@@ -1,8 +1,7 @@
 package org.haox.kerb.server;
 
 import junit.framework.Assert;
-import org.haox.kerb.base.Ticket;
-import org.haox.kerb.base.TicketGrantingTicket;
+import org.haox.kerb.spec.type.ticket.TicketGrantingTicket;
 import org.junit.Test;
 
 public class TGTTicketTest {
