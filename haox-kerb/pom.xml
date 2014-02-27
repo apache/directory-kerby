@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>kerb-base</module>
+        <module>kerb-spec</module>
         <module>kerb-api</module>
         <module>kerb-core</module>
         <module>kerb-server</module>

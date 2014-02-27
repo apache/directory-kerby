@@ -9,7 +9,7 @@ public class TGTTicketTest {
     @Test
     public void testTGT() {
         String principal = "drankye@EXAMPLE.COM";
-        TicketGrantingTicket tgt = new TicketGrantingTicket();
+        TicketGrantingTicket tgt = new TicketGrantingTicket(null, null, null);
         tgt.setClientPrincipal(principal);
         Assert.assertEquals(tgt.getClientPrincipal(), principal);
     }

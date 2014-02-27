@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>org.haox</groupId>
-            <artifactId>kerb-base</artifactId>
+            <artifactId>kerb-spec</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
