@@ -18,6 +18,6 @@
         <module>kerb-api</module>
         <module>kerb-core</module>
         <module>kerb-server</module>
-        <module>kerb-decoding</module>
+        <module>kerb-codec</module>
     </modules>
 </project>
