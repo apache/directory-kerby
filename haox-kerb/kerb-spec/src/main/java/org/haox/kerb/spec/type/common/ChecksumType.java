@@ -1,6 +1,14 @@
 package org.haox.kerb.spec.type.common;
 
-public enum ChecksumType {
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbEnum;
+import org.haox.kerb.spec.type.KrbFactory;
+import org.haox.kerb.spec.type.KrbInteger;
+
+import java.math.BigInteger;
+
+public enum ChecksumType implements KrbEnum {
+    NONE(-1),
     CRC32(0x0001),
     RSA_MD4(0x0002),
     RSA_MD4_DES(0x0003),
@@ -22,5 +30,27 @@ public enum ChecksumType {
 
     private ChecksumType(int value) {
         this.value = value;
+    }
+
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+    public KrbInteger asInteger() throws KrbException {
+        KrbInteger tmp = KrbFactory.create(KrbInteger.class);
+        tmp.setValue(BigInteger.valueOf(value));
+        return tmp;
+    }
+    public static ChecksumType fromValue(KrbInteger value) {
+        if (value != null) {
+            for (KrbEnum e : values()) {
+                if (e.getValue() == value.getValue().intValue()) {
+                    return (ChecksumType) e;
+                }
+            }
+        }
+
+        return NONE;
     }
 }

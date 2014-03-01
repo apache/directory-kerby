@@ -9,11 +9,15 @@ public class KrbFactory {
         instance = factory;
     }
 
-    public static KrbFactory get() {
+    private static KrbFactory get() {
         return instance;
     }
 
-    public KrbType create(Class<? extends KrbType> type) throws KrbException {
+    public static <T extends KrbType> T create(Class<T> type) throws KrbException {
+        return get().createOf(type);
+    }
+
+    protected <T extends KrbType> T createOf(Class<T> type) throws KrbException {
         try {
             Class<? extends KrbType> classType = null;
             if (type.isInterface()) {
@@ -21,7 +25,7 @@ public class KrbFactory {
             } else {
                 classType = type;
             }
-            return classType.newInstance();
+            return (T) classType.newInstance();
         } catch (InstantiationException e) {
             KrbThrow.out(KrbTypeMessageCode.INVALID_KRB_TYPE);
         } catch (IllegalAccessException e) {

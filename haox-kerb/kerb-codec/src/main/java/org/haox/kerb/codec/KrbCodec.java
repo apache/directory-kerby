@@ -16,14 +16,14 @@ public class KrbCodec {
         return encodable.encode();
     }
 
-    public static KrbType decode(byte[] content, Class<? extends KrbType> krbType) throws KrbException {
-        KrbType implObj = KrbFactory.get().create(krbType);
+    public static <T extends KrbType> T decode(byte[] content, Class<T> krbType) throws KrbException {
+        KrbType implObj = KrbFactory.create(krbType);
         if (! (implObj instanceof KrbEncodable)) {
             KrbThrow.out(KrbCodecMessageCode.NOT_ENCODABLE);
         }
 
         KrbEncodable encodable = (KrbEncodable) implObj;
         encodable.decode(content);
-        return implObj;
+        return (T) implObj;
     }
 }
