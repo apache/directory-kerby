@@ -16,27 +16,12 @@ import java.util.List;
  req-body        [4] KDC-REQ-BODY
  }
  */
-public abstract class KdcReq extends KrbMessage {
-    private List<PaData> paDataList;
-    private KdcReqBody reqBody;
+public interface KdcReq extends KrbMessage {
+    public List<PaData> getPaDataList();
 
-    public KdcReq(KrbMessageType msgType) {
-        super(msgType);
-    }
+    public void setPaDataList(List<PaData> paDataList);
 
-    public List<PaData> getPaDataList() {
-        return paDataList;
-    }
+    public KdcReqBody getReqBody();
 
-    public void setPaDataList(List<PaData> paDataList) {
-        this.paDataList = paDataList;
-    }
-
-    public KdcReqBody getReqBody() {
-        return reqBody;
-    }
-
-    public void setReqBody(KdcReqBody reqBody) {
-        this.reqBody = reqBody;
-    }
+    public void setReqBody(KdcReqBody reqBody);
 }

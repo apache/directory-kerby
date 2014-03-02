@@ -1,6 +1,13 @@
 package org.haox.kerb.spec.type;
 
-public interface KrbOctetString extends KrbType {
-    public void setValue(byte[] value);
-    public byte[] getValue();
+public class KrbOctetString implements KrbType {
+    private byte[] value;
+
+    public void setValue(byte[] value) {
+        this.value = value;
+    }
+
+    public byte[] getValue() {
+        return value;
+    }
 }

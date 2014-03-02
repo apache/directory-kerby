@@ -1,5 +1,6 @@
 package org.haox.kerb.spec.type.ap;
 
+import org.haox.kerb.spec.type.*;
 import org.haox.kerb.spec.type.common.*;
 
 /**
@@ -9,92 +10,81 @@ import org.haox.kerb.spec.type.common.*;
  cname                   [2] PrincipalName,
  cksum                   [3] Checksum OPTIONAL,
  cusec                   [4] Microseconds,
- ctime                   [5] KerberosTime,
+ ctime                   [5] KrbTime,
  subkey                  [6] EncryptionKey OPTIONAL,
  seq-number              [7] UInt32 OPTIONAL,
  authorization-data      [8] AuthorizationData OPTIONAL
  }
  */
-public class Authenticator {
-    private int authenticatorVno;
-    private String crealm;
-    private PrincipalName cname;
-    private Checksum cksum;
-    private int cusec;
-    private KerberosTime ctime;
-    private EncryptionKey subKey;
-    private Integer seqNumber;
-    private AuthorizationData authorizationData;
+public interface Authenticator extends SequenceType {
+    public static enum Tag implements KrbTag {
+        AUTHENTICATOR_VNO(0, KrbInteger.class),
+        CREALM(1, KrbString.class),
+        CNAME(2, PrincipalName.class),
+        CKSUM(3, Checksum.class),
+        CUSEC(4, KrbInteger.class),
+        CTIME(5, KrbTime.class),
+        SUBKEY(6, EncryptionKey.class),
+        SEQ_NUMBER(7, KrbInteger.class),
+        AUTHORIZATION_DATA(8, AuthorizationData.class);
 
-    public int getAuthenticatorVno() {
-        return authenticatorVno;
-    }
+        private int value;
+        private Class<? extends KrbType> type;
 
-    public void setAuthenticatorVno(int authenticatorVno) {
-        this.authenticatorVno = authenticatorVno;
-    }
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
 
-    public String getCrealm() {
-        return crealm;
-    }
+        @Override
+        public int getValue() {
+            return value;
+        }
 
-    public void setCrealm(String crealm) {
-        this.crealm = crealm;
-    }
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
 
-    public PrincipalName getCname() {
-        return cname;
-    }
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
 
-    public void setCname(PrincipalName cname) {
-        this.cname = cname;
-    }
+    public int getAuthenticatorVno();
 
-    public Checksum getCksum() {
-        return cksum;
-    }
+    public void setAuthenticatorVno(int authenticatorVno);
 
-    public void setCksum(Checksum cksum) {
-        this.cksum = cksum;
-    }
+    public String getCrealm();
 
-    public int getCusec() {
-        return cusec;
-    }
+    public void setCrealm(String crealm);
 
-    public void setCusec(int cusec) {
-        this.cusec = cusec;
-    }
+    public PrincipalName getCname();
 
-    public KerberosTime getCtime() {
-        return ctime;
-    }
+    public void setCname(PrincipalName cname);
 
-    public void setCtime(KerberosTime ctime) {
-        this.ctime = ctime;
-    }
+    public Checksum getCksum();
 
-    public EncryptionKey getSubKey() {
-        return subKey;
-    }
+    public void setCksum(Checksum cksum);
 
-    public void setSubKey(EncryptionKey subKey) {
-        this.subKey = subKey;
-    }
+    public int getCusec();
 
-    public Integer getSeqNumber() {
-        return seqNumber;
-    }
+    public void setCusec(int cusec);
 
-    public void setSeqNumber(Integer seqNumber) {
-        this.seqNumber = seqNumber;
-    }
+    public KrbTime getCtime();
 
-    public AuthorizationData getAuthorizationData() {
-        return authorizationData;
-    }
+    public void setCtime(KrbTime ctime);
 
-    public void setAuthorizationData(AuthorizationData authorizationData) {
-        this.authorizationData = authorizationData;
-    }
+    public EncryptionKey getSubKey();
+
+    public void setSubKey(EncryptionKey subKey);
+
+    public Integer getSeqNumber();
+
+    public void setSeqNumber(Integer seqNumber);
+
+    public AuthorizationData getAuthorizationData();
+
+    public void setAuthorizationData(AuthorizationData authorizationData);
 }

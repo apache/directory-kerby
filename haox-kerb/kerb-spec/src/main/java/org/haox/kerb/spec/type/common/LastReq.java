@@ -5,7 +5,7 @@ import java.util.List;
 /**
  LastReq         ::=     SEQUENCE OF SEQUENCE {
  lr-type         [0] Int32,
- lr-value        [1] KerberosTime
+ lr-value        [1] KrbTime
  }
  */
 public class LastReq {

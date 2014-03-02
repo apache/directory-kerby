@@ -1,7 +1,9 @@
 package org.haox.kerb.spec.type.ticket;
 
 import org.haox.kerb.spec.KrbConstant;
+import org.haox.kerb.spec.type.*;
 import org.haox.kerb.spec.type.common.EncryptedData;
+import org.haox.kerb.spec.type.common.PrincipalName;
 
 /**
  Ticket          ::= [APPLICATION 1] SEQUENCE {
@@ -11,48 +13,52 @@ import org.haox.kerb.spec.type.common.EncryptedData;
  enc-part        [3] EncryptedData -- EncTicketPart
  }
  */
-public class Ticket {
-    public static final int TKT_KVNO = KrbConstant.KERBEROS_V5;
+public interface Ticket extends SequenceType {
+    public static enum Tag implements KrbTag {
+        TKT_VNO(0, KrbInteger.class),
+        REALM(1, KrbString.class),
+        SNAME(2, PrincipalName.class),
+        ENC_PART(3, EncryptedData.class);
 
-    private final int tktvno = TKT_KVNO;
-    private String sname;
-    private String realm;
-    private EncTicketPart encPart;
-    private EncryptedData encryptedEncPart;
-    //
-    public int getTktvno() {
-        return tktvno;
-    }
+        private int value;
+        private Class<? extends KrbType> type;
 
-    public String getSname() {
-        return sname;
-    }
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
 
-    public void setSname(String sname) {
-        this.sname = sname;
-    }
+        @Override
+        public int getValue() {
+            return value;
+        }
 
-    public String getRealm() {
-        return realm;
-    }
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
 
-    public void setRealm(String realm) {
-        this.realm = realm;
-    }
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
 
-    public EncryptedData getEncryptedEncPart() {
-        return encryptedEncPart;
-    }
+    public int getTktvno();
 
-    public void setEncryptedEncPart(EncryptedData encryptedEncPart) {
-        this.encryptedEncPart = encryptedEncPart;
-    }
+    public String getSname();
 
-    public EncTicketPart getEncPart() {
-        return encPart;
-    }
+    public void setSname(String sname);
 
-    public void setEncPart(EncTicketPart encPart) {
-        this.encPart = encPart;
-    }
+    public String getRealm();
+
+    public void setRealm(String realm);
+
+    public EncryptedData getEncryptedEncPart();
+
+    public void setEncryptedEncPart(EncryptedData encryptedEncPart);
+
+    public EncTicketPart getEncPart();
+
+    public void setEncPart(EncTicketPart encPart);
 }

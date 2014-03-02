@@ -37,11 +37,6 @@ public enum ChecksumType implements KrbEnum {
         return value;
     }
 
-    public KrbInteger asInteger() throws KrbException {
-        KrbInteger tmp = KrbFactory.create(KrbInteger.class);
-        tmp.setValue(BigInteger.valueOf(value));
-        return tmp;
-    }
     public static ChecksumType fromValue(KrbInteger value) {
         if (value != null) {
             for (KrbEnum e : values()) {

@@ -1,6 +1,8 @@
 package org.haox.kerb.spec.type.common;
 
-public class KerberosTime {
+import org.haox.kerb.spec.type.KrbType;
+
+public class KrbTime implements KrbType {
     private long value;
 
     public long getValue() {

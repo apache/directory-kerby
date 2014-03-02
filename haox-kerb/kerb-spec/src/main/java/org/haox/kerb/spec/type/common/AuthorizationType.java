@@ -1,6 +1,9 @@
 package org.haox.kerb.spec.type.common;
 
-public enum AuthorizationType {
+import org.haox.kerb.spec.type.KrbEnum;
+import org.haox.kerb.spec.type.KrbInteger;
+
+public enum AuthorizationType implements KrbEnum {
     /**
      * Constant for the "null" authorization type.
      */
@@ -102,4 +105,22 @@ public enum AuthorizationType {
     private AuthorizationType(int value) {
         this.value = value;
     }
+
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+    public static AuthorizationType fromValue(KrbInteger value) {
+        if (value != null) {
+            for (KrbEnum e : values()) {
+                if (e.getValue() == value.getValue().intValue()) {
+                    return (AuthorizationType) e;
+                }
+            }
+        }
+
+        return NULL;
+    }
+
 }

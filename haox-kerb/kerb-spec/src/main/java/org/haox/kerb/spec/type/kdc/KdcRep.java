@@ -1,6 +1,9 @@
 package org.haox.kerb.spec.type.kdc;
 
-import org.haox.kerb.spec.type.common.*;
+import org.haox.kerb.spec.type.common.EncryptedData;
+import org.haox.kerb.spec.type.common.KrbMessage;
+import org.haox.kerb.spec.type.common.PaData;
+import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
 import java.util.List;
@@ -19,63 +22,28 @@ import java.util.List;
  -- as appropriate
  }
  */
-public abstract class KdcRep extends KrbMessage {
-    private List<PaData> paData;
-    private String crealm;
-    private PrincipalName cname;
-    private Ticket ticket;
-    private EncryptedData encryptedEncPart;
-    private EncKdcRepPart encPart;
+public interface KdcRep extends KrbMessage {
+    public List<PaData> getPaData();
 
-    public KdcRep(KrbMessageType msgType) {
-        super(msgType);
-    }
+    public void setPaData(List<PaData> paData);
 
-    public List<PaData> getPaData() {
-        return paData;
-    }
+    public String getCrealm();
 
-    public void setPaData(List<PaData> paData) {
-        this.paData = paData;
-    }
+    public void setCrealm(String crealm);
 
-    public String getCrealm() {
-        return crealm;
-    }
+    public PrincipalName getCname();
 
-    public void setCrealm(String crealm) {
-        this.crealm = crealm;
-    }
+    public void setCname(PrincipalName cname);
 
-    public PrincipalName getCname() {
-        return cname;
-    }
+    public Ticket getTicket();
 
-    public void setCname(PrincipalName cname) {
-        this.cname = cname;
-    }
+    public void setTicket(Ticket ticket);
 
-    public Ticket getTicket() {
-        return ticket;
-    }
+    public EncryptedData getEncryptedEncPart();
 
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-    }
+    public void setEncryptedEncPart(EncryptedData encryptedEncPart);
 
-    public EncryptedData getEncryptedEncPart() {
-        return encryptedEncPart;
-    }
+    public EncKdcRepPart getEncPart();
 
-    public void setEncryptedEncPart(EncryptedData encryptedEncPart) {
-        this.encryptedEncPart = encryptedEncPart;
-    }
-
-    public EncKdcRepPart getEncPart() {
-        return encPart;
-    }
-
-    public void setEncPart(EncKdcRepPart encPart) {
-        this.encPart = encPart;
-    }
+    public void setEncPart(EncKdcRepPart encPart);
 }

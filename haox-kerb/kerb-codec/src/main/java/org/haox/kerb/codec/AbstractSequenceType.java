@@ -10,13 +10,13 @@ import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.util.Enumeration;
 
-public abstract class AbstractSequenceKrbType extends AbstractKrbType {
-    protected abstract KrbTag[] getTags();
+public abstract class AbstractSequenceType extends AbstractKrbType implements SequenceType {
+    public abstract KrbTag[] getTags();
     protected KrbType[] fields;
 
-    public AbstractSequenceKrbType() {
+    public AbstractSequenceType() {
         KrbTag[] tags = getTags();
-        fields = new KrbType[tags.length];
+        this.fields = new KrbType[tags.length];
     }
 
     @Override
@@ -83,23 +83,32 @@ public abstract class AbstractSequenceKrbType extends AbstractKrbType {
             } else if (KrbOctetString.class.isAssignableFrom(type)) {
                 DEROctetString tmp = DecodingUtil.as(DEROctetString.class, tagged);
                 ((KrbOctetString) value).setValue(tmp.getOctets());
+            } else if (SequenceOfType.class.isAssignableFrom(type)) {
+                tagged.getDEREncoded()
+                DEROctetString tmp = DecodingUtil.as(DEROctetString.class, tagged);
+                ((KrbOctetString) value).setValue(tmp.getOctets());
+            } else if (KrbOctetString.class.isAssignableFrom(type)) {
+                DEROctetString tmp = DecodingUtil.as(DEROctetString.class, tagged);
+                ((KrbOctetString) value).setValue(tmp.getOctets());
             }
         }
     }
 
-    protected <T extends KrbType> T getFieldAs(KrbTag tag, Class<T> t) {
-        KrbType value = fields[tag.getIndex()];
+    protected <T extends KrbType> T getFieldAs(KrbTag tag, Class<T> t) throws KrbException {
+        return getFieldAs(tag.getIndex(), t);
+    }
+
+    protected <T extends KrbType> T getFieldAs(int index, Class<T> t) throws KrbException {
+        KrbType value = fields[index];
         if (value == null) return null;
         return (T) value;
     }
 
-    protected void setField(KrbTag tag, KrbType value) {
-        fields[tag.getIndex()] = value;
+    protected void setField(KrbTag tag, KrbType value) throws KrbException {
+        setField(tag.getIndex(), value);
     }
 
-    @Override
-    public boolean isSimple() {
-        return false;
+    protected void setField(int index, KrbType value) throws KrbException {
+        fields[index] = value;
     }
-
 }

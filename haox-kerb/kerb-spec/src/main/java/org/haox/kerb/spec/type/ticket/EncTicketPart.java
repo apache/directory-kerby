@@ -14,13 +14,13 @@ public class EncTicketPart {
     /** field containing list of transited realm names */
     private TransitedEncoding transited;
     /** time of initial authentication */
-    private KerberosTime authTime;
+    private KrbTime authTime;
     /** time after which ticket is valid */
-    private KerberosTime startTime;
+    private KrbTime startTime;
     /** ticket's expiry time */
-    private KerberosTime endTime;
+    private KrbTime endTime;
     /** the maximum endtime that may be included in a renewal */
-    private KerberosTime renewtill;
+    private KrbTime renewtill;
     /** the addresses from which this ticket can be used */
     private HostAddresses clientAddresses;
     /** the authorization data */
@@ -66,35 +66,35 @@ public class EncTicketPart {
         this.transited = transited;
     }
 
-    public KerberosTime getAuthTime() {
+    public KrbTime getAuthTime() {
         return authTime;
     }
 
-    public void setAuthTime(KerberosTime authTime) {
+    public void setAuthTime(KrbTime authTime) {
         this.authTime = authTime;
     }
 
-    public KerberosTime getStartTime() {
+    public KrbTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(KerberosTime startTime) {
+    public void setStartTime(KrbTime startTime) {
         this.startTime = startTime;
     }
 
-    public KerberosTime getEndTime() {
+    public KrbTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(KerberosTime endTime) {
+    public void setEndTime(KrbTime endTime) {
         this.endTime = endTime;
     }
 
-    public KerberosTime getRenewtill() {
+    public KrbTime getRenewtill() {
         return renewtill;
     }
 
-    public void setRenewtill(KerberosTime renewtill) {
+    public void setRenewtill(KrbTime renewtill) {
         this.renewtill = renewtill;
     }
 

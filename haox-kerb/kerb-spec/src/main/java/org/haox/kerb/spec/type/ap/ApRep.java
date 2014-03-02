@@ -11,27 +11,12 @@ import org.haox.kerb.spec.type.common.KrbMessageType;
  enc-part        [2] EncryptedData -- EncAPRepPart
  }
  */
-public abstract class ApRep extends KrbMessage {
-    private EncAPRepPart encPart;
-    private EncryptedData encryptedEncPart;
+public interface ApRep extends KrbMessage {
+    public EncAPRepPart getEncPart();
 
-    public ApRep() {
-        super(KrbMessageType.AP_REP);
-    }
+    public void setEncPart(EncAPRepPart encPart);
 
-    public EncAPRepPart getEncPart() {
-        return encPart;
-    }
+    public EncryptedData getEncryptedEncPart();
 
-    public void setEncPart(EncAPRepPart encPart) {
-        this.encPart = encPart;
-    }
-
-    public EncryptedData getEncryptedEncPart() {
-        return encryptedEncPart;
-    }
-
-    public void setEncryptedEncPart(EncryptedData encryptedEncPart) {
-        this.encryptedEncPart = encryptedEncPart;
-    }
+    public void setEncryptedEncPart(EncryptedData encryptedEncPart);
 }

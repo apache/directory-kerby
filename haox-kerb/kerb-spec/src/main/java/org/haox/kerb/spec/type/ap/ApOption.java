@@ -1,7 +1,7 @@
 package org.haox.kerb.spec.type.ap;
 
 /**
- APOptions       ::= KerberosFlags
+ APOptions       ::= KrbFlags
  -- reserved(0),
  -- use-session-key(1),
  -- mutual-required(2)

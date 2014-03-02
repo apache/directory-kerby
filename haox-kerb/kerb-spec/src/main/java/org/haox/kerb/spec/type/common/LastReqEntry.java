@@ -3,12 +3,12 @@ package org.haox.kerb.spec.type.common;
 /**
  LastReq         ::=     SEQUENCE OF SEQUENCE {
  lr-type         [0] Int32,
- lr-value        [1] KerberosTime
+ lr-value        [1] KrbTime
  }
  */
 public class LastReqEntry {
     private LastReqType lrType;
-    private KerberosTime lrValue;
+    private KrbTime lrValue;
 
     public LastReqType getLrType() {
         return lrType;
@@ -18,11 +18,11 @@ public class LastReqEntry {
         this.lrType = lrType;
     }
 
-    public KerberosTime getLrValue() {
+    public KrbTime getLrValue() {
         return lrValue;
     }
 
-    public void setLrValue(KerberosTime lrValue) {
+    public void setLrValue(KrbTime lrValue) {
         this.lrValue = lrValue;
     }
 }

@@ -1,8 +1,10 @@
 package org.haox.kerb.spec;
 
-import org.haox.kerb.spec.type.KrbType;
+import org.haox.kerb.spec.type.*;
 
+import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KrbTypes {
@@ -36,4 +38,31 @@ public class KrbTypes {
         return impl;
     }
 
+    public static KrbInteger makeInteger(KrbEnum eValue) throws KrbException {
+        return makeInteger(eValue.getValue());
+    }
+
+    public static KrbInteger makeInteger(int value) throws KrbException {
+        KrbInteger result = KrbFactory.create(KrbInteger.class);
+        result.setValue(BigInteger.valueOf(value));
+        return result;
+    }
+
+    public static KrbString makeString(String value) throws KrbException {
+        KrbString result = KrbFactory.create(KrbString.class);
+        result.setValue(value);
+        return result;
+    }
+
+    public static KrbStrings makeStrings(List<String> strings) throws KrbException {
+        KrbStrings result = KrbFactory.create(KrbStrings.class);
+        result.setValues(strings);
+        return result;
+    }
+
+    public static KrbOctetString makeOctetString(byte[] octets) throws KrbException {
+        KrbOctetString value = KrbFactory.create(KrbOctetString.class);
+        value.setValue(octets);
+        return value;
+    }
 }

@@ -1,28 +1,48 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbInteger;
+import org.haox.kerb.spec.type.KrbOctetString;
+import org.haox.kerb.spec.type.KrbTag;
+import org.haox.kerb.spec.type.KrbType;
+
 /**
  Checksum        ::= SEQUENCE {
  cksumtype       [0] Int32,
  checksum        [1] OCTET STRING
  }
  */
-public class Checksum {
-    private ChecksumType cksumtype;
-    private byte[] checksum;
+public interface Checksum extends KrbType {
+    public static enum Tag implements KrbTag {
+        CKSUM_TYPE(0, KrbInteger.class),
+        CHECK_SUM(1, KrbOctetString.class);
 
-    public ChecksumType getCksumtype() {
-        return cksumtype;
-    }
+        private int value;
+        private Class<? extends KrbType> type;
 
-    public void setCksumtype(ChecksumType cksumtype) {
-        this.cksumtype = cksumtype;
-    }
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
 
-    public byte[] getChecksum() {
-        return checksum;
-    }
+        @Override
+        public int getValue() {
+            return value;
+        }
 
-    public void setChecksum(byte[] checksum) {
-        this.checksum = checksum;
-    }
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
+
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
+
+    public ChecksumType getCksumtype() throws KrbException;
+    public void setCksumtype(ChecksumType cksumtype) throws KrbException;
+    public byte[] getChecksum() throws KrbException;
+    public void setChecksum(byte[] checksum) throws KrbException;
 }

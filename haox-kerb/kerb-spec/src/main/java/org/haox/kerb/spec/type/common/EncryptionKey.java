@@ -1,22 +1,51 @@
 package org.haox.kerb.spec.type.common;
 
-public class EncryptionKey {
-    private EncryptionType keyType;
-    private byte[] keyData;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbInteger;
+import org.haox.kerb.spec.type.KrbOctetString;
+import org.haox.kerb.spec.type.KrbTag;
+import org.haox.kerb.spec.type.KrbType;
 
-    public EncryptionType getKeyType() {
-        return keyType;
-    }
+/**
+ EncryptionKey   ::= SEQUENCE {
+ keytype         [0] Int32 -- actually encryption type --,
+ keyvalue        [1] OCTET STRING
+ }
+ */
+public interface EncryptionKey extends KrbType {
+    public static enum Tag implements KrbTag {
+        KEY_TYPE(0, KrbInteger.class),
+        KEY_VALUE(1, KrbOctetString.class);
 
-    public void setKeyType(EncryptionType keyType) {
-        this.keyType = keyType;
-    }
+        private int value;
+        private Class<? extends KrbType> type;
 
-    public byte[] getKeyData() {
-        return keyData;
-    }
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
 
-    public void setKeyData(byte[] keyData) {
-        this.keyData = keyData;
-    }
+        @Override
+        public int getValue() {
+            return value;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
+
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
+
+    public EncryptionType getKeyType() throws KrbException;
+
+    public void setKeyType(EncryptionType keyType) throws KrbException;
+
+    public byte[] getKeyData() throws KrbException;
+
+    public void setKeyData(byte[] keyData) throws KrbException;
 }

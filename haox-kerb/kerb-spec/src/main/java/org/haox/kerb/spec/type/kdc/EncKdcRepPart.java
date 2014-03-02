@@ -8,12 +8,12 @@ import org.haox.kerb.spec.type.ticket.TicketFlags;
  key             [0] EncryptionKey,
  last-req        [1] LastReq,
  nonce           [2] UInt32,
- key-expiration  [3] KerberosTime OPTIONAL,
+ key-expiration  [3] KrbTime OPTIONAL,
  flags           [4] TicketFlags,
- authtime        [5] KerberosTime,
- starttime       [6] KerberosTime OPTIONAL,
- endtime         [7] KerberosTime,
- renew-till      [8] KerberosTime OPTIONAL,
+ authtime        [5] KrbTime,
+ starttime       [6] KrbTime OPTIONAL,
+ endtime         [7] KrbTime,
+ renew-till      [8] KrbTime OPTIONAL,
  srealm          [9] Realm,
  sname           [10] PrincipalName,
  caddr           [11] HostAddresses OPTIONAL
@@ -23,12 +23,12 @@ public class EncKdcRepPart {
     private EncryptionKey key;
     private LastReq lastReq;
     private int nonce;
-    private KerberosTime keyExpiration;
+    private KrbTime keyExpiration;
     private TicketFlags flags;
-    private KerberosTime authTime;
-    private KerberosTime startTime;
-    private KerberosTime endTime;
-    private KerberosTime renewTill;
+    private KrbTime authTime;
+    private KrbTime startTime;
+    private KrbTime endTime;
+    private KrbTime renewTill;
     private String srealm;
     private PrincipalName sname;
     private HostAddresses caddr;
@@ -57,11 +57,11 @@ public class EncKdcRepPart {
         this.nonce = nonce;
     }
 
-    public KerberosTime getKeyExpiration() {
+    public KrbTime getKeyExpiration() {
         return keyExpiration;
     }
 
-    public void setKeyExpiration(KerberosTime keyExpiration) {
+    public void setKeyExpiration(KrbTime keyExpiration) {
         this.keyExpiration = keyExpiration;
     }
 
@@ -73,35 +73,35 @@ public class EncKdcRepPart {
         this.flags = flags;
     }
 
-    public KerberosTime getAuthTime() {
+    public KrbTime getAuthTime() {
         return authTime;
     }
 
-    public void setAuthTime(KerberosTime authTime) {
+    public void setAuthTime(KrbTime authTime) {
         this.authTime = authTime;
     }
 
-    public KerberosTime getStartTime() {
+    public KrbTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(KerberosTime startTime) {
+    public void setStartTime(KrbTime startTime) {
         this.startTime = startTime;
     }
 
-    public KerberosTime getEndTime() {
+    public KrbTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(KerberosTime endTime) {
+    public void setEndTime(KrbTime endTime) {
         this.endTime = endTime;
     }
 
-    public KerberosTime getRenewTill() {
+    public KrbTime getRenewTill() {
         return renewTill;
     }
 
-    public void setRenewTill(KerberosTime renewTill) {
+    public void setRenewTill(KrbTime renewTill) {
         this.renewTill = renewTill;
     }
 

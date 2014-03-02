@@ -15,6 +15,9 @@ import org.bouncycastle.asn1.DERInteger;
 import org.bouncycastle.asn1.DERSequence;
 import org.haox.kerb.codec.DecodingException;
 import org.haox.kerb.codec.DecodingUtil;
+import org.haox.kerb.codec.KrbCodec;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.ap.ApReq;
 
 public class KerberosApRequest {
 
@@ -24,7 +27,12 @@ public class KerberosApRequest {
     public KerberosApRequest(byte[] token, KerberosKey[] keys) throws DecodingException {
         if(token.length <= 0)
             throw new DecodingException("kerberos.request.empty", null, null);
-
+        try {
+            KrbCodec.decode(token, ApReq.class);
+        } catch (KrbException e) {
+            e.printStackTrace();
+        }
+/*
         DERSequence sequence;
         try {
             ASN1InputStream stream = new ASN1InputStream(new ByteArrayInputStream(token));
@@ -69,6 +77,7 @@ public class KerberosApRequest {
                 throw new DecodingException("kerberos.field.invalid", args, null);
             }
         }
+        */
     }
 
     public byte getApOptions() {

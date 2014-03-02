@@ -1,14 +1,16 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.kerb.spec.type.KrbType;
+
 /**
- KerberosFlags   ::= BIT STRING (SIZE (32..MAX))
+ KrbFlags   ::= BIT STRING (SIZE (32..MAX))
  -- minimum number of bits shall be sent,
  -- but no fewer than 32
  */
-public class KerberosFlags {
+public class KrbFlags implements KrbType {
     private int value = 0;
 
-    public KerberosFlags(int value) {
+    public void setFlags(int value) {
         this.value = value;
     }
 

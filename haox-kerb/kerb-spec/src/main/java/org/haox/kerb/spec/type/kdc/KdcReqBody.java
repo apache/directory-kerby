@@ -15,9 +15,9 @@ import java.util.Set;
  -- Server's realm
  -- Also client's in AS-REQ --,
  sname                   [3] PrincipalName OPTIONAL,
- from                    [4] KerberosTime OPTIONAL,
- till                    [5] KerberosTime,
- rtime                   [6] KerberosTime OPTIONAL,
+ from                    [4] KrbTime OPTIONAL,
+ till                    [5] KrbTime,
+ rtime                   [6] KrbTime OPTIONAL,
  nonce                   [7] UInt32,
  etype                   [8] SEQUENCE OF Int32 -- EncryptionType
  -- in preference order --,
@@ -33,9 +33,9 @@ public class KdcReqBody {
     private PrincipalName cname;
     private String realm;
     private PrincipalName sname;
-    private KerberosTime from;
-    private KerberosTime till;
-    private KerberosTime rtime;
+    private KrbTime from;
+    private KrbTime till;
+    private KrbTime rtime;
     private int nonce;
     private Set<EncryptionType> etype;
     private HostAddresses addresses;
@@ -74,27 +74,27 @@ public class KdcReqBody {
         this.sname = sname;
     }
 
-    public KerberosTime getFrom() {
+    public KrbTime getFrom() {
         return from;
     }
 
-    public void setFrom(KerberosTime from) {
+    public void setFrom(KrbTime from) {
         this.from = from;
     }
 
-    public KerberosTime getTill() {
+    public KrbTime getTill() {
         return till;
     }
 
-    public void setTill(KerberosTime till) {
+    public void setTill(KrbTime till) {
         this.till = till;
     }
 
-    public KerberosTime getRtime() {
+    public KrbTime getRtime() {
         return rtime;
     }
 
-    public void setRtime(KerberosTime rtime) {
+    public void setRtime(KrbTime rtime) {
         this.rtime = rtime;
     }
 

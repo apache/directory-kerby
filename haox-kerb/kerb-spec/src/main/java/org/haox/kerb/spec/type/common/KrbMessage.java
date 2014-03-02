@@ -1,24 +1,13 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.kerb.spec.KrbConstant;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.SequenceType;
 
-public abstract class KrbMessage {
-    private final int pvno = KrbConstant.KERBEROS_V5;
-    private KrbMessageType msgType;
+public interface KrbMessage extends SequenceType {
 
-    public KrbMessage(KrbMessageType msgType) {
-        this.msgType = msgType;
-    }
+    public int getPvno();
 
-    public int getPvno() {
-        return pvno;
-    }
+    public KrbMessageType getMsgType() throws KrbException;
 
-    public KrbMessageType getMsgType() {
-        return msgType;
-    }
-
-    public void setMsgType(KrbMessageType msgType) {
-        this.msgType = msgType;
-    }
+    public void setMsgType(KrbMessageType msgType) throws KrbException;
 }

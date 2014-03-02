@@ -1,8 +1,12 @@
 package org.haox.kerb.spec.type.ap;
 
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbInteger;
+import org.haox.kerb.spec.type.KrbTag;
+import org.haox.kerb.spec.type.KrbType;
 import org.haox.kerb.spec.type.common.EncryptedData;
+import org.haox.kerb.spec.type.common.KrbFlags;
 import org.haox.kerb.spec.type.common.KrbMessage;
-import org.haox.kerb.spec.type.common.KrbMessageType;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
 /**
@@ -14,45 +18,52 @@ import org.haox.kerb.spec.type.ticket.Ticket;
  authenticator   [4] EncryptedData -- Authenticator
  }
  */
-public abstract class ApReq extends KrbMessage {
-    private ApOptions apOptions;
-    private Ticket ticket;
-    private Authenticator authenticator;
-    private EncryptedData encryptedAuthenticator;
+public interface ApReq extends KrbMessage {
+    public static enum Tag implements KrbTag {
+        PVNO(0, KrbInteger.class),
+        MSG_TYPE(1, KrbInteger.class),
+        AP_OPTIONS(2, KrbFlags.class),
+        TICKET(3, Ticket.class),
+        AUTHENTICATOR(4, Authenticator.class);
 
-    public ApReq() {
-        super(KrbMessageType.AP_REP);
-    }
+        private int value;
+        private Class<? extends KrbType> type;
 
-    public ApOptions getApOptions() {
-        return apOptions;
-    }
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
 
-    public void setApOptions(ApOptions apOptions) {
-        this.apOptions = apOptions;
-    }
+        @Override
+        public int getValue() {
+            return value;
+        }
 
-    public Ticket getTicket() {
-        return ticket;
-    }
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
 
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-    }
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
 
-    public Authenticator getAuthenticator() {
-        return authenticator;
-    }
+    public ApOptions getApOptions() throws KrbException;
 
-    public void setAuthenticator(Authenticator authenticator) {
-        this.authenticator = authenticator;
-    }
+    public void setApOptions(ApOptions apOptions) throws KrbException;
 
-    public EncryptedData getEncryptedAuthenticator() {
-        return encryptedAuthenticator;
-    }
+    public Ticket getTicket() throws KrbException;
 
-    public void setEncryptedAuthenticator(EncryptedData encryptedAuthenticator) {
-        this.encryptedAuthenticator = encryptedAuthenticator;
-    }
+    public void setTicket(Ticket ticket) throws KrbException;
+
+    public Authenticator getAuthenticator();
+
+    public void setAuthenticator(Authenticator authenticator);
+
+    public EncryptedData getEncryptedAuthenticator() throws KrbException;
+
+    public void setEncryptedAuthenticator(EncryptedData encryptedAuthenticator) throws KrbException;
 }
+

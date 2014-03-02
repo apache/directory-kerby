@@ -1,6 +1,9 @@
 package org.haox.kerb.spec.type.common;
 
-public enum EncryptionType {
+import org.haox.kerb.spec.type.KrbEnum;
+import org.haox.kerb.spec.type.KrbInteger;
+
+public enum EncryptionType implements KrbEnum {
     /**
      * The "unknown" encryption type.
      */
@@ -140,4 +143,22 @@ public enum EncryptionType {
         this.value = value;
         this.name = name;
     }
+
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+    public static EncryptionType fromValue(KrbInteger value) {
+        if (value != null) {
+            for (KrbEnum e : values()) {
+                if (e.getValue() == value.getValue().intValue()) {
+                    return (EncryptionType) e;
+                }
+            }
+        }
+
+        return UNKNOWN;
+    }
+
 }

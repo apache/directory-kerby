@@ -27,9 +27,9 @@ public class KrbFactory {
             }
             return (T) classType.newInstance();
         } catch (InstantiationException e) {
-            KrbThrow.out(KrbTypeMessageCode.INVALID_KRB_TYPE);
+            KrbThrow.out(KrbTypeMessageCode.INVALID_KRB_TYPE, e);
         } catch (IllegalAccessException e) {
-            KrbThrow.out(KrbTypeMessageCode.INVALID_KRB_TYPE);
+            KrbThrow.out(KrbTypeMessageCode.INVALID_KRB_TYPE, e);
         }
 
         return null;
