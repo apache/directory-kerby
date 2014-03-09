@@ -1,4 +1,4 @@
-package org.haox.kerb;
+package org.haox.kerb.api;
 
 import javax.security.auth.login.FailedLoginException;
 

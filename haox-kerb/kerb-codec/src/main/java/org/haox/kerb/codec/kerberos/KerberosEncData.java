@@ -1,5 +1,14 @@
 package org.haox.kerb.codec.kerberos;
 
+import org.bouncycastle.asn1.*;
+import org.haox.kerb.codec.DecodingException;
+import org.haox.kerb.codec.DecodingUtil;
+
+import javax.crypto.Cipher;
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -9,23 +18,6 @@ import java.security.Key;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
-import javax.crypto.Cipher;
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1TaggedObject;
-import org.bouncycastle.asn1.DERApplicationSpecific;
-import org.bouncycastle.asn1.DERGeneralString;
-import org.bouncycastle.asn1.DERInteger;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERTaggedObject;
-import org.haox.kerb.codec.DecodingException;
-import org.haox.kerb.codec.DecodingUtil;
 
 public class KerberosEncData {
 
@@ -47,9 +39,9 @@ public class KerberosEncData {
         }
 
         stream = new ASN1InputStream(new ByteArrayInputStream(derToken.getContents()));
-        DERSequence sequence;
+        ASN1Sequence sequence;
         try {
-            sequence = DecodingUtil.as(DERSequence.class, stream);
+            sequence = DecodingUtil.as(ASN1Sequence.class, stream);
             stream.close();
         } catch(IOException e) {
             throw new DecodingException("kerberos.ticket.malformed", null, e);

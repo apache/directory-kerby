@@ -10,13 +10,8 @@ import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.util.Enumeration;
 
-public abstract class AbstractSequenceType extends AbstractKrbType implements SequenceType {
-    public abstract KrbTag[] getTags();
-    protected KrbType[] fields;
-
-    public AbstractSequenceType() {
-        KrbTag[] tags = getTags();
-        this.fields = new KrbType[tags.length];
+public abstract class AbstractSequenceBase extends AbstractKrbType implements SequenceType {
+    public AbstractSequenceBase() {
     }
 
     @Override
@@ -30,6 +25,7 @@ public abstract class AbstractSequenceType extends AbstractKrbType implements Se
     }
 
     protected byte[] doEncoding() throws Exception {
+        /*
         ASN1EncodableVector v = new ASN1EncodableVector();
         KrbTag[] tags = getTags();
         Class<? extends KrbType> type;
@@ -47,8 +43,10 @@ public abstract class AbstractSequenceType extends AbstractKrbType implements Se
                 v.add(new DERTaggedObject(true, tag.getValue(), tmp));
             }
         }
-        DERSequence tmp = new DERSequence(v);
-        return tmp.getEncoded();
+        DERObject tmp = new DERSequence(v);
+        return tmp.getDEREncoded();
+        */
+        return null;
     }
 
     @Override
@@ -61,6 +59,7 @@ public abstract class AbstractSequenceType extends AbstractKrbType implements Se
     }
 
     protected void doDecoding(byte[] content) throws Exception {
+        /*
         ASN1InputStream stream = new ASN1InputStream(new ByteArrayInputStream(content));
         DERSequence sequence = null;
         sequence = DecodingUtil.as(DERSequence.class, stream);
@@ -92,8 +91,9 @@ public abstract class AbstractSequenceType extends AbstractKrbType implements Se
                 ((KrbOctetString) value).setValue(tmp.getOctets());
             }
         }
+        */
     }
-
+    /*
     protected <T extends KrbType> T getFieldAs(KrbTag tag, Class<T> t) throws KrbException {
         return getFieldAs(tag.getIndex(), t);
     }
@@ -111,4 +111,5 @@ public abstract class AbstractSequenceType extends AbstractKrbType implements Se
     protected void setField(int index, KrbType value) throws KrbException {
         fields[index] = value;
     }
+    */
 }

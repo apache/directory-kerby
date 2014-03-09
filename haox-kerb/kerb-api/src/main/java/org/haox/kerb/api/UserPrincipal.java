@@ -1,7 +1,7 @@
 /*
  * Created on 17 mai 2005 by jerome
  */
-package org.haox.kerb;
+package org.haox.kerb.api;
 
 import java.security.Principal;
 

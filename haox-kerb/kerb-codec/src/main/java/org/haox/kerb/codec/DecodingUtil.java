@@ -1,12 +1,9 @@
 package org.haox.kerb.codec;
 
+import org.bouncycastle.asn1.*;
+
 import java.io.IOException;
 import java.util.Enumeration;
-
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1TaggedObject;
-import org.bouncycastle.asn1.DERObject;
-import org.bouncycastle.asn1.DERSequence;
 
 public final class DecodingUtil {
 
@@ -45,19 +42,19 @@ public final class DecodingUtil {
         return as(type, enumeration.nextElement());
     }
 
-    public static <T extends DERObject> T as(Class<T> type, ASN1InputStream stream)
+    public static <T extends ASN1Object> T as(Class<T> type, ASN1InputStream stream)
             throws DecodingException, IOException {
 
         return as(type, stream.readObject());
     }
 
-    public static <T extends DERObject> T as(Class<T> type, ASN1TaggedObject tagged)
+    public static <T extends ASN1Object> T as(Class<T> type, ASN1TaggedObject tagged)
             throws DecodingException {
 
         return as(type, tagged.getObject());
     }
 
-    public static <T extends DERObject> T as(Class<T> type, DERSequence sequence, int index)
+    public static <T extends ASN1Object> T as(Class<T> type, ASN1Sequence sequence, int index)
             throws DecodingException {
 
         return as(type, sequence.getObjectAt(index));

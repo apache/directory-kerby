@@ -1,23 +1,14 @@
 package org.haox.kerb.codec.kerberos;
 
+import org.bouncycastle.asn1.*;
+import org.haox.kerb.codec.DecodingException;
+import org.haox.kerb.codec.DecodingUtil;
+
+import javax.security.auth.kerberos.KerberosKey;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Enumeration;
-
-import javax.security.auth.kerberos.KerberosKey;
-
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1TaggedObject;
-import org.bouncycastle.asn1.DERApplicationSpecific;
-import org.bouncycastle.asn1.DERBitString;
-import org.bouncycastle.asn1.DERInteger;
-import org.bouncycastle.asn1.DERSequence;
-import org.haox.kerb.codec.DecodingException;
-import org.haox.kerb.codec.DecodingUtil;
-import org.haox.kerb.codec.KrbCodec;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.ap.ApReq;
 
 public class KerberosApRequest {
 
@@ -27,16 +18,11 @@ public class KerberosApRequest {
     public KerberosApRequest(byte[] token, KerberosKey[] keys) throws DecodingException {
         if(token.length <= 0)
             throw new DecodingException("kerberos.request.empty", null, null);
-        try {
-            KrbCodec.decode(token, ApReq.class);
-        } catch (KrbException e) {
-            e.printStackTrace();
-        }
-/*
-        DERSequence sequence;
+
+        ASN1Sequence sequence;
         try {
             ASN1InputStream stream = new ASN1InputStream(new ByteArrayInputStream(token));
-            sequence = DecodingUtil.as(DERSequence.class, stream);
+            sequence = DecodingUtil.as(ASN1Sequence.class, stream);
             stream.close();
         } catch(IOException e) {
             throw new DecodingException("kerberos.ticket.malformed", null, e);
@@ -77,7 +63,6 @@ public class KerberosApRequest {
                 throw new DecodingException("kerberos.field.invalid", args, null);
             }
         }
-        */
     }
 
     public byte getApOptions() {

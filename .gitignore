@@ -2,3 +2,4 @@
 *.iml
 *.class
 target/
+.metadata/
