@@ -2,4 +2,8 @@
 *.iml
 *.class
 target/
+.settings/
 .metadata/
+*.classpath
+*.project
+bc.zip
