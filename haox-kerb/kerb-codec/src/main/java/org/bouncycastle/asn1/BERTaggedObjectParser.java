@@ -9,10 +9,10 @@ public class BERTaggedObjectParser
     private int _tagNumber;
     private ASN1StreamParser _parser;
 
-    BERTaggedObjectParser(
-        boolean             constructed,
-        int                 tagNumber,
-        ASN1StreamParser    parser)
+    public BERTaggedObjectParser(
+            boolean constructed,
+            int tagNumber,
+            ASN1StreamParser parser)
     {
         _constructed = constructed;
         _tagNumber = tagNumber;

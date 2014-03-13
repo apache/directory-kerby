@@ -378,7 +378,7 @@ public class DERObjectIdentifier
 
     private static ASN1ObjectIdentifier[][] cache = new ASN1ObjectIdentifier[256][];
 
-    static ASN1ObjectIdentifier fromOctetString(byte[] enc)
+    public static ASN1ObjectIdentifier fromOctetString(byte[] enc)
     {
         if (enc.length < 3)
         {

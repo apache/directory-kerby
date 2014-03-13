@@ -12,7 +12,7 @@ public class ASN1Exception
         super(message);
     }
 
-    ASN1Exception(String message, Throwable cause)
+    public ASN1Exception(String message, Throwable cause)
     {
         super(message);
         this.cause = cause;

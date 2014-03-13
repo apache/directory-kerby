@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
 
-class StreamUtil
+public class StreamUtil
 {
     private static final long  MAX_MEMORY = Runtime.getRuntime().maxMemory();
 
@@ -16,7 +16,7 @@ class StreamUtil
      * @param in input stream of interest
      * @return length calculation or MAX_VALUE.
      */
-    static int findLimit(InputStream in)
+    public static int findLimit(InputStream in)
     {
         if (in instanceof LimitedInputStream)
         {

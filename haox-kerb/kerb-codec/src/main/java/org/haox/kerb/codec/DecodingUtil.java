@@ -1,6 +1,7 @@
 package org.haox.kerb.codec;
 
 import org.bouncycastle.asn1.*;
+import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -42,7 +43,7 @@ public final class DecodingUtil {
         return as(type, enumeration.nextElement());
     }
 
-    public static <T extends ASN1Object> T as(Class<T> type, ASN1InputStream stream)
+    public static <T extends ASN1Object> T as(Class<T> type, HaoxASN1InputStream stream)
             throws DecodingException, IOException {
 
         return as(type, stream.readObject());

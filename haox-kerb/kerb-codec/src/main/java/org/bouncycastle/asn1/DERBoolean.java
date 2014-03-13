@@ -156,7 +156,7 @@ public class DERBoolean
       return (value[0] != 0) ? "TRUE" : "FALSE";
     }
 
-    static ASN1Boolean fromOctetString(byte[] value)
+    public static ASN1Boolean fromOctetString(byte[] value)
     {
         if (value.length != 1)
         {

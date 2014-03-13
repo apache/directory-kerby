@@ -93,7 +93,7 @@ public class ASN1StreamParser
         throw new RuntimeException("implicit tagging not implemented");
     }
 
-    ASN1Primitive readTaggedObject(boolean constructed, int tag) throws IOException
+    public ASN1Primitive readTaggedObject(boolean constructed, int tag) throws IOException
     {
         if (!constructed)
         {

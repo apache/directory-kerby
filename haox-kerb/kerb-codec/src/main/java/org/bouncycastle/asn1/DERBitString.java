@@ -289,7 +289,7 @@ public class DERBitString
         return new DERBitString(data, padBits);
     }
 
-    static DERBitString fromInputStream(int length, InputStream stream)
+    public static DERBitString fromInputStream(int length, InputStream stream)
         throws IOException
     {
         if (length < 1)

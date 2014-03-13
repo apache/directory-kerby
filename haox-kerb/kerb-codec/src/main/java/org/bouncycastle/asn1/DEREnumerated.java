@@ -140,7 +140,7 @@ public class DEREnumerated
 
     private static ASN1Enumerated[] cache = new ASN1Enumerated[12];
 
-    static ASN1Enumerated fromOctetString(byte[] enc)
+    public static ASN1Enumerated fromOctetString(byte[] enc)
     {
         if (enc.length > 1)
         {

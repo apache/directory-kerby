@@ -1,6 +1,7 @@
 package org.haox.kerb.spec.type.ticket;
 
 import org.haox.kerb.spec.KrbConstant;
+import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.*;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.PrincipalName;
@@ -14,6 +15,8 @@ import org.haox.kerb.spec.type.common.PrincipalName;
  }
  */
 public interface Ticket extends SequenceType {
+    public static final int TKT_KVNO = KrbConstant.KERBEROS_V5;
+
     public static enum Tag implements KrbTag {
         TKT_VNO(0, KrbInteger.class),
         REALM(1, KrbString.class),
@@ -44,19 +47,19 @@ public interface Ticket extends SequenceType {
         }
     };
 
-    public int getTktvno();
+    public int getTktvno() throws KrbException;
 
-    public String getSname();
+    public String getSname() throws KrbException;
 
-    public void setSname(String sname);
+    public void setSname(String sname) throws KrbException;
 
-    public String getRealm();
+    public String getRealm() throws KrbException;
 
-    public void setRealm(String realm);
+    public void setRealm(String realm) throws KrbException;
 
-    public EncryptedData getEncryptedEncPart();
+    public EncryptedData getEncryptedEncPart() throws KrbException;
 
-    public void setEncryptedEncPart(EncryptedData encryptedEncPart);
+    public void setEncryptedEncPart(EncryptedData encryptedEncPart) throws KrbException;
 
     public EncTicketPart getEncPart();
 

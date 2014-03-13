@@ -7,7 +7,7 @@ import org.bouncycastle.util.Arrays;
 public class ASN1Integer
     extends DERInteger
 {
-    ASN1Integer(byte[] bytes, boolean clone)
+    public ASN1Integer(byte[] bytes, boolean clone)
     {
         super(clone ? Arrays.clone(bytes) : bytes);
     }

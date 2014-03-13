@@ -12,6 +12,7 @@ import org.bouncycastle.asn1.DEREnumerated;
 import org.bouncycastle.asn1.DERObjectIdentifier;
 import org.haox.kerb.codec.DecodingException;
 import org.haox.kerb.codec.DecodingUtil;
+import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
 
 public class SpnegoTargToken extends SpnegoToken {
 
@@ -23,7 +24,7 @@ public class SpnegoTargToken extends SpnegoToken {
     private int result = UNSPECIFIED_RESULT;
 
     public SpnegoTargToken(byte[] token) throws DecodingException {
-        ASN1InputStream stream = new ASN1InputStream(new ByteArrayInputStream(token));
+        HaoxASN1InputStream stream = new HaoxASN1InputStream(new ByteArrayInputStream(token));
         ASN1TaggedObject tagged;
         try {
             tagged = DecodingUtil.as(ASN1TaggedObject.class, stream);

@@ -1,6 +1,7 @@
 package org.haox.kerb.spec;
 
 import org.haox.kerb.spec.type.*;
+import org.haox.kerb.spec.type.common.KrbTime;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -65,4 +66,11 @@ public class KrbTypes {
         value.setValue(octets);
         return value;
     }
+
+    public static KrbTime makeTime(int value) throws KrbException {
+        KrbTime result = KrbFactory.create(KrbTime.class);
+        result.setValue(value);
+        return result;
+    }
+
 }

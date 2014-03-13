@@ -1,9 +1,14 @@
 package org.haox.kerb.spec.type.ap.impl;
 
 import org.haox.kerb.codec.AbstractSequenceType;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.KrbTypes;
+import org.haox.kerb.spec.type.KrbInteger;
+import org.haox.kerb.spec.type.KrbString;
 import org.haox.kerb.spec.type.KrbTag;
 import org.haox.kerb.spec.type.ap.Authenticator;
 import org.haox.kerb.spec.type.common.*;
+import org.haox.kerb.spec.type.ticket.Ticket;
 
 /**
  Authenticator   ::= [APPLICATION 2] SEQUENCE  {
@@ -19,86 +24,87 @@ import org.haox.kerb.spec.type.common.*;
  }
  */
 public class AuthenticatorImpl extends AbstractSequenceType implements Authenticator {
-    private int authenticatorVno;
-    private String crealm;
-    private PrincipalName cname;
-    private Checksum cksum;
-    private int cusec;
-    private KrbTime ctime;
-    private EncryptionKey subKey;
-    private Integer seqNumber;
-    private AuthorizationData authorizationData;
-
-    public int getAuthenticatorVno() {
-        return authenticatorVno;
+    public int getAuthenticatorVno() throws KrbException {
+        KrbInteger value = getFieldAs(Tag.AUTHENTICATOR_VNO, KrbInteger.class);
+        if (value != null) {
+            return value.getValue().intValue();
+        }
+        return -1;
     }
 
-    public void setAuthenticatorVno(int authenticatorVno) {
-        this.authenticatorVno = authenticatorVno;
+    public void setAuthenticatorVno(int authenticatorVno) throws KrbException {
+        setField(Tag.AUTHENTICATOR_VNO, KrbTypes.makeInteger(authenticatorVno));
     }
 
-    public String getCrealm() {
-        return crealm;
+    public String getCrealm() throws KrbException {
+        KrbString value = getFieldAs(Tag.CREALM, KrbString.class);
+        if (value != null) {
+            return value.getValue();
+        }
+        return null;
     }
 
-    public void setCrealm(String crealm) {
-        this.crealm = crealm;
+    public void setCrealm(String crealm) throws KrbException {
+        setField(Tag.CREALM, KrbTypes.makeString(crealm));
     }
 
-    public PrincipalName getCname() {
-        return cname;
+    public PrincipalName getCname() throws KrbException {
+        return getFieldAs(Tag.CNAME, PrincipalName.class);
     }
 
-    public void setCname(PrincipalName cname) {
-        this.cname = cname;
+    public void setCname(PrincipalName cname) throws KrbException {
+        setField(Tag.CNAME, cname);
     }
 
-    public Checksum getCksum() {
-        return cksum;
+    public Checksum getCksum() throws KrbException {
+        return getFieldAs(Tag.CKSUM, Checksum.class);
     }
 
-    public void setCksum(Checksum cksum) {
-        this.cksum = cksum;
+    public void setCksum(Checksum cksum) throws KrbException {
+        setField(Tag.CKSUM, cksum);
     }
 
-    public int getCusec() {
-        return cusec;
+    public int getCusec() throws KrbException {
+        KrbInteger value = getFieldAs(Tag.CUSEC, KrbInteger.class);
+        return value.getValue().intValue();
     }
 
-    public void setCusec(int cusec) {
-        this.cusec = cusec;
+    public void setCusec(int cusec) throws KrbException {
+        setField(Tag.CUSEC, KrbTypes.makeInteger(cusec));
     }
 
-    public KrbTime getCtime() {
-        return ctime;
+    public KrbTime getCtime() throws KrbException {
+        KrbInteger value = getFieldAs(Tag.CTIME, KrbInteger.class);
+        return KrbTypes.makeTime(value.getValue().intValue());
     }
 
-    public void setCtime(KrbTime ctime) {
-        this.ctime = ctime;
+    public void setCtime(KrbTime ctime) throws KrbException {
+        setField(Tag.CTIME, ctime);
     }
 
-    public EncryptionKey getSubKey() {
-        return subKey;
+    public EncryptionKey getSubKey() throws KrbException {
+        return getFieldAs(Tag.SUBKEY, EncryptionKey.class);
     }
 
-    public void setSubKey(EncryptionKey subKey) {
-        this.subKey = subKey;
+    public void setSubKey(EncryptionKey subKey) throws KrbException {
+        setField(Tag.SUBKEY, subKey);
     }
 
-    public Integer getSeqNumber() {
-        return seqNumber;
+    public Integer getSeqNumber() throws KrbException {
+        KrbInteger value = getFieldAs(Tag.SEQ_NUMBER, KrbInteger.class);
+        return value.getValue().intValue();
     }
 
-    public void setSeqNumber(Integer seqNumber) {
-        this.seqNumber = seqNumber;
+    public void setSeqNumber(Integer seqNumber) throws KrbException {
+        setField(Tag.SEQ_NUMBER, KrbTypes.makeInteger(seqNumber));
     }
 
-    public AuthorizationData getAuthorizationData() {
-        return authorizationData;
+    public AuthorizationData getAuthorizationData() throws KrbException {
+        return getFieldAs(Tag.AUTHORIZATION_DATA, AuthorizationData.class);
     }
 
-    public void setAuthorizationData(AuthorizationData authorizationData) {
-        this.authorizationData = authorizationData;
+    public void setAuthorizationData(AuthorizationData authorizationData) throws KrbException {
+        setField(Tag.AUTHORIZATION_DATA, authorizationData);
     }
 
     @Override

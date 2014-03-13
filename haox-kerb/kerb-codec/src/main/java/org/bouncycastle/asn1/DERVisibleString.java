@@ -70,7 +70,7 @@ public class DERVisibleString
     /**
      * basic constructor - byte encoded string.
      */
-    DERVisibleString(
+    public DERVisibleString(
         byte[]   string)
     {
         this.string = string;

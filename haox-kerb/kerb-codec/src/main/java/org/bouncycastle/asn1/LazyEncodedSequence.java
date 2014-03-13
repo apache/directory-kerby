@@ -6,13 +6,13 @@ import java.util.Enumeration;
 /**
  * Note: this class is for processing DER/DL encoded sequences only.
  */
-class LazyEncodedSequence
+public class LazyEncodedSequence
     extends ASN1Sequence
 {
     private byte[] encoded;
 
-    LazyEncodedSequence(
-        byte[] encoded)
+    public LazyEncodedSequence(
+            byte[] encoded)
         throws IOException
     {
         this.encoded = encoded;

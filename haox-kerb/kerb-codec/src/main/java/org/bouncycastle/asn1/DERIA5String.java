@@ -70,7 +70,7 @@ public class DERIA5String
     /**
      * basic constructor - with bytes.
      */
-    DERIA5String(
+    public DERIA5String(
         byte[]   string)
     {
         this.string = string;

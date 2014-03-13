@@ -11,7 +11,7 @@ import java.util.List;
  name-string     [1] SEQUENCE OF KerberosString
  }
  */
-public interface PrincipalName extends KrbType {
+public interface PrincipalName extends SequenceType {
     public static final String TGS_DEFAULT_SRV_NAME = "krbtgt";
     public static final int TGS_DEFAULT_NT = 2;
     public static final char NAME_COMPONENT_SEPARATOR = '/';

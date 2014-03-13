@@ -73,7 +73,7 @@ public class DERUTF8String
     /**
      * basic constructor - byte encoded string.
      */
-    DERUTF8String(byte[] string)
+    public DERUTF8String(byte[] string)
     {
         this.string = string;
     }

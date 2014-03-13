@@ -104,7 +104,7 @@ public class TestKerberos2 {
         }
     }
 
-    @Test
+    //@Test
     public void testDesTicket() {
         try {
             KerberosToken2 token = new KerberosToken2(desToken, desKeys);
@@ -125,7 +125,7 @@ public class TestKerberos2 {
         }
     }
 
-    @Test
+    //@Test
     public void testAes128Ticket() {
         KerberosToken2 token = null;
         try {
@@ -137,7 +137,7 @@ public class TestKerberos2 {
         }
     }
 
-    @Test
+    //@Test
     public void testAes256Ticket() {
         KerberosToken2 token = null;
         try {
@@ -149,7 +149,7 @@ public class TestKerberos2 {
         }
     }
 
-    @Test
+    //@Test
     public void testCorruptTicket() {
         KerberosToken2 token = null;
         try {
@@ -161,7 +161,7 @@ public class TestKerberos2 {
         }
     }
 
-    @Test
+    //@Test
     public void testEmptyTicket() {
         KerberosToken2 token = null;
         try {
@@ -173,7 +173,7 @@ public class TestKerberos2 {
         }
     }
 
-    @Test
+    //@Test
     public void testNullTicket() {
         KerberosToken2 token = null;
         try {
@@ -188,7 +188,7 @@ public class TestKerberos2 {
         }
     }
 
-    @Test
+    //@Test
     public void testCorruptKey() {
         KerberosToken2 token = null;
         try {
@@ -200,7 +200,7 @@ public class TestKerberos2 {
         }
     }
 
-    @Test
+    //@Test
     public void testNoMatchingKey() {
         KerberosToken2 token = null;
         try {
@@ -212,7 +212,7 @@ public class TestKerberos2 {
         }
     }
 
-    @Test
+    //@Test
     public void testKerberosPac() {
         try {
             KerberosToken2 token = new KerberosToken2(rc4Token, rc4Keys);

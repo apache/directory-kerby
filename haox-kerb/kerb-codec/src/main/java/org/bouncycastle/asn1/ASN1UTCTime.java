@@ -5,7 +5,7 @@ import java.util.Date;
 public class ASN1UTCTime
     extends DERUTCTime
 {
-    ASN1UTCTime(byte[] bytes)
+    public ASN1UTCTime(byte[] bytes)
     {
         super(bytes);
     }

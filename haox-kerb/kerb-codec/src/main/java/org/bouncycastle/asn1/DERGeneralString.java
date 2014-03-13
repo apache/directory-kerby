@@ -51,7 +51,7 @@ public class DERGeneralString
         }
     }
 
-    DERGeneralString(byte[] string)
+    public DERGeneralString(byte[] string)
     {
         this.string = string;
     }

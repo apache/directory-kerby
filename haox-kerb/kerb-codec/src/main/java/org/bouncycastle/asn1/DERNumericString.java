@@ -70,7 +70,7 @@ public class DERNumericString
     /**
      * basic constructor - with bytes.
      */
-    DERNumericString(
+    public DERNumericString(
         byte[]   string)
     {
         this.string = string;

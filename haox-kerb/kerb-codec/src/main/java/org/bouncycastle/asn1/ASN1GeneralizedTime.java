@@ -5,7 +5,7 @@ import java.util.Date;
 public class ASN1GeneralizedTime
     extends DERGeneralizedTime
 {
-    ASN1GeneralizedTime(byte[] bytes)
+    public ASN1GeneralizedTime(byte[] bytes)
     {
         super(bytes);
     }

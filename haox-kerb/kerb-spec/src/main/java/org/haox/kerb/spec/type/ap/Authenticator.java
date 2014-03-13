@@ -1,5 +1,6 @@
 package org.haox.kerb.spec.type.ap;
 
+import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.*;
 import org.haox.kerb.spec.type.common.*;
 
@@ -52,39 +53,39 @@ public interface Authenticator extends SequenceType {
         }
     };
 
-    public int getAuthenticatorVno();
+    public int getAuthenticatorVno() throws KrbException;
 
-    public void setAuthenticatorVno(int authenticatorVno);
+    public void setAuthenticatorVno(int authenticatorVno) throws KrbException;
 
-    public String getCrealm();
+    public String getCrealm() throws KrbException;
 
-    public void setCrealm(String crealm);
+    public void setCrealm(String crealm) throws KrbException;
 
-    public PrincipalName getCname();
+    public PrincipalName getCname() throws KrbException;
 
-    public void setCname(PrincipalName cname);
+    public void setCname(PrincipalName cname) throws KrbException;
 
-    public Checksum getCksum();
+    public Checksum getCksum() throws KrbException;
 
-    public void setCksum(Checksum cksum);
+    public void setCksum(Checksum cksum) throws KrbException;
 
-    public int getCusec();
+    public int getCusec() throws KrbException;
 
-    public void setCusec(int cusec);
+    public void setCusec(int cusec) throws KrbException;
 
-    public KrbTime getCtime();
+    public KrbTime getCtime() throws KrbException;
 
-    public void setCtime(KrbTime ctime);
+    public void setCtime(KrbTime ctime) throws KrbException;
 
-    public EncryptionKey getSubKey();
+    public EncryptionKey getSubKey() throws KrbException;
 
-    public void setSubKey(EncryptionKey subKey);
+    public void setSubKey(EncryptionKey subKey) throws KrbException;
 
-    public Integer getSeqNumber();
+    public Integer getSeqNumber() throws KrbException;
 
-    public void setSeqNumber(Integer seqNumber);
+    public void setSeqNumber(Integer seqNumber) throws KrbException;
 
-    public AuthorizationData getAuthorizationData();
+    public AuthorizationData getAuthorizationData() throws KrbException;
 
-    public void setAuthorizationData(AuthorizationData authorizationData);
+    public void setAuthorizationData(AuthorizationData authorizationData) throws KrbException;
 }

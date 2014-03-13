@@ -15,7 +15,7 @@ public class DERApplicationSpecific
     private final int       tag;
     private final byte[]    octets;
 
-    DERApplicationSpecific(
+    public DERApplicationSpecific(
         boolean isConstructed,
         int     tag,
         byte[]  octets)
