@@ -1,8 +1,8 @@
 package org.haox.kerb.codec;
 
 import org.bouncycastle.asn1.*;
+import org.haox.kerb.codec.encoding.ByteBufferASN1Object;
 import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
-import org.haox.kerb.codec.encoding.HaoxLazyEncodedSequence;
 import org.haox.kerb.spec.KrbCodecMessageCode;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.KrbThrow;
@@ -10,7 +10,6 @@ import org.haox.kerb.spec.type.*;
 import org.haox.kerb.spec.type.common.KrbFlags;
 import org.haox.kerb.spec.type.common.KrbTime;
 
-import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.util.Enumeration;
 
@@ -65,10 +64,9 @@ public abstract class AbstractSequenceType extends AbstractKrbType implements Se
     }
 
     protected void doDecoding(byte[] content) throws Exception {
-        HaoxASN1InputStream stream = new HaoxASN1InputStream(new ByteArrayInputStream(content));
+        HaoxASN1InputStream stream = new HaoxASN1InputStream(content);
         DLSequence sequence = null;
         sequence = DecodingUtil.as(DLSequence.class, stream);
-        stream.close();
 
         KrbTag[] tags = getTags();
         Enumeration<?> seqFields = sequence.getObjects();
@@ -100,19 +98,23 @@ public abstract class AbstractSequenceType extends AbstractKrbType implements Se
                 DEROctetString tmp = DecodingUtil.as(DEROctetString.class, tagged);
                 ((KrbOctetString) value).setValue(tmp.getOctets());
             } else if (SequenceType.class.isAssignableFrom(type)) {
-                byte[] tmp = null;
+                ByteBufferASN1Object tmp = null;
                 ASN1Object obj = tagged.getObject();
-                if (obj instanceof DERApplicationSpecific) {
-                    tmp = ((DERApplicationSpecific) obj).getContents();
-                } else if (obj instanceof HaoxLazyEncodedSequence) {
-                    tmp = ((HaoxLazyEncodedSequence) obj).getContent();
+                if (obj instanceof ByteBufferASN1Object) {
+                    tmp = (ByteBufferASN1Object) obj;
                 }
                 if (tmp != null) {
-                    ((AbstractSequenceType) value).decode(tmp);
+                    ((AbstractSequenceType) value).decode(tmp.toByteArray());
                 }
             } else if (SequenceOfType.class.isAssignableFrom(type)) {
-                HaoxLazyEncodedSequence tmp = DecodingUtil.as(HaoxLazyEncodedSequence.class, tagged);
-                ((AbstractSequenceOfType) value).decode(tmp.getContent());
+                ByteBufferASN1Object tmp = null;
+                ASN1Object obj = tagged.getObject();
+                if (obj instanceof ByteBufferASN1Object) {
+                    tmp = (ByteBufferASN1Object) obj;
+                }
+                if (tmp != null) {
+                    ((AbstractSequenceOfType) value).decode(tmp.toByteArray());
+                }
             }
         }
     }

@@ -80,7 +80,7 @@ public class LazyEncodedSequence
         return super.toDLObject();
     }
 
-    int encodedLength()
+    protected int encodedLength()
         throws IOException
     {
         if (encoded != null)
@@ -93,8 +93,8 @@ public class LazyEncodedSequence
         }
     }
 
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         if (encoded != null)

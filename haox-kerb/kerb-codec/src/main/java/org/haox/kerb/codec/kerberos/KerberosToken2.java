@@ -6,6 +6,7 @@ import org.bouncycastle.asn1.DERObjectIdentifier;
 import org.haox.kerb.codec.DecodingException;
 import org.haox.kerb.codec.DecodingUtil;
 import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
+import org.haox.kerb.codec.encoding.HaoxDERApplicationSpecific;
 
 import javax.security.auth.kerberos.KerberosKey;
 import java.io.ByteArrayInputStream;
@@ -25,13 +26,12 @@ public class KerberosToken2 {
             throw new DecodingException("kerberos.token.empty", null, null);
 
         try {
-            HaoxASN1InputStream stream = new HaoxASN1InputStream(new ByteArrayInputStream(token));
-            DERApplicationSpecific derToken = DecodingUtil.as(DERApplicationSpecific.class, stream);
+            HaoxASN1InputStream stream = new HaoxASN1InputStream(token);
+            HaoxDERApplicationSpecific derToken = DecodingUtil.as(HaoxDERApplicationSpecific.class, stream);
             if(derToken == null || !derToken.isConstructed())
                 throw new DecodingException("kerberos.token.malformed", null, null);
-            stream.close();
 
-            stream = new HaoxASN1InputStream(new ByteArrayInputStream(derToken.getContents()));
+            stream = new HaoxASN1InputStream(derToken.getByteBuffer(), derToken.getLimit());
             DERObjectIdentifier kerberosOid = DecodingUtil.as(DERObjectIdentifier.class, stream);
             if(!kerberosOid.getId().equals(KerberosConstants.KERBEROS_OID))
                 throw new DecodingException("kerberos.token.invalid", null, null);
@@ -46,8 +46,6 @@ public class KerberosToken2 {
             DERApplicationSpecific krbToken = DecodingUtil.as(DERApplicationSpecific.class, stream);
             if(krbToken == null || !krbToken.isConstructed())
                 throw new DecodingException("kerberos.token.malformed", null, null);
-
-            stream.close();
 
             apRequest = new KerberosApRequest2(krbToken.getContents(), keys);
         } catch(IOException e) {

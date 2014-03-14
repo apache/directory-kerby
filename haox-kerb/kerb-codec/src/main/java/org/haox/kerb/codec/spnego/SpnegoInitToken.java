@@ -14,6 +14,7 @@ import org.bouncycastle.asn1.DERObjectIdentifier;
 import org.haox.kerb.codec.DecodingException;
 import org.haox.kerb.codec.DecodingUtil;
 import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
+import org.haox.kerb.codec.encoding.HaoxDERApplicationSpecific;
 
 public class SpnegoInitToken extends SpnegoToken {
 
@@ -30,13 +31,13 @@ public class SpnegoInitToken extends SpnegoToken {
 
     public SpnegoInitToken(byte[] token) throws DecodingException {
         try {
-            HaoxASN1InputStream stream = new HaoxASN1InputStream(new ByteArrayInputStream(token));
-            DERApplicationSpecific constructed = DecodingUtil.as(DERApplicationSpecific.class,
+            HaoxASN1InputStream stream = new HaoxASN1InputStream(token);
+            HaoxDERApplicationSpecific constructed = DecodingUtil.as(HaoxDERApplicationSpecific.class,
                     stream);
             if(constructed == null || !constructed.isConstructed())
                 throw new DecodingException("spnego.token.malformed", null, null);
 
-            stream = new HaoxASN1InputStream(new ByteArrayInputStream(constructed.getContents()));
+            stream = new HaoxASN1InputStream(constructed.getByteBuffer(), constructed.getLimit());
             DERObjectIdentifier spnegoOid = DecodingUtil.as(DERObjectIdentifier.class, stream);
             if(!spnegoOid.getId().equals(SpnegoConstants.SPNEGO_OID))
                 throw new DecodingException("spnego.token.invalid", null, null);

@@ -1,18 +1,15 @@
 package org.haox.kerb.codec.encoding;
 
-import org.bouncycastle.asn1.LazyEncodedSequence;
+import org.bouncycastle.asn1.ASN1OutputStream;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.AbstractASN1Primitive;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
-public class HaoxLazyEncodedSequence extends LazyEncodedSequence {
-    private byte[] content;
-
-    public HaoxLazyEncodedSequence(byte[] encoded) throws IOException {
-        super(encoded);
-        this.content = encoded;
-    }
-
-    public byte[] getContent() {
-        return content;
+public class HaoxLazyEncodedSequence extends ByteBufferASN1Object
+{
+    public HaoxLazyEncodedSequence(ByteBuffer byteBuffer, int limit) {
+        super(byteBuffer, limit);
     }
 }
