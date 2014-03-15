@@ -1,7 +1,9 @@
 package org.haox.kerb.codec.encoding;
 
 import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.util.ASN1Dump;
 
+import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -10,6 +12,8 @@ public class HaoxASN1InputStream implements BERTags
 {
     private ByteBuffer byteBuffer;
     private final int limit; // number of bytes that can be read from byteBuffer
+    private final int offset;
+
     private int tag;
     private int tagNo;
     private int length;
@@ -28,13 +32,13 @@ public class HaoxASN1InputStream implements BERTags
     public HaoxASN1InputStream(ByteBuffer buffer, int limit) {
         byteBuffer = buffer;
         this.limit = limit;
+        this.offset = buffer.position();
     }
 
-    protected void readLength() throws IOException {
-        this.length = readLength(byteBuffer, limit);
-    }
-
-    public byte read() {
+    public byte readByte() throws IOException {
+        if (!available()) {
+            throw new IOException("Buffer EOF");
+        }
         return byteBuffer.get();
     }
 
@@ -42,7 +46,19 @@ public class HaoxASN1InputStream implements BERTags
         return doReadObject(false);
     }
 
-    public ASN1Primitive doReadObject(boolean lazyLoad) throws IOException {
+    public boolean available() {
+        return byteBuffer.hasRemaining() &&
+                byteBuffer.position() - offset < limit;
+    }
+
+    private ASN1Primitive doReadObject(boolean lazyLoad) throws IOException {
+        if (! available()) {
+            return null;
+        }
+
+        System.out.println("Reading object ...");
+        //asn1Dump(fromByteBuffer(byteBuffer.duplicate(), limit), false);
+
         if (lazyLoad) byteBuffer.mark();
 
         readTag();
@@ -59,14 +75,15 @@ public class HaoxASN1InputStream implements BERTags
         } catch (IllegalArgumentException e) {
             throw new IOException("corrupted stream detected", e);
         } finally {
-            byteBuffer.position(byteBuffer.position() + length);
+            int newPos = byteBuffer.position() + length;
+            byteBuffer.position(newPos);
         }
     }
 
     /**
      * build an object given its tag and the number of bytes to construct it from.
      */
-    protected ASN1Primitive buildObject(boolean lazyLoad) throws IOException {
+    private ASN1Primitive buildObject(boolean lazyLoad) throws IOException {
         if ((tag & APPLICATION) != 0) {
             return new HaoxDERApplicationSpecific(isConstructed, tagNo, byteBuffer.duplicate(), length);
         }
@@ -77,7 +94,6 @@ public class HaoxASN1InputStream implements BERTags
         }
 
         if (isConstructed) {
-            // TODO There are other tags that may be constructed (e.g. BIT_STRING)
             switch (tagNo) {
                 case OCTET_STRING:
                     // yes, people actually do this...
@@ -113,22 +129,24 @@ public class HaoxASN1InputStream implements BERTags
         return createPrimitiveDERObject(tagNo, byteBuffer.duplicate(), length);
     }
 
-    ASN1EncodableVector buildEncodableVector()
-            throws IOException
-    {
-        ASN1EncodableVector v = new ASN1EncodableVector();
-        ASN1Primitive o;
+    public ASN1EncodableVector buildEncodableVector() throws IOException {
+        ASN1EncodableVector result = new ASN1EncodableVector();
 
-        while ((o = readObject()) != null)
-        {
-            v.add(o);
+        if (available()) {
+            System.out.println("Building sequence vector ...");
+            asn1Dump(fromByteBuffer(byteBuffer.duplicate(), limit), false);
         }
 
-        return v;
+        ASN1Primitive o;
+        while ((o = readObject()) != null) {
+            result.add(o);
+        }
+
+        return result;
     }
 
     ASN1EncodableVector buildDEREncodableVector() throws IOException {
-        return new HaoxASN1InputStream(byteBuffer, length).buildEncodableVector();
+        return new HaoxASN1InputStream(byteBuffer.duplicate(), length).buildEncodableVector();
     }
 
     protected static char[] getBMPCharBuffer(ByteBuffer byteBuffer, int limit) throws IOException {
@@ -151,7 +169,7 @@ public class HaoxASN1InputStream implements BERTags
     }
 
     private void readTag() throws IOException {
-        tag = byteBuffer.get();
+        tag = readByte() & 0xff;
         if (tag <= 0) {
             if (tag == 0) {
                 throw new IOException("unexpected end-of-contents marker");
@@ -166,7 +184,7 @@ public class HaoxASN1InputStream implements BERTags
         if (tagNo == 0x1f) {
             tagNo = 0;
 
-            int b = byteBuffer.get();
+            int b = readByte() & 0xff;
 
             // X.690-0207 8.1.2.4.2
             // "c) bits 7 to 1 of the first subsequent octet shall not all be zero."
@@ -177,7 +195,7 @@ public class HaoxASN1InputStream implements BERTags
             while ((b >= 0) && ((b & 0x80) != 0)) {
                 tagNo |= (b & 0x7f);
                 tagNo <<= 7;
-                b = byteBuffer.get();
+                b = readByte();
             }
 
             if (b < 0) {
@@ -188,15 +206,14 @@ public class HaoxASN1InputStream implements BERTags
         }
     }
 
-    public static int readLength(ByteBuffer buffer, int limit) throws IOException {
-        byte b = buffer.get();
-        int length = b & 0xff;
+    private void readLength() throws IOException {
+        length = readByte() & 0xff;
         if (length < 0) {
             throw new EOFException("EOF found when length expected");
         }
 
         if (length == 0x80) {
-            return -1;      // indefinite-length encoding
+            length = -1;      // indefinite-length encoding
         }
 
         if (length > 127) {
@@ -209,7 +226,7 @@ public class HaoxASN1InputStream implements BERTags
 
             length = 0;
             for (int i = 0; i < size; i++) {
-                int next = buffer.get();
+                int next = readByte() & 0xff;
 
                 if (next < 0) {
                     throw new EOFException("EOF found reading length");
@@ -225,8 +242,6 @@ public class HaoxASN1InputStream implements BERTags
                 throw new IOException("corrupted stream - out of bounds length found");
             }
         }
-
-        return length;
     }
 
     public static byte[] fromByteBuffer(ByteBuffer byteBuffer, int limit) {
@@ -238,7 +253,7 @@ public class HaoxASN1InputStream implements BERTags
     private static ASN1Primitive createPrimitiveDERObject(int tagNo, ByteBuffer byteBuffer, int limit) throws IOException {
         switch (tagNo) {
             case BIT_STRING:
-                return DERBitString.fromByteArray(fromByteBuffer(byteBuffer, limit));
+                return DERBitString.fromInputStream(limit, new ByteArrayInputStream(fromByteBuffer(byteBuffer, limit)));
             case BMP_STRING:
                 return new DERBMPString(new String(getBMPCharBuffer(byteBuffer, limit)));
             case BOOLEAN:
@@ -278,7 +293,7 @@ public class HaoxASN1InputStream implements BERTags
         }
     }
 
-   private ASN1Primitive readTaggedObject(boolean constructed, int tag) throws IOException {
+   private ASN1Primitive readTaggedObject(boolean constructed, int tagNo) throws IOException {
         if (!constructed) {
             // Note: !CONSTRUCTED => IMPLICIT
             throw new IOException("Implict not supported yet");
@@ -287,8 +302,8 @@ public class HaoxASN1InputStream implements BERTags
         ASN1EncodableVector v = readVector();
 
         return v.size() == 1
-                ?   new DERTaggedObject(true, tag, v.get(0))
-                :   new DERTaggedObject(false, tag, DERFactory.createSequence(v));
+                ?   new DERTaggedObject(true, tagNo, v.get(0))
+                :   new DERTaggedObject(false, tagNo, DERFactory.createSequence(v));
     }
 
     private ASN1EncodableVector readVector() throws IOException {
@@ -302,101 +317,11 @@ public class HaoxASN1InputStream implements BERTags
         return v;
     }
 
-    /*
-    public ASN1Encodable parser_readObject()
-            throws IOException
-    {
-        int tag = read();
-        if (tag == -1)
-        {
-            return null;
+    public static void asn1Dump(byte[] content, boolean verbose) throws IOException {
+        ASN1InputStream ais = new ASN1InputStream(content, true);
+        ASN1Object obj;
+        while (null != (obj = ais.readObject())) {
+            System.out.println(ASN1Dump.dumpAsString(obj, true));
         }
-
-        //
-        // calculate tag number
-        //
-        int tagNo = readTagNumber(this, tag);
-
-        boolean isConstructed = (tag & BERTags.CONSTRUCTED) != 0;
-
-        //
-        // calculate length
-        //
-        int length = readLength(this, limit);
-
-        if (length < 0) // indefinite length method
-        {
-            if (!isConstructed)
-            {
-                throw new IOException("indefinite length primitive encoding encountered");
-            }
-
-            IndefiniteLengthInputStream indIn = new IndefiniteLengthInputStream(_in, _limit);
-            ASN1StreamParser sp = new ASN1StreamParser(indIn, _limit);
-
-            if ((tag & BERTags.APPLICATION) != 0)
-            {
-                return new BERApplicationSpecificParser(tagNo, sp);
-            }
-
-            if ((tag & BERTags.TAGGED) != 0)
-            {
-                return new BERTaggedObjectParser(true, tagNo, sp);
-            }
-
-            return sp.readIndef(tagNo);
-        }
-        else
-        {
-            org.bouncycastle.asn1.DefiniteLengthInputStream defIn = new org.bouncycastle.asn1.DefiniteLengthInputStream(_in, length);
-
-            if ((tag & BERTags.APPLICATION) != 0)
-            {
-                return new DERApplicationSpecific(isConstructed, tagNo, defIn.toByteArray());
-            }
-
-            if ((tag & BERTags.TAGGED) != 0)
-            {
-                return new BERTaggedObjectParser(isConstructed, tagNo, new ASN1StreamParser(defIn));
-            }
-
-            if (isConstructed)
-            {
-                // TODO There are other tags that may be constructed (e.g. BIT_STRING)
-                switch (tagNo)
-                {
-                    case BERTags.OCTET_STRING:
-                        //
-                        // yes, people actually do this...
-                        //
-                        return new BEROctetStringParser(new ASN1StreamParser(defIn));
-                    case BERTags.SEQUENCE:
-                        return new DERSequenceParser(new ASN1StreamParser(defIn));
-                    case BERTags.SET:
-                        return new DERSetParser(new ASN1StreamParser(defIn));
-                    case BERTags.EXTERNAL:
-                        return new DERExternalParser(new ASN1StreamParser(defIn));
-                    default:
-                        throw new IOException("unknown tag " + tagNo + " encountered");
-                }
-            }
-
-            // Some primitive encodings can be handled by parsers too...
-            switch (tagNo)
-            {
-                case BERTags.OCTET_STRING:
-                    return new DEROctetStringParser(defIn);
-            }
-
-            try
-            {
-                return ASN1InputStream.createPrimitiveDERObject(tagNo, defIn, tmpBuffers);
-            }
-            catch (IllegalArgumentException e)
-            {
-                throw new ASN1Exception("corrupted stream detected", e);
-            }
-        }
-    } */
-
+    }
 }

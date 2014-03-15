@@ -246,8 +246,8 @@ public abstract class ASN1Sequence
         return hashCode;
     }
 
-    boolean asn1Equals(
-        ASN1Primitive o)
+    protected boolean asn1Equals(
+            ASN1Primitive o)
     {
         if (!(o instanceof ASN1Sequence))
         {
@@ -313,7 +313,7 @@ public abstract class ASN1Sequence
         return true;
     }
 
-    abstract void encode(ASN1OutputStream out)
+    protected abstract void encode(ASN1OutputStream out)
         throws IOException;
 
     public String toString() 

@@ -40,7 +40,7 @@ public class BERSequence
         super(array);
     }
 
-    int encodedLength()
+    protected int encodedLength()
         throws IOException
     {
         int length = 0;
@@ -54,8 +54,8 @@ public class BERSequence
 
     /*
      */
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         out.write(BERTags.SEQUENCE | BERTags.CONSTRUCTED);

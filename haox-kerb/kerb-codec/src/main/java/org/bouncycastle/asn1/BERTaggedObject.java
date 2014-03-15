@@ -66,7 +66,7 @@ public class BERTaggedObject
         }
     }
 
-    int encodedLength()
+    protected int encodedLength()
         throws IOException
     {
         if (!empty)
@@ -92,8 +92,8 @@ public class BERTaggedObject
         }
     }
 
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         out.writeTag(BERTags.CONSTRUCTED | BERTags.TAGGED, tagNo);

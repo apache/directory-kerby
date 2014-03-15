@@ -120,7 +120,7 @@ public class DERExternal
         return true;
     }
 
-    int encodedLength()
+    protected int encodedLength()
         throws IOException
     {
         return this.getEncoded().length;
@@ -129,7 +129,7 @@ public class DERExternal
     /* (non-Javadoc)
      * @see org.bouncycastle.asn1.ASN1Primitive#encode(org.bouncycastle.asn1.DEROutputStream)
      */
-    void encode(ASN1OutputStream out)
+    protected void encode(ASN1OutputStream out)
         throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -153,7 +153,7 @@ public class DERExternal
     /* (non-Javadoc)
      * @see org.bouncycastle.asn1.ASN1Primitive#asn1Equals(org.bouncycastle.asn1.ASN1Primitive)
      */
-    boolean asn1Equals(ASN1Primitive o)
+    protected boolean asn1Equals(ASN1Primitive o)
     {
         if (!(o instanceof DERExternal))
         {

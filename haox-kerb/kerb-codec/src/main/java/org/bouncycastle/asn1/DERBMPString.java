@@ -130,13 +130,13 @@ public class DERBMPString
         return false;
     }
 
-    int encodedLength()
+    protected int encodedLength()
     {
         return 1 + StreamUtil.calculateBodyLength(string.length * 2) + (string.length * 2);
     }
 
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         out.write(BERTags.BMP_STRING);

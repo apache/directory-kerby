@@ -51,7 +51,7 @@ public class DERTaggedObject
         }
     }
 
-    int encodedLength()
+    protected int encodedLength()
         throws IOException
     {
         if (!empty)
@@ -77,8 +77,8 @@ public class DERTaggedObject
         }
     }
 
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         if (!empty)

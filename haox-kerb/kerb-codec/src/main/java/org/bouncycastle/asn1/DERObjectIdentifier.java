@@ -285,7 +285,7 @@ public class DERObjectIdentifier
         return false;
     }
 
-    int encodedLength()
+    protected int encodedLength()
         throws IOException
     {
         int length = getBody().length;
@@ -293,8 +293,8 @@ public class DERObjectIdentifier
         return 1 + StreamUtil.calculateBodyLength(length) + length;
     }
 
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         byte[] enc = getBody();
@@ -309,8 +309,8 @@ public class DERObjectIdentifier
         return identifier.hashCode();
     }
 
-    boolean asn1Equals(
-        ASN1Primitive o)
+    protected boolean asn1Equals(
+            ASN1Primitive o)
     {
         if (!(o instanceof DERObjectIdentifier))
         {

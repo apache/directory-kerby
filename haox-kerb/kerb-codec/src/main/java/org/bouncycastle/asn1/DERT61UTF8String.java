@@ -111,13 +111,13 @@ public class DERT61UTF8String
         return false;
     }
 
-    int encodedLength()
+    protected int encodedLength()
     {
         return 1 + StreamUtil.calculateBodyLength(string.length) + string.length;
     }
 
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         out.writeEncoded(BERTags.T61_STRING, string);
@@ -133,8 +133,8 @@ public class DERT61UTF8String
         return Arrays.clone(string);
     }
 
-    boolean asn1Equals(
-        ASN1Primitive o)
+    protected boolean asn1Equals(
+            ASN1Primitive o)
     {
         if (!(o instanceof DERT61UTF8String))
         {

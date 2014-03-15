@@ -24,13 +24,13 @@ public class DERNull
         return false;
     }
 
-    int encodedLength()
+    protected int encodedLength()
     {
         return 2;
     }
 
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         out.writeEncoded(BERTags.NULL, zeroBytes);

@@ -292,19 +292,13 @@ public class ASN1Dump
 
         if (app.isConstructed())
         {
-            try
-            {
+            buf.append(indent + type + " ApplicationSpecific[" + app.getApplicationTag() + "]" + nl);
+                /* has issue?
                 ASN1Sequence s = ASN1Sequence.getInstance(app.getObject(BERTags.SEQUENCE));
-                buf.append(indent + type + " ApplicationSpecific[" + app.getApplicationTag() + "]" + nl);
                 for (Enumeration e = s.getObjects(); e.hasMoreElements();)
                 {
                     _dumpAsString(indent + TAB, verbose, (ASN1Primitive)e.nextElement(), buf);
-                }
-            }
-            catch (IOException e)
-            {
-                buf.append(e);
-            }
+                }*/
             return buf.toString();
         }
 

@@ -120,13 +120,13 @@ public class DERPrintableString
         return false;
     }
 
-    int encodedLength()
+    protected int encodedLength()
     {
         return 1 + StreamUtil.calculateBodyLength(string.length) + string.length;
     }
 
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         out.writeEncoded(BERTags.PRINTABLE_STRING, string);
@@ -137,8 +137,8 @@ public class DERPrintableString
         return Arrays.hashCode(string);
     }
 
-    boolean asn1Equals(
-        ASN1Primitive o)
+    protected boolean asn1Equals(
+            ASN1Primitive o)
     {
         if (!(o instanceof DERPrintableString))
         {

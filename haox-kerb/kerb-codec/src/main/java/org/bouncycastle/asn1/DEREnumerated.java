@@ -108,20 +108,20 @@ public class DEREnumerated
         return false;
     }
 
-    int encodedLength()
+    protected int encodedLength()
     {
         return 1 + StreamUtil.calculateBodyLength(bytes.length) + bytes.length;
     }
 
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         out.writeEncoded(BERTags.ENUMERATED, bytes);
     }
     
-    boolean asn1Equals(
-        ASN1Primitive  o)
+    protected boolean asn1Equals(
+            ASN1Primitive o)
     {
         if (!(o instanceof DEREnumerated))
         {

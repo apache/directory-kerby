@@ -62,7 +62,7 @@ public class DERSequence
         return bodyLength;
     }
 
-    int encodedLength()
+    protected int encodedLength()
         throws IOException
     {
         int length = getBodyLength();
@@ -78,8 +78,8 @@ public class DERSequence
      * ASN.1 descriptions given. Rather than just outputting SEQUENCE,
      * we also have to specify CONSTRUCTED, and the objects length.
      */
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         ASN1OutputStream        dOut = out.getDERSubStream();

@@ -93,8 +93,8 @@ public abstract class ASN1TaggedObject
         }
     }
     
-    boolean asn1Equals(
-        ASN1Primitive o)
+    protected boolean asn1Equals(
+            ASN1Primitive o)
     {
         if (!(o instanceof ASN1TaggedObject))
         {
@@ -226,7 +226,7 @@ public abstract class ASN1TaggedObject
         return new DLTaggedObject(explicit, tagNo, obj);
     }
 
-    abstract void encode(ASN1OutputStream out)
+    protected abstract void encode(ASN1OutputStream out)
         throws IOException;
 
     public String toString()

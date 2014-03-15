@@ -117,18 +117,18 @@ public class DERBoolean
         return (value[0] != 0);
     }
 
-    boolean isConstructed()
+    public boolean isConstructed()
     {
         return false;
     }
 
-    int encodedLength()
+    protected int encodedLength()
     {
         return 3;
     }
 
-    void encode(
-        ASN1OutputStream out)
+    protected void encode(
+            ASN1OutputStream out)
         throws IOException
     {
         out.writeEncoded(BERTags.BOOLEAN, value);

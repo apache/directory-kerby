@@ -108,8 +108,8 @@ public abstract class ASN1OctetString
         return Arrays.hashCode(this.getOctets());
     }
 
-    boolean asn1Equals(
-        ASN1Primitive o)
+    protected boolean asn1Equals(
+            ASN1Primitive o)
     {
         if (!(o instanceof ASN1OctetString))
         {
@@ -136,7 +136,7 @@ public abstract class ASN1OctetString
         return new DEROctetString(string);
     }
 
-    abstract void encode(ASN1OutputStream out)
+    protected abstract void encode(ASN1OutputStream out)
         throws IOException;
 
     public String toString()

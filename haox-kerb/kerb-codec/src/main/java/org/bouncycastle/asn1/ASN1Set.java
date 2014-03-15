@@ -313,8 +313,8 @@ abstract public class ASN1Set
         return derSet;
     }
 
-    boolean asn1Equals(
-        ASN1Primitive o)
+    protected boolean asn1Equals(
+            ASN1Primitive o)
     {
         if (!(o instanceof ASN1Set))
         {
@@ -450,7 +450,7 @@ abstract public class ASN1Set
         return true;
     }
 
-    abstract void encode(ASN1OutputStream out)
+    protected abstract void encode(ASN1OutputStream out)
             throws IOException;
 
     public String toString() 

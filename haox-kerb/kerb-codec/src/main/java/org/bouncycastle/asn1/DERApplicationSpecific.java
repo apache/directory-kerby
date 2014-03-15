@@ -194,7 +194,7 @@ public class DERApplicationSpecific
         return new ASN1InputStream(tmp).readObject();
     }
 
-    int encodedLength()
+    protected int encodedLength()
         throws IOException
     {
         return StreamUtil.calculateTagLength(tag) + StreamUtil.calculateBodyLength(octets.length) + octets.length;
@@ -203,7 +203,7 @@ public class DERApplicationSpecific
     /* (non-Javadoc)
      * @see org.bouncycastle.asn1.ASN1Primitive#encode(org.bouncycastle.asn1.DEROutputStream)
      */
-    void encode(ASN1OutputStream out) throws IOException
+    protected void encode(ASN1OutputStream out) throws IOException
     {
         int classBits = BERTags.APPLICATION;
         if (isConstructed)
@@ -214,8 +214,8 @@ public class DERApplicationSpecific
         out.writeEncoded(classBits, tag, octets);
     }
     
-    boolean asn1Equals(
-        ASN1Primitive o)
+    protected boolean asn1Equals(
+            ASN1Primitive o)
     {
         if (!(o instanceof DERApplicationSpecific))
         {

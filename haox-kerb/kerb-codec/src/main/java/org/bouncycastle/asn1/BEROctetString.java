@@ -120,7 +120,7 @@ public class BEROctetString
         return true;
     }
 
-    int encodedLength()
+    protected int encodedLength()
         throws IOException
     {
         int length = 0;

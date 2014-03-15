@@ -5,7 +5,7 @@ import java.io.IOException;
 public abstract class ASN1Primitive
     extends ASN1Object
 {
-    ASN1Primitive()
+    protected ASN1Primitive()
     {
 
     }

@@ -1,6 +1,7 @@
 package org.haox.kerb.codec;
 
 import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.util.ASN1Dump;
 import org.haox.kerb.codec.encoding.ByteBufferASN1Object;
 import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
 import org.haox.kerb.spec.KrbCodecMessageCode;
@@ -10,6 +11,7 @@ import org.haox.kerb.spec.type.*;
 import org.haox.kerb.spec.type.common.KrbFlags;
 import org.haox.kerb.spec.type.common.KrbTime;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Enumeration;
 
@@ -64,9 +66,16 @@ public abstract class AbstractSequenceType extends AbstractKrbType implements Se
     }
 
     protected void doDecoding(byte[] content) throws Exception {
+        System.out.println("Start decoding for " + this.getClass().getSimpleName());
+        System.out.println("The content follows:");
+        HaoxASN1InputStream.asn1Dump(content, true);
+
         HaoxASN1InputStream stream = new HaoxASN1InputStream(content);
-        DLSequence sequence = null;
-        sequence = DecodingUtil.as(DLSequence.class, stream);
+        ASN1Primitive asn1Obj = stream.readObject();
+        if (asn1Obj == null) {
+            KrbThrow.out(KrbCodecMessageCode.DECODING_FAILED);
+        }
+        DLSequence sequence = (DLSequence) asn1Obj;
 
         KrbTag[] tags = getTags();
         Enumeration<?> seqFields = sequence.getObjects();
