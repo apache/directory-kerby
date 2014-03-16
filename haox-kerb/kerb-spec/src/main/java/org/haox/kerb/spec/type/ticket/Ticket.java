@@ -49,9 +49,9 @@ public interface Ticket extends SequenceType {
 
     public int getTktvno() throws KrbException;
 
-    public String getSname() throws KrbException;
+    public PrincipalName getSname() throws KrbException;
 
-    public void setSname(String sname) throws KrbException;
+    public void setSname(PrincipalName sname) throws KrbException;
 
     public String getRealm() throws KrbException;
 

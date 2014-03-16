@@ -4,8 +4,8 @@ import org.haox.kerb.spec.KrbException;
 
 import java.util.List;
 
-public interface KrbStrings extends KrbType {
-    public void addValue(String value) throws KrbException;
+public interface KrbStrings extends SequenceOfType {
+    public static Class<? extends KrbType> ElementType = KrbString.class;
 
     public List<String> getValues();
 

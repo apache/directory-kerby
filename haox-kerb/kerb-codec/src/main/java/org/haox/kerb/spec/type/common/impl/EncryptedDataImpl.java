@@ -10,12 +10,12 @@ import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
 public class EncryptedDataImpl extends AbstractSequenceType implements EncryptedData {
-    public EncryptionType geteType() throws KrbException {
+    public EncryptionType getEType() throws KrbException {
         KrbInteger value = getFieldAs(Tag.ETYPE, KrbInteger.class);
         return EncryptionType.fromValue(value);
     }
 
-    public void seteType(EncryptionType eType) throws KrbException {
+    public void setEType(EncryptionType eType) throws KrbException {
         setField(Tag.ETYPE, KrbTypes.makeInteger(eType));
     }
 

@@ -33,7 +33,7 @@ public class KrbTypes {
             } catch (ClassNotFoundException e) { }
         }
         if (impl == null) {
-            KrbThrow.out(KrbTypeMessageCode.NO_IMPL_FOUND);
+            KrbThrow.out(KrbTypeMessageCode.NO_IMPL_FOUND, "for interface " + inf.getCanonicalName());
         }
 
         return impl;

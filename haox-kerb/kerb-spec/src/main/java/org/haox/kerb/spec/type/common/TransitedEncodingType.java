@@ -1,6 +1,9 @@
 package org.haox.kerb.spec.type.common;
 
-public enum TransitedEncodingType {
+import org.haox.kerb.spec.type.KrbEnum;
+import org.haox.kerb.spec.type.KrbInteger;
+
+public enum TransitedEncodingType implements KrbEnum {
     UNKNOWN(-1),
     NULL(0),
     DOMAIN_X500_COMPRESS(1);
@@ -9,5 +12,22 @@ public enum TransitedEncodingType {
 
     private TransitedEncodingType(int value) {
         this.value = value;
+    }
+
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+    public static TransitedEncodingType fromValue(KrbInteger value) {
+        if (value != null) {
+            for (KrbEnum e : values()) {
+                if (e.getValue() == value.getValue().intValue()) {
+                    return (TransitedEncodingType) e;
+                }
+            }
+        }
+
+        return NULL;
     }
 }

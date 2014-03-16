@@ -1,116 +1,106 @@
 package org.haox.kerb.spec.type.ticket;
 
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.*;
 import org.haox.kerb.spec.type.common.*;
 
-public class EncTicketPart {
-    /** the ticket's flags */
-    private TicketFlags flags;
-    /** the encryption key */
-    private EncryptionKey key;
-    /** the client's realm */
-    private String crealm;
-    /** client's principal */
-    private PrincipalName cname;
-    /** field containing list of transited realm names */
-    private TransitedEncoding transited;
-    /** time of initial authentication */
-    private KrbTime authTime;
-    /** time after which ticket is valid */
-    private KrbTime startTime;
-    /** ticket's expiry time */
-    private KrbTime endTime;
-    /** the maximum endtime that may be included in a renewal */
-    private KrbTime renewtill;
-    /** the addresses from which this ticket can be used */
-    private HostAddresses clientAddresses;
-    /** the authorization data */
-    private AuthorizationData authorizationData;
+/**
+ -- Encrypted part of ticket
+ EncTicketPart   ::= [APPLICATION 3] SEQUENCE {
+ flags                   [0] TicketFlags,
+ key                     [1] EncryptionKey,
+ crealm                  [2] Realm,
+ cname                   [3] PrincipalName,
+ transited               [4] TransitedEncoding,
+ authtime                [5] KerberosTime,
+ starttime               [6] KerberosTime OPTIONAL,
+ endtime                 [7] KerberosTime,
+ renew-till              [8] KerberosTime OPTIONAL,
+ caddr                   [9] HostAddresses OPTIONAL,
+ authorization-data      [10] AuthorizationData OPTIONAL
+ }
+ */
+public interface EncTicketPart extends SequenceType {
+    public static enum Tag implements KrbTag {
+        FLAGS(0, TicketFlags.class),
+        KEY(1, EncryptionKey.class),
+        CREALM(2, KrbString.class),
+        CNAME(3, PrincipalName.class),
+        TRANSITED(4, TransitedEncoding.class),
+        AUTHTIME(5, KrbTime.class),
+        STARTTIME(6, KrbTime.class),
+        ENDTIME(7, KrbTime.class),
+        RENEW_TILL(8, KrbTime.class),
+        CADDR(9, HostAddresses.class),
+        AUTHORIZATION_DATA(10, AuthorizationData.class);
 
-    public TicketFlags getFlags() {
-        return flags;
-    }
+        private int value;
+        private Class<? extends KrbType> type;
 
-    public void setFlags(TicketFlags flags) {
-        this.flags = flags;
-    }
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
 
-    public EncryptionKey getKey() {
-        return key;
-    }
+        @Override
+        public int getValue() {
+            return value;
+        }
 
-    public void setKey(EncryptionKey key) {
-        this.key = key;
-    }
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
 
-    public String getCrealm() {
-        return crealm;
-    }
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
 
-    public void setCrealm(String crealm) {
-        this.crealm = crealm;
-    }
 
-    public PrincipalName getCname() {
-        return cname;
-    }
 
-    public void setCname(PrincipalName cname) {
-        this.cname = cname;
-    }
+    public TicketFlags getFlags() throws KrbException;
 
-    public TransitedEncoding getTransited() {
-        return transited;
-    }
+    public void setFlags(TicketFlags flags) throws KrbException;
 
-    public void setTransited(TransitedEncoding transited) {
-        this.transited = transited;
-    }
+    public EncryptionKey getKey() throws KrbException;
 
-    public KrbTime getAuthTime() {
-        return authTime;
-    }
+    public void setKey(EncryptionKey key) throws KrbException;
 
-    public void setAuthTime(KrbTime authTime) {
-        this.authTime = authTime;
-    }
+    public String getCrealm() throws KrbException;
 
-    public KrbTime getStartTime() {
-        return startTime;
-    }
+    public void setCrealm(String crealm) throws KrbException;
 
-    public void setStartTime(KrbTime startTime) {
-        this.startTime = startTime;
-    }
+    public PrincipalName getCname() throws KrbException;
 
-    public KrbTime getEndTime() {
-        return endTime;
-    }
+    public void setCname(PrincipalName cname) throws KrbException;
 
-    public void setEndTime(KrbTime endTime) {
-        this.endTime = endTime;
-    }
+    public TransitedEncoding getTransited() throws KrbException;
 
-    public KrbTime getRenewtill() {
-        return renewtill;
-    }
+    public void setTransited(TransitedEncoding transited) throws KrbException;
 
-    public void setRenewtill(KrbTime renewtill) {
-        this.renewtill = renewtill;
-    }
+    public KrbTime getAuthTime() throws KrbException;
 
-    public HostAddresses getClientAddresses() {
-        return clientAddresses;
-    }
+    public void setAuthTime(KrbTime authTime) throws KrbException;
 
-    public void setClientAddresses(HostAddresses clientAddresses) {
-        this.clientAddresses = clientAddresses;
-    }
+    public KrbTime getStartTime() throws KrbException;
 
-    public AuthorizationData getAuthorizationData() {
-        return authorizationData;
-    }
+    public void setStartTime(KrbTime startTime) throws KrbException;
 
-    public void setAuthorizationData(AuthorizationData authorizationData) {
-        this.authorizationData = authorizationData;
-    }
+    public KrbTime getEndTime() throws KrbException;
+
+    public void setEndTime(KrbTime endTime) throws KrbException;
+
+    public KrbTime getRenewtill() throws KrbException;
+
+    public void setRenewtill(KrbTime renewtill) throws KrbException;
+
+    public HostAddresses getClientAddresses() throws KrbException;
+
+    public void setClientAddresses(HostAddresses clientAddresses) throws KrbException;
+
+    public AuthorizationData getAuthorizationData() throws KrbException;
+
+    public void setAuthorizationData(AuthorizationData authorizationData) throws KrbException;
 }

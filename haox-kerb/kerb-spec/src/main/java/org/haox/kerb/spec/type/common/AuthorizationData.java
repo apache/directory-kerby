@@ -1,5 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.kerb.spec.type.KrbType;
 import org.haox.kerb.spec.type.SequenceOfType;
 
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.List;
  }
  */
 public interface AuthorizationData extends SequenceOfType {
+    public static Class<? extends KrbType> ElementType =  AuthorizationDataEntry.class;
+
     public List<AuthorizationDataEntry> getEntries();
 
     public void setEntries(List<AuthorizationDataEntry> entries);

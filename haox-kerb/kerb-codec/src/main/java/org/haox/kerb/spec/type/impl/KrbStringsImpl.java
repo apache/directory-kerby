@@ -1,20 +1,16 @@
-package org.haox.kerb.spec.type;
+package org.haox.kerb.spec.type.impl;
 
 import org.haox.kerb.codec.AbstractSequenceOfType;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.KrbTypes;
+import org.haox.kerb.spec.type.KrbString;
+import org.haox.kerb.spec.type.KrbStrings;
+import org.haox.kerb.spec.type.KrbType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class KrbStringsImpl extends AbstractSequenceOfType implements KrbStrings {
-    public KrbStringsImpl() {
-        super(KrbString.class);
-    }
-
-    public void addValue(String value) throws KrbException {
-        this.addElement(KrbTypes.makeString(value));
-    }
 
     public List<String> getValues() {
         List<KrbString> values = this.getElementsAs(KrbString.class);
@@ -29,10 +25,16 @@ public class KrbStringsImpl extends AbstractSequenceOfType implements KrbStrings
     }
 
     public void setValues(List<String> values) throws KrbException {
+        elements.clear();
         if (values != null) {
             for (String value : values) {
-                this.addValue(value);
+                elements.add(KrbTypes.makeString(value));
             }
         }
+    }
+
+    @Override
+    public Class<? extends KrbType> getElementType() {
+        return ElementType;
     }
 }

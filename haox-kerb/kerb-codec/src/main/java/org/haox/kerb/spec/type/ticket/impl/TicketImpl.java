@@ -8,6 +8,7 @@ import org.haox.kerb.spec.type.KrbInteger;
 import org.haox.kerb.spec.type.KrbString;
 import org.haox.kerb.spec.type.KrbTag;
 import org.haox.kerb.spec.type.common.EncryptedData;
+import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
@@ -22,24 +23,16 @@ public class TicketImpl  extends AbstractSequenceType implements Ticket {
         return -1;
     }
 
-    public String getSname() throws KrbException {
-        KrbString value = getFieldAs(Tag.SNAME, KrbString.class);
-        if (value != null) {
-            return value.getValue();
-        }
-        return null;
+    public PrincipalName getSname() throws KrbException {
+        return getFieldAs(Tag.SNAME, PrincipalName.class);
     }
 
-    public void setSname(String sname) throws KrbException {
-        setField(Tag.SNAME, KrbTypes.makeString(sname));
+    public void setSname(PrincipalName sname) throws KrbException {
+        setField(Tag.SNAME, sname);
     }
 
     public String getRealm() throws KrbException {
-        KrbString value = getFieldAs(Tag.REALM, KrbString.class);
-        if (value != null) {
-            return value.getValue();
-        }
-        return null;
+        return getFieldAsString(Tag.REALM);
     }
 
     public void setRealm(String realm) throws KrbException {

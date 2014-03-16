@@ -1,12 +1,14 @@
 package org.haox.kerb.decoding;
 
 import org.haox.kerb.codec.DecodingException;
-import org.haox.kerb.codec.kerberos.KerberosAuthData;
 import org.haox.kerb.codec.kerberos.KerberosPacAuthData;
-import org.haox.kerb.codec.kerberos.KerberosTicket;
+import org.haox.kerb.codec.kerberos.KerberosTicket2;
 import org.haox.kerb.codec.kerberos.KerberosToken2;
 import org.haox.kerb.codec.pac.Pac;
 import org.haox.kerb.codec.pac.PacLogonInfo;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.AuthorizationData;
+import org.haox.kerb.spec.type.common.AuthorizationDataEntry;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,16 +86,15 @@ public class TestKerberos2 {
     }
 
     @Test
-    public void testRc4Ticket() {
+    public void testRc4Ticket() throws KrbException {
         try {
             KerberosToken2 token = new KerberosToken2(rc4Token, rc4Keys);
 
             Assert.assertNotNull(token);
             Assert.assertNotNull(token.getApRequest());
 
-            KerberosTicket ticket = token.getApRequest().getTicket();
+            KerberosTicket2 ticket = token.getApRequest().getTicket();
             Assert.assertNotNull(ticket);
-            Assert.assertEquals(ticket, token.getTicket());
             Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
             Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
             Assert.assertEquals("user.test", ticket.getUserPrincipalName());
@@ -105,16 +106,15 @@ public class TestKerberos2 {
     }
 
     //@Test
-    public void testDesTicket() {
+    public void testDesTicket() throws KrbException {
         try {
             KerberosToken2 token = new KerberosToken2(desToken, desKeys);
 
             Assert.assertNotNull(token);
             Assert.assertNotNull(token.getApRequest());
 
-            KerberosTicket ticket = token.getApRequest().getTicket();
+            KerberosTicket2 ticket = token.getApRequest().getTicket();
             Assert.assertNotNull(ticket);
-            Assert.assertEquals(ticket, token.getTicket());
             Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
             Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
             Assert.assertEquals("user.test@domain.com", ticket.getUserPrincipalName());
@@ -213,22 +213,22 @@ public class TestKerberos2 {
     }
 
     //@Test
-    public void testKerberosPac() {
+    public void testKerberosPac() throws KrbException {
         try {
             KerberosToken2 token = new KerberosToken2(rc4Token, rc4Keys);
 
             Assert.assertNotNull(token);
             Assert.assertNotNull(token.getApRequest());
 
-            KerberosTicket ticket = token.getApRequest().getTicket();
+            KerberosTicket2 ticket = token.getApRequest().getTicket();
             Assert.assertNotNull(ticket);
 
-            Assert.assertNotNull(ticket.getEncData());
-            Assert.assertNotNull(ticket.getEncData().getUserAuthorizations());
-            Assert.assertTrue(ticket.getEncData().getUserAuthorizations().size() > 0);
+            AuthorizationData authzData = ticket.getAuthorizationData();
+            Assert.assertNotNull(authzData);
+            Assert.assertTrue(authzData.getEntries().size() > 0);
 
             Pac pac = null;
-            for(KerberosAuthData authData : ticket.getEncData().getUserAuthorizations()) {
+            for(AuthorizationDataEntry authData : authzData.getEntries()) {
                 if(authData instanceof KerberosPacAuthData)
                     pac = ((KerberosPacAuthData)authData).getPac();
             }

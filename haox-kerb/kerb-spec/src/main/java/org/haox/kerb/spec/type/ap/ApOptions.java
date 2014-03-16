@@ -5,7 +5,7 @@ import org.haox.kerb.spec.type.common.KrbFlags;
 public class ApOptions extends KrbFlags {
 
     public ApOptions() {
-        setFlags(0);
+        this(0);
     }
 
     public ApOptions(int value) {

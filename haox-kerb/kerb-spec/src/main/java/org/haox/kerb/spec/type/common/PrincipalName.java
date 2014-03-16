@@ -58,4 +58,6 @@ public interface PrincipalName extends SequenceType {
     public void setNameStrings(List<String> nameStrings) throws KrbException;
 
     public String getNameRealm();
+
+    public String getName() throws KrbException;
 }

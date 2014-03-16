@@ -122,5 +122,4 @@ public enum AuthorizationType implements KrbEnum {
 
         return NULL;
     }
-
 }

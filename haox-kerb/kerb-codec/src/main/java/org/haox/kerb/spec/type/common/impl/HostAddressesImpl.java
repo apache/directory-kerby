@@ -4,18 +4,20 @@ import org.haox.kerb.codec.AbstractSequenceOfType;
 import org.haox.kerb.spec.type.KrbType;
 import org.haox.kerb.spec.type.common.AuthorizationData;
 import org.haox.kerb.spec.type.common.AuthorizationDataEntry;
+import org.haox.kerb.spec.type.common.HostAddress;
+import org.haox.kerb.spec.type.common.HostAddresses;
 
 import java.util.List;
 
-public class AuthorizationDataImpl extends AbstractSequenceOfType implements AuthorizationData {
+public class HostAddressesImpl extends AbstractSequenceOfType implements HostAddresses {
 
-    public List<AuthorizationDataEntry> getEntries() {
-        return this.getElementsAs(AuthorizationDataEntry.class);
+    public List<HostAddress> getAddresses() {
+        return this.getElementsAs(HostAddress.class);
     }
 
-    public void setEntries(List<AuthorizationDataEntry> entries) {
+    public void setAddresses(List<HostAddress> addresses) {
         elements.clear();
-        elements.addAll(entries);
+        elements.addAll(addresses);
     }
 
     @Override

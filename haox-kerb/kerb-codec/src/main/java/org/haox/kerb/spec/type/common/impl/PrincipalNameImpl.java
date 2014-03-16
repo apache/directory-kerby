@@ -30,8 +30,24 @@ public class PrincipalNameImpl extends AbstractSequenceType implements Principal
         setField(Tag.NAME_STRING, KrbTypes.makeStrings(nameStrings));
     }
 
+    @Override
     public String getNameRealm() {
         return null; //TODO: get realm from strings
+    }
+
+    @Override
+    public String getName() throws KrbException {
+        List<String> names = getNameStrings();
+        StringBuffer sb = new StringBuffer();
+        boolean isFirst = true;
+        for (String name : names) {
+            sb.append(name);
+            if (isFirst && names.size() > 1) {
+                sb.append("/");
+            }
+            isFirst = false;
+        }
+        return sb.toString();
     }
 
     @Override

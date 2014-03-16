@@ -8,6 +8,7 @@ import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.KrbFlags;
 import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.ticket.Ticket;
+import sun.security.krb5.internal.APOptions;
 
 /**
  AP-REQ          ::= [APPLICATION 14] SEQUENCE {
@@ -22,7 +23,7 @@ public interface ApReq extends KrbMessage {
     public static enum Tag implements KrbTag {
         PVNO(0, KrbInteger.class),
         MSG_TYPE(1, KrbInteger.class),
-        AP_OPTIONS(2, KrbFlags.class),
+        AP_OPTIONS(2, ApOptions.class),
         TICKET(3, Ticket.class),
         AUTHENTICATOR(4, Authenticator.class);
 

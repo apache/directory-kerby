@@ -9,12 +9,6 @@ import org.haox.kerb.spec.type.KrbTag;
 import org.haox.kerb.spec.type.common.AuthorizationDataEntry;
 import org.haox.kerb.spec.type.common.AuthorizationType;
 
-/**
- AuthorizationData       ::= SEQUENCE OF SEQUENCE {
- ad-type         [0] Int32,
- ad-data         [1] OCTET STRING
- }
- */
 public class AuthorizationDataEntryImpl extends AbstractSequenceType implements AuthorizationDataEntry {
     public AuthorizationType getAuthzType() throws KrbException {
         KrbInteger value = getFieldAs(Tag.AD_TYPE, KrbInteger.class);

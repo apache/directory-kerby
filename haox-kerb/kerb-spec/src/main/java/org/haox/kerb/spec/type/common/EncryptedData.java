@@ -39,9 +39,10 @@ public interface EncryptedData extends SequenceType {
             return type;
         }
     };
-    public EncryptionType geteType() throws KrbException;
 
-    public void seteType(EncryptionType eType) throws KrbException;
+    public EncryptionType getEType() throws KrbException;
+
+    public void setEType(EncryptionType eType) throws KrbException;
 
     public int getKvno() throws KrbException;
 

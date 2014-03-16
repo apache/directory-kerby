@@ -1,28 +1,48 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.*;
+
 /**
  TransitedEncoding       ::= SEQUENCE {
  tr-type         [0] Int32 -- must be registered --,
  contents        [1] OCTET STRING
  }
  */
-public class TransitedEncoding {
-    private TransitedEncodingType trType;
-    private byte[] contents;
+public interface TransitedEncoding extends SequenceType {
+    public static enum Tag implements KrbTag {
+        TR_TYPE(0, KrbInteger.class),
+        CONTENTS(1, KrbOctetString.class);
 
-    public TransitedEncodingType getTrType() {
-        return trType;
-    }
+        private int value;
+        private Class<? extends KrbType> type;
 
-    public void setTrType(TransitedEncodingType trType) {
-        this.trType = trType;
-    }
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
 
-    public byte[] getContents() {
-        return contents;
-    }
+        @Override
+        public int getValue() {
+            return value;
+        }
 
-    public void setContents(byte[] contents) {
-        this.contents = contents;
-    }
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
+
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
+
+    public TransitedEncodingType getTrType() throws KrbException;
+
+    public void setTrType(TransitedEncodingType trType) throws KrbException;
+
+    public byte[] getContents() throws KrbException;
+
+    public void setContents(byte[] contents) throws KrbException;
 }

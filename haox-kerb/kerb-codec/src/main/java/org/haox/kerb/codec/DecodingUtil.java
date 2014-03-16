@@ -30,7 +30,7 @@ public final class DecodingUtil {
     public static <T> T as(Class<T> type, Object object) throws DecodingException {
 
         if(!type.isInstance(object)) {
-            Object[] args = new Object[]{type, object.getClass()};
+            Object[] args = new Object[]{object.getClass(), type};
             throw new DecodingException("object.cast.fail", args, null);
         }
 

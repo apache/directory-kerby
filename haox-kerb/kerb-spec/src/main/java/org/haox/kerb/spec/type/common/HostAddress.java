@@ -1,22 +1,48 @@
 package org.haox.kerb.spec.type.common;
 
-public class HostAddress {
-    private HostAddrType addrType;
-    private byte[] address;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.*;
 
-    public HostAddrType getAddrType() {
-        return addrType;
-    }
+/*
+HostAddress     ::= SEQUENCE  {
+        addr-type       [0] Int32,
+        address         [1] OCTET STRING
+}
+ */
+public interface HostAddress extends SequenceType {
+    public static enum Tag implements KrbTag {
+        ADDR_TYPE(0, KrbInteger.class),
+        ADDRESS(1, KrbOctetString.class);
 
-    public void setAddrType(HostAddrType addrType) {
-        this.addrType = addrType;
-    }
+        private int value;
+        private Class<? extends KrbType> type;
 
-    public byte[] getAddress() {
-        return address;
-    }
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
 
-    public void setAddress(byte[] address) {
-        this.address = address;
-    }
+        @Override
+        public int getValue() {
+            return value;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
+
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
+
+    public HostAddrType getAddrType() throws KrbException;
+
+    public void setAddrType(HostAddrType addrType) throws KrbException;
+
+    public byte[] getAddress() throws KrbException;
+
+    public void setAddress(byte[] address) throws KrbException;
 }

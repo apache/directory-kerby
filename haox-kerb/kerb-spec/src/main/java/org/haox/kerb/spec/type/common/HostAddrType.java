@@ -1,6 +1,9 @@
 package org.haox.kerb.spec.type.common;
 
-public enum HostAddrType {
+import org.haox.kerb.spec.type.KrbEnum;
+import org.haox.kerb.spec.type.KrbInteger;
+
+public enum HostAddrType implements KrbEnum {
     /**
      * Constant for the "null" host address type.
      */
@@ -58,5 +61,22 @@ public enum HostAddrType {
 
     private HostAddrType(int value) {
         this.value = value;
+    }
+
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+    public static HostAddrType fromValue(KrbInteger value) {
+        if (value != null) {
+            for (KrbEnum e : values()) {
+                if (e.getValue() == value.getValue().intValue()) {
+                    return (HostAddrType) e;
+                }
+            }
+        }
+
+        return NULL;
     }
 }

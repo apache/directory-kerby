@@ -54,12 +54,7 @@ public class KerberosToken2 {
         }
     }
 
-    public KerberosTicket getTicket() {
-        return apRequest.getTicket();
-    }
-
     public KerberosApRequest2 getApRequest() {
         return apRequest;
     }
-
 }
