@@ -7,3 +7,4 @@ target/
 *.classpath
 *.project
 bc.zip
+log.txt

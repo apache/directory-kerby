@@ -13,11 +13,13 @@ public abstract class AbstractKrbType implements KrbType, KrbEncodable {
     public void decode(byte[] content)  throws KrbException {
         System.out.println("Start decoding for " + this.getClass().getSimpleName());
         System.out.println("The content follows:");
+
+        /*
         try {
             HaoxASN1InputStream.asn1Dump(content, true);
         } catch (IOException e) {
             KrbThrow.out(KrbCodecMessageCode.DECODING_FAILED, e);
-        }
+        }*/
 
         try {
             doDecoding(content);

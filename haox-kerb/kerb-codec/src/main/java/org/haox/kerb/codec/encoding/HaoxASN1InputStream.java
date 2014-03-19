@@ -129,24 +129,8 @@ public class HaoxASN1InputStream implements BERTags
         return createPrimitiveDERObject(tagNo, byteBuffer.duplicate(), length);
     }
 
-    public ASN1EncodableVector buildEncodableVector() throws IOException {
-        ASN1EncodableVector result = new ASN1EncodableVector();
-
-        if (available()) {
-            System.out.println("Building sequence vector ...");
-            asn1Dump(fromByteBuffer(byteBuffer.duplicate(), limit), false);
-        }
-
-        ASN1Primitive o;
-        while ((o = readObject()) != null) {
-            result.add(o);
-        }
-
-        return result;
-    }
-
     ASN1EncodableVector buildDEREncodableVector() throws IOException {
-        return new HaoxASN1InputStream(byteBuffer.duplicate(), length).buildEncodableVector();
+        return new HaoxASN1InputStream(byteBuffer.duplicate(), length).readVector();
     }
 
     protected static char[] getBMPCharBuffer(ByteBuffer byteBuffer, int limit) throws IOException {
