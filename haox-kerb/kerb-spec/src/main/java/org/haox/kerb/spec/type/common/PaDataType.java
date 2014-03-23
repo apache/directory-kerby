@@ -1,9 +1,12 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.kerb.spec.type.KrbEnum;
+import org.haox.kerb.spec.type.KrbInteger;
+
 /**
  * From krb5.h
  */
-public enum PaDataType {
+public enum PaDataType implements KrbEnum {
     NONE                (0),
     AP_REQ              (1),
     //TGS_REQ           (AP_REQ),
@@ -50,5 +53,22 @@ public enum PaDataType {
 
     private PaDataType(int value) {
         this.value = value;
+    }
+
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+    public static PaDataType fromValue(KrbInteger value) {
+        if (value != null) {
+            for (KrbEnum e : values()) {
+                if (e.getValue() == value.getValue().intValue()) {
+                    return (PaDataType) e;
+                }
+            }
+        }
+
+        return NONE;
     }
 }

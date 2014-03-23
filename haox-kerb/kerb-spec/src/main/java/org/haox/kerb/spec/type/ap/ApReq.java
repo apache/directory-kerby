@@ -5,10 +5,8 @@ import org.haox.kerb.spec.type.KrbInteger;
 import org.haox.kerb.spec.type.KrbTag;
 import org.haox.kerb.spec.type.KrbType;
 import org.haox.kerb.spec.type.common.EncryptedData;
-import org.haox.kerb.spec.type.common.KrbFlags;
 import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.ticket.Ticket;
-import sun.security.krb5.internal.APOptions;
 
 /**
  AP-REQ          ::= [APPLICATION 14] SEQUENCE {

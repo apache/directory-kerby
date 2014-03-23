@@ -2,7 +2,7 @@ package org.haox.kerb.spec.type.kdc;
 
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.KrbMessage;
-import org.haox.kerb.spec.type.common.PaData;
+import org.haox.kerb.spec.type.common.PaDataEntry;
 import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
@@ -23,9 +23,9 @@ import java.util.List;
  }
  */
 public interface KdcRep extends KrbMessage {
-    public List<PaData> getPaData();
+    public List<PaDataEntry> getPaData();
 
-    public void setPaData(List<PaData> paData);
+    public void setPaData(List<PaDataEntry> paData);
 
     public String getCrealm();
 

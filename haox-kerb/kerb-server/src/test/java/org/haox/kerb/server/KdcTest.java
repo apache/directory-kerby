@@ -10,14 +10,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.security.auth.kerberos.KerberosPrincipal;
-import javax.security.auth.kerberos.KerberosTicket;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.apache.directory.shared.kerberos.codec.types.EncryptionType.*;
-import static org.apache.directory.shared.kerberos.codec.types.EncryptionType.RC4_HMAC;
 
 public class KdcTest {
     private static Set<EncryptionType> DEFAULT_ENCRYPTION_TYPES;
@@ -64,6 +60,6 @@ public class KdcTest {
 
     @After
     public void tearDown() throws Exception {
-        kdcServer.start();
+        kdcServer.stop();
     }
 }

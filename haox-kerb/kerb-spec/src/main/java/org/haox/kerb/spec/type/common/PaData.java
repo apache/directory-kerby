@@ -1,5 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.kerb.spec.type.KrbType;
+import org.haox.kerb.spec.type.SequenceOfType;
+
+import java.util.List;
+
 /**
  PA-DATA         ::= SEQUENCE {
  -- NOTE: first tag is [1], not [0]
@@ -7,23 +12,10 @@ package org.haox.kerb.spec.type.common;
  padata-value    [2] OCTET STRING -- might be encoded AP-REQ
  }
  */
-public class PaData {
-    private PaDataType paDataType;
-    private byte[] paDataValue;
+public interface PaData extends SequenceOfType {
+    public static Class<? extends KrbType> ElementType =  PaDataEntry.class;
 
-    public PaDataType getPaDataType() {
-        return paDataType;
-    }
+    public List<PaDataEntry> getEntries();
 
-    public void setPaDataType(PaDataType paDataType) {
-        this.paDataType = paDataType;
-    }
-
-    public byte[] getPaDataValue() {
-        return paDataValue;
-    }
-
-    public void setPaDataValue(byte[] paDataValue) {
-        this.paDataValue = paDataValue;
-    }
+    public void setEntries(List<PaDataEntry> entries);
 }

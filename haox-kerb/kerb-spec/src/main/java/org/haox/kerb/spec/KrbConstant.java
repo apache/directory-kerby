@@ -209,7 +209,7 @@ public interface KrbConstant {
 /** LastRequest tags */
     public final static int LAST_REQ_LR_TYPE_TAG = 0xA0;
     public final static int LAST_REQ_LR_VALUE_TAG = 0xA1;
-/** PaData tags */
+/** PaDataEntry tags */
     public final static int PADATA_TYPE_TAG = 0xA1;
     public final static int PADATA_VALUE_TAG = 0xA2;
 /** PA-ENC-TS-ENC tags */

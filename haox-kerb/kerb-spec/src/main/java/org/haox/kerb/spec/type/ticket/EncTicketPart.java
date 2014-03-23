@@ -58,8 +58,6 @@ public interface EncTicketPart extends SequenceType {
         }
     };
 
-
-
     public TicketFlags getFlags() throws KrbException;
 
     public void setFlags(TicketFlags flags) throws KrbException;

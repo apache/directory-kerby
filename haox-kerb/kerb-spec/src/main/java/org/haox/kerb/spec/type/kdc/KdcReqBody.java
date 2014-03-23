@@ -1,9 +1,10 @@
 package org.haox.kerb.spec.type.kdc;
 
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.*;
 import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.ticket.Ticket;
+import org.haox.kerb.spec.type.ticket.Tickets;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,113 +29,94 @@ import java.util.Set;
  -- NOTE: not empty
  }
  */
-public class KdcReqBody {
-    private KdcOptions kdcOptions;
-    private PrincipalName cname;
-    private String realm;
-    private PrincipalName sname;
-    private KrbTime from;
-    private KrbTime till;
-    private KrbTime rtime;
-    private int nonce;
-    private Set<EncryptionType> etype;
-    private HostAddresses addresses;
-    private EncryptedData encAuthorizationData;
-    private List<Ticket> additionalTickets;
+public interface KdcReqBody extends SequenceType {
+    public static enum Tag implements KrbTag {
+        KDC_OPTIONS(0, KdcOptions.class),
+        CNAME(1, PrincipalName.class),
+        REALM(2, KrbString.class),
+        SNAME(3, PrincipalName.class),
+        FROM(4, KrbTime.class),
+        TILL(5, KrbTime.class),
+        RTIME(6, KrbTime.class),
+        NONCE(7, KrbInteger.class),
+        ETYPE(8, KrbIntegers.class),
+        ADDRESSES(9, HostAddresses.class),
+        ENC_AUTHORIZATION_DATA(10, AuthorizationData.class),
+        ADDITIONAL_TICKETS(11, Tickets.class);
 
-    public KdcOptions getKdcOptions() {
-        return kdcOptions;
-    }
+        private int value;
+        private Class<? extends KrbType> type;
 
-    public void setKdcOptions(KdcOptions kdcOptions) {
-        this.kdcOptions = kdcOptions;
-    }
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
 
-    public PrincipalName getCname() {
-        return cname;
-    }
+        @Override
+        public int getValue() {
+            return value;
+        }
 
-    public void setCname(PrincipalName cname) {
-        this.cname = cname;
-    }
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
 
-    public String getRealm() {
-        return realm;
-    }
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
 
-    public void setRealm(String realm) {
-        this.realm = realm;
-    }
+    public KdcOptions getKdcOptions() throws KrbException;
 
-    public PrincipalName getSname() {
-        return sname;
-    }
+    public void setKdcOptions(KdcOptions kdcOptions) throws KrbException;
 
-    public void setSname(PrincipalName sname) {
-        this.sname = sname;
-    }
+    public PrincipalName getCname() throws KrbException;
 
-    public KrbTime getFrom() {
-        return from;
-    }
+    public void setCname(PrincipalName cname) throws KrbException;
 
-    public void setFrom(KrbTime from) {
-        this.from = from;
-    }
+    public String getRealm() throws KrbException;
 
-    public KrbTime getTill() {
-        return till;
-    }
+    public void setRealm(String realm) throws KrbException;
 
-    public void setTill(KrbTime till) {
-        this.till = till;
-    }
+    public PrincipalName getSname() throws KrbException;
 
-    public KrbTime getRtime() {
-        return rtime;
-    }
+    public void setSname(PrincipalName sname) throws KrbException;
 
-    public void setRtime(KrbTime rtime) {
-        this.rtime = rtime;
-    }
+    public KrbTime getFrom() throws KrbException;
 
-    public int getNonce() {
-        return nonce;
-    }
+    public void setFrom(KrbTime from) throws KrbException;
 
-    public void setNonce(int nonce) {
-        this.nonce = nonce;
-    }
+    public KrbTime getTill() throws KrbException;
 
-    public Set<EncryptionType> getEtype() {
-        return etype;
-    }
+    public void setTill(KrbTime till) throws KrbException;
 
-    public void setEtype(Set<EncryptionType> etype) {
-        this.etype = etype;
-    }
+    public KrbTime getRtime() throws KrbException;
 
-    public HostAddresses getAddresses() {
-        return addresses;
-    }
+    public void setRtime(KrbTime rtime) throws KrbException;
 
-    public void setAddresses(HostAddresses addresses) {
-        this.addresses = addresses;
-    }
+    public int getNonce();
 
-    public EncryptedData getEncAuthorizationData() {
-        return encAuthorizationData;
-    }
+    public void setNonce(int nonce);
 
-    public void setEncAuthorizationData(EncryptedData encAuthorizationData) {
-        this.encAuthorizationData = encAuthorizationData;
-    }
+    public Set<EncryptionType> getEtype();
 
-    public List<Ticket> getAdditionalTickets() {
-        return additionalTickets;
-    }
+    public void setEtype(Set<EncryptionType> etype);
 
-    public void setAdditionalTickets(List<Ticket> additionalTickets) {
-        this.additionalTickets = additionalTickets;
-    }
+    public HostAddresses getAddresses();
+
+    public void setAddresses(HostAddresses addresses);
+
+    public EncryptedData getEncryptedAuthorizationData() throws KrbException;
+
+    public void setEncryptedAuthorizationData(EncryptedData encAuthorizationData) throws KrbException;
+
+    public AuthorizationData getAuthorizationData();
+
+    public void setAuthorizationData(AuthorizationData encAuthorizationData);
+
+    public Tickets getAdditionalTickets() throws KrbException;
+
+    public void setAdditionalTickets(Tickets additionalTickets) throws KrbException;
 }
