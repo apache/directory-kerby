@@ -65,17 +65,26 @@ public abstract class AbstractSequenceType extends AbstractSequenceBase implemen
         }
         DLSequence sequence = (DLSequence) asn1Obj;
 
-        KrbTag[] tags = getTags();
         Enumeration<?> seqFields = sequence.getObjects();
         ASN1TaggedObject tagged = null;
         while(seqFields.hasMoreElements()) {
             tagged = (ASN1TaggedObject) seqFields.nextElement();
 
-            KrbTag tag = tags[tagged.getTagNo()];
+            KrbTag tag = getTag(tagged.getTagNo());
             Class<? extends KrbType> type = tag.getType();
             KrbType value = convertAsn1ObjectAs(type, tagged.getObject());
             fields[tag.getIndex()] = value;
         }
+    }
+
+    protected KrbTag getTag(int tagNo) {
+        KrbTag[] tags = getTags();
+        for (KrbTag tag : tags) {
+            if (tag.getValue() == tagNo) {
+                return tag;
+            }
+        }
+        return null;
     }
 
     protected <T extends KrbType> T getFieldAs(KrbTag tag, Class<T> t) throws KrbException {

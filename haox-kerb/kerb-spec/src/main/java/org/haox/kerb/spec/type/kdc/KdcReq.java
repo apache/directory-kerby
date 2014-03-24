@@ -42,7 +42,7 @@ public interface KdcReq extends KrbMessage {
 
         @Override
         public int getIndex() {
-            return ordinal() - 1;
+            return value - 1;
         }
 
         @Override

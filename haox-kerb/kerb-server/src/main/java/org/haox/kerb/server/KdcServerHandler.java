@@ -24,7 +24,10 @@ public class KdcServerHandler extends SimpleChannelInboundHandler<Object> {
         logger.log(Level.INFO, "message received, msg:" + msg.toString());
 
         ByteBuf byteBuf = (ByteBuf) msg;
-        byte[] buffer = null;
+        int len = byteBuf.readInt();
+        byte[] buffer = new byte[len];
+        byteBuf.readBytes(buffer);
+        /*
         ByteBuffer byteBuffer = null;
         if (byteBuf.hasArray()) {
             buffer = byteBuf.array();
@@ -41,7 +44,7 @@ public class KdcServerHandler extends SimpleChannelInboundHandler<Object> {
                 buffer = new byte[byteBuffer.remaining()];
                 byteBuffer.get(buffer);
             }
-        }
+        } */
 
         AsReq asReq = null;
         try {
