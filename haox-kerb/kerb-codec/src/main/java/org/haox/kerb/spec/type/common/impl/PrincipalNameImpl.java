@@ -47,6 +47,13 @@ public class PrincipalNameImpl extends AbstractSequenceType implements Principal
             }
             isFirst = false;
         }
+
+        String realm = getNameRealm();
+        if (realm != null && !realm.isEmpty()) {
+            sb.append("@");
+            sb.append(realm);
+        }
+
         return sb.toString();
     }
 

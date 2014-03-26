@@ -137,7 +137,7 @@ public abstract class ECCurve
      * by subsequent multiplication.
      * 
      * @param point
-     *            The <code>ECPoint</code> to store precomputations for.
+     *            The <code>ECPoint</code> to identity precomputations for.
      * @param name
      *            A <code>String</code> used to index precomputations of different types.
      * @param preCompInfo

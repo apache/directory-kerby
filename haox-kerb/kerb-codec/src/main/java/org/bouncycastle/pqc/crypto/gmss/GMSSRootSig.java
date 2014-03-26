@@ -611,7 +611,7 @@ public class GMSSRootSig
     }
 
     /**
-     * Converts the long parameters into byte arrays to store it in
+     * Converts the long parameters into byte arrays to identity it in
      * statByte-Array
      */
     public byte[] getStatLong()

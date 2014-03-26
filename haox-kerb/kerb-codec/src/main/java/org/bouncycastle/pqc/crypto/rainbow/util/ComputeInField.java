@@ -50,7 +50,7 @@ public class ComputeInField
             // this matrix stores B and b from the equation B*x = b
             // b is stored as the last column.
             // B contains one column more than rows.
-            // In this column we store a free coefficient that should be later subtracted from b
+            // In this column we identity a free coefficient that should be later subtracted from b
             A = new short[B.length][B.length + 1];
             // stores the solution of the LES
             x = new short[B.length];

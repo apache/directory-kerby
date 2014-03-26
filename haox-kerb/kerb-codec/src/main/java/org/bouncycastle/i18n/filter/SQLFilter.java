@@ -2,7 +2,7 @@
 package org.bouncycastle.i18n.filter;
 
 /**
- * Filter for strings to store in a SQL table.
+ * Filter for strings to identity in a SQL table.
  * 
  * escapes ' " = - / \ ; \r \n
  */

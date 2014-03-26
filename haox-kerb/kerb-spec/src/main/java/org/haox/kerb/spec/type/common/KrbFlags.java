@@ -1,5 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
+import org.apache.directory.shared.kerberos.flags.TicketFlag;
 import org.haox.kerb.spec.type.KrbType;
 
 /**

@@ -5,7 +5,7 @@ public interface Memoable
     /**
      * Produce a copy of this object with its configuration and in its current state.
      * <p/>
-     * The returned object may be used simply to store the state, or may be used as a similar object
+     * The returned object may be used simply to identity the state, or may be used as a similar object
      * starting from the copied state.
      */
     public Memoable copy();

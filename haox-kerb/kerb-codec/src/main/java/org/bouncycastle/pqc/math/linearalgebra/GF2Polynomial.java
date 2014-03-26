@@ -114,7 +114,7 @@ public class GF2Polynomial
     /**
      * Creates a new GF2Polynomial of the given <i>length</i> and value zero.
      *
-     * @param length the desired number of bits to store
+     * @param length the desired number of bits to identity
      */
     public GF2Polynomial(int length)
     {
@@ -131,7 +131,7 @@ public class GF2Polynomial
     /**
      * Creates a new GF2Polynomial of the given <i>length</i> and random value.
      *
-     * @param length the desired number of bits to store
+     * @param length the desired number of bits to identity
      * @param rand   SecureRandom to use for randomization
      */
     public GF2Polynomial(int length, Random rand)
@@ -158,7 +158,7 @@ public class GF2Polynomial
      * <LI>ALL</LI>
      * </UL>
      *
-     * @param length the desired number of bits to store
+     * @param length the desired number of bits to identity
      * @param value  the value described by a String
      */
     public GF2Polynomial(int length, String value)
@@ -204,7 +204,7 @@ public class GF2Polynomial
      * Creates a new GF2Polynomial of the given <i>length</i> using the given
      * int[]. LSB is contained in bs[0].
      *
-     * @param length the desired number of bits to store
+     * @param length the desired number of bits to identity
      * @param bs     contains the desired value, LSB in bs[0]
      */
     public GF2Polynomial(int length, int[] bs)

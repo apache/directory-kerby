@@ -202,7 +202,7 @@ public class GF2nPolynomial
      * Sets the coefficient at <i>index</i> to <i>elem</i>.
      *
      * @param index the index
-     * @param elem  the GF2nElement to store as coefficient <i>index</i>
+     * @param elem  the GF2nElement to identity as coefficient <i>index</i>
      */
     public final void set(int index, GF2nElement elem)
     {

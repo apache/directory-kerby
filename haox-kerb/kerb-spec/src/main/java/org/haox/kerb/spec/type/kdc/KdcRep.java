@@ -1,12 +1,14 @@
 package org.haox.kerb.spec.type.kdc;
 
+import org.haox.kerb.spec.type.KrbInteger;
+import org.haox.kerb.spec.type.KrbString;
+import org.haox.kerb.spec.type.KrbTag;
+import org.haox.kerb.spec.type.KrbType;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.KrbMessage;
-import org.haox.kerb.spec.type.common.PaDataEntry;
+import org.haox.kerb.spec.type.common.PaData;
 import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.ticket.Ticket;
-
-import java.util.List;
 
 /**
  KDC-REP         ::= SEQUENCE {
@@ -23,9 +25,42 @@ import java.util.List;
  }
  */
 public interface KdcRep extends KrbMessage {
-    public List<PaDataEntry> getPaData();
+    public static enum Tag implements KrbTag {
+        PVNO(0, KrbInteger.class),
+        MSG_TYPE(1, KrbInteger.class),
+        PADATA(2, PaData.class),
+        CREALM(3, KrbString.class),
+        CNAME(4, PrincipalName.class),
+        TICKET(5, Ticket.class),
+        ENC_PART(6, EncryptedData.class);
 
-    public void setPaData(List<PaDataEntry> paData);
+        private int value;
+        private Class<? extends KrbType> type;
+
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
+
+        @Override
+        public int getValue() {
+            return value;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
+        }
+
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
+
+    public PaData getPaData();
+
+    public void setPaData(PaData paData);
 
     public String getCrealm();
 

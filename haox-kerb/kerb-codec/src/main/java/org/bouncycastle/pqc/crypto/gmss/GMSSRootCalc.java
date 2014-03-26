@@ -282,14 +282,14 @@ public class GMSSRootCalc
         // a new leaf was omitted, so raise index on lowest layer
         index[0]++;
 
-        // store the nodes on the lowest layer in treehash or authpath
+        // identity the nodes on the lowest layer in treehash or authpath
         if (index[0] == 1)
         {
             System.arraycopy(leaf, 0, AuthPath[0], 0, mdLength);
         }
         else if (index[0] == 3)
         {
-            // store in treehash only if K < H
+            // identity in treehash only if K < H
             if (heightOfTree > K)
             {
                 treehash[0].setFirstNode(leaf);
@@ -298,7 +298,7 @@ public class GMSSRootCalc
 
         if ((index[0] - 3) % 2 == 0 && index[0] >= 3)
         {
-            // store in retain if K = H
+            // identity in retain if K = H
             if (heightOfTree == K)
             // TODO: check it
             {
@@ -318,7 +318,7 @@ public class GMSSRootCalc
             byte[] help = new byte[mdLength];
             byte[] toBeHashed = new byte[mdLength << 1];
 
-            // store the new leaf in help
+            // identity the new leaf in help
             System.arraycopy(leaf, 0, help, 0, mdLength);
             int helpHeight = 0;
             // while top to nodes have same height

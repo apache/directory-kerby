@@ -358,10 +358,10 @@ public class GF2nPolynomialField
             }
         }
 
-        // store field and matrix for further use
+        // identity field and matrix for further use
         fields.addElement(B1);
         matrices.addElement(COBMatrix);
-        // store field and inverse matrix for further use in B1
+        // identity field and inverse matrix for further use in B1
         B1.fields.addElement(this);
         B1.matrices.addElement(invertMatrix(COBMatrix));
     }

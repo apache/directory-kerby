@@ -64,7 +64,7 @@ public class DisplayText
     * Creates a new <code>DisplayText</code> instance.
     *
     * @param type the desired encoding type for the text. 
-    * @param text the text to store. Strings longer than 200
+    * @param text the text to identity. Strings longer than 200
     * characters are truncated. 
     */
    public DisplayText(int type, String text)

@@ -587,7 +587,7 @@ public class GF2Matrix
         {
             // copy this matrix to first columns
             System.arraycopy(matrix[i], 0, result.matrix[i], 0, length);
-            // store the identity in last columns
+            // identity the identity in last columns
             result.matrix[i][ind >> 5] |= 1 << (ind & 0x1f);
         }
 
@@ -658,7 +658,7 @@ public class GF2Matrix
 
         for (int i = numRows - 1; i >= 0; i--)
         {
-            // store the identity in first columns
+            // identity the identity in first columns
             result.matrix[i][i >> 5] |= 1 << (i & 0x1f);
 
             // copy this matrix to last columns

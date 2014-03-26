@@ -22,7 +22,7 @@ import org.bouncycastle.asn1.DERTaggedObject;
  * </pre>
  * 
  * <blockquote> The forward elements of the crossCertificatePair attribute of a
- * CA's directory entry shall be used to store all, except self-issued
+ * CA's directory entry shall be used to identity all, except self-issued
  * certificates issued to this CA. Optionally, the reverse elements of the
  * crossCertificatePair attribute, of a CA's directory entry may contain a
  * subset of certificates issued by this CA to other CAs. When both the forward

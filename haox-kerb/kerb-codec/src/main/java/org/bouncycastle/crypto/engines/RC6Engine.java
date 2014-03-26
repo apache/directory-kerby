@@ -235,7 +235,7 @@ public class RC6Engine
         A += _S[2*_noRounds+2];
         C += _S[2*_noRounds+3];
             
-        // store A, B, C and D registers to out        
+        // identity A, B, C and D registers to out
         wordToBytes(A, out, outOff);
         wordToBytes(B, out, outOff + bytesPerWord);
         wordToBytes(C, out, outOff + bytesPerWord*2);

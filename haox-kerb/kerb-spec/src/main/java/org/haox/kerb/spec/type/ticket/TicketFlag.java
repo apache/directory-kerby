@@ -1,6 +1,9 @@
 package org.haox.kerb.spec.type.ticket;
 
-public enum TicketFlag {
+import org.haox.kerb.spec.type.KrbEnum;
+
+public enum TicketFlag implements KrbEnum {
+    NONE(-1),
     FORWARDABLE(0x40000000),
     FORWARDED(0x20000000),
     PROXIABLE(0x10000000),
@@ -21,5 +24,20 @@ public enum TicketFlag {
 
     private TicketFlag(int value) {
         this.value = value;
+    }
+
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+    public static TicketFlag fromValue(int value) {
+        for (KrbEnum e : values()) {
+            if (e.getValue() == value) {
+                return (TicketFlag) e;
+            }
+        }
+
+        return NONE;
     }
 }

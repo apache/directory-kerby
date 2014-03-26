@@ -5,9 +5,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbFactory;
+import org.haox.kerb.spec.type.kdc.AsRep;
 import org.haox.kerb.spec.type.kdc.AsReq;
 
-import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,6 +53,14 @@ public class KdcServerHandler extends SimpleChannelInboundHandler<Object> {
         } catch (KrbException e) {
             e.printStackTrace();
         }
+
+        AsRep asRep = null;
+        try {
+            asRep = processAsReq(asReq);
+        } catch (KrbException e) {
+            e.printStackTrace();
+        }
+
         ctx.channel().writeAndFlush(msg);
     }
 
@@ -64,5 +73,14 @@ public class KdcServerHandler extends SimpleChannelInboundHandler<Object> {
                 "Unexpected exception from downstream.",
                 cause);
         ctx.close();
+    }
+
+    private AsRep processAsReq(AsReq asReq) throws KrbException {
+        AsRep asRep = KrbFactory.create(AsRep.class);
+
+        asRep.setCname(asReq.getReqBody().getCname());
+        asRep.setCrealm(asReq.getReqBody().getRealm());
+
+        return asRep;
     }
 }

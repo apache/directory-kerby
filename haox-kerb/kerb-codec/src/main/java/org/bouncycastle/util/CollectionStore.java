@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A simple collection backed store.
+ * A simple collection backed identity.
  */
 public class CollectionStore
     implements Store
@@ -16,7 +16,7 @@ public class CollectionStore
     /**
      * Basic constructor.
      *
-     * @param collection - initial contents for the store, this is copied.
+     * @param collection - initial contents for the identity, this is copied.
      */
     public CollectionStore(
         Collection collection)

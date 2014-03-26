@@ -230,7 +230,7 @@ public class Treehash
         }
         else
         {
-            // store the new node in help array, do not push it on the stack
+            // identity the new node in help array, do not push it on the stack
             help = leaf;
             helpHeight = 0;
 
@@ -271,7 +271,7 @@ public class Treehash
 
             // finally check whether the top node on stack and the first node
             // in treehash have same height. If so hash them together
-            // and store them in treehash
+            // and identity them in treehash
             if (((Integer)heightOfNodes.lastElement()).intValue() == this.firstNodeHeight)
             {
                 byte[] toBeHashed = new byte[this.messDigestTree
@@ -287,7 +287,7 @@ public class Treehash
                 this.heightOfNodes
                     .removeElementAt(this.heightOfNodes.size() - 1);
 
-                // store new element in firstNode, stack is then empty
+                // identity new element in firstNode, stack is then empty
                 messDigestTree.update(toBeHashed, 0, toBeHashed.length);
                 this.firstNode = new byte[messDigestTree.getDigestSize()];
                 messDigestTree.doFinal(this.firstNode, 0);

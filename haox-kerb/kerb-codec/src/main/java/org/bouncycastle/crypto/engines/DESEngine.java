@@ -376,7 +376,7 @@ public class DESEngine
         }
 
         //
-        // store the processed key
+        // identity the processed key
         //
         for (int i = 0; i != 32; i += 2)
         {

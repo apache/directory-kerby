@@ -767,7 +767,7 @@ public class GMSSPrivateKeyParameters
         OTSseed = gmssRandom.nextSeed(currentSeeds[layer]);
 
         // STEP 2 of Algorithm
-        // if phi's parent on height tau + 1 if left node, store auth_tau
+        // if phi's parent on height tau + 1 if left node, identity auth_tau
         // in keep_tau.
         // TODO check it, formerly was
         // int L = Phi / (int) Math.floor(Math.pow(2, Tau + 1));
@@ -775,7 +775,7 @@ public class GMSSPrivateKeyParameters
         int L = (Phi >>> (Tau + 1)) & 1;
 
         byte[] tempKeep = new byte[mdLength];
-        // store the keep node not in keep[layer][tau/2] because it might be in
+        // identity the keep node not in keep[layer][tau/2] because it might be in
         // use
         // wait until the space is freed in step 4a
         if (Tau < H - 1 && L == 0)
@@ -786,7 +786,7 @@ public class GMSSPrivateKeyParameters
 
         byte[] help = new byte[mdLength];
         // STEP 3 of Algorithm
-        // if phi is left child, compute and store leaf for next currentAuthPath
+        // if phi is left child, compute and identity leaf for next currentAuthPath
         // path,
         // (obtained by veriying current signature)
         if (Tau == 0)

@@ -28,7 +28,7 @@ public class ByteQueue
     private static final int DEFAULT_CAPACITY = 1024;
 
     /**
-     * The buffer where we store our data.
+     * The buffer where we identity our data.
      */
     private byte[] databuf;;
 
