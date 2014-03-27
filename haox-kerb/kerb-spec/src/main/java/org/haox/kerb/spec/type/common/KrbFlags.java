@@ -1,6 +1,7 @@
 package org.haox.kerb.spec.type.common;
 
 import org.apache.directory.shared.kerberos.flags.TicketFlag;
+import org.haox.kerb.spec.type.KrbEnum;
 import org.haox.kerb.spec.type.KrbType;
 
 /**
@@ -30,4 +31,17 @@ public class KrbFlags implements KrbType {
     public void clear() {
         value = 0;
     }
+
+    public boolean isFlagSet(KrbEnum flag) {
+        return isFlagSet(flag.getValue());
+    }
+
+    public void setFlag(KrbEnum flag)  {
+        setFlag(flag.getValue());
+    }
+
+    public void clearFlag(KrbEnum flag) {
+        clearFlag(flag.getValue());
+    }
+
 }

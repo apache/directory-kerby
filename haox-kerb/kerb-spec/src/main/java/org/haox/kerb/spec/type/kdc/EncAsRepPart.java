@@ -1,5 +1,5 @@
 package org.haox.kerb.spec.type.kdc;
 
-public class EncAsRepPart extends EncKdcRepPart {
+public interface EncAsRepPart extends EncKdcRepPart {
 
 }

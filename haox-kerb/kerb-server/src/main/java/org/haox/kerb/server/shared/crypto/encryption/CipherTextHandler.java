@@ -5,8 +5,10 @@ import org.apache.directory.api.asn1.EncoderException;
 import org.apache.directory.api.ldap.model.constants.Loggers;
 import org.apache.directory.shared.kerberos.exceptions.ErrorType;
 import org.apache.directory.shared.kerberos.exceptions.KerberosException;
+import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.server.shared.crypto.KeyUsage;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbType;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -53,19 +55,12 @@ public class CipherTextHandler
      * @return The Kerberos EncryptedData.
      * @throws org.apache.directory.shared.kerberos.exceptions.KerberosException
      */
-    public EncryptedData seal( EncryptionKey key, AbstractAsn1Object message, KeyUsage usage ) throws KerberosException, KrbException {
+    public EncryptedData seal( EncryptionKey key, KrbType message, KeyUsage usage ) throws KerberosException, KrbException {
         try
         {
-            int bufferSize = message.computeLength();
-            ByteBuffer buffer = ByteBuffer.allocate( bufferSize );
-            byte[] encoded = message.encode( buffer ).array();
+            byte[] encoded = KrbCodec.encode(message);
             return encrypt( key, encoded, usage );
-        }
-        catch ( EncoderException ioe )
-        {
-            throw new KerberosException( ErrorType.KRB_AP_ERR_BAD_INTEGRITY, ioe );
-        }
-        catch ( ClassCastException cce )
+        } catch ( ClassCastException cce )
         {
             throw new KerberosException( ErrorType.KRB_AP_ERR_BAD_INTEGRITY, cce );
         }

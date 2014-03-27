@@ -17,16 +17,4 @@ public class TicketFlags extends KrbFlags {
     public boolean isInvalid() {
         return isFlagSet(INVALID.getValue());
     }
-
-    public boolean isFlagSet(TicketFlag flag) {
-        return isFlagSet(flag.getValue());
-    }
-
-    public void setFlag(TicketFlag flag)  {
-        setFlag(flag.getValue());
-    }
-
-    public void clearFlag(TicketFlag flag) {
-        clearFlag(flag.getValue());
-    }
 }

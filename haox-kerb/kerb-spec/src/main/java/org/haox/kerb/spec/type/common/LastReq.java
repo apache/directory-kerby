@@ -1,5 +1,8 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.kerb.spec.type.KrbType;
+import org.haox.kerb.spec.type.SequenceOfType;
+
 import java.util.List;
 
 /**
@@ -8,14 +11,10 @@ import java.util.List;
  lr-value        [1] KrbTime
  }
  */
-public class LastReq {
-    private List<LastReqEntry> entries;
+public interface LastReq extends SequenceOfType {
+    public static Class<? extends KrbType> ElementType =  LastReqEntry.class;
 
-    public List<LastReqEntry> getEntries() {
-        return entries;
-    }
+    public List<LastReqEntry> getEntries();
 
-    public void setEntries(List<LastReqEntry> entries) {
-        this.entries = entries;
-    }
+    public void setEntries(List<LastReqEntry> entries);
 }

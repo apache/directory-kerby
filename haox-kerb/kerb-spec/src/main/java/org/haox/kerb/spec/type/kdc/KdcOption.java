@@ -1,6 +1,9 @@
 package org.haox.kerb.spec.type.kdc;
 
-public enum KdcOption {
+import org.haox.kerb.spec.type.KrbEnum;
+
+public enum KdcOption implements KrbEnum {
+    NONE(-1),
     //RESERVED(0x80000000),
     FORWARDABLE(0x40000000),
     FORWARDED(0x20000000),
@@ -38,5 +41,20 @@ public enum KdcOption {
 
     private KdcOption(int value) {
         this.value = value;
+    }
+
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+    public static KdcOption fromValue(int value) {
+        for (KrbEnum e : values()) {
+            if (e.getValue() == value) {
+                return (KdcOption) e;
+            }
+        }
+
+        return NONE;
     }
 }

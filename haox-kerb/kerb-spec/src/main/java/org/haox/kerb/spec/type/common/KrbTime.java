@@ -42,6 +42,10 @@ public class KrbTime implements KrbType {
         return value <= ktime.value;
     }
 
+    public boolean lessThan(long time ) {
+        return value <= time;
+    }
+
     public boolean greaterThan( KrbTime ktime ) {
         return value > ktime.value;
     }

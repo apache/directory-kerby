@@ -149,12 +149,10 @@ public enum EncryptionType implements KrbEnum {
         return value;
     }
 
-    public static EncryptionType fromValue(KrbInteger value) {
-        if (value != null) {
-            for (KrbEnum e : values()) {
-                if (e.getValue() == value.getValue().intValue()) {
-                    return (EncryptionType) e;
-                }
+    public static EncryptionType fromValue(int value) {
+        for (KrbEnum e : values()) {
+            if (e.getValue() == value) {
+                return (EncryptionType) e;
             }
         }
 

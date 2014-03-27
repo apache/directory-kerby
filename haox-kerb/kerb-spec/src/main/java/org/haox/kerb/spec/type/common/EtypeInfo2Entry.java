@@ -3,15 +3,17 @@ package org.haox.kerb.spec.type.common;
 import org.haox.kerb.spec.type.*;
 
 /**
- LastReq         ::=     SEQUENCE OF SEQUENCE {
- lr-type         [0] Int32,
- lr-value        [1] KrbTime
+ ETYPE-INFO2-ENTRY       ::= SEQUENCE {
+ etype           [0] Int32,
+ salt            [1] KerberosString OPTIONAL,
+ s2kparams       [2] OCTET STRING OPTIONAL
  }
  */
-public interface LastReqEntry extends SequenceType {
+public interface EtypeInfo2Entry extends SequenceType {
     public static enum Tag implements KrbTag {
-        LR_TYPE(0, KrbInteger.class),
-        LR_VALUE(1, KrbTime.class);
+        ETYPE(0, KrbInteger.class),
+        SALT(1, KrbOctetString.class),
+        S2KPARAMS(2, KrbOctetString.class);
 
         private int value;
         private Class<? extends KrbType> type;
@@ -37,11 +39,16 @@ public interface LastReqEntry extends SequenceType {
         }
     };
 
-    public LastReqType getLrType();
+    public byte[] getSalt();
 
-    public void setLrType(LastReqType lrType);
+    public void setSalt(byte[] salt);
 
-    public KrbTime getLrValue();
+    public int getEtype();
 
-    public void setLrValue(KrbTime lrValue);
+    public void setEtype(int etype);
+
+    public byte[] getS2kParams();
+
+    public void setS2kParams(byte[] s2kParams);
+
 }

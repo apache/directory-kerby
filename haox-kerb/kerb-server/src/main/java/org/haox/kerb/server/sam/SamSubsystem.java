@@ -1,7 +1,7 @@
 package org.haox.kerb.server.sam;
 
 import org.apache.directory.server.i18n.I18n;
-import org.haox.kerb.server.shared.identity.IdentityEntry;
+import org.haox.kerb.server.shared.store.PrincipalStoreEntry;
 import org.haox.kerb.spec.type.common.SamType;
 
 import javax.naming.NamingException;
@@ -72,7 +72,7 @@ public final class SamSubsystem
      * @throws SamException thrown when there is a failure within the verifier
      * or a verifier cannot be found.
      */
-    public KerberosKey verify( IdentityEntry entry, byte[] sad ) throws SamException
+    public KerberosKey verify( PrincipalStoreEntry entry, byte[] sad ) throws SamException
     {
         SamVerifier verifier = null;
 
@@ -93,7 +93,7 @@ public final class SamSubsystem
             return verifier.verify( entry.getPrincipal(), sad );
         }
 
-        String key = PROPKEY_BASE + entry.getSamType().getOrdinal();
+        String key = PROPKEY_BASE + entry.getSamType().ordinal();
 
         Hashtable<Object, Object> env = new Hashtable<Object, Object>();
 

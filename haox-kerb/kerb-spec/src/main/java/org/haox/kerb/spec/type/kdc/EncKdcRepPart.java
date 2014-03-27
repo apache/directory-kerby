@@ -1,5 +1,6 @@
 package org.haox.kerb.spec.type.kdc;
 
+import org.haox.kerb.spec.type.*;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.ticket.TicketFlags;
 
@@ -19,113 +20,91 @@ import org.haox.kerb.spec.type.ticket.TicketFlags;
  caddr           [11] HostAddresses OPTIONAL
  }
  */
-public class EncKdcRepPart {
-    private EncryptionKey key;
-    private LastReq lastReq;
-    private int nonce;
-    private KrbTime keyExpiration;
-    private TicketFlags flags;
-    private KrbTime authTime;
-    private KrbTime startTime;
-    private KrbTime endTime;
-    private KrbTime renewTill;
-    private String srealm;
-    private PrincipalName sname;
-    private HostAddresses caddr;
+public interface EncKdcRepPart extends SequenceType {
+    public static enum Tag implements KrbTag {
+        KEY(0, EncryptionKey.class),
+        LAST_REQ(1, LastReq.class),
+        NONCE(2, KrbInteger.class),
+        KEY_EXPIRATION(3, KrbTime.class),
+        FLAGS(4, TicketFlags.class),
+        AUTHTIME(5, KrbTime.class),
+        STARTTIME(6, KrbTime.class),
+        ENDTIME(7, KrbTime.class),
+        RENEW_TILL(8, KrbTime.class),
+        SREALM(9, KrbString.class),
+        SNAME(10, PrincipalName.class),
+        CADDR(11, HostAddresses.class);
 
-    public EncryptionKey getKey() {
-        return key;
-    }
+        private int value;
+        private Class<? extends KrbType> type;
 
-    public void setKey(EncryptionKey key) {
-        this.key = key;
-    }
+        private Tag(int value, Class<? extends KrbType> type) {
+            this.value = value;
+            this.type = type;
+        }
 
-    public LastReq getLastReq() {
-        return lastReq;
-    }
+        @Override
+        public int getValue() {
+            return value;
+        }
 
-    public void setLastReq(LastReq lastReq) {
-        this.lastReq = lastReq;
-    }
+        @Override
+        public int getIndex() {
+            return value - 1;
+        }
 
-    public int getNonce() {
-        return nonce;
-    }
+        @Override
+        public Class<? extends KrbType> getType() {
+            return type;
+        }
+    };
 
-    public void setNonce(int nonce) {
-        this.nonce = nonce;
-    }
 
-    public KrbTime getKeyExpiration() {
-        return keyExpiration;
-    }
+    public EncryptionKey getKey();
 
-    public void setKeyExpiration(KrbTime keyExpiration) {
-        this.keyExpiration = keyExpiration;
-    }
+    public void setKey(EncryptionKey key);
 
-    public TicketFlags getFlags() {
-        return flags;
-    }
+    public LastReq getLastReq();
 
-    public void setFlags(TicketFlags flags) {
-        this.flags = flags;
-    }
+    public void setLastReq(LastReq lastReq);
 
-    public KrbTime getAuthTime() {
-        return authTime;
-    }
+    public int getNonce();
 
-    public void setAuthTime(KrbTime authTime) {
-        this.authTime = authTime;
-    }
+    public void setNonce(int nonce);
 
-    public KrbTime getStartTime() {
-        return startTime;
-    }
+    public KrbTime getKeyExpiration();
 
-    public void setStartTime(KrbTime startTime) {
-        this.startTime = startTime;
-    }
+    public void setKeyExpiration(KrbTime keyExpiration);
 
-    public KrbTime getEndTime() {
-        return endTime;
-    }
+    public TicketFlags getFlags();
 
-    public void setEndTime(KrbTime endTime) {
-        this.endTime = endTime;
-    }
+    public void setFlags(TicketFlags flags);
 
-    public KrbTime getRenewTill() {
-        return renewTill;
-    }
+    public KrbTime getAuthTime();
 
-    public void setRenewTill(KrbTime renewTill) {
-        this.renewTill = renewTill;
-    }
+    public void setAuthTime(KrbTime authTime);
 
-    public String getSrealm() {
-        return srealm;
-    }
+    public KrbTime getStartTime();
 
-    public void setSrealm(String srealm) {
-        this.srealm = srealm;
-    }
+    public void setStartTime(KrbTime startTime);
 
-    public PrincipalName getSname() {
-        return sname;
-    }
+    public KrbTime getEndTime();
 
-    public void setSname(PrincipalName sname) {
-        this.sname = sname;
-    }
+    public void setEndTime(KrbTime endTime);
 
-    public HostAddresses getCaddr() {
-        return caddr;
-    }
+    public KrbTime getRenewTill();
 
-    public void setCaddr(HostAddresses caddr) {
-        this.caddr = caddr;
-    }
+    public void setRenewTill(KrbTime renewTill);
+
+    public String getSrealm();
+
+    public void setSrealm(String srealm);
+
+    public PrincipalName getSname();
+
+    public void setSname(PrincipalName sname);
+
+    public HostAddresses getCaddr();
+
+    public void setCaddr(HostAddresses caddr);
 }

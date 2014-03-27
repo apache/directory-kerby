@@ -1,5 +1,8 @@
 package org.haox.kerb.server.shared.crypto.encryption;
 
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbFactory;
+import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.util.*;
@@ -142,4 +145,13 @@ public class EncryptionUtil
     {
         return !oldEncTypes.contains( eType );
     }
+
+    public static EncryptionKey createEncryptionKey(EncryptionType type, byte[] keyData) throws KrbException {
+        EncryptionKey ekey = KrbFactory.create(EncryptionKey.class);
+        ekey.setKeyType(type);
+        ekey.setKeyData(keyData);
+
+        return ekey;
+    }
+
 }

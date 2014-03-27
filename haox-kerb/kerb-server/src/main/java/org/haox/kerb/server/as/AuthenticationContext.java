@@ -1,9 +1,9 @@
 package org.haox.kerb.server.as;
 
-import org.apache.directory.shared.kerberos.components.EncryptionKey;
-import org.apache.directory.shared.kerberos.messages.Ticket;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.shared.store.PrincipalStoreEntry;
+import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.ticket.Ticket;
 
 /**
  * A context used to identity and manage Authentication elements
