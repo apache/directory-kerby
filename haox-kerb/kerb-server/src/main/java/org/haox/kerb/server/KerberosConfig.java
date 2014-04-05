@@ -1,8 +1,8 @@
 package org.haox.kerb.server;
 
-import org.apache.directory.shared.kerberos.codec.types.PrincipalNameType;
 import org.haox.kerb.server.shared.crypto.encryption.EncryptionUtil;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.NameType;
 
 import javax.security.auth.kerberos.KerberosPrincipal;
 import java.util.HashSet;
@@ -333,7 +333,7 @@ public class KerberosConfig
     {
         if ( srvPrincipal == null )
         {
-            srvPrincipal = new KerberosPrincipal( servicePrincipal, PrincipalNameType.KRB_NT_SRV_INST.getValue() );
+            srvPrincipal = new KerberosPrincipal( servicePrincipal, NameType.NT_SRV_HST.getValue() );
         }
 
         return srvPrincipal;

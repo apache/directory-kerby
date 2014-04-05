@@ -1,28 +1,7 @@
-/*
- *  Licensed to the Apache Software Foundation (ASF) under one
- *  or more contributor license agreements.  See the NOTICE file
- *  distributed with this work for additional information
- *  regarding copyright ownership.  The ASF licenses this file
- *  to you under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
- *  with the License.  You may obtain a copy of the License at
- *  
- *    http://www.apache.org/licenses/LICENSE-2.0
- *  
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License. 
- *  
- */
 package org.haox.kerb.server.shared.keytab;
 
-
-import org.apache.directory.server.kerberos.shared.keytab.Keytab;
-import org.apache.directory.server.kerberos.shared.keytab.KeytabEntry;
-import org.apache.directory.shared.kerberos.components.EncryptionKey;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.EncryptionKey;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -66,8 +45,7 @@ class KeytabEncoder
      * @param entries
      * @return The ByteBuffer.
      */
-    ByteBuffer write( byte[] keytabVersion, List<org.apache.directory.server.kerberos.shared.keytab.KeytabEntry> entries )
-    {
+    ByteBuffer write( byte[] keytabVersion, List<KeytabEntry> entries ) throws KrbException {
         List<ByteBuffer> keytabEntryBuffers = new ArrayList<ByteBuffer>();;
         short version = getKeytabVersion( keytabVersion );
 
@@ -100,14 +78,13 @@ class KeytabEncoder
      * - the key version (1 byte)
      * - the key
      *
-     * @param buffer
+     * @param buffers
      * @param entries
      */
-    private int encodeKeytabEntries( List<ByteBuffer> buffers, short version, List<org.apache.directory.server.kerberos.shared.keytab.KeytabEntry> entries )
-    {
+    private int encodeKeytabEntries( List<ByteBuffer> buffers, short version, List<KeytabEntry> entries ) throws KrbException {
         int size = 0;
 
-        for ( org.apache.directory.server.kerberos.shared.keytab.KeytabEntry keytabEntry : entries )
+        for ( KeytabEntry keytabEntry : entries )
         {
             ByteBuffer entryBuffer = encodeKeytabEntry( version, keytabEntry );
 
@@ -125,8 +102,7 @@ class KeytabEncoder
      * Encode a "keytab entry," which consists of a principal name,
      * principal type, key version number, and key material.
      */
-    private ByteBuffer encodeKeytabEntry( short version, KeytabEntry entry )
-    {
+    private ByteBuffer encodeKeytabEntry( short version, KeytabEntry entry ) throws KrbException {
         // Compute the principalName encoding
         ByteBuffer principalNameBuffer = encodePrincipalName( version, entry.getPrincipalName() );
 
@@ -160,7 +136,7 @@ class KeytabEncoder
         }
 
         // Store the timeStamp 
-        buffer.putInt( ( int ) ( entry.getTimeStamp().getTime() / 1000 ) );
+        buffer.putInt( ( int ) ( entry.getTimeStamp().getValue() / 1000 ) );
 
         // Store the key version
         buffer.put( entry.getKeyVersion() );
@@ -172,13 +148,6 @@ class KeytabEncoder
         return buffer;
     }
 
-
-    /**
-     * Encode a principal name.
-     *
-     * @param buffer
-     * @param principalName
-     */
     private ByteBuffer encodePrincipalName( short version, String principalName )
     {
         String[] split = principalName.split( "@" );
@@ -235,9 +204,8 @@ class KeytabEncoder
      * We identity the KeyType value ( a short ) and the KeyValue ( a length
      * on a short and the bytes )
      */
-    private ByteBuffer encodeKeyBlock( EncryptionKey key )
-    {
-        byte[] keyBytes = key.getKeyValue();
+    private ByteBuffer encodeKeyBlock( EncryptionKey key ) throws KrbException {
+        byte[] keyBytes = key.getKeyData();
         int size = 2 + 2 + keyBytes.length; // type, length, data
         ByteBuffer buffer = ByteBuffer.allocate( size );
 

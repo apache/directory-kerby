@@ -1,7 +1,7 @@
 package org.haox.kerb.server.shared.keytab;
 
 import org.apache.directory.server.i18n.I18n;
-import org.apache.directory.server.kerberos.shared.keytab.KeytabEntry;
+import org.haox.kerb.spec.KrbException;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -74,8 +74,7 @@ public class Keytab
      * @return The keytab.
      * @throws java.io.IOException
      */
-    public static org.apache.directory.server.kerberos.shared.keytab.Keytab read( File file ) throws IOException
-    {
+    public static Keytab read( File file ) throws IOException, KrbException {
         ByteBuffer buffer = ByteBuffer.wrap( getBytesFromFile( file ) );
         return readKeytab( buffer );
     }
@@ -87,9 +86,9 @@ public class Keytab
      *
      * @return The keytab.
      */
-    public static org.apache.directory.server.kerberos.shared.keytab.Keytab getInstance()
+    public static Keytab getInstance()
     {
-        return new org.apache.directory.server.kerberos.shared.keytab.Keytab();
+        return new Keytab();
     }
 
 
@@ -99,8 +98,7 @@ public class Keytab
      * @param file
      * @throws java.io.IOException
      */
-    public void write( File file ) throws IOException
-    {
+    public void write( File file ) throws IOException, KrbException {
         KeytabEncoder writer = new KeytabEncoder();
         ByteBuffer buffer = writer.write( keytabVersion, entries );
         writeFile( buffer, file );
@@ -149,8 +147,7 @@ public class Keytab
      * @param bytes
      * @return The keytab.
      */
-    static org.apache.directory.server.kerberos.shared.keytab.Keytab read( byte[] bytes )
-    {
+    static Keytab read( byte[] bytes ) throws KrbException {
         ByteBuffer buffer = ByteBuffer.wrap( bytes );
         return readKeytab( buffer );
     }
@@ -160,8 +157,7 @@ public class Keytab
      * Write the keytab to a {@link java.nio.ByteBuffer}.
      * @return The buffer.
      */
-    ByteBuffer write()
-    {
+    ByteBuffer write() throws KrbException {
         KeytabEncoder writer = new KeytabEncoder();
         return writer.write( keytabVersion, entries );
     }
@@ -173,13 +169,12 @@ public class Keytab
      * @param buffer
      * @return The keytab.
      */
-    private static org.apache.directory.server.kerberos.shared.keytab.Keytab readKeytab( ByteBuffer buffer )
-    {
-        org.apache.directory.server.kerberos.shared.keytab.KeytabDecoder reader = new org.apache.directory.server.kerberos.shared.keytab.KeytabDecoder();
+    private static Keytab readKeytab( ByteBuffer buffer ) throws KrbException {
+        KeytabDecoder reader = new KeytabDecoder();
         byte[] keytabVersion = reader.getKeytabVersion( buffer );
         List<KeytabEntry> entries = reader.getKeytabEntries( buffer );
 
-        org.apache.directory.server.kerberos.shared.keytab.Keytab keytab = new org.apache.directory.server.kerberos.shared.keytab.Keytab();
+        Keytab keytab = new Keytab();
 
         keytab.setKeytabVersion( keytabVersion );
         keytab.setEntries( entries );

@@ -3,8 +3,7 @@ package org.haox.kerb.server.shared.replay;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.store.AbstractPolicy;
-import org.apache.directory.server.kerberos.shared.replay.ReplayCache;
-import org.apache.directory.shared.kerberos.KerberosTime;
+import org.haox.kerb.spec.type.common.KrbTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,7 @@ public class ReplayCacheImpl implements ReplayCache
     private Cache cache;
 
     /** default clock skew */
-    private static final long DEFAULT_CLOCK_SKEW = 5 * KerberosTime.MINUTE;
+    private static final long DEFAULT_CLOCK_SKEW = 5 * KrbTime.MINUTE;
 
     /** The clock skew */
     private long clockSkew = DEFAULT_CLOCK_SKEW;
@@ -48,7 +47,7 @@ public class ReplayCacheImpl implements ReplayCache
         private KerberosPrincipal clientPrincipal;
 
         /** The client time */
-        private KerberosTime clientTime;
+        private KrbTime clientTime;
 
         /** The client micro seconds */
         private int clientMicroSeconds;
@@ -63,7 +62,7 @@ public class ReplayCacheImpl implements ReplayCache
          * @param clientMicroSeconds
          */
         public ReplayCacheEntry( KerberosPrincipal serverPrincipal, KerberosPrincipal clientPrincipal,
-            KerberosTime clientTime, int clientMicroSeconds )
+            KrbTime clientTime, int clientMicroSeconds )
         {
             this.serverPrincipal = serverPrincipal;
             this.clientPrincipal = clientPrincipal;
@@ -109,7 +108,7 @@ public class ReplayCacheImpl implements ReplayCache
             sb.append( '#' );
             sb.append( ( serverPrincipal == null ) ? "null" : serverPrincipal.getName() );
             sb.append( '#' );
-            sb.append( ( clientTime == null ) ? "null" : clientTime.getDate() );
+            sb.append( ( clientTime == null ) ? "null" : clientTime.getValue() );
             sb.append( '#' );
             sb.append( clientMicroSeconds );
 
@@ -190,7 +189,7 @@ public class ReplayCacheImpl implements ReplayCache
      * Check if an entry is a replay or not.
      */
     public synchronized boolean isReplay( KerberosPrincipal serverPrincipal, KerberosPrincipal clientPrincipal,
-        KerberosTime clientTime, int clientMicroSeconds )
+        KrbTime clientTime, int clientMicroSeconds )
     {
 
         ReplayCacheEntry entry = new ReplayCacheEntry( serverPrincipal, clientPrincipal, clientTime, clientMicroSeconds );
@@ -220,7 +219,7 @@ public class ReplayCacheImpl implements ReplayCache
      * entries.
      */
     public synchronized void save( KerberosPrincipal serverPrincipal, KerberosPrincipal clientPrincipal,
-        KerberosTime clientTime, int clientMicroSeconds )
+        KrbTime clientTime, int clientMicroSeconds )
     {
         ReplayCacheEntry entry = new ReplayCacheEntry( serverPrincipal, clientPrincipal, clientTime, clientMicroSeconds );
 

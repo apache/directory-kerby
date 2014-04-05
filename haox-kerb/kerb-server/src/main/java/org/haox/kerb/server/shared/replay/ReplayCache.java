@@ -4,7 +4,6 @@ import org.haox.kerb.spec.type.common.KrbTime;
 
 import javax.security.auth.kerberos.KerberosPrincipal;
 
-
 /**
  * "The replay cache will identity at least the server name, along with the client name,
  * time, and microsecond fields from the recently-seen authenticators, and if a

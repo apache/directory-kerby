@@ -1,29 +1,10 @@
-/*
- *  Licensed to the Apache Software Foundation (ASF) under one
- *  or more contributor license agreements.  See the NOTICE file
- *  distributed with this work for additional information
- *  regarding copyright ownership.  The ASF licenses this file
- *  to you under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
- *  with the License.  You may obtain a copy of the License at
- *  
- *    http://www.apache.org/licenses/LICENSE-2.0
- *  
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License. 
- *  
- */
 package org.haox.kerb.server.shared.keytab;
 
-
-import org.apache.directory.server.kerberos.shared.keytab.KeytabEntry;
-import org.apache.directory.shared.kerberos.KerberosTime;
-import org.apache.directory.shared.kerberos.codec.types.EncryptionType;
-import org.apache.directory.shared.kerberos.components.EncryptionKey;
+import org.haox.kerb.server.shared.crypto.encryption.EncryptionUtil;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.KrbTime;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -58,8 +39,7 @@ class KeytabDecoder
      * @param buffer
      * @return The keytab entries.
      */
-    List<KeytabEntry> getKeytabEntries( ByteBuffer buffer )
-    {
+    List<KeytabEntry> getKeytabEntries( ByteBuffer buffer ) throws KrbException {
         List<KeytabEntry> entries = new ArrayList<KeytabEntry>();
 
         while ( buffer.remaining() > 0 )
@@ -79,14 +59,13 @@ class KeytabDecoder
      * Reads off a "keytab entry," which consists of a principal name,
      * principal type, key version number, and key material.
      */
-    private KeytabEntry getKeytabEntry( ByteBuffer buffer )
-    {
+    private KeytabEntry getKeytabEntry( ByteBuffer buffer ) throws KrbException {
         String principalName = getPrincipalName( buffer );
 
         long principalType = buffer.getInt();
 
         long time = buffer.getInt();
-        KerberosTime timeStamp = new KerberosTime( time * 1000 );
+        KrbTime timeStamp = new KrbTime( time * 1000 );
 
         byte keyVersion = buffer.get();
 
@@ -132,13 +111,12 @@ class KeytabDecoder
     /**
      * Read off a 16-bit encryption type and symmetric key material.
      */
-    private EncryptionKey getKeyBlock( ByteBuffer buffer )
-    {
+    private EncryptionKey getKeyBlock( ByteBuffer buffer ) throws KrbException {
         int type = buffer.getShort();
         byte[] keyblock = getCountedBytes( buffer );
 
-        EncryptionType encryptionType = EncryptionType.getTypeByValue(type);
-        EncryptionKey key = new EncryptionKey( encryptionType, keyblock );
+        EncryptionType encryptionType = EncryptionType.fromValue(type);
+        EncryptionKey key = EncryptionUtil.createEncryptionKey(encryptionType, keyblock );
 
         return key;
     }

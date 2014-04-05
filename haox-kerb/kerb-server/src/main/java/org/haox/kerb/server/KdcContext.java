@@ -37,7 +37,7 @@ public abstract class KdcContext
     private ReplayCache replayCache;
 
     /**
-     * @return Returns the config.
+     * @return Returns the org.haox.config.
      */
     public KerberosConfig getConfig()
     {
@@ -46,7 +46,7 @@ public abstract class KdcContext
 
 
     /**
-     * @param config The config to set.
+     * @param config The org.haox.config to set.
      */
     public void setConfig( KerberosConfig config )
     {

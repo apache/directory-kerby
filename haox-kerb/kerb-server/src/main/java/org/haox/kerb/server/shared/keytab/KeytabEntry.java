@@ -1,7 +1,7 @@
 package org.haox.kerb.server.shared.keytab;
 
-import org.apache.directory.shared.kerberos.KerberosTime;
-import org.apache.directory.shared.kerberos.components.EncryptionKey;
+import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.common.KrbTime;
 
 /**
  * An entry within a keytab file.
@@ -12,7 +12,7 @@ public class KeytabEntry
 
     private long principalType;
 
-    private KerberosTime timeStamp;
+    private KrbTime timeStamp;
 
     private byte keyVersion;
 
@@ -28,7 +28,7 @@ public class KeytabEntry
      * @param keyVersion
      * @param key
      */
-    public KeytabEntry( String principalName, long principalType, KerberosTime timeStamp, byte keyVersion,
+    public KeytabEntry( String principalName, long principalType, KrbTime timeStamp, byte keyVersion,
         EncryptionKey key )
     {
         this.principalName = principalName;
@@ -78,7 +78,7 @@ public class KeytabEntry
     /**
      * @return The timeStamp.
      */
-    public KerberosTime getTimeStamp()
+    public KrbTime getTimeStamp()
     {
         return timeStamp;
     }

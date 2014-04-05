@@ -187,7 +187,7 @@ public class MiniKdc {
             && ! workDir.mkdirs()) {
       throw new RuntimeException("Cannot create directory " + workDir);
     }
-    LOG.info("Configuration:");
+    LOG.info("ConfigImpl:");
     LOG.info("---------------------------------------------------------------");
     for (Map.Entry entry : conf.entrySet()) {
       LOG.info("  {}: {}", entry.getKey(), entry.getValue());
@@ -381,12 +381,12 @@ public class MiniKdc {
     System.setProperty("sun.security.krb5.debug", conf.getProperty(DEBUG,
             "false"));
 
-    // refresh the config
+    // refresh the org.haox.config
     Class<?> classRef;
     if (System.getProperty("java.vendor").contains("IBM")) {
-      classRef = Class.forName("com.ibm.security.krb5.internal.Config");
+      classRef = Class.forName("com.ibm.security.krb5.internal.ConfigImpl");
     } else {
-      classRef = Class.forName("sun.security.krb5.Config");
+      classRef = Class.forName("sun.security.krb5.ConfigImpl");
     }
     Method refreshMethod = classRef.getMethod("refresh", new Class[0]);
     refreshMethod.invoke(classRef, new Object[0]);

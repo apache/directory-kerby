@@ -14,7 +14,7 @@ public class KerberosCredentials {
     private Subject subject;
 
     public KerberosCredentials() throws LoginException {
-        this(System.getProperty("jaaslounge.sso.jaas.config"));
+        this(System.getProperty("jaaslounge.sso.jaas.org.haox.config"));
     }
 
     public KerberosCredentials(String loginContextName) throws LoginException {

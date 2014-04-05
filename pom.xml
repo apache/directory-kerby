@@ -18,6 +18,7 @@
 
     <modules>
         <module>haox-kerb</module>
+        <module>haox-org.haox.config</module>
     </modules>
 
     <dependencies>
