@@ -1,51 +1,18 @@
-/*
- *  Licensed to the Apache Software Foundation (ASF) under one
- *  or more contributor license agreements.  See the NOTICE file
- *  distributed with this work for additional information
- *  regarding copyright ownership.  The ASF licenses this file
- *  to you under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
- *  with the License.  You may obtain a copy of the License at
- *  
- *    http://www.apache.org/licenses/LICENSE-2.0
- *  
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License. 
- *  
- */
 package org.haox.kerb.server;
-
 
 import net.sf.ehcache.Cache;
 import org.apache.directory.api.ldap.model.exception.LdapInvalidDnException;
 import org.apache.directory.api.ldap.model.name.Dn;
-import org.apache.directory.server.kerberos.changepwd.protocol.ChangePasswordProtocolHandler;
-import org.apache.directory.server.kerberos.kdc.DirectoryPrincipalStore;
-import org.apache.directory.server.kerberos.shared.replay.ReplayCache;
-import org.apache.directory.server.kerberos.shared.replay.ReplayCacheImpl;
-import org.apache.directory.server.kerberos.shared.store.PrincipalStore;
-import org.apache.directory.server.protocol.shared.transport.TcpTransport;
-import org.apache.directory.server.protocol.shared.transport.Transport;
-import org.apache.directory.server.protocol.shared.transport.UdpTransport;
-import org.apache.mina.core.service.IoAcceptor;
-import org.apache.mina.transport.socket.DatagramSessionConfig;
-import org.apache.mina.transport.socket.SocketAcceptor;
+import org.haox.kerb.server.shared.replay.ReplayCache;
+import org.haox.kerb.server.shared.replay.ReplayCacheImpl;
+import org.haox.kerb.server.shared.store.DirectoryPrincipalStore;
+import org.haox.kerb.server.shared.store.PrincipalStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-
-/**
- * Contains the configuration parameters for the Change Password protocol provider.
- *
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
- */
-public class ChangePasswordServer extends DirectoryBackedService
+public class ChangePasswordServer extends AbstractKdcService
 {
     /** logger for this class */
     private static final Logger LOG = LoggerFactory.getLogger( ChangePasswordServer.class );
@@ -95,6 +62,7 @@ public class ChangePasswordServer extends DirectoryBackedService
         Cache cache = getDirectoryService().getCacheService().getCache( "changePwdReplayCache" );
         replayCache = new ReplayCacheImpl( cache );
 
+        /*
         for ( Transport transport : transports )
         {
             IoAcceptor acceptor = transport.getAcceptor();
@@ -122,14 +90,14 @@ public class ChangePasswordServer extends DirectoryBackedService
             // Bind
             acceptor.bind();
         }
-
+        */
         LOG.info( "ChangePassword service started." );
         //System.out.println( "ChangePassword service started." );
     }
 
 
-    public void stop()
-    {
+    public void stop() {
+        /*
         for ( Transport transport : getTransports() )
         {
             IoAcceptor acceptor = transport.getAcceptor();
@@ -138,7 +106,7 @@ public class ChangePasswordServer extends DirectoryBackedService
             {
                 acceptor.dispose();
             }
-        }
+        } */
 
         replayCache.clear();
 
@@ -159,40 +127,5 @@ public class ChangePasswordServer extends DirectoryBackedService
     public ChangePasswordConfig getConfig()
     {
         return config;
-    }
-
-
-    public int getTcpPort()
-    {
-        for ( Transport t : getTransports() )
-        {
-            if ( t instanceof TcpTransport )
-            {
-                return t.getPort();
-            }
-        }
-
-        throw new IllegalStateException( "TCP transport is not enabled" );
-    }
-
-
-    /**
-     * @see Object#toString()
-     */
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append( "ChangePasswordServer[" ).append( getServiceName() ).append( "], listening on :" ).append( '\n' );
-
-        if ( getTransports() != null )
-        {
-            for ( Transport transport : getTransports() )
-            {
-                sb.append( "    " ).append( transport ).append( '\n' );
-            }
-        }
-
-        return sb.toString();
     }
 }

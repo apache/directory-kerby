@@ -36,38 +36,8 @@
         </dependency>
         <dependency>
             <groupId>org.apache.directory.server</groupId>
-            <artifactId>kerberos-client</artifactId>
-            <version>2.0.0-M16-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.api</groupId>
-            <artifactId>api-all</artifactId>
-            <version>2.0.0-M16-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-core</artifactId>
-            <version>2.0.0-M16-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-core</artifactId>
-            <version>2.0.0-M16-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-jdbm-partition</artifactId>
-            <version>2.0.0-M16-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-ldif-partition</artifactId>
-            <version>2.0.0-M16-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-interceptor-kerberos</artifactId>
-            <version>2.0.0-M16-SNAPSHOT</version>
+            <artifactId>apacheds-all</artifactId>
+            <version>2.0.0-M15</version>
         </dependency>
     </dependencies>
 </project>

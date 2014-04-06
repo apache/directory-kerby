@@ -3,7 +3,7 @@ package org.haox.kerb.server;
 import org.apache.directory.server.constants.ServerDNConstants;
 import org.apache.directory.server.core.api.DirectoryService;
 
-public abstract class DirectoryBackedService
+public abstract class AbstractKdcService
 {
     /** A flag set to indicate if the server is started or not */
     private boolean started;
@@ -133,29 +133,5 @@ public abstract class DirectoryBackedService
     public void setSearchBaseDn( String searchBaseDn )
     {
         this.searchBaseDn = searchBaseDn;
-    }
-
-
-    /**
-     * Gets true if this service uses a catalog for searching different
-     * regions of the DIT for its data.
-     *
-     * @return true if the search base dn is for a catalog, false otherwise
-     */
-    public boolean isCatelogBased()
-    {
-        return catelogBased;
-    }
-
-
-    /**
-     * Set true if this service uses a catalog for searching different
-     * regions of the DIT for its data.
-     *
-     * @param  catelogBased if the search base dn is for a catalog, false otherwise
-     */
-    public void setCatelogBased( boolean catelogBased )
-    {
-        this.catelogBased = catelogBased;
     }
 }

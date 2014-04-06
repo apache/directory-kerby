@@ -16,7 +16,7 @@ import org.haox.kerb.server.shared.store.PrincipalStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class KdcServer extends DirectoryBackedService {
+public class KdcServer extends AbstractKdcService {
     private static final Logger LOG = LoggerFactory.getLogger(KdcServer.class);
 
     /** The default kdc service name */
