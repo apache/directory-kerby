@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Conf {
-    private static final Logger LOG = LoggerFactory.getLogger(Conf.class);
+    private static final Logger logger = LoggerFactory.getLogger(Conf.class);
 
 	private List<ConfigLoader> resourceConfigs;
-    private Config config;
+    private final ConfigImpl config;
+    private boolean needReload;
 
 	public Conf() {
-        resourceConfigs = new ArrayList<ConfigLoader>(1);
+        this.resourceConfigs = new ArrayList<ConfigLoader>(1);
+        this.config = new ConfigImpl("Conf");
+        this.needReload = true;
 	}
 
 	public void addXmlConfig(File xmlFile) throws IOException {
@@ -33,6 +36,7 @@ public class Conf {
     public void addResource(Resource resource) {
         ConfigLoader loader = getLoader(resource);
         resourceConfigs.add(loader);
+        needReload = true;
     }
 
     private static ConfigLoader getLoader(Resource resource) {
@@ -49,24 +53,24 @@ public class Conf {
     }
 
     public Config getConfig() {
-        if (config == null) {
+        if (needReload) {
             reload();
+            needReload = false;
         }
         return config;
     }
 
     public void reload() {
-        this.config = null;
+        this.config.reset();
         if (resourceConfigs.size() == 1) {
             ConfigLoader loader = resourceConfigs.get(0);
-            this.config = loader.getConfig();
+            loader.setConfig(this.config);
+            loader.load();
         } else {
-            ConfigImpl configImpl = new ConfigImpl("Conf");
             for (ConfigLoader loader : resourceConfigs) {
-                Config loaded = loader.getConfig();
-                configImpl.set(loaded.getResource(), loaded);
+                Config loaded = loader.load();
+                this.config.set(loaded.getResource(), loaded);
             }
-            this.config = configImpl;
         }
     }
 }

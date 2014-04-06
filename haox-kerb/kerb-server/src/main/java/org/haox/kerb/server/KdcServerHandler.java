@@ -9,20 +9,15 @@ import org.haox.kerb.spec.type.KrbFactory;
 import org.haox.kerb.spec.type.kdc.AsRep;
 import org.haox.kerb.spec.type.kdc.AsReq;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Handles a server-side channel.
- */
 public class KdcServerHandler extends SimpleChannelInboundHandler<Object> {
-
-    private static final Logger logger = Logger.getLogger(
-            KdcServerHandler.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(KdcServerHandler.class);
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
-        logger.log(Level.INFO, "message received, msg:" + msg.toString());
+        logger.info("message received, msg:" + msg.toString());
 
         ByteBuf byteBuf = (ByteBuf) msg;
         int len = byteBuf.readInt();
@@ -68,10 +63,7 @@ public class KdcServerHandler extends SimpleChannelInboundHandler<Object> {
     public void exceptionCaught(ChannelHandlerContext ctx,
             Throwable cause) throws Exception {
         // Close the connection when an exception is raised.
-        logger.log(
-                Level.WARNING,
-                "Unexpected exception from downstream.",
-                cause);
+        logger.warn("Unexpected exception from downstream.", cause);
         ctx.close();
     }
 

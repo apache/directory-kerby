@@ -1,5 +1,6 @@
 package org.haox.config;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 
@@ -10,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XmlConfigLoader extends ConfigLoader {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Config.class);
+    private static final Logger logger = LoggerFactory.getLogger(Config.class);
 
     @Override
-    protected void loadConfig(Config config, Resource resource) throws Exception {
+    protected void loadConfig(ConfigImpl config, Resource resource) throws Exception {
         Element doc = loadResourceDocument(resource);
         loadConfig((ConfigImpl) config, doc);
     }

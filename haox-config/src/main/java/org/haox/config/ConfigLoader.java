@@ -2,23 +2,30 @@ package org.haox.config;
 
 public abstract class ConfigLoader {
     private Resource resource;
-    private Config config;
+    private ConfigImpl config;
 
-    public void setResource(Resource resource) {
+    protected void setResource(Resource resource) {
         this.resource = resource;
     }
 
-    public Config getConfig() {
-        if (config == null) {
-            config = new ConfigImpl(resource.getName());
-            try {
-                loadConfig(config, resource);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to load org.haox.config", e);
-            }
-        }
-        return config;
+    protected void setConfig(ConfigImpl config) {
+        this.config = config;
     }
 
-    protected abstract void loadConfig(Config config, Resource resource) throws Exception;
+    public Config load() {
+        if (config == null) {
+            config = new ConfigImpl(resource.getName());
+        }
+        config.reset();
+
+        try {
+            loadConfig(config, resource);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load org.haox.config", e);
+        }
+
+        return this.config;
+    }
+
+    protected abstract void loadConfig(ConfigImpl config, Resource resource) throws Exception;
 }

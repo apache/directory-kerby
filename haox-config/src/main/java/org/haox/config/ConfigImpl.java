@@ -1,11 +1,12 @@
 package org.haox.config;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class ConfigImpl implements Config {
-	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(Config.class);
+	private static final Logger logger = LoggerFactory.getLogger(Config.class);
 
     private String resource;
 	private Map<String, ConfigObject> properties;
@@ -17,6 +18,11 @@ public class ConfigImpl implements Config {
         this.resource = resource;
         this.properties = new HashMap<String, ConfigObject>();
         this.subConfigs = new ArrayList<Config>(0);
+    }
+
+    protected void reset() {
+        this.properties.clear();
+        this.subConfigs.clear();
     }
 
     @Override
@@ -50,6 +56,14 @@ public class ConfigImpl implements Config {
 	}
 
     @Override
+    public String getString(ConfigKey name) {
+        if (name.getDefaultValue() != null) {
+            return getString(name.toPropertyKey(), (String) name.getDefaultValue());
+        }
+        return getString(name.toPropertyKey());
+    }
+
+    @Override
     public String getString(String name, String defaultValue) {
         String result = getString(name);
         if (result == null) {
@@ -68,6 +82,11 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public String getTrimmed(ConfigKey name) {
+        return getTrimmed(name.toPropertyKey());
+    }
+
+    @Override
     public Integer getInt(String name) {
         Integer result = null;
         String value = getTrimmed(name);
@@ -75,6 +94,14 @@ public class ConfigImpl implements Config {
             result = Integer.valueOf(value);
         }
         return result;
+    }
+
+    @Override
+    public Integer getInt(ConfigKey name) {
+        if (name.getDefaultValue() != null) {
+            return getInt(name.toPropertyKey(), (Integer) name.getDefaultValue());
+        }
+        return getInt(name.toPropertyKey());
     }
 
     @Override
@@ -97,6 +124,14 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public Long getLong(ConfigKey name) {
+        if (name.getDefaultValue() != null) {
+            return getLong(name.toPropertyKey(), (Long) name.getDefaultValue());
+        }
+        return getLong(name.toPropertyKey());
+    }
+
+    @Override
     public Long getLong(String name, long defaultValue) {
         Long result = getLong(name);
         if (result == null) {
@@ -113,6 +148,14 @@ public class ConfigImpl implements Config {
             result = Float.valueOf(value);
         }
         return result;
+    }
+
+    @Override
+    public Float getFloat(ConfigKey name) {
+        if (name.getDefaultValue() != null) {
+            return getFloat(name.toPropertyKey(), (Float) name.getDefaultValue());
+        }
+        return getFloat(name.toPropertyKey());
     }
 
     @Override
@@ -135,6 +178,14 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public Boolean getBoolean(ConfigKey name) {
+        if (name.getDefaultValue() != null) {
+            return getBoolean(name.toPropertyKey(), (Boolean) name.getDefaultValue());
+        }
+        return getBoolean(name.toPropertyKey());
+    }
+
+    @Override
     public Boolean getBoolean(String name, boolean defaultValue) {
         Boolean result = getBoolean(name);
         if (result == null) {
@@ -154,18 +205,43 @@ public class ConfigImpl implements Config {
 	}
 
     @Override
-    public Config getConfig(String name) {
-        return null;
+    public List<String> getList(String name, String[] defaultValue) {
+        List<String> results = getList(name);
+        if (results == null) {
+            results = Arrays.asList(defaultValue);
+        }
+        return results;
     }
 
     @Override
-    public Class<?> getClass(String name, Class<?> defaultValue) throws ClassNotFoundException {
+    public List<String> getList(ConfigKey name) {
+        if (name.getDefaultValue() != null) {
+            return getList(name.toPropertyKey(), (String[]) name.getDefaultValue());
+        }
+        return getList(name.toPropertyKey());
+    }
+
+    @Override
+    public Config getConfig(String name) {
+        Config result = null;
+        ConfigObject co = properties.get(name);
+        if (co != null) {
+            result = co.getConfigValue();
+        }
+        return result;
+    }
+
+    @Override
+    public Config getConfig(ConfigKey name) {
+        return getConfig(name.toPropertyKey());
+    }
+
+    @Override
+    public Class<?> getClass(String name) throws ClassNotFoundException {
         Class<?> result = null;
 
         String valueString = getString(name);
-        if (valueString == null) {
-            result = defaultValue;
-        } else {
+        if (valueString != null) {
             Class<?> cls = Class.forName(name);
             result = cls;
         }
@@ -174,8 +250,30 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public Class<?> getClass(String name, Class<?> defaultValue) throws ClassNotFoundException {
+        Class<?> result = getClass(name);
+        if (result == null) {
+            result = defaultValue;
+        }
+        return result;
+    }
+
+    @Override
+    public Class<?> getClass(ConfigKey name) throws ClassNotFoundException {
+        if (name.getDefaultValue() != null) {
+            return getClass(name.toPropertyKey(), (Class<?>) name.getDefaultValue());
+        }
+        return getClass(name.toPropertyKey());
+    }
+
+    @Override
     public <T> T getInstance(String name) throws ClassNotFoundException {
         return getInstance(name, null);
+    }
+
+    @Override
+    public <T> T getInstance(ConfigKey name) throws ClassNotFoundException {
+        return getInstance(name.toPropertyKey());
     }
 
     @Override
