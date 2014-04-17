@@ -2,18 +2,20 @@ package org.haox.asn1.type;
 
 public enum BerTag
 {
+    UNKNOWN             (-1),
     BOOLEAN             (0x01),
     INTEGER             (0x02),
     BIT_STRING          (0x03),
     OCTET_STRING        (0x04),
-    NULL                (0x05),
+    NULL                 (0x05),
     OBJECT_IDENTIFIER   (0x06),
-    EXTERNAL            (0x08),
+    EXTERNAL             (0x08),
+    REAL                  (0x09),
     ENUMERATED          (0x0a),
     SEQUENCE            (0x10),
     SEQUENCE_OF         (0x10),
-    SET                 (0x11),
-    SET_OF              (0x11),
+    SET                  (0x11),
+    SET_OF               (0x11),
     NUMERIC_STRING      (0x12),
     PRINTABLE_STRING    (0x13),
     T61_STRING          (0x14),
@@ -26,10 +28,11 @@ public enum BerTag
     GENERAL_STRING      (0x1b),
     UNIVERSAL_STRING    (0x1c),
     BMP_STRING          (0x1e),
-    UTF8_STRING         (0x0c),
-    CONSTRUCTED         (0x20),
-    APPLICATION         (0x40),
-    TAGGED              (0x80);
+    UTF8_STRING         (0x0c);
+
+    public static int CONSTRUCTED = 0x20;
+    public static int APPLICATION = 0x40;
+    public static int TAGGED = 0x80;
 
     private int value;
 
@@ -39,5 +42,15 @@ public enum BerTag
 
     public int getValue() {
         return value;
+    }
+
+    public static BerTag fromValue(int value) {
+        for (BerTag e : values()) {
+            if (e.getValue() == value) {
+                return (BerTag) e;
+            }
+        }
+
+        return UNKNOWN;
     }
 }

@@ -3,10 +3,14 @@ package org.haox.kerb.server.common;
 import org.haox.config.ConfigKey;
 
 public enum KdcConfigKey implements ConfigKey {
+    KRB_DEBUG(true),
+    WORK_DIR("c:\\abc2\\haox\\krb5haoxkdc"), //"/var/krb5haoxkdc"
     KDC_SERVICE_NAME("Haox_KDC_Server"),
     KDC_ADDRESS("127.0.0.1"),
     KDC_PORT(8015),
+    KDC_DOMAIN("example.com"),
     KDC_REALM("EXAMPLE.COM"),
+    KDC_DN("dc=example,dc=com"),
     TGS_PRINCIPAL("krbtgt@EXAMPLE.COM"),
     ALLOWABLE_CLOCKSKEW(5 * 60),
     EMPTY_ADDRESSES_ALLOWED(true),

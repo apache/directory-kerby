@@ -29,8 +29,8 @@ public class Asn1Boolean extends AbstractAsn1Primitive<Boolean>
     }
 
     @Override
-    protected void decodeValue(int length, LimitedByteBuffer content) throws IOException {
-        byte[] bytes = content.readBytes(length);
+    protected void decodeValue(LimitedByteBuffer content) throws IOException {
+        byte[] bytes = content.readAllBytes();
 
         if (bytes.length != 1) {
             throw new IOException("More than 1 byte found for Boolean");

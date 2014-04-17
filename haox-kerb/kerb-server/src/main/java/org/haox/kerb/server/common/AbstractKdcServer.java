@@ -12,6 +12,8 @@ import org.haox.kerb.server.shared.replay.ReplayCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+
 public abstract class AbstractKdcServer
 {
     private static final Logger logger = LoggerFactory.getLogger(AbstractKdcServer.class);
@@ -26,6 +28,7 @@ public abstract class AbstractKdcServer
     protected String searchBaseDn;
     protected DirectoryService directoryService;
     protected ReplayCache replayCache;
+    protected File workDir;
 
     public AbstractKdcServer() {
 
@@ -37,8 +40,16 @@ public abstract class AbstractKdcServer
         initConfig();
 
         this.serviceName = getServiceName();
+        this.workDir = getWorkDir();
         this.bossGroup = new NioEventLoopGroup();
         this.workerGroup = new NioEventLoopGroup();
+    }
+
+    protected File getWorkDir() {
+        String path = kdcConfig.getWorkDir();
+        File file = new File(path);
+        file.mkdirs();
+        return file;
     }
 
     protected void initConfig() {

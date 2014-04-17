@@ -10,4 +10,5 @@ public interface Asn1Type {
     public void encode(ByteBuffer buffer);
     public void decode(byte[] content) throws IOException;
     public void decode(LimitedByteBuffer content) throws IOException;
+    public void decode(int tag, int tagNo, LimitedByteBuffer content) throws IOException;
 }

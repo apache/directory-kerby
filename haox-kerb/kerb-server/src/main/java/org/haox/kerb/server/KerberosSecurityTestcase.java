@@ -24,9 +24,9 @@ import java.io.File;
 import java.util.Properties;
 
 /**
- * KerberosSecurityTestcase provides a base class for using MiniKdc with other
- * testcases. KerberosSecurityTestcase starts the MiniKdc (@Before) before
- * running tests, and stop the MiniKdc (@After) after the testcases, using
+ * KerberosSecurityTestcase provides a base class for using TestKdcServer with other
+ * testcases. KerberosSecurityTestcase starts the TestKdcServer (@Before) before
+ * running tests, and stop the TestKdcServer (@After) after the testcases, using
  * default settings (working dir and kdc configurations).
  * <p>
  * Users can directly inherit this class and implement their own test functions
@@ -52,7 +52,7 @@ public class KerberosSecurityTestcase {
   /**
    * Create a working directory, it should be the build directory. Under
    * this directory an ApacheDS working directory will be created, this
-   * directory will be deleted when the MiniKdc stops.
+   * directory will be deleted when the TestKdcServer stops.
    */
   public void createTestDir() {
     workDir = new File(System.getProperty("test.dir", "target"));

@@ -28,8 +28,8 @@ public abstract class Asn1String extends AbstractAsn1Primitive<String>
     }
 
     @Override
-    protected void decodeValue(int length, LimitedByteBuffer content) throws IOException {
-        byte[] bytes = content.readBytes(length);
+    protected void decodeValue(LimitedByteBuffer content) throws IOException {
+        byte[] bytes = content.readAllBytes();
         setValue(new String(bytes, StandardCharsets.US_ASCII));
     }
 

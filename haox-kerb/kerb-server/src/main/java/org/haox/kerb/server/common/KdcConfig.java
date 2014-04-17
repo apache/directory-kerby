@@ -23,8 +23,16 @@ public class KdcConfig
         return conf.getConfig();
     }
 
+    public boolean enableDebug() {
+        return config.getBoolean(KdcConfigKey.KRB_DEBUG);
+    }
+
     public String getKdcServiceName() {
         return config.getString(KdcConfigKey.KDC_SERVICE_NAME);
+    }
+
+    public String getWorkDir() {
+        return config.getString(KdcConfigKey.WORK_DIR);
     }
 
     public String getKdcAddress() {
@@ -33,6 +41,22 @@ public class KdcConfig
 
     public int getKdcPort() {
         return config.getInt(KdcConfigKey.KDC_PORT);
+    }
+
+    public String getKdcRealm() {
+        return config.getString(KdcConfigKey.KDC_REALM);
+    }
+
+    public String getKdcDomain() {
+        return config.getString(KdcConfigKey.KDC_DOMAIN);
+    }
+
+    public String getKdcDn() {
+        return config.getString(KdcConfigKey.KDC_DN);
+    }
+
+    public String getTgsPrincipal() {
+        return config.getString(KdcConfigKey.TGS_PRINCIPAL);
     }
 
     public long getAllowableClockSkew() {
@@ -69,14 +93,6 @@ public class KdcConfig
 
     public long getMinimumTicketLifetime() {
         return config.getLong(KdcConfigKey.MINIMUM_TICKET_LIFETIME);
-    }
-
-    public String getKdcRealm() {
-        return config.getString(KdcConfigKey.KDC_REALM);
-    }
-
-    public String getTgsPrincipal() {
-        return config.getString(KdcConfigKey.TGS_PRINCIPAL);
     }
 
     public List<String> getEncryptionTypes() {

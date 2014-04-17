@@ -1,9 +1,10 @@
 package org.haox.asn1.type;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public abstract class AbstractAsn1Primitive<T> extends AbstractAsn1Type implements Asn1PrimitiveType<T> {
-    private T value;
+public abstract class AbstractAsn1Primitive<T> extends AbstractAsn1Type<T> {
+    private byte[] bytes;
 
     public AbstractAsn1Primitive(BerTag tag) {
         this(null, tag);
@@ -14,13 +15,12 @@ public abstract class AbstractAsn1Primitive<T> extends AbstractAsn1Type implemen
         setValue(value);
     }
 
-    @Override
-    public T getValue() {
-        return value;
+    protected byte[] getBytes() {
+        return bytes;
     }
 
-    protected void setValue(T value) {
-        this.value = value;
+    protected void setBytes(byte[] bytes) {
+        this.bytes = bytes;
     }
 
     @Override
@@ -30,7 +30,30 @@ public abstract class AbstractAsn1Primitive<T> extends AbstractAsn1Type implemen
         buffer.put(body());
     }
 
-    protected abstract byte[] body();
+    protected byte[] body() {
+        if (bytes == null) {
+            toBytes();
+        }
+        return bytes;
+    }
+
+    @Override
+    protected int bodyLength() {
+        if (bytes == null) {
+            toBytes();
+        }
+        return bytes.length;
+    }
+
+    protected void toBytes() {}
+
+    @Override
+    protected void decodeValue(LimitedByteBuffer content) throws IOException {
+        bytes = content.readAllBytes();
+        toValue();
+    }
+
+    protected void toValue() throws IOException {}
 
     @Override
     protected boolean isConstructed() {

@@ -17,7 +17,6 @@ import org.apache.directory.api.ldap.schemamanager.impl.DefaultSchemaManager;
 import org.apache.directory.server.constants.ServerDNConstants;
 import org.apache.directory.server.core.DefaultDirectoryService;
 import org.apache.directory.server.core.api.CacheService;
-import org.apache.directory.server.core.api.DirectoryService;
 import org.apache.directory.server.core.api.InstanceLayout;
 import org.apache.directory.server.core.api.schema.SchemaPartition;
 import org.apache.directory.server.core.kerberos.KeyDerivationInterceptor;
@@ -35,133 +34,36 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.text.MessageFormat;
 import java.util.*;
 
-public class MiniKdc {
-    private static final Logger LOG = LoggerFactory.getLogger(MiniKdc.class);
+public class TestKdcServer extends KdcServer {
+    private static final Logger logger = LoggerFactory.getLogger(TestKdcServer.class);
 
-    public static final String ORG_NAME = "org.name";
-    public static final String ORG_DOMAIN = "org.domain";
-    public static final String KDC_BIND_ADDRESS = "kdc.bind.address";
-    public static final String KDC_PORT = "kdc.port";
-    public static final String INSTANCE = "instance";
-    public static final String MAX_TICKET_LIFETIME = "max.ticket.lifetime";
-    public static final String MAX_RENEWABLE_LIFETIME = "max.renewable.lifetime";
-    public static final String TRANSPORT = "transport";
-    public static final String DEBUG = "debug";
-
-    private static final Set<String> PROPERTIES = new HashSet<String>();
-    private static final Properties DEFAULT_CONFIG = new Properties();
-
-    static {
-        PROPERTIES.add(ORG_NAME);
-        PROPERTIES.add(ORG_DOMAIN);
-        PROPERTIES.add(KDC_BIND_ADDRESS);
-        PROPERTIES.add(KDC_BIND_ADDRESS);
-        PROPERTIES.add(KDC_PORT);
-        PROPERTIES.add(INSTANCE);
-        PROPERTIES.add(TRANSPORT);
-        PROPERTIES.add(MAX_TICKET_LIFETIME);
-        PROPERTIES.add(MAX_RENEWABLE_LIFETIME);
-
-        DEFAULT_CONFIG.setProperty(KDC_BIND_ADDRESS, "localhost");
-        DEFAULT_CONFIG.setProperty(KDC_PORT, "0");
-        DEFAULT_CONFIG.setProperty(INSTANCE, "DefaultKrbServer");
-        DEFAULT_CONFIG.setProperty(ORG_NAME, "EXAMPLE");
-        DEFAULT_CONFIG.setProperty(ORG_DOMAIN, "COM");
-        DEFAULT_CONFIG.setProperty(TRANSPORT, "TCP");
-        DEFAULT_CONFIG.setProperty(MAX_TICKET_LIFETIME, "86400000");
-        DEFAULT_CONFIG.setProperty(MAX_RENEWABLE_LIFETIME, "604800000");
-        DEFAULT_CONFIG.setProperty(DEBUG, "false");
-    }
-
-    /**
-     * Convenience method that returns MiniKdc default configuration.
-     * <p/>
-     * The returned configuration is a copy, it can be customized before using
-     * it to create a MiniKdc.
-     * @return a MiniKdc default configuration.
-     */
-    public static Properties createConf() {
-        return (Properties) DEFAULT_CONFIG.clone();
-    }
-
-    private Properties conf;
-    private DirectoryService ds;
-    private KdcServer kdc;
-    private int port;
-    private String realm;
     private File workDir;
     private File krb5conf;
 
     /**
-     * Creates a MiniKdc.
+     * Creates a TestKdcServer.
      *
-     * @param conf MiniKdc configuration.
+     * @param conf TestKdcServer configuration.
      * @param workDir working directory, it should be the build directory. Under
      * this directory an ApacheDS working directory will be created, this
-     * directory will be deleted when the MiniKdc stops.
-     * @throws Exception thrown if the MiniKdc could not be created.
+     * directory will be deleted when the TestKdcServer stops.
+     * @throws Exception thrown if the TestKdcServer could not be created.
      */
-    public MiniKdc(Properties conf, File workDir) throws Exception {
-        if (!conf.keySet().containsAll(PROPERTIES)) {
-            Set<String> missingProperties = new HashSet<String>(PROPERTIES);
-            missingProperties.removeAll(conf.keySet());
-            throw new IllegalArgumentException("Missing configuration properties: "
-                    + missingProperties);
-        }
+    public TestKdcServer(Properties conf, File workDir) throws Exception {
         this.workDir = new File(workDir, Long.toString(System.currentTimeMillis()));
         if (! workDir.exists()
                 && ! workDir.mkdirs()) {
             throw new RuntimeException("Cannot create directory " + workDir);
         }
-        LOG.info("ConfigImpl:");
-        LOG.info("---------------------------------------------------------------");
+        logger.info("ConfigImpl:");
+        logger.info("---------------------------------------------------------------");
         for (Map.Entry entry : conf.entrySet()) {
-            LOG.info("  {}: {}", entry.getKey(), entry.getValue());
+            logger.info("  {}: {}", entry.getKey(), entry.getValue());
         }
-        LOG.info("---------------------------------------------------------------");
-        this.conf = conf;
-        port = Integer.parseInt(conf.getProperty(KDC_PORT));
-        if (port == 0) {
-            ServerSocket ss = new ServerSocket(0, 1, InetAddress.getByName
-                    (conf.getProperty(KDC_BIND_ADDRESS)));
-            port = ss.getLocalPort();
-            ss.close();
-        }
-        String orgName= conf.getProperty(ORG_NAME);
-        String orgDomain = conf.getProperty(ORG_DOMAIN);
-        realm = orgName.toUpperCase() + "." + orgDomain.toUpperCase();
-    }
-
-    /**
-     * Returns the port of the MiniKdc.
-     *
-     * @return the port of the MiniKdc.
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
-     * Returns the host of the MiniKdc.
-     *
-     * @return the host of the MiniKdc.
-     */
-    public String getHost() {
-        return conf.getProperty(KDC_BIND_ADDRESS);
-    }
-
-    /**
-     * Returns the realm of the MiniKdc.
-     *
-     * @return the realm of the MiniKdc.
-     */
-    public String getRealm() {
-        return realm;
+        logger.info("---------------------------------------------------------------");
     }
 
     public File getKrb5conf() {
@@ -169,133 +71,16 @@ public class MiniKdc {
     }
 
     /**
-     * Starts the MiniKdc.
+     * Starts the TestKdcServer.
      *
-     * @throws Exception thrown if the MiniKdc could not be started.
+     * @throws Exception thrown if the TestKdcServer could not be started.
      */
     public synchronized void start() throws Exception {
-        if (kdc != null) {
-            throw new RuntimeException("Already started");
-        }
         initDirectoryService();
         initKDCServer();
     }
 
-    @SuppressWarnings("unchecked")
-    private void initDirectoryService() throws Exception {
-        ds = new DefaultDirectoryService();
-        ds.setInstanceLayout(new InstanceLayout(workDir));
-
-        CacheService cacheService = new CacheService();
-        ds.setCacheService(cacheService);
-
-        // first load the schema
-        InstanceLayout instanceLayout = ds.getInstanceLayout();
-        File schemaPartitionDirectory = new File(
-                instanceLayout.getPartitionsDirectory(), "schema");
-        SchemaLdifExtractor extractor = new DefaultSchemaLdifExtractor(
-                instanceLayout.getPartitionsDirectory());
-        extractor.extractOrCopy();
-
-        SchemaLoader loader = new LdifSchemaLoader(schemaPartitionDirectory);
-        SchemaManager schemaManager = new DefaultSchemaManager(loader);
-        schemaManager.loadAllEnabled();
-        ds.setSchemaManager(schemaManager);
-        // Init the LdifPartition with schema
-        LdifPartition schemaLdifPartition = new LdifPartition(schemaManager);
-        schemaLdifPartition.setPartitionPath(schemaPartitionDirectory.toURI());
-
-        // The schema partition
-        SchemaPartition schemaPartition = new SchemaPartition(schemaManager);
-        schemaPartition.setWrappedPartition(schemaLdifPartition);
-        ds.setSchemaPartition(schemaPartition);
-
-        JdbmPartition systemPartition = new JdbmPartition(ds.getSchemaManager());
-        systemPartition.setId("system");
-        systemPartition.setPartitionPath(new File(
-                ds.getInstanceLayout().getPartitionsDirectory(),
-                systemPartition.getId()).toURI());
-        systemPartition.setSuffixDn(new Dn(ServerDNConstants.SYSTEM_DN));
-        systemPartition.setSchemaManager(ds.getSchemaManager());
-        ds.setSystemPartition(systemPartition);
-
-        ds.getChangeLog().setEnabled(false);
-        ds.setDenormalizeOpAttrsEnabled(true);
-        ds.addLast(new KeyDerivationInterceptor());
-
-        // create one partition
-        String orgName= conf.getProperty(ORG_NAME).toLowerCase();
-        String orgDomain = conf.getProperty(ORG_DOMAIN).toLowerCase();
-
-        JdbmPartition partition = new JdbmPartition(ds.getSchemaManager());
-        partition.setId(orgName);
-        partition.setPartitionPath(new File(
-                ds.getInstanceLayout().getPartitionsDirectory(), orgName).toURI());
-        partition.setSuffixDn(new Dn("dc=" + orgName + ",dc=" + orgDomain));
-        ds.addPartition(partition);
-        // indexes
-        Set indexedAttributes = new HashSet();
-        indexedAttributes.add(new JdbmIndex<String, Entry>("objectClass", false));
-        indexedAttributes.add(new JdbmIndex<String, Entry>("dc", false));
-        indexedAttributes.add(new JdbmIndex<String, Entry>("ou", false));
-        partition.setIndexedAttributes(indexedAttributes);
-
-        // And start the ds
-        ds.setInstanceId(conf.getProperty(INSTANCE));
-        ds.startup();
-        // context entry, after ds.startup()
-        Dn dn = new Dn("dc=" + orgName + ",dc=" + orgDomain);
-        Entry entry = ds.newEntry(dn);
-        entry.add("objectClass", "top", "domain");
-        entry.add("dc", orgName);
-        ds.getAdminSession().add(entry);
-    }
-
     private void initKDCServer() throws Exception {
-        String orgName= conf.getProperty(ORG_NAME);
-        String orgDomain = conf.getProperty(ORG_DOMAIN);
-        String bindAddress = conf.getProperty(KDC_BIND_ADDRESS);
-        final Map<String, String> map = new HashMap<String, String>();
-        map.put("0", orgName.toLowerCase());
-        map.put("1", orgDomain.toLowerCase());
-        map.put("2", orgName.toUpperCase());
-        map.put("3", orgDomain.toUpperCase());
-        map.put("4", bindAddress);
-
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        InputStream is = cl.getResourceAsStream("minikdc.ldiff");
-
-        SchemaManager schemaManager = ds.getSchemaManager();
-        final String content = StrSubstitutor.replace(IOUtils.toString(is), map);
-        LdifReader reader = new LdifReader(new StringReader(content));
-        for (LdifEntry ldifEntry : reader) {
-            ds.getAdminSession().add(new DefaultEntry(schemaManager,
-                    ldifEntry.getEntry()));
-        }
-
-        kdc = new KdcServer();
-        kdc.setDirectoryService(ds);
-
-        // transport
-    /*
-    String transport = conf.getProperty(TRANSPORT);
-    if (transport.trim().equals("TCP")) {
-      kdc.addTransports(new TcpTransport(bindAddress, port, 3, 50));
-    } else if (transport.trim().equals("UDP")) {
-      kdc.addTransports(new UdpTransport(port));
-    } else {
-      throw new IllegalArgumentException("Invalid transport: " + transport);
-    }
-    */
-        kdc.setServiceName(conf.getProperty(INSTANCE));
-        kdc.getConfig().setMaximumRenewableLifetime(
-                Long.parseLong(conf.getProperty(MAX_RENEWABLE_LIFETIME)));
-        kdc.getConfig().setMaximumTicketLifetime(
-                Long.parseLong(conf.getProperty(MAX_TICKET_LIFETIME)));
-
-        kdc.getConfig().setPaEncTimestampRequired(false);
-        kdc.start();
-
         StringBuilder sb = new StringBuilder();
         is = cl.getResourceAsStream("minikdc-krb5.conf");
         BufferedReader r = new BufferedReader(new InputStreamReader(is));
@@ -324,13 +109,13 @@ public class MiniKdc {
         Method refreshMethod = classRef.getMethod("refresh", new Class[0]);
         refreshMethod.invoke(classRef, new Object[0]);
 
-        LOG.info("MiniKdc listening at port: {}", getPort());
-        LOG.info("MiniKdc setting JVM krb5.conf to: {}",
+        logger.info("TestKdcServer listening at port: {}", getPort());
+        logger.info("TestKdcServer setting JVM krb5.conf to: {}",
                 krb5conf.getAbsolutePath());
     }
 
     /**
-     * Stops the MiniKdc
+     * Stops the TestKdcServer
      * @throws Exception
      */
     public synchronized void stop() {
@@ -341,7 +126,7 @@ public class MiniKdc {
             try {
                 ds.shutdown();
             } catch (Exception ex) {
-                LOG.error("Could not shutdown ApacheDS properly: {}", ex.toString(),
+                logger.error("Could not shutdown ApacheDS properly: {}", ex.toString(),
                         ex);
             }
         }
@@ -351,14 +136,14 @@ public class MiniKdc {
     private void delete(File f) {
         if (f.isFile()) {
             if (! f.delete()) {
-                LOG.warn("WARNING: cannot delete file " + f.getAbsolutePath());
+                logger.warn("WARNING: cannot delete file " + f.getAbsolutePath());
             }
         } else {
             for (File c: f.listFiles()) {
                 delete(c);
             }
             if (! f.delete()) {
-                LOG.warn("WARNING: cannot delete directory " + f.getAbsolutePath());
+                logger.warn("WARNING: cannot delete directory " + f.getAbsolutePath());
             }
         }
     }
@@ -446,7 +231,7 @@ public class MiniKdc {
         for (Map.Entry entry : userConf.entrySet()) {
             conf.put(entry.getKey(), entry.getValue());
         }
-        final MiniKdc miniKdc = new MiniKdc(conf, workDir);
+        final TestKdcServer miniKdc = new TestKdcServer(conf, workDir);
         miniKdc.start();
         File krb5conf = new File(workDir, "krb5.conf");
         if (miniKdc.getKrb5conf().renameTo(krb5conf)) {
@@ -455,7 +240,7 @@ public class MiniKdc {
             System.arraycopy(args, 3, principals, 0, args.length - 3);
             miniKdc.createPrincipal(keytabFile, principals);
             System.out.println();
-            System.out.println("Standalone MiniKdc Running");
+            System.out.println("Standalone TestKdcServer Running");
             System.out.println("---------------------------------------------------");
             System.out.println("  Realm           : " + miniKdc.getRealm());
             System.out.println("  Running at      : " + miniKdc.getHost() + ":" +
@@ -479,6 +264,4 @@ public class MiniKdc {
                     + krb5conf.getAbsolutePath());
         }
     }
-
-
 }

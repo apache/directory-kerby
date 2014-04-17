@@ -20,6 +20,15 @@ public class LimitedByteBuffer {
         this.startOffset = byteBuffer.position();
     }
 
+    public LimitedByteBuffer(LimitedByteBuffer other, int limit) {
+        if (limit > other.hasLeft()) {
+            throw new IllegalArgumentException("limit is too large, out of bound");
+        }
+        this.byteBuffer = other.byteBuffer.duplicate();
+        this.limit = limit;
+        this.startOffset = byteBuffer.position();
+    }
+
     public boolean available() {
         return byteBuffer.hasRemaining() &&
                 byteBuffer.position() - startOffset < limit;
@@ -37,6 +46,10 @@ public class LimitedByteBuffer {
             throw new IOException("Buffer EOF");
         }
         return byteBuffer.get();
+    }
+
+    public byte[] readAllBytes() throws IOException {
+        return readBytes(limit);
     }
 
     public byte[] readBytes(int len) throws IOException {

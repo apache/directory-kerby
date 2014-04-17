@@ -4,12 +4,26 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public abstract class AbstractAsn1Type implements Asn1Type {
+public abstract class AbstractAsn1Type<T> implements Asn1Type {
     private final int tag;
     private int encodingLen = -1;
+    private T value;
 
     public AbstractAsn1Type(int tag) {
+        this(tag, null);
+    }
+
+    public AbstractAsn1Type(int tag, T value) {
         this.tag = tag;
+        this.value = value;
+    }
+
+    public T getValue() {
+        return value;
+    }
+
+    protected void setValue(T value) {
+        this.value = value;
     }
 
     @Override
@@ -30,6 +44,7 @@ public abstract class AbstractAsn1Type implements Asn1Type {
         decode(new LimitedByteBuffer(content));
     }
 
+    @Override
     public int encodingLength() {
         if (encodingLen == -1) {
             int bodyLen = bodyLength();
@@ -46,18 +61,18 @@ public abstract class AbstractAsn1Type implements Asn1Type {
         int tagNo = readTagNo(content, tag);
         int length = readLength(content);
 
-        decode(tag, tagNo, length, content);
+        decode(tag, tagNo, new LimitedByteBuffer(content, length));
     }
 
-    protected void decode(int tag, int tagNo, int length,
-                          LimitedByteBuffer content) throws IOException {
+    @Override
+    public void decode(int tag, int tagNo, LimitedByteBuffer content) throws IOException {
         if (this.tag != -1 && this.tag != tag) {
             throw new IOException("Unexpected tag " + tag + ", expecting " + this.tag);
         }
-        decodeValue(length, content);
+        decodeValue(content);
     }
 
-    protected abstract void decodeValue(int length, LimitedByteBuffer content) throws IOException;
+    protected abstract void decodeValue(LimitedByteBuffer content) throws IOException;
 
     protected boolean isConstructed() {
         return true;

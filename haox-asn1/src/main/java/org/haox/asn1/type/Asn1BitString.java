@@ -20,20 +20,36 @@ public class Asn1BitString extends AbstractAsn1Primitive<byte[]>
     }
 
     @Override
-    protected byte[] body() {
-        byte[] bytes = new byte[bodyLength()];
-        bytes[0] = (byte)padding;
-        System.arraycopy(getValue(), 0, bytes, 1, bytes.length - 1);
-        return bytes;
-    }
-
-    @Override
     protected int bodyLength() {
         return getValue().length + 1;
     }
 
     @Override
-    protected void decodeValue(int length, LimitedByteBuffer content) throws IOException {
-        setValue(content.readBytes(length));
+    protected void toBytes() {
+        byte[] bytes = new byte[bodyLength()];
+        bytes[0] = (byte)padding;
+        System.arraycopy(getValue(), 0, bytes, 1, bytes.length - 1);
+        setBytes(bytes);
+    }
+
+    @Override
+    protected void toValue() throws IOException {
+        byte[] bytes = getBytes();
+        if (bytes.length < 1) {
+            throw new IOException("Bad stream, zero bytes found for bitstring");
+        }
+        int paddingBits = bytes[0];
+        validatePaddingBits(paddingBits);
+        byte[] newBytes = new byte[bytes.length - 1];
+        if (bytes.length > 1) {
+            System.arraycopy(bytes, 1, newBytes, 0, bytes.length - 1);
+        }
+        setValue(newBytes);
+    }
+
+    private void validatePaddingBits(int paddingBits) throws IOException {
+        if (paddingBits < 0 || paddingBits > 7) {
+            throw new IOException("Bad padding number: " + paddingBits + ", should be in [0, 7]");
+        }
     }
 }
