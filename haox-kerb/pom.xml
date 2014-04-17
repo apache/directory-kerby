@@ -14,10 +14,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>kerb-spec</module>
         <module>kerb-api</module>
-        <module>kerb-core</module>
         <module>kerb-server</module>
-        <module>kerb-codec</module>
+        <module>kerb-core</module>
     </modules>
 </project>

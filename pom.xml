@@ -18,7 +18,7 @@
 
     <modules>
         <module>haox-kerb</module>
-        <module>haox-org.haox.config</module>
+        <module>haox-config</module>
         <module>haox-asn1</module>
     </modules>
 
