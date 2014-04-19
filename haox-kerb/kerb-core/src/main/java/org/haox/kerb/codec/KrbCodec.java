@@ -1,29 +1,31 @@
 package org.haox.kerb.codec;
 
+import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.spec.KrbCodecMessageCode;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.KrbThrow;
-import org.haox.kerb.spec.type.KrbFactory;
-import org.haox.kerb.spec.type.KrbType;
+
+import java.io.IOException;
 
 public class KrbCodec {
-    public static byte[] encode(KrbType krbObj) throws KrbException {
-        if (! (krbObj instanceof KrbEncodable)) {
-            KrbThrow.out(KrbCodecMessageCode.NOT_ENCODABLE);
-        }
-
-        KrbEncodable encodable = (KrbEncodable) krbObj;
-        return encodable.encode();
+    public static byte[] encode(Asn1Type krbObj) throws KrbException {
+        return krbObj.encode();
     }
 
-    public static <T extends KrbType> T decode(byte[] content, Class<T> krbType) throws KrbException {
-        KrbType implObj = KrbFactory.create(krbType);
-        if (! (implObj instanceof KrbEncodable)) {
-            KrbThrow.out(KrbCodecMessageCode.NOT_ENCODABLE);
+    public static <T extends Asn1Type> T decode(byte[] content, Class<T> krbType) throws KrbException {
+        Asn1Type implObj = null;
+        try {
+            implObj = krbType.newInstance();
+        } catch (Exception e) {
+            KrbThrow.out(KrbCodecMessageCode.DECODING_FAILED, e);
         }
 
-        KrbEncodable encodable = (KrbEncodable) implObj;
-        encodable.decode(content);
+        try {
+            implObj.decode(content);
+        } catch (IOException e) {
+            KrbThrow.out(KrbCodecMessageCode.DECODING_FAILED, e);
+        }
+
         return (T) implObj;
     }
 }

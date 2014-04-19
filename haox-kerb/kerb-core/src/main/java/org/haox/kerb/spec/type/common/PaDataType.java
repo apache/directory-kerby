@@ -1,7 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
 import org.haox.kerb.spec.type.KrbEnum;
-import org.haox.kerb.spec.type.KrbInteger;
 
 /**
  * From krb5.h
@@ -60,10 +59,10 @@ public enum PaDataType implements KrbEnum {
         return value;
     }
 
-    public static PaDataType fromValue(KrbInteger value) {
+    public static PaDataType fromValue(Integer value) {
         if (value != null) {
             for (KrbEnum e : values()) {
-                if (e.getValue() == value.getValue().intValue()) {
+                if (e.getValue() == value.intValue()) {
                     return (PaDataType) e;
                 }
             }

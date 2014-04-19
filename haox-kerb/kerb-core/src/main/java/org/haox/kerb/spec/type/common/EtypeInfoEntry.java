@@ -1,6 +1,9 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.kerb.spec.type.*;
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1OctetString;
+import org.haox.asn1.type.Asn1Tag;
+import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
  ETYPE-INFO-ENTRY        ::= SEQUENCE {
@@ -8,40 +11,33 @@ import org.haox.kerb.spec.type.*;
  salt            [1] OCTET STRING OPTIONAL
  }
  */
-public interface EtypeInfoEntry extends SequenceType {
-    public static enum Tag implements KrbTag {
-        ETYPE(0, KrbInteger.class),
-        SALT(1, KrbOctetString.class);
+public class EtypeInfoEntry extends KrbSequenceType {
+    private static int ETYPE = 0;
+    private static int SALT = 1;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(ETYPE, 0, Asn1Integer.class),
+            new Asn1Tag(SALT, 1, Asn1OctetString.class)
     };
 
-    public byte[] getSalt();
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setSalt(byte[] salt);
+    public int getEtype() {
+        return getFieldAsInt(ETYPE);
+    }
 
-    public int getEtype();
+    public void setEtype(int etype) {
+        setFieldAsInt(ETYPE, etype);
+    }
 
-    public void setEtype(int etype);
+    public byte[] getSalt() {
+        return getFieldAsOctetBytes(SALT);
+    }
+
+    public void setSalt(byte[] salt) {
+        setFieldAsOctetBytes(SALT, salt);
+    }
 }

@@ -1,7 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1OctetString;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.*;
+import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
  TransitedEncoding       ::= SEQUENCE {
@@ -9,40 +12,34 @@ import org.haox.kerb.spec.type.*;
  contents        [1] OCTET STRING
  }
  */
-public interface TransitedEncoding extends SequenceType {
-    public static enum Tag implements KrbTag {
-        TR_TYPE(0, KrbInteger.class),
-        CONTENTS(1, KrbOctetString.class);
+public class TransitedEncoding extends KrbSequenceType {
+    private static int TR_TYPE = 0;
+    private static int CONTENTS = 1;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(TR_TYPE, 1, Asn1Integer.class),
+            new Asn1Tag(CONTENTS, 2, Asn1OctetString.class)
     };
 
-    public TransitedEncodingType getTrType() throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setTrType(TransitedEncodingType trType) throws KrbException;
+    public TransitedEncodingType getTrType() throws KrbException {
+        Integer value = getFieldAsInteger(TR_TYPE);
+        return TransitedEncodingType.fromValue(value);
+    }
 
-    public byte[] getContents() throws KrbException;
+    public void setTrType(TransitedEncodingType trType) throws KrbException {
+        setField(TR_TYPE, trType);
+    }
 
-    public void setContents(byte[] contents) throws KrbException;
+    public byte[] getContents() throws KrbException {
+        return getFieldAsOctetBytes(CONTENTS);
+    }
+
+    public void setContents(byte[] contents) throws KrbException {
+        setFieldAsOctetBytes(CONTENTS, contents);
+    }
 }

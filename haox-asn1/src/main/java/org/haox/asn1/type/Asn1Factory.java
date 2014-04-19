@@ -3,47 +3,45 @@ package org.haox.asn1.type;
 public class Asn1Factory {
 
     public static Asn1Type create(BerTag tag) {
-        Asn1Type value = null;
         switch (tag) {
             case BIT_STRING:
-                value = new Asn1BitString();
+                return new Asn1BitString();
             case BMP_STRING:
-                value = new Asn1BmpString();
+                return new Asn1BmpString();
             case BOOLEAN:
-                value = new Asn1Boolean();
+                return new Asn1Boolean();
             case ENUMERATED:
-                value = null;
+                return null;
             case GENERALIZED_TIME:
-                value = new Asn1GeneralizedTime();
+                return new Asn1GeneralizedTime();
             case GENERAL_STRING:
-                value = new Asn1GeneralString();
+                return new Asn1GeneralString();
             case IA5_STRING:
-                value = new new Asn1IA5String();
+                return new Asn1IA5String();
             case INTEGER:
-                value = new Asn1Integer();
+                return new Asn1Integer();
             case NULL:
-                value = new Asn1Null();
+                return new Asn1Null();
             case NUMERIC_STRING:
-                value = new Asn1NumericsString();
+                return new Asn1NumericsString();
             case OBJECT_IDENTIFIER:
-                value = null;
+                return null;
             case OCTET_STRING:
-                value = new Asn1OctetString();
+                return new Asn1OctetString();
             case PRINTABLE_STRING:
-                value = new Asn1PrintableString();
+                return new Asn1PrintableString();
             case T61_STRING:
-                value = new Asn1T61String();
+                return new Asn1T61String();
             case UNIVERSAL_STRING:
-                value = new Asn1UniversalString();
+                return new Asn1UniversalString();
             case UTC_TIME:
-                value = new Asn1UtcTime();
+                return new Asn1UtcTime();
             case UTF8_STRING:
-                value = new Asn1Utf8String();
+                return new Asn1Utf8String();
             case VISIBLE_STRING:
-                value = new Asn1VisibleString();
+                return new Asn1VisibleString();
             default:
                 throw new IllegalArgumentException("Unexpected tag " + tag.getValue());
         }
-        return value;
     }
 }

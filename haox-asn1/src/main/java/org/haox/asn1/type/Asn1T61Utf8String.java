@@ -31,12 +31,12 @@ public class Asn1T61Utf8String extends Asn1String
         return bytes.length;
     }
 
-    private void toBytes() {
+    protected void toBytes() {
         this.bytes = getValue().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
-    protected void decodeValue(int length, LimitedByteBuffer content) throws IOException {
-        byte[] bytes = content.readBytes(length);
+    protected void decodeValue(LimitedByteBuffer content) throws IOException {
+        byte[] bytes = content.readAllBytes();
         setValue(new String(bytes, StandardCharsets.UTF_8));
     }}

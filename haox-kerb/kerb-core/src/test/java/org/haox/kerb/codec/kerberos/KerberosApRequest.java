@@ -17,7 +17,7 @@ public class KerberosApRequest {
             throw new DecodingException("kerberos.request.empty", null, null);
 
         try {
-            apReq = KrbCodec.decode(token, ApReq.class);
+            apReq = new ApReq();KrbCodec.decode(token, ApReq.class);
             ticket = new KerberosTicket(apReq.getTicket(), apReq.getApOptions(), keys);
         } catch (KrbException e) {
             e.printStackTrace();

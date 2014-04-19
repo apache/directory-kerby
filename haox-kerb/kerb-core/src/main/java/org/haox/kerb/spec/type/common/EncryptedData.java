@@ -1,7 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1OctetString;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.*;
 
 /**
  EncryptedData   ::= SEQUENCE {
@@ -10,45 +13,48 @@ import org.haox.kerb.spec.type.*;
  cipher  [2] OCTET STRING -- ciphertext
  }
  */
-public interface EncryptedData extends SequenceType {
-    public static enum Tag implements KrbTag {
-        ETYPE(0, KrbInteger.class),
-        KVNO(1, KrbInteger.class),
-        CIPHER(2, KrbOctetString.class);
+public class EncryptedData extends AbstractSequenceType {
+    private static int ETYPE = 0;
+    private static int KVNO = 1;
+    private static int CIPHER = 2;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(ETYPE, 0, Asn1Integer.class),
+            new Asn1Tag(KVNO, 1, Asn1Integer.class),
+            new Asn1Tag(CIPHER, 2, Asn1OctetString.class)
     };
 
-    public EncryptionType getEType() throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setEType(EncryptionType eType) throws KrbException;
+    public EncryptionType getEType() throws KrbException {
+        Integer value = getFieldAsInteger(ETYPE);
+        return EncryptionType.fromValue(value);
+    }
 
-    public int getKvno() throws KrbException;
+    public void setEType(EncryptionType eType) throws KrbException {
+        setFieldAsInt(ETYPE, eType.getValue());
+    }
 
-    public void setKvno(int kvno) throws KrbException;
+    public int getKvno() throws KrbException {
+        Integer value = getFieldAsInteger(KVNO);
+        if (value != null) {
+            return value.intValue();
+        }
+        return -1;
+    }
 
-    public byte[] getCipher() throws KrbException;
+    public void setKvno(int kvno) throws KrbException {
+        setFieldAsInt(KVNO, kvno);
+    }
 
-    public void setCipher(byte[] cipher) throws KrbException;
+    public byte[] getCipher() throws KrbException {
+        return getFieldAsOctetBytes(CIPHER);
+    }
+
+    public void setCipher(byte[] cipher) throws KrbException {
+        setFieldAsOctetBytes(CIPHER, cipher);
+    }
 }

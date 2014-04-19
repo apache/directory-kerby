@@ -22,7 +22,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         return value;
     }
 
-    protected void setValue(T value) {
+    public void setValue(T value) {
         this.value = value;
     }
 

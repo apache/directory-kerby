@@ -1,6 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.kerb.spec.type.*;
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1OctetString;
+import org.haox.asn1.type.Asn1Tag;
+import org.haox.kerb.spec.type.KerberosString;
+import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
  ETYPE-INFO2-ENTRY       ::= SEQUENCE {
@@ -9,46 +13,43 @@ import org.haox.kerb.spec.type.*;
  s2kparams       [2] OCTET STRING OPTIONAL
  }
  */
-public interface EtypeInfo2Entry extends SequenceType {
-    public static enum Tag implements KrbTag {
-        ETYPE(0, KrbInteger.class),
-        SALT(1, KrbOctetString.class),
-        S2KPARAMS(2, KrbOctetString.class);
+public class EtypeInfo2Entry extends KrbSequenceType {
+    private static int ETYPE = 0;
+    private static int SALT = 1;
+    private static int S2KPARAMS = 2;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(ETYPE, 0, Asn1Integer.class),
+            new Asn1Tag(SALT, 1, KerberosString.class),
+            new Asn1Tag(S2KPARAMS, 2, Asn1OctetString.class)
     };
 
-    public byte[] getSalt();
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setSalt(byte[] salt);
+    public int getEtype() {
+        return getFieldAsInt(ETYPE);
+    }
 
-    public int getEtype();
+    public void setEtype(int etype) {
+        setFieldAsInt(ETYPE, etype);
+    }
 
-    public void setEtype(int etype);
+    public String getSalt() {
+        return getFieldAsString(SALT);
+    }
 
-    public byte[] getS2kParams();
+    public void setSalt(String salt) {
+        setFieldAsString(SALT, salt);
+    }
 
-    public void setS2kParams(byte[] s2kParams);
+    public byte[] getS2kParams() {
+        return getFieldAsOctetBytes(S2KPARAMS);
+    }
 
+    public void setS2kParams(byte[] s2kParams) {
+        setFieldAsOctetBytes(S2KPARAMS, s2kParams);
+    }
 }

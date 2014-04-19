@@ -1,7 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
 import org.haox.kerb.spec.type.KrbEnum;
-import org.haox.kerb.spec.type.KrbInteger;
 
 public enum AuthorizationType implements KrbEnum {
     /**
@@ -111,10 +110,10 @@ public enum AuthorizationType implements KrbEnum {
         return value;
     }
 
-    public static AuthorizationType fromValue(KrbInteger value) {
+    public static AuthorizationType fromValue(Integer value) {
         if (value != null) {
             for (KrbEnum e : values()) {
-                if (e.getValue() == value.getValue().intValue()) {
+                if (e.getValue() == value.intValue()) {
                     return (AuthorizationType) e;
                 }
             }

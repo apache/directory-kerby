@@ -1,7 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1OctetString;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.*;
 
 /**
  PA-DATA         ::= SEQUENCE {
@@ -10,40 +13,34 @@ import org.haox.kerb.spec.type.*;
  padata-value    [2] OCTET STRING -- might be encoded AP-REQ
  }
  */
-public interface PaDataEntry extends SequenceType {
-    public static enum Tag implements KrbTag {
-        PADATA_TYPE(1, KrbInteger.class),
-        PADATA_VALUE(2, KrbOctetString.class);
+public class PaDataEntry extends AbstractSequenceType {
+    private static int PADATA_TYPE = 0;
+    private static int PADATA_VALUE = 1;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal() - 1;
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(PADATA_TYPE, 1, Asn1Integer.class),
+            new Asn1Tag(PADATA_VALUE, 2, Asn1OctetString.class)
     };
 
-    public PaDataType getPaDataType() throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setPaDataType(PaDataType paDataType) throws KrbException;
+    public PaDataType getPaDataType() throws KrbException {
+        Integer value = getFieldAsInteger(PADATA_TYPE);
+        return PaDataType.fromValue(value);
+    }
 
-    public byte[] getPaDataValue() throws KrbException;
+    public void setPaDataType(PaDataType paDataType) throws KrbException {
+        setFieldAsInt(PADATA_TYPE, paDataType.getValue());
+    }
 
-    public void setPaDataValue(byte[] paDataValue) throws KrbException;
+    public byte[] getPaDataValue() throws KrbException {
+        return getFieldAsOctetBytes(PADATA_VALUE);
+    }
+
+    public void setPaDataValue(byte[] paDataValue) throws KrbException {
+        setFieldAsOctetBytes(PADATA_VALUE, paDataValue);
+    }
 }

@@ -3,7 +3,7 @@ package org.haox.kerb.server.shared.replay;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.store.AbstractPolicy;
-import org.haox.kerb.spec.type.common.KrbTime;
+import org.haox.kerb.spec.type.KerberosTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +28,7 @@ public class ReplayCacheImpl implements ReplayCache
     private Cache cache;
 
     /** default clock skew */
-    private static final long DEFAULT_CLOCK_SKEW = 5 * KrbTime.MINUTE;
+    private static final long DEFAULT_CLOCK_SKEW = 5 * KerberosTime.MINUTE;
 
     /** The clock skew */
     private long clockSkew = DEFAULT_CLOCK_SKEW;
@@ -47,7 +47,7 @@ public class ReplayCacheImpl implements ReplayCache
         private KerberosPrincipal clientPrincipal;
 
         /** The client time */
-        private KrbTime clientTime;
+        private KerberosTime clientTime;
 
         /** The client micro seconds */
         private int clientMicroSeconds;
@@ -62,7 +62,7 @@ public class ReplayCacheImpl implements ReplayCache
          * @param clientMicroSeconds
          */
         public ReplayCacheEntry( KerberosPrincipal serverPrincipal, KerberosPrincipal clientPrincipal,
-            KrbTime clientTime, int clientMicroSeconds )
+            KerberosTime clientTime, int clientMicroSeconds )
         {
             this.serverPrincipal = serverPrincipal;
             this.clientPrincipal = clientPrincipal;
@@ -189,7 +189,7 @@ public class ReplayCacheImpl implements ReplayCache
      * Check if an entry is a replay or not.
      */
     public synchronized boolean isReplay( KerberosPrincipal serverPrincipal, KerberosPrincipal clientPrincipal,
-        KrbTime clientTime, int clientMicroSeconds )
+        KerberosTime clientTime, int clientMicroSeconds )
     {
 
         ReplayCacheEntry entry = new ReplayCacheEntry( serverPrincipal, clientPrincipal, clientTime, clientMicroSeconds );
@@ -219,7 +219,7 @@ public class ReplayCacheImpl implements ReplayCache
      * entries.
      */
     public synchronized void save( KerberosPrincipal serverPrincipal, KerberosPrincipal clientPrincipal,
-        KrbTime clientTime, int clientMicroSeconds )
+        KerberosTime clientTime, int clientMicroSeconds )
     {
         ReplayCacheEntry entry = new ReplayCacheEntry( serverPrincipal, clientPrincipal, clientTime, clientMicroSeconds );
 

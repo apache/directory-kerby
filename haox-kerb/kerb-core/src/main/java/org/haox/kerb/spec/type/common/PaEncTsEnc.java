@@ -1,9 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbInteger;
-import org.haox.kerb.spec.type.KrbTag;
-import org.haox.kerb.spec.type.KrbType;
+import org.haox.kerb.spec.type.KerberosTime;
+import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
  PA-ENC-TS-ENC           ::= SEQUENCE {
@@ -11,40 +12,33 @@ import org.haox.kerb.spec.type.KrbType;
  pausec          [1] Microseconds OPTIONAL
  }
  */
-public interface PaEncTsEnc extends KrbType {
-    public static enum Tag implements KrbTag {
-        PATIMESTAMP(0, KrbTime.class),
-        PAUSEC(1, KrbInteger.class);
+public class PaEncTsEnc extends KrbSequenceType {
+    private static int PATIMESTAMP = 0;
+    private static int PAUSEC = 1;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(PATIMESTAMP, 1, KerberosTime.class),
+            new Asn1Tag(PAUSEC, 2, Asn1Integer.class)
     };
 
-    public KrbTime getPaTimestamp() throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setPaTimestamp(KrbTime paTimestamp) throws KrbException;
+    public KerberosTime getPaTimestamp() {
+        return getFieldAsTime(PATIMESTAMP);
+    }
 
-    public long getPaUsec() throws KrbException;
+    public void setPaTimestamp(KerberosTime paTimestamp) {
+        setFieldAs(PATIMESTAMP, paTimestamp);
+    }
 
-    public void setPaUsec(long paUsec) throws KrbException;
+    public int getPaUsec() {
+        return getFieldAsInt(PAUSEC);
+    }
+
+    public void setPaUsec(int paUsec) {
+        setFieldAsInt(PAUSEC, paUsec);
+    }
 }

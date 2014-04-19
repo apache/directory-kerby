@@ -1,8 +1,11 @@
 package org.haox.kerb.spec.type.ticket;
 
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.*;
+import org.haox.kerb.spec.type.KerberosString;
+import org.haox.kerb.spec.type.KrbSequenceType;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.PrincipalName;
 
@@ -14,54 +17,66 @@ import org.haox.kerb.spec.type.common.PrincipalName;
  enc-part        [3] EncryptedData -- EncTicketPart
  }
  */
-public interface Ticket extends SequenceType {
+public class Ticket extends KrbSequenceType {
     public static final int TKT_KVNO = KrbConstant.KERBEROS_V5;
+    public static final int TAG = 1;
 
-    public static enum Tag implements KrbTag {
-        TKT_VNO(0, KrbInteger.class),
-        REALM(1, KrbString.class),
-        SNAME(2, PrincipalName.class),
-        ENC_PART(3, EncryptedData.class);
+    private static int TKT_VNO = 0;
+    private static int REALM = 1;
+    private static int SNAME = 2;
+    private static int ENC_PART = 3;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(TKT_VNO, 0, Asn1Integer.class),
+            new Asn1Tag(REALM, 1, KerberosString.class),
+            new Asn1Tag(SNAME, 2, PrincipalName.class),
+            new Asn1Tag(ENC_PART, 3, EncryptedData.class)
     };
 
-    public int getTktvno() throws KrbException;
+    public Ticket() {
+        super(TAG);
+    }
 
-    public PrincipalName getSname() throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setSname(PrincipalName sname) throws KrbException;
+    private EncTicketPart encPart;
 
-    public String getRealm() throws KrbException;
+    public int getTktvno() throws KrbException {
+        return getFieldAsInt(TKT_VNO);
+    }
 
-    public void setRealm(String realm) throws KrbException;
+    public PrincipalName getSname() throws KrbException {
+        return getFieldAs(SNAME, PrincipalName.class);
+    }
 
-    public EncryptedData getEncryptedEncPart() throws KrbException;
+    public void setSname(PrincipalName sname) throws KrbException {
+        setFieldAs(SNAME, sname);
+    }
 
-    public void setEncryptedEncPart(EncryptedData encryptedEncPart) throws KrbException;
+    public String getRealm() throws KrbException {
+        return getFieldAsString(REALM);
+    }
 
-    public EncTicketPart getEncPart();
+    public void setRealm(String realm) throws KrbException {
+        setFieldAs(REALM, new KerberosString(realm));
+    }
 
-    public void setEncPart(EncTicketPart encPart);
+    public EncryptedData getEncryptedEncPart() throws KrbException {
+        return getFieldAs(ENC_PART, EncryptedData.class);
+    }
+
+    public void setEncryptedEncPart(EncryptedData encryptedEncPart) throws KrbException {
+        setFieldAs(ENC_PART, encryptedEncPart);
+    }
+
+    public EncTicketPart getEncPart() {
+        return encPart;
+    }
+
+    public void setEncPart(EncTicketPart encPart) {
+        this.encPart = encPart;
+    }
 }

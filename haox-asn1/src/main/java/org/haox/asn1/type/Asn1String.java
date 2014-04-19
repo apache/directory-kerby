@@ -18,8 +18,9 @@ public abstract class Asn1String extends AbstractAsn1Primitive<String>
     }
 
     @Override
-    protected byte[] body() {
-        return getValue().getBytes(StandardCharsets.US_ASCII);
+    protected void toBytes() {
+        byte[] bytes = getValue().getBytes(StandardCharsets.US_ASCII);
+        setBytes(bytes);
     }
 
     @Override
@@ -27,9 +28,8 @@ public abstract class Asn1String extends AbstractAsn1Primitive<String>
         return getValue().length();
     }
 
-    @Override
-    protected void decodeValue(LimitedByteBuffer content) throws IOException {
-        byte[] bytes = content.readAllBytes();
+    protected void toValue() throws IOException {
+        byte[] bytes = getBytes();
         setValue(new String(bytes, StandardCharsets.US_ASCII));
     }
 

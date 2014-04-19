@@ -1,7 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.kerb.spec.type.KrbType;
-import org.haox.kerb.spec.type.SequenceOfType;
+import org.haox.asn1.type.SequenceOfType;
 
 import java.util.List;
 
@@ -12,10 +11,6 @@ import java.util.List;
  -- but has a value mapping and encodes the same
  ::= SEQUENCE OF HostAddress
  */
-public interface HostAddresses extends SequenceOfType {
-    public static Class<? extends KrbType> ElementType =  HostAddress.class;
+public class HostAddresses extends SequenceOfType<HostAddress> {
 
-    public List<HostAddress> getAddresses();
-
-    public void setAddresses(List<HostAddress> addresses);
 }

@@ -1,21 +1,18 @@
 package org.haox.kerb.server.shared.crypto.encryption;
 
-import org.apache.directory.api.asn1.AbstractAsn1Object;
-import org.apache.directory.api.asn1.EncoderException;
 import org.apache.directory.api.ldap.model.constants.Loggers;
 import org.apache.directory.shared.kerberos.exceptions.ErrorType;
 import org.apache.directory.shared.kerberos.exceptions.KerberosException;
+import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.server.shared.crypto.KeyUsage;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbType;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +52,7 @@ public class CipherTextHandler
      * @return The Kerberos EncryptedData.
      * @throws org.apache.directory.shared.kerberos.exceptions.KerberosException
      */
-    public EncryptedData seal( EncryptionKey key, KrbType message, KeyUsage usage ) throws KerberosException, KrbException {
+    public EncryptedData seal(EncryptionKey key, Asn1Type message, KeyUsage usage ) throws KerberosException, KrbException {
         try
         {
             byte[] encoded = KrbCodec.encode(message);

@@ -1,7 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1OctetString;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.*;
 
 /**
  AuthorizationData       ::= SEQUENCE OF SEQUENCE {
@@ -9,40 +12,34 @@ import org.haox.kerb.spec.type.*;
  ad-data         [1] OCTET STRING
  }
  */
-public interface AuthorizationDataEntry extends SequenceType {
-    public static enum Tag implements KrbTag {
-        AD_TYPE(0, KrbInteger.class),
-        AD_DATA(1, KrbOctetString.class);
+public class AuthorizationDataEntry extends AbstractSequenceType {
+    private static int AD_TYPE = 0;
+    private static int AD_DATA = 1;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(AD_TYPE, 0, Asn1Integer.class),
+            new Asn1Tag(AD_DATA, 1, Asn1OctetString.class)
     };
 
-    public AuthorizationType getAuthzType() throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setAuthzType(AuthorizationType authzType) throws KrbException;
+    public AuthorizationType getAuthzType() throws KrbException {
+        Integer value = getFieldAsInteger(AD_TYPE);
+        return AuthorizationType.fromValue(value);
+    }
 
-    public byte[] getAuthzData() throws KrbException;
+    public void setAuthzType(AuthorizationType authzType) throws KrbException {
+        setFieldAsInt(AD_TYPE, authzType.getValue());
+    }
 
-    public void setAuthzData(byte[] authzData) throws KrbException;
+    public byte[] getAuthzData() throws KrbException {
+        return getFieldAsOctetBytes(AD_DATA);
+    }
+
+    public void setAuthzData(byte[] authzData) throws KrbException {
+        setFieldAsOctetBytes(AD_DATA, authzData);
+    }
 }

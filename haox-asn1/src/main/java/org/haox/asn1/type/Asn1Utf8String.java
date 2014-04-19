@@ -5,8 +5,6 @@ import java.nio.charset.StandardCharsets;
 
 public class Asn1Utf8String extends Asn1String
 {
-    private byte[] bytes;
-
     public Asn1Utf8String() {
         super(BerTag.UTF8_STRING);
     }
@@ -16,28 +14,13 @@ public class Asn1Utf8String extends Asn1String
     }
 
     @Override
-    protected byte[] body() {
-        if (bytes == null) {
-            toBytes();
-        }
-        return bytes;
+    protected void toBytes() {
+        byte[] bytes = getValue().getBytes(StandardCharsets.UTF_8);
+        setBytes(bytes);
     }
 
-    @Override
-    protected int bodyLength() {
-        if (bytes == null) {
-            toBytes();
-        }
-        return bytes.length;
-    }
-
-    private void toBytes() {
-        this.bytes = getValue().getBytes(StandardCharsets.UTF_8);
-    }
-
-    @Override
-    protected void decodeValue(int length, LimitedByteBuffer content) throws IOException {
-        byte[] bytes = content.readBytes(length);
+    protected void toValue() throws IOException {
+        byte[] bytes = getBytes();
         setValue(new String(bytes, StandardCharsets.UTF_8));
     }
 }

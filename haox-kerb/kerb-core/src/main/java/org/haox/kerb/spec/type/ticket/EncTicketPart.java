@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.ticket;
 
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbString;
-import org.haox.kerb.spec.type.KrbTag;
-import org.haox.kerb.spec.type.KrbType;
-import org.haox.kerb.spec.type.SequenceType;
+import org.haox.kerb.spec.type.KerberosString;
+import org.haox.kerb.spec.type.KerberosTime;
+import org.haox.kerb.spec.type.KrbSequenceType;
 import org.haox.kerb.spec.type.common.*;
 
 /**
@@ -23,85 +23,150 @@ import org.haox.kerb.spec.type.common.*;
  authorization-data      [10] AuthorizationData OPTIONAL
  }
  */
-public interface EncTicketPart extends SequenceType {
-    public static enum Tag implements KrbTag {
-        FLAGS(0, TicketFlags.class),
-        KEY(1, EncryptionKey.class),
-        CREALM(2, KrbString.class),
-        CNAME(3, PrincipalName.class),
-        TRANSITED(4, TransitedEncoding.class),
-        AUTHTIME(5, KrbTime.class),
-        STARTTIME(6, KrbTime.class),
-        ENDTIME(7, KrbTime.class),
-        RENEW_TILL(8, KrbTime.class),
-        CADDR(9, HostAddresses.class),
-        AUTHORIZATION_DATA(10, AuthorizationData.class);
+public class EncTicketPart extends KrbSequenceType {
+    public static final int TAG = 1;
 
-        private int value;
-        private Class<? extends KrbType> type;
+    private static int FLAGS = 0;
+    private static int KEY = 1;
+    private static int CREALM = 2;
+    private static int CNAME = 3;
+    private static int TRANSITED = 4;
+    private static int AUTHTIME = 5;
+    private static int STARTTIME = 6;
+    private static int ENDTIME = 7;
+    private static int RENEW_TILL = 8;
+    private static int CADDR = 9;
+    private static int AUTHORIZATION_DATA = 10;
 
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(FLAGS, 0, TicketFlags.class),
+            new Asn1Tag(KEY, 1, EncryptionKey.class),
+            new Asn1Tag(CREALM, 2, KerberosString.class),
+            new Asn1Tag(CNAME, 3, PrincipalName.class),
+            new Asn1Tag(TRANSITED, 4, TransitedEncoding.class),
+            new Asn1Tag(AUTHTIME, 5, KerberosTime.class),
+            new Asn1Tag(STARTTIME, 6, KerberosTime.class),
+            new Asn1Tag(ENDTIME, 7, KerberosTime.class),
+            new Asn1Tag(ENDTIME, 8, KerberosTime.class),
+            new Asn1Tag(CADDR, 9, HostAddresses.class),
+            new Asn1Tag(AUTHORIZATION_DATA, 10, AuthorizationData.class)
     };
 
-    public TicketFlags getFlags() throws KrbException;
+    public EncTicketPart() {
+        super(TAG);
+    }
 
-    public void setFlags(TicketFlags flags) throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public EncryptionKey getKey() throws KrbException;
+    public TicketFlags getFlags() throws KrbException {
+        return getFieldAs(FLAGS, TicketFlags.class);
+    }
 
-    public void setKey(EncryptionKey key) throws KrbException;
 
-    public String getCrealm() throws KrbException;
+    public void setFlags(TicketFlags flags) throws KrbException {
+        setFieldAs(FLAGS, flags);
+    }
 
-    public void setCrealm(String crealm) throws KrbException;
 
-    public PrincipalName getCname() throws KrbException;
+    public EncryptionKey getKey() throws KrbException {
+        return getFieldAs(KEY, EncryptionKey.class);
+    }
 
-    public void setCname(PrincipalName cname) throws KrbException;
 
-    public TransitedEncoding getTransited() throws KrbException;
+    public void setKey(EncryptionKey key) throws KrbException {
+        setFieldAs(KEY, key);
+    }
 
-    public void setTransited(TransitedEncoding transited) throws KrbException;
 
-    public KrbTime getAuthTime() throws KrbException;
+    public String getCrealm() throws KrbException {
+        return getFieldAsString(CREALM);
+    }
 
-    public void setAuthTime(KrbTime authTime) throws KrbException;
 
-    public KrbTime getStartTime() throws KrbException;
+    public void setCrealm(String crealm) throws KrbException {
+        setFieldAsString(CREALM, crealm);
+    }
 
-    public void setStartTime(KrbTime startTime) throws KrbException;
 
-    public KrbTime getEndTime() throws KrbException;
+    public PrincipalName getCname() throws KrbException {
+        return getFieldAs(CNAME, PrincipalName.class);
+    }
 
-    public void setEndTime(KrbTime endTime) throws KrbException;
 
-    public KrbTime getRenewtill() throws KrbException;
+    public void setCname(PrincipalName cname) throws KrbException {
+        setFieldAs(CNAME, cname);
+    }
 
-    public void setRenewtill(KrbTime renewtill) throws KrbException;
 
-    public HostAddresses getClientAddresses() throws KrbException;
+    public TransitedEncoding getTransited() throws KrbException {
+        return getFieldAs(TRANSITED, TransitedEncoding.class);
+    }
 
-    public void setClientAddresses(HostAddresses clientAddresses) throws KrbException;
 
-    public AuthorizationData getAuthorizationData() throws KrbException;
+    public void setTransited(TransitedEncoding transited) throws KrbException {
+        setFieldAs(TRANSITED, transited);
+    }
 
-    public void setAuthorizationData(AuthorizationData authorizationData) throws KrbException;
+
+    public KerberosTime getAuthTime() throws KrbException {
+        return getFieldAs(AUTHTIME, KerberosTime.class);
+    }
+
+
+    public void setAuthTime(KerberosTime authTime) throws KrbException {
+        setFieldAs(AUTHTIME, authTime);
+    }
+
+
+    public KerberosTime getStartTime() throws KrbException {
+        return getFieldAs(STARTTIME, KerberosTime.class);
+    }
+
+
+    public void setStartTime(KerberosTime startTime) throws KrbException {
+        setFieldAs(STARTTIME, startTime);
+    }
+
+
+    public KerberosTime getEndTime() throws KrbException {
+        return getFieldAs(ENDTIME, KerberosTime.class);
+    }
+
+
+    public void setEndTime(KerberosTime endTime) throws KrbException {
+        setFieldAs(ENDTIME, endTime);
+    }
+
+
+    public KerberosTime getRenewtill() throws KrbException {
+        return getFieldAs(RENEW_TILL, KerberosTime.class);
+    }
+
+
+    public void setRenewtill(KerberosTime renewtill) throws KrbException {
+        setFieldAs(RENEW_TILL, renewtill);
+    }
+
+
+    public HostAddresses getClientAddresses() throws KrbException {
+        return getFieldAs(CADDR, HostAddresses.class);
+    }
+
+
+    public void setClientAddresses(HostAddresses clientAddresses) throws KrbException {
+        setFieldAs(CADDR, clientAddresses);
+    }
+
+
+    public AuthorizationData getAuthorizationData() throws KrbException {
+        return getFieldAs(AUTHORIZATION_DATA, AuthorizationData.class);
+    }
+
+
+    public void setAuthorizationData(AuthorizationData authorizationData) throws KrbException {
+        setFieldAs(AUTHORIZATION_DATA, authorizationData);
+    }
 }

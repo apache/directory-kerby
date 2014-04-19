@@ -1,7 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
 import org.haox.kerb.spec.type.KrbEnum;
-import org.haox.kerb.spec.type.KrbInteger;
 
 public enum NameType implements KrbEnum {
     NT_UNKNOWN(0),
@@ -22,10 +21,10 @@ public enum NameType implements KrbEnum {
         return value;
     }
 
-    public static NameType fromValue(KrbInteger value) {
+    public static NameType fromValue(Integer value) {
         if (value != null) {
             for (KrbEnum e : values()) {
-                if (e.getValue() == value.getValue().intValue()) {
+                if (e.getValue() == value.intValue()) {
                     return (NameType) e;
                 }
             }

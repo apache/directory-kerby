@@ -1,7 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1OctetString;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.*;
 
 /*
 HostAddress     ::= SEQUENCE  {
@@ -9,40 +12,34 @@ HostAddress     ::= SEQUENCE  {
         address         [1] OCTET STRING
 }
  */
-public interface HostAddress extends SequenceType {
-    public static enum Tag implements KrbTag {
-        ADDR_TYPE(0, KrbInteger.class),
-        ADDRESS(1, KrbOctetString.class);
+public class HostAddress extends AbstractSequenceType {
+    private static int ADDR_TYPE = 0;
+    private static int ADDRESS = 1;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(ADDR_TYPE, 0, Asn1Integer.class),
+            new Asn1Tag(ADDRESS, 1, Asn1OctetString.class)
     };
 
-    public HostAddrType getAddrType() throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setAddrType(HostAddrType addrType) throws KrbException;
+    public HostAddrType getAddrType() throws KrbException {
+        Integer value = getFieldAsInteger(ADDR_TYPE);
+        return HostAddrType.fromValue(value);
+    }
 
-    public byte[] getAddress() throws KrbException;
+    public void setAddrType(HostAddrType addrType) throws KrbException {
+        setFieldAs(ADDR_TYPE, new Asn1Integer(addrType.getValue()));
+    }
 
-    public void setAddress(byte[] address) throws KrbException;
+    public byte[] getAddress() throws KrbException {
+        return getFieldAsOctetBytes(ADDRESS);
+    }
+
+    public void setAddress(byte[] address) throws KrbException {
+        setFieldAsOctetBytes(ADDRESS, address);
+    }
 }

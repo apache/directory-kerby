@@ -1,7 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
 import org.haox.kerb.spec.type.KrbEnum;
-import org.haox.kerb.spec.type.KrbInteger;
 
 public enum ChecksumType implements KrbEnum {
     NONE(-1),
@@ -33,15 +32,14 @@ public enum ChecksumType implements KrbEnum {
         return value;
     }
 
-    public static ChecksumType fromValue(KrbInteger value) {
+    public static ChecksumType fromValue(Integer value) {
         if (value != null) {
             for (KrbEnum e : values()) {
-                if (e.getValue() == value.getValue().intValue()) {
+                if (e.getValue() == value) {
                     return (ChecksumType) e;
                 }
             }
         }
-
         return NONE;
     }
 }

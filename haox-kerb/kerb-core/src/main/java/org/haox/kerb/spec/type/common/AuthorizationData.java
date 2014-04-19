@@ -1,9 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.kerb.spec.type.KrbType;
-import org.haox.kerb.spec.type.SequenceOfType;
-
-import java.util.List;
+import org.haox.asn1.type.SequenceOfType;
 
 /**
  AuthorizationData       ::= SEQUENCE OF SEQUENCE {
@@ -11,10 +8,6 @@ import java.util.List;
  ad-data         [1] OCTET STRING
  }
  */
-public interface AuthorizationData extends SequenceOfType {
-    public static Class<? extends KrbType> ElementType =  AuthorizationDataEntry.class;
+public class AuthorizationData extends SequenceOfType<AuthorizationDataEntry> {
 
-    public List<AuthorizationDataEntry> getEntries();
-
-    public void setEntries(List<AuthorizationDataEntry> entries);
 }

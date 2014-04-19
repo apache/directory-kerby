@@ -1,7 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
 import org.haox.kerb.spec.type.KrbEnum;
-import org.haox.kerb.spec.type.KrbInteger;
 
 public enum SamType implements KrbEnum
 {
@@ -24,15 +23,9 @@ public enum SamType implements KrbEnum
     /** safe SAM type enum for CRYPTOCard */
     SAM_TYPE_CRYPTOCARD(6); // CRYPTOCard
 
-    /** the value/code for the sam type */
     private int value;
 
-
-    /**
-     * Private constructor prevents construction outside of this class.
-     */
-    private SamType(int value)
-    {
+    private SamType(int value) {
         this.value = value;
     }
 
@@ -41,24 +34,14 @@ public enum SamType implements KrbEnum
         return value;
     }
 
-    public static SamType fromValue(KrbInteger value) {
+    public static SamType fromValue(Integer value) {
         if (value != null) {
-            return fromValue(value.getValue().intValue());
-        }
-
-        return SAM_NONE;
-    }
-
-    public static SamType fromValue( int value )
-    {
-        for (SamType st : SamType.values() )
-        {
-            if ( value == st.getValue() )
-            {
-                return st;
+            for (SamType st : SamType.values() ) {
+                if (value == st.getValue()) {
+                    return st;
+                }
             }
         }
-
         return SAM_NONE;
     }
 }

@@ -1,20 +1,13 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.kerb.spec.type.KrbType;
-import org.haox.kerb.spec.type.SequenceOfType;
-
-import java.util.List;
+import org.haox.asn1.type.SequenceOfType;
 
 /**
  LastReq         ::=     SEQUENCE OF SEQUENCE {
  lr-type         [0] Int32,
- lr-value        [1] KrbTime
+ lr-value        [1] KerberosTime
  }
  */
-public interface LastReq extends SequenceOfType {
-    public static Class<? extends KrbType> ElementType =  LastReqEntry.class;
+public class LastReq extends SequenceOfType<LastReqEntry> {
 
-    public List<LastReqEntry> getEntries();
-
-    public void setEntries(List<LastReqEntry> entries);
 }

@@ -1,50 +1,44 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.kerb.spec.type.KrbInteger;
-import org.haox.kerb.spec.type.KrbTag;
-import org.haox.kerb.spec.type.KrbType;
-import org.haox.kerb.spec.type.SequenceType;
+import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1Tag;
+import org.haox.kerb.spec.type.KerberosTime;
 
 /**
  LastReq         ::=     SEQUENCE OF SEQUENCE {
  lr-type         [0] Int32,
- lr-value        [1] KrbTime
+ lr-value        [1] KerberosTime
  }
  */
-public interface LastReqEntry extends SequenceType {
-    public static enum Tag implements KrbTag {
-        LR_TYPE(0, KrbInteger.class),
-        LR_VALUE(1, KrbTime.class);
+public class LastReqEntry extends AbstractSequenceType {
+    private static int LR_TYPE = 0;
+    private static int LR_VALUE = 1;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(LR_TYPE, 0, Asn1Integer.class),
+            new Asn1Tag(LR_VALUE, 1, KerberosTime.class)
     };
 
-    public LastReqType getLrType();
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setLrType(LastReqType lrType);
+    public LastReqType getLrType() {
+        Integer value = getFieldAsInteger(LR_TYPE);
+        return LastReqType.fromValue(value);
+    }
 
-    public KrbTime getLrValue();
+    public void setLrType(LastReqType lrType) {
+        setFieldAsInt(LR_TYPE, lrType.getValue());
+    }
 
-    public void setLrValue(KrbTime lrValue);
+    public KerberosTime getLrValue() {
+        return getFieldAs(LR_VALUE, KerberosTime.class);
+    }
+
+    public void setLrValue(KerberosTime lrValue) {
+        setFieldAs(LR_VALUE, lrValue);
+    }
 }

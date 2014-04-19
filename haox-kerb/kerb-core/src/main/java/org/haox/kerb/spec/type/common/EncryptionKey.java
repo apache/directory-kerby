@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1OctetString;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbInteger;
-import org.haox.kerb.spec.type.KrbOctetString;
-import org.haox.kerb.spec.type.KrbTag;
-import org.haox.kerb.spec.type.KrbType;
 
 /**
  EncryptionKey   ::= SEQUENCE {
@@ -12,40 +12,34 @@ import org.haox.kerb.spec.type.KrbType;
  keyvalue        [1] OCTET STRING
  }
  */
-public interface EncryptionKey extends KrbType {
-    public static enum Tag implements KrbTag {
-        KEY_TYPE(0, KrbInteger.class),
-        KEY_VALUE(1, KrbOctetString.class);
+public class EncryptionKey extends AbstractSequenceType {
+    private static int KEY_TYPE = 0;
+    private static int KEY_VALUE = 1;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(KEY_TYPE, 0, Asn1Integer.class),
+            new Asn1Tag(KEY_VALUE, 1, Asn1OctetString.class)
     };
 
-    public EncryptionType getKeyType() throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setKeyType(EncryptionType keyType) throws KrbException;
+    public EncryptionType getKeyType() throws KrbException {
+        Integer value = getFieldAsInteger(KEY_TYPE);
+        return EncryptionType.fromValue(value);
+    }
 
-    public byte[] getKeyData() throws KrbException;
+    public void setKeyType(EncryptionType keyType) throws KrbException {
+        setFieldAsInt(KEY_TYPE, keyType.getValue());
+    }
 
-    public void setKeyData(byte[] keyData) throws KrbException;
+    public byte[] getKeyData() throws KrbException {
+        return getFieldAsOctetBytes(KEY_VALUE);
+    }
+
+    public void setKeyData(byte[] keyData) throws KrbException {
+        setFieldAsOctetBytes(KEY_VALUE, keyData);
+    }
 }

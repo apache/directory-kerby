@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.hadoop.minikdc;
+package org.haox.kerb.server;
 
 import org.junit.After;
 import org.junit.Before;

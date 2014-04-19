@@ -22,8 +22,8 @@ public class Asn1Null extends AbstractAsn1Primitive<Object>
     }
 
     @Override
-    protected void decodeValue(int length, LimitedByteBuffer content) throws IOException {
-        if (length != 0) {
+    protected void decodeValue(LimitedByteBuffer content) throws IOException {
+        if (content.hasLeft() != 0) {
             throw new IOException("Unexpected bytes found for NULL");
         }
     }

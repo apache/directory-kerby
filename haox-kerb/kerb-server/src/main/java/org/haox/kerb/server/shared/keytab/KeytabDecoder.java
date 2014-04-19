@@ -4,7 +4,7 @@ import org.haox.kerb.server.shared.crypto.encryption.EncryptionUtil;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.KrbTime;
+import org.haox.kerb.spec.type.common.KerberosTime;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -65,7 +65,7 @@ class KeytabDecoder
         long principalType = buffer.getInt();
 
         long time = buffer.getInt();
-        KrbTime timeStamp = new KrbTime( time * 1000 );
+        KerberosTime timeStamp = new KerberosTime( time * 1000 );
 
         byte keyVersion = buffer.get();
 

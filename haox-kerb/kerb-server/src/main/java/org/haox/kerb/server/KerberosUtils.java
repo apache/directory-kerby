@@ -430,7 +430,7 @@ public class KerberosUtils
 
         KerberosPrincipal serverPrincipal = getKerberosPrincipal( ticket.getSname(), ticket.getRealm() );
         KerberosPrincipal clientPrincipal = getKerberosPrincipal( authenticator.getCname(), authenticator.getCrealm() );
-        KrbTime clientTime = authenticator.getCtime();
+        KerberosTime clientTime = authenticator.getCtime();
         int clientMicroSeconds = authenticator.getCusec();
 
         if ( replayCache != null )
@@ -454,10 +454,10 @@ public class KerberosUtils
          * current time by more than the allowable clock skew, or if the INVALID
          * flag is set in the ticket, the KRB_AP_ERR_TKT_NYV error is returned."
          */
-        KrbTime startTime = ( ticket.getEncPart().getStartTime() != null ) ? ticket.getEncPart()
+        KerberosTime startTime = ( ticket.getEncPart().getStartTime() != null ) ? ticket.getEncPart()
             .getStartTime() : ticket.getEncPart().getAuthTime();
 
-        KrbTime now = new KrbTime();
+        KerberosTime now = new KerberosTime();
         boolean isValidStartTime = startTime.lessThan( now );
 
         if ( !isValidStartTime || ( ticket.getEncPart().getFlags().isInvalid() && !isValidate ) )

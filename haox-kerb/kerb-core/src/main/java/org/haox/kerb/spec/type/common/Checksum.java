@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1OctetString;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbInteger;
-import org.haox.kerb.spec.type.KrbOctetString;
-import org.haox.kerb.spec.type.KrbTag;
-import org.haox.kerb.spec.type.KrbType;
 
 /**
  Checksum        ::= SEQUENCE {
@@ -12,37 +12,34 @@ import org.haox.kerb.spec.type.KrbType;
  checksum        [1] OCTET STRING
  }
  */
-public interface Checksum extends KrbType {
-    public static enum Tag implements KrbTag {
-        CKSUM_TYPE(0, KrbInteger.class),
-        CHECK_SUM(1, KrbOctetString.class);
+public class Checksum extends AbstractSequenceType {
+    private static int CKSUM_TYPE = 0;
+    private static int CHECK_SUM = 1;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+        new Asn1Tag(CKSUM_TYPE, 0, Asn1Integer.class),
+        new Asn1Tag(CHECK_SUM, 1, Asn1OctetString.class)
     };
 
-    public ChecksumType getCksumtype() throws KrbException;
-    public void setCksumtype(ChecksumType cksumtype) throws KrbException;
-    public byte[] getChecksum() throws KrbException;
-    public void setChecksum(byte[] checksum) throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
+
+    public ChecksumType getCksumtype() throws KrbException {
+        Integer value = getFieldAsInteger(CKSUM_TYPE);
+        return ChecksumType.fromValue(value);
+    }
+
+    public void setCksumtype(ChecksumType cksumtype) throws KrbException {
+        setFieldAsInt(CKSUM_TYPE, cksumtype.getValue());
+    }
+
+    public byte[] getChecksum() throws KrbException {
+        return getFieldAsOctets(CHECK_SUM);
+    }
+
+    public void setChecksum(byte[] checksum) throws KrbException {
+        setFieldAsOctets(CHECK_SUM, checksum);
+    }
 }

@@ -1,11 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KrbEnum;
-import org.haox.kerb.spec.type.KrbFactory;
-import org.haox.kerb.spec.type.KrbInteger;
-
-import java.math.BigInteger;
 
 public enum KrbMessageType implements KrbEnum {
     NONE(-1),
@@ -31,15 +26,10 @@ public enum KrbMessageType implements KrbEnum {
         return value;
     }
 
-    public KrbInteger asInteger() throws KrbException {
-        KrbInteger tmp = KrbFactory.create(KrbInteger.class);
-        tmp.setValue(BigInteger.valueOf(value));
-        return tmp;
-    }
-    public static KrbMessageType fromValue(KrbInteger value) {
+    public static KrbMessageType fromValue(Integer value) {
         if (value != null) {
             for (KrbEnum e : values()) {
-                if (e.getValue() == value.getValue().intValue()) {
+                if (e.getValue() == value.intValue()) {
                     return (KrbMessageType) e;
                 }
             }

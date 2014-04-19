@@ -5,10 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbFactory;
 import org.haox.kerb.spec.type.kdc.AsRep;
 import org.haox.kerb.spec.type.kdc.AsReq;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +66,7 @@ public class KdcServerHandler extends SimpleChannelInboundHandler<Object> {
     }
 
     private AsRep processAsReq(AsReq asReq) throws KrbException {
-        AsRep asRep = KrbFactory.create(AsRep.class);
+        AsRep asRep = new AsRep();
 
         asRep.setCname(asReq.getReqBody().getCname());
         asRep.setCrealm(asReq.getReqBody().getRealm());

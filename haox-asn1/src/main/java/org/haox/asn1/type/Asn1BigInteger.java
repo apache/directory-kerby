@@ -2,19 +2,26 @@ package org.haox.asn1.type;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 
-public class Asn1Integer extends AbstractAsn1Primitive<Integer>
+public class Asn1BigInteger extends AbstractAsn1Primitive<BigInteger>
 {
     private byte[] bytes;
 
-    public Asn1Integer() {
+    public Asn1BigInteger() {
         this(0);
     }
 
-    public Asn1Integer(int value) {
+    public Asn1BigInteger(int value) {
+        this(BigInteger.valueOf(value));
+    }
+
+    public Asn1BigInteger(long value) {
+        this(BigInteger.valueOf(value));
+    }
+
+    public Asn1BigInteger(BigInteger value) {
         super(value, BerTag.INTEGER);
-        this.bytes = ByteBuffer.allocate(4).putInt(value).array();
+        this.bytes = value.toByteArray();
     }
 
     @Override
@@ -31,6 +38,6 @@ public class Asn1Integer extends AbstractAsn1Primitive<Integer>
     protected void decodeValue(LimitedByteBuffer content) throws IOException {
         byte[] bytes = content.readAllBytes();
         this.bytes = bytes;
-        setValue(new BigInteger(bytes).intValue());
+        setValue(new BigInteger(bytes));
     }
 }

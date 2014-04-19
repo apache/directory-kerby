@@ -1,6 +1,8 @@
 package org.haox.kerb.spec.type.common;
 
-public enum LastReqType {
+import org.haox.kerb.spec.type.KrbEnum;
+
+public enum LastReqType implements KrbEnum {
     NONE(0),
     ALL_LAST_TGT(1),
     THE_LAST_TGT(-1),
@@ -21,5 +23,21 @@ public enum LastReqType {
 
     private LastReqType(int value) {
         this.value = value;
+    }
+
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+    public static LastReqType fromValue(Integer value) {
+        if (value != null) {
+            for (KrbEnum e : values()) {
+                if (e.getValue() == value) {
+                    return (LastReqType) e;
+                }
+            }
+        }
+        return NONE;
     }
 }

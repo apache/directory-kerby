@@ -225,13 +225,15 @@ public class TestKerberos {
 
             AuthorizationData authzData = ticket.getAuthorizationData();
             Assert.assertNotNull(authzData);
-            Assert.assertTrue(authzData.getEntries().size() > 0);
+            Assert.assertTrue(authzData.getElements().size() > 0);
 
             if (false) {
                 Pac pac = null;
-                for(AuthorizationDataEntry authData : authzData.getEntries()) {
+                for(AuthorizationDataEntry authData : authzData.getElements()) {
+                    /*
                     if(authData instanceof KerberosPacAuthData)
                         pac = ((KerberosPacAuthData)authData).getPac();
+                        */
                 }
                 Assert.assertNotNull(pac);
 

@@ -1,7 +1,12 @@
 package org.haox.kerb.spec.type.kdc;
 
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.*;
+import org.haox.kerb.spec.type.KerberosString;
+import org.haox.kerb.spec.type.KerberosTime;
+import org.haox.kerb.spec.type.KrbIntegers;
+import org.haox.kerb.spec.type.KrbSequenceType;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.ticket.Tickets;
 
@@ -16,9 +21,9 @@ import java.util.Set;
  -- Server's realm
  -- Also client's in AS-REQ --,
  sname                   [3] PrincipalName OPTIONAL,
- from                    [4] KrbTime OPTIONAL,
- till                    [5] KrbTime,
- rtime                   [6] KrbTime OPTIONAL,
+ from                    [4] KerberosTime OPTIONAL,
+ till                    [5] KerberosTime,
+ rtime                   [6] KerberosTime OPTIONAL,
  nonce                   [7] UInt32,
  etype                   [8] SEQUENCE OF Int32 -- EncryptionType
  -- in preference order --,
@@ -29,94 +34,153 @@ import java.util.Set;
  -- NOTE: not empty
  }
  */
-public interface KdcReqBody extends SequenceType {
-    public static enum Tag implements KrbTag {
-        KDC_OPTIONS(0, KdcOptions.class),
-        CNAME(1, PrincipalName.class),
-        REALM(2, KrbString.class),
-        SNAME(3, PrincipalName.class),
-        FROM(4, KrbTime.class),
-        TILL(5, KrbTime.class),
-        RTIME(6, KrbTime.class),
-        NONCE(7, KrbInteger.class),
-        ETYPE(8, KrbIntegers.class),
-        ADDRESSES(9, HostAddresses.class),
-        ENC_AUTHORIZATION_DATA(10, AuthorizationData.class),
-        ADDITIONAL_TICKETS(11, Tickets.class);
+public class KdcReqBody extends KrbSequenceType {
+    private static int KDC_OPTIONS = 0;
+    private static int CNAME = 1;
+    private static int REALM = 2;
+    private static int SNAME = 3;
+    private static int FROM = 4;
+    private static int TILL = 5;
+    private static int RTIME = 6;
+    private static int NONCE = 7;
+    private static int ETYPE = 8;
+    private static int ADDRESSES = 9;
+    private static int ENC_AUTHORIZATION_DATA = 10;
+    private static int ADDITIONAL_TICKETS = 11;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(KDC_OPTIONS, 0, KdcOptions.class),
+            new Asn1Tag(CNAME, 1, PrincipalName.class),
+            new Asn1Tag(REALM, 2, KerberosString.class),
+            new Asn1Tag(SNAME, 3, PrincipalName.class),
+            new Asn1Tag(FROM, 4, KerberosTime.class),
+            new Asn1Tag(TILL, 5, KerberosTime.class),
+            new Asn1Tag(RTIME, 6, KerberosTime.class),
+            new Asn1Tag(NONCE, 7, Asn1Integer.class),
+            new Asn1Tag(ETYPE, 8, KrbIntegers.class),
+            new Asn1Tag(ADDRESSES, 9, HostAddresses.class),
+            new Asn1Tag(ENC_AUTHORIZATION_DATA, 10, AuthorizationData.class),
+            new Asn1Tag(ADDITIONAL_TICKETS, 11, Tickets.class)
     };
 
-    public KdcOptions getKdcOptions() throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setKdcOptions(KdcOptions kdcOptions) throws KrbException;
+    private AuthorizationData authorizationData;
 
-    public PrincipalName getCname() throws KrbException;
+    public KerberosTime getFrom() throws KrbException {
+        return getFieldAs(FROM, KerberosTime.class);
+    }
 
-    public void setCname(PrincipalName cname) throws KrbException;
+    public void setFrom(KerberosTime from) throws KrbException {
+        setFieldAs(FROM, from);
+    }
 
-    public String getRealm() throws KrbException;
+    public KerberosTime getTill() throws KrbException {
+        return getFieldAs(TILL, KerberosTime.class);
+    }
 
-    public void setRealm(String realm) throws KrbException;
+    public void setTill(KerberosTime till) throws KrbException {
+        setFieldAs(TILL, till);
+    }
 
-    public PrincipalName getSname() throws KrbException;
 
-    public void setSname(PrincipalName sname) throws KrbException;
+    public KerberosTime getRtime() throws KrbException {
+        return getFieldAs(RTIME, KerberosTime.class);
+    }
 
-    public KrbTime getFrom() throws KrbException;
 
-    public void setFrom(KrbTime from) throws KrbException;
+    public void setRtime(KerberosTime rtime) throws KrbException {
+        setFieldAs(RTIME, rtime);
+    }
 
-    public KrbTime getTill() throws KrbException;
+    public int getNonce() {
+        return 0;
+    }
 
-    public void setTill(KrbTime till) throws KrbException;
+    public void setNonce(int nonce) {
 
-    public KrbTime getRtime() throws KrbException;
+    }
 
-    public void setRtime(KrbTime rtime) throws KrbException;
+    public Set<EncryptionType> getEtype() {
+        return null;
+    }
 
-    public int getNonce();
+    public void setEtype(Set<EncryptionType> etype) {
 
-    public void setNonce(int nonce);
+    }
 
-    public Set<EncryptionType> getEtype();
+    public HostAddresses getAddresses() {
+        return null;
+    }
 
-    public void setEtype(Set<EncryptionType> etype);
+    public void setAddresses(HostAddresses addresses) {
 
-    public HostAddresses getAddresses();
+    }
 
-    public void setAddresses(HostAddresses addresses);
 
-    public EncryptedData getEncryptedAuthorizationData() throws KrbException;
+    public EncryptedData getEncryptedAuthorizationData() throws KrbException {
+        return getFieldAs(ENC_AUTHORIZATION_DATA, EncryptedData.class);
+    }
 
-    public void setEncryptedAuthorizationData(EncryptedData encAuthorizationData) throws KrbException;
 
-    public AuthorizationData getAuthorizationData();
+    public void setEncryptedAuthorizationData(EncryptedData encAuthorizationData) throws KrbException {
+        setFieldAs(ENC_AUTHORIZATION_DATA, encAuthorizationData);
+    }
 
-    public void setAuthorizationData(AuthorizationData encAuthorizationData);
 
-    public Tickets getAdditionalTickets() throws KrbException;
+    public AuthorizationData getAuthorizationData() {
+        return authorizationData;
+    }
 
-    public void setAdditionalTickets(Tickets additionalTickets) throws KrbException;
+
+    public void setAuthorizationData(AuthorizationData authorizationData) {
+        this.authorizationData = authorizationData;
+    }
+
+
+    public Tickets getAdditionalTickets() throws KrbException {
+        return getFieldAs(ADDITIONAL_TICKETS, Tickets.class);
+    }
+
+
+    public void setAdditionalTickets(Tickets additionalTickets) throws KrbException {
+        setFieldAs(ADDITIONAL_TICKETS, additionalTickets);
+    }
+
+
+    public KdcOptions getKdcOptions() throws KrbException {
+        return getFieldAs(KDC_OPTIONS, KdcOptions.class);
+    }
+
+
+    public void setKdcOptions(KdcOptions kdcOptions) throws KrbException {
+        setFieldAs(KDC_OPTIONS, kdcOptions);
+    }
+
+    public PrincipalName getSname() throws KrbException {
+        return getFieldAs(SNAME, PrincipalName.class);
+    }
+
+    public void setSname(PrincipalName sname) throws KrbException {
+        setFieldAs(SNAME, sname);
+    }
+
+    public PrincipalName getCname() throws KrbException {
+        return getFieldAs(CNAME, PrincipalName.class);
+    }
+
+    public void setCname(PrincipalName cname) throws KrbException {
+        setFieldAs(CNAME, cname);
+    }
+
+    public String getRealm() throws KrbException {
+        return getFieldAsString(REALM);
+    }
+
+    public void setRealm(String realm) throws KrbException {
+        setFieldAs(REALM, new KerberosString(realm));
+    }
 }

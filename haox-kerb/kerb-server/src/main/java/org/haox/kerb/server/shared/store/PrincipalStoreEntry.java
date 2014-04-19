@@ -1,8 +1,8 @@
 package org.haox.kerb.server.shared.store;
 
+import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.KrbTime;
 import org.haox.kerb.spec.type.common.SamType;
 
 import javax.security.auth.kerberos.KerberosPrincipal;
@@ -20,9 +20,9 @@ public class PrincipalStoreEntry
     private String userId;
 
     // KDCEntry
-    private KrbTime validStart;
-    private KrbTime validEnd;
-    private KrbTime passwordEnd;
+    private KerberosTime validStart;
+    private KerberosTime validEnd;
+    private KerberosTime passwordEnd;
     private int keyVersionNumber;
     private int maxLife;
     private int maxRenew;
@@ -31,15 +31,15 @@ public class PrincipalStoreEntry
 
     private boolean disabled;
     private boolean lockedOut;
-    private KrbTime expiration;
+    private KerberosTime expiration;
 
     private Map<EncryptionType, EncryptionKey> keyMap;
 
 
     PrincipalStoreEntry( String distinguishedName, String commonName, String userId, KerberosPrincipal principal,
-        int keyVersionNumber, KrbTime validStart, KrbTime validEnd, KrbTime passwordEnd, int maxLife,
+        int keyVersionNumber, KerberosTime validStart, KerberosTime validEnd, KerberosTime passwordEnd, int maxLife,
         int maxRenew, int kdcFlags, Map<EncryptionType, EncryptionKey> keyMap, String realmName, SamType samType,
-        boolean disabled, boolean lockedOut, KrbTime expiration )
+        boolean disabled, boolean lockedOut, KerberosTime expiration )
     {
         this.distinguishedName = distinguishedName;
         this.commonName = commonName;
@@ -88,7 +88,7 @@ public class PrincipalStoreEntry
      *
      * @return The expiration time.
      */
-    public KrbTime getExpiration()
+    public KerberosTime getExpiration()
     {
         return expiration;
     }
@@ -187,7 +187,7 @@ public class PrincipalStoreEntry
      *
      * @return The expiration time for the password.
      */
-    public KrbTime getPasswordEnd()
+    public KerberosTime getPasswordEnd()
     {
         return passwordEnd;
     }
@@ -220,7 +220,7 @@ public class PrincipalStoreEntry
      *
      * @return The end of validity.
      */
-    public KrbTime getValidEnd()
+    public KerberosTime getValidEnd()
     {
         return validEnd;
     }
@@ -231,7 +231,7 @@ public class PrincipalStoreEntry
      *
      * @return The start of validity.
      */
-    public KrbTime getValidStart()
+    public KerberosTime getValidStart()
     {
         return validStart;
     }

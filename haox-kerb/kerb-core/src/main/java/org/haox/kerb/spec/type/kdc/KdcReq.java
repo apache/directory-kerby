@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.kdc;
 
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbInteger;
-import org.haox.kerb.spec.type.KrbTag;
-import org.haox.kerb.spec.type.KrbType;
-import org.haox.kerb.spec.type.common.KrbMessage;
+import org.haox.kerb.spec.type.common.AbstractKrbMessage;
+import org.haox.kerb.spec.type.common.KrbMessageType;
 import org.haox.kerb.spec.type.common.PaData;
 
 /**
@@ -17,42 +17,39 @@ import org.haox.kerb.spec.type.common.PaData;
  req-body        [4] KDC-REQ-BODY
  }
  */
-public interface KdcReq extends KrbMessage {
-    public static enum Tag implements KrbTag {
-        PVNO(1, KrbInteger.class),
-        MSG_TYPE(2, KrbInteger.class),
-        PADATA(3, PaData.class),
-        REQ_BODY(4, KdcReqBody.class);
+public class KdcReq extends AbstractKrbMessage {
+    private static int PADATA = 2;
+    private static int REQ_BODY = 3;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return value - 1;
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(PVNO, 1, Asn1Integer.class),
+            new Asn1Tag(MSG_TYPE, 2, Asn1Integer.class),
+            new Asn1Tag(PADATA, 3, PaData.class),
+            new Asn1Tag(REQ_BODY, 4, KdcReqBody.class)
     };
 
-    public PaData getPaData() throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setPaData(PaData paData) throws KrbException;
+    public KdcReq(KrbMessageType msgType) throws KrbException {
+        super(msgType);
+    }
 
-    public KdcReqBody getReqBody() throws KrbException;
+    public PaData getPaData() throws KrbException {
+        return getFieldAs(PADATA, PaData.class);
+    }
 
-    public void setReqBody(KdcReqBody reqBody) throws KrbException;
+    public void setPaData(PaData paData) throws KrbException {
+        setFieldAs(PADATA, paData);
+    }
+
+    public KdcReqBody getReqBody() throws KrbException {
+        return getFieldAs(PADATA, KdcReqBody.class);
+    }
+
+    public void setReqBody(KdcReqBody reqBody) throws KrbException {
+        setFieldAs(REQ_BODY, reqBody);
+    }
 }

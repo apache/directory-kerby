@@ -1,7 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
 import org.haox.kerb.spec.type.KrbEnum;
-import org.haox.kerb.spec.type.KrbInteger;
 
 public enum HostAddrType implements KrbEnum {
     /**
@@ -68,10 +67,10 @@ public enum HostAddrType implements KrbEnum {
         return value;
     }
 
-    public static HostAddrType fromValue(KrbInteger value) {
+    public static HostAddrType fromValue(Integer value) {
         if (value != null) {
             for (KrbEnum e : values()) {
-                if (e.getValue() == value.getValue().intValue()) {
+                if (e.getValue() == value.intValue()) {
                     return (HostAddrType) e;
                 }
             }

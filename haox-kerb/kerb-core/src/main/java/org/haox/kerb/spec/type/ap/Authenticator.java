@@ -1,8 +1,15 @@
 package org.haox.kerb.spec.type.ap;
 
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.*;
-import org.haox.kerb.spec.type.common.*;
+import org.haox.kerb.spec.type.KerberosString;
+import org.haox.kerb.spec.type.KerberosTime;
+import org.haox.kerb.spec.type.KrbSequenceType;
+import org.haox.kerb.spec.type.common.AuthorizationData;
+import org.haox.kerb.spec.type.common.Checksum;
+import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.common.PrincipalName;
 
 /**
  Authenticator   ::= [APPLICATION 2] SEQUENCE  {
@@ -11,81 +18,113 @@ import org.haox.kerb.spec.type.common.*;
  cname                   [2] PrincipalName,
  cksum                   [3] Checksum OPTIONAL,
  cusec                   [4] Microseconds,
- ctime                   [5] KrbTime,
+ ctime                   [5] KerberosTime,
  subkey                  [6] EncryptionKey OPTIONAL,
  seq-number              [7] UInt32 OPTIONAL,
  authorization-data      [8] AuthorizationData OPTIONAL
  }
  */
-public interface Authenticator extends SequenceType {
-    public static enum Tag implements KrbTag {
-        AUTHENTICATOR_VNO(0, KrbInteger.class),
-        CREALM(1, KrbString.class),
-        CNAME(2, PrincipalName.class),
-        CKSUM(3, Checksum.class),
-        CUSEC(4, KrbInteger.class),
-        CTIME(5, KrbTime.class),
-        SUBKEY(6, EncryptionKey.class),
-        SEQ_NUMBER(7, KrbInteger.class),
-        AUTHORIZATION_DATA(8, AuthorizationData.class);
+public class Authenticator extends KrbSequenceType {
+    private static int AUTHENTICATOR_VNO = 0;
+    private static int CREALM = 1;
+    private static int CNAME = 2;
+    private static int CKSUM = 3;
+    private static int CUSEC = 4;
+    private static int CTIME = 5;
+    private static int SUBKEY = 6;
+    private static int SEQ_NUMBER = 7;
+    private static int AUTHORIZATION_DATA = 8;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(AUTHENTICATOR_VNO, 0, Asn1Integer.class),
+            new Asn1Tag(CREALM, 1, KerberosString.class),
+            new Asn1Tag(CNAME, 2, PrincipalName.class),
+            new Asn1Tag(CKSUM, 3, Checksum.class),
+            new Asn1Tag(CUSEC, 4, Asn1Integer.class),
+            new Asn1Tag(CTIME, 5, KerberosTime.class),
+            new Asn1Tag(SUBKEY, 6, EncryptionKey.class),
+            new Asn1Tag(SEQ_NUMBER, 7, Asn1Integer.class),
+            new Asn1Tag(AUTHORIZATION_DATA, 8, AuthorizationData.class)
     };
 
-    public int getAuthenticatorVno() throws KrbException;
+    public Authenticator() {
+        super();
+    }
 
-    public void setAuthenticatorVno(int authenticatorVno) throws KrbException;
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public String getCrealm() throws KrbException;
+    public int getAuthenticatorVno() throws KrbException {
+        return getFieldAsInt(AUTHENTICATOR_VNO);
+    }
 
-    public void setCrealm(String crealm) throws KrbException;
+    public void setAuthenticatorVno(int authenticatorVno) throws KrbException {
+        setFieldAsInt(AUTHENTICATOR_VNO, authenticatorVno);
+    }
 
-    public PrincipalName getCname() throws KrbException;
+    public String getCrealm() throws KrbException {
+        return getFieldAsString(CREALM);
+    }
 
-    public void setCname(PrincipalName cname) throws KrbException;
+    public void setCrealm(String crealm) throws KrbException {
+        setFieldAsString(CREALM, crealm);
+    }
 
-    public Checksum getCksum() throws KrbException;
+    public PrincipalName getCname() throws KrbException {
+        return getFieldAs(CNAME, PrincipalName.class);
+    }
 
-    public void setCksum(Checksum cksum) throws KrbException;
+    public void setCname(PrincipalName cname) throws KrbException {
+        setFieldAs(CNAME, cname);
+    }
 
-    public int getCusec() throws KrbException;
+    public Checksum getCksum() throws KrbException {
+        return getFieldAs(CKSUM, Checksum.class);
+    }
 
-    public void setCusec(int cusec) throws KrbException;
+    public void setCksum(Checksum cksum) throws KrbException {
+        setFieldAs(CKSUM, cksum);
+    }
 
-    public KrbTime getCtime() throws KrbException;
+    public int getCusec() throws KrbException {
+        return getFieldAsInt(CUSEC);
+    }
 
-    public void setCtime(KrbTime ctime) throws KrbException;
+    public void setCusec(int cusec) throws KrbException {
+        setFieldAsInt(CUSEC, cusec);
+    }
 
-    public EncryptionKey getSubKey() throws KrbException;
+    public KerberosTime getCtime() throws KrbException {
+        return getFieldAsTime(CTIME);
+    }
 
-    public void setSubKey(EncryptionKey subKey) throws KrbException;
+    public void setCtime(KerberosTime ctime) throws KrbException {
+        setFieldAs(CTIME, ctime);
+    }
 
-    public Integer getSeqNumber() throws KrbException;
+    public EncryptionKey getSubKey() throws KrbException {
+        return getFieldAs(SUBKEY, EncryptionKey.class);
+    }
 
-    public void setSeqNumber(Integer seqNumber) throws KrbException;
+    public void setSubKey(EncryptionKey subKey) throws KrbException {
+        setFieldAs(SUBKEY, subKey);
+    }
 
-    public AuthorizationData getAuthorizationData() throws KrbException;
+    public int getSeqNumber() throws KrbException {
+        return getFieldAsInt(SEQ_NUMBER);
+    }
 
-    public void setAuthorizationData(AuthorizationData authorizationData) throws KrbException;
+    public void setSeqNumber(Integer seqNumber) throws KrbException {
+        setFieldAsInt(SEQ_NUMBER, seqNumber);
+    }
+
+    public AuthorizationData getAuthorizationData() throws KrbException {
+        return getFieldAs(AUTHORIZATION_DATA, AuthorizationData.class);
+    }
+
+    public void setAuthorizationData(AuthorizationData authorizationData) throws KrbException {
+        setFieldAs(AUTHORIZATION_DATA, authorizationData);
+    }
 }

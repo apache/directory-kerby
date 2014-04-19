@@ -23,7 +23,7 @@ public class Asn1OctetString extends AbstractAsn1Primitive<byte[]>
     }
 
     @Override
-    protected void decodeValue(int length, LimitedByteBuffer content) throws IOException {
-        setValue(content.readBytes(length));
+    protected void decodeValue(LimitedByteBuffer content) throws IOException {
+        setValue(content.readAllBytes());
     }
 }

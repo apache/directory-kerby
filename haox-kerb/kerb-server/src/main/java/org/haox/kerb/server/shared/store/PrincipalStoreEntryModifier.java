@@ -8,9 +8,9 @@ import org.apache.directory.server.i18n.I18n;
 import org.apache.directory.shared.kerberos.exceptions.KerberosException;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.KrbTime;
 import org.haox.kerb.spec.type.common.SamType;
 
 import javax.security.auth.kerberos.KerberosPrincipal;
@@ -32,9 +32,9 @@ public class PrincipalStoreEntryModifier
     // must
     private int keyVersionNumber;
     // may
-    private KrbTime validStart;
-    private KrbTime validEnd;
-    private KrbTime passwordEnd;
+    private KerberosTime validStart;
+    private KerberosTime validEnd;
+    private KerberosTime passwordEnd;
     private int maxLife;
     private int maxRenew;
     private int kdcFlags;
@@ -42,7 +42,7 @@ public class PrincipalStoreEntryModifier
 
     private boolean disabled = false;
     private boolean lockedOut = false;
-    private KrbTime expiration = KrbTime.NEVER;
+    private KerberosTime expiration = KerberosTime.NEVER;
 
     private Map<EncryptionType, EncryptionKey> keyMap;
 
@@ -87,7 +87,7 @@ public class PrincipalStoreEntryModifier
      *
      * @param expiration
      */
-    public void setExpiration( KrbTime expiration )
+    public void setExpiration( KerberosTime expiration )
     {
         this.expiration = expiration;
     }
@@ -186,7 +186,7 @@ public class PrincipalStoreEntryModifier
      *
      * @param passwordEnd
      */
-    public void setPasswordEnd( KrbTime passwordEnd )
+    public void setPasswordEnd( KerberosTime passwordEnd )
     {
         this.passwordEnd = passwordEnd;
     }
@@ -219,7 +219,7 @@ public class PrincipalStoreEntryModifier
      *
      * @param validEnd
      */
-    public void setValidEnd( KrbTime validEnd )
+    public void setValidEnd( KerberosTime validEnd )
     {
         this.validEnd = validEnd;
     }
@@ -230,7 +230,7 @@ public class PrincipalStoreEntryModifier
      *
      * @param validStart
      */
-    public void setValidStart( KrbTime validStart )
+    public void setValidStart( KerberosTime validStart )
     {
         this.validStart = validStart;
     }

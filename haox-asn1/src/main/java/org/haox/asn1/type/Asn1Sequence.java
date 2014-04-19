@@ -37,7 +37,7 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
         }
     }
 
-    public List<Asn1SequenceField> getFields() {
+    protected List<Asn1SequenceField> getFields() {
         return fields;
     }
 

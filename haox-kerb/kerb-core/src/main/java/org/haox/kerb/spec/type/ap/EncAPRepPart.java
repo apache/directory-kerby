@@ -1,51 +1,71 @@
 package org.haox.kerb.spec.type.ap;
 
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1Tag;
+import org.haox.kerb.spec.type.KerberosTime;
+import org.haox.kerb.spec.type.KrbSequenceType;
 import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.KrbTime;
 
 /**
  EncAPRepPart    ::= [APPLICATION 27] SEQUENCE {
- ctime           [0] KrbTime,
+ ctime           [0] KerberosTime,
  cusec           [1] Microseconds,
  subkey          [2] EncryptionKey OPTIONAL,
  seq-number      [3] UInt32 OPTIONAL
  }
  */
-public class EncAPRepPart {
-    private KrbTime ctime;
-    private int cusec;
-    private EncryptionKey subkey;
-    private Integer seqNumber;
+public class EncAPRepPart extends KrbSequenceType {
+    public static int TAG = 27;
+    private static int CTIME = 0;
+    private static int CUSEC = 1;
+    private static int SUBKEY = 2;
+    private static int SEQ_NUMBER = 3;
 
-    public KrbTime getCtime() {
-        return ctime;
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(CTIME, 0, KerberosTime.class),
+            new Asn1Tag(CUSEC, 1, Asn1Integer.class),
+            new Asn1Tag(SUBKEY, 2, EncryptionKey.class),
+            new Asn1Tag(SEQ_NUMBER, 3, Asn1Integer.class)
+    };
+
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
     }
 
-    public void setCtime(KrbTime ctime) {
-        this.ctime = ctime;
+    public EncAPRepPart() {
+        super(TAG);
+    }
+
+    public KerberosTime getCtime() {
+        return getFieldAsTime(CTIME);
+    }
+
+    public void setCtime(KerberosTime ctime) {
+        setFieldAs(CTIME, ctime);
     }
 
     public int getCusec() {
-        return cusec;
+        return getFieldAsInt(CUSEC);
     }
 
     public void setCusec(int cusec) {
-        this.cusec = cusec;
+        setFieldAsInt(CUSEC, cusec);
     }
 
     public EncryptionKey getSubkey() {
-        return subkey;
+        return getFieldAs(SUBKEY, EncryptionKey.class);
     }
 
     public void setSubkey(EncryptionKey subkey) {
-        this.subkey = subkey;
+        setFieldAs(SUBKEY, subkey);
     }
 
-    public Integer getSeqNumber() {
-        return seqNumber;
+    public int getSeqNumber() {
+        return getFieldAsInt(SEQ_NUMBER);
     }
 
     public void setSeqNumber(Integer seqNumber) {
-        this.seqNumber = seqNumber;
+        setFieldAsInt(SEQ_NUMBER, seqNumber);
     }
 }

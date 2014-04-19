@@ -1,13 +1,10 @@
 package org.haox.kerb.spec.type.kdc;
 
-import org.haox.kerb.spec.type.KrbInteger;
-import org.haox.kerb.spec.type.KrbString;
-import org.haox.kerb.spec.type.KrbTag;
-import org.haox.kerb.spec.type.KrbType;
-import org.haox.kerb.spec.type.common.EncryptedData;
-import org.haox.kerb.spec.type.common.KrbMessage;
-import org.haox.kerb.spec.type.common.PaData;
-import org.haox.kerb.spec.type.common.PrincipalName;
+import org.haox.asn1.type.Asn1Integer;
+import org.haox.asn1.type.Asn1Tag;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KerberosString;
+import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
 /**
@@ -24,61 +21,79 @@ import org.haox.kerb.spec.type.ticket.Ticket;
  -- as appropriate
  }
  */
-public interface KdcRep extends KrbMessage {
-    public static enum Tag implements KrbTag {
-        PVNO(0, KrbInteger.class),
-        MSG_TYPE(1, KrbInteger.class),
-        PADATA(2, PaData.class),
-        CREALM(3, KrbString.class),
-        CNAME(4, PrincipalName.class),
-        TICKET(5, Ticket.class),
-        ENC_PART(6, EncryptedData.class);
+public class KdcRep extends AbstractKrbMessage {
+    private static int PADATA = 2;
+    private static int CREALM = 3;
+    private static int CNAME = 4;
+    private static int TICKET = 5;
+    private static int ENC_PART = 6;
 
-        private int value;
-        private Class<? extends KrbType> type;
-
-        private Tag(int value, Class<? extends KrbType> type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int getValue() {
-            return value;
-        }
-
-        @Override
-        public int getIndex() {
-            return ordinal();
-        }
-
-        @Override
-        public Class<? extends KrbType> getType() {
-            return type;
-        }
+    static Asn1Tag[] tags = new Asn1Tag[] {
+            new Asn1Tag(PVNO, 0, Asn1Integer.class),
+            new Asn1Tag(MSG_TYPE, 1, Asn1Integer.class),
+            new Asn1Tag(PADATA, 2, PaData.class),
+            new Asn1Tag(CREALM, 3, KerberosString.class),
+            new Asn1Tag(CNAME, 4, PrincipalName.class),
+            new Asn1Tag(TICKET, 5, Ticket.class),
+            new Asn1Tag(ENC_PART, 6, EncryptedData.class)
     };
 
-    public PaData getPaData();
+    @Override
+    protected Asn1Tag[] getTags() {
+        return tags;
+    }
 
-    public void setPaData(PaData paData);
+    private EncKdcRepPart encPart;
 
-    public String getCrealm();
+    public KdcRep(KrbMessageType msgType) throws KrbException {
+        super(msgType);
+    }
 
-    public void setCrealm(String crealm);
+    public PaData getPaData() throws KrbException {
+        return getFieldAs(PADATA, PaData.class);
+    }
 
-    public PrincipalName getCname();
+    public void setPaData(PaData paData) throws KrbException {
+        setFieldAs(PADATA, paData);
+    }
 
-    public void setCname(PrincipalName cname);
+    public PrincipalName getCname() throws KrbException {
+        return getFieldAs(CNAME, PrincipalName.class);
+    }
 
-    public Ticket getTicket();
+    public void setCname(PrincipalName sname) throws KrbException {
+        setFieldAs(CNAME, sname);
+    }
 
-    public void setTicket(Ticket ticket);
+    public String getCrealm() throws KrbException {
+        return getFieldAsString(CREALM);
+    }
 
-    public EncryptedData getEncryptedEncPart();
+    public void setCrealm(String realm) throws KrbException {
+        setFieldAs(CREALM, new KerberosString(realm));
+    }
 
-    public void setEncryptedEncPart(EncryptedData encryptedEncPart);
+    public Ticket getTicket() {
+        return getFieldAs(TICKET, Ticket.class);
+    }
 
-    public EncKdcRepPart getEncPart();
+    public void setTicket(Ticket ticket) {
+        setFieldAs(TICKET, ticket);
+    }
 
-    public void setEncPart(EncKdcRepPart encPart);
+    public EncryptedData getEncryptedEncPart() {
+        return getFieldAs(ENC_PART, EncryptedData.class);
+    }
+
+    public void setEncryptedEncPart(EncryptedData encryptedEncPart) {
+        setFieldAs(ENC_PART, encryptedEncPart);
+    }
+
+    public EncKdcRepPart getEncPart() {
+        return encPart;
+    }
+
+    public void setEncPart(EncKdcRepPart encPart) {
+        this.encPart = encPart;
+    }
 }

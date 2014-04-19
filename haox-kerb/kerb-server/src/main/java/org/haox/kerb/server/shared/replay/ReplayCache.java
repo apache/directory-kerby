@@ -1,6 +1,6 @@
 package org.haox.kerb.server.shared.replay;
 
-import org.haox.kerb.spec.type.common.KrbTime;
+import org.haox.kerb.spec.type.KerberosTime;
 
 import javax.security.auth.kerberos.KerberosPrincipal;
 
@@ -21,7 +21,7 @@ public interface ReplayCache
      * @param clientMicroSeconds The client microsecond
      * @return true if the request is a replay.
      */
-    boolean isReplay(KerberosPrincipal serverPrincipal, KerberosPrincipal clientPrincipal, KrbTime clientTime,
+    boolean isReplay(KerberosPrincipal serverPrincipal, KerberosPrincipal clientPrincipal, KerberosTime clientTime,
                      int clientMicroSeconds);
 
 
@@ -34,7 +34,7 @@ public interface ReplayCache
      * @param clientTime The client time
      * @param clientMicroSeconds The client microsecond
      */
-    void save(KerberosPrincipal serverPrincipal, KerberosPrincipal clientPrincipal, KrbTime clientTime,
+    void save(KerberosPrincipal serverPrincipal, KerberosPrincipal clientPrincipal, KerberosTime clientTime,
               int clientMicroSeconds);
     
     /**

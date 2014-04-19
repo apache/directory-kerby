@@ -2,7 +2,6 @@ package org.haox.kerb.codec;
 
 import junit.framework.Assert;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbFactory;
 import org.haox.kerb.spec.type.common.Checksum;
 import org.haox.kerb.spec.type.common.ChecksumType;
 import org.junit.Test;
@@ -13,7 +12,7 @@ public class CodecTest {
 
     @Test
     public void testCodec() throws KrbException {
-        Checksum mcs = KrbFactory.create(Checksum.class);
+        Checksum mcs = new Checksum();
         mcs.setCksumtype(ChecksumType.CRC32);
         mcs.setChecksum(new byte[] {0x10});
         byte[] bytes = KrbCodec.encode(mcs);
