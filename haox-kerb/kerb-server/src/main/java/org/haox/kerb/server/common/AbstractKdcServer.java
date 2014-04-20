@@ -35,19 +35,19 @@ public abstract class AbstractKdcServer
 
     }
 
-    protected String getKdcRealm() {
+    public String getKdcRealm() {
         return kdcConfig.getKdcRealm();
     }
 
-    protected String getKdcHost() {
+    public String getKdcHost() {
         return kdcConfig.getKdcAddress();
     }
 
-    protected short getKdcPort() {
+    public short getKdcPort() {
         return (short) kdcConfig.getKdcPort();
     }
 
-    protected boolean enableDebug() {
+    public boolean enableDebug() {
         return kdcConfig.enableDebug();
     }
 

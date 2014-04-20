@@ -38,7 +38,7 @@ public class KerberosUtils
     /** An empty list of principal names */
     public static final List<String> EMPTY_PRINCIPAL_NAME = new ArrayList<String>();
 
-    /** 
+    /**
      * an order preserved map containing cipher names to the corresponding algorithm 
      * names in the descending order of strength
      */
@@ -89,10 +89,10 @@ public class KerberosUtils
      *  may not occur within a realm name; the `@`, newline, tab, and<br/>
      *  backspace characters may be included using the quoting<br/>
      *  conventions described in (1a), (1b), and (1c) above.<br/>
-     * 
+     *
      * @param principal The principal to be parsed
      * @return The names as a List of nameComponent
-     * 
+     *
      * @throws java.text.ParseException if the name is not valid
      */
     public static List<String> getNames( KerberosPrincipal principal ) throws ParseException
@@ -247,7 +247,7 @@ public class KerberosUtils
      * @return The first matching encryption type.
      */
     public static EncryptionType getBestEncryptionType( Set<EncryptionType> requestedTypes,
-        Set<EncryptionType> configuredTypes )
+                                                        Set<EncryptionType> configuredTypes )
     {
         for ( EncryptionType encryptionType : configuredTypes )
         {
@@ -313,7 +313,7 @@ public class KerberosUtils
      * whether any resulting error pertains to a server or client.
      */
     public static PrincipalStoreEntry getEntry( KerberosPrincipal principal, PrincipalStore store, ErrorType errorType )
-        throws KerberosException
+            throws KerberosException
     {
         PrincipalStoreEntry entry = null;
 
@@ -341,24 +341,24 @@ public class KerberosUtils
 
 
     /**
-         * Verifies an AuthHeader using guidelines from RFC 1510 section A.10., "KRB_AP_REQ verification."
-         *
-         * @param authHeader
-         * @param ticket
-         * @param serverKey
-         * @param clockSkew
-         * @param replayCache
-         * @param emptyAddressesAllowed
-         * @param clientAddress
-         * @param lockBox
-         * @param authenticatorKeyUsage
-         * @param isValidate
-         * @return The authenticator.
-         * @throws org.apache.directory.shared.kerberos.exceptions.KerberosException
-         */
+     * Verifies an AuthHeader using guidelines from RFC 1510 section A.10., "KRB_AP_REQ verification."
+     *
+     * @param authHeader
+     * @param ticket
+     * @param serverKey
+     * @param clockSkew
+     * @param replayCache
+     * @param emptyAddressesAllowed
+     * @param clientAddress
+     * @param lockBox
+     * @param authenticatorKeyUsage
+     * @param isValidate
+     * @return The authenticator.
+     * @throws org.apache.directory.shared.kerberos.exceptions.KerberosException
+     */
     public static Authenticator verifyAuthHeader( ApReq authHeader, Ticket ticket, EncryptionKey serverKey,
-        long clockSkew, ReplayCheckService replayCache, boolean emptyAddressesAllowed, InetAddress clientAddress,
-        CipherTextHandler lockBox, KeyUsage authenticatorKeyUsage, boolean isValidate ) throws KerberosException, KrbException {
+                                                  long clockSkew, ReplayCheckService replayCache, boolean emptyAddressesAllowed, InetAddress clientAddress,
+                                                  CipherTextHandler lockBox, KeyUsage authenticatorKeyUsage, boolean isValidate ) throws KerberosException, KrbException {
         if ( authHeader.getPvno() != KerberosConstants.KERBEROS_V5 )
         {
             throw new KerberosException( ErrorType.KRB_AP_ERR_BADVERSION );
@@ -397,12 +397,12 @@ public class KerberosUtils
         }
 
         byte[] encTicketPartData = lockBox.decrypt(ticketKey, ticket.getEncryptedEncPart(),
-            KeyUsage.AS_OR_TGS_REP_TICKET_WITH_SRVKEY );
+                KeyUsage.AS_OR_TGS_REP_TICKET_WITH_SRVKEY );
         EncTicketPart encPart = KrbCodec.decode(encTicketPartData, EncTicketPart.class);
         ticket.setEncPart(encPart);
 
         byte[] authenticatorData = lockBox.decrypt( ticket.getEncPart().getKey(), authHeader.getEncryptedAuthenticator(),
-            authenticatorKeyUsage );
+                authenticatorKeyUsage );
 
         Authenticator authenticator = KrbCodec.decode(authenticatorData, Authenticator.class);
 
@@ -433,14 +433,8 @@ public class KerberosUtils
         KerberosTime clientTime = authenticator.getCtime();
         int clientMicroSeconds = authenticator.getCusec();
 
-        if ( replayCache != null )
-        {
-            if ( replayCache.isReplay( serverPrincipal, clientPrincipal, clientTime, clientMicroSeconds ) )
-            {
-                throw new KerberosException( ErrorType.KRB_AP_ERR_REPEAT );
-            }
-
-            replayCache.save( serverPrincipal, clientPrincipal, clientTime, clientMicroSeconds );
+        if ( replayCache.checkReplay(clientPrincipal.toString(), serverPrincipal.toString() , clientTime.getValue(), clientMicroSeconds ) ) {
+            throw new KerberosException( ErrorType.KRB_AP_ERR_REPEAT );
         }
 
         if ( !authenticator.getCtime().isInClockSkew( clockSkew ) )
@@ -455,7 +449,7 @@ public class KerberosUtils
          * flag is set in the ticket, the KRB_AP_ERR_TKT_NYV error is returned."
          */
         KerberosTime startTime = ( ticket.getEncPart().getStartTime() != null ) ? ticket.getEncPart()
-            .getStartTime() : ticket.getEncPart().getAuthTime();
+                .getStartTime() : ticket.getEncPart().getAuthTime();
 
         KerberosTime now = new KerberosTime();
         boolean isValidStartTime = startTime.lessThan( now );

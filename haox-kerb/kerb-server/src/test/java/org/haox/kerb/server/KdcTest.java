@@ -40,7 +40,7 @@ public class KdcTest {
 
     @Before
     public void setUp() throws Exception {
-        kdcServer = new SimpleKdcServer(port);
+        kdcServer = new SimpleKdcServer();
         kdcServer.start();
     }
 

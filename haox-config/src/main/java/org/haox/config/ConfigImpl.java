@@ -58,9 +58,9 @@ public class ConfigImpl implements Config {
     @Override
     public String getString(ConfigKey name) {
         if (name.getDefaultValue() != null) {
-            return getString(name.toPropertyKey(), (String) name.getDefaultValue());
+            return getString(name.getPropertyKey(), (String) name.getDefaultValue());
         }
-        return getString(name.toPropertyKey());
+        return getString(name.getPropertyKey());
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ConfigImpl implements Config {
 
     @Override
     public String getTrimmed(ConfigKey name) {
-        return getTrimmed(name.toPropertyKey());
+        return getTrimmed(name.getPropertyKey());
     }
 
     @Override
@@ -99,9 +99,9 @@ public class ConfigImpl implements Config {
     @Override
     public Integer getInt(ConfigKey name) {
         if (name.getDefaultValue() != null) {
-            return getInt(name.toPropertyKey(), (Integer) name.getDefaultValue());
+            return getInt(name.getPropertyKey(), (Integer) name.getDefaultValue());
         }
-        return getInt(name.toPropertyKey());
+        return getInt(name.getPropertyKey());
     }
 
     @Override
@@ -126,9 +126,9 @@ public class ConfigImpl implements Config {
     @Override
     public Long getLong(ConfigKey name) {
         if (name.getDefaultValue() != null) {
-            return getLong(name.toPropertyKey(), (Long) name.getDefaultValue());
+            return getLong(name.getPropertyKey(), (Long) name.getDefaultValue());
         }
-        return getLong(name.toPropertyKey());
+        return getLong(name.getPropertyKey());
     }
 
     @Override
@@ -153,9 +153,9 @@ public class ConfigImpl implements Config {
     @Override
     public Float getFloat(ConfigKey name) {
         if (name.getDefaultValue() != null) {
-            return getFloat(name.toPropertyKey(), (Float) name.getDefaultValue());
+            return getFloat(name.getPropertyKey(), (Float) name.getDefaultValue());
         }
-        return getFloat(name.toPropertyKey());
+        return getFloat(name.getPropertyKey());
     }
 
     @Override
@@ -180,9 +180,9 @@ public class ConfigImpl implements Config {
     @Override
     public Boolean getBoolean(ConfigKey name) {
         if (name.getDefaultValue() != null) {
-            return getBoolean(name.toPropertyKey(), (Boolean) name.getDefaultValue());
+            return getBoolean(name.getPropertyKey(), (Boolean) name.getDefaultValue());
         }
-        return getBoolean(name.toPropertyKey());
+        return getBoolean(name.getPropertyKey());
     }
 
     @Override
@@ -216,9 +216,9 @@ public class ConfigImpl implements Config {
     @Override
     public List<String> getList(ConfigKey name) {
         if (name.getDefaultValue() != null) {
-            return getList(name.toPropertyKey(), (String[]) name.getDefaultValue());
+            return getList(name.getPropertyKey(), (String[]) name.getDefaultValue());
         }
-        return getList(name.toPropertyKey());
+        return getList(name.getPropertyKey());
     }
 
     @Override
@@ -233,7 +233,7 @@ public class ConfigImpl implements Config {
 
     @Override
     public Config getConfig(ConfigKey name) {
-        return getConfig(name.toPropertyKey());
+        return getConfig(name.getPropertyKey());
     }
 
     @Override
@@ -261,9 +261,9 @@ public class ConfigImpl implements Config {
     @Override
     public Class<?> getClass(ConfigKey name) throws ClassNotFoundException {
         if (name.getDefaultValue() != null) {
-            return getClass(name.toPropertyKey(), (Class<?>) name.getDefaultValue());
+            return getClass(name.getPropertyKey(), (Class<?>) name.getDefaultValue());
         }
-        return getClass(name.toPropertyKey());
+        return getClass(name.getPropertyKey());
     }
 
     @Override
@@ -273,7 +273,7 @@ public class ConfigImpl implements Config {
 
     @Override
     public <T> T getInstance(ConfigKey name) throws ClassNotFoundException {
-        return getInstance(name.toPropertyKey());
+        return getInstance(name.getPropertyKey());
     }
 
     @Override

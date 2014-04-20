@@ -7,12 +7,16 @@ import org.apache.directory.server.kerberos.shared.keytab.KeytabEntry;
 import org.apache.directory.shared.kerberos.KerberosTime;
 import org.apache.directory.shared.kerberos.codec.types.EncryptionType;
 import org.apache.directory.shared.kerberos.components.EncryptionKey;
+import org.haox.kerb.server.common.KdcConfigKey;
 import org.haox.kerb.server.identity.Identity;
 import org.haox.kerb.server.identity.KrbIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.*;
@@ -20,10 +24,30 @@ import java.util.*;
 public class TestKdcServer extends SimpleKdcServer {
     private static final Logger logger = LoggerFactory.getLogger(TestKdcServer.class);
 
+    public static final String ORG_DOMAIN = KdcConfigKey.KDC_DOMAIN.getPropertyKey();
+    public static final String KDC_REALM = KdcConfigKey.KDC_REALM.getPropertyKey();
+    public static final String KDC_HOST = KdcConfigKey.KDC_HOST.getPropertyKey();
+    public static final String KDC_PORT = KdcConfigKey.KDC_PORT.getPropertyKey();
+    public static final String WORK_DIR = KdcConfigKey.WORK_DIR.getPropertyKey();
+
+    private static final Properties DEFAULT_CONFIG = new Properties();
+    static {
+        DEFAULT_CONFIG.setProperty(KDC_HOST, "localhost");
+        DEFAULT_CONFIG.setProperty(KDC_PORT, "8018");
+        DEFAULT_CONFIG.setProperty(ORG_DOMAIN, "test.com");
+        DEFAULT_CONFIG.setProperty(KDC_REALM, "TEST.COM");
+    }
+
+    public static Properties createConf() {
+        return (Properties) DEFAULT_CONFIG.clone();
+    }
+
     private File workDir;
     private File krb5conf;
 
-    public TestKdcServer(Properties conf, File workDir) throws Exception {
+    public TestKdcServer(Properties conf) throws Exception {
+        getConfig().getConf().addPropertiesConfig(conf);
+
         this.workDir = new File(workDir, Long.toString(System.currentTimeMillis()));
         if (! workDir.exists()
                 && ! workDir.mkdirs()) {
@@ -140,6 +164,7 @@ public class TestKdcServer extends SimpleKdcServer {
         keytab.write(keytabFile);
     }
 
+    /*
     public static void main(String[] args) throws  Exception {
         if (args.length < 4) {
             System.out.println("Arguments: <WORKDIR> <MINIKDCPROPERTIES> " +
@@ -194,5 +219,5 @@ public class TestKdcServer extends SimpleKdcServer {
             throw new RuntimeException("Cannot rename KDC's krb5conf to "
                     + krb5conf.getAbsolutePath());
         }
-    }
+    } */
 }

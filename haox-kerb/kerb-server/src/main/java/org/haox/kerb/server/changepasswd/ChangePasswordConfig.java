@@ -2,7 +2,6 @@ package org.haox.kerb.server.changepasswd;
 
 import org.haox.config.ConfigKey;
 import org.haox.kerb.server.common.KdcConfig;
-import org.haox.kerb.server.common.KdcConfigKey;
 
 public class ChangePasswordConfig extends KdcConfig
 {
@@ -25,7 +24,7 @@ public class ChangePasswordConfig extends KdcConfig
         }
 
         @Override
-        public String toPropertyKey() {
+        public String getPropertyKey() {
             return "change_password_" + name().toLowerCase();
         }
 
@@ -36,22 +35,22 @@ public class ChangePasswordConfig extends KdcConfig
     }
 
     public String getServiceName() {
-        return config.getString(ChangePasswordConfigKey.SERVICE_NAME);
+        return conf.getString(ChangePasswordConfigKey.SERVICE_NAME);
     }
 
     public String getServerAddress() {
-        return config.getString(ChangePasswordConfigKey.SERVER_ADDRESS);
+        return conf.getString(ChangePasswordConfigKey.SERVER_ADDRESS);
     }
 
     public int getServerPort() {
-        return config.getInt(ChangePasswordConfigKey.SERVER_PORT);
+        return conf.getInt(ChangePasswordConfigKey.SERVER_PORT);
     }
 
     public String getServicePrincipal() {
-        return config.getString(ChangePasswordConfigKey.SERVICE_PRINCIPAL);
+        return conf.getString(ChangePasswordConfigKey.SERVICE_PRINCIPAL);
     }
 
     public int getPasswordLength() {
-        return config.getInt(ChangePasswordConfigKey.PASSWORD_LENGTH);
+        return conf.getInt(ChangePasswordConfigKey.PASSWORD_LENGTH);
     }
 }

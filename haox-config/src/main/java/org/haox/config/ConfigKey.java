@@ -1,6 +1,6 @@
 package org.haox.config;
 
 public interface ConfigKey {
-    public String toPropertyKey();
+    public String getPropertyKey();
     public Object getDefaultValue();
 }

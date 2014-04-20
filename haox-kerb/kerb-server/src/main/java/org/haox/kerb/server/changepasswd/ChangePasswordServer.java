@@ -1,12 +1,7 @@
 package org.haox.kerb.server.changepasswd;
 
 import io.netty.channel.socket.SocketChannel;
-import net.sf.ehcache.Cache;
-import org.apache.directory.api.ldap.model.name.Dn;
 import org.haox.kerb.server.common.AbstractKdcServer;
-import org.haox.kerb.server.shared.replay.ReplayCheckServiceImpl;
-import org.haox.kerb.server.shared.store.DirectoryPrincipalStore;
-import org.haox.kerb.server.shared.store.PrincipalStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,14 +28,12 @@ public class ChangePasswordServer extends AbstractKdcServer
 
     @Override
     protected void doStart() throws Exception {
-        PrincipalStore store = new DirectoryPrincipalStore( getIdentityService(), new Dn( this.getSearchBaseDn() ) );
-        Cache cache = getIdentityService().getCacheService().getCache( "changePwdReplayCache" );
-        replayCache = new ReplayCheckServiceImpl( cache );
+
     }
 
     @Override
     protected void doStop() throws Exception {
-        replayCache.clear();
+
     }
 
     @Override

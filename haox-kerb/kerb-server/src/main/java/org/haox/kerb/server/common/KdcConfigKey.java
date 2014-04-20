@@ -6,7 +6,7 @@ public enum KdcConfigKey implements ConfigKey {
     KRB_DEBUG(true),
     WORK_DIR("c:\\abc2\\haox\\krb5haoxkdc"), //"/var/krb5haoxkdc"
     KDC_SERVICE_NAME("Haox_KDC_Server"),
-    KDC_ADDRESS("127.0.0.1"),
+    KDC_HOST("127.0.0.1"),
     KDC_PORT(8015),
     KDC_DOMAIN("example.com"),
     KDC_REALM("EXAMPLE.COM"),
@@ -36,8 +36,8 @@ public enum KdcConfigKey implements ConfigKey {
     }
 
     @Override
-    public String toPropertyKey() {
-        return "kdc_" + name().toLowerCase();
+    public String getPropertyKey() {
+        return "kdc." + name().toLowerCase();
     }
 
     @Override

@@ -8,12 +8,12 @@ import java.util.Properties;
 
 public class KdcTestBase {
     private TestKdcServer kdc;
-    private File workDir;
+    private File testDir;
     private Properties conf;
 
     @Before
     public void startTestKdc() throws Exception {
-        kdc = new TestKdcServer(conf, workDir);
+        kdc = new TestKdcServer(conf);
         kdc.start();
     }
 
@@ -28,19 +28,25 @@ public class KdcTestBase {
         return kdc;
     }
 
-    protected File getTestDir() {
-        return new File(System.getProperty("test.dir", "target"));
+    protected void setTestDir(File testDir) {
+        this.testDir = testDir;
+        File workDir = new File(testDir, "testkdc_run");
+        conf.setProperty(TestKdcServer.WORK_DIR, workDir.getAbsolutePath());
     }
 
-    protected String getKdcRealm() {
+    public File getWorkDir() {
+        return new File(getKdc().getConfig().getWorkDir());
+    }
+
+    public String getKdcRealm() {
         return "TEST.COM";
     }
 
-    protected String getKdcHost() {
+    public String getKdcHost() {
         return "localhost";
     }
 
-    protected short getKdcPort() {
+    public short getKdcPort() {
         return 8015;
     }
 }

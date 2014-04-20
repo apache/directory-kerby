@@ -6,7 +6,7 @@ import java.util.List;
 
 public class KdcConfig
 {
-    private Conf conf;
+    protected Conf conf;
 
     public KdcConfig() {
         this.conf = new Conf();
@@ -29,7 +29,7 @@ public class KdcConfig
     }
 
     public String getKdcAddress() {
-        return conf.getString(KdcConfigKey.KDC_ADDRESS);
+        return conf.getString(KdcConfigKey.KDC_HOST);
     }
 
     public int getKdcPort() {
