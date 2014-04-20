@@ -1,109 +1,102 @@
 package org.haox.kerb.server.common;
 
 import org.haox.config.Conf;
-import org.haox.config.Config;
 
 import java.util.List;
 
 public class KdcConfig
 {
-    protected Conf conf;
-    protected Config config;
+    private Conf conf;
 
     public KdcConfig() {
         this.conf = new Conf();
-        this.config = this.conf.getConfig();
     }
 
     public Conf getConf() {
         return this.conf;
     }
 
-    public Config getConfig() {
-        return conf.getConfig();
-    }
-
     public boolean enableDebug() {
-        return config.getBoolean(KdcConfigKey.KRB_DEBUG);
+        return conf.getBoolean(KdcConfigKey.KRB_DEBUG);
     }
 
     public String getKdcServiceName() {
-        return config.getString(KdcConfigKey.KDC_SERVICE_NAME);
+        return conf.getString(KdcConfigKey.KDC_SERVICE_NAME);
     }
 
     public String getWorkDir() {
-        return config.getString(KdcConfigKey.WORK_DIR);
+        return conf.getString(KdcConfigKey.WORK_DIR);
     }
 
     public String getKdcAddress() {
-        return config.getString(KdcConfigKey.KDC_ADDRESS);
+        return conf.getString(KdcConfigKey.KDC_ADDRESS);
     }
 
     public int getKdcPort() {
-        return config.getInt(KdcConfigKey.KDC_PORT);
+        return conf.getInt(KdcConfigKey.KDC_PORT);
     }
 
     public String getKdcRealm() {
-        return config.getString(KdcConfigKey.KDC_REALM);
+        return conf.getString(KdcConfigKey.KDC_REALM);
     }
 
     public String getKdcDomain() {
-        return config.getString(KdcConfigKey.KDC_DOMAIN);
+        return conf.getString(KdcConfigKey.KDC_DOMAIN);
     }
 
     public String getKdcDn() {
-        return config.getString(KdcConfigKey.KDC_DN);
+        return conf.getString(KdcConfigKey.KDC_DN);
     }
 
     public String getTgsPrincipal() {
-        return config.getString(KdcConfigKey.TGS_PRINCIPAL);
+        return conf.getString(KdcConfigKey.TGS_PRINCIPAL);
     }
 
     public long getAllowableClockSkew() {
-        return config.getLong(KdcConfigKey.ALLOWABLE_CLOCKSKEW);
+        return conf.getLong(KdcConfigKey.ALLOWABLE_CLOCKSKEW);
     }
 
     public boolean isEmptyAddressesAllowed() {
-        return config.getBoolean(KdcConfigKey.EMPTY_ADDRESSES_ALLOWED);
+        return conf.getBoolean(KdcConfigKey.EMPTY_ADDRESSES_ALLOWED);
     }
 
     public boolean isForwardableAllowed() {
-        return config.getBoolean(KdcConfigKey.FORWARDABLE_ALLOWED);
+        return conf.getBoolean(KdcConfigKey.FORWARDABLE_ALLOWED);
     }
 
     public boolean isPostdatedAllowed() {
-        return config.getBoolean(KdcConfigKey.POSTDATED_ALLOWED);
+        return conf.getBoolean(KdcConfigKey.POSTDATED_ALLOWED);
     }
 
     public boolean isProxiableAllowed() {
-        return config.getBoolean(KdcConfigKey.PROXIABLE_ALLOWED);
+        return conf.getBoolean(KdcConfigKey.PROXIABLE_ALLOWED);
     }
 
     public boolean isRenewableAllowed() {
-        return config.getBoolean(KdcConfigKey.RENEWABLE_ALLOWED);
+        return conf.getBoolean(KdcConfigKey.RENEWABLE_ALLOWED);
     }
 
     public long getMaximumRenewableLifetime() {
-        return config.getLong(KdcConfigKey.MAXIMUM_RENEWABLE_LIFETIME);
+        return conf.getLong(KdcConfigKey.MAXIMUM_RENEWABLE_LIFETIME);
     }
 
     public long getMaximumTicketLifetime() {
-        return config.getLong(KdcConfigKey.MAXIMUM_TICKET_LIFETIME);
+        return conf.getLong(KdcConfigKey.MAXIMUM_TICKET_LIFETIME);
     }
 
     public long getMinimumTicketLifetime() {
-        return config.getLong(KdcConfigKey.MINIMUM_TICKET_LIFETIME);
+        return conf.getLong(KdcConfigKey.MINIMUM_TICKET_LIFETIME);
     }
 
     public List<String> getEncryptionTypes() {
-        return config.getList(KdcConfigKey.ENCRYPTION_TYPES);
+        return conf.getList(KdcConfigKey.ENCRYPTION_TYPES);
     }
 
     public boolean isPaEncTimestampRequired() {
-        return config.getBoolean(KdcConfigKey.PA_ENC_TIMESTAMP_REQUIRED);
+        return conf.getBoolean(KdcConfigKey.PA_ENC_TIMESTAMP_REQUIRED);
     }
 
     public boolean isBodyChecksumVerified() {
-        return config.getBoolean(KdcConfigKey.VERIFY_BODY_CHECKSUM);
+        return conf.getBoolean(KdcConfigKey.VERIFY_BODY_CHECKSUM);
     }
 }

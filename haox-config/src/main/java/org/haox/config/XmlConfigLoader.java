@@ -30,7 +30,7 @@ public class XmlConfigLoader extends ConfigLoader {
             logger.error("Failed to set setXIncludeAware(true) for parser", e);
         }
         DocumentBuilder builder = docBuilderFactory.newDocumentBuilder();
-        InputStream is = resource.getResourceStream();
+        InputStream is = (InputStream) resource.getResource();
         Document doc = null;
         try {
             doc = builder.parse(is);
@@ -47,7 +47,7 @@ public class XmlConfigLoader extends ConfigLoader {
     private boolean validateConfig(Element root) {
         boolean valid = false;
 
-        if ("org/haox/config".equals(root.getTagName())) {
+        if ("config".equals(root.getTagName())) {
             valid = true;
         } else {
             logger.error("bad conf element: top-level element not <configuration>");
@@ -77,7 +77,7 @@ public class XmlConfigLoader extends ConfigLoader {
             String tagName = prop.getTagName();
             if ("property".equals(tagName) && prop.hasChildNodes()) {
                 value = loadProperty(prop);
-            } else if ("org/haox/config".equals(tagName) && prop.hasChildNodes()) {
+            } else if ("config".equals(tagName) && prop.hasChildNodes()) {
                 ConfigImpl cfg = new ConfigImpl(name);
                 loadConfig(cfg, prop);
                 value = new ConfigObject(cfg);
