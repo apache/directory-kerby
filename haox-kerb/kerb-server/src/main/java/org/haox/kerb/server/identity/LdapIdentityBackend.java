@@ -1,9 +1,5 @@
-package org.haox.kerb.server;
+package org.haox.kerb.server.identity;
 
-import io.netty.channel.socket.SocketChannel;
-import net.sf.ehcache.Cache;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.directory.api.ldap.model.entry.DefaultEntry;
 import org.apache.directory.api.ldap.model.entry.Entry;
 import org.apache.directory.api.ldap.model.ldif.LdifEntry;
@@ -18,16 +14,14 @@ import org.apache.directory.api.ldap.schemamanager.impl.DefaultSchemaManager;
 import org.apache.directory.server.constants.ServerDNConstants;
 import org.apache.directory.server.core.DefaultDirectoryService;
 import org.apache.directory.server.core.api.CacheService;
+import org.apache.directory.server.core.api.DirectoryService;
 import org.apache.directory.server.core.api.InstanceLayout;
 import org.apache.directory.server.core.api.schema.SchemaPartition;
 import org.apache.directory.server.core.kerberos.KeyDerivationInterceptor;
 import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmIndex;
 import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmPartition;
 import org.apache.directory.server.core.partition.ldif.LdifPartition;
-import org.haox.kerb.server.common.AbstractKdcServer;
-import org.haox.kerb.server.shared.replay.ReplayCacheImpl;
-import org.haox.kerb.server.shared.store.DirectoryPrincipalStore;
-import org.haox.kerb.server.shared.store.PrincipalStore;
+import org.haox.kerb.server.shared.replay.ReplayCheckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,40 +31,19 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 
-public class KdcServer extends AbstractKdcServer {
-    private static final Logger logger = LoggerFactory.getLogger(KdcServer.class);
+public abstract class LdapIdentityBackend extends AbstractIdentityBackend {
+    private static final Logger logger = LoggerFactory.getLogger(LdapIdentityBackend.class);
 
-    public KdcServer() {
+    private String searchBaseDn;
+    private DirectoryService directoryService;
+    private ReplayCheckService replayCache;
+    private File workDir;
+
+    public LdapIdentityBackend() {
         super();
     }
 
-    @Override
-    protected String getServiceName() {
-        return kdcConfig.getKdcServiceName();
-    }
 
-    @Override
-    protected void doStart() throws Exception {
-        PrincipalStore store = new DirectoryPrincipalStore( getDirectoryService(), new Dn( this.getSearchBaseDn() ) );
-        Cache cache = getDirectoryService().getCacheService().getCache( "kdcReplayCache" );
-        replayCache = new ReplayCacheImpl( cache, kdcConfig.getAllowableClockSkew());
-
-        startTransport();
-    }
-
-    @Override
-    protected void doStop() throws Exception {
-        stopTransport();
-
-        if ( replayCache != null ) {
-            replayCache.clear();
-        }
-    }
-
-    @Override
-    protected void initTransportChannel(SocketChannel ch) {
-        ch.pipeline().addLast(new KdcServerHandler());
-    }
 
     private void initDirectoryService() throws Exception {
         directoryService = new DefaultDirectoryService();
@@ -113,8 +86,8 @@ public class KdcServer extends AbstractKdcServer {
         directoryService.setDenormalizeOpAttrsEnabled(true);
         directoryService.addLast(new KeyDerivationInterceptor());
 
-        String orgDn = kdcConfig.getKdcDn();
-        String orgDomain = kdcConfig.getKdcDomain();
+        String orgDn = null;//kdcConfig.getKdcDn();
+        String orgDomain = null;//kdcConfig.getKdcDomain();
         JdbmPartition partition = new JdbmPartition(directoryService.getSchemaManager());
         partition.setId(orgDomain);
         partition.setPartitionPath(new File(
@@ -145,21 +118,12 @@ public class KdcServer extends AbstractKdcServer {
         InputStream is = cl.getResourceAsStream("kdc.ldiff");
 
         SchemaManager schemaManager = directoryService.getSchemaManager();
-        final String content = StrSubstitutor.replace(IOUtils.toString(is), map);
+        //final String content = StrSubstitutor.replace(IOUtils.toString(is), map);
+        String content = null;
         LdifReader reader = new LdifReader(new StringReader(content));
         for (LdifEntry ldifEntry : reader) {
             directoryService.getAdminSession().add(new DefaultEntry(schemaManager,
                     ldifEntry.getEntry()));
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        int port;
-        if (args.length > 0) {
-            port = Integer.parseInt(args[0]);
-        } else {
-            port = 8080;
-        }
-        new KdcServer().start();
     }
 }

@@ -7,7 +7,6 @@ import org.haox.kerb.server.shared.crypto.encryption.Aes128CtsSha1Encryption;
 import org.haox.kerb.server.shared.crypto.encryption.Aes256CtsSha1Encryption;
 import org.haox.kerb.server.shared.crypto.encryption.Des3CbcSha1KdEncryption;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbFactory;
 import org.haox.kerb.spec.type.common.Checksum;
 import org.haox.kerb.spec.type.common.ChecksumType;
 
@@ -55,7 +54,7 @@ public class ChecksumHandler
 
         ChecksumEngine digester = getEngine( checksumType );
         byte[] checksumBytes = digester.calculateChecksum(bytes, key, usage);
-        Checksum checksum = KrbFactory.create(Checksum.class);
+        Checksum checksum = new Checksum();
         checksum.setCksumtype(checksumType);
         checksum.setChecksum(checksumBytes);
         return checksum;

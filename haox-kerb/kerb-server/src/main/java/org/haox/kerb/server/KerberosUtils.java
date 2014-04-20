@@ -9,11 +9,11 @@ import org.apache.directory.shared.kerberos.exceptions.KerberosException;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.server.shared.crypto.KeyUsage;
 import org.haox.kerb.server.shared.crypto.encryption.CipherTextHandler;
-import org.haox.kerb.server.shared.replay.ReplayCache;
+import org.haox.kerb.server.shared.replay.ReplayCheckService;
 import org.haox.kerb.server.shared.store.PrincipalStore;
 import org.haox.kerb.server.shared.store.PrincipalStoreEntry;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbFactory;
+import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.ap.ApReq;
 import org.haox.kerb.spec.type.ap.Authenticator;
 import org.haox.kerb.spec.type.common.*;
@@ -357,7 +357,7 @@ public class KerberosUtils
          * @throws org.apache.directory.shared.kerberos.exceptions.KerberosException
          */
     public static Authenticator verifyAuthHeader( ApReq authHeader, Ticket ticket, EncryptionKey serverKey,
-        long clockSkew, ReplayCache replayCache, boolean emptyAddressesAllowed, InetAddress clientAddress,
+        long clockSkew, ReplayCheckService replayCache, boolean emptyAddressesAllowed, InetAddress clientAddress,
         CipherTextHandler lockBox, KeyUsage authenticatorKeyUsage, boolean isValidate ) throws KerberosException, KrbException {
         if ( authHeader.getPvno() != KerberosConstants.KERBEROS_V5 )
         {
@@ -413,9 +413,9 @@ public class KerberosUtils
 
         if ( ticket.getEncPart().getClientAddresses() != null )
         {
-            HostAddress tmp = KrbFactory.create(HostAddress.class);
+            HostAddress tmp = new HostAddress();
             tmp.setAddress(clientAddress.getAddress());
-            if ( !ticket.getEncPart().getClientAddresses().getAddresses().contains(tmp))
+            if ( !ticket.getEncPart().getClientAddresses().getElements().contains(tmp))
             {
                 throw new KerberosException( ErrorType.KRB_AP_ERR_BADADDR );
             }

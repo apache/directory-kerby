@@ -5,7 +5,6 @@ import org.apache.directory.shared.kerberos.exceptions.KerberosException;
 import org.haox.kerb.server.shared.crypto.KeyUsage;
 import org.haox.kerb.server.shared.crypto.checksum.ChecksumEngine;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbFactory;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 

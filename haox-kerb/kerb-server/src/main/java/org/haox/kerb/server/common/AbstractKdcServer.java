@@ -7,8 +7,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.apache.directory.server.core.api.DirectoryService;
-import org.haox.kerb.server.shared.replay.ReplayCache;
+import org.haox.kerb.server.identity.IdentityService;
+import org.haox.kerb.server.identity.SimpleIdentityBackend;
+import org.haox.kerb.server.shared.replay.ReplayCheckService;
+import org.haox.kerb.server.shared.replay.ReplayCheckServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,13 +27,28 @@ public abstract class AbstractKdcServer
     private EventLoopGroup workerGroup;
 
     protected KdcConfig kdcConfig;
-    protected String searchBaseDn;
-    protected DirectoryService directoryService;
-    protected ReplayCache replayCache;
+    protected IdentityService identityService;
+    private ReplayCheckService replayCheckService;
     protected File workDir;
 
     public AbstractKdcServer() {
 
+    }
+
+    protected String getKdcRealm() {
+        return kdcConfig.getKdcRealm();
+    }
+
+    protected String getKdcHost() {
+        return kdcConfig.getKdcAddress();
+    }
+
+    protected short getKdcPort() {
+        return (short) kdcConfig.getKdcPort();
+    }
+
+    protected boolean enableDebug() {
+        return kdcConfig.enableDebug();
     }
 
     protected abstract String getServiceName();
@@ -43,6 +60,9 @@ public abstract class AbstractKdcServer
         this.workDir = getWorkDir();
         this.bossGroup = new NioEventLoopGroup();
         this.workerGroup = new NioEventLoopGroup();
+
+        initIdentityService();
+        initReplayCheckService();
     }
 
     protected File getWorkDir() {
@@ -96,24 +116,21 @@ public abstract class AbstractKdcServer
         this.serviceName = name;
     }
 
-    public DirectoryService getDirectoryService() {
-        return directoryService;
+    public IdentityService getIdentityService() {
+        return identityService;
     }
 
-    protected void setDirectoryService( DirectoryService directoryService ) {
-        this.directoryService = directoryService;
+    protected void initIdentityService() {
+        File identityFile = new File(workDir, "simplekdb.dat");
+        this.identityService = new SimpleIdentityBackend(identityFile);
     }
 
-    public String getSearchBaseDn() {
-        return searchBaseDn;
+    public ReplayCheckService getReplayCheckService() {
+        return replayCheckService;
     }
 
-    protected void setSearchBaseDn( String searchBaseDn ) {
-        this.searchBaseDn = searchBaseDn;
-    }
-
-    public ReplayCache getReplayCache() {
-        return replayCache;
+    protected void initReplayCheckService() {
+        this.replayCheckService = new ReplayCheckServiceImpl();
     }
 
     protected void startTransport() throws Exception {

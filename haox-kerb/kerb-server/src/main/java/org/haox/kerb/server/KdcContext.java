@@ -1,7 +1,7 @@
 package org.haox.kerb.server;
 
 import org.haox.kerb.server.shared.crypto.encryption.CipherTextHandler;
-import org.haox.kerb.server.shared.replay.ReplayCache;
+import org.haox.kerb.server.shared.replay.ReplayCheckService;
 import org.haox.kerb.server.shared.store.PrincipalStore;
 import org.haox.kerb.spec.type.common.AbstractKrbMessage;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -33,7 +33,7 @@ public abstract class KdcContext
     private EncryptionType encryptionType;
 
     /** the replay cache */
-    private ReplayCache replayCache;
+    private ReplayCheckService replayCache;
 
     /**
      * @return Returns the org.haox.config.
@@ -169,7 +169,7 @@ public abstract class KdcContext
      *
      * @param replayCache
      */
-    public void setReplayCache( ReplayCache replayCache )
+    public void setReplayCache( ReplayCheckService replayCache )
     {
         this.replayCache = replayCache;
     }
@@ -178,7 +178,7 @@ public abstract class KdcContext
     /**
      * @return the replay cache
      */
-    public ReplayCache getReplayCache()
+    public ReplayCheckService getReplayCache()
     {
         return replayCache;
     }

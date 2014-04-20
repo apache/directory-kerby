@@ -36,11 +36,11 @@ public class KdcTest {
     private String hostname = "localhost";
     private int port = 8088;
 
-    private KdcServer kdcServer;
+    private SimpleKdcServer kdcServer;
 
     @Before
     public void setUp() throws Exception {
-        kdcServer = new KdcServer(port);
+        kdcServer = new SimpleKdcServer(port);
         kdcServer.start();
     }
 

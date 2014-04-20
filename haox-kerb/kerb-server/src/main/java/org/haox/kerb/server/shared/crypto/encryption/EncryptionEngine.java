@@ -3,7 +3,6 @@ package org.haox.kerb.server.shared.crypto.encryption;
 import org.apache.directory.shared.kerberos.exceptions.KerberosException;
 import org.haox.kerb.server.shared.crypto.KeyUsage;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbFactory;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -234,7 +233,7 @@ public abstract class EncryptionEngine
 
     protected EncryptedData makeEncryptedData(byte[] cipherText) throws KrbException {
         //return new EncryptedData( getEncryptionType(), key.getKeyVersion(), cipherText );
-        EncryptedData result = KrbFactory.create(EncryptedData.class);
+        EncryptedData result = new EncryptedData();
         result.setCipher(cipherText);
         result.setEType(getEncryptionType());
         //result.setKvno(); //ZKTOOD

@@ -1,7 +1,7 @@
 package org.haox.kerb.server.shared.keytab;
 
+import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.KerberosTime;
 
 /**
  * An entry within a keytab file.

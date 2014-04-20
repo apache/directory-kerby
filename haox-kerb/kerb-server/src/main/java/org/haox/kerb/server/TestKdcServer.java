@@ -1,34 +1,14 @@
 package org.haox.kerb.server;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.directory.api.ldap.model.entry.DefaultEntry;
-import org.apache.directory.api.ldap.model.entry.Entry;
-import org.apache.directory.api.ldap.model.ldif.LdifEntry;
-import org.apache.directory.api.ldap.model.ldif.LdifReader;
-import org.apache.directory.api.ldap.model.name.Dn;
-import org.apache.directory.api.ldap.model.schema.SchemaManager;
-import org.apache.directory.api.ldap.model.schema.registries.SchemaLoader;
-import org.apache.directory.api.ldap.schemaextractor.SchemaLdifExtractor;
-import org.apache.directory.api.ldap.schemaextractor.impl.DefaultSchemaLdifExtractor;
-import org.apache.directory.api.ldap.schemaloader.LdifSchemaLoader;
-import org.apache.directory.api.ldap.schemamanager.impl.DefaultSchemaManager;
-import org.apache.directory.server.constants.ServerDNConstants;
-import org.apache.directory.server.core.DefaultDirectoryService;
-import org.apache.directory.server.core.api.CacheService;
-import org.apache.directory.server.core.api.InstanceLayout;
-import org.apache.directory.server.core.api.schema.SchemaPartition;
-import org.apache.directory.server.core.kerberos.KeyDerivationInterceptor;
-import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmIndex;
-import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmPartition;
-import org.apache.directory.server.core.partition.ldif.LdifPartition;
 import org.apache.directory.server.kerberos.shared.crypto.encryption.KerberosKeyFactory;
 import org.apache.directory.server.kerberos.shared.keytab.Keytab;
 import org.apache.directory.server.kerberos.shared.keytab.KeytabEntry;
 import org.apache.directory.shared.kerberos.KerberosTime;
 import org.apache.directory.shared.kerberos.codec.types.EncryptionType;
 import org.apache.directory.shared.kerberos.components.EncryptionKey;
+import org.haox.kerb.server.identity.Identity;
+import org.haox.kerb.server.identity.KrbIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,21 +17,12 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.*;
 
-public class TestKdcServer extends KdcServer {
+public class TestKdcServer extends SimpleKdcServer {
     private static final Logger logger = LoggerFactory.getLogger(TestKdcServer.class);
 
     private File workDir;
     private File krb5conf;
 
-    /**
-     * Creates a TestKdcServer.
-     *
-     * @param conf TestKdcServer configuration.
-     * @param workDir working directory, it should be the build directory. Under
-     * this directory an ApacheDS working directory will be created, this
-     * directory will be deleted when the TestKdcServer stops.
-     * @throws Exception thrown if the TestKdcServer could not be created.
-     */
     public TestKdcServer(Properties conf, File workDir) throws Exception {
         this.workDir = new File(workDir, Long.toString(System.currentTimeMillis()));
         if (! workDir.exists()
@@ -70,66 +41,49 @@ public class TestKdcServer extends KdcServer {
         return krb5conf;
     }
 
-    /**
-     * Starts the TestKdcServer.
-     *
-     * @throws Exception thrown if the TestKdcServer could not be started.
-     */
-    public synchronized void start() throws Exception {
-        initDirectoryService();
-        initKDCServer();
-    }
+    @Override
+    protected void initConfig() {
+        super.initConfig();
 
-    private void initKDCServer() throws Exception {
-        StringBuilder sb = new StringBuilder();
-        is = cl.getResourceAsStream("minikdc-krb5.conf");
-        BufferedReader r = new BufferedReader(new InputStreamReader(is));
-        String line = r.readLine();
-        while (line != null) {
-            sb.append(line).append("{3}");
-            line = r.readLine();
+        try {
+            StringBuilder sb = new StringBuilder();
+            InputStream is = getClass().getResourceAsStream("minikdc-krb5.conf");
+            BufferedReader r = new BufferedReader(new InputStreamReader(is));
+            String line = r.readLine();
+            while (line != null) {
+                sb.append(line).append("{3}");
+                line = r.readLine();
+            }
+            r.close();
+            krb5conf = new File(workDir, "krb5.conf").getAbsoluteFile();
+            FileUtils.writeStringToFile(krb5conf,
+                    MessageFormat.format(sb.toString(), getKdcRealm(), getKdcHost(),
+                            Integer.toString(getKdcPort()), System.getProperty("line.separator")));
+            System.setProperty("java.security.krb5.conf", krb5conf.getAbsolutePath());
+
+            System.setProperty("sun.security.krb5.debug", String.valueOf(enableDebug()));
+
+            // refresh the org.haox.config
+            Class<?> classRef;
+            if (System.getProperty("java.vendor").contains("IBM")) {
+                classRef = Class.forName("com.ibm.security.krb5.internal.ConfigImpl");
+            } else {
+                classRef = Class.forName("sun.security.krb5.ConfigImpl");
+            }
+            Method refreshMethod = classRef.getMethod("refresh", new Class[0]);
+            refreshMethod.invoke(classRef, new Object[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        r.close();
-        krb5conf = new File(workDir, "krb5.conf").getAbsoluteFile();
-        FileUtils.writeStringToFile(krb5conf,
-                MessageFormat.format(sb.toString(), getRealm(), getHost(),
-                        Integer.toString(getPort()), System.getProperty("line.separator")));
-        System.setProperty("java.security.krb5.conf", krb5conf.getAbsolutePath());
 
-        System.setProperty("sun.security.krb5.debug", conf.getProperty(DEBUG,
-                "false"));
-
-        // refresh the org.haox.config
-        Class<?> classRef;
-        if (System.getProperty("java.vendor").contains("IBM")) {
-            classRef = Class.forName("com.ibm.security.krb5.internal.ConfigImpl");
-        } else {
-            classRef = Class.forName("sun.security.krb5.ConfigImpl");
-        }
-        Method refreshMethod = classRef.getMethod("refresh", new Class[0]);
-        refreshMethod.invoke(classRef, new Object[0]);
-
-        logger.info("TestKdcServer listening at port: {}", getPort());
         logger.info("TestKdcServer setting JVM krb5.conf to: {}",
                 krb5conf.getAbsolutePath());
     }
 
-    /**
-     * Stops the TestKdcServer
-     * @throws Exception
-     */
-    public synchronized void stop() {
-        if (kdc != null) {
-            System.getProperties().remove("java.security.krb5.conf");
-            System.getProperties().remove("sun.security.krb5.debug");
-            kdc.stop();
-            try {
-                ds.shutdown();
-            } catch (Exception ex) {
-                logger.error("Could not shutdown ApacheDS properly: {}", ex.toString(),
-                        ex);
-            }
-        }
+    public void stop() {
+        super.stop();
+        System.getProperties().remove("java.security.krb5.conf");
+        System.getProperties().remove("sun.security.krb5.debug");
         delete(workDir);
     }
 
@@ -148,57 +102,34 @@ public class TestKdcServer extends KdcServer {
         }
     }
 
-    /**
-     * Creates a principal in the KDC with the specified user and password.
-     *
-     * @param principal principal name, do not include the domain.
-     * @param password password.
-     * @throws Exception thrown if the principal could not be created.
-     */
     public synchronized void createPrincipal(String principal, String password)
             throws Exception {
-        String orgName= conf.getProperty(ORG_NAME);
-        String orgDomain = conf.getProperty(ORG_DOMAIN);
-        String baseDn = "ou=users,dc=" + orgName.toLowerCase() + ",dc=" +
-                orgDomain.toLowerCase();
-        String content = "dn: uid=" + principal + "," + baseDn + "\n" +
-                "objectClass: top\n" +
-                "objectClass: person\n" +
-                "objectClass: inetOrgPerson\n" +
-                "objectClass: krb5principal\n" +
-                "objectClass: krb5kdcentry\n" +
-                "cn: " + principal + "\n" +
-                "sn: " + principal + "\n" +
-                "uid: " + principal + "\n" +
-                "userPassword: " + password + "\n" +
-                "krb5PrincipalName: " + principal + "@" + getRealm() + "\n" +
-                "krb5KeyVersionNumber: 0";
+        Identity identity = new KrbIdentity(principal, password);
+        getIdentityService().addIdentity(identity);
+    }
 
-        for (LdifEntry ldifEntry : new LdifReader(new StringReader(content))) {
-            ds.getAdminSession().add(new DefaultEntry(ds.getSchemaManager(),
-                    ldifEntry.getEntry()));
+    public void createPrincipals(String ... principals)
+            throws Exception {
+        String generatedPassword;
+        for (String principal : principals) {
+            generatedPassword = UUID.randomUUID().toString();
+            principal = principal + "@" + getKdcRealm();
+            createPrincipal(principal, generatedPassword);
         }
     }
 
-    /**
-     * Creates  multiple principals in the KDC and adds them to a keytab file.
-     *
-     * @param keytabFile keytab file to add the created principal.s
-     * @param principals principals to add to the KDC, do not include the domain.
-     * @throws Exception thrown if the principals or the keytab file could not be
-     * created.
-     */
-    public void createPrincipal(File keytabFile, String ... principals)
+    public void exportPrincipals(File keytabFile)
             throws Exception {
-        String generatedPassword = UUID.randomUUID().toString();
         Keytab keytab = new Keytab();
         List<KeytabEntry> entries = new ArrayList<KeytabEntry>();
-        for (String principal : principals) {
-            createPrincipal(principal, generatedPassword);
-            principal = principal + "@" + getRealm();
+
+        List<Identity> identities = getIdentityService().getIdentities();
+        for (Identity identity : identities) {
+            KrbIdentity ki = (KrbIdentity) identity;
+            String principal = ki.getPrincipal();
             KerberosTime timestamp = new KerberosTime();
             for (Map.Entry<EncryptionType, EncryptionKey> entry : KerberosKeyFactory
-                    .getKerberosKeys(principal, generatedPassword).entrySet()) {
+                    .getKerberosKeys(principal, ki.getPassword()).entrySet()) {
                 EncryptionKey ekey = entry.getValue();
                 byte keyVersion = (byte) ekey.getKeyVersion();
                 entries.add(new KeytabEntry(principal, 1L, timestamp, keyVersion,
