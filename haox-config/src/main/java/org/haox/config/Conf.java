@@ -36,7 +36,7 @@ public class Conf implements Config {
         addResource(Resource.createPropertiesFileResource(propertiesFile));
     }
 
-    public void addPropertiesConfig(Properties propertiesConfig) throws IOException {
+    public void addPropertiesConfig(Properties propertiesConfig) {
         addResource(Resource.createPropertiesResource(propertiesConfig));
     }
 
