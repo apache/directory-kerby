@@ -1,7 +1,7 @@
 package org.haox.kerb.spec.type.kdc;
 
 import org.haox.asn1.type.Asn1Integer;
-import org.haox.asn1.type.Asn1Tag;
+import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.AbstractKrbMessage;
 import org.haox.kerb.spec.type.common.KrbMessageType;

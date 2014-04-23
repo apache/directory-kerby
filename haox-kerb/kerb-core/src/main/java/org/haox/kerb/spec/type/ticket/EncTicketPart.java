@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.ticket;
 
-import org.haox.asn1.type.Asn1Tag;
+import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;

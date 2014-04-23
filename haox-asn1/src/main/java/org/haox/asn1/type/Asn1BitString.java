@@ -1,5 +1,7 @@
 package org.haox.asn1.type;
 
+import org.haox.asn1.BerTag;
+
 import java.io.IOException;
 
 public class Asn1BitString extends AbstractAsn1Primitive<byte[]>

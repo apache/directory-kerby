@@ -1,5 +1,8 @@
 package org.haox.asn1.type;
 
+import org.haox.asn1.BerTag;
+import org.haox.asn1.LimitedByteBuffer;
+
 import java.io.IOException;
 import java.math.BigInteger;
 

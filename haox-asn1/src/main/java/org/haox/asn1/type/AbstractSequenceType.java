@@ -1,5 +1,9 @@
 package org.haox.asn1.type;
 
+import org.haox.asn1.Asn1Option;
+import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.LimitedByteBuffer;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -34,7 +38,7 @@ public abstract class AbstractSequenceType extends AbstractAsn1Type<AbstractSequ
     }
 
     @Override
-    public void encode(ByteBuffer buffer) {
+    public void encode(ByteBuffer buffer, Asn1Option option) {
         buffer.put((byte) tag());
         buffer.put((byte) bodyLength());
         encodeBody(buffer);
@@ -53,7 +57,7 @@ public abstract class AbstractSequenceType extends AbstractAsn1Type<AbstractSequ
     @Override
     protected void decodeValue(LimitedByteBuffer content) throws IOException {
         Asn1Sequence sequence = new Asn1Sequence();
-        sequence.decode(content);
+        sequence.decodeValue(content);
 
         for (Asn1SequenceField field : sequence.getFields()) {
             Asn1Tag tag = getTag(field.getTagNo());

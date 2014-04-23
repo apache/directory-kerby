@@ -1,7 +1,7 @@
 package org.haox.kerb.spec.type.ap;
 
 import org.haox.asn1.type.Asn1Integer;
-import org.haox.asn1.type.Asn1Tag;
+import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.KrbSequenceType;
 import org.haox.kerb.spec.type.common.EncryptionKey;

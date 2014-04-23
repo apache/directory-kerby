@@ -1,5 +1,9 @@
 package org.haox.asn1.type;
 
+import org.haox.asn1.Asn1Option;
+import org.haox.asn1.BerTag;
+import org.haox.asn1.LimitedByteBuffer;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -24,7 +28,7 @@ public abstract class AbstractAsn1Primitive<T> extends AbstractAsn1Type<T> {
     }
 
     @Override
-    public void encode(ByteBuffer buffer) {
+    public void encode(ByteBuffer buffer, Asn1Option option) {
         buffer.put((byte) tag());
         buffer.put((byte) bodyLength());
         buffer.put(body());

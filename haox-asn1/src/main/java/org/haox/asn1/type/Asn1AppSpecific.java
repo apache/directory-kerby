@@ -6,10 +6,10 @@ import org.haox.asn1.LimitedByteBuffer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class Asn1Tagged extends AbstractAsn1Type<Asn1Type> {
+public class Asn1AppSpecific extends AbstractAsn1Type<Asn1Type> {
     private int tagNo;
 
-    public Asn1Tagged(int tagNo, Asn1Type value) {
+    public Asn1AppSpecific(int tagNo, Asn1Type value) {
         super(value.tag(), value);
         this.tagNo = tagNo;
     }

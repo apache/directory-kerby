@@ -1,4 +1,4 @@
-package org.haox.asn1.type;
+package org.haox.asn1;
 
 public enum BerTag
 {

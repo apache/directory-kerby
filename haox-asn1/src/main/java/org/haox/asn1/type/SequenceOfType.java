@@ -1,5 +1,8 @@
 package org.haox.asn1.type;
 
+import org.haox.asn1.Asn1Option;
+import org.haox.asn1.LimitedByteBuffer;
+
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.nio.ByteBuffer;
@@ -32,7 +35,7 @@ public class SequenceOfType<T extends Asn1Type>
     }
 
     @Override
-    public void encode(ByteBuffer buffer) {
+    public void encode(ByteBuffer buffer, Asn1Option option) {
         buffer.put((byte) tag());
         buffer.put((byte) bodyLength());
         encodeBody(buffer);

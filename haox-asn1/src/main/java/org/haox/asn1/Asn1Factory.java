@@ -1,4 +1,7 @@
-package org.haox.asn1.type;
+package org.haox.asn1;
+
+import org.haox.asn1.BerTag;
+import org.haox.asn1.type.*;
 
 public class Asn1Factory {
 

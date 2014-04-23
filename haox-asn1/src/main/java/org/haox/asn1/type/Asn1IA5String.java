@@ -1,5 +1,7 @@
 package org.haox.asn1.type;
 
+import org.haox.asn1.BerTag;
+
 public class Asn1IA5String extends Asn1String
 {
     public Asn1IA5String() {

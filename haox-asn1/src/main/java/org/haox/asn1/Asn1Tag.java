@@ -1,4 +1,6 @@
-package org.haox.asn1.type;
+package org.haox.asn1;
+
+import org.haox.asn1.type.Asn1Type;
 
 public class Asn1Tag {
     private int index;

@@ -1,5 +1,10 @@
 package org.haox.asn1.type;
 
+import org.haox.asn1.Asn1Factory;
+import org.haox.asn1.Asn1Option;
+import org.haox.asn1.BerTag;
+import org.haox.asn1.LimitedByteBuffer;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -51,7 +56,7 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
     }
 
     @Override
-    public void encode(ByteBuffer buffer) {
+    public void encode(ByteBuffer buffer, Asn1Option option) {
         buffer.put((byte) tag());
         buffer.put((byte) bodyLength());
         encodeBody(buffer);

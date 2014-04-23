@@ -1,5 +1,8 @@
 package org.haox.asn1.type;
 
+import org.haox.asn1.Asn1Option;
+import org.haox.asn1.LimitedByteBuffer;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -33,8 +36,18 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     @Override
     public byte[] encode() {
+        return encode(Asn1Option.EXPLICIT);
+    }
+
+    @Override
+    public void encode(ByteBuffer buffer) {
+        encode(buffer, Asn1Option.EXPLICIT);
+    }
+
+    @Override
+    public byte[] encode(Asn1Option option) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(encodingLength());
-        encode(byteBuffer);
+        encode(byteBuffer, option);
         byteBuffer.flip();
         return byteBuffer.array();
     }
@@ -66,9 +79,10 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     @Override
     public void decode(int tag, int tagNo, LimitedByteBuffer content) throws IOException {
+        /*
         if (this.tag != -1 && this.tag != tag) {
             throw new IOException("Unexpected tag " + tag + ", expecting " + this.tag);
-        }
+        }*/
         decodeValue(content);
     }
 
@@ -189,7 +203,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
             if (length < 0) {
                 throw new IOException("Bad stream - negative length found");
             }
-            if (length >= buffer.hasLeft()) {
+            if (length > buffer.hasLeft()) {
                 throw new IOException("Bad stream - out of bounds length found");
             }
         }

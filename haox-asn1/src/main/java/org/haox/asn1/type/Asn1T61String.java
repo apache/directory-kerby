@@ -1,7 +1,6 @@
 package org.haox.asn1.type;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import org.haox.asn1.BerTag;
 
 public class Asn1T61String extends Asn1String
 {

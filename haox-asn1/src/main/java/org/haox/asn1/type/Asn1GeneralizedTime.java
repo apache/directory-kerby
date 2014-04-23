@@ -1,5 +1,7 @@
 package org.haox.asn1.type;
 
+import org.haox.asn1.BerTag;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
