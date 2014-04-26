@@ -36,9 +36,9 @@ public class CVCertificate
     public static String ReferenceEncoding = "ISO-8859-1";
 
     /**
-     * Sets the values of the certificate (body and signature).
+     * Sets the values of the certificate (encodeBody and signature).
      *
-     * @param appSpe is a DERApplicationSpecific object containing body and signature.
+     * @param appSpe is a DERApplicationSpecific object containing encodeBody and signature.
      * @throws IOException if tags or value are incorrect.
      */
     private void setPrivateData(DERApplicationSpecific appSpe)
@@ -125,9 +125,9 @@ public class CVCertificate
     }
 
     /**
-     * Create an iso7816Certificate structure from a body and its signature.
+     * Create an iso7816Certificate structure from a encodeBody and its signature.
      *
-     * @param body the Iso7816CertificateBody object containing the body.
+     * @param body the Iso7816CertificateBody object containing the encodeBody.
      * @param signature   the byte array containing the signature
      * @return the Iso7816CertificateStructure
      * @throws IOException if there is a problem parsing the data.
@@ -171,10 +171,10 @@ public class CVCertificate
     }
 
     /**
-     * Gives the signature of the whole body. Type of signature is given in
+     * Gives the signature of the whole encodeBody. Type of signature is given in
      * the Iso7816CertificateBody.Iso7816PublicKey.ASN1ObjectIdentifier
      *
-     * @return the signature of the body.
+     * @return the signature of the encodeBody.
      */
     public byte[] getSignature()
     {
@@ -182,9 +182,9 @@ public class CVCertificate
     }
 
     /**
-     * Gives the body of the certificate.
+     * Gives the encodeBody of the certificate.
      *
-     * @return the body.
+     * @return the encodeBody.
      */
     public CertificateBody getBody()
     {

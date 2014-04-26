@@ -1,18 +1,17 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.BerTag;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KrbSequenceType;
+import org.haox.kerb.spec.type.KrbAppSequenceType;
 
-public abstract class AbstractKrbMessage extends KrbSequenceType {
+public abstract class AbstractKrbMessage extends KrbAppSequenceType {
     protected static int PVNO = 0;
     protected static int MSG_TYPE = 1;
 
     private final int pvno = KrbConstant.KERBEROS_V5;
 
     public AbstractKrbMessage(KrbMessageType msgType) throws KrbException {
-        super(msgType.getValue() | BerTag.APPLICATION | BerTag.CONSTRUCTED);
+        super(msgType.getValue());
         setPvno(pvno);
         setMsgType(msgType);
     }

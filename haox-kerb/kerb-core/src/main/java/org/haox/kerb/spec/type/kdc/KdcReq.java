@@ -14,7 +14,7 @@ import org.haox.kerb.spec.type.common.PaData;
  msg-type        [2] INTEGER (10 -- AS -- | 12 -- TGS --),
  padata          [3] SEQUENCE OF PA-DATA OPTIONAL
  -- NOTE: not empty --,
- req-body        [4] KDC-REQ-BODY
+ req-encodeBody        [4] KDC-REQ-BODY
  }
  */
 public class KdcReq extends AbstractKrbMessage {

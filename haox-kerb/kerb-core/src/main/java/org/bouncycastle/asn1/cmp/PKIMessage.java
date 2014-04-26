@@ -60,7 +60,7 @@ public class PKIMessage
      * Creates a new PKIMessage.
      *
      * @param header     message header
-     * @param body       message body
+     * @param body       message encodeBody
      * @param protection message protection (may be null)
      * @param extraCerts extra certificates (may be null)
      */
@@ -134,7 +134,7 @@ public class PKIMessage
      * <pre>
      * PKIMessage ::= SEQUENCE {
      *                  header           PKIHeader,
-     *                  body             PKIBody,
+     *                  encodeBody             PKIBody,
      *                  protection   [0] PKIProtection OPTIONAL,
      *                  extraCerts   [1] SEQUENCE SIZE (1..MAX) OF CMPCertificate
      *                                                                     OPTIONAL

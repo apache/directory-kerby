@@ -1,14 +1,14 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.BerTag;
+import org.haox.asn1.UniversalTag;
 
 public class Asn1T61String extends Asn1String
 {
     public Asn1T61String() {
-        super(BerTag.T61_STRING);
+        this(null);
     }
 
     public Asn1T61String(String value) {
-        super(value, BerTag.T61_STRING);
+        super(UniversalTag.T61_STRING, value);
     }
 }

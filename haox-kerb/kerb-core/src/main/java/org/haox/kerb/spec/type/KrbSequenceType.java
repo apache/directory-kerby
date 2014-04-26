@@ -3,15 +3,6 @@ package org.haox.kerb.spec.type;
 import org.haox.asn1.type.AbstractSequenceType;
 
 public abstract class KrbSequenceType extends AbstractSequenceType {
-
-    public KrbSequenceType(int tag) {
-        super(tag);
-    }
-
-    public KrbSequenceType() {
-        super();
-    }
-
     protected int getFieldAsInt(int index) {
         Integer value = getFieldAsInteger(index);
         if (value != null) {

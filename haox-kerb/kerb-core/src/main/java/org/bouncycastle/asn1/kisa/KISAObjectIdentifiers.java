@@ -4,7 +4,7 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 
 /**
  * Korea Information Security Agency (KISA)
- * ({iso(1) member-body(2) kr(410) kisa(200004)})
+ * ({iso(1) member-encodeBody(2) kr(410) kisa(200004)})
  * <p>
  * See <a href="http://tools.ietf.org/html/rfc4010">RFC 4010</a>
  * Use of the SEED Encryption Algorithm

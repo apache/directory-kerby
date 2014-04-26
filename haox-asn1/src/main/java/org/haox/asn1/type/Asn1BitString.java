@@ -1,10 +1,11 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.BerTag;
+import org.haox.asn1.Asn1Option;
+import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 
-public class Asn1BitString extends AbstractAsn1Primitive<byte[]>
+public class Asn1BitString extends AbstractAsn1Simple<byte[]>
 {
     private int padding;
 
@@ -17,18 +18,18 @@ public class Asn1BitString extends AbstractAsn1Primitive<byte[]>
     }
 
     public Asn1BitString(byte[] value, int padding) {
-        super(value, BerTag.BIT_STRING);
+        super(UniversalTag.BIT_STRING, value);
         this.padding = padding;
     }
 
     @Override
-    protected int bodyLength() {
+    protected int encodingBodyLength(Asn1Option option) {
         return getValue().length + 1;
     }
 
     @Override
-    protected void toBytes() {
-        byte[] bytes = new byte[bodyLength()];
+    protected void toBytes(Asn1Option option) {
+        byte[] bytes = new byte[encodingBodyLength(option)];
         bytes[0] = (byte)padding;
         System.arraycopy(getValue(), 0, bytes, 1, bytes.length - 1);
         setBytes(bytes);

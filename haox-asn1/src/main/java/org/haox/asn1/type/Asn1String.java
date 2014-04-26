@@ -1,6 +1,7 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.BerTag;
+import org.haox.asn1.Asn1Option;
+import org.haox.asn1.UniversalTag;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,24 +10,24 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Asn1String extends AbstractAsn1Primitive<String>
+public abstract class Asn1String extends AbstractAsn1Simple<String>
 {
-    public Asn1String(BerTag tag) {
-        super(null, tag);
+    public Asn1String(UniversalTag tagNo) {
+        super(tagNo, null);
     }
 
-    public Asn1String(String value, BerTag tag) {
-        super(value, tag);
+    public Asn1String(UniversalTag tagNo, String value) {
+        super(tagNo, value);
     }
 
     @Override
-    protected void toBytes() {
+    protected void toBytes(Asn1Option option) {
         byte[] bytes = getValue().getBytes(StandardCharsets.US_ASCII);
         setBytes(bytes);
     }
 
     @Override
-    protected int bodyLength() {
+    protected int encodingBodyLength(Asn1Option option) {
         return getValue().length();
     }
 

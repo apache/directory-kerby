@@ -361,7 +361,7 @@ class DTLSReliableHandshake
 
         int length = message.getBody().length;
 
-        // NOTE: Must still send a fragment if body is empty
+        // NOTE: Must still send a fragment if encodeBody is empty
         int fragment_offset = 0;
         do
         {

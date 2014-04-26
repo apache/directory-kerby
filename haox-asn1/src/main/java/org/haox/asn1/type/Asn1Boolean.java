@@ -1,11 +1,12 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.BerTag;
+import org.haox.asn1.Asn1Option;
 import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 
-public class Asn1Boolean extends AbstractAsn1Primitive<Boolean>
+public class Asn1Boolean extends AbstractAsn1Simple<Boolean>
 {
     private static final byte[] TRUE_BYTE = new byte[] { (byte)0xff };
     private static final byte[] FALSE_BYTE = new byte[] { (byte)0x00 };
@@ -18,27 +19,28 @@ public class Asn1Boolean extends AbstractAsn1Primitive<Boolean>
     }
 
     public Asn1Boolean(Boolean value) {
-        super(value, BerTag.BOOLEAN);
+        super(UniversalTag.BOOLEAN, value);
     }
 
     @Override
-    protected byte[] body() {
-        return getValue() ? TRUE_BYTE : FALSE_BYTE;
-    }
-
-    @Override
-    protected int bodyLength() {
+    protected int encodingBodyLength(Asn1Option option) {
         return 1;
     }
 
     @Override
-    protected void decodeValue(LimitedByteBuffer content) throws IOException {
-        byte[] bytes = content.readAllBytes();
-
-        if (bytes.length != 1) {
+    protected void decodeBody(LimitedByteBuffer content) throws IOException {
+        if (content.hasLeft() != 1) {
             throw new IOException("More than 1 byte found for Boolean");
         }
+        super.decodeBody(content);
+    }
 
+    protected void toBytes() {
+        setBytes(getValue() ? TRUE_BYTE : FALSE_BYTE);
+    }
+
+    protected void toValue() throws IOException {
+        byte[] bytes = getBytes();
         if (bytes[0] == 0) {
             setValue(false);
         } else if (bytes[0] == 0xff) {

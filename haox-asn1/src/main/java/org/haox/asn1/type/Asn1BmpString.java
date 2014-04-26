@@ -1,22 +1,27 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.BerTag;
+import org.haox.asn1.Asn1Option;
+import org.haox.asn1.UniversalTag;
 import org.haox.asn1.LimitedByteBuffer;
 
 import java.io.IOException;
 
-public class Asn1BmpString extends AbstractAsn1Primitive<String>
+public class Asn1BmpString extends AbstractAsn1Simple<String>
 {
     public Asn1BmpString() {
         super(null);
     }
 
     public Asn1BmpString(String value) {
-        super(value, BerTag.BMP_STRING);
+        super(UniversalTag.BMP_STRING, value);
     }
 
     @Override
-    protected byte[] body() {
+    protected int encodingBodyLength(Asn1Option option) {
+        return getValue().length() * 2;
+    }
+
+    protected void toBytes(Asn1Option option) {
         String strValue = getValue();
         int len = strValue.length();
         byte[] bytes = new byte[len * 2];
@@ -26,25 +31,23 @@ public class Asn1BmpString extends AbstractAsn1Primitive<String>
             bytes[2 * i] = (byte)(c >> 8);
             bytes[2 * i + 1] = (byte)c;
         }
-        return bytes;
+        setBytes(bytes);
     }
 
-    @Override
-    protected int bodyLength() {
-        return getValue().length() * 2;
-    }
-
-    @Override
-    protected void decodeValue(LimitedByteBuffer content) throws IOException {
-        if (content.hasLeft() % 2 != 0) {
-            throw new IOException("Bad stream, BMP string expecting multiple of 2 bytes");
-        }
-
-        byte[] bytes = content.readAllBytes();
+    protected void toValue() throws IOException {
+        byte[] bytes = getBytes();
         char[]  chars = new char[bytes.length / 2];
         for (int i = 0; i != chars.length; i++) {
             chars[i] = (char)((bytes[2 * i] << 8) | (bytes[2 * i + 1] & 0xff));
         }
         setValue(new String(chars));
+    }
+
+    @Override
+    protected void decodeBody(LimitedByteBuffer content) throws IOException {
+        if (content.hasLeft() % 2 != 0) {
+            throw new IOException("Bad stream, BMP string expecting multiple of 2 bytes");
+        }
+        super.decodeBody(content);
     }
 }

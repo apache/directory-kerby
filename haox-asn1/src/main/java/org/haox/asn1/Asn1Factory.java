@@ -1,11 +1,10 @@
 package org.haox.asn1;
 
-import org.haox.asn1.BerTag;
 import org.haox.asn1.type.*;
 
 public class Asn1Factory {
 
-    public static Asn1Type create(BerTag tag) {
+    public static Asn1Type create(UniversalTag tag) {
         switch (tag) {
             case BIT_STRING:
                 return new Asn1BitString();

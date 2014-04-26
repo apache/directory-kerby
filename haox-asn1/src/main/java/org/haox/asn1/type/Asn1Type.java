@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public interface Asn1Type {
-    public int tag();
-    public int encodingLength();
+    public int tagClass();
+    public int tagNo();
     public byte[] encode(Asn1Option option);
     public void encode(ByteBuffer buffer, Asn1Option option);
     public byte[] encode();

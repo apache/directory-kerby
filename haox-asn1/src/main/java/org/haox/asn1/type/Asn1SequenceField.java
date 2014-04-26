@@ -13,7 +13,9 @@ public class Asn1SequenceField
     private int tagNo;
     private LimitedByteBuffer content;
 
-    public Asn1SequenceField(Asn1Type fieldValue) {
+    public Asn1SequenceField(int tag, int tagNo, Asn1Type fieldValue) {
+        this.tag = tag;
+        this.tagNo = tagNo;
         this.fieldValue = fieldValue;
     }
 
@@ -35,19 +37,17 @@ public class Asn1SequenceField
         return fieldValue;
     }
 
-    public void decode() throws IOException {
-        fieldValue = null; // non-simple cases
-
-        fieldValue.decode(tag, tagNo, content);
+    public boolean isFullyDecoded() {
+        return fieldValue != null;
     }
 
     public void decodeAs(Class<? extends Asn1Type> type) throws IOException {
-        fieldValue = null;
+        try {
+            fieldValue = type.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         fieldValue.decode(tag, tagNo, content);
-    }
-
-    public void encode(ByteBuffer buffer) {
-        fieldValue.encode(buffer);
     }
 }

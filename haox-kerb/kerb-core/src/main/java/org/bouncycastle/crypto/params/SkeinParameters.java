@@ -178,7 +178,7 @@ public class SkeinParameters
         /**
          * Sets a parameters to apply to the Skein hash function.<br>
          * Parameter types must be in the range 0,5..62, and cannot use the value {@value
-         * SkeinParameters#PARAM_TYPE_MESSAGE} (reserved for message body).
+         * SkeinParameters#PARAM_TYPE_MESSAGE} (reserved for message encodeBody).
          * <p/>
          * Parameters with type < {@value SkeinParameters#PARAM_TYPE_MESSAGE} are processed before
          * the message content, parameters with type > {@value SkeinParameters#PARAM_TYPE_MESSAGE}

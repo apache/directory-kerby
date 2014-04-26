@@ -5,7 +5,7 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 /**
  * <pre>
  * GOST Algorithms OBJECT IDENTIFIERS :
- *    { iso(1) member-body(2) ru(643) rans(2) cryptopro(2)}
+ *    { iso(1) member-encodeBody(2) ru(643) rans(2) cryptopro(2)}
  * </pre>
  */
 public interface CryptoProObjectIdentifiers
@@ -44,14 +44,14 @@ public interface CryptoProObjectIdentifiers
     static final ASN1ObjectIdentifier    gostR3411_94_with_gostR3410_2001 = GOST_id.branch("3");
 
     /**
-     * { iso(1) member-body(2) ru(643) rans(2) cryptopro(2) hashes(30) }
+     * { iso(1) member-encodeBody(2) ru(643) rans(2) cryptopro(2) hashes(30) }
      * <p>
      * Gost R3411-94-CryptoProParamSet OID: 1.2.643.2.2.30.1
      */
     static final ASN1ObjectIdentifier    gostR3411_94_CryptoProParamSet = GOST_id.branch("30.1");
 
     /**
-     * { iso(1) member-body(2) ru(643) rans(2) cryptopro(2) signs(32) }
+     * { iso(1) member-encodeBody(2) ru(643) rans(2) cryptopro(2) signs(32) }
      * <p>
      * Gost R3410-94-CryptoPro-A OID: 1.2.643.2.2.32.2
      */
@@ -64,7 +64,7 @@ public interface CryptoProObjectIdentifiers
     static final ASN1ObjectIdentifier    gostR3410_94_CryptoPro_D     = GOST_id.branch("32.5");
 
     /**
-     * { iso(1) member-body(2) ru(643) rans(2) cryptopro(2) exchanges(33) }
+     * { iso(1) member-encodeBody(2) ru(643) rans(2) cryptopro(2) exchanges(33) }
      * <p>
      * Gost R3410-94-CryptoPro-XchA OID: 1.2.643.2.2.33.1
      */
@@ -75,7 +75,7 @@ public interface CryptoProObjectIdentifiers
     static final ASN1ObjectIdentifier    gostR3410_94_CryptoPro_XchC  = GOST_id.branch("33.3");
 
     /**
-     * { iso(1) member-body(2)ru(643) rans(2) cryptopro(2) ecc-signs(35) }
+     * { iso(1) member-encodeBody(2)ru(643) rans(2) cryptopro(2) ecc-signs(35) }
      * <p>
      * Gost R3410-2001-CryptoPro-A OID: 1.2.643.2.2.35.1
      */
@@ -86,7 +86,7 @@ public interface CryptoProObjectIdentifiers
     static final ASN1ObjectIdentifier    gostR3410_2001_CryptoPro_C = GOST_id.branch("35.3");
 
     /**
-     * { iso(1) member-body(2) ru(643) rans(2) cryptopro(2) ecc-exchanges(36) }
+     * { iso(1) member-encodeBody(2) ru(643) rans(2) cryptopro(2) ecc-exchanges(36) }
      * <p>
      * Gost R3410-2001-CryptoPro-XchA OID: 1.2.643.2.2.36.0
      */

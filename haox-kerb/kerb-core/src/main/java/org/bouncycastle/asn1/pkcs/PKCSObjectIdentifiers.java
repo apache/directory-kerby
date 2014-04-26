@@ -4,7 +4,7 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 
 /**
  * pkcs-1 OBJECT IDENTIFIER ::=<p>
- *   { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) 1 }
+ *   { iso(1) member-encodeBody(2) us(840) rsadsi(113549) pkcs(1) 1 }
  *
  */
 public interface PKCSObjectIdentifiers
@@ -42,7 +42,7 @@ public interface PKCSObjectIdentifiers
 
     //
     // pkcs-3 OBJECT IDENTIFIER ::= {
-    //       iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) 3 }
+    //       iso(1) member-encodeBody(2) us(840) rsadsi(113549) pkcs(1) 3 }
     //
     /** PKCS#3: 1.2.840.113549.1.3 */
     static final ASN1ObjectIdentifier    pkcs_3                  = new ASN1ObjectIdentifier("1.2.840.113549.1.3");
@@ -51,7 +51,7 @@ public interface PKCSObjectIdentifiers
 
     //
     // pkcs-5 OBJECT IDENTIFIER ::= {
-    //       iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) 5 }
+    //       iso(1) member-encodeBody(2) us(840) rsadsi(113549) pkcs(1) 5 }
     //
     /** PKCS#5: 1.2.840.113549.1.5 */
     static final ASN1ObjectIdentifier    pkcs_5                  = new ASN1ObjectIdentifier("1.2.840.113549.1.5");
@@ -75,7 +75,7 @@ public interface PKCSObjectIdentifiers
 
     //
     // encryptionAlgorithm OBJECT IDENTIFIER ::= {
-    //       iso(1) member-body(2) us(840) rsadsi(113549) 3 }
+    //       iso(1) member-encodeBody(2) us(840) rsadsi(113549) 3 }
     //
     /**  1.2.840.113549.3 */
     static final ASN1ObjectIdentifier    encryptionAlgorithm     = new ASN1ObjectIdentifier("1.2.840.113549.3");
@@ -94,21 +94,21 @@ public interface PKCSObjectIdentifiers
     static final ASN1ObjectIdentifier    digestAlgorithm        = new ASN1ObjectIdentifier("1.2.840.113549.2");
     //
     // md2 OBJECT IDENTIFIER ::=
-    //      {iso(1) member-body(2) US(840) rsadsi(113549) digestAlgorithm(2) 2}
+    //      {iso(1) member-encodeBody(2) US(840) rsadsi(113549) digestAlgorithm(2) 2}
     //
     /**  1.2.840.113549.2.2 */
     static final ASN1ObjectIdentifier    md2                    = digestAlgorithm.branch("2");
 
     //
     // md4 OBJECT IDENTIFIER ::=
-    //      {iso(1) member-body(2) US(840) rsadsi(113549) digestAlgorithm(2) 4}
+    //      {iso(1) member-encodeBody(2) US(840) rsadsi(113549) digestAlgorithm(2) 4}
     //
     /**  1.2.840.113549.2.4 */
     static final ASN1ObjectIdentifier    md4                    = digestAlgorithm.branch("4");
 
     //
     // md5 OBJECT IDENTIFIER ::=
-    //      {iso(1) member-body(2) US(840) rsadsi(113549) digestAlgorithm(2) 5}
+    //      {iso(1) member-encodeBody(2) US(840) rsadsi(113549) digestAlgorithm(2) 5}
     //
     /**  1.2.840.113549.2.5 */
     static final ASN1ObjectIdentifier    md5                    = digestAlgorithm.branch("5");
@@ -126,7 +126,7 @@ public interface PKCSObjectIdentifiers
 
     //
     // pkcs-7 OBJECT IDENTIFIER ::= {
-    //       iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) 7 }
+    //       iso(1) member-encodeBody(2) us(840) rsadsi(113549) pkcs(1) 7 }
     //
     /** pkcs#7: 1.2.840.113549.1.7 */
     static final ASN1ObjectIdentifier    pkcs_7                  = new ASN1ObjectIdentifier("1.2.840.113549.1.7");
@@ -145,7 +145,7 @@ public interface PKCSObjectIdentifiers
 
     //
     // pkcs-9 OBJECT IDENTIFIER ::= {
-    //       iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) 9 }
+    //       iso(1) member-encodeBody(2) us(840) rsadsi(113549) pkcs(1) 9 }
     //
     /** PKCS#9: 1.2.840.113549.1.9 */
     static final ASN1ObjectIdentifier    pkcs_9                  = new ASN1ObjectIdentifier("1.2.840.113549.1.9");
@@ -210,7 +210,7 @@ public interface PKCSObjectIdentifiers
     static final ASN1ObjectIdentifier    sMIMECapabilitiesVersions = pkcs_9.branch("15.3");
 
     //
-    // id-ct OBJECT IDENTIFIER ::= {iso(1) member-body(2) usa(840)
+    // id-ct OBJECT IDENTIFIER ::= {iso(1) member-encodeBody(2) usa(840)
     // rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) ct(1)}
     //
     /** PKCS#9: 1.2.840.113549.1.9.16.1 -- smime ct */
@@ -234,7 +234,7 @@ public interface PKCSObjectIdentifiers
     static final ASN1ObjectIdentifier id_alg_PWRI_KEK         = id_alg.branch("9");
 
     //
-    // id-cti OBJECT IDENTIFIER ::= {iso(1) member-body(2) usa(840)
+    // id-cti OBJECT IDENTIFIER ::= {iso(1) member-encodeBody(2) usa(840)
     // rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) cti(6)}
     //
     /** PKCS#9: 1.2.840.113549.1.9.16.6 -- smime cti */
@@ -254,7 +254,7 @@ public interface PKCSObjectIdentifiers
     static final ASN1ObjectIdentifier    id_cti_ets_proofOfCreation = id_cti.branch("6");
     
     //
-    // id-aa OBJECT IDENTIFIER ::= {iso(1) member-body(2) usa(840)
+    // id-aa OBJECT IDENTIFIER ::= {iso(1) member-encodeBody(2) usa(840)
     // rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) attributes(2)}
     //
     /** PKCS#9: 1.2.840.113549.1.9.16.6.2 - smime attributes */
@@ -327,7 +327,7 @@ public interface PKCSObjectIdentifiers
     static final ASN1ObjectIdentifier id_aa_otherSigCert   = id_aa_ets_otherSigCert;
     
     /**
-     * id-spq OBJECT IDENTIFIER ::= {iso(1) member-body(2) usa(840)
+     * id-spq OBJECT IDENTIFIER ::= {iso(1) member-encodeBody(2) usa(840)
      * rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-spq(5)}; <p>
      * 1.2.840.113549.1.9.16.5
      */
@@ -340,7 +340,7 @@ public interface PKCSObjectIdentifiers
 
     //
     // pkcs-12 OBJECT IDENTIFIER ::= {
-    //       iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) 12 }
+    //       iso(1) member-encodeBody(2) us(840) rsadsi(113549) pkcs(1) 12 }
     //
     /** PKCS#12: 1.2.840.113549.1.12 */
     static final ASN1ObjectIdentifier   pkcs_12                  = new ASN1ObjectIdentifier("1.2.840.113549.1.12");

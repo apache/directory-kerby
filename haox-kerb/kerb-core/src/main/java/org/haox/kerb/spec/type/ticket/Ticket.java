@@ -1,11 +1,11 @@
 package org.haox.kerb.spec.type.ticket;
 
-import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
-import org.haox.kerb.spec.type.KrbSequenceType;
+import org.haox.kerb.spec.type.KrbAppSequenceType;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.PrincipalName;
 
@@ -17,7 +17,7 @@ import org.haox.kerb.spec.type.common.PrincipalName;
  enc-part        [3] EncryptedData -- EncTicketPart
  }
  */
-public class Ticket extends KrbSequenceType {
+public class Ticket extends KrbAppSequenceType {
     public static final int TKT_KVNO = KrbConstant.KERBEROS_V5;
     public static final int TAG = 1;
 

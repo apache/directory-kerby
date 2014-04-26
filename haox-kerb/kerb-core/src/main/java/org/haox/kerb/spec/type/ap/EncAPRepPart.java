@@ -1,9 +1,9 @@
 package org.haox.kerb.spec.type.ap;
 
-import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.KrbSequenceType;
+import org.haox.kerb.spec.type.KrbAppSequenceType;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 
 /**
@@ -14,7 +14,7 @@ import org.haox.kerb.spec.type.common.EncryptionKey;
  seq-number      [3] UInt32 OPTIONAL
  }
  */
-public class EncAPRepPart extends KrbSequenceType {
+public class EncAPRepPart extends KrbAppSequenceType {
     public static int TAG = 27;
     private static int CTIME = 0;
     private static int CUSEC = 1;

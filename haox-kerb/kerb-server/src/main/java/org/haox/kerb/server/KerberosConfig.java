@@ -46,7 +46,7 @@ public class KerberosConfig
     /** The default for allowing renewable tickets */
     public static final boolean DEFAULT_TGS_RENEWABLE_ALLOWED = true;
 
-    /** The default for verifying the body checksum */
+    /** The default for verifying the encodeBody checksum */
     public static final boolean DEFAULT_VERIFY_BODY_CHECKSUM = true;
 
     /** The default encryption types */
@@ -89,7 +89,7 @@ public class KerberosConfig
     /** Whether renewable tickets are allowed. */
     private boolean isRenewableAllowed = KerberosConfig.DEFAULT_TGS_RENEWABLE_ALLOWED;
 
-    /** Whether to verify the body checksum. */
+    /** Whether to verify the encodeBody checksum. */
     private boolean isBodyChecksumVerified = KerberosConfig.DEFAULT_VERIFY_BODY_CHECKSUM;
 
     /** The encryption types. */

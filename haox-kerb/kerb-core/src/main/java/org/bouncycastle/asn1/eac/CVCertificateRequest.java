@@ -110,9 +110,9 @@ public class CVCertificateRequest
     int ProfileId;
 
     /**
-     * Returns the body of the certificate template
+     * Returns the encodeBody of the certificate template
      *
-     * @return the body.
+     * @return the encodeBody.
      */
     public CertificateBody getCertificateBody()
     {

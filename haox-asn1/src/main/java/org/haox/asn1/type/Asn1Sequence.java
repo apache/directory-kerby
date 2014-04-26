@@ -1,9 +1,6 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Factory;
-import org.haox.asn1.Asn1Option;
-import org.haox.asn1.BerTag;
-import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -15,29 +12,34 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
     private List<Asn1SequenceField> fields;
 
     public Asn1Sequence() {
-        this(-1);
+        super(TagClass.UNIVERSAL.getValue(), UniversalTag.SEQUENCE.getValue());
+        this.fields = new ArrayList<Asn1SequenceField>();
+        setValue(new ArrayList<Asn1Type>());
     }
 
-    public Asn1Sequence(int tag) {
-        super(tag);
-        this.fields = new ArrayList<Asn1SequenceField>();
+    @Override
+    public byte[] encode() {
+        return encode(Asn1Option.DER);
+    }
+
+    @Override
+    public void encode(ByteBuffer buffer) {
+        encode(buffer, Asn1Option.DER);
     }
 
     @Override
     public List<Asn1Type> getValue() {
-        if (super.getValue() == null) {
-            List<Asn1Type> value = new ArrayList<Asn1Type>();
-            convertAndFill(value);
-            setValue(value);
-        }
-
+        toValue();
         return super.getValue();
     }
 
-    private void convertAndFill(List<Asn1Type> value) {
-        for (Asn1SequenceField field: fields) {
-            if (field != null) {
-                value.add(field.getFieldValue()); //ZKTODO
+    private void toValue() {
+        if (getValue().isEmpty()) {
+            List<Asn1Type> value = getValue();
+            for (Asn1SequenceField field: fields) {
+                if (field != null) {
+                    value.add(field.getFieldValue());
+                }
             }
         }
     }
@@ -47,31 +49,33 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
     }
 
     public void addField(Asn1Type fieldValue) {
-        this.fields.add(new Asn1SequenceField(fieldValue));
+        getValue().add(fieldValue);
     }
 
     @Override
-    protected int bodyLength() {
-        return 0;
+    protected int encodingBodyLength(Asn1Option option) {
+        List<Asn1Type> value = getValue();
+        int allLen = 0;
+        for (Asn1Type part : value) {
+            if (part != null) {
+                allLen += ((AbstractAsn1Type) part).encodingLength(option);
+            }
+        }
+        return allLen;
     }
 
     @Override
-    public void encode(ByteBuffer buffer, Asn1Option option) {
-        buffer.put((byte) tag());
-        buffer.put((byte) bodyLength());
-        encodeBody(buffer);
-    }
-
-    private void encodeBody(ByteBuffer buffer) {
-        for (Asn1SequenceField field: fields) {
-            if (field != null) {
-                field.encode(buffer);
+    protected void encodeBody(ByteBuffer buffer, Asn1Option option) {
+        List<Asn1Type> value = getValue();
+        for (Asn1Type part : value) {
+            if (part != null) {
+                part.encode(buffer, option);
             }
         }
     }
 
     @Override
-    protected void decodeValue(LimitedByteBuffer content) throws IOException {
+    protected void decodeBody(LimitedByteBuffer content) throws IOException {
         while (content.available()) {
             Asn1SequenceField aValue = decodeOne(content);
             if (aValue != null) {
@@ -85,7 +89,7 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
     private static Asn1SequenceField decodeOne(LimitedByteBuffer content) throws IOException {
         int tag = readTag(content);
         int tagNo = readTagNo(content, tag);
-        boolean isConstructed = (tag & BerTag.CONSTRUCTED) != 0;
+        boolean isConstructed = (tag & CONSTRUCTED_FLAG) != 0;
         int length = readLength(content);
         if (length < 0) {
             throw new IOException("Unexpected length");
@@ -93,28 +97,33 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
         LimitedByteBuffer valueContent = new LimitedByteBuffer(content, length);
 
         Asn1SequenceField value = null;
-        if ((tag & BerTag.TAGGED) != 0) {
-            value = decodeOne(valueContent);
+        TagClass tagClass = TagClass.fromTag(tag);
+        if (tagClass.isTagged()) {
+            value = decodeTagged(tag, tagNo, valueContent);
         } else {
-            BerTag tagEnum = BerTag.fromValue(tagNo);
+            UniversalTag tagEnum = UniversalTag.fromValue(tagNo);
             if (isConstructed) {
                 value = createConsructed(tag, tagEnum, valueContent);
             } else {
                 Asn1Type aValue = createPrimitive(tag, tagEnum, valueContent);
-                value = new Asn1SequenceField(aValue);
+                value = new Asn1SequenceField(tag, tagNo, aValue);
             }
         }
 
         return value;
     }
 
-    private static Asn1Type createPrimitive(int tag, BerTag tagNo, LimitedByteBuffer content) throws IOException {
+    private static Asn1Type createPrimitive(int tag, UniversalTag tagNo, LimitedByteBuffer content) throws IOException {
         Asn1Type result = Asn1Factory.create(tagNo);
         result.decode(tag, tagNo.getValue(), content);
         return result;
     }
 
-    private static Asn1SequenceField createConsructed(int tag, BerTag tagNo, LimitedByteBuffer content) {
+    private static Asn1SequenceField createConsructed(int tag, UniversalTag tagNo, LimitedByteBuffer content) {
         return new Asn1SequenceField(tag, tagNo.getValue(), content);
+    }
+
+    private static Asn1SequenceField decodeTagged(int tag, int tagNo, LimitedByteBuffer content) throws IOException {
+        return new Asn1SequenceField(tag, tagNo, content);
     }
 }

@@ -53,7 +53,7 @@ public class ProtectedPart
      * <pre>
      * ProtectedPart ::= SEQUENCE {
      *                    header    PKIHeader,
-     *                    body      PKIBody
+     *                    encodeBody      PKIBody
      * }
      * </pre>
      * @return a basic ASN.1 object representation.

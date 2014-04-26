@@ -126,7 +126,7 @@ public class DERT61UTF8String
     /**
      * Return the encoded string as a byte array.
      *
-     * @return the actual bytes making up the encoded body of the T61 string.
+     * @return the actual bytes making up the encoded encodeBody of the T61 string.
      */
     public byte[] getOctets()
     {

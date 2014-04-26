@@ -4,7 +4,7 @@ import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.KrbSequenceType;
+import org.haox.kerb.spec.type.KrbAppSequenceType;
 import org.haox.kerb.spec.type.common.*;
 
 /**
@@ -23,8 +23,8 @@ import org.haox.kerb.spec.type.common.*;
  authorization-data      [10] AuthorizationData OPTIONAL
  }
  */
-public class EncTicketPart extends KrbSequenceType {
-    public static final int TAG = 1;
+public class EncTicketPart extends KrbAppSequenceType {
+    public static final int TAG = 3;
 
     private static int FLAGS = 0;
     private static int KEY = 1;

@@ -155,7 +155,7 @@ public class PKIBody
 
     /**
      * <pre>
-     * PKIBody ::= CHOICE {       -- message-specific body elements
+     * PKIBody ::= CHOICE {       -- message-specific encodeBody elements
      *        ir       [0]  CertReqMessages,        --Initialization Request
      *        ip       [1]  CertRepMessage,         --Initialization Response
      *        cr       [2]  CertReqMessages,        --Certification Request

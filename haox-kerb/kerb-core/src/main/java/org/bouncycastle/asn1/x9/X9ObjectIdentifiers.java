@@ -6,7 +6,7 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
  *
  * X9.62
  * <pre>
- * ansi-X9-62 OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+ * ansi-X9-62 OBJECT IDENTIFIER ::= { iso(1) member-encodeBody(2)
  *                                    us(840) ansi-x962(10045) }
  * </pre>
  */
@@ -140,7 +140,7 @@ public interface X9ObjectIdentifiers
     /**
      * DSA
      * <pre>
-     * dsapublicnumber OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+     * dsapublicnumber OBJECT IDENTIFIER ::= { iso(1) member-encodeBody(2)
      *                                         us(840) ansi-x957(10040) number-type(4) 1 }
      * </pre>
      * Base OID: 1.2.840.10040.4.1
@@ -150,7 +150,7 @@ public interface X9ObjectIdentifiers
     /**
      * <pre>
      * id-dsa-with-sha1 OBJECT IDENTIFIER ::= {
-     *     iso(1) member-body(2) us(840) x9-57(10040) x9cm(4) 3 }
+     *     iso(1) member-encodeBody(2) us(840) x9-57(10040) x9cm(4) 3 }
      * </pre>
      * OID: 1.2.840.10040.4.3
      */
@@ -179,7 +179,7 @@ public interface X9ObjectIdentifiers
      * Diffie-Hellman
      * <pre>
      * dhpublicnumber OBJECT IDENTIFIER ::= {
-     *    iso(1) member-body(2)  us(840) ansi-x942(10046) number-type(2) 1
+     *    iso(1) member-encodeBody(2)  us(840) ansi-x942(10046) number-type(2) 1
      * }
      * </pre>
      * OID: 1.2.840.10046.2.1

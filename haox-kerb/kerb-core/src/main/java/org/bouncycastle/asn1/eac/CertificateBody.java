@@ -163,8 +163,8 @@ public class CertificateBody
     /**
      * builds an Iso7816CertificateBody with an ASN1InputStream.
      *
-     * @param obj DERApplicationSpecific containing the whole body.
-     * @throws IOException if the body is not valid.
+     * @param obj DERApplicationSpecific containing the whole encodeBody.
+     * @throws IOException if the encodeBody is not valid.
      */
     private CertificateBody(DERApplicationSpecific obj)
         throws IOException
@@ -175,7 +175,7 @@ public class CertificateBody
     /**
      * create a profile type Iso7816CertificateBody.
      *
-     * @return return the "profile" type certificate body.
+     * @return return the "profile" type certificate encodeBody.
      * @throws IOException if the DERApplicationSpecific cannot be created.
      */
     private ASN1Primitive profileToASN1Object()
@@ -258,7 +258,7 @@ public class CertificateBody
     /**
      * create a request type Iso7816CertificateBody.
      *
-     * @return return the "request" type certificate body.
+     * @return return the "request" type certificate encodeBody.
      * @throws IOException if the DERApplicationSpecific cannot be created.
      */
     private ASN1Primitive requestToASN1Object()
@@ -275,7 +275,7 @@ public class CertificateBody
     /**
      * create a "request" or "profile" type Iso7816CertificateBody according to the variables sets.
      *
-     * @return return the ASN1Primitive representing the "request" or "profile" type certificate body.
+     * @return return the ASN1Primitive representing the "request" or "profile" type certificate encodeBody.
      * @throws IOException if the DERApplicationSpecific cannot be created or if data are missings to create a valid certificate.
      */
     public ASN1Primitive toASN1Primitive()
@@ -311,7 +311,7 @@ public class CertificateBody
     /**
      * Gives an instance of Iso7816CertificateBody taken from Object obj
      *
-     * @param obj is the Object to extract the certificate body from.
+     * @param obj is the Object to extract the certificate encodeBody from.
      * @return the Iso7816CertificateBody taken from Object obj.
      * @throws IOException if object is not valid.
      */

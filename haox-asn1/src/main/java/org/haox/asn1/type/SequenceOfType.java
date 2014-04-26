@@ -2,6 +2,8 @@ package org.haox.asn1.type;
 
 import org.haox.asn1.Asn1Option;
 import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.TagClass;
+import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -9,52 +11,48 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SequenceOfType<T extends Asn1Type>
-        extends AbstractAsn1Type<SequenceOfType<T>> {
+public class SequenceOfType<T extends Asn1Type> extends AbstractAsn1Type<SequenceOfType<T>> {
     private List<T> elements;
 
     public SequenceOfType() {
-        this(-1);
-    }
-
-    public SequenceOfType(int tag) {
-        super(tag);
-        setValue(this);
-        elements = new ArrayList<T>();
+        super(TagClass.UNIVERSAL.getValue(), UniversalTag.SEQUENCE.getValue());
+        this.elements = new ArrayList<T>();
     }
 
     @Override
-    protected int bodyLength() {
+    public byte[] encode() {
+        return encode(Asn1Option.DER);
+    }
+
+    @Override
+    public void encode(ByteBuffer buffer) {
+        encode(buffer, Asn1Option.DER);
+    }
+
+    @Override
+    protected int encodingBodyLength(Asn1Option option) {
         int allLen = 0;
         for (Asn1Type field : elements) {
             if (field != null) {
-                allLen += field.encodingLength();
+                allLen += ((AbstractAsn1Type) field).encodingLength(option);
             }
         }
         return allLen;
     }
 
     @Override
-    public void encode(ByteBuffer buffer, Asn1Option option) {
-        buffer.put((byte) tag());
-        buffer.put((byte) bodyLength());
-        encodeBody(buffer);
-    }
-
-    private void encodeBody(ByteBuffer buffer) {
-        Asn1Sequence sequence = new Asn1Sequence();
-        for (Asn1Type field: elements) {
+    protected void encodeBody(ByteBuffer buffer, Asn1Option option) {
+        for (Asn1Type field : elements) {
             if (field != null) {
-                sequence.addField(field);
+                field.encode(buffer, option);
             }
         }
-        sequence.encode(buffer);
     }
 
     @Override
-    protected void decodeValue(LimitedByteBuffer content) throws IOException {
+    protected void decodeBody(LimitedByteBuffer content) throws IOException {
         Asn1Sequence sequence = new Asn1Sequence();
-        sequence.decode(content);
+        sequence.decode(tag(), tagNo(), content);
 
         elements.clear();
         for (Asn1SequenceField field : sequence.getFields()) {

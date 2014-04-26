@@ -1,6 +1,7 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.BerTag;
+import org.haox.asn1.Asn1Option;
+import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -10,14 +11,14 @@ import java.util.Date;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-public class Asn1GeneralizedTime extends AbstractAsn1Primitive<Long>
+public class Asn1GeneralizedTime extends AbstractAsn1Simple<Long>
 {
     public Asn1GeneralizedTime() {
-        this(0L);
+        this(null);
     }
 
     public Asn1GeneralizedTime(Long time) {
-        super(time, BerTag.GENERALIZED_TIME);
+        super(UniversalTag.GENERALIZED_TIME, time);
     }
 
     protected void toValue() throws IOException {
@@ -84,7 +85,7 @@ public class Asn1GeneralizedTime extends AbstractAsn1Primitive<Long>
     }
 
     @Override
-    protected void toBytes() {
+    protected void toBytes(Asn1Option option) {
         Date date = new Date(getValue());
         SimpleDateFormat dateF = new SimpleDateFormat("yyyyMMddHHmmss'Z'");
         dateF.setTimeZone(new SimpleTimeZone(0, "Z"));

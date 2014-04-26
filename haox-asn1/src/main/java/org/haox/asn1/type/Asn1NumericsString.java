@@ -1,17 +1,19 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.BerTag;
+import org.haox.asn1.UniversalTag;
 
 public class Asn1NumericsString extends Asn1String
 {
     public Asn1NumericsString() {
-        super(BerTag.NUMERIC_STRING);
+        this(null);
     }
 
     public Asn1NumericsString(String value) {
-        super(value, BerTag.NUMERIC_STRING);
-        if (!isNumeric(value)) {
-            throw new IllegalArgumentException("Invalid numeric string");
+        super(UniversalTag.NUMERIC_STRING, value);
+        if (value != null) {
+            if (!isNumeric(value)) {
+                throw new IllegalArgumentException("Invalid numeric string");
+            }
         }
     }
 

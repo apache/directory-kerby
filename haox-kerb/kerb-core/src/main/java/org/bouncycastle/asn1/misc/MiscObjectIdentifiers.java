@@ -50,7 +50,7 @@ public interface MiscObjectIdentifiers
 
     //
     // Entrust
-    //       iso(1) member-body(16) us(840) nortelnetworks(113533) entrust(7)
+    //       iso(1) member-encodeBody(16) us(840) nortelnetworks(113533) entrust(7)
     //
     /** NortelNetworks Entrust OID base: 1.2.840.113533.7 */
     static final ASN1ObjectIdentifier    entrust                 = new ASN1ObjectIdentifier("1.2.840.113533.7");

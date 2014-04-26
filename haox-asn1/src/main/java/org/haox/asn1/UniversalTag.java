@@ -1,6 +1,6 @@
 package org.haox.asn1;
 
-public enum BerTag
+public enum UniversalTag
 {
     UNKNOWN             (-1),
     BOOLEAN             (0x01),
@@ -30,13 +30,9 @@ public enum BerTag
     BMP_STRING          (0x1e),
     UTF8_STRING         (0x0c);
 
-    public static int CONSTRUCTED = 0x20;
-    public static int APPLICATION = 0x40;
-    public static int TAGGED = 0x80;
-
     private int value;
 
-    private BerTag(int value) {
+    private UniversalTag(int value) {
         this.value = value;
     }
 
@@ -44,10 +40,10 @@ public enum BerTag
         return value;
     }
 
-    public static BerTag fromValue(int value) {
-        for (BerTag e : values()) {
+    public static UniversalTag fromValue(int value) {
+        for (UniversalTag e : values()) {
             if (e.getValue() == value) {
-                return (BerTag) e;
+                return (UniversalTag) e;
             }
         }
 

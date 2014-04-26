@@ -125,7 +125,7 @@ public class PKIStatusInfo
      *   granted                (0), -- you got exactly what you asked for
      *   grantedWithMods        (1), -- you got something like what you asked for
      *   rejection              (2), -- you don't get it, more information elsewhere in the message
-     *   waiting                (3), -- the request body part has not yet been processed, expect to hear more later
+     *   waiting                (3), -- the request encodeBody part has not yet been processed, expect to hear more later
      *   revocationWarning      (4), -- this message contains a warning that a revocation is imminent
      *   revocationNotification (5), -- notification that a revocation has occurred
      *   keyUpdateWarning       (6)  -- update already done for the oldCertId specified in CertReqMsg
