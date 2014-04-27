@@ -1,9 +1,9 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.AbstractSequenceType;
-import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.type.KerberosTime;
+import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
  LastReq         ::=     SEQUENCE OF SEQUENCE {
@@ -11,7 +11,7 @@ import org.haox.kerb.spec.type.KerberosTime;
  lr-value        [1] KerberosTime
  }
  */
-public class LastReqEntry extends AbstractSequenceType {
+public class LastReqEntry extends KrbSequenceType {
     private static int LR_TYPE = 0;
     private static int LR_VALUE = 1;
 
@@ -20,9 +20,8 @@ public class LastReqEntry extends AbstractSequenceType {
             new Asn1Tag(LR_VALUE, 1, KerberosTime.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+    public LastReqEntry() {
+        super(tags);
     }
 
     public LastReqType getLrType() {

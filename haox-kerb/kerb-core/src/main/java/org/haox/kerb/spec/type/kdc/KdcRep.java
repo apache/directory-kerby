@@ -1,7 +1,7 @@
 package org.haox.kerb.spec.type.kdc;
 
-import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.common.*;
@@ -38,15 +38,10 @@ public class KdcRep extends AbstractKrbMessage {
             new Asn1Tag(ENC_PART, 6, EncryptedData.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
-    }
-
     private EncKdcRepPart encPart;
 
     public KdcRep(KrbMessageType msgType) throws KrbException {
-        super(msgType);
+        super(msgType, tags);
     }
 
     public PaData getPaData() throws KrbException {

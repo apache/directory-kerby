@@ -1,11 +1,10 @@
 package org.haox.kerb.spec.type.kdc;
 
-import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.KrbAppSequenceType;
-import org.haox.kerb.spec.type.KrbSequenceType;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.HostAddresses;
 import org.haox.kerb.spec.type.common.LastReq;
@@ -28,7 +27,7 @@ import org.haox.kerb.spec.type.ticket.TicketFlags;
  caddr           [11] HostAddresses OPTIONAL
  }
  */
-public class EncKdcRepPart extends KrbAppSequenceType {
+public abstract class EncKdcRepPart extends KrbAppSequenceType {
     private static int KEY = 0;
     private static int LAST_REQ = 1;
     private static int NONCE = 2;
@@ -58,12 +57,7 @@ public class EncKdcRepPart extends KrbAppSequenceType {
     };
 
     public EncKdcRepPart(int tagNo) {
-        super(tagNo);
-    }
-
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+        super(tagNo, tags);
     }
 
     public EncryptionKey getKey() {

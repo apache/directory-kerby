@@ -1,7 +1,7 @@
 package org.haox.kerb.spec.type.kdc;
 
-import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.AbstractKrbMessage;
 import org.haox.kerb.spec.type.common.KrbMessageType;
@@ -28,13 +28,8 @@ public class KdcReq extends AbstractKrbMessage {
             new Asn1Tag(REQ_BODY, 4, KdcReqBody.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
-    }
-
     public KdcReq(KrbMessageType msgType) throws KrbException {
-        super(msgType);
+        super(msgType, tags);
     }
 
     public PaData getPaData() throws KrbException {

@@ -1,6 +1,6 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Option;
+import org.haox.asn1.EncodingOption;
 import org.haox.asn1.UniversalTag;
 
 import java.io.ByteArrayOutputStream;
@@ -21,13 +21,13 @@ public abstract class Asn1String extends AbstractAsn1Simple<String>
     }
 
     @Override
-    protected void toBytes(Asn1Option option) {
+    protected void toBytes(EncodingOption encodingOption) {
         byte[] bytes = getValue().getBytes(StandardCharsets.US_ASCII);
         setBytes(bytes);
     }
 
     @Override
-    protected int encodingBodyLength(Asn1Option option) {
+    protected int encodingBodyLength(EncodingOption encodingOption) {
         return getValue().length();
     }
 

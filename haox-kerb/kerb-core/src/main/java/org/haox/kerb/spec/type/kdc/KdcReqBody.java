@@ -1,7 +1,7 @@
 package org.haox.kerb.spec.type.kdc;
 
-import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;
@@ -63,9 +63,8 @@ public class KdcReqBody extends KrbSequenceType {
             new Asn1Tag(ADDITIONAL_TICKETS, 11, Tickets.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+    public KdcReqBody() {
+        super(tags);
     }
 
     private AuthorizationData authorizationData;

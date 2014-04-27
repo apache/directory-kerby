@@ -19,12 +19,17 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
 
     @Override
     public byte[] encode() {
-        return encode(Asn1Option.DER);
+        return encode(EncodingOption.DER);
     }
 
     @Override
     public void encode(ByteBuffer buffer) {
-        encode(buffer, Asn1Option.DER);
+        encode(buffer, EncodingOption.DER);
+    }
+
+    @Override
+    protected boolean isConstructed(EncodingOption encodingOption) {
+        return true;
     }
 
     @Override
@@ -53,23 +58,23 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
     }
 
     @Override
-    protected int encodingBodyLength(Asn1Option option) {
+    protected int encodingBodyLength(EncodingOption encodingOption) {
         List<Asn1Type> value = getValue();
         int allLen = 0;
         for (Asn1Type part : value) {
             if (part != null) {
-                allLen += ((AbstractAsn1Type) part).encodingLength(option);
+                allLen += ((AbstractAsn1Type) part).encodingLength(encodingOption);
             }
         }
         return allLen;
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer, Asn1Option option) {
+    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) {
         List<Asn1Type> value = getValue();
         for (Asn1Type part : value) {
             if (part != null) {
-                part.encode(buffer, option);
+                part.encode(buffer, encodingOption);
             }
         }
     }
@@ -115,7 +120,7 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
 
     private static Asn1Type createPrimitive(int tag, UniversalTag tagNo, LimitedByteBuffer content) throws IOException {
         Asn1Type result = Asn1Factory.create(tagNo);
-        result.decode(tag, tagNo.getValue(), content);
+        ((AbstractAsn1Type)result).decode(tag, tagNo.getValue(), content);
         return result;
     }
 

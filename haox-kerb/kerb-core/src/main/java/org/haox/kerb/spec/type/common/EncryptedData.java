@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.Asn1Tag;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
  EncryptedData   ::= SEQUENCE {
@@ -13,7 +13,7 @@ import org.haox.kerb.spec.KrbException;
  cipher  [2] OCTET STRING -- ciphertext
  }
  */
-public class EncryptedData extends AbstractSequenceType {
+public class EncryptedData extends KrbSequenceType {
     private static int ETYPE = 0;
     private static int KVNO = 1;
     private static int CIPHER = 2;
@@ -24,9 +24,8 @@ public class EncryptedData extends AbstractSequenceType {
             new Asn1Tag(CIPHER, 2, Asn1OctetString.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+    public EncryptedData() {
+        super(tags);
     }
 
     public EncryptionType getEType() throws KrbException {

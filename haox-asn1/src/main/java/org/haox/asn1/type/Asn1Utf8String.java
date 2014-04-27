@@ -1,6 +1,6 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Option;
+import org.haox.asn1.EncodingOption;
 import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class Asn1Utf8String extends Asn1String
     }
 
     @Override
-    protected void toBytes(Asn1Option option) {
+    protected void toBytes(EncodingOption encodingOption) {
         byte[] bytes = getValue().getBytes(StandardCharsets.UTF_8);
         setBytes(bytes);
     }

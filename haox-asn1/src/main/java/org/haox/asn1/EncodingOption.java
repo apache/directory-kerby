@@ -1,6 +1,6 @@
 package org.haox.asn1;
 
-public enum Asn1Option
+public enum EncodingOption
 {
     UNKNOWN(-1),
     PRIMITIVE(1),
@@ -9,12 +9,13 @@ public enum Asn1Option
     CONSTRUCTED_INDEFLEN(4),
     IMPLICIT(5),
     EXPLICIT(6),
-    DER(7),
-    CER(8);
+    BER(7),
+    DER(8),
+    CER(9);
 
     private int value;
 
-    private Asn1Option(int value) {
+    private EncodingOption(int value) {
         this.value = value;
     }
 
@@ -46,10 +47,10 @@ public enum Asn1Option
         return this == CER;
     }
 
-    public static Asn1Option fromValue(int value) {
-        for (Asn1Option e : values()) {
+    public static EncodingOption fromValue(int value) {
+        for (EncodingOption e : values()) {
             if (e.getValue() == value) {
-                return (Asn1Option) e;
+                return (EncodingOption) e;
             }
         }
 

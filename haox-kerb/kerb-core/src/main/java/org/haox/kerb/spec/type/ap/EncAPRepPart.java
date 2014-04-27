@@ -28,13 +28,8 @@ public class EncAPRepPart extends KrbAppSequenceType {
             new Asn1Tag(SEQ_NUMBER, 3, Asn1Integer.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
-    }
-
     public EncAPRepPart() {
-        super(TAG);
+        super(TAG, tags);
     }
 
     public KerberosTime getCtime() {

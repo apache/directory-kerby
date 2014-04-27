@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.AbstractSequenceType;
-import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosStrings;
+import org.haox.kerb.spec.type.KrbSequenceType;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  name-string     [1] SEQUENCE OF KerberosString
  }
  */
-public class PrincipalName extends AbstractSequenceType {
+public class PrincipalName extends KrbSequenceType {
     public static final String TGS_DEFAULT_SRV_NAME = "krbtgt";
     public static final int TGS_DEFAULT_NT = 2;
     public static final char NAME_COMPONENT_SEPARATOR = '/';
@@ -33,9 +33,8 @@ public class PrincipalName extends AbstractSequenceType {
             new Asn1Tag(NAME_STRING, 1, KerberosStrings.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+    public PrincipalName() {
+        super(tags);
     }
 
     public NameType getNameType() throws KrbException {

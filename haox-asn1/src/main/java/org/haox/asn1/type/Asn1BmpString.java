@@ -1,6 +1,6 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Option;
+import org.haox.asn1.EncodingOption;
 import org.haox.asn1.UniversalTag;
 import org.haox.asn1.LimitedByteBuffer;
 
@@ -17,11 +17,11 @@ public class Asn1BmpString extends AbstractAsn1Simple<String>
     }
 
     @Override
-    protected int encodingBodyLength(Asn1Option option) {
+    protected int encodingBodyLength(EncodingOption encodingOption) {
         return getValue().length() * 2;
     }
 
-    protected void toBytes(Asn1Option option) {
+    protected void toBytes(EncodingOption encodingOption) {
         String strValue = getValue();
         int len = strValue.length();
         byte[] bytes = new byte[len * 2];

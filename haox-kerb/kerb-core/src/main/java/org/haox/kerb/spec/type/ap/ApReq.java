@@ -1,7 +1,7 @@
 package org.haox.kerb.spec.type.ap;
 
-import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.AbstractKrbMessage;
 import org.haox.kerb.spec.type.common.EncryptedData;
@@ -29,15 +29,10 @@ public class ApReq extends AbstractKrbMessage {
             new Asn1Tag(AUTHENTICATOR, 3, Authenticator.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
-    }
-
     private Authenticator authenticator;
 
     public ApReq() throws KrbException {
-        super(KrbMessageType.AP_REQ);
+        super(KrbMessageType.AP_REQ, tags);
     }
 
     public ApOptions getApOptions() throws KrbException {

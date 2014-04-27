@@ -1,6 +1,6 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Option;
+import org.haox.asn1.EncodingOption;
 import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
@@ -23,13 +23,13 @@ public class Asn1BitString extends AbstractAsn1Simple<byte[]>
     }
 
     @Override
-    protected int encodingBodyLength(Asn1Option option) {
+    protected int encodingBodyLength(EncodingOption encodingOption) {
         return getValue().length + 1;
     }
 
     @Override
-    protected void toBytes(Asn1Option option) {
-        byte[] bytes = new byte[encodingBodyLength(option)];
+    protected void toBytes(EncodingOption encodingOption) {
+        byte[] bytes = new byte[encodingBodyLength(encodingOption)];
         bytes[0] = (byte)padding;
         System.arraycopy(getValue(), 0, bytes, 1, bytes.length - 1);
         setBytes(bytes);

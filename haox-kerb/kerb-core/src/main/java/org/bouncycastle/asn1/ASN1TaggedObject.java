@@ -152,7 +152,7 @@ public abstract class ASN1TaggedObject
      * return whether or not the object may be explicitly tagged. 
      * <p>
      * Note: if the object has been read from an input stream, the only
-     * time you can be sure if isExplicit is returning the true state of
+     * time you can be sure if isConstructed is returning the true state of
      * affairs is if it returns false. An implicitly tagged object may appear
      * to be explicitly tagged, so you need to understand the context under
      * which the reading was done as well, see getObject below.

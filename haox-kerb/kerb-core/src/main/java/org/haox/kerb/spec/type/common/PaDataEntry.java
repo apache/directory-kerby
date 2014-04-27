@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.Asn1Tag;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
  PA-DATA         ::= SEQUENCE {
@@ -13,7 +13,7 @@ import org.haox.kerb.spec.KrbException;
  padata-value    [2] OCTET STRING -- might be encoded AP-REQ
  }
  */
-public class PaDataEntry extends AbstractSequenceType {
+public class PaDataEntry extends KrbSequenceType {
     private static int PADATA_TYPE = 0;
     private static int PADATA_VALUE = 1;
 
@@ -22,9 +22,8 @@ public class PaDataEntry extends AbstractSequenceType {
             new Asn1Tag(PADATA_VALUE, 2, Asn1OctetString.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+    public PaDataEntry() {
+        super(tags);
     }
 
     public PaDataType getPaDataType() throws KrbException {

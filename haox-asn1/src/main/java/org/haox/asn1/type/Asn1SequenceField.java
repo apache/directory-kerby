@@ -48,6 +48,6 @@ public class Asn1SequenceField
             e.printStackTrace();
         }
 
-        fieldValue.decode(tag, tagNo, content);
+        ((AbstractAsn1Type)fieldValue).decode(tag, tagNo, content);
     }
 }

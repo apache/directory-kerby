@@ -53,12 +53,7 @@ public class EncTicketPart extends KrbAppSequenceType {
     };
 
     public EncTicketPart() {
-        super(TAG);
-    }
-
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+        super(TAG, tags);
     }
 
     public TicketFlags getFlags() throws KrbException {

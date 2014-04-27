@@ -1,8 +1,8 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.Asn1Tag;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
@@ -21,9 +21,8 @@ public class TransitedEncoding extends KrbSequenceType {
             new Asn1Tag(CONTENTS, 2, Asn1OctetString.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+    public TransitedEncoding() {
+        super(tags);
     }
 
     public TransitedEncodingType getTrType() throws KrbException {

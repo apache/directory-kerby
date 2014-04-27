@@ -1,7 +1,7 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Option;
-import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.EncodingOption;
+import org.haox.asn1.TaggingOption;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -9,11 +9,12 @@ import java.nio.ByteBuffer;
 public interface Asn1Type {
     public int tagClass();
     public int tagNo();
-    public byte[] encode(Asn1Option option);
-    public void encode(ByteBuffer buffer, Asn1Option option);
+    public byte[] encode(EncodingOption encodingOption);
+    public void encode(ByteBuffer buffer, EncodingOption encodingOption);
+    public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption, EncodingOption encodingOption);
     public byte[] encode();
     public void encode(ByteBuffer buffer);
     public void decode(byte[] content) throws IOException;
-    public void decode(LimitedByteBuffer content) throws IOException;
-    public void decode(int tag, int tagNo, LimitedByteBuffer content) throws IOException;
+    public void decode(ByteBuffer content) throws IOException;
+    public void taggedDecode(ByteBuffer content, TaggingOption taggingOption) throws IOException;
 }

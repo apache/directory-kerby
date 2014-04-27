@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.Asn1Tag;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
  AuthorizationData       ::= SEQUENCE OF SEQUENCE {
@@ -12,7 +12,7 @@ import org.haox.kerb.spec.KrbException;
  ad-data         [1] OCTET STRING
  }
  */
-public class AuthorizationDataEntry extends AbstractSequenceType {
+public class AuthorizationDataEntry extends KrbSequenceType {
     private static int AD_TYPE = 0;
     private static int AD_DATA = 1;
 
@@ -21,9 +21,8 @@ public class AuthorizationDataEntry extends AbstractSequenceType {
             new Asn1Tag(AD_DATA, 1, Asn1OctetString.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+    public AuthorizationDataEntry() {
+        super(tags);
     }
 
     public AuthorizationType getAuthzType() throws KrbException {

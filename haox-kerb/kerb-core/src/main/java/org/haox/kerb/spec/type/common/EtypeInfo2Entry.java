@@ -1,8 +1,8 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.Asn1Tag;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
@@ -24,9 +24,8 @@ public class EtypeInfo2Entry extends KrbSequenceType {
             new Asn1Tag(S2KPARAMS, 2, Asn1OctetString.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+    public EtypeInfo2Entry() {
+        super(tags);
     }
 
     public int getEtype() {

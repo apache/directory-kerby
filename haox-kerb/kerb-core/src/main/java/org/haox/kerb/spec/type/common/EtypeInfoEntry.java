@@ -1,8 +1,8 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.Asn1Tag;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
@@ -20,9 +20,8 @@ public class EtypeInfoEntry extends KrbSequenceType {
             new Asn1Tag(SALT, 1, Asn1OctetString.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+    public EtypeInfoEntry() {
+        super(tags);
     }
 
     public int getEtype() {

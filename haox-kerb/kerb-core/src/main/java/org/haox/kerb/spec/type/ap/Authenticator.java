@@ -1,11 +1,11 @@
 package org.haox.kerb.spec.type.ap;
 
-import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.KrbSequenceType;
+import org.haox.kerb.spec.type.KrbAppSequenceType;
 import org.haox.kerb.spec.type.common.AuthorizationData;
 import org.haox.kerb.spec.type.common.Checksum;
 import org.haox.kerb.spec.type.common.EncryptionKey;
@@ -24,7 +24,8 @@ import org.haox.kerb.spec.type.common.PrincipalName;
  authorization-data      [8] AuthorizationData OPTIONAL
  }
  */
-public class Authenticator extends KrbSequenceType {
+public class Authenticator extends KrbAppSequenceType {
+    public static int TAG = 2;
     private static int AUTHENTICATOR_VNO = 0;
     private static int CREALM = 1;
     private static int CNAME = 2;
@@ -48,12 +49,7 @@ public class Authenticator extends KrbSequenceType {
     };
 
     public Authenticator() {
-        super();
-    }
-
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+        super(TAG, tags);
     }
 
     public int getAuthenticatorVno() throws KrbException {

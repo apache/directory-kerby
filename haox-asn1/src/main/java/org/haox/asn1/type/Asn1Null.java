@@ -1,6 +1,6 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Option;
+import org.haox.asn1.EncodingOption;
 import org.haox.asn1.UniversalTag;
 import org.haox.asn1.LimitedByteBuffer;
 
@@ -16,12 +16,12 @@ public class Asn1Null extends AbstractAsn1Simple<Object>
     }
 
     @Override
-    protected byte[] encodeBody(Asn1Option option) {
+    protected byte[] encodeBody(EncodingOption encodingOption) {
         return EMPTY_BYTES;
     }
 
     @Override
-    protected int encodingBodyLength(Asn1Option option) {
+    protected int encodingBodyLength(EncodingOption encodingOption) {
         return 0;
     }
 

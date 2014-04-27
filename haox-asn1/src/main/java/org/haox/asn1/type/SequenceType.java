@@ -8,45 +8,56 @@ import java.nio.ByteBuffer;
 /**
  * For sequence type that consists of tagged fields
  */
-public abstract class AbstractSequenceType extends AbstractAsn1Type<AbstractSequenceType> {
+public class SequenceType extends AbstractAsn1Type<SequenceType> {
     private Asn1Tag[] tags;
     private Asn1Type[] fields;
 
-    public AbstractSequenceType() {
+    public SequenceType(Asn1Tag[] tags) {
         super(TagClass.UNIVERSAL.getValue(), UniversalTag.SEQUENCE.getValue());
         setValue(this);
-        tags = getTags();
+        this.tags = tags;
         fields = new Asn1Type[tags.length];
     }
 
-    protected abstract Asn1Tag[] getTags();
-
     @Override
     public byte[] encode() {
-        return encode(Asn1Option.DER);
+        return encode(EncodingOption.DER);
     }
 
     @Override
     public void encode(ByteBuffer buffer) {
-        encode(buffer, Asn1Option.DER);
+        encode(buffer, EncodingOption.DER);
     }
 
     @Override
-    protected int encodingBodyLength(Asn1Option option) {
+    protected boolean isConstructed(EncodingOption encodingOption) {
+        return true;
+    }
+
+    @Override
+    protected int encodingBodyLength(EncodingOption encodingOption) {
         int allLen = 0;
-        for (Asn1Type field : fields) {
+        Asn1Type field;
+        TaggingOption taggingOption;
+        for (int i = 0; i < fields.length; ++i) {
+            field = fields[i];
             if (field != null) {
-                allLen += ((AbstractAsn1Type) field).encodingLength(option);
+                taggingOption = new TaggingOption(tags[i].getTag(), false);
+                allLen += ((AbstractAsn1Type) field).taggedEncodingLength(taggingOption, encodingOption);
             }
         }
         return allLen;
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer, Asn1Option option) {
-        for (Asn1Type field : fields) {
+    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) {
+        Asn1Type field;
+        TaggingOption taggingOption;
+        for (int i = 0; i < fields.length; ++i) {
+            field = fields[i];
             if (field != null) {
-                field.encode(buffer, option);
+                taggingOption = new TaggingOption(tags[i].getTag(), false);
+                field.taggedEncode(buffer, taggingOption, encodingOption);
             }
         }
     }
@@ -94,18 +105,18 @@ public abstract class AbstractSequenceType extends AbstractAsn1Type<AbstractSequ
         throw new RuntimeException("The targeted field type isn't of string");
     }
 
-    public byte[] getFieldAsOctets(int index) {
+    protected byte[] getFieldAsOctets(int index) {
         Asn1OctetString value = getFieldAs(index, Asn1OctetString.class);
         if (value != null) return value.getValue();
         return null;
     }
 
-    public void setFieldAsOctets(int index, byte[] bytes) {
+    protected void setFieldAsOctets(int index, byte[] bytes) {
         Asn1OctetString value = new Asn1OctetString(bytes);
         setFieldAs(index, value);
     }
 
-    public Integer getFieldAsInteger(int index) {
+    protected Integer getFieldAsInteger(int index) {
         Asn1Integer value = getFieldAs(index, Asn1Integer.class);
         if (value != null) {
             return value.getValue().intValue();
@@ -113,11 +124,11 @@ public abstract class AbstractSequenceType extends AbstractAsn1Type<AbstractSequ
         return null;
     }
 
-    public void setFieldAsInt(int index, int value) {
+    protected void setFieldAsInt(int index, int value) {
         setFieldAs(index, new Asn1Integer(value));
     }
 
-    public byte[] getFieldAsOctetBytes(int index) {
+    protected byte[] getFieldAsOctetBytes(int index) {
         Asn1OctetString value = getFieldAs(index, Asn1OctetString.class);
         if (value != null) {
             return value.getValue();
@@ -125,7 +136,7 @@ public abstract class AbstractSequenceType extends AbstractAsn1Type<AbstractSequ
         return null;
     }
 
-    public void setFieldAsOctetBytes(int index, byte[] value) {
+    protected void setFieldAsOctetBytes(int index, byte[] value) {
         setFieldAs(index, new Asn1OctetString(value));
     }
 }

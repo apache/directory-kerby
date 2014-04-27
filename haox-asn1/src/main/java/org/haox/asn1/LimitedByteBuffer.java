@@ -14,6 +14,10 @@ public class LimitedByteBuffer {
         this.startOffset = 0;
     }
 
+    public LimitedByteBuffer(ByteBuffer byteBuffer) {
+        this(byteBuffer, 0);
+    }
+
     public LimitedByteBuffer(ByteBuffer byteBuffer, int limit) {
         this.byteBuffer = byteBuffer;
         this.limit = limit;

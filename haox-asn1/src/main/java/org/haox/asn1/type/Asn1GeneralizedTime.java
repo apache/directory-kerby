@@ -1,6 +1,6 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Option;
+import org.haox.asn1.EncodingOption;
 import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
@@ -85,7 +85,7 @@ public class Asn1GeneralizedTime extends AbstractAsn1Simple<Long>
     }
 
     @Override
-    protected void toBytes(Asn1Option option) {
+    protected void toBytes(EncodingOption encodingOption) {
         Date date = new Date(getValue());
         SimpleDateFormat dateF = new SimpleDateFormat("yyyyMMddHHmmss'Z'");
         dateF.setTimeZone(new SimpleTimeZone(0, "Z"));

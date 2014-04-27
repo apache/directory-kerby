@@ -1,6 +1,6 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Option;
+import org.haox.asn1.EncodingOption;
 import org.haox.asn1.LimitedByteBuffer;
 import org.haox.asn1.TagClass;
 import org.haox.asn1.UniversalTag;
@@ -21,30 +21,35 @@ public class SequenceOfType<T extends Asn1Type> extends AbstractAsn1Type<Sequenc
 
     @Override
     public byte[] encode() {
-        return encode(Asn1Option.DER);
+        return encode(EncodingOption.DER);
     }
 
     @Override
     public void encode(ByteBuffer buffer) {
-        encode(buffer, Asn1Option.DER);
+        encode(buffer, EncodingOption.DER);
     }
 
     @Override
-    protected int encodingBodyLength(Asn1Option option) {
+    protected boolean isConstructed(EncodingOption encodingOption) {
+        return true;
+    }
+
+    @Override
+    protected int encodingBodyLength(EncodingOption encodingOption) {
         int allLen = 0;
         for (Asn1Type field : elements) {
             if (field != null) {
-                allLen += ((AbstractAsn1Type) field).encodingLength(option);
+                allLen += ((AbstractAsn1Type) field).encodingLength(encodingOption);
             }
         }
         return allLen;
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer, Asn1Option option) {
+    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) {
         for (Asn1Type field : elements) {
             if (field != null) {
-                field.encode(buffer, option);
+                field.encode(buffer, encodingOption);
             }
         }
     }

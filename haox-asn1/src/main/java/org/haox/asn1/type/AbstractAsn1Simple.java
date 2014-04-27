@@ -1,6 +1,6 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Option;
+import org.haox.asn1.EncodingOption;
 import org.haox.asn1.LimitedByteBuffer;
 import org.haox.asn1.TagClass;
 import org.haox.asn1.UniversalTag;
@@ -21,12 +21,12 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
 
     @Override
     public byte[] encode() {
-        return encode(Asn1Option.PRIMITIVE);
+        return encode(EncodingOption.PRIMITIVE);
     }
 
     @Override
     public void encode(ByteBuffer buffer) {
-        encode(buffer, Asn1Option.PRIMITIVE);
+        encode(buffer, EncodingOption.PRIMITIVE);
     }
 
     protected byte[] getBytes() {
@@ -38,23 +38,28 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
     }
 
     @Override
-    public void encode(ByteBuffer buffer, Asn1Option option) {
-        buffer.put((byte) makeTag(option));
-        buffer.put((byte) encodingBodyLength(option));
-        buffer.put(encodeBody(option));
+    public void encode(ByteBuffer buffer, EncodingOption encodingOption) {
+        buffer.put((byte) makeTag(encodingOption));
+        buffer.put((byte) encodingBodyLength(encodingOption));
+        buffer.put(encodeBody(encodingOption));
     }
 
-    protected byte[] encodeBody(Asn1Option option) {
+    protected byte[] encodeBody(EncodingOption encodingOption) {
         if (bytes == null) {
-            toBytes(option);
+            toBytes(encodingOption);
         }
         return bytes;
     }
 
     @Override
-    protected int encodingBodyLength(Asn1Option option) {
+    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) {
+        buffer.put(encodeBody(encodingOption));
+    }
+
+    @Override
+    protected int encodingBodyLength(EncodingOption encodingOption) {
         if (bytes == null) {
-            toBytes(option);
+            toBytes(encodingOption);
         }
         return bytes.length;
     }
@@ -65,7 +70,11 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
         toValue();
     }
 
+    protected boolean isConstructed(EncodingOption encodingOption) {
+        return false;
+    }
+
     protected void toValue() throws IOException {}
 
-    protected void toBytes(Asn1Option option) {}
+    protected void toBytes(EncodingOption encodingOption) {}
 }

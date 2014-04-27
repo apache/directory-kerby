@@ -1,7 +1,6 @@
 package org.haox.asn1;
 
-import org.haox.asn1.type.Asn1AppSpecific;
-import org.haox.asn1.type.Asn1Tagged;
+import org.haox.asn1.type.Asn1Tagging;
 import org.haox.asn1.type.Asn1VisibleString;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,48 +47,45 @@ public class TestEncoding {
         }
     }
 
-    static class Type2 extends Asn1AppSpecific {
+    static class Type2 extends Asn1Tagging<Type1> {
         Type2(Type1 value) {
-            super(3, value);
+            super(3, value, true);
         }
     }
 
-    static class Type3 extends Asn1Tagged {
+    static class Type3 extends Asn1Tagging<Type2> {
         Type3(Type2 value) {
-            super(2, value);
+            super(2, value, false);
         }
     }
 
-    static class Type4 extends Asn1AppSpecific {
+    static class Type4 extends Asn1Tagging<Type3> {
         Type4(Type3 value) {
-            super(7, value);
+            super(7, value, true);
         }
     }
 
-    static class Type5 extends Asn1Tagged {
-        Type5(Type2 value) {
-            super(2, value);
-        }
-    }
+    // Type5 = Type3
 
     @Test
     public void testEncodings() {
-        byte[] TYPE1_EXPECTED_BYTES = new byte[] {0x1A, 0x05, 0x4A, 0x6F, 0x6E, 0x65, 0x73};
-        byte[] TYPE2_EXPECTED_BYTES = new byte[] {0x43, 0x05, 0x4A, 0x6F, 0x6E, 0x65, 0x73};
-        byte[] TYPE3_EXPECTED_BYTES = new byte[] {(byte) 0xA2, 0x07, 0x43, 0x05, 0x4A, 0x6F, 0x6E, 0x65, 0x73};
-        byte[] TYPE4_EXPECTED_BYTES = new byte[] {(byte) 0x67, 0x07, 0x43, 0x05, 0x4A, 0x6F, 0x6E, 0x65, 0x73};
-        byte[] TYPE5_EXPECTED_BYTES = new byte[] {(byte) 0x82, 0x05, 0x4A, 0x6F, 0x6E, 0x65, 0x73};
+        byte[] TYPE1_EXPECTED_BYTES = new byte[] {(byte) 0x1A, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
+        byte[] TYPE2_EXPECTED_BYTES = new byte[] {(byte) 0x43, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
+        byte[] TYPE3_EXPECTED_BYTES = new byte[] {(byte) 0xA2, (byte) 0x07, (byte) 0x43, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
+        byte[] TYPE4_EXPECTED_BYTES = new byte[] {(byte) 0x67, (byte) 0x07, (byte) 0x43, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
+        byte[] TYPE5_EXPECTED_BYTES = new byte[] {(byte) 0x82, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
 
         Type1 aType1 = new Type1(TEST_STRING);
         Type2 aType2 = new Type2(aType1);
         Type3 aType3 = new Type3(aType2);
         Type4 aType4 = new Type4(aType3);
-        Type5 aType5 = new Type5(aType2);
+        // Type5 = Type3
+        Type3 aType5 = new Type3(aType2);
 
-        Assert.assertArrayEquals(aType1.encode(), TYPE1_EXPECTED_BYTES);
-        Assert.assertArrayEquals(aType2.encode(), TYPE2_EXPECTED_BYTES);
-        //Assert.assertArrayEquals(aType3.encode(), TYPE3_EXPECTED_BYTES);
-        //Assert.assertArrayEquals(aType4.encode(), TYPE4_EXPECTED_BYTES);
-        //Assert.assertArrayEquals(aType5.encode(), TYPE5_EXPECTED_BYTES);
+        //Assert.assertArrayEquals(TYPE1_EXPECTED_BYTES, aType1.encode());
+        //Assert.assertArrayEquals(TYPE2_EXPECTED_BYTES, aType2.encode(EncodingOption.IMPLICIT));
+        Assert.assertArrayEquals(TYPE3_EXPECTED_BYTES, aType3.encode(EncodingOption.EXPLICIT));
+        //Assert.assertArrayEquals(TYPE4_EXPECTED_BYTES, aType4.encode());
+        //Assert.assertArrayEquals(TYPE5_EXPECTED_BYTES, aType5.encode());
     }
 }

@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.AbstractSequenceType;
+import org.haox.asn1.Asn1Tag;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.asn1.Asn1Tag;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KrbSequenceType;
 
 /*
 HostAddress     ::= SEQUENCE  {
@@ -12,7 +12,7 @@ HostAddress     ::= SEQUENCE  {
         address         [1] OCTET STRING
 }
  */
-public class HostAddress extends AbstractSequenceType {
+public class HostAddress extends KrbSequenceType {
     private static int ADDR_TYPE = 0;
     private static int ADDRESS = 1;
 
@@ -21,9 +21,8 @@ public class HostAddress extends AbstractSequenceType {
             new Asn1Tag(ADDRESS, 1, Asn1OctetString.class)
     };
 
-    @Override
-    protected Asn1Tag[] getTags() {
-        return tags;
+    public HostAddress() {
+        super(tags);
     }
 
     public HostAddrType getAddrType() throws KrbException {
