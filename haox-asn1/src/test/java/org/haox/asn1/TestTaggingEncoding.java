@@ -38,7 +38,7 @@ Ref. X.690-0207 8.14 Encoding of a tagged value
  8216 0516 4A6F6E657316
  */
 
-public class TestEncoding {
+public class TestTaggingEncoding {
     static final String TEST_STRING = "Jones";
 
     static class Type1 extends Asn1VisibleString {
@@ -50,22 +50,30 @@ public class TestEncoding {
     static class Type2 extends Asn1Tagging<Type1> {
         Type2(Type1 value) {
             super(3, value, true);
+            setEncodingOption(EncodingOption.IMPLICIT);
         }
     }
 
     static class Type3 extends Asn1Tagging<Type2> {
         Type3(Type2 value) {
             super(2, value, false);
+            setEncodingOption(EncodingOption.EXPLICIT);
         }
     }
 
     static class Type4 extends Asn1Tagging<Type3> {
         Type4(Type3 value) {
             super(7, value, true);
+            setEncodingOption(EncodingOption.IMPLICIT);
         }
     }
 
-    // Type5 = Type3
+    static class Type5 extends Asn1Tagging<Type2> {
+        Type5(Type2 value) {
+            super(2, value, false);
+            setEncodingOption(EncodingOption.IMPLICIT);
+        }
+    }
 
     @Test
     public void testEncodings() {
@@ -79,13 +87,12 @@ public class TestEncoding {
         Type2 aType2 = new Type2(aType1);
         Type3 aType3 = new Type3(aType2);
         Type4 aType4 = new Type4(aType3);
-        // Type5 = Type3
-        Type3 aType5 = new Type3(aType2);
+        Type5 aType5 = new Type5(aType2);
 
-        //Assert.assertArrayEquals(TYPE1_EXPECTED_BYTES, aType1.encode());
-        //Assert.assertArrayEquals(TYPE2_EXPECTED_BYTES, aType2.encode(EncodingOption.IMPLICIT));
-        Assert.assertArrayEquals(TYPE3_EXPECTED_BYTES, aType3.encode(EncodingOption.EXPLICIT));
-        //Assert.assertArrayEquals(TYPE4_EXPECTED_BYTES, aType4.encode());
-        //Assert.assertArrayEquals(TYPE5_EXPECTED_BYTES, aType5.encode());
+        Assert.assertArrayEquals(TYPE1_EXPECTED_BYTES, aType1.encode());
+        Assert.assertArrayEquals(TYPE2_EXPECTED_BYTES, aType2.encode());
+        Assert.assertArrayEquals(TYPE3_EXPECTED_BYTES, aType3.encode());
+        Assert.assertArrayEquals(TYPE4_EXPECTED_BYTES, aType4.encode());
+        Assert.assertArrayEquals(TYPE5_EXPECTED_BYTES, aType5.encode());
     }
 }

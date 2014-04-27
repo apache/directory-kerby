@@ -1,8 +1,5 @@
 package org.haox.asn1;
 
-import org.haox.asn1.type.AbstractAsn1Type;
-import org.haox.asn1.type.Asn1Type;
-
 public class TaggingOption
 {
     private int tagNo;

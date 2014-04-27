@@ -17,39 +17,30 @@ public class SequenceOfType<T extends Asn1Type> extends AbstractAsn1Type<Sequenc
     public SequenceOfType() {
         super(TagClass.UNIVERSAL.getValue(), UniversalTag.SEQUENCE.getValue());
         this.elements = new ArrayList<T>();
+        setEncodingOption(EncodingOption.CONSTRUCTED);
     }
 
     @Override
-    public byte[] encode() {
-        return encode(EncodingOption.DER);
-    }
-
-    @Override
-    public void encode(ByteBuffer buffer) {
-        encode(buffer, EncodingOption.DER);
-    }
-
-    @Override
-    protected boolean isConstructed(EncodingOption encodingOption) {
+    protected boolean isConstructed() {
         return true;
     }
 
     @Override
-    protected int encodingBodyLength(EncodingOption encodingOption) {
+    protected int encodingBodyLength() {
         int allLen = 0;
         for (Asn1Type field : elements) {
             if (field != null) {
-                allLen += ((AbstractAsn1Type) field).encodingLength(encodingOption);
+                allLen += ((AbstractAsn1Type) field).encodingLength();
             }
         }
         return allLen;
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) {
+    protected void encodeBody(ByteBuffer buffer) {
         for (Asn1Type field : elements) {
             if (field != null) {
-                field.encode(buffer, encodingOption);
+                field.encode(buffer);
             }
         }
     }

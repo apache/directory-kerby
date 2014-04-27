@@ -1,8 +1,7 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.EncodingOption;
-import org.haox.asn1.UniversalTag;
 import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 
@@ -17,12 +16,12 @@ public class Asn1OctetString extends AbstractAsn1Simple<byte[]>
     }
 
     @Override
-    protected byte[] encodeBody(EncodingOption encodingOption) {
+    protected byte[] encodeBody() {
         return getValue();
     }
 
     @Override
-    protected int encodingBodyLength(EncodingOption encodingOption) {
+    protected int encodingBodyLength() {
         return getValue().length;
     }
 

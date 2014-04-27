@@ -18,7 +18,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     // for decoding
     private int tag = -1;
-    private EncodingOption encodingOption = EncodingOption.UNKNOWN;
+    protected EncodingOption encodingOption = EncodingOption.UNKNOWN;
     private int encodingLen = -1;
 
 
@@ -30,6 +30,10 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         this.tagClass = tagClass;
         this.tagNo = tagNo;
         this.value = value;
+    }
+
+    public void setEncodingOption(EncodingOption encodingOption) {
+        this.encodingOption = encodingOption;
     }
 
     public T getValue() {
@@ -55,21 +59,21 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     }
 
     @Override
-    public byte[] encode(EncodingOption encodingOption) {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(encodingLength(encodingOption));
-        encode(byteBuffer, encodingOption);
+    public byte[] encode() {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(encodingLength());
+        encode(byteBuffer);
         byteBuffer.flip();
         return byteBuffer.array();
     }
 
     @Override
-    public void encode(ByteBuffer buffer, EncodingOption encodingOption) {
-        encodeTag(buffer, makeTag(encodingOption));
-        encodeLength(buffer, encodingBodyLength(encodingOption));
-        encodeBody(buffer, encodingOption);
+    public void encode(ByteBuffer buffer) {
+        encodeTag(buffer, makeTag());
+        encodeLength(buffer, encodingBodyLength());
+        encodeBody(buffer);
     }
 
-    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) { }
+    protected void encodeBody(ByteBuffer buffer) { }
 
     @Override
     public void decode(byte[] content) throws IOException {
@@ -81,25 +85,24 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         decode(new LimitedByteBuffer(content));
     }
 
-    protected int makeTag(EncodingOption encodingOption) {
+    protected int makeTag() {
         int flags = tagClass;
-        if (isConstructed(encodingOption)) flags |= CONSTRUCTED_FLAG;
+        if (isConstructed()) flags |= CONSTRUCTED_FLAG;
         int tag = flags | tagNo;
         return tag;
     }
 
-    protected int encodingLength(EncodingOption encodingOption) {
-        if (encodingOption != encodingOption || encodingLen == -1) {
-            this.encodingOption = encodingOption;
-            int bodyLen = encodingBodyLength(encodingOption);
-            encodingLen = lengthOfTagLength(makeTag(encodingOption)) + lengthOfBodyLength(bodyLen) + bodyLen;
+    protected int encodingLength() {
+        if (encodingLen == -1) {
+            int bodyLen = encodingBodyLength();
+            encodingLen = lengthOfTagLength(makeTag()) + lengthOfBodyLength(bodyLen) + bodyLen;
         }
         return encodingLen;
     }
 
-    protected abstract boolean isConstructed(EncodingOption encodingOption);
+    protected abstract boolean isConstructed();
 
-    protected abstract int encodingBodyLength(EncodingOption encodingOption);
+    protected abstract int encodingBodyLength();
 
     protected void decode(LimitedByteBuffer content) throws IOException {
         int tag = readTag(content);
@@ -126,19 +129,19 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     protected abstract void decodeBody(LimitedByteBuffer content) throws IOException;
 
-    protected int taggedEncodingLength(TaggingOption taggingOption, EncodingOption encodingOption) {
+    protected int taggedEncodingLength(TaggingOption taggingOption) {
         int taggingTag = taggingOption.getTag(encodingOption);
-        int taggingBodyLen = encodingLength(encodingOption);
+        int taggingBodyLen = encodingLength();
         int taggingEncodingLen = lengthOfTagLength(taggingTag) + lengthOfBodyLength(taggingBodyLen) + taggingBodyLen;
         return taggingEncodingLen;
     }
 
     @Override
-    public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption, EncodingOption encodingOption) {
+    public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption) {
         int taggingTag = taggingOption.getTag(encodingOption);
         buffer.put((byte) taggingTag);
-        buffer.put((byte) encodingLength(encodingOption));
-        encode(buffer, encodingOption);
+        buffer.put((byte) encodingLength());
+        encode(buffer);
     }
 
     @Override

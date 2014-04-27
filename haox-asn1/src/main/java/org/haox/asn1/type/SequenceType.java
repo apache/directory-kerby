@@ -17,25 +17,16 @@ public class SequenceType extends AbstractAsn1Type<SequenceType> {
         setValue(this);
         this.tags = tags;
         fields = new Asn1Type[tags.length];
+        setEncodingOption(EncodingOption.CONSTRUCTED);
     }
 
     @Override
-    public byte[] encode() {
-        return encode(EncodingOption.DER);
-    }
-
-    @Override
-    public void encode(ByteBuffer buffer) {
-        encode(buffer, EncodingOption.DER);
-    }
-
-    @Override
-    protected boolean isConstructed(EncodingOption encodingOption) {
+    protected boolean isConstructed() {
         return true;
     }
 
     @Override
-    protected int encodingBodyLength(EncodingOption encodingOption) {
+    protected int encodingBodyLength() {
         int allLen = 0;
         Asn1Type field;
         TaggingOption taggingOption;
@@ -43,21 +34,21 @@ public class SequenceType extends AbstractAsn1Type<SequenceType> {
             field = fields[i];
             if (field != null) {
                 taggingOption = new TaggingOption(tags[i].getTag(), false);
-                allLen += ((AbstractAsn1Type) field).taggedEncodingLength(taggingOption, encodingOption);
+                allLen += ((AbstractAsn1Type) field).taggedEncodingLength(taggingOption);
             }
         }
         return allLen;
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) {
+    protected void encodeBody(ByteBuffer buffer) {
         Asn1Type field;
         TaggingOption taggingOption;
         for (int i = 0; i < fields.length; ++i) {
             field = fields[i];
             if (field != null) {
                 taggingOption = new TaggingOption(tags[i].getTag(), false);
-                field.taggedEncode(buffer, taggingOption, encodingOption);
+                field.taggedEncode(buffer, taggingOption);
             }
         }
     }

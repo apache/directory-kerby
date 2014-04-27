@@ -20,31 +20,22 @@ public class TaggingSequenceType extends AbstractAsn1Type<SequenceType> {
         this.tagged = new SequenceType(tags);
         setValue(tagged);
         this.tagging = new Asn1Tagging<SequenceType>(tagNo, tagged, isAppSpecific);
+        setEncodingOption(EncodingOption.EXPLICIT);
     }
 
     @Override
-    public byte[] encode() {
-        return encode(EncodingOption.DER);
+    protected boolean isConstructed() {
+        return tagging.isConstructed();
     }
 
     @Override
-    public void encode(ByteBuffer buffer) {
-        encode(buffer, EncodingOption.DER);
+    protected int encodingBodyLength() {
+        return tagging.encodingBodyLength();
     }
 
     @Override
-    protected boolean isConstructed(EncodingOption encodingOption) {
-        return tagging.isConstructed(encodingOption);
-    }
-
-    @Override
-    protected int encodingBodyLength(EncodingOption encodingOption) {
-        return tagging.encodingBodyLength(encodingOption);
-    }
-
-    @Override
-    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) {
-        tagging.encodeBody(buffer, encodingOption);
+    protected void encodeBody(ByteBuffer buffer) {
+        tagging.encodeBody(buffer);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.EncodingOption;
 import org.haox.asn1.LimitedByteBuffer;
 import org.haox.asn1.UniversalTag;
 
@@ -23,7 +22,7 @@ public class Asn1Boolean extends AbstractAsn1Simple<Boolean>
     }
 
     @Override
-    protected int encodingBodyLength(EncodingOption encodingOption) {
+    protected int encodingBodyLength() {
         return 1;
     }
 

@@ -1,8 +1,8 @@
 package org.haox.asn1.type;
 
 import org.haox.asn1.EncodingOption;
-import org.haox.asn1.UniversalTag;
 import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ public class Asn1BmpString extends AbstractAsn1Simple<String>
     }
 
     @Override
-    protected int encodingBodyLength(EncodingOption encodingOption) {
+    protected int encodingBodyLength() {
         return getValue().length() * 2;
     }
 

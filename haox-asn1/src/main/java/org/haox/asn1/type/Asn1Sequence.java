@@ -15,20 +15,11 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
         super(TagClass.UNIVERSAL.getValue(), UniversalTag.SEQUENCE.getValue());
         this.fields = new ArrayList<Asn1SequenceField>();
         setValue(new ArrayList<Asn1Type>());
+        setEncodingOption(EncodingOption.CONSTRUCTED);
     }
 
     @Override
-    public byte[] encode() {
-        return encode(EncodingOption.DER);
-    }
-
-    @Override
-    public void encode(ByteBuffer buffer) {
-        encode(buffer, EncodingOption.DER);
-    }
-
-    @Override
-    protected boolean isConstructed(EncodingOption encodingOption) {
+    protected boolean isConstructed() {
         return true;
     }
 
@@ -58,23 +49,23 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
     }
 
     @Override
-    protected int encodingBodyLength(EncodingOption encodingOption) {
+    protected int encodingBodyLength() {
         List<Asn1Type> value = getValue();
         int allLen = 0;
         for (Asn1Type part : value) {
             if (part != null) {
-                allLen += ((AbstractAsn1Type) part).encodingLength(encodingOption);
+                allLen += ((AbstractAsn1Type) part).encodingLength();
             }
         }
         return allLen;
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) {
+    protected void encodeBody(ByteBuffer buffer) {
         List<Asn1Type> value = getValue();
         for (Asn1Type part : value) {
             if (part != null) {
-                part.encode(buffer, encodingOption);
+                part.encode(buffer);
             }
         }
     }

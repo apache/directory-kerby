@@ -9,9 +9,8 @@ import java.nio.ByteBuffer;
 public interface Asn1Type {
     public int tagClass();
     public int tagNo();
-    public byte[] encode(EncodingOption encodingOption);
-    public void encode(ByteBuffer buffer, EncodingOption encodingOption);
-    public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption, EncodingOption encodingOption);
+    public void setEncodingOption(EncodingOption encodingOption);
+    public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption);
     public byte[] encode();
     public void encode(ByteBuffer buffer);
     public void decode(byte[] content) throws IOException;

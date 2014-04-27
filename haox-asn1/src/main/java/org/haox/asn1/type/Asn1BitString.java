@@ -23,13 +23,13 @@ public class Asn1BitString extends AbstractAsn1Simple<byte[]>
     }
 
     @Override
-    protected int encodingBodyLength(EncodingOption encodingOption) {
+    protected int encodingBodyLength() {
         return getValue().length + 1;
     }
 
     @Override
     protected void toBytes(EncodingOption encodingOption) {
-        byte[] bytes = new byte[encodingBodyLength(encodingOption)];
+        byte[] bytes = new byte[encodingBodyLength()];
         bytes[0] = (byte)padding;
         System.arraycopy(getValue(), 0, bytes, 1, bytes.length - 1);
         setBytes(bytes);

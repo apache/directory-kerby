@@ -19,58 +19,42 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     public Asn1Tagging(int tagNo, T value, boolean isAppSpecific) {
         super((isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC).getValue(), tagNo, value);
+        setEncodingOption(EncodingOption.EXPLICIT);
     }
 
     @Override
-    public byte[] encode() {
-        return encode(EncodingOption.EXPLICIT);
-    }
-
-    @Override
-    public void encode(ByteBuffer buffer) {
-        encode(buffer, EncodingOption.EXPLICIT);
-    }
-
-    @Override
-    public void encode(ByteBuffer buffer, EncodingOption encodingOption) {
-        int tag = makeTag(encodingOption);
-        encodeTag(buffer, tag);
-        encodeLength(buffer, encodingBodyLength(encodingOption));
+    protected int encodingBodyLength() {
+        AbstractAsn1Type value = (AbstractAsn1Type) getValue();
         if (encodingOption.isExplicit()) {
-            encodeBody(buffer, encodingOption);
+            return value.encodingLength();
         } else if (encodingOption.isImplicit()) {
-            AbstractAsn1Type value = (AbstractAsn1Type) getValue();
-            value.encodeBody(buffer, encodingOption);
+            return value.encodingBodyLength();
         } else {
             throw new RuntimeException("Invalid encoding option, only allowing explicit/implicit");
         }
     }
 
     @Override
-    protected int encodingBodyLength(EncodingOption encodingOption) {
-        AbstractAsn1Type value = (AbstractAsn1Type) getValue();
-        if (isConstructed(encodingOption)) {
-            return value.encodingLength(encodingOption);
-        } else {
-            return value.encodingBodyLength(encodingOption);
-        }
-    }
-
-    @Override
-    protected boolean isConstructed(EncodingOption encodingOption) {
+    protected boolean isConstructed() {
         if (encodingOption.isExplicit()) {
             return true;
         } else if (encodingOption.isImplicit()) {
             AbstractAsn1Type value = (AbstractAsn1Type) getValue();
-            return value.isConstructed(encodingOption);
+            return value.isConstructed();
         }
         return false;
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) {
-        Asn1Type value = getValue();
-        value.encode(buffer, encodingOption);
+    protected void encodeBody(ByteBuffer buffer) {
+        AbstractAsn1Type value = (AbstractAsn1Type) getValue();
+        if (encodingOption.isExplicit()) {
+            value.encode(buffer);
+        } else if (encodingOption.isImplicit()) {
+            value.encodeBody(buffer);
+        } else {
+            throw new RuntimeException("Invalid encoding option, only allowing explicit/implicit");
+        }
     }
 
     @Override

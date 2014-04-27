@@ -3,7 +3,6 @@ package org.haox.asn1.type;
 import org.haox.asn1.LimitedByteBuffer;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 public class Asn1SequenceField
 {

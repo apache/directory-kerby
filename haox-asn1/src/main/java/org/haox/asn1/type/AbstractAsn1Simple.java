@@ -17,16 +17,7 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
 
     public AbstractAsn1Simple(UniversalTag tagNo, T value) {
         super(TagClass.UNIVERSAL.getValue(), tagNo.getValue(), value);
-    }
-
-    @Override
-    public byte[] encode() {
-        return encode(EncodingOption.PRIMITIVE);
-    }
-
-    @Override
-    public void encode(ByteBuffer buffer) {
-        encode(buffer, EncodingOption.PRIMITIVE);
+        setEncodingOption(EncodingOption.PRIMITIVE);
     }
 
     protected byte[] getBytes() {
@@ -38,13 +29,13 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
     }
 
     @Override
-    public void encode(ByteBuffer buffer, EncodingOption encodingOption) {
-        buffer.put((byte) makeTag(encodingOption));
-        buffer.put((byte) encodingBodyLength(encodingOption));
-        buffer.put(encodeBody(encodingOption));
+    public void encode(ByteBuffer buffer) {
+        buffer.put((byte) makeTag());
+        buffer.put((byte) encodingBodyLength());
+        buffer.put(encodeBody());
     }
 
-    protected byte[] encodeBody(EncodingOption encodingOption) {
+    protected byte[] encodeBody() {
         if (bytes == null) {
             toBytes(encodingOption);
         }
@@ -52,12 +43,12 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer, EncodingOption encodingOption) {
-        buffer.put(encodeBody(encodingOption));
+    protected void encodeBody(ByteBuffer buffer) {
+        buffer.put(encodeBody());
     }
 
     @Override
-    protected int encodingBodyLength(EncodingOption encodingOption) {
+    protected int encodingBodyLength() {
         if (bytes == null) {
             toBytes(encodingOption);
         }
@@ -70,7 +61,8 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
         toValue();
     }
 
-    protected boolean isConstructed(EncodingOption encodingOption) {
+    @Override
+    protected boolean isConstructed() {
         return false;
     }
 
