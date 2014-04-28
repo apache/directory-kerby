@@ -18,7 +18,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
     }
 
     public Asn1Tagging(int tagNo, T value, boolean isAppSpecific) {
-        super((isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC).getValue(), tagNo, value);
+        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC, tagNo, value);
         setEncodingOption(EncodingOption.EXPLICIT);
     }
 

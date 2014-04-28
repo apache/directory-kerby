@@ -13,7 +13,7 @@ public class SequenceType extends AbstractAsn1Type<SequenceType> {
     private Asn1Type[] fields;
 
     public SequenceType(Asn1Tag[] tags) {
-        super(TagClass.UNIVERSAL.getValue(), UniversalTag.SEQUENCE.getValue());
+        super(TagClass.UNIVERSAL, UniversalTag.SEQUENCE.getValue());
         setValue(this);
         this.tags = tags;
         fields = new Asn1Type[tags.length];
@@ -33,7 +33,7 @@ public class SequenceType extends AbstractAsn1Type<SequenceType> {
         for (int i = 0; i < fields.length; ++i) {
             field = fields[i];
             if (field != null) {
-                taggingOption = new TaggingOption(tags[i].getTag(), false);
+                taggingOption = TaggingOption.newExplicitContextSpecific(tags[i].getTag());
                 allLen += ((AbstractAsn1Type) field).taggedEncodingLength(taggingOption);
             }
         }
@@ -47,7 +47,7 @@ public class SequenceType extends AbstractAsn1Type<SequenceType> {
         for (int i = 0; i < fields.length; ++i) {
             field = fields[i];
             if (field != null) {
-                taggingOption = new TaggingOption(tags[i].getTag(), false);
+                taggingOption = TaggingOption.newExplicitContextSpecific(tags[i].getTag());
                 field.taggedEncode(buffer, taggingOption);
             }
         }

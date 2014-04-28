@@ -19,6 +19,8 @@ public enum EncodingOption
         this.value = value;
     }
 
+    public static int CONSTRUCTED_FLAG = 0x20;
+
     public int getValue() {
         return value;
     }

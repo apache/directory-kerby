@@ -16,7 +16,7 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
     }
 
     public AbstractAsn1Simple(UniversalTag tagNo, T value) {
-        super(TagClass.UNIVERSAL.getValue(), tagNo.getValue(), value);
+        super(TagClass.UNIVERSAL, tagNo.getValue(), value);
         setEncodingOption(EncodingOption.PRIMITIVE);
     }
 

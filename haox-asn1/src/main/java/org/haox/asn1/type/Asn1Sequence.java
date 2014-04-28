@@ -12,7 +12,7 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
     private List<Asn1SequenceField> fields;
 
     public Asn1Sequence() {
-        super(TagClass.UNIVERSAL.getValue(), UniversalTag.SEQUENCE.getValue());
+        super(TagClass.UNIVERSAL, UniversalTag.SEQUENCE.getValue());
         this.fields = new ArrayList<Asn1SequenceField>();
         setValue(new ArrayList<Asn1Type>());
         setEncodingOption(EncodingOption.CONSTRUCTED);
@@ -85,7 +85,7 @@ public class Asn1Sequence extends AbstractAsn1Type<List<Asn1Type>>
     private static Asn1SequenceField decodeOne(LimitedByteBuffer content) throws IOException {
         int tag = readTag(content);
         int tagNo = readTagNo(content, tag);
-        boolean isConstructed = (tag & CONSTRUCTED_FLAG) != 0;
+        boolean isConstructed = (tag & EncodingOption.CONSTRUCTED_FLAG) != 0;
         int length = readLength(content);
         if (length < 0) {
             throw new IOException("Unexpected length");

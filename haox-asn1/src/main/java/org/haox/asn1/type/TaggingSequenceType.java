@@ -16,7 +16,7 @@ public class TaggingSequenceType extends AbstractAsn1Type<SequenceType> {
     private SequenceType tagged;
 
     public TaggingSequenceType(int tagNo, Asn1Tag[] tags, boolean isAppSpecific) {
-        super((isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC).getValue(), tagNo);
+        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC, tagNo);
         this.tagged = new SequenceType(tags);
         setValue(tagged);
         this.tagging = new Asn1Tagging<SequenceType>(tagNo, tagged, isAppSpecific);

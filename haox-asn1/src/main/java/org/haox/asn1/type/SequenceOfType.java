@@ -15,7 +15,7 @@ public class SequenceOfType<T extends Asn1Type> extends AbstractAsn1Type<Sequenc
     private List<T> elements;
 
     public SequenceOfType() {
-        super(TagClass.UNIVERSAL.getValue(), UniversalTag.SEQUENCE.getValue());
+        super(TagClass.UNIVERSAL, UniversalTag.SEQUENCE.getValue());
         this.elements = new ArrayList<T>();
         setEncodingOption(EncodingOption.CONSTRUCTED);
     }
