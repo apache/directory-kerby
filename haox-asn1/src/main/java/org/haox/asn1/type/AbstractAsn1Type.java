@@ -161,11 +161,28 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     @Override
     public void taggedDecode(ByteBuffer content, TaggingOption taggingOption) throws IOException {
         LimitedByteBuffer limitedBuffer = new LimitedByteBuffer(content);
-        int taggingTag = readTag(limitedBuffer);
-        int taggingTagNo = readTagNo(limitedBuffer, taggingTag);
-        int taggingLength = readLength(limitedBuffer);
+        taggedDecode(limitedBuffer, taggingOption);
+    }
 
-        decode(new LimitedByteBuffer(limitedBuffer, taggingLength));
+    public void taggedDecode(LimitedByteBuffer content, TaggingOption taggingOption) throws IOException {
+        int taggingTag = readTag(content);
+        int taggingTagNo = readTagNo(content, taggingTag);
+        int taggingLength = readLength(content);
+
+        int expectedTaggingTag = taggingOption.makeTag(isConstructed());
+        if (expectedTaggingTag != taggingTag) {
+            throw new IOException("Unexpected tag " + taggingTag + ", expecting " + expectedTaggingTag);
+        }
+        if (taggingOption.getTagNo() != taggingTagNo) {
+            throw new IOException("Unexpected tagNo " + taggingTagNo + ", expecting " + taggingOption.getTagNo());
+        }
+
+        LimitedByteBuffer newContent = new LimitedByteBuffer(content, taggingLength);
+        if (taggingOption.isImplicit()) {
+            decodeBody(newContent);
+        } else {
+            decode(newContent);
+        }
     }
 
     public static int lengthOfBodyLength(int length) {

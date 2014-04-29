@@ -20,6 +20,9 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
     public Asn1Tagging(int tagNo, T value, boolean isAppSpecific) {
         super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC, tagNo, value);
         setEncodingOption(EncodingOption.EXPLICIT);
+        if (value == null) {
+            initValue();
+        }
     }
 
     @Override
@@ -59,13 +62,24 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     @Override
     protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        Asn1Sequence sequence = new Asn1Sequence();
-        sequence.decode(content);
-        Asn1SequenceField field = sequence.getFields().get(0);
-        if (!field.isFullyDecoded()) {
-            Class<T> type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-            field.decodeAs(type);
+        AbstractAsn1Type value = (AbstractAsn1Type) getValue();
+        if (encodingOption.isExplicit()) {
+            value.decode(content);
+        } else if (encodingOption.isImplicit()) {
+            value.decodeBody(content);
+        } else {
+            throw new RuntimeException("Invalid encoding option, only allowing explicit/implicit");
         }
-        setValue((T) field.getFieldValue());
+    }
+
+    private void initValue() {
+        Class<? extends Asn1Type> valueType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        AbstractAsn1Type value = null;
+        try {
+            value = (AbstractAsn1Type) valueType.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create tagged value", e);
+        }
+        setValue((T) value);
     }
 }

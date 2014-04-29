@@ -15,7 +15,7 @@ public class LimitedByteBuffer {
     }
 
     public LimitedByteBuffer(ByteBuffer byteBuffer) {
-        this(byteBuffer, 0);
+        this(byteBuffer, byteBuffer.limit());
     }
 
     public LimitedByteBuffer(ByteBuffer byteBuffer, int limit) {

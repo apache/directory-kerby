@@ -49,37 +49,52 @@ public class TestTaggingEncoding {
     static byte[] TYPE5_EXPECTED_BYTES = new byte[] {(byte) 0x82, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
 
 
-    static class Type1 extends Asn1VisibleString {
-        Type1(String value) {
+    public static class Type1 extends Asn1VisibleString {
+        public Type1(String value) {
             super(value);
+        }
+        public Type1() {
+            this(null);
         }
     }
 
-    static class Type2 extends Asn1Tagging<Type1> {
-        Type2(Type1 value) {
+    public static class Type2 extends Asn1Tagging<Type1> {
+        public Type2(Type1 value) {
             super(3, value, true);
             setEncodingOption(EncodingOption.IMPLICIT);
         }
+        public Type2() {
+            this(null);
+        }
     }
 
-    static class Type3 extends Asn1Tagging<Type2> {
-        Type3(Type2 value) {
+    public static class Type3 extends Asn1Tagging<Type2> {
+        public Type3(Type2 value) {
             super(2, value, false);
             setEncodingOption(EncodingOption.EXPLICIT);
         }
-    }
-
-    static class Type4 extends Asn1Tagging<Type3> {
-        Type4(Type3 value) {
-            super(7, value, true);
-            setEncodingOption(EncodingOption.IMPLICIT);
+        public Type3() {
+            this(null);
         }
     }
 
-    static class Type5 extends Asn1Tagging<Type2> {
-        Type5(Type2 value) {
+    public static class Type4 extends Asn1Tagging<Type3> {
+        public Type4(Type3 value) {
+            super(7, value, true);
+            setEncodingOption(EncodingOption.IMPLICIT);
+        }
+        public Type4() {
+            this(null);
+        }
+    }
+
+    public static class Type5 extends Asn1Tagging<Type2> {
+        public Type5(Type2 value) {
             super(2, value, false);
             setEncodingOption(EncodingOption.IMPLICIT);
+        }
+        public Type5() {
+            this(null);
         }
     }
 
@@ -100,13 +115,25 @@ public class TestTaggingEncoding {
 
     @Test
     public void testAsn1TaggingDecoding() throws IOException {
-        Type1 aType1 = new Type1(null);
+        Type1 aType1 = new Type1();
         aType1.decode(TYPE1_EXPECTED_BYTES);
         Assert.assertEquals(TEST_STRING, aType1.getValue());
 
-        Type2 aType2 = new Type2(null);
+        Type2 aType2 = new Type2();
         aType2.decode(TYPE2_EXPECTED_BYTES);
         Assert.assertEquals(TEST_STRING, aType2.getValue().getValue());
+
+        Type3 aType3 = new Type3();
+        aType3.decode(TYPE3_EXPECTED_BYTES);
+        Assert.assertEquals(TEST_STRING, aType3.getValue().getValue().getValue());
+
+        Type4 aType4 = new Type4();
+        aType4.decode(TYPE4_EXPECTED_BYTES);
+        Assert.assertEquals(TEST_STRING, aType4.getValue().getValue().getValue().getValue());
+
+        Type5 aType5 = new Type5();
+        aType5.decode(TYPE5_EXPECTED_BYTES);
+        Assert.assertEquals(TEST_STRING, aType5.getValue().getValue().getValue());
     }
 
     @Test
@@ -126,5 +153,32 @@ public class TestTaggingEncoding {
                 aType3.taggedEncode(TaggingOption.newImplicitAppSpecific(7))); // for Type4
         Assert.assertArrayEquals(TYPE5_EXPECTED_BYTES,
                 aType2.taggedEncode(TaggingOption.newImplicitContextSpecific(2)));  // for Type5
+    }
+
+    @Test
+    public void testTaggingDecodingOption() throws IOException {
+        Type1 aType1 = new Type1();
+        aType1.decode(TYPE1_EXPECTED_BYTES);
+        Assert.assertEquals(TEST_STRING, aType1.getValue());
+
+        // for Type2
+        aType1 = new Type1();
+        aType1.taggedDecode(TYPE2_EXPECTED_BYTES, TaggingOption.newImplicitAppSpecific(3));
+        Assert.assertEquals(TEST_STRING, aType1.getValue());
+
+        // for Type3
+        Type2 aType2 = new Type2();
+        aType2.taggedDecode(TYPE3_EXPECTED_BYTES, TaggingOption.newExplicitContextSpecific(2));
+        Assert.assertEquals(TEST_STRING, aType2.getValue().getValue());
+
+        // for Type4
+        Type3 aType3 = new Type3();
+        aType3.taggedDecode(TYPE4_EXPECTED_BYTES, TaggingOption.newImplicitAppSpecific(7));
+        Assert.assertEquals(TEST_STRING, aType3.getValue().getValue().getValue());
+
+        // for Type5
+        aType2 = new Type2();
+        aType2.taggedDecode(TYPE5_EXPECTED_BYTES, TaggingOption.newImplicitContextSpecific(2));
+        Assert.assertEquals(TEST_STRING, aType2.getValue().getValue());
     }
 }
