@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.ap;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
@@ -36,20 +36,20 @@ public class Authenticator extends KrbAppSequenceType {
     private static int SEQ_NUMBER = 7;
     private static int AUTHORIZATION_DATA = 8;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(AUTHENTICATOR_VNO, 0, Asn1Integer.class),
-            new Asn1Tag(CREALM, 1, KerberosString.class),
-            new Asn1Tag(CNAME, 2, PrincipalName.class),
-            new Asn1Tag(CKSUM, 3, Checksum.class),
-            new Asn1Tag(CUSEC, 4, Asn1Integer.class),
-            new Asn1Tag(CTIME, 5, KerberosTime.class),
-            new Asn1Tag(SUBKEY, 6, EncryptionKey.class),
-            new Asn1Tag(SEQ_NUMBER, 7, Asn1Integer.class),
-            new Asn1Tag(AUTHORIZATION_DATA, 8, AuthorizationData.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(AUTHENTICATOR_VNO, 0, Asn1Integer.class),
+            new Asn1FieldInfo(CREALM, 1, KerberosString.class),
+            new Asn1FieldInfo(CNAME, 2, PrincipalName.class),
+            new Asn1FieldInfo(CKSUM, 3, Checksum.class),
+            new Asn1FieldInfo(CUSEC, 4, Asn1Integer.class),
+            new Asn1FieldInfo(CTIME, 5, KerberosTime.class),
+            new Asn1FieldInfo(SUBKEY, 6, EncryptionKey.class),
+            new Asn1FieldInfo(SEQ_NUMBER, 7, Asn1Integer.class),
+            new Asn1FieldInfo(AUTHORIZATION_DATA, 8, AuthorizationData.class)
     };
 
     public Authenticator() {
-        super(TAG, tags);
+        super(TAG, fieldInfos);
     }
 
     public int getAuthenticatorVno() throws KrbException {

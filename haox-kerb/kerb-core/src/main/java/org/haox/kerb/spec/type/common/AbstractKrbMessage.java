@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KrbAppSequenceType;
@@ -11,8 +11,8 @@ public abstract class AbstractKrbMessage extends KrbAppSequenceType {
 
     private final int pvno = KrbConstant.KERBEROS_V5;
 
-    public AbstractKrbMessage(KrbMessageType msgType, Asn1Tag[] tags) throws KrbException {
-        super(msgType.getValue(), tags);
+    public AbstractKrbMessage(KrbMessageType msgType, Asn1FieldInfo[] fieldInfos) throws KrbException {
+        super(msgType.getValue(), fieldInfos);
         setPvno(pvno);
         setMsgType(msgType);
     }

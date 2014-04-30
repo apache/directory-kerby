@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.ticket;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
@@ -26,15 +26,15 @@ public class Ticket extends KrbAppSequenceType {
     private static int SNAME = 2;
     private static int ENC_PART = 3;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(TKT_VNO, 0, Asn1Integer.class),
-            new Asn1Tag(REALM, 1, KerberosString.class),
-            new Asn1Tag(SNAME, 2, PrincipalName.class),
-            new Asn1Tag(ENC_PART, 3, EncryptedData.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(TKT_VNO, 0, Asn1Integer.class),
+            new Asn1FieldInfo(REALM, 1, KerberosString.class),
+            new Asn1FieldInfo(SNAME, 2, PrincipalName.class),
+            new Asn1FieldInfo(ENC_PART, 3, EncryptedData.class)
     };
 
     public Ticket() {
-        super(TAG, tags);
+        super(TAG, fieldInfos);
     }
 
     private EncTicketPart encPart;

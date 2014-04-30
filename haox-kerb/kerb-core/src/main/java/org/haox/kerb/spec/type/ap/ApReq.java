@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.ap;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.AbstractKrbMessage;
@@ -22,17 +22,17 @@ public class ApReq extends AbstractKrbMessage {
     private static int TICKET = 3;
     private static int AUTHENTICATOR = 4;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(PVNO, 0, Asn1Integer.class),
-            new Asn1Tag(MSG_TYPE, 1, Asn1Integer.class),
-            new Asn1Tag(AP_OPTIONS, 2, Ticket.class),
-            new Asn1Tag(AUTHENTICATOR, 3, Authenticator.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(PVNO, 0, Asn1Integer.class),
+            new Asn1FieldInfo(MSG_TYPE, 1, Asn1Integer.class),
+            new Asn1FieldInfo(AP_OPTIONS, 2, Ticket.class),
+            new Asn1FieldInfo(AUTHENTICATOR, 3, Authenticator.class)
     };
 
     private Authenticator authenticator;
 
     public ApReq() throws KrbException {
-        super(KrbMessageType.AP_REQ, tags);
+        super(KrbMessageType.AP_REQ, fieldInfos);
     }
 
     public ApOptions getApOptions() throws KrbException {

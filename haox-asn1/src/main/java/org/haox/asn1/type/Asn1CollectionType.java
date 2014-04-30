@@ -6,17 +6,17 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * For sequence type that consists of tagged fields
+ * For collection type that consists of tagged fields
  */
-public class FieldsTaggedSequence extends AbstractAsn1Type<FieldsTaggedSequence> {
-    private Asn1Tag[] tags;
+public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1CollectionType> {
+    private Asn1FieldInfo[] fieldInfos;
     private Asn1Type[] fields;
 
-    public FieldsTaggedSequence(Asn1Tag[] tags) {
-        super(TagClass.UNIVERSAL, UniversalTag.SEQUENCE.getValue());
+    public Asn1CollectionType(int universalTagNo, Asn1FieldInfo[] fieldInfos) {
+        super(TagClass.UNIVERSAL, universalTagNo);
         setValue(this);
-        this.tags = tags;
-        fields = new Asn1Type[tags.length];
+        this.fieldInfos = fieldInfos;
+        fields = new Asn1Type[fieldInfos.length];
         setEncodingOption(EncodingOption.CONSTRUCTED);
     }
 
@@ -33,7 +33,7 @@ public class FieldsTaggedSequence extends AbstractAsn1Type<FieldsTaggedSequence>
         for (int i = 0; i < fields.length; ++i) {
             field = fields[i];
             if (field != null) {
-                taggingOption = TaggingOption.newExplicitContextSpecific(tags[i].getTag());
+                taggingOption = TaggingOption.newExplicitContextSpecific(fieldInfos[i].getTagNo());
                 allLen += ((AbstractAsn1Type) field).taggedEncodingLength(taggingOption);
             }
         }
@@ -47,7 +47,7 @@ public class FieldsTaggedSequence extends AbstractAsn1Type<FieldsTaggedSequence>
         for (int i = 0; i < fields.length; ++i) {
             field = fields[i];
             if (field != null) {
-                taggingOption = TaggingOption.newExplicitContextSpecific(tags[i].getTag());
+                taggingOption = TaggingOption.newExplicitContextSpecific(fieldInfos[i].getTagNo());
                 field.taggedEncode(buffer, taggingOption);
             }
         }
@@ -55,20 +55,22 @@ public class FieldsTaggedSequence extends AbstractAsn1Type<FieldsTaggedSequence>
 
     @Override
     protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        Asn1Sequence sequence = new Asn1Sequence();
-        sequence.decode(tag(), tagNo(), content);
+        Asn1Collection coll = createCollection();
+        coll.decode(tag(), tagNo(), content);
 
-        for (Asn1Item field : sequence.getValue()) {
-            Asn1Tag tag = getTag(field.getTagNo());
+        for (Asn1Item field : coll.getValue()) {
+            Asn1FieldInfo tag = getTag(field.getTagNo());
             Class<? extends Asn1Type> type = tag.getType();
             field.decodeValueAs(type);
             fields[tag.getIndex()] = field.getValue();
         }
     }
 
-    protected Asn1Tag getTag(int tagNo) {
-        for (Asn1Tag tag : tags) {
-            if (tag.getTag() == tagNo) {
+    protected abstract Asn1Collection createCollection();
+
+    protected Asn1FieldInfo getTag(int tagNo) {
+        for (Asn1FieldInfo tag : fieldInfos) {
+            if (tag.getTagNo() == tagNo) {
                 return tag;
             }
         }

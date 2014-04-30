@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.ticket;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;
@@ -38,22 +38,22 @@ public class EncTicketPart extends KrbAppSequenceType {
     private static int CADDR = 9;
     private static int AUTHORIZATION_DATA = 10;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(FLAGS, 0, TicketFlags.class),
-            new Asn1Tag(KEY, 1, EncryptionKey.class),
-            new Asn1Tag(CREALM, 2, KerberosString.class),
-            new Asn1Tag(CNAME, 3, PrincipalName.class),
-            new Asn1Tag(TRANSITED, 4, TransitedEncoding.class),
-            new Asn1Tag(AUTHTIME, 5, KerberosTime.class),
-            new Asn1Tag(STARTTIME, 6, KerberosTime.class),
-            new Asn1Tag(ENDTIME, 7, KerberosTime.class),
-            new Asn1Tag(ENDTIME, 8, KerberosTime.class),
-            new Asn1Tag(CADDR, 9, HostAddresses.class),
-            new Asn1Tag(AUTHORIZATION_DATA, 10, AuthorizationData.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(FLAGS, 0, TicketFlags.class),
+            new Asn1FieldInfo(KEY, 1, EncryptionKey.class),
+            new Asn1FieldInfo(CREALM, 2, KerberosString.class),
+            new Asn1FieldInfo(CNAME, 3, PrincipalName.class),
+            new Asn1FieldInfo(TRANSITED, 4, TransitedEncoding.class),
+            new Asn1FieldInfo(AUTHTIME, 5, KerberosTime.class),
+            new Asn1FieldInfo(STARTTIME, 6, KerberosTime.class),
+            new Asn1FieldInfo(ENDTIME, 7, KerberosTime.class),
+            new Asn1FieldInfo(ENDTIME, 8, KerberosTime.class),
+            new Asn1FieldInfo(CADDR, 9, HostAddresses.class),
+            new Asn1FieldInfo(AUTHORIZATION_DATA, 10, AuthorizationData.class)
     };
 
     public EncTicketPart() {
-        super(TAG, tags);
+        super(TAG, fieldInfos);
     }
 
     public TicketFlags getFlags() throws KrbException {

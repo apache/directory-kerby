@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.kdc;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
@@ -28,20 +28,20 @@ public class KdcRep extends AbstractKrbMessage {
     private static int TICKET = 5;
     private static int ENC_PART = 6;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(PVNO, 0, Asn1Integer.class),
-            new Asn1Tag(MSG_TYPE, 1, Asn1Integer.class),
-            new Asn1Tag(PADATA, 2, PaData.class),
-            new Asn1Tag(CREALM, 3, KerberosString.class),
-            new Asn1Tag(CNAME, 4, PrincipalName.class),
-            new Asn1Tag(TICKET, 5, Ticket.class),
-            new Asn1Tag(ENC_PART, 6, EncryptedData.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(PVNO, 0, Asn1Integer.class),
+            new Asn1FieldInfo(MSG_TYPE, 1, Asn1Integer.class),
+            new Asn1FieldInfo(PADATA, 2, PaData.class),
+            new Asn1FieldInfo(CREALM, 3, KerberosString.class),
+            new Asn1FieldInfo(CNAME, 4, PrincipalName.class),
+            new Asn1FieldInfo(TICKET, 5, Ticket.class),
+            new Asn1FieldInfo(ENC_PART, 6, EncryptedData.class)
     };
 
     private EncKdcRepPart encPart;
 
     public KdcRep(KrbMessageType msgType) throws KrbException {
-        super(msgType, tags);
+        super(msgType, fieldInfos);
     }
 
     public PaData getPaData() throws KrbException {

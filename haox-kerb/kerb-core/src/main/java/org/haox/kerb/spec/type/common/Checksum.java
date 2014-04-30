@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
 import org.haox.kerb.spec.KrbException;
@@ -16,13 +16,13 @@ public class Checksum extends KrbSequenceType {
     private static int CKSUM_TYPE = 0;
     private static int CHECK_SUM = 1;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-        new Asn1Tag(CKSUM_TYPE, 0, Asn1Integer.class),
-        new Asn1Tag(CHECK_SUM, 1, Asn1OctetString.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+        new Asn1FieldInfo(CKSUM_TYPE, 0, Asn1Integer.class),
+        new Asn1FieldInfo(CHECK_SUM, 1, Asn1OctetString.class)
     };
 
     public Checksum() {
-        super(tags);
+        super(fieldInfos);
     }
 
     public ChecksumType getCksumtype() throws KrbException {

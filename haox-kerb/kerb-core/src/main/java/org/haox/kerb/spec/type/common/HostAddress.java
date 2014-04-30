@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
 import org.haox.kerb.spec.KrbException;
@@ -16,13 +16,13 @@ public class HostAddress extends KrbSequenceType {
     private static int ADDR_TYPE = 0;
     private static int ADDRESS = 1;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(ADDR_TYPE, 0, Asn1Integer.class),
-            new Asn1Tag(ADDRESS, 1, Asn1OctetString.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(ADDR_TYPE, 0, Asn1Integer.class),
+            new Asn1FieldInfo(ADDRESS, 1, Asn1OctetString.class)
     };
 
     public HostAddress() {
-        super(tags);
+        super(fieldInfos);
     }
 
     public HostAddrType getAddrType() throws KrbException {

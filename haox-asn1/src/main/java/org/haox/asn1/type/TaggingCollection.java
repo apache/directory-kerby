@@ -1,6 +1,5 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.Asn1Tag;
 import org.haox.asn1.EncodingOption;
 import org.haox.asn1.LimitedByteBuffer;
 import org.haox.asn1.TagClass;
@@ -9,19 +8,21 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * For tagging a sequence type with tagNo, either application specific or context specific class
+ * For tagging a collection type with tagNo, either application specific or context specific class
  */
-public class TaggingSequenceType extends AbstractAsn1Type<FieldsTaggedSequence> {
-    private Asn1Tagging<FieldsTaggedSequence> tagging;
-    private FieldsTaggedSequence tagged;
+public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionType> {
+    private Asn1Tagging<Asn1CollectionType> tagging;
+    private Asn1CollectionType tagged;
 
-    public TaggingSequenceType(int tagNo, Asn1Tag[] tags, boolean isAppSpecific) {
-        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC, tagNo);
-        this.tagged = new FieldsTaggedSequence(tags);
+    public TaggingCollection(int taggingTagNo, Asn1FieldInfo[] tags, boolean isAppSpecific) {
+        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC, taggingTagNo);
+        this.tagged = createTaggedCollection(tags);
         setValue(tagged);
-        this.tagging = new Asn1Tagging<FieldsTaggedSequence>(tagNo, tagged, isAppSpecific);
+        this.tagging = new Asn1Tagging<Asn1CollectionType>(taggingTagNo, tagged, isAppSpecific);
         setEncodingOption(EncodingOption.EXPLICIT);
     }
+
+    protected abstract Asn1CollectionType createTaggedCollection(Asn1FieldInfo[] tags);
 
     @Override
     protected boolean isConstructed() {
@@ -43,7 +44,7 @@ public class TaggingSequenceType extends AbstractAsn1Type<FieldsTaggedSequence> 
         tagging.decodeBody(content);
     }
 
-    protected Asn1Tag getTag(int tagNo) {
+    protected Asn1FieldInfo getTag(int tagNo) {
         return tagged.getTag(tagNo);
     }
 

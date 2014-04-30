@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.ap;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.AbstractKrbMessage;
@@ -17,14 +17,14 @@ import org.haox.kerb.spec.type.common.KrbMessageType;
 public class ApRep extends AbstractKrbMessage {
     private static int ENC_PART = 2;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(PVNO, 0, Asn1Integer.class),
-            new Asn1Tag(MSG_TYPE, 1, Asn1Integer.class),
-            new Asn1Tag(ENC_PART, 2, EncryptedData.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(PVNO, 0, Asn1Integer.class),
+            new Asn1FieldInfo(MSG_TYPE, 1, Asn1Integer.class),
+            new Asn1FieldInfo(ENC_PART, 2, EncryptedData.class)
     };
 
     public ApRep() throws KrbException {
-        super(KrbMessageType.AP_REP, tags);
+        super(KrbMessageType.AP_REP, fieldInfos);
     }
 
     private EncAPRepPart encRepPart;

@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosStrings;
@@ -28,13 +28,13 @@ public class PrincipalName extends KrbSequenceType {
     private static int NAME_TYPE = 0;
     private static int NAME_STRING = 1;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(NAME_TYPE, 0, Asn1Integer.class),
-            new Asn1Tag(NAME_STRING, 1, KerberosStrings.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(NAME_TYPE, 0, Asn1Integer.class),
+            new Asn1FieldInfo(NAME_STRING, 1, KerberosStrings.class)
     };
 
     public PrincipalName() {
-        super(tags);
+        super(fieldInfos);
     }
 
     public NameType getNameType() throws KrbException {

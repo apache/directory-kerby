@@ -1,12 +1,12 @@
 package org.haox.kerb.spec.type;
 
-import org.haox.asn1.Asn1Tag;
-import org.haox.asn1.type.FieldsTaggedSequence;
+import org.haox.asn1.type.Asn1FieldInfo;
+import org.haox.asn1.type.Asn1SequenceType;
 
-public abstract class KrbSequenceType extends FieldsTaggedSequence {
+public abstract class KrbSequenceType extends Asn1SequenceType {
 
-    public KrbSequenceType(Asn1Tag[] tags) {
-        super(tags);
+    public KrbSequenceType(Asn1FieldInfo[] fieldInfos) {
+        super(fieldInfos);
     }
 
     protected int getFieldAsInt(int index) {

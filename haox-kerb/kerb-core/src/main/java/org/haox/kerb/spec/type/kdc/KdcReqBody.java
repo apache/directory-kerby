@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.kdc;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
@@ -48,23 +48,23 @@ public class KdcReqBody extends KrbSequenceType {
     private static int ENC_AUTHORIZATION_DATA = 10;
     private static int ADDITIONAL_TICKETS = 11;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(KDC_OPTIONS, 0, KdcOptions.class),
-            new Asn1Tag(CNAME, 1, PrincipalName.class),
-            new Asn1Tag(REALM, 2, KerberosString.class),
-            new Asn1Tag(SNAME, 3, PrincipalName.class),
-            new Asn1Tag(FROM, 4, KerberosTime.class),
-            new Asn1Tag(TILL, 5, KerberosTime.class),
-            new Asn1Tag(RTIME, 6, KerberosTime.class),
-            new Asn1Tag(NONCE, 7, Asn1Integer.class),
-            new Asn1Tag(ETYPE, 8, KrbIntegers.class),
-            new Asn1Tag(ADDRESSES, 9, HostAddresses.class),
-            new Asn1Tag(ENC_AUTHORIZATION_DATA, 10, AuthorizationData.class),
-            new Asn1Tag(ADDITIONAL_TICKETS, 11, Tickets.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(KDC_OPTIONS, 0, KdcOptions.class),
+            new Asn1FieldInfo(CNAME, 1, PrincipalName.class),
+            new Asn1FieldInfo(REALM, 2, KerberosString.class),
+            new Asn1FieldInfo(SNAME, 3, PrincipalName.class),
+            new Asn1FieldInfo(FROM, 4, KerberosTime.class),
+            new Asn1FieldInfo(TILL, 5, KerberosTime.class),
+            new Asn1FieldInfo(RTIME, 6, KerberosTime.class),
+            new Asn1FieldInfo(NONCE, 7, Asn1Integer.class),
+            new Asn1FieldInfo(ETYPE, 8, KrbIntegers.class),
+            new Asn1FieldInfo(ADDRESSES, 9, HostAddresses.class),
+            new Asn1FieldInfo(ENC_AUTHORIZATION_DATA, 10, AuthorizationData.class),
+            new Asn1FieldInfo(ADDITIONAL_TICKETS, 11, Tickets.class)
     };
 
     public KdcReqBody() {
-        super(tags);
+        super(fieldInfos);
     }
 
     private AuthorizationData authorizationData;

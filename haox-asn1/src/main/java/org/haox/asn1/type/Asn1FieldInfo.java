@@ -1,23 +1,21 @@
-package org.haox.asn1;
+package org.haox.asn1.type;
 
-import org.haox.asn1.type.Asn1Type;
-
-public class Asn1Tag {
+public class Asn1FieldInfo {
     private int index;
     private int tag;
     private Class<? extends Asn1Type> type;
 
-    public Asn1Tag(int tag, Class<? extends Asn1Type> type) {
-        this(tag, tag, type);
+    public Asn1FieldInfo(int tagNo, Class<? extends Asn1Type> type) {
+        this(tagNo, tagNo, type);
     }
 
-    public Asn1Tag(int index, int tag, Class<? extends Asn1Type> type) {
+    public Asn1FieldInfo(int index, int tagNo, Class<? extends Asn1Type> type) {
         this.index = index;
-        this.tag = tag;
+        this.tag = tagNo;
         this.type = type;
     }
 
-    public int getTag() {
+    public int getTagNo() {
         return tag;
     }
 

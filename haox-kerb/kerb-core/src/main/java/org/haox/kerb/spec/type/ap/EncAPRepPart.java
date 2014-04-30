@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.ap;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.KrbAppSequenceType;
@@ -21,15 +21,15 @@ public class EncAPRepPart extends KrbAppSequenceType {
     private static int SUBKEY = 2;
     private static int SEQ_NUMBER = 3;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(CTIME, 0, KerberosTime.class),
-            new Asn1Tag(CUSEC, 1, Asn1Integer.class),
-            new Asn1Tag(SUBKEY, 2, EncryptionKey.class),
-            new Asn1Tag(SEQ_NUMBER, 3, Asn1Integer.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(CTIME, 0, KerberosTime.class),
+            new Asn1FieldInfo(CUSEC, 1, Asn1Integer.class),
+            new Asn1FieldInfo(SUBKEY, 2, EncryptionKey.class),
+            new Asn1FieldInfo(SEQ_NUMBER, 3, Asn1Integer.class)
     };
 
     public EncAPRepPart() {
-        super(TAG, tags);
+        super(TAG, fieldInfos);
     }
 
     public KerberosTime getCtime() {

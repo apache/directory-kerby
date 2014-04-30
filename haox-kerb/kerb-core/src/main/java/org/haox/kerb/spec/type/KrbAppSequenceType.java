@@ -1,14 +1,14 @@
 package org.haox.kerb.spec.type;
 
-import org.haox.asn1.Asn1Tag;
-import org.haox.asn1.type.TaggingSequenceType;
+import org.haox.asn1.type.Asn1FieldInfo;
+import org.haox.asn1.type.TaggingSequence;
 
 /**
  * This is for application specific sequence tagged with a number.
  */
-public abstract class KrbAppSequenceType extends TaggingSequenceType {
-    public KrbAppSequenceType(int tagNo, Asn1Tag[] tags) {
-        super(tagNo, tags, true);
+public abstract class KrbAppSequenceType extends TaggingSequence {
+    public KrbAppSequenceType(int tagNo, Asn1FieldInfo[] fieldInfos) {
+        super(tagNo, fieldInfos, true);
     }
 
     protected int getFieldAsInt(int index) {

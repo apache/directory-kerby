@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.kdc;
 
-import org.haox.asn1.Asn1Tag;
+import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;
@@ -41,23 +41,23 @@ public abstract class EncKdcRepPart extends KrbAppSequenceType {
     private static int SNAME = 10;
     private static int CADDR = 11;
 
-    static Asn1Tag[] tags = new Asn1Tag[] {
-            new Asn1Tag(KEY, 0, EncryptionKey.class),
-            new Asn1Tag(LAST_REQ, 1, LastReq.class),
-            new Asn1Tag(NONCE, 2, Asn1Integer.class),
-            new Asn1Tag(KEY_EXPIRATION, 3, KerberosTime.class),
-            new Asn1Tag(FLAGS, 4, TicketFlags.class),
-            new Asn1Tag(AUTHTIME, 5, KerberosTime.class),
-            new Asn1Tag(STARTTIME, 6, KerberosTime.class),
-            new Asn1Tag(ENDTIME, 7, KerberosTime.class),
-            new Asn1Tag(RENEW_TILL, 8, KerberosTime.class),
-            new Asn1Tag(SREALM, 9, KerberosString.class),
-            new Asn1Tag(SNAME, 10, PrincipalName.class),
-            new Asn1Tag(CADDR, 11, HostAddresses.class)
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(KEY, 0, EncryptionKey.class),
+            new Asn1FieldInfo(LAST_REQ, 1, LastReq.class),
+            new Asn1FieldInfo(NONCE, 2, Asn1Integer.class),
+            new Asn1FieldInfo(KEY_EXPIRATION, 3, KerberosTime.class),
+            new Asn1FieldInfo(FLAGS, 4, TicketFlags.class),
+            new Asn1FieldInfo(AUTHTIME, 5, KerberosTime.class),
+            new Asn1FieldInfo(STARTTIME, 6, KerberosTime.class),
+            new Asn1FieldInfo(ENDTIME, 7, KerberosTime.class),
+            new Asn1FieldInfo(RENEW_TILL, 8, KerberosTime.class),
+            new Asn1FieldInfo(SREALM, 9, KerberosString.class),
+            new Asn1FieldInfo(SNAME, 10, PrincipalName.class),
+            new Asn1FieldInfo(CADDR, 11, HostAddresses.class)
     };
 
     public EncKdcRepPart(int tagNo) {
-        super(tagNo, tags);
+        super(tagNo, fieldInfos);
     }
 
     public EncryptionKey getKey() {
