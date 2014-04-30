@@ -1,9 +1,9 @@
 package org.haox.kerb.spec.type;
 
 import org.haox.asn1.Asn1Tag;
-import org.haox.asn1.type.SequenceType;
+import org.haox.asn1.type.FieldsTaggedSequence;
 
-public abstract class KrbSequenceType extends SequenceType {
+public abstract class KrbSequenceType extends FieldsTaggedSequence {
 
     public KrbSequenceType(Asn1Tag[] tags) {
         super(tags);

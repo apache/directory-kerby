@@ -37,7 +37,7 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
 
     protected byte[] encodeBody() {
         if (bytes == null) {
-            toBytes(encodingOption);
+            toBytes();
         }
         return bytes;
     }
@@ -50,14 +50,14 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
     @Override
     protected int encodingBodyLength() {
         if (bytes == null) {
-            toBytes(encodingOption);
+            toBytes();
         }
         return bytes.length;
     }
 
     @Override
     protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        setBytes(content.readAllBytes());
+        setBytes(content.readAllLeftBytes());
         toValue();
     }
 
@@ -68,5 +68,5 @@ public abstract class AbstractAsn1Simple<T> extends AbstractAsn1Type<T> {
 
     protected void toValue() throws IOException {}
 
-    protected void toBytes(EncodingOption encodingOption) {}
+    protected void toBytes() {}
 }

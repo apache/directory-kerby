@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.SequenceOfType;
+import org.haox.kerb.spec.type.KrbSequenceOfType;
 
 /**
  LastReq         ::=     SEQUENCE OF SEQUENCE {
@@ -8,6 +8,6 @@ import org.haox.asn1.type.SequenceOfType;
  lr-value        [1] KerberosTime
  }
  */
-public class LastReq extends SequenceOfType<LastReqEntry> {
+public class LastReq extends KrbSequenceOfType<LastReqEntry> {
 
 }

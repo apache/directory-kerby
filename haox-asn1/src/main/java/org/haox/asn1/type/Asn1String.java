@@ -21,7 +21,7 @@ public abstract class Asn1String extends AbstractAsn1Simple<String>
     }
 
     @Override
-    protected void toBytes(EncodingOption encodingOption) {
+    protected void toBytes() {
         byte[] bytes = getValue().getBytes(StandardCharsets.US_ASCII);
         setBytes(bytes);
     }

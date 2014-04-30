@@ -52,11 +52,25 @@ public class LimitedByteBuffer {
         return byteBuffer.get();
     }
 
-    public byte[] readAllBytes() throws IOException {
-        return readBytes(limit);
+    public byte[] readAllLeftBytes() throws IOException {
+        return readBytes((int) hasLeft());
+    }
+
+    public void skip(int len) throws IOException {
+        checkLen(len);
+        int newPos = byteBuffer.position() + len;
+        byteBuffer.position(newPos);
     }
 
     public byte[] readBytes(int len) throws IOException {
+        checkLen(len);
+
+        byte[] bytes = new byte[len];
+        byteBuffer.get(bytes);
+        return bytes;
+    }
+
+    private void checkLen(int len) throws IOException {
         if (len <= 0) {
             throw new IllegalArgumentException("Bad argument len: " + len);
         }
@@ -66,10 +80,6 @@ public class LimitedByteBuffer {
         if (hasLeft() < len) {
             throw new IOException("Out of Buffer");
         }
-
-        byte[] bytes = new byte[len];
-        byteBuffer.get(bytes);
-        return bytes;
     }
 
     public void readBytes(byte[] bytes) throws IOException {

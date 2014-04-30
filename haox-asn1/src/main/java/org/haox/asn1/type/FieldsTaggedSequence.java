@@ -8,11 +8,11 @@ import java.nio.ByteBuffer;
 /**
  * For sequence type that consists of tagged fields
  */
-public class SequenceType extends AbstractAsn1Type<SequenceType> {
+public class FieldsTaggedSequence extends AbstractAsn1Type<FieldsTaggedSequence> {
     private Asn1Tag[] tags;
     private Asn1Type[] fields;
 
-    public SequenceType(Asn1Tag[] tags) {
+    public FieldsTaggedSequence(Asn1Tag[] tags) {
         super(TagClass.UNIVERSAL, UniversalTag.SEQUENCE.getValue());
         setValue(this);
         this.tags = tags;
@@ -58,11 +58,11 @@ public class SequenceType extends AbstractAsn1Type<SequenceType> {
         Asn1Sequence sequence = new Asn1Sequence();
         sequence.decode(tag(), tagNo(), content);
 
-        for (Asn1SequenceField field : sequence.getFields()) {
+        for (Asn1Item field : sequence.getValue()) {
             Asn1Tag tag = getTag(field.getTagNo());
             Class<? extends Asn1Type> type = tag.getType();
-            field.decodeAs(type);
-            fields[tag.getIndex()] = field.getFieldValue();
+            field.decodeValueAs(type);
+            fields[tag.getIndex()] = field.getValue();
         }
     }
 

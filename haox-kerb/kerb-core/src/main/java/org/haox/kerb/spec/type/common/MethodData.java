@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.SequenceOfType;
+import org.haox.kerb.spec.type.KrbSequenceOfType;
 
 /**
  METHOD-DATA     ::= SEQUENCE OF PA-DATA
  */
-public class MethodData extends SequenceOfType<PaDataEntry> {
+public class MethodData extends KrbSequenceOfType<PaDataEntry> {
 
 }

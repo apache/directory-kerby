@@ -62,7 +62,7 @@ public class Asn1UtcTime extends AbstractAsn1Simple<Long>
     }
 
     @Override
-    protected void toBytes(EncodingOption encodingOption) {
+    protected void toBytes() {
         Date date = new Date(getValue());
         SimpleDateFormat dateF = new SimpleDateFormat("yyMMddHHmmss'Z'");
         dateF.setTimeZone(new SimpleTimeZone(0, "Z"));

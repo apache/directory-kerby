@@ -1,10 +1,8 @@
 package org.haox.kerb.spec.type;
 
-import org.haox.asn1.type.SequenceOfType;
-
 import java.util.List;
 
-public class KerberosStrings extends SequenceOfType<KerberosString> {
+public class KerberosStrings extends KrbSequenceOfType<KerberosString> {
     public KerberosStrings(List<String> strings) {
         super();
         setValues(strings);
@@ -14,7 +12,7 @@ public class KerberosStrings extends SequenceOfType<KerberosString> {
         clear();
         if (values != null) {
             for (String value : values) {
-                add(new KerberosString(value));
+                addElement(new KerberosString(value));
             }
         }
     }

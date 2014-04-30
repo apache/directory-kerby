@@ -1,10 +1,10 @@
 package org.haox.kerb.spec.type.ticket;
 
-import org.haox.asn1.type.SequenceOfType;
+import org.haox.kerb.spec.type.KrbSequenceOfType;
 
 /**
  SEQUENCE OF Ticket
  */
-public class Tickets extends SequenceOfType<Ticket> {
+public class Tickets extends KrbSequenceOfType<Ticket> {
 
 }

@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.SequenceOfType;
+import org.haox.kerb.spec.type.KrbSequenceOfType;
 
 /**
  -- NOTE: HostAddresses is always used as an OPTIONAL field and
@@ -9,6 +9,6 @@ import org.haox.asn1.type.SequenceOfType;
  -- but has a value mapping and encodes the same
  ::= SEQUENCE OF HostAddress
  */
-public class HostAddresses extends SequenceOfType<HostAddress> {
+public class HostAddresses extends KrbSequenceOfType<HostAddress> {
 
 }

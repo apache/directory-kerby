@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.SequenceOfType;
+import org.haox.kerb.spec.type.KrbSequenceOfType;
 
 /**
  AuthorizationData       ::= SEQUENCE OF SEQUENCE {
@@ -8,6 +8,6 @@ import org.haox.asn1.type.SequenceOfType;
  ad-data         [1] OCTET STRING
  }
  */
-public class AuthorizationData extends SequenceOfType<AuthorizationDataEntry> {
+public class AuthorizationData extends KrbSequenceOfType<AuthorizationDataEntry> {
 
 }

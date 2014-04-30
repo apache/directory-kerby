@@ -17,7 +17,7 @@ public class Asn1Utf8String extends Asn1String
     }
 
     @Override
-    protected void toBytes(EncodingOption encodingOption) {
+    protected void toBytes() {
         byte[] bytes = getValue().getBytes(StandardCharsets.UTF_8);
         setBytes(bytes);
     }

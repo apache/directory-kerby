@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.type.SequenceOfType;
+import org.haox.kerb.spec.type.KrbSequenceOfType;
 
 /**
  PA-DATA         ::= SEQUENCE {
@@ -9,6 +9,6 @@ import org.haox.asn1.type.SequenceOfType;
  padata-value    [2] OCTET STRING -- might be encoded AP-REQ
  }
  */
-public class PaData extends SequenceOfType<PaDataEntry> {
+public class PaData extends KrbSequenceOfType<PaDataEntry> {
 
 }

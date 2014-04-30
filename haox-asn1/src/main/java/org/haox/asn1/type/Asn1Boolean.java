@@ -34,6 +34,7 @@ public class Asn1Boolean extends AbstractAsn1Simple<Boolean>
         super.decodeBody(content);
     }
 
+    @Override
     protected void toBytes() {
         setBytes(getValue() ? TRUE_BYTE : FALSE_BYTE);
     }

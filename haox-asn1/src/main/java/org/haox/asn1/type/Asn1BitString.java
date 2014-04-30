@@ -28,7 +28,7 @@ public class Asn1BitString extends AbstractAsn1Simple<byte[]>
     }
 
     @Override
-    protected void toBytes(EncodingOption encodingOption) {
+    protected void toBytes() {
         byte[] bytes = new byte[encodingBodyLength()];
         bytes[0] = (byte)padding;
         System.arraycopy(getValue(), 0, bytes, 1, bytes.length - 1);

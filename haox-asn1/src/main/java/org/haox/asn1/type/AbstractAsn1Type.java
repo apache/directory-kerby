@@ -52,7 +52,11 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         return tagNo;
     }
 
-    protected int tag() {
+    @Override
+    public int tag() {
+        if (tag == -1) {
+            tag = makeTag();
+        }
         return tag;
     }
 

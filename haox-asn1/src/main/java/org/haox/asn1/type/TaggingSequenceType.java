@@ -11,15 +11,15 @@ import java.nio.ByteBuffer;
 /**
  * For tagging a sequence type with tagNo, either application specific or context specific class
  */
-public class TaggingSequenceType extends AbstractAsn1Type<SequenceType> {
-    private Asn1Tagging<SequenceType> tagging;
-    private SequenceType tagged;
+public class TaggingSequenceType extends AbstractAsn1Type<FieldsTaggedSequence> {
+    private Asn1Tagging<FieldsTaggedSequence> tagging;
+    private FieldsTaggedSequence tagged;
 
     public TaggingSequenceType(int tagNo, Asn1Tag[] tags, boolean isAppSpecific) {
         super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC, tagNo);
-        this.tagged = new SequenceType(tags);
+        this.tagged = new FieldsTaggedSequence(tags);
         setValue(tagged);
-        this.tagging = new Asn1Tagging<SequenceType>(tagNo, tagged, isAppSpecific);
+        this.tagging = new Asn1Tagging<FieldsTaggedSequence>(tagNo, tagged, isAppSpecific);
         setEncodingOption(EncodingOption.EXPLICIT);
     }
 
