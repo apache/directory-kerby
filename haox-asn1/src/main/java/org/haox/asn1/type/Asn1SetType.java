@@ -8,7 +8,7 @@ import org.haox.asn1.UniversalTag;
 public class Asn1SetType extends Asn1CollectionType {
 
     public Asn1SetType(Asn1FieldInfo[] tags) {
-        super(UniversalTag.SEQUENCE.getValue(), tags);
+        super(UniversalTag.SET.getValue(), tags);
     }
 
     @Override

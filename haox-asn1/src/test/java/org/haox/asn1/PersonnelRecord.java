@@ -13,10 +13,10 @@ public class PersonnelRecord extends TaggingSet {
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(NAME, -1, Name.class),
             new Asn1FieldInfo(TITLE, 0, Asn1VisibleString.class),
-            new Asn1FieldInfo(NUMBER, 1, EmployeeNumber.class),
-            new Asn1FieldInfo(DATEOFHIRE, 2, Date.class),
-            new Asn1FieldInfo(NAMEOFSPOUSE, 3, Name.class),
-            new Asn1FieldInfo(CHILDREN, -1, Children.class)
+            new Asn1FieldInfo(NUMBER, -1, EmployeeNumber.class),
+            new Asn1FieldInfo(DATEOFHIRE, 1, Date.class),
+            new Asn1FieldInfo(NAMEOFSPOUSE, 2, Name.class),
+            new Asn1FieldInfo(CHILDREN, 3, Children.class, true)
     };
 
     public PersonnelRecord() {
@@ -73,7 +73,11 @@ public class PersonnelRecord extends TaggingSet {
     }
 
     public static class Children extends Asn1SequenceOf<ChildInformation> {
-
+        public Children(ChildInformation ... children) {
+            for (ChildInformation child : children) {
+                addElement(child);
+            }
+        }
     }
 
     public static class ChildInformation extends Asn1SetType {
@@ -89,19 +93,19 @@ public class PersonnelRecord extends TaggingSet {
             super(tags);
         }
 
-        public void setName(String name) {
-            setFieldAs(NAME, new Asn1VisibleString(name));
+        public void setName(Name name) {
+            setFieldAs(NAME, name);
         }
 
-        public String getName() {
-            return getFieldAsString(NAME);
+        public Name getName() {
+            return getFieldAs(NAME, Name.class);
         }
 
-        public void setDate(Date date) {
+        public void setDateOfBirth(Date date) {
             setFieldAs(DATEOFBIRTH, date);
         }
 
-        public Date getDate() {
+        public Date getDateOfBirth() {
             return getFieldAs(NAME, Date.class);
         }
     }
@@ -120,6 +124,13 @@ public class PersonnelRecord extends TaggingSet {
         public Name() {
             super(1, tags, true);
             setEncodingOption(EncodingOption.IMPLICIT);
+        }
+
+        public Name(String givenName, String initial, String familyName) {
+            this();
+            setGivenName(givenName);
+            setInitial(initial);
+            setFamilyName(familyName);
         }
 
         public void setGivenName(String givenName) {
@@ -148,8 +159,8 @@ public class PersonnelRecord extends TaggingSet {
     }
 
     public static class EmployeeNumber extends Asn1Tagging<Asn1Integer> {
-        public EmployeeNumber(Asn1Integer value) {
-            super(2, value, true);
+        public EmployeeNumber(Integer value) {
+            super(2, new Asn1Integer(value), true);
             setEncodingOption(EncodingOption.IMPLICIT);
         }
         public EmployeeNumber() {
@@ -158,8 +169,8 @@ public class PersonnelRecord extends TaggingSet {
     }
 
     public static class Date extends Asn1Tagging<Asn1VisibleString> {
-        public Date(Asn1VisibleString value) {
-            super(3, value, true);
+        public Date(String value) {
+            super(3, new Asn1VisibleString(value), true);
             setEncodingOption(EncodingOption.IMPLICIT);
         }
         public Date() {

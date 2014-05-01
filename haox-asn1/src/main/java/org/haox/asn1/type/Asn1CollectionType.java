@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * For collection type that consists of tagged fields
+ * For collection type that may consist of tagged fields
  */
 public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1CollectionType> {
     private Asn1FieldInfo[] fieldInfos;
@@ -28,13 +28,17 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
     @Override
     protected int encodingBodyLength() {
         int allLen = 0;
-        Asn1Type field;
+        AbstractAsn1Type field;
         TaggingOption taggingOption;
         for (int i = 0; i < fields.length; ++i) {
-            field = fields[i];
+            field = (AbstractAsn1Type) fields[i];
             if (field != null) {
-                taggingOption = TaggingOption.newExplicitContextSpecific(fieldInfos[i].getTagNo());
-                allLen += ((AbstractAsn1Type) field).taggedEncodingLength(taggingOption);
+                if (fieldInfos[i].isTagged()) {
+                    taggingOption = fieldInfos[i].getTaggingOption();
+                    allLen += field.taggedEncodingLength(taggingOption);
+                } else {
+                    allLen += field.encodingLength();
+                }
             }
         }
         return allLen;
@@ -47,8 +51,12 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
         for (int i = 0; i < fields.length; ++i) {
             field = fields[i];
             if (field != null) {
-                taggingOption = TaggingOption.newExplicitContextSpecific(fieldInfos[i].getTagNo());
-                field.taggedEncode(buffer, taggingOption);
+                if (fieldInfos[i].isTagged()) {
+                    taggingOption = taggingOption = fieldInfos[i].getTaggingOption();
+                    field.taggedEncode(buffer, taggingOption);
+                } else {
+                    field.encode(buffer);
+                }
             }
         }
     }

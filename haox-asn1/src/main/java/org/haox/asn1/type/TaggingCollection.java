@@ -24,6 +24,10 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
 
     protected abstract Asn1CollectionType createTaggedCollection(Asn1FieldInfo[] tags);
 
+    public void setEncodingOption(EncodingOption encodingOption) {
+        tagging.setEncodingOption(encodingOption);
+    }
+
     @Override
     protected boolean isConstructed() {
         return tagging.isConstructed();
@@ -48,7 +52,7 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
         return tagged.getTag(tagNo);
     }
 
-    protected <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
+    public <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
         return tagged.getFieldAs(index, t);
     }
 

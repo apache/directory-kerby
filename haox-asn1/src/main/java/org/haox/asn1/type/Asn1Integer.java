@@ -17,7 +17,7 @@ public class Asn1Integer extends AbstractAsn1Simple<Integer>
     }
 
     protected void toBytes() {
-        setBytes(ByteBuffer.allocate(4).putInt(getValue()).array());
+        setBytes(BigInteger.valueOf(getValue()).toByteArray());
     }
 
     protected void toValue() throws IOException {
