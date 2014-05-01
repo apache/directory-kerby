@@ -17,15 +17,14 @@ public abstract class Asn1CollectionOf<T extends Asn1Type> extends Asn1Collectio
         List<Asn1Item> items = getValue();
         List<T> results = new ArrayList<T>(items.size());
         for (Asn1Item item : items) {
-            if (item.isFullyDecoded()) {
-                results.add((T) item.getValue());
-            } else {
+            if (!item.isFullyDecoded()) {
                 try {
                     item.decodeValueAs(getElementType());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
+            results.add((T) item.getValue());
         }
         return results;
     }

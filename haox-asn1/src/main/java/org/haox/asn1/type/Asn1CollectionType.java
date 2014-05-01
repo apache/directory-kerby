@@ -1,6 +1,9 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.*;
+import org.haox.asn1.EncodingOption;
+import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.TagClass;
+import org.haox.asn1.TaggingOption;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -16,7 +19,7 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
         super(TagClass.UNIVERSAL, universalTagNo);
         setValue(this);
         this.fieldInfos = fieldInfos;
-        fields = new Asn1Type[fieldInfos.length];
+        this.fields = new Asn1Type[fieldInfos.length];
         setEncodingOption(EncodingOption.CONSTRUCTED);
     }
 
@@ -63,26 +66,85 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
 
     @Override
     protected void decodeBody(LimitedByteBuffer content) throws IOException {
+        initFields();
+
         Asn1Collection coll = createCollection();
         coll.decode(tag(), tagNo(), content);
 
-        for (Asn1Item field : coll.getValue()) {
-            Asn1FieldInfo tag = getTag(field.getTagNo());
-            Class<? extends Asn1Type> type = tag.getType();
-            field.decodeValueAs(type);
-            fields[tag.getIndex()] = field.getValue();
+        int lastPos = -1, foundPos = -1;
+        for (Asn1Item item : coll.getValue()) {
+            TagClass tagClass = TagClass.fromTag(item.getTag());
+            foundPos = -1;
+            for (int i = lastPos + 1; i < fieldInfos.length; ++i) {
+                if (tagClass.isContextSpecific()) {
+                    if(fieldInfos[i].getTagNo() == item.getTagNo()) {
+                        foundPos = i;
+                        break;
+                    }
+                } else if (fields[i].tag() == item.getTag()) {
+                    foundPos = i;
+                    break;
+                }
+            }
+            if (foundPos == -1) {
+                throw new RuntimeException("Unexpected item with tag: " + item.getTag());
+            }
+
+            if (item.isFullyDecoded()) {
+                fields[foundPos] = item.getValue();
+            } else {
+                AbstractAsn1Type fieldValue = (AbstractAsn1Type) fields[foundPos];
+                if (tagClass.isContextSpecific()) {
+                    fieldValue.taggedDecode(item.getTag(), item.getTagNo(), item.getContent(),
+                            fieldInfos[foundPos].getTaggingOption());
+                } else {
+                    fieldValue.decode(item.getTag(), item.getTagNo(), item.getContent());
+                }
+            }
+            lastPos = foundPos;
+        }
+    }
+
+    private void initFields() {
+        for (int i = 0; i < fieldInfos.length; ++i) {
+            try {
+                fields[i] = fieldInfos[i].getType().newInstance();
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Bad field info specified at index of " + i, e);
+            }
         }
     }
 
     protected abstract Asn1Collection createCollection();
 
-    protected Asn1FieldInfo getTag(int tagNo) {
-        for (Asn1FieldInfo tag : fieldInfos) {
-            if (tag.getTagNo() == tagNo) {
-                return tag;
+    protected void decodeItem(Asn1Item item) throws IOException {
+        TagClass tagClass = TagClass.fromTag(item.getTag());
+        int thePos = -1;
+        for (int i = 0; i < fieldInfos.length; ++i) {
+            if (tagClass.isContextSpecific()) {
+                if(fieldInfos[i].getTagNo() == item.getTagNo()) {
+                    thePos = i;
+                    break;
+                }
+            } else if (fields[i].tag() == item.getTag()) {
+                thePos = i;
+                break;
             }
         }
-        return null;
+        if (thePos == -1) {
+            throw new RuntimeException("Unexpected item with tag: " + item.getTag());
+        }
+        if (item.isFullyDecoded()) {
+            fields[thePos] = item.getValue();
+        } else {
+            if (tagClass.isContextSpecific()) {
+                ((AbstractAsn1Type)fields[thePos]).taggedDecode(item.getTag(),
+                        item.getTagNo(), item.getContent(), fieldInfos[thePos].getTaggingOption());
+            } else {
+                ((AbstractAsn1Type)fields[thePos]).decode(item.getTag(),
+                        item.getTagNo(), item.getContent());
+            }
+        }
     }
 
     protected <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {

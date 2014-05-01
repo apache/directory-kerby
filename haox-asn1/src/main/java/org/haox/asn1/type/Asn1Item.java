@@ -32,6 +32,10 @@ public class Asn1Item
         return tagNo;
     }
 
+    public LimitedByteBuffer getContent() {
+        return content;
+    }
+
     public Asn1Type getValue() {
         return value;
     }

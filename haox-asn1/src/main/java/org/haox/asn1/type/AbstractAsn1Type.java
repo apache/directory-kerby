@@ -116,10 +116,10 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     protected void decode(int tag, int tagNo, LimitedByteBuffer content) throws IOException {
         if (this.tagClass != TagClass.UNKNOWN && this.tagClass != TagClass.fromTag(tag)) {
-            throw new IOException("Unexpected tag class" + tag + ", expecting " + this.tagClass);
+            throw new IOException("Unexpected tag " + tag + ", expecting " + this.tagClass);
         }
         if (this.tagNo != -1 && this.tagNo != tagNo) {
-            throw new IOException("Unexpected tagNo" + tagNo + ", expecting " + this.tagNo);
+            throw new IOException("Unexpected tagNo " + tagNo + ", expecting " + this.tagNo);
         }
 
         this.tagClass = TagClass.fromTag(tag);
@@ -168,11 +168,16 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         taggedDecode(limitedBuffer, taggingOption);
     }
 
-    public void taggedDecode(LimitedByteBuffer content, TaggingOption taggingOption) throws IOException {
+    protected void taggedDecode(LimitedByteBuffer content, TaggingOption taggingOption) throws IOException {
         int taggingTag = readTag(content);
         int taggingTagNo = readTagNo(content, taggingTag);
         int taggingLength = readLength(content);
+        LimitedByteBuffer newContent = new LimitedByteBuffer(content, taggingLength);
 
+        taggedDecode(taggingTag, taggingTagNo, newContent, taggingOption);
+    }
+
+    protected void taggedDecode(int taggingTag, int taggingTagNo, LimitedByteBuffer content, TaggingOption taggingOption) throws IOException {
         int expectedTaggingTag = taggingOption.makeTag(isConstructed());
         if (expectedTaggingTag != taggingTag) {
             throw new IOException("Unexpected tag " + taggingTag + ", expecting " + expectedTaggingTag);
@@ -181,11 +186,10 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
             throw new IOException("Unexpected tagNo " + taggingTagNo + ", expecting " + taggingOption.getTagNo());
         }
 
-        LimitedByteBuffer newContent = new LimitedByteBuffer(content, taggingLength);
         if (taggingOption.isImplicit()) {
-            decodeBody(newContent);
+            decodeBody(content);
         } else {
-            decode(newContent);
+            decode(content);
         }
     }
 

@@ -48,11 +48,7 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
         tagging.decodeBody(content);
     }
 
-    protected Asn1FieldInfo getTag(int tagNo) {
-        return tagged.getTag(tagNo);
-    }
-
-    public <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
+    protected <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
         return tagged.getFieldAs(index, t);
     }
 

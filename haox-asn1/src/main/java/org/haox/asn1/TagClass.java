@@ -18,6 +18,14 @@ public enum TagClass
         return value;
     }
 
+    public boolean isAppSpecific() {
+        return this == APPLICATION;
+    }
+
+    public boolean isContextSpecific() {
+        return this == CONTEXT_SPECIFIC;
+    }
+
     public boolean isTagged() {
         return this == APPLICATION || this == CONTEXT_SPECIFIC;
     }

@@ -74,9 +74,14 @@ public class PersonnelRecord extends TaggingSet {
 
     public static class Children extends Asn1SequenceOf<ChildInformation> {
         public Children(ChildInformation ... children) {
+            super();
             for (ChildInformation child : children) {
                 addElement(child);
             }
+        }
+
+        public Children() {
+            super();
         }
     }
 
@@ -106,7 +111,7 @@ public class PersonnelRecord extends TaggingSet {
         }
 
         public Date getDateOfBirth() {
-            return getFieldAs(NAME, Date.class);
+            return getFieldAs(DATEOFBIRTH, Date.class);
         }
     }
 
