@@ -21,6 +21,10 @@ public enum EncodingOption
 
     public static int CONSTRUCTED_FLAG = 0x20;
 
+    public static boolean isConstructed(int tag) {
+        return (tag & CONSTRUCTED_FLAG) != 0;
+    }
+
     public int getValue() {
         return value;
     }

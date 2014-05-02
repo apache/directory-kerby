@@ -30,15 +30,19 @@ public abstract class Asn1CollectionOf<T extends Asn1Type> extends Asn1Collectio
     }
 
     public void addElement(T element) {
-        addItem(new Asn1Item(element));
+        super.addItem(element);
     }
 
     @Override
     public void addItem(Asn1Type value) {
-        if (! getElementType().isInstance(value)) {
+        Class<T> eleType = getElementType();
+        if (value instanceof Asn1Item) {
+            super.addItem(value);
+        } else if (! eleType.isInstance(value)) {
             throw new RuntimeException("Unexpected element type " + value.getClass().getCanonicalName());
+        } else {
+            addElement((T) value);
         }
-        addElement((T) value);
     }
 
     protected Class<T> getElementType() {

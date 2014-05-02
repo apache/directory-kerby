@@ -12,6 +12,7 @@ public interface Asn1Type {
     public int tagNo();
     public void setEncodingOption(EncodingOption encodingOption);
     public int tag();
+    public int encodingLength();
     public byte[] encode();
     public void encode(ByteBuffer buffer);
     public void decode(byte[] content) throws IOException;

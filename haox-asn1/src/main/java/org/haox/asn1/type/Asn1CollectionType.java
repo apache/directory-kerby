@@ -95,10 +95,10 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
             } else {
                 AbstractAsn1Type fieldValue = (AbstractAsn1Type) fields[foundPos];
                 if (tagClass.isContextSpecific()) {
-                    fieldValue.taggedDecode(item.getTag(), item.getTagNo(), item.getContent(),
+                    fieldValue.taggedDecode(item.getTag(), item.getTagNo(), item.getBodyContent(),
                             fieldInfos[foundPos].getTaggingOption());
                 } else {
-                    fieldValue.decode(item.getTag(), item.getTagNo(), item.getContent());
+                    fieldValue.decode(item.getTag(), item.getTagNo(), item.getBodyContent());
                 }
             }
             lastPos = foundPos;
@@ -116,36 +116,6 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
     }
 
     protected abstract Asn1Collection createCollection();
-
-    protected void decodeItem(Asn1Item item) throws IOException {
-        TagClass tagClass = TagClass.fromTag(item.getTag());
-        int thePos = -1;
-        for (int i = 0; i < fieldInfos.length; ++i) {
-            if (tagClass.isContextSpecific()) {
-                if(fieldInfos[i].getTagNo() == item.getTagNo()) {
-                    thePos = i;
-                    break;
-                }
-            } else if (fields[i].tag() == item.getTag()) {
-                thePos = i;
-                break;
-            }
-        }
-        if (thePos == -1) {
-            throw new RuntimeException("Unexpected item with tag: " + item.getTag());
-        }
-        if (item.isFullyDecoded()) {
-            fields[thePos] = item.getValue();
-        } else {
-            if (tagClass.isContextSpecific()) {
-                ((AbstractAsn1Type)fields[thePos]).taggedDecode(item.getTag(),
-                        item.getTagNo(), item.getContent(), fieldInfos[thePos].getTaggingOption());
-            } else {
-                ((AbstractAsn1Type)fields[thePos]).decode(item.getTag(),
-                        item.getTagNo(), item.getContent());
-            }
-        }
-    }
 
     protected <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
         Asn1Type value = fields[index];

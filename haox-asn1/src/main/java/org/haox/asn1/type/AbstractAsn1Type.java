@@ -1,9 +1,6 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.EncodingOption;
-import org.haox.asn1.LimitedByteBuffer;
-import org.haox.asn1.TagClass;
-import org.haox.asn1.TaggingOption;
+import org.haox.asn1.*;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -94,7 +91,8 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         return tag;
     }
 
-    protected int encodingLength() {
+    @Override
+    public int encodingLength() {
         if (encodingLen == -1) {
             int bodyLen = encodingBodyLength();
             encodingLen = lengthOfTagLength(makeTag()) + lengthOfBodyLength(bodyLen) + bodyLen;
@@ -114,7 +112,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         decode(tag, tagNo, new LimitedByteBuffer(content, length));
     }
 
-    protected void decode(int tag, int tagNo, LimitedByteBuffer content) throws IOException {
+    public void decode(int tag, int tagNo, LimitedByteBuffer content) throws IOException {
         if (this.tagClass != TagClass.UNKNOWN && this.tagClass != TagClass.fromTag(tag)) {
             throw new IOException("Unexpected tag " + tag + ", expecting " + this.tagClass);
         }
@@ -191,6 +189,35 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         } else {
             decode(content);
         }
+    }
+
+    public static Asn1Type decodeOne(LimitedByteBuffer content) throws IOException {
+        int tag = readTag(content);
+        int tagNo = readTagNo(content, tag);
+        boolean isConstructed = EncodingOption.isConstructed(tag);
+        int length = readLength(content);
+        if (length < 0) {
+            throw new IOException("Unexpected length");
+        }
+        LimitedByteBuffer valueContent = new LimitedByteBuffer(content, length);
+        content.skip(length);
+
+        TagClass tagClass = TagClass.fromTag(tag);
+        if (tagClass.isTagged()) {
+            return new Asn1Item(tag, tagNo, valueContent);
+        }
+
+        UniversalTag tagEnum = UniversalTag.fromValue(tagNo);
+        if (isConstructed) {
+            return new Asn1Item(tag, tagNo, valueContent);
+        }
+        return createSimple(tag, tagEnum, valueContent);
+    }
+
+    private static Asn1Type createSimple(int tag, UniversalTag tagNo, LimitedByteBuffer content) throws IOException {
+        Asn1Type result = Asn1Factory.create(tagNo);
+        ((AbstractAsn1Type)result).decode(tag, tagNo.getValue(), content);
+        return result;
     }
 
     public static int lengthOfBodyLength(int length) {
