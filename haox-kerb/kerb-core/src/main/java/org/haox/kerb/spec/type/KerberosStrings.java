@@ -3,6 +3,11 @@ package org.haox.kerb.spec.type;
 import java.util.List;
 
 public class KerberosStrings extends KrbSequenceOfType<KerberosString> {
+
+    public KerberosStrings() {
+        super();
+    }
+
     public KerberosStrings(List<String> strings) {
         super();
         setValues(strings);

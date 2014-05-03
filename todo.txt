@@ -3,4 +3,4 @@ haox-asn1
 2. Asn1 object identifier type;
 3. Better organization of types for general parser style and model driven style;
 haox-kerb
-1. Please pass the test ASAP.
+1. Please pass the test ASAP. --DONE!!!

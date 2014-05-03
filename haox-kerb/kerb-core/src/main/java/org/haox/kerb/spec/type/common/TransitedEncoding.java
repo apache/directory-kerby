@@ -17,8 +17,8 @@ public class TransitedEncoding extends KrbSequenceType {
     private static int CONTENTS = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(TR_TYPE, 1, Asn1Integer.class),
-            new Asn1FieldInfo(CONTENTS, 2, Asn1OctetString.class)
+            new Asn1FieldInfo(TR_TYPE, 0, Asn1Integer.class),
+            new Asn1FieldInfo(CONTENTS, 1, Asn1OctetString.class)
     };
 
     public TransitedEncoding() {

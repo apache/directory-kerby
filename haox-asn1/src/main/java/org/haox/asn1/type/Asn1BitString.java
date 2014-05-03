@@ -9,7 +9,7 @@ public class Asn1BitString extends Asn1Simple<byte[]>
     private int padding;
 
     public Asn1BitString() {
-        super(null);
+        this(null);
     }
 
     public Asn1BitString(byte[] value) {

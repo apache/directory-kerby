@@ -40,4 +40,24 @@ public class Asn1InputBuffer {
         }
         return one;
     }
+
+    public void readBytes(byte[] bytes) throws IOException {
+        limitedBuffer.readBytes(bytes);
+    }
+
+    public byte[] readAllLeftBytes() throws IOException {
+        return limitedBuffer.readAllLeftBytes();
+    }
+
+    public void skipNext() throws IOException {
+        if (limitedBuffer.available()) {
+            AbstractAsn1Type.skipOne(limitedBuffer);
+        }
+    }
+
+    public void skipBytes(int len) throws IOException {
+        if (limitedBuffer.available()) {
+            limitedBuffer.skip(len);
+        }
+    }
 }

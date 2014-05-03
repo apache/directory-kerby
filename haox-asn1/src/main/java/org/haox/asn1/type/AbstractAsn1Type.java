@@ -242,6 +242,16 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         return result;
     }
 
+    public static void skipOne(LimitedByteBuffer content) throws IOException {
+        int tag = readTag(content);
+        int tagNo = readTagNo(content, tag);
+        int length = readLength(content);
+        if (length < 0) {
+            throw new IOException("Unexpected length");
+        }
+        content.skip(length);
+    }
+
     public static int lengthOfBodyLength(int length) {
         int count = 1;
 

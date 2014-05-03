@@ -25,8 +25,9 @@ public class ApReq extends AbstractKrbMessage {
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PVNO, 0, Asn1Integer.class),
             new Asn1FieldInfo(MSG_TYPE, 1, Asn1Integer.class),
-            new Asn1FieldInfo(AP_OPTIONS, 2, Ticket.class),
-            new Asn1FieldInfo(AUTHENTICATOR, 3, Authenticator.class)
+            new Asn1FieldInfo(AP_OPTIONS, 2, ApOptions.class),
+            new Asn1FieldInfo(TICKET, 3, Ticket.class),
+            new Asn1FieldInfo(AUTHENTICATOR, 4, EncryptedData.class)
     };
 
     private Authenticator authenticator;

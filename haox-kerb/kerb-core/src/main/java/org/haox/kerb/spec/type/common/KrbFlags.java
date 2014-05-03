@@ -1,5 +1,6 @@
 package org.haox.kerb.spec.type.common;
 
+import org.haox.asn1.type.Asn1BitString;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.type.KrbEnum;
 
@@ -8,25 +9,36 @@ import org.haox.kerb.spec.type.KrbEnum;
  -- minimum number of bits shall be sent,
  -- but no fewer than 32
  */
-public class KrbFlags extends Asn1Integer {
-    public void setFlags(int value) {
-        setValue(value);
+public class KrbFlags extends Asn1BitString {
+    private int flags;
+
+    public KrbFlags() {
+        this(0);
+    }
+
+    public KrbFlags(int value) {
+        super();
+        setFlags(value);
+    }
+
+    public void setFlags(int flags) {
+        this.flags = flags;
     }
 
     public boolean isFlagSet(int flag) {
-        return (getValue() & flag) != 0;
+        return (flags & flag) != 0;
     }
 
     public void setFlag(int flag)  {
-        setValue(getValue() | flag);
+        flags |= flag;
     }
 
     public void clearFlag(int flag) {
-        setValue(getValue() & ~flag);
+        flags &= ~flag;
     }
 
     public void clear() {
-        setValue(0);
+        flags = 0;
     }
 
     public boolean isFlagSet(KrbEnum flag) {

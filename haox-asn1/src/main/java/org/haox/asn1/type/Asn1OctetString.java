@@ -8,7 +8,7 @@ import java.io.IOException;
 public class Asn1OctetString extends Asn1Simple<byte[]>
 {
     public Asn1OctetString() {
-        super(null);
+        this(null);
     }
 
     public Asn1OctetString(byte[] value) {

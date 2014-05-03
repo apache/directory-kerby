@@ -71,14 +71,16 @@ public class LimitedByteBuffer {
     }
 
     private void checkLen(int len) throws IOException {
-        if (len <= 0) {
+        if (len < 0) {
             throw new IllegalArgumentException("Bad argument len: " + len);
         }
-        if (!available()) {
-            throw new IOException("Buffer EOF");
-        }
-        if (hasLeft() < len) {
-            throw new IOException("Out of Buffer");
+        if (len > 0) {
+            if (!available()) {
+                throw new IOException("Buffer EOF");
+            }
+            if (hasLeft() < len) {
+                throw new IOException("Out of Buffer");
+            }
         }
     }
 
