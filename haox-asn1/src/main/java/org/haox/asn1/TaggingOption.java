@@ -31,7 +31,7 @@ public class TaggingOption
     public int makeTag(boolean isTaggedConstructed) {
         boolean isConstructed = isImplicit ? isTaggedConstructed : true;
         TagClass tagClass = isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC;
-        int taggingTag = tagClass.getValue() | (isConstructed ? EncodingOption.CONSTRUCTED_FLAG : 0x00) | getTagNo();
+        int taggingTag = tagClass.getValue() | (isConstructed ? EncodingOption.CONSTRUCTED_FLAG : 0x00) | tagNo;
         return taggingTag;
     }
 

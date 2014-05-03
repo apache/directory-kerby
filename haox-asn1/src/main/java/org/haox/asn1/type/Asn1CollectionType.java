@@ -24,7 +24,7 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
     }
 
     @Override
-    protected boolean isConstructed() {
+    public boolean isConstructed() {
         return true;
     }
 
@@ -73,10 +73,9 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
 
         int lastPos = -1, foundPos = -1;
         for (Asn1Item item : coll.getValue()) {
-            TagClass tagClass = TagClass.fromTag(item.getTag());
             foundPos = -1;
             for (int i = lastPos + 1; i < fieldInfos.length; ++i) {
-                if (tagClass.isContextSpecific()) {
+                if (item.isContextSpecific()) {
                     if(fieldInfos[i].getTagNo() == item.getTagNo()) {
                         foundPos = i;
                         break;
@@ -90,17 +89,15 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
                 throw new RuntimeException("Unexpected item with tag: " + item.getTag());
             }
 
-            if (item.isFullyDecoded()) {
-                fields[foundPos] = item.getValue();
-            } else {
+            if (! item.isFullyDecoded()) {
                 AbstractAsn1Type fieldValue = (AbstractAsn1Type) fields[foundPos];
-                if (tagClass.isContextSpecific()) {
-                    fieldValue.taggedDecode(item.getTag(), item.getTagNo(), item.getBodyContent(),
-                            fieldInfos[foundPos].getTaggingOption());
+                if (item.isContextSpecific()) {
+                    item.decodeValueWith(fieldValue, fieldInfos[foundPos].getTaggingOption());
                 } else {
-                    fieldValue.decode(item.getTag(), item.getTagNo(), item.getBodyContent());
+                    item.decodeValueWith(fieldValue);
                 }
             }
+            fields[foundPos] = item.getValue();
             lastPos = foundPos;
         }
     }

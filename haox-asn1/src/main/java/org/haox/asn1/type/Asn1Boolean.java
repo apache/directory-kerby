@@ -5,7 +5,7 @@ import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 
-public class Asn1Boolean extends AbstractAsn1Simple<Boolean>
+public class Asn1Boolean extends Asn1Simple<Boolean>
 {
     private static final byte[] TRUE_BYTE = new byte[] { (byte)0xff };
     private static final byte[] FALSE_BYTE = new byte[] { (byte)0x00 };

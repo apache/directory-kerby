@@ -1,6 +1,5 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.EncodingOption;
 import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.util.Date;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-public class Asn1UtcTime extends AbstractAsn1Simple<Long>
+public class Asn1UtcTime extends Asn1Simple<Long>
 {
     public Asn1UtcTime() {
         this(null);

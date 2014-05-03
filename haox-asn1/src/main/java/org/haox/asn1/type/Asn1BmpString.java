@@ -6,7 +6,7 @@ import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 
-public class Asn1BmpString extends AbstractAsn1Simple<String>
+public class Asn1BmpString extends Asn1Simple<String>
 {
     public Asn1BmpString() {
         super(null);

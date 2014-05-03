@@ -1,6 +1,5 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.EncodingOption;
 import org.haox.asn1.UniversalTag;
 
 import java.io.ByteArrayOutputStream;
@@ -10,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Asn1String extends AbstractAsn1Simple<String>
+public abstract class Asn1String extends Asn1Simple<String>
 {
     public Asn1String(UniversalTag tagNo) {
         super(tagNo, null);

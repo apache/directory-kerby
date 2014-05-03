@@ -4,9 +4,8 @@ import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 
-public class Asn1Integer extends AbstractAsn1Simple<Integer>
+public class Asn1Integer extends Asn1Simple<Integer>
 {
     public Asn1Integer() {
         this(null);

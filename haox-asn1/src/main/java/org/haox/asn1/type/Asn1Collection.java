@@ -1,6 +1,9 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.*;
+import org.haox.asn1.EncodingOption;
+import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.TagClass;
+import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -16,7 +19,7 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>>
     }
 
     @Override
-    protected boolean isConstructed() {
+    public boolean isConstructed() {
         return true;
     }
 
@@ -38,7 +41,7 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>>
         int allLen = 0;
         for (Asn1Item item : valueItems) {
             if (item != null) {
-                allLen += ((AbstractAsn1Type) item.getValue()).encodingLength();
+                allLen += item.encodingLength();
             }
         }
         return allLen;
@@ -49,7 +52,7 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>>
         List<Asn1Item> valueItems = getValue();
         for (Asn1Item item : valueItems) {
             if (item != null) {
-                item.getValue().encode(buffer);
+                item.encode(buffer);
             }
         }
     }
@@ -69,4 +72,47 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>>
             }
         }
     }
+
+    public static boolean isCollection(int tagNo) {
+        return isCollection(UniversalTag.fromValue(tagNo));
+    }
+
+    public static boolean isCollection(UniversalTag tagNo) {
+        switch (tagNo) {
+            case SEQUENCE:
+            case SEQUENCE_OF:
+            case SET:
+            case SET_OF:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static Asn1Type createCollection(int tagNo) {
+        if (! isCollection(tagNo)) {
+            throw new IllegalArgumentException("Not collection type, tag: " + tagNo);
+        }
+        return createCollection(UniversalTag.fromValue(tagNo));
+    }
+
+    public static Asn1Type createCollection(UniversalTag tagNo) {
+        if (! isCollection(tagNo)) {
+            throw new IllegalArgumentException("Not collection type, tag: " + tagNo);
+        }
+
+        switch (tagNo) {
+            case SEQUENCE:
+                return new Asn1Sequence();
+            case SEQUENCE_OF:
+                return new Asn1Sequence();
+            case SET:
+                return new Asn1Set();
+            case SET_OF:
+                return new Asn1Set();
+            default:
+                throw new IllegalArgumentException("Unexpected tag " + tagNo.getValue());
+        }
+    }
+
 }

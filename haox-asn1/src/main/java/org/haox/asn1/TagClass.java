@@ -18,6 +18,10 @@ public enum TagClass
         return value;
     }
 
+    public boolean isUniversal() {
+        return this == UNIVERSAL;
+    }
+
     public boolean isAppSpecific() {
         return this == APPLICATION;
     }

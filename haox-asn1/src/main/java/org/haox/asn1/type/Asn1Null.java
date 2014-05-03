@@ -5,7 +5,7 @@ import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
 
-public class Asn1Null extends AbstractAsn1Simple<Object>
+public class Asn1Null extends Asn1Simple<Object>
 {
     public static final Asn1Null NULL = new Asn1Null();
     private static final byte[]  EMPTY_BYTES = new byte[0];

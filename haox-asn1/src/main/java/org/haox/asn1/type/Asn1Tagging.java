@@ -38,7 +38,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
     }
 
     @Override
-    protected boolean isConstructed() {
+    public boolean isConstructed() {
         if (encodingOption.isExplicit()) {
             return true;
         } else if (encodingOption.isImplicit()) {

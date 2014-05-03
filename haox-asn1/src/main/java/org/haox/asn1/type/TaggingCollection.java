@@ -29,7 +29,7 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
     }
 
     @Override
-    protected boolean isConstructed() {
+    public boolean isConstructed() {
         return tagging.isConstructed();
     }
 

@@ -1,6 +1,9 @@
 package org.haox.kerb.codec.kerberos;
 
 import org.bouncycastle.asn1.DERObjectIdentifier;
+import org.haox.asn1.Asn1Dump;
+import org.haox.asn1.Asn1InputBuffer;
+import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.codec.DecodingException;
 import org.haox.kerb.codec.DecodingUtil;
 import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
@@ -20,9 +23,13 @@ public class KerberosToken {
     public KerberosToken(byte[] token, KerberosKey[] keys) throws DecodingException {
 
         if(token.length <= 0)
-            throw new DecodingException("kerberos.token.empty", null, null);
+                    throw new DecodingException("kerberos.token.empty", null, null);
 
         try {
+            //Asn1InputBuffer buffer = new Asn1InputBuffer(token);
+            //Asn1Type value = buffer.read();
+            System.out.println(Asn1Dump.dump(token));
+
             HaoxASN1InputStream.asn1Dump(token, true);
             HaoxASN1InputStream stream = new HaoxASN1InputStream(token);
             HaoxDERApplicationSpecific derToken = DecodingUtil.as(HaoxDERApplicationSpecific.class, stream);

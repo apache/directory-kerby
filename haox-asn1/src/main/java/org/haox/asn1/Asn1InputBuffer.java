@@ -1,6 +1,7 @@
 package org.haox.asn1;
 
 import org.haox.asn1.type.AbstractAsn1Type;
+import org.haox.asn1.type.Asn1Item;
 import org.haox.asn1.type.Asn1Type;
 
 import java.io.IOException;
@@ -28,6 +29,15 @@ public class Asn1InputBuffer {
         if (! limitedBuffer.available()) {
             return null;
         }
-        return AbstractAsn1Type.decodeOne(limitedBuffer);
+        Asn1Item one = AbstractAsn1Type.decodeOne(limitedBuffer);
+        if (one.isSimple()) {
+            one.decodeValueAsSimple();
+        } else if (one.isCollection()) {
+            one.decodeValueAsCollection();
+        }
+        if (one.isFullyDecoded()) {
+            return one.getValue();
+        }
+        return one;
     }
 }

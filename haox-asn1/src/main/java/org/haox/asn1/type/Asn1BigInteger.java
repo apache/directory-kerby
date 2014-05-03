@@ -5,7 +5,7 @@ import org.haox.asn1.UniversalTag;
 import java.io.IOException;
 import java.math.BigInteger;
 
-public class Asn1BigInteger extends AbstractAsn1Simple<BigInteger>
+public class Asn1BigInteger extends Asn1Simple<BigInteger>
 {
     public Asn1BigInteger() {
         this(null);

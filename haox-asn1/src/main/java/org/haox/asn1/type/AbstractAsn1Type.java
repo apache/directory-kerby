@@ -1,6 +1,9 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.*;
+import org.haox.asn1.EncodingOption;
+import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.TagClass;
+import org.haox.asn1.TaggingOption;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -100,7 +103,37 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         return encodingLen;
     }
 
-    protected abstract boolean isConstructed();
+    public boolean isConstructed() {
+        if (tag != -1) {
+            return (tag() & EncodingOption.CONSTRUCTED_FLAG) != 0;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isUniversal() {
+        return tagClass.isUniversal();
+    }
+
+    public boolean isAppSpecific() {
+        return tagClass.isAppSpecific();
+    }
+
+    public boolean isContextSpecific() {
+        return tagClass.isContextSpecific();
+    }
+
+    public boolean isTagged() {
+        return tagClass.isTagged();
+    }
+
+    public boolean isSimple() {
+        return isUniversal() && Asn1Simple.isSimple(tagNo);
+    }
+
+    public boolean isCollection() {
+        return isUniversal() && Asn1Collection.isCollection(tagNo);
+    }
 
     protected abstract int encodingBodyLength();
 
@@ -191,7 +224,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         }
     }
 
-    public static Asn1Type decodeOne(LimitedByteBuffer content) throws IOException {
+    public static Asn1Item decodeOne(LimitedByteBuffer content) throws IOException {
         int tag = readTag(content);
         int tagNo = readTagNo(content, tag);
         boolean isConstructed = EncodingOption.isConstructed(tag);
@@ -202,21 +235,10 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         LimitedByteBuffer valueContent = new LimitedByteBuffer(content, length);
         content.skip(length);
 
-        TagClass tagClass = TagClass.fromTag(tag);
-        if (tagClass.isTagged()) {
-            return new Asn1Item(tag, tagNo, valueContent);
+        Asn1Item result = new Asn1Item(tag, tagNo, valueContent);
+        if (result.isSimple()) {
+            result.decodeValueAsSimple();
         }
-
-        UniversalTag tagEnum = UniversalTag.fromValue(tagNo);
-        if (isConstructed) {
-            return new Asn1Item(tag, tagNo, valueContent);
-        }
-        return createSimple(tag, tagEnum, valueContent);
-    }
-
-    private static Asn1Type createSimple(int tag, UniversalTag tagNo, LimitedByteBuffer content) throws IOException {
-        Asn1Type result = Asn1Factory.create(tagNo);
-        ((AbstractAsn1Type)result).decode(tag, tagNo.getValue(), content);
         return result;
     }
 
