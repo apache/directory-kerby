@@ -7,6 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.haox.kerb.server.KdcServerHandler;
 import org.haox.kerb.server.identity.IdentityService;
 import org.haox.kerb.server.identity.SimpleIdentityBackend;
 import org.haox.kerb.server.shared.replay.ReplayCheckService;
@@ -149,7 +150,9 @@ public abstract class AbstractKdcServer
         b.bind(kdcConfig.getKdcPort());
     }
 
-    protected abstract void initTransportChannel(SocketChannel ch);
+    protected void initTransportChannel(SocketChannel ch) {
+        ch.pipeline().addLast(new KdcServerHandler());
+    }
 
     protected void stopTransport() throws Exception {
         workerGroup.shutdownGracefully();

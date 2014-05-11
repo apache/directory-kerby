@@ -2,8 +2,7 @@ package org.haox.kerb.spec.type.ap;
 
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.AbstractKrbMessage;
+import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.KrbMessageType;
 
@@ -14,7 +13,7 @@ import org.haox.kerb.spec.type.common.KrbMessageType;
  enc-part        [2] EncryptedData -- EncAPRepPart
  }
  */
-public class ApRep extends AbstractKrbMessage {
+public class ApRep extends KrbMessage {
     private static int ENC_PART = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
@@ -23,7 +22,7 @@ public class ApRep extends AbstractKrbMessage {
             new Asn1FieldInfo(ENC_PART, 2, EncryptedData.class)
     };
 
-    public ApRep() throws KrbException {
+    public ApRep() {
         super(KrbMessageType.AP_REP, fieldInfos);
     }
 

@@ -2,10 +2,10 @@ package org.haox.kerb.spec.type.kdc;
 
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.AbstractKrbMessage;
+import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.common.KrbMessageType;
 import org.haox.kerb.spec.type.common.PaData;
+import org.haox.kerb.spec.type.common.PaDataEntry;
 
 /**
  KDC-REQ         ::= SEQUENCE {
@@ -17,7 +17,7 @@ import org.haox.kerb.spec.type.common.PaData;
  req-encodeBody        [4] KDC-REQ-BODY
  }
  */
-public class KdcReq extends AbstractKrbMessage {
+public class KdcReq extends KrbMessage {
     private static int PADATA = 2;
     private static int REQ_BODY = 3;
 
@@ -28,23 +28,30 @@ public class KdcReq extends AbstractKrbMessage {
             new Asn1FieldInfo(REQ_BODY, 4, KdcReqBody.class)
     };
 
-    public KdcReq(KrbMessageType msgType) throws KrbException {
+    public KdcReq(KrbMessageType msgType) {
         super(msgType, fieldInfos);
     }
 
-    public PaData getPaData() throws KrbException {
+    public PaData getPaData() {
         return getFieldAs(PADATA, PaData.class);
     }
 
-    public void setPaData(PaData paData) throws KrbException {
+    public void setPaData(PaData paData) {
         setFieldAs(PADATA, paData);
     }
 
-    public KdcReqBody getReqBody() throws KrbException {
+    public void addPaData(PaDataEntry paDataEntry) {
+        if (getPaData() == null) {
+            setPaData(new PaData());
+        }
+        getPaData().addElement(paDataEntry);
+    }
+
+    public KdcReqBody getReqBody() {
         return getFieldAs(PADATA, KdcReqBody.class);
     }
 
-    public void setReqBody(KdcReqBody reqBody) throws KrbException {
+    public void setReqBody(KdcReqBody reqBody) {
         setFieldAs(REQ_BODY, reqBody);
     }
 }

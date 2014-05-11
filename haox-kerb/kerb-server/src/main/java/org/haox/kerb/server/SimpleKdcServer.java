@@ -27,11 +27,6 @@ public class SimpleKdcServer extends AbstractKdcServer {
         stopTransport();
     }
 
-    @Override
-    protected void initTransportChannel(SocketChannel ch) {
-        ch.pipeline().addLast(new KdcServerHandler());
-    }
-
     private void initKDCServer() throws Exception {
 
     }

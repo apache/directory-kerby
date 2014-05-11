@@ -1,13 +1,21 @@
 package org.haox.kerb.codec;
 
+import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.type.AbstractAsn1Type;
 import org.haox.asn1.type.Asn1Type;
-import org.haox.kerb.spec.KrbCodecMessageCode;
+import org.haox.kerb.spec.CodecMessageCode;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.KrbThrow;
+import org.haox.kerb.spec.type.common.KrbMessage;
+import org.haox.kerb.spec.type.common.KrbMessageType;
+import org.haox.kerb.spec.type.kdc.AsRep;
+import org.haox.kerb.spec.type.kdc.TgsRep;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class KrbCodec {
+
     public static byte[] encode(Asn1Type krbObj) throws KrbException {
         return krbObj.encode();
     }
@@ -17,15 +25,37 @@ public class KrbCodec {
         try {
             implObj = krbType.newInstance();
         } catch (Exception e) {
-            KrbThrow.out(KrbCodecMessageCode.DECODING_FAILED, e);
+            KrbThrow.out(CodecMessageCode.DECODING_FAILED, e);
         }
 
         try {
             implObj.decode(content);
         } catch (IOException e) {
-            KrbThrow.out(KrbCodecMessageCode.DECODING_FAILED, e);
+            KrbThrow.out(CodecMessageCode.DECODING_FAILED, e);
         }
 
         return (T) implObj;
     }
+
+    public static KrbMessage decodeMessage(ByteBuffer byteBuffer) throws IOException {
+        LimitedByteBuffer limitedBuffer = new LimitedByteBuffer(byteBuffer);
+        int tag = AbstractAsn1Type.readTag(limitedBuffer);
+        int tagNo = AbstractAsn1Type.readTagNo(limitedBuffer, tag);
+        int length = AbstractAsn1Type.readLength(limitedBuffer);
+        LimitedByteBuffer valueBuffer = new LimitedByteBuffer(limitedBuffer, length);
+
+        KrbMessage msg = null;
+        KrbMessageType msgType = KrbMessageType.fromValue(tag);
+        if (msgType == KrbMessageType.AS_REP) {
+            msg = new AsRep();
+        } else if (msgType == KrbMessageType.TGS_REP) {
+            msg = new TgsRep();
+        } else {
+            throw new IOException("To be supported krb message type with tag: " + tag);
+        }
+        msg.decode(tag, tagNo, valueBuffer);
+
+        return msg;
+    }
+
 }

@@ -3,7 +3,6 @@ package org.haox.kerb.spec.type.common;
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
@@ -25,20 +24,20 @@ public class TransitedEncoding extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public TransitedEncodingType getTrType() throws KrbException {
+    public TransitedEncodingType getTrType() {
         Integer value = getFieldAsInteger(TR_TYPE);
         return TransitedEncodingType.fromValue(value);
     }
 
-    public void setTrType(TransitedEncodingType trType) throws KrbException {
+    public void setTrType(TransitedEncodingType trType) {
         setField(TR_TYPE, trType);
     }
 
-    public byte[] getContents() throws KrbException {
+    public byte[] getContents() {
         return getFieldAsOctetBytes(CONTENTS);
     }
 
-    public void setContents(byte[] contents) throws KrbException {
+    public void setContents(byte[] contents) {
         setFieldAsOctetBytes(CONTENTS, contents);
     }
 }

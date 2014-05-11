@@ -12,6 +12,14 @@ public class Asn1FieldInfo {
         this(index, tagNo, type, false);
     }
 
+    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type) {
+        this(index, index, type, false);
+    }
+
+    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type, boolean isImplicit) {
+        this(index, index, type, isImplicit);
+    }
+
     public Asn1FieldInfo(int index, int tagNo, Class<? extends Asn1Type> type, boolean isImplicit) {
         this.index = index;
         this.tagNo = tagNo;

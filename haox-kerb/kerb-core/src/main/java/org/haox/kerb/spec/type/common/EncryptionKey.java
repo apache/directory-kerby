@@ -3,7 +3,6 @@ package org.haox.kerb.spec.type.common;
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
@@ -25,20 +24,20 @@ public class EncryptionKey extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public EncryptionType getKeyType() throws KrbException {
+    public EncryptionType getKeyType() {
         Integer value = getFieldAsInteger(KEY_TYPE);
         return EncryptionType.fromValue(value);
     }
 
-    public void setKeyType(EncryptionType keyType) throws KrbException {
+    public void setKeyType(EncryptionType keyType) {
         setFieldAsInt(KEY_TYPE, keyType.getValue());
     }
 
-    public byte[] getKeyData() throws KrbException {
+    public byte[] getKeyData() {
         return getFieldAsOctetBytes(KEY_VALUE);
     }
 
-    public void setKeyData(byte[] keyData) throws KrbException {
+    public void setKeyData(byte[] keyData) {
         setFieldAsOctetBytes(KEY_VALUE, keyData);
     }
 }

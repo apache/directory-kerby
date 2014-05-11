@@ -3,7 +3,6 @@ package org.haox.kerb.spec.type.common;
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
@@ -25,20 +24,20 @@ public class AuthorizationDataEntry extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public AuthorizationType getAuthzType() throws KrbException {
+    public AuthorizationType getAuthzType() {
         Integer value = getFieldAsInteger(AD_TYPE);
         return AuthorizationType.fromValue(value);
     }
 
-    public void setAuthzType(AuthorizationType authzType) throws KrbException {
+    public void setAuthzType(AuthorizationType authzType) {
         setFieldAsInt(AD_TYPE, authzType.getValue());
     }
 
-    public byte[] getAuthzData() throws KrbException {
+    public byte[] getAuthzData() {
         return getFieldAsOctetBytes(AD_DATA);
     }
 
-    public void setAuthzData(byte[] authzData) throws KrbException {
+    public void setAuthzData(byte[] authzData) {
         setFieldAsOctetBytes(AD_DATA, authzData);
     }
 }

@@ -1,6 +1,6 @@
 package org.haox.kerb.server.shared.keytab;
 
-import org.haox.kerb.server.shared.crypto.encryption.EncryptionUtil;
+import org.haox.kerb.common.crypto.encryption.EncryptionUtil;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionKey;

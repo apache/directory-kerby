@@ -1,9 +1,9 @@
 package org.haox.kerb.server;
 
-import org.haox.kerb.server.shared.crypto.encryption.CipherTextHandler;
+import org.haox.kerb.common.crypto.encryption.CipherTextHandler;
 import org.haox.kerb.server.shared.replay.ReplayCheckService;
 import org.haox.kerb.server.shared.store.PrincipalStore;
-import org.haox.kerb.spec.type.common.AbstractKrbMessage;
+import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 
@@ -23,7 +23,7 @@ public abstract class KdcContext
     private KdcReq request;
 
     /** The kerberos response */
-    private AbstractKrbMessage reply;
+    private KrbMessage reply;
 
     /** The client IP address */
     private InetAddress clientAddress;
@@ -92,7 +92,7 @@ public abstract class KdcContext
     /**
      * @return Returns the reply.
      */
-    public AbstractKrbMessage getReply()
+    public KrbMessage getReply()
     {
         return reply;
     }
@@ -101,7 +101,7 @@ public abstract class KdcContext
     /**
      * @param reply The reply to set.
      */
-    public void setReply(AbstractKrbMessage reply )
+    public void setReply(KrbMessage reply )
     {
         this.reply = reply;
     }

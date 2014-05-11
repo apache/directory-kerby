@@ -3,7 +3,6 @@ package org.haox.kerb.spec.type.common;
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
@@ -28,16 +27,16 @@ public class EncryptedData extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public EncryptionType getEType() throws KrbException {
+    public EncryptionType getEType() {
         Integer value = getFieldAsInteger(ETYPE);
         return EncryptionType.fromValue(value);
     }
 
-    public void setEType(EncryptionType eType) throws KrbException {
+    public void setEType(EncryptionType eType) {
         setFieldAsInt(ETYPE, eType.getValue());
     }
 
-    public int getKvno() throws KrbException {
+    public int getKvno() {
         Integer value = getFieldAsInteger(KVNO);
         if (value != null) {
             return value.intValue();
@@ -45,15 +44,15 @@ public class EncryptedData extends KrbSequenceType {
         return -1;
     }
 
-    public void setKvno(int kvno) throws KrbException {
+    public void setKvno(int kvno) {
         setFieldAsInt(KVNO, kvno);
     }
 
-    public byte[] getCipher() throws KrbException {
+    public byte[] getCipher() {
         return getFieldAsOctetBytes(CIPHER);
     }
 
-    public void setCipher(byte[] cipher) throws KrbException {
+    public void setCipher(byte[] cipher) {
         setFieldAsOctetBytes(CIPHER, cipher);
     }
 }

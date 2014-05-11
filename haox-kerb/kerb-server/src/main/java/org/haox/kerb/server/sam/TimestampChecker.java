@@ -1,6 +1,6 @@
 package org.haox.kerb.server.sam;
 
-import org.haox.kerb.server.shared.crypto.encryption.CipherTextHandler;
+import org.haox.kerb.common.crypto.encryption.CipherTextHandler;
 
 import javax.security.auth.kerberos.KerberosKey;
 
@@ -34,7 +34,7 @@ public class TimestampChecker implements KeyIntegrityChecker
 
             /*
              * Since we got here we must have a valid timestamp structure that we can
-             * validate to be within a five minute skew.
+             * handle to be within a five minute skew.
              *
             KerberosTime time = timestamp.getPaTimestamp();
 

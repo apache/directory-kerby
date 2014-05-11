@@ -21,6 +21,14 @@ public class Asn1BitString extends Asn1Simple<byte[]>
         this.padding = padding;
     }
 
+    public void setPadding(int padding) {
+        this.padding = padding;
+    }
+
+    public int getPadding() {
+        return padding;
+    }
+
     @Override
     protected int encodingBodyLength() {
         return getValue().length + 1;

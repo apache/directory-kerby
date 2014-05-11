@@ -13,10 +13,10 @@ import org.haox.kerb.server.KerberosUtils;
 import org.haox.kerb.server.PaUtil;
 import org.haox.kerb.server.sam.SamException;
 import org.haox.kerb.server.sam.SamSubsystem;
-import org.haox.kerb.server.shared.crypto.KeyUsage;
-import org.haox.kerb.server.shared.crypto.encryption.CipherTextHandler;
-import org.haox.kerb.server.shared.crypto.encryption.EncryptionUtil;
-import org.haox.kerb.server.shared.crypto.encryption.RandomKeyFactory;
+import org.haox.kerb.common.crypto.encryption.KeyUsage;
+import org.haox.kerb.common.crypto.encryption.CipherTextHandler;
+import org.haox.kerb.common.crypto.encryption.EncryptionUtil;
+import org.haox.kerb.common.crypto.encryption.RandomKeyFactory;
 import org.haox.kerb.server.shared.store.PrincipalStore;
 import org.haox.kerb.server.shared.store.PrincipalStoreEntry;
 import org.haox.kerb.spec.KrbException;
@@ -418,7 +418,7 @@ public class AuthenticationService
 
                 if ( kdcOptions.isFlagSet( KdcOption.VALIDATE ) )
                 {
-                    LOG_KRB.error( "Ticket cannot be generated, as it's a validate" );
+                    LOG_KRB.error( "Ticket cannot be generated, as it's a handle" );
 
                 }
 

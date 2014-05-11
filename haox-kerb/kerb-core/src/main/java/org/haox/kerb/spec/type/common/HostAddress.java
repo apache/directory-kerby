@@ -3,8 +3,9 @@ package org.haox.kerb.spec.type.common;
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KrbSequenceType;
+
+import java.net.InetAddress;
 
 /*
 HostAddress     ::= SEQUENCE  {
@@ -25,20 +26,27 @@ public class HostAddress extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public HostAddrType getAddrType() throws KrbException {
+    public HostAddress(InetAddress inetAddress) {
+        this();
+
+        setAddrType(HostAddrType.ADDRTYPE_INET);
+        setAddress(inetAddress.getAddress());
+    }
+
+    public HostAddrType getAddrType() {
         Integer value = getFieldAsInteger(ADDR_TYPE);
         return HostAddrType.fromValue(value);
     }
 
-    public void setAddrType(HostAddrType addrType) throws KrbException {
-        setFieldAs(ADDR_TYPE, new Asn1Integer(addrType.getValue()));
+    public void setAddrType(HostAddrType addrType) {
+        setField(ADDR_TYPE, addrType);
     }
 
-    public byte[] getAddress() throws KrbException {
+    public byte[] getAddress() {
         return getFieldAsOctetBytes(ADDRESS);
     }
 
-    public void setAddress(byte[] address) throws KrbException {
+    public void setAddress(byte[] address) {
         setFieldAsOctetBytes(ADDRESS, address);
     }
 }

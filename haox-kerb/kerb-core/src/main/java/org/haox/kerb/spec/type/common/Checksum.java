@@ -3,7 +3,6 @@ package org.haox.kerb.spec.type.common;
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
@@ -25,20 +24,20 @@ public class Checksum extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public ChecksumType getCksumtype() throws KrbException {
+    public ChecksumType getCksumtype() {
         Integer value = getFieldAsInteger(CKSUM_TYPE);
         return ChecksumType.fromValue(value);
     }
 
-    public void setCksumtype(ChecksumType cksumtype) throws KrbException {
+    public void setCksumtype(ChecksumType cksumtype) {
         setFieldAsInt(CKSUM_TYPE, cksumtype.getValue());
     }
 
-    public byte[] getChecksum() throws KrbException {
+    public byte[] getChecksum() {
         return getFieldAsOctets(CHECK_SUM);
     }
 
-    public void setChecksum(byte[] checksum) throws KrbException {
+    public void setChecksum(byte[] checksum) {
         setFieldAsOctets(CHECK_SUM, checksum);
     }
 }

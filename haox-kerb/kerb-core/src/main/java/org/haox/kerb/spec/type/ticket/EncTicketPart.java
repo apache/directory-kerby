@@ -1,7 +1,6 @@
 package org.haox.kerb.spec.type.ticket;
 
 import org.haox.asn1.type.Asn1FieldInfo;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.KrbAppSequenceType;
@@ -56,112 +55,112 @@ public class EncTicketPart extends KrbAppSequenceType {
         super(TAG, fieldInfos);
     }
 
-    public TicketFlags getFlags() throws KrbException {
+    public TicketFlags getFlags() {
         return getFieldAs(FLAGS, TicketFlags.class);
     }
 
 
-    public void setFlags(TicketFlags flags) throws KrbException {
+    public void setFlags(TicketFlags flags) {
         setFieldAs(FLAGS, flags);
     }
 
 
-    public EncryptionKey getKey() throws KrbException {
+    public EncryptionKey getKey() {
         return getFieldAs(KEY, EncryptionKey.class);
     }
 
 
-    public void setKey(EncryptionKey key) throws KrbException {
+    public void setKey(EncryptionKey key) {
         setFieldAs(KEY, key);
     }
 
 
-    public String getCrealm() throws KrbException {
+    public String getCrealm() {
         return getFieldAsString(CREALM);
     }
 
 
-    public void setCrealm(String crealm) throws KrbException {
+    public void setCrealm(String crealm) {
         setFieldAsString(CREALM, crealm);
     }
 
 
-    public PrincipalName getCname() throws KrbException {
+    public PrincipalName getCname() {
         return getFieldAs(CNAME, PrincipalName.class);
     }
 
 
-    public void setCname(PrincipalName cname) throws KrbException {
+    public void setCname(PrincipalName cname) {
         setFieldAs(CNAME, cname);
     }
 
 
-    public TransitedEncoding getTransited() throws KrbException {
+    public TransitedEncoding getTransited() {
         return getFieldAs(TRANSITED, TransitedEncoding.class);
     }
 
 
-    public void setTransited(TransitedEncoding transited) throws KrbException {
+    public void setTransited(TransitedEncoding transited) {
         setFieldAs(TRANSITED, transited);
     }
 
 
-    public KerberosTime getAuthTime() throws KrbException {
+    public KerberosTime getAuthTime() {
         return getFieldAs(AUTHTIME, KerberosTime.class);
     }
 
 
-    public void setAuthTime(KerberosTime authTime) throws KrbException {
+    public void setAuthTime(KerberosTime authTime) {
         setFieldAs(AUTHTIME, authTime);
     }
 
 
-    public KerberosTime getStartTime() throws KrbException {
+    public KerberosTime getStartTime() {
         return getFieldAs(STARTTIME, KerberosTime.class);
     }
 
 
-    public void setStartTime(KerberosTime startTime) throws KrbException {
+    public void setStartTime(KerberosTime startTime) {
         setFieldAs(STARTTIME, startTime);
     }
 
 
-    public KerberosTime getEndTime() throws KrbException {
+    public KerberosTime getEndTime() {
         return getFieldAs(ENDTIME, KerberosTime.class);
     }
 
 
-    public void setEndTime(KerberosTime endTime) throws KrbException {
+    public void setEndTime(KerberosTime endTime) {
         setFieldAs(ENDTIME, endTime);
     }
 
 
-    public KerberosTime getRenewtill() throws KrbException {
+    public KerberosTime getRenewtill() {
         return getFieldAs(RENEW_TILL, KerberosTime.class);
     }
 
 
-    public void setRenewtill(KerberosTime renewtill) throws KrbException {
+    public void setRenewtill(KerberosTime renewtill) {
         setFieldAs(RENEW_TILL, renewtill);
     }
 
 
-    public HostAddresses getClientAddresses() throws KrbException {
+    public HostAddresses getClientAddresses() {
         return getFieldAs(CADDR, HostAddresses.class);
     }
 
 
-    public void setClientAddresses(HostAddresses clientAddresses) throws KrbException {
+    public void setClientAddresses(HostAddresses clientAddresses) {
         setFieldAs(CADDR, clientAddresses);
     }
 
 
-    public AuthorizationData getAuthorizationData() throws KrbException {
+    public AuthorizationData getAuthorizationData() {
         return getFieldAs(AUTHORIZATION_DATA, AuthorizationData.class);
     }
 
 
-    public void setAuthorizationData(AuthorizationData authorizationData) throws KrbException {
+    public void setAuthorizationData(AuthorizationData authorizationData) {
         setFieldAs(AUTHORIZATION_DATA, authorizationData);
     }
 }

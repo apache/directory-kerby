@@ -3,7 +3,6 @@ package org.haox.kerb.spec.type.common;
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
@@ -26,20 +25,20 @@ public class PaDataEntry extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public PaDataType getPaDataType() throws KrbException {
+    public PaDataType getPaDataType() {
         Integer value = getFieldAsInteger(PADATA_TYPE);
         return PaDataType.fromValue(value);
     }
 
-    public void setPaDataType(PaDataType paDataType) throws KrbException {
+    public void setPaDataType(PaDataType paDataType) {
         setFieldAsInt(PADATA_TYPE, paDataType.getValue());
     }
 
-    public byte[] getPaDataValue() throws KrbException {
+    public byte[] getPaDataValue() {
         return getFieldAsOctetBytes(PADATA_VALUE);
     }
 
-    public void setPaDataValue(byte[] paDataValue) throws KrbException {
+    public void setPaDataValue(byte[] paDataValue) {
         setFieldAsOctetBytes(PADATA_VALUE, paDataValue);
     }
 }

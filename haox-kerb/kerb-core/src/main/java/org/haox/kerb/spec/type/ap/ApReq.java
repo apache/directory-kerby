@@ -2,8 +2,7 @@ package org.haox.kerb.spec.type.ap;
 
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.AbstractKrbMessage;
+import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.KrbMessageType;
 import org.haox.kerb.spec.type.ticket.Ticket;
@@ -17,7 +16,7 @@ import org.haox.kerb.spec.type.ticket.Ticket;
  authenticator   [4] EncryptedData -- Authenticator
  }
  */
-public class ApReq extends AbstractKrbMessage {
+public class ApReq extends KrbMessage {
     private static int AP_OPTIONS = 2;
     private static int TICKET = 3;
     private static int AUTHENTICATOR = 4;
@@ -32,23 +31,23 @@ public class ApReq extends AbstractKrbMessage {
 
     private Authenticator authenticator;
 
-    public ApReq() throws KrbException {
+    public ApReq() {
         super(KrbMessageType.AP_REQ, fieldInfos);
     }
 
-    public ApOptions getApOptions() throws KrbException {
+    public ApOptions getApOptions() {
         return getFieldAs(AP_OPTIONS, ApOptions.class);
     }
 
-    public void setApOptions(ApOptions apOptions) throws KrbException {
+    public void setApOptions(ApOptions apOptions) {
         setFieldAs(AP_OPTIONS, apOptions);
     }
 
-    public Ticket getTicket() throws KrbException {
+    public Ticket getTicket() {
         return getFieldAs(TICKET, Ticket.class);
     }
 
-    public void setTicket(Ticket ticket) throws KrbException {
+    public void setTicket(Ticket ticket) {
         setFieldAs(TICKET, ticket);
     }
 
@@ -60,11 +59,11 @@ public class ApReq extends AbstractKrbMessage {
         this.authenticator = authenticator;
     }
 
-    public EncryptedData getEncryptedAuthenticator() throws KrbException {
+    public EncryptedData getEncryptedAuthenticator() {
         return getFieldAs(AUTHENTICATOR, EncryptedData.class);
     }
 
-    public void setEncryptedAuthenticator(EncryptedData encryptedAuthenticator) throws KrbException {
+    public void setEncryptedAuthenticator(EncryptedData encryptedAuthenticator) {
         setFieldAs(AUTHENTICATOR, encryptedAuthenticator);
     }
 }

@@ -28,12 +28,12 @@ public class EtypeInfo2Entry extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public int getEtype() {
-        return getFieldAsInt(ETYPE);
+    public EncryptionType getEtype() {
+        return EncryptionType.fromValue(getFieldAsInt(ETYPE));
     }
 
-    public void setEtype(int etype) {
-        setFieldAsInt(ETYPE, etype);
+    public void setEtype(EncryptionType etype) {
+        setField(ETYPE, etype);
     }
 
     public String getSalt() {

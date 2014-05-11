@@ -3,7 +3,6 @@ package org.haox.kerb.spec.type.ticket;
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.KrbConstant;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KrbAppSequenceType;
 import org.haox.kerb.spec.type.common.EncryptedData;
@@ -39,31 +38,31 @@ public class Ticket extends KrbAppSequenceType {
 
     private EncTicketPart encPart;
 
-    public int getTktvno() throws KrbException {
+    public int getTktvno() {
         return getFieldAsInt(TKT_VNO);
     }
 
-    public PrincipalName getSname() throws KrbException {
+    public PrincipalName getSname() {
         return getFieldAs(SNAME, PrincipalName.class);
     }
 
-    public void setSname(PrincipalName sname) throws KrbException {
+    public void setSname(PrincipalName sname) {
         setFieldAs(SNAME, sname);
     }
 
-    public String getRealm() throws KrbException {
+    public String getRealm() {
         return getFieldAsString(REALM);
     }
 
-    public void setRealm(String realm) throws KrbException {
+    public void setRealm(String realm) {
         setFieldAs(REALM, new KerberosString(realm));
     }
 
-    public EncryptedData getEncryptedEncPart() throws KrbException {
+    public EncryptedData getEncryptedEncPart() {
         return getFieldAs(ENC_PART, EncryptedData.class);
     }
 
-    public void setEncryptedEncPart(EncryptedData encryptedEncPart) throws KrbException {
+    public void setEncryptedEncPart(EncryptedData encryptedEncPart) {
         setFieldAs(ENC_PART, encryptedEncPart);
     }
 

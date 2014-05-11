@@ -30,7 +30,7 @@ public abstract class KrbSequenceType extends Asn1SequenceType {
         setFieldAs(index, new KerberosTime(value));
     }
 
-    protected void setField(int index, KrbEnum krbEnum) {
-        setFieldAsInt(index, krbEnum.getValue());
+    protected void setField(int index, KrbEnum value) {
+        setFieldAsInt(index, value.getValue());
     }
 }

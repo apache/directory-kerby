@@ -2,7 +2,6 @@ package org.haox.kerb.spec.type.kdc;
 
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.ticket.Ticket;
@@ -21,7 +20,7 @@ import org.haox.kerb.spec.type.ticket.Ticket;
  -- as appropriate
  }
  */
-public class KdcRep extends AbstractKrbMessage {
+public class KdcRep extends KrbMessage {
     private static int PADATA = 2;
     private static int CREALM = 3;
     private static int CNAME = 4;
@@ -40,31 +39,31 @@ public class KdcRep extends AbstractKrbMessage {
 
     private EncKdcRepPart encPart;
 
-    public KdcRep(KrbMessageType msgType) throws KrbException {
+    public KdcRep(KrbMessageType msgType) {
         super(msgType, fieldInfos);
     }
 
-    public PaData getPaData() throws KrbException {
+    public PaData getPaData() {
         return getFieldAs(PADATA, PaData.class);
     }
 
-    public void setPaData(PaData paData) throws KrbException {
+    public void setPaData(PaData paData) {
         setFieldAs(PADATA, paData);
     }
 
-    public PrincipalName getCname() throws KrbException {
+    public PrincipalName getCname() {
         return getFieldAs(CNAME, PrincipalName.class);
     }
 
-    public void setCname(PrincipalName sname) throws KrbException {
+    public void setCname(PrincipalName sname) {
         setFieldAs(CNAME, sname);
     }
 
-    public String getCrealm() throws KrbException {
+    public String getCrealm() {
         return getFieldAsString(CREALM);
     }
 
-    public void setCrealm(String realm) throws KrbException {
+    public void setCrealm(String realm) {
         setFieldAs(CREALM, new KerberosString(realm));
     }
 

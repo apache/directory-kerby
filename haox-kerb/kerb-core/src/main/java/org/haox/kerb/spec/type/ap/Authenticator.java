@@ -2,7 +2,6 @@ package org.haox.kerb.spec.type.ap;
 
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.KrbAppSequenceType;
@@ -52,75 +51,75 @@ public class Authenticator extends KrbAppSequenceType {
         super(TAG, fieldInfos);
     }
 
-    public int getAuthenticatorVno() throws KrbException {
+    public int getAuthenticatorVno() {
         return getFieldAsInt(AUTHENTICATOR_VNO);
     }
 
-    public void setAuthenticatorVno(int authenticatorVno) throws KrbException {
+    public void setAuthenticatorVno(int authenticatorVno) {
         setFieldAsInt(AUTHENTICATOR_VNO, authenticatorVno);
     }
 
-    public String getCrealm() throws KrbException {
+    public String getCrealm() {
         return getFieldAsString(CREALM);
     }
 
-    public void setCrealm(String crealm) throws KrbException {
+    public void setCrealm(String crealm) {
         setFieldAsString(CREALM, crealm);
     }
 
-    public PrincipalName getCname() throws KrbException {
+    public PrincipalName getCname() {
         return getFieldAs(CNAME, PrincipalName.class);
     }
 
-    public void setCname(PrincipalName cname) throws KrbException {
+    public void setCname(PrincipalName cname) {
         setFieldAs(CNAME, cname);
     }
 
-    public Checksum getCksum() throws KrbException {
+    public Checksum getCksum() {
         return getFieldAs(CKSUM, Checksum.class);
     }
 
-    public void setCksum(Checksum cksum) throws KrbException {
+    public void setCksum(Checksum cksum) {
         setFieldAs(CKSUM, cksum);
     }
 
-    public int getCusec() throws KrbException {
+    public int getCusec() {
         return getFieldAsInt(CUSEC);
     }
 
-    public void setCusec(int cusec) throws KrbException {
+    public void setCusec(int cusec) {
         setFieldAsInt(CUSEC, cusec);
     }
 
-    public KerberosTime getCtime() throws KrbException {
+    public KerberosTime getCtime() {
         return getFieldAsTime(CTIME);
     }
 
-    public void setCtime(KerberosTime ctime) throws KrbException {
+    public void setCtime(KerberosTime ctime) {
         setFieldAs(CTIME, ctime);
     }
 
-    public EncryptionKey getSubKey() throws KrbException {
+    public EncryptionKey getSubKey() {
         return getFieldAs(SUBKEY, EncryptionKey.class);
     }
 
-    public void setSubKey(EncryptionKey subKey) throws KrbException {
+    public void setSubKey(EncryptionKey subKey) {
         setFieldAs(SUBKEY, subKey);
     }
 
-    public int getSeqNumber() throws KrbException {
+    public int getSeqNumber() {
         return getFieldAsInt(SEQ_NUMBER);
     }
 
-    public void setSeqNumber(Integer seqNumber) throws KrbException {
+    public void setSeqNumber(Integer seqNumber) {
         setFieldAsInt(SEQ_NUMBER, seqNumber);
     }
 
-    public AuthorizationData getAuthorizationData() throws KrbException {
+    public AuthorizationData getAuthorizationData() {
         return getFieldAs(AUTHORIZATION_DATA, AuthorizationData.class);
     }
 
-    public void setAuthorizationData(AuthorizationData authorizationData) throws KrbException {
+    public void setAuthorizationData(AuthorizationData authorizationData) {
         setFieldAs(AUTHORIZATION_DATA, authorizationData);
     }
 }

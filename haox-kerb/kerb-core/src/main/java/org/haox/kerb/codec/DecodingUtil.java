@@ -1,6 +1,8 @@
 package org.haox.kerb.codec;
 
-import org.bouncycastle.asn1.*;
+import org.bouncycastle.asn1.ASN1Object;
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.ASN1TaggedObject;
 import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
 
 import java.io.IOException;
