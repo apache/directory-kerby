@@ -50,6 +50,8 @@ public class Asn1BitString extends Asn1Simple<byte[]>
         }
         int paddingBits = bytes[0];
         validatePaddingBits(paddingBits);
+        setPadding(paddingBits);
+
         byte[] newBytes = new byte[bytes.length - 1];
         if (bytes.length > 1) {
             System.arraycopy(bytes, 1, newBytes, 0, bytes.length - 1);
