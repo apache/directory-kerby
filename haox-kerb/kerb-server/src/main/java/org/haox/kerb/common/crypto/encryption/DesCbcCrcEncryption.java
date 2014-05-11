@@ -6,6 +6,7 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.KrbErrorCode;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -64,7 +65,7 @@ public class DesCbcCrcEncryption extends EncryptionEngine
     }
 
 
-    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KerberosException, KrbException {
+    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KrbException {
         // decrypt the data
         byte[] decryptedData = decrypt( data.getCipher(), key.getKeyData() );
 
@@ -82,9 +83,8 @@ public class DesCbcCrcEncryption extends EncryptionEngine
         byte[] newChecksum = calculateIntegrity( decryptedData, key.getKeyData(), usage );
 
         // compare checksums
-        if ( !Arrays.equals( oldChecksum, newChecksum ) )
-        {
-            throw new KerberosException( ErrorType.KRB_AP_ERR_BAD_INTEGRITY );
+        if ( !Arrays.equals( oldChecksum, newChecksum ) ) {
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY );
         }
 
         // remove leading confounder and checksum

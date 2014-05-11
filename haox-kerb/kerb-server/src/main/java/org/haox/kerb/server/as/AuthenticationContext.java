@@ -10,7 +10,6 @@ import org.haox.kerb.spec.type.ticket.Ticket;
  */
 public class AuthenticationContext extends KdcContext
 {
-    /** The Kerberos Ticket associated to this context */
     private Ticket ticket;
 
     /** The client key */

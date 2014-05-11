@@ -49,9 +49,8 @@ public class EncryptionUtil
      * @param configuredTypes The configured encryption types
      * @return The first matching encryption type.
      */
-    public static EncryptionType getBestEncryptionType( Set<EncryptionType> requestedTypes,
-        Set<EncryptionType> configuredTypes )
-    {
+    public static EncryptionType getBestEncryptionType(List<EncryptionType> requestedTypes,
+        List<EncryptionType> configuredTypes ) {
         for ( EncryptionType encryptionType : configuredTypes )
         {
             if ( requestedTypes.contains( encryptionType ) )

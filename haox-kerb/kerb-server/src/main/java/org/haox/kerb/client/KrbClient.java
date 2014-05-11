@@ -73,17 +73,13 @@ public class KrbClient {
 
     private TgtTicket doRequestTgtTicket(AsRequest tgtTktReq) throws KrbException {
         KrbMessage respMsg;
-        try {
-            respMsg = sendAndReceive(tgtTktReq);
-        } catch (IOException e) {
-            throw new KrbException(KrbErrorCode.KRB_TIMEOUT);
-        }
+        respMsg = sendAndReceive(tgtTktReq);
         if (respMsg instanceof KrbError) {
             throw new KrbErrorException((KrbError) respMsg);
         }
 
         AsRep asRep = (AsRep) respMsg;
-        AsResponse asResponse = new AsResponse(context, asRep);
+        AsResponse asResponse = new AsResponse(context, asRep, tgtTktReq);
         asResponse.handle();
         return asResponse.getTicket();
     }
@@ -93,17 +89,13 @@ public class KrbClient {
         TgsRequest ticketReq = new TgsRequest(context, tgt);
 
         KrbMessage respMsg;
-        try {
-            respMsg = sendAndReceive(ticketReq);
-        } catch (IOException e) {
-            throw new KrbException(KrbErrorCode.KRB_TIMEOUT);
-        }
+        respMsg = sendAndReceive(ticketReq);
         if (respMsg instanceof KrbError) {
             throw new KrbErrorException((KrbError) respMsg);
         }
 
         TgsRep tgsRep = (TgsRep) respMsg;
-        TgsResponse tgsResponse = new TgsResponse(context, tgsRep);
+        TgsResponse tgsResponse = new TgsResponse(context, tgsRep, ticketReq);
         tgsResponse.handle();
         return tgsResponse.getServiceTicket();
     }
@@ -127,12 +119,16 @@ public class KrbClient {
         }
     } */
 
-    private KrbMessage sendAndReceive(KdcRequest kdcRequest) throws IOException {
+    private KrbMessage sendAndReceive(KdcRequest kdcRequest) throws KrbException {
         KdcReq kdcReq = kdcRequest.makeKdcRequest();
         ByteBuffer buffer = ByteBuffer.wrap(kdcReq.encode());
 
         ByteBuffer respData = null;//sendAndReceive(buffer);
-        return KrbCodec.decodeMessage(respData);
+        try {
+            return KrbCodec.decodeMessage(respData);
+        } catch (IOException e) {
+            throw new KrbException("Failed to decode krb message");
+        }
     }
 
     public static void main(String[] args) throws Exception {

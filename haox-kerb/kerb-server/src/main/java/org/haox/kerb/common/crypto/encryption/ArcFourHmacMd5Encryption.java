@@ -33,7 +33,7 @@ class ArcFourHmacMd5Encryption extends EncryptionEngine
     }
 
 
-    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KerberosException, KrbException {
+    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KrbException {
         return data.getCipher();
     }
 

@@ -1,6 +1,5 @@
 package org.haox.kerb.common.crypto.encryption;
 
-import org.apache.directory.shared.kerberos.exceptions.KerberosException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
@@ -26,7 +25,7 @@ class NullEncryption extends EncryptionEngine
     }
 
 
-    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KerberosException, KrbException {
+    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KrbException {
         return data.getCipher();
     }
 

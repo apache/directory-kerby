@@ -1,7 +1,8 @@
 package org.haox.kerb.client;
 
-import org.apache.directory.shared.kerberos.codec.types.PrincipalNameType;
+import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.common.crypto.encryption.KeyUsage;
+import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.ap.ApOptions;
 import org.haox.kerb.spec.type.ap.ApReq;
@@ -17,11 +18,9 @@ public class TgsRequest extends KdcRequest {
     private TgsReq tgsReq;
     private TgtTicket tgt;
 
-    private String serverPrincipal;
-
     private ApOptions apOptions = new ApOptions();
 
-    private EncryptionKey subSessionKey;
+    private EncryptionKey sessionKey;
 
     private KdcOptions kdcOptions = new KdcOptions();
 
@@ -30,8 +29,8 @@ public class TgsRequest extends KdcRequest {
         this.tgt = tgtTicket;
     }
 
-    public void setSubSessionKey(EncryptionKey subSessionKey) {
-        this.subSessionKey = subSessionKey;
+    public void setSessionKey(EncryptionKey sessionKey) {
+        this.sessionKey = sessionKey;
     }
 
     public void setKdcOptions(KdcOptions kdcOptions) {
@@ -39,49 +38,57 @@ public class TgsRequest extends KdcRequest {
     }
 
     @Override
-    public KdcReq makeKdcRequest() {
-        // session key
-        EncryptionKey sessionKey = tgt.getSessionKey();
+    public KdcReq makeKdcRequest() throws KrbException {
         Authenticator authenticator = new Authenticator();
-        authenticator.setCname(new PrincipalName(serviceTicketReq.getTgt().getClientName(), PrincipalNameType.KRB_NT_PRINCIPAL));
-        authenticator.setCrealm(serviceTicketReq.getTgt().getRealm());
-        authenticator.setCtime(new KerberosTime());
+        authenticator.setCname(new PrincipalName(tgt.getClientPrincipal()));
+        authenticator.setCrealm(tgt.getRealm());
+
+        long ctime = System.currentTimeMillis();
+        authenticator.setCtime(new KerberosTime(ctime));
         authenticator.setCusec(0);
 
-        if(serviceTicketReq.getSubSessionKey() != null) {
-            sessionKey = serviceTicketReq.getSubSessionKey();
-            authenticator.setSubKey(sessionKey);
+        if(sessionKey == null) {
+            sessionKey = tgt.getSessionKey();
         }
+        authenticator.setSubKey(sessionKey);
 
-        EncryptedData authnData = cipherTextHandler.encrypt(sessionKey, getEncoded(authenticator), KeyUsage.TGS_REQ_PA_TGS_REQ_PADATA_AP_REQ_TGS_SESS_KEY);
+        EncryptedData authnData = encodingAndEncryptWithSessionKey(authenticator,
+                KeyUsage.TGS_REQ_PA_TGS_REQ_PADATA_AP_REQ_TGS_SESS_KEY);
 
         ApReq apReq = new ApReq();
-
-        apReq.setAuthenticator(authnData);
-        apReq.setTicket(serviceTicketReq.getTgt().getTicket());
-
-        apReq.setApOptions(serviceTicketReq.getApOptions());
+        apReq.setEncryptedAuthenticator(authnData);
+        apReq.setTicket(tgt.getTicket());
+        apReq.setApOptions(apOptions);
 
         KdcReqBody tgsReqBody = new KdcReqBody();
-        tgsReqBody.setKdcOptions(serviceTicketReq.getKdcOptions());
-        tgsReqBody.setRealm(KrbUtil.extractRealm(serverPrincipal));
-        tgsReqBody.setTill(getDefaultTill());
-        int currentNonce = nonceGenerator.nextInt();
-        tgsReqBody.setNonce(currentNonce);
-        tgsReqBody.setEtype(config.getEncryptionTypes());
+        tgsReqBody.setKdcOptions(getKdcOptions());
+        tgsReqBody.setRealm(KrbUtil.extractRealm(getRealm()));
+        tgsReqBody.setTill(new KerberosTime(ctime + getTicketTillTime()));
+        int nonce = generateNonce();
+        tgsReqBody.setNonce(nonce);
+        setChosenNonce(nonce);
+        tgsReqBody.setEtypes(getEtypes());
 
-        PrincipalName principalName = new PrincipalName(KrbUtil.extractName(serverPrincipal), KerberosPrincipal.KRB_NT_SRV_HST);
+        PrincipalName principalName = new PrincipalName(getServerPrincipal());
         tgsReqBody.setSname(principalName);
 
         TgsReq tgsReq = new TgsReq();
-        tgsReq.setKdcReqBody(tgsReqBody);
+        tgsReq.setReqBody(tgsReqBody);
 
-        PaData authnHeader = new PaData();
-        authnHeader.setPaDataType(PaDataType.PA_TGS_REQ);
-        authnHeader.setPaDataValue(getEncoded(apReq));
-
+        PaDataEntry authnHeader = new PaDataEntry();
+        authnHeader.setPaDataType(PaDataType.TGS_REQ);
+        authnHeader.setPaDataValue(apReq.encode());
         tgsReq.addPaData(authnHeader);
 
         return tgsReq;
+    }
+
+    protected EncryptedData encodingAndEncryptWithSessionKey(Asn1Type value, KeyUsage usage) throws KrbException {
+        byte[] encodedData = value.encode();
+        return getContext().getCipherHandler().encrypt(sessionKey, encodedData, usage);
+    }
+
+    protected byte[] decryptWithSessionKey(EncryptedData data, KeyUsage usage) throws KrbException {
+        return getContext().getCipherHandler().decrypt(sessionKey, data, usage);
     }
 }

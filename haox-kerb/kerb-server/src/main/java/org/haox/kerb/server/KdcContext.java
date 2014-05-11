@@ -1,13 +1,16 @@
 package org.haox.kerb.server;
 
+import org.haox.kerb.client.KrbUtil;
 import org.haox.kerb.common.crypto.encryption.CipherTextHandler;
+import org.haox.kerb.server.common.KdcConfig;
 import org.haox.kerb.server.shared.replay.ReplayCheckService;
 import org.haox.kerb.server.shared.store.PrincipalStore;
-import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 
 import java.net.InetAddress;
+import java.util.List;
 
 /**
  * The context used to identity the collected and computed data while processing a
@@ -16,8 +19,9 @@ import java.net.InetAddress;
 public abstract class KdcContext
 {
     /** The KDC server configuration */
-    private KerberosConfig config;
+    private KdcConfig config;
     private PrincipalStore store;
+    private List<EncryptionType> defaultEtypes;
 
     /** The request being processed */
     private KdcReq request;
@@ -35,23 +39,20 @@ public abstract class KdcContext
     /** the replay cache */
     private ReplayCheckService replayCache;
 
-    /**
-     * @return Returns the org.haox.config.
-     */
-    public KerberosConfig getConfig()
-    {
+    public KdcConfig getConfig() {
         return config;
     }
 
-
-    /**
-     * @param config The org.haox.config to set.
-     */
-    public void setConfig( KerberosConfig config )
-    {
+    public void setConfig( KdcConfig config ) {
         this.config = config;
     }
 
+    public List<EncryptionType> getDefaultEtypes() {
+        if (defaultEtypes == null || defaultEtypes.isEmpty()) {
+            defaultEtypes = KrbUtil.getEncryptionTypes(config.getEncryptionTypes());
+        }
+        return defaultEtypes;
+    }
 
     /**
      * @return Returns the identity.
@@ -61,19 +62,11 @@ public abstract class KdcContext
         return store;
     }
 
-
-    /**
-     * @param store The identity to set.
-     */
     public void setStore(PrincipalStore store)
     {
         this.store = store;
     }
 
-
-    /**
-     * @return Returns the request.
-     */
     public KdcReq getRequest()
     {
         return request;

@@ -13,8 +13,4 @@ public class TgtTicket extends AbstractServiceTicket {
     public String getClientPrincipal() {
         return clientPrincipal;
     }
-
-    public void setClientPrincipal(String clientPrincipal) {
-        this.clientPrincipal = clientPrincipal;
-    }
 }

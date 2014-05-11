@@ -185,9 +185,8 @@ public abstract class EncryptionEngine
      *
      *  Kc = DK(base-key, usage | 0x99);
      */
-    protected byte[] getUsageKc( KeyUsage usage )
-    {
-        return getUsage( usage.getOrdinal(), ( byte ) 0x99 );
+    protected byte[] getUsageKc( KeyUsage usage ) {
+        return getUsage( usage.getValue(), ( byte ) 0x99 );
     }
 
 
@@ -200,7 +199,7 @@ public abstract class EncryptionEngine
      */
     protected byte[] getUsageKe( KeyUsage usage )
     {
-        return getUsage( usage.getOrdinal(), ( byte ) 0xAA );
+        return getUsage( usage.getValue(), ( byte ) 0xAA );
     }
 
 
@@ -213,7 +212,7 @@ public abstract class EncryptionEngine
      */
     protected byte[] getUsageKi( KeyUsage usage )
     {
-        return getUsage( usage.getOrdinal(), ( byte ) 0x55 );
+        return getUsage( usage.getValue(), ( byte ) 0x55 );
     }
 
 

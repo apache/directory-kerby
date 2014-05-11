@@ -31,10 +31,6 @@ public abstract class KdcRequest {
 
     public abstract KdcReq makeKdcRequest() throws KrbException;
 
-    public KerberosTime getDefaultTill() {
-        return new KerberosTime(System.currentTimeMillis() + (KerberosTime.MINUTE * 60));
-    }
-
     public KdcOptions getKdcOptions() {
         return kdcOptions;
     }
@@ -54,12 +50,12 @@ public abstract class KdcRequest {
         return context;
     }
 
-    public EncryptedData encodingAndEncrypt(Asn1Type value, KeyUsage usage ) throws KrbException {
+    protected EncryptedData encodingAndEncryptWithClientKey(Asn1Type value, KeyUsage usage) throws KrbException {
         byte[] encodedData = value.encode();
         return context.getCipherHandler().encrypt(getClientKey(), encodedData, usage);
     }
 
-    public byte[] decrypt(EncryptedData data, KeyUsage usage) throws KrbException {
+    protected byte[] decryptWithClientKey(EncryptedData data, KeyUsage usage) throws KrbException {
         return context.getCipherHandler().decrypt(getClientKey(), data, usage);
     }
 
@@ -68,7 +64,7 @@ public abstract class KdcRequest {
         long paTimestamp = System.currentTimeMillis();
         paTs.setPaTimestamp(new KerberosTime(paTimestamp));
 
-        EncryptedData paDataValue = encodingAndEncrypt(paTs, KeyUsage.AS_REQ_PA_ENC_TIMESTAMP_WITH_CKEY);
+        EncryptedData paDataValue = encodingAndEncryptWithClientKey(paTs, KeyUsage.AS_REQ_PA_ENC_TIMESTAMP_WITH_CKEY);
         PaDataEntry tsPaEntry = new PaDataEntry();
         tsPaEntry.setPaDataType(PaDataType.ENC_TIMESTAMP);
         tsPaEntry.setPaDataValue(paDataValue.encode());
@@ -137,6 +133,10 @@ public abstract class KdcRequest {
 
     public long getTicketValidTime() {
         return context.getTicketValidTime();
+    }
+
+    public long getTicketTillTime() {
+        return KerberosTime.MINUTE * 60;
     }
 
     public String getClientPrincipal() {

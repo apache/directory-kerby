@@ -6,6 +6,7 @@ import org.haox.kerb.common.crypto.checksum.ChecksumEngine;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.common.KrbErrorCode;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -57,7 +58,7 @@ abstract class AesCtsSha1Encryption extends EncryptionEngine implements Checksum
     }
 
 
-    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KerberosException, KrbException {
+    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KrbException {
         byte[] Ke = deriveKey( key.getKeyData(), getUsageKe( usage ), 128, getKeyLength() );
 
         byte[] encryptedData = data.getCipher();
@@ -82,7 +83,7 @@ abstract class AesCtsSha1Encryption extends EncryptionEngine implements Checksum
         // compare checksums
         if ( !Arrays.equals( oldChecksum, newChecksum ) )
         {
-            throw new KerberosException( ErrorType.KRB_AP_ERR_BAD_INTEGRITY );
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY );
         }
 
         return withoutConfounder;

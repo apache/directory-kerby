@@ -1,14 +1,9 @@
 package org.haox.kerb.common.crypto.encryption;
 
 import org.apache.directory.api.util.Strings;
-import org.apache.directory.shared.kerberos.exceptions.ErrorType;
-import org.apache.directory.shared.kerberos.exceptions.KerberosException;
 import org.haox.kerb.common.crypto.checksum.ChecksumEngine;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.ChecksumType;
-import org.haox.kerb.spec.type.common.EncryptedData;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.*;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -66,7 +61,7 @@ public class Des3CbcSha1KdEncryption extends EncryptionEngine implements Checksu
     }
 
 
-    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KerberosException, KrbException {
+    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KrbException {
         byte[] Ke = deriveKey( key.getKeyData(), getUsageKe( usage ), 64, 168 );
 
         byte[] encryptedData = data.getCipher();
@@ -91,7 +86,7 @@ public class Des3CbcSha1KdEncryption extends EncryptionEngine implements Checksu
         // compare checksums
         if ( !Arrays.equals( oldChecksum, newChecksum ) )
         {
-            throw new KerberosException( ErrorType.KRB_AP_ERR_BAD_INTEGRITY );
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY );
         }
 
         return withoutConfounder;

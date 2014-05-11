@@ -7,6 +7,7 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.KrbErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +63,7 @@ class DesCbcMd5Encryption extends EncryptionEngine
     }
 
 
-    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KerberosException, KrbException {
+    public byte[] getDecryptedData( EncryptionKey key, EncryptedData data, KeyUsage usage ) throws KrbException {
         LOG_KRB.debug( "Decrypting data using {}", key );
 
         // decrypt the data
@@ -84,7 +85,7 @@ class DesCbcMd5Encryption extends EncryptionEngine
         // compare checksums
         if ( !Arrays.equals( oldChecksum, newChecksum ) )
         {
-            throw new KerberosException( ErrorType.KRB_AP_ERR_BAD_INTEGRITY );
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY );
         }
 
         // remove leading confounder and checksum

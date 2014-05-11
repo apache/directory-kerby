@@ -94,23 +94,9 @@ public class KrbContext {
     }
 
     public List<EncryptionType> getDefaultEtypes() {
-        if (defaultEtypes != null && ! defaultEtypes.isEmpty()) {
-            return defaultEtypes;
+        if (defaultEtypes == null || defaultEtypes.isEmpty()) {
+            defaultEtypes = KrbUtil.getEncryptionTypes(config.getEncryptionTypes());
         }
-
-        List<String> encryptionTypes = config.getEncryptionTypes();
-        if (!encryptionTypes.isEmpty()) {
-            List<EncryptionType> results = new ArrayList<EncryptionType>();
-            EncryptionType etype;
-            for (String etypeName : encryptionTypes) {
-                etype = EncryptionType.fromName(etypeName);
-                if (etype != EncryptionType.UNKNOWN) {
-                    results.add(etype);
-                }
-            }
-            defaultEtypes = results;
-        }
-
         return defaultEtypes;
     }
 }

@@ -8,10 +8,10 @@ import org.haox.kerb.spec.type.KrbEnum;
 public enum PaDataType implements KrbEnum {
     NONE                (0),
     AP_REQ              (1),
-    //TGS_REQ           (AP_REQ),
+    TGS_REQ           (1),
     ENC_TIMESTAMP       (2), // RFC 4120
     PW_SALT             (3), // RFC 4120
-    //ENC_ENCKEY        (4),  // Key encrypted within itself
+    ENC_ENCKEY        (4),  // Key encrypted within itself
     ENC_UNIX_TIME       (5),  // timestamp encrypted in key. RFC 4120
     ENC_SANDIA_SECURID (6),  // SecurId passcode. RFC 4120
     SESAME              (7),  // Sesame project. RFC 4120

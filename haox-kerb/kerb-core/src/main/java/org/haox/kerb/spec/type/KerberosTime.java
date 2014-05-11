@@ -22,7 +22,7 @@ public class KerberosTime extends Asn1GeneralizedTime {
     public static final int WEEK = MINUTE * 10080;
 
     public KerberosTime() {
-        super();
+        super(0L);
     }
 
     public KerberosTime(Long time) {

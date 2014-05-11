@@ -1,11 +1,9 @@
 package org.haox.kerb.common.crypto.encryption;
 
-import org.apache.directory.server.i18n.I18n;
-import org.apache.directory.shared.kerberos.exceptions.ErrorType;
-import org.apache.directory.shared.kerberos.exceptions.KerberosException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.KrbErrorCode;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -39,27 +37,12 @@ public class RandomKeyFactory
         DEFAULT_CIPHERS = Collections.unmodifiableMap( map );
     }
 
-
-    /**
-     * Get a map of random keys.  The default set of encryption types is used.
-     * 
-     * @return The map of random keys.
-     * @throws org.apache.directory.shared.kerberos.exceptions.KerberosException
-     */
-    public static Map<EncryptionType, EncryptionKey> getRandomKeys() throws KerberosException, KrbException {
+    public static Map<EncryptionType, EncryptionKey> getRandomKeys() throws KrbException {
         return getRandomKeys( DEFAULT_CIPHERS.keySet() );
     }
 
-
-    /**
-     * Get a map of random keys for a list of cipher types to derive keys for.
-     *
-     * @param ciphers The list of ciphers to derive keys for.
-     * @return The list of KerberosKey's.
-     * @throws org.apache.directory.shared.kerberos.exceptions.KerberosException
-     */
     public static Map<EncryptionType, EncryptionKey> getRandomKeys( Set<EncryptionType> ciphers )
-            throws KerberosException, KrbException {
+            throws KrbException {
         Map<EncryptionType, EncryptionKey> map = new HashMap<EncryptionType, EncryptionKey>();
 
         for ( EncryptionType encryptionType : ciphers )
@@ -70,22 +53,12 @@ public class RandomKeyFactory
         return map;
     }
 
-
-    /**
-     * Get a new random key for a given {@link org.apache.directory.shared.kerberos.codec.types.EncryptionType}.
-     *
-     * @param encryptionType
-     *
-     * @return The new random key.
-     * @throws org.apache.directory.shared.kerberos.exceptions.KerberosException
-     */
-    public static EncryptionKey getRandomKey( EncryptionType encryptionType ) throws KerberosException, KrbException {
+    public static EncryptionKey getRandomKey( EncryptionType encryptionType ) throws KrbException {
         String algorithm = DEFAULT_CIPHERS.get( encryptionType );
 
         if ( algorithm == null )
         {
-            throw new KerberosException( ErrorType.KDC_ERR_ETYPE_NOSUPP, I18n.err( I18n.ERR_616,
-                encryptionType.name() ) );
+            throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP);
         }
 
         try
@@ -110,7 +83,7 @@ public class RandomKeyFactory
         }
         catch ( NoSuchAlgorithmException nsae )
         {
-            throw new KerberosException( ErrorType.KDC_ERR_ETYPE_NOSUPP, nsae );
+            throw new KrbException( KrbErrorCode.KDC_ERR_ETYPE_NOSUPP, nsae );
         }
     }
 }
