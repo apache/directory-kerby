@@ -1,5 +1,10 @@
 package org.haox.kerb.client;
 
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
@@ -102,22 +107,22 @@ public class KrbClient {
 
     /*
     public void run() throws Exception {
-        EventLoopGroup group = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
-            Bootstrap b = new Bootstrap();
-            b.group(group)
+            Bootstrap bs = new Bootstrap();
+            bs.group(workerGroup)
                     .channel(NioSocketChannel.class)
                     .handler(new KrbClientHandler());
 
             // Make the connection attempt.
-            ChannelFuture f = b.connect(kdcHost, kdcPort).sync();
-
+            ChannelFuture f = bs.connect(kdcHost, kdcPort).sync();
+            f.channel().write()
             // Wait until the connection is closed.
             f.channel().closeFuture().sync();
         } finally {
-            group.shutdownGracefully();
+            workerGroup.shutdownGracefully();
         }
-    } */
+    }*/
 
     private KrbMessage sendAndReceive(KdcRequest kdcRequest) throws KrbException {
         KdcReq kdcReq = kdcRequest.makeKdcRequest();

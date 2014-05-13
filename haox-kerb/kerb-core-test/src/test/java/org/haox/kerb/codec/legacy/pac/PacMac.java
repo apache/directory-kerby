@@ -1,6 +1,6 @@
 package org.haox.kerb.codec.legacy.pac;
 
-import org.haox.kerb.codec.DecodingUtil;
+import org.haox.kerb.codec.legacy.DecodingUtil;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;

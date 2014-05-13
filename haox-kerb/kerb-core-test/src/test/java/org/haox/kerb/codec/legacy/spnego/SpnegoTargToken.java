@@ -1,11 +1,10 @@
 package org.haox.kerb.codec.legacy.spnego;
 
 import org.bouncycastle.asn1.*;
+import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
 import org.haox.kerb.codec.legacy.DecodingException;
 import org.haox.kerb.codec.legacy.DecodingUtil;
-import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
 
-import java.io.IOException;
 import java.util.Enumeration;
 
 public class SpnegoTargToken extends SpnegoToken {
