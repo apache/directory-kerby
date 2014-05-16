@@ -7,7 +7,6 @@ import org.apache.directory.server.kerberos.shared.keytab.KeytabEntry;
 import org.apache.directory.shared.kerberos.KerberosTime;
 import org.apache.directory.shared.kerberos.codec.types.EncryptionType;
 import org.apache.directory.shared.kerberos.components.EncryptionKey;
-import org.haox.kerb.server.common.KdcConfigKey;
 import org.haox.kerb.server.identity.Identity;
 import org.haox.kerb.server.identity.KrbIdentity;
 import org.slf4j.Logger;

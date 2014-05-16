@@ -1,6 +1,6 @@
 package org.haox.kerb.server;
 
-import org.haox.kerb.common.crypto.encryption.EncryptionUtil;
+import org.haox.kerb.crypto.encryption.EncryptionUtil;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.NameType;
 

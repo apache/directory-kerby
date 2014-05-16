@@ -1,7 +1,7 @@
 package org.haox.kerb.server.sam;
 
 import org.apache.directory.server.i18n.I18n;
-import org.haox.kerb.server.shared.store.PrincipalStoreEntry;
+import org.haox.kerb.server.store.PrincipalStoreEntry;
 import org.haox.kerb.spec.type.common.SamType;
 
 import javax.naming.NamingException;

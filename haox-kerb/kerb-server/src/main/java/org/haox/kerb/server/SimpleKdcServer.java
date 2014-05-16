@@ -1,7 +1,5 @@
 package org.haox.kerb.server;
 
-import io.netty.channel.socket.SocketChannel;
-import org.haox.kerb.server.common.AbstractKdcServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

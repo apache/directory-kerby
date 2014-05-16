@@ -1,10 +1,9 @@
 package org.haox.kerb.server;
 
-import org.haox.kerb.client.KrbUtil;
-import org.haox.kerb.common.crypto.encryption.CipherTextHandler;
-import org.haox.kerb.server.common.KdcConfig;
-import org.haox.kerb.server.shared.replay.ReplayCheckService;
-import org.haox.kerb.server.shared.store.PrincipalStore;
+import org.haox.kerb.common.KrbUtil;
+import org.haox.kerb.crypto.encryption.CipherTextHandler;
+import org.haox.kerb.server.replay.ReplayCheckService;
+import org.haox.kerb.server.store.PrincipalStore;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.kdc.KdcReq;

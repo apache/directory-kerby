@@ -21,7 +21,7 @@ import org.apache.directory.server.core.kerberos.KeyDerivationInterceptor;
 import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmIndex;
 import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmPartition;
 import org.apache.directory.server.core.partition.ldif.LdifPartition;
-import org.haox.kerb.server.shared.replay.ReplayCheckService;
+import org.haox.kerb.server.replay.ReplayCheckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

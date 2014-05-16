@@ -1,7 +1,7 @@
 package org.haox.kerb.server.changepasswd;
 
 import org.haox.config.ConfigKey;
-import org.haox.kerb.server.common.KdcConfig;
+import org.haox.kerb.server.KdcConfig;
 
 public class ChangePasswordConfig extends KdcConfig
 {

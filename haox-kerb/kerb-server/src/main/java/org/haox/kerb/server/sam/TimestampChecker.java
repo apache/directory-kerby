@@ -1,6 +1,6 @@
 package org.haox.kerb.server.sam;
 
-import org.haox.kerb.common.crypto.encryption.CipherTextHandler;
+import org.haox.kerb.crypto.encryption.CipherTextHandler;
 
 import javax.security.auth.kerberos.KerberosKey;
 
