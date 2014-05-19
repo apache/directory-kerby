@@ -1,8 +1,8 @@
-package org.haox.kerb.common.transport;
+package org.haox.kerb.transport;
 
 import java.nio.channels.DatagramChannel;
 
-public class UdpTransport extends KrbTransport {
+public class UdpTransport extends Transport {
     private DatagramChannel channel;
 
     public UdpTransport(DatagramChannel channel, boolean isActive) {

@@ -1,8 +1,8 @@
-package org.haox.kerb.common.transport;
+package org.haox.kerb.transport;
 
 import java.nio.channels.SocketChannel;
 
-public class TcpTransport extends KrbTransport {
+public class TcpTransport extends Transport {
 
     private SocketChannel channel;
 

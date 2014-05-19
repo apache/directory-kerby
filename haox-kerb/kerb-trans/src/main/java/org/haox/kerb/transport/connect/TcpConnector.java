@@ -1,20 +1,20 @@
-package org.haox.kerb.common.transport.connect;
+package org.haox.kerb.transport.connect;
 
-import org.haox.kerb.common.transport.KrbTransport;
-import org.haox.kerb.common.transport.UdpTransport;
+import org.haox.kerb.transport.Transport;
+import org.haox.kerb.transport.UdpTransport;
 
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.channels.DatagramChannel;
 
-public class TcpConnector extends KrbConnector {
+public class TcpConnector extends Connector {
 
     public TcpConnector(String serverAddress, short serverPort) {
         super(serverAddress, serverPort);
     }
 
     @Override
-    protected KrbTransport doConnect(SocketAddress sa) throws IOException {
+    protected Transport doConnect(SocketAddress sa) throws IOException {
         DatagramChannel channel = DatagramChannel.open();
         channel.configureBlocking(true);
         channel.connect(sa);

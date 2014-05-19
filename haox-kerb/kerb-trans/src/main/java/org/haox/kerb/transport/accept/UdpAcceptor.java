@@ -1,7 +1,7 @@
-package org.haox.kerb.common.transport.accept;
+package org.haox.kerb.transport.accept;
 
-import org.haox.kerb.common.transport.KrbTransport;
-import org.haox.kerb.common.transport.UdpTransport;
+import org.haox.kerb.transport.Transport;
+import org.haox.kerb.transport.UdpTransport;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -10,7 +10,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 
-public abstract class UdpAcceptor extends KrbAcceptor {
+public abstract class UdpAcceptor extends Acceptor {
     private String address;
     private short listenPort;
     DatagramChannel serverSocketChannel = null;
@@ -36,7 +36,7 @@ public abstract class UdpAcceptor extends KrbAcceptor {
         if (selectionKey.isReadable()) {
             DatagramChannel datagramChannel =
                     (DatagramChannel) selectionKey.channel();
-            KrbTransport transport = new UdpTransport(datagramChannel, false);
+            Transport transport = new UdpTransport(datagramChannel, false);
             onNewTransport(transport);
             //transport.onReadable();
         }

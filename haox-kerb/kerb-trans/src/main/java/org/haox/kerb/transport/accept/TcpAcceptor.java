@@ -1,7 +1,7 @@
-package org.haox.kerb.common.transport.accept;
+package org.haox.kerb.transport.accept;
 
-import org.haox.kerb.common.transport.KrbTransport;
-import org.haox.kerb.common.transport.TcpTransport;
+import org.haox.kerb.transport.Transport;
+import org.haox.kerb.transport.TcpTransport;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,7 +10,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
-public abstract class TcpAcceptor extends KrbAcceptor {
+public abstract class TcpAcceptor extends Acceptor {
     ServerSocketChannel serverSocketChannel = null;
     private boolean tcpNoDelay = true;
 
@@ -49,7 +49,7 @@ public abstract class TcpAcceptor extends KrbAcceptor {
             channel.socket().setKeepAlive(true);
             channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
 
-            KrbTransport transport = new TcpTransport(channel, false);
+            Transport transport = new TcpTransport(channel, false);
             key.attach(transport);
 
             onNewTransport(transport);
@@ -57,13 +57,13 @@ public abstract class TcpAcceptor extends KrbAcceptor {
     }
 
     void doRead(SelectionKey selectionKey) throws IOException {
-        KrbTransport transport = (KrbTransport) selectionKey.attachment();
+        Transport transport = (Transport) selectionKey.attachment();
         transport.onReadable();
         selectionKey.interestOps(SelectionKey.OP_WRITE);
     }
 
     void doWrite(SelectionKey selectionKey) throws IOException {
-        KrbTransport transport = (KrbTransport) selectionKey.attachment();
+        Transport transport = (Transport) selectionKey.attachment();
         transport.onWriteable();
         selectionKey.interestOps(SelectionKey.OP_READ);
     }

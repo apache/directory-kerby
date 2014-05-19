@@ -1,14 +1,15 @@
-package org.haox.kerb.common.handler;
+package org.haox.kerb.handler;
 
-import org.haox.kerb.common.KrbRunnable;
-import org.haox.kerb.common.event.KrbEvent;
-import org.haox.kerb.common.event.TransportEvent;
-import org.haox.kerb.common.transport.KrbTransport;
+import org.haox.kerb.Actor;
+import org.haox.kerb.event.Event;
+import org.haox.kerb.event.EventType;
+import org.haox.kerb.event.TransportEvent;
+import org.haox.kerb.transport.Transport;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class AbstractTransportHandler extends KrbRunnable implements TransportHandler {
+public class AbstractTransportHandler extends Actor implements TransportHandler {
 
     private final BlockingQueue<TransportEvent> eventQueue;
 
@@ -18,12 +19,21 @@ public class AbstractTransportHandler extends KrbRunnable implements TransportHa
     }
 
     @Override
+    public EventType[] getInterestedEvents() {
+        return new EventType[] {
+                EventType.NEW_TRANSPORT,
+                EventType.READABLE_TRANSPORT,
+                EventType.WRITEABLE_TRANSPORT
+        };
+    }
+
+    @Override
     public void handleTransport(TransportEvent event) {
         eventQueue.add(event);
     }
 
     @Override
-    public void handle(KrbEvent event) {
+    public void handle(Event event) {
         if (! (event instanceof TransportEvent)) {
             throw new RuntimeException("Message dispatcher met non-transport event");
         }
@@ -32,9 +42,9 @@ public class AbstractTransportHandler extends KrbRunnable implements TransportHa
     }
 
     protected void process(TransportEvent event) {
-        KrbTransport transport = event.getTransport();
+        Transport transport = event.getTransport();
 
-        KrbEvent.EventType eventType = event.getEventType();
+        EventType eventType = event.getEventType();
         switch (eventType) {
             case NEW_TRANSPORT:
                 break;

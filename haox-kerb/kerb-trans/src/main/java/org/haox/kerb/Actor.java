@@ -1,11 +1,11 @@
-package org.haox.kerb.common;
+package org.haox.kerb;
 
-public abstract class KrbRunnable {
+public abstract class Actor {
     private volatile boolean stopped = false;
 
     private Thread thread;
 
-    public KrbRunnable() {
+    public Actor() {
 
     }
 

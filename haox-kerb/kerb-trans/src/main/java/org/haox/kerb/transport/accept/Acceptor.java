@@ -1,9 +1,9 @@
-package org.haox.kerb.common.transport.accept;
+package org.haox.kerb.transport.accept;
 
-import org.haox.kerb.common.dispatch.KrbDispatcher;
-import org.haox.kerb.common.KrbRunnable;
-import org.haox.kerb.common.event.TransportEvent;
-import org.haox.kerb.common.transport.KrbTransport;
+import org.haox.kerb.Actor;
+import org.haox.kerb.dispatch.Dispatcher;
+import org.haox.kerb.event.NewTransportEvent;
+import org.haox.kerb.transport.Transport;
 
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
@@ -11,14 +11,14 @@ import java.nio.channels.Selector;
 import java.util.Iterator;
 import java.util.Set;
 
-public abstract class KrbAcceptor extends KrbRunnable {
+public abstract class Acceptor extends Actor {
     protected String address;
     protected short listenPort;
     protected Selector selector = null;
 
-    private KrbDispatcher dispatcher;
+    private Dispatcher dispatcher;
 
-    public KrbAcceptor(String address, short listenPort) {
+    public Acceptor(String address, short listenPort) {
         this.address = address;
         this.listenPort = listenPort;
     }
@@ -50,7 +50,7 @@ public abstract class KrbAcceptor extends KrbRunnable {
 
     protected abstract void dealKey(SelectionKey selectionKey) throws IOException;
 
-    protected void onNewTransport(KrbTransport transport) {
-        dispatcher.dispatch(new TransportEvent(transport));
+    protected void onNewTransport(Transport transport) {
+        dispatcher.dispatch(new NewTransportEvent(transport));
     }
 }
