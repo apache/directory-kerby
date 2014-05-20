@@ -13,4 +13,11 @@ public class Message {
     public ByteBuffer[] getContents() {
         return this.buffers;
     }
+
+    public ByteBuffer getContent() {
+        if (buffers.length > 0) {
+            return buffers[0];
+        }
+        return null;
+    }
 }

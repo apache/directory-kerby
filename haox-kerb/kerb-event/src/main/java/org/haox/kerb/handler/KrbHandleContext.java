@@ -12,6 +12,6 @@ public class KrbHandleContext {
     }
 
     public void sendMessage(KrbMessage message) {
-        //transport.sendMessage(message);
+        //transport.postMessage(message);
     }
 }

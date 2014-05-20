@@ -8,10 +8,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kerb-trans</artifactId>
+    <artifactId>kerb-event</artifactId>
 
-    <name>Haox-kerb Transport</name>
-    <description>Haox-kerb Transport facilities for both client and server</description>
+    <name>Haox-kerb Event</name>
+    <description>Haox-kerb Event and Transport facilities for both client and server</description>
 
     <dependencies>
         <dependency>

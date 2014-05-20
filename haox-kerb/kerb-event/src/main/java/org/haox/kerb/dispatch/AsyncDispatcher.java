@@ -4,9 +4,6 @@ import org.haox.kerb.Actor;
 import org.haox.kerb.event.Event;
 import org.haox.kerb.event.EventType;
 import org.haox.kerb.handler.Handler;
-import org.haox.kerb.handler.KrbMessageDispatcher;
-import org.haox.kerb.handler.MessageHandler;
-import org.haox.kerb.handler.SimpleMessageHandler;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,10 +19,12 @@ public class AsyncDispatcher extends Actor implements Dispatcher {
         this.handlers = new ConcurrentHashMap<EventType, Handler>();
         this.eventQueue = new LinkedBlockingQueue<Event>();
 
+        /*
         KrbMessageDispatcher krbDispatcher = new KrbMessageDispatcher();
         MessageHandler msgHandler = new SimpleMessageHandler();
         register(krbDispatcher);
         register(msgHandler);
+        */
     }
 
     @Override
@@ -43,7 +42,9 @@ public class AsyncDispatcher extends Actor implements Dispatcher {
     protected void process(Event event) {
         EventType eventType = event.getEventType();
         Handler handler = handlers.get(eventType);
-        handler.handle(event);
+        if (handler != null) {
+            handler.handle(event);
+        }
     }
 
     @Override

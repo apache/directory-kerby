@@ -10,7 +10,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
-public abstract class TcpAcceptor extends Acceptor {
+public class TcpAcceptor extends Acceptor {
     ServerSocketChannel serverSocketChannel = null;
     private boolean tcpNoDelay = true;
 
@@ -57,13 +57,13 @@ public abstract class TcpAcceptor extends Acceptor {
     }
 
     void doRead(SelectionKey selectionKey) throws IOException {
-        Transport transport = (Transport) selectionKey.attachment();
+        TcpTransport transport = (TcpTransport) selectionKey.attachment();
         transport.onReadable();
         selectionKey.interestOps(SelectionKey.OP_WRITE);
     }
 
     void doWrite(SelectionKey selectionKey) throws IOException {
-        Transport transport = (Transport) selectionKey.attachment();
+        TcpTransport transport = (TcpTransport) selectionKey.attachment();
         transport.onWriteable();
         selectionKey.interestOps(SelectionKey.OP_READ);
     }

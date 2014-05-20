@@ -4,7 +4,7 @@ import org.haox.kerb.event.Event;
 import org.haox.kerb.event.EventType;
 import org.haox.kerb.event.MessageEvent;
 
-public class SimpleMessageHandler implements MessageHandler {
+public abstract class SimpleMessageHandler implements MessageHandler {
 
     @Override
     public EventType[] getInterestedEvents() {
@@ -15,9 +15,7 @@ public class SimpleMessageHandler implements MessageHandler {
     }
 
     @Override
-    public void handleMessage(MessageEvent event) {
-
-    }
+    public abstract void handleMessage(MessageEvent event);
 
     @Override
     public void handle(Event event) {

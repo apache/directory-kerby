@@ -1,6 +1,7 @@
 package org.haox.kerb.transport.accept;
 
 import org.haox.kerb.Actor;
+import org.haox.kerb.EventService;
 import org.haox.kerb.dispatch.Dispatcher;
 import org.haox.kerb.event.NewTransportEvent;
 import org.haox.kerb.transport.Transport;
@@ -21,6 +22,11 @@ public abstract class Acceptor extends Actor {
     public Acceptor(String address, short listenPort) {
         this.address = address;
         this.listenPort = listenPort;
+        this.dispatcher = EventService.getInstance();
+    }
+
+    public void setDispatcher(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
     }
 
     public void start() {
@@ -51,6 +57,7 @@ public abstract class Acceptor extends Actor {
     protected abstract void dealKey(SelectionKey selectionKey) throws IOException;
 
     protected void onNewTransport(Transport transport) {
+        transport.setDispatcher(dispatcher);
         dispatcher.dispatch(new NewTransportEvent(transport));
     }
 }
