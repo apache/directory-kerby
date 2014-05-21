@@ -1,9 +1,14 @@
 package org.haox.kerb.handler;
 
-import org.haox.kerb.event.MessageEvent;
+import org.haox.kerb.event.EventType;
 
-public interface MessageHandler extends Handler {
+public abstract class MessageHandler extends SyncEventHandler {
 
-    public void handleMessage(MessageEvent event);
-
+    @Override
+    public EventType[] getInterestedEvents() {
+        return new EventType[] {
+                EventType.NEW_INBOUND_MESSAGE,
+                EventType.NEW_OUTBOUND_MESSAGE
+        };
+    }
 }

@@ -1,7 +1,10 @@
 package org.haox.kerb.transport.accept;
 
-import org.haox.kerb.transport.Transport;
+import org.haox.kerb.event.Event;
+import org.haox.kerb.event.EventType;
+import org.haox.kerb.event.channel.TcpAddressBindEvent;
 import org.haox.kerb.transport.TcpTransport;
+import org.haox.kerb.transport.Transport;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,22 +14,17 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
 public class TcpAcceptor extends Acceptor {
-    ServerSocketChannel serverSocketChannel = null;
+
     private boolean tcpNoDelay = true;
 
-    public TcpAcceptor(String address, short listenPort) {
-        super(address, listenPort);
+    public TcpAcceptor() {
+        super();
     }
 
     @Override
-    protected void doStart() throws IOException {
-        super.doStart();
-
-        serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.configureBlocking(false);
-        ServerSocket serverSocket = serverSocketChannel.socket();
-        serverSocket.bind(new InetSocketAddress(listenPort));
-        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+    protected void doListen(InetSocketAddress socketAddress) {
+        TcpAddressBindEvent event = new TcpAddressBindEvent(socketAddress);
+        getDispatcher().dispatch(event);
     }
 
     @Override
@@ -67,4 +65,28 @@ public class TcpAcceptor extends Acceptor {
         transport.onWriteable();
         selectionKey.interestOps(SelectionKey.OP_READ);
     }
+
+    @Override
+    public void process(Event event) throws IOException {
+        switch (event.getEventType()) {
+            case TCP_ADDRESS_BIND:
+                doBind((TcpAddressBindEvent) event);
+        }
+    }
+
+    @Override
+    public EventType[] getInterestedEvents() {
+        return new EventType[] {
+                EventType.TCP_ADDRESS_BIND
+        };
+    }
+
+    protected void doBind(TcpAddressBindEvent event) throws IOException {
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.configureBlocking(false);
+        ServerSocket serverSocket = serverSocketChannel.socket();
+        serverSocket.bind(event.getAddress());
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+    }
+
 }

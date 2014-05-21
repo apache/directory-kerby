@@ -1,26 +1,21 @@
 package org.haox.kerb;
 
-public abstract class Actor {
-    private volatile boolean stopped = false;
+public abstract class AsyncEventActor extends EventActor {
 
     private Thread thread;
 
-    public Actor() {
-
+    public AsyncEventActor() {
+        super();
     }
 
-    public void init() {
-
-    }
-
-    public void start() {
+    @Override
+    protected void doStart() {
+        init();
         thread = new Thread(new TheRunnable());
         thread.start();
     }
 
-    public void stop() {
-        stopped = true;
-        stopped = true;
+    protected void doStop() {
         if (thread != null) {
             thread.interrupt();
             try {
@@ -31,14 +26,22 @@ public abstract class Actor {
         }
     }
 
-    public boolean isStopped() {
-        return stopped;
+    /**
+     * returns true to mean terminating the loop
+     */
+    protected boolean loopOnce() {
+        try {
+            return takeAndProcess();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     class TheRunnable implements Runnable {
         @Override
         public void run() {
-            while (!stopped && !Thread.currentThread().isInterrupted()) {
+            while (!isStopped() && !Thread.currentThread().isInterrupted()) {
                 try {
                     if (loopOnce()) break;
                 } catch (Exception e) {
@@ -47,9 +50,4 @@ public abstract class Actor {
             }
         }
     }
-
-    /**
-     * returns true to mean terminating the loop
-     */
-    protected abstract boolean loopOnce() throws Exception;
 }

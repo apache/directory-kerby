@@ -1,53 +1,36 @@
 package org.haox.kerb.handler;
 
-import org.haox.kerb.Actor;
+import org.haox.kerb.event.Event;
+import org.haox.kerb.event.EventType;
 import org.haox.kerb.event.KrbMessageEvent;
 import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.transport.Transport;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-public abstract class AsyncKrbMessageHandler extends Actor implements KrbMessageHandler {
-
-    private final BlockingQueue<KrbMessageEvent> eventQueue;
+public abstract class AsyncKrbMessageHandler extends AsyncEventHandler {
 
     public AsyncKrbMessageHandler() {
         super();
-        this.eventQueue = new LinkedBlockingQueue<KrbMessageEvent>();
     }
 
     @Override
-    public void handleMessage(KrbMessageEvent event) {
-        eventQueue.add(event);
+    public EventType[] getInterestedEvents() {
+        return new EventType[] {
+                EventType.NEW_INBOUND_KRBMESSAGE,
+                EventType.NEW_OUTBOUND_KRBMESSAGE
+        };
     }
 
-    protected void process(KrbMessageEvent event) {
-        KrbMessage message = event.getMessage();
-        Transport transport = event.getTransport();
+    @Override
+    public void process(Event event) {
+        KrbMessageEvent ke = (KrbMessageEvent) event;
+        KrbMessage message = ke.getMessage();
+        Transport transport = ke.getTransport();
 
         KrbHandleContext hctx = new KrbHandleContext(transport);
-        handleMessage(hctx, message);
+        process(hctx, message);
     }
 
-    protected abstract void handleMessage(KrbHandleContext hctx, KrbMessage message);
+    protected abstract void process(KrbHandleContext hctx, KrbMessage message);
 
-    @Override
-    protected boolean loopOnce() {
-        KrbMessageEvent event;
-        try {
-            event = eventQueue.take();
-        } catch(InterruptedException ie) {
-            if (!isStopped()) {
-                //LOG.warn("AsyncDispatcher thread interrupted", ie);
-            }
-            return true;
-        }
-        if (event != null) {
-            process(event);
-        }
-
-        return false;
-    }
 }
 

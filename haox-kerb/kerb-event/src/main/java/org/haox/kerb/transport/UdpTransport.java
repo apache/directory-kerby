@@ -26,6 +26,7 @@ public class UdpTransport extends Transport {
 
     @Override
     protected void doSendMessage(Message message) throws IOException {
-        channel.send(message.getContents()[0], getRemoteAddress());
+        ByteBuffer buffer = message.getContent();
+        channel.send(buffer, getRemoteAddress());
     }
 }
