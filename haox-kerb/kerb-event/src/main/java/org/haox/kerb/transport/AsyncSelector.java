@@ -29,7 +29,6 @@ public abstract class AsyncSelector extends AsyncEventHandler {
 
     @Override
     protected boolean loopOnce() {
-        selector.wakeup();
         boolean checkResult = false;
         try {
             checkResult = checkAndProcess();
@@ -47,13 +46,14 @@ public abstract class AsyncSelector extends AsyncEventHandler {
     }
 
     protected void selectOnce() throws IOException {
-        selector.selectNow();
-        Set<SelectionKey> selectionKeys = selector.selectedKeys();
-        Iterator<SelectionKey> iterator = selectionKeys.iterator();
-        while (iterator.hasNext()) {
-            SelectionKey selectionKey = iterator.next();
-            iterator.remove();
-            dealKey(selectionKey);
+        if (selector.selectNow() > 0) {
+            Set<SelectionKey> selectionKeys = selector.selectedKeys();
+            Iterator<SelectionKey> iterator = selectionKeys.iterator();
+            while (iterator.hasNext()) {
+                SelectionKey selectionKey = iterator.next();
+                iterator.remove();
+                dealKey(selectionKey);
+            }
         }
     }
 

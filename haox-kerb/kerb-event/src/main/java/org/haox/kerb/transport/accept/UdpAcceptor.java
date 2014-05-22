@@ -71,7 +71,7 @@ public class UdpAcceptor extends Acceptor {
         DatagramChannel serverSocketChannel = DatagramChannel.open();
         serverSocketChannel.configureBlocking(false);
         DatagramSocket serverSocket = serverSocketChannel.socket();
-        serverSocket.bind(new InetSocketAddress(event.getAddress().getPort()));
+        serverSocket.bind(event.getAddress());
         serverSocketChannel.register(selector, SelectionKey.OP_READ);
     }
 
