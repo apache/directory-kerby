@@ -1,6 +1,6 @@
 package org.haox.kerb.codec.pac;
 
-import org.haox.kerb.codec.DecodingException;
+import java.io.IOException;
 
 public class PacSid {
 
@@ -11,10 +11,10 @@ public class PacSid {
     private byte[] authority;
     private byte[] subs;
 
-    public PacSid(byte[] bytes) throws DecodingException {
+    public PacSid(byte[] bytes) throws IOException {
         if(bytes.length < 8 || ((bytes.length - 8) % 4) != 0
                 || ((bytes.length - 8) / 4) != bytes[1])
-            throw new DecodingException("pac.sid.malformed.size", null, null);
+            throw new IOException("pac.sid.malformed.size");
 
         this.revision = bytes[0];
         this.subCount = bytes[1];
@@ -82,10 +82,10 @@ public class PacSid {
         return builder.toString();
     }
 
-    public static PacSid createFromSubs(byte[] bytes) throws DecodingException {
+    public static PacSid createFromSubs(byte[] bytes) throws IOException {
         if((bytes.length % 4) != 0) {
             Object[] args = new Object[]{bytes.length};
-            throw new DecodingException("pac.subauthority.malformed.size", args, null);
+            throw new IOException("pac.subauthority.malformed.size");
         }
 
         byte[] sidBytes = new byte[8 + bytes.length];

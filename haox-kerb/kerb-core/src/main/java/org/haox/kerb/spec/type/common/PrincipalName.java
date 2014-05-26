@@ -94,6 +94,32 @@ public class PrincipalName extends KrbSequenceType {
         return sb.toString();
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null || ! (other instanceof PrincipalName)) {
+            return false;
+        } else if (this == other) {
+            return true;
+        }
+
+        PrincipalName otherPrincipal = (PrincipalName) other;
+        if (getNameType() != ((PrincipalName) other).getNameType()) {
+            return false;
+        }
+
+        return getName().equals(otherPrincipal.getName());
+    }
+
     private static List<String> makeNameStrings(String nameString) {
         String realm = null;
         List<String> nameStrings;

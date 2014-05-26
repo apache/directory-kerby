@@ -35,7 +35,7 @@ public abstract class KdcContext
     /** The encryption type */
     private EncryptionType encryptionType;
 
-    /** the replay cache */
+    /** the replay ccache */
     private ReplayCheckService replayCache;
 
     public KdcConfig getConfig() {
@@ -157,7 +157,7 @@ public abstract class KdcContext
     }
     
     /**
-     * sets the replay cache
+     * sets the replay ccache
      *
      * @param replayCache
      */
@@ -168,7 +168,7 @@ public abstract class KdcContext
 
 
     /**
-     * @return the replay cache
+     * @return the replay ccache
      */
     public ReplayCheckService getReplayCache()
     {

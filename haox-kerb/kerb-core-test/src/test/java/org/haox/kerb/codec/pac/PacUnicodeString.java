@@ -1,6 +1,6 @@
 package org.haox.kerb.codec.pac;
 
-import org.haox.kerb.codec.DecodingException;
+import java.io.IOException;
 
 public class PacUnicodeString {
 
@@ -27,14 +27,14 @@ public class PacUnicodeString {
         return pointer;
     }
 
-    public String check(String string) throws DecodingException {
+    public String check(String string) throws IOException {
         if(pointer == 0 && string != null)
-            throw new DecodingException("pac.string.notempty", null, null);
+            throw new IOException("pac.string.notempty");
 
         int expected = length / 2;
         if(string.length() != expected) {
             Object[] args = new Object[]{expected, string.length()};
-            throw new DecodingException("pac.string.invalid.size", args, null);
+            throw new IOException("pac.string.invalid.size");
         }
 
         return string;

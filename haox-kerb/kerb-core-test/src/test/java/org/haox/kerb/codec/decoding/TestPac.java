@@ -1,15 +1,13 @@
 package org.haox.kerb.codec.decoding;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.crypto.spec.SecretKeySpec;
-
-import org.haox.kerb.codec.DecodingException;
 import org.haox.kerb.codec.pac.Pac;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class TestPac {
 
@@ -68,7 +66,7 @@ public class TestPac {
             Assert.assertEquals("DOMAIN", pac.getLogonInfo().getDomainName());
             Assert.assertEquals("WS2008", pac.getLogonInfo().getServerName());
 
-        } catch(DecodingException e) {
+        } catch(IOException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
         }
@@ -90,7 +88,7 @@ public class TestPac {
             Assert.assertEquals("DOMAIN", pac.getLogonInfo().getDomainName());
             Assert.assertEquals("WS2008", pac.getLogonInfo().getServerName());
 
-        } catch(DecodingException e) {
+        } catch(IOException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
         }
@@ -102,7 +100,7 @@ public class TestPac {
         try {
             pac = new Pac(corruptData, rc4Key);
             Assert.fail("Should have thrown DecodingException.");
-        } catch(DecodingException e) {
+        } catch(IOException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(pac);
         }
@@ -114,7 +112,7 @@ public class TestPac {
         try {
             pac = new Pac(new byte[0], rc4Key);
             Assert.fail("Should have thrown DecodingException.");
-        } catch(DecodingException e) {
+        } catch(IOException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(pac);
         }
@@ -126,7 +124,7 @@ public class TestPac {
         try {
             pac = new Pac(null, rc4Key);
             Assert.fail("Should have thrown NullPointerException.");
-        } catch(DecodingException e) {
+        } catch(IOException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
         } catch(NullPointerException e) {
@@ -140,8 +138,8 @@ public class TestPac {
         Pac pac = null;
         try {
             pac = new Pac(rc4Data, corruptKey);
-            Assert.fail("Should have thrown DecodingException.");
-        } catch(DecodingException e) {
+            Assert.fail("Should have thrown IOException.");
+        } catch(IOException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(pac);
         }

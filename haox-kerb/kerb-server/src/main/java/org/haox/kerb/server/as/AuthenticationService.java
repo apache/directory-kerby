@@ -5,14 +5,15 @@ import org.apache.directory.server.i18n.I18n;
 import org.apache.directory.shared.kerberos.KerberosConstants;
 import org.apache.directory.shared.kerberos.exceptions.InvalidTicketException;
 import org.haox.kerb.codec.KrbCodec;
+import org.haox.kerb.common.KrbUtil;
 import org.haox.kerb.crypto.encryption.CipherTextHandler;
 import org.haox.kerb.crypto.encryption.EncryptionUtil;
 import org.haox.kerb.crypto.encryption.KeyUsage;
 import org.haox.kerb.crypto.encryption.RandomKeyFactory;
+import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.KerberosUtils;
 import org.haox.kerb.server.PaUtil;
-import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.sam.SamException;
 import org.haox.kerb.server.sam.SamSubsystem;
 import org.haox.kerb.server.store.PrincipalStore;
@@ -170,7 +171,7 @@ public class AuthenticationService
                     {
                         KerberosKey samKey = SamSubsystem.getInstance().verify(clientEntry,
                                 paData.getPaDataValue());
-                        clientKey = EncryptionUtil.createEncryptionKey(
+                        clientKey = KrbUtil.createEncryptionKey(
                                 EncryptionType.fromValue(samKey.getKeyType()), samKey.getEncoded());
                     }
                 }
@@ -256,7 +257,7 @@ public class AuthenticationService
                  *         error_out(KDC_ERR_PREAUTH_FAILED);
                  * endif
                  * 
-                 * add decrypted_enc_timestamp and usec to replay cache;
+                 * add decrypted_enc_timestamp and usec to replay ccache;
                  */
             }
         }

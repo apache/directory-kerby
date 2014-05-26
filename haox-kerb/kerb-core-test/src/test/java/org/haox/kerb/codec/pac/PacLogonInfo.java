@@ -1,7 +1,5 @@
 package org.haox.kerb.codec.pac;
 
-import org.haox.kerb.codec.DecodingException;
-
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -33,7 +31,7 @@ public class PacLogonInfo {
     private int userAccountControl;
     private int userFlags;
 
-    public PacLogonInfo(byte[] data) throws DecodingException {
+    public PacLogonInfo(byte[] data) throws IOException {
         try {
             PacDataInputStream pacStream = new PacDataInputStream(new DataInputStream(
                     new ByteArrayInputStream(data)));
@@ -117,7 +115,7 @@ public class PacLogonInfo {
                 int realGroupCount = pacStream.readInt();
                 if(realGroupCount != groupCount) {
                     Object[] args = new Object[]{groupCount, realGroupCount};
-                    throw new DecodingException("pac.groups.invalid.size", args, null);
+                    throw new IOException("pac.groups.invalid.size");
                 }
                 groups = new PacGroup[groupCount];
                 for(int i = 0; i < groupCount; i++) {
@@ -143,7 +141,7 @@ public class PacLogonInfo {
                 int realExtraSidCount = pacStream.readInt();
                 if(realExtraSidCount != extraSidCount) {
                     Object[] args = new Object[]{extraSidCount, realExtraSidCount};
-                    throw new DecodingException("pac.extrasids.invalid.size", args, null);
+                    throw new IOException("pac.extrasids.invalid.size");
                 }
                 extraSidAtts = new PacSidAttributes[extraSidCount];
                 int[] pointers = new int[extraSidCount];
@@ -169,7 +167,7 @@ public class PacLogonInfo {
                 int realResourceGroupCount = pacStream.readInt();
                 if(realResourceGroupCount != resourceGroupCount) {
                     Object[] args = new Object[]{resourceGroupCount, realResourceGroupCount};
-                    throw new DecodingException("pac.resourcegroups.invalid.size", args, null);
+                    throw new IOException("pac.resourcegroups.invalid.size");
                 }
                 resourceGroups = new PacGroup[resourceGroupCount];
                 for(int i = 0; i < resourceGroupCount; i++) {
@@ -206,7 +204,7 @@ public class PacLogonInfo {
                 groupSids[i] = PacSid.append(domainId, groups[i].getId());
             }
         } catch(IOException e) {
-            throw new DecodingException("pac.logoninfo.malformed", null, e);
+            throw new IOException("pac.logoninfo.malformed", e);
         }
     }
 

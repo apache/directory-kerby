@@ -5,7 +5,6 @@ import org.haox.kerb.codec.DecodingException;
 import org.haox.kerb.codec.DecodingUtil;
 import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
 
-import java.io.IOException;
 import java.util.Enumeration;
 
 public class SpnegoTargToken extends SpnegoToken {
@@ -20,11 +19,7 @@ public class SpnegoTargToken extends SpnegoToken {
     public SpnegoTargToken(byte[] token) throws DecodingException {
         HaoxASN1InputStream stream = new HaoxASN1InputStream(token);
         ASN1TaggedObject tagged;
-        try {
-            tagged = DecodingUtil.as(ASN1TaggedObject.class, stream);
-        } catch(IOException e) {
-            throw new DecodingException("spnego.token.malformed", null, e);
-        }
+        tagged = DecodingUtil.as(ASN1TaggedObject.class, stream);
 
         ASN1Sequence sequence = ASN1Sequence.getInstance(tagged, true);
         Enumeration<?> fields = sequence.getObjects();

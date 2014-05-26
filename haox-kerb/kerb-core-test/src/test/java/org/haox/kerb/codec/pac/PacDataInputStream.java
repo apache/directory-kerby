@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.Date;
 
-import org.haox.kerb.codec.DecodingException;
-
 public class PacDataInputStream {
 
     private DataInputStream dis;
@@ -90,25 +88,25 @@ public class PacDataInputStream {
         return date;
     }
 
-    public PacUnicodeString readUnicodeString() throws IOException, DecodingException {
+    public PacUnicodeString readUnicodeString() throws IOException {
         short length = readShort();
         short maxLength = readShort();
         int pointer = readInt();
 
         if(maxLength < length) {
-            throw new DecodingException("pac.string.malformed.size", null, null);
+            throw new IOException("pac.string.malformed.size");
         }
 
         return new PacUnicodeString(length, maxLength, pointer);
     }
 
-    public String readString() throws IOException, DecodingException {
+    public String readString() throws IOException {
         int totalChars = readInt();
         int unusedChars = readInt();
         int usedChars = readInt();
 
         if(unusedChars > totalChars || usedChars > totalChars - unusedChars)
-            throw new DecodingException("pac.string.malformed.size", null, null);
+            throw new IOException("pac.string.malformed.size");
 
         dis.skip(unusedChars * 2);
         char[] chars = new char[usedChars];
@@ -118,14 +116,14 @@ public class PacDataInputStream {
         return new String(chars);
     }
 
-    public PacSid readId() throws IOException, DecodingException {
+    public PacSid readId() throws IOException {
         byte[] bytes = new byte[4];
         readFully(bytes);
 
         return PacSid.createFromSubs(bytes);
     }
 
-    public PacSid readSid() throws IOException, DecodingException {
+    public PacSid readSid() throws IOException {
         int sidSize = readInt();
 
         byte[] bytes = new byte[8 + sidSize * 4];

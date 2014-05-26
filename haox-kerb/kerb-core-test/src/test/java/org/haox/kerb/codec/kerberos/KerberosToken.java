@@ -2,7 +2,6 @@ package org.haox.kerb.codec.kerberos;
 
 import org.haox.asn1.Asn1InputBuffer;
 import org.haox.asn1.type.Asn1Item;
-import org.haox.kerb.codec.DecodingException;
 
 import javax.security.auth.kerberos.KerberosKey;
 import java.io.IOException;
@@ -11,21 +10,21 @@ public class KerberosToken {
 
     private KerberosApRequest apRequest;
 
-    public KerberosToken(byte[] token) throws DecodingException {
+    public KerberosToken(byte[] token) throws IOException {
         this(token, null);
     }
 
-    public KerberosToken(byte[] token, KerberosKey[] keys) throws DecodingException {
+    public KerberosToken(byte[] token, KerberosKey[] keys) throws IOException {
 
         if(token.length <= 0)
-                    throw new DecodingException("kerberos.token.empty", null, null);
+                    throw new IOException("kerberos.token.empty");
 
         try {
             Asn1InputBuffer buffer = new Asn1InputBuffer(token);
 
             Asn1Item value = (Asn1Item) buffer.read();
             if(! value.isAppSpecific() && ! value.isConstructed())
-                throw new DecodingException("kerberos.token.malformed", null, null);
+                throw new IOException("kerberos.token.malformed");
 
             buffer = new Asn1InputBuffer(value.getBodyContent());
             buffer.skipNext();
@@ -34,7 +33,7 @@ public class KerberosToken {
 
             apRequest = new KerberosApRequest(buffer.readAllLeftBytes(), keys);
         } catch(IOException e) {
-            throw new DecodingException("kerberos.token.malformed", null, e);
+            throw new IOException("kerberos.token.malformed", e);
         }
     }
 

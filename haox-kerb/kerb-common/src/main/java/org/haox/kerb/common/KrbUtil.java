@@ -1,5 +1,6 @@
 package org.haox.kerb.common;
 
+import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.util.ArrayList;
@@ -45,5 +46,13 @@ public class KrbUtil {
         }
 
         return Collections.emptyList();
+    }
+
+    public static EncryptionKey createEncryptionKey(EncryptionType type, byte[] keyData) {
+        EncryptionKey ekey = new EncryptionKey();
+        ekey.setKeyType(type);
+        ekey.setKeyData(keyData);
+
+        return ekey;
     }
 }

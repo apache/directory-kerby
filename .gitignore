@@ -8,3 +8,5 @@ target/
 *.project
 bc.zip
 log.txt
+*.ipr
+*.iws

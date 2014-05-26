@@ -1,6 +1,6 @@
 package org.haox.kerb.codec.pac;
 
-import org.haox.kerb.codec.DecodingException;
+import java.io.IOException;
 
 /**
  * Structure representing the PAC_CREDENTIAL_TYPE record
@@ -13,10 +13,10 @@ public class PacCredentialType {
 
     private byte[] credentialType;
 
-    public PacCredentialType(byte[] data) throws DecodingException {
+    public PacCredentialType(byte[] data) throws IOException {
         credentialType = data;
         if(!isCredentialTypeCorrect()) {
-            throw new DecodingException("pac.credentialtype.malformed");
+            throw new IOException("pac.credentialtype.malformed");
         }
     }
 

@@ -1,8 +1,6 @@
 package org.haox.kerb.codec.kerberos;
 
-import org.haox.kerb.codec.DecodingException;
 import org.haox.kerb.codec.KrbCodec;
-import org.haox.kerb.codec.legacy.kerberos.KerberosCredentials;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.ap.ApOptions;
 import org.haox.kerb.spec.type.common.AuthorizationData;
@@ -11,7 +9,7 @@ import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
 import javax.security.auth.kerberos.KerberosKey;
-import javax.security.auth.login.LoginException;
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 public class KerberosTicket {
@@ -20,38 +18,17 @@ public class KerberosTicket {
     private Ticket ticket;
 
     public KerberosTicket(Ticket ticket, ApOptions apOptions, KerberosKey[] keys)
-            throws DecodingException, KrbException {
+            throws KrbException, IOException {
         this.ticket = ticket;
 
         EncryptionType etype = ticket.getEncryptedEncPart().getEType();
         byte[] crypt = ticket.getEncryptedEncPart().getCipher();
 
-        if(keys == null) {
-            try {
-                keys = new KerberosCredentials().getKeys();
-            } catch(LoginException e) {
-                throw new DecodingException("kerberos.login.fail", null, e);
-            }
-        }
-
-        KerberosKey serverKey = null;
-        for(KerberosKey key : keys) {
-            if(key.getKeyType() == etype.getValue())
-                serverKey = key;
-        }
-
-        if(serverKey == null) {
-            Object[] args = new Object[]{etype.getValue()};
-            throw new DecodingException("kerberos.key.notfound", args, null);
-        }
-
         byte[] decrypted = null;
         try {
-            decrypted = KerberosEncData.decrypt(crypt, serverKey, serverKey.getKeyType());
-            //encData = new KerberosEncData(decrypted, serverKey);
+            decrypted = KerberosEncData.decrypt(crypt, etype);
         } catch(GeneralSecurityException e) {
-            Object[] args = new Object[]{serverKey.getKeyType()};
-            throw new DecodingException("kerberos.decrypt.fail", args, e);
+            throw new IOException("kerberos.decrypt.fail", e);
         }
 
         try {

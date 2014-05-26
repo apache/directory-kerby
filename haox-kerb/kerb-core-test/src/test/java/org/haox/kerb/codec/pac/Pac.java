@@ -1,7 +1,5 @@
 package org.haox.kerb.codec.pac;
 
-import org.haox.kerb.codec.DecodingException;
-
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -16,21 +14,21 @@ public class Pac {
     private PacSignature serverSignature;
     private PacSignature kdcSignature;
 
-    public Pac(byte[] data, Key key) throws DecodingException {
+    public Pac(byte[] data, Key key) throws IOException {
         byte[] checksumData = data.clone();
         try {
             PacDataInputStream pacStream = new PacDataInputStream(new DataInputStream(
                     new ByteArrayInputStream(data)));
 
             if(data.length <= 8)
-                throw new DecodingException("pac.token.empty", null, null);
+                throw new IOException("pac.token.empty");
 
             int bufferCount = pacStream.readInt();
             int version = pacStream.readInt();
 
             if(version != PacConstants.PAC_VERSION) {
                 Object[] args = new Object[]{version};
-                throw new DecodingException("pac.version.invalid", args, null);
+                throw new IOException("pac.version.invalid");
             }
 
             for(int bufferIndex = 0; bufferIndex < bufferCount; bufferIndex++) {
@@ -67,7 +65,7 @@ public class Pac {
                 }
             }
         } catch(IOException e) {
-            throw new DecodingException("pac.token.malformed", null, e);
+            throw new IOException("pac.token.malformed", e);
         }
 
         PacMac mac = new PacMac();
@@ -75,12 +73,12 @@ public class Pac {
             mac.init(key);
             mac.update(checksumData);
         } catch(NoSuchAlgorithmException e) {
-            throw new DecodingException("pac.check.fail", null, e);
+            throw new IOException("pac.check.fail", e);
         }
 
         byte checksum[] = mac.doFinal();
         if(!Arrays.equals(serverSignature.getChecksum(), checksum))
-            throw new DecodingException("pac.signature.invalid", null, null);
+            throw new IOException("pac.signature.invalid", null);
     }
 
     public PacLogonInfo getLogonInfo() {

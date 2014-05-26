@@ -28,6 +28,10 @@ public class KrbFlags extends Asn1BitString {
         flags2Value();
     }
 
+    public int getFlags() {
+        return flags;
+    }
+
     public boolean isFlagSet(int flag) {
         return (flags & (1 << flagPos(flag))) != 0;
     }

@@ -1,14 +1,13 @@
 package org.haox.kerb.codec.decoding;
 
-import org.haox.kerb.codec.DecodingException;
+import org.haox.kerb.codec.kerberos.AuthzDataUtil;
+import org.haox.kerb.codec.kerberos.KerberosEncData;
 import org.haox.kerb.codec.kerberos.KerberosTicket;
 import org.haox.kerb.codec.kerberos.KerberosToken;
-import org.haox.kerb.codec.kerberos.KerberosPacAuthData;
 import org.haox.kerb.codec.pac.Pac;
 import org.haox.kerb.codec.pac.PacLogonInfo;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.AuthorizationData;
-import org.haox.kerb.spec.type.common.AuthorizationDataEntry;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -99,7 +98,7 @@ public class TestKerberos {
             Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
             Assert.assertEquals("user.test", ticket.getUserPrincipalName());
             Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
-        } catch(DecodingException e) {
+        } catch(IOException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
         }
@@ -119,7 +118,7 @@ public class TestKerberos {
             Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
             Assert.assertEquals("user.test@domain.com", ticket.getUserPrincipalName());
             Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
-        } catch(DecodingException e) {
+        } catch(IOException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
         }
@@ -130,8 +129,8 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(aes128Token, aes128Keys);
-            Assert.fail("Should have thrown DecodingException.");
-        } catch(DecodingException e) {
+            Assert.fail("Should have thrown IOException.");
+        } catch(IOException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
@@ -142,8 +141,8 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(aes256Token, aes256Keys);
-            Assert.fail("Should have thrown DecodingException.");
-        } catch(DecodingException e) {
+            Assert.fail("Should have thrown IOException.");
+        } catch(IOException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
@@ -154,8 +153,8 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(corruptToken, rc4Keys);
-            Assert.fail("Should have thrown DecodingException.");
-        } catch(DecodingException e) {
+            Assert.fail("Should have thrown IOException.");
+        } catch(IOException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
@@ -166,8 +165,8 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(new byte[0], rc4Keys);
-            Assert.fail("Should have thrown DecodingException.");
-        } catch(DecodingException e) {
+            Assert.fail("Should have thrown IOException.");
+        } catch(IOException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
@@ -179,7 +178,7 @@ public class TestKerberos {
         try {
             token = new KerberosToken(null, rc4Keys);
             Assert.fail("Should have thrown NullPointerException.");
-        } catch(DecodingException e) {
+        } catch(IOException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
         } catch(NullPointerException e) {
@@ -193,8 +192,8 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(rc4Token, corruptKeys);
-            Assert.fail("Should have thrown DecodingException.");
-        } catch(DecodingException e) {
+            Assert.fail("Should have thrown IOException.");
+        } catch(IOException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
@@ -205,8 +204,8 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(rc4Token, desKeys);
-            Assert.fail("Should have thrown DecodingException.");
-        } catch(DecodingException e) {
+            Assert.fail("Should have thrown IOException.");
+        } catch(IOException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
@@ -227,22 +226,15 @@ public class TestKerberos {
             Assert.assertNotNull(authzData);
             Assert.assertTrue(authzData.getElements().size() > 0);
 
-            if (false) {
-                Pac pac = null;
-                for(AuthorizationDataEntry authData : authzData.getElements()) {
-                    /*
-                    if(authData instanceof KerberosPacAuthData)
-                        pac = ((KerberosPacAuthData)authData).getPac();
-                        */
-                }
-                Assert.assertNotNull(pac);
+            Pac pac = AuthzDataUtil.getPac(authzData,
+                    KerberosEncData.getServerKey(ticket.getTicket().getEncPart().getKey().getKeyType()));
+            Assert.assertNotNull(pac);
 
-                PacLogonInfo logonInfo = pac.getLogonInfo();
-                Assert.assertNotNull(logonInfo);
+            PacLogonInfo logonInfo = pac.getLogonInfo();
+            Assert.assertNotNull(logonInfo);
 
-                Assert.assertEquals(ticket.getUserPrincipalName(), logonInfo.getUserName());
-            }
-        } catch(DecodingException e) {
+            Assert.assertEquals(ticket.getUserPrincipalName(), logonInfo.getUserName());
+        } catch(IOException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
         }

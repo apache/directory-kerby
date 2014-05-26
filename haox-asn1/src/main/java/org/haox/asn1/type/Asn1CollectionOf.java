@@ -29,6 +29,20 @@ public abstract class Asn1CollectionOf<T extends Asn1Type> extends Asn1Collectio
         return results;
     }
 
+    public void setElements(List<T> elements) {
+        super.clear();
+
+        for (T ele : elements) {
+            addElement(ele);
+        }
+    }
+
+    public void addElements(T ... elements) {
+        for (T ele : elements) {
+            addElement(ele);
+        }
+    }
+
     public void addElement(T element) {
         super.addItem(element);
     }

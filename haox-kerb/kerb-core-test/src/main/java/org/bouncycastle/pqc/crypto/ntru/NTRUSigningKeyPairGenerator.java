@@ -243,7 +243,7 @@ public class NTRUSigningKeyPairGenerator
             IntegerPolynomial t = f.mult(fRev);
             t.add(g.mult(gRev));
             Resultant rt = t.resultant();
-            C = fRev.mult(B);   // fRev.mult(B) is actually faster than new SparseTernaryPolynomial(fRev).mult(B), possibly due to cache locality?
+            C = fRev.mult(B);   // fRev.mult(B) is actually faster than new SparseTernaryPolynomial(fRev).mult(B), possibly due to ccache locality?
             C.add(gRev.mult(A));
             C = C.mult(rt.rho);
             C.div(rt.res);

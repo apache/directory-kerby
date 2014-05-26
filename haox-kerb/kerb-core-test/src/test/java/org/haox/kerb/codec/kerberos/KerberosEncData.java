@@ -1,147 +1,49 @@
 package org.haox.kerb.codec.kerberos;
 
-import org.bouncycastle.asn1.*;
-import org.haox.kerb.codec.DecodingException;
 import org.haox.kerb.codec.DecodingUtil;
+import org.haox.kerb.spec.type.common.EncryptionType;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.ByteArrayInputStream;
+import javax.security.auth.kerberos.KerberosKey;
+import javax.security.auth.login.LoginException;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 public class KerberosEncData {
 
-    private String userRealm;
-    private String userPrincipalName;
-    private ArrayList<InetAddress> userAddresses;
-    private List<KerberosAuthData> userAuthorizations;
-
-    public KerberosEncData(byte[] token, Key key) throws DecodingException {
-        ASN1InputStream stream = new ASN1InputStream(new ByteArrayInputStream(token));
-        DERApplicationSpecific derToken;
-        try {
-            derToken = DecodingUtil.as(DERApplicationSpecific.class, stream);
-            if(!derToken.isConstructed())
-                throw new DecodingException("kerberos.ticket.malformed", null, null);
-            stream.close();
-        } catch(IOException e) {
-            throw new DecodingException("kerberos.ticket.malformed", null, e);
-        }
-
-        stream = new ASN1InputStream(new ByteArrayInputStream(derToken.getContents()));
-        ASN1Sequence sequence;
-        try {
-            sequence = DecodingUtil.as(ASN1Sequence.class, stream);
-            stream.close();
-        } catch(IOException e) {
-            throw new DecodingException("kerberos.ticket.malformed", null, e);
-        }
-
-        Enumeration<?> fields = sequence.getObjects();
-        while(fields.hasMoreElements()) {
-            ASN1TaggedObject tagged = DecodingUtil.as(ASN1TaggedObject.class, fields);
-
-            switch (tagged.getTagNo()) {
-            case 0: // Ticket Flags
-                break;
-            case 1: // Key
-                break;
-            case 2: // Realm
-                DERGeneralString derRealm = DecodingUtil.as(DERGeneralString.class, tagged);
-                userRealm = derRealm.getString();
-                break;
-            case 3: // Principal
-                DERSequence principalSequence = DecodingUtil.as(DERSequence.class, tagged);
-                DERSequence nameSequence = DecodingUtil.as(DERSequence.class, DecodingUtil.as(
-                        DERTaggedObject.class, principalSequence, 1));
-
-                StringBuilder nameBuilder = new StringBuilder();
-                Enumeration<?> parts = nameSequence.getObjects();
-                while(parts.hasMoreElements()) {
-                    Object part = parts.nextElement();
-                    DERGeneralString stringPart = DecodingUtil.as(DERGeneralString.class, part);
-                    nameBuilder.append(stringPart.getString());
-                    if(parts.hasMoreElements())
-                        nameBuilder.append('/');
-                }
-                userPrincipalName = nameBuilder.toString();
-                break;
-            case 4: // Transited Encoding
-                break;
-            case 5: // Kerberos Time
-                // DERGeneralizedTime derTime = KerberosUtil.readAs(tagged,
-                // DERGeneralizedTime.class);
-                break;
-            case 6: // Kerberos Time
-                // DERGeneralizedTime derTime = KerberosUtil.readAs(tagged,
-                // DERGeneralizedTime.class);
-                break;
-            case 7: // Kerberos Time
-                // DERGeneralizedTime derTime = KerberosUtil.readAs(tagged,
-                // DERGeneralizedTime.class);
-                break;
-            case 8: // Kerberos Time
-                // DERGeneralizedTime derTime = KerberosUtil.readAs(tagged,
-                // DERGeneralizedTime.class);
-                break;
-            case 9: // Host Addresses
-                DERSequence adressesSequence = DecodingUtil.as(DERSequence.class, tagged);
-                Enumeration<?> adresses = adressesSequence.getObjects();
-                while(adresses.hasMoreElements()) {
-                    DERSequence addressSequence = DecodingUtil.as(DERSequence.class, adresses);
-                    DERInteger addressType = DecodingUtil.as(DERInteger.class, addressSequence, 0);
-                    DEROctetString addressOctets = DecodingUtil.as(DEROctetString.class,
-                            addressSequence, 1);
-
-                    userAddresses = new ArrayList<InetAddress>();
-                    if(addressType.getValue().intValue() == KerberosConstants.AF_INTERNET) {
-                        InetAddress userAddress = null;
-                        try {
-                            userAddress = InetAddress.getByAddress(addressOctets.getOctets());
-                        } catch(UnknownHostException e) {}
-                        userAddresses.add(userAddress);
-                    }
-                }
-                break;
-            case 10: // Authorization Data
-                DERSequence authSequence = DecodingUtil.as(DERSequence.class, tagged);
-
-                userAuthorizations = new ArrayList<KerberosAuthData>();
-                Enumeration<?> authElements = authSequence.getObjects();
-                while(authElements.hasMoreElements()) {
-                    DERSequence authElement = DecodingUtil.as(DERSequence.class, authElements);
-                    DERInteger authType = DecodingUtil.as(DERInteger.class, DecodingUtil.as(
-                            DERTaggedObject.class, authElement, 0));
-                    DEROctetString authData = DecodingUtil.as(DEROctetString.class, DecodingUtil
-                            .as(DERTaggedObject.class, authElement, 1));
-
-                    userAuthorizations.addAll(KerberosAuthData.parse(
-                            authType.getValue().intValue(), authData.getOctets(), key));
-                }
-                break;
-            default:
-                Object[] args = new Object[]{tagged.getTagNo()};
-                throw new DecodingException("kerberos.field.invalid", args, null);
+    private static KerberosKey[] keys;
+    public static Key getServerKey(EncryptionType etype) throws IOException {
+        if(keys == null) {
+            try {
+                keys = new org.haox.kerb.codec.legacy.kerberos.KerberosCredentials().getKeys();
+            } catch(LoginException e) {
+                throw new IOException("kerberos.login.fail", e);
             }
         }
+
+        KerberosKey serverKey = null;
+        for(KerberosKey key : keys) {
+            if(key.getKeyType() == etype.getValue()) {
+                serverKey = key;
+                break;
+            }
+        }
+
+        return serverKey;
     }
 
-    public static byte[] decrypt(byte[] data, Key key, int type) throws GeneralSecurityException {
+    public static byte[] decrypt(byte[] data, EncryptionType etype) throws GeneralSecurityException, IOException {
+        Key key = getServerKey(etype);
         Cipher cipher = null;
         byte[] decrypt = null;
 
-        switch (type) {
-        case KerberosConstants.DES_ENC_TYPE:
+        switch (etype) {
+        case DES_CBC_MD5:
             try {
                 cipher = Cipher.getInstance("DES/CBC/NoPadding");
             } catch(GeneralSecurityException e) {
@@ -168,7 +70,7 @@ public class KerberosEncData {
 
             decrypt = output;
             break;
-        case KerberosConstants.RC4_ENC_TYPE:
+        case RC4_HMAC:
             byte[] code = DecodingUtil.asBytes(Cipher.DECRYPT_MODE);
             byte[] codeHmac = getHmac(code, key.getEncoded());
 
@@ -209,21 +111,4 @@ public class KerberosEncData {
 
         return mac.doFinal(data);
     }
-
-    public String getUserRealm() {
-        return userRealm;
-    }
-
-    public String getUserPrincipalName() {
-        return userPrincipalName;
-    }
-
-    public ArrayList<InetAddress> getUserAddresses() {
-        return userAddresses;
-    }
-
-    public List<KerberosAuthData> getUserAuthorizations() {
-        return userAuthorizations;
-    }
-
 }

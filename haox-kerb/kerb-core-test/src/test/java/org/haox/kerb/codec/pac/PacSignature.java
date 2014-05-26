@@ -4,14 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import org.haox.kerb.codec.DecodingException;
-
 public class PacSignature {
 
     private int type;
     private byte[] checksum;
 
-    public PacSignature(byte[] data) throws DecodingException {
+    public PacSignature(byte[] data) throws IOException {
         try {
             PacDataInputStream bufferStream = new PacDataInputStream(new DataInputStream(
                     new ByteArrayInputStream(data)));
@@ -20,7 +18,7 @@ public class PacSignature {
             checksum = new byte[bufferStream.available()];
             bufferStream.readFully(checksum);
         } catch(IOException e) {
-            throw new DecodingException("pac.signature.malformed", null, e);
+            throw new IOException("pac.signature.malformed", e);
         }
     }
 
