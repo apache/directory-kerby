@@ -1,53 +1,50 @@
 package org.haox.kerb.codec.kerberos;
 
-import javax.security.auth.Subject;
+import org.haox.kerb.keytab.Keytab;
+import org.haox.kerb.keytab.KeytabEntry;
+import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.PrincipalName;
+
 import javax.security.auth.kerberos.KerberosKey;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
+import javax.security.auth.kerberos.KerberosPrincipal;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Key;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 public class KerberosCredentials {
 
-    private Subject subject;
+    private static Keytab keytab;
 
-    public KerberosCredentials() throws LoginException {
-        this(System.getProperty("jaaslounge.sso.jaas.org.haox.config"));
+    private static void init() throws IOException {
+        InputStream kis = KerberosCredentials.class.getResourceAsStream("/server.keytab");
+        keytab = new Keytab();
+        keytab.load(kis);
     }
 
-    public KerberosCredentials(String loginContextName) throws LoginException {
-        LoginContext lc = new LoginContext(loginContextName);
-        lc.login();
-        subject = lc.getSubject();
+    public static Key getServerKey(EncryptionType etype) throws IOException {
+        if (keytab == null) {
+            init();
+        }
+
+        for (PrincipalName principal : keytab.getPrincipals()) {
+            for (KeytabEntry entry : keytab.getKeytabEntries(principal)) {
+                if (entry.getKey().getKeyType() == etype) {
+                    return convert(entry);
+                }
+            }
+        }
+        return null;
     }
 
-    public KerberosKey[] getKeys() {
-        List<Key> serverKeys = new ArrayList<Key>();
+    private static Key convert(KeytabEntry entry) {
+        KerberosPrincipal krbPrinc = new KerberosPrincipal(
+                entry.getPrincipal().getName(),
+                entry.getPrincipal().getNameType().getValue());
+        Key key = new KerberosKey(krbPrinc,
+                entry.getKey().getKeyData(),
+                entry.getKey().getKeyType().getValue(),
+                entry.getKvno());
 
-        Set<Object> serverPrivateCredentials = subject.getPrivateCredentials();
-        for(Object credential : serverPrivateCredentials)
-            if(credential instanceof KerberosKey)
-                serverKeys.add((KerberosKey)credential);
-
-        return serverKeys.toArray(new KerberosKey[0]);
+        return key;
     }
-
-    public KerberosKey getKey(int keyType) {
-        KerberosKey serverKey = null;
-
-        Set<Object> serverPrivateCredentials = subject.getPrivateCredentials();
-        for(Object credential : serverPrivateCredentials)
-            if(credential instanceof KerberosKey)
-                if(((KerberosKey)credential).getKeyType() == keyType)
-                    serverKey = (KerberosKey)credential;
-
-        return serverKey;
-    }
-
-    public Subject getSubject() {
-        return subject;
-    }
-
 }

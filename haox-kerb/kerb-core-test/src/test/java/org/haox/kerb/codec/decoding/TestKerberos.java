@@ -1,9 +1,10 @@
 package org.haox.kerb.codec.decoding;
 
 import org.haox.kerb.codec.kerberos.AuthzDataUtil;
-import org.haox.kerb.codec.kerberos.KerberosEncData;
+import org.haox.kerb.codec.kerberos.KerberosCredentials;
 import org.haox.kerb.codec.kerberos.KerberosTicket;
 import org.haox.kerb.codec.kerberos.KerberosToken;
+import org.haox.kerb.codec.pac.PacSid;
 import org.haox.kerb.codec.pac.Pac;
 import org.haox.kerb.codec.pac.PacLogonInfo;
 import org.haox.kerb.spec.KrbException;
@@ -15,6 +16,8 @@ import org.junit.Test;
 import javax.security.auth.kerberos.KerberosKey;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestKerberos {
 
@@ -227,11 +230,21 @@ public class TestKerberos {
             Assert.assertTrue(authzData.getElements().size() > 0);
 
             Pac pac = AuthzDataUtil.getPac(authzData,
-                    KerberosEncData.getServerKey(ticket.getTicket().getEncPart().getKey().getKeyType()));
+                    KerberosCredentials.getServerKey(ticket.getTicket().getEncPart().getKey().getKeyType()));
             Assert.assertNotNull(pac);
 
             PacLogonInfo logonInfo = pac.getLogonInfo();
             Assert.assertNotNull(logonInfo);
+
+            List<String> sids = new ArrayList<String>();
+            if(logonInfo.getGroupSid() != null)
+                sids.add(logonInfo.getGroupSid().toString());
+            for(PacSid pacSid : logonInfo.getGroupSids())
+                sids.add(pacSid.toString());
+            for(PacSid pacSid : logonInfo.getExtraSids())
+                sids.add(pacSid.toString());
+            for(PacSid pacSid : logonInfo.getResourceGroupSids())
+                sids.add(pacSid.toString());
 
             Assert.assertEquals(ticket.getUserPrincipalName(), logonInfo.getUserName());
         } catch(IOException e) {

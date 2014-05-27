@@ -11,6 +11,7 @@ import org.haox.kerb.spec.type.ticket.Ticket;
 import javax.security.auth.kerberos.KerberosKey;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.Key;
 
 public class KerberosTicket {
     private String serverPrincipalName;
@@ -26,7 +27,8 @@ public class KerberosTicket {
 
         byte[] decrypted = null;
         try {
-            decrypted = KerberosEncData.decrypt(crypt, etype);
+            Key key = (keys != null && keys.length > 0) ? keys[0] : null;
+            decrypted = KerberosEncData.decrypt(crypt, key, etype);
         } catch(GeneralSecurityException e) {
             throw new IOException("kerberos.decrypt.fail", e);
         }

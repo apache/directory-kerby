@@ -8,37 +8,18 @@ import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.security.auth.kerberos.KerberosKey;
-import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
 
 public class KerberosEncData {
 
-    private static KerberosKey[] keys;
-    public static Key getServerKey(EncryptionType etype) throws IOException {
-        if(keys == null) {
-            try {
-                keys = new org.haox.kerb.codec.legacy.kerberos.KerberosCredentials().getKeys();
-            } catch(LoginException e) {
-                throw new IOException("kerberos.login.fail", e);
-            }
+    public static byte[] decrypt(byte[] data, Key inputKey, EncryptionType etype) throws GeneralSecurityException, IOException {
+        Key key = inputKey;
+        if (key == null) {
+            key = KerberosCredentials.getServerKey(etype);
         }
 
-        KerberosKey serverKey = null;
-        for(KerberosKey key : keys) {
-            if(key.getKeyType() == etype.getValue()) {
-                serverKey = key;
-                break;
-            }
-        }
-
-        return serverKey;
-    }
-
-    public static byte[] decrypt(byte[] data, EncryptionType etype) throws GeneralSecurityException, IOException {
-        Key key = getServerKey(etype);
         Cipher cipher = null;
         byte[] decrypt = null;
 
