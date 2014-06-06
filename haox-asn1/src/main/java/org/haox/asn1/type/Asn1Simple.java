@@ -30,8 +30,8 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     @Override
     public void encode(ByteBuffer buffer) {
-        buffer.put((byte) makeTag());
-        buffer.put((byte) encodingBodyLength());
+        encodeTag(buffer, tagFlags(), tagNo());
+        encodeLength(buffer, encodingBodyLength());
         buffer.put(encodeBody());
     }
 

@@ -12,16 +12,22 @@ import java.nio.ByteBuffer;
 public abstract class AbstractAsn1Type<T> implements Asn1Type {
     private TagClass tagClass = TagClass.UNKNOWN;
     private int tagNo = -1;
-    private T value;
-
-    // for decoding
-    private int tag = -1;
+    private int tagFlags = -1;
     protected EncodingOption encodingOption = EncodingOption.UNKNOWN;
     private int encodingLen = -1;
-
+    private T value;
 
     public AbstractAsn1Type(TagClass tagClass, int tagNo) {
         this(tagClass, tagNo, null);
+    }
+
+    public AbstractAsn1Type(int tagFlags, int tagNo) {
+        this(tagFlags, tagNo, null);
+    }
+
+    public AbstractAsn1Type(int tagFlags, int tagNo, T value) {
+        this(TagClass.fromTagFlags(tagFlags), tagNo, value);
+        setTagFlags(tagFlags);
     }
 
     public AbstractAsn1Type(TagClass tagClass, int tagNo, T value) {
@@ -42,8 +48,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         this.value = value;
     }
 
-    @Override
-    public TagClass tagClass() {
+    protected TagClass tagClass() {
         return tagClass;
     }
 
@@ -52,12 +57,12 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         return tagNo;
     }
 
-    @Override
-    public int tag() {
-        if (tag == -1) {
-            tag = makeTag();
-        }
-        return tag;
+    protected void setTagFlags(int tagFlags) {
+        this.tagFlags = tagFlags & 0xe0;
+    }
+
+    protected void setTagNo(int tagNo) {
+        this.tagNo = tagNo;
     }
 
     @Override
@@ -70,7 +75,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     @Override
     public void encode(ByteBuffer buffer) {
-        encodeTag(buffer, makeTag());
+        encodeTag(buffer, tagFlags(), tagNo());
         encodeLength(buffer, encodingBodyLength());
         encodeBody(buffer);
     }
@@ -87,25 +92,28 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         decode(new LimitedByteBuffer(content));
     }
 
-    protected int makeTag() {
-        int flags = tagClass.getValue();
-        if (isConstructed()) flags |= EncodingOption.CONSTRUCTED_FLAG;
-        int tag = flags | tagNo;
-        return tag;
+    @Override
+    public int tagFlags() {
+        if (tagFlags == -1) {
+            int flags = tagClass.getValue();
+            if (isConstructed()) flags |= EncodingOption.CONSTRUCTED_FLAG;
+            return flags;
+        }
+        return tagFlags;
     }
 
     @Override
     public int encodingLength() {
         if (encodingLen == -1) {
             int bodyLen = encodingBodyLength();
-            encodingLen = lengthOfTagLength(makeTag()) + lengthOfBodyLength(bodyLen) + bodyLen;
+            encodingLen = lengthOfTagLength(tagNo()) + lengthOfBodyLength(bodyLen) + bodyLen;
         }
         return encodingLen;
     }
 
     public boolean isConstructed() {
-        if (tag != -1) {
-            return (tag() & EncodingOption.CONSTRUCTED_FLAG) != 0;
+        if (tagFlags != -1) {
+            return (tagFlags & EncodingOption.CONSTRUCTED_FLAG) != 0;
         } else {
             return false;
         }
@@ -145,16 +153,16 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         decode(tag, tagNo, new LimitedByteBuffer(content, length));
     }
 
-    public void decode(int tag, int tagNo, LimitedByteBuffer content) throws IOException {
-        if (this.tagClass != TagClass.UNKNOWN && this.tagClass != TagClass.fromTag(tag)) {
-            throw new IOException("Unexpected tag " + tag + ", expecting " + this.tagClass);
+    public void decode(int tagFlags, int tagNo, LimitedByteBuffer content) throws IOException {
+        if (this.tagClass != TagClass.UNKNOWN && this.tagClass != TagClass.fromTagFlags(tagFlags)) {
+            throw new IOException("Unexpected tagFlags " + tagFlags + ", expecting " + this.tagClass);
         }
         if (this.tagNo != -1 && this.tagNo != tagNo) {
             throw new IOException("Unexpected tagNo " + tagNo + ", expecting " + this.tagNo);
         }
 
-        this.tagClass = TagClass.fromTag(tag);
-        this.tag = tag;
+        this.tagClass = TagClass.fromTagFlags(tagFlags);
+        this.tagFlags = tagFlags;
         this.tagNo = tagNo;
 
         decodeBody(content);
@@ -163,9 +171,9 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     protected abstract void decodeBody(LimitedByteBuffer content) throws IOException;
 
     protected int taggedEncodingLength(TaggingOption taggingOption) {
-        int taggingTag = taggingOption.makeTag(isConstructed());
+        int taggingTagNo = taggingOption.getTagNo();
         int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength() : encodingLength();
-        int taggingEncodingLen = lengthOfTagLength(taggingTag) + lengthOfBodyLength(taggingBodyLen) + taggingBodyLen;
+        int taggingEncodingLen = lengthOfTagLength(taggingTagNo) + lengthOfBodyLength(taggingBodyLen) + taggingBodyLen;
         return taggingEncodingLen;
     }
 
@@ -178,8 +186,8 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     @Override
     public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption) {
-        int taggingTag = taggingOption.makeTag(isConstructed());
-        encodeTag(buffer, taggingTag);
+        int taggingTagFlags = taggingOption.tagFlags(isConstructed());
+        encodeTag(buffer, taggingTagFlags, taggingOption.getTagNo());
         int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength() : encodingLength();
         encodeLength(buffer, taggingBodyLen);
         if (taggingOption.isImplicit()) {
@@ -205,13 +213,14 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         int taggingLength = readLength(content);
         LimitedByteBuffer newContent = new LimitedByteBuffer(content, taggingLength);
 
-        taggedDecode(taggingTag, taggingTagNo, newContent, taggingOption);
+        int tagFlags = taggingTag & 0xe0;
+        taggedDecode(tagFlags, taggingTagNo, newContent, taggingOption);
     }
 
-    protected void taggedDecode(int taggingTag, int taggingTagNo, LimitedByteBuffer content, TaggingOption taggingOption) throws IOException {
-        int expectedTaggingTag = taggingOption.makeTag(isConstructed());
-        if (expectedTaggingTag != taggingTag) {
-            throw new IOException("Unexpected tag " + taggingTag + ", expecting " + expectedTaggingTag);
+    protected void taggedDecode(int taggingTagFlags, int taggingTagNo, LimitedByteBuffer content, TaggingOption taggingOption) throws IOException {
+        int expectedTaggingTagFlags = taggingOption.tagFlags(isConstructed());
+        if (expectedTaggingTagFlags != taggingTagFlags) {
+            throw new IOException("Unexpected tag flags" + taggingTagFlags + ", expecting " + expectedTaggingTagFlags);
         }
         if (taggingOption.getTagNo() != taggingTagNo) {
             throw new IOException("Unexpected tagNo " + taggingTagNo + ", expecting " + taggingOption.getTagNo());
@@ -252,102 +261,86 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         content.skip(length);
     }
 
-    public static int lengthOfBodyLength(int length) {
-        int count = 1;
-
-        if (length > 127) {
-            int size = 1;
-            int val = length;
-
-            while ((val >>>= 8) != 0) {
-                size++;
-            }
-
-            for (int i = (size - 1) * 8; i >= 0; i -= 8) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
-    public static int lengthOfTagLength(int tag) {
-        int tagNo = tag & 0x1f;
+    public static int lengthOfBodyLength(int bodyLength) {
         int length = 1;
 
-        if (tagNo >= 31) {
-            if (tagNo < 128) {
+        if (bodyLength > 127) {
+            int payload = bodyLength;
+            while (payload != 0) {
+                payload >>= 8;
                 length++;
-            } else {
-                byte[] stack = new byte[5];
-                int pos = stack.length;
-
-                stack[--pos] = (byte)(tagNo & 0x7F);
-
-                do {
-                    tagNo >>= 7;
-                    stack[--pos] = (byte)(tagNo & 0x7F | 0x80);
-                }
-                while (tagNo > 127);
-
-                length += stack.length - pos;
             }
         }
 
         return length;
     }
 
-    public static void encodeTag(ByteBuffer buffer, int tag) {
-        int tagNo = tag & 0x1f;
-        int flags = tag & 0xe0;
+    public static int lengthOfTagLength(int tagNo) {
+        int length = 1;
+
+        if (tagNo >= 31) {
+            if (tagNo < 128) {
+                length++;
+            } else {
+                length++;
+
+                do {
+                    tagNo >>= 7;
+                    length++;
+                } while (tagNo > 127);
+            }
+        }
+
+        return length;
+    }
+
+    public static void encodeTag(ByteBuffer buffer, int flags, int tagNo) {
         if (tagNo < 31) {
-            buffer.put((byte) tag);
+            buffer.put((byte) (flags | tagNo));
         } else {
             buffer.put((byte) (flags | 0x1f));
             if (tagNo < 128) {
                 buffer.put((byte) tagNo);
             } else {
-                byte[] stack = new byte[5];
-                int pos = stack.length;
+                byte[] tmpBytes = new byte[5]; // 5 * 7 > 32
+                int iPut = tmpBytes.length;
 
-                stack[--pos] = (byte)(tagNo & 0x7F);
+                tmpBytes[--iPut] = (byte)(tagNo & 0x7f);
                 do {
                     tagNo >>= 7;
-                    stack[--pos] = (byte)(tagNo & 0x7F | 0x80);
-                }
-                while (tagNo > 127);
+                    tmpBytes[--iPut] = (byte)(tagNo & 0x7f | 0x80);
+                } while (tagNo > 127);
 
-                buffer.put(stack, pos, stack.length - pos);
+                buffer.put(tmpBytes, iPut, tmpBytes.length - iPut);
             }
         }
     }
 
-    public static void encodeLength(ByteBuffer buffer, int length) {
-        if (length > 127) {
-            int size = 1;
-            int val = length;
+    public static void encodeLength(ByteBuffer buffer, int bodyLength) {
+        if (bodyLength < 128) {
+            buffer.put((byte) bodyLength);
+        } else {
+            int length = 0;
+            int payload = bodyLength;
 
-            while ((val >>>= 8) != 0) {
-                size++;
+            while (payload != 0) {
+                payload >>= 8;
+                length++;
             }
 
-            buffer.put((byte) (size | 0x80));
+            buffer.put((byte) (length | 0x80));
 
-            for (int i = (size - 1) * 8; i >= 0; i -= 8) {
-                buffer.put((byte) (length >> i));
+            payload = bodyLength;
+            for (int i = length - 1; i >= 0; i--) {
+                buffer.put((byte) (payload >> (i * 8)));
             }
-        }
-        else {
-            buffer.put((byte) length);
         }
     }
 
     public static int readTag(LimitedByteBuffer buffer) throws IOException {
         int tag = buffer.readByte() & 0xff;
-        if (tag <= 0) {
-            if (tag == 0) {
-                throw new IOException("Unexpected EOF");
-            }
+        if (tag == 0) {
+            throw new IOException("Bad tag 0 found");
         }
         return tag;
     }
@@ -360,17 +353,13 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
             int b = buffer.readByte() & 0xff;
             if ((b & 0x7f) == 0) {
-                throw new IOException("Bad stream - invalid high tag number found");
+                throw new IOException("Invalid high tag number found");
             }
 
             while ((b >= 0) && ((b & 0x80) != 0)) {
                 tagNo |= (b & 0x7f);
                 tagNo <<= 7;
                 b = buffer.readByte();
-            }
-
-            if (b < 0) {
-                throw new EOFException("Unexpected EOF");
             }
 
             tagNo |= (b & 0x7f);
@@ -380,40 +369,33 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     }
 
     public static int readLength(LimitedByteBuffer buffer) throws IOException {
-        int length = buffer.readByte() & 0xff;
-        if (length < 0) {
+        int bodyLength = buffer.readByte() & 0xff;
+        if (bodyLength < 0) {
             throw new EOFException("Unexpected EOF");
         }
 
-        if (length == 0x80) {
-            length = -1;
-        }
-
-        if (length > 127) {
-            int size = length & 0x7f;
-            if (size > 4) {
-                throw new IOException("DER length more than 4 bytes: " + size);
+        if (bodyLength > 127) {
+            int length = bodyLength & 0x7f;
+            if (length > 4) {
+                throw new IOException("Bad bodyLength of more than 4 bytes: " + length);
             }
 
-            length = 0;
-            for (int i = 0; i < size; i++) {
-                int next = buffer.readByte() & 0xff;
-
-                if (next < 0) {
-                    throw new EOFException("Unexpected EOF");
-                }
-
-                length = (length << 8) + next;
+            bodyLength = 0;
+            int tmp;
+            for (int i = 0; i < length; i++) {
+                tmp = buffer.readByte() & 0xff;
+                bodyLength = (bodyLength << 8) + tmp;
             }
 
-            if (length < 0) {
-                throw new IOException("Bad stream - negative length found");
+            if (bodyLength < 0) {
+                throw new IOException("Invalid bodyLength " + bodyLength);
             }
-            if (length > buffer.hasLeft()) {
-                throw new IOException("Bad stream - out of bounds length found");
+            if (bodyLength > buffer.hasLeft()) {
+                throw new IOException("Corrupt stream - less data "
+                        + buffer.hasLeft() + " than expected " + bodyLength);
             }
         }
 
-        return length;
+        return bodyLength;
     }
 }

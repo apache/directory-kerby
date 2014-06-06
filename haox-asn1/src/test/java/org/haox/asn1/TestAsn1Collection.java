@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class TestCollection {
+public class TestAsn1Collection {
     static String TEST_STR = "Jones";
     static Boolean TEST_BOOL = true;
     static byte[] EXPECTED_BYTES = new byte[] {(byte) 0x30, (byte) 0x0A,

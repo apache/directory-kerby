@@ -44,7 +44,7 @@ public enum TagClass
         return UNKNOWN;
     }
 
-    public static TagClass fromTag(int tag) {
+    public static TagClass fromTagFlags(int tag) {
         return fromValue(tag & 0xC0);
     }
 }

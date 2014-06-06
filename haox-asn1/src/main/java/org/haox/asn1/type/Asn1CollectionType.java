@@ -69,24 +69,26 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
         initFields();
 
         Asn1Collection coll = createCollection();
-        coll.decode(tag(), tagNo(), content);
+        coll.decode(tagFlags(), tagNo(), content);
 
         int lastPos = -1, foundPos = -1;
         for (Asn1Item item : coll.getValue()) {
             foundPos = -1;
             for (int i = lastPos + 1; i < fieldInfos.length; ++i) {
                 if (item.isContextSpecific()) {
-                    if(fieldInfos[i].getTagNo() == item.getTagNo()) {
+                    if(fieldInfos[i].getTagNo() == item.tagNo()) {
                         foundPos = i;
                         break;
                     }
-                } else if (fields[i].tag() == item.getTag()) {
+                } else if (fields[i].tagFlags() == item.tagFlags() &&
+                        fields[i].tagNo() == item.tagNo()) {
                     foundPos = i;
                     break;
                 }
             }
             if (foundPos == -1) {
-                throw new RuntimeException("Unexpected item with tag: " + item.getTag());
+                throw new RuntimeException("Unexpected item with (tagFlags, tagNo): ("
+                        + item.tagFlags() + ", " + item.tagNo() + ")");
             }
 
             if (! item.isFullyDecoded()) {

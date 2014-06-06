@@ -1,17 +1,15 @@
 package org.haox.asn1.type;
 
 import org.haox.asn1.EncodingOption;
-import org.haox.asn1.TagClass;
 import org.haox.asn1.TaggingOption;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public interface Asn1Type {
-    public TagClass tagClass();
+    public int tagFlags();
     public int tagNo();
     public void setEncodingOption(EncodingOption encodingOption);
-    public int tag();
     public int encodingLength();
     public byte[] encode();
     public void encode(ByteBuffer buffer);

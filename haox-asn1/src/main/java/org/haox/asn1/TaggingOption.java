@@ -28,11 +28,11 @@ public class TaggingOption
         this.isAppSpecific = isAppSpecific;
     }
 
-    public int makeTag(boolean isTaggedConstructed) {
+    public int tagFlags(boolean isTaggedConstructed) {
         boolean isConstructed = isImplicit ? isTaggedConstructed : true;
         TagClass tagClass = isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC;
-        int taggingTag = tagClass.getValue() | (isConstructed ? EncodingOption.CONSTRUCTED_FLAG : 0x00) | tagNo;
-        return taggingTag;
+        int flags = tagClass.getValue() | (isConstructed ? EncodingOption.CONSTRUCTED_FLAG : 0x00);
+        return flags;
     }
 
     public int getTagNo() {

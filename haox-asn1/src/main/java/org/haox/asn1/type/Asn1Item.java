@@ -1,6 +1,8 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.*;
+import org.haox.asn1.Asn1Factory;
+import org.haox.asn1.LimitedByteBuffer;
+import org.haox.asn1.TaggingOption;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -19,38 +21,19 @@ import java.nio.ByteBuffer;
  */
 public class Asn1Item extends AbstractAsn1Type<Asn1Type>
 {
-    private int tag = -1;
-    private int tagNo = -1;
     private LimitedByteBuffer bodyContent;
 
     public Asn1Item(Asn1Type value) {
-        super(value.tagClass(), value.tagNo(), value);
-        this.tag = value.tag();
-        this.tagNo = value.tagNo();
+        super(value.tagFlags(), value.tagNo(), value);
     }
 
     public Asn1Item(int tag, int tagNo, LimitedByteBuffer bodyContent) {
-        super(TagClass.fromTag(tag), tagNo);
-        this.tag = tag;
-        this.tagNo = tagNo;
+        super(tag, tagNo);
         this.bodyContent = bodyContent;
-    }
-
-    public int getTag() {
-        return tag;
-    }
-
-    public int getTagNo() {
-        return tagNo;
     }
 
     public LimitedByteBuffer getBodyContent() {
         return bodyContent;
-    }
-
-    @Override
-    public boolean isConstructed() {
-        return (tag & EncodingOption.CONSTRUCTED_FLAG) != 0;
     }
 
     @Override
@@ -89,7 +72,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
             throw new IllegalArgumentException("Attempting to decode non-simple value as simple");
         }
 
-        Asn1Type value = Asn1Factory.create(tagNo);
+        Asn1Type value = Asn1Factory.create(tagNo());
         decodeValueWith(value);
     }
 
@@ -99,7 +82,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
             throw new IllegalArgumentException("Attempting to decode non-collection value as collection");
         }
 
-        Asn1Type value = Asn1Factory.create(tagNo);
+        Asn1Type value = Asn1Factory.create(tagNo());
         decodeValueWith(value);
     }
 
@@ -115,7 +98,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
 
     public void decodeValueWith(Asn1Type value) throws IOException {
         setValue(value);
-        ((AbstractAsn1Type) value).decode(tag, tagNo, bodyContent);
+        ((AbstractAsn1Type) value).decode(tagFlags(), tagNo(), bodyContent);
     }
 
     public void decodeValueAsImplicitTagged(int originalTag, int originalTagNo) throws IOException {
@@ -147,7 +130,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
         if (! isTagged()) {
             throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
         }
-        ((AbstractAsn1Type) value).taggedDecode(getTag(), getTagNo(), getBodyContent(), taggingOption);
+        ((AbstractAsn1Type) value).taggedDecode(tagFlags(), tagNo(), getBodyContent(), taggingOption);
         setValue(value);
     }
 }
