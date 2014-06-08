@@ -1,4 +1,4 @@
-package org.haox.kerb.codec.decoding;
+package org.haox.kerb.codec.test;
 
 import org.haox.kerb.codec.kerberos.AuthzDataUtil;
 import org.haox.kerb.codec.kerberos.KerberosCredentials;

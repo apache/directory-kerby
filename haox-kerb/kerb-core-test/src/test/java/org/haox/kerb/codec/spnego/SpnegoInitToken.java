@@ -1,11 +1,11 @@
 package org.haox.kerb.codec.spnego;
 
 import org.bouncycastle.asn1.*;
-import org.haox.kerb.codec.DecodingException;
 import org.haox.kerb.codec.DecodingUtil;
-import org.haox.kerb.codec.encoding.HaoxASN1InputStream;
-import org.haox.kerb.codec.encoding.HaoxDERApplicationSpecific;
+import org.haox.kerb.codec.util.HaoxASN1InputStream;
+import org.haox.kerb.codec.util.HaoxDERApplicationSpecific;
 
+import java.io.IOException;
 import java.util.Enumeration;
 
 public class SpnegoInitToken extends SpnegoToken {
@@ -21,17 +21,17 @@ public class SpnegoInitToken extends SpnegoToken {
     private String[] mechanisms;
     private int contextFlags;
 
-    public SpnegoInitToken(byte[] token) throws DecodingException {
+    public SpnegoInitToken(byte[] token) throws IOException {
         HaoxASN1InputStream stream = new HaoxASN1InputStream(token);
         HaoxDERApplicationSpecific constructed = DecodingUtil.as(HaoxDERApplicationSpecific.class,
                 stream);
         if(constructed == null || !constructed.isConstructed())
-            throw new DecodingException("spnego.token.malformed", null, null);
+            throw new IOException("spnego.token.malformed");
 
         stream = new HaoxASN1InputStream(constructed.getByteBuffer(), constructed.getLimit());
         DERObjectIdentifier spnegoOid = DecodingUtil.as(DERObjectIdentifier.class, stream);
         if(!spnegoOid.getId().equals(SpnegoConstants.SPNEGO_OID))
-            throw new DecodingException("spnego.token.invalid", null, null);
+            throw new IOException("spnego.token.invalid");
 
         ASN1TaggedObject tagged = DecodingUtil.as(ASN1TaggedObject.class, stream);
         ASN1Sequence sequence = ASN1Sequence.getInstance(tagged, true);
@@ -65,7 +65,7 @@ public class SpnegoInitToken extends SpnegoToken {
                 break;
             default:
                 Object[] args = new Object[]{tagged.getTagNo()};
-                throw new DecodingException("spnego.field.invalid", args, null);
+                throw new IOException("spnego.field.invalid");
             }
         }
     }

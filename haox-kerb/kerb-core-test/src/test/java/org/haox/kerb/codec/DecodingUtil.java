@@ -1,9 +1,9 @@
 package org.haox.kerb.codec;
 
-import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Object;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.ASN1TaggedObject;
+import org.haox.kerb.codec.util.HaoxASN1InputStream;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -29,36 +29,36 @@ public final class DecodingUtil {
         return bytes;
     }
 
-    public static <T> T as(Class<T> type, Object object) throws DecodingException {
+    public static <T> T as(Class<T> type, Object object) throws IOException {
 
         if(!type.isInstance(object)) {
             Object[] args = new Object[]{object.getClass(), type};
-            throw new DecodingException("object.cast.fail", args, null);
+            throw new IOException("object.cast.fail");
         }
 
         return type.cast(object);
     }
 
     public static <T extends Object> T as(Class<T> type, Enumeration<?> enumeration)
-            throws DecodingException {
+            throws IOException {
 
         return as(type, enumeration.nextElement());
     }
 
-    public static <T extends ASN1Object> T as(Class<T> type, ASN1InputStream stream)
-            throws DecodingException, IOException {
+    public static <T extends ASN1Object> T as(Class<T> type, HaoxASN1InputStream stream)
+            throws IOException {
 
         return as(type, stream.readObject());
     }
 
     public static <T extends ASN1Object> T as(Class<T> type, ASN1TaggedObject tagged)
-            throws DecodingException {
+            throws IOException {
 
         return as(type, tagged.getObject());
     }
 
     public static <T extends ASN1Object> T as(Class<T> type, ASN1Sequence sequence, int index)
-            throws DecodingException {
+            throws IOException {
 
         return as(type, sequence.getObjectAt(index));
     }

@@ -1,4 +1,4 @@
-package org.haox.kerb.codec.encoding;
+package org.haox.kerb.codec.util;
 
 import java.nio.ByteBuffer;
 

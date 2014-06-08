@@ -33,7 +33,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         } else if (encodingOption.isImplicit()) {
             return value.encodingBodyLength();
         } else {
-            throw new RuntimeException("Invalid encoding option, only allowing explicit/implicit");
+            throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
         }
     }
 
@@ -56,7 +56,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         } else if (encodingOption.isImplicit()) {
             value.encodeBody(buffer);
         } else {
-            throw new RuntimeException("Invalid encoding option, only allowing explicit/implicit");
+            throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
         }
     }
 
@@ -68,7 +68,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         } else if (encodingOption.isImplicit()) {
             value.decodeBody(content);
         } else {
-            throw new RuntimeException("Invalid encoding option, only allowing explicit/implicit");
+            throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
         }
     }
 

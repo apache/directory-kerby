@@ -10,82 +10,53 @@ import java.util.Date;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-public class Asn1GeneralizedTime extends Asn1Simple<Long>
+public class Asn1GeneralizedTime extends Asn1Simple<Date>
 {
     public Asn1GeneralizedTime() {
         this(null);
     }
 
-    public Asn1GeneralizedTime(Long time) {
-        super(UniversalTag.GENERALIZED_TIME, time);
+    public Asn1GeneralizedTime(long time) {
+        super(UniversalTag.GENERALIZED_TIME, new Date(time * 1000L));
+    }
+
+    public Asn1GeneralizedTime(Date date) {
+        super(UniversalTag.UTC_TIME, date);
     }
 
     protected void toValue() throws IOException {
         String dateStr = new String(getBytes(), StandardCharsets.US_ASCII);
         SimpleDateFormat sdf;
-        String d = dateStr;
+        String fixedDateStr = dateStr;
 
-        if (dateStr.endsWith("Z")) {
-            if (hasFractionalSeconds(dateStr)) {
-                sdf = new SimpleDateFormat("yyyyMMddHHmmss.SSS'Z'");
-            } else {
-                sdf = new SimpleDateFormat("yyyyMMddHHmmss'Z'");
-            }
+        boolean withZ = dateStr.endsWith("Z");
+        String timeZonePart = getTimeZonePart(dateStr);
+        boolean withZone = timeZonePart != null;
+        String millSecs = getMillSeconds(dateStr);
 
+        fixedDateStr = dateStr.substring(0, 16) + millSecs;
+        if (withZ) {
+            sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
             sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
-        }
-        else if (dateStr.indexOf('-') > 0 || dateStr.indexOf('+') > 0) {
-            d = normalizeTimeString(dateStr);
-            if (hasFractionalSeconds(dateStr)) {
-                sdf = new SimpleDateFormat("yyyyMMddHHmmss.SSSz");
-            } else {
-                sdf = new SimpleDateFormat("yyyyMMddHHmmssz");
-            }
-
+        } else if (withZone) {
+            fixedDateStr += timeZonePart;
+            sdf = new SimpleDateFormat("yyyyMMddHHmmssSSSz");
             sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
         } else {
-            if (hasFractionalSeconds(dateStr)) {
-                sdf = new SimpleDateFormat("yyyyMMddHHmmss.SSS");
-            } else {
-                sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-            }
-
+            sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
             sdf.setTimeZone(new SimpleTimeZone(0, TimeZone.getDefault().getID()));
         }
 
-        if (hasFractionalSeconds(dateStr)) {
-            // java misinterprets extra digits as being milliseconds...
-            String frac = d.substring(14);
-            int index;
-            for (index = 1; index < frac.length(); index++) {
-                char ch = frac.charAt(index);
-                if (!('0' <= ch && ch <= '9')) {
-                    break;        
-                }
-            }
-
-            if (index - 1 > 3) {
-                frac = frac.substring(0, 4) + frac.substring(index);
-                d = d.substring(0, 14) + frac;
-            } else if (index - 1 == 1) {
-                frac = frac.substring(0, index) + "00" + frac.substring(index);
-                d = d.substring(0, 14) + frac;
-            } else if (index - 1 == 2) {
-                frac = frac.substring(0, index) + "0" + frac.substring(index);
-                d = d.substring(0, 14) + frac;
-            }
-        }
-
         try {
-            setValue(sdf.parse(d).getTime());
+            setValue(sdf.parse(fixedDateStr));
         } catch (ParseException e) {
-            throw new IOException("Failed to parse as date time");
+            throw new IOException("Failed to parse as generalized time string " + dateStr);
         }
     }
 
     @Override
     protected void toBytes() {
-        Date date = new Date(getValue());
+        Date date = getValue();
         SimpleDateFormat dateF = new SimpleDateFormat("yyyyMMddHHmmss'Z'");
         dateF.setTimeZone(new SimpleTimeZone(0, "Z"));
 
@@ -94,66 +65,48 @@ public class Asn1GeneralizedTime extends Asn1Simple<Long>
         setBytes(bytes);
     }
 
-    private boolean hasFractionalSeconds(String dateStr) {
-        for (int i = 0; i != dateStr.length(); i++) {
-            if (dateStr.charAt(i) == '.') {
-                if (i == 14) {
-                    return true;
-                }
+    /**
+     * Extract the fractional part in seconds and convert into integer by (frac * 1000) as milli seconds
+     */
+    private String getMillSeconds(String dateStr) {
+        char[] millDigits = new char[] {'0', '0', '0'};
+
+        int iPos = dateStr.indexOf('.');
+        if (iPos > 0) {
+            if (iPos != 14) {
+                throw new IllegalArgumentException("Bad generalized time string, " +
+                        "with improper milli seconds " + dateStr);
+            }
+
+            char chr;
+            int j = 0;
+            for (int i = 15; i < dateStr.length() && j < millDigits.length; i++) {
+                chr = dateStr.charAt(i);
+                if ('0' <= chr && chr <= '9') {
+                    millDigits[j++] = chr;
+                } else break;
             }
         }
-        return false;
+
+        return new String(millDigits);
     }
 
-    private String normalizeTimeString(String stime) {
-        if (stime.charAt(stime.length() - 1) == 'Z') {
-            return stime.substring(0, stime.length() - 1) + "GMT+00:00";
-        } else {
-            int signPos = stime.length() - 5;
-            char sign = stime.charAt(signPos);
-            if (sign == '-' || sign == '+') {
-                return stime.substring(0, signPos)
-                        + "GMT"
-                        + stime.substring(signPos, signPos + 3)
-                        + ":"
-                        + stime.substring(signPos + 3);
-            } else {
-                signPos = stime.length() - 3;
-                sign = stime.charAt(signPos);
-                if (sign == '-' || sign == '+') {
-                    return stime.substring(0, signPos)
-                            + "GMT"
-                            + stime.substring(signPos)
-                            + ":00";
-                }
-            }
+    /**
+     * Extract the timezone part if any
+     */
+    private String getTimeZonePart(String dateStr) {
+        int iPos = dateStr.indexOf('+');
+        if (iPos == -1) {
+            iPos = dateStr.indexOf('-');
         }
-        return stime + calculateGMTOffset();
-    }
-
-    private String calculateGMTOffset() {
-        String sign = "+";
-        TimeZone timeZone = TimeZone.getDefault();
-        int offset = timeZone.getRawOffset();
-        if (offset < 0) {
-            sign = "-";
-            offset = -offset;
-        }
-        int hours = offset / (60 * 60 * 1000);
-        int minutes = (offset - (hours * 60 * 60 * 1000)) / (60 * 1000);
-
-        if (timeZone.useDaylightTime() && timeZone.inDaylightTime(new Date(getValue()))) {
-            hours += sign.equals("+") ? 1 : -1;
+        if (iPos > 0 && iPos != dateStr.length() - 5) {
+            throw new IllegalArgumentException("Bad generalized time string, " +
+                    "with improper timezone part " + dateStr);
         }
 
-        return "GMT" + sign + convert(hours) + ":" + convert(minutes);
-    }
-
-    private String convert(int time) {
-        if (time < 10) {
-            return "0" + time;
+        if (iPos > 0) {
+            return dateStr.substring(iPos);
         }
-
-        return Integer.toString(time);
+        return null;
     }
 }

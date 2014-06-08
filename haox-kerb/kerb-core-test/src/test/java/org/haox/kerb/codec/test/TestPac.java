@@ -1,4 +1,4 @@
-package org.haox.kerb.codec.decoding;
+package org.haox.kerb.codec.test;
 
 import org.haox.kerb.codec.pac.Pac;
 import org.junit.Assert;

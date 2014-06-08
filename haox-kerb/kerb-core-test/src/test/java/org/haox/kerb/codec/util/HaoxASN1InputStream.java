@@ -1,4 +1,4 @@
-package org.haox.kerb.codec.encoding;
+package org.haox.kerb.codec.util;
 
 import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.util.ASN1Dump;
@@ -197,7 +197,7 @@ public class HaoxASN1InputStream implements BERTags
         }
 
         if (length == 0x80) {
-            length = -1;      // indefinite-length encoding
+            length = -1;      // indefinite-length util
         }
 
         if (length > 127) {

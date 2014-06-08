@@ -8,9 +8,9 @@ import java.util.TimeZone;
  KerberosTime    ::= GeneralizedTime -- with no fractional seconds
  */
 public class KerberosTime extends Asn1GeneralizedTime {
-    private static final TimeZone UTC = TimeZone.getTimeZone( "UTC" );
+    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
-    public static final KerberosTime NEVER = new KerberosTime( Long.MAX_VALUE );
+    public static final KerberosTime NEVER = new KerberosTime(Long.MAX_VALUE);
 
     /** The number of milliseconds in a minute. */
     public static final int MINUTE = 60000;
@@ -25,25 +25,25 @@ public class KerberosTime extends Asn1GeneralizedTime {
         super(0L);
     }
 
-    public KerberosTime(Long time) {
+    public KerberosTime(long time) {
         super(time);
     }
 
-    public boolean lessThan( KerberosTime ktime ) {
-        return getValue() <= ktime.getValue();
+    public boolean lessThan(KerberosTime ktime) {
+        return getValue().compareTo(ktime.getValue()) == -1;
     }
 
-    public boolean lessThan(long time ) {
-        return getValue() <= time;
+    public boolean lessThan(long time) {
+        return getValue().getTime() <= time * 1000;
     }
 
-    public boolean greaterThan( KerberosTime ktime ) {
-        return getValue() > ktime.getValue();
+    public boolean greaterThan(KerberosTime ktime) {
+        return getValue().compareTo(ktime.getValue()) == 1;
     }
 
-    public boolean isInClockSkew( long clockSkew ) {
+    public boolean isInClockSkew(long clockSkew) {
         // The KerberosTime does not have milliseconds
-        long delta = Math.abs( getValue() - System.currentTimeMillis() );
+        long delta = Math.abs(getValue().getTime() - System.currentTimeMillis());
 
         return delta < clockSkew;
     }

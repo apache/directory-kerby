@@ -31,8 +31,9 @@ public class Util {
      * 0x02 02 00 80
      */
     public static byte[] hex2bytes(String hexString) {
+        hexString = hexString.toUpperCase();
         String hexStr = hexString;
-        if (hexString.startsWith("0x") || hexString.startsWith("0X")) {
+        if (hexString.startsWith("0X")) {
             hexStr = hexString.substring(2);
         }
         String[] hexParts = hexStr.split(" ");

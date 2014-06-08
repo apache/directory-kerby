@@ -1,6 +1,6 @@
 package org.haox.kerb.codec.spnego;
 
-import org.haox.kerb.codec.DecodingException;
+import java.io.IOException;
 
 public abstract class SpnegoToken {
 
@@ -11,11 +11,11 @@ public abstract class SpnegoToken {
     protected byte[] mechanismList;
     protected String mechanism;
 
-    public static SpnegoToken parse(byte[] token) throws DecodingException {
+    public static SpnegoToken parse(byte[] token) throws IOException {
         SpnegoToken spnegoToken = null;
 
         if(token.length <= 0)
-            throw new DecodingException("spnego.token.empty", null, null);
+            throw new IOException("spnego.token.empty");
 
         switch (token[0]) {
         case (byte)0x60:
@@ -27,7 +27,7 @@ public abstract class SpnegoToken {
         default:
             spnegoToken = null;
             Object[] args = new Object[]{token[0]};
-            throw new DecodingException("spnego.token.invalid", args, null);
+            throw new IOException("spnego.token.invalid");
         }
 
         return spnegoToken;
