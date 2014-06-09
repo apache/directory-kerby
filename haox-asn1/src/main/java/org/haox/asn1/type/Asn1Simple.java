@@ -134,7 +134,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
             case NUMERIC_STRING:
                 return new Asn1NumericsString();
             case OBJECT_IDENTIFIER:
-                return null;
+                return new Asn1ObjectIdentifier();
             case OCTET_STRING:
                 return new Asn1OctetString();
             case PRINTABLE_STRING:

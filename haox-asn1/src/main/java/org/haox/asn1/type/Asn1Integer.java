@@ -15,10 +15,12 @@ public class Asn1Integer extends Asn1Simple<Integer>
         super(UniversalTag.INTEGER, value);
     }
 
+    @Override
     protected void toBytes() {
         setBytes(BigInteger.valueOf(getValue()).toByteArray());
     }
 
+    @Override
     protected void toValue() throws IOException {
         setValue(new BigInteger(getBytes()).intValue());
     }
