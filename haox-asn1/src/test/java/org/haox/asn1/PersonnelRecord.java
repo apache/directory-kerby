@@ -2,6 +2,10 @@ package org.haox.asn1;
 
 import org.haox.asn1.type.*;
 
+/**
+ * Ref. X.690-0207(http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf),
+ * Annex A, A.1 ASN.1 description of the record structure
+ */
 public class PersonnelRecord extends TaggingSet {
     private static int NAME = 0;
     private static int TITLE = 1;

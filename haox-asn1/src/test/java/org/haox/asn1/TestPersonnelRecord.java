@@ -5,6 +5,10 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+/**
+ * Ref. X.690-0207(http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf),
+ * Annex A, A.1 ASN.1 description of the record structure
+ */
 public class TestPersonnelRecord {
 
     static boolean verbose = false;
