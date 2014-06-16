@@ -43,10 +43,10 @@ public class HostAddress extends KrbSequenceType {
     }
 
     public byte[] getAddress() {
-        return getFieldAsOctetBytes(ADDRESS);
+        return getFieldAsOctets(ADDRESS);
     }
 
     public void setAddress(byte[] address) {
-        setFieldAsOctetBytes(ADDRESS, address);
+        setFieldAsOctets(ADDRESS, address);
     }
 }

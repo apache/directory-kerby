@@ -25,7 +25,7 @@ import org.haox.kerb.spec.type.KerberosTime;
  }
  */
 public class KrbError extends KrbMessage {
-    public static final int TKT_KVNO = KrbConstant.KERBEROS_V5;
+    public static final int TKT_KVNO = KrbConstant.KRB_V5;
     public static final int TAG = 30;
 
     private static int CTIME = 2;

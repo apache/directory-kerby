@@ -45,10 +45,10 @@ public class EtypeInfo2Entry extends KrbSequenceType {
     }
 
     public byte[] getS2kParams() {
-        return getFieldAsOctetBytes(S2KPARAMS);
+        return getFieldAsOctets(S2KPARAMS);
     }
 
     public void setS2kParams(byte[] s2kParams) {
-        setFieldAsOctetBytes(S2KPARAMS, s2kParams);
+        setFieldAsOctets(S2KPARAMS, s2kParams);
     }
 }

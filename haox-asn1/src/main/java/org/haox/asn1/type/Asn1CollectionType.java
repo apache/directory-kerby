@@ -159,16 +159,4 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
     protected void setFieldAsInt(int index, int value) {
         setFieldAs(index, new Asn1Integer(value));
     }
-
-    protected byte[] getFieldAsOctetBytes(int index) {
-        Asn1OctetString value = getFieldAs(index, Asn1OctetString.class);
-        if (value != null) {
-            return value.getValue();
-        }
-        return null;
-    }
-
-    protected void setFieldAsOctetBytes(int index, byte[] value) {
-        setFieldAs(index, new Asn1OctetString(value));
-    }
 }

@@ -17,7 +17,7 @@ import org.haox.kerb.spec.type.common.PrincipalName;
  }
  */
 public class Ticket extends KrbAppSequenceType {
-    public static final int TKT_KVNO = KrbConstant.KERBEROS_V5;
+    public static final int TKT_KVNO = KrbConstant.KRB_V5;
     public static final int TAG = 1;
 
     private static int TKT_VNO = 0;

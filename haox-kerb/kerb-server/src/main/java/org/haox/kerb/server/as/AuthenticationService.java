@@ -23,6 +23,10 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.kdc.*;
+import org.haox.kerb.spec.type.pa.PaData;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
+import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.spec.type.pa.PaEncTsEnc;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 import org.haox.kerb.spec.type.ticket.TicketFlag;
@@ -452,20 +456,17 @@ public class AuthenticationService
 
         long till = 0;
 
-        if (request.getReqBody().getTill().getValue() == 0)
-        {
+        if (request.getReqBody().getTill() == null) {
             till = Long.MAX_VALUE;
-        }
-        else
-        {
-            till = request.getReqBody().getTill().getValue();
+        } else {
+            till = request.getReqBody().getTill().getTimeInSeconds();
         }
 
         /*
          * The end time is the minimum of (a) the requested till time or (b)
          * the start time plus maximum lifetime as configured in policy.
          */
-        long endTime = Math.min(till, startTime.getValue() + config.getMaximumTicketLifetime());
+        long endTime = Math.min(till, startTime.getTimeInSeconds() + config.getMaximumTicketLifetime());
         KerberosTime kerberosEndTime = new KerberosTime(endTime);
         encTicketPart.setEndTime(kerberosEndTime);
 
@@ -480,10 +481,9 @@ public class AuthenticationService
             throw new KrbException(KrbErrorCode.KDC_ERR_NEVER_VALID);
         }
 
-        long ticketLifeTime = Math.abs(startTime.getValue() - kerberosEndTime.getValue());
+        long ticketLifeTime = Math.abs(startTime.getTimeInSeconds() - kerberosEndTime.getTimeInSeconds());
 
-        if (ticketLifeTime < config.getMinimumTicketLifetime())
-        {
+        if (ticketLifeTime < config.getMinimumTicketLifetime()) {
             LOG_KRB.error("Ticket cannot be generated, as the Lifetime is too small");
             throw new KrbException(KrbErrorCode.KDC_ERR_NEVER_VALID);
         }
@@ -519,7 +519,7 @@ public class AuthenticationService
 
             ticketFlags.setFlag(TicketFlag.RENEWABLE);
 
-            if (tempRtime == null || tempRtime.getValue() == 0)
+            if (tempRtime == null || tempRtime.getTimeInSeconds() == 0)
             {
                 tempRtime = KerberosTime.NEVER;
             }
@@ -529,7 +529,8 @@ public class AuthenticationService
              * time or (b) the start time plus maximum renewable lifetime as
              * configured in policy.
              */
-            long renewTill = Math.min(tempRtime.getValue(), startTime.getValue() + config.getMaximumRenewableLifetime());
+            long renewTill = Math.min(tempRtime.getTimeInSeconds(),
+                    startTime.getTimeInSeconds() + config.getMaximumRenewableLifetime());
             encTicketPart.setRenewtill(new KerberosTime(renewTill));
         }
 

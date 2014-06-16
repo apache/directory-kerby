@@ -34,10 +34,10 @@ public class AuthorizationDataEntry extends KrbSequenceType {
     }
 
     public byte[] getAuthzData() {
-        return getFieldAsOctetBytes(AD_DATA);
+        return getFieldAsOctets(AD_DATA);
     }
 
     public void setAuthzData(byte[] authzData) {
-        setFieldAsOctetBytes(AD_DATA, authzData);
+        setFieldAsOctets(AD_DATA, authzData);
     }
 }

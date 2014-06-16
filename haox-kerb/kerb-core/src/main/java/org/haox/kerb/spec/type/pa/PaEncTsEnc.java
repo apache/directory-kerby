@@ -1,4 +1,4 @@
-package org.haox.kerb.spec.type.common;
+package org.haox.kerb.spec.type.pa;
 
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
@@ -7,8 +7,8 @@ import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**
  PA-ENC-TS-ENC           ::= SEQUENCE {
- patimestamp     [0] KerberosTime -- client's time --,
- pausec          [1] Microseconds OPTIONAL
+    patimestamp     [0] KerberosTime -- client's time --,
+    pausec          [1] Microseconds OPTIONAL
  }
  */
 public class PaEncTsEnc extends KrbSequenceType {

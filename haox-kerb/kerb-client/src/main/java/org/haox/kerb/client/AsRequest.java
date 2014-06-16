@@ -4,7 +4,7 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.HostAddresses;
-import org.haox.kerb.spec.type.common.PaDataEntry;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.kdc.AsReq;
 import org.haox.kerb.spec.type.kdc.KdcReq;

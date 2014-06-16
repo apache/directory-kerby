@@ -13,6 +13,8 @@ import org.haox.kerb.spec.type.kdc.KdcOptions;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.kdc.KdcReqBody;
 import org.haox.kerb.spec.type.kdc.TgsReq;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
+import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
 
 public class TgsRequest extends KdcRequest {

@@ -33,10 +33,10 @@ public class EtypeInfoEntry extends KrbSequenceType {
     }
 
     public byte[] getSalt() {
-        return getFieldAsOctetBytes(SALT);
+        return getFieldAsOctets(SALT);
     }
 
     public void setSalt(byte[] salt) {
-        setFieldAsOctetBytes(SALT, salt);
+        setFieldAsOctets(SALT, salt);
     }
 }

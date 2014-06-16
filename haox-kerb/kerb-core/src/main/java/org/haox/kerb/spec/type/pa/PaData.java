@@ -1,4 +1,4 @@
-package org.haox.kerb.spec.type.common;
+package org.haox.kerb.spec.type.pa;
 
 import org.haox.kerb.spec.type.KrbSequenceOfType;
 

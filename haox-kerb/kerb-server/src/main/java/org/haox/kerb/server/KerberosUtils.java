@@ -414,7 +414,8 @@ public class KerberosUtils
         KerberosTime clientTime = authenticator.getCtime();
         int clientMicroSeconds = authenticator.getCusec();
 
-        if (replayCache.checkReplay(clientPrincipal.toString(), serverPrincipal.toString() , clientTime.getValue(), clientMicroSeconds)) {
+        if (replayCache.checkReplay(clientPrincipal.toString(), serverPrincipal.toString() ,
+                clientTime.getTimeInSeconds(), clientMicroSeconds)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_REPEAT);
         }
 

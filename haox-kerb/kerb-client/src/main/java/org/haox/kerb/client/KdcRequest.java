@@ -8,6 +8,9 @@ import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.kdc.KdcOptions;
 import org.haox.kerb.spec.type.kdc.KdcReq;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
+import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.spec.type.pa.PaEncTsEnc;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

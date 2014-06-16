@@ -8,7 +8,7 @@ public abstract class KrbMessage extends KrbAppSequenceType {
     protected static int PVNO = 0;
     protected static int MSG_TYPE = 1;
 
-    private final int pvno = KrbConstant.KERBEROS_V5;
+    private final int pvno = KrbConstant.KRB_V5;
 
     public KrbMessage(KrbMessageType msgType, Asn1FieldInfo[] fieldInfos) {
         super(msgType.getValue(), fieldInfos);

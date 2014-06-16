@@ -34,10 +34,10 @@ public class TransitedEncoding extends KrbSequenceType {
     }
 
     public byte[] getContents() {
-        return getFieldAsOctetBytes(CONTENTS);
+        return getFieldAsOctets(CONTENTS);
     }
 
     public void setContents(byte[] contents) {
-        setFieldAsOctetBytes(CONTENTS, contents);
+        setFieldAsOctets(CONTENTS, contents);
     }
 }

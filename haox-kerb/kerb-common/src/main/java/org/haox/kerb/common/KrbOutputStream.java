@@ -25,7 +25,7 @@ public abstract class KrbOutputStream extends DataOutputStream
     public void writeTime(KerberosTime ktime) throws IOException {
     	int time = 0;
     	if (ktime != null) {
-    		time = (int) (ktime.getValue() / 1000);
+    		time = (int) (ktime.getValue().getTime() / 1000);
     	}
     	writeInt(time);
     }

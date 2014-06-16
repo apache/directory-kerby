@@ -77,10 +77,10 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
     }
 
     protected byte[] getFieldAsOctetBytes(int index) {
-        return tagged.getFieldAsOctetBytes(index);
+        return tagged.getFieldAsOctets(index);
     }
 
     protected void setFieldAsOctetBytes(int index, byte[] value) {
-        tagged.setFieldAsOctetBytes(index, value);
+        tagged.setFieldAsOctets(index, value);
     }
 }

@@ -1,6 +1,8 @@
 package org.haox.kerb.client;
 
 import org.haox.kerb.spec.type.common.*;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
+import org.haox.kerb.spec.type.pa.PaDataType;
 
 import java.io.IOException;
 import java.util.ArrayList;

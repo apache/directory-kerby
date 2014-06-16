@@ -4,8 +4,8 @@ import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.common.KrbMessageType;
-import org.haox.kerb.spec.type.common.PaData;
-import org.haox.kerb.spec.type.common.PaDataEntry;
+import org.haox.kerb.spec.type.pa.PaData;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
 
 /**
  KDC-REQ         ::= SEQUENCE {

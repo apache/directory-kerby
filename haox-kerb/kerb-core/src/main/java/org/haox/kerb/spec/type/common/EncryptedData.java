@@ -49,10 +49,10 @@ public class EncryptedData extends KrbSequenceType {
     }
 
     public byte[] getCipher() {
-        return getFieldAsOctetBytes(CIPHER);
+        return getFieldAsOctets(CIPHER);
     }
 
     public void setCipher(byte[] cipher) {
-        setFieldAsOctetBytes(CIPHER, cipher);
+        setFieldAsOctets(CIPHER, cipher);
     }
 }

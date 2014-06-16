@@ -34,10 +34,10 @@ public class EncryptionKey extends KrbSequenceType {
     }
 
     public byte[] getKeyData() {
-        return getFieldAsOctetBytes(KEY_VALUE);
+        return getFieldAsOctets(KEY_VALUE);
     }
 
     public void setKeyData(byte[] keyData) {
-        setFieldAsOctetBytes(KEY_VALUE, keyData);
+        setFieldAsOctets(KEY_VALUE, keyData);
     }
 }

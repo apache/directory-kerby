@@ -16,8 +16,11 @@ public class Asn1GeneralizedTime extends Asn1Simple<Date>
         this(null);
     }
 
+    /**
+     * time in milliseconds
+     */
     public Asn1GeneralizedTime(long time) {
-        super(UniversalTag.GENERALIZED_TIME, new Date(time * 1000L));
+        super(UniversalTag.GENERALIZED_TIME, new Date(time));
     }
 
     public Asn1GeneralizedTime(Date date) {

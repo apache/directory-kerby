@@ -42,18 +42,18 @@ public abstract class EncKdcRepPart extends KrbAppSequenceType {
     private static int CADDR = 11;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(KEY, 0, EncryptionKey.class),
-            new Asn1FieldInfo(LAST_REQ, 1, LastReq.class),
-            new Asn1FieldInfo(NONCE, 2, Asn1Integer.class),
-            new Asn1FieldInfo(KEY_EXPIRATION, 3, KerberosTime.class),
-            new Asn1FieldInfo(FLAGS, 4, TicketFlags.class),
-            new Asn1FieldInfo(AUTHTIME, 5, KerberosTime.class),
-            new Asn1FieldInfo(STARTTIME, 6, KerberosTime.class),
-            new Asn1FieldInfo(ENDTIME, 7, KerberosTime.class),
-            new Asn1FieldInfo(RENEW_TILL, 8, KerberosTime.class),
-            new Asn1FieldInfo(SREALM, 9, KerberosString.class),
-            new Asn1FieldInfo(SNAME, 10, PrincipalName.class),
-            new Asn1FieldInfo(CADDR, 11, HostAddresses.class)
+            new Asn1FieldInfo(KEY, EncryptionKey.class),
+            new Asn1FieldInfo(LAST_REQ, LastReq.class),
+            new Asn1FieldInfo(NONCE, Asn1Integer.class),
+            new Asn1FieldInfo(KEY_EXPIRATION, KerberosTime.class),
+            new Asn1FieldInfo(FLAGS, TicketFlags.class),
+            new Asn1FieldInfo(AUTHTIME, KerberosTime.class),
+            new Asn1FieldInfo(STARTTIME, KerberosTime.class),
+            new Asn1FieldInfo(ENDTIME, KerberosTime.class),
+            new Asn1FieldInfo(RENEW_TILL, KerberosTime.class),
+            new Asn1FieldInfo(SREALM, KerberosString.class),
+            new Asn1FieldInfo(SNAME, PrincipalName.class),
+            new Asn1FieldInfo(CADDR, HostAddresses.class)
     };
 
     public EncKdcRepPart(int tagNo) {

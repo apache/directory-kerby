@@ -1,4 +1,4 @@
-package org.haox.kerb.spec.type.common;
+package org.haox.kerb.spec.type.pa;
 
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
@@ -35,10 +35,10 @@ public class PaDataEntry extends KrbSequenceType {
     }
 
     public byte[] getPaDataValue() {
-        return getFieldAsOctetBytes(PADATA_VALUE);
+        return getFieldAsOctets(PADATA_VALUE);
     }
 
     public void setPaDataValue(byte[] paDataValue) {
-        setFieldAsOctetBytes(PADATA_VALUE, paDataValue);
+        setFieldAsOctets(PADATA_VALUE, paDataValue);
     }
 }

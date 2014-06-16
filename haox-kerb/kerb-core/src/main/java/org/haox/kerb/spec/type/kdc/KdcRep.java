@@ -4,6 +4,7 @@ import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.common.*;
+import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
 /**
