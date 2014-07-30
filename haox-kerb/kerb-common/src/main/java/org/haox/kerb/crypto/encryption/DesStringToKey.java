@@ -36,7 +36,6 @@ import java.security.spec.AlgorithmParameterSpec;
  * in RFC 1510, "The Kerberos Network Authentication Service (V5)," and clarified
  * in RFC 3961, "Encryption and Checksum Specifications for Kerberos 5."
  *
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class DesStringToKey
 {
@@ -46,9 +45,9 @@ public class DesStringToKey
      * @param passPhrase The passphrase to derive a symmetric DES key from.
      * @return The derived symmetric DES key.
      */
-    public byte[] getKey( String passPhrase )
+    public byte[] getKey(String passPhrase)
     {
-        return generateKey( passPhrase );
+        return generateKey(passPhrase);
     }
 
 
@@ -62,9 +61,9 @@ public class DesStringToKey
      * @param userName The username.
      * @return The derived symmetric DES key.
      */
-    public byte[] getKey( String password, String realmName, String userName )
+    public byte[] getKey(String password, String realmName, String userName)
     {
-        return generateKey( password + realmName + userName );
+        return generateKey(password + realmName + userName);
     }
 
 
@@ -75,19 +74,19 @@ public class DesStringToKey
      * @return The DES key.
      * @throws Exception
      */
-    protected byte[] generateKey( String passPhrase )
+    protected byte[] generateKey(String passPhrase)
     {
-        byte encodedByteArray[] = characterEncodeString( passPhrase );
+        byte encodedByteArray[] = characterEncodeString(passPhrase);
 
-        byte paddedByteArray[] = padString( encodedByteArray );
+        byte paddedByteArray[] = padString(encodedByteArray);
 
-        byte[] secretKey = fanFold( paddedByteArray );
+        byte[] secretKey = fanFold(paddedByteArray);
 
-        secretKey = setParity( secretKey );
-        secretKey = getStrongKey( secretKey );
-        secretKey = calculateChecksum( paddedByteArray, secretKey );
-        secretKey = setParity( secretKey );
-        secretKey = getStrongKey( secretKey );
+        secretKey = setParity(secretKey);
+        secretKey = getStrongKey(secretKey);
+        secretKey = calculateChecksum(paddedByteArray, secretKey);
+        secretKey = setParity(secretKey);
+        secretKey = getStrongKey(secretKey);
 
         return secretKey;
     }
@@ -99,20 +98,20 @@ public class DesStringToKey
      * @param in The byte array to set parity on.
      * @return The parity-adjusted byte array.
      */
-    protected byte[] setParity( byte[] in )
+    protected byte[] setParity(byte[] in)
     {
         byte[] out = new byte[8];
 
         int bitCount = 0;
         int index = 0;
 
-        for ( int i = 0; i < 64; i++ )
+        for (int i = 0; i < 64; i++)
         {
-            if ( ( i + 1 ) % 8 == 0 )
+            if ((i + 1) % 8 == 0)
             {
-                if ( bitCount % 2 == 0 )
+                if (bitCount % 2 == 0)
                 {
-                    setBit( out, i, 1 );
+                    setBit(out, i, 1);
                 }
 
                 index++;
@@ -120,12 +119,12 @@ public class DesStringToKey
             }
             else
             {
-                int val = getBit( in, index );
+                int val = getBit(in, index);
                 boolean bit = val > 0;
 
-                if ( bit )
+                if (bit)
                 {
-                    setBit( out, i, val );
+                    setBit(out, i, val);
                     bitCount++;
                 }
 
@@ -144,13 +143,13 @@ public class DesStringToKey
      * @param pos
      * @return The value of the bit.
      */
-    protected int getBit( byte[] data, int pos )
+    protected int getBit(byte[] data, int pos)
     {
         int posByte = pos / 8;
         int posBit = pos % 8;
 
         byte valByte = data[posByte];
-        int valInt = valByte >> ( 8 - ( posBit + 1 ) ) & 0x0001;
+        int valInt = valByte >> (8 - (posBit + 1)) & 0x0001;
         return valInt;
     }
 
@@ -162,13 +161,13 @@ public class DesStringToKey
      * @param pos
      * @param val
      */
-    protected void setBit( byte[] data, int pos, int val )
+    protected void setBit(byte[] data, int pos, int val)
     {
         int posByte = pos / 8;
         int posBit = pos % 8;
         byte oldByte = data[posByte];
-        oldByte = ( byte ) ( ( ( 0xFF7F >> posBit ) & oldByte ) & 0x00FF );
-        byte newByte = ( byte ) ( ( val << ( 8 - ( posBit + 1 ) ) ) | oldByte );
+        oldByte = (byte) (((0xFF7F >> posBit) & oldByte) & 0x00FF);
+        byte newByte = (byte) ((val << (8 - (posBit + 1))) | oldByte);
         data[posByte] = newByte;
     }
 
@@ -185,38 +184,38 @@ public class DesStringToKey
      * @param paddedByteArray The padded byte array.
      * @return The fan-folded intermediate DES key.
      */
-    protected byte[] fanFold( byte[] paddedByteArray )
+    protected byte[] fanFold(byte[] paddedByteArray)
     {
         byte secretKey[] = new byte[8];
 
         int div = paddedByteArray.length / 8;
 
-        for ( int ii = 0; ii < div; ii++ )
+        for (int ii = 0; ii < div; ii++)
         {
             byte blockValue1[] = new byte[8];
-            System.arraycopy( paddedByteArray, ii * 8, blockValue1, 0, 8 );
+            System.arraycopy(paddedByteArray, ii * 8, blockValue1, 0, 8);
 
-            if ( ii % 2 == 1 )
+            if (ii % 2 == 1)
             {
                 byte tempbyte1 = 0;
                 byte tempbyte2 = 0;
                 byte blockValue2[] = new byte[8];
 
-                for ( int jj = 0; jj < 8; jj++ )
+                for (int jj = 0; jj < 8; jj++)
                 {
                     tempbyte2 = 0;
 
-                    for ( int kk = 0; kk < 4; kk++ )
+                    for (int kk = 0; kk < 4; kk++)
                     {
-                        tempbyte2 = ( byte ) ( ( 1 << ( 7 - kk ) ) & 0xff );
-                        tempbyte1 |= ( blockValue1[jj] & tempbyte2 ) >>> ( 7 - 2 * kk );
+                        tempbyte2 = (byte) ((1 << (7 - kk)) & 0xff);
+                        tempbyte1 |= (blockValue1[jj] & tempbyte2) >>> (7 - 2 * kk);
                         tempbyte2 = 0;
                     }
 
-                    for ( int kk = 4; kk < 8; kk++ )
+                    for (int kk = 4; kk < 8; kk++)
                     {
-                        tempbyte2 = ( byte ) ( ( 1 << ( 7 - kk ) ) & 0xff );
-                        tempbyte1 |= ( blockValue1[jj] & tempbyte2 ) << ( 2 * kk - 7 );
+                        tempbyte2 = (byte) ((1 << (7 - kk)) & 0xff);
+                        tempbyte1 |= (blockValue1[jj] & tempbyte2) << (2 * kk - 7);
                         tempbyte2 = 0;
                     }
 
@@ -224,21 +223,21 @@ public class DesStringToKey
                     tempbyte1 = 0;
                 }
 
-                for ( int jj = 0; jj < 8; jj++ )
+                for (int jj = 0; jj < 8; jj++)
                 {
-                    blockValue2[jj] = ( byte ) ( ( ( blockValue2[jj] & 0xff ) >>> 1 ) & 0xff );
+                    blockValue2[jj] = (byte) (((blockValue2[jj] & 0xff) >>> 1) & 0xff);
                 }
 
-                System.arraycopy( blockValue2, 0, blockValue1, 0, blockValue2.length );
+                System.arraycopy(blockValue2, 0, blockValue1, 0, blockValue2.length);
             }
 
-            for ( int jj = 0; jj < 8; jj++ )
+            for (int jj = 0; jj < 8; jj++)
             {
-                blockValue1[jj] = ( byte ) ( ( ( blockValue1[jj] & 0xff ) << 1 ) & 0xff );
+                blockValue1[jj] = (byte) (((blockValue1[jj] & 0xff) << 1) & 0xff);
             }
 
             // ... eXclusive-ORed with itself to form an 8-byte DES key
-            for ( int jj = 0; jj < 8; jj++ )
+            for (int jj = 0; jj < 8; jj++)
             {
                 secretKey[jj] ^= blockValue1[jj];
             }
@@ -258,25 +257,25 @@ public class DesStringToKey
      * @param keyBytes The bytes of the intermediate key.
      * @return The final eight-byte block as the checksum.
      */
-    protected byte[] calculateChecksum( byte[] data, byte[] keyBytes )
+    protected byte[] calculateChecksum(byte[] data, byte[] keyBytes)
     {
         try
         {
-            Cipher cipher = Cipher.getInstance( "DES/CBC/NoPadding" );
-            SecretKey key = new SecretKeySpec( keyBytes, "DES" );
+            Cipher cipher = Cipher.getInstance("DES/CBC/NoPadding");
+            SecretKey key = new SecretKeySpec(keyBytes, "DES");
 
-            AlgorithmParameterSpec paramSpec = new IvParameterSpec( keyBytes );
+            AlgorithmParameterSpec paramSpec = new IvParameterSpec(keyBytes);
 
-            cipher.init( Cipher.ENCRYPT_MODE, key, paramSpec );
+            cipher.init(Cipher.ENCRYPT_MODE, key, paramSpec);
 
-            byte[] result = cipher.doFinal( data );
+            byte[] result = cipher.doFinal(data);
 
             byte[] checksum = new byte[8];
-            System.arraycopy( result, result.length - 8, checksum, 0, 8 );
+            System.arraycopy(result, result.length - 8, checksum, 0, 8);
 
             return checksum;
         }
-        catch ( GeneralSecurityException nsae )
+        catch (GeneralSecurityException nsae)
         {
             nsae.printStackTrace();
             return null;
@@ -291,16 +290,16 @@ public class DesStringToKey
      * @param secretKey The key to correct, if necessary.
      * @return The corrected key.
      */
-    protected byte[] getStrongKey( byte[] secretKey )
+    protected byte[] getStrongKey(byte[] secretKey)
     {
         try
         {
-            if ( DESKeySpec.isWeak( secretKey, 0 ) )
+            if (DESKeySpec.isWeak(secretKey, 0))
             {
                 secretKey[7] ^= 0xf0;
             }
         }
-        catch ( InvalidKeyException ike )
+        catch (InvalidKeyException ike)
         {
             return new byte[8];
         }
@@ -315,7 +314,7 @@ public class DesStringToKey
      * @param string The String to encode.
      * @return The encoded String.
      */
-    protected byte[] characterEncodeString( String string )
+    protected byte[] characterEncodeString(String string)
     {
         byte encodedByteArray[] = new byte[string.length()];
 
@@ -331,11 +330,11 @@ public class DesStringToKey
      * @param encodedString
      * @return The padded byte array.
      */
-    protected byte[] padString( byte encodedString[] )
+    protected byte[] padString(byte encodedString[])
     {
         int length;
 
-        if ( encodedString.length < 8 )
+        if (encodedString.length < 8)
         {
             length = encodedString.length;
         }
@@ -344,19 +343,19 @@ public class DesStringToKey
             length = encodedString.length % 8;
         }
 
-        if ( length == 0 )
+        if (length == 0)
         {
             return encodedString;
         }
 
-        byte paddedByteArray[] = new byte[( 8 - length ) + encodedString.length];
+        byte paddedByteArray[] = new byte[(8 - length) + encodedString.length];
 
-        for ( int ii = paddedByteArray.length - 1; ii > encodedString.length - 1; ii-- )
+        for (int ii = paddedByteArray.length - 1; ii > encodedString.length - 1; ii--)
         {
             paddedByteArray[ii] = 0;
         }
 
-        System.arraycopy( encodedString, 0, paddedByteArray, 0, encodedString.length );
+        System.arraycopy(encodedString, 0, paddedByteArray, 0, encodedString.length);
 
         return paddedByteArray;
     }

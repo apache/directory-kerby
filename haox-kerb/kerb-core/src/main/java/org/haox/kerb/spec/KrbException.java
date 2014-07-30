@@ -19,4 +19,8 @@ public class KrbException extends Exception {
     public KrbException(KrbErrorCode errorCode, Throwable cause) {
         super(errorCode.getMessage(), cause);
     }
+
+    public KrbException(KrbErrorCode errorCode, String message) {
+        super(message + " with error code: " + errorCode.name());
+    }
 }

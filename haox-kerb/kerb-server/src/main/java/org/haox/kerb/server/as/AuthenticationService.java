@@ -175,8 +175,7 @@ public class AuthenticationService
                     {
                         KerberosKey samKey = SamSubsystem.getInstance().verify(clientEntry,
                                 paData.getPaDataValue());
-                        clientKey = KrbUtil.createEncryptionKey(
-                                EncryptionType.fromValue(samKey.getKeyType()), samKey.getEncoded());
+                        clientKey = new EncryptionKey(samKey.getKeyType(), samKey.getEncoded());
                     }
                 }
             } catch (SamException se) {

@@ -1,11 +1,11 @@
 package org.haox.kerb.crypto.encryption;
 
+import org.haox.kerb.common.KerberosKey;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.PrincipalName;
 
-import javax.security.auth.kerberos.KerberosKey;
-import javax.security.auth.kerberos.KerberosPrincipal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,13 +51,10 @@ public class KerberosKeyFactory
 
     public static EncryptionKey string2Key(String principalName, String passPhrase,
                                            EncryptionType encryptionType) throws KrbException {
-        KerberosPrincipal principal = new KerberosPrincipal(principalName);
+        PrincipalName principal = new PrincipalName(principalName);
         KerberosKey kerberosKey = new KerberosKey(principal, passPhrase.toCharArray(),
                 EncryptionUtil.getAlgoNameFromEncType(encryptionType));
-        EncryptionKey ekey = new EncryptionKey();
-        ekey.setKeyType(encryptionType);
-        ekey.setKeyData(kerberosKey.getEncoded());
-
+        EncryptionKey ekey = new EncryptionKey(encryptionType, kerberosKey.getKeyBytes());
         return ekey;
     }
 }

@@ -31,7 +31,9 @@ public class PrincipalName extends KrbSequenceType {
     }
 
     public PrincipalName(String nameString) {
-        this(makeNameStrings(nameString), NameType.NT_PRINCIPAL);
+        this();
+        setNameType(NameType.NT_PRINCIPAL);
+        fromeNameString(nameString);
     }
 
     public PrincipalName(List<String> nameStrings, NameType type) {
@@ -120,21 +122,19 @@ public class PrincipalName extends KrbSequenceType {
         return getName().equals(otherPrincipal.getName());
     }
 
-    private static List<String> makeNameStrings(String nameString) {
-        String realm = null;
+    private void fromeNameString(String nameString) {
+        String tmpRealm = null;
         List<String> nameStrings;
         int pos = nameString.indexOf('@');
         String nameParts = nameString;
         if (pos != -1) {
-            nameParts = nameString.substring(pos);
-            realm = nameString.substring(pos + 1);
+            nameParts = nameString.substring(0, pos);
+            tmpRealm = nameString.substring(pos + 1);
         }
-        String parts[] = nameString.split("\\/");
+        String parts[] = nameParts.split("\\/");
         nameStrings = Arrays.asList(parts);
-        if (realm != null) {
-            nameStrings.add(realm);
-        }
 
-        return nameStrings;
+        setNameStrings(nameStrings);
+        setRealm(tmpRealm);
     }
 }

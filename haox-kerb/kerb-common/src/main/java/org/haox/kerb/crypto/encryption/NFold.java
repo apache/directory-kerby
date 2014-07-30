@@ -31,7 +31,6 @@ package org.haox.kerb.crypto.encryption;
  * 1's-complement addition (that is, with end-around carry) to yield
  * a n-bit result."
  * 
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class NFold
 {
@@ -42,21 +41,18 @@ public class NFold
      * @param data The data to n-fold.
      * @return The n-folded data.
      */
-    public static byte[] nFold( int n, byte[] data )
-    {
+    public static byte[] nFold(int n, byte[] data) {
         int k = data.length * 8;
-        int lcm = getLcm( n, k );
+        int lcm = getLcm(n, k);
         int replicate = lcm / k;
         byte[] sumBytes = new byte[lcm / 8];
 
-        for ( int i = 0; i < replicate; i++ )
-        {
+        for (int i = 0; i < replicate; i++) {
             int rotation = 13 * i;
 
-            byte[] temp = rotateRight( data, data.length * 8, rotation );
+            byte[] temp = rotateRight(data, data.length * 8, rotation);
 
-            for ( int j = 0; j < temp.length; j++ )
-            {
+            for (int j = 0; j < temp.length; j++) {
                 sumBytes[j + i * temp.length] = temp[j];
             }
         }
@@ -64,15 +60,12 @@ public class NFold
         byte[] sum = new byte[n / 8];
         byte[] nfold = new byte[n / 8];
 
-        for ( int m = 0; m < lcm / n; m++ )
-        {
-            for ( int o = 0; o < n / 8; o++ )
-            {
-                sum[o] = sumBytes[o + ( m * n / 8 )];
+        for (int m = 0; m < lcm / n; m++) {
+            for (int o = 0; o < n / 8; o++) {
+                sum[o] = sumBytes[o + (m * n / 8)];
             }
 
-            nfold = sum( nfold, sum, nfold.length * 8 );
-
+            nfold = sum(nfold, sum, nfold.length * 8);
         }
 
         return nfold;
@@ -86,24 +79,21 @@ public class NFold
      * @param n2 The second number.
      * @return The least-common multiple.
      */
-    protected static int getLcm( int n1, int n2 )
-    {
+    protected static int getLcm(int n1, int n2) {
         int temp;
         int product;
 
         product = n1 * n2;
 
-        do
-        {
-            if ( n1 < n2 )
-            {
+        do {
+            if (n1 < n2) {
                 temp = n1;
                 n1 = n2;
                 n2 = temp;
             }
             n1 = n1 % n2;
         }
-        while ( n1 != 0 );
+        while (n1 != 0);
 
         return product / n2;
     }
@@ -117,15 +107,13 @@ public class NFold
      * @param step The number of positions to rotate the byte array.
      * @return The right-rotated byte array.
      */
-    private static byte[] rotateRight( byte[] in, int len, int step )
-    {
-        int numOfBytes = ( len - 1 ) / 8 + 1;
+    private static byte[] rotateRight(byte[] in, int len, int step) {
+        int numOfBytes = (len - 1) / 8 + 1;
         byte[] out = new byte[numOfBytes];
 
-        for ( int i = 0; i < len; i++ )
-        {
-            int val = getBit( in, i );
-            setBit( out, ( i + step ) % len, val );
+        for (int i = 0; i < len; i++) {
+            int val = getBit(in, i);
+            setBit(out, (i + step) % len, val);
         }
         return out;
     }
@@ -141,40 +129,32 @@ public class NFold
      * @param len The length of the byte arrays to sum.
      * @return The sum with end-around carry.
      */
-    protected static byte[] sum( byte[] n1, byte[] n2, int len )
-    {
-        int numOfBytes = ( len - 1 ) / 8 + 1;
+    protected static byte[] sum(byte[] n1, byte[] n2, int len) {
+        int numOfBytes = (len - 1) / 8 + 1;
         byte[] out = new byte[numOfBytes];
         int carry = 0;
 
-        for ( int i = len - 1; i > -1; i-- )
-        {
-            int n1b = getBit( n1, i );
-            int n2b = getBit( n2, i );
+        for (int i = len - 1; i > -1; i--) {
+            int n1b = getBit(n1, i);
+            int n2b = getBit(n2, i);
 
             int sum = n1b + n2b + carry;
 
-            if ( sum == 0 || sum == 1 )
-            {
-                setBit( out, i, sum );
+            if (sum == 0 || sum == 1) {
+                setBit(out, i, sum);
                 carry = 0;
-            }
-            else if ( sum == 2 )
-            {
+            } else if (sum == 2) {
                 carry = 1;
-            }
-            else if ( sum == 3 )
-            {
-                setBit( out, i, 1 );
+            } else if (sum == 3) {
+                setBit(out, i, 1);
                 carry = 1;
             }
         }
 
-        if ( carry == 1 )
-        {
+        if (carry == 1) {
             byte[] carryArray = new byte[n1.length];
             carryArray[carryArray.length - 1] = 1;
-            out = sum( out, carryArray, n1.length * 8 );
+            out = sum(out, carryArray, n1.length * 8);
         }
 
         return out;
@@ -188,13 +168,12 @@ public class NFold
      * @param pos The position to get the bit at.
      * @return The value of the bit.
      */
-    private static int getBit( byte[] data, int pos )
-    {
+    private static int getBit(byte[] data, int pos) {
         int posByte = pos / 8;
         int posBit = pos % 8;
 
         byte valByte = data[posByte];
-        int valInt = valByte >> ( 8 - ( posBit + 1 ) ) & 0x0001;
+        int valInt = valByte >> (8 - (posBit + 1)) & 0x0001;
         return valInt;
     }
 
@@ -204,15 +183,14 @@ public class NFold
      *
      * @param data The data to set the bit in.
      * @param pos The position of the bit to set.
-     * @param The value to set the bit to.
+     * @param val The value to set the bit to.
      */
-    private static void setBit( byte[] data, int pos, int val )
-    {
+    private static void setBit(byte[] data, int pos, int val) {
         int posByte = pos / 8;
         int posBit = pos % 8;
         byte oldByte = data[posByte];
-        oldByte = ( byte ) ( ( ( 0xFF7F >> posBit ) & oldByte ) & 0x00FF );
-        byte newByte = ( byte ) ( ( val << ( 8 - ( posBit + 1 ) ) ) | oldByte );
+        oldByte = (byte) (((0xFF7F >> posBit) & oldByte) & 0x00FF);
+        byte newByte = (byte) ((val << (8 - (posBit + 1))) | oldByte);
         data[posByte] = newByte;
     }
 }

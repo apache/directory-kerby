@@ -80,7 +80,7 @@ public class RandomKeyFactory
 
             byte[] keyBytes = key.getEncoded();
 
-            return KrbUtil.createEncryptionKey(encryptionType, keyBytes);
+            return new EncryptionKey(encryptionType, keyBytes);
         }
         catch ( NoSuchAlgorithmException nsae )
         {

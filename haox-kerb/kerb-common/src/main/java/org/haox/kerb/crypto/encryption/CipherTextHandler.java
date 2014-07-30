@@ -42,7 +42,7 @@ public class CipherTextHandler
      * @param key The key to use for encrypting.
      * @param usage The key usage.
      * @return The Kerberos EncryptedData.
-     * @throws org.apache.directory.shared.kerberos.exceptions.KerberosException
+     * @throws KrbException
      */
     public EncryptedData seal(EncryptionKey key, Asn1Type message, KeyUsage usage) throws KrbException {
         try
@@ -70,7 +70,7 @@ public class CipherTextHandler
      * @param data The data to decrypt
      * @param usage The key usage number
      * @return The decrypted data as a byte[]
-     * @throws org.apache.directory.shared.kerberos.exceptions.KerberosException If the decoding failed
+     * @throws KrbException If the decoding failed
      */
     public byte[] decrypt(EncryptionKey key, EncryptedData data, KeyUsage usage) throws KrbException {
         EncryptionEngine engine = getEngine(key);

@@ -28,7 +28,7 @@ public abstract class KrbInputStream extends DataInputStream
         EncryptionType encryptionType = EncryptionType.fromValue(eType);
 
         byte[] keyData = readCountedOctets();
-        EncryptionKey key = KrbUtil.createEncryptionKey(encryptionType, keyData);
+        EncryptionKey key = new EncryptionKey(encryptionType, keyData);
 
         return key;
     }
