@@ -23,6 +23,7 @@ public class EncryptionUtil
         cipherAlgoMap.put( "des3", "DESede" );
         cipherAlgoMap.put( "des", "DES" );
 
+        /*
         oldEncTypes.add( DES_CBC_CRC );
         oldEncTypes.add( DES_CBC_MD4 );
         oldEncTypes.add( DES_CBC_MD5 );
@@ -37,6 +38,7 @@ public class EncryptionUtil
         oldEncTypes.add( RSAENCRYPTION_ENVOID );
         oldEncTypes.add( RSAES_OAEP_ENV_OID );
         oldEncTypes.add( RC4_HMAC );
+        */
     }
 
     /**

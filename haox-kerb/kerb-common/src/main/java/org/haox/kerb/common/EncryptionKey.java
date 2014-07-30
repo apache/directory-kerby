@@ -122,21 +122,21 @@ public class EncryptionKey
     public static EncryptionKey[] acquireSecretKeys(char[] password,
             String salt) throws KrbException {
 
-        int[] etypes = EType.getDefaults("default_tkt_enctypes");
+        int[] etypes = AbstractEncType.getDefaults("default_tkt_enctypes");
         if (etypes == null) {
-            etypes = EType.getBuiltInDefaults();
+            etypes = AbstractEncType.getBuiltInDefaults();
         }
 
         EncryptionKey[] encKeys = new EncryptionKey[etypes.length];
         for (int i = 0; i < etypes.length; i++) {
-            if (EType.isSupported(etypes[i])) {
+            if (AbstractEncType.isSupported(etypes[i])) {
                 encKeys[i] = new EncryptionKey(
                         stringToKey(password, salt, null, etypes[i]),
                         etypes[i], null);
             } else {
                 if (DEBUG) {
                     System.out.println("Encryption Type " +
-                        EType.toString(etypes[i]) +
+                            AbstractEncType.toString(etypes[i]) +
                         " is not supported/enabled");
                 }
             }
@@ -202,7 +202,7 @@ public class EncryptionKey
 
                 default:
                         throw new IllegalArgumentException("encryption type " +
-                        EType.toString(keyType) + " not supported");
+                                AbstractEncType.toString(keyType) + " not supported");
             }
 
         } catch (GeneralSecurityException e) {
@@ -230,7 +230,7 @@ public class EncryptionKey
         } else if (algorithm.equalsIgnoreCase("AES256")) {
             keyType = EncryptedData.ETYPE_AES256_CTS_HMAC_SHA1_96;
             // validate if AES256 is enabled
-            if (!EType.isSupported(keyType)) {
+            if (!AbstractEncType.isSupported(keyType)) {
                 throw new IllegalArgumentException("Algorithm " + algorithm +
                         " not enabled");
             }
@@ -324,16 +324,16 @@ public class EncryptionKey
         throws KrbException {
 
         // check if encryption type is supported
-        if (!EType.isSupported(etype)) {
+        if (!AbstractEncType.isSupported(etype)) {
             throw new KrbException("Encryption type " +
-                EType.toString(etype) + " is not supported/enabled");
+                    AbstractEncType.toString(etype) + " is not supported/enabled");
         }
 
         int ktype;
         boolean etypeFound = false;
         for (int i = 0; i < keys.length; i++) {
             ktype = keys[i].getEType();
-            if (EType.isSupported(ktype)) {
+            if (AbstractEncType.isSupported(ktype)) {
                 Integer kv = keys[i].getKeyVersionNumber();
                 if (etype == ktype) {
                     etypeFound = true;

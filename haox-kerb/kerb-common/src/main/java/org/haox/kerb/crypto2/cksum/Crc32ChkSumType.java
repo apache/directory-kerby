@@ -1,10 +1,12 @@
-package org.haox.kerb.crypto2;
+package org.haox.kerb.crypto2.cksum;
 
 import org.haox.kerb.common.Checksum;
+import org.haox.kerb.crypto2.AbstractChkSumType;
+import org.haox.kerb.crypto2.crc32;
 
-public class Crc32CksumType extends CksumType {
+public class Crc32ChkSumType extends AbstractChkSumType {
 
-    public Crc32CksumType() {
+    public Crc32ChkSumType() {
     }
 
     public int confounderSize() {

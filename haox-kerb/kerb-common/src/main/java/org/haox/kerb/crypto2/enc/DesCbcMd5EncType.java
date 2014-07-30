@@ -1,18 +1,20 @@
-package org.haox.kerb.crypto2;
+package org.haox.kerb.crypto2.enc;
 
 import org.haox.kerb.common.Checksum;
 import org.haox.kerb.common.EncryptedData;
+import org.haox.kerb.crypto2.enc.DesCbcEncType;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.security.MessageDigest;
 
-public final class DesCbcMd5EType extends DesCbcEType {
+public final class DesCbcMd5EncType extends DesCbcEncType {
 
-    public DesCbcMd5EType() {
+    public DesCbcMd5EncType() {
     }
 
-    public int eType() {
-        return EncryptedData.ETYPE_DES_CBC_MD5;
+    public EncryptionType eType() {
+        return EncryptionType.DES_CBC_MD5;
     }
 
     public int minimumPadSize() {

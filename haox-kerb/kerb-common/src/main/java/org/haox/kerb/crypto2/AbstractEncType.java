@@ -2,8 +2,10 @@ package org.haox.kerb.crypto2;
 
 import org.haox.kerb.common.Config;
 import org.haox.kerb.common.EncryptedData;
+import org.haox.kerb.crypto2.enc.*;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
 import javax.crypto.Cipher;
@@ -11,10 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//only needed if dataSize() implementation changes back to spec;
-//see dataSize() below
-
-public abstract class EType {
+public abstract class AbstractEncType implements EncType {
 
     private static final boolean DEBUG = true;
     private static final boolean ALLOW_WEAK_CRYPTO;
@@ -35,59 +34,7 @@ public abstract class EType {
         ALLOW_WEAK_CRYPTO = allowed;
     }
 
-    public static EType getInstance  (int eTypeConst)
-        throws KrbException {
-        EType eType = null;
-        String eTypeName = null;
-        switch (eTypeConst) {
-        case EncryptedData.ETYPE_NULL:
-            eType = new NullEType();
-            eTypeName = "sun.security.krb5.internal.crypto.NullEType";
-            break;
-        case EncryptedData.ETYPE_DES_CBC_CRC:
-            eType = new DesCbcCrcEType();
-            eTypeName = "sun.security.krb5.internal.crypto.DesCbcCrcEType";
-            break;
-        case EncryptedData.ETYPE_DES_CBC_MD5:
-            eType = new DesCbcMd5EType();
-            eTypeName = "sun.security.krb5.internal.crypto.DesCbcMd5EType";
-            break;
-
-        case EncryptedData.ETYPE_DES3_CBC_HMAC_SHA1_KD:
-            eType = new Des3CbcHmacSha1KdEType();
-            eTypeName =
-                "sun.security.krb5.internal.crypto.Des3CbcHmacSha1KdEType";
-            break;
-
-        case EncryptedData.ETYPE_AES128_CTS_HMAC_SHA1_96:
-            eType = new Aes128CtsHmacSha1EType();
-            eTypeName =
-                "sun.security.krb5.internal.crypto.Aes128CtsHmacSha1EType";
-            break;
-
-        case EncryptedData.ETYPE_AES256_CTS_HMAC_SHA1_96:
-            eType = new Aes256CtsHmacSha1EType();
-            eTypeName =
-                "sun.security.krb5.internal.crypto.Aes256CtsHmacSha1EType";
-            break;
-
-        case EncryptedData.ETYPE_ARCFOUR_HMAC:
-            eType = new ArcFourHmacEType();
-            eTypeName = "sun.security.krb5.internal.crypto.ArcFourHmacEType";
-            break;
-
-        default:
-            String msg = "encryption type = " + toString(eTypeConst)
-                + " ("  + eTypeConst + ")";
-            throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP, msg);
-        }
-        if (DEBUG) {
-            System.out.println(">>> EType: " + eTypeName);
-        }
-        return eType;
-    }
-
-    public abstract int eType();
+    public abstract EncryptionType eType();
 
     public abstract int minimumPadSize();
 
@@ -266,16 +213,16 @@ public abstract class EType {
             throws KrbException {
 
         // check if encryption type is supported
-        if (!EType.isSupported(etype)) {
+        if (!AbstractEncType.isSupported(etype)) {
             throw new KrbException("Encryption type " +
-                    EType.toString(etype) + " is not supported/enabled");
+                    AbstractEncType.toString(etype) + " is not supported/enabled");
         }
 
         int ktype;
         boolean etypeFound = false;
         for (int i = 0; i < keys.length; i++) {
             ktype = keys[i].getKeyType().getValue();
-            if (EType.isSupported(ktype)) {
+            if (AbstractEncType.isSupported(ktype)) {
                 Integer kv = keys[i].getKvno();
                 if (etype == ktype) {
                     etypeFound = true;

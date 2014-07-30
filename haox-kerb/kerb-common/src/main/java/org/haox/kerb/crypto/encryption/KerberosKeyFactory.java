@@ -1,15 +1,13 @@
 package org.haox.kerb.crypto.encryption;
 
-import org.haox.kerb.common.KerberosKey;
+import org.haox.kerb.crypto2.*;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.PrincipalName;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.security.GeneralSecurityException;
+import java.util.*;
 
 public class KerberosKeyFactory
 {
@@ -50,11 +48,64 @@ public class KerberosKeyFactory
     }
 
     public static EncryptionKey string2Key(String principalName, String passPhrase,
-                                           EncryptionType encryptionType) throws KrbException {
+                                           EncryptionType eType) throws KrbException {
         PrincipalName principal = new PrincipalName(principalName);
-        KerberosKey kerberosKey = new KerberosKey(principal, passPhrase.toCharArray(),
-                EncryptionUtil.getAlgoNameFromEncType(encryptionType));
-        EncryptionKey ekey = new EncryptionKey(encryptionType, kerberosKey.getKeyBytes());
-        return ekey;
+        byte[] keyBytes = stringToKey(passPhrase.toCharArray(),
+                getSalt(principal), null, eType);
+        return new EncryptionKey(eType, keyBytes);
+    }
+
+    private static String getSalt(PrincipalName principalName) {
+        StringBuffer salt = new StringBuffer();
+        if (principalName.getRealm() != null) {
+            salt.append(principalName.getRealm().toString());
+        }
+        List<String> nameStrings = principalName.getNameStrings();
+        for (String ns : nameStrings) {
+            salt.append(ns);
+        }
+        return salt.toString();
+    }
+
+    private static byte[] stringToKey(char[] password, String salt,
+                                      byte[] s2kparams, EncryptionType keyType) throws KrbException {
+
+        char[] slt = salt.toCharArray();
+        char[] pwsalt = new char[password.length + slt.length];
+        System.arraycopy(password, 0, pwsalt, 0, password.length);
+        System.arraycopy(slt, 0, pwsalt, password.length, slt.length);
+        Arrays.fill(slt, '0');
+
+        try {
+            switch (keyType) {
+                case DES_CBC_CRC:
+                case DES_CBC_MD5:
+                    return Des.string_to_key_bytes(pwsalt);
+
+                case DES3_CBC_SHA1:
+                case DES3_CBC_SHA1_KD:
+                    return Des3.stringToKey(pwsalt);
+
+                case ARCFOUR_HMAC:
+                    return ArcFourHmac.stringToKey(password);
+
+                case AES128_CTS_HMAC_SHA1_96:
+                    return Aes128.stringToKey(password, salt, s2kparams);
+
+                case AES256_CTS_HMAC_SHA1_96:
+                    return Aes256.stringToKey(password, salt, s2kparams);
+
+                default:
+                    throw new IllegalArgumentException("encryption type "
+                            + keyType.name() + " not supported");
+            }
+
+        } catch (GeneralSecurityException e) {
+            KrbException ke = new KrbException(e.getMessage());
+            ke.initCause(e);
+            throw ke;
+        } finally {
+            Arrays.fill(pwsalt, '0');
+        }
     }
 }

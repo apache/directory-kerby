@@ -1,13 +1,15 @@
-package org.haox.kerb.crypto2;
+package org.haox.kerb.crypto2.cksum;
 
 import org.haox.kerb.common.Checksum;
+import org.haox.kerb.crypto2.AbstractChkSumType;
+import org.haox.kerb.crypto2.Aes256;
 import org.haox.kerb.spec.KrbException;
 
 import java.security.GeneralSecurityException;
 
-public class HmacSha1Aes256CksumType extends CksumType {
+public class HmacSha1Aes256ChkSumType extends AbstractChkSumType {
 
-    public HmacSha1Aes256CksumType() {
+    public HmacSha1Aes256ChkSumType() {
     }
 
     public int confounderSize() {

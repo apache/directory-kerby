@@ -1,14 +1,16 @@
-package org.haox.kerb.crypto2;
+package org.haox.kerb.crypto2.cksum;
 
 import org.haox.kerb.common.Checksum;
+import org.haox.kerb.crypto2.AbstractChkSumType;
+import org.haox.kerb.crypto2.Des;
 import org.haox.kerb.spec.KrbException;
 
 import javax.crypto.spec.DESKeySpec;
 import java.security.InvalidKeyException;
 
-public class DesMacKCksumType extends CksumType {
+public class DesMacKChkSumType extends AbstractChkSumType {
 
-    public DesMacKCksumType() {
+    public DesMacKChkSumType() {
     }
 
     public int confounderSize() {

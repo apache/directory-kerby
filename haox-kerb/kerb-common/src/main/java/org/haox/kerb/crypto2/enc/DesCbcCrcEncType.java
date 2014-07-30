@@ -1,16 +1,18 @@
-package org.haox.kerb.crypto2;
+package org.haox.kerb.crypto2.enc;
 
 import org.haox.kerb.common.Checksum;
 import org.haox.kerb.common.EncryptedData;
+import org.haox.kerb.crypto2.crc32;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.EncryptionType;
 
-public class DesCbcCrcEType extends DesCbcEType {
+public class DesCbcCrcEncType extends DesCbcEncType {
 
-    public DesCbcCrcEType() {
+    public DesCbcCrcEncType() {
     }
 
-    public int eType() {
-        return EncryptedData.ETYPE_DES_CBC_CRC;
+    public EncryptionType eType() {
+        return EncryptionType.DES_CBC_CRC;
     }
 
     public int minimumPadSize() {

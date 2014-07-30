@@ -1,6 +1,7 @@
 package org.haox.kerb.common;
 
-import org.haox.kerb.crypto2.EType;
+import org.haox.kerb.crypto2.AbstractEncType;
+import org.haox.kerb.crypto2.EncType;
 import org.haox.kerb.spec.KrbException;
 
 /**
@@ -45,95 +46,4 @@ public class EncryptedData implements Cloneable {
     public static final int
          ETYPE_AES256_CTS_HMAC_SHA1_96 = 18; // 16      0           16
 
-    private EncryptedData() {
-    }
-
-    public EncryptedData(
-                         int new_eType,
-                         Integer new_kvno,
-                         byte[] new_cipher) {
-        eType = new_eType;
-        kvno = new_kvno;
-        cipher = new_cipher;
-    }
-
-    public EncryptedData(
-                         EncryptionKey key,
-                         byte[] plaintext,
-                         int usage)
-        throws KrbException {
-        EType etypeEngine = EType.getInstance(key.getEType());
-        cipher = etypeEngine.encrypt(plaintext, key.getBytes(), usage);
-        eType = key.getEType();
-        kvno = key.getKeyVersionNumber();
-    }
-
-    // currently destructive on cipher
-    public byte[] decrypt(
-                          EncryptionKey key, int usage)
-        throws KrbException {
-            if (eType != key.getEType()) {
-                throw new KrbException(
-                    "EncryptedData is encrypted using keytype " +
-                    EType.toString(eType) +
-                    " but decryption key is of type " +
-                    EType.toString(key.getEType()));
-            }
-
-            EType etypeEngine = EType.getInstance(eType);
-            plain = etypeEngine.decrypt(cipher, key.getBytes(), usage);
-            cipher = null;
-            return etypeEngine.decryptedData(plain);
-        }
-
-    private byte[] decryptedData() throws KrbException {
-        if (plain != null) {
-            EType etypeEngine = EType.getInstance(eType);
-            return etypeEngine.decryptedData(plain);
-        }
-        return null;
-    }
-
-    /**
-     * Reset asn.1 data stream after decryption, remove redundant bytes.
-     * @param data the decrypted data from decrypt().
-     * @return the reset byte array which holds exactly one asn1 datum
-     * including its tag and length.
-     *
-     */
-    public byte[] reset(byte[] data) {
-        byte[]  bytes = null;
-        // for asn.1 encoded data, we use length field to
-        // determine the data length and remove redundant paddings.
-        if ((data[1] & 0xFF) < 128) {
-            bytes = new byte[data[1] + 2];
-            System.arraycopy(data, 0, bytes, 0, data[1] + 2);
-        } else {
-            if ((data[1] & 0xFF) > 128) {
-                int len = data[1] & (byte)0x7F;
-                int result = 0;
-                for (int i = 0; i < len; i++) {
-                    result |= (data[i + 2] & 0xFF) << (8 * (len - i - 1));
-                }
-                bytes = new byte[result + len + 2];
-                System.arraycopy(data, 0, bytes, 0, result + len + 2);
-            }
-        }
-        return bytes;
-    }
-
-    public int getEType() {
-        return eType;
-    }
-
-    public Integer getKeyVersionNumber() {
-        return kvno;
-    }
-
-    /**
-     * Returns the raw cipher text bytes, not in ASN.1 encoding.
-     */
-    public byte[] getBytes() {
-        return cipher;
-    }
 }

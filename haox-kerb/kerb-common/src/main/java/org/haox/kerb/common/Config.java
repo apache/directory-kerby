@@ -1,11 +1,9 @@
 package org.haox.kerb.common;
 
-import org.haox.kerb.crypto2.EType;
-import org.haox.kerb.spec.KrbErrorException;
+import org.haox.kerb.crypto2.AbstractEncType;
+import org.haox.kerb.crypto2.EncType;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.KrbError;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
-import org.haox.kerb.spec.type.common.PrincipalName;
 import sun.net.dns.ResolverConfiguration;
 
 import java.io.*;
@@ -856,7 +854,7 @@ public class Config {
                 System.out.println("Using builtin default etypes for " +
                     enctypes);
             }
-            etype = EType.getBuiltInDefaults();
+            etype = AbstractEncType.getBuiltInDefaults();
         } else {
             for (int j = 0; j < default_enctypes.length(); j++) {
                 if (default_enctypes.substring(j, j + 1).equals(",")) {
@@ -873,7 +871,7 @@ public class Config {
             for (int i = 0; i < len; i++) {
                 type = getType(st.nextToken());
                 if ((type != -1) &&
-                    (EType.isSupported(type))) {
+                    (AbstractEncType.isSupported(type))) {
                     ls.add(type);
                 }
             }
@@ -909,7 +907,7 @@ public class Config {
      */
     /*
      * This method converts the string representation of encryption type and
-     * checksum type to int value that can be later used by EType and
+     * checksum type to int value that can be later used by EncType and
      * Checksum classes.
      */
     public int getType(String input) {

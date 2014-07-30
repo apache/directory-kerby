@@ -2,145 +2,80 @@ package org.haox.kerb.spec.type.common;
 
 import org.haox.kerb.spec.type.KrbEnum;
 
+/**
+ * According to krb5.hin
+ */
 public enum EncryptionType implements KrbEnum {
-    /**
-     * The "unknown" encryption type.
-     */
-    UNKNOWN(-1, "UNKNOWN"),
 
-    /**
-     * The "null" encryption type.
-     */
-    NULL(0, "null"),
+    NULL(0, "null", "Null encryption type"),
 
-    /**
-     * The des-cbc-crc encryption type.
-     */
-    DES_CBC_CRC(1, "des-cbc-crc"),
+    DES_CBC_CRC(0x0001, "des-cbc-crc", "DES cbc mode with CRC-32"),
 
-    /**
-     * The des-cbc-md4 encryption type.
-     */
-    DES_CBC_MD4(2, "des-cbc-md4"),
+    DES_CBC_MD4(0x0002, "des-cbc-md4", "DES cbc mode with RSA-MD4"),
 
-    /**
-     * The des-cbc-md5 encryption type.
-     */
-    DES_CBC_MD5(3, "des-cbc-md5"),
+    DES_CBC_MD5(0x0003, "des-cbc-md5", "DES cbc mode with RSA-MD5"),
+    DES(0x0003, "des", "DES cbc mode with RSA-MD5"),
 
-    /**
-     * The reserved (4) encryption type.
-     */
-    RESERVED4(4, "[reserved]"),
+    DES_CBC_RAW(0x0004, "des-cbc-raw", "DES cbc mode raw"),
 
-    /**
-     * The des3-cbc-md5 encryption type.
-     */
-    DES3_CBC_MD5(5, "des3-cbc-md5"),
+    DES3_CBC_SHA(0x0005, "des3-cbc-sha", "DES-3 cbc with SHA1"),
 
-    /**
-     * The reserved (6) encryption type.
-     */
-    RESERVED6(6, "[reserved]"),
+    DES3_CBC_RAW(0x0006, "des3-cbc-raw", "Triple DES cbc mode raw"),
 
-    /**
-     * The des3-cbc-sha1 encryption type.
-     */
-    DES3_CBC_SHA1(7, "des3-cbc-sha1"),
+    RESERVED1(0x0007, "reserved1", "Reserved 1"),
 
-    /**
-     * The dsaWithSHA1-CmsOID encryption type.
-     */
-    DSAWITHSHA1_CMSOID(9, "dsaWithSHA1-CmsOID"),
+    DES_HMAC_SHA1(0x0008, "des-hmac-sha1", "DES with HMAC/sha1"),
 
-    /**
-     * The md5WithRSAEncryption-CmsOID encryption type.
-     */
-    MD5WITHRSAENCRYPTION_CMSOID(10, "md5WithRSAEncryption-CmsOID"),
+    DSA_SHA1_CMS(0x0009, "dsa-sha1-cms", "DSA with SHA1, CMS signature"),
 
-    /**
-     * The sha1WithRSAEncryption-CmsOID encryption type.
-     */
-    SHA1WITHRSAENCRYPTION_CMSOID(11, "sha1WithRSAEncryption-CmsOID"),
+    MD5_RSA_CMS(0x000a, "md5-rsa-cms", "MD5 with RSA, CMS signature"),
 
-    /**
-     * The rc2CBC-EnvOID encryption type.
-     */
-    RC2CBC_ENVOID(12, "rc2CBC-EnvOID"),
+    SHA1_RSA_CMS(0x000b, "sha1-rsa-cms", "SHA1 with RSA, CMS signature"),
 
-    /**
-     * The rsaEncryption-EnvOID encryption type.
-     */
-    RSAENCRYPTION_ENVOID(13, "rsaEncryption-EnvOID"),
+    RC2_CBC_ENV(0x000c, "rc2-cbc-env", "RC2 cbc mode, CMS enveloped data"),
 
-    /**
-     * The rsaES-OAEP-ENV-OID encryption type.
-     */
-    RSAES_OAEP_ENV_OID(14, "rsaES-OAEP-ENV-OID"),
+    RSA_ENV(0x000d, "rsa-env", "RSA encryption, CMS enveloped data"),
 
-    /**
-     * The des-ede3-cbc-Env-OID encryption type.
-     */
-    DES_EDE3_CBC_ENV_OID(15, "des-ede3-cbc-Env-OID"),
+    RSA_ES_OAEP_ENV(0x000e, "rsa-es-oaep-env", "RSA w/OEAP encryption, CMS enveloped data"),
 
-    /**
-     * The des3-cbc-sha1-kd encryption type.
-     */
-    DES3_CBC_SHA1_KD(16, "des3-cbc-sha1-kd"),
+    DES3_CBC_ENV(0x000f, "des3-cbc-env", "DES-3 cbc mode, CMS enveloped data"),
 
-    /**
-     * The aes128-cts-hmac-sha1-96 encryption type.
-     */
-    AES128_CTS_HMAC_SHA1_96(17, "aes128-cts-hmac-sha1-96"),
+    DES3_CBC_SHA1(0x0010, "des3-cbc-sha1", "Triple DES cbc mode with HMAC/sha1"),
+    DES3_HMAC_SHA1(0x0010, "des3-hmac-sha1", "Triple DES cbc mode with HMAC/sha1"),
+    DES3_CBC_SHA1_KD(0x0010, "des3-cbc-sha1-kd", "Triple DES cbc mode with HMAC/sha1"),
 
-    /**
-     * The aes256-cts-hmac-sha1-96 encryption type.
-     */
-    AES256_CTS_HMAC_SHA1_96(18, "aes256-cts-hmac-sha1-96"),
+    AES128_CTS_HMAC_SHA1_96 (0x0011, "aes128-cts-hmac-sha1-96", "AES-128 CTS mode with 96-bit SHA-1 HMAC"),
+    AES128_CTS (0x0011, "aes128-cts", "AES-128 CTS mode with 96-bit SHA-1 HMAC"),
 
-    /**
-     * The rc4-hmac encryption type.
-     */
-    RC4_HMAC(23, "rc4-hmac"),
+    AES256_CTS_HMAC_SHA1_96(0x0012, "aes256-cts-hmac-sha1-96", "AES-256 CTS mode with 96-bit SHA-1 HMAC"),
+    AES256_CTS(0x0012, "aes256-cts", "AES-256 CTS mode with 96-bit SHA-1 HMAC"),
 
-    /**
-     * The rc4-hmac-exp encryption type.
-     */
-    RC4_HMAC_EXP(24, "rc4-hmac-exp"),
+    ARCFOUR_HMAC(0x0017, "arcfour-hmac", "ArcFour with HMAC/md5"),
+    RC4_HMAC(0x0017, "rc4-hmac", "ArcFour with HMAC/md5"),
+    ARCFOUR_HMAC_MD5(0x0017, "arcfour-hmac-md5", "ArcFour with HMAC/md5"),
 
-    /**
-     * The subkey-keymaterial encryption type.
-     */
-    SUBKEY_KEYMATERIAL(65, "subkey-keymaterial"),
+    ARCFOUR_HMAC_EXP(0x0018, "arcfour-hmac-exp", "Exportable ArcFour with HMAC/md5"),
+    RC4_HMAC_EXP(0x0018, "rc4-hmac-exp", "Exportable ArcFour with HMAC/md5"),
+    ARCFOUR_HMAC_MD5_EXP(0x0018, "arcfour-hmac-md5-exp", "Exportable ArcFour with HMAC/md5"),
 
-    /**
-     * The rc4-md4 encryption type.
-     */
-    RC4_MD4(-128, "rc4-md4"),
+    CAMELLIA128_CTS_CMAC(0x0019, "camellia128-cts-cmac", "Camellia-128 CTS mode with CMAC"),
+    CAMELLIA128_CTS(0x0019, "camellia128-cts", "Camellia-128 CTS mode with CMAC"),
 
-    /**
-     * The c4-hmac-old encryption type.
-     */
-    RC4_HMAC_OLD(-133, "rc4-hmac-old"),
+    CAMELLIA256_CTS_CMAC(0x001a, "camellia256-cts-cmac", "Camellia-256 CTS mode with CMAC"),
+    CAMELLIA256_CTS(0x001a, "camellia256-cts", "Camellia-256 CTS mode with CMAC"),
 
-    /**
-     * The rc4-hmac-old-exp encryption type.
-     */
-    RC4_HMAC_OLD_EXP(-135, "rc4-hmac-old-exp");
+    UNKNOWN(0x01ff, "UNKNOWN", "Unknown encryption type");
 
-    /**
-     * The value/code for the encryption type.
-     */
     private final int value;
 
-    /**
-     * The name
-     */
     private final String name;
 
-    private EncryptionType(int value, String name) {
+    private final String displayName;
+
+    private EncryptionType(int value, String name, String displayName) {
         this.value = value;
         this.name = name;
+        this.displayName = displayName;
     }
 
     @Override
@@ -150,6 +85,10 @@ public enum EncryptionType implements KrbEnum {
 
     public String getName() {
         return name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public static EncryptionType fromValue(Integer value) {
@@ -163,10 +102,10 @@ public enum EncryptionType implements KrbEnum {
         return UNKNOWN;
     }
 
-    public static EncryptionType fromName(String etypeName) {
-        if (etypeName != null) {
+    public static EncryptionType fromName(String name) {
+        if (name != null) {
             for (EncryptionType e : values()) {
-                if (e.getName() == etypeName) {
+                if (e.getName() == name) {
                     return (EncryptionType) e;
                 }
             }

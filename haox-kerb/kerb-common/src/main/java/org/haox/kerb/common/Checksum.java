@@ -1,12 +1,8 @@
 package org.haox.kerb.common;
 
-import org.haox.kerb.crypto2.CksumType;
+import org.haox.kerb.crypto2.AbstractChkSumType;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.Arrays;
 
 public class Checksum {
 
@@ -112,7 +108,7 @@ public class Checksum {
         throws KrbException {
 
         cksumType = new_cksumType;
-        CksumType cksumEngine = CksumType.getInstance(cksumType);
+        AbstractChkSumType cksumEngine = AbstractChkSumType.getInstance(cksumType);
         if (!cksumEngine.isSafe()) {
             checksum = cksumEngine.calculateChecksum(data, data.length);
         } else {
@@ -131,7 +127,7 @@ public class Checksum {
                         EncryptionKey key, int usage)
         throws KrbException {
         cksumType = new_cksumType;
-        CksumType cksumEngine = CksumType.getInstance(cksumType);
+        AbstractChkSumType cksumEngine = AbstractChkSumType.getInstance(cksumType);
         if (!cksumEngine.isSafe())
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_INAPP_CKSUM);
         checksum =
@@ -147,7 +143,7 @@ public class Checksum {
     public boolean verifyKeyedChecksum(byte[] data, EncryptionKey key,
                                         int usage)
         throws KrbException {
-        CksumType cksumEngine = CksumType.getInstance(cksumType);
+        AbstractChkSumType cksumEngine = AbstractChkSumType.getInstance(cksumType);
         if (!cksumEngine.isSafe())
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_INAPP_CKSUM);
         return cksumEngine.verifyKeyedChecksum(data,
@@ -166,7 +162,7 @@ public class Checksum {
     boolean isEqual(Checksum cksum) throws KrbException {
         if (cksumType != cksum.cksumType)
             return false;
-        CksumType cksumEngine = CksumType.getInstance(cksumType);
+        AbstractChkSumType cksumEngine = AbstractChkSumType.getInstance(cksumType);
         return cksumEngine.isChecksumEqual(checksum, cksum.checksum);
     }
 

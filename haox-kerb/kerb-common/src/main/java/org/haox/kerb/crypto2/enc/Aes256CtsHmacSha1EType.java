@@ -1,39 +1,42 @@
-package org.haox.kerb.crypto2;
+package org.haox.kerb.crypto2.enc;
 
 import org.haox.kerb.common.Checksum;
 import org.haox.kerb.common.EncryptedData;
+import org.haox.kerb.crypto2.AbstractEncType;
+import org.haox.kerb.crypto2.Aes256;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.security.GeneralSecurityException;
 
-public final class ArcFourHmacEType extends EType {
+public final class Aes256CtsHmacSha1EType extends AbstractEncType {
 
-    public int eType() {
-        return EncryptedData.ETYPE_ARCFOUR_HMAC;
+    public EncryptionType eType() {
+        return EncryptionType.AES256_CTS_HMAC_SHA1_96;
     }
 
     public int minimumPadSize() {
-        return 1;
+        return 0;
     }
 
     public int confounderSize() {
-        return 8;
+        return blockSize();
     }
 
     public int checksumType() {
-        return Checksum.CKSUMTYPE_HMAC_MD5_ARCFOUR;
+        return Checksum.CKSUMTYPE_HMAC_SHA1_96_AES256;
     }
 
     public int checksumSize() {
-        return ArcFourHmac.getChecksumLength();
+        return Aes256.getChecksumLength();
     }
 
     public int blockSize() {
-        return 1;
+        return 16;
     }
 
     public int keySize() {
-        return 16; // bytes
+        return 32; // bytes
     }
 
     public byte[] encrypt(byte[] data, byte[] key, int usage)
@@ -45,7 +48,7 @@ public final class ArcFourHmacEType extends EType {
     public byte[] encrypt(byte[] data, byte[] key, byte[] ivec, int usage)
         throws KrbException {
         try {
-            return ArcFourHmac.encrypt(key, usage, ivec, data, 0, data.length);
+            return Aes256.encrypt(key, usage, ivec, data, 0, data.length);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);
@@ -62,7 +65,7 @@ public final class ArcFourHmacEType extends EType {
     public byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec, int usage)
         throws KrbException {
         try {
-            return ArcFourHmac.decrypt(key, usage, ivec, cipher, 0, cipher.length);
+            return Aes256.decrypt(key, usage, ivec, cipher, 0, cipher.length);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);
@@ -71,7 +74,7 @@ public final class ArcFourHmacEType extends EType {
     }
 
     // Override default, because our decrypted data does not return confounder
-    // Should eventually get rid of EType.decryptedData and
+    // Should eventually get rid of EncType.decryptedData and
     // EncryptedData.decryptedData altogether
     public byte[] decryptedData(byte[] data) {
         return data;

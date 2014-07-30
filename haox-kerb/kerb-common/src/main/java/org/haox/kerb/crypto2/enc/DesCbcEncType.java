@@ -1,10 +1,12 @@
-package org.haox.kerb.crypto2;
+package org.haox.kerb.crypto2.enc;
 
 import org.haox.kerb.common.Confounder;
+import org.haox.kerb.crypto2.AbstractEncType;
+import org.haox.kerb.crypto2.Des;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
-abstract class DesCbcEType extends EType {
+abstract class DesCbcEncType extends AbstractEncType {
     protected abstract byte[] calculateChecksum(byte[] data, int size)
         throws KrbException;
 

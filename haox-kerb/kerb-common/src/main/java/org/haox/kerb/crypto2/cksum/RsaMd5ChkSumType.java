@@ -1,13 +1,14 @@
-package org.haox.kerb.crypto2;
+package org.haox.kerb.crypto2.cksum;
 
 import org.haox.kerb.common.Checksum;
+import org.haox.kerb.crypto2.AbstractChkSumType;
 import org.haox.kerb.spec.KrbException;
 
 import java.security.MessageDigest;
 
-public final class RsaMd5CksumType extends CksumType {
+public final class RsaMd5ChkSumType extends AbstractChkSumType {
 
-    public RsaMd5CksumType() {
+    public RsaMd5ChkSumType() {
     }
 
     public int confounderSize() {

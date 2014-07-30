@@ -1,21 +1,23 @@
-package org.haox.kerb.crypto2;
+package org.haox.kerb.crypto2.cksum;
 
 import org.haox.kerb.common.Checksum;
+import org.haox.kerb.crypto2.AbstractChkSumType;
+import org.haox.kerb.crypto2.Des3;
 import org.haox.kerb.spec.KrbException;
 
 import java.security.GeneralSecurityException;
 
-public class HmacSha1Aes128CksumType extends CksumType {
+public class HmacSha1Des3KdChkSumType extends AbstractChkSumType {
 
-    public HmacSha1Aes128CksumType() {
+    public HmacSha1Des3KdChkSumType() {
     }
 
     public int confounderSize() {
-        return 16;
+        return 8;
     }
 
     public int cksumType() {
-        return Checksum.CKSUMTYPE_HMAC_SHA1_96_AES128;
+        return Checksum.CKSUMTYPE_HMAC_SHA1_DES3_KD;
     }
 
     public boolean isSafe() {
@@ -23,11 +25,11 @@ public class HmacSha1Aes128CksumType extends CksumType {
     }
 
     public int cksumSize() {
-        return 12;  // bytes
+        return 20;  // bytes
     }
 
     public int keySize() {
-        return 16;   // bytes
+        return 24;   // bytes
     }
 
     public byte[] calculateChecksum(byte[] data, int size) {
@@ -45,11 +47,11 @@ public class HmacSha1Aes128CksumType extends CksumType {
         int usage) throws KrbException {
 
          try {
-            return Aes128.calculateChecksum(key, usage, data, 0, size);
+             return Des3.calculateChecksum(key, usage, data, 0, size);
          } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException(e.getMessage());
-            ke.initCause(e);
-            throw ke;
+             KrbException ke = new KrbException(e.getMessage());
+             ke.initCause(e);
+             throw ke;
          }
     }
 
@@ -65,13 +67,14 @@ public class HmacSha1Aes128CksumType extends CksumType {
         byte[] key, byte[] checksum, int usage) throws KrbException {
 
          try {
-            byte[] newCksum = Aes128.calculateChecksum(key, usage,
-                                                        data, 0, size);
-            return isChecksumEqual(checksum, newCksum);
+             byte[] newCksum = Des3.calculateChecksum(key, usage,
+                 data, 0, size);
+
+             return isChecksumEqual(checksum, newCksum);
          } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException(e.getMessage());
-            ke.initCause(e);
-            throw ke;
+             KrbException ke = new KrbException(e.getMessage());
+             ke.initCause(e);
+             throw ke;
          }
-    }
+     }
 }
