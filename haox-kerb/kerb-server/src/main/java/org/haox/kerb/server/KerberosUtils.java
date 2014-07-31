@@ -5,8 +5,8 @@ import org.apache.directory.server.i18n.I18n;
 import org.apache.directory.shared.kerberos.KerberosConstants;
 import org.apache.directory.shared.kerberos.codec.options.ApOptions;
 import org.haox.kerb.codec.KrbCodec;
-import org.haox.kerb.crypto.encryption.CipherTextHandler;
-import org.haox.kerb.crypto.encryption.KeyUsage;
+import org.haox.kerb.crypto2.EncryptionHandler;
+import org.haox.kerb.crypto2.KeyUsage;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.store.PrincipalStore;
 import org.haox.kerb.server.store.PrincipalStoreEntry;
@@ -338,8 +338,9 @@ public class KerberosUtils
     }
 
     public static Authenticator verifyAuthHeader(ApReq authHeader, Ticket ticket, EncryptionKey serverKey,
-                                                  long clockSkew, ReplayCheckService replayCache, boolean emptyAddressesAllowed, InetAddress clientAddress,
-                                                  CipherTextHandler lockBox, KeyUsage authenticatorKeyUsage, boolean isValidate) throws KrbException, KrbException {
+                                                  long clockSkew, ReplayCheckService replayCache,
+                                                  boolean emptyAddressesAllowed, InetAddress clientAddress,
+                                                  KeyUsage authenticatorKeyUsage, boolean isValidate) throws KrbException, KrbException {
         if (authHeader.getPvno() != KerberosConstants.KERBEROS_V5)
         {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
@@ -377,13 +378,13 @@ public class KerberosUtils
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_NOKEY);
         }
 
-        byte[] encTicketPartData = lockBox.decrypt(ticketKey, ticket.getEncryptedEncPart(),
+        byte[] encTicketPartData = EncryptionHandler.decrypt(ticket.getEncryptedEncPart(), ticketKey,
                 KeyUsage.AS_OR_TGS_REP_TICKET_WITH_SRVKEY);
         EncTicketPart encPart = KrbCodec.decode(encTicketPartData, EncTicketPart.class);
         ticket.setEncPart(encPart);
 
-        byte[] authenticatorData = lockBox.decrypt(ticket.getEncPart().getKey(), authHeader.getEncryptedAuthenticator(),
-                authenticatorKeyUsage);
+        byte[] authenticatorData = EncryptionHandler.decrypt(authHeader.getEncryptedAuthenticator(),
+                ticket.getEncPart().getKey(), authenticatorKeyUsage);
 
         Authenticator authenticator = KrbCodec.decode(authenticatorData, Authenticator.class);
 

@@ -1,14 +1,16 @@
 package org.haox.kerb.client;
 
 import org.haox.asn1.type.Asn1Type;
-import org.haox.kerb.common.KrbUtil;
-import org.haox.kerb.crypto.encryption.KeyUsage;
+import org.haox.kerb.crypto2.EncryptionHandler;
+import org.haox.kerb.crypto2.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.ap.ApOptions;
 import org.haox.kerb.spec.type.ap.ApReq;
 import org.haox.kerb.spec.type.ap.Authenticator;
-import org.haox.kerb.spec.type.common.*;
+import org.haox.kerb.spec.type.common.EncryptedData;
+import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.kdc.KdcOptions;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.kdc.KdcReqBody;
@@ -88,10 +90,10 @@ public class TgsRequest extends KdcRequest {
 
     protected EncryptedData encodingAndEncryptWithSessionKey(Asn1Type value, KeyUsage usage) throws KrbException {
         byte[] encodedData = value.encode();
-        return getContext().getCipherHandler().encrypt(sessionKey, encodedData, usage);
+        return EncryptionHandler.encrypt(encodedData, sessionKey, usage);
     }
 
     protected byte[] decryptWithSessionKey(EncryptedData data, KeyUsage usage) throws KrbException {
-        return getContext().getCipherHandler().decrypt(sessionKey, data, usage);
+        return EncryptionHandler.decrypt(data, sessionKey, usage);
     }
 }

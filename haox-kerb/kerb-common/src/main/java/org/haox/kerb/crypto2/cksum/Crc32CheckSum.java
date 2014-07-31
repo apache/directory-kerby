@@ -1,20 +1,19 @@
 package org.haox.kerb.crypto2.cksum;
 
-import org.haox.kerb.common.Checksum;
-import org.haox.kerb.crypto2.AbstractChkSumType;
 import org.haox.kerb.crypto2.crc32;
+import org.haox.kerb.spec.type.common.CheckSumType;
 
-public class Crc32ChkSumType extends AbstractChkSumType {
+public class Crc32CheckSum extends AbstractCheckSumTypeHandler {
 
-    public Crc32ChkSumType() {
+    public Crc32CheckSum() {
     }
 
     public int confounderSize() {
         return 0;
     }
 
-    public int cksumType() {
-        return Checksum.CKSUMTYPE_CRC32;
+    public CheckSumType cksumType() {
+        return CheckSumType.CRC32;
     }
 
     public boolean isSafe() {
@@ -29,18 +28,9 @@ public class Crc32ChkSumType extends AbstractChkSumType {
         return 0;
     }
 
-    public byte[] calculateChecksum(byte[] data, int size) {
-        return crc32.byte2crc32sum_bytes(data, size);
-    }
-
-    public byte[] calculateKeyedChecksum(byte[] data, int size,
-                                         byte[] key, int usage) {
-                                             return null;
-                                         }
-
-    public boolean verifyKeyedChecksum(byte[] data, int size,
-                                       byte[] key, byte[] checksum, int usage) {
-        return false;
+    @Override
+    public byte[] calculateChecksum(byte[] data) {
+        return crc32.byte2crc32sum_bytes(data, data.length);
     }
 
     public static byte[] int2quad(long input) {

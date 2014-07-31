@@ -37,7 +37,7 @@ public class Asn1GeneralizedTime extends Asn1Simple<Date>
         boolean withZone = timeZonePart != null;
         String millSecs = getMillSeconds(dateStr);
 
-        fixedDateStr = dateStr.substring(0, 16) + millSecs;
+        fixedDateStr = dateStr.substring(0, 14) + millSecs;
         if (withZ) {
             sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
             sdf.setTimeZone(new SimpleTimeZone(0, "Z"));

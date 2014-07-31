@@ -1,6 +1,7 @@
 package org.haox.kerb.codec.kerberos;
 
 import org.haox.kerb.codec.DecodingUtil;
+import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
 import javax.crypto.Cipher;
@@ -14,10 +15,10 @@ import java.security.Key;
 
 public class KerberosEncData {
 
-    public static byte[] decrypt(byte[] data, Key inputKey, EncryptionType etype) throws GeneralSecurityException, IOException {
-        Key key = inputKey;
+    public static byte[] decrypt(byte[] data, EncryptionKey inputKey, EncryptionType etype) throws GeneralSecurityException, IOException {
+        EncryptionKey key = inputKey;
         if (key == null) {
-            key = KerberosCredentials.getServerKey(etype);
+            //key = KerberosCredentials.getServerKey(etype);
         }
 
         Cipher cipher = null;
@@ -33,7 +34,7 @@ public class KerberosEncData {
             byte[] ivec = new byte[8];
             IvParameterSpec params = new IvParameterSpec(ivec);
 
-            SecretKeySpec skSpec = new SecretKeySpec(key.getEncoded(), "DES");
+            SecretKeySpec skSpec = new SecretKeySpec(key.getKeyData(), "DES");
             SecretKey sk = (SecretKey)skSpec;
 
             cipher.init(Cipher.DECRYPT_MODE, sk, params);
@@ -53,7 +54,7 @@ public class KerberosEncData {
             break;
         case RC4_HMAC:
             byte[] code = DecodingUtil.asBytes(Cipher.DECRYPT_MODE);
-            byte[] codeHmac = getHmac(code, key.getEncoded());
+            byte[] codeHmac = getHmac(code, key.getKeyData());
 
             byte[] dataChecksum = new byte[KerberosConstants.CHECKSUM_SIZE];
             System.arraycopy(data, 0, dataChecksum, 0, KerberosConstants.CHECKSUM_SIZE);

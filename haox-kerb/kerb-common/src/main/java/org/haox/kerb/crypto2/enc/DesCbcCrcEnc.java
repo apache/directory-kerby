@@ -1,14 +1,13 @@
 package org.haox.kerb.crypto2.enc;
 
-import org.haox.kerb.common.Checksum;
-import org.haox.kerb.common.EncryptedData;
 import org.haox.kerb.crypto2.crc32;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
-public class DesCbcCrcEncType extends DesCbcEncType {
+public class DesCbcCrcEnc extends DesCbcEnc {
 
-    public DesCbcCrcEncType() {
+    public DesCbcCrcEnc() {
     }
 
     public EncryptionType eType() {
@@ -23,8 +22,8 @@ public class DesCbcCrcEncType extends DesCbcEncType {
         return 8;
     }
 
-    public int checksumType() {
-        return Checksum.CKSUMTYPE_CRC32;
+    public CheckSumType checksumType() {
+        return CheckSumType.CRC32;
     }
 
     public int checksumSize() {

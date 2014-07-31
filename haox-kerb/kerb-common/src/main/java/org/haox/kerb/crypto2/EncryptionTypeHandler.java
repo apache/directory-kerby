@@ -1,9 +1,10 @@
 package org.haox.kerb.crypto2;
 
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
-public interface EncType {
+public interface EncryptionTypeHandler {
 
     public EncryptionType eType();
 
@@ -11,7 +12,7 @@ public interface EncType {
 
     public int confounderSize();
 
-    public int checksumType();
+    public CheckSumType checksumType();
 
     public int checksumSize();
 

@@ -1,16 +1,14 @@
 package org.haox.kerb.crypto2.enc;
 
-import org.haox.kerb.common.Checksum;
-import org.haox.kerb.common.EncryptedData;
-import org.haox.kerb.crypto2.enc.DesCbcEncType;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.security.MessageDigest;
 
-public final class DesCbcMd5EncType extends DesCbcEncType {
+public final class DesCbcMd5Enc extends DesCbcEnc {
 
-    public DesCbcMd5EncType() {
+    public DesCbcMd5Enc() {
     }
 
     public EncryptionType eType() {
@@ -25,8 +23,8 @@ public final class DesCbcMd5EncType extends DesCbcEncType {
         return 8;
     }
 
-    public int checksumType() {
-        return Checksum.CKSUMTYPE_RSA_MD5;
+    public CheckSumType checksumType() {
+        return CheckSumType.RSA_MD5;
     }
 
     public int checksumSize() {

@@ -2,6 +2,7 @@ package org.haox.kerb.codec.kerberos;
 
 import org.haox.kerb.keytab.Keytab;
 import org.haox.kerb.keytab.KeytabEntry;
+import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.PrincipalName;
 
@@ -21,7 +22,22 @@ public class KerberosCredentials {
         keytab.load(kis);
     }
 
-    public static Key getServerKey(EncryptionType etype) throws IOException {
+    public static EncryptionKey getServerKey2(EncryptionType etype) throws IOException {
+        if (keytab == null) {
+            init();
+        }
+
+        for (PrincipalName principal : keytab.getPrincipals()) {
+            for (KeytabEntry entry : keytab.getKeytabEntries(principal)) {
+                if (entry.getKey().getKeyType() == etype) {
+                    return entry.getKey();
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Key getServerKey1(EncryptionType etype) throws IOException {
         if (keytab == null) {
             init();
         }

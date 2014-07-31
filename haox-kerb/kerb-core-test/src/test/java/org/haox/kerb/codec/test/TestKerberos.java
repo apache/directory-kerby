@@ -4,16 +4,16 @@ import org.haox.kerb.codec.kerberos.AuthzDataUtil;
 import org.haox.kerb.codec.kerberos.KerberosCredentials;
 import org.haox.kerb.codec.kerberos.KerberosTicket;
 import org.haox.kerb.codec.kerberos.KerberosToken;
-import org.haox.kerb.codec.pac.PacSid;
 import org.haox.kerb.codec.pac.Pac;
 import org.haox.kerb.codec.pac.PacLogonInfo;
+import org.haox.kerb.codec.pac.PacSid;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.AuthorizationData;
+import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.security.auth.kerberos.KerberosKey;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -26,11 +26,11 @@ public class TestKerberos {
     private byte[] aes128Token;
     private byte[] aes256Token;
     private byte[] corruptToken;
-    private KerberosKey rc4Keys[];
-    private KerberosKey desKeys[];
-    private KerberosKey aes128Keys[];
-    private KerberosKey aes256Keys[];
-    private KerberosKey corruptKeys[];
+    private EncryptionKey rc4Key;
+    private EncryptionKey desKey;
+    private EncryptionKey aes128Key;
+    private EncryptionKey aes256Key;
+    private EncryptionKey corruptKey;
 
     @Before
     public void setUp() throws IOException {
@@ -62,35 +62,34 @@ public class TestKerberos {
         file = this.getClass().getClassLoader().getResourceAsStream("rc4-key-data");
         keyData = new byte[file.available()];
         file.read(keyData);
-        rc4Keys = new KerberosKey[]{new KerberosKey(null, keyData, 23, 2)};
+        rc4Key = new EncryptionKey(23, keyData, 2);
         file.close();
 
         file = this.getClass().getClassLoader().getResourceAsStream("des-key-data");
         keyData = new byte[file.available()];
         file.read(keyData);
-        desKeys = new KerberosKey[]{new KerberosKey(null, keyData, 3, 2)};
+        desKey = new EncryptionKey(3, keyData, 2);
         file.close();
 
         file = this.getClass().getClassLoader().getResourceAsStream("aes128-key-data");
         keyData = new byte[file.available()];
         file.read(keyData);
-        aes128Keys = new KerberosKey[]{new KerberosKey(null, keyData, 17, 2)};
+        aes128Key = new EncryptionKey(17, keyData, 2);
         file.close();
 
         file = this.getClass().getClassLoader().getResourceAsStream("aes256-key-data");
         keyData = new byte[file.available()];
         file.read(keyData);
-        aes256Keys = new KerberosKey[]{new KerberosKey(null, keyData, 18, 2)};
+        aes256Key = new EncryptionKey(18, keyData, 2);
         file.close();
 
-        corruptKeys = new KerberosKey[]{new KerberosKey(null,
-                new byte[]{5, 4, 2, 1, 5, 4, 2, 1, 3}, 23, 2)};
+        corruptKey = new EncryptionKey(23, new byte[]{5, 4, 2, 1, 5, 4, 2, 1, 3}, 2);
     }
 
     @Test
     public void testRc4Ticket() throws KrbException {
         try {
-            KerberosToken token = new KerberosToken(rc4Token, rc4Keys);
+            KerberosToken token = new KerberosToken(rc4Token, rc4Key);
 
             Assert.assertNotNull(token);
             Assert.assertNotNull(token.getApRequest());
@@ -110,7 +109,7 @@ public class TestKerberos {
     @Test
     public void testDesTicket() throws KrbException {
         try {
-            KerberosToken token = new KerberosToken(desToken, desKeys);
+            KerberosToken token = new KerberosToken(desToken, desKey);
 
             Assert.assertNotNull(token);
             Assert.assertNotNull(token.getApRequest());
@@ -131,7 +130,7 @@ public class TestKerberos {
     public void testAes128Ticket() {
         KerberosToken token = null;
         try {
-            token = new KerberosToken(aes128Token, aes128Keys);
+            token = new KerberosToken(aes128Token, aes128Key);
             Assert.fail("Should have thrown IOException.");
         } catch(IOException e) {
             Assert.assertNotNull(e);
@@ -143,7 +142,7 @@ public class TestKerberos {
     public void testAes256Ticket() {
         KerberosToken token = null;
         try {
-            token = new KerberosToken(aes256Token, aes256Keys);
+            token = new KerberosToken(aes256Token, aes256Key);
             Assert.fail("Should have thrown IOException.");
         } catch(IOException e) {
             Assert.assertNotNull(e);
@@ -155,7 +154,7 @@ public class TestKerberos {
     public void testCorruptTicket() {
         KerberosToken token = null;
         try {
-            token = new KerberosToken(corruptToken, rc4Keys);
+            token = new KerberosToken(corruptToken, rc4Key);
             Assert.fail("Should have thrown IOException.");
         } catch(IOException e) {
             Assert.assertNotNull(e);
@@ -167,7 +166,7 @@ public class TestKerberos {
     public void testEmptyTicket() {
         KerberosToken token = null;
         try {
-            token = new KerberosToken(new byte[0], rc4Keys);
+            token = new KerberosToken(new byte[0], rc4Key);
             Assert.fail("Should have thrown IOException.");
         } catch(IOException e) {
             Assert.assertNotNull(e);
@@ -179,7 +178,7 @@ public class TestKerberos {
     public void testNullTicket() {
         KerberosToken token = null;
         try {
-            token = new KerberosToken(null, rc4Keys);
+            token = new KerberosToken(null, rc4Key);
             Assert.fail("Should have thrown NullPointerException.");
         } catch(IOException e) {
             e.printStackTrace();
@@ -194,7 +193,7 @@ public class TestKerberos {
     public void testCorruptKey() {
         KerberosToken token = null;
         try {
-            token = new KerberosToken(rc4Token, corruptKeys);
+            token = new KerberosToken(rc4Token, corruptKey);
             Assert.fail("Should have thrown IOException.");
         } catch(IOException e) {
             Assert.assertNotNull(e);
@@ -206,7 +205,7 @@ public class TestKerberos {
     public void testNoMatchingKey() {
         KerberosToken token = null;
         try {
-            token = new KerberosToken(rc4Token, desKeys);
+            token = new KerberosToken(rc4Token, desKey);
             Assert.fail("Should have thrown IOException.");
         } catch(IOException e) {
             Assert.assertNotNull(e);
@@ -217,7 +216,7 @@ public class TestKerberos {
     @Test
     public void testKerberosPac() throws KrbException {
         try {
-            KerberosToken token = new KerberosToken(rc4Token, rc4Keys);
+            KerberosToken token = new KerberosToken(rc4Token, rc4Key);
 
             Assert.assertNotNull(token);
             Assert.assertNotNull(token.getApRequest());
@@ -230,7 +229,7 @@ public class TestKerberos {
             Assert.assertTrue(authzData.getElements().size() > 0);
 
             Pac pac = AuthzDataUtil.getPac(authzData,
-                    KerberosCredentials.getServerKey(ticket.getTicket().getEncPart().getKey().getKeyType()));
+                    KerberosCredentials.getServerKey1(ticket.getTicket().getEncPart().getKey().getKeyType()));
             Assert.assertNotNull(pac);
 
             PacLogonInfo logonInfo = pac.getLogonInfo();

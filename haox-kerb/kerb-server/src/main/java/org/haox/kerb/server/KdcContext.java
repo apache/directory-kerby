@@ -1,7 +1,6 @@
 package org.haox.kerb.server;
 
 import org.haox.kerb.common.KrbUtil;
-import org.haox.kerb.crypto.encryption.CipherTextHandler;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.store.PrincipalStore;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -30,7 +29,6 @@ public abstract class KdcContext
 
     /** The client IP address */
     private InetAddress clientAddress;
-    private CipherTextHandler cipherTextHandler;
 
     /** The encryption type */
     private EncryptionType encryptionType;
@@ -115,25 +113,6 @@ public abstract class KdcContext
     {
         this.clientAddress = clientAddress;
     }
-
-
-    /**
-     * @return Returns the {@link CipherTextHandler}.
-     */
-    public CipherTextHandler getCipherTextHandler()
-    {
-        return cipherTextHandler;
-    }
-
-
-    /**
-     * @param cipherTextHandler The {@link CipherTextHandler} to set.
-     */
-    public void setCipherTextHandler( CipherTextHandler cipherTextHandler )
-    {
-        this.cipherTextHandler = cipherTextHandler;
-    }
-
 
     /**
      * Returns the encryption type to use for this session.

@@ -1,7 +1,6 @@
 package org.haox.kerb.client;
 
 import org.haox.kerb.common.KrbUtil;
-import org.haox.kerb.crypto.encryption.CipherTextHandler;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.security.SecureRandom;
@@ -16,17 +15,11 @@ public class KrbContext {
     private String serverPrincipal;
     private List<EncryptionType> defaultEtypes;
 
-    public CipherTextHandler getCipherHandler() {
-        return cipherHandler;
-    }
-
-    private CipherTextHandler cipherHandler;
     private SecureRandom nonceGenerator;
     private KrbConfig config;
 
     public KrbContext() {
         nonceGenerator = new SecureRandom(String.valueOf(System.currentTimeMillis()).getBytes());
-        cipherHandler = new CipherTextHandler();
     }
 
     public int generateNonce() {

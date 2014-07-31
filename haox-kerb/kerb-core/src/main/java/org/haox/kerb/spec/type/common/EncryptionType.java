@@ -7,7 +7,7 @@ import org.haox.kerb.spec.type.KrbEnum;
  */
 public enum EncryptionType implements KrbEnum {
 
-    NULL(0, "null", "Null encryption type"),
+    NONE(0, "none", "None encryption type"),
 
     DES_CBC_CRC(0x0001, "des-cbc-crc", "DES cbc mode with CRC-32"),
 
@@ -21,8 +21,6 @@ public enum EncryptionType implements KrbEnum {
     DES3_CBC_SHA(0x0005, "des3-cbc-sha", "DES-3 cbc with SHA1"),
 
     DES3_CBC_RAW(0x0006, "des3-cbc-raw", "Triple DES cbc mode raw"),
-
-    RESERVED1(0x0007, "reserved1", "Reserved 1"),
 
     DES_HMAC_SHA1(0x0008, "des-hmac-sha1", "DES with HMAC/sha1"),
 
@@ -62,9 +60,9 @@ public enum EncryptionType implements KrbEnum {
     CAMELLIA128_CTS(0x0019, "camellia128-cts", "Camellia-128 CTS mode with CMAC"),
 
     CAMELLIA256_CTS_CMAC(0x001a, "camellia256-cts-cmac", "Camellia-256 CTS mode with CMAC"),
-    CAMELLIA256_CTS(0x001a, "camellia256-cts", "Camellia-256 CTS mode with CMAC"),
+    CAMELLIA256_CTS(0x001a, "camellia256-cts", "Camellia-256 CTS mode with CMAC");
 
-    UNKNOWN(0x01ff, "UNKNOWN", "Unknown encryption type");
+    //UNKNOWN(0x01ff, "UNKNOWN", "Unknown encryption type");
 
     private final int value;
 
@@ -99,7 +97,7 @@ public enum EncryptionType implements KrbEnum {
                 }
             }
         }
-        return UNKNOWN;
+        return NONE;
     }
 
     public static EncryptionType fromName(String name) {
@@ -110,6 +108,6 @@ public enum EncryptionType implements KrbEnum {
                 }
             }
         }
-        return UNKNOWN;
+        return NONE;
     }
 }

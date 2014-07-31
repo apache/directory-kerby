@@ -1,4 +1,4 @@
-package org.haox.kerb.crypto.encryption;
+package org.haox.kerb.common;
 
 import org.haox.kerb.crypto2.*;
 import org.haox.kerb.spec.KrbException;

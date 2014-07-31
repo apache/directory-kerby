@@ -1,16 +1,16 @@
 package org.haox.kerb.crypto.checksum;
 
-import org.haox.kerb.crypto.encryption.KeyUsage;
-import org.haox.kerb.spec.type.common.ChecksumType;
+import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.CheckSumType;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 class RsaMd5Checksum implements ChecksumEngine
 {
-    public ChecksumType checksumType()
+    public CheckSumType checksumType()
     {
-        return ChecksumType.RSA_MD5;
+        return CheckSumType.RSA_MD5;
     }
 
 

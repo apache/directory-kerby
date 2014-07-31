@@ -2,6 +2,7 @@ package org.haox.kerb.codec.kerberos;
 
 import org.haox.asn1.Asn1InputBuffer;
 import org.haox.asn1.type.Asn1Item;
+import org.haox.kerb.spec.type.common.EncryptionKey;
 
 import javax.security.auth.kerberos.KerberosKey;
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class KerberosToken {
         this(token, null);
     }
 
-    public KerberosToken(byte[] token, KerberosKey[] keys) throws IOException {
+    public KerberosToken(byte[] token, EncryptionKey key) throws IOException {
 
         if(token.length <= 0)
                     throw new IOException("kerberos.token.empty");
@@ -31,7 +32,7 @@ public class KerberosToken {
 
             buffer.skipBytes(2);
 
-            apRequest = new KerberosApRequest(buffer.readAllLeftBytes(), keys);
+            apRequest = new KerberosApRequest(buffer.readAllLeftBytes(), key);
         } catch(IOException e) {
             throw new IOException("kerberos.token.malformed", e);
         }

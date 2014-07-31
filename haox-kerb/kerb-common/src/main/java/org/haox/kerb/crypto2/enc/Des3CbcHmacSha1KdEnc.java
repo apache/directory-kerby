@@ -1,18 +1,16 @@
 package org.haox.kerb.crypto2.enc;
 
-import org.haox.kerb.common.Checksum;
-import org.haox.kerb.common.EncryptedData;
-import org.haox.kerb.crypto2.AbstractEncType;
-import org.haox.kerb.crypto2.Aes256;
+import org.haox.kerb.crypto2.Des3;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.security.GeneralSecurityException;
 
-public final class Aes256CtsHmacSha1EType extends AbstractEncType {
+public final class Des3CbcHmacSha1KdEnc extends AbstractEncryptionTypeHandler {
 
     public EncryptionType eType() {
-        return EncryptionType.AES256_CTS_HMAC_SHA1_96;
+        return EncryptionType.DES3_CBC_SHA1_KD;
     }
 
     public int minimumPadSize() {
@@ -23,20 +21,20 @@ public final class Aes256CtsHmacSha1EType extends AbstractEncType {
         return blockSize();
     }
 
-    public int checksumType() {
-        return Checksum.CKSUMTYPE_HMAC_SHA1_96_AES256;
+    public CheckSumType checksumType() {
+        return CheckSumType.HMAC_SHA1_DES3_KD;
     }
 
     public int checksumSize() {
-        return Aes256.getChecksumLength();
+        return Des3.getChecksumLength();
     }
 
     public int blockSize() {
-        return 16;
+        return 8;
     }
 
     public int keySize() {
-        return 32; // bytes
+        return 24; // bytes
     }
 
     public byte[] encrypt(byte[] data, byte[] key, int usage)
@@ -48,7 +46,7 @@ public final class Aes256CtsHmacSha1EType extends AbstractEncType {
     public byte[] encrypt(byte[] data, byte[] key, byte[] ivec, int usage)
         throws KrbException {
         try {
-            return Aes256.encrypt(key, usage, ivec, data, 0, data.length);
+            return Des3.encrypt(key, usage, ivec, data, 0, data.length);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);
@@ -57,7 +55,7 @@ public final class Aes256CtsHmacSha1EType extends AbstractEncType {
     }
 
     public byte[] decrypt(byte[] cipher, byte[] key, int usage)
-        throws KrbException {
+        throws KrbException{
         byte[] ivec = new byte[blockSize()];
         return decrypt(cipher, key, ivec, usage);
     }
@@ -65,7 +63,7 @@ public final class Aes256CtsHmacSha1EType extends AbstractEncType {
     public byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec, int usage)
         throws KrbException {
         try {
-            return Aes256.decrypt(key, usage, ivec, cipher, 0, cipher.length);
+            return Des3.decrypt(key, usage, ivec, cipher, 0, cipher.length);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);

@@ -1,25 +1,25 @@
 package org.haox.kerb.crypto2.cksum;
 
-import org.haox.kerb.common.Checksum;
-import org.haox.kerb.common.Confounder;
-import org.haox.kerb.crypto2.AbstractChkSumType;
+import org.haox.kerb.crypto2.Confounder;
 import org.haox.kerb.crypto2.Des;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.CheckSumType;
 
 import javax.crypto.spec.DESKeySpec;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 
-public class DesMacChkSumType extends AbstractChkSumType {
+public final class RsaMd5DesCheckSum extends AbstractCheckSumTypeHandler {
 
-    public DesMacChkSumType() {
+    public RsaMd5DesCheckSum() {
     }
 
     public int confounderSize() {
         return 8;
     }
 
-    public int cksumType() {
-        return Checksum.CKSUMTYPE_DES_MAC;
+    public CheckSumType cksumType() {
+        return CheckSumType.RSA_MD5_DES;
     }
 
     public boolean isSafe() {
@@ -27,48 +27,29 @@ public class DesMacChkSumType extends AbstractChkSumType {
     }
 
     public int cksumSize() {
-        return 16;
+        return 24;
     }
 
     public int keySize() {
         return 8;
     }
 
-    public byte[] calculateChecksum(byte[] data, int size) {
-        return null;
-    }
-
-    /**
-     * Calculates keyed checksum.
-     * @param data the data used to generate the checksum.
-     * @param size length of the data.
-     * @param key the key used to encrypt the checksum.
-     * @return keyed checksum.
-     *
-     * @modified by Yanni Zhang, 12/08/99.
-     */
-    public byte[] calculateKeyedChecksum(byte[] data, int size, byte[] key,
-        int usage) throws KrbException {
-        byte[] new_data = new byte[size + confounderSize()];
+    @Override
+    public byte[] calculateKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
+        //prepend confounder
+        byte[] new_data = new byte[data.length + confounderSize()];
         byte[] conf = Confounder.bytes(confounderSize());
         System.arraycopy(conf, 0, new_data, 0, confounderSize());
-        System.arraycopy(data, 0, new_data, confounderSize(), size);
+        System.arraycopy(data, 0, new_data, confounderSize(), data.length);
 
-        //check for weak keys
-        try {
-            if (DESKeySpec.isWeak(key, 0)) {
-                key[7] = (byte)(key[7] ^ 0xF0);
-            }
-        } catch (InvalidKeyException ex) {
-            // swallow, since it should never happen
-        }
-        byte[] residue_ivec = new byte[key.length];
-        byte[] residue = Des.des_cksum(residue_ivec, new_data, key);
+        //calculate md5 cksum
+        byte[] mdc_cksum = calculateChecksum(new_data, new_data.length);
         byte[] cksum = new byte[cksumSize()];
         System.arraycopy(conf, 0, cksum, 0, confounderSize());
-        System.arraycopy(residue, 0, cksum, confounderSize(),
+        System.arraycopy(mdc_cksum, 0, cksum, confounderSize(),
                          cksumSize() - confounderSize());
 
+        //compute modified key
         byte[] new_key = new byte[keySize()];
         System.arraycopy(key, 0, new_key, 0, key.length);
         for (int i = 0; i < new_key.length; i++)
@@ -89,37 +70,23 @@ public class DesMacChkSumType extends AbstractChkSumType {
         return enc_cksum;
     }
 
-    /**
-     * Verifies keyed checksum.
-     * @param data the data.
-     * @param size the length of data.
-     * @param key the key used to encrypt the checksum.
-     * @param checksum
-     * @return true if verification is successful.
-     *
-     * @modified by Yanni Zhang, 12/08/99.
-     */
-    public boolean verifyKeyedChecksum(byte[] data, int size,
-        byte[] key, byte[] checksum, int usage) throws KrbException {
+    @Override
+    public boolean verifyKeyedChecksum(byte[] data,
+        byte[] key, int usage, byte[] checksum) throws KrbException {
+        //decrypt checksum
         byte[] cksum = decryptKeyedChecksum(checksum, key);
 
-        byte[] new_data = new byte[size + confounderSize()];
+        //prepend confounder
+        byte[] new_data = new byte[data.length + confounderSize()];
         System.arraycopy(cksum, 0, new_data, 0, confounderSize());
-        System.arraycopy(data, 0, new_data, confounderSize(), size);
+        System.arraycopy(data, 0, new_data, confounderSize(), data.length);
 
-        //check for weak keys
-        try {
-            if (DESKeySpec.isWeak(key, 0)) {
-                key[7] = (byte)(key[7] ^ 0xF0);
-            }
-        } catch (InvalidKeyException ex) {
-            // swallow, since it should never happen
-        }
-        byte[] ivec = new byte[key.length];
-        byte[] new_cksum = Des.des_cksum(ivec, new_data, key);
+        byte[] new_cksum = calculateChecksum(new_data, new_data.length);
+        //extract original cksum value
         byte[] orig_cksum = new byte[cksumSize() - confounderSize()];
         System.arraycopy(cksum,  confounderSize(), orig_cksum, 0,
                          cksumSize() - confounderSize());
+
         return isChecksumEqual(orig_cksum, new_cksum);
     }
 
@@ -132,6 +99,7 @@ public class DesMacChkSumType extends AbstractChkSumType {
      * @modified by Yanni Zhang, 12/08/99.
      */
     private byte[] decryptKeyedChecksum(byte[] enc_cksum, byte[] key) throws KrbException {
+        //compute modified key
         byte[] new_key = new byte[keySize()];
         System.arraycopy(key, 0, new_key, 0, key.length);
         for (int i = 0; i < new_key.length; i++)
@@ -145,9 +113,35 @@ public class DesMacChkSumType extends AbstractChkSumType {
             // swallow, since it should never happen
         }
         byte[] ivec = new byte[new_key.length];
+
         byte[] cksum = new byte[enc_cksum.length];
         Des.cbc_encrypt(enc_cksum, cksum, new_key, ivec, false);
         return cksum;
+    }
+
+    /**
+     * Calculates checksum using MD5.
+     * @param data the data used to generate the checksum.
+     * @param size length of the data.
+     * @return the checksum.
+     *
+     * @modified by Yanni Zhang, 12/08/99.
+     */
+    public byte[] calculateChecksum(byte[] data, int size) throws KrbException{
+        MessageDigest md5;
+        byte[] result = null;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+        } catch (Exception e) {
+            throw new KrbException("JCE provider may not be installed. " + e.getMessage());
+        }
+        try {
+            md5.update(data);
+            result = md5.digest();
+        } catch (Exception e) {
+            throw new KrbException(e.getMessage());
+        }
+        return result;
     }
 
 }

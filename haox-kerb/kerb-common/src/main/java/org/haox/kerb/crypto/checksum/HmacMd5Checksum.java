@@ -1,7 +1,7 @@
 package org.haox.kerb.crypto.checksum;
 
-import org.haox.kerb.crypto.encryption.KeyUsage;
-import org.haox.kerb.spec.type.common.ChecksumType;
+import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.CheckSumType;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -10,9 +10,9 @@ import java.security.GeneralSecurityException;
 
 class HmacMd5Checksum implements ChecksumEngine
 {
-    public ChecksumType checksumType()
+    public CheckSumType checksumType()
     {
-        return ChecksumType.HMAC_MD5_ARCFOUR;
+        return CheckSumType.HMAC_MD5_ARCFOUR;
     }
 
 

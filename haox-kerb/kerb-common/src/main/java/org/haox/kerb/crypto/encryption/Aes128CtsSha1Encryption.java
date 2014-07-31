@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.encryption;
 
-import org.haox.kerb.spec.type.common.ChecksumType;
+import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
 public class Aes128CtsSha1Encryption extends AesCtsSha1Encryption
@@ -11,9 +11,9 @@ public class Aes128CtsSha1Encryption extends AesCtsSha1Encryption
     }
 
 
-    public ChecksumType checksumType()
+    public CheckSumType checksumType()
     {
-        return ChecksumType.HMAC_SHA1_96_AES128;
+        return CheckSumType.HMAC_SHA1_96_AES128;
     }
 
 

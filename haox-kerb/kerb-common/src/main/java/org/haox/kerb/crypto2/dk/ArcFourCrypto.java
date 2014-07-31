@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto2.dk;
 
-import org.haox.kerb.common.Confounder;
+import org.haox.kerb.crypto2.Confounder;
 import org.haox.kerb.crypto2.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 

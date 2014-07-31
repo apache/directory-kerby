@@ -29,13 +29,22 @@ public class EncryptionKey extends KrbSequenceType {
     }
 
     public EncryptionKey(int keyType, byte[] keyData) {
-        this(EncryptionType.fromValue(keyType), keyData);
+        this(keyType, keyData, -1);
+    }
+
+    public EncryptionKey(int keyType, byte[] keyData, int kvno) {
+        this(EncryptionType.fromValue(keyType), keyData, kvno);
     }
 
     public EncryptionKey(EncryptionType keyType, byte[] keyData) {
+        this(keyType, keyData, -1);
+    }
+
+    public EncryptionKey(EncryptionType keyType, byte[] keyData, int kvno) {
         this();
         setKeyType(keyType);
         setKeyData(keyData);
+        setKvno(kvno);
     }
 
     public EncryptionType getKeyType() {

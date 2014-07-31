@@ -1,38 +1,36 @@
 package org.haox.kerb.crypto2.enc;
 
-import org.haox.kerb.common.Checksum;
-import org.haox.kerb.common.EncryptedData;
-import org.haox.kerb.crypto2.AbstractEncType;
-import org.haox.kerb.crypto2.ArcFourHmac;
+import org.haox.kerb.crypto2.Aes128;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.security.GeneralSecurityException;
 
-public final class ArcFourHmacEncType extends AbstractEncType {
+public final class Aes128CtsHmacSha1Enc extends AbstractEncryptionTypeHandler {
 
     public EncryptionType eType() {
-        return EncryptionType.ARCFOUR_HMAC;
+        return EncryptionType.AES128_CTS_HMAC_SHA1_96;
     }
 
     public int minimumPadSize() {
-        return 1;
+        return 0;
     }
 
     public int confounderSize() {
-        return 8;
+        return blockSize();
     }
 
-    public int checksumType() {
-        return Checksum.CKSUMTYPE_HMAC_MD5_ARCFOUR;
+    public CheckSumType checksumType() {
+        return CheckSumType.HMAC_SHA1_96_AES128;
     }
 
     public int checksumSize() {
-        return ArcFourHmac.getChecksumLength();
+        return Aes128.getChecksumLength();
     }
 
     public int blockSize() {
-        return 1;
+        return 16;
     }
 
     public int keySize() {
@@ -48,7 +46,7 @@ public final class ArcFourHmacEncType extends AbstractEncType {
     public byte[] encrypt(byte[] data, byte[] key, byte[] ivec, int usage)
         throws KrbException {
         try {
-            return ArcFourHmac.encrypt(key, usage, ivec, data, 0, data.length);
+            return Aes128.encrypt(key, usage, ivec, data, 0, data.length);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);
@@ -65,7 +63,7 @@ public final class ArcFourHmacEncType extends AbstractEncType {
     public byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec, int usage)
         throws KrbException {
         try {
-            return ArcFourHmac.decrypt(key, usage, ivec, cipher, 0, cipher.length);
+            return Aes128.decrypt(key, usage, ivec, cipher, 0, cipher.length);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);

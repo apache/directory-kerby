@@ -1,12 +1,16 @@
 package org.haox.kerb.crypto2;
 
+import org.haox.asn1.type.Asn1Type;
+import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.Config;
 import org.haox.kerb.crypto2.enc.*;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.EncryptedData;
+import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
-public class EncTypeMgr {
+public class EncryptionHandler {
 
     private static final boolean ALLOW_WEAK_CRYPTO;
 
@@ -24,61 +28,81 @@ public class EncTypeMgr {
         ALLOW_WEAK_CRYPTO = allowed;
     }
 
-    public static EncType getEncType(String eType) throws KrbException {
+    public static EncryptionTypeHandler getEncHandler(String eType) throws KrbException {
         EncryptionType eTypeEnum = EncryptionType.fromName(eType);
-        return getEncType(eTypeEnum);
+        return getEncHandler(eTypeEnum);
     }
 
-    public static EncType getEncType(int eType) throws KrbException {
+    public static EncryptionTypeHandler getEncHandler(int eType) throws KrbException {
         EncryptionType eTypeEnum = EncryptionType.fromValue(eType);
-        return getEncType(eTypeEnum);
+        return getEncHandler(eTypeEnum);
     }
 
-    public static EncType getEncType(EncryptionType eType) throws KrbException {
-        EncType encType = null;
+    public static EncryptionTypeHandler getEncHandler(EncryptionType eType) throws KrbException {
+        EncryptionTypeHandler encType = null;
         switch (eType) {
             case DES_CBC_CRC:
-                encType = new DesCbcCrcEncType();
+                encType = new DesCbcCrcEnc();
                 break;
 
             case DES_CBC_MD5:
             case DES:
-                encType = new DesCbcMd5EncType();
+                encType = new DesCbcMd5Enc();
                 break;
 
             case DES3_CBC_SHA1:
             case DES3_CBC_SHA1_KD:
             case DES3_HMAC_SHA1:
-                encType = new Des3CbcHmacSha1KdEncType();
+                encType = new Des3CbcHmacSha1KdEnc();
                 break;
 
             case AES128_CTS_HMAC_SHA1_96:
             case AES128_CTS:
-                encType = new Aes128CtsHmacSha1EType();
+                encType = new Aes128CtsHmacSha1Enc();
                 break;
 
             case AES256_CTS_HMAC_SHA1_96:
             case AES256_CTS:
-                encType = new Aes256CtsHmacSha1EType();
+                encType = new Aes256CtsHmacSha1Enc();
                 break;
 
             case RC4_HMAC:
             case ARCFOUR_HMAC:
             case ARCFOUR_HMAC_MD5:
-                encType = new ArcFourHmacEncType();
+                encType = new ArcFourHmacEnc();
                 break;
 
-            case NULL:
-            case UNKNOWN:
-                encType = null;
-                break;
-
+            case NONE:
             default:
                 String message = "Unsupported encryption type: " + eType.name();
                 throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP, message);
         }
 
         return encType;
+    }
+
+    public static EncryptedData seal(Asn1Type message, EncryptionKey key, KeyUsage usage) throws KrbException {
+        byte[] encoded = KrbCodec.encode(message);
+        return encrypt(encoded, key, usage);
+    }
+
+
+    public static EncryptedData encrypt(byte[] plainText, EncryptionKey key, KeyUsage usage) throws KrbException {
+        EncryptionTypeHandler handler = getEncHandler(key.getKeyType());
+        byte[] cipher = handler.encrypt(plainText, key.getKeyData(), usage.getValue());
+        EncryptedData ed = new EncryptedData();
+        ed.setCipher(cipher);
+        ed.setEType(key.getKeyType());
+        ed.setKvno(key.getKvno());
+
+        return ed;
+    }
+
+    public static byte[] decrypt(EncryptedData data, EncryptionKey key, KeyUsage usage) throws KrbException {
+        EncryptionTypeHandler handler = getEncHandler(key.getKeyType());
+
+        byte[] plainData = handler.decrypt(data.getCipher(), key.getKeyData(), usage.getValue());
+        return handler.decryptedData(plainData);
     }
 
     public static EncryptionType[] getSupportedEncTypes() {

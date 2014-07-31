@@ -1,15 +1,15 @@
 package org.haox.kerb.crypto.checksum;
 
-import org.haox.kerb.crypto.encryption.KeyUsage;
-import org.haox.kerb.spec.type.common.ChecksumType;
+import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.CheckSumType;
 
 import java.util.zip.CRC32;
 
 class Crc32Checksum implements ChecksumEngine
 {
-    public ChecksumType checksumType()
+    public CheckSumType checksumType()
     {
-        return ChecksumType.CRC32;
+        return CheckSumType.CRC32;
     }
 
 

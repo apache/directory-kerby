@@ -6,7 +6,7 @@ import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.KrbAppSequenceType;
 import org.haox.kerb.spec.type.common.AuthorizationData;
-import org.haox.kerb.spec.type.common.Checksum;
+import org.haox.kerb.spec.type.common.CheckSum;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.PrincipalName;
 
@@ -39,7 +39,7 @@ public class Authenticator extends KrbAppSequenceType {
             new Asn1FieldInfo(AUTHENTICATOR_VNO, 0, Asn1Integer.class),
             new Asn1FieldInfo(CREALM, 1, KerberosString.class),
             new Asn1FieldInfo(CNAME, 2, PrincipalName.class),
-            new Asn1FieldInfo(CKSUM, 3, Checksum.class),
+            new Asn1FieldInfo(CKSUM, 3, CheckSum.class),
             new Asn1FieldInfo(CUSEC, 4, Asn1Integer.class),
             new Asn1FieldInfo(CTIME, 5, KerberosTime.class),
             new Asn1FieldInfo(SUBKEY, 6, EncryptionKey.class),
@@ -75,11 +75,11 @@ public class Authenticator extends KrbAppSequenceType {
         setFieldAs(CNAME, cname);
     }
 
-    public Checksum getCksum() {
-        return getFieldAs(CKSUM, Checksum.class);
+    public CheckSum getCksum() {
+        return getFieldAs(CKSUM, CheckSum.class);
     }
 
-    public void setCksum(Checksum cksum) {
+    public void setCksum(CheckSum cksum) {
         setFieldAs(CKSUM, cksum);
     }
 

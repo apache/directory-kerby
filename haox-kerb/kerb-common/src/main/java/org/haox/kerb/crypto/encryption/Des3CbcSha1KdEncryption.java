@@ -1,6 +1,7 @@
 package org.haox.kerb.crypto.encryption;
 
 import org.haox.kerb.crypto.checksum.ChecksumEngine;
+import org.haox.kerb.crypto2.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.*;
 
@@ -38,9 +39,9 @@ public class Des3CbcSha1KdEncryption extends EncryptionEngine implements Checksu
     }
 
 
-    public ChecksumType checksumType()
+    public CheckSumType checksumType()
     {
-        return ChecksumType.HMAC_SHA1_DES3;
+        return CheckSumType.HMAC_SHA1_DES3;
     }
 
 

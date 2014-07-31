@@ -1,6 +1,6 @@
 package org.haox.kerb.client;
 
-import org.haox.kerb.crypto.encryption.KeyUsage;
+import org.haox.kerb.crypto2.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.kdc.EncTgsRepPart;
 import org.haox.kerb.spec.type.kdc.TgsRep;

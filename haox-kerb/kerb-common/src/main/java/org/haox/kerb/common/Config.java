@@ -1,7 +1,5 @@
 package org.haox.kerb.common;
 
-import org.haox.kerb.crypto2.AbstractEncType;
-import org.haox.kerb.crypto2.EncType;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 import sun.net.dns.ResolverConfiguration;
@@ -843,6 +841,7 @@ public class Config {
      * Returns the default encryption types.
      *
      */
+    /*
     public int[] defaultEtype(String enctypes) {
         String default_enctypes;
         default_enctypes = getDefault(enctypes, "libdefaults");
@@ -854,7 +853,7 @@ public class Config {
                 System.out.println("Using builtin default etypes for " +
                     enctypes);
             }
-            etype = AbstractEncType.getBuiltInDefaults();
+            etype = AbstractEncryptionTypeHandler.getBuiltInDefaults();
         } else {
             for (int j = 0; j < default_enctypes.length(); j++) {
                 if (default_enctypes.substring(j, j + 1).equals(",")) {
@@ -869,9 +868,9 @@ public class Config {
             ArrayList<Integer> ls = new ArrayList<Integer>(len);
             int type;
             for (int i = 0; i < len; i++) {
-                type = getType(st.nextToken());
+                type = -1;//getType(st.nextToken());
                 if ((type != -1) &&
-                    (AbstractEncType.isSupported(type))) {
+                    (AbstractEncryptionTypeHandler.isSupported(type))) {
                     ls.add(type);
                 }
             }
@@ -898,7 +897,7 @@ public class Config {
         }
         return etype;
     }
-
+    */
 
     /**
      * Get the etype and checksum value for the specified encryption and
@@ -910,6 +909,7 @@ public class Config {
      * checksum type to int value that can be later used by EncType and
      * Checksum classes.
      */
+    /*
     public int getType(String input) {
         int result = -1;
         if (input == null) {
@@ -966,12 +966,12 @@ public class Config {
                 input.equalsIgnoreCase("hmac-md5-arcfour") ||
                 input.equalsIgnoreCase("hmac-md5-enc")) {
             result = Checksum.CKSUMTYPE_HMAC_MD5_ARCFOUR;
-        } else if (input.equalsIgnoreCase("NULL")) {
+        } else if (input.equalsIgnoreCase("NONE")) {
             result = EncryptedData.ETYPE_NULL;
         }
 
         return result;
-    }
+    }*/
 
     /**
      * Resets the default kdc realm.

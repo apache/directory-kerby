@@ -1,14 +1,10 @@
 package org.haox.kerb.server.sam;
 
-import org.haox.kerb.crypto.encryption.CipherTextHandler;
-
 import javax.security.auth.kerberos.KerberosKey;
 
 public class TimestampChecker implements KeyIntegrityChecker
 {
     private static final long FIVE_MINUTES = 300000;
-    private static final CipherTextHandler cipherTextHandler = new CipherTextHandler();
-
 
     // FIXME this whole function seems to be buggy and also I don't find any references to this function in code- kayyagari
     public boolean checkKeyIntegrity( byte[] encryptedData, KerberosKey kerberosKey )

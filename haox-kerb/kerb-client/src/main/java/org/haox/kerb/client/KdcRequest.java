@@ -1,8 +1,9 @@
 package org.haox.kerb.client;
 
 import org.haox.asn1.type.Asn1Type;
-import org.haox.kerb.crypto.encryption.KerberosKeyFactory;
-import org.haox.kerb.crypto.encryption.KeyUsage;
+import org.haox.kerb.common.KerberosKeyFactory;
+import org.haox.kerb.crypto2.EncryptionHandler;
+import org.haox.kerb.crypto2.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
@@ -55,11 +56,11 @@ public abstract class KdcRequest {
 
     protected EncryptedData encodingAndEncryptWithClientKey(Asn1Type value, KeyUsage usage) throws KrbException {
         byte[] encodedData = value.encode();
-        return context.getCipherHandler().encrypt(getClientKey(), encodedData, usage);
+        return EncryptionHandler.encrypt(encodedData, getClientKey(), usage);
     }
 
     protected byte[] decryptWithClientKey(EncryptedData data, KeyUsage usage) throws KrbException {
-        return context.getCipherHandler().decrypt(getClientKey(), data, usage);
+        return EncryptionHandler.decrypt(data, getClientKey(), usage);
     }
 
     protected PaDataEntry makeTimeStampPaDataEntry() throws KrbException {

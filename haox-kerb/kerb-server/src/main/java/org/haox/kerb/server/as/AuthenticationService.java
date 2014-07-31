@@ -5,11 +5,10 @@ import org.apache.directory.server.i18n.I18n;
 import org.apache.directory.shared.kerberos.KerberosConstants;
 import org.apache.directory.shared.kerberos.exceptions.InvalidTicketException;
 import org.haox.kerb.codec.KrbCodec;
-import org.haox.kerb.common.KrbUtil;
-import org.haox.kerb.crypto.encryption.CipherTextHandler;
 import org.haox.kerb.crypto.encryption.EncryptionUtil;
-import org.haox.kerb.crypto.encryption.KeyUsage;
 import org.haox.kerb.crypto.encryption.RandomKeyFactory;
+import org.haox.kerb.crypto2.EncryptionHandler;
+import org.haox.kerb.crypto2.KeyUsage;
 import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.KerberosUtils;
@@ -45,12 +44,9 @@ public class AuthenticationService
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationService.class);
     private static final Logger LOG_KRB = LoggerFactory.getLogger(Loggers.KERBEROS_LOG.getName());
 
-    private static final CipherTextHandler cipherTextHandler = new CipherTextHandler();
-
     private static final String SERVICE_NAME = "Authentication Service (AS)";
 
     public void execute(AuthenticationContext authContext) throws Exception {
-        authContext.setCipherTextHandler(cipherTextHandler);
 
         int kerberosVersion = authContext.getRequest().getPvno();
 
@@ -201,7 +197,6 @@ public class AuthenticationService
 
         KdcConfig config = authContext.getConfig();
         KdcReq request = authContext.getRequest();
-        CipherTextHandler cipherTextHandler = authContext.getCipherTextHandler();
         PrincipalStoreEntry clientEntry = authContext.getClientEntry();
         String clientName = clientEntry.getPrincipal().getName();
 
@@ -237,7 +232,7 @@ public class AuthenticationService
                 for (PaDataEntry paData : preAuthData.getElements()) {
                     if (paData.getPaDataType().equals(PaDataType.ENC_TIMESTAMP)) {
                         EncryptedData dataValue = KrbCodec.decode(paData.getPaDataValue(), EncryptedData.class);
-                        byte[] decryptedData = cipherTextHandler.decrypt(clientKey, dataValue,
+                        byte[] decryptedData = EncryptionHandler.decrypt(dataValue, clientKey,
                                 KeyUsage.AS_REQ_PA_ENC_TIMESTAMP_WITH_CKEY);
                         timestamp = KrbCodec.decode(decryptedData, PaEncTsEnc.class);
                     }
@@ -293,7 +288,6 @@ public class AuthenticationService
     private static void generateTicket(AuthenticationContext authContext) throws KrbException,
             InvalidTicketException, KrbException {
         KdcReq request = authContext.getRequest();
-        CipherTextHandler cipherTextHandler = authContext.getCipherTextHandler();
         PrincipalName serverPrincipal = request.getReqBody().getSname();
 
         LOG_KRB.debug("--> Generating ticket for {}", serverPrincipal);
@@ -548,7 +542,7 @@ public class AuthenticationService
             }
         }
 
-        EncryptedData encryptedData = cipherTextHandler.seal(serverKey, encTicketPart,
+        EncryptedData encryptedData = EncryptionHandler.seal(encTicketPart, serverKey,
                 KeyUsage.AS_OR_TGS_REP_TICKET_WITH_SRVKEY);
 
         Ticket newTicket = new Ticket();
@@ -614,7 +608,7 @@ public class AuthenticationService
         }
 
         EncryptionKey clientKey = authContext.getClientKey();
-        EncryptedData encryptedData = cipherTextHandler.seal(clientKey, encAsRepPart,
+        EncryptedData encryptedData = EncryptionHandler.seal(encAsRepPart, clientKey,
                 KeyUsage.AS_REP_ENC_PART_WITH_CKEY);
         reply.setEncryptedEncPart(encryptedData);
         //FIXME the below setter is useless, remove it

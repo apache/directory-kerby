@@ -2,7 +2,7 @@ package org.haox.kerb.spec.type.fast;
 
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.kerb.spec.type.KrbSequenceType;
-import org.haox.kerb.spec.type.common.Checksum;
+import org.haox.kerb.spec.type.common.CheckSum;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.pa.PaData;
 
@@ -45,12 +45,12 @@ public class KrbFastFinished extends KrbSequenceType {
         setFieldAs(FAST_OPTIONS, armor);
     }
 
-    public Checksum getReqChecksum() {
-        return getFieldAs(PADATA, Checksum.class);
+    public CheckSum getReqChecksum() {
+        return getFieldAs(PADATA, CheckSum.class);
     }
 
-    public void setReqChecksum(Checksum checksum) {
-        setFieldAs(PADATA, checksum);
+    public void setReqChecksum(CheckSum checkSum) {
+        setFieldAs(PADATA, checkSum);
     }
 
     public EncryptedData getEncFastReq() {
