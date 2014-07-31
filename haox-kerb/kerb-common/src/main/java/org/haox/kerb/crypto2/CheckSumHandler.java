@@ -110,7 +110,7 @@ public class CheckSumHandler {
         return cksumHandler;
     }
 
-    public CheckSum checksum(CheckSumType checkSumType, byte[] bytes) throws KrbException {
+    public static CheckSum checksum(CheckSumType checkSumType, byte[] bytes) throws KrbException {
         CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
         byte[] checksumBytes = handler.calculateChecksum(bytes);
         CheckSum checkSum = new CheckSum();
@@ -119,7 +119,7 @@ public class CheckSumHandler {
         return checkSum;
     }
 
-    public void verifyChecksum(CheckSum checkSum, byte[] bytes) throws KrbException {
+    public static void verifyChecksum(CheckSum checkSum, byte[] bytes) throws KrbException {
         CheckSumType checkSumType = checkSum.getCksumtype();
         CheckSum newCheckSum = checksum(checkSumType, bytes);
 
@@ -128,7 +128,7 @@ public class CheckSumHandler {
         }
     }
 
-    public CheckSum checksumWithKey(CheckSumType checkSumType,
+    public static CheckSum checksumWithKey(CheckSumType checkSumType,
                            byte[] bytes, byte[] key, KeyUsage usage) throws KrbException {
         CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
         byte[] checksumBytes = handler.calculateKeyedChecksum(bytes, key, usage.getValue());
@@ -138,7 +138,7 @@ public class CheckSumHandler {
         return checkSum;
     }
 
-    public void verifyChecksumWithKey(CheckSum checkSum,
+    public static void verifyChecksumWithKey(CheckSum checkSum,
         byte[] bytes, byte[] key, KeyUsage usage) throws KrbException {
         CheckSumType checkSumType = checkSum.getCksumtype();
         CheckSum newCheckSum = checksumWithKey(checkSumType, bytes, key, usage);

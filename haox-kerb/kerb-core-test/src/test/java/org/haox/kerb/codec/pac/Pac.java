@@ -1,5 +1,11 @@
 package org.haox.kerb.codec.pac;
 
+import org.haox.kerb.crypto2.CheckSumHandler;
+import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.CheckSum;
+import org.haox.kerb.spec.type.common.EncryptionKey;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -14,7 +20,7 @@ public class Pac {
     private PacSignature serverSignature;
     private PacSignature kdcSignature;
 
-    public Pac(byte[] data, Key key) throws IOException {
+    public Pac(byte[] data, byte[] key) throws KrbException {
         byte[] checksumData = data.clone();
         try {
             PacDataInputStream pacStream = new PacDataInputStream(new DataInputStream(
@@ -65,20 +71,11 @@ public class Pac {
                 }
             }
         } catch(IOException e) {
-            throw new IOException("pac.token.malformed", e);
+            throw new KrbException("pac.token.malformed", e);
         }
 
-        PacMac mac = new PacMac();
-        try {
-            mac.init(key);
-            mac.update(checksumData);
-        } catch(NoSuchAlgorithmException e) {
-            throw new IOException("pac.check.fail", e);
-        }
-
-        byte checksum[] = mac.doFinal();
-        if(!Arrays.equals(serverSignature.getChecksum(), checksum))
-            throw new IOException("pac.signature.invalid", null);
+        CheckSum checksum = new CheckSum(serverSignature.getType(), serverSignature.getChecksum());
+        CheckSumHandler.verifyChecksumWithKey(checksum, checksumData, key, KeyUsage.KERB_NON_KERB_CKSUM_SALT);
     }
 
     public PacLogonInfo getLogonInfo() {

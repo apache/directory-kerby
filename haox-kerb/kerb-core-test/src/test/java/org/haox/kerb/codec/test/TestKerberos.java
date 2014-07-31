@@ -7,9 +7,9 @@ import org.haox.kerb.codec.kerberos.KerberosToken;
 import org.haox.kerb.codec.pac.Pac;
 import org.haox.kerb.codec.pac.PacLogonInfo;
 import org.haox.kerb.codec.pac.PacSid;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.AuthorizationData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.common.EncryptionType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,67 +87,65 @@ public class TestKerberos {
     }
 
     @Test
-    public void testRc4Ticket() throws KrbException {
-        try {
-            KerberosToken token = new KerberosToken(rc4Token, rc4Key);
+    public void testRc4Ticket() throws Exception {
+        KerberosToken token = new KerberosToken(rc4Token, rc4Key);
 
-            Assert.assertNotNull(token);
-            Assert.assertNotNull(token.getApRequest());
+        Assert.assertNotNull(token);
+        Assert.assertNotNull(token.getApRequest());
 
-            KerberosTicket ticket = token.getApRequest().getTicket();
-            Assert.assertNotNull(ticket);
-            Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
-            Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
-            Assert.assertEquals("user.test", ticket.getUserPrincipalName());
-            Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
-        } catch(IOException e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
+        KerberosTicket ticket = token.getApRequest().getTicket();
+        Assert.assertNotNull(ticket);
+        Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
+        Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
+        Assert.assertEquals("user.test", ticket.getUserPrincipalName());
+        Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
     }
 
     @Test
-    public void testDesTicket() throws KrbException {
-        try {
-            KerberosToken token = new KerberosToken(desToken, desKey);
+    public void testDesTicket() throws Exception {
+        KerberosToken token = new KerberosToken(desToken, desKey);
 
-            Assert.assertNotNull(token);
-            Assert.assertNotNull(token.getApRequest());
+        Assert.assertNotNull(token);
+        Assert.assertNotNull(token.getApRequest());
 
-            KerberosTicket ticket = token.getApRequest().getTicket();
-            Assert.assertNotNull(ticket);
-            Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
-            Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
-            Assert.assertEquals("user.test@domain.com", ticket.getUserPrincipalName());
-            Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
-        } catch(IOException e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
+        KerberosTicket ticket = token.getApRequest().getTicket();
+        Assert.assertNotNull(ticket);
+        Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
+        Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
+        Assert.assertEquals("user.test@domain.com", ticket.getUserPrincipalName());
+        Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
     }
 
     @Test
-    public void testAes128Ticket() {
+    public void testAes128Ticket() throws Exception {
         KerberosToken token = null;
-        try {
-            token = new KerberosToken(aes128Token, aes128Key);
-            Assert.fail("Should have thrown IOException.");
-        } catch(IOException e) {
-            Assert.assertNotNull(e);
-            Assert.assertNull(token);
-        }
+        token = new KerberosToken(aes128Token, aes128Key);
+
+        Assert.assertNotNull(token);
+        Assert.assertNotNull(token.getApRequest());
+
+        KerberosTicket ticket = token.getApRequest().getTicket();
+        Assert.assertNotNull(ticket);
+        Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
+        Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
+        Assert.assertEquals("user.test", ticket.getUserPrincipalName());
+        Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
     }
 
     @Test
-    public void testAes256Ticket() {
+    public void testAes256Ticket() throws Exception {
         KerberosToken token = null;
-        try {
-            token = new KerberosToken(aes256Token, aes256Key);
-            Assert.fail("Should have thrown IOException.");
-        } catch(IOException e) {
-            Assert.assertNotNull(e);
-            Assert.assertNull(token);
-        }
+        token = new KerberosToken(aes256Token, aes256Key);
+
+        Assert.assertNotNull(token);
+        Assert.assertNotNull(token.getApRequest());
+
+        KerberosTicket ticket = token.getApRequest().getTicket();
+        Assert.assertNotNull(ticket);
+        Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
+        Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
+        Assert.assertEquals("user.test", ticket.getUserPrincipalName());
+        Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
     }
 
     @Test
@@ -155,8 +153,8 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(corruptToken, rc4Key);
-            Assert.fail("Should have thrown IOException.");
-        } catch(IOException e) {
+            Assert.fail("Should have thrown Exception.");
+        } catch(Exception e) {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
@@ -167,15 +165,15 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(new byte[0], rc4Key);
-            Assert.fail("Should have thrown IOException.");
-        } catch(IOException e) {
+            Assert.fail("Should have thrown Exception.");
+        } catch(Exception e) {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
     }
 
     @Test
-    public void testNullTicket() {
+    public void testNullTicket() throws Exception {
         KerberosToken token = null;
         try {
             token = new KerberosToken(null, rc4Key);
@@ -194,8 +192,8 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(rc4Token, corruptKey);
-            Assert.fail("Should have thrown IOException.");
-        } catch(IOException e) {
+            Assert.fail("Should have thrown Exception.");
+        } catch(Exception e) {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
@@ -206,49 +204,45 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(rc4Token, desKey);
-            Assert.fail("Should have thrown IOException.");
-        } catch(IOException e) {
+            Assert.fail("Should have thrown Exception.");
+        } catch(Exception e) {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
     }
 
     @Test
-    public void testKerberosPac() throws KrbException {
-        try {
-            KerberosToken token = new KerberosToken(rc4Token, rc4Key);
+    public void testKerberosPac() throws Exception {
+        KerberosToken token = new KerberosToken(rc4Token, rc4Key);
 
-            Assert.assertNotNull(token);
-            Assert.assertNotNull(token.getApRequest());
+        Assert.assertNotNull(token);
+        Assert.assertNotNull(token.getApRequest());
 
-            KerberosTicket ticket = token.getApRequest().getTicket();
-            Assert.assertNotNull(ticket);
+        KerberosTicket ticket = token.getApRequest().getTicket();
+        Assert.assertNotNull(ticket);
 
-            AuthorizationData authzData = ticket.getAuthorizationData();
-            Assert.assertNotNull(authzData);
-            Assert.assertTrue(authzData.getElements().size() > 0);
+        AuthorizationData authzData = ticket.getAuthorizationData();
+        Assert.assertNotNull(authzData);
+        Assert.assertTrue(authzData.getElements().size() > 0);
 
-            Pac pac = AuthzDataUtil.getPac(authzData,
-                    KerberosCredentials.getServerKey1(ticket.getTicket().getEncPart().getKey().getKeyType()));
-            Assert.assertNotNull(pac);
+        EncryptionType eType = ticket.getTicket().getEncPart().getKey().getKeyType();
+        Pac pac = AuthzDataUtil.getPac(authzData,
+                KerberosCredentials.getServerKey(eType).getKeyData());
+        Assert.assertNotNull(pac);
 
-            PacLogonInfo logonInfo = pac.getLogonInfo();
-            Assert.assertNotNull(logonInfo);
+        PacLogonInfo logonInfo = pac.getLogonInfo();
+        Assert.assertNotNull(logonInfo);
 
-            List<String> sids = new ArrayList<String>();
-            if(logonInfo.getGroupSid() != null)
-                sids.add(logonInfo.getGroupSid().toString());
-            for(PacSid pacSid : logonInfo.getGroupSids())
-                sids.add(pacSid.toString());
-            for(PacSid pacSid : logonInfo.getExtraSids())
-                sids.add(pacSid.toString());
-            for(PacSid pacSid : logonInfo.getResourceGroupSids())
-                sids.add(pacSid.toString());
+        List<String> sids = new ArrayList<String>();
+        if(logonInfo.getGroupSid() != null)
+            sids.add(logonInfo.getGroupSid().toString());
+        for(PacSid pacSid : logonInfo.getGroupSids())
+            sids.add(pacSid.toString());
+        for(PacSid pacSid : logonInfo.getExtraSids())
+            sids.add(pacSid.toString());
+        for(PacSid pacSid : logonInfo.getResourceGroupSids())
+            sids.add(pacSid.toString());
 
-            Assert.assertEquals(ticket.getUserPrincipalName(), logonInfo.getUserName());
-        } catch(IOException e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
+        Assert.assertEquals(ticket.getUserPrincipalName(), logonInfo.getUserName());
     }
 }

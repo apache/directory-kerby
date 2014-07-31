@@ -26,6 +26,17 @@ public class CheckSum extends KrbSequenceType {
         super(fieldInfos);
     }
 
+    public CheckSum(CheckSumType cksumType, byte[] checksum) {
+        this();
+
+        setCksumtype(cksumType);
+        setChecksum(checksum);
+    }
+
+    public CheckSum(int cksumType, byte[] checksum) {
+        this(CheckSumType.fromValue(cksumType), checksum);
+    }
+
     public CheckSumType getCksumtype() {
         Integer value = getFieldAsInteger(CKSUM_TYPE);
         return CheckSumType.fromValue(value);

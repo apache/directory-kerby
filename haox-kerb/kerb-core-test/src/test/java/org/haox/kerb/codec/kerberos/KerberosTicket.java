@@ -7,14 +7,10 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.ap.ApOptions;
 import org.haox.kerb.spec.type.common.AuthorizationData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
-import javax.security.auth.kerberos.KerberosKey;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.Key;
 
 public class KerberosTicket {
     private String serverPrincipalName;
@@ -22,27 +18,14 @@ public class KerberosTicket {
     private Ticket ticket;
 
     public KerberosTicket(Ticket ticket, ApOptions apOptions, EncryptionKey key)
-            throws KrbException, IOException {
+            throws Exception {
         this.ticket = ticket;
 
-        try {
-            if (key == null) {
-                key = KerberosCredentials.getServerKey2(ticket.getEncryptedEncPart().getEType());
-            }
+        byte[] decrypted = EncryptionHandler.decrypt(
+                ticket.getEncryptedEncPart(), key, KeyUsage.AS_OR_TGS_REP_TICKET_WITH_SRVKEY);
 
-            EncryptionType etype = ticket.getEncryptedEncPart().getEType();
-            byte[] crypt = ticket.getEncryptedEncPart().getCipher();
-            byte[] decrypted = KerberosEncData.decrypt(crypt, key, etype);
-            //byte[] decrypted = EncryptionHandler.decrypt(
-            //        ticket.getEncryptedEncPart(), key, KeyUsage.AP_REQ_AUTHNT_CKSUM_SESS_KEY);
-
-            EncTicketPart encPart = KrbCodec.decode(decrypted, EncTicketPart.class);
-            ticket.setEncPart(encPart);
-        } catch (KrbException e) {
-            e.printStackTrace();
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
+        EncTicketPart encPart = KrbCodec.decode(decrypted, EncTicketPart.class);
+        ticket.setEncPart(encPart);
     }
 
     public String getUserPrincipalName() throws KrbException {

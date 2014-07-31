@@ -43,7 +43,12 @@ public enum KeyUsage implements KrbEnum
     AP_REP_ENC_PART_SESS_KEY(12),
 
     // KRB-PRIV encrypted part, encrypted with a key chosen by the application (Section 5.7.1)
-    KRB_PRIV_ENC_PART_CHOSEN_KEY(13);
+    KRB_PRIV_ENC_PART_CHOSEN_KEY(13),
+
+    // MS-PAC
+    KERB_NON_KERB_CKSUM_SALT(17),
+
+    KU_AD_KDC_ISSUED_CKSUM(19);
 
     private int value;
 

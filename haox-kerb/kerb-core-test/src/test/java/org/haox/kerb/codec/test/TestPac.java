@@ -1,6 +1,8 @@
 package org.haox.kerb.codec.test;
 
 import org.haox.kerb.codec.pac.Pac;
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +16,9 @@ public class TestPac {
     private byte[] rc4Data;
     private byte[] desData;
     private byte[] corruptData;
-    private SecretKeySpec rc4Key;
-    private SecretKeySpec desKey;
-    private SecretKeySpec corruptKey;
+    private byte[] rc4Key;
+    private byte[] desKey;
+    private byte[] corruptKey;
 
     @Before
     public void setUp() throws IOException {
@@ -38,60 +40,48 @@ public class TestPac {
         file = this.getClass().getClassLoader().getResourceAsStream("rc4-key-data");
         keyData = new byte[file.available()];
         file.read(keyData);
-        rc4Key = new SecretKeySpec(keyData, "ArcFourHmac");
+        rc4Key = keyData;
         file.close();
 
         file = this.getClass().getClassLoader().getResourceAsStream("des-key-data");
         keyData = new byte[file.available()];
         file.read(keyData);
-        desKey = new SecretKeySpec(keyData, "DES");
+        desKey = keyData;
         file.close();
 
-        corruptKey = new SecretKeySpec(new byte[]{5, 4, 2, 1, 5, 4, 2, 1, 3}, "");
+        corruptKey = new byte[]{5, 4, 2, 1, 5, 4, 2, 1, 3};
     }
 
     @Test
-    public void testRc4Pac() {
-        try {
-            Pac pac = new Pac(rc4Data, rc4Key);
+    public void testRc4Pac() throws KrbException {
+        Pac pac = new Pac(rc4Data, rc4Key);
 
-            Assert.assertNotNull(pac);
-            Assert.assertNotNull(pac.getLogonInfo());
+        Assert.assertNotNull(pac);
+        Assert.assertNotNull(pac.getLogonInfo());
 
-            Assert.assertEquals("user.test", pac.getLogonInfo().getUserName());
-            Assert.assertEquals("User Test", pac.getLogonInfo().getUserDisplayName());
-            Assert.assertEquals(0, pac.getLogonInfo().getBadPasswordCount());
-            Assert.assertEquals(32, pac.getLogonInfo().getUserFlags());
-            Assert.assertEquals(46, pac.getLogonInfo().getLogonCount());
-            Assert.assertEquals("DOMAIN", pac.getLogonInfo().getDomainName());
-            Assert.assertEquals("WS2008", pac.getLogonInfo().getServerName());
-
-        } catch(IOException e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
+        Assert.assertEquals("user.test", pac.getLogonInfo().getUserName());
+        Assert.assertEquals("User Test", pac.getLogonInfo().getUserDisplayName());
+        Assert.assertEquals(0, pac.getLogonInfo().getBadPasswordCount());
+        Assert.assertEquals(32, pac.getLogonInfo().getUserFlags());
+        Assert.assertEquals(46, pac.getLogonInfo().getLogonCount());
+        Assert.assertEquals("DOMAIN", pac.getLogonInfo().getDomainName());
+        Assert.assertEquals("WS2008", pac.getLogonInfo().getServerName());
     }
 
     @Test
-    public void testDesPac() {
-        try {
-            Pac pac = new Pac(desData, desKey);
+    public void testDesPac() throws KrbException {
+        Pac pac = new Pac(desData, desKey);
 
-            Assert.assertNotNull(pac);
-            Assert.assertNotNull(pac.getLogonInfo());
+        Assert.assertNotNull(pac);
+        Assert.assertNotNull(pac.getLogonInfo());
 
-            Assert.assertEquals("user.test", pac.getLogonInfo().getUserName());
-            Assert.assertEquals("User Test", pac.getLogonInfo().getUserDisplayName());
-            Assert.assertEquals(0, pac.getLogonInfo().getBadPasswordCount());
-            Assert.assertEquals(32, pac.getLogonInfo().getUserFlags());
-            Assert.assertEquals(48, pac.getLogonInfo().getLogonCount());
-            Assert.assertEquals("DOMAIN", pac.getLogonInfo().getDomainName());
-            Assert.assertEquals("WS2008", pac.getLogonInfo().getServerName());
-
-        } catch(IOException e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
+        Assert.assertEquals("user.test", pac.getLogonInfo().getUserName());
+        Assert.assertEquals("User Test", pac.getLogonInfo().getUserDisplayName());
+        Assert.assertEquals(0, pac.getLogonInfo().getBadPasswordCount());
+        Assert.assertEquals(32, pac.getLogonInfo().getUserFlags());
+        Assert.assertEquals(48, pac.getLogonInfo().getLogonCount());
+        Assert.assertEquals("DOMAIN", pac.getLogonInfo().getDomainName());
+        Assert.assertEquals("WS2008", pac.getLogonInfo().getServerName());
     }
 
     @Test
@@ -99,8 +89,8 @@ public class TestPac {
         Pac pac = null;
         try {
             pac = new Pac(corruptData, rc4Key);
-            Assert.fail("Should have thrown DecodingException.");
-        } catch(IOException e) {
+            Assert.fail("Should have thrown KrbException.");
+        } catch(KrbException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(pac);
         }
@@ -111,8 +101,8 @@ public class TestPac {
         Pac pac = null;
         try {
             pac = new Pac(new byte[0], rc4Key);
-            Assert.fail("Should have thrown DecodingException.");
-        } catch(IOException e) {
+            Assert.fail("Should have thrown KrbException.");
+        } catch(KrbException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(pac);
         }
@@ -124,7 +114,7 @@ public class TestPac {
         try {
             pac = new Pac(null, rc4Key);
             Assert.fail("Should have thrown NullPointerException.");
-        } catch(IOException e) {
+        } catch(KrbException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
         } catch(NullPointerException e) {
@@ -138,8 +128,8 @@ public class TestPac {
         Pac pac = null;
         try {
             pac = new Pac(rc4Data, corruptKey);
-            Assert.fail("Should have thrown IOException.");
-        } catch(IOException e) {
+            Assert.fail("Should have thrown KrbException.");
+        } catch(KrbException e) {
             Assert.assertNotNull(e);
             Assert.assertNull(pac);
         }
