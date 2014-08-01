@@ -1,9 +1,7 @@
 package org.haox.kerb.client;
 
 import org.haox.asn1.type.Asn1Type;
-import org.haox.kerb.common.KerberosKeyFactory;
 import org.haox.kerb.crypto2.EncryptionHandler;
-import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
@@ -129,7 +127,7 @@ public abstract class KdcRequest {
 
     public EncryptionKey getClientKey() throws KrbException {
         if (clientKey == null) {
-            clientKey = KerberosKeyFactory.string2Key(getClientPrincipal(),
+            clientKey = EncryptionHandler.string2Key(getClientPrincipal(),
                 context.getPassword(), getChosenEtype());
         }
         return clientKey;

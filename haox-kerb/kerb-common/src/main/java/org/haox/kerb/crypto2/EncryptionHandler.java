@@ -7,6 +7,11 @@ import org.haox.kerb.crypto2.enc.*;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.*;
 
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class EncryptionHandler {
 
     private static final boolean ALLOW_WEAK_CRYPTO;
@@ -104,6 +109,71 @@ public class EncryptionHandler {
 
     public static EncryptionType[] getSupportedEncTypes() {
         return new EncryptionType[0];
+    }
+
+    public static List<EncryptionKey> makeEncryptionKeys(
+            String principalName, String passPhrase) throws KrbException {
+        return makeEncryptionKeys(principalName, passPhrase, getSupportedEncTypes());
+    }
+
+    public static List<EncryptionKey> makeEncryptionKeys(
+            String principalName, String passPhrase, EncryptionType[] ciphers) throws KrbException {
+        List<EncryptionKey> resultKeys = new ArrayList<EncryptionKey>();
+        for (EncryptionType encryptionType : ciphers) {
+            resultKeys.add(string2Key(principalName, passPhrase, encryptionType));
+        }
+
+        return resultKeys;
+    }
+
+    public static EncryptionKey string2Key(String principalName,
+          String passPhrase, EncryptionType eType) throws KrbException {
+        PrincipalName principal = new PrincipalName(principalName);
+        byte[] keyBytes = stringToKey(passPhrase.toCharArray(),
+                PrincipalName.makeSalt(principal), null, eType);
+        return new EncryptionKey(eType, keyBytes);
+    }
+
+    public static byte[] stringToKey(char[] password, String salt,
+                                     byte[] s2kparams, EncryptionType keyType) throws KrbException {
+
+        char[] slt = salt.toCharArray();
+        char[] pwsalt = new char[password.length + slt.length];
+        System.arraycopy(password, 0, pwsalt, 0, password.length);
+        System.arraycopy(slt, 0, pwsalt, password.length, slt.length);
+        Arrays.fill(slt, '0');
+
+        try {
+            switch (keyType) {
+                case DES_CBC_CRC:
+                case DES_CBC_MD5:
+                    return Des.string_to_key_bytes(pwsalt);
+
+                case DES3_CBC_SHA1:
+                case DES3_CBC_SHA1_KD:
+                    return Des3.stringToKey(pwsalt);
+
+                case ARCFOUR_HMAC:
+                    return ArcFourHmac.stringToKey(password);
+
+                case AES128_CTS_HMAC_SHA1_96:
+                    return Aes128.stringToKey(password, salt, s2kparams);
+
+                case AES256_CTS_HMAC_SHA1_96:
+                    return Aes256.stringToKey(password, salt, s2kparams);
+
+                default:
+                    throw new IllegalArgumentException("encryption type "
+                            + keyType.name() + " not supported");
+            }
+
+        } catch (GeneralSecurityException e) {
+            KrbException ke = new KrbException(e.getMessage());
+            ke.initCause(e);
+            throw ke;
+        } finally {
+            Arrays.fill(pwsalt, '0');
+        }
     }
 
     /*

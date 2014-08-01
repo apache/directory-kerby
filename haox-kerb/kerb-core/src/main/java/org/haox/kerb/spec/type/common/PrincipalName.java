@@ -158,4 +158,17 @@ public class PrincipalName extends KrbSequenceType {
 
         return principal.substring(0, pos);
     }
+
+    public static String makeSalt(PrincipalName principalName) {
+        StringBuffer salt = new StringBuffer();
+        if (principalName.getRealm() != null) {
+            salt.append(principalName.getRealm().toString());
+        }
+        List<String> nameStrings = principalName.getNameStrings();
+        for (String ns : nameStrings) {
+            salt.append(ns);
+        }
+        return salt.toString();
+    }
+
 }

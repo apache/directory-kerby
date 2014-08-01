@@ -1,6 +1,6 @@
 package org.haox.kerb;
 
-import org.haox.kerb.common.KerberosKeyFactory;
+import org.haox.kerb.crypto2.EncryptionHandler;
 import org.haox.kerb.keytab.Keytab;
 import org.haox.kerb.keytab.KeytabEntry;
 import org.haox.kerb.spec.KrbException;
@@ -58,7 +58,7 @@ public class KeysTest {
         List<KeytabEntry> entries = keytab.getKeytabEntries(principal);
         EncryptionKey genKey;
         for (KeytabEntry ke : entries) {
-            genKey = KerberosKeyFactory.string2Key(principal.getName(),
+            genKey = EncryptionHandler.string2Key(principal.getName(),
                     TEST_PASSWORD, ke.getKey().getKeyType());
             Assert.assertTrue(ke.getKey().equals(genKey));
         }
