@@ -1,6 +1,7 @@
 package org.haox.kerb.crypto2.enc;
 
 import org.haox.kerb.crypto2.Des3;
+import org.haox.kerb.crypto2.key.Des3KeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -8,6 +9,10 @@ import org.haox.kerb.spec.type.common.EncryptionType;
 import java.security.GeneralSecurityException;
 
 public final class Des3CbcHmacSha1KdEnc extends AbstractEncryptionTypeHandler {
+
+    public Des3CbcHmacSha1KdEnc() {
+        super(new Des3KeyMaker());
+    }
 
     public EncryptionType eType() {
         return EncryptionType.DES3_CBC_SHA1_KD;

@@ -2,10 +2,17 @@ package org.haox.kerb.crypto2.enc;
 
 import org.haox.kerb.crypto2.Confounder;
 import org.haox.kerb.crypto2.Des;
+import org.haox.kerb.crypto2.key.DesKeyMaker;
+import org.haox.kerb.crypto2.key.KeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
 abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
+
+    public DesCbcEnc() {
+        super(new DesKeyMaker());
+    }
+
     protected abstract byte[] calculateChecksum(byte[] data, int size)
         throws KrbException;
 

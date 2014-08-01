@@ -1,6 +1,8 @@
 package org.haox.kerb.crypto2.enc;
 
 import org.haox.kerb.crypto2.Aes128;
+import org.haox.kerb.crypto2.key.Aes128KeyMaker;
+import org.haox.kerb.crypto2.key.KeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -8,6 +10,10 @@ import org.haox.kerb.spec.type.common.EncryptionType;
 import java.security.GeneralSecurityException;
 
 public final class Aes128CtsHmacSha1Enc extends AbstractEncryptionTypeHandler {
+
+    public Aes128CtsHmacSha1Enc() {
+        super(new Aes128KeyMaker());
+    }
 
     public EncryptionType eType() {
         return EncryptionType.AES128_CTS_HMAC_SHA1_96;

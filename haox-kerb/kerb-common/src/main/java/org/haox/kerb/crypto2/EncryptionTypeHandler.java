@@ -8,6 +8,8 @@ public interface EncryptionTypeHandler {
 
     public EncryptionType eType();
 
+    public byte[] str2key(String string, String salt, byte[] param) throws KrbException;
+
     public int minimumPadSize();
 
     public int confounderSize();

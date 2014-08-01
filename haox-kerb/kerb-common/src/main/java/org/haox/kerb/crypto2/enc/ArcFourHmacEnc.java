@@ -1,6 +1,8 @@
 package org.haox.kerb.crypto2.enc;
 
 import org.haox.kerb.crypto2.ArcFourHmac;
+import org.haox.kerb.crypto2.key.KeyMaker;
+import org.haox.kerb.crypto2.key.Rc4KeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -8,6 +10,10 @@ import org.haox.kerb.spec.type.common.EncryptionType;
 import java.security.GeneralSecurityException;
 
 public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
+
+    public ArcFourHmacEnc() {
+        super(new Rc4KeyMaker());
+    }
 
     public EncryptionType eType() {
         return EncryptionType.ARCFOUR_HMAC;

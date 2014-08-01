@@ -1,8 +1,22 @@
 package org.haox.kerb.crypto2.enc;
 
 import org.haox.kerb.crypto2.EncryptionTypeHandler;
+import org.haox.kerb.crypto2.key.KeyMaker;
+import org.haox.kerb.spec.KrbException;
 
 public abstract class AbstractEncryptionTypeHandler implements EncryptionTypeHandler {
+
+    private KeyMaker keyMaker;
+
+    public AbstractEncryptionTypeHandler(KeyMaker keyMaker) {
+        this.keyMaker = keyMaker;
+    }
+
+    @Override
+    public byte[] str2key(String string, String salt, byte[] param) throws KrbException {
+        return keyMaker.str2key(string, salt, param);
+    }
+
 
     public int dataSize(byte[] data)
     // throws Asn1Exception
