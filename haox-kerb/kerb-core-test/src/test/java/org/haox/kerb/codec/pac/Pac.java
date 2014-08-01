@@ -1,17 +1,13 @@
 package org.haox.kerb.codec.pac;
 
 import org.haox.kerb.crypto2.CheckSumHandler;
-import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSum;
-import org.haox.kerb.spec.type.common.EncryptionKey;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 public class Pac {
 
@@ -75,7 +71,7 @@ public class Pac {
         }
 
         CheckSum checksum = new CheckSum(serverSignature.getType(), serverSignature.getChecksum());
-        CheckSumHandler.verifyChecksumWithKey(checksum, checksumData, key, KeyUsage.KERB_NON_KERB_CKSUM_SALT);
+        CheckSumHandler.verifyChecksumWithKey(checksum, checksumData, key, KeyUsage.APP_DATA_CKSUM);
     }
 
     public PacLogonInfo getLogonInfo() {

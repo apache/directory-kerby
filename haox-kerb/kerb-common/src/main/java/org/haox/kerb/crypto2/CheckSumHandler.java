@@ -4,6 +4,7 @@ import org.haox.kerb.crypto2.cksum.*;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSum;
 import org.haox.kerb.spec.type.common.CheckSumType;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
 public class CheckSumHandler {

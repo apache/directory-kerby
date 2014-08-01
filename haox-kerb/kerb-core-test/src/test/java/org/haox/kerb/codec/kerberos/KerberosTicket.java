@@ -2,15 +2,13 @@ package org.haox.kerb.codec.kerberos;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto2.EncryptionHandler;
-import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.ap.ApOptions;
 import org.haox.kerb.spec.type.common.AuthorizationData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
-
-import java.io.IOException;
 
 public class KerberosTicket {
     private String serverPrincipalName;
@@ -22,7 +20,7 @@ public class KerberosTicket {
         this.ticket = ticket;
 
         byte[] decrypted = EncryptionHandler.decrypt(
-                ticket.getEncryptedEncPart(), key, KeyUsage.AS_OR_TGS_REP_TICKET_WITH_SRVKEY);
+                ticket.getEncryptedEncPart(), key, KeyUsage.KDC_REP_TICKET);
 
         EncTicketPart encPart = KrbCodec.decode(decrypted, EncTicketPart.class);
         ticket.setEncPart(encPart);

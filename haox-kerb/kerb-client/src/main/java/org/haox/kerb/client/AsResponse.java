@@ -1,6 +1,6 @@
 package org.haox.kerb.client;
 
-import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.HostAddress;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
@@ -32,7 +32,7 @@ public class AsResponse extends KdcResponse {
             throw new KrbException(KrbErrorCode.WRONG_REALM);
         }
 
-        byte[] decryptedData = getKdcRequest().decryptWithClientKey(getKdcRep().getEncryptedEncPart(), KeyUsage.AS_REP_ENC_PART_WITH_CKEY);
+        byte[] decryptedData = getKdcRequest().decryptWithClientKey(getKdcRep().getEncryptedEncPart(), KeyUsage.AS_REP_ENCPART);
         EncKdcRepPart encKdcRepPart = new EncAsRepPart();
         try {
             encKdcRepPart.decode(decryptedData);

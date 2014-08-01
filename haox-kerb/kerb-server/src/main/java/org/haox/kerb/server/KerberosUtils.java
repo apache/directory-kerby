@@ -6,7 +6,7 @@ import org.apache.directory.shared.kerberos.KerberosConstants;
 import org.apache.directory.shared.kerberos.codec.options.ApOptions;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto2.EncryptionHandler;
-import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.store.PrincipalStore;
 import org.haox.kerb.server.store.PrincipalStoreEntry;
@@ -379,7 +379,7 @@ public class KerberosUtils
         }
 
         byte[] encTicketPartData = EncryptionHandler.decrypt(ticket.getEncryptedEncPart(), ticketKey,
-                KeyUsage.AS_OR_TGS_REP_TICKET_WITH_SRVKEY);
+                KeyUsage.KDC_REP_TICKET);
         EncTicketPart encPart = KrbCodec.decode(encTicketPartData, EncTicketPart.class);
         ticket.setEncPart(encPart);
 

@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.checksum;
 
-import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.common.CheckSumType;
 
 import java.security.MessageDigest;

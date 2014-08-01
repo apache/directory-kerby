@@ -1,6 +1,6 @@
 package org.haox.kerb.client;
 
-import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.kdc.EncTgsRepPart;
 import org.haox.kerb.spec.type.kdc.TgsRep;
@@ -24,7 +24,7 @@ public class TgsResponse extends KdcResponse {
 
     @Override
     public void handle() throws KrbException {
-        byte[] decryptedData = getTgsRequest().decryptWithSessionKey(getTgsRep().getEncryptedEncPart(), KeyUsage.TGS_REP_ENC_PART_TGS_SESS_KEY);
+        byte[] decryptedData = getTgsRequest().decryptWithSessionKey(getTgsRep().getEncryptedEncPart(), KeyUsage.TGS_REP_ENCPART_SESSKEY);
         EncTgsRepPart encTgsRepPart = new EncTgsRepPart();
         try {
             encTgsRepPart.decode(decryptedData);

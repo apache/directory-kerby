@@ -2,7 +2,7 @@ package org.haox.kerb.client;
 
 import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.crypto2.EncryptionHandler;
-import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.ap.ApOptions;
@@ -58,7 +58,7 @@ public class TgsRequest extends KdcRequest {
         authenticator.setSubKey(sessionKey);
 
         EncryptedData authnData = encodingAndEncryptWithSessionKey(authenticator,
-                KeyUsage.TGS_REQ_PA_TGS_REQ_PADATA_AP_REQ_TGS_SESS_KEY);
+                KeyUsage.TGS_REQ_AUTH);
 
         ApReq apReq = new ApReq();
         apReq.setEncryptedAuthenticator(authnData);

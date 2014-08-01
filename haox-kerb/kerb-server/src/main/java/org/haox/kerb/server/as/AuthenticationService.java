@@ -8,7 +8,7 @@ import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.encryption.EncryptionUtil;
 import org.haox.kerb.crypto.encryption.RandomKeyFactory;
 import org.haox.kerb.crypto2.EncryptionHandler;
-import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.KerberosUtils;
@@ -233,7 +233,7 @@ public class AuthenticationService
                     if (paData.getPaDataType().equals(PaDataType.ENC_TIMESTAMP)) {
                         EncryptedData dataValue = KrbCodec.decode(paData.getPaDataValue(), EncryptedData.class);
                         byte[] decryptedData = EncryptionHandler.decrypt(dataValue, clientKey,
-                                KeyUsage.AS_REQ_PA_ENC_TIMESTAMP_WITH_CKEY);
+                                KeyUsage.AS_REQ_PA_ENC_TS);
                         timestamp = KrbCodec.decode(decryptedData, PaEncTsEnc.class);
                     }
                 }
@@ -543,7 +543,7 @@ public class AuthenticationService
         }
 
         EncryptedData encryptedData = EncryptionHandler.seal(encTicketPart, serverKey,
-                KeyUsage.AS_OR_TGS_REP_TICKET_WITH_SRVKEY);
+                KeyUsage.KDC_REP_TICKET);
 
         Ticket newTicket = new Ticket();
         newTicket.setSname(ticketPrincipal);
@@ -609,7 +609,7 @@ public class AuthenticationService
 
         EncryptionKey clientKey = authContext.getClientKey();
         EncryptedData encryptedData = EncryptionHandler.seal(encAsRepPart, clientKey,
-                KeyUsage.AS_REP_ENC_PART_WITH_CKEY);
+                KeyUsage.AS_REP_ENCPART);
         reply.setEncryptedEncPart(encryptedData);
         //FIXME the below setter is useless, remove it
         reply.setEncPart(encKdcRepPart);

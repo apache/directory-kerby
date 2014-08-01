@@ -3,7 +3,7 @@ package org.haox.kerb.client;
 import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.common.KerberosKeyFactory;
 import org.haox.kerb.crypto2.EncryptionHandler;
-import org.haox.kerb.crypto2.KeyUsage;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
@@ -68,7 +68,7 @@ public abstract class KdcRequest {
         long paTimestamp = System.currentTimeMillis();
         paTs.setPaTimestamp(new KerberosTime(paTimestamp));
 
-        EncryptedData paDataValue = encodingAndEncryptWithClientKey(paTs, KeyUsage.AS_REQ_PA_ENC_TIMESTAMP_WITH_CKEY);
+        EncryptedData paDataValue = encodingAndEncryptWithClientKey(paTs, KeyUsage.AS_REQ_PA_ENC_TS);
         PaDataEntry tsPaEntry = new PaDataEntry();
         tsPaEntry.setPaDataType(PaDataType.ENC_TIMESTAMP);
         tsPaEntry.setPaDataValue(paDataValue.encode());
