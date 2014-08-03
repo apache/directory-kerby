@@ -9,6 +9,7 @@ import java.security.GeneralSecurityException;
 public class HmacMd5ArcFourCheckSum extends AbstractCheckSumTypeHandler {
 
     public HmacMd5ArcFourCheckSum() {
+        super(null, null);
     }
 
     public int confounderSize() {

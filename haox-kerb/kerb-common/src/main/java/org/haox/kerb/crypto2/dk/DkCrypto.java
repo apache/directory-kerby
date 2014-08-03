@@ -408,7 +408,7 @@ public abstract class DkCrypto {
     }
 
     // DK(Key, Constant) = random-to-key(DR(Key, Constant))
-    byte[] dk(byte[] key, byte[] constant)
+    public byte[] dk(byte[] key, byte[] constant)
         throws GeneralSecurityException {
         return randomToKey(dr(key, constant));
     }

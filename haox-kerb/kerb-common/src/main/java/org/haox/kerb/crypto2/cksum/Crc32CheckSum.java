@@ -1,11 +1,12 @@
 package org.haox.kerb.crypto2.cksum;
 
-import org.haox.kerb.crypto2.crc32;
+import org.haox.kerb.crypto2.Crc32;
 import org.haox.kerb.spec.type.common.CheckSumType;
 
 public class Crc32CheckSum extends AbstractCheckSumTypeHandler {
 
     public Crc32CheckSum() {
+        super(null, null);
     }
 
     public int confounderSize() {
@@ -30,7 +31,7 @@ public class Crc32CheckSum extends AbstractCheckSumTypeHandler {
 
     @Override
     public byte[] calculateChecksum(byte[] data) {
-        return crc32.byte2crc32sum_bytes(data, data.length);
+        return Crc32.byte2crc32sum_bytes(data, data.length);
     }
 
     public static byte[] int2quad(long input) {

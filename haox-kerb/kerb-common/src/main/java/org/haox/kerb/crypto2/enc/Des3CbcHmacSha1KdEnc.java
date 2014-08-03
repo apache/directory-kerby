@@ -11,7 +11,7 @@ import java.security.GeneralSecurityException;
 public final class Des3CbcHmacSha1KdEnc extends AbstractEncryptionTypeHandler {
 
     public Des3CbcHmacSha1KdEnc() {
-        super(new Des3KeyMaker());
+        super(null, null, new Des3KeyMaker());
     }
 
     public EncryptionType eType() {
@@ -40,12 +40,6 @@ public final class Des3CbcHmacSha1KdEnc extends AbstractEncryptionTypeHandler {
 
     public int keySize() {
         return 24; // bytes
-    }
-
-    public byte[] encrypt(byte[] data, byte[] key, int usage)
-        throws KrbException {
-        byte[] ivec = new byte[blockSize()];
-        return encrypt(data, key, ivec, usage);
     }
 
     public byte[] encrypt(byte[] data, byte[] key, byte[] ivec, int usage)

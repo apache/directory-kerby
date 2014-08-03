@@ -3,7 +3,7 @@ package org.haox.kerb.crypto2;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 
-public interface CheckSumTypeHandler {
+public interface CheckSumTypeHandler extends CryptoTypeHandler {
 
     public int confounderSize();
 

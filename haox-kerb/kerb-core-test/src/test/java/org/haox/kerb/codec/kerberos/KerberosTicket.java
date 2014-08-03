@@ -1,12 +1,14 @@
 package org.haox.kerb.codec.kerberos;
 
+import org.bouncycastle.util.Arrays;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto2.EncryptionHandler;
-import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.ap.ApOptions;
 import org.haox.kerb.spec.type.common.AuthorizationData;
+import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
@@ -24,6 +26,18 @@ public class KerberosTicket {
 
         EncTicketPart encPart = KrbCodec.decode(decrypted, EncTicketPart.class);
         ticket.setEncPart(encPart);
+
+        /**
+         * Also test encryption by the way
+         */
+        EncryptedData encrypted = EncryptionHandler.encrypt(
+                decrypted, key, KeyUsage.KDC_REP_TICKET);
+
+        byte[] decrypted2 = EncryptionHandler.decrypt(
+                encrypted, key, KeyUsage.KDC_REP_TICKET);
+        if (!Arrays.areEqual(decrypted, decrypted2)) {
+            throw new KrbException("Encryption checking failed after decryption");
+        }
     }
 
     public String getUserPrincipalName() throws KrbException {

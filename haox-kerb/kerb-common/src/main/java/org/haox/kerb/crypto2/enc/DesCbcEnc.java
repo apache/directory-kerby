@@ -2,15 +2,15 @@ package org.haox.kerb.crypto2.enc;
 
 import org.haox.kerb.crypto2.Confounder;
 import org.haox.kerb.crypto2.Des;
+import org.haox.kerb.crypto2.enc.provider.DesProvider;
 import org.haox.kerb.crypto2.key.DesKeyMaker;
-import org.haox.kerb.crypto2.key.KeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
 abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
 
     public DesCbcEnc() {
-        super(new DesKeyMaker());
+        super(new DesProvider(), null, new DesKeyMaker());
     }
 
     protected abstract byte[] calculateChecksum(byte[] data, int size)
@@ -24,31 +24,30 @@ abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
         return 8;
     }
 
-    /**
-     * Encrypts the data using DES in CBC mode.
-     * @param data the buffer for plain text.
-     * @param key the key to encrypt the data.
-     * @return the buffer for encrypted data.
-     *
-     * @written by Yanni Zhang, Dec 6 99.
-     */
+    protected void encryptWith(byte[] workBuffer, int[] workLens,
+                                 byte[] key, byte[] iv, int usage) throws KrbException {
+        int confounderLen = workLens[0];
+        int checksumLen = workLens[1];
+        int inputLen = workLens[2];
+        int paddingLen = workLens[3];
 
-    public byte[] encrypt(byte[] data, byte[] key, int usage)
-         throws KrbException {
-        byte[] ivec = new byte[keySize()];
-        return encrypt(data, key, ivec, usage);
+        // confounder
+        byte[] confounder = Confounder.bytes(confounderLen);
+        System.arraycopy(confounder, 0, workBuffer, 0, confounderLen);
+
+        // padding
+        for (int i = confounderLen + checksumLen + inputLen; i < paddingLen; ++i) {
+            workBuffer[i] = 0;
+        }
+
+        // checksum
+        byte[] cksum = calculateChecksum(workBuffer, workBuffer.length);
+        System.arraycopy(cksum, 0, workBuffer, confounderLen, checksumLen);
+
+        encProvider().encrypt(key, iv, workBuffer);
     }
 
-    /**
-     * Encrypts the data using DES in CBC mode.
-     * @param data the buffer for plain text.
-     * @param key the key to encrypt the data.
-     * @param ivec initialization vector.
-     * @return buffer for encrypted data.
-     *
-     * @modified by Yanni Zhang, Feb 24 00.
-     */
-    public byte[] encrypt(byte[] data, byte[] key, byte[] ivec,
+    public byte[] encryptOld(byte[] data, byte[] key, byte[] ivec,
         int usage) throws KrbException {
 
         /*
@@ -93,19 +92,6 @@ abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
         byte[] cipher = new byte[new_data.length];
         Des.cbc_encrypt(new_data, cipher, key, ivec, true);
         return cipher;
-    }
-
-    /**
-     * Decrypts the data using DES in CBC mode.
-     * @param cipher the input buffer.
-     * @param key the key to decrypt the data.
-     *
-     * @written by Yanni Zhang, Dec 6 99.
-     */
-    public byte[] decrypt(byte[] cipher, byte[] key, int usage)
-        throws KrbException {
-        byte[] ivec = new byte[keySize()];
-        return decrypt(cipher, key, ivec, usage);
     }
 
     /**

@@ -11,6 +11,7 @@ import java.security.InvalidKeyException;
 public class DesMacCheckSum extends AbstractCheckSumTypeHandler {
 
     public DesMacCheckSum() {
+        super(null, null);
     }
 
     public int confounderSize() {

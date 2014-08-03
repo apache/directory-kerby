@@ -9,6 +9,7 @@ import java.security.GeneralSecurityException;
 public class HmacSha1Des3KdCheckSum extends AbstractCheckSumTypeHandler {
 
     public HmacSha1Des3KdCheckSum() {
+        super(null, null);
     }
 
     public int confounderSize() {

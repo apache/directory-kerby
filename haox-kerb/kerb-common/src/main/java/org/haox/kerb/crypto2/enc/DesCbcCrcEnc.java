@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto2.enc;
 
-import org.haox.kerb.crypto2.crc32;
+import org.haox.kerb.crypto2.Crc32;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -56,7 +56,7 @@ public class DesCbcCrcEnc extends DesCbcEnc {
     }
 
     protected byte[] calculateChecksum(byte[] data, int size) {
-        return crc32.byte2crc32sum_bytes(data, size);
+        return Crc32.byte2crc32sum_bytes(data, size);
     }
 
 }

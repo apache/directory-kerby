@@ -5,6 +5,8 @@ import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
+import java.util.Arrays;
+
 /**
  EncryptedData   ::= SEQUENCE {
  etype   [0] Int32 -- EncryptionType --,
@@ -54,5 +56,22 @@ public class EncryptedData extends KrbSequenceType {
 
     public void setCipher(byte[] cipher) {
         setFieldAsOctets(CIPHER, cipher);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EncryptedData that = (EncryptedData) o;
+
+        /*
+        if (getKvno() != -1 && that.getKvno() != -1 &&
+                getKvno() != that.getKvno()) return false;
+        */
+
+        if (getEType() != that.getEType()) return false;
+
+        return Arrays.equals(getCipher(), that.getCipher());
     }
 }

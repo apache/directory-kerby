@@ -1,5 +1,7 @@
 package org.haox.kerb.crypto.encryption;
 
+import org.haox.kerb.crypto2.cksum.HashProvider;
+import org.haox.kerb.crypto2.enc.EncryptProvider;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 

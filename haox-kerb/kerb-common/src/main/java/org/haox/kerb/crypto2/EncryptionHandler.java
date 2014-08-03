@@ -90,6 +90,7 @@ public class EncryptionHandler {
     public static EncryptedData encrypt(byte[] plainText, EncryptionKey key, KeyUsage usage) throws KrbException {
         EncryptionTypeHandler handler = getEncHandler(key.getKeyType());
         byte[] cipher = handler.encrypt(plainText, key.getKeyData(), usage.getValue());
+
         EncryptedData ed = new EncryptedData();
         ed.setCipher(cipher);
         ed.setEType(key.getKeyType());

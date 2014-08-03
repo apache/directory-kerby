@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 public final class RsaMd5CheckSum extends AbstractCheckSumTypeHandler {
 
     public RsaMd5CheckSum() {
+        super(null, null);
     }
 
     public int confounderSize() {

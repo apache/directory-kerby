@@ -4,19 +4,26 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
-public interface EncryptionTypeHandler {
+public interface EncryptionTypeHandler extends CryptoTypeHandler {
 
     public EncryptionType eType();
 
-    public byte[] str2key(String string, String salt, byte[] param) throws KrbException;
+    public int confounderSize();
+
+    public int checksumSize();
+
+    public int paddingSize();
+
+    public int trailerSize();
+
+    public byte[] str2key(String string,
+                          String salt, byte[] param) throws KrbException;
 
     public int minimumPadSize();
 
-    public int confounderSize();
+
 
     public CheckSumType checksumType();
-
-    public int checksumSize();
 
     public int blockSize();
 
