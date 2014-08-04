@@ -7,6 +7,8 @@ import org.haox.kerb.crypto2.key.DesKeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
+import java.util.Arrays;
+
 abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
 
     public DesCbcEnc() {
@@ -28,7 +30,7 @@ abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
                                  byte[] key, byte[] iv, int usage) throws KrbException {
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
-        int inputLen = workLens[2];
+        int dataLen = workLens[2];
         int paddingLen = workLens[3];
 
         // confounder
@@ -36,7 +38,7 @@ abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
         System.arraycopy(confounder, 0, workBuffer, 0, confounderLen);
 
         // padding
-        for (int i = confounderLen + checksumLen + inputLen; i < paddingLen; ++i) {
+        for (int i = confounderLen + checksumLen + dataLen; i < paddingLen; ++i) {
             workBuffer[i] = 0;
         }
 
@@ -94,15 +96,34 @@ abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
         return cipher;
     }
 
-    /**
-     * Decrypts the data using DES in CBC mode.
-     * @param cipher the input buffer.
-     * @param key the key to decrypt the data.
-     * @param ivec initialization vector.
-     *
-     * @modified by Yanni Zhang, Dec 6 99.
-     */
-    public byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec, int usage)
+    @Override
+    protected byte[] decryptWith(byte[] workBuffer, int[] workLens,
+                                 byte[] key, byte[] iv, int usage) throws KrbException {
+        int confounderLen = workLens[0];
+        int checksumLen = workLens[1];
+        int dataLen = workLens[2];
+
+        encProvider().decrypt(key, iv, workBuffer);
+
+        byte[] checksum = new byte[checksumLen];
+        for (int i = 0; i < checksumLen; i++) {
+            checksum[i] = workBuffer[confounderLen + i];
+            workBuffer[confounderLen + i] = (byte) 0;
+        }
+
+        byte[] newChecksum = calculateChecksum(workBuffer, workBuffer.length);
+        if (! checksumEqual(checksum, newChecksum)) {
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
+        }
+
+        byte[] data = new byte[dataLen];
+        System.arraycopy(workBuffer, confounderLen + checksumLen,
+                data, 0, dataLen);
+
+        return data;
+    }
+
+    public byte[] decryptOld(byte[] cipher, byte[] key, byte[] ivec, int usage)
         throws KrbException {
 
         /*
@@ -142,15 +163,6 @@ abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
             data[i] = 0;
     }
 
-    /*
-        // Not used.
-    public void setChecksum(byte[] data, int size) throws KrbCryptoException{
-        resetChecksumField(data);
-        byte[] cksum = calculateChecksum(data, size);
-        copyChecksumField(data, cksum);
-    }
-*/
-
     private byte[] generateChecksum(byte[] data) throws KrbException{
         byte[] cksum1 = checksumField(data);
         resetChecksumField(data);
@@ -177,5 +189,9 @@ abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
         byte[] cksum1 = checksumField(data);
         byte[] cksum2 = generateChecksum(data);
         return isChecksumEqual(cksum1, cksum2);
+    }
+
+    public byte[] decryptedData(byte[] data) {
+        return data;
     }
 }

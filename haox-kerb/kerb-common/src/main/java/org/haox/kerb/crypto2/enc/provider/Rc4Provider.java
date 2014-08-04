@@ -14,10 +14,25 @@ public class Rc4Provider extends AbstractEncryptProvider {
 
     @Override
     public void encrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException {
+        rc4Encrypt(data, key, cipherState, true);
+    }
+
+    @Override
+    public void decrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException {
+        rc4Encrypt(data, key, cipherState, false);
+    }
+
+    @Override
+    public byte[] initState(byte[] key, int keyUsage) {
+        return new byte[0];
+    }
+
+    public static void rc4Encrypt(byte[] data, byte[] key,
+                                  byte[] cipherState, boolean encrypt) throws KrbException {
         try {
             Cipher cipher = Cipher.getInstance("ARCFOUR");
             SecretKeySpec secretKey = new SecretKeySpec(key, "ARCFOUR");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            cipher.init(encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, secretKey);
             byte[] output = cipher.doFinal(data);
             System.arraycopy(output, 0, data, 0, output.length);
         } catch (GeneralSecurityException e) {
@@ -25,15 +40,6 @@ public class Rc4Provider extends AbstractEncryptProvider {
             ke.initCause(e);
             throw ke;
         }
-    }
 
-    @Override
-    public void decrypt(byte[] key, byte[] cipherState, byte[] data) {
-
-    }
-
-    @Override
-    public byte[] initState(byte[] key, int keyUsage) {
-        return new byte[0];
     }
 }

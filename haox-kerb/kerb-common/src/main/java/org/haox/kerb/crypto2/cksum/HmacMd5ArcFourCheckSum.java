@@ -52,7 +52,7 @@ public class HmacMd5ArcFourCheckSum extends AbstractCheckSumTypeHandler {
              byte[] newCksum = ArcFourHmac.calculateChecksum(key, usage,
                  data, 0, data.length);
 
-             return isChecksumEqual(checksum, newCksum);
+             return checksumEqual(checksum, newCksum);
          } catch (GeneralSecurityException e) {
              KrbException ke = new KrbException(e.getMessage());
              ke.initCause(e);

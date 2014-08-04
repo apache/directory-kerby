@@ -59,10 +59,10 @@ public final class Des3CbcHmacSha1KdEnc extends AbstractEncryptionTypeHandler {
         return decrypt(cipher, key, ivec, usage);
     }
 
-    public byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec, int usage)
+    public byte[] decrypt(byte[] cipher, byte[] key, byte[] iv, int usage)
         throws KrbException {
         try {
-            return Des3.decrypt(key, usage, ivec, cipher, 0, cipher.length);
+            return Des3.decrypt(key, usage, iv, cipher, 0, cipher.length);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);

@@ -1,20 +1,16 @@
 package org.haox.kerb.crypto2.cksum;
 
+import org.haox.kerb.crypto2.AbstractCryptoTypeHandler;
 import org.haox.kerb.crypto2.CheckSumTypeHandler;
 import org.haox.kerb.crypto2.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
-import java.util.Arrays;
-
-public abstract class AbstractCheckSumTypeHandler implements CheckSumTypeHandler {
-
-    private EncryptProvider encProvider;
-    private HashProvider hashProvider;
+public abstract class AbstractCheckSumTypeHandler
+        extends AbstractCryptoTypeHandler implements CheckSumTypeHandler {
 
     public AbstractCheckSumTypeHandler(EncryptProvider encProvider,
                                          HashProvider hashProvider) {
-        this.encProvider = encProvider;
-        this.hashProvider = hashProvider;
+        super(encProvider, hashProvider);
     }
 
     @Override
@@ -25,16 +21,6 @@ public abstract class AbstractCheckSumTypeHandler implements CheckSumTypeHandler
     @Override
     public String displayName() {
         return cksumType().getDisplayName();
-    }
-
-    @Override
-    public EncryptProvider encProvider() {
-        return encProvider;
-    }
-
-    @Override
-    public HashProvider hashProvider() {
-        return hashProvider;
     }
 
     public byte[] calculateChecksum(byte[] data) throws KrbException {
@@ -53,9 +39,5 @@ public abstract class AbstractCheckSumTypeHandler implements CheckSumTypeHandler
     public boolean verifyKeyedChecksum(byte[] data,
                                        byte[] key, int usage, byte[] checksum) throws KrbException {
         throw new UnsupportedOperationException();
-    }
-
-    protected boolean isChecksumEqual(byte[] origCksum, byte[] newCksum) {
-        return Arrays.equals(origCksum, newCksum);
     }
 }

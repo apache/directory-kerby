@@ -7,11 +7,14 @@ import org.haox.kerb.crypto2.key.Rc4KeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.KrbErrorCode;
 
+import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 
 public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
 
@@ -57,7 +60,7 @@ public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
          byte[] key, byte[] iv, int usage) throws KrbException {
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
-        int inputLen = workLens[2];
+        int dataLen = workLens[2];
 
         /**
          * Instead of E(Confounder | Checksum | Plaintext | Padding),
@@ -74,22 +77,17 @@ public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
 
         byte[] k1, k2, k3;
 
-        // compute K1
         k1 = new byte[key.length];
         System.arraycopy(key, 0, k1, 0, key.length);
 
-        // get the salt using key usage
         byte[] salt = getSalt(usage);
 
         byte[] checksum;
         try {
-            // compute K2 using K1
             k2 = getHmac(k1, salt);
 
-            // generate checksum using K2
-            checksum = getHmac(k2, workBuffer, checksumLen, confounderLen + inputLen);
+            checksum = getHmac(k2, workBuffer, checksumLen, confounderLen + dataLen);
 
-            // compute K3 using K2 and checksum
             k3 = getHmac(k2, checksum);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
@@ -97,9 +95,9 @@ public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
             throw ke;
         }
 
-        byte[] tmpEnc = new byte[confounderLen + inputLen];
+        byte[] tmpEnc = new byte[confounderLen + dataLen];
         System.arraycopy(workBuffer, checksumLen,
-                tmpEnc, 0, confounderLen + inputLen);
+                tmpEnc, 0, confounderLen + dataLen);
         encProvider().encrypt(k3, iv, tmpEnc);
         System.arraycopy(checksum, 0, workBuffer, 0, checksumLen);
         System.arraycopy(tmpEnc, 0, workBuffer, checksumLen, tmpEnc.length);
@@ -116,16 +114,55 @@ public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
         }
     }
 
-    public byte[] decrypt(byte[] cipher, byte[] key, int usage)
-        throws KrbException {
-        byte[] ivec = new byte[blockSize()];
-        return decrypt(cipher, key, ivec, usage);
+    @Override
+    protected byte[] decryptWith(byte[] workBuffer, int[] workLens,
+                                 byte[] key, byte[] iv, int usage) throws KrbException {
+        int confounderLen = workLens[0];
+        int checksumLen = workLens[1];
+        int dataLen = workLens[2];
+
+        /* checksum and decryption */
+
+        byte[] k1, k2, k3;
+
+        k1 = new byte[key.length];
+        System.arraycopy(key, 0, k1, 0, key.length);
+
+        byte[] salt = getSalt(usage);
+
+        try {
+            k2 = getHmac(k1, salt);
+
+            k3 = getHmac(k2, workBuffer, 0, checksumLen);
+
+            byte[] tmpEnc = new byte[confounderLen + dataLen];
+            System.arraycopy(workBuffer, checksumLen,
+                    tmpEnc, 0, confounderLen + dataLen);
+            encProvider().decrypt(k3, iv, tmpEnc);
+
+            byte[] newChecksum = getHmac(k2, tmpEnc);
+
+            if (! checksumEqual(workBuffer, newChecksum, newChecksum.length)) {
+                throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
+            }
+
+            byte[] data = new byte[dataLen];
+            System.arraycopy(tmpEnc, confounderLen,
+                    data, 0, dataLen);
+
+            return data;
+
+        } catch (GeneralSecurityException e) {
+            KrbException ke = new KrbException(e.getMessage());
+            ke.initCause(e);
+            throw ke;
+        }
     }
 
-    public byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec, int usage)
+    public byte[] decryptOld(byte[] cipher, byte[] key, byte[] iv, int usage)
         throws KrbException {
         try {
-            return ArcFourHmac.decrypt(key, usage, ivec, cipher, 0, cipher.length);
+            return ArcFourHmac.decrypt(key, usage, iv, cipher, 0, cipher.length);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);

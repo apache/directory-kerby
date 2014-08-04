@@ -12,7 +12,7 @@ public interface EncryptProvider {
     public int blockSize(); //crypto block size
 
     public void encrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException;
-    public void decrypt(byte[] key, byte[] cipherState, byte[] data);
+    public void decrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException;
     public void cbcMac(byte[] key, byte[] iv, byte[] data);
     public byte[] initState(byte[] key, int keyUsage);
     public void cleanState();

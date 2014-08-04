@@ -21,8 +21,8 @@ public abstract class AesProvider extends AbstractEncryptProvider {
     }
 
     @Override
-    public void decrypt(byte[] key, byte[] cipherState, byte[] data) {
-
+    public void decrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException {
+        aesEncrypt(data, key, cipherState, false);
     }
 
     @Override

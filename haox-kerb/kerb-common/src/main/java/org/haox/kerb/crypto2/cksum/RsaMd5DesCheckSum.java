@@ -88,7 +88,7 @@ public final class RsaMd5DesCheckSum extends AbstractCheckSumTypeHandler {
         System.arraycopy(cksum,  confounderSize(), orig_cksum, 0,
                          cksumSize() - confounderSize());
 
-        return isChecksumEqual(orig_cksum, new_cksum);
+        return checksumEqual(orig_cksum, new_cksum);
     }
 
     /**

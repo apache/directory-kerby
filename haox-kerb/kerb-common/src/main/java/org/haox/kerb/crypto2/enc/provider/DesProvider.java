@@ -21,8 +21,8 @@ public class DesProvider extends AbstractEncryptProvider {
     }
 
     @Override
-    public void decrypt(byte[] key, byte[] cipherState, byte[] data) {
-
+    public void decrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException {
+        cbcEncrypt(data, key, cipherState, false);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class DesProvider extends AbstractEncryptProvider {
     }
 
     public static void cbcEncrypt(byte[] input, byte[] key,
-                                        byte[] cipherState, boolean encrypt) throws KrbException {
+                                  byte[] cipherState, boolean encrypt) throws KrbException {
 
         Cipher cipher = null;
         try {

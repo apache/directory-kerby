@@ -1,20 +1,19 @@
 package org.haox.kerb.crypto2.enc;
 
+import org.haox.kerb.crypto2.AbstractCryptoTypeHandler;
 import org.haox.kerb.crypto2.EncryptionTypeHandler;
 import org.haox.kerb.crypto2.cksum.HashProvider;
 import org.haox.kerb.crypto2.key.KeyMaker;
 import org.haox.kerb.spec.KrbException;
 
-public abstract class AbstractEncryptionTypeHandler implements EncryptionTypeHandler {
+public abstract class AbstractEncryptionTypeHandler
+        extends AbstractCryptoTypeHandler implements EncryptionTypeHandler {
 
-    private EncryptProvider encProvider;
-    private HashProvider hashProvider;
     private KeyMaker keyMaker;
 
     public AbstractEncryptionTypeHandler(EncryptProvider encProvider,
           HashProvider hashProvider, KeyMaker keyMaker) {
-        this.encProvider = encProvider;
-        this.hashProvider = hashProvider;
+        super(encProvider, hashProvider);
         this.keyMaker = keyMaker;
     }
 
@@ -26,16 +25,6 @@ public abstract class AbstractEncryptionTypeHandler implements EncryptionTypeHan
     @Override
     public String displayName() {
         return eType().getDisplayName();
-    }
-
-    @Override
-    public EncryptProvider encProvider() {
-        return encProvider;
-    }
-
-    @Override
-    public HashProvider hashProvider() {
-        return hashProvider;
     }
 
     protected int paddingLength(int inputLen) {
@@ -51,17 +40,17 @@ public abstract class AbstractEncryptionTypeHandler implements EncryptionTypeHan
 
     @Override
     public int confounderSize() {
-        return encProvider.blockSize();
+        return encProvider().blockSize();
     }
 
     @Override
     public int checksumSize() {
-        return hashProvider.hashSize();
+        return hashProvider().hashSize();
     }
 
     @Override
     public int paddingSize() {
-        return encProvider.blockSize();
+        return encProvider().blockSize();
     }
 
     @Override
@@ -76,7 +65,7 @@ public abstract class AbstractEncryptionTypeHandler implements EncryptionTypeHan
 
     @Override
     public byte[] encrypt(byte[] data, byte[] key, int usage) throws KrbException {
-        byte[] iv = new byte[encProvider.blockSize()];
+        byte[] iv = new byte[encProvider().blockSize()];
         return encrypt(data, key, iv, usage);
     }
 
@@ -113,8 +102,26 @@ public abstract class AbstractEncryptionTypeHandler implements EncryptionTypeHan
 
     public byte[] decrypt(byte[] cipher, byte[] key, int usage)
             throws KrbException {
-        byte[] iv = new byte[encProvider.blockSize()];
+        byte[] iv = new byte[encProvider().blockSize()];
         return decrypt(cipher, key, iv, usage);
+    }
+
+    public byte[] decrypt(byte[] cipher, byte[] key, byte[] iv, int usage)
+            throws KrbException {
+
+        int totalLen = cipher.length;
+        int confounderLen = confounderSize();
+        int checksumLen = checksumSize();
+        int trailerLen = trailerSize();
+        int dataLen = totalLen - (confounderLen + checksumLen + trailerLen);
+
+        int[] workLens = new int[] {confounderLen, checksumLen, dataLen, trailerLen};
+        return decryptWith(cipher, workLens, key, iv, usage);
+    }
+
+    protected byte[] decryptWith(byte[] workBuffer, int[] workLens,
+                               byte[] key, byte[] iv, int usage) throws KrbException {
+        return null;
     }
 
     public int dataSize(byte[] data)

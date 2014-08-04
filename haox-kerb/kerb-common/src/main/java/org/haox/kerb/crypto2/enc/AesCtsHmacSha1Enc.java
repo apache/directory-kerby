@@ -1,11 +1,11 @@
 package org.haox.kerb.crypto2.enc;
 
-import org.haox.kerb.crypto2.Aes128;
 import org.haox.kerb.crypto2.Confounder;
 import org.haox.kerb.crypto2.cksum.HashProvider;
 import org.haox.kerb.crypto2.dk.AesDkCrypto;
 import org.haox.kerb.crypto2.key.KeyMaker;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.KrbErrorCode;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -74,7 +74,7 @@ public abstract class AesCtsHmacSha1Enc extends AbstractEncryptionTypeHandler {
             tmpEnc[i] = 0;
         }
 
-        // checksum
+        // checksum & encrypt
         byte[] checksum;
         try {
             checksum = getHmac(Ki, tmpEnc, checksumLen);
@@ -89,15 +89,58 @@ public abstract class AesCtsHmacSha1Enc extends AbstractEncryptionTypeHandler {
         System.arraycopy(checksum, 0, workBuffer, tmpEnc.length, checksum.length);
     }
 
-    public byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec, int usage)
-            throws KrbException {
+    @Override
+    protected byte[] decryptWith(byte[] workBuffer, int[] workLens,
+                                 byte[] key, byte[] iv, int usage) throws KrbException {
+        int confounderLen = workLens[0];
+        int checksumLen = workLens[1];
+        int dataLen = workLens[2];
+
+        byte[] Ke, Ki, Kc;
+        byte[] constant = new byte[5];
+        constant[0] = (byte) ((usage>>24)&0xff);
+        constant[1] = (byte) ((usage>>16)&0xff);
+        constant[2] = (byte) ((usage>>8)&0xff);
+        constant[3] = (byte) (usage&0xff);
+        constant[4] = (byte) 0xaa;
         try {
-            return Aes128.decrypt(key, usage, ivec, cipher, 0, cipher.length);
+            Ke = CRYPTO.dk(key, constant);
+            constant[4] = (byte) 0x55;
+            Ki = CRYPTO.dk(key, constant);
+            constant[4] = (byte) 0x99;
+            Kc = CRYPTO.dk(key, constant);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);
             throw ke;
         }
+
+        // decrypt and verify checksum
+
+        byte[] tmpEnc = new byte[confounderLen + dataLen];
+        System.arraycopy(workBuffer, 0,
+                tmpEnc, 0, confounderLen + dataLen);
+        byte[] checksum = new byte[checksumLen];
+        System.arraycopy(workBuffer, confounderLen + dataLen,
+                checksum, 0, checksumLen);
+
+        byte[] newChecksum;
+        try {
+            encProvider().decrypt(Ke, iv, tmpEnc);
+            newChecksum = getHmac(Ki, tmpEnc, checksumLen);
+        } catch (GeneralSecurityException e) {
+            KrbException ke = new KrbException(e.getMessage());
+            ke.initCause(e);
+            throw ke;
+        }
+
+        if (! checksumEqual(checksum, newChecksum)) {
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
+        }
+
+        byte[] data = new byte[dataLen];
+        System.arraycopy(tmpEnc, confounderLen, data, 0, dataLen);
+        return data;
     }
 
     protected byte[] getHmac(byte[] key, byte[] msg, int hashSize)

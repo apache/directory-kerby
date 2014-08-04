@@ -43,16 +43,10 @@ public final class Aes128CtsHmacSha1Enc extends AesCtsHmacSha1Enc {
         return 16; // bytes
     }
 
-    public byte[] decrypt(byte[] cipher, byte[] key, int usage)
-        throws KrbException {
-        byte[] ivec = new byte[blockSize()];
-        return decrypt(cipher, key, ivec, usage);
-    }
-
-    public byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec, int usage)
+    public byte[] decryptOld(byte[] cipher, byte[] key, byte[] iv, int usage)
         throws KrbException {
         try {
-            return Aes128.decrypt(key, usage, ivec, cipher, 0, cipher.length);
+            return Aes128.decrypt(key, usage, iv, cipher, 0, cipher.length);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);

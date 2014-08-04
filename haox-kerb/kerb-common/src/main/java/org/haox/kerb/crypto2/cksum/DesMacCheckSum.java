@@ -98,7 +98,7 @@ public class DesMacCheckSum extends AbstractCheckSumTypeHandler {
         byte[] orig_cksum = new byte[cksumSize() - confounderSize()];
         System.arraycopy(cksum,  confounderSize(), orig_cksum, 0,
                          cksumSize() - confounderSize());
-        return isChecksumEqual(orig_cksum, new_cksum);
+        return checksumEqual(orig_cksum, new_cksum);
     }
 
     /**

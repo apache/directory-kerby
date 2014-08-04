@@ -51,7 +51,7 @@ public class HmacSha1Aes128CheckSum extends AbstractCheckSumTypeHandler {
          try {
             byte[] newCksum = Aes128.calculateChecksum(key, usage,
                                                         data, 0, data.length);
-            return isChecksumEqual(checksum, newCksum);
+            return checksumEqual(checksum, newCksum);
          } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);
