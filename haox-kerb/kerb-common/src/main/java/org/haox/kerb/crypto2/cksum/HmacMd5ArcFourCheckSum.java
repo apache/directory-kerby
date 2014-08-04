@@ -6,7 +6,7 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 
 import java.security.GeneralSecurityException;
 
-public class HmacMd5ArcFourCheckSum extends AbstractCheckSumTypeHandler {
+public class HmacMd5ArcFourCheckSum extends AbstractKeyedCheckSumTypeHandler {
 
     public HmacMd5ArcFourCheckSum() {
         super(null, null);

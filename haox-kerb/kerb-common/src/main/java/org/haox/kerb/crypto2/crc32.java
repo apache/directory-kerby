@@ -186,16 +186,18 @@ public final class Crc32 extends MessageDigestSpi {
         System.out.println("\n\t};");
     }
 
-    public static int byte2crc32sum(int seed, byte[] data, int size) {
+    public static int byte2crc32sum(int seed, byte[] data, int start, int size) {
         int crc = seed;
 
-        for (int i = 0; i < size; i++)
-            crc = (crc >>> 8) ^ crc32Table[(crc ^ data[i]) & 0xff];
+        for (int i = 0; i < size; i++) {
+            crc = (crc >>> 8) ^ crc32Table[(crc ^ data[start + i]) & 0xff];
+        }
+
         return crc;
     }
 
     public static int byte2crc32sum(int seed, byte[] data) {
-        return byte2crc32sum(seed, data, data.length);
+        return byte2crc32sum(seed, data, 0, data.length);
     }
 
     //sum from zero, i.e., no pre- or post-conditioning
@@ -213,10 +215,8 @@ public final class Crc32 extends MessageDigestSpi {
         return int2quad(temp);
     }
 
-    public static byte[] byte2crc32sum_bytes(byte[] data, int size) {
-        int temp = byte2crc32sum(0, data, size);
-        System.out.println(">>>crc32: " + Integer.toHexString(temp));
-        System.out.println(">>>crc32: " + Integer.toBinaryString(temp));
+    public static byte[] byte2crc32sum_bytes(byte[] data, int start, int size) {
+        int temp = byte2crc32sum(0, data, start, size);
         return int2quad(temp);
     }
 

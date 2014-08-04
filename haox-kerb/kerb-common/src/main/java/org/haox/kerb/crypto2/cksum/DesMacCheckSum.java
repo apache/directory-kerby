@@ -8,7 +8,7 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 import javax.crypto.spec.DESKeySpec;
 import java.security.InvalidKeyException;
 
-public class DesMacCheckSum extends AbstractCheckSumTypeHandler {
+public class DesMacCheckSum extends AbstractKeyedCheckSumTypeHandler {
 
     public DesMacCheckSum() {
         super(null, null);

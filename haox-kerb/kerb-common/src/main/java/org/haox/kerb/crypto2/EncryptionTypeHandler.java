@@ -19,15 +19,7 @@ public interface EncryptionTypeHandler extends CryptoTypeHandler {
     public byte[] str2key(String string,
                           String salt, byte[] param) throws KrbException;
 
-    public int minimumPadSize();
-
-
-
     public CheckSumType checksumType();
-
-    public int blockSize();
-
-    public int keySize();
 
     public byte[] encrypt(byte[] data, byte[] key, int usage)
         throws KrbException;

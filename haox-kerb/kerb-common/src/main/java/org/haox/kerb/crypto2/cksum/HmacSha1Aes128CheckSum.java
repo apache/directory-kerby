@@ -6,7 +6,7 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 
 import java.security.GeneralSecurityException;
 
-public class HmacSha1Aes128CheckSum extends AbstractCheckSumTypeHandler {
+public class HmacSha1Aes128CheckSum extends AbstractKeyedCheckSumTypeHandler {
 
     public HmacSha1Aes128CheckSum() {
         super(null, null);

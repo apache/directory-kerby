@@ -1,6 +1,7 @@
 package org.haox.kerb.ccache;
 
 import org.haox.kerb.spec.type.common.PrincipalName;
+import org.haox.kerb.spec.type.ticket.Ticket;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -170,7 +171,7 @@ public class CredentialCache implements KrbCredentialCache
 
             results.add(cred);
         }
-        
+
         return results;
     }
 
@@ -234,5 +235,25 @@ public class CredentialCache implements KrbCredentialCache
         ccos.writeShort(tag.length);
         ccos.writeInt(tag.time);
         ccos.writeInt(tag.usec);
+    }
+
+    public static void main(String[] args) throws IOException {
+        if (args.length != 2) {
+            System.err.println("Dump credential cache file");
+            System.err.println("Usage: CredentialCache <ccache-file>");
+            System.exit(1);
+        }
+
+        String cacheFile = args[1];
+        CredentialCache cc = new CredentialCache();
+        cc.load(new File(cacheFile));
+
+        Ticket tkt;
+        for (Credential cred : cc.getCredentials()) {
+            tkt = cred.getTicket();
+            System.out.println("Tkt server name: " + tkt.getSname().getName());
+            System.out.println("Tkt client name: " + cred.getClientName().getName());
+            System.out.println("Tkt encrypt type: " + tkt.getEncryptedEncPart().getEType().getName());
+        }
     }
 }
