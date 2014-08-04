@@ -77,7 +77,7 @@ public class AesDkCrypto extends DkCrypto {
             saltUtf8 = salt.getBytes("UTF-8");
             return stringToKey(password, saltUtf8, s2kparams);
         } catch (Exception e) {
-            return null;
+            throw new GeneralSecurityException(e);
         } finally {
             if (saltUtf8 != null) {
                 Arrays.fill(saltUtf8, (byte)0);
