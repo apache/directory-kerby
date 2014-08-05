@@ -8,11 +8,24 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class EncryptionHandler {
 
     private static final boolean ALLOW_WEAK_CRYPTO;
+
+    private static final Set<EncryptionType> oldEncTypes = new HashSet<EncryptionType>();
+
+    static {
+        oldEncTypes.add(EncryptionType.DES_CBC_CRC);
+        oldEncTypes.add(EncryptionType.DES_CBC_MD4);
+        oldEncTypes.add(EncryptionType.DES_CBC_MD5);
+        oldEncTypes.add(EncryptionType.DES3_CBC_SHA1);
+        oldEncTypes.add(EncryptionType.DES3_CBC_SHA1_KD);
+        oldEncTypes.add(EncryptionType.RC4_HMAC);
+    }
 
     static {
         boolean allowed = true;
@@ -26,6 +39,21 @@ public class EncryptionHandler {
                     exc.getMessage());
         }
         ALLOW_WEAK_CRYPTO = allowed;
+    }
+
+    public static EncryptionType getBestEncryptionType(List<EncryptionType> requestedTypes,
+                                                       List<EncryptionType> configuredTypes) {
+        for (EncryptionType encryptionType : configuredTypes) {
+            if (requestedTypes.contains(encryptionType)) {
+                return encryptionType;
+            }
+        }
+
+        return null;
+    }
+
+    public static boolean isNewEncryptionType(EncryptionType eType) {
+        return !oldEncTypes.contains(eType);
     }
 
     public static EncryptionTypeHandler getEncHandler(String eType) throws KrbException {

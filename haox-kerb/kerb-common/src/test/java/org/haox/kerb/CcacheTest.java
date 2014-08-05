@@ -39,5 +39,6 @@ public class CcacheTest {
 
         PrincipalName princ = cc.getPrimaryPrincipal();
         Assert.assertNotNull(princ);
+        Assert.assertTrue(princ.getName().equals("drankye@SH.INTEL.COM"));
     }
 }
