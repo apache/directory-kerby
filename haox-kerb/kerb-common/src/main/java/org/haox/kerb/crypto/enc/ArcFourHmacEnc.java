@@ -2,6 +2,9 @@ package org.haox.kerb.crypto.enc;
 
 import org.haox.kerb.crypto.ArcFourHmac;
 import org.haox.kerb.crypto.Confounder;
+import org.haox.kerb.crypto.Rc4;
+import org.haox.kerb.crypto.cksum.provider.Hmac;
+import org.haox.kerb.crypto.cksum.provider.Md5Provider;
 import org.haox.kerb.crypto.enc.provider.Rc4Provider;
 import org.haox.kerb.crypto.key.Rc4KeyMaker;
 import org.haox.kerb.spec.KrbException;
@@ -9,15 +12,12 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.GeneralSecurityException;
 
 public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
 
     public ArcFourHmacEnc() {
-        super(new Rc4Provider(), null, new Rc4KeyMaker());
+        super(new Rc4Provider(), new Md5Provider(), new Rc4KeyMaker());
     }
 
     public EncryptionType eType() {
@@ -78,20 +78,14 @@ public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
         k1 = new byte[key.length];
         System.arraycopy(key, 0, k1, 0, key.length);
 
-        byte[] salt = getSalt(usage);
-
         byte[] checksum;
-        try {
-            k2 = getHmac(k1, salt);
+        byte[] salt = Rc4.getSalt(usage);
+        k2 = Hmac.hmac(hashProvider(), k1, salt);
 
-            checksum = getHmac(k2, workBuffer, checksumLen, confounderLen + dataLen);
+        checksum = Hmac.hmac(hashProvider(), k2, workBuffer,
+                checksumLen, confounderLen + dataLen);
 
-            k3 = getHmac(k2, checksum);
-        } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException(e.getMessage());
-            ke.initCause(e);
-            throw ke;
-        }
+        k3 = Hmac.hmac(hashProvider(), k2, checksum);
 
         byte[] tmpEnc = new byte[confounderLen + dataLen];
         System.arraycopy(workBuffer, checksumLen,
@@ -126,35 +120,29 @@ public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
         k1 = new byte[key.length];
         System.arraycopy(key, 0, k1, 0, key.length);
 
-        byte[] salt = getSalt(usage);
+        byte[] salt = Rc4.getSalt(usage);
 
-        try {
-            k2 = getHmac(k1, salt);
+        k2 = Hmac.hmac(hashProvider(), k1, salt);
 
-            k3 = getHmac(k2, workBuffer, 0, checksumLen);
+        k3 = Hmac.hmac(hashProvider(), k2, workBuffer, 0, checksumLen);
 
-            byte[] tmpEnc = new byte[confounderLen + dataLen];
-            System.arraycopy(workBuffer, checksumLen,
-                    tmpEnc, 0, confounderLen + dataLen);
-            encProvider().decrypt(k3, iv, tmpEnc);
+        byte[] tmpEnc = new byte[confounderLen + dataLen];
+        System.arraycopy(workBuffer, checksumLen,
+                tmpEnc, 0, confounderLen + dataLen);
+        encProvider().decrypt(k3, iv, tmpEnc);
 
-            byte[] newChecksum = getHmac(k2, tmpEnc);
+        byte[] newChecksum = Hmac.hmac(hashProvider(), k2, tmpEnc);
 
-            if (! checksumEqual(workBuffer, newChecksum, newChecksum.length)) {
-                throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
-            }
-
-            byte[] data = new byte[dataLen];
-            System.arraycopy(tmpEnc, confounderLen,
-                    data, 0, dataLen);
-
-            return data;
-
-        } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException(e.getMessage());
-            ke.initCause(e);
-            throw ke;
+        if (! checksumEqual(workBuffer, newChecksum, newChecksum.length)) {
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
         }
+
+        byte[] data = new byte[dataLen];
+        System.arraycopy(tmpEnc, confounderLen,
+                data, 0, dataLen);
+
+        return data;
+
     }
 
     public byte[] decryptOld(byte[] cipher, byte[] key, byte[] iv, int usage)
@@ -173,54 +161,5 @@ public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
     // EncryptedData.decryptedData altogether
     public byte[] decryptedData(byte[] data) {
         return data;
-    }
-
-    /**
-     * Get the HMAC-MD5
-     */
-    protected byte[] getHmac(byte[] key, byte[] data, int start, int len)
-            throws GeneralSecurityException {
-
-        SecretKey keyKi = new SecretKeySpec(key, "HmacMD5");
-        Mac m = Mac.getInstance("HmacMD5");
-        m.init(keyKi);
-
-        // generate hash
-        m.update(data, start, len);
-        byte[] hash = m.doFinal();
-        return hash;
-    }
-
-    protected byte[] getHmac(byte[] key, byte[] data)
-            throws GeneralSecurityException {
-
-        SecretKey keyKi = new SecretKeySpec(key, "HmacMD5");
-        Mac m = Mac.getInstance("HmacMD5");
-        m.init(keyKi);
-
-        // generate hash
-        byte[] hash = m.doFinal(data);
-        return hash;
-    }
-
-    // get the salt using key usage
-    private byte[] getSalt(int usage) {
-        int ms_usage = arcfour_translate_usage(usage);
-        byte[] salt = new byte[4];
-        salt[0] = (byte)(ms_usage & 0xff);
-        salt[1] = (byte)((ms_usage >> 8) & 0xff);
-        salt[2] = (byte)((ms_usage >> 16) & 0xff);
-        salt[3] = (byte)((ms_usage >> 24) & 0xff);
-        return salt;
-    }
-
-    // Key usage translation for MS
-    private int arcfour_translate_usage(int usage) {
-        switch (usage) {
-            case 3: return 8;
-            case 9: return 8;
-            case 23: return 13;
-            default: return usage;
-        }
     }
 }

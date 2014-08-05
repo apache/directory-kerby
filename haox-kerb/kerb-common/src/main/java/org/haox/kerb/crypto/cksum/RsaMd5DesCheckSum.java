@@ -13,7 +13,7 @@ import java.security.InvalidKeyException;
 public final class RsaMd5DesCheckSum extends AbstractKeyedCheckSumTypeHandler {
 
     public RsaMd5DesCheckSum() {
-        super(new DesProvider(), new Md5Provider());
+        super(new DesProvider(), new Md5Provider(), 24, 24);
     }
 
     public int confounderSize() {
@@ -37,7 +37,7 @@ public final class RsaMd5DesCheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     @Override
-    public byte[] calculateKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
+    public byte[] makeKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
         //prepend confounder
         byte[] new_data = new byte[data.length + confounderSize()];
         byte[] conf = Confounder.bytes(confounderSize());
@@ -45,7 +45,8 @@ public final class RsaMd5DesCheckSum extends AbstractKeyedCheckSumTypeHandler {
         System.arraycopy(data, 0, new_data, confounderSize(), data.length);
 
         //calculate md5 cksum
-        byte[] mdc_cksum = hashProvider().hash(new_data);
+        hashProvider().hash(new_data);
+        byte[] mdc_cksum = hashProvider().output();
         byte[] cksum = new byte[cksumSize()];
         System.arraycopy(conf, 0, cksum, 0, confounderSize());
         System.arraycopy(mdc_cksum, 0, cksum, confounderSize(),
@@ -83,7 +84,8 @@ public final class RsaMd5DesCheckSum extends AbstractKeyedCheckSumTypeHandler {
         System.arraycopy(cksum, 0, new_data, 0, confounderSize());
         System.arraycopy(data, 0, new_data, confounderSize(), data.length);
 
-        byte[] new_cksum = hashProvider().hash(new_data);
+        hashProvider().hash(new_data);
+        byte[] new_cksum = hashProvider().output();
         //extract original cksum value
         byte[] orig_cksum = new byte[cksumSize() - confounderSize()];
         System.arraycopy(cksum,  confounderSize(), orig_cksum, 0,

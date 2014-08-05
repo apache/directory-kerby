@@ -14,21 +14,7 @@ public abstract class AesProvider extends AbstractEncryptProvider {
     }
 
     @Override
-    public void encrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException {
-        aesEncrypt(data, key, cipherState, true);
-    }
-
-    @Override
-    public void decrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException {
-        aesEncrypt(data, key, cipherState, false);
-    }
-
-    @Override
-    public byte[] initState(byte[] key, int keyUsage) {
-        return new byte[0];
-    }
-
-    public static void aesEncrypt(byte[] input, byte[] key,
+    protected void doEncrypt(byte[] data, byte[] key,
                                   byte[] cipherState, boolean encrypt) throws KrbException {
         Cipher cipher = null;
         try {
@@ -46,8 +32,8 @@ public abstract class AesProvider extends AbstractEncryptProvider {
 
             cipher.init(encrypt ?
                     Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, secretKey, param);
-            byte[] output = cipher.doFinal(input);
-            System.arraycopy(output, 0, input, 0, output.length);
+            byte[] output = cipher.doFinal(data);
+            System.arraycopy(output, 0, data, 0, output.length);
         } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);

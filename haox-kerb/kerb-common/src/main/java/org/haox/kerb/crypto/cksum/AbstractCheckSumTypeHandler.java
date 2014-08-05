@@ -8,9 +8,14 @@ import org.haox.kerb.spec.KrbException;
 public abstract class AbstractCheckSumTypeHandler
         extends AbstractCryptoTypeHandler implements CheckSumTypeHandler {
 
-    public AbstractCheckSumTypeHandler(EncryptProvider encProvider,
-                                       HashProvider hashProvider) {
+    private int computeSize;
+    private int outputSize;
+
+    public AbstractCheckSumTypeHandler(EncryptProvider encProvider, HashProvider hashProvider,
+                                       int computeSize, int outputSize) {
         super(encProvider, hashProvider);
+        this.computeSize = computeSize;
+        this.outputSize = outputSize;
     }
 
     @Override
@@ -25,19 +30,19 @@ public abstract class AbstractCheckSumTypeHandler
 
     @Override
     public int computeSize() {
-        return 0;
+        return computeSize;
     }
 
     @Override
     public int outputSize() {
-        return 0;
+        return outputSize;
     }
 
-    public byte[] calculateChecksum(byte[] data) throws KrbException {
-        return calculateChecksum(data, 0, data.length);
+    public byte[] makeChecksum(byte[] data) throws KrbException {
+        return makeChecksum(data, 0, data.length);
     }
 
-    public byte[] calculateChecksum(byte[] data, int start, int size) throws KrbException {
+    public byte[] makeChecksum(byte[] data, int start, int size) throws KrbException {
         throw new UnsupportedOperationException();
     }
 
@@ -45,13 +50,13 @@ public abstract class AbstractCheckSumTypeHandler
         throw new UnsupportedOperationException();
     }
 
-    public byte[] calculateKeyedChecksum(byte[] data,
-                                         byte[] key, int usage) throws KrbException {
-        return calculateKeyedChecksum(data, 0, data.length, key, usage);
+    public byte[] makeKeyedChecksum(byte[] data,
+                                    byte[] key, int usage) throws KrbException {
+        return makeKeyedChecksum(data, 0, data.length, key, usage);
     }
 
-    public byte[] calculateKeyedChecksum(byte[] data, int start, int size,
-                                         byte[] key, int usage) throws KrbException {
+    public byte[] makeKeyedChecksum(byte[] data, int start, int size,
+                                    byte[] key, int usage) throws KrbException {
         throw new UnsupportedOperationException();
     }
 

@@ -9,7 +9,7 @@ import java.security.GeneralSecurityException;
 public class HmacSha1Des3KdCheckSum extends AbstractKeyedCheckSumTypeHandler {
 
     public HmacSha1Des3KdCheckSum() {
-        super(null, null);
+        super(null, null, 20, 20);
     }
 
     public int confounderSize() {
@@ -33,7 +33,7 @@ public class HmacSha1Des3KdCheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     @Override
-    public byte[] calculateKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
+    public byte[] makeKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
 
          try {
              return Des3.calculateChecksum(key, usage, data, 0, data.length);

@@ -8,10 +8,10 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 import javax.crypto.spec.DESKeySpec;
 import java.security.InvalidKeyException;
 
-public class DesMacCheckSum extends AbstractKeyedCheckSumTypeHandler {
+public class DesCbcCheckSum extends AbstractKeyedCheckSumTypeHandler {
 
-    public DesMacCheckSum() {
-        super(null, null);
+    public DesCbcCheckSum() {
+        super(null, null, 8, 8);
     }
 
     public int confounderSize() {
@@ -19,7 +19,7 @@ public class DesMacCheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     public CheckSumType cksumType() {
-        return CheckSumType.DES_MAC;
+        return CheckSumType.DES_CBC;
     }
 
     public boolean isSafe() {
@@ -35,7 +35,7 @@ public class DesMacCheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     @Override
-    public byte[] calculateKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
+    public byte[] makeKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
         byte[] new_data = new byte[data.length + confounderSize()];
         byte[] conf = Confounder.bytes(confounderSize());
         System.arraycopy(conf, 0, new_data, 0, confounderSize());

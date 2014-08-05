@@ -1,35 +1,21 @@
 package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.Aes128;
+import org.haox.kerb.crypto.dk.AesDkCrypto;
+import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 
 import java.security.GeneralSecurityException;
 
-public class HmacSha1Aes128CheckSum extends HmacSha1AesCheckSum {
+public abstract class HmacSha1AesCheckSum extends AbstractKeyedCheckSumTypeHandler {
+    private AesDkCrypto CRYPTO;
 
-    public HmacSha1Aes128CheckSum() {
-        super(null, null);
-    }
+    public HmacSha1AesCheckSum(EncryptProvider encProvider,
+                               HashProvider hashProvider) {
+        super(encProvider, hashProvider, 20, 12);
 
-    public int confounderSize() {
-        return 16;
-    }
-
-    public CheckSumType cksumType() {
-        return CheckSumType.HMAC_SHA1_96_AES128;
-    }
-
-    public boolean isSafe() {
-        return true;
-    }
-
-    public int cksumSize() {
-        return 12;  // bytes
-    }
-
-    public int keySize() {
-        return 16;   // bytes
+        CRYPTO = new AesDkCrypto(encProvider.keySize() * 8);
     }
 
     @Override

@@ -30,7 +30,8 @@ abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
         }
 
         // checksum
-        byte[] cksum = hashProvider().hash(workBuffer);
+        hashProvider().hash(workBuffer);
+        byte[] cksum = hashProvider().output();
         System.arraycopy(cksum, 0, workBuffer, confounderLen, checksumLen);
 
         encProvider().encrypt(key, iv, workBuffer);
@@ -51,7 +52,8 @@ abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
             workBuffer[confounderLen + i] = (byte) 0;
         }
 
-        byte[] newChecksum = hashProvider().hash(workBuffer);
+        hashProvider().hash(workBuffer);
+        byte[] newChecksum = hashProvider().output();
         if (! checksumEqual(checksum, newChecksum)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
         }

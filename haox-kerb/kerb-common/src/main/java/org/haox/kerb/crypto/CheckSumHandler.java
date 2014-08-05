@@ -76,7 +76,7 @@ public class CheckSumHandler {
                 break;
 
             case DES_MAC:
-                cksumHandler = new DesMacCheckSum();
+                cksumHandler = new DesCbcCheckSum();
                 break;
 
             case RSA_MD5:
@@ -113,7 +113,7 @@ public class CheckSumHandler {
 
     public static CheckSum checksum(CheckSumType checkSumType, byte[] bytes) throws KrbException {
         CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
-        byte[] checksumBytes = handler.calculateChecksum(bytes);
+        byte[] checksumBytes = handler.makeChecksum(bytes);
         CheckSum checkSum = new CheckSum();
         checkSum.setCksumtype(checkSumType);
         checkSum.setChecksum(checksumBytes);
@@ -132,7 +132,7 @@ public class CheckSumHandler {
     public static CheckSum checksumWithKey(CheckSumType checkSumType,
                            byte[] bytes, byte[] key, KeyUsage usage) throws KrbException {
         CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
-        byte[] checksumBytes = handler.calculateKeyedChecksum(bytes, key, usage.getValue());
+        byte[] checksumBytes = handler.makeKeyedChecksum(bytes, key, usage.getValue());
         CheckSum checkSum = new CheckSum();
         checkSum.setCksumtype(checkSumType);
         checkSum.setChecksum(checksumBytes);

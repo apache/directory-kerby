@@ -10,6 +10,7 @@ public interface HashProvider {
     public int hashSize();
     public int blockSize();
 
-    public byte[] hash(byte[] data, int start, int size) throws KrbException;
-    public byte[] hash(byte[] data) throws KrbException;
+    public void hash(byte[] data, int start, int size) throws KrbException;
+    public void hash(byte[] data) throws KrbException;
+    public byte[] output();
 }

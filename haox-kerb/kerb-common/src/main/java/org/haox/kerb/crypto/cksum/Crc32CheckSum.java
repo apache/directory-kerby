@@ -7,7 +7,7 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 public class Crc32CheckSum extends AbstractCheckSumTypeHandler {
 
     public Crc32CheckSum() {
-        super(null, new Crc32Provider());
+        super(null, new Crc32Provider(), 4, 4);
     }
 
     public int confounderSize() {
@@ -31,7 +31,8 @@ public class Crc32CheckSum extends AbstractCheckSumTypeHandler {
     }
 
     @Override
-    public byte[] calculateChecksum(byte[] data, int start, int size) throws KrbException {
-        return hashProvider().hash(data, start, size);
+    public byte[] makeChecksum(byte[] data, int start, int size) throws KrbException {
+        hashProvider().hash(data, start, size);
+        return hashProvider().output();
     }
 }

@@ -10,6 +10,12 @@ public abstract class AbstractHashProvider implements HashProvider {
     public AbstractHashProvider(int hashSize, int blockSize) {
         this.hashSize = hashSize;
         this.blockSize = blockSize;
+
+        init();
+    }
+
+    protected void init() {
+
     }
 
     @Override
@@ -23,7 +29,7 @@ public abstract class AbstractHashProvider implements HashProvider {
     }
 
     @Override
-    public byte[] hash(byte[] data) throws KrbException {
-        return hash(data, 0, data.length);
+    public void hash(byte[] data) throws KrbException {
+        hash(data, 0, data.length);
     }
 }

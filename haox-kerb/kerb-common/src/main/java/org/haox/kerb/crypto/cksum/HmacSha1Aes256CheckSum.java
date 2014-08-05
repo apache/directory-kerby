@@ -6,7 +6,7 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 
 import java.security.GeneralSecurityException;
 
-public class HmacSha1Aes256CheckSum extends AbstractKeyedCheckSumTypeHandler {
+public class HmacSha1Aes256CheckSum extends HmacSha1AesCheckSum {
 
     public HmacSha1Aes256CheckSum() {
         super(null, null);
@@ -33,7 +33,7 @@ public class HmacSha1Aes256CheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     @Override
-    public byte[] calculateKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
+    public byte[] makeKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
 
          try {
             return Aes256.calculateChecksum(key, usage, data, 0, data.length);

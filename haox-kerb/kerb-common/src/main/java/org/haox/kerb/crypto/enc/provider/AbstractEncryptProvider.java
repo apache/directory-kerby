@@ -1,6 +1,7 @@
 package org.haox.kerb.crypto.enc.provider;
 
 import org.haox.kerb.crypto.enc.EncryptProvider;
+import org.haox.kerb.spec.KrbException;
 
 public abstract class AbstractEncryptProvider implements EncryptProvider {
     private int blockSize;
@@ -27,6 +28,23 @@ public abstract class AbstractEncryptProvider implements EncryptProvider {
     public int blockSize() {
         return blockSize;
     }
+
+    @Override
+    public byte[] initState(byte[] key, int keyUsage) {
+        return new byte[0];
+    }
+
+    @Override
+    public void encrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException {
+        doEncrypt(data, key, cipherState, true);
+    }
+
+    @Override
+    public void decrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException {
+        doEncrypt(data, key, cipherState, false);
+    }
+
+    protected abstract void doEncrypt(byte[] data, byte[] key, byte[] cipherState, boolean encrypt) throws KrbException;
 
     @Override
     public void cbcMac(byte[] key, byte[] iv, byte[] data) {

@@ -6,7 +6,7 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 public class RsaMd5CheckSum extends AbstractCheckSumTypeHandler {
 
     public RsaMd5CheckSum() {
-        super(null, new Md5Provider());
+        super(null, new Md5Provider(), 16, 16);
     }
 
     public int confounderSize() {
