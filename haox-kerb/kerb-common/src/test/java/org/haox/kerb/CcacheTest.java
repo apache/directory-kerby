@@ -1,11 +1,6 @@
 package org.haox.kerb;
 
 import org.haox.kerb.ccache.CredentialCache;
-import org.haox.kerb.crypto2.EncryptionHandler;
-import org.haox.kerb.keytab.Keytab;
-import org.haox.kerb.keytab.KeytabEntry;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.PrincipalName;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +8,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 /*
 Default principal: drankye@SH.INTEL.COM

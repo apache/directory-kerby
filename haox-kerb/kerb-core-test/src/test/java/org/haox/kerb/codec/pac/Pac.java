@@ -1,6 +1,6 @@
 package org.haox.kerb.codec.pac;
 
-import org.haox.kerb.crypto2.CheckSumHandler;
+import org.haox.kerb.crypto.CheckSumHandler;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSum;

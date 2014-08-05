@@ -1,7 +1,7 @@
 package org.haox.kerb.common;
 
-import org.haox.kerb.crypto2.EncryptionHandler;
-import org.haox.kerb.crypto2.EncryptionTypeHandler;
+import org.haox.kerb.crypto.EncryptionHandler;
+import org.haox.kerb.crypto.EncryptionTypeHandler;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;

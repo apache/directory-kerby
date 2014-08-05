@@ -5,8 +5,7 @@ import org.apache.directory.server.i18n.I18n;
 import org.apache.directory.shared.kerberos.KerberosConstants;
 import org.apache.directory.shared.kerberos.exceptions.InvalidTicketException;
 import org.haox.kerb.codec.KrbCodec;
-import org.haox.kerb.crypto.encryption.RandomKeyFactory;
-import org.haox.kerb.crypto2.EncryptionHandler;
+import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.KerberosUtils;
@@ -385,7 +384,7 @@ public class AuthenticationService
             throw new KrbException(KrbErrorCode.KDC_ERR_BADOPTION);
         }
 
-        EncryptionKey sessionKey = RandomKeyFactory.getRandomKey(authContext.getEncryptionType());
+        EncryptionKey sessionKey = EncryptionHandler.makeRandomKey(authContext.getEncryptionType());
         encTicketPart.setKey(sessionKey);
 
         encTicketPart.setCname(request.getReqBody().getCname());

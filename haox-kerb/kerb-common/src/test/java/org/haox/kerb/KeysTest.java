@@ -1,6 +1,6 @@
 package org.haox.kerb;
 
-import org.haox.kerb.crypto2.EncryptionHandler;
+import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.keytab.Keytab;
 import org.haox.kerb.keytab.KeytabEntry;
 import org.haox.kerb.spec.KrbException;

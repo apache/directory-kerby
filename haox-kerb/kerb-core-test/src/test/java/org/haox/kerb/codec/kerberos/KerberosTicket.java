@@ -2,7 +2,7 @@ package org.haox.kerb.codec.kerberos;
 
 import org.bouncycastle.util.Arrays;
 import org.haox.kerb.codec.KrbCodec;
-import org.haox.kerb.crypto2.EncryptionHandler;
+import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.ap.ApOptions;
 import org.haox.kerb.spec.type.common.AuthorizationData;
