@@ -10,8 +10,6 @@ public abstract class AbstractHashProvider implements HashProvider {
     public AbstractHashProvider(int hashSize, int blockSize) {
         this.hashSize = hashSize;
         this.blockSize = blockSize;
-
-        init();
     }
 
     protected void init() {

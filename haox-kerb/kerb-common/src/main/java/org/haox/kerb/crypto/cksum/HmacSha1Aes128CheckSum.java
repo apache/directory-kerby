@@ -1,6 +1,7 @@
 package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.Aes128;
+import org.haox.kerb.crypto.enc.provider.Aes128Provider;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 
@@ -9,7 +10,7 @@ import java.security.GeneralSecurityException;
 public class HmacSha1Aes128CheckSum extends HmacSha1AesCheckSum {
 
     public HmacSha1Aes128CheckSum() {
-        super(null, null);
+        super(new Aes128Provider());
     }
 
     public int confounderSize() {
@@ -32,8 +33,8 @@ public class HmacSha1Aes128CheckSum extends HmacSha1AesCheckSum {
         return 16;   // bytes
     }
 
-    @Override
-    public byte[] makeKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
+
+    public byte[] makeKeyedChecksumOld(byte[] data, byte[] key, int usage) throws KrbException {
 
          try {
             return Aes128.calculateChecksum(key, usage, data, 0, data.length);

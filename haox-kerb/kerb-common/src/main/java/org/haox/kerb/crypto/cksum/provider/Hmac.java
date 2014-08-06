@@ -17,25 +17,20 @@ public class Hmac {
         byte[] ipad = new byte[blockLen];
         byte[] opad = new byte[blockLen];
 
-        // XOR k with ipad and opad, respectively
+        int ki;
         for (int i = 0; i < blockLen; i++) {
-            int si = (i < key.length) ? key[i] : 0;
-            ipad[i] = (byte)(si ^ 0x36);
-            opad[i] = (byte)(si ^ 0x5c);
+            ki = (i < key.length) ? key[i] : 0;
+            ipad[i] = (byte)(ki ^ 0x36);
+            opad[i] = (byte)(ki ^ 0x5c);
         }
 
-        // compute digest for 1st pass; start with inner pad
         hashProvider.hash(ipad);
 
-        // add the selected part of an array of bytes to the inner digest
         hashProvider.hash(data, start, len);
 
-        // finish the inner digest
         byte[] tmp = hashProvider.output();
 
-        // compute digest for 2nd pass; start with outer pad
         hashProvider.hash(opad);
-        // add result of 1st hash
         hashProvider.hash(tmp);
 
         tmp = hashProvider.output();

@@ -1,6 +1,7 @@
 package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.Aes256;
+import org.haox.kerb.crypto.enc.provider.Aes256Provider;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 
@@ -9,7 +10,7 @@ import java.security.GeneralSecurityException;
 public class HmacSha1Aes256CheckSum extends HmacSha1AesCheckSum {
 
     public HmacSha1Aes256CheckSum() {
-        super(null, null);
+        super(new Aes256Provider());
     }
 
     public int confounderSize() {
@@ -32,8 +33,7 @@ public class HmacSha1Aes256CheckSum extends HmacSha1AesCheckSum {
         return 32;   // bytes
     }
 
-    @Override
-    public byte[] makeKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
+    public byte[] makeKeyedChecksumOld(byte[] data, byte[] key, int usage) throws KrbException {
 
          try {
             return Aes256.calculateChecksum(key, usage, data, 0, data.length);
