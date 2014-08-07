@@ -14,10 +14,11 @@ import org.haox.kerb.spec.type.common.KrbErrorCode;
 
 import java.security.GeneralSecurityException;
 
-public final class ArcFourHmacEnc extends AbstractEncryptionTypeHandler {
+public final class ArcFourHmacEnc extends AbstractEncTypeHandler {
 
     public ArcFourHmacEnc() {
-        super(new Rc4Provider(), new Md5Provider(), new Rc4KeyMaker());
+        super(new Rc4Provider(), new Md5Provider());
+        keyMaker(new Rc4KeyMaker(this));
     }
 
     public EncryptionType eType() {

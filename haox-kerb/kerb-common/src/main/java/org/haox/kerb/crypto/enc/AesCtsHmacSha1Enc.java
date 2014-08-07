@@ -3,7 +3,6 @@ package org.haox.kerb.crypto.enc;
 import org.haox.kerb.crypto.Confounder;
 import org.haox.kerb.crypto.cksum.HashProvider;
 import org.haox.kerb.crypto.dk.AesDkCrypto;
-import org.haox.kerb.crypto.key.KeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
@@ -12,14 +11,11 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.GeneralSecurityException;
 
-public abstract class AesCtsHmacSha1Enc extends AbstractEncryptionTypeHandler {
-    private AesDkCrypto CRYPTO;
+public abstract class AesCtsHmacSha1Enc extends AbstractEncTypeHandler {
 
     public AesCtsHmacSha1Enc(EncryptProvider encProvider,
-                             HashProvider hashProvider, KeyMaker keyMaker) {
-        super(encProvider, hashProvider, keyMaker);
-
-        CRYPTO = new AesDkCrypto(encProvider.keySize() * 8);
+                             HashProvider hashProvider) {
+        super(encProvider, hashProvider);
     }
 
     @Override
@@ -42,17 +38,11 @@ public abstract class AesCtsHmacSha1Enc extends AbstractEncryptionTypeHandler {
         constant[2] = (byte) ((usage>>8)&0xff);
         constant[3] = (byte) (usage&0xff);
         constant[4] = (byte) 0xaa;
-        try {
-            Ke = CRYPTO.dk(key, constant);
-            constant[4] = (byte) 0x55;
-            Ki = CRYPTO.dk(key, constant);
-            constant[4] = (byte) 0x99;
-            Kc = CRYPTO.dk(key, constant);
-        } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException(e.getMessage());
-            ke.initCause(e);
-            throw ke;
-        }
+        Ke = keyMaker().dk(key, constant);
+        constant[4] = (byte) 0x55;
+        Ki = keyMaker().dk(key, constant);
+        constant[4] = (byte) 0x99;
+        Kc = keyMaker().dk(key, constant);
 
         /**
          * Instead of E(Confounder | Checksum | Plaintext | Padding),
@@ -103,17 +93,11 @@ public abstract class AesCtsHmacSha1Enc extends AbstractEncryptionTypeHandler {
         constant[2] = (byte) ((usage>>8)&0xff);
         constant[3] = (byte) (usage&0xff);
         constant[4] = (byte) 0xaa;
-        try {
-            Ke = CRYPTO.dk(key, constant);
-            constant[4] = (byte) 0x55;
-            Ki = CRYPTO.dk(key, constant);
-            constant[4] = (byte) 0x99;
-            Kc = CRYPTO.dk(key, constant);
-        } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException(e.getMessage());
-            ke.initCause(e);
-            throw ke;
-        }
+        Ke = keyMaker().dk(key, constant);
+        constant[4] = (byte) 0x55;
+        Ki = keyMaker().dk(key, constant);
+        constant[4] = (byte) 0x99;
+        Kc = keyMaker().dk(key, constant);
 
         // decrypt and verify checksum
 

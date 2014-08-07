@@ -4,7 +4,7 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
-public interface EncryptionTypeHandler extends CryptoTypeHandler {
+public interface EncTypeHandler extends CryptoTypeHandler {
 
     public EncryptionType eType();
 
@@ -18,6 +18,8 @@ public interface EncryptionTypeHandler extends CryptoTypeHandler {
 
     public byte[] str2key(String string,
                           String salt, byte[] param) throws KrbException;
+
+    public byte[] random2Key(byte[] randomBits) throws KrbException;
 
     public CheckSumType checksumType();
 

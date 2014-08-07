@@ -11,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
-public final class Des {
+public class Des {
 
     // RFC 3961 demands that UTF-8 encoding be used in DES's
     // string-to-key function. For historical reasons, some

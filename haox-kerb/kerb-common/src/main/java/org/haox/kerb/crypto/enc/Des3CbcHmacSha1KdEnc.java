@@ -8,10 +8,11 @@ import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.security.GeneralSecurityException;
 
-public final class Des3CbcHmacSha1KdEnc extends AbstractEncryptionTypeHandler {
+public final class Des3CbcHmacSha1KdEnc extends AbstractEncTypeHandler {
 
     public Des3CbcHmacSha1KdEnc() {
-        super(null, null, new Des3KeyMaker());
+        super(null, null);
+        keyMaker(new Des3KeyMaker(this));
     }
 
     public EncryptionType eType() {

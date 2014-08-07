@@ -44,6 +44,18 @@ public abstract class AbstractEncryptProvider implements EncryptProvider {
         doEncrypt(data, key, cipherState, false);
     }
 
+    @Override
+    public void encrypt(byte[] key, byte[] data) throws KrbException {
+        byte[] cipherState = new byte[blockSize()];
+        encrypt(key, cipherState, data);
+    }
+
+    @Override
+    public void decrypt(byte[] key, byte[] data) throws KrbException {
+        byte[] cipherState = new byte[blockSize()];
+        decrypt(key, cipherState, data);
+    }
+
     protected abstract void doEncrypt(byte[] data, byte[] key, byte[] cipherState, boolean encrypt) throws KrbException;
 
     @Override

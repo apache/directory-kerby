@@ -1,7 +1,7 @@
 package org.haox.kerb.common;
 
+import org.haox.kerb.crypto.EncTypeHandler;
 import org.haox.kerb.crypto.EncryptionHandler;
-import org.haox.kerb.crypto.EncryptionTypeHandler;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -30,14 +30,14 @@ public class KrbUtil {
 
     public static byte[] encrypt(EncryptionKey key,
           byte[] plaintext, int usage) throws KrbException {
-        EncryptionTypeHandler encType = EncryptionHandler.getEncHandler(key.getKeyType());
+        EncTypeHandler encType = EncryptionHandler.getEncHandler(key.getKeyType());
         byte[] cipherData = encType.encrypt(plaintext, key.getKeyData(), usage);
         return cipherData;
     }
 
     public static byte[] decrypt(EncryptionKey key,
            byte[] cipherData, int usage) throws KrbException {
-        EncryptionTypeHandler encType = EncryptionHandler.getEncHandler(key.getKeyType());
+        EncTypeHandler encType = EncryptionHandler.getEncHandler(key.getKeyType());
         byte[] plainData = encType.decrypt(cipherData, key.getKeyData(), usage);
         return plainData;
     }

@@ -56,18 +56,18 @@ public class EncryptionHandler {
         return !oldEncTypes.contains(eType);
     }
 
-    public static EncryptionTypeHandler getEncHandler(String eType) throws KrbException {
+    public static EncTypeHandler getEncHandler(String eType) throws KrbException {
         EncryptionType eTypeEnum = EncryptionType.fromName(eType);
         return getEncHandler(eTypeEnum);
     }
 
-    public static EncryptionTypeHandler getEncHandler(int eType) throws KrbException {
+    public static EncTypeHandler getEncHandler(int eType) throws KrbException {
         EncryptionType eTypeEnum = EncryptionType.fromValue(eType);
         return getEncHandler(eTypeEnum);
     }
 
-    public static EncryptionTypeHandler getEncHandler(EncryptionType eType) throws KrbException {
-        EncryptionTypeHandler encType = null;
+    public static EncTypeHandler getEncHandler(EncryptionType eType) throws KrbException {
+        EncTypeHandler encType = null;
         switch (eType) {
             case DES_CBC_CRC:
                 encType = new DesCbcCrcEnc();
@@ -116,7 +116,7 @@ public class EncryptionHandler {
 
 
     public static EncryptedData encrypt(byte[] plainText, EncryptionKey key, KeyUsage usage) throws KrbException {
-        EncryptionTypeHandler handler = getEncHandler(key.getKeyType());
+        EncTypeHandler handler = getEncHandler(key.getKeyType());
         byte[] cipher = handler.encrypt(plainText, key.getKeyData(), usage.getValue());
 
         EncryptedData ed = new EncryptedData();
@@ -128,7 +128,7 @@ public class EncryptionHandler {
     }
 
     public static byte[] decrypt(EncryptedData data, EncryptionKey key, KeyUsage usage) throws KrbException {
-        EncryptionTypeHandler handler = getEncHandler(key.getKeyType());
+        EncTypeHandler handler = getEncHandler(key.getKeyType());
 
         byte[] plainData = handler.decrypt(data.getCipher(), key.getKeyData(), usage.getValue());
         return handler.decryptedData(plainData);
@@ -172,7 +172,7 @@ public class EncryptionHandler {
 
     public static byte[] stringToKey(String string, String salt,
                    byte[] s2kparams, EncryptionType eType) throws KrbException {
-        EncryptionTypeHandler handler = getEncHandler(eType);
+        EncTypeHandler handler = getEncHandler(eType);
         byte[] keyBytes = handler.str2key(string, salt, s2kparams);
         return keyBytes;
     }

@@ -7,10 +7,11 @@ import org.haox.kerb.crypto.key.DesKeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
-abstract class DesCbcEnc extends AbstractEncryptionTypeHandler {
+abstract class DesCbcEnc extends AbstractEncTypeHandler {
 
     public DesCbcEnc(HashProvider hashProvider) {
-        super(new DesProvider(), hashProvider, new DesKeyMaker());
+        super(new DesProvider(), hashProvider);
+        keyMaker(new DesKeyMaker(this));
     }
 
     protected void encryptWith(byte[] workBuffer, int[] workLens,

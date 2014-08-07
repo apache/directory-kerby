@@ -1,20 +1,27 @@
 package org.haox.kerb.crypto.enc;
 
 import org.haox.kerb.crypto.AbstractCryptoTypeHandler;
-import org.haox.kerb.crypto.EncryptionTypeHandler;
+import org.haox.kerb.crypto.EncTypeHandler;
 import org.haox.kerb.crypto.cksum.HashProvider;
 import org.haox.kerb.crypto.key.KeyMaker;
 import org.haox.kerb.spec.KrbException;
 
-public abstract class AbstractEncryptionTypeHandler
-        extends AbstractCryptoTypeHandler implements EncryptionTypeHandler {
+public abstract class AbstractEncTypeHandler
+        extends AbstractCryptoTypeHandler implements EncTypeHandler {
 
     private KeyMaker keyMaker;
 
-    public AbstractEncryptionTypeHandler(EncryptProvider encProvider,
-          HashProvider hashProvider, KeyMaker keyMaker) {
+    public AbstractEncTypeHandler(EncryptProvider encProvider,
+                                  HashProvider hashProvider) {
         super(encProvider, hashProvider);
+    }
+
+    protected void keyMaker(KeyMaker keyMaker) {
         this.keyMaker = keyMaker;
+    }
+
+    protected KeyMaker keyMaker() {
+        return keyMaker;
     }
 
     @Override
@@ -61,6 +68,11 @@ public abstract class AbstractEncryptionTypeHandler
     @Override
     public byte[] str2key(String string, String salt, byte[] param) throws KrbException {
         return keyMaker.str2key(string, salt, param);
+    }
+
+    @Override
+    public byte[] random2Key(byte[] randomBits) throws KrbException {
+        return new byte[0];
     }
 
     @Override
