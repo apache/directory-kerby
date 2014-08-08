@@ -81,7 +81,7 @@ public class EncryptionHandler {
             case DES3_CBC_SHA1:
             case DES3_CBC_SHA1_KD:
             case DES3_HMAC_SHA1:
-                encType = new Des3CbcHmacSha1KdEnc();
+                encType = new Des3CbcSha1Enc();
                 break;
 
             case AES128_CTS_HMAC_SHA1_96:

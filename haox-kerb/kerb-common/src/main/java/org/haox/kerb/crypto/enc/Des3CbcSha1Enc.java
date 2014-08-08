@@ -1,6 +1,8 @@
 package org.haox.kerb.crypto.enc;
 
 import org.haox.kerb.crypto.Des3;
+import org.haox.kerb.crypto.cksum.provider.Sha1Provider;
+import org.haox.kerb.crypto.enc.provider.Des3Provider;
 import org.haox.kerb.crypto.key.Des3KeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
@@ -8,15 +10,15 @@ import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.security.GeneralSecurityException;
 
-public final class Des3CbcHmacSha1KdEnc extends AbstractEncTypeHandler {
+public class Des3CbcSha1Enc extends AbstractEncTypeHandler {
 
-    public Des3CbcHmacSha1KdEnc() {
-        super(null, null);
+    public Des3CbcSha1Enc() {
+        super(new Des3Provider(), new Sha1Provider());
         keyMaker(new Des3KeyMaker(this));
     }
 
     public EncryptionType eType() {
-        return EncryptionType.DES3_CBC_SHA1_KD;
+        return EncryptionType.DES3_CBC_SHA1;
     }
 
     public int minimumPadSize() {
@@ -28,7 +30,7 @@ public final class Des3CbcHmacSha1KdEnc extends AbstractEncTypeHandler {
     }
 
     public CheckSumType checksumType() {
-        return CheckSumType.HMAC_SHA1_DES3_KD;
+        return CheckSumType.HMAC_SHA1_DES3;
     }
 
     public int checksumSize() {
@@ -43,7 +45,7 @@ public final class Des3CbcHmacSha1KdEnc extends AbstractEncTypeHandler {
         return 24; // bytes
     }
 
-    public byte[] encrypt(byte[] data, byte[] key, byte[] ivec, int usage)
+    public byte[] encryptOld(byte[] data, byte[] key, byte[] ivec, int usage)
         throws KrbException {
         try {
             return Des3.encrypt(key, usage, ivec, data, 0, data.length);
@@ -54,13 +56,7 @@ public final class Des3CbcHmacSha1KdEnc extends AbstractEncTypeHandler {
         }
     }
 
-    public byte[] decrypt(byte[] cipher, byte[] key, int usage)
-        throws KrbException{
-        byte[] ivec = new byte[blockSize()];
-        return decrypt(cipher, key, ivec, usage);
-    }
-
-    public byte[] decrypt(byte[] cipher, byte[] key, byte[] iv, int usage)
+    public byte[] decryptOld(byte[] cipher, byte[] key, byte[] iv, int usage)
         throws KrbException {
         try {
             return Des3.decrypt(key, usage, iv, cipher, 0, cipher.length);

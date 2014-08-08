@@ -23,10 +23,7 @@ public class DesProvider extends AbstractEncryptProvider {
         try {
             cipher = Cipher.getInstance("DES/CBC/NoPadding");
         } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException("JCE provider may not be installed. "
-                    + e.getMessage());
-            ke.initCause(e);
-            throw ke;
+            throw new KrbException("Failed to init cipher", e);
         }
         IvParameterSpec params = new IvParameterSpec(cipherState);
         SecretKeySpec skSpec = new SecretKeySpec(key, "DES");
