@@ -1,7 +1,7 @@
 package org.haox.kerb.client;
 
 import org.haox.asn1.type.Asn1Type;
-import org.haox.kerb.crypto2.EncryptionHandler;
+import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;

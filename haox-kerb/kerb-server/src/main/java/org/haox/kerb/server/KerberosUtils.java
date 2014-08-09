@@ -5,7 +5,7 @@ import org.apache.directory.server.i18n.I18n;
 import org.apache.directory.shared.kerberos.KerberosConstants;
 import org.apache.directory.shared.kerberos.codec.options.ApOptions;
 import org.haox.kerb.codec.KrbCodec;
-import org.haox.kerb.crypto2.EncryptionHandler;
+import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.store.PrincipalStore;

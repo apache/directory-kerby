@@ -15,6 +15,8 @@ import java.io.IOException;
 
 public class Credential
 {
+    private static String CONF_REALM = "X-CACHECONF:";
+
     private PrincipalName clientName;
     private String clientRealm;
     private PrincipalName serverName;
@@ -148,6 +150,12 @@ public class Credential
             throw new IOException("Invalid server principal name");
         }
 
+        boolean isConfEntry = false;
+
+        if (serverName.getRealm().equals(CONF_REALM)) {
+            isConfEntry = true;
+        }
+
         this.key = ccis.readKey(version);
 
         KerberosTime[] times = ccis.readTimes();
@@ -164,7 +172,12 @@ public class Credential
 
         this.authzData = ccis.readAuthzData();
 
-        this.ticket = ccis.readTicket();
+        if (isConfEntry) {
+            byte[] confData = ccis.readCountedOctets();
+            // ignoring confData for now
+        } else {
+            this.ticket = ccis.readTicket();
+        }
 
         this.secondTicket = ccis.readTicket();
 

@@ -5,10 +5,7 @@ import org.apache.directory.server.i18n.I18n;
 import org.apache.directory.shared.kerberos.KerberosConstants;
 import org.apache.directory.shared.kerberos.exceptions.InvalidTicketException;
 import org.haox.kerb.codec.KrbCodec;
-import org.haox.kerb.crypto.encryption.EncryptionUtil;
-import org.haox.kerb.crypto.encryption.RandomKeyFactory;
-import org.haox.kerb.crypto2.EncryptionHandler;
-import org.haox.kerb.spec.type.common.KeyUsage;
+import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.KerberosUtils;
@@ -77,7 +74,7 @@ public class AuthenticationService
         LOG.debug("Encryption types requested by client {}.", requestedTypes);
         LOG_KRB.debug("Encryption types requested by client {}.", requestedTypes);
 
-        EncryptionType bestType = EncryptionUtil.getBestEncryptionType(requestedTypes, kdcContext.getDefaultEtypes());
+        EncryptionType bestType = EncryptionHandler.getBestEncryptionType(requestedTypes, kdcContext.getDefaultEtypes());
 
         LOG.debug("Session will use encryption type {}.", bestType);
         LOG_KRB.debug("Session will use encryption type {}.", bestType);
@@ -387,7 +384,7 @@ public class AuthenticationService
             throw new KrbException(KrbErrorCode.KDC_ERR_BADOPTION);
         }
 
-        EncryptionKey sessionKey = RandomKeyFactory.getRandomKey(authContext.getEncryptionType());
+        EncryptionKey sessionKey = EncryptionHandler.makeRandomKey(authContext.getEncryptionType());
         encTicketPart.setKey(sessionKey);
 
         encTicketPart.setCname(request.getReqBody().getCname());
@@ -709,7 +706,7 @@ public class AuthenticationService
     private KrbError preparePreAuthenticationError(AuthenticationContext authContext) throws KrbException {
         EncryptionType requestedType = authContext.getEncryptionType();
         List<EncryptionType> encryptionTypes = authContext.getDefaultEtypes();
-        boolean isNewEtype = EncryptionUtil.isNewEncryptionType(requestedType);
+        boolean isNewEtype = EncryptionHandler.isNewEncryptionType(requestedType);
 
         EtypeInfo2 eTypeInfo2 = new EtypeInfo2();
 
