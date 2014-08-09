@@ -1,11 +1,7 @@
 package org.haox.kerb;
 
-import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.keytab.Keytab;
 import org.haox.kerb.keytab.KeytabEntry;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.PrincipalName;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +13,7 @@ import java.util.List;
 
 /*
 The principal was created with password '123456'
+
 KVNO Principal
 ---- --------------------------------------------------------------------------
    1 test@SH.INTEL.COM (des-cbc-crc)
@@ -28,35 +25,33 @@ KVNO Principal
    1 test@SH.INTEL.COM (camellia256-cts-cmac)
    1 test@SH.INTEL.COM (camellia128-cts-cmac)
  */
-public class KeysTest {
-    private static String TEST_PASSWORD = "123456";
+public class KeytabTest {
 
     private Keytab keytab;
 
     @Before
     public void setUp() throws IOException {
-        InputStream kis = KeysTest.class.getResourceAsStream("/test.keytab");
+        InputStream kis = KeytabTest.class.getResourceAsStream("/test.keytab");
         keytab = new Keytab();
         keytab.load(kis);
     }
 
     @Test
-    public void testString2Key() throws KrbException {
+    public void testKeytab() {
+        Assert.assertNotNull(keytab);
+
         List<PrincipalName> principals = keytab.getPrincipals();
         PrincipalName principal = principals.get(0);
         List<KeytabEntry> entries = keytab.getKeytabEntries(principal);
-        EncryptionKey genKey;
-        EncryptionType keyType;
         for (KeytabEntry ke : entries) {
-            keyType = ke.getKey().getKeyType();
-            if (EncryptionHandler.isSupported(keyType)) {
-                genKey = EncryptionHandler.string2Key(principal.getName(),
-                        TEST_PASSWORD, keyType);
-                if(! ke.getKey().equals(genKey)) {
-                    //Assert.fail("str2key failed for key type: " + keyType.getName());
-                    System.err.println("str2key failed for key type: " + keyType.getName());
-                }
-            }
+            Assert.assertTrue(ke.getKvno() == 1);
         }
+    }
+
+    public static void main(String[] args) throws IOException {
+        InputStream kis = KeytabTest.class.getResourceAsStream("test.keytab");
+        Keytab keytab = new Keytab();
+        keytab.load(kis);
+        System.out.println("Principals:" + keytab.getPrincipals().size());
     }
 }

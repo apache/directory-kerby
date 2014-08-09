@@ -1,5 +1,7 @@
 package org.haox.kerb.keytab;
 
+import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.PrincipalName;
 
 import java.io.*;
@@ -56,6 +58,18 @@ public class Keytab implements KrbKeytab {
     @Override
     public List<KeytabEntry> getKeytabEntries(PrincipalName principal) {
         return principalEntries.get(principal);
+    }
+
+    @Override
+    public EncryptionKey getKey(PrincipalName principal, EncryptionType keyType) {
+        List<KeytabEntry> entries = getKeytabEntries(principal);
+        for (KeytabEntry ke : entries) {
+            if (ke.getKey().getKeyType() == keyType) {
+                return ke.getKey();
+            }
+        }
+
+        return null;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package org.haox.kerb.keytab;
 
+import org.haox.kerb.spec.type.common.EncryptionKey;
+import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.PrincipalName;
 
 import java.io.File;
@@ -19,6 +21,8 @@ public interface KrbKeytab {
     public void removeKeytabEntry(KeytabEntry entry);
 
     public List<KeytabEntry> getKeytabEntries(PrincipalName principal);
+
+    public EncryptionKey getKey(PrincipalName principal, EncryptionType keyType);
 
     public void load(File keytabFile) throws IOException;
 

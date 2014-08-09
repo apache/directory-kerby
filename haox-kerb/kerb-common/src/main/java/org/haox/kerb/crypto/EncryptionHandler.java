@@ -67,46 +67,54 @@ public class EncryptionHandler {
     }
 
     public static EncTypeHandler getEncHandler(EncryptionType eType) throws KrbException {
-        EncTypeHandler encType = null;
+        return getEncHandler(eType, false);
+    }
+
+    private static EncTypeHandler getEncHandler(EncryptionType eType, boolean check) throws KrbException {
+        EncTypeHandler encHandler = null;
         switch (eType) {
             case DES_CBC_CRC:
-                encType = new DesCbcCrcEnc();
+                encHandler = new DesCbcCrcEnc();
                 break;
 
             case DES_CBC_MD5:
             case DES:
-                encType = new DesCbcMd5Enc();
+                encHandler = new DesCbcMd5Enc();
                 break;
 
             case DES3_CBC_SHA1:
             case DES3_CBC_SHA1_KD:
             case DES3_HMAC_SHA1:
-                encType = new Des3CbcSha1Enc();
+                encHandler = new Des3CbcSha1Enc();
                 break;
 
             case AES128_CTS_HMAC_SHA1_96:
             case AES128_CTS:
-                encType = new Aes128CtsHmacSha1Enc();
+                encHandler = new Aes128CtsHmacSha1Enc();
                 break;
 
             case AES256_CTS_HMAC_SHA1_96:
             case AES256_CTS:
-                encType = new Aes256CtsHmacSha1Enc();
+                encHandler = new Aes256CtsHmacSha1Enc();
                 break;
 
             case RC4_HMAC:
             case ARCFOUR_HMAC:
             case ARCFOUR_HMAC_MD5:
-                encType = new ArcFourHmacEnc();
+                encHandler = new ArcFourHmacEnc();
                 break;
 
             case NONE:
             default:
-                String message = "Unsupported encryption type: " + eType.name();
-                throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP, message);
+                break;
         }
 
-        return encType;
+        if (encHandler == null && ! check) {
+            String message = "Unsupported encryption type: " + eType.name();
+            throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP, message);
+        }
+
+        return encHandler;
     }
 
     public static EncryptedData seal(Asn1Type message, EncryptionKey key, KeyUsage usage) throws KrbException {
@@ -160,6 +168,11 @@ public class EncryptionHandler {
 
     public static EncryptionKey makeRandomKey(EncryptionType encryptionType) throws KrbException {
         return null;
+    }
+
+    public static boolean isSupported(EncryptionType eType) throws KrbException {
+        EncTypeHandler handler = getEncHandler(eType, true);
+        return  handler != null;
     }
 
     public static EncryptionKey string2Key(String principalName,
@@ -265,6 +278,7 @@ public class EncryptionHandler {
         return null;
     }*/
 
+    /*
     public static boolean isSupported(EncryptionType eType) {
         EncryptionType[] supportedTypes = getSupportedEncTypes();
         for (int i = 0; i < supportedTypes.length; i++) {
@@ -273,5 +287,5 @@ public class EncryptionHandler {
             }
         }
         return false;
-    }
+    }*/
 }
