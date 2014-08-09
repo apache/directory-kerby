@@ -100,7 +100,7 @@ public class CheckSumHandler {
                 break;
 
             case HMAC_MD5_ARCFOUR:
-                cksumHandler = new HmacMd5ArcFourCheckSum();
+                cksumHandler = new HmacMd5Rc4CheckSum();
                 break;
 
             default:

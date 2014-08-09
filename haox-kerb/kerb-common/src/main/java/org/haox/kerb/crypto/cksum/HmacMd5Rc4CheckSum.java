@@ -2,7 +2,7 @@ package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.ArcFourHmac;
 import org.haox.kerb.crypto.Rc4;
-import org.haox.kerb.crypto.cksum.provider.Hmac;
+import org.haox.kerb.crypto.Hmac;
 import org.haox.kerb.crypto.cksum.provider.Md5Provider;
 import org.haox.kerb.crypto.enc.provider.Rc4Provider;
 import org.haox.kerb.spec.KrbException;
@@ -10,9 +10,9 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 
 import java.security.GeneralSecurityException;
 
-public class HmacMd5ArcFourCheckSum extends AbstractKeyedCheckSumTypeHandler {
+public class HmacMd5Rc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
 
-    public HmacMd5ArcFourCheckSum() {
+    public HmacMd5Rc4CheckSum() {
         super(new Rc4Provider(), new Md5Provider(), 16, 16);
     }
 

@@ -34,6 +34,4 @@ public interface EncTypeHandler extends CryptoTypeHandler {
 
     public byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec,
         int usage) throws KrbException;
-
-    public byte[] decryptedData(byte[] data);
 }

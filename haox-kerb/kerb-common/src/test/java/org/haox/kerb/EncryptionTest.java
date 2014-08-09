@@ -38,27 +38,44 @@ public class EncryptionTest {
 
     @Before
     public void setUp() throws IOException {
-        InputStream kis = EncryptionTest.class.getResourceAsStream("/test.keytab");
+        InputStream kis = EncryptionTest.class.getResourceAsStream("/krbtgt.keytab");
         keytab = new Keytab();
         keytab.load(kis);
     }
 
     @Test
-    public void testEncryption() throws KrbException, IOException {
-        String[] ccFiles = new String[]{
-                "aes128-cts-hmac-sha1-96.cc",
-                "aes256-cts-hmac-sha1-96.cc",
-                "arcfour-hmac.cc",
-                "camellia128-cts-cmac.cc",
-                "camellia256-cts-cmac.cc",
-                "des3-cbc-sha1.cc",
-                "des-cbc-crc.cc"
-        };
+    public void testAes128() throws IOException, KrbException {
+        testEncWith("aes128-cts-hmac-sha1-96.cc");
+    }
 
-        for (String ccFile : ccFiles) {
-            testEncWith(ccFile);
-            break;
-        }
+    @Test
+    public void testAes256() throws IOException, KrbException {
+        testEncWith("aes256-cts-hmac-sha1-96.cc");
+    }
+
+    @Test
+    public void testRc4() throws IOException, KrbException {
+        testEncWith("arcfour-hmac.cc");
+    }
+
+    @Test
+    public void testCamellia128() throws IOException, KrbException {
+        testEncWith("camellia128-cts-cmac.cc");
+    }
+
+    @Test
+    public void testCamellia256() throws IOException, KrbException {
+        testEncWith("camellia256-cts-cmac.cc");
+    }
+
+    @Test
+    public void testDesCbcCrc() throws IOException, KrbException {
+        testEncWith("des-cbc-crc.cc");
+    }
+
+    @Test
+    public void testDes3CbcSha1() throws IOException, KrbException {
+        testEncWith("des3-cbc-sha1.cc");
     }
 
     private void testEncWith(String ccFile) throws IOException, KrbException {
@@ -100,6 +117,7 @@ public class EncryptionTest {
     private PrincipalName getServer() {
         // only one, krbtgt/SH.INTEL.COM@SH.INTEL.COM
         List<PrincipalName> principals = keytab.getPrincipals();
+
         PrincipalName server = principals.get(0);
 
         return server;

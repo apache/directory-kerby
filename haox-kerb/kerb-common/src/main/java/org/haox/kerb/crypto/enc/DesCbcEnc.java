@@ -50,7 +50,7 @@ abstract class DesCbcEnc extends AbstractEncTypeHandler {
         byte[] checksum = new byte[checksumLen];
         for (int i = 0; i < checksumLen; i++) {
             checksum[i] = workBuffer[confounderLen + i];
-            workBuffer[confounderLen + i] = (byte) 0;
+            workBuffer[confounderLen + i] = 0;
         }
 
         hashProvider().hash(workBuffer);
@@ -63,10 +63,6 @@ abstract class DesCbcEnc extends AbstractEncTypeHandler {
         System.arraycopy(workBuffer, confounderLen + checksumLen,
                 data, 0, dataLen);
 
-        return data;
-    }
-
-    public byte[] decryptedData(byte[] data) {
         return data;
     }
 }

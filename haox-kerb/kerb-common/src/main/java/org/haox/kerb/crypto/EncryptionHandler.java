@@ -101,7 +101,7 @@ public class EncryptionHandler {
             case RC4_HMAC:
             case ARCFOUR_HMAC:
             case ARCFOUR_HMAC_MD5:
-                encHandler = new ArcFourHmacEnc();
+                encHandler = new Rc4HmacEnc();
                 break;
 
             case NONE:
@@ -139,7 +139,7 @@ public class EncryptionHandler {
         EncTypeHandler handler = getEncHandler(key.getKeyType());
 
         byte[] plainData = handler.decrypt(data.getCipher(), key.getKeyData(), usage.getValue());
-        return handler.decryptedData(plainData);
+        return plainData;
     }
 
     public static EncryptionType[] getSupportedEncTypes() {

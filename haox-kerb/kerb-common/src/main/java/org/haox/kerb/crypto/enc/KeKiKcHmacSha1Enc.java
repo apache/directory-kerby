@@ -2,18 +2,13 @@ package org.haox.kerb.crypto.enc;
 
 import org.haox.kerb.crypto.Confounder;
 import org.haox.kerb.crypto.cksum.HashProvider;
-import org.haox.kerb.crypto.dk.AesDkCrypto;
+import org.haox.kerb.crypto.Hmac;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.security.GeneralSecurityException;
+public abstract class KeKiKcHmacSha1Enc extends AbstractEncTypeHandler {
 
-public abstract class AesCtsHmacSha1Enc extends AbstractEncTypeHandler {
-
-    public AesCtsHmacSha1Enc(EncryptProvider encProvider,
+    public KeKiKcHmacSha1Enc(EncryptProvider encProvider,
                              HashProvider hashProvider) {
         super(encProvider, hashProvider);
     }
@@ -22,6 +17,7 @@ public abstract class AesCtsHmacSha1Enc extends AbstractEncTypeHandler {
     public int paddingSize() {
         return 0;
     }
+
 
     @Override
     protected void encryptWith(byte[] workBuffer, int[] workLens,
@@ -66,14 +62,8 @@ public abstract class AesCtsHmacSha1Enc extends AbstractEncTypeHandler {
 
         // checksum & encrypt
         byte[] checksum;
-        try {
-            checksum = getHmac(Ki, tmpEnc, checksumLen);
-            encProvider().encrypt(Ke, iv, tmpEnc);
-        } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException(e.getMessage());
-            ke.initCause(e);
-            throw ke;
-        }
+        checksum = getHmac(Ki, tmpEnc, checksumLen);
+        encProvider().encrypt(Ke, iv, tmpEnc);
 
         System.arraycopy(tmpEnc, 0, workBuffer, 0, tmpEnc.length);
         System.arraycopy(checksum, 0, workBuffer, tmpEnc.length, checksum.length);
@@ -109,14 +99,8 @@ public abstract class AesCtsHmacSha1Enc extends AbstractEncTypeHandler {
                 checksum, 0, checksumLen);
 
         byte[] newChecksum;
-        try {
-            encProvider().decrypt(Ke, iv, tmpEnc);
-            newChecksum = getHmac(Ki, tmpEnc, checksumLen);
-        } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException(e.getMessage());
-            ke.initCause(e);
-            throw ke;
-        }
+        encProvider().decrypt(Ke, iv, tmpEnc);
+        newChecksum = getHmac(Ki, tmpEnc, checksumLen);
 
         if (! checksumEqual(checksum, newChecksum)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
@@ -127,15 +111,11 @@ public abstract class AesCtsHmacSha1Enc extends AbstractEncTypeHandler {
         return data;
     }
 
-    protected byte[] getHmac(byte[] key, byte[] msg, int hashSize)
-            throws GeneralSecurityException {
-
-        SecretKey keyKi = new SecretKeySpec(key, "HMAC");
-        Mac m = Mac.getInstance("HmacSHA1");
-        m.init(keyKi);
+    protected byte[] getHmac(byte[] key, byte[] data, int hashSize)
+            throws KrbException {
 
         // generate hash
-        byte[] hash = m.doFinal(msg);
+        byte[] hash = Hmac.hmac(hashProvider(), key, data);
 
         // truncate hash
         byte[] output = new byte[hashSize];

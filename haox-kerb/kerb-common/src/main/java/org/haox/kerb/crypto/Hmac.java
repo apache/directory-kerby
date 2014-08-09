@@ -1,4 +1,4 @@
-package org.haox.kerb.crypto.cksum.provider;
+package org.haox.kerb.crypto;
 
 import org.haox.kerb.crypto.cksum.HashProvider;
 import org.haox.kerb.spec.KrbException;

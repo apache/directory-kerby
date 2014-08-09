@@ -11,7 +11,7 @@ public class Crc32Provider extends AbstractHashProvider {
 
     @Override
     public void hash(byte[] data, int start, int size) {
-        output = Crc32.byte2crc32sum_bytes(data, start, size);
+        output = Crc32.crc(data, start, size);
     }
 
     @Override

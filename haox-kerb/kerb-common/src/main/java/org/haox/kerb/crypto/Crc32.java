@@ -1,78 +1,8 @@
 package org.haox.kerb.crypto;
 
-import java.security.DigestException;
-import java.security.MessageDigestSpi;
+public class Crc32 {
 
-public final class Crc32 extends MessageDigestSpi {
-    private static final int CRC32_LENGTH = 4; //32-bit
-    private int seed;
-
-    public Crc32() {
-        init();
-    }
-
-    /**
-     * Return the digest length in bytes
-     */
-    protected int engineGetDigestLength() {
-        return (CRC32_LENGTH);
-    }
-
-    /**
-     */
-    protected byte[] engineDigest() {
-        byte[] result = new byte[CRC32_LENGTH];
-        result = int2quad(seed);
-        //processBuffer(buffer, 0, bufferIndex, result, 0);
-        init();
-        return result;
-    }
-
-    /**
-     */
-    protected int engineDigest(byte[] buf, int offset, int len) throws DigestException {
-        byte[] result = new byte[CRC32_LENGTH];
-        result = int2quad(seed);
-        if (len < CRC32_LENGTH) {
-            throw new DigestException("partial digests not returned");
-        }
-        if (buf.length - offset < CRC32_LENGTH) {
-            throw new DigestException("insufficient space in the output " +
-                    "buffer to store the digest");
-        }
-        System.arraycopy(result, 0, buf, offset, CRC32_LENGTH);
-        //processBuffer(buffer, 0, bufferIndex, result, 0);
-        /*if (len < CRC32_LENGTH) {
-          throw new DigestException("partial digests not returned");
-          }
-          if (buf.length - offset < CRC32_LENGTH) {
-          throw new DigestException("insufficient space in the output " +
-          "buffer to store the digest");
-          }
-          System.arraycopy(result, 0, buf, offset, CRC32_LENGTH);      */
-        init();
-        return CRC32_LENGTH;
-    }
-    /**
-     * Update adds the passed byte to the digested data.
-     */
-    protected synchronized void engineUpdate(byte b) {
-        byte[] input = new byte[1];
-        input[0] = b;
-        //engineUpdate(input, 0, 1);
-        engineUpdate(input, seed, 1);
-    }
-
-    /**
-     * Update adds the selected part of an array of bytes to the digest.
-     * This version is more efficient than the byte-at-a-time version;
-     * it avoids data copies and reduces per-byte call overhead.
-     */
-    protected synchronized void engineUpdate(byte input[], int offset,
-                                             int len) {
-        processData(input, offset, len);
-    }
-    private static int[] crc32Table = {
+    private static long[] crcTable = {
             0x00000000, 0x77073096, 0xee0e612c, 0x990951ba,
             0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
             0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
@@ -139,92 +69,33 @@ public final class Crc32 extends MessageDigestSpi {
             0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
     };
 
-    protected void engineReset() {
-        init();
+    public static byte[] crc(byte[] data, int start, int size) {
+        long c = doCrc32(data, start, size);
+        return convert((int) c);
     }
 
-    /**
-     * Initialize the CRC32 information
-     */
-    public void init() {
-        seed = 0;
-    }
+    private static long doCrc32(byte[] data, int start, int len) {
+        long c = 0;
 
-    private void processData(byte[] data, int off, int len) {
-        int result = seed;
-        for (int i = 0; i < len; i++)
-            result = (result >>> 8) ^ crc32Table[(result ^ data[i]) & 0xff];
-        seed = result;
-    }
-
-    public static int int2crc32(int b) {
-        int crc = b;
-
-        for (int i = 8; i > 0; i--) {
-            if ((crc & 1) != 0)
-                crc = (crc >>> 1) ^ 0xedb88320;
-            else
-                crc = crc >>> 1;
-        }
-        return crc;
-    }
-
-    public static void printcrc32Table() {
-        String temp;
-        String zerofill = "00000000";
-
-        System.out.print("\tpublic static int[] crc32Table = {");
-        for (int i = 0; i < 256; i++) {
-            if ((i % 4) == 0)
-                System.out.print("\n\t\t");
-            temp = Integer.toHexString(int2crc32(i));
-            System.out.print("0x" +
-                    zerofill.substring(temp.length()) + temp);
-            if (i !=  255)
-                System.out.print(", ");
-        }
-        System.out.println("\n\t};");
-    }
-
-    public static int byte2crc32sum(int seed, byte[] data, int start, int size) {
-        int crc = seed;
-
-        for (int i = 0; i < size; i++) {
-            crc = (crc >>> 8) ^ crc32Table[(crc ^ data[start + i]) & 0xff];
+        int idx;
+        for (int i = 0; i < len; i++) {
+            idx = (int) (data[start + i] ^ c);
+            idx &= 0xff;
+            c >>>= 8;
+            c ^= crcTable[idx];
         }
 
-        return crc;
+        return c;
     }
 
-    public static int byte2crc32sum(int seed, byte[] data) {
-        return byte2crc32sum(seed, data, 0, data.length);
-    }
+    private static byte[] convert(int val) {
+        byte[] p = new byte[4];
 
-    //sum from zero, i.e., no pre- or post-conditioning
-    public static int byte2crc32sum(byte[] data) {
-        return byte2crc32sum(0, data);
-    }
+        p[3] = (byte) ((val >> 24) & 0xff);
+        p[2] = (byte) ((val >> 16) & 0xff);
+        p[1] = (byte) ((val >>  8) & 0xff);
+        p[0] = (byte) ((val      ) & 0xff);
 
-    //CCITT ITU-T 3309 CRC-32 w/ standard pre- and post-conditioning
-    public static int byte2crc32(byte[] data) {
-        return ~byte2crc32sum(0xffffffff, data);
-    }
-
-    public static byte[] byte2crc32sum_bytes(byte[] data) {
-        int temp = byte2crc32sum(data);
-        return int2quad(temp);
-    }
-
-    public static byte[] byte2crc32sum_bytes(byte[] data, int start, int size) {
-        int temp = byte2crc32sum(0, data, start, size);
-        return int2quad(temp);
-    }
-
-    public static byte[] int2quad(long input) {
-        byte[] output = new byte[4];
-        for (int i = 0; i < 4; i++) {
-            output[i] = (byte)((input >>> (i * 8)) & 0xff);
-        }
-        return output;
+        return p;
     }
 }
