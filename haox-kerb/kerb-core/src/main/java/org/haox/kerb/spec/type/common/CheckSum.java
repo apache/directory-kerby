@@ -55,14 +55,22 @@ public class CheckSum extends KrbSequenceType {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
 
-        CheckSum that = (CheckSum) o;
+        CheckSum that = (CheckSum) other;
 
         if (getCksumtype() != that.getCksumtype()) return false;
 
         return Arrays.equals(getChecksum(), that.getChecksum());
+    }
+
+    public boolean isEqual(CheckSum other) {
+        return this.equals(other);
+    }
+
+    public boolean isEqual(byte[] cksumBytes) {
+        return Arrays.equals(getChecksum(), cksumBytes);
     }
 }

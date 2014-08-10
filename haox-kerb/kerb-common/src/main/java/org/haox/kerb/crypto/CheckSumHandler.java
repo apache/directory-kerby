@@ -68,7 +68,15 @@ public class CheckSumHandler {
         return getCheckSumHandler(eTypeEnum);
     }
 
+    public static boolean isImplemented(CheckSumType cksumType) throws KrbException {
+        return getCheckSumHandler(cksumType, true) != null;
+    }
+
     public static CheckSumTypeHandler getCheckSumHandler(CheckSumType cksumType) throws KrbException {
+        return getCheckSumHandler(cksumType, false);
+    }
+
+    private static CheckSumTypeHandler getCheckSumHandler(CheckSumType cksumType, boolean check) throws KrbException {
         CheckSumTypeHandler cksumHandler = null;
         switch (cksumType) {
             case CRC32:
@@ -79,8 +87,16 @@ public class CheckSumHandler {
                 cksumHandler = new DesCbcCheckSum();
                 break;
 
+            case RSA_MD4:
+                cksumHandler = new RsaMd4CheckSum();
+                break;
+
             case RSA_MD5:
                 cksumHandler = new RsaMd5CheckSum();
+                break;
+
+            case NIST_SHA:
+                cksumHandler = new Sha1CheckSum();
                 break;
 
             case RSA_MD5_DES:
@@ -104,8 +120,12 @@ public class CheckSumHandler {
                 break;
 
             default:
-                String message = "Unsupported checksum type: " + cksumType.name();
-                throw new KrbException(KrbErrorCode.KDC_ERR_SUMTYPE_NOSUPP, message);
+                break;
+        }
+
+        if (cksumHandler == null && ! check) {
+            String message = "Unsupported checksum type: " + cksumType.name();
+            throw new KrbException(KrbErrorCode.KDC_ERR_SUMTYPE_NOSUPP, message);
         }
 
         return cksumHandler;

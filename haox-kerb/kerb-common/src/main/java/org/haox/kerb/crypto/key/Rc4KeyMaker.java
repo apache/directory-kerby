@@ -1,6 +1,7 @@
 package org.haox.kerb.crypto.key;
 
 import org.haox.kerb.crypto.EncTypeHandler;
+import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 import sun.security.provider.MD4;
 
@@ -9,8 +10,8 @@ import java.security.MessageDigest;
 
 public class Rc4KeyMaker extends AbstractKeyMaker {
 
-    public Rc4KeyMaker(EncTypeHandler typeHandler) {
-        super(typeHandler);
+    public Rc4KeyMaker(EncryptProvider encProvider) {
+        super(encProvider);
     }
 
     @Override

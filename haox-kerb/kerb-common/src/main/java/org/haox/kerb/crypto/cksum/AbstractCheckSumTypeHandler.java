@@ -38,28 +38,54 @@ public abstract class AbstractCheckSumTypeHandler
         return outputSize;
     }
 
+    public boolean isSafe() {
+        return false;
+    }
+
+    public int cksumSize() {
+        return 4;
+    }
+
+    public int keySize() {
+        return 0;
+    }
+
+    public int confounderSize() {
+        return 0;
+    }
+
+    @Override
     public byte[] makeChecksum(byte[] data) throws KrbException {
         return makeChecksum(data, 0, data.length);
     }
 
+    @Override
     public byte[] makeChecksum(byte[] data, int start, int size) throws KrbException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean verifyChecksum(byte[] data, byte[] checksum) throws KrbException {
+        return verifyChecksum(data, 0, data.length, checksum);
+    }
+
+    @Override
+    public boolean verifyChecksum(byte[] data, int start, int size, byte[] checksum) throws KrbException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public byte[] makeKeyedChecksum(byte[] data,
                                     byte[] key, int usage) throws KrbException {
         return makeKeyedChecksum(data, 0, data.length, key, usage);
     }
 
+    @Override
     public byte[] makeKeyedChecksum(byte[] data, int start, int size,
                                     byte[] key, int usage) throws KrbException {
         throw new UnsupportedOperationException();
     }
-
+    @Override
     public boolean verifyKeyedChecksum(byte[] data,
                                        byte[] key, int usage, byte[] checksum) throws KrbException {
         throw new UnsupportedOperationException();

@@ -11,7 +11,7 @@ abstract class DesCbcEnc extends AbstractEncTypeHandler {
 
     public DesCbcEnc(HashProvider hashProvider) {
         super(new DesProvider(), hashProvider);
-        keyMaker(new DesKeyMaker(this));
+        keyMaker(new DesKeyMaker(this.encProvider()));
     }
 
     protected void encryptWith(byte[] workBuffer, int[] workLens,

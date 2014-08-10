@@ -1,6 +1,5 @@
 package org.haox.kerb.crypto.enc;
 
-import org.haox.kerb.crypto.Aes128;
 import org.haox.kerb.crypto.cksum.provider.Sha1Provider;
 import org.haox.kerb.crypto.enc.provider.Aes128Provider;
 import org.haox.kerb.crypto.key.Aes128KeyMaker;
@@ -11,7 +10,7 @@ public class Aes128CtsHmacSha1Enc extends KeKiKcHmacSha1Enc {
 
     public Aes128CtsHmacSha1Enc() {
         super(new Aes128Provider(), new Sha1Provider());
-        keyMaker(new Aes128KeyMaker(this));
+        keyMaker(new Aes128KeyMaker(this.encProvider()));
     }
 
     @Override

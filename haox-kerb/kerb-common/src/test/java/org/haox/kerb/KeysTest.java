@@ -7,7 +7,6 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.PrincipalName;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,7 +48,7 @@ public class KeysTest {
         EncryptionType keyType;
         for (KeytabEntry ke : entries) {
             keyType = ke.getKey().getKeyType();
-            if (EncryptionHandler.isSupported(keyType)) {
+            if (EncryptionHandler.isImplemented(keyType)) {
                 genKey = EncryptionHandler.string2Key(principal.getName(),
                         TEST_PASSWORD, keyType);
                 if(! ke.getKey().equals(genKey)) {

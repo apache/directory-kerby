@@ -10,7 +10,7 @@ public class Aes256CtsHmacSha1Enc extends KeKiKcHmacSha1Enc {
 
     public Aes256CtsHmacSha1Enc() {
         super(new Aes256Provider(), new Sha1Provider());
-        keyMaker(new Aes256KeyMaker(this));
+        keyMaker(new Aes256KeyMaker(this.encProvider()));
     }
 
     public EncryptionType eType() {

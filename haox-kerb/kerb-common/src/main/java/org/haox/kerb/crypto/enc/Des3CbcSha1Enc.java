@@ -16,7 +16,7 @@ public class Des3CbcSha1Enc extends KeKiKcHmacSha1Enc {
 
     public Des3CbcSha1Enc() {
         super(new Des3Provider(), new Sha1Provider());
-        keyMaker(new Des3KeyMaker(this));
+        keyMaker(new Des3KeyMaker(this.encProvider()));
     }
 
     public EncryptionType eType() {

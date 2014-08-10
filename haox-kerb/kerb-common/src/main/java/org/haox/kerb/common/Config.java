@@ -870,7 +870,7 @@ public class Config {
             for (int i = 0; i < len; i++) {
                 type = -1;//getType(st.nextToken());
                 if ((type != -1) &&
-                    (AbstractEncryptionTypeHandler.isSupported(type))) {
+                    (AbstractEncryptionTypeHandler.isImplemented(type))) {
                     ls.add(type);
                 }
             }

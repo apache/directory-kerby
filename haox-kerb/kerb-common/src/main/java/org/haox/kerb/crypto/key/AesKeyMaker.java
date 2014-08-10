@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.key;
 
-import org.haox.kerb.crypto.EncTypeHandler;
+import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
 import java.io.UnsupportedEncodingException;
@@ -8,8 +8,8 @@ import java.security.GeneralSecurityException;
 
 public abstract class AesKeyMaker extends AbstractKeyMaker {
 
-    public AesKeyMaker(EncTypeHandler typeHandler) {
-        super(typeHandler);
+    public AesKeyMaker(EncryptProvider encProvider) {
+        super(encProvider);
     }
 
     @Override
@@ -34,7 +34,7 @@ public abstract class AesKeyMaker extends AbstractKeyMaker {
             throw new RuntimeException(e);
         }
 
-        int keySize = typeHandler().encProvider().keySize();
+        int keySize = encProvider().keySize();
         byte[] random = new byte[0];
         try {
             random = PBKDF2(string.toCharArray(), saltBytes, iterCount, keySize);

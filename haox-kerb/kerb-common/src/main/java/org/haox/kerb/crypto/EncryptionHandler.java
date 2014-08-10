@@ -170,7 +170,7 @@ public class EncryptionHandler {
         return null;
     }
 
-    public static boolean isSupported(EncryptionType eType) throws KrbException {
+    public static boolean isImplemented(EncryptionType eType) throws KrbException {
         EncTypeHandler handler = getEncHandler(eType, true);
         return  handler != null;
     }
@@ -235,7 +235,7 @@ public class EncryptionHandler {
             throws KrbException {
 
         // check if encryption type is supported
-        if (!EncTypeMgr.isSupported(etype)) {
+        if (!EncTypeMgr.isImplemented(etype)) {
             throw new KrbException("Encryption type " +
                     EncTypeMgr.toString(etype) + " is not supported/enabled");
         }
@@ -244,7 +244,7 @@ public class EncryptionHandler {
         boolean etypeFound = false;
         for (int i = 0; i < keys.length; i++) {
             ktype = keys[i].getKeyType().getValue();
-            if (EncTypeMgr.isSupported(ktype)) {
+            if (EncTypeMgr.isImplemented(ktype)) {
                 Integer kv = keys[i].getKvno();
                 if (etype == ktype) {
                     etypeFound = true;
@@ -278,7 +278,6 @@ public class EncryptionHandler {
         return null;
     }*/
 
-    /*
     public static boolean isSupported(EncryptionType eType) {
         EncryptionType[] supportedTypes = getSupportedEncTypes();
         for (int i = 0; i < supportedTypes.length; i++) {
@@ -287,5 +286,5 @@ public class EncryptionHandler {
             }
         }
         return false;
-    }*/
+    }
 }

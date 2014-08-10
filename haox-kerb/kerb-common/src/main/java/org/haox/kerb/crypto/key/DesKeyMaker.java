@@ -2,12 +2,13 @@ package org.haox.kerb.crypto.key;
 
 import org.haox.kerb.crypto.Des;
 import org.haox.kerb.crypto.EncTypeHandler;
+import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
 public class DesKeyMaker extends AbstractKeyMaker {
 
-    public DesKeyMaker(EncTypeHandler typeHandler) {
-        super(typeHandler);
+    public DesKeyMaker(EncryptProvider encProvider) {
+        super(encProvider);
     }
 
     @Override

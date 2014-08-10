@@ -86,7 +86,7 @@ public class EncryptionTest {
         Ticket ticket = getTicket();
         EncryptionType keyType = ticket.getEncryptedEncPart().getEType();
         EncryptionKey key = getServerKey(keyType);
-        if (! EncryptionHandler.isSupported(keyType)) {
+        if (! EncryptionHandler.isImplemented(keyType)) {
             System.err.println("Key type not supported yet: " + keyType.getName());
             return;
         }

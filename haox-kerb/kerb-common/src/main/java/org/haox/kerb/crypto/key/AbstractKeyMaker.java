@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.key;
 
-import org.haox.kerb.crypto.EncTypeHandler;
+import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
 import javax.crypto.SecretKey;
@@ -15,14 +15,14 @@ public abstract class AbstractKeyMaker implements KeyMaker {
 
     protected static final byte[] KERBEROS_CONSTANT = "kerberos".getBytes();
 
-    private EncTypeHandler typeHandler;
+    private EncryptProvider encProvider;
 
-    public AbstractKeyMaker(EncTypeHandler typeHandler) {
-        this.typeHandler = typeHandler;
+    public AbstractKeyMaker(EncryptProvider encProvider) {
+        this.encProvider = encProvider;
     }
 
-    protected EncTypeHandler typeHandler() {
-        return typeHandler;
+    protected EncryptProvider encProvider() {
+        return encProvider;
     }
 
     @Override
@@ -64,18 +64,21 @@ public abstract class AbstractKeyMaker implements KeyMaker {
      */
     private byte[] dr(byte[] key, byte[] constant) throws KrbException {
 
-        int blocksize = typeHandler().encProvider().blockSize();
-        int keyInuptSize = typeHandler().encProvider().keyInputSize();
+        int blocksize = encProvider().blockSize();
+        int keyInuptSize = encProvider().keyInputSize();
         byte[] keyBytes = new byte[keyInuptSize];
+        byte[] Ki;
 
         if (constant.length != blocksize) {
-            constant = Dk.nfold(constant, blocksize);
+            Ki = Dk.nfold(constant, blocksize);
+        } else {
+            Ki = new byte[constant.length];
+            System.arraycopy(constant, 0, Ki, 0, constant.length);
         }
-        byte[] Ki = constant;
 
         int n = 0, len;
         while (n < keyInuptSize) {
-            typeHandler().encProvider().encrypt(key, Ki);
+            encProvider().encrypt(key, Ki);
 
             if (n + blocksize >= keyInuptSize) {
                 System.arraycopy(Ki, 0, keyBytes, n, keyInuptSize - n);

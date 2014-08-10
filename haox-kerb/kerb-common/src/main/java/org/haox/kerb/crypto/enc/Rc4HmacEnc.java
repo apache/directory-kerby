@@ -15,7 +15,7 @@ public final class Rc4HmacEnc extends AbstractEncTypeHandler {
 
     public Rc4HmacEnc() {
         super(new Rc4Provider(), new Md5Provider());
-        keyMaker(new Rc4KeyMaker(this));
+        keyMaker(new Rc4KeyMaker(this.encProvider()));
     }
 
     public EncryptionType eType() {

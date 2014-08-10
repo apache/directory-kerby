@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class MessageDigestHashProvider extends AbstractHashProvider {
     private String algorithm;
-    private MessageDigest messageDigest;
+    protected MessageDigest messageDigest;
 
     public MessageDigestHashProvider(int hashSize, int blockSize, String algorithm) {
         super(hashSize, blockSize);
@@ -17,7 +17,7 @@ public class MessageDigestHashProvider extends AbstractHashProvider {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         try {
             messageDigest = MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
