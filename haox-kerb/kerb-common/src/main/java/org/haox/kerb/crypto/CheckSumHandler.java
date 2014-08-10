@@ -103,8 +103,9 @@ public class CheckSumHandler {
                 cksumHandler = new RsaMd5DesCheckSum();
                 break;
 
+            case HMAC_SHA1_DES3:
             case HMAC_SHA1_DES3_KD:
-                cksumHandler = new HmacSha1Des3KdCheckSum();
+                cksumHandler = new HmacSha1Des3CheckSum();
                 break;
 
             case HMAC_SHA1_96_AES128:

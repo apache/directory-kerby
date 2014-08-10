@@ -37,7 +37,44 @@ public final class RsaMd5DesCheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     @Override
-    public byte[] makeKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
+    protected byte[] makeKeyedChecksumWith(byte[] data, int start, int len,
+                                           byte[] key, int usage) throws KrbException {
+        //prepend confounder
+        byte[] new_data = new byte[data.length + confounderSize()];
+        byte[] conf = Confounder.bytes(confounderSize());
+        System.arraycopy(conf, 0, new_data, 0, confounderSize());
+        System.arraycopy(data, 0, new_data, confounderSize(), data.length);
+
+        //calculate md5 cksum
+        hashProvider().hash(new_data);
+        byte[] mdc_cksum = hashProvider().output();
+        byte[] cksum = new byte[cksumSize()];
+        System.arraycopy(conf, 0, cksum, 0, confounderSize());
+        System.arraycopy(mdc_cksum, 0, cksum, confounderSize(),
+                cksumSize() - confounderSize());
+
+        //compute modified key
+        byte[] new_key = new byte[keySize()];
+        System.arraycopy(key, 0, new_key, 0, key.length);
+        for (int i = 0; i < new_key.length; i++)
+            new_key[i] = (byte)(new_key[i] ^ 0xf0);
+        //check for weak keys
+        try {
+            if (DESKeySpec.isWeak(new_key, 0)) {
+                new_key[7] = (byte)(new_key[7] ^ 0xF0);
+            }
+        } catch (InvalidKeyException ex) {
+            // swallow, since it should never happen
+        }
+        byte[] ivec = new byte[new_key.length];
+
+        //des-cbc encrypt
+        byte[] enc_cksum = new byte[cksum.length];
+        Des.cbc_encrypt(cksum, enc_cksum, new_key, ivec, true);
+        return enc_cksum;
+    }
+
+    public byte[] makeKeyedChecksumOld(byte[] data, byte[] key, int usage) throws KrbException {
         //prepend confounder
         byte[] new_data = new byte[data.length + confounderSize()];
         byte[] conf = Confounder.bytes(confounderSize());

@@ -1,15 +1,15 @@
 package org.haox.kerb.crypto.enc;
 
 import org.haox.kerb.crypto.Confounder;
-import org.haox.kerb.crypto.cksum.HashProvider;
 import org.haox.kerb.crypto.Hmac;
+import org.haox.kerb.crypto.cksum.HashProvider;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
-public abstract class KeKiKcHmacSha1Enc extends AbstractEncTypeHandler {
+public abstract class KeKiHmacSha1Enc extends AbstractEncTypeHandler {
 
-    public KeKiKcHmacSha1Enc(EncryptProvider encProvider,
-                             HashProvider hashProvider) {
+    public KeKiHmacSha1Enc(EncryptProvider encProvider,
+                           HashProvider hashProvider) {
         super(encProvider, hashProvider);
     }
 
@@ -27,7 +27,7 @@ public abstract class KeKiKcHmacSha1Enc extends AbstractEncTypeHandler {
         int inputLen = workLens[2];
         int paddingLen = workLens[3];
 
-        byte[] Ke, Ki, Kc;
+        byte[] Ke, Ki;
         byte[] constant = new byte[5];
         constant[0] = (byte) ((usage>>24)&0xff);
         constant[1] = (byte) ((usage>>16)&0xff);
@@ -37,8 +37,6 @@ public abstract class KeKiKcHmacSha1Enc extends AbstractEncTypeHandler {
         Ke = keyMaker().dk(key, constant);
         constant[4] = (byte) 0x55;
         Ki = keyMaker().dk(key, constant);
-        constant[4] = (byte) 0x99;
-        Kc = keyMaker().dk(key, constant);
 
         /**
          * Instead of E(Confounder | Checksum | Plaintext | Padding),

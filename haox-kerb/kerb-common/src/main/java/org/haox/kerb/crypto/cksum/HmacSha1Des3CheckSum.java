@@ -1,15 +1,20 @@
 package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.Des3;
+import org.haox.kerb.crypto.Hmac;
+import org.haox.kerb.crypto.enc.provider.Des3Provider;
+import org.haox.kerb.crypto.key.Des3KeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 
 import java.security.GeneralSecurityException;
 
-public class HmacSha1Des3KdCheckSum extends AbstractKeyedCheckSumTypeHandler {
+public class HmacSha1Des3CheckSum extends HmacKcCheckSum {
 
-    public HmacSha1Des3KdCheckSum() {
-        super(null, null, 20, 20);
+    public HmacSha1Des3CheckSum() {
+        super(new Des3Provider(), 20, 20);
+
+        keyMaker(new Des3KeyMaker(encProvider()));
     }
 
     public int confounderSize() {
@@ -17,7 +22,7 @@ public class HmacSha1Des3KdCheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     public CheckSumType cksumType() {
-        return CheckSumType.HMAC_SHA1_DES3_KD;
+        return CheckSumType.HMAC_SHA1_DES3;
     }
 
     public boolean isSafe() {
@@ -30,18 +35,6 @@ public class HmacSha1Des3KdCheckSum extends AbstractKeyedCheckSumTypeHandler {
 
     public int keySize() {
         return 24;   // bytes
-    }
-
-    @Override
-    public byte[] makeKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
-
-         try {
-             return Des3.calculateChecksum(key, usage, data, 0, data.length);
-         } catch (GeneralSecurityException e) {
-             KrbException ke = new KrbException(e.getMessage());
-             ke.initCause(e);
-             throw ke;
-         }
     }
 
     @Override

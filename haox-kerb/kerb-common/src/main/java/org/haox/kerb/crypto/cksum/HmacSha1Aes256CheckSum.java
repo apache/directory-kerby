@@ -8,10 +8,10 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 
 import java.security.GeneralSecurityException;
 
-public class HmacSha1Aes256CheckSum extends HmacSha1AesCheckSum {
+public class HmacSha1Aes256CheckSum extends HmacKcCheckSum {
 
     public HmacSha1Aes256CheckSum() {
-        super(new Aes256Provider());
+        super(new Aes256Provider(), 20, 12);
 
         keyMaker(new Aes256KeyMaker(encProvider()));
     }

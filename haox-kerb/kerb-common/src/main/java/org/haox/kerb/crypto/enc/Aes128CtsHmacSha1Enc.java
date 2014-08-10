@@ -6,7 +6,7 @@ import org.haox.kerb.crypto.key.Aes128KeyMaker;
 import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
-public class Aes128CtsHmacSha1Enc extends KeKiKcHmacSha1Enc {
+public class Aes128CtsHmacSha1Enc extends KeKiHmacSha1Enc {
 
     public Aes128CtsHmacSha1Enc() {
         super(new Aes128Provider(), new Sha1Provider());
