@@ -5,6 +5,20 @@ import org.haox.kerb.spec.KrbException;
 
 public class Hmac {
 
+    public static byte[] hmac(HashProvider hashProvider, byte[] key,
+                       byte[] data, int outputSize) throws KrbException {
+        return hmac(hashProvider, key, data, 0, data.length, outputSize);
+    }
+
+    public static byte[] hmac(HashProvider hashProvider, byte[] key, byte[] data,
+                       int start, int len, int outputSize) throws KrbException {
+        byte[] hash = Hmac.hmac(hashProvider, key, data, start, len);
+
+        byte[] output = new byte[outputSize];
+        System.arraycopy(hash, 0, output, 0, outputSize);
+        return output;
+    }
+
     public static byte[] hmac(HashProvider hashProvider,
                               byte[] key, byte[] data) throws KrbException {
         return hmac(hashProvider, key, data, 0, data.length);

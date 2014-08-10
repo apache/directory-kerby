@@ -1,8 +1,8 @@
 package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.ArcFourHmac;
-import org.haox.kerb.crypto.Rc4;
 import org.haox.kerb.crypto.Hmac;
+import org.haox.kerb.crypto.Rc4;
 import org.haox.kerb.crypto.cksum.provider.Md5Provider;
 import org.haox.kerb.crypto.enc.provider.Rc4Provider;
 import org.haox.kerb.spec.KrbException;
@@ -37,8 +37,8 @@ public class HmacMd5Rc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     @Override
-    protected void makeKeyedChecksumWith(byte[] workBuffer, int[] workLens,
-                                         byte[] data, int start, int size, byte[] key, int usage) throws KrbException {
+    protected byte[] makeKeyedChecksumWith(byte[] data, int start, int len,
+                                           byte[] key, int usage) throws KrbException {
 
         byte[] Ksign = null;
         byte[] signKey = "signaturekey".getBytes();
@@ -49,11 +49,11 @@ public class HmacMd5Rc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
         byte[] salt = Rc4.getSalt(usage);
 
         hashProvider().hash(salt);
-        hashProvider().hash(data, start, size);
+        hashProvider().hash(data, start, len);
         byte[] hashTmp = hashProvider().output();
 
         byte[] hmac = Hmac.hmac(hashProvider(), Ksign, hashTmp);
-        System.arraycopy(hmac, 0, workBuffer, 0, hmac.length);
+        return hmac;
     }
 
     @Override

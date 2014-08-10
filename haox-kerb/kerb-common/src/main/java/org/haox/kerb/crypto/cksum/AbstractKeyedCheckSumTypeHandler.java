@@ -30,24 +30,21 @@ public abstract class AbstractKeyedCheckSumTypeHandler extends AbstractCheckSumT
     @Override
     public byte[] makeKeyedChecksum(byte[] data, int start, int len,
                                     byte[] key, int usage) throws KrbException {
-        int computeSize = computeSize();
         int outputSize = outputSize();
 
-        int[] workLens = new int[] {computeSize, outputSize};
-        byte[] workBuffer = new byte[computeSize];
-        makeKeyedChecksumWith(workBuffer, workLens, data, start, len, key, usage);
-
-        if (outputSize < computeSize) {
+        byte[] tmp = makeKeyedChecksumWith(data, start, len, key, usage);
+        if (outputSize < tmp.length) {
             byte[] output = new byte[outputSize];
-            System.arraycopy(workBuffer, 0, output, 0, outputSize);
+            System.arraycopy(tmp, 0, output, 0, outputSize);
             return output;
+        } else {
+            return tmp;
         }
-        return workBuffer;
     }
 
-    protected void makeKeyedChecksumWith(byte[] workBuffer, int[] workLens, byte[] data,
-                                         int start, int len, byte[] key, int usage) throws KrbException {
-
+    protected byte[] makeKeyedChecksumWith(byte[] data, int start, int len,
+                                           byte[] key, int usage) throws KrbException {
+        return new byte[0];
     }
 
     @Override
