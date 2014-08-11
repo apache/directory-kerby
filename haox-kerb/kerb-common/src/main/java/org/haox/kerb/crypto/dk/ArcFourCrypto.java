@@ -113,7 +113,7 @@ public class ArcFourCrypto extends DkCrypto {
         int start, int len) throws GeneralSecurityException {
 
         if (debug) {
-            System.out.println("ARCFOUR: makeChecksum with usage = " +
+            System.out.println("ARCFOUR: checksum with usage = " +
                                                 usage);
         }
 

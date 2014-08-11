@@ -19,20 +19,20 @@ public interface CheckSumTypeHandler extends CryptoTypeHandler {
 
     public int keySize();
 
-    public byte[] makeChecksum(byte[] data) throws KrbException;
+    public byte[] checksum(byte[] data) throws KrbException;
 
-    public byte[] makeChecksum(byte[] data, int start, int len) throws KrbException;
+    public byte[] checksum(byte[] data, int start, int len) throws KrbException;
 
-    public boolean verifyChecksum(byte[] data, byte[] checksum) throws KrbException;
+    public boolean verify(byte[] data, byte[] checksum) throws KrbException;
 
-    public boolean verifyChecksum(byte[] data, int start, int len, byte[] checksum) throws KrbException;
+    public boolean verify(byte[] data, int start, int len, byte[] checksum) throws KrbException;
 
-    public byte[] makeKeyedChecksum(byte[] data,
-                                    byte[] key, int usage) throws KrbException;
+    public byte[] checksumWithKey(byte[] data,
+                                  byte[] key, int usage) throws KrbException;
 
-    public byte[] makeKeyedChecksum(byte[] data, int start, int len,
-                                    byte[] key, int usage) throws KrbException;
+    public byte[] checksumWithKey(byte[] data, int start, int len,
+                                  byte[] key, int usage) throws KrbException;
 
-    public boolean verifyKeyedChecksum(byte[] data,
-        byte[] key, int usage, byte[] checksum) throws KrbException;
+    public boolean verifyWithKey(byte[] data,
+                                 byte[] key, int usage, byte[] checksum) throws KrbException;
 }

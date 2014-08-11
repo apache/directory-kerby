@@ -48,8 +48,8 @@ public class HmacSha1Aes256CheckSum extends HmacKcCheckSum {
     }
 
     @Override
-    public boolean verifyKeyedChecksum(byte[] data,
-        byte[] key, int usage, byte[] checksum) throws KrbException {
+    public boolean verifyWithKey(byte[] data,
+                                 byte[] key, int usage, byte[] checksum) throws KrbException {
 
          try {
             byte[] newCksum = Aes256.calculateChecksum(key, usage, data,

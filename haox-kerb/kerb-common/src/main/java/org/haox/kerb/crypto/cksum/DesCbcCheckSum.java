@@ -35,7 +35,7 @@ public class DesCbcCheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     @Override
-    public byte[] makeKeyedChecksum(byte[] data, byte[] key, int usage) throws KrbException {
+    public byte[] checksumWithKey(byte[] data, byte[] key, int usage) throws KrbException {
         byte[] new_data = new byte[data.length + confounderSize()];
         byte[] conf = Confounder.bytes(confounderSize());
         System.arraycopy(conf, 0, new_data, 0, confounderSize());
@@ -77,8 +77,8 @@ public class DesCbcCheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     @Override
-    public boolean verifyKeyedChecksum(byte[] data,
-        byte[] key, int usage, byte[] checksum) throws KrbException {
+    public boolean verifyWithKey(byte[] data,
+                                 byte[] key, int usage, byte[] checksum) throws KrbException {
         byte[] cksum = decryptKeyedChecksum(checksum, key);
 
         byte[] new_data = new byte[data.length + confounderSize()];

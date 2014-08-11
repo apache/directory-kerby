@@ -8,7 +8,7 @@ import org.haox.kerb.spec.type.KrbEnum;
 public enum KeyUsage implements KrbEnum
 {
     UNKNOWN(-1),
-
+    NONE(0),
     //AS-REQ PA-ENC-TIMESTAMP padata timestamp, encrypted with the client key
     AS_REQ_PA_ENC_TS(1),
     //AS-REP Ticket and TGS-REP Ticket (includes TGS session key or application session key),

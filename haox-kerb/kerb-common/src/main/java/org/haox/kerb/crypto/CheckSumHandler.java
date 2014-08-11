@@ -99,6 +99,10 @@ public class CheckSumHandler {
                 cksumHandler = new Sha1CheckSum();
                 break;
 
+            case RSA_MD4_DES:
+                cksumHandler = new RsaMd4DesCheckSum();
+                break;
+
             case RSA_MD5_DES:
                 cksumHandler = new RsaMd5DesCheckSum();
                 break;
@@ -134,39 +138,34 @@ public class CheckSumHandler {
 
     public static CheckSum checksum(CheckSumType checkSumType, byte[] bytes) throws KrbException {
         CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
-        byte[] checksumBytes = handler.makeChecksum(bytes);
+        byte[] checksumBytes = handler.checksum(bytes);
         CheckSum checkSum = new CheckSum();
         checkSum.setCksumtype(checkSumType);
         checkSum.setChecksum(checksumBytes);
         return checkSum;
     }
 
-    public static void verifyChecksum(CheckSum checkSum, byte[] bytes) throws KrbException {
+    public static boolean verify(CheckSum checkSum, byte[] bytes) throws KrbException {
         CheckSumType checkSumType = checkSum.getCksumtype();
-        CheckSum newCheckSum = checksum(checkSumType, bytes);
-
-        if (! newCheckSum.equals(checkSum)) {
-            throw new KrbException(KrbErrorCode.KRB_AP_ERR_MODIFIED );
-        }
+        CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
+        return handler.verify(bytes, checkSum.getChecksum());
     }
 
     public static CheckSum checksumWithKey(CheckSumType checkSumType,
                            byte[] bytes, byte[] key, KeyUsage usage) throws KrbException {
         CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
-        byte[] checksumBytes = handler.makeKeyedChecksum(bytes, key, usage.getValue());
+        byte[] checksumBytes = handler.checksumWithKey(bytes, key, usage.getValue());
         CheckSum checkSum = new CheckSum();
         checkSum.setCksumtype(checkSumType);
         checkSum.setChecksum(checksumBytes);
         return checkSum;
     }
 
-    public static void verifyChecksumWithKey(CheckSum checkSum,
-        byte[] bytes, byte[] key, KeyUsage usage) throws KrbException {
+    public static boolean verifyWithKey(CheckSum checkSum, byte[] bytes,
+                                        byte[] key, KeyUsage usage) throws KrbException {
         CheckSumType checkSumType = checkSum.getCksumtype();
-        CheckSum newCheckSum = checksumWithKey(checkSumType, bytes, key, usage);
-
-        if (! newCheckSum.equals(checkSum)) {
-            throw new KrbException(KrbErrorCode.KRB_AP_ERR_MODIFIED );
-        }
+        CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
+        return handler.verifyWithKey(bytes, key,
+                usage.getValue(), checkSum.getChecksum());
     }
 }

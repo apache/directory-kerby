@@ -71,7 +71,7 @@ public class Pac {
         }
 
         CheckSum checksum = new CheckSum(serverSignature.getType(), serverSignature.getChecksum());
-        CheckSumHandler.verifyChecksumWithKey(checksum, checksumData, key, KeyUsage.APP_DATA_CKSUM);
+        CheckSumHandler.verifyWithKey(checksum, checksumData, key, KeyUsage.APP_DATA_CKSUM);
     }
 
     public PacLogonInfo getLogonInfo() {

@@ -55,39 +55,39 @@ public abstract class AbstractCheckSumTypeHandler
     }
 
     @Override
-    public byte[] makeChecksum(byte[] data) throws KrbException {
-        return makeChecksum(data, 0, data.length);
+    public byte[] checksum(byte[] data) throws KrbException {
+        return checksum(data, 0, data.length);
     }
 
     @Override
-    public byte[] makeChecksum(byte[] data, int start, int size) throws KrbException {
+    public byte[] checksum(byte[] data, int start, int size) throws KrbException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean verifyChecksum(byte[] data, byte[] checksum) throws KrbException {
-        return verifyChecksum(data, 0, data.length, checksum);
+    public boolean verify(byte[] data, byte[] checksum) throws KrbException {
+        return verify(data, 0, data.length, checksum);
     }
 
     @Override
-    public boolean verifyChecksum(byte[] data, int start, int size, byte[] checksum) throws KrbException {
+    public boolean verify(byte[] data, int start, int size, byte[] checksum) throws KrbException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public byte[] makeKeyedChecksum(byte[] data,
-                                    byte[] key, int usage) throws KrbException {
-        return makeKeyedChecksum(data, 0, data.length, key, usage);
+    public byte[] checksumWithKey(byte[] data,
+                                  byte[] key, int usage) throws KrbException {
+        return checksumWithKey(data, 0, data.length, key, usage);
     }
 
     @Override
-    public byte[] makeKeyedChecksum(byte[] data, int start, int size,
-                                    byte[] key, int usage) throws KrbException {
+    public byte[] checksumWithKey(byte[] data, int start, int size,
+                                  byte[] key, int usage) throws KrbException {
         throw new UnsupportedOperationException();
     }
     @Override
-    public boolean verifyKeyedChecksum(byte[] data,
-                                       byte[] key, int usage, byte[] checksum) throws KrbException {
+    public boolean verifyWithKey(byte[] data,
+                                 byte[] key, int usage, byte[] checksum) throws KrbException {
         throw new UnsupportedOperationException();
     }
 }

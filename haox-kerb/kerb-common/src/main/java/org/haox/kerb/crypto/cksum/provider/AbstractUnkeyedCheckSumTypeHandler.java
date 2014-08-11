@@ -2,7 +2,6 @@ package org.haox.kerb.crypto.cksum.provider;
 
 import org.haox.kerb.crypto.cksum.AbstractCheckSumTypeHandler;
 import org.haox.kerb.crypto.cksum.HashProvider;
-import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
 public abstract class AbstractUnkeyedCheckSumTypeHandler extends AbstractCheckSumTypeHandler {
@@ -13,7 +12,7 @@ public abstract class AbstractUnkeyedCheckSumTypeHandler extends AbstractCheckSu
     }
 
     @Override
-    public byte[] makeChecksum(byte[] data, int start, int len) throws KrbException {
+    public byte[] checksum(byte[] data, int start, int len) throws KrbException {
         int outputSize = outputSize();
 
         HashProvider hp = hashProvider();
@@ -29,8 +28,8 @@ public abstract class AbstractUnkeyedCheckSumTypeHandler extends AbstractCheckSu
     }
 
     @Override
-    public boolean verifyChecksum(byte[] data, int start, int len, byte[] checksum) throws KrbException {
-        byte[] newCksum = makeChecksum(data, start, len);
+    public boolean verify(byte[] data, int start, int len, byte[] checksum) throws KrbException {
+        byte[] newCksum = checksum(data, start, len);
         return checksumEqual(newCksum, checksum);
     }
 }

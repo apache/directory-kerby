@@ -2,7 +2,7 @@ package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.Confounder;
 import org.haox.kerb.crypto.Des;
-import org.haox.kerb.crypto.cksum.provider.Md5Provider;
+import org.haox.kerb.crypto.cksum.provider.Md4Provider;
 import org.haox.kerb.crypto.enc.provider.DesProvider;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
@@ -10,10 +10,10 @@ import org.haox.kerb.spec.type.common.CheckSumType;
 import javax.crypto.spec.DESKeySpec;
 import java.security.InvalidKeyException;
 
-public final class RsaMd5DesCheckSum extends AbstractKeyedCheckSumTypeHandler {
+public final class RsaMd4DesCheckSum extends AbstractKeyedCheckSumTypeHandler {
 
-    public RsaMd5DesCheckSum() {
-        super(new DesProvider(), new Md5Provider(), 24, 24);
+    public RsaMd4DesCheckSum() {
+        super(new DesProvider(), new Md4Provider(), 24, 24);
     }
 
     public int confounderSize() {
@@ -21,7 +21,7 @@ public final class RsaMd5DesCheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     public CheckSumType cksumType() {
-        return CheckSumType.RSA_MD5_DES;
+        return CheckSumType.RSA_MD4_DES;
     }
 
     public boolean isSafe() {

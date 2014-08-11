@@ -22,14 +22,14 @@ public abstract class AbstractKeyedCheckSumTypeHandler extends AbstractCheckSumT
     }
 
     @Override
-    public byte[] makeKeyedChecksum(byte[] data,
-                                    byte[] key, int usage) throws KrbException {
-        return makeKeyedChecksum(data, 0, data.length, key, usage);
+    public byte[] checksumWithKey(byte[] data,
+                                  byte[] key, int usage) throws KrbException {
+        return checksumWithKey(data, 0, data.length, key, usage);
     }
 
     @Override
-    public byte[] makeKeyedChecksum(byte[] data, int start, int len,
-                                    byte[] key, int usage) throws KrbException {
+    public byte[] checksumWithKey(byte[] data, int start, int len,
+                                  byte[] key, int usage) throws KrbException {
         int outputSize = outputSize();
 
         byte[] tmp = makeKeyedChecksumWith(data, start, len, key, usage);
@@ -48,8 +48,8 @@ public abstract class AbstractKeyedCheckSumTypeHandler extends AbstractCheckSumT
     }
 
     @Override
-    public boolean verifyKeyedChecksum(byte[] data, byte[] key,
-                                       int usage, byte[] checksum) throws KrbException {
+    public boolean verifyWithKey(byte[] data, byte[] key,
+                                 int usage, byte[] checksum) throws KrbException {
         throw new UnsupportedOperationException();
     }
 }
