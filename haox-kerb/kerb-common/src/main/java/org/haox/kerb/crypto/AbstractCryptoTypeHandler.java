@@ -26,20 +26,22 @@ public abstract class AbstractCryptoTypeHandler implements CryptoTypeHandler {
         return hashProvider;
     }
 
-    protected static boolean checksumEqual(byte[] origCksum, byte[] newCksum) {
-        return Arrays.equals(origCksum, newCksum);
+    protected static boolean checksumEqual(byte[] cksum1, byte[] cksum2) {
+        return Arrays.equals(cksum1, cksum2);
     }
 
-    protected static boolean checksumEqual(byte[] origCksum, byte[] newCksum, int len) {
-        if (origCksum == newCksum)
+    protected static boolean checksumEqual(byte[] cksum1, byte[] cksum2, int cksum2Start, int len) {
+        if (cksum1 == cksum2)
             return true;
-        if (origCksum == null || newCksum == null)
+        if (cksum1 == null || cksum2 == null)
             return false;
 
-        if (len <= newCksum.length && len <= origCksum.length) {
+        if (len <= cksum2.length && len <= cksum1.length) {
             for (int i = 0; i < len; i++)
-                if (origCksum[i] != newCksum[i])
+                if (cksum1[i] != cksum2[cksum2Start + i])
                     return false;
+        } else {
+            return false;
         }
 
         return true;

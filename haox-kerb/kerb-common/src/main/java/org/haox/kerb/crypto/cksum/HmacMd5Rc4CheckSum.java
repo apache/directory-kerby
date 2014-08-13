@@ -37,8 +37,8 @@ public class HmacMd5Rc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     @Override
-    protected byte[] makeKeyedChecksumWith(byte[] data, int start, int len,
-                                           byte[] key, int usage) throws KrbException {
+    protected byte[] doChecksumWithKey(byte[] data, int start, int len,
+                                       byte[] key, int usage) throws KrbException {
 
         byte[] Ksign = null;
         byte[] signKey = "signaturekey".getBytes();

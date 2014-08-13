@@ -12,8 +12,8 @@ public abstract class HmacKcCheckSum extends AbstractKeyedCheckSumTypeHandler {
     }
 
     @Override
-    protected byte[] makeKeyedChecksumWith(byte[] data, int start, int len,
-                                           byte[] key, int usage) throws KrbException {
+    protected byte[] doChecksumWithKey(byte[] data, int start, int len,
+                                       byte[] key, int usage) throws KrbException {
         byte[] Kc;
         byte[] constant = new byte[5];
         constant[0] = (byte) ((usage>>24)&0xff);
