@@ -2,7 +2,7 @@ package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.Aes128;
 import org.haox.kerb.crypto.enc.provider.Aes128Provider;
-import org.haox.kerb.crypto.key.Aes128KeyMaker;
+import org.haox.kerb.crypto.key.AesKeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
 
@@ -13,7 +13,7 @@ public class HmacSha1Aes128CheckSum extends HmacKcCheckSum {
     public HmacSha1Aes128CheckSum() {
         super(new Aes128Provider(), 20, 12);
 
-        keyMaker(new Aes128KeyMaker(encProvider()));
+        keyMaker(new AesKeyMaker((Aes128Provider) encProvider()));
     }
 
     public int confounderSize() {

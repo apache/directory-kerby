@@ -1,0 +1,84 @@
+package org.haox.kerb.crypto.key;
+
+import org.haox.kerb.crypto.enc.provider.CamelliaProvider;
+import org.haox.kerb.spec.KrbException;
+
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+
+public class CamelliaKeyMaker extends AbstractKeyMaker {
+
+    public CamelliaKeyMaker(CamelliaProvider encProvider) {
+        super(encProvider);
+    }
+
+    @Override
+    public byte[] random2Key(byte[] randomBits) throws KrbException {
+        return randomBits;
+    }
+
+    @Override
+    public byte[] str2key(String string, String salt, byte[] param) throws KrbException {
+        int iterCount = getIterCount(param, 32768);
+
+        byte[] saltBytes = null;
+        try {
+            saltBytes = getSaltBytes(salt, getPepper());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        int keySize = encProvider().keySize();
+        byte[] random = new byte[0];
+        try {
+            random = PBKDF2(string.toCharArray(), saltBytes, iterCount, keySize);
+        } catch (GeneralSecurityException e) {
+            throw new KrbException("PBKDF2 failed", e);
+        }
+
+        byte[] tmpKey = random2Key(random);
+        byte[] result = dk(tmpKey, KERBEROS_CONSTANT);
+
+        return result;
+    }
+
+    private String getPepper() {
+        int keySize = encProvider().keySize();
+        String pepper = keySize == 16 ? "camellia128-cts-cmac" : "camellia256-cts-cmac";
+        return pepper;
+    }
+
+    /*
+     * NIST SP800-108 KDF in feedback mode (section 5.2).
+     */
+    @Override
+    protected byte[] dr(byte[] key, byte[] constant) throws KrbException {
+
+        int blocksize = encProvider().blockSize();
+        int keyInuptSize = encProvider().keyInputSize();
+        byte[] keyBytes = new byte[keyInuptSize];
+        byte[] Ki;
+
+        if (constant.length != blocksize) {
+            Ki = Dk.nfold(constant, blocksize);
+        } else {
+            Ki = new byte[constant.length];
+            System.arraycopy(constant, 0, Ki, 0, constant.length);
+        }
+
+        int n = 0, len;
+        while (n < keyInuptSize) {
+            encProvider().encrypt(key, Ki);
+
+            if (n + blocksize >= keyInuptSize) {
+                System.arraycopy(Ki, 0, keyBytes, n, keyInuptSize - n);
+                break;
+            }
+
+            System.arraycopy(Ki, 0, keyBytes, n, blocksize);
+            n += blocksize;
+        }
+
+        return keyBytes;
+    }
+}

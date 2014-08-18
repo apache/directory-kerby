@@ -6,6 +6,7 @@ import org.haox.kerb.spec.KrbException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -43,6 +44,38 @@ public abstract class AbstractKeyMaker implements KeyMaker {
         return result;
     }
 
+    protected static int getIterCount(byte[] param, int defCount) {
+        int iterCount = defCount;
+
+        if (param != null) {
+            if (param.length != 4) {
+                throw new IllegalArgumentException("Invalid param to str2Key");
+            }
+            iterCount = readBigEndian(param, 0, 4);
+        }
+
+        return iterCount;
+    }
+
+    protected static byte[] getSaltBytes(String salt, String pepper)
+            throws UnsupportedEncodingException {
+        byte[] saltBytes = salt.getBytes("UTF-8");
+        if (pepper != null && ! pepper.isEmpty()) {
+            byte[] pepperBytes = pepper.getBytes("UTF-8");
+            int len = saltBytes.length;
+            len += 1 + pepperBytes.length;
+            byte[] results = new byte[len];
+            System.arraycopy(pepperBytes, 0, results, 0, pepperBytes.length);
+            results[pepperBytes.length] = (byte) 0;
+            System.arraycopy(saltBytes, 0,
+                    results, pepperBytes.length + 1, saltBytes.length);
+
+            return results;
+        } else {
+            return saltBytes;
+        }
+    }
+
     protected static byte[] PBKDF2(char[] secret, byte[] salt,
                                    int count, int keySize) throws GeneralSecurityException {
 
@@ -62,7 +95,7 @@ public abstract class AbstractKeyMaker implements KeyMaker {
      * K4 = ...
      * DR(Key, Constant) = k-truncate(K1 | K2 | K3 | K4 ...)
      */
-    private byte[] dr(byte[] key, byte[] constant) throws KrbException {
+    protected byte[] dr(byte[] key, byte[] constant) throws KrbException {
 
         int blocksize = encProvider().blockSize();
         int keyInuptSize = encProvider().keyInputSize();

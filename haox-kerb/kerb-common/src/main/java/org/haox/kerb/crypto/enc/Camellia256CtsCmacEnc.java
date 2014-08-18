@@ -7,9 +7,9 @@ import org.haox.kerb.crypto.key.AesKeyMaker;
 import org.haox.kerb.spec.type.common.CheckSumType;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
-public class Aes256CtsHmacSha1Enc extends KeKiHmacSha1Enc {
+public class Camellia256CtsCmacEnc extends KeKiHmacSha1Enc {
 
-    public Aes256CtsHmacSha1Enc() {
+    public Camellia256CtsCmacEnc() {
         super(new Aes256Provider(), new Sha1Provider());
         keyMaker(new AesKeyMaker((AesProvider) encProvider()));
     }

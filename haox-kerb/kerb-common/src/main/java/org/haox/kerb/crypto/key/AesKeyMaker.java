@@ -1,14 +1,14 @@
 package org.haox.kerb.crypto.key;
 
-import org.haox.kerb.crypto.enc.EncryptProvider;
+import org.haox.kerb.crypto.enc.provider.AesProvider;
 import org.haox.kerb.spec.KrbException;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
-public abstract class AesKeyMaker extends AbstractKeyMaker {
+public class AesKeyMaker extends AbstractKeyMaker {
 
-    public AesKeyMaker(EncryptProvider encProvider) {
+    public AesKeyMaker(AesProvider encProvider) {
         super(encProvider);
     }
 
@@ -19,17 +19,11 @@ public abstract class AesKeyMaker extends AbstractKeyMaker {
 
     @Override
     public byte[] str2key(String string, String salt, byte[] param) throws KrbException {
-        int iterCount = 4096;
-        if (param != null) {
-            if (param.length != 4) {
-                throw new IllegalArgumentException("Invalid param to str2Key");
-            }
-            iterCount = readBigEndian(param, 0, 4);
-        }
+        int iterCount = getIterCount(param, 4096);
 
         byte[] saltBytes = null;
         try {
-            saltBytes = salt.getBytes("UTF-8");
+            saltBytes = getSaltBytes(salt, null);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

@@ -50,4 +50,20 @@ public class Util {
 
         return bytes;
     }
+
+    /**
+     * Convert bytes into format as:
+     * 02020080
+     */
+    public static String bytesToHex2(byte[] bytes) {
+        int len = bytes.length * 2;
+        char[] hexChars = new char[len];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_CHARS[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_CHARS[v & 0x0F];
+        }
+
+        return new String(hexChars);
+    }
 }

@@ -98,6 +98,16 @@ public class EncryptionHandler {
                 encHandler = new Aes256CtsHmacSha1Enc();
                 break;
 
+            case CAMELLIA128_CTS_CMAC:
+            case CAMELLIA128_CTS:
+                encHandler = new Camellia128CtsCmacEnc();
+                break;
+
+            case CAMELLIA256_CTS_CMAC:
+            case CAMELLIA256_CTS:
+                encHandler = new Camellia256CtsCmacEnc();
+                break;
+
             case RC4_HMAC:
             case ARCFOUR_HMAC:
             case ARCFOUR_HMAC_MD5:
