@@ -1,5 +1,9 @@
 package org.haox.kerb;
 
+import org.haox.kerb.crypto.enc.EncryptProvider;
+import org.haox.kerb.crypto.enc.provider.Camellia128Provider;
+import org.haox.kerb.crypto.enc.provider.Camellia256Provider;
+import org.haox.kerb.spec.KrbException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,13 +17,12 @@ import java.util.List;
 
 public class CamelliaEncTest {
 
-    private List<String> outputs;
-    private byte[] key;
+    private List<String> outputs = new ArrayList<String>();
     private int keySize;
 
     private byte[] plain = new byte[16];
     private byte[] cipher = new byte[16];
-    private byte[] zero = new byte[16];
+    private EncryptProvider encProvider;
 
     private List<String> getExpectedLines() throws IOException {
         InputStream res = CamelliaEncTest.class.getResourceAsStream("/camellia-expect-vt.txt");
@@ -28,38 +31,45 @@ public class CamelliaEncTest {
         List<String> results = new ArrayList<String>();
         String line;
         while ((line = br.readLine()) != null) {
-            results.add(line);
+            line = line.trim();
+            if (! line.isEmpty()) {
+                results.add(line);
+            }
         }
         return results;
     }
 
     @Test
-    public void testEnc() throws IOException {
+    public void testEnc() throws IOException, KrbException {
         List<String> expectedLines = getExpectedLines();
 
         testWith(16);
+        outputs.add("==========");
         testWith(32);
+        outputs.add("==========");
 
         List<String> newLines = expectedLines;
         Assert.assertEquals("Comparing new lines with expected lines",
-                expectedLines, newLines);
+                expectedLines, outputs);
     }
 
-    private void testWith(int keySize) {
+    private void testWith(int keySize) throws KrbException {
         this.keySize = keySize;
         outputs.add("KEYSIZE=" + (keySize * 8));
 
-        Arrays.fill(plain, (byte) 0);
-        hexDump("PT", plain);
+        encProvider = keySize == 16 ?
+                new Camellia128Provider() : new Camellia256Provider();
 
-        this.key = new byte[keySize];
+        byte[] key = new byte[keySize];
         Arrays.fill(key, (byte) 0);
-        for (int i = 0; i < keySize * 8; ++i) {
-            Arrays.fill(key, (byte) 0);
-            setBit(key, i);
+        hexDump("KEY", key);
+
+        for (int i = 0; i < 16 * 8; ++i) {
+            Arrays.fill(plain, (byte) 0);
+            setBit(plain, i);
             outputs.add("I=" + (i + 1));
-            hexDump("KEY", key);
-            enc();
+            hexDump("PT", plain);
+            encWith(key);
             hexDump("CT", cipher);
         }
     }
@@ -69,11 +79,15 @@ public class CamelliaEncTest {
         outputs.add(line);
     }
 
-    private static void setBit(byte[] bytes, int i) {
-
+    private static void setBit(byte[] bytes, int bitnum) {
+        int bytenum = bitnum / 8;
+        bitnum %= 8;
+        // First bit is the high bit!
+        bytes[bytenum] = (byte) (1 << (7 - bitnum));
     }
 
-    private void enc() {
-
+    private void encWith(byte[] key) throws KrbException {
+        System.arraycopy(plain, 0, cipher, 0, plain.length);
+        encProvider.encrypt(key, cipher);
     }
 }
