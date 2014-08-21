@@ -15,7 +15,7 @@ public interface EncryptProvider {
     public void decrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException;
     public void encrypt(byte[] key, byte[] data) throws KrbException;
     public void decrypt(byte[] key, byte[] data) throws KrbException;
-    public void cbcMac(byte[] key, byte[] iv, byte[] data);
+    public void encryptBlock(byte[] key, byte[] cipherState, byte[] block) throws KrbException;
     public byte[] initState(byte[] key, int keyUsage);
     public void cleanState();
     public void cleanKey();

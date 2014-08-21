@@ -3,7 +3,14 @@ package org.haox.kerb.crypto;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
+import java.util.Arrays;
+
 public class Cmac {
+
+    private static byte[] constRb = {
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0x87
+    };
 
     public static byte[] cmac(EncryptProvider encProvider, byte[] key,
                        byte[] data, int outputSize) throws KrbException {
@@ -27,19 +34,19 @@ public class Cmac {
     public static byte[] cmac(EncryptProvider encProvider,
                               byte[] key, byte[] data, int start, int len) throws KrbException {
 
-        int blockLen = encProvider.blockSize();
+        int blockSize = encProvider.blockSize();
 
-        byte[] y = new byte[blockLen];
-        byte[] mLast = new byte[blockLen];
-        byte[] padded = new byte[blockLen];
-        byte[] k1 = new byte[blockLen];
-        byte[] k2 = new byte[blockLen];
+        byte[] Y = new byte[blockSize];
+        byte[] mLast = new byte[blockSize];
+        byte[] padded = new byte[blockSize];
+        byte[] K1 = new byte[blockSize];
+        byte[] K2 = new byte[blockSize];
 
         // step 1
-        makeSubkey(encProvider, key, k1, k2);
+        makeSubkey(encProvider, key, K1, K2);
 
         // step 2
-        int n = (len + blockLen - 1) / len;
+        int n = (len + blockSize - 1) / blockSize;
 
         // step 3
         boolean lastIsComplete;
@@ -47,34 +54,114 @@ public class Cmac {
             n = 1;
             lastIsComplete = false;
         } else {
-            lastIsComplete = ((len % blockLen) == 0);
+            lastIsComplete = ((len % blockSize) == 0);
         }
 
-        return null;
-        /*
-        int ki;
-        for (int i = 0; i < blockLen; i++) {
-            ki = (i < key.length) ? key[i] : 0;
-            ipad[i] = (byte)(ki ^ 0x36);
-            opad[i] = (byte)(ki ^ 0x5c);
+        // Step 6 (all but last block)
+        byte[] cipherState = new byte[blockSize];
+        byte[] cipher = new byte[blockSize];
+        for (int i = 0; i < n - 1; i++) {
+            System.arraycopy(data, i * blockSize, cipher, 0, blockSize);
+            encProvider.encryptBlock(key, cipherState, cipher);
+            System.arraycopy(cipher, 0, cipherState, 0, blockSize);
         }
 
-        encProvider.hash(ipad);
+        // step 5
+        System.arraycopy(cipher, 0, Y, 0, blockSize);
 
-        encProvider.hash(data, start, len);
+        // step 4
+        int lastPos = (n - 1) * blockSize;
+        int lastLen = lastIsComplete ? blockSize : len % blockSize;
+        byte[] lastBlock = new byte[lastLen];
+        System.arraycopy(data, lastPos, lastBlock, 0, lastLen);
+        if (lastIsComplete) {
+            xor128(lastBlock, K1, mLast);
+        } else {
+            padding(lastBlock, padded);
+            xor128(padded, K2, mLast);
+        }
 
-        byte[] tmp = encProvider.output();
+        // Step 6 (last block)
+        encProvider.encryptBlock(key, cipherState, mLast);
 
-        encProvider.hash(opad);
-        encProvider.hash(tmp);
-
-        tmp = encProvider.output();
-        return tmp;
-        */
+        return mLast;
     }
 
+    // Generate subkeys K1 and K2 as described in RFC 4493 figure 2.2.
     private static void makeSubkey(EncryptProvider encProvider,
-                              byte[] key, byte[] k1, byte[] k2) throws KrbException {
+                              byte[] key, byte[] K1, byte[] K2) throws KrbException {
 
+        // L := encrypt(K, const_Zero)
+        byte[] L = new byte[K1.length];
+        Arrays.fill(L, (byte) 0);
+        encProvider.encryptBlock(key, null, L);
+
+        // K1 := (MSB(L) == 0) ? L << 1 : (L << 1) XOR const_Rb
+        if ((L[0] & 0x80) == 0) {
+            leftShiftByOne(L, K1);
+        } else {
+            byte[] tmp = new byte[K1.length];
+            leftShiftByOne(L, tmp);
+            xor128(tmp, constRb, K1);
+        }
+
+        // K2 := (MSB(K1) == 0) ? K1 << 1 : (K1 << 1) XOR const_Rb
+        if ((K1[0] & 0x80) == 0) {
+            leftShiftByOne(K1, K2);
+        } else {
+            byte[] tmp = new byte[K1.length];
+            leftShiftByOne(K1, tmp);
+            xor128(tmp, constRb, K2);
+        }
+    }
+
+    private static void leftShiftByOne(byte[] input, byte[] output) {
+        byte overflow = 0;
+
+        for (int i = input.length - 1; i >= 0; i--) {
+            output[i] = (byte) (input[i] << 1);
+            output[i] |= overflow;
+            overflow = (byte) ((input[i] & 0x80) != 0 ? 1 : 0);
+        }
+    }
+
+    private static void xor128(byte[] a, byte[] b, byte[] output) {
+        int av, bv, v;
+        for (int i = 0; i < a.length / 4; ++i) {
+            av = bytes2int(a, i * 4);
+            bv = bytes2int(b, i * 4);
+            v = av ^ bv;
+            int2bytes(v, output, i * 4);
+        }
+    }
+
+    private static int bytes2int(byte[] bytes, int pos) {
+        int value = 0;
+
+        for (int i = 0; i < 4; i++) {
+            value = (value << 8) + (bytes[pos + i] & 0xff);
+        }
+        return value;
+    }
+
+    private static void int2bytes(int value, byte[] bytes, int pos) {
+        for (int i = 0; i < 4; i++) {
+            bytes[pos + 3 - i] = (byte)value;
+            value >>>= 8;
+        }
+    }
+
+    // Padding out data with a 1 bit followed by 0 bits, placing the result in pad
+    private static void padding(byte[] data, byte[] padded) {
+        int len = data.length;
+
+        // original last block
+        System.arraycopy(data, 0, padded, 0, len);
+
+        padded[len] = (byte) 0x80;
+
+        for (int i = len + 1; i < padded.length; i++) {
+            padded[i] = 0x00;
+        }
     }
 }

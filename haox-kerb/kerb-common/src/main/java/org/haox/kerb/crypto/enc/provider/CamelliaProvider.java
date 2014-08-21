@@ -16,8 +16,7 @@ public abstract class CamelliaProvider extends AbstractEncryptProvider {
         Camellia cipher = new Camellia();
         cipher.setKey(encrypt, key);
 
-        byte[] output = new byte[data.length];
-        cipher.processBlock(data, 0, output, 0);
-        System.arraycopy(output, 0, data, 0, output.length);
+        //cipher.processBlock(data, 0);
+        cipher.cbcEncryption(data, cipherState);
     }
 }

@@ -4,8 +4,8 @@ package org.haox.kerb.crypto;
  * Camellia - based on RFC 3713, about half the size of CamelliaEngine.
  */
 
-public class Camellia
-{
+public class Camellia {
+    private int keySize;
     private static final int BLOCK_SIZE = 16;
     private static final int MASK8 = 0xff;
     private boolean initialized;
@@ -159,7 +159,7 @@ public class Camellia
         ki[3 + ioff] = ko[1 + ooff];
     }
 
-    private int bytes2int(byte[] src, int offset)
+    private static int bytes2int(byte[] src, int offset)
     {
         int word = 0;
 
@@ -170,7 +170,7 @@ public class Camellia
         return word;
     }
 
-    private void int2bytes(int word, byte[] dst, int offset)
+    private static void int2bytes(int word, byte[] dst, int offset)
     {
         for (int i = 0; i < 4; i++)
         {
@@ -255,6 +255,7 @@ public class Camellia
     public void setKey(boolean forEncryption, byte[] key)
     {
         initialized = true;
+        keySize = key.length;
 
         int[] k = new int[8];
         int[] ka = new int[4];
@@ -536,8 +537,7 @@ public class Camellia
         return BLOCK_SIZE;
     }
 
-    public int processBlock(byte[] in, int inOff,
-                            byte[] out, int outOff)
+    public void processBlock(byte[] in, int inOff)
         throws IllegalStateException
     {
 
@@ -545,14 +545,44 @@ public class Camellia
         {
             throw new IllegalStateException("Camellia is not initialized");
         }
-        
+
+        byte[] out = new byte[BLOCK_SIZE];
+
         if (_keyis128)
         {
-            return processBlock128(in, inOff, out, outOff);
+            processBlock128(in, inOff, out, 0);
         }
         else
         {
-            return processBlock192or256(in, inOff, out, outOff);
+            processBlock192or256(in, inOff, out, 0);
+        }
+
+        System.arraycopy(out, 0, in, inOff, BLOCK_SIZE);
+    }
+
+    public void cbcEncryption(byte[] data, byte[] iv) {
+        int blocksNum = data.length / BLOCK_SIZE;
+
+        byte[] cipherState = new byte[BLOCK_SIZE];
+        System.arraycopy(iv, 0, cipherState, 0, BLOCK_SIZE);
+
+        byte[] cipher = new byte[BLOCK_SIZE];
+        for (int i = 0; i < blocksNum; ++i) {
+            System.arraycopy(data, i * BLOCK_SIZE, cipher, 0, BLOCK_SIZE);
+            xor(cipherState, cipher);
+            processBlock(cipher, 0);
+            System.arraycopy(cipher, 0, data, i * BLOCK_SIZE, BLOCK_SIZE);
+            System.arraycopy(cipher, 0, cipherState, 0, BLOCK_SIZE);
+        }
+    }
+
+    private static void xor(byte[] input, byte[] output) {
+        int a, b;
+        for (int i = 0; i < input.length / 4; ++i) {
+            a = bytes2int(input, i * 4);
+            b = bytes2int(output, i * 4);
+            b = a ^ b;
+            int2bytes(b, output, i * 4);
         }
     }
 }
