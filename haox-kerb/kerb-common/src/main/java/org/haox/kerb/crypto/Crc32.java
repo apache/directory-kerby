@@ -70,19 +70,17 @@ public class Crc32 {
     };
 
     public static byte[] crc(byte[] data, int start, int size) {
-        long c = doCrc32(data, start, size);
+        long c = crc(0, data, start, size);
         return convert((int) c);
     }
 
-    private static long doCrc32(byte[] data, int start, int len) {
-        long c = 0;
+    public static long crc(long seed, byte[] data, int start, int len) {
+        long c = seed;
 
         int idx;
         for (int i = 0; i < len; i++) {
-            idx = (int) (data[start + i] ^ c);
-            idx &= 0xff;
-            c >>>= 8;
-            c ^= crcTable[idx];
+            idx = (int) ((data[start + i] ^ c) & 0xff);
+            c = ((c & 0xffffffffL) >> 8) ^ crcTable[idx]; // why?
         }
 
         return c;

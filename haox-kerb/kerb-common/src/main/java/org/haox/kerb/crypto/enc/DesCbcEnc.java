@@ -14,6 +14,7 @@ abstract class DesCbcEnc extends AbstractEncTypeHandler {
         keyMaker(new DesKeyMaker(this.encProvider()));
     }
 
+    @Override
     protected void encryptWith(byte[] workBuffer, int[] workLens,
                                  byte[] key, byte[] iv, int usage) throws KrbException {
         int confounderLen = workLens[0];
