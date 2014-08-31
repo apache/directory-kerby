@@ -1,16 +1,16 @@
 package org.haox.kerb.crypto.enc;
 
+import org.haox.kerb.crypto.Cmac;
 import org.haox.kerb.crypto.Confounder;
 import org.haox.kerb.crypto.Hmac;
 import org.haox.kerb.crypto.cksum.HashProvider;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
-public abstract class KeKiHmacSha1Enc extends KeKiEnc {
+public abstract class KeKiCmacEnc extends KeKiEnc {
 
-    public KeKiHmacSha1Enc(EncryptProvider encProvider,
-                           HashProvider hashProvider) {
-        super(encProvider, hashProvider);
+    public KeKiCmacEnc(EncryptProvider encProvider) {
+        super(encProvider, null);
     }
 
     @Override
@@ -18,6 +18,10 @@ public abstract class KeKiHmacSha1Enc extends KeKiEnc {
         return 0;
     }
 
+    @Override
+    public int checksumSize() {
+        return encProvider().blockSize();
+    }
 
     protected void encryptWithOld(byte[] workBuffer, int[] workLens,
                                byte[] key, byte[] iv, int usage) throws KrbException {
@@ -112,7 +116,7 @@ public abstract class KeKiHmacSha1Enc extends KeKiEnc {
             throws KrbException {
 
         // generate hash
-        byte[] hash = Hmac.hmac(hashProvider(), key, data);
+        byte[] hash = Cmac.cmac(encProvider(), key, data);
 
         // truncate hash
         byte[] output = new byte[hashSize];

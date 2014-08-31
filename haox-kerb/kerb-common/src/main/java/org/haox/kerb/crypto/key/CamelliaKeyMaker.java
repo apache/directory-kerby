@@ -1,5 +1,7 @@
 package org.haox.kerb.crypto.key;
 
+import org.haox.kerb.crypto.Cmac;
+import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.enc.provider.CamelliaProvider;
 import org.haox.kerb.spec.KrbException;
 
@@ -59,16 +61,31 @@ public class CamelliaKeyMaker extends AbstractKeyMaker {
         byte[] keyBytes = new byte[keyInuptSize];
         byte[] Ki;
 
-        if (constant.length != blocksize) {
-            Ki = Dk.nfold(constant, blocksize);
-        } else {
-            Ki = new byte[constant.length];
-            System.arraycopy(constant, 0, Ki, 0, constant.length);
-        }
+        int len = 0;
+        // K(i-1): the previous block of PRF output, initially all-zeros.
+        len += blocksize;
+        // four-byte big-endian binary string giving the block counter
+        len += 4;
+        // the fixed derived-key input
+        len += constant.length;
+        // 0x00: separator byte
+        len += 1;
+        // four-byte big-endian binary string giving the output length
+        len += 4;
 
-        int n = 0, len;
-        while (n < keyInuptSize) {
-            encProvider().encrypt(key, Ki);
+        Ki = new byte[len];
+        System.arraycopy(constant, 0, Ki, blocksize + 4, constant.length);
+        Util.int2bytesBe(keyInuptSize * 8, Ki, len - 4);
+
+        int i, n = 0;
+        byte[] tmp;
+        for (i = 1, n = 0; n < keyInuptSize; i++) {
+            // Update the block counter
+            Util.int2bytesBe(i, Ki, blocksize);
+
+            // Compute a CMAC checksum, update Ki with the result
+            tmp = Cmac.cmac(encProvider(), key, Ki);
+            System.arraycopy(tmp, 0, Ki, 0, blocksize);
 
             if (n + blocksize >= keyInuptSize) {
                 System.arraycopy(Ki, 0, keyBytes, n, keyInuptSize - n);

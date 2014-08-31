@@ -20,10 +20,13 @@ public class Cmac {
     public static byte[] cmac(EncryptProvider encProvider, byte[] key, byte[] data,
                        int start, int len, int outputSize) throws KrbException {
         byte[] hash = Cmac.cmac(encProvider, key, data, start, len);
-
-        byte[] output = new byte[outputSize];
-        System.arraycopy(hash, 0, output, 0, outputSize);
-        return output;
+        if (hash.length > outputSize) {
+            byte[] output = new byte[outputSize];
+            System.arraycopy(hash, 0, output, 0, outputSize);
+            return output;
+        } else {
+            return hash;
+        }
     }
 
     public static byte[] cmac(EncryptProvider encProvider,

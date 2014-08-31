@@ -80,7 +80,7 @@ public class Crc32 {
         int idx;
         for (int i = 0; i < len; i++) {
             idx = (int) ((data[start + i] ^ c) & 0xff);
-            c = ((c & 0xffffffffL) >> 8) ^ crcTable[idx]; // why?
+            c = ((c & 0xffffffffL) >>> 8) ^ crcTable[idx]; // why?
         }
 
         return c;

@@ -1,15 +1,15 @@
 package org.haox.kerb.crypto.enc;
 
 import org.haox.kerb.crypto.Confounder;
-import org.haox.kerb.crypto.Hmac;
+import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.cksum.HashProvider;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
-public abstract class KeKiHmacSha1Enc extends KeKiEnc {
+public abstract class KeKiEnc extends AbstractEncTypeHandler {
 
-    public KeKiHmacSha1Enc(EncryptProvider encProvider,
-                           HashProvider hashProvider) {
+    public KeKiEnc(EncryptProvider encProvider,
+                   HashProvider hashProvider) {
         super(encProvider, hashProvider);
     }
 
@@ -19,7 +19,8 @@ public abstract class KeKiHmacSha1Enc extends KeKiEnc {
     }
 
 
-    protected void encryptWithOld(byte[] workBuffer, int[] workLens,
+    @Override
+    protected void encryptWith(byte[] workBuffer, int[] workLens,
                                byte[] key, byte[] iv, int usage) throws KrbException {
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
@@ -66,7 +67,8 @@ public abstract class KeKiHmacSha1Enc extends KeKiEnc {
         System.arraycopy(checksum, 0, workBuffer, tmpEnc.length, checksum.length);
     }
 
-    protected byte[] decryptWithOld(byte[] workBuffer, int[] workLens,
+    @Override
+    protected byte[] decryptWith(byte[] workBuffer, int[] workLens,
                                  byte[] key, byte[] iv, int usage) throws KrbException {
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
@@ -74,10 +76,13 @@ public abstract class KeKiHmacSha1Enc extends KeKiEnc {
 
         byte[] Ke, Ki, Kc;
         byte[] constant = new byte[5];
+        /*
         constant[0] = (byte) ((usage>>24)&0xff);
         constant[1] = (byte) ((usage>>16)&0xff);
         constant[2] = (byte) ((usage>>8)&0xff);
         constant[3] = (byte) (usage&0xff);
+        */
+        Util.int2bytesBe(usage, constant, 0);
         constant[4] = (byte) 0xaa;
         Ke = keyMaker().dk(key, constant);
         constant[4] = (byte) 0x55;
@@ -107,16 +112,6 @@ public abstract class KeKiHmacSha1Enc extends KeKiEnc {
         return data;
     }
 
-    @Override
-    protected byte[] makeChecksum(byte[] key, byte[] data, int hashSize)
-            throws KrbException {
-
-        // generate hash
-        byte[] hash = Hmac.hmac(hashProvider(), key, data);
-
-        // truncate hash
-        byte[] output = new byte[hashSize];
-        System.arraycopy(hash, 0, output, 0, hashSize);
-        return output;
-    }
+    protected abstract byte[] makeChecksum(byte[] key, byte[] data, int hashSize)
+            throws KrbException;
 }
