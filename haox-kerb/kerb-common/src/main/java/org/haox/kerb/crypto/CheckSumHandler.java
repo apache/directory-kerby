@@ -120,6 +120,14 @@ public class CheckSumHandler {
                 cksumHandler = new HmacSha1Aes256CheckSum();
                 break;
 
+            case CMAC_CAMELLIA128:
+                cksumHandler = new CmacCamellia128CheckSum();
+                break;
+
+            case CMAC_CAMELLIA256:
+                cksumHandler = new CmacCamellia256CheckSum();
+                break;
+
             case HMAC_MD5_ARCFOUR:
                 cksumHandler = new HmacMd5Rc4CheckSum();
                 break;

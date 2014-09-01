@@ -50,6 +50,7 @@ public abstract class AbstractKeyedCheckSumTypeHandler extends AbstractCheckSumT
     @Override
     public boolean verifyWithKey(byte[] data, byte[] key,
                                  int usage, byte[] checksum) throws KrbException {
-        throw new UnsupportedOperationException();
+        byte[] newCksum = checksumWithKey(data, key, usage);
+        return checksumEqual(checksum, newCksum);
     }
 }

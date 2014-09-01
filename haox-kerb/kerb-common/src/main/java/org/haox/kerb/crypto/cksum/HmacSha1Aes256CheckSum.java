@@ -1,12 +1,8 @@
 package org.haox.kerb.crypto.cksum;
 
-import org.haox.kerb.crypto.Aes256;
 import org.haox.kerb.crypto.enc.provider.Aes256Provider;
 import org.haox.kerb.crypto.key.AesKeyMaker;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
-
-import java.security.GeneralSecurityException;
 
 public class HmacSha1Aes256CheckSum extends HmacKcCheckSum {
 
@@ -34,31 +30,5 @@ public class HmacSha1Aes256CheckSum extends HmacKcCheckSum {
 
     public int keySize() {
         return 32;   // bytes
-    }
-
-    public byte[] makeKeyedChecksumOld(byte[] data, byte[] key, int usage) throws KrbException {
-
-         try {
-            return Aes256.calculateChecksum(key, usage, data, 0, data.length);
-         } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException(e.getMessage());
-            ke.initCause(e);
-            throw ke;
-         }
-    }
-
-    @Override
-    public boolean verifyWithKey(byte[] data,
-                                 byte[] key, int usage, byte[] checksum) throws KrbException {
-
-         try {
-            byte[] newCksum = Aes256.calculateChecksum(key, usage, data,
-                    0, data.length);
-            return checksumEqual(checksum, newCksum);
-         } catch (GeneralSecurityException e) {
-            KrbException ke = new KrbException(e.getMessage());
-            ke.initCause(e);
-            throw ke;
-         }
     }
 }

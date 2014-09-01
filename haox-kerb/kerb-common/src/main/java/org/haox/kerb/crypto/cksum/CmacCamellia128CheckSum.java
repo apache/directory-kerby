@@ -1,15 +1,17 @@
 package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.enc.provider.Aes128Provider;
+import org.haox.kerb.crypto.enc.provider.Camellia128Provider;
 import org.haox.kerb.crypto.key.AesKeyMaker;
+import org.haox.kerb.crypto.key.CamelliaKeyMaker;
 import org.haox.kerb.spec.type.common.CheckSumType;
 
-public class HmacSha1Aes128CheckSum extends HmacKcCheckSum {
+public class CmacCamellia128CheckSum extends CmacKcCheckSum {
 
-    public HmacSha1Aes128CheckSum() {
-        super(new Aes128Provider(), 20, 12);
+    public CmacCamellia128CheckSum() {
+        super(new Camellia128Provider(), 16, 16);
 
-        keyMaker(new AesKeyMaker((Aes128Provider) encProvider()));
+        keyMaker(new CamelliaKeyMaker((Camellia128Provider) encProvider()));
     }
 
     public int confounderSize() {
@@ -17,7 +19,7 @@ public class HmacSha1Aes128CheckSum extends HmacKcCheckSum {
     }
 
     public CheckSumType cksumType() {
-        return CheckSumType.HMAC_SHA1_96_AES128;
+        return CheckSumType.CMAC_CAMELLIA128;
     }
 
     public boolean isSafe() {
@@ -25,7 +27,7 @@ public class HmacSha1Aes128CheckSum extends HmacKcCheckSum {
     }
 
     public int cksumSize() {
-        return 12;  // bytes
+        return 16;  // bytes
     }
 
     public int keySize() {
