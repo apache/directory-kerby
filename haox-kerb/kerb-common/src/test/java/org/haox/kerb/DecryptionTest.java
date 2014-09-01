@@ -485,8 +485,8 @@ public class DecryptionTest {
     private boolean testWith(TestCase testCase) throws Exception {
         KeyUsage ku = KeyUsage.fromValue(testCase.keyUsage);
 
-        byte[] cipherBytes = Util.hex2bytes2(testCase.cipher);
-        byte[] keyBytes = Util.hex2bytes2(testCase.key);
+        byte[] cipherBytes = Util.hex2bytes(testCase.cipher);
+        byte[] keyBytes = Util.hex2bytes(testCase.key);
 
         EncryptionKey encKey = new EncryptionKey(testCase.encType, keyBytes);
         byte[] decrypted = EncryptionHandler.decrypt(cipherBytes, encKey, ku);

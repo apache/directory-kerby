@@ -75,7 +75,7 @@ public class CamelliaEncTest {
     }
 
     private void hexDump(String label, byte[] bytes) {
-        String line = label + "=" + Util.bytesToHex2(bytes);
+        String line = label + "=" + Util.bytesToHex(bytes);
         outputs.add(line);
     }
 

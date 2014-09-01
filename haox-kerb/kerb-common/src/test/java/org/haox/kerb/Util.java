@@ -7,55 +7,9 @@ public class Util {
 
     /**
      * Convert bytes into format as:
-     * 0x02 02 00 80
-     */
-    public static String bytesToHex(byte[] bytes) {
-        int len = bytes.length * 2;
-        len += bytes.length; // for ' ' appended for each char
-        len += 2; // for '0x' prefix
-        char[] hexChars = new char[len];
-        hexChars[0] = '0';
-        hexChars[1] = 'x';
-        for ( int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 3 + 2] = HEX_CHARS[v >>> 4];
-            hexChars[j * 3 + 3] = HEX_CHARS[v & 0x0F];
-            hexChars[j * 3 + 4] = ' ';
-        }
-
-        return new String(hexChars);
-    }
-
-    /**
-     * Convert hex string like follows into byte array
-     * 0x02 02 00 80
-     */
-    public static byte[] hex2bytes(String hexString) {
-        hexString = hexString.toUpperCase();
-        String hexStr = hexString;
-        if (hexString.startsWith("0X")) {
-            hexStr = hexString.substring(2);
-        }
-        String[] hexParts = hexStr.split(" ");
-
-        byte[] bytes = new byte[hexParts.length];
-        char[] hexPart;
-        for (int i = 0; i < hexParts.length; ++i) {
-            hexPart = hexParts[i].toCharArray();
-            if (hexPart.length != 2) {
-                throw new IllegalArgumentException("Invalid hex string to convert");
-            }
-            bytes[i] = (byte) ((HEX_CHARS_STR.indexOf(hexPart[0]) << 4) + HEX_CHARS_STR.indexOf(hexPart[1]));
-        }
-
-        return bytes;
-    }
-
-    /**
-     * Convert bytes into format as:
      * 02020080
      */
-    public static String bytesToHex2(byte[] bytes) {
+    public static String bytesToHex(byte[] bytes) {
         int len = bytes.length * 2;
         char[] hexChars = new char[len];
         for ( int j = 0; j < bytes.length; j++ ) {
@@ -71,7 +25,7 @@ public class Util {
      * Convert hex string like follows into byte array
      * 02020080
      */
-    public static byte[] hex2bytes2(String hexString) {
+    public static byte[] hex2bytes(String hexString) {
         hexString = hexString.toUpperCase();
         int len = hexString.length() / 2;
         byte[] bytes = new byte[len];

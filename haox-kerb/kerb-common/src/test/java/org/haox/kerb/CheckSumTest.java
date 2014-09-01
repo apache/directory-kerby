@@ -25,12 +25,12 @@ public class CheckSumTest {
             new CksumTest(
                     CheckSumType.RSA_MD4_DES,
                     "this is a test",
-                    "0xe3 f7 6a 07 f3 40 1e 35 36 b4 3a 3f 54 22 6c 39 42 2c 35 68 2c 35 48 35"
+                    "e3f76a07f3401e3536b43a3f54226c39422c35682c354835"
             ),
             new CksumTest(
                     CheckSumType.RSA_MD5_DES,
                     "this is a test",
-                    "0xe3 f7 6a 07 f3 40 1e 35 11 43 ee 6f 4c 09 be 1e db 42 64 d5 50 15 db 53"
+                    "e3f76a07f3401e351143ee6f4c09be1edb4264d55015db53"
             )
     };
 
