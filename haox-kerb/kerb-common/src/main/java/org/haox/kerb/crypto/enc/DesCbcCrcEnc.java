@@ -20,6 +20,13 @@ public class DesCbcCrcEnc extends DesCbcEnc {
     }
 
     @Override
+    public byte[] encrypt(byte[] data, byte[] key, int usage) throws KrbException {
+        byte[] iv = new byte[encProvider().blockSize()];
+        System.arraycopy(key, 0, iv, 0, key.length);
+        return encrypt(data, key, iv, usage);
+    }
+
+    @Override
     public byte[] decrypt(byte[] cipher, byte[] key, int usage)
             throws KrbException {
         byte[] iv = new byte[encProvider().blockSize()];
