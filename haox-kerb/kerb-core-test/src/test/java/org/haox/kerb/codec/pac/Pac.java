@@ -71,7 +71,9 @@ public class Pac {
         }
 
         CheckSum checksum = new CheckSum(serverSignature.getType(), serverSignature.getChecksum());
-        CheckSumHandler.verifyWithKey(checksum, checksumData, key, KeyUsage.APP_DATA_CKSUM);
+        if (! CheckSumHandler.verifyWithKey(checksum, checksumData, key, KeyUsage.APP_DATA_CKSUM)) {
+            throw new KrbException("Check sum verifying failed");
+        }
     }
 
     public PacLogonInfo getLogonInfo() {

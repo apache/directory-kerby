@@ -18,7 +18,7 @@ public class TestSpnego {
     private byte[] aes256Token;
     private byte[] corruptToken;
 
-    @Before
+    //@Before
     public void setUp() throws IOException {
         InputStream file;
 
@@ -45,7 +45,7 @@ public class TestSpnego {
         corruptToken = new byte[]{5, 4, 2, 1};
     }
 
-    @Test
+    //@Test
     public void testRc4Token() {
         try {
             SpnegoToken spnegoToken = SpnegoToken.parse(rc4Token);
@@ -62,7 +62,7 @@ public class TestSpnego {
         }
     }
 
-    @Test
+    //@Test
     public void testDesToken() {
         try {
             SpnegoToken spnegoToken = SpnegoToken.parse(desToken);
@@ -79,7 +79,7 @@ public class TestSpnego {
         }
     }
 
-    @Test
+    //@Test
     public void testAes128Token() {
         try {
             SpnegoToken spnegoToken = SpnegoToken.parse(aes128Token);
@@ -96,7 +96,7 @@ public class TestSpnego {
         }
     }
 
-    @Test
+    //@Test
     public void testAes256Token() {
         try {
             SpnegoToken spnegoToken = SpnegoToken.parse(aes256Token);
