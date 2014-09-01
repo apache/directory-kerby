@@ -17,12 +17,12 @@ public class Camellia {
     private int[] state = new int[4]; // for encryption and decryption
 
     private static final int SIGMA[] = {
-        0xa09e667f, 0x3bcc908b,
-        0xb67ae858, 0x4caa73b2,
-        0xc6ef372f, 0xe94f82be,
-        0x54ff53a5, 0xf1d36f1c,
-        0x10e527fa, 0xde682d1d,
-        0xb05688c2, 0xb3e6c1fd
+            0xa09e667f, 0x3bcc908b,
+            0xb67ae858, 0x4caa73b2,
+            0xc6ef372f, 0xe94f82be,
+            0x54ff53a5, 0xf1d36f1c,
+            0x10e527fa, 0xde682d1d,
+            0xb05688c2, 0xb3e6c1fd
     };
 
     /*
@@ -31,70 +31,70 @@ public class Camellia {
     *
     */
     private static final byte SBOX1[] = {
-        (byte)112, (byte)130, (byte)44, (byte)236,
-        (byte)179, (byte)39, (byte)192, (byte)229,
-        (byte)228, (byte)133, (byte)87, (byte)53,
-        (byte)234, (byte)12, (byte)174, (byte)65,
-        (byte)35, (byte)239, (byte)107, (byte)147,
-        (byte)69, (byte)25, (byte)165, (byte)33,
-        (byte)237, (byte)14, (byte)79, (byte)78,
-        (byte)29, (byte)101, (byte)146, (byte)189,
-        (byte)134, (byte)184, (byte)175, (byte)143,
-        (byte)124, (byte)235, (byte)31, (byte)206,
-        (byte)62, (byte)48, (byte)220, (byte)95,
-        (byte)94, (byte)197, (byte)11, (byte)26,
-        (byte)166, (byte)225, (byte)57, (byte)202,
-        (byte)213, (byte)71, (byte)93, (byte)61,
-        (byte)217, (byte)1, (byte)90, (byte)214,
-        (byte)81, (byte)86, (byte)108, (byte)77,
-        (byte)139, (byte)13, (byte)154, (byte)102,
-        (byte)251, (byte)204, (byte)176, (byte)45,
-        (byte)116, (byte)18, (byte)43, (byte)32,
-        (byte)240, (byte)177, (byte)132, (byte)153,
-        (byte)223, (byte)76, (byte)203, (byte)194,
-        (byte)52, (byte)126, (byte)118, (byte)5,
-        (byte)109, (byte)183, (byte)169, (byte)49,
-        (byte)209, (byte)23, (byte)4, (byte)215,
-        (byte)20, (byte)88, (byte)58, (byte)97,
-        (byte)222, (byte)27, (byte)17, (byte)28,
-        (byte)50, (byte)15, (byte)156, (byte)22,
-        (byte)83, (byte)24, (byte)242, (byte)34,
-        (byte)254, (byte)68, (byte)207, (byte)178,
-        (byte)195, (byte)181, (byte)122, (byte)145,
-        (byte)36, (byte)8, (byte)232, (byte)168,
-        (byte)96, (byte)252, (byte)105, (byte)80,
-        (byte)170, (byte)208, (byte)160, (byte)125,
-        (byte)161, (byte)137, (byte)98, (byte)151,
-        (byte)84, (byte)91, (byte)30, (byte)149,
-        (byte)224, (byte)255, (byte)100, (byte)210,
-        (byte)16, (byte)196, (byte)0, (byte)72,
-        (byte)163, (byte)247, (byte)117, (byte)219,
-        (byte)138, (byte)3, (byte)230, (byte)218,
-        (byte)9, (byte)63, (byte)221, (byte)148,
-        (byte)135, (byte)92, (byte)131, (byte)2,
-        (byte)205, (byte)74, (byte)144, (byte)51,
-        (byte)115, (byte)103, (byte)246, (byte)243,
-        (byte)157, (byte)127, (byte)191, (byte)226,
-        (byte)82, (byte)155, (byte)216, (byte)38,
-        (byte)200, (byte)55, (byte)198, (byte)59,
-        (byte)129, (byte)150, (byte)111, (byte)75,
-        (byte)19, (byte)190, (byte)99, (byte)46,
-        (byte)233, (byte)121, (byte)167, (byte)140,
-        (byte)159, (byte)110, (byte)188, (byte)142,
-        (byte)41, (byte)245, (byte)249, (byte)182,
-        (byte)47, (byte)253, (byte)180, (byte)89,
-        (byte)120, (byte)152, (byte)6, (byte)106,
-        (byte)231, (byte)70, (byte)113, (byte)186,
-        (byte)212, (byte)37, (byte)171, (byte)66,
-        (byte)136, (byte)162, (byte)141, (byte)250,
-        (byte)114, (byte)7, (byte)185, (byte)85,
-        (byte)248, (byte)238, (byte)172, (byte)10,
-        (byte)54, (byte)73, (byte)42, (byte)104,
-        (byte)60, (byte)56, (byte)241, (byte)164,
-        (byte)64, (byte)40, (byte)211, (byte)123,
-        (byte)187, (byte)201, (byte)67, (byte)193,
-        (byte)21, (byte)227, (byte)173, (byte)244,
-        (byte)119, (byte)199, (byte)128, (byte)158
+            (byte)112, (byte)130, (byte)44, (byte)236,
+            (byte)179, (byte)39, (byte)192, (byte)229,
+            (byte)228, (byte)133, (byte)87, (byte)53,
+            (byte)234, (byte)12, (byte)174, (byte)65,
+            (byte)35, (byte)239, (byte)107, (byte)147,
+            (byte)69, (byte)25, (byte)165, (byte)33,
+            (byte)237, (byte)14, (byte)79, (byte)78,
+            (byte)29, (byte)101, (byte)146, (byte)189,
+            (byte)134, (byte)184, (byte)175, (byte)143,
+            (byte)124, (byte)235, (byte)31, (byte)206,
+            (byte)62, (byte)48, (byte)220, (byte)95,
+            (byte)94, (byte)197, (byte)11, (byte)26,
+            (byte)166, (byte)225, (byte)57, (byte)202,
+            (byte)213, (byte)71, (byte)93, (byte)61,
+            (byte)217, (byte)1, (byte)90, (byte)214,
+            (byte)81, (byte)86, (byte)108, (byte)77,
+            (byte)139, (byte)13, (byte)154, (byte)102,
+            (byte)251, (byte)204, (byte)176, (byte)45,
+            (byte)116, (byte)18, (byte)43, (byte)32,
+            (byte)240, (byte)177, (byte)132, (byte)153,
+            (byte)223, (byte)76, (byte)203, (byte)194,
+            (byte)52, (byte)126, (byte)118, (byte)5,
+            (byte)109, (byte)183, (byte)169, (byte)49,
+            (byte)209, (byte)23, (byte)4, (byte)215,
+            (byte)20, (byte)88, (byte)58, (byte)97,
+            (byte)222, (byte)27, (byte)17, (byte)28,
+            (byte)50, (byte)15, (byte)156, (byte)22,
+            (byte)83, (byte)24, (byte)242, (byte)34,
+            (byte)254, (byte)68, (byte)207, (byte)178,
+            (byte)195, (byte)181, (byte)122, (byte)145,
+            (byte)36, (byte)8, (byte)232, (byte)168,
+            (byte)96, (byte)252, (byte)105, (byte)80,
+            (byte)170, (byte)208, (byte)160, (byte)125,
+            (byte)161, (byte)137, (byte)98, (byte)151,
+            (byte)84, (byte)91, (byte)30, (byte)149,
+            (byte)224, (byte)255, (byte)100, (byte)210,
+            (byte)16, (byte)196, (byte)0, (byte)72,
+            (byte)163, (byte)247, (byte)117, (byte)219,
+            (byte)138, (byte)3, (byte)230, (byte)218,
+            (byte)9, (byte)63, (byte)221, (byte)148,
+            (byte)135, (byte)92, (byte)131, (byte)2,
+            (byte)205, (byte)74, (byte)144, (byte)51,
+            (byte)115, (byte)103, (byte)246, (byte)243,
+            (byte)157, (byte)127, (byte)191, (byte)226,
+            (byte)82, (byte)155, (byte)216, (byte)38,
+            (byte)200, (byte)55, (byte)198, (byte)59,
+            (byte)129, (byte)150, (byte)111, (byte)75,
+            (byte)19, (byte)190, (byte)99, (byte)46,
+            (byte)233, (byte)121, (byte)167, (byte)140,
+            (byte)159, (byte)110, (byte)188, (byte)142,
+            (byte)41, (byte)245, (byte)249, (byte)182,
+            (byte)47, (byte)253, (byte)180, (byte)89,
+            (byte)120, (byte)152, (byte)6, (byte)106,
+            (byte)231, (byte)70, (byte)113, (byte)186,
+            (byte)212, (byte)37, (byte)171, (byte)66,
+            (byte)136, (byte)162, (byte)141, (byte)250,
+            (byte)114, (byte)7, (byte)185, (byte)85,
+            (byte)248, (byte)238, (byte)172, (byte)10,
+            (byte)54, (byte)73, (byte)42, (byte)104,
+            (byte)60, (byte)56, (byte)241, (byte)164,
+            (byte)64, (byte)40, (byte)211, (byte)123,
+            (byte)187, (byte)201, (byte)67, (byte)193,
+            (byte)21, (byte)227, (byte)173, (byte)244,
+            (byte)119, (byte)199, (byte)128, (byte)158
     };
 
     private static int rightRotate(int x, int s)
@@ -108,7 +108,7 @@ public class Camellia {
     }
 
     private static void roldq(int rot, int[] ki, int ioff,
-                                    int[] ko, int ooff)
+                              int[] ko, int ooff)
     {
         ko[0 + ooff] = (ki[0 + ioff] << rot) | (ki[1 + ioff] >>> (32 - rot));
         ko[1 + ooff] = (ki[1 + ioff] << rot) | (ki[2 + ioff] >>> (32 - rot));
@@ -121,7 +121,7 @@ public class Camellia {
     }
 
     private static void decroldq(int rot, int[] ki, int ioff,
-                                       int[] ko, int ooff)
+                                 int[] ko, int ooff)
     {
         ko[2 + ooff] = (ki[0 + ioff] << rot) | (ki[1 + ioff] >>> (32 - rot));
         ko[3 + ooff] = (ki[1 + ioff] << rot) | (ki[2 + ioff] >>> (32 - rot));
@@ -134,7 +134,7 @@ public class Camellia {
     }
 
     private static void roldqo32(int rot, int[] ki, int ioff,
-                                       int[] ko, int ooff)
+                                 int[] ko, int ooff)
     {
         ko[0 + ooff] = (ki[1 + ioff] << (rot - 32)) | (ki[2 + ioff] >>> (64 - rot));
         ko[1 + ooff] = (ki[2 + ioff] << (rot - 32)) | (ki[3 + ioff] >>> (64 - rot));
@@ -147,7 +147,7 @@ public class Camellia {
     }
 
     private static void decroldqo32(int rot, int[] ki, int ioff,
-                                          int[] ko, int ooff)
+                                    int[] ko, int ooff)
     {
         ko[2 + ooff] = (ki[1 + ioff] << (rot - 32)) | (ki[2 + ioff] >>> (64 - rot));
         ko[3 + ooff] = (ki[2 + ioff] << (rot - 32)) | (ki[3 + ioff] >>> (64 - rot));
@@ -296,7 +296,7 @@ public class Camellia {
                 break;
             default:
                 throw new
-                    IllegalArgumentException("key sizes are only 16/24/32 bytes.");
+                        IllegalArgumentException("key sizes are only 16/24/32 bytes.");
         }
 
         for (int i = 0; i < 4; i++)
@@ -457,7 +457,7 @@ public class Camellia {
     }
 
     private int processBlock128(byte[] in, int inOff,
-                                      byte[] out, int outOff)
+                                byte[] out, int outOff)
     {
         for (int i = 0; i < 4; i++)
         {
@@ -491,7 +491,7 @@ public class Camellia {
     }
 
     private int processBlock192or256(byte[] in, int inOff,
-                                           byte[] out, int outOff)
+                                     byte[] out, int outOff)
     {
         for (int i = 0; i < 4; i++)
         {
@@ -538,7 +538,7 @@ public class Camellia {
     }
 
     public void processBlock(byte[] in, int inOff)
-        throws IllegalStateException
+            throws IllegalStateException
     {
 
         if (!initialized)
@@ -560,26 +560,146 @@ public class Camellia {
         System.arraycopy(out, 0, in, inOff, BLOCK_SIZE);
     }
 
-    public void cbcEncryption(byte[] data, byte[] iv) {
-        int blocksNum = data.length / BLOCK_SIZE;
-
+    public void encrypt(byte[] data, byte[] iv) {
+        byte[] cipher = new byte[BLOCK_SIZE];
         byte[] cipherState = new byte[BLOCK_SIZE];
-        System.arraycopy(iv, 0, cipherState, 0, BLOCK_SIZE);
 
+        int blocksNum = (data.length + BLOCK_SIZE - 1) / BLOCK_SIZE;
+        if (blocksNum == 1) {
+            cbcEnc(data, 0, 1, cipherState);
+            return;
+        }
+
+        if (iv != null) {
+            System.arraycopy(iv, 0, cipherState, 0, BLOCK_SIZE);
+        }
+
+        int contBlocksNum, offset = 0;
+        while (blocksNum > 2) {
+            contBlocksNum = (data.length - offset) / BLOCK_SIZE;
+            if (contBlocksNum > 0) {
+                // Encrypt a series of contiguous blocks in place if we can, but
+                // don't touch the last two blocks.
+                contBlocksNum = (contBlocksNum > blocksNum - 2) ? blocksNum - 2 : contBlocksNum;
+                cbcEnc(data, offset, contBlocksNum, cipherState);
+                offset += contBlocksNum * BLOCK_SIZE;
+                blocksNum -= contBlocksNum;
+            } else {
+                cbcEnc(data, offset, 1, cipherState);
+                offset += BLOCK_SIZE;
+                blocksNum--;
+            }
+        }
+
+        // Encrypt the last two blocks and store the results in reverse order
+        byte[] blockN2 = new byte[BLOCK_SIZE];
+        byte[] blockN1 = new byte[BLOCK_SIZE];
+
+        System.arraycopy(data, offset, blockN2, 0, BLOCK_SIZE);
+        cbcEnc(blockN2, 0, 1, cipherState);
+        System.arraycopy(data, offset + BLOCK_SIZE, blockN1, 0, BLOCK_SIZE);
+        cbcEnc(blockN1, 0, 1, cipherState);
+
+        System.arraycopy(blockN1, 0, data, offset, BLOCK_SIZE);
+        System.arraycopy(blockN1, 0, data, offset + BLOCK_SIZE, BLOCK_SIZE);
+
+        if (iv != null) {
+            System.arraycopy(cipherState, 0, iv, 0, BLOCK_SIZE);
+        }
+    }
+
+    public void decrypt(byte[] data, byte[] iv) {
+        byte[] cipher = new byte[BLOCK_SIZE];
+        byte[] cipherState = new byte[BLOCK_SIZE];
+
+        int blocksNum = (data.length + BLOCK_SIZE - 1) / BLOCK_SIZE;
+        int lastBlockLen = data.length - (blocksNum - 1) * BLOCK_SIZE;
+        if (blocksNum == 1) {
+            cbcDec(data, 0, 1, cipherState);
+            return;
+        }
+
+        if (iv != null) {
+            System.arraycopy(iv, 0, cipherState, 0, BLOCK_SIZE);
+        }
+
+        int contBlocksNum, offset = 0;
+        while (blocksNum > 2) {
+            contBlocksNum = (data.length - offset) / BLOCK_SIZE;
+            if (contBlocksNum > 0) {
+                // Decrypt a series of contiguous blocks in place if we can, but
+                // don't touch the last two blocks.
+                contBlocksNum = (contBlocksNum > blocksNum - 2) ? blocksNum - 2 : contBlocksNum;
+                cbcDec(data, offset, contBlocksNum, cipherState);
+                offset += contBlocksNum * BLOCK_SIZE;
+                blocksNum -= contBlocksNum;
+            } else {
+                cbcDec(data, offset, 1, cipherState);
+                offset += BLOCK_SIZE;
+                blocksNum--;
+            }
+        }
+
+        // Decrypt the last two blocks
+        byte[] blockN2 = new byte[BLOCK_SIZE];
+        byte[] blockN1 = new byte[BLOCK_SIZE];
+        System.arraycopy(data, offset, blockN2, 0, BLOCK_SIZE);
+        System.arraycopy(data, offset + BLOCK_SIZE, blockN1, 0, lastBlockLen);
+        if (iv != null) {
+            System.arraycopy(blockN2, 0, iv, 0, BLOCK_SIZE);
+        }
+
+        byte[] tmpCipherState = new byte[BLOCK_SIZE];
+        System.arraycopy(blockN1, 0, tmpCipherState, 0, BLOCK_SIZE);
+        cbcDec(blockN2, 0, 1, tmpCipherState);
+        System.arraycopy(blockN2, lastBlockLen, blockN1, lastBlockLen, BLOCK_SIZE - lastBlockLen);
+        cbcEnc(blockN1, 0, 1, cipherState);
+
+        System.arraycopy(blockN1, 0, data, offset, BLOCK_SIZE);
+        System.arraycopy(blockN2, 0, data, offset + BLOCK_SIZE, lastBlockLen);
+    }
+
+    /**
+     * CBC encrypt nblocks blocks of data in place, using and updating iv.
+     */
+    public void cbcEnc(byte[] data, int offset, int blocksNum, byte[] cipherState) {
         byte[] cipher = new byte[BLOCK_SIZE];
         for (int i = 0; i < blocksNum; ++i) {
-            System.arraycopy(data, i * BLOCK_SIZE, cipher, 0, BLOCK_SIZE);
-            xor(cipherState, cipher);
+            System.arraycopy(data, offset + i * BLOCK_SIZE, cipher, 0, BLOCK_SIZE);
+            xor(cipherState, 0, cipher);
             processBlock(cipher, 0);
-            System.arraycopy(cipher, 0, data, i * BLOCK_SIZE, BLOCK_SIZE);
+            System.arraycopy(cipher, 0, data, offset + i * BLOCK_SIZE, BLOCK_SIZE);
             System.arraycopy(cipher, 0, cipherState, 0, BLOCK_SIZE);
         }
     }
 
-    private static void xor(byte[] input, byte[] output) {
+    /**
+     * CBC encrypt nblocks blocks of data in place, using and updating iv.
+     */
+    public void cbcDec(byte[] data, int offset, int blocksNum, byte[] cipherState) {
+        byte[] lastBlock = new byte[BLOCK_SIZE];
+        byte[] cipher = new byte[BLOCK_SIZE];
+
+        System.arraycopy(data, offset + (blocksNum - 1) * BLOCK_SIZE, lastBlock, 0, BLOCK_SIZE);
+        for (int i = blocksNum; i > 0; i--) {
+            System.arraycopy(data, offset + (i - 1) * BLOCK_SIZE, cipher, 0, BLOCK_SIZE);
+            processBlock(cipher, 0);
+
+            if (i == 1) {
+                xor(cipherState, 0, cipher);
+            } else {
+                xor(data, offset + (i -2) * BLOCK_SIZE, cipher);
+            }
+
+            System.arraycopy(cipher, 0, data, offset + (i - 1) * BLOCK_SIZE, BLOCK_SIZE);
+        }
+        System.arraycopy(lastBlock, 0, cipherState, 0, BLOCK_SIZE);
+    }
+
+    private static void xor(byte[] input, int offset, byte[] output) {
         int a, b;
-        for (int i = 0; i < input.length / 4; ++i) {
-            a = bytes2int(input, i * 4);
+        for (int i = 0; i < output.length / 4; ++i) {
+            a = bytes2int(input, offset + i * 4);
             b = bytes2int(output, i * 4);
             b = a ^ b;
             int2bytes(b, output, i * 4);

@@ -76,7 +76,6 @@ public abstract class AbstractEncryptProvider implements EncryptProvider {
 
         if (cipherState == null) {
             cipherState = new byte[blockSize()];
-            Arrays.fill(cipherState, (byte) 0);
         }
         if (supportCbcMac()) {
             cbcMac(key, cipherState, block);

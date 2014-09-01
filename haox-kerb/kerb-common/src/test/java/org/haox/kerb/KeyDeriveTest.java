@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 /**
- * Key derivation test with results using known values.
+ * Key derivation test with known values.
  */
 public class KeyDeriveTest {
 

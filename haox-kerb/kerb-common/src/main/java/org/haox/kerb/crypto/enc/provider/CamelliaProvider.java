@@ -11,12 +11,28 @@ public abstract class CamelliaProvider extends AbstractEncryptProvider {
 
     @Override
     protected void doEncrypt(byte[] data, byte[] key,
-                                  byte[] cipherState, boolean encrypt) throws KrbException {
+                             byte[] cipherState, boolean encrypt) throws KrbException {
 
         Camellia cipher = new Camellia();
         cipher.setKey(encrypt, key);
+        if (encrypt) {
+            cipher.encrypt(data, cipherState);
+        } else {
+            cipher.decrypt(data, cipherState);
+        }
+    }
 
-        //cipher.processBlock(data, 0);
-        cipher.cbcEncryption(data, cipherState);
+    @Override
+    protected boolean supportCbcMac() {
+        return true;
+    }
+
+    @Override
+    protected void cbcMac(byte[] key, byte[] cipherState, byte[] data) {
+        Camellia cipher = new Camellia();
+        cipher.setKey(true, key);
+
+        int blocksNum = data.length / blockSize();
+        cipher.cbcEnc(data, 0, blocksNum, cipherState);
     }
 }

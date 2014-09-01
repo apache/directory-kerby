@@ -145,6 +145,13 @@ public class EncryptionHandler {
         return ed;
     }
 
+    public static byte[] decrypt(byte[] data, EncryptionKey key, KeyUsage usage) throws KrbException {
+        EncTypeHandler handler = getEncHandler(key.getKeyType());
+
+        byte[] plainData = handler.decrypt(data, key.getKeyData(), usage.getValue());
+        return plainData;
+    }
+
     public static byte[] decrypt(EncryptedData data, EncryptionKey key, KeyUsage usage) throws KrbException {
         EncTypeHandler handler = getEncHandler(key.getKeyType());
 
@@ -180,8 +187,13 @@ public class EncryptionHandler {
         return null;
     }
 
-    public static boolean isImplemented(EncryptionType eType) throws KrbException {
-        EncTypeHandler handler = getEncHandler(eType, true);
+    public static boolean isImplemented(EncryptionType eType) {
+        EncTypeHandler handler = null;
+        try {
+            handler = getEncHandler(eType, true);
+        } catch (KrbException e) {
+            return false;
+        }
         return  handler != null;
     }
 

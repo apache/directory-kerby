@@ -19,6 +19,11 @@ public abstract class KeKiCmacEnc extends KeKiEnc {
     }
 
     @Override
+    public int trailerSize() {
+        return 0;
+    }
+
+    @Override
     public int checksumSize() {
         return encProvider().blockSize();
     }
