@@ -565,6 +565,7 @@ public class Camellia {
         byte[] cipherState = new byte[BLOCK_SIZE];
 
         int blocksNum = (data.length + BLOCK_SIZE - 1) / BLOCK_SIZE;
+        int lastBlockLen = data.length - (blocksNum - 1) * BLOCK_SIZE;
         if (blocksNum == 1) {
             cbcEnc(data, 0, 1, cipherState);
             return;
@@ -597,11 +598,11 @@ public class Camellia {
 
         System.arraycopy(data, offset, blockN2, 0, BLOCK_SIZE);
         cbcEnc(blockN2, 0, 1, cipherState);
-        System.arraycopy(data, offset + BLOCK_SIZE, blockN1, 0, BLOCK_SIZE);
+        System.arraycopy(data, offset + BLOCK_SIZE, blockN1, 0, lastBlockLen);
         cbcEnc(blockN1, 0, 1, cipherState);
 
         System.arraycopy(blockN1, 0, data, offset, BLOCK_SIZE);
-        System.arraycopy(blockN1, 0, data, offset + BLOCK_SIZE, BLOCK_SIZE);
+        System.arraycopy(blockN2, 0, data, offset + BLOCK_SIZE, lastBlockLen);
 
         if (iv != null) {
             System.arraycopy(cipherState, 0, iv, 0, BLOCK_SIZE);
@@ -653,7 +654,7 @@ public class Camellia {
         System.arraycopy(blockN1, 0, tmpCipherState, 0, BLOCK_SIZE);
         cbcDec(blockN2, 0, 1, tmpCipherState);
         System.arraycopy(blockN2, lastBlockLen, blockN1, lastBlockLen, BLOCK_SIZE - lastBlockLen);
-        cbcEnc(blockN1, 0, 1, cipherState);
+        cbcDec(blockN1, 0, 1, cipherState);
 
         System.arraycopy(blockN1, 0, data, offset, BLOCK_SIZE);
         System.arraycopy(blockN2, 0, data, offset + BLOCK_SIZE, lastBlockLen);
