@@ -63,6 +63,7 @@ public class TestUdpServer extends TestUdpBase {
         socketChannel.write(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
         ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
         socketChannel.read(byteBuffer);
+        byteBuffer.flip();
         clientRecvedMessage = recvBuffer2String(byteBuffer);
 
         Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);

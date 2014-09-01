@@ -9,7 +9,6 @@ public class TestUdpBase {
     protected String clientRecvedMessage;
 
     protected String recvBuffer2String(ByteBuffer buffer) {
-        buffer.flip();
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
         return new String(bytes);
