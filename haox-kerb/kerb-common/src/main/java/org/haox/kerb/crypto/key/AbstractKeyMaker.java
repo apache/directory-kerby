@@ -1,5 +1,6 @@
 package org.haox.kerb.crypto.key;
 
+import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
@@ -46,7 +47,7 @@ public abstract class AbstractKeyMaker implements KeyMaker {
             if (param.length != 4) {
                 throw new IllegalArgumentException("Invalid param to str2Key");
             }
-            iterCount = readBigEndian(param, 0, 4);
+            iterCount = Util.bytes2intBe(param, 0);
         }
 
         return iterCount;
@@ -81,56 +82,5 @@ public abstract class AbstractKeyMaker implements KeyMaker {
         byte[] result = key.getEncoded();
 
         return result;
-    }
-
-    protected static final int readBigEndian(byte[] data, int pos, int size) {
-        int result = 0;
-        int shifter = (size-1) * 8;
-        while (size > 0) {
-            result += (data[pos] & 0xff) << shifter;
-            shifter -= 8;
-            pos++;
-            size--;
-        }
-        return result;
-    }
-
-    // Routines used for debugging
-    static String bytesToString(byte[] digest) {
-        // Get character representation of digest
-        StringBuffer digestString = new StringBuffer();
-
-        for (int i = 0; i < digest.length; i++) {
-            if ((digest[i] & 0x000000ff) < 0x10) {
-                digestString.append("0" +
-                        Integer.toHexString(digest[i] & 0x000000ff));
-            } else {
-                digestString.append(
-                        Integer.toHexString(digest[i] & 0x000000ff));
-            }
-        }
-        return digestString.toString();
-    }
-
-    protected static byte[] binaryStringToBytes(String str) {
-        char[] usageStr = str.toCharArray();
-        byte[] usage = new byte[usageStr.length/2];
-        for (int i = 0; i < usage.length; i++) {
-            byte a = Byte.parseByte(new String(usageStr, i*2, 1), 16);
-            byte b = Byte.parseByte(new String(usageStr, i*2 + 1, 1), 16);
-            usage[i] = (byte) ((a<<4)|b);
-        }
-        return usage;
-    }
-
-    protected static byte[] charToUtf16(char[] chars) {
-        Charset utf8 = Charset.forName("UTF-16LE");
-
-        CharBuffer cb = CharBuffer.wrap(chars);
-        ByteBuffer bb = utf8.encode(cb);
-        int len = bb.limit();
-        byte[] answer = new byte[len];
-        bb.get(answer, 0, len);
-        return answer;
     }
 }
