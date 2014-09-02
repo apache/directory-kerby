@@ -1,12 +1,12 @@
 package org.haox.kerb;
 
-import org.junit.Assert;
 import org.haox.kerb.crypto.enc.provider.*;
 import org.haox.kerb.crypto.key.AesKeyMaker;
 import org.haox.kerb.crypto.key.CamelliaKeyMaker;
 import org.haox.kerb.crypto.key.Des3KeyMaker;
-import org.haox.kerb.crypto.key.KeyMaker;
+import org.haox.kerb.crypto.key.DkKeyMaker;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -151,7 +151,7 @@ public class KeyDeriveTest {
             )
     };
 
-    static KeyMaker getKeyMaker(EncryptionType encType) {
+    static DkKeyMaker getKeyMaker(EncryptionType encType) {
         switch (encType) {
             case DES3_CBC_SHA1:
                 return new Des3KeyMaker(new Des3Provider());
@@ -195,7 +195,7 @@ public class KeyDeriveTest {
         byte[] constant = Util.hex2bytes(testCase.constant);
         byte[] outkey;
 
-        KeyMaker km = getKeyMaker(testCase.encType);
+        DkKeyMaker km = getKeyMaker(testCase.encType);
         outkey = km.dk(inkey, constant);
         if (! Arrays.equals(answer, outkey)) {
             System.err.println("failed with:");

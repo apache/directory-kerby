@@ -2,6 +2,7 @@ package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.enc.EncryptProvider;
+import org.haox.kerb.crypto.key.DkKeyMaker;
 import org.haox.kerb.spec.KrbException;
 
 public abstract class KcCheckSum extends AbstractKeyedCheckSumTypeHandler {
@@ -18,7 +19,7 @@ public abstract class KcCheckSum extends AbstractKeyedCheckSumTypeHandler {
         byte[] constant = new byte[5];
         Util.int2bytesBe(usage, constant, 0);
         constant[4] = (byte) 0x99;
-        Kc = keyMaker().dk(key, constant);
+        Kc = ((DkKeyMaker) keyMaker()).dk(key, constant);
 
         byte[] mac = mac(Kc, data, start, len);
         return mac;

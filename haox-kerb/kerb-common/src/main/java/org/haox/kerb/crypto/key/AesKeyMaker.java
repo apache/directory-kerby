@@ -6,7 +6,7 @@ import org.haox.kerb.spec.KrbException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
-public class AesKeyMaker extends AbstractKeyMaker {
+public class AesKeyMaker extends DkKeyMaker {
 
     public AesKeyMaker(AesProvider encProvider) {
         super(encProvider);

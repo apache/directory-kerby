@@ -3,6 +3,7 @@ package org.haox.kerb.crypto.enc;
 import org.haox.kerb.crypto.Confounder;
 import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.cksum.HashProvider;
+import org.haox.kerb.crypto.key.DkKeyMaker;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 
@@ -34,9 +35,9 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         constant[2] = (byte) ((usage>>8)&0xff);
         constant[3] = (byte) (usage&0xff);
         constant[4] = (byte) 0xaa;
-        Ke = keyMaker().dk(key, constant);
+        Ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
         constant[4] = (byte) 0x55;
-        Ki = keyMaker().dk(key, constant);
+        Ki = ((DkKeyMaker) keyMaker()).dk(key, constant);
 
         /**
          * Instead of E(Confounder | Checksum | Plaintext | Padding),
@@ -78,9 +79,9 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         byte[] constant = new byte[5];
         Util.int2bytesBe(usage, constant, 0);
         constant[4] = (byte) 0xaa;
-        Ke = keyMaker().dk(key, constant);
+        Ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
         constant[4] = (byte) 0x55;
-        Ki = keyMaker().dk(key, constant);
+        Ki = ((DkKeyMaker) keyMaker()).dk(key, constant);
 
         // decrypt and verify checksum
 

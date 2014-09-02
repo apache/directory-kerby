@@ -8,7 +8,7 @@ import org.haox.kerb.spec.KrbException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
-public class CamelliaKeyMaker extends AbstractKeyMaker {
+public class CamelliaKeyMaker extends DkKeyMaker {
 
     public CamelliaKeyMaker(CamelliaProvider encProvider) {
         super(encProvider);

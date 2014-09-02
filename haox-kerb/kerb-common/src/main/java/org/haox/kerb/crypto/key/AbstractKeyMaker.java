@@ -31,11 +31,6 @@ public abstract class AbstractKeyMaker implements KeyMaker {
         return new byte[0];
     }
 
-    // DK(Key, Constant) = random-to-key(DR(Key, Constant))
-    public byte[] dk(byte[] key, byte[] constant) throws KrbException {
-        return random2Key(dr(key, constant));
-    }
-
     protected static char[] makePasswdSalt(String password, String salt) {
         char[] result = new char[password.length() + salt.length()];
         System.arraycopy(password.toCharArray(), 0, result, 0, password.length());
@@ -86,43 +81,6 @@ public abstract class AbstractKeyMaker implements KeyMaker {
         byte[] result = key.getEncoded();
 
         return result;
-    }
-
-    /*
-     * K1 = E(Key, n-fold(Constant), initial-cipher-state)
-     * K2 = E(Key, K1, initial-cipher-state)
-     * K3 = E(Key, K2, initial-cipher-state)
-     * K4 = ...
-     * DR(Key, Constant) = k-truncate(K1 | K2 | K3 | K4 ...)
-     */
-    protected byte[] dr(byte[] key, byte[] constant) throws KrbException {
-
-        int blocksize = encProvider().blockSize();
-        int keyInuptSize = encProvider().keyInputSize();
-        byte[] keyBytes = new byte[keyInuptSize];
-        byte[] Ki;
-
-        if (constant.length != blocksize) {
-            Ki = Dk.nfold(constant, blocksize);
-        } else {
-            Ki = new byte[constant.length];
-            System.arraycopy(constant, 0, Ki, 0, constant.length);
-        }
-
-        int n = 0, len;
-        while (n < keyInuptSize) {
-            encProvider().encrypt(key, Ki);
-
-            if (n + blocksize >= keyInuptSize) {
-                System.arraycopy(Ki, 0, keyBytes, n, keyInuptSize - n);
-                break;
-            }
-
-            System.arraycopy(Ki, 0, keyBytes, n, blocksize);
-            n += blocksize;
-        }
-
-        return keyBytes;
     }
 
     protected static final int readBigEndian(byte[] data, int pos, int size) {

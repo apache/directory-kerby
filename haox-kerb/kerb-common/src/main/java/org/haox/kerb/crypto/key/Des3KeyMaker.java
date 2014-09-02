@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.key;
 
-import org.haox.kerb.crypto.EncTypeHandler;
+import org.haox.kerb.crypto.Nfold;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
@@ -8,7 +8,7 @@ import javax.crypto.spec.DESKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 
-public class Des3KeyMaker extends AbstractKeyMaker {
+public class Des3KeyMaker extends DkKeyMaker {
 
     public Des3KeyMaker(EncryptProvider encProvider) {
         super(encProvider);
@@ -20,7 +20,7 @@ public class Des3KeyMaker extends AbstractKeyMaker {
         int keyInputSize = encProvider().keyInputSize();
         try {
             byte[] utf8Bytes = new String(passwdSalt).getBytes("UTF-8");
-            byte[] tmpKey = random2Key(Dk.nfold(utf8Bytes, keyInputSize));
+            byte[] tmpKey = random2Key(Nfold.nfold(utf8Bytes, keyInputSize));
             return dk(tmpKey, KERBEROS_CONSTANT);
         } catch (UnsupportedEncodingException e) {
             throw new KrbException("str2key failed", e);

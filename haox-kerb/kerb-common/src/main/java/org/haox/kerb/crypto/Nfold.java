@@ -1,8 +1,8 @@
-package org.haox.kerb.crypto.key;
+package org.haox.kerb.crypto;
 
 import java.util.Arrays;
 
-public class Dk {
+public class Nfold {
 
     public static byte[] nfold(byte[] input, int size) {
 
