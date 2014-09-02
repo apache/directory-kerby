@@ -132,6 +132,10 @@ public class CheckSumHandler {
                 cksumHandler = new HmacMd5Rc4CheckSum();
                 break;
 
+            case MD5_HMAC_ARCFOUR:
+                cksumHandler = new Md5HmacRc4CheckSum();
+                break;
+
             default:
                 break;
         }
