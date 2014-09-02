@@ -23,7 +23,7 @@ import java.security.MessageDigest;
  * <p><b>$Revision: 1.2 $</b>
  * @author  Raif S. Naffah
  */
-public  class MD4 extends MessageDigest implements Cloneable
+public  class Md4 extends MessageDigest implements Cloneable
 {
 // MD4 specific object variables
 //...........................................................................
@@ -57,7 +57,7 @@ public  class MD4 extends MessageDigest implements Cloneable
 // Constructors
 //...........................................................................
 
-    public MD4 () {
+    public Md4() {
         super("MD4");
         engineReset();
     }
@@ -65,7 +65,7 @@ public  class MD4 extends MessageDigest implements Cloneable
     /**
      *    This constructor is here to implement cloneability of this class.
      */
-    private MD4 (MD4 md) {
+    private Md4(Md4 md) {
         this();
         context = (int[])md.context.clone();
         buffer = (byte[])md.buffer.clone();
@@ -79,7 +79,7 @@ public  class MD4 extends MessageDigest implements Cloneable
     /**
      * Returns a copy of this MD object.
      */
-    public Object clone() { return new MD4(this); }
+    public Object clone() { return new Md4(this); }
 
 
 // JCE methods

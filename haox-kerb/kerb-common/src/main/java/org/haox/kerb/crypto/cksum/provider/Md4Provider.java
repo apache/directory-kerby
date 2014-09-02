@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.cksum.provider;
 
-import org.haox.kerb.crypto.MD4;
+import org.haox.kerb.crypto.Md4;
 
 public class Md4Provider extends MessageDigestHashProvider {
 
@@ -10,6 +10,6 @@ public class Md4Provider extends MessageDigestHashProvider {
 
     @Override
     protected void init() {
-        messageDigest = new MD4();
+        messageDigest = new Md4();
     }
 }
