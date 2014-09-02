@@ -1,6 +1,7 @@
 package org.haox.kerb.crypto.key;
 
 import org.haox.kerb.crypto.Cmac;
+import org.haox.kerb.crypto.Pbkdf;
 import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.enc.provider.CamelliaProvider;
 import org.haox.kerb.spec.KrbException;
@@ -33,7 +34,7 @@ public class CamelliaKeyMaker extends DkKeyMaker {
         int keySize = encProvider().keySize();
         byte[] random = new byte[0];
         try {
-            random = PBKDF2(string.toCharArray(), saltBytes, iterCount, keySize);
+            random = Pbkdf.PBKDF2(string.toCharArray(), saltBytes, iterCount, keySize);
         } catch (GeneralSecurityException e) {
             throw new KrbException("PBKDF2 failed", e);
         }

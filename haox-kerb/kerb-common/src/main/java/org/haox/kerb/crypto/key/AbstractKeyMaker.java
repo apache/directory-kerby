@@ -71,16 +71,4 @@ public abstract class AbstractKeyMaker implements KeyMaker {
             return saltBytes;
         }
     }
-
-    protected static byte[] PBKDF2(char[] secret, byte[] salt,
-                                   int count, int keySize) throws GeneralSecurityException {
-
-        PBEKeySpec ks = new PBEKeySpec(secret, salt, count, keySize * 8);
-        SecretKeyFactory skf =
-                SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        SecretKey key = skf.generateSecret(ks);
-        byte[] result = key.getEncoded();
-
-        return result;
-    }
 }
