@@ -82,6 +82,10 @@ public class EncryptionHandler {
                 encHandler = new DesCbcMd5Enc();
                 break;
 
+            case DES_CBC_MD4:
+                encHandler = new DesCbcMd4Enc();
+                break;
+
             case DES3_CBC_SHA1:
             case DES3_CBC_SHA1_KD:
             case DES3_HMAC_SHA1:

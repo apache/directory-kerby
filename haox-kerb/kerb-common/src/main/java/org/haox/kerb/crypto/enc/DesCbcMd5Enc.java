@@ -15,6 +15,6 @@ public class DesCbcMd5Enc extends DesCbcEnc {
     }
 
     public CheckSumType checksumType() {
-        return CheckSumType.RSA_MD5;
+        return CheckSumType.RSA_MD5_DES;
     }
 }
