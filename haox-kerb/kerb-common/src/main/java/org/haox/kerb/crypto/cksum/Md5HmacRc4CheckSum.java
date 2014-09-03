@@ -39,7 +39,7 @@ public class Md5HmacRc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
 
         byte[] Ksign = key;
 
-        byte[] salt = Rc4.getSalt(usage);
+        byte[] salt = Rc4.getSalt(usage, false);
 
         hashProvider().hash(salt);
         hashProvider().hash(data, start, len);

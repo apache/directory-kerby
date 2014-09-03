@@ -7,13 +7,21 @@ import java.security.GeneralSecurityException;
 
 public class Rc4 {
 
-    public static byte[] getSalt(int usage) {
-        int ms_usage = convertUsage(usage);
-        byte[] salt = new byte[4];
-        salt[0] = (byte)(ms_usage & 0xff);
-        salt[1] = (byte)((ms_usage >> 8) & 0xff);
-        salt[2] = (byte)((ms_usage >> 16) & 0xff);
-        salt[3] = (byte)((ms_usage >> 24) & 0xff);
+    private static byte[] L40 = "fortybits".getBytes();
+
+    public static byte[] getSalt(int usage, boolean exportable) {
+        int msUsage = convertUsage(usage);
+        byte[] salt;
+
+        if (exportable) {
+            salt = new byte[14];
+            System.arraycopy(L40, 0, salt, 0, 9);
+            Util.int2bytesLe(msUsage, salt, 10);
+        } else {
+            salt = new byte[4];
+            Util.int2bytesLe(msUsage, salt, 0);
+        }
+
         return salt;
     }
 

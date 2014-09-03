@@ -114,6 +114,12 @@ public class EncryptionHandler {
                 encHandler = new Rc4HmacEnc();
                 break;
 
+            case RC4_HMAC_EXP:
+            case ARCFOUR_HMAC_EXP:
+            case ARCFOUR_HMAC_MD5_EXP:
+                encHandler = new Rc4HmacExpEnc();
+                break;
+
             case NONE:
             default:
                 break;
