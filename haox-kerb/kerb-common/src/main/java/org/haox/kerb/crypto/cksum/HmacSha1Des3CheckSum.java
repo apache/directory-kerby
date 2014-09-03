@@ -1,13 +1,8 @@
 package org.haox.kerb.crypto.cksum;
 
-import org.haox.kerb.crypto.Des3;
-import org.haox.kerb.crypto.Hmac;
 import org.haox.kerb.crypto.enc.provider.Des3Provider;
 import org.haox.kerb.crypto.key.Des3KeyMaker;
-import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.CheckSumType;
-
-import java.security.GeneralSecurityException;
 
 public class HmacSha1Des3CheckSum extends HmacKcCheckSum {
 
@@ -36,20 +31,4 @@ public class HmacSha1Des3CheckSum extends HmacKcCheckSum {
     public int keySize() {
         return 24;   // bytes
     }
-
-    @Override
-    public boolean verifyWithKey(byte[] data,
-                                 byte[] key, int usage, byte[] checksum) throws KrbException {
-
-         try {
-             byte[] newCksum = Des3.calculateChecksum(key, usage,
-                 data, 0, data.length);
-
-             return checksumEqual(checksum, newCksum);
-         } catch (GeneralSecurityException e) {
-             KrbException ke = new KrbException(e.getMessage());
-             ke.initCause(e);
-             throw ke;
-         }
-     }
 }
