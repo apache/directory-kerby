@@ -14,8 +14,6 @@ public interface EncTypeHandler extends CryptoTypeHandler {
 
     public int paddingSize();
 
-    public int trailerSize();
-
     public byte[] str2key(String string,
                           String salt, byte[] param) throws KrbException;
 

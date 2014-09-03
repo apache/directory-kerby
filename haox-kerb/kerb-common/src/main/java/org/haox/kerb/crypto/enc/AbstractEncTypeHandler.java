@@ -61,11 +61,6 @@ public abstract class AbstractEncTypeHandler
     }
 
     @Override
-    public int trailerSize() {
-        return 0;
-    }
-
-    @Override
     public byte[] str2key(String string, String salt, byte[] param) throws KrbException {
         return keyMaker.str2key(string, salt, param);
     }
@@ -88,20 +83,19 @@ public abstract class AbstractEncTypeHandler
         int headerLen = confounderLen + checksumLen;
         int inputLen = data.length;
         int paddingLen = paddingLength(inputLen);
-        int trailerLen = trailerSize();
 
         /**
          *  E(Confounder | Checksum | Plaintext | Padding), or
          *  header | data | padding | trailer, where trailer may be absent
          */
 
-        int workLength = headerLen + inputLen + paddingLen + trailerLen;
+        int workLength = headerLen + inputLen + paddingLen;
 
         byte[] workBuffer = new byte[workLength];
         System.arraycopy(data, 0, workBuffer, headerLen, data.length);
 
         int [] workLens = new int[] {confounderLen, checksumLen,
-                inputLen, paddingLen, trailerLen};
+                inputLen, paddingLen};
 
         encryptWith(workBuffer, workLens, key, iv, usage);
         return workBuffer;
@@ -124,10 +118,9 @@ public abstract class AbstractEncTypeHandler
         int totalLen = cipher.length;
         int confounderLen = confounderSize();
         int checksumLen = checksumSize();
-        int trailerLen = trailerSize();
-        int dataLen = totalLen - (confounderLen + checksumLen + trailerLen);
+        int dataLen = totalLen - (confounderLen + checksumLen);
 
-        int[] workLens = new int[] {confounderLen, checksumLen, dataLen, trailerLen};
+        int[] workLens = new int[] {confounderLen, checksumLen, dataLen};
         return decryptWith(cipher, workLens, key, iv, usage);
     }
 
