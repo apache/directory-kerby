@@ -65,7 +65,7 @@ public class Cmac {
         byte[] cipher = new byte[blockSize];
         for (int i = 0; i < n - 1; i++) {
             System.arraycopy(data, i * blockSize, cipher, 0, blockSize);
-            encProvider.encryptBlock(key, cipherState, cipher);
+            encryptBlock(encProvider, key, cipherState, cipher);
             System.arraycopy(cipher, 0, cipherState, 0, blockSize);
         }
 
@@ -85,7 +85,7 @@ public class Cmac {
         }
 
         // Step 6 (last block)
-        encProvider.encryptBlock(key, cipherState, mLast);
+        encryptBlock(encProvider, key, cipherState, mLast);
 
         return mLast;
     }
@@ -97,7 +97,7 @@ public class Cmac {
         // L := encrypt(K, const_Zero)
         byte[] L = new byte[K1.length];
         Arrays.fill(L, (byte) 0);
-        encProvider.encryptBlock(key, null, L);
+        encryptBlock(encProvider, key, null, L);
 
         // K1 := (MSB(L) == 0) ? L << 1 : (L << 1) XOR const_Rb
         if ((L[0] & 0x80) == 0) {
@@ -115,6 +115,18 @@ public class Cmac {
             byte[] tmp = new byte[K1.length];
             leftShiftByOne(K1, tmp);
             xor128(tmp, constRb, K2);
+        }
+    }
+
+    private static void encryptBlock(EncryptProvider encProvider,
+                                     byte[] key, byte[] cipherState, byte[] block) throws KrbException {
+        if (cipherState == null) {
+            cipherState = new byte[encProvider.blockSize()];
+        }
+        if (encProvider.supportCbcMac()) {
+            encProvider.cbcMac(key, cipherState, block);
+        } else {
+            encProvider.encrypt(key, cipherState, block);
         }
     }
 

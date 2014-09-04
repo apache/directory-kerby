@@ -3,8 +3,6 @@ package org.haox.kerb.crypto.enc.provider;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
-import java.util.Arrays;
-
 public abstract class AbstractEncryptProvider implements EncryptProvider {
     private int blockSize;
     private int keyInputSize;
@@ -60,28 +58,14 @@ public abstract class AbstractEncryptProvider implements EncryptProvider {
 
     protected abstract void doEncrypt(byte[] data, byte[] key, byte[] cipherState, boolean encrypt) throws KrbException;
 
-    protected void cbcMac(byte[] key, byte[] iv, byte[] data) {
+    @Override
+    public byte[] cbcMac(byte[] key, byte[] iv, byte[] data) throws KrbException {
         throw new UnsupportedOperationException();
     }
 
-    protected boolean supportCbcMac() {
-        return false;
-    }
-
     @Override
-    public void encryptBlock(byte[] key, byte[] cipherState, byte[] block) throws KrbException {
-        if (block.length != blockSize() || blockSize() == 1) {
-            throw new KrbException("Invalid block size or not block cipher");
-        }
-
-        if (cipherState == null) {
-            cipherState = new byte[blockSize()];
-        }
-        if (supportCbcMac()) {
-            cbcMac(key, cipherState, block);
-        } else {
-            encrypt(key, cipherState, block);
-        }
+    public boolean supportCbcMac() {
+        return false;
     }
 
     @Override

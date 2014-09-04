@@ -37,4 +37,35 @@ public class Util {
         bytes[offset + 1] = (byte) ((val >>  8) & 0xff);
         bytes[offset + 0] = (byte) ((val      ) & 0xff);
     }
+
+    public static byte[] long2bytes(long input) {
+        byte[] output = new byte[8];
+        for (int i = 0; i < 8; i++) {
+            output[i] = (byte)((input >>> ((7 - i) * 8)) & 0xffL);
+        }
+        return output;
+    }
+
+    public static void long2bytes(long input, byte[] output, int offset) {
+        for (int i = 0; i < 8; i++) {
+            if (i + offset < output.length) {
+                output[i + offset] =
+                        (byte)((input >>> ((7 - i) * 8)) & 0xffL);
+            }
+        }
+    }
+
+    public static long bytes2long(byte[] input) {
+        return bytes2long(input, 0);
+    }
+
+    public static long bytes2long(byte[] input, int offset) {
+        long result = 0;
+        for (int i = 0; i < 8; i++) {
+            if (i + offset < input.length) {
+                result |= (((long)input[i + offset]) & 0xffL) << ((7 - i) * 8);
+            }
+        }
+        return result;
+    }
 }

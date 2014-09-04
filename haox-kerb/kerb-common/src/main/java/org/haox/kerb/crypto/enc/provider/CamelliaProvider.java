@@ -23,16 +23,17 @@ public abstract class CamelliaProvider extends AbstractEncryptProvider {
     }
 
     @Override
-    protected boolean supportCbcMac() {
+    public boolean supportCbcMac() {
         return true;
     }
 
     @Override
-    protected void cbcMac(byte[] key, byte[] cipherState, byte[] data) {
+    public byte[] cbcMac(byte[] key, byte[] cipherState, byte[] data) {
         Camellia cipher = new Camellia();
         cipher.setKey(true, key);
 
         int blocksNum = data.length / blockSize();
         cipher.cbcEnc(data, 0, blocksNum, cipherState);
+        return data;
     }
 }
