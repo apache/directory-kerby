@@ -23,10 +23,10 @@ public class Util {
     public static int bytes2intBe(byte[] bytes, int offset) {
         int val = 0;
 
-        val += bytes[offset + 0] << 24;
-        val += bytes[offset + 1] << 16;
-        val += bytes[offset + 2] << 8;
-        val += bytes[offset + 3] & 0xff;
+        val += (bytes[offset + 0] & 0xff) << 24;
+        val += (bytes[offset + 1] & 0xff) << 16;
+        val += (bytes[offset + 2] & 0xff) << 8;
+        val += (bytes[offset + 3] & 0xff);
 
         return val;
     }
@@ -79,5 +79,25 @@ public class Util {
             }
         }
         return result;
+    }
+
+    public static void xor(byte[] input, int offset, byte[] output) {
+        int a, b;
+        for (int i = 0; i < output.length / 4; ++i) {
+            a = bytes2intBe(input, offset + i * 4);
+            b = bytes2intBe(output, i * 4);
+            b = a ^ b;
+            int2bytesBe(b, output, i * 4);
+        }
+    }
+
+    public static void xor(byte[] a, byte[] b, byte[] output) {
+        int av, bv, v;
+        for (int i = 0; i < a.length / 4; ++i) {
+            av = bytes2intBe(a, i * 4);
+            bv = bytes2intBe(b, i * 4);
+            v = av ^ bv;
+            int2bytesBe(v, output, i * 4);
+        }
     }
 }

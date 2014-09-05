@@ -159,26 +159,6 @@ public class Camellia {
         ki[3 + ioff] = ko[1 + ooff];
     }
 
-    private static int bytes2int(byte[] src, int offset)
-    {
-        int word = 0;
-
-        for (int i = 0; i < 4; i++)
-        {
-            word = (word << 8) + (src[i + offset] & MASK8);
-        }
-        return word;
-    }
-
-    private static void int2bytes(int word, byte[] dst, int offset)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            dst[(3 - i) + offset] = (byte)word;
-            word >>>= 8;
-        }
-    }
-
     private byte lRot8(byte v, int rot)
     {
         return (byte)((v << rot) | ((v & 0xff) >>> (8 - rot)));
@@ -266,32 +246,32 @@ public class Camellia {
         {
             case 16:
                 _keyis128 = true;
-                k[0] = bytes2int(key, 0);
-                k[1] = bytes2int(key, 4);
-                k[2] = bytes2int(key, 8);
-                k[3] = bytes2int(key, 12);
+                k[0] = Util.bytes2intBe(key, 0);
+                k[1] = Util.bytes2intBe(key, 4);
+                k[2] = Util.bytes2intBe(key, 8);
+                k[3] = Util.bytes2intBe(key, 12);
                 k[4] = k[5] = k[6] = k[7] = 0;
                 break;
             case 24:
-                k[0] = bytes2int(key, 0);
-                k[1] = bytes2int(key, 4);
-                k[2] = bytes2int(key, 8);
-                k[3] = bytes2int(key, 12);
-                k[4] = bytes2int(key, 16);
-                k[5] = bytes2int(key, 20);
+                k[0] = Util.bytes2intBe(key, 0);
+                k[1] = Util.bytes2intBe(key, 4);
+                k[2] = Util.bytes2intBe(key, 8);
+                k[3] = Util.bytes2intBe(key, 12);
+                k[4] = Util.bytes2intBe(key, 16);
+                k[5] = Util.bytes2intBe(key, 20);
                 k[6] = ~k[4];
                 k[7] = ~k[5];
                 _keyis128 = false;
                 break;
             case 32:
-                k[0] = bytes2int(key, 0);
-                k[1] = bytes2int(key, 4);
-                k[2] = bytes2int(key, 8);
-                k[3] = bytes2int(key, 12);
-                k[4] = bytes2int(key, 16);
-                k[5] = bytes2int(key, 20);
-                k[6] = bytes2int(key, 24);
-                k[7] = bytes2int(key, 28);
+                k[0] = Util.bytes2intBe(key, 0);
+                k[1] = Util.bytes2intBe(key, 4);
+                k[2] = Util.bytes2intBe(key, 8);
+                k[3] = Util.bytes2intBe(key, 12);
+                k[4] = Util.bytes2intBe(key, 16);
+                k[5] = Util.bytes2intBe(key, 20);
+                k[6] = Util.bytes2intBe(key, 24);
+                k[7] = Util.bytes2intBe(key, 28);
                 _keyis128 = false;
                 break;
             default:
@@ -461,7 +441,7 @@ public class Camellia {
     {
         for (int i = 0; i < 4; i++)
         {
-            state[i] = bytes2int(in, inOff + (i * 4));
+            state[i] = Util.bytes2intBe(in, inOff + (i * 4));
             state[i] ^= kw[i];
         }
 
@@ -482,10 +462,10 @@ public class Camellia {
         state[0] ^= kw[6];
         state[1] ^= kw[7];
 
-        int2bytes(state[2], out, outOff);
-        int2bytes(state[3], out, outOff + 4);
-        int2bytes(state[0], out, outOff + 8);
-        int2bytes(state[1], out, outOff + 12);
+        Util.int2bytesBe(state[2], out, outOff);
+        Util.int2bytesBe(state[3], out, outOff + 4);
+        Util.int2bytesBe(state[0], out, outOff + 8);
+        Util.int2bytesBe(state[1], out, outOff + 12);
 
         return BLOCK_SIZE;
     }
@@ -495,7 +475,7 @@ public class Camellia {
     {
         for (int i = 0; i < 4; i++)
         {
-            state[i] = bytes2int(in, inOff + (i * 4));
+            state[i] = Util.bytes2intBe(in, inOff + (i * 4));
             state[i] ^= kw[i];
         }
 
@@ -520,10 +500,10 @@ public class Camellia {
         state[0] ^= kw[6];
         state[1] ^= kw[7];
 
-        int2bytes(state[2], out, outOff);
-        int2bytes(state[3], out, outOff + 4);
-        int2bytes(state[0], out, outOff + 8);
-        int2bytes(state[1], out, outOff + 12);
+        Util.int2bytesBe(state[2], out, outOff);
+        Util.int2bytesBe(state[3], out, outOff + 4);
+        Util.int2bytesBe(state[0], out, outOff + 8);
+        Util.int2bytesBe(state[1], out, outOff + 12);
         return BLOCK_SIZE;
     }
 
@@ -667,7 +647,7 @@ public class Camellia {
         byte[] cipher = new byte[BLOCK_SIZE];
         for (int i = 0; i < blocksNum; ++i) {
             System.arraycopy(data, offset + i * BLOCK_SIZE, cipher, 0, BLOCK_SIZE);
-            xor(cipherState, 0, cipher);
+            Util.xor(cipherState, 0, cipher);
             processBlock(cipher, 0);
             System.arraycopy(cipher, 0, data, offset + i * BLOCK_SIZE, BLOCK_SIZE);
             System.arraycopy(cipher, 0, cipherState, 0, BLOCK_SIZE);
@@ -687,23 +667,13 @@ public class Camellia {
             processBlock(cipher, 0);
 
             if (i == 1) {
-                xor(cipherState, 0, cipher);
+                Util.xor(cipherState, 0, cipher);
             } else {
-                xor(data, offset + (i -2) * BLOCK_SIZE, cipher);
+                Util.xor(data, offset + (i -2) * BLOCK_SIZE, cipher);
             }
 
             System.arraycopy(cipher, 0, data, offset + (i - 1) * BLOCK_SIZE, BLOCK_SIZE);
         }
         System.arraycopy(lastBlock, 0, cipherState, 0, BLOCK_SIZE);
-    }
-
-    private static void xor(byte[] input, int offset, byte[] output) {
-        int a, b;
-        for (int i = 0; i < output.length / 4; ++i) {
-            a = bytes2int(input, offset + i * 4);
-            b = bytes2int(output, i * 4);
-            b = a ^ b;
-            int2bytes(b, output, i * 4);
-        }
     }
 }

@@ -78,10 +78,10 @@ public class Cmac {
         byte[] lastBlock = new byte[lastLen];
         System.arraycopy(data, lastPos, lastBlock, 0, lastLen);
         if (lastIsComplete) {
-            xor128(lastBlock, K1, mLast);
+            Util.xor(lastBlock, K1, mLast);
         } else {
             padding(lastBlock, padded);
-            xor128(padded, K2, mLast);
+            Util.xor(padded, K2, mLast);
         }
 
         // Step 6 (last block)
@@ -105,7 +105,7 @@ public class Cmac {
         } else {
             byte[] tmp = new byte[K1.length];
             leftShiftByOne(L, tmp);
-            xor128(tmp, constRb, K1);
+            Util.xor(tmp, constRb, K1);
         }
 
         // K2 := (MSB(K1) == 0) ? K1 << 1 : (K1 << 1) XOR const_Rb
@@ -114,7 +114,7 @@ public class Cmac {
         } else {
             byte[] tmp = new byte[K1.length];
             leftShiftByOne(K1, tmp);
-            xor128(tmp, constRb, K2);
+            Util.xor(tmp, constRb, K2);
         }
     }
 
@@ -137,32 +137,6 @@ public class Cmac {
             output[i] = (byte) (input[i] << 1);
             output[i] |= overflow;
             overflow = (byte) ((input[i] & 0x80) != 0 ? 1 : 0);
-        }
-    }
-
-    private static void xor128(byte[] a, byte[] b, byte[] output) {
-        int av, bv, v;
-        for (int i = 0; i < a.length / 4; ++i) {
-            av = bytes2int(a, i * 4);
-            bv = bytes2int(b, i * 4);
-            v = av ^ bv;
-            int2bytes(v, output, i * 4);
-        }
-    }
-
-    private static int bytes2int(byte[] bytes, int pos) {
-        int value = 0;
-
-        for (int i = 0; i < 4; i++) {
-            value = (value << 8) + (bytes[pos + i] & 0xff);
-        }
-        return value;
-    }
-
-    private static void int2bytes(int value, byte[] bytes, int pos) {
-        for (int i = 0; i < 4; i++) {
-            bytes[pos + 3 - i] = (byte)value;
-            value >>>= 8;
         }
     }
 
