@@ -1,26 +1,14 @@
 package org.haox.kerb.crypto.key;
 
+import org.haox.kerb.crypto.Des;
 import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
-import java.util.Arrays;
-
 public class DesKeyMaker extends AbstractKeyMaker {
 
-    private static final long[] badKeys = {
-            0x0101010101010101L, 0xfefefefefefefefeL,
-            0x1f1f1f1f1f1f1f1fL, 0xe0e0e0e0e0e0e0e0L,
-            0x01fe01fe01fe01feL, 0xfe01fe01fe01fe01L,
-            0x1fe01fe00ef10ef1L, 0xe01fe01ff10ef10eL,
-            0x01e001e001f101f1L, 0xe001e001f101f101L,
-            0x1ffe1ffe0efe0efeL, 0xfe1ffe1ffe0efe0eL,
-            0x011f011f010e010eL, 0x1f011f010e010e01L,
-            0xe0fee0fef1fef1feL, 0xfee0fee0fef1fef1L
-    };
-
     private static final byte[] goodParity = {
-            1,       1,   2,   2,   4,   4,   7,   7,
+            1,   1,   2,   2,   4,   4,    7,   7,
             8,   8,   11,  11,  13,  13,  14,  14,
             16,  16,  19,  19,  21,  21,  22,  22,
             25,  25,  26,  26,  28,  28,  31,  31,
@@ -70,103 +58,6 @@ public class DesKeyMaker extends AbstractKeyMaker {
             (byte)253, (byte)253, (byte)254, (byte)254
     };
 
-    public static final byte[] setParity(byte[] key) {
-        for (int i=0; i < 8; i++) {
-            key[i] = goodParity[key[i] & 0xff];
-        }
-        return key;
-    }
-
-    public static final long setParity(long key) {
-        return Util.bytes2long(setParity(Util.long2bytes(key)));
-    }
-
-    public static final boolean isBadKey(long key) {
-        for (int i = 0; i < badKeys.length; i++) {
-            if (badKeys[i] == key) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static final boolean isBadKey(byte[] key) {
-        return isBadKey(Util.bytes2long(key, 0));
-    }
-
-    public long passwd2long(char[] passwdChars) throws KrbException {
-        long key = 0;
-        long octet, octet1, octet2 = 0;
-        byte[] cbytes = null;
-
-        // Convert password to byte array
-        cbytes = (new String(passwdChars)).getBytes();
-
-        // pad data
-        byte[] passwdBytes = pad(cbytes);
-
-        byte[] newkey = new byte[8];
-        int length = (passwdBytes.length / 8) + (passwdBytes.length % 8  == 0 ? 0 : 1);
-        for (int i = 0; i < length; i++) {
-            octet = Util.bytes2long(passwdBytes, i * 8) & 0x7f7f7f7f7f7f7f7fL;
-            if (i % 2 == 1) {
-                octet1 = 0;
-                for (int j = 0; j < 64; j++) {
-                    octet1 |= ((octet & (1L << j)) >>> j) << (63 - j);
-                }
-                octet = octet1 >>> 1;
-            }
-            key ^= (octet << 1);
-        }
-        key = setParity(key);
-        if (isBadKey(key)) {
-            byte [] temp = Util.long2bytes(key);
-            temp[7] ^= 0xf0;
-            key = Util.bytes2long(temp);
-        }
-
-        byte[] iv = Util.long2bytes(key);
-        byte[] encKey = Util.long2bytes(key);
-
-        if (encProvider().supportCbcMac()) {
-            newkey = encProvider().cbcMac(iv, encKey, passwdBytes);
-        } else {
-            throw new KrbException("cbcMac should be supported by the provider: " + encProvider().getClass());
-        }
-
-        key = Util.bytes2long(setParity(newkey));
-        if (isBadKey(key)) {
-            byte [] temp = Util.long2bytes(key);
-            temp[7] ^= 0xf0;
-            key = Util.bytes2long(temp);
-        }
-
-        // clear-up sensitive information
-        if (cbytes != null) {
-            Arrays.fill(cbytes, 0, cbytes.length, (byte) 0);
-        }
-        if (passwdBytes != null) {
-            Arrays.fill(passwdBytes, 0, passwdBytes.length, (byte) 0);
-        }
-
-        return key;
-    }
-
-    static byte[] pad(byte[] data) {
-        int len;
-        if (data.length < 8) len = data.length;
-        else len = data.length % 8;
-        if (len == 0) return data;
-        else {
-            byte[] padding = new byte[ 8 - len + data.length];
-            for (int i = padding.length - 1; i > data.length - 1; i--) {
-                padding[i] = 0;
-            }
-            System.arraycopy(data, 0, padding, 0, data.length);
-            return padding;
-        }
-    }
-
     public DesKeyMaker(EncryptProvider encProvider) {
         super(encProvider);
     }
@@ -194,12 +85,72 @@ public class DesKeyMaker extends AbstractKeyMaker {
         }
 
         char[] passwdSalt = makePasswdSalt(string, salt);
-        long keyLong = passwd2long(passwdSalt);
-        return Util.long2bytes(keyLong);
+        byte[] key = passwd2key(passwdSalt);
+        return key;
     }
 
     @Override
     public byte[] random2Key(byte[] randomBits) throws KrbException {
         return randomBits;
+    }
+
+    public static final void setParity(byte[] key) {
+        for (int i=0; i < 8; i++) {
+            key[i] = goodParity[key[i] & 0xff];
+        }
+    }
+
+    private long passwd2long(byte[] passwdBytes) {
+        int keySize = 8;
+
+        long lKey = 0;
+        int n = passwdBytes.length / keySize;
+        long l, l1, l2 = 0;
+        for (int i = 0; i < n; i++) {
+            l = Util.bytes2long(passwdBytes, i * keySize) & 0x7f7f7f7f7f7f7f7fL;
+            if (i % 2 == 1) {
+                l1 = 0;
+                for (int j = 0; j < 64; j++) {
+                    l1 |= ((l & (1L << j)) >>> j) << (63 - j);
+                }
+                l = l1 >>> 1;
+            }
+            lKey ^= (l << 1);
+        }
+
+        return lKey;
+    }
+
+    private byte[] passwd2key(char[] passwdChars) throws KrbException {
+        int keySize = 8;
+
+        byte[] bytes = (new String(passwdChars)).getBytes();
+        byte[] passwdBytes = Util.padding(bytes, keySize);
+        long lKey = passwd2long(passwdBytes);
+
+        byte[] keyBytes = Util.long2bytes(lKey);
+        fixKey(keyBytes);
+
+        byte[] iv = keyBytes;
+        byte[] encKey = keyBytes;
+
+        byte[] bKey = null;
+        if (encProvider().supportCbcMac()) {
+            bKey = encProvider().cbcMac(iv, encKey, passwdBytes);
+        } else {
+            throw new KrbException("cbcMac should be supported by the provider: "
+                    + encProvider().getClass());
+        }
+
+        fixKey(bKey);
+
+        return bKey;
+    }
+
+    private void fixKey(byte[] key) {
+        setParity(key);
+        if (Des.isWeakKey(key)) {
+            Des.fixKey(key);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.haox.kerb.crypto.key;
 
+import org.haox.kerb.crypto.Des;
 import org.haox.kerb.crypto.Nfold;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
@@ -35,27 +36,15 @@ public class Des3KeyMaker extends DkKeyMaker {
      */
     @Override
     public byte[] random2Key(byte[] randomBits) throws KrbException {
-        byte[] one = keyCorrection(des3Expand(randomBits, 0, 7));
-        byte[] two = keyCorrection(des3Expand(randomBits, 7, 14));
-        byte[] three = keyCorrection(des3Expand(randomBits, 14, 21));
+        byte[] one = Des.fixKey(des3Expand(randomBits, 0, 7));
+        byte[] two = Des.fixKey(des3Expand(randomBits, 7, 14));
+        byte[] three = Des.fixKey(des3Expand(randomBits, 14, 21));
 
         byte[] key = new byte[24];
         System.arraycopy(one, 0, key, 0, 8);
         System.arraycopy(two, 0, key, 8, 8);
         System.arraycopy(three, 0, key, 16, 8);
 
-        return key;
-    }
-
-    private static byte[] keyCorrection(byte[] key) {
-        // check for weak key
-        try {
-            if (DESKeySpec.isWeak(key, 0)) {
-                key[7] = (byte)(key[7] ^ 0xF0);
-            }
-        } catch (InvalidKeyException ex) {
-            // swallow, since it should never happen
-        }
         return key;
     }
 

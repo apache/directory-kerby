@@ -8,6 +8,18 @@ public class Util {
         return dup;
     }
 
+    public static byte[] padding(byte[] data, int block) {
+        int len = data.length;
+        int paddingLen = len % block != 0 ? 8 - len % block : 0;
+        if (paddingLen == 0) {
+            return data;
+        }
+
+        byte[] result = new byte[len + + paddingLen];
+        System.arraycopy(data, 0, result, 0, len);
+        return result;
+    }
+
     public static int bytes2intBe(byte[] bytes, int offset) {
         int val = 0;
 
