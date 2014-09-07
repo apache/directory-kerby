@@ -23,7 +23,7 @@ abstract class DesCbcEnc extends AbstractEncTypeHandler {
         int paddingLen = workLens[3];
 
         // confounder
-        byte[] confounder = Confounder.bytes(confounderLen);
+        byte[] confounder = Confounder.makeBytes(confounderLen);
         System.arraycopy(confounder, 0, workBuffer, 0, confounderLen);
 
         // padding

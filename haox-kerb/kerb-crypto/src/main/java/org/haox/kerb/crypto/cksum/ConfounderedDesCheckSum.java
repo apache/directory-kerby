@@ -25,7 +25,7 @@ public abstract class ConfounderedDesCheckSum extends AbstractKeyedCheckSumTypeH
         byte[] workBuffer = new byte[computeSize];
 
         // confounder
-        byte[] conf = Confounder.bytes(blockSize);
+        byte[] conf = Confounder.makeBytes(blockSize);
 
         // confounder | data
         byte[] toHash = new byte[blockSize + len];

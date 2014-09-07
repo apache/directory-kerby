@@ -45,13 +45,6 @@ public class Nfold {
                 (input[((inbits)-(msbit>>>3))%inbits]&0xff))
                 >>>((msbit&7)+1))&0xff;
 
-            /*
-            System.err.println("((" +
-                ((input[((inbits-1)-(msbit>>>3))%inbits]&0xff)<<8)
-                + "|" + (input[((inbits)-(msbit>>>3))%inbits]&0xff) + ")"
-                + ">>>" + ((msbit&7)+1) + ")&0xff = " + bval);
-            */
-
             thisbyte += bval;
 
             /* do the addition */

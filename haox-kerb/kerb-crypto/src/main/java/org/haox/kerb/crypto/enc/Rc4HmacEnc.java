@@ -55,7 +55,7 @@ public class Rc4HmacEnc extends AbstractEncTypeHandler {
          */
 
         // confounder
-        byte[] confounder = Confounder.bytes(confounderLen);
+        byte[] confounder = Confounder.makeBytes(confounderLen);
         System.arraycopy(confounder, 0, workBuffer, checksumLen, confounderLen);
 
         // no padding

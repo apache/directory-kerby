@@ -47,7 +47,7 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
 
         byte[] tmpEnc = new byte[confounderLen + inputLen + paddingLen];
         // confounder
-        byte[] confounder = Confounder.bytes(confounderLen);
+        byte[] confounder = Confounder.makeBytes(confounderLen);
         System.arraycopy(confounder, 0, tmpEnc, 0, confounderLen);
 
         // data
