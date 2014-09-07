@@ -5,10 +5,7 @@ package org.haox.kerb.crypto;
  */
 
 public class Camellia {
-    private int keySize;
     private static final int BLOCK_SIZE = 16;
-    private static final int MASK8 = 0xff;
-
     private int[] state = new int[4]; // for encryption and decryption
 
     private CamelliaKey camKey;
@@ -17,24 +14,24 @@ public class Camellia {
         camKey = new CamelliaKey(key, forEncryption);
     }
 
-    private int processBlock128(byte[] in, int inOff,
+    private void process128Block(byte[] in, int inOff,
                                 byte[] out, int outOff) {
         for (int i = 0; i < 4; i++) {
             state[i] = Util.bytes2intBe(in, inOff + (i * 4));
             state[i] ^= camKey.kw[i];
         }
 
-        camKey.camelliaF2(state, camKey.subkey, 0);
-        camKey.camelliaF2(state, camKey.subkey, 4);
-        camKey.camelliaF2(state, camKey.subkey, 8);
-        camKey.camelliaFLs(state, camKey.ke, 0);
-        camKey.camelliaF2(state, camKey.subkey, 12);
-        camKey.camelliaF2(state, camKey.subkey, 16);
-        camKey.camelliaF2(state, camKey.subkey, 20);
-        camKey.camelliaFLs(state, camKey.ke, 4);
-        camKey.camelliaF2(state, camKey.subkey, 24);
-        camKey.camelliaF2(state, camKey.subkey, 28);
-        camKey.camelliaF2(state, camKey.subkey, 32);
+        camKey.f2(state, camKey.subkey, 0);
+        camKey.f2(state, camKey.subkey, 4);
+        camKey.f2(state, camKey.subkey, 8);
+        camKey.fls(state, camKey.ke, 0);
+        camKey.f2(state, camKey.subkey, 12);
+        camKey.f2(state, camKey.subkey, 16);
+        camKey.f2(state, camKey.subkey, 20);
+        camKey.fls(state, camKey.ke, 4);
+        camKey.f2(state, camKey.subkey, 24);
+        camKey.f2(state, camKey.subkey, 28);
+        camKey.f2(state, camKey.subkey, 32);
 
         state[2] ^= camKey.kw[4];
         state[3] ^= camKey.kw[5];
@@ -45,32 +42,30 @@ public class Camellia {
         Util.int2bytesBe(state[3], out, outOff + 4);
         Util.int2bytesBe(state[0], out, outOff + 8);
         Util.int2bytesBe(state[1], out, outOff + 12);
-
-        return BLOCK_SIZE;
     }
 
-    private int processBlock192or256(byte[] in, int inOff,
-                                     byte[] out, int outOff) {
+    private void processBlockLargerBlock(byte[] in, int inOff,
+                                        byte[] out, int outOff) {
         for (int i = 0; i < 4; i++) {
             state[i] = Util.bytes2intBe(in, inOff + (i * 4));
             state[i] ^= camKey.kw[i];
         }
 
-        camKey.camelliaF2(state, camKey.subkey, 0);
-        camKey.camelliaF2(state, camKey.subkey, 4);
-        camKey.camelliaF2(state, camKey.subkey, 8);
-        camKey.camelliaFLs(state, camKey.ke, 0);
-        camKey.camelliaF2(state, camKey.subkey, 12);
-        camKey.camelliaF2(state, camKey.subkey, 16);
-        camKey.camelliaF2(state, camKey.subkey, 20);
-        camKey.camelliaFLs(state, camKey.ke, 4);
-        camKey.camelliaF2(state, camKey.subkey, 24);
-        camKey.camelliaF2(state, camKey.subkey, 28);
-        camKey.camelliaF2(state, camKey.subkey, 32);
-        camKey.camelliaFLs(state, camKey.ke, 8);
-        camKey.camelliaF2(state, camKey.subkey, 36);
-        camKey.camelliaF2(state, camKey.subkey, 40);
-        camKey.camelliaF2(state, camKey.subkey, 44);
+        camKey.f2(state, camKey.subkey, 0);
+        camKey.f2(state, camKey.subkey, 4);
+        camKey.f2(state, camKey.subkey, 8);
+        camKey.fls(state, camKey.ke, 0);
+        camKey.f2(state, camKey.subkey, 12);
+        camKey.f2(state, camKey.subkey, 16);
+        camKey.f2(state, camKey.subkey, 20);
+        camKey.fls(state, camKey.ke, 4);
+        camKey.f2(state, camKey.subkey, 24);
+        camKey.f2(state, camKey.subkey, 28);
+        camKey.f2(state, camKey.subkey, 32);
+        camKey.fls(state, camKey.ke, 8);
+        camKey.f2(state, camKey.subkey, 36);
+        camKey.f2(state, camKey.subkey, 40);
+        camKey.f2(state, camKey.subkey, 44);
 
         state[2] ^= camKey.kw[4];
         state[3] ^= camKey.kw[5];
@@ -81,16 +76,15 @@ public class Camellia {
         Util.int2bytesBe(state[3], out, outOff + 4);
         Util.int2bytesBe(state[0], out, outOff + 8);
         Util.int2bytesBe(state[1], out, outOff + 12);
-        return BLOCK_SIZE;
     }
 
     public void processBlock(byte[] in, int inOff) {
         byte[] out = new byte[BLOCK_SIZE];
 
         if (camKey.is128()) {
-            processBlock128(in, inOff, out, 0);
+            process128Block(in, inOff, out, 0);
         } else {
-            processBlock192or256(in, inOff, out, 0);
+            processBlockLargerBlock(in, inOff, out, 0);
         }
 
         System.arraycopy(out, 0, in, inOff, BLOCK_SIZE);

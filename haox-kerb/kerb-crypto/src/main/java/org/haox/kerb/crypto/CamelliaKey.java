@@ -6,7 +6,6 @@ package org.haox.kerb.crypto;
 
 public class CamelliaKey {
     private int keySize;
-    private static final int MASK8 = 0xff;
 
     protected int[] subkey = new int[24 * 4];
     protected int[] kw = new int[4 * 2]; // for whitening
@@ -118,8 +117,7 @@ public class CamelliaKey {
     }
 
     private static void decroldq(int rot, int[] ki, int ioff,
-                                 int[] ko, int ooff)
-    {
+                                 int[] ko, int ooff) {
         ko[2 + ooff] = (ki[0 + ioff] << rot) | (ki[1 + ioff] >>> (32 - rot));
         ko[3 + ooff] = (ki[1 + ioff] << rot) | (ki[2 + ioff] >>> (32 - rot));
         ko[0 + ooff] = (ki[2 + ioff] << rot) | (ki[3 + ioff] >>> (32 - rot));
@@ -144,8 +142,7 @@ public class CamelliaKey {
     }
 
     private static void decroldqo32(int rot, int[] ki, int ioff,
-                                    int[] ko, int ooff)
-    {
+                                    int[] ko, int ooff) {
         ko[2 + ooff] = (ki[1 + ioff] << (rot - 32)) | (ki[2 + ioff] >>> (64 - rot));
         ko[3 + ooff] = (ki[2 + ioff] << (rot - 32)) | (ki[3 + ioff] >>> (64 - rot));
         ko[0 + ooff] = (ki[3 + ioff] << (rot - 32)) | (ki[0 + ioff] >>> (64 - rot));
@@ -163,20 +160,20 @@ public class CamelliaKey {
 
     private int sbox2(int x)
     {
-        return (lRot8(SBOX1[x], 1) & MASK8);
+        return (lRot8(SBOX1[x], 1) & 0xff);
     }
 
     private int sbox3(int x)
     {
-        return (lRot8(SBOX1[x], 7) & MASK8);
+        return (lRot8(SBOX1[x], 7) & 0xff);
     }
 
     private int sbox4(int x)
     {
-        return (SBOX1[((int)lRot8((byte)x, 1) & MASK8)] & MASK8);
+        return (SBOX1[((int)lRot8((byte)x, 1) & 0xff)] & 0xff);
     }
 
-    protected void camelliaFLs(int[] s, int[] fkey, int keyoff) {
+    protected void fls(int[] s, int[] fkey, int keyoff) {
         s[1] ^= leftRotate(s[0] & fkey[0 + keyoff], 1);
         s[0] ^= fkey[1 + keyoff] | s[1];
 
@@ -184,20 +181,20 @@ public class CamelliaKey {
         s[3] ^= leftRotate(fkey[2 + keyoff] & s[2], 1);
     }
 
-    protected void camelliaF2(int[] s, int[] skey, int keyoff) {
+    protected void f2(int[] s, int[] skey, int keyoff) {
         int t1, t2, u, v;
 
         t1 = s[0] ^ skey[0 + keyoff];
-        u = sbox4((t1 & MASK8));
-        u |= (sbox3(((t1 >>> 8) & MASK8)) << 8);
-        u |= (sbox2(((t1 >>> 16) & MASK8)) << 16);
-        u |= ((int)(SBOX1[((t1 >>> 24) & MASK8)] & MASK8) << 24);
+        u = sbox4((t1 & 0xff));
+        u |= (sbox3(((t1 >>> 8) & 0xff)) << 8);
+        u |= (sbox2(((t1 >>> 16) & 0xff)) << 16);
+        u |= ((int)(SBOX1[((t1 >>> 24) & 0xff)] & 0xff) << 24);
 
         t2 = s[1] ^ skey[1 + keyoff];
-        v = (int)SBOX1[(t2 & MASK8)] & MASK8;
-        v |= (sbox4(((t2 >>> 8) & MASK8)) << 8);
-        v |= (sbox3(((t2 >>> 16) & MASK8)) << 16);
-        v |= (sbox2(((t2 >>> 24) & MASK8)) << 24);
+        v = (int)SBOX1[(t2 & 0xff)] & 0xff;
+        v |= (sbox4(((t2 >>> 8) & 0xff)) << 8);
+        v |= (sbox3(((t2 >>> 16) & 0xff)) << 16);
+        v |= (sbox2(((t2 >>> 24) & 0xff)) << 24);
 
         v = leftRotate(v, 8);
         u ^= v;
@@ -207,16 +204,16 @@ public class CamelliaKey {
         s[3] ^= leftRotate(u, 8);
 
         t1 = s[2] ^ skey[2 + keyoff];
-        u = sbox4((t1 & MASK8));
-        u |= sbox3(((t1 >>> 8) & MASK8)) << 8;
-        u |= sbox2(((t1 >>> 16) & MASK8)) << 16;
-        u |= ((int)SBOX1[((t1 >>> 24) & MASK8)] & MASK8) << 24;
+        u = sbox4((t1 & 0xff));
+        u |= sbox3(((t1 >>> 8) & 0xff)) << 8;
+        u |= sbox2(((t1 >>> 16) & 0xff)) << 16;
+        u |= ((int)SBOX1[((t1 >>> 24) & 0xff)] & 0xff) << 24;
 
         t2 = s[3] ^ skey[3 + keyoff];
-        v = ((int)SBOX1[(t2 & MASK8)] & MASK8);
-        v |= sbox4(((t2 >>> 8) & MASK8)) << 8;
-        v |= sbox3(((t2 >>> 16) & MASK8)) << 16;
-        v |= sbox2(((t2 >>> 24) & MASK8)) << 24;
+        v = ((int)SBOX1[(t2 & 0xff)] & 0xff);
+        v |= sbox4(((t2 >>> 8) & 0xff)) << 8;
+        v |= sbox3(((t2 >>> 16) & 0xff)) << 16;
+        v |= sbox2(((t2 >>> 24) & 0xff)) << 24;
 
         v = leftRotate(v, 8);
         u ^= v;
@@ -272,11 +269,11 @@ public class CamelliaKey {
         }
 
         /* compute KA */
-        camelliaF2(ka, SIGMA, 0);
+        f2(ka, SIGMA, 0);
         for (int i = 0; i < 4; i++) {
             ka[i] ^= k[i];
         }
-        camelliaF2(ka, SIGMA, 4);
+        f2(ka, SIGMA, 4);
 
         if (keySize == 16) {
             if (isEncrypt) {
@@ -340,7 +337,7 @@ public class CamelliaKey {
             for (int i = 0; i < 4; i++) {
                 kb[i] = ka[i] ^ k[i + 4];
             }
-            camelliaF2(kb, SIGMA, 8);
+            f2(kb, SIGMA, 8);
 
             if (isEncrypt) {
                 /* KL dependant keys */
