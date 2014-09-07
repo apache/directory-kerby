@@ -706,7 +706,7 @@ public class AuthenticationService
     private KrbError preparePreAuthenticationError(AuthenticationContext authContext) throws KrbException {
         EncryptionType requestedType = authContext.getEncryptionType();
         List<EncryptionType> encryptionTypes = authContext.getDefaultEtypes();
-        boolean isNewEtype = EncryptionHandler.isNewEncryptionType(requestedType);
+        boolean isNewEtype = true;//EncryptionHandler.isNewEncryptionType(requestedType);
 
         EtypeInfo2 eTypeInfo2 = new EtypeInfo2();
 

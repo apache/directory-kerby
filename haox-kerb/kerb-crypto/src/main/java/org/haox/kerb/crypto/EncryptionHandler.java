@@ -2,44 +2,14 @@ package org.haox.kerb.crypto;
 
 import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.codec.KrbCodec;
-import org.haox.kerb.common.Config;
 import org.haox.kerb.crypto.enc.*;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class EncryptionHandler {
-
-    private static final boolean ALLOW_WEAK_CRYPTO;
-
-    private static final Set<EncryptionType> oldEncTypes = new HashSet<EncryptionType>();
-
-    static {
-        oldEncTypes.add(EncryptionType.DES_CBC_CRC);
-        oldEncTypes.add(EncryptionType.DES_CBC_MD4);
-        oldEncTypes.add(EncryptionType.DES_CBC_MD5);
-        oldEncTypes.add(EncryptionType.DES3_CBC_SHA1);
-        oldEncTypes.add(EncryptionType.DES3_CBC_SHA1_KD);
-        oldEncTypes.add(EncryptionType.RC4_HMAC);
-    }
-
-    static {
-        boolean allowed = true;
-        try {
-            Config cfg = Config.getInstance();
-            String temp = cfg.getDefault("allow_weak_crypto", "libdefaults");
-            if (temp != null && temp.equals("false")) allowed = false;
-        } catch (Exception exc) {
-            System.out.println ("Exception in getting allow_weak_crypto, " +
-                    "using default value " +
-                    exc.getMessage());
-        }
-        ALLOW_WEAK_CRYPTO = allowed;
-    }
 
     public static EncryptionType getBestEncryptionType(List<EncryptionType> requestedTypes,
                                                        List<EncryptionType> configuredTypes) {
@@ -50,10 +20,6 @@ public class EncryptionHandler {
         }
 
         return null;
-    }
-
-    public static boolean isNewEncryptionType(EncryptionType eType) {
-        return !oldEncTypes.contains(eType);
     }
 
     public static EncTypeHandler getEncHandler(String eType) throws KrbException {
