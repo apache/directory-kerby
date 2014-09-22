@@ -21,5 +21,6 @@
         <module>kerb-event</module>
         <module>kerb-client</module>
         <module>kerb-server</module>
+        <module>kerb-kdc-test</module>
     </modules>
 </project>

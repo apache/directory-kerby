@@ -83,6 +83,9 @@ public abstract class AbstractKdcServer
         } catch (Exception e) {
             throw new RuntimeException("Failed to start " + getServiceName());
         }
+
+        started = true;
+
         logger.info("Started " + serviceName);
     }
 

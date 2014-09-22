@@ -25,10 +25,6 @@ public class SimpleKdcServer extends AbstractKdcServer {
         stopTransport();
     }
 
-    private void initKDCServer() throws Exception {
-
-    }
-
     public static void main(String[] args) throws Exception {
         int port;
         if (args.length > 0) {
