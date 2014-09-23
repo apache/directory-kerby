@@ -18,7 +18,6 @@
         <module>kerb-core-test</module>
         <module>kerb-common</module>
         <module>kerb-crypto</module>
-        <module>kerb-event</module>
         <module>kerb-client</module>
         <module>kerb-server</module>
         <module>kerb-kdc-test</module>

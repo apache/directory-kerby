@@ -1,9 +1,9 @@
 package org.haox.kerb.client;
 
 import org.haox.kerb.common.KrbUtil;
+import org.haox.kerb.crypto.Nonce;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
-import java.security.SecureRandom;
 import java.util.List;
 
 public class KrbContext {
@@ -15,15 +15,14 @@ public class KrbContext {
     private String serverPrincipal;
     private List<EncryptionType> defaultEtypes;
 
-    private SecureRandom nonceGenerator;
     private KrbConfig config;
 
     public KrbContext() {
-        nonceGenerator = new SecureRandom(String.valueOf(System.currentTimeMillis()).getBytes());
+
     }
 
     public int generateNonce() {
-        return nonceGenerator.nextInt();
+        return Nonce.value();
     }
 
     public long getTicketValidTime() {

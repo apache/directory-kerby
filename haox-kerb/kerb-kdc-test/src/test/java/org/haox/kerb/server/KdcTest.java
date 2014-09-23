@@ -1,5 +1,7 @@
 package org.haox.kerb.server;
 
+import org.haox.kerb.client.KrbClient;
+import org.haox.kerb.spec.type.ticket.TgtTicket;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,9 +23,13 @@ public class KdcTest {
         kdcServer.start();
     }
 
-    @Test
+    //@Test
     public void testKdc() throws Exception {
         Assert.assertTrue(kdcServer.isStarted());
+
+        KrbClient krbClnt = new KrbClient(hostname, port);
+        TgtTicket tgt = krbClnt.requestTgtTicket(clientPrincipal, password);
+        Assert.assertNotNull(tgt);
     }
 
     @After

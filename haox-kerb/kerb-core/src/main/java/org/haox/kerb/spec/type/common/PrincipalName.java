@@ -33,7 +33,7 @@ public class PrincipalName extends KrbSequenceType {
     public PrincipalName(String nameString) {
         this();
         setNameType(NameType.NT_PRINCIPAL);
-        fromeNameString(nameString);
+        fromNameString(nameString);
     }
 
     public PrincipalName(List<String> nameStrings, NameType type) {
@@ -122,7 +122,7 @@ public class PrincipalName extends KrbSequenceType {
         return getName().equals(otherPrincipal.getName());
     }
 
-    private void fromeNameString(String nameString) {
+    private void fromNameString(String nameString) {
         String tmpRealm = null;
         List<String> nameStrings;
         int pos = nameString.indexOf('@');

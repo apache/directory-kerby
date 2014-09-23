@@ -1,6 +1,7 @@
 package org.haox.kerb.client;
 
 import org.haox.kerb.codec.KrbCodec;
+import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -27,7 +28,8 @@ public class KrbClient {
     private EncryptionType usedEtype;
 
     public KrbClient(String kdcHost, int kdcPort) {
-        this.context = new KrbContext();
+        this(new KrbConfig());
+
         context.setKdcHost(kdcHost);
         context.setKdcPort(kdcPort);
     }
@@ -41,8 +43,13 @@ public class KrbClient {
     public TgtTicket requestTgtTicket(String principal, String password) throws KrbException {
         context.setClientPrincipal(principal);
         context.setPassword(password);
+        context.setServerPrincipal(makeTgsPrincipal());
         AsRequest asRequest = new AsRequest(context);
         return requestTgtTicket(asRequest);
+    }
+
+    private String makeTgsPrincipal() {
+        return KrbConstant.TGS_PRINCIPAL + "@EXAMPLE.COM";
     }
 
     public ServiceTicket requestServiceTicket(String clientPrincipal, String password,
