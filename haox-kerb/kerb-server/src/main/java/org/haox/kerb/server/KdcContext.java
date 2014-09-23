@@ -3,39 +3,32 @@ package org.haox.kerb.server;
 import org.haox.kerb.common.KrbUtil;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.store.PrincipalStore;
+import org.haox.kerb.server.store.PrincipalStoreEntry;
+import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KrbMessage;
+import org.haox.kerb.spec.type.kdc.KdcRep;
 import org.haox.kerb.spec.type.kdc.KdcReq;
+import org.haox.kerb.spec.type.ticket.Ticket;
 
 import java.net.InetAddress;
 import java.util.List;
 
-/**
- * The context used to identity the collected and computed data while processing a
- * kerberos message.
- */
 public abstract class KdcContext
 {
-    /** The KDC server configuration */
     private KdcConfig config;
     private PrincipalStore store;
     private List<EncryptionType> defaultEtypes;
-
-    /** The request being processed */
+    private Ticket ticket;
+    private boolean isPreAuthenticated;
     private KdcReq request;
-
-    /** The kerberos response */
-    private KrbMessage reply;
-
-    /** The client IP address */
+    private KdcRep reply;
     private InetAddress clientAddress;
-
-    /** The encryption type */
     private EncryptionType encryptionType;
-
-    /** the replay ccache */
     private ReplayCheckService replayCache;
-
+    private EncryptionKey clientKey;
+    private PrincipalStoreEntry clientEntry;
+    private PrincipalStoreEntry serverEntry;
     public KdcConfig getConfig() {
         return config;
     }
@@ -51,9 +44,6 @@ public abstract class KdcContext
         return defaultEtypes;
     }
 
-    /**
-     * @return Returns the identity.
-     */
     public PrincipalStore getStore()
     {
         return store;
@@ -69,88 +59,94 @@ public abstract class KdcContext
         return request;
     }
 
-
-    /**
-     * @param request The request to set.
-     */
     public void setRequest( KdcReq request )
     {
         this.request = request;
     }
 
-
-    /**
-     * @return Returns the reply.
-     */
     public KrbMessage getReply()
     {
         return reply;
     }
 
-
-    /**
-     * @param reply The reply to set.
-     */
-    public void setReply(KrbMessage reply )
+    public void setReply(KdcRep reply )
     {
         this.reply = reply;
     }
 
-
-    /**
-     * @return Returns the clientAddress.
-     */
     public InetAddress getClientAddress()
     {
         return clientAddress;
     }
 
-
-    /**
-     * @param clientAddress The clientAddress to set.
-     */
     public void setClientAddress( InetAddress clientAddress )
     {
         this.clientAddress = clientAddress;
     }
 
-    /**
-     * Returns the encryption type to use for this session.
-     *
-     * @return The encryption type.
-     */
     public EncryptionType getEncryptionType()
     {
         return encryptionType;
     }
 
-
-    /**
-     * Sets the encryption type to use for this session.
-     *
-     * @param encryptionType The encryption type to set.
-     */
     public void setEncryptionType( EncryptionType encryptionType )
     {
         this.encryptionType = encryptionType;
     }
-    
-    /**
-     * sets the replay ccache
-     *
-     * @param replayCache
-     */
+
     public void setReplayCache( ReplayCheckService replayCache )
     {
         this.replayCache = replayCache;
     }
 
-
-    /**
-     * @return the replay ccache
-     */
     public ReplayCheckService getReplayCache()
     {
         return replayCache;
+    }
+
+    public Ticket getTicket() {
+        return ticket;
+    }
+
+    public void setTicket( Ticket ticket ) {
+        this.ticket = ticket;
+    }
+
+    public boolean isPreAuthenticated() {
+        return isPreAuthenticated;
+    }
+
+    public void setPreAuthenticated( boolean isPreAuthenticated ) {
+        this.isPreAuthenticated = isPreAuthenticated;
+    }
+
+    public PrincipalStoreEntry getServerEntry()
+    {
+        return serverEntry;
+    }
+
+    public void setServerEntry( PrincipalStoreEntry serverEntry )
+    {
+        this.serverEntry = serverEntry;
+    }
+
+    public PrincipalStoreEntry getClientEntry()
+    {
+        return clientEntry;
+    }
+
+    public void setClientEntry( PrincipalStoreEntry clientEntry )
+    {
+        this.clientEntry = clientEntry;
+    }
+
+    public EncryptionKey getClientKey()
+    {
+        return clientKey;
+    }
+
+    public void setClientKey( EncryptionKey clientKey )
+    {
+        this.clientKey = clientKey;
     }
 }
