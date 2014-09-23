@@ -2,14 +2,14 @@ package org.haox.kerb.server.as;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.EncryptionHandler;
-import org.haox.kerb.server.*;
-import org.haox.kerb.server.store.PrincipalStore;
-import org.haox.kerb.server.store.PrincipalStoreEntry;
+import org.haox.kerb.server.KdcConfig;
+import org.haox.kerb.server.KdcContext;
+import org.haox.kerb.server.KdcService;
+import org.haox.kerb.server.identity.KrbIdentity;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.kdc.KdcReq;
-import org.haox.kerb.spec.type.kdc.KdcReqBody;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
@@ -17,7 +17,6 @@ import org.haox.kerb.spec.type.pa.PaEncTsEnc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.kerberos.KerberosPrincipal;
 import java.util.Date;
 import java.util.List;
 
@@ -44,19 +43,8 @@ public class AuthnService extends KdcService {
         kdcContext.setEncryptionType(bestType);
     }
 
-    private void getClientEntry(AuthnContext authContext) throws KrbException {
-        KdcReqBody kdcReqBody = authContext.getRequest().getReqBody();
-        KerberosPrincipal principal = KerberosUtils.getKerberosPrincipal(
-                kdcReqBody.getCname(), kdcReqBody.getRealm());
-        PrincipalStore store = authContext.getStore();
-
-        PrincipalStoreEntry storeEntry = KerberosUtils.getEntry(principal, store,
-                KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
-        authContext.setClientEntry(storeEntry);
-    }
-
     private static void checkPolicy(AuthnContext authContext) throws KrbException {
-        PrincipalStoreEntry entry = authContext.getClientEntry();
+        KrbIdentity entry = authContext.getClientEntry();
 
         if (entry.isDisabled()) {
             throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
@@ -76,7 +64,7 @@ public class AuthnService extends KdcService {
 
         KdcConfig config = authContext.getConfig();
         KdcReq request = authContext.getRequest();
-        PrincipalStoreEntry clientEntry = authContext.getClientEntry();
+        KrbIdentity clientEntry = authContext.getClientEntry();
         String clientName = clientEntry.getPrincipal().getName();
 
         EncryptionKey clientKey = null;
@@ -124,7 +112,7 @@ public class AuthnService extends KdcService {
 
         KdcConfig config = authnContext.getConfig();
 
-        PrincipalStoreEntry clientEntry = authnContext.getClientEntry();
+        KrbIdentity clientEntry = authnContext.getClientEntry();
         String clientName = clientEntry.getPrincipal().getName();
 
         EncryptionKey clientKey = null;

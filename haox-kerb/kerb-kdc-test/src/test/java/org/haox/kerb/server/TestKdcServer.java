@@ -9,6 +9,7 @@ import org.apache.directory.shared.kerberos.codec.types.EncryptionType;
 import org.apache.directory.shared.kerberos.components.EncryptionKey;
 import org.haox.kerb.server.identity.Identity;
 import org.haox.kerb.server.identity.KrbIdentity;
+import org.haox.kerb.spec.type.common.PrincipalName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,74 +150,17 @@ public class TestKdcServer extends SimpleKdcServer {
         List<Identity> identities = getIdentityService().getIdentities();
         for (Identity identity : identities) {
             KrbIdentity ki = (KrbIdentity) identity;
-            String principal = ki.getPrincipal();
+            PrincipalName principal = ki.getPrincipal();
             KerberosTime timestamp = new KerberosTime();
             for (Map.Entry<EncryptionType, EncryptionKey> entry : KerberosKeyFactory
-                    .getKerberosKeys(principal, ki.getPassword()).entrySet()) {
+                    .getKerberosKeys(principal.getName(), ki.getPassword()).entrySet()) {
                 EncryptionKey ekey = entry.getValue();
                 byte keyVersion = (byte) ekey.getKeyVersion();
-                entries.add(new KeytabEntry(principal, 1L, timestamp, keyVersion,
+                entries.add(new KeytabEntry(principal.getName(), 1L, timestamp, keyVersion,
                         ekey));
             }
         }
         keytab.setEntries(entries);
         keytab.write(keytabFile);
     }
-
-    /*
-    public static void main(String[] args) throws  Exception {
-        if (args.length < 4) {
-            System.out.println("Arguments: <WORKDIR> <MINIKDCPROPERTIES> " +
-                    "<KEYTABFILE> [<PRINCIPALS>]+");
-            System.exit(1);
-        }
-        File workDir = new File(args[0]);
-        if (!workDir.exists()) {
-            throw new RuntimeException("Specified work directory does not exists: "
-                    + workDir.getAbsolutePath());
-        }
-        Properties conf = createConf();
-        File file = new File(args[1]);
-        if (!file.exists()) {
-            throw new RuntimeException("Specified configuration does not exists: "
-                    + file.getAbsolutePath());
-        }
-        Properties userConf = new Properties();
-        userConf.load(new FileReader(file));
-        for (Map.Entry entry : userConf.entrySet()) {
-            conf.put(entry.getKey(), entry.getValue());
-        }
-        final TestKdcServer miniKdc = new TestKdcServer(conf, workDir);
-        miniKdc.start();
-        File krb5conf = new File(workDir, "krb5.conf");
-        if (miniKdc.getKrb5conf().renameTo(krb5conf)) {
-            File keytabFile = new File(args[2]).getAbsoluteFile();
-            String[] principals = new String[args.length - 3];
-            System.arraycopy(args, 3, principals, 0, args.length - 3);
-            miniKdc.createPrincipal(keytabFile, principals);
-            System.out.println();
-            System.out.println("Standalone TestKdcServer Running");
-            System.out.println("---------------------------------------------------");
-            System.out.println("  Realm           : " + miniKdc.getRealm());
-            System.out.println("  Running at      : " + miniKdc.getHost() + ":" +
-                    miniKdc.getHost());
-            System.out.println("  krb5conf        : " + krb5conf);
-            System.out.println();
-            System.out.println("  created keytab  : " + keytabFile);
-            System.out.println("  with principals : " + Arrays.asList(principals));
-            System.out.println();
-            System.out.println(" Do <CTRL-C> or kill <PID> to stop it");
-            System.out.println("---------------------------------------------------");
-            System.out.println();
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                @Override
-                public void run() {
-                    miniKdc.stop();
-                }
-            });
-        } else {
-            throw new RuntimeException("Cannot rename KDC's krb5conf to "
-                    + krb5conf.getAbsolutePath());
-        }
-    } */
 }

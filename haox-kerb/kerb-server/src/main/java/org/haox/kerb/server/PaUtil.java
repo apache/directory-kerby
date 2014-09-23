@@ -12,5 +12,4 @@ public class PaUtil {
         entry.setPaDataValue(paData);
         return entry;
     }
-
 }

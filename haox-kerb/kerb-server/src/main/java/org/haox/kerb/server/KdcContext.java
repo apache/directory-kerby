@@ -1,9 +1,9 @@
 package org.haox.kerb.server;
 
 import org.haox.kerb.common.KrbUtil;
+import org.haox.kerb.server.identity.IdentityService;
+import org.haox.kerb.server.identity.KrbIdentity;
 import org.haox.kerb.server.replay.ReplayCheckService;
-import org.haox.kerb.server.store.PrincipalStore;
-import org.haox.kerb.server.store.PrincipalStoreEntry;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KrbMessage;
@@ -17,7 +17,7 @@ import java.util.List;
 public abstract class KdcContext
 {
     private KdcConfig config;
-    private PrincipalStore store;
+    private IdentityService identityService;
     private List<EncryptionType> defaultEtypes;
     private Ticket ticket;
     private boolean isPreAuthenticated;
@@ -27,8 +27,8 @@ public abstract class KdcContext
     private EncryptionType encryptionType;
     private ReplayCheckService replayCache;
     private EncryptionKey clientKey;
-    private PrincipalStoreEntry clientEntry;
-    private PrincipalStoreEntry serverEntry;
+    private KrbIdentity clientEntry;
+    private KrbIdentity serverEntry;
     public KdcConfig getConfig() {
         return config;
     }
@@ -44,14 +44,14 @@ public abstract class KdcContext
         return defaultEtypes;
     }
 
-    public PrincipalStore getStore()
+    public IdentityService getIdentityService()
     {
-        return store;
+        return identityService;
     }
 
-    public void setStore(PrincipalStore store)
+    public void setIdentityService(IdentityService identityService)
     {
-        this.store = store;
+        this.identityService = identityService;
     }
 
     public KdcReq getRequest()
@@ -120,23 +120,21 @@ public abstract class KdcContext
         this.isPreAuthenticated = isPreAuthenticated;
     }
 
-    public PrincipalStoreEntry getServerEntry()
-    {
+    public KrbIdentity getServerEntry() {
         return serverEntry;
     }
 
-    public void setServerEntry( PrincipalStoreEntry serverEntry )
+    public void setServerEntry(KrbIdentity serverEntry )
     {
         this.serverEntry = serverEntry;
     }
 
-    public PrincipalStoreEntry getClientEntry()
+    public KrbIdentity getClientEntry()
     {
         return clientEntry;
     }
 
-    public void setClientEntry( PrincipalStoreEntry clientEntry )
-    {
+    public void setClientEntry(KrbIdentity clientEntry ) {
         this.clientEntry = clientEntry;
     }
 
