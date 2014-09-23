@@ -1,7 +1,5 @@
 package org.haox.kerb.server.tgs;
 
-import org.apache.directory.shared.kerberos.KerberosConstants;
-import org.apache.directory.shared.kerberos.codec.options.ApOptions;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.server.KdcConfig;
@@ -9,9 +7,11 @@ import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.KdcService;
 import org.haox.kerb.server.identity.KrbIdentity;
 import org.haox.kerb.server.replay.ReplayCheckService;
+import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
+import org.haox.kerb.spec.type.ap.ApOptions;
 import org.haox.kerb.spec.type.ap.ApReq;
 import org.haox.kerb.spec.type.ap.Authenticator;
 import org.haox.kerb.spec.type.common.*;
@@ -150,7 +150,7 @@ public class TgsService extends KdcService {
                                                  long clockSkew, ReplayCheckService replayCache,
                                                  boolean emptyAddressesAllowed, InetAddress clientAddress,
                                                  KeyUsage authenticatorKeyUsage, boolean isValidate) throws KrbException, KrbException {
-        if (authHeader.getPvno() != KerberosConstants.KERBEROS_V5)
+        if (authHeader.getPvno() != KrbConstant.KRB_V5)
         {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
         }
@@ -160,14 +160,14 @@ public class TgsService extends KdcService {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
         }
 
-        if (authHeader.getTicket().getTktvno() != KerberosConstants.KERBEROS_V5)
+        if (authHeader.getTicket().getTktvno() != KrbConstant.KRB_V5)
         {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
         }
 
         EncryptionKey ticketKey = null;
 
-        if (authHeader.getApOptions().isFlagSet(ApOptions.USE_SESSION_KEY))
+        if (authHeader.getApOptions().isFlagSet(0/*ApOptions.USE_SESSION_KEY*/))
         {
             ticketKey = authHeader.getTicket().getEncPart().getKey();
         }
@@ -252,7 +252,7 @@ public class TgsService extends KdcService {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_EXPIRED);
         }
 
-        authHeader.getApOptions().setFlag(ApOptions.MUTUAL_REQUIRED);
+        authHeader.getApOptions().setFlag(0/*ApOptions.MUTUAL_REQUIRED*/);
 
         return authenticator;
     }

@@ -1,15 +1,9 @@
 package org.haox.kerb.server;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.directory.server.kerberos.shared.crypto.encryption.KerberosKeyFactory;
-import org.apache.directory.server.kerberos.shared.keytab.Keytab;
-import org.apache.directory.server.kerberos.shared.keytab.KeytabEntry;
-import org.apache.directory.shared.kerberos.KerberosTime;
-import org.apache.directory.shared.kerberos.codec.types.EncryptionType;
-import org.apache.directory.shared.kerberos.components.EncryptionKey;
+import org.haox.kerb.keytab.Keytab;
+import org.haox.kerb.keytab.KeytabEntry;
 import org.haox.kerb.server.identity.Identity;
 import org.haox.kerb.server.identity.KrbIdentity;
-import org.haox.kerb.spec.type.common.PrincipalName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +12,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.*;
 
 public class TestKdcServer extends SimpleKdcServer {
@@ -71,7 +64,7 @@ public class TestKdcServer extends SimpleKdcServer {
 
         try {
             StringBuilder sb = new StringBuilder();
-            InputStream is = getClass().getResourceAsStream("minikdc-krb5.conf");
+            InputStream is = getClass().getResourceAsStream("kdc-krb5.conf");
             BufferedReader r = new BufferedReader(new InputStreamReader(is));
             String line = r.readLine();
             while (line != null) {
@@ -80,9 +73,11 @@ public class TestKdcServer extends SimpleKdcServer {
             }
             r.close();
             krb5conf = new File(workDir, "krb5.conf").getAbsoluteFile();
+            /*ZKTODO
             FileUtils.writeStringToFile(krb5conf,
                     MessageFormat.format(sb.toString(), getKdcRealm(), getKdcHost(),
                             Integer.toString(getKdcPort()), System.getProperty("line.separator")));
+            */
             System.setProperty("java.security.krb5.conf", krb5conf.getAbsolutePath());
 
             System.setProperty("sun.security.krb5.debug", String.valueOf(enableDebug()));
@@ -142,11 +137,11 @@ public class TestKdcServer extends SimpleKdcServer {
         }
     }
 
-    public void exportPrincipals(File keytabFile)
-            throws Exception {
+    public void exportPrincipals(File keytabFile) throws Exception {
         Keytab keytab = new Keytab();
         List<KeytabEntry> entries = new ArrayList<KeytabEntry>();
 
+        /*ZKTODO
         List<Identity> identities = getIdentityService().getIdentities();
         for (Identity identity : identities) {
             KrbIdentity ki = (KrbIdentity) identity;
@@ -162,5 +157,6 @@ public class TestKdcServer extends SimpleKdcServer {
         }
         keytab.setEntries(entries);
         keytab.write(keytabFile);
+        */
     }
 }
