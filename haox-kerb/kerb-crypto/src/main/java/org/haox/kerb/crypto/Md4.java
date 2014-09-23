@@ -25,9 +25,6 @@ import java.security.MessageDigest;
  */
 public  class Md4 extends MessageDigest implements Cloneable
 {
-// MD4 specific object variables
-//...........................................................................
-
     /**
      * The size in bytes of the input block to the tranformation algorithm.
      */
@@ -53,10 +50,6 @@ public  class Md4 extends MessageDigest implements Cloneable
      */
     private int[] X = new int[16];
 
-
-// Constructors
-//...........................................................................
-
     public Md4() {
         super("MD4");
         engineReset();
@@ -72,18 +65,10 @@ public  class Md4 extends MessageDigest implements Cloneable
         count = md.count;
     }
 
-
-// Cloneable method implementation
-//...........................................................................
-
     /**
      * Returns a copy of this MD object.
      */
     public Object clone() { return new Md4(this); }
-
-
-// JCE methods
-//...........................................................................
 
     /**
      * Resets this object disregarding any temporary data present at the
@@ -184,10 +169,6 @@ public  class Md4 extends MessageDigest implements Cloneable
         engineReset();
         return result;
     }
-
-
-// own methods
-//...........................................................................
 
     /**
      *    MD4 basic transformation.

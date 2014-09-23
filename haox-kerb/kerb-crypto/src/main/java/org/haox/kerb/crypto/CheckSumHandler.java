@@ -9,55 +9,6 @@ import org.haox.kerb.spec.type.common.KrbErrorCode;
 
 public class CheckSumHandler {
 
-    /*
-    static int CKSUMTYPE_DEFAULT;
-    static int SAFECKSUMTYPE_DEFAULT;
-
-    private static boolean DEBUG = true;
-    static {
-        String temp = null;
-        Config cfg = null;
-        try {
-            cfg = Config.getInstance();
-            temp = cfg.getDefault("default_checksum", "libdefaults");
-            if (temp != null)
-                {
-                    CKSUMTYPE_DEFAULT = cfg.getType(temp);
-                } else {
-                    CKSUMTYPE_DEFAULT = CKSUMTYPE_RSA_MD5;
-                }
-        } catch (Exception exc) {
-            if (DEBUG) {
-                System.out.println("Exception in getting default checksum "+
-                                   "value from the configuration " +
-                                   "Setting default checksum to be RSA-MD5");
-                exc.printStackTrace();
-            }
-            CKSUMTYPE_DEFAULT = CKSUMTYPE_RSA_MD5;
-        }
-
-
-        try {
-            temp = cfg.getDefault("safe_checksum_type", "libdefaults");
-            if (temp != null)
-                {
-                    SAFECKSUMTYPE_DEFAULT = cfg.getType(temp);
-                } else {
-                    SAFECKSUMTYPE_DEFAULT = CKSUMTYPE_RSA_MD5_DES;
-                }
-        } catch (Exception exc) {
-            if (DEBUG) {
-                System.out.println("Exception in getting safe default " +
-                                   "checksum value " +
-                                   "from the configuration Setting  " +
-                                   "safe default checksum to be RSA-MD5");
-                exc.printStackTrace();
-            }
-            SAFECKSUMTYPE_DEFAULT = CKSUMTYPE_RSA_MD5_DES;
-        }
-    }
-
-     */
     public static CheckSumTypeHandler getCheckSumHandler(String cksumType) throws KrbException {
         CheckSumType eTypeEnum = CheckSumType.fromName(cksumType);
         return getCheckSumHandler(eTypeEnum);
