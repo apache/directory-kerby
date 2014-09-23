@@ -1,12 +1,6 @@
 package org.haox.kerb.codec.spnego;
 
-import org.bouncycastle.asn1.*;
-import org.haox.kerb.codec.DecodingUtil;
-import org.haox.kerb.codec.util.HaoxASN1InputStream;
-import org.haox.kerb.codec.util.HaoxDERApplicationSpecific;
-
 import java.io.IOException;
-import java.util.Enumeration;
 
 public class SpnegoInitToken extends SpnegoToken {
 
@@ -22,6 +16,7 @@ public class SpnegoInitToken extends SpnegoToken {
     private int contextFlags;
 
     public SpnegoInitToken(byte[] token) throws IOException {
+        /*
         HaoxASN1InputStream stream = new HaoxASN1InputStream(token);
         HaoxDERApplicationSpecific constructed = DecodingUtil.as(HaoxDERApplicationSpecific.class,
                 stream);
@@ -68,6 +63,7 @@ public class SpnegoInitToken extends SpnegoToken {
                 throw new IOException("spnego.field.invalid");
             }
         }
+        */
     }
 
     public int getContextFlags() {

@@ -1,6 +1,0 @@
-haox-asn1
-1. General asn1 collection of types for parser style, no template parameter;
-2. Asn1 object identifier type;
-3. Better organization of types for general parser style and model driven style;
-haox-kerb
-1. Please pass the test ASAP. --DONE!!!

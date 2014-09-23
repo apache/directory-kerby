@@ -1,6 +1,5 @@
 package org.haox.kerb.codec.kerberos;
 
-import org.bouncycastle.util.Arrays;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.spec.KrbException;
@@ -11,6 +10,8 @@ import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
+
+import java.util.Arrays;
 
 public class KerberosTicket {
     private String serverPrincipalName;
@@ -35,7 +36,7 @@ public class KerberosTicket {
 
         byte[] decrypted2 = EncryptionHandler.decrypt(
                 encrypted, key, KeyUsage.KDC_REP_TICKET);
-        if (!Arrays.areEqual(decrypted, decrypted2)) {
+        if (!Arrays.equals(decrypted, decrypted2)) {
             throw new KrbException("Encryption checking failed after decryption");
         }
     }
