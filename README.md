@@ -17,7 +17,7 @@ PKINIT (going)
 </pre>
 
 ### haox-asn1
-Look at [haox-asn1](https://github.com/drankye/haox/blob/master/haox-asn1/README.md)
+Please look at [haox-asn1](https://github.com/drankye/haox/blob/master/haox-asn1/README.md) for details.
 
 ### kerb-crypto
 Implementing des, des3, rc4, aes, camellia encryption and corresponding checksum types
