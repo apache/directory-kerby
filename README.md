@@ -29,8 +29,6 @@ Independent with Kerberos codes in JRE, but rely on JCE
 | des-cbc-crc | DES cbc mode with CRC-32 (weak) |
 | des-cbc-md4 | DES cbc mode with RSA-MD4 (weak) |
 | des-cbc-md5 |	DES cbc mode with RSA-MD5 (weak) |
-| des-cbc-raw |	DES cbc mode raw (weak) |
-| des3-cbc-raw |	Triple DES cbc mode raw (weak) |
 | des3-cbc-sha1 des3-hmac-sha1 des3-cbc-sha1-kd |	Triple DES cbc mode with HMAC/sha1 |
 | des-hmac-sha1 |	DES with HMAC/sha1 (weak) |
 | aes256-cts-hmac-sha1-96 aes256-cts AES-256 	| CTS mode with 96-bit SHA-1 HMAC |
