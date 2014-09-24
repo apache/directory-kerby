@@ -21,10 +21,10 @@ Preauth framework (going)
 PKINIT (going)
 </pre>
 
-### haox-asn1
+### The ASN-1 support
 Please look at [haox-asn1](https://github.com/drankye/haox/blob/master/haox-asn1/README.md) for details.
 
-### kerb-crypto
+### Kerberos Crypto and encryption types
 Implementing des, des3, rc4, aes, camellia encryption and corresponding checksum types
 Interoperates with MIT Kerberos and Microsoft AD
 Independent with Kerberos codes in JRE, but rely on JCE
