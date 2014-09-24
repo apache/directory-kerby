@@ -1,8 +1,13 @@
 Haox
 ====
 
-Haox is a Java client library binding for Kerberos as an effort to catch up with latest Kerberos features. It will also provide a simple KDC
-server implementation for unit test and integration usages for Kerberized system and application development.
+Haox is a Java client library binding for Kerberos as an effort to catch up with latest Kerberos features. It will also provide a simple KDC server implementation for unit test and integration usages to ease Kerberized system and application development.
+
+### Motivations  
+* Provide Java client API in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges. With such API, you can write your own kinit like tool with maximum flexibility in your application.
++ Provide new Kerberos features as soon as possible that can't just be done in JRE, like PKINIT and TokenPreauth mechanisms.
++ Provide a simple KDC server that you can easily integrate into your unit tests and integration tests.
++ Least dependency, it's ensured to depend only on JRE, for easy use and maintain.
 
 ### Status
 <pre>
@@ -44,7 +49,7 @@ Independent with Kerberos codes in JRE, but rely on JCE
 | camellia | The Camellia family: camellia256-cts-cmac and camellia128-cts-cmac |
 
 ### Dependency
-It surely only depends on JRE. Currently it depends on SLF4J but that will be removed.
+It surely only depends on JRE. Currently it depends on SLF4J but that will be removed later.
 
 ### License
 Apache License V2.0
