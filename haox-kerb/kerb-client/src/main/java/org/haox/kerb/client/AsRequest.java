@@ -1,0 +1,71 @@
+package org.haox.kerb.client;
+
+import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KerberosTime;
+import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.HostAddresses;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
+import org.haox.kerb.spec.type.common.PrincipalName;
+import org.haox.kerb.spec.type.kdc.AsReq;
+import org.haox.kerb.spec.type.kdc.KdcReq;
+import org.haox.kerb.spec.type.kdc.KdcReqBody;
+
+import java.util.List;
+
+public class AsRequest extends KdcRequest {
+    private AsReq asReq;
+
+    public AsRequest(KrbContext context) {
+        super(context);
+        this.asReq = new AsReq();
+    }
+
+    @Override
+    public KdcReq makeKdcRequest() throws KrbException {
+        KdcReqBody body = new KdcReqBody();
+
+        long startTime = System.currentTimeMillis();
+        body.setFrom(new KerberosTime(startTime));
+
+        PrincipalName cName = null;
+        cName = new PrincipalName(getClientPrincipal());
+        body.setCname(cName);
+
+        body.setRealm(getRealm());
+
+        PrincipalName sName = new PrincipalName(getServerPrincipal());
+        body.setSname(sName);
+
+        body.setTill(new KerberosTime(startTime + getTicketValidTime()));
+
+        int nonce = generateNonce();
+        body.setNonce(nonce);
+        setChosenNonce(nonce);
+
+        body.setKdcOptions(getKdcOptions());
+
+        HostAddresses addresses = getHostAddresses();
+        if (addresses != null) {
+            body.setAddresses(addresses);
+        }
+
+        List<EncryptionType> etypes = getEtypes();
+        if (etypes.isEmpty()) {
+            throw new KrbException("No encryption type is configured and available");
+        }
+        body.setEtypes(etypes);
+
+        EncryptionType encryptionType = etypes.iterator().next();
+        setChosenEtype(encryptionType);
+
+        AsReq req = new AsReq();
+        req.setReqBody(body);
+
+        if (isPreAuthEnabled()) {
+            PaDataEntry tsPaEntry = makeTimeStampPaDataEntry();
+            req.addPaData(tsPaEntry);
+        }
+
+        return asReq;
+    }
+}
