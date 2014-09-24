@@ -1,7 +1,7 @@
 Haox
 ====
 
-Haox is a Java client library binding for Kerberos as an effort to catch up with latest Kerberos features. It will also provide a simple KDC server implementation for unit test and integration usages to ease Kerberized system and application development.
+Haox is a Java client library binding for Kerberos as an effort to catch up with latest Kerberos features. 
 
 ### Motivations  
 * Provide Java client API in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges. With such API, you can write your own kinit like tool with maximum flexibility in your application.
