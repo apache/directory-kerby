@@ -59,7 +59,7 @@ public class AuthorizationData extends Asn1SequenceOf<AuthzDataEntry> {
 Then you can process with above definitions, encode and decode, without caring about the details.
 
 Think about how to implement the more complex sample from [ITU-T Rec. X.680 ISO/IEC 8824-1](http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf), 
-Please look at [PersonnelRecord.java](https://github.com/drankye/haox-asn1/blob/master/src/test/java/org/haox/asn1/PersonnelRecord.java) unit test case.
+Please look at [PersonnelRecord.java](https://github.com/drankye/haox/blob/master/haox-asn1/src/test/java/org/haox/asn1/PersonnelRecord.java) unit test case.
 ```
 A.1 ASN.1 description of the record structure
 The structure of the hypothetical personnel record is formally described below using ASN.1 specified in
