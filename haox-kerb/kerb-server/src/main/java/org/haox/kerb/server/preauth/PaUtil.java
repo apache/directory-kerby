@@ -1,4 +1,4 @@
-package org.haox.kerb.server;
+package org.haox.kerb.server.preauth;
 
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaDataEntry;

@@ -6,6 +6,7 @@ import org.haox.kerb.server.as.AuthnContext;
 import org.haox.kerb.server.identity.Identity;
 import org.haox.kerb.server.identity.IdentityService;
 import org.haox.kerb.server.identity.KrbIdentity;
+import org.haox.kerb.server.preauth.PaUtil;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
