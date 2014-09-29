@@ -1,15 +1,5 @@
 package org.haox.event;
 
-public enum EventType {
-    TCP_ADDRESS_BIND,
-    TCP_ADDRESS_CONNECT,
-    UDP_ADDRESS_BIND,
-    UDP_ADDRESS_CONNECT,
-    CHANNEL_ACCEPT,
-    CHANNEL_CONNECT,
-    NEW_TRANSPORT,
-    WRITEABLE_TRANSPORT,
-    READABLE_TRANSPORT,
-    NEW_INBOUND_MESSAGE,
-    NEW_OUTBOUND_MESSAGE
+public interface EventType {
+    // no op
 }

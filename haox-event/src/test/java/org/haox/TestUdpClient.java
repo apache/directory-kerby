@@ -1,18 +1,12 @@
 package org.haox;
 
 import junit.framework.Assert;
-import org.haox.dispatch.AsyncDispatcher;
 import org.haox.event.Event;
-import org.haox.event.EventType;
-import org.haox.event.MessageEvent;
-import org.haox.handler.AsyncMessageHandler;
-import org.haox.handler.AsyncTransportHandler;
-import org.haox.handler.MessageHandler;
-import org.haox.handler.TransportHandler;
-import org.haox.message.Message;
-import org.haox.transport.Transport;
-import org.haox.transport.connect.Connector;
-import org.haox.transport.connect.UdpConnector;
+import org.haox.event.EventHub;
+import org.haox.event.InternalEventHandler;
+import org.haox.transport.*;
+import org.haox.transport.event.MessageEvent;
+import org.haox.transport.event.TransportEventType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -83,55 +77,45 @@ public class TestUdpClient extends TestUdpBase {
     }
 
     private void setUpClient() throws IOException {
-        AsyncDispatcher clientDispatcher = new AsyncDispatcher();
-        clientDispatcher.start();
+        EventHub eventHub = new EventHub();
 
-        MessageHandler messageHandler = new MessageHandler() {
+        MessageHandler messageHandler = new MessageHandler(eventHub) {
             @Override
-            public void process(Event event) {
+            protected void doHandle(Event event) throws Exception {
                 MessageEvent msgEvent = (MessageEvent) event;
-                if (msgEvent.getEventType() == EventType.NEW_INBOUND_MESSAGE) {
-                    synchronized (TestUdpClient.this) {
-                        ByteBuffer buffer = msgEvent.getMessage().getContent();
-                        clientRecvedMessage = recvBuffer2String(buffer);
-                        System.out.println("Recved clientRecvedMessage: " + clientRecvedMessage);
-                    }
-                } else if (msgEvent.getEventType() == EventType.NEW_OUTBOUND_MESSAGE) {
-                    try {
-                        msgEvent.getTransport().sendMessage(msgEvent.getMessage());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if (msgEvent.getEventType() == TransportEventType.INBOUND_MESSAGE) {
+                    ByteBuffer buffer = msgEvent.getMessage().getContent();
+                    clientRecvedMessage = recvBuffer2String(buffer);
+                    System.out.println("Recved clientRecvedMessage: " + clientRecvedMessage);
+                } else if (msgEvent.getEventType() == TransportEventType.OUTBOUND_MESSAGE) {
+                    msgEvent.getTransport().sendMessage(msgEvent.getMessage());
                 }
             }
         };
-        clientDispatcher.register(new AsyncMessageHandler(messageHandler));
+        eventHub.register(messageHandler);
 
-        Connector connector = new UdpConnector();
-        clientDispatcher.register(connector);
-        TransportHandler transportHandler = new TransportHandler() {
+        Connector connector = new UdpConnector(eventHub);
+        eventHub.register((InternalEventHandler) connector);
+        TransportHandler transportHandler = new TransportHandler(eventHub) {
             @Override
             protected void onNewTransport(Transport transport) {
-                synchronized (TestUdpClient.this) {
-                    transport.postMessage(new Message(ByteBuffer.wrap(TEST_MESSAGE.getBytes())));
-                }
+                transport.sendMessage(new Message(ByteBuffer.wrap(TEST_MESSAGE.getBytes())));
             }
         };
-        clientDispatcher.register(new AsyncTransportHandler(transportHandler));
+        eventHub.register(transportHandler);
 
+        eventHub.start();
         connector.connect(serverHost, serverPort);
     }
 
     @Test
     public void testUdpTransport() throws IOException, InterruptedException {
         while (true) {
-            synchronized (this) {
-                if (clientRecvedMessage == null) {
-                    Thread.sleep(1000);
-                } else {
-                    System.out.println("Got clientRecvedMessage: " + clientRecvedMessage);
-                    break;
-                }
+            if (clientRecvedMessage == null) {
+                Thread.sleep(1000);
+            } else {
+                System.out.println("Got clientRecvedMessage: " + clientRecvedMessage);
+                break;
             }
         }
         Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);

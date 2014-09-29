@@ -1,14 +1,15 @@
 package org.haox;
 
 import junit.framework.Assert;
-import org.haox.dispatch.AsyncDispatcher;
 import org.haox.event.Event;
-import org.haox.event.EventType;
-import org.haox.event.MessageEvent;
-import org.haox.handler.AsyncMessageHandler;
-import org.haox.handler.MessageHandler;
-import org.haox.transport.accept.Acceptor;
-import org.haox.transport.accept.UdpAcceptor;
+import org.haox.event.EventHandler;
+import org.haox.event.EventHub;
+import org.haox.event.InternalEventHandler;
+import org.haox.transport.Acceptor;
+import org.haox.transport.MessageHandler;
+import org.haox.transport.UdpAcceptor;
+import org.haox.transport.event.MessageEvent;
+import org.haox.transport.event.TransportEventType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,29 +27,24 @@ public class TestUdpServer extends TestUdpBase {
     }
 
     private void setUpServer() throws IOException {
-        AsyncDispatcher serverDispatcher = new AsyncDispatcher();
-        serverDispatcher.start();
+        EventHub eventHub = new EventHub();
+        eventHub.start();
 
-        MessageHandler messageHandler = new MessageHandler() {
+        MessageHandler messageHandler = new MessageHandler(eventHub) {
             @Override
-            public void process(Event event) {
+            protected void doHandle(Event event) throws Exception {
                 MessageEvent msgEvent = (MessageEvent) event;
-                if (msgEvent.getEventType() == EventType.NEW_INBOUND_MESSAGE) {
-                    msgEvent.getTransport().postMessage(msgEvent.getMessage());
-                } else if (msgEvent.getEventType() == EventType.NEW_OUTBOUND_MESSAGE) {
-                    try {
-                        msgEvent.getTransport().sendMessage(msgEvent.getMessage());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if (msgEvent.getEventType() == TransportEventType.INBOUND_MESSAGE) {
+                    msgEvent.getTransport().sendMessage(msgEvent.getMessage());
+                } else if (msgEvent.getEventType() == TransportEventType.OUTBOUND_MESSAGE) {
+                    msgEvent.getTransport().sendMessage(msgEvent.getMessage());
                 }
             }
         };
-        serverDispatcher.register(new AsyncMessageHandler(messageHandler));
+        eventHub.register(messageHandler);
 
-        Acceptor acceptor = new UdpAcceptor();
-        serverDispatcher.register(acceptor);
-
+        Acceptor acceptor = new UdpAcceptor(eventHub);
+        eventHub.register((InternalEventHandler) acceptor);
         acceptor.listen(serverHost, serverPort);
     }
 

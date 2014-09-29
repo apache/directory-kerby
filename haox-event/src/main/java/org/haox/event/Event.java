@@ -1,6 +1,6 @@
 package org.haox.event;
 
-public abstract class Event {
+public class Event {
 
     private EventType eventType;
 
