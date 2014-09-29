@@ -36,8 +36,6 @@ public class TestUdpServer extends TestUdpBase {
                 MessageEvent msgEvent = (MessageEvent) event;
                 if (msgEvent.getEventType() == TransportEventType.INBOUND_MESSAGE) {
                     msgEvent.getTransport().sendMessage(msgEvent.getMessage());
-                } else if (msgEvent.getEventType() == TransportEventType.OUTBOUND_MESSAGE) {
-                    msgEvent.getTransport().sendMessage(msgEvent.getMessage());
                 }
             }
         };

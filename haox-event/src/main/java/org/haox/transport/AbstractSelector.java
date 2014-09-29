@@ -45,8 +45,8 @@ public abstract class AbstractSelector extends LongRunningEventHandler {
             Iterator<SelectionKey> iterator = selectionKeys.iterator();
             while (iterator.hasNext()) {
                 SelectionKey selectionKey = iterator.next();
-                iterator.remove();
                 dealKey(selectionKey);
+                iterator.remove();
             }
         }
     }

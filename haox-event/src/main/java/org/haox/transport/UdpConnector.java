@@ -52,7 +52,7 @@ public class UdpConnector extends Connector {
         channel.configureBlocking(false);
         channel.connect(address);
 
-        channel.register(selector, SelectionKey.OP_READ);
+        channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
 
         UdpTransport transport = new UdpTransport(channel, address, true);
         transports.put(address, transport);
@@ -61,18 +61,19 @@ public class UdpConnector extends Connector {
 
     @Override
     protected void dealKey(SelectionKey selectionKey) throws IOException {
+        DatagramChannel channel =
+                (DatagramChannel) selectionKey.channel();
+
         if (selectionKey.isReadable()) {
-            doRead(selectionKey);
+            doRead(channel);
         } else if (selectionKey.isWritable()) {
-            doWrite(selectionKey);
+            doWrite(channel);
         }
     }
 
-    private void doRead(SelectionKey selectionKey) throws IOException {
-        DatagramChannel datagramChannel =
-                (DatagramChannel) selectionKey.channel();
+    private void doRead(DatagramChannel channel) throws IOException {
         ByteBuffer recvBuffer = ByteBuffer.allocate(65536); // to optimize
-        InetSocketAddress fromAddress = (InetSocketAddress) datagramChannel.receive(recvBuffer);
+        InetSocketAddress fromAddress = (InetSocketAddress) channel.receive(recvBuffer);
         if (fromAddress != null) {
             recvBuffer.flip();
             UdpTransport transport = transports.get(fromAddress);
@@ -83,7 +84,7 @@ public class UdpConnector extends Connector {
         }
     }
 
-    private void doWrite(SelectionKey selectionKey) throws IOException {
+    private void doWrite(DatagramChannel channel) throws IOException {
         for (UdpTransport transport : transports.values()) {
             transport.onWriteable();
         }

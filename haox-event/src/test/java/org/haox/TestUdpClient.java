@@ -58,7 +58,7 @@ public class TestUdpClient extends TestUdpBase {
                     SelectionKey selectionKey = iterator.next();
                     iterator.remove();
                     if (selectionKey.isReadable()) {
-                        ByteBuffer recvBuffer = ByteBuffer.allocate(65536); // to optimize
+                        ByteBuffer recvBuffer = ByteBuffer.allocate(65536);
                         InetSocketAddress fromAddress = (InetSocketAddress) serverSocketChannel.receive(recvBuffer);
                         if (fromAddress != null) {
                             recvBuffer.flip();
@@ -87,8 +87,6 @@ public class TestUdpClient extends TestUdpBase {
                     ByteBuffer buffer = msgEvent.getMessage().getContent();
                     clientRecvedMessage = recvBuffer2String(buffer);
                     System.out.println("Recved clientRecvedMessage: " + clientRecvedMessage);
-                } else if (msgEvent.getEventType() == TransportEventType.OUTBOUND_MESSAGE) {
-                    msgEvent.getTransport().sendMessage(msgEvent.getMessage());
                 }
             }
         };

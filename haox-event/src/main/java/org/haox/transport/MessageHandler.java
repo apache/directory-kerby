@@ -13,8 +13,7 @@ public abstract class MessageHandler extends AbstractEventHandler {
     @Override
     public TransportEventType[] getInterestedEvents() {
         return new TransportEventType[] {
-                TransportEventType.INBOUND_MESSAGE,
-                TransportEventType.OUTBOUND_MESSAGE
+                TransportEventType.INBOUND_MESSAGE
         };
     }
 }
