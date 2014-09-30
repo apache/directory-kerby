@@ -51,4 +51,14 @@ public abstract class LongRunningEventHandler extends BufferedEventHandler {
     public boolean isStopped() {
         return executorService.isShutdown();
     }
+
+    protected void processEvents() {
+        while (! eventQueue.isEmpty()) {
+            try {
+                process(eventQueue.take());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

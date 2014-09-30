@@ -8,7 +8,7 @@ import java.util.concurrent.BlockingQueue;
  */
 public abstract class BufferedEventHandler extends AbstractInternalEventHandler {
 
-    private BlockingQueue<Event> eventQueue;
+    protected BlockingQueue<Event> eventQueue;
 
     public BufferedEventHandler(EventHandler handler) {
         super(handler);
@@ -29,16 +29,6 @@ public abstract class BufferedEventHandler extends AbstractInternalEventHandler 
             eventQueue.put(event);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    protected void processEvents() {
-        while (! eventQueue.isEmpty()) {
-            try {
-                process(eventQueue.take());
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 }

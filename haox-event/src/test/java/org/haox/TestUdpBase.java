@@ -1,5 +1,7 @@
 package org.haox;
 
+import org.haox.event.EventType;
+
 import java.nio.ByteBuffer;
 
 public class TestUdpBase {
@@ -7,6 +9,10 @@ public class TestUdpBase {
     protected short serverPort = 8181;
     protected String TEST_MESSAGE = "Hello world!";
     protected String clientRecvedMessage;
+
+    protected enum TestEventType implements EventType {
+        FINISHED
+    }
 
     protected String recvBuffer2String(ByteBuffer buffer) {
         byte[] bytes = new byte[buffer.remaining()];

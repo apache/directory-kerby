@@ -3,6 +3,7 @@ package org.haox;
 import junit.framework.Assert;
 import org.haox.event.Event;
 import org.haox.event.EventHub;
+import org.haox.event.EventWaiter;
 import org.haox.event.InternalEventHandler;
 import org.haox.transport.*;
 import org.haox.transport.event.MessageEvent;
@@ -21,6 +22,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class TestUdpClient extends TestUdpBase {
+
+    private EventHub eventHub;
+    private EventWaiter eventWaiter;
 
     @Before
     public void setUp() throws IOException {
@@ -77,7 +81,7 @@ public class TestUdpClient extends TestUdpBase {
     }
 
     private void setUpClient() throws IOException {
-        EventHub eventHub = new EventHub();
+        eventHub = new EventHub();
 
         MessageHandler messageHandler = new MessageHandler(eventHub) {
             @Override
@@ -87,6 +91,8 @@ public class TestUdpClient extends TestUdpBase {
                     ByteBuffer buffer = msgEvent.getMessage().getContent();
                     clientRecvedMessage = recvBuffer2String(buffer);
                     System.out.println("Recved clientRecvedMessage: " + clientRecvedMessage);
+                    Boolean result = TEST_MESSAGE.equals(clientRecvedMessage);
+                    dispatch(new Event(TestEventType.FINISHED, result));
                 }
             }
         };
@@ -102,20 +108,19 @@ public class TestUdpClient extends TestUdpBase {
         };
         eventHub.register(transportHandler);
 
+        eventWaiter = eventHub.waitEvent(TestEventType.FINISHED);
+
         eventHub.start();
         connector.connect(serverHost, serverPort);
     }
 
     @Test
-    public void testUdpTransport() throws IOException, InterruptedException {
-        while (true) {
-            if (clientRecvedMessage == null) {
-                Thread.sleep(1000);
-            } else {
-                System.out.println("Got clientRecvedMessage: " + clientRecvedMessage);
-                break;
-            }
+    public void testUdpTransport() {
+        Event event = eventWaiter.waitEvent();
+        if (event != null) {
+            Assert.assertTrue((Boolean) event.getEventData());
+        } else {
+            Assert.fail();
         }
-        Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
     }
 }
