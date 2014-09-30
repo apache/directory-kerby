@@ -1,7 +1,5 @@
 package org.haox.transport;
 
-import org.haox.message.Message;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
@@ -16,7 +14,7 @@ public class TcpTransport extends Transport {
     }
 
     @Override
-    protected void doSendMessage(Message message) {
+    protected void sendOutMessage(Message message) {
 
     }
 }

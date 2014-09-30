@@ -1,18 +1,12 @@
 package org.haox;
 
 import junit.framework.Assert;
-import org.haox.dispatch.AsyncDispatcher;
-import org.haox.event.Event;
-import org.haox.event.EventType;
-import org.haox.event.MessageEvent;
-import org.haox.handler.AsyncMessageHandler;
-import org.haox.handler.AsyncTransportHandler;
-import org.haox.handler.MessageHandler;
-import org.haox.handler.TransportHandler;
-import org.haox.message.Message;
-import org.haox.transport.Transport;
-import org.haox.transport.connect.Connector;
-import org.haox.transport.connect.UdpConnector;
+import org.haox.event.*;
+import org.haox.transport.*;
+import org.haox.transport.event.MessageEvent;
+import org.haox.transport.event.TransportEvent;
+import org.haox.transport.event.TransportEventType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,6 +21,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class TestUdpClient extends TestUdpBase {
+
+    private EventHub eventHub;
+    private EventWaiter eventWaiter;
 
     @Before
     public void setUp() throws IOException {
@@ -64,7 +61,7 @@ public class TestUdpClient extends TestUdpBase {
                     SelectionKey selectionKey = iterator.next();
                     iterator.remove();
                     if (selectionKey.isReadable()) {
-                        ByteBuffer recvBuffer = ByteBuffer.allocate(65536); // to optimize
+                        ByteBuffer recvBuffer = ByteBuffer.allocate(65536);
                         InetSocketAddress fromAddress = (InetSocketAddress) serverSocketChannel.receive(recvBuffer);
                         if (fromAddress != null) {
                             recvBuffer.flip();
@@ -83,57 +80,54 @@ public class TestUdpClient extends TestUdpBase {
     }
 
     private void setUpClient() throws IOException {
-        AsyncDispatcher clientDispatcher = new AsyncDispatcher();
-        clientDispatcher.start();
+        eventHub = new EventHub();
 
-        MessageHandler messageHandler = new MessageHandler() {
+        EventHandler messageHandler = new AbstractEventHandler() {
             @Override
-            public void process(Event event) {
+            protected void doHandle(Event event) throws Exception {
                 MessageEvent msgEvent = (MessageEvent) event;
-                if (msgEvent.getEventType() == EventType.NEW_INBOUND_MESSAGE) {
-                    synchronized (TestUdpClient.this) {
-                        ByteBuffer buffer = msgEvent.getMessage().getContent();
-                        clientRecvedMessage = recvBuffer2String(buffer);
-                        System.out.println("Recved clientRecvedMessage: " + clientRecvedMessage);
-                    }
-                } else if (msgEvent.getEventType() == EventType.NEW_OUTBOUND_MESSAGE) {
-                    try {
-                        msgEvent.getTransport().sendMessage(msgEvent.getMessage());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if (msgEvent.getEventType() == TransportEventType.INBOUND_MESSAGE) {
+                    ByteBuffer buffer = msgEvent.getMessage().getContent();
+                    clientRecvedMessage = recvBuffer2String(buffer);
+                    System.out.println("Recved clientRecvedMessage: " + clientRecvedMessage);
+                    Boolean result = TEST_MESSAGE.equals(clientRecvedMessage);
+                    dispatch(new Event(TestEventType.FINISHED, result));
                 }
             }
+
+            @Override
+            public EventType[] getInterestedEvents() {
+                return new EventType[] {
+                        TransportEventType.INBOUND_MESSAGE
+                };
+            }
         };
-        clientDispatcher.register(new AsyncMessageHandler(messageHandler));
+        eventHub.register(messageHandler);
 
         Connector connector = new UdpConnector();
-        clientDispatcher.register(connector);
-        TransportHandler transportHandler = new TransportHandler() {
-            @Override
-            protected void onNewTransport(Transport transport) {
-                synchronized (TestUdpClient.this) {
-                    transport.postMessage(new Message(ByteBuffer.wrap(TEST_MESSAGE.getBytes())));
-                }
-            }
-        };
-        clientDispatcher.register(new AsyncTransportHandler(transportHandler));
+        eventHub.register(connector);
+        eventHub.register(new TransportHandler());
 
+        eventWaiter = eventHub.waitEvent(
+                TestEventType.FINISHED,
+                TransportEventType.NEW_TRANSPORT);
+
+        eventHub.start();
         connector.connect(serverHost, serverPort);
     }
 
     @Test
-    public void testUdpTransport() throws IOException, InterruptedException {
-        while (true) {
-            synchronized (this) {
-                if (clientRecvedMessage == null) {
-                    Thread.sleep(1000);
-                } else {
-                    System.out.println("Got clientRecvedMessage: " + clientRecvedMessage);
-                    break;
-                }
-            }
-        }
-        Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
+    public void testUdpTransport() {
+        Event event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
+        Transport transport = ((TransportEvent) event).getTransport();
+        transport.sendMessage(new Message(ByteBuffer.wrap(TEST_MESSAGE.getBytes())));
+
+        event = eventWaiter.waitEvent(TestEventType.FINISHED);
+        Assert.assertTrue((Boolean) event.getEventData());
+    }
+
+    @After
+    public void cleanup() {
+        eventHub.stop();
     }
 }

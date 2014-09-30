@@ -1,14 +1,12 @@
 package org.haox;
 
 import junit.framework.Assert;
-import org.haox.dispatch.AsyncDispatcher;
-import org.haox.event.Event;
-import org.haox.event.EventType;
-import org.haox.event.MessageEvent;
-import org.haox.handler.AsyncMessageHandler;
-import org.haox.handler.MessageHandler;
-import org.haox.transport.accept.Acceptor;
-import org.haox.transport.accept.UdpAcceptor;
+import org.haox.event.*;
+import org.haox.transport.Acceptor;
+import org.haox.transport.UdpAcceptor;
+import org.haox.transport.event.MessageEvent;
+import org.haox.transport.event.TransportEventType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,52 +18,57 @@ import java.nio.channels.DatagramChannel;
 
 public class TestUdpServer extends TestUdpBase {
 
+    private EventHub eventHub;
+
     @Before
     public void setUp() throws IOException {
         setUpServer();
     }
 
     private void setUpServer() throws IOException {
-        AsyncDispatcher serverDispatcher = new AsyncDispatcher();
-        serverDispatcher.start();
+        eventHub = new EventHub();
 
-        MessageHandler messageHandler = new MessageHandler() {
+        EventHandler messageHandler = new AbstractEventHandler() {
             @Override
-            public void process(Event event) {
+            protected void doHandle(Event event) throws Exception {
                 MessageEvent msgEvent = (MessageEvent) event;
-                if (msgEvent.getEventType() == EventType.NEW_INBOUND_MESSAGE) {
-                    msgEvent.getTransport().postMessage(msgEvent.getMessage());
-                } else if (msgEvent.getEventType() == EventType.NEW_OUTBOUND_MESSAGE) {
-                    try {
-                        msgEvent.getTransport().sendMessage(msgEvent.getMessage());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if (msgEvent.getEventType() == TransportEventType.INBOUND_MESSAGE) {
+                    msgEvent.getTransport().sendMessage(msgEvent.getMessage());
                 }
             }
+
+            @Override
+            public EventType[] getInterestedEvents() {
+                return new EventType[] { TransportEventType.INBOUND_MESSAGE };
+            }
         };
-        serverDispatcher.register(new AsyncMessageHandler(messageHandler));
+        eventHub.register(messageHandler);
 
         Acceptor acceptor = new UdpAcceptor();
-        serverDispatcher.register(acceptor);
+        eventHub.register(acceptor);
 
+        eventHub.start();
         acceptor.listen(serverHost, serverPort);
     }
 
     @Test
     public void testUdpTransport() throws IOException, InterruptedException {
-        Thread.sleep(1000);
+        Thread.sleep(10);
 
         DatagramChannel socketChannel = DatagramChannel.open();
         socketChannel.configureBlocking(true);
         SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
-        socketChannel.connect(sa);
-        socketChannel.write(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
+        socketChannel.send(ByteBuffer.wrap(TEST_MESSAGE.getBytes()), sa);
         ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
-        socketChannel.read(byteBuffer);
+        socketChannel.receive(byteBuffer);
         byteBuffer.flip();
         clientRecvedMessage = recvBuffer2String(byteBuffer);
 
         Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
+    }
+
+    @After
+    public void cleanup() {
+        eventHub.stop();
     }
 }

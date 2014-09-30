@@ -1,7 +1,5 @@
 package org.haox.transport;
 
-import org.haox.message.Message;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -20,12 +18,12 @@ public class UdpTransport extends Transport {
         this(channel, remoteAddress, true);
     }
 
-    public void onInboundMessage(ByteBuffer message) {
+    protected void onInboundMessage(ByteBuffer message) {
         handleInboundMessage(new Message(message));
     }
 
     @Override
-    protected void doSendMessage(Message message) throws IOException {
+    protected void sendOutMessage(Message message) throws IOException {
         ByteBuffer buffer = message.getContent();
         channel.send(buffer, getRemoteAddress());
     }
