@@ -8,8 +8,8 @@ import java.nio.channels.SelectionKey;
 
 public abstract class Connector extends AbstractSelector {
 
-    public Connector(Dispatcher dispatcher) {
-        super(dispatcher);
+    public Connector() {
+        super();
     }
 
     public void connect(String serverAddress, short serverPort) throws IOException {

@@ -11,8 +11,8 @@ public abstract class LongRunningEventHandler extends BufferedEventHandler {
         super(handler);
     }
 
-    public LongRunningEventHandler(Dispatcher dispatcher) {
-        super(dispatcher);
+    public LongRunningEventHandler() {
+        super();
     }
 
     protected abstract void loopOnce();
@@ -28,12 +28,6 @@ public abstract class LongRunningEventHandler extends BufferedEventHandler {
                     processEvents();
 
                     loopOnce();
-
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         });
@@ -44,7 +38,7 @@ public abstract class LongRunningEventHandler extends BufferedEventHandler {
         if (executorService.isShutdown()) {
             return;
         }
-        executorService.shutdown();
+        executorService.shutdownNow();
     }
 
     @Override

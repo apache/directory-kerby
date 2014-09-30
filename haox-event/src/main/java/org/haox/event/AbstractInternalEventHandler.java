@@ -10,8 +10,8 @@ public abstract class AbstractInternalEventHandler extends AbstractEventHandler
 
     private static AtomicInteger idGen = new AtomicInteger();
 
-    public AbstractInternalEventHandler(Dispatcher dispatcher) {
-        super(dispatcher);
+    public AbstractInternalEventHandler() {
+        super();
 
         this.id = idGen.getAndIncrement();
 
@@ -19,7 +19,7 @@ public abstract class AbstractInternalEventHandler extends AbstractEventHandler
     }
 
     public AbstractInternalEventHandler(EventHandler handler) {
-        this(handler.getDispatcher());
+        this();
 
         this.handler = handler;
     }

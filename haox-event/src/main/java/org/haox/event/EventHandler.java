@@ -7,4 +7,6 @@ public interface EventHandler {
     public EventType[] getInterestedEvents();
 
     public Dispatcher getDispatcher();
+
+    public void setDispatcher(Dispatcher dispatcher);
 }

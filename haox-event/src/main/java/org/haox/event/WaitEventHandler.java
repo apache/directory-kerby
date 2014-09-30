@@ -10,37 +10,50 @@ public class WaitEventHandler extends BufferedEventHandler {
         super(handler);
     }
 
+    public Event waitEvent() {
+        return waitEvent(null);
+    }
+
     public Event waitEvent(final EventType eventType) {
         Future<Event> future = executorService.submit(new Callable<Event>() {
             @Override
             public Event call() throws Exception {
-                Event result = check(eventType);
-                return result;
+                if (eventType != null) {
+                    return checkEvent(eventType);
+                } else {
+                    return checkEvent();
+                }
             }
         });
 
-        Event result = null;
         try {
-            result = future.get();
-        } catch (InterruptedException e) {
-            return null;
-        } catch (ExecutionException e) {
+            return future.get();
+        } catch (Exception e) {
             return null;
         }
-
-        return result;
     }
 
-    private Event check(EventType eventType) throws Exception {
+    private Event checkEvent() throws Exception {
+        return eventQueue.take();
+    }
+
+    private Event checkEvent(EventType eventType) throws Exception {
         Event event = null;
 
         while (true) {
-            event = eventQueue.take();
-            if (event.getEventType() == eventType) {
-                break;
+            if (eventQueue.size() == 1) {
+                if (eventQueue.peek().getEventType() == eventType) {
+                    return eventQueue.take();
+                }
+            } else {
+                event = eventQueue.take();
+                if (event.getEventType() == eventType) {
+                    return event;
+                } else {
+                    eventQueue.put(event); // put back since not wanted
+                }
             }
         }
-        return event;
     }
 
     @Override

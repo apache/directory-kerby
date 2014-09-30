@@ -14,10 +14,10 @@ import java.nio.channels.SocketChannel;
 
 public class TcpConnector extends Connector {
 
-    public TcpConnector(Dispatcher dispatcher) {
-        super(dispatcher);
+    public TcpConnector() {
+        super();
 
-        setEventHandler(new AbstractEventHandler(dispatcher) {
+        setEventHandler(new AbstractEventHandler() {
             @Override
             protected void doHandle(Event event) throws Exception {
                 if (event.getEventType() ==  TransportEventType.TCP_ADDRESS_CONNECT) {

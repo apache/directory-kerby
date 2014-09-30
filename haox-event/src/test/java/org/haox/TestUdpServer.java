@@ -1,12 +1,8 @@
 package org.haox;
 
 import junit.framework.Assert;
-import org.haox.event.Event;
-import org.haox.event.EventHandler;
-import org.haox.event.EventHub;
-import org.haox.event.InternalEventHandler;
+import org.haox.event.*;
 import org.haox.transport.Acceptor;
-import org.haox.transport.MessageHandler;
 import org.haox.transport.UdpAcceptor;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
@@ -32,7 +28,7 @@ public class TestUdpServer extends TestUdpBase {
     private void setUpServer() throws IOException {
         eventHub = new EventHub();
 
-        MessageHandler messageHandler = new MessageHandler(eventHub) {
+        EventHandler messageHandler = new AbstractEventHandler() {
             @Override
             protected void doHandle(Event event) throws Exception {
                 MessageEvent msgEvent = (MessageEvent) event;
@@ -40,11 +36,16 @@ public class TestUdpServer extends TestUdpBase {
                     msgEvent.getTransport().sendMessage(msgEvent.getMessage());
                 }
             }
+
+            @Override
+            public EventType[] getInterestedEvents() {
+                return new EventType[] { TransportEventType.INBOUND_MESSAGE };
+            }
         };
         eventHub.register(messageHandler);
 
-        Acceptor acceptor = new UdpAcceptor(eventHub);
-        eventHub.register((InternalEventHandler) acceptor);
+        Acceptor acceptor = new UdpAcceptor();
+        eventHub.register(acceptor);
 
         eventHub.start();
         acceptor.listen(serverHost, serverPort);
@@ -52,6 +53,8 @@ public class TestUdpServer extends TestUdpBase {
 
     @Test
     public void testUdpTransport() throws IOException, InterruptedException {
+        Thread.sleep(10);
+
         DatagramChannel socketChannel = DatagramChannel.open();
         socketChannel.configureBlocking(true);
         SocketAddress sa = new InetSocketAddress(serverHost, serverPort);

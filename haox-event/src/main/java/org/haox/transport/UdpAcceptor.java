@@ -1,14 +1,12 @@
 package org.haox.transport;
 
 import org.haox.event.AbstractEventHandler;
-import org.haox.event.Dispatcher;
 import org.haox.event.Event;
 import org.haox.event.EventType;
 import org.haox.transport.event.TransportEventType;
 import org.haox.transport.event.channel.UdpAddressBindEvent;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -17,13 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UdpAcceptor extends Acceptor {
+    private DatagramChannel serverChannel;
     private Map<InetSocketAddress, UdpTransport> transports;
 
-    public UdpAcceptor(Dispatcher dispatcher) {
-        super(dispatcher);
+    public UdpAcceptor() {
+        super();
         this.transports = new HashMap<InetSocketAddress, UdpTransport>();
 
-        setEventHandler(new AbstractEventHandler(dispatcher) {
+        setEventHandler(new AbstractEventHandler() {
             @Override
             protected void doHandle(Event event) throws Exception {
                 if (event.getEventType() ==  TransportEventType.UDP_ADDRESS_BIND) {
@@ -80,9 +79,20 @@ public class UdpAcceptor extends Acceptor {
     }
 
     private void doBind(UdpAddressBindEvent event) throws IOException {
-        DatagramChannel serverSocketChannel = DatagramChannel.open();
-        serverSocketChannel.configureBlocking(false);
-        serverSocketChannel.bind(event.getAddress());
-        serverSocketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+        serverChannel = DatagramChannel.open();
+        serverChannel.configureBlocking(false);
+        serverChannel.bind(event.getAddress());
+        serverChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+
+        try {
+            serverChannel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

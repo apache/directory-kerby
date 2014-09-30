@@ -9,10 +9,6 @@ import java.net.InetSocketAddress;
 
 public abstract class Acceptor extends AbstractSelector {
 
-    public Acceptor(Dispatcher dispatcher) {
-        super(dispatcher);
-    }
-
     public void listen(String address, short listenPort) {
         InetSocketAddress socketAddress = new InetSocketAddress(address, listenPort);
         doListen(socketAddress);

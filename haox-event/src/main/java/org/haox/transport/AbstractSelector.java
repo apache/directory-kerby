@@ -1,7 +1,5 @@
 package org.haox.transport;
 
-import org.haox.event.Dispatcher;
-import org.haox.event.EventHandler;
 import org.haox.event.LongRunningEventHandler;
 import org.haox.transport.event.NewTransportEvent;
 
@@ -14,10 +12,6 @@ import java.util.Set;
 public abstract class AbstractSelector extends LongRunningEventHandler {
 
     protected Selector selector;
-
-    public AbstractSelector(Dispatcher dispatcher) {
-        super(dispatcher);
-    }
 
     @Override
     public void init() {
@@ -40,7 +34,7 @@ public abstract class AbstractSelector extends LongRunningEventHandler {
     }
 
     protected void selectOnce() throws IOException {
-        if (selector.selectNow() > 0) {
+        if (selector.isOpen() && selector.select(10) > 0 && selector.isOpen()) {
             Set<SelectionKey> selectionKeys = selector.selectedKeys();
             Iterator<SelectionKey> iterator = selectionKeys.iterator();
             while (iterator.hasNext()) {
@@ -56,5 +50,16 @@ public abstract class AbstractSelector extends LongRunningEventHandler {
     protected void onNewTransport(Transport transport) {
         transport.setDispatcher(getDispatcher());
         dispatch(new NewTransportEvent(transport));
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+
+        try {
+            selector.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

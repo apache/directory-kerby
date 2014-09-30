@@ -1,12 +1,10 @@
 package org.haox;
 
 import junit.framework.Assert;
-import org.haox.event.Event;
-import org.haox.event.EventHub;
-import org.haox.event.EventWaiter;
-import org.haox.event.InternalEventHandler;
+import org.haox.event.*;
 import org.haox.transport.*;
 import org.haox.transport.event.MessageEvent;
+import org.haox.transport.event.TransportEvent;
 import org.haox.transport.event.TransportEventType;
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +13,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
@@ -85,7 +82,7 @@ public class TestUdpClient extends TestUdpBase {
     private void setUpClient() throws IOException {
         eventHub = new EventHub();
 
-        MessageHandler messageHandler = new MessageHandler(eventHub) {
+        EventHandler messageHandler = new AbstractEventHandler() {
             @Override
             protected void doHandle(Event event) throws Exception {
                 MessageEvent msgEvent = (MessageEvent) event;
@@ -97,20 +94,23 @@ public class TestUdpClient extends TestUdpBase {
                     dispatch(new Event(TestEventType.FINISHED, result));
                 }
             }
+
+            @Override
+            public EventType[] getInterestedEvents() {
+                return new EventType[] {
+                        TransportEventType.INBOUND_MESSAGE
+                };
+            }
         };
         eventHub.register(messageHandler);
 
-        Connector connector = new UdpConnector(eventHub);
-        eventHub.register((InternalEventHandler) connector);
-        TransportHandler transportHandler = new TransportHandler(eventHub) {
-            @Override
-            protected void onNewTransport(Transport transport) {
-                transport.sendMessage(new Message(ByteBuffer.wrap(TEST_MESSAGE.getBytes())));
-            }
-        };
-        eventHub.register(transportHandler);
+        Connector connector = new UdpConnector();
+        eventHub.register(connector);
+        eventHub.register(new TransportHandler());
 
-        eventWaiter = eventHub.waitEvent(TestEventType.FINISHED);
+        eventWaiter = eventHub.waitEvent(
+                TestEventType.FINISHED,
+                TransportEventType.NEW_TRANSPORT);
 
         eventHub.start();
         connector.connect(serverHost, serverPort);
@@ -118,12 +118,12 @@ public class TestUdpClient extends TestUdpBase {
 
     @Test
     public void testUdpTransport() {
-        Event event = eventWaiter.waitEvent();
-        if (event != null) {
-            Assert.assertTrue((Boolean) event.getEventData());
-        } else {
-            Assert.fail();
-        }
+        Event event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
+        Transport transport = ((TransportEvent) event).getTransport();
+        transport.sendMessage(new Message(ByteBuffer.wrap(TEST_MESSAGE.getBytes())));
+
+        event = eventWaiter.waitEvent(TestEventType.FINISHED);
+        Assert.assertTrue((Boolean) event.getEventData());
     }
 
     @After

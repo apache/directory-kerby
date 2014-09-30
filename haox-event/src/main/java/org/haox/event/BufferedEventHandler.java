@@ -14,8 +14,8 @@ public abstract class BufferedEventHandler extends AbstractInternalEventHandler 
         super(handler);
     }
 
-    public BufferedEventHandler(Dispatcher dispatcher) {
-        super(dispatcher);
+    public BufferedEventHandler() {
+        super();
     }
 
     @Override

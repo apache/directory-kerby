@@ -38,7 +38,7 @@ public class ExecutedEventHandler extends AbstractInternalEventHandler {
         if (executorService.isShutdown()) {
             return;
         }
-        executorService.shutdown();
+        executorService.shutdownNow();
     }
 
     @Override

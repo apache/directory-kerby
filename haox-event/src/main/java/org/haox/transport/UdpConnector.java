@@ -19,11 +19,11 @@ public class UdpConnector extends Connector {
 
     private Map<InetSocketAddress, UdpTransport> transports;
 
-    public UdpConnector(Dispatcher dispatcher) {
-        super(dispatcher);
+    public UdpConnector() {
+        super();
         this.transports = new HashMap<InetSocketAddress, UdpTransport>();
 
-        setEventHandler(new AbstractEventHandler(dispatcher) {
+        setEventHandler(new AbstractEventHandler() {
             @Override
             protected void doHandle(Event event) throws Exception {
                 if (event.getEventType() == TransportEventType.UDP_ADDRESS_CONNECT) {

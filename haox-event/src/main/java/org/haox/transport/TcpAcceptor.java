@@ -17,10 +17,6 @@ public class TcpAcceptor extends Acceptor {
 
     private boolean tcpNoDelay = true;
 
-    public TcpAcceptor(Dispatcher dispatcher) {
-        super(dispatcher);
-    }
-
     @Override
     protected void doListen(InetSocketAddress socketAddress) {
         TcpAddressBindEvent event = new TcpAddressBindEvent(socketAddress);

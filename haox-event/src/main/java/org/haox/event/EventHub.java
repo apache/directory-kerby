@@ -1,6 +1,8 @@
 package org.haox.event;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EventHub implements Dispatcher {
@@ -22,8 +24,8 @@ public class EventHub implements Dispatcher {
     private InternalEventHandler builtInHandler;
 
     class BuiltInEventHandler extends AbstractEventHandler {
-        public BuiltInEventHandler(Dispatcher dispatcher) {
-            super(dispatcher);
+        public BuiltInEventHandler() {
+            super();
         }
 
         @Override
@@ -42,7 +44,7 @@ public class EventHub implements Dispatcher {
     }
 
     private void init() {
-        EventHandler eh = new BuiltInEventHandler(this);
+        EventHandler eh = new BuiltInEventHandler();
         builtInHandler = new ExecutedEventHandler(eh);
         register(builtInHandler);
     }
@@ -54,12 +56,14 @@ public class EventHub implements Dispatcher {
 
     @Override
     public void register(EventHandler handler) {
+        handler.setDispatcher(this);
         InternalEventHandler ieh = new ExecutedEventHandler(handler);
         register(ieh);
     }
 
     @Override
     public void register(InternalEventHandler handler) {
+        handler.setDispatcher(this);
         handler.init();
 
         handlers.put(handler.id(), handler);
@@ -78,11 +82,11 @@ public class EventHub implements Dispatcher {
     }
 
     public EventWaiter waitEvent(final EventType event) {
-        if (eventWaiters.containsKey(event)) {
-            return eventWaiters.get(event);
-        }
+        return waitEvent(new EventType[] { event } );
+    }
 
-        EventHandler handler = new AbstractEventHandler(this) {
+    public EventWaiter waitEvent(final EventType... events) {
+        EventHandler handler = new AbstractEventHandler() {
             @Override
             protected void doHandle(Event event) throws Exception {
                 // no op;
@@ -90,16 +94,22 @@ public class EventHub implements Dispatcher {
 
             @Override
             public EventType[] getInterestedEvents() {
-                return new EventType[] { event };
+                return events;
             }
         };
 
+        handler.setDispatcher(this);
         final WaitEventHandler waitEventHandler = new WaitEventHandler(handler);
         register(waitEventHandler);
         EventWaiter waiter = new EventWaiter() {
             @Override
-            public Event waitEvent() {
+            public Event waitEvent(EventType event) {
                 return waitEventHandler.waitEvent(event);
+            }
+
+            @Override
+            public Event waitEvent() {
+                return waitEventHandler.waitEvent();
             }
         };
 
