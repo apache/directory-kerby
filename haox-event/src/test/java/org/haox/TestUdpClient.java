@@ -8,12 +8,14 @@ import org.haox.event.InternalEventHandler;
 import org.haox.transport.*;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
@@ -122,5 +124,10 @@ public class TestUdpClient extends TestUdpBase {
         } else {
             Assert.fail();
         }
+    }
+
+    @After
+    public void cleanup() {
+        eventHub.stop();
     }
 }

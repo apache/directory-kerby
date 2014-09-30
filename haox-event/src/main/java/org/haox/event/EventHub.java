@@ -135,6 +135,8 @@ public class EventHub implements Dispatcher {
     }
 
     public void stop() {
-        dispatch(new Event(BuiltInEventType.STOP));
+        for (InternalEventHandler handler : handlers.values()) {
+            handler.stop();
+        }
     }
 }

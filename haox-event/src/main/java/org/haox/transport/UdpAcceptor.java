@@ -48,34 +48,41 @@ public class UdpAcceptor extends Acceptor {
 
     @Override
     protected void dealKey(SelectionKey selectionKey) throws IOException {
+        DatagramChannel channel =
+                (DatagramChannel) selectionKey.channel();
+
         if (selectionKey.isReadable()) {
-            doRead(selectionKey);
+            doRead(channel);
+        } else if (selectionKey.isWritable()) {
+            doWrite(channel);
         }
     }
 
-    private void doRead(SelectionKey selectionKey) throws IOException {
-        DatagramChannel datagramChannel =
-                (DatagramChannel) selectionKey.channel();
+    private void doRead(DatagramChannel channel) throws IOException {
         ByteBuffer recvBuffer = ByteBuffer.allocate(65536); // to optimize
-        InetSocketAddress fromAddress = (InetSocketAddress) datagramChannel.receive(recvBuffer);
+        InetSocketAddress fromAddress = (InetSocketAddress) channel.receive(recvBuffer);
         if (fromAddress != null) {
             recvBuffer.flip();
             UdpTransport transport = transports.get(fromAddress);
             if (transport == null) {
-                transport = new UdpTransport(datagramChannel, fromAddress);
-                transport.setDispatcher(getDispatcher());
+                transport = new UdpTransport(channel, fromAddress, false);
                 transports.put(fromAddress, transport);
+                onNewTransport(transport);
             }
             transport.onInboundMessage(recvBuffer);
+        }
+    }
+
+    private void doWrite(DatagramChannel channel) throws IOException {
+        for (UdpTransport transport : transports.values()) {
+            transport.onWriteable();
         }
     }
 
     private void doBind(UdpAddressBindEvent event) throws IOException {
         DatagramChannel serverSocketChannel = DatagramChannel.open();
         serverSocketChannel.configureBlocking(false);
-        DatagramSocket serverSocket = serverSocketChannel.socket();
-        serverSocket.bind(event.getAddress());
-        serverSocketChannel.register(selector, SelectionKey.OP_READ);
+        serverSocketChannel.bind(event.getAddress());
+        serverSocketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
     }
-
 }

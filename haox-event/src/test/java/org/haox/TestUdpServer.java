@@ -10,6 +10,7 @@ import org.haox.transport.MessageHandler;
 import org.haox.transport.UdpAcceptor;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,14 +22,15 @@ import java.nio.channels.DatagramChannel;
 
 public class TestUdpServer extends TestUdpBase {
 
+    private EventHub eventHub;
+
     @Before
     public void setUp() throws IOException {
         setUpServer();
     }
 
     private void setUpServer() throws IOException {
-        EventHub eventHub = new EventHub();
-        eventHub.start();
+        eventHub = new EventHub();
 
         MessageHandler messageHandler = new MessageHandler(eventHub) {
             @Override
@@ -43,23 +45,27 @@ public class TestUdpServer extends TestUdpBase {
 
         Acceptor acceptor = new UdpAcceptor(eventHub);
         eventHub.register((InternalEventHandler) acceptor);
+
+        eventHub.start();
         acceptor.listen(serverHost, serverPort);
     }
 
     @Test
     public void testUdpTransport() throws IOException, InterruptedException {
-        Thread.sleep(1000);
-
         DatagramChannel socketChannel = DatagramChannel.open();
         socketChannel.configureBlocking(true);
         SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
-        socketChannel.connect(sa);
-        socketChannel.write(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
+        socketChannel.send(ByteBuffer.wrap(TEST_MESSAGE.getBytes()), sa);
         ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
-        socketChannel.read(byteBuffer);
+        socketChannel.receive(byteBuffer);
         byteBuffer.flip();
         clientRecvedMessage = recvBuffer2String(byteBuffer);
 
         Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
+    }
+
+    @After
+    public void cleanup() {
+        eventHub.stop();
     }
 }
