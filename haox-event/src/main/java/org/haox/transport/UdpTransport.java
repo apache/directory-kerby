@@ -19,12 +19,11 @@ public class UdpTransport extends Transport {
     }
 
     protected void onInboundMessage(ByteBuffer message) {
-        handleInboundMessage(new Message(message));
+        handleInboundMessage(message);
     }
 
     @Override
-    protected void sendOutMessage(Message message) throws IOException {
-        ByteBuffer buffer = message.getContent();
-        channel.send(buffer, getRemoteAddress());
+    protected void sendOutMessage(ByteBuffer message) throws IOException {
+        channel.send(message, getRemoteAddress());
     }
 }

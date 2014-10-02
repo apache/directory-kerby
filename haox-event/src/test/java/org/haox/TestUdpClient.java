@@ -2,7 +2,10 @@ package org.haox;
 
 import junit.framework.Assert;
 import org.haox.event.*;
-import org.haox.transport.*;
+import org.haox.transport.Connector;
+import org.haox.transport.Transport;
+import org.haox.transport.TransportHandler;
+import org.haox.transport.UdpConnector;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEvent;
 import org.haox.transport.event.TransportEventType;
@@ -87,7 +90,7 @@ public class TestUdpClient extends TestUdpBase {
             protected void doHandle(Event event) throws Exception {
                 MessageEvent msgEvent = (MessageEvent) event;
                 if (msgEvent.getEventType() == TransportEventType.INBOUND_MESSAGE) {
-                    ByteBuffer buffer = msgEvent.getMessage().getContent();
+                    ByteBuffer buffer = msgEvent.getMessage();
                     clientRecvedMessage = recvBuffer2String(buffer);
                     System.out.println("Recved clientRecvedMessage: " + clientRecvedMessage);
                     Boolean result = TEST_MESSAGE.equals(clientRecvedMessage);
@@ -120,7 +123,7 @@ public class TestUdpClient extends TestUdpBase {
     public void testUdpTransport() {
         Event event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
         Transport transport = ((TransportEvent) event).getTransport();
-        transport.sendMessage(new Message(ByteBuffer.wrap(TEST_MESSAGE.getBytes())));
+        transport.sendMessage(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
 
         event = eventWaiter.waitEvent(TestEventType.FINISHED);
         Assert.assertTrue((Boolean) event.getEventData());
