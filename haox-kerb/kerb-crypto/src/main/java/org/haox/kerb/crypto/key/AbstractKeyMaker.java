@@ -1,17 +1,10 @@
 package org.haox.kerb.crypto.key;
 
-import org.haox.kerb.crypto.Util;
+import org.haox.kerb.crypto.BytesUtil;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.security.GeneralSecurityException;
 
 public abstract class AbstractKeyMaker implements KeyMaker {
 
@@ -47,7 +40,7 @@ public abstract class AbstractKeyMaker implements KeyMaker {
             if (param.length != 4) {
                 throw new IllegalArgumentException("Invalid param to str2Key");
             }
-            iterCount = Util.bytes2intBe(param, 0);
+            iterCount = BytesUtil.bytes2int(param, 0, true);
         }
 
         return iterCount;

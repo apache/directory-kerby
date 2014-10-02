@@ -1,10 +1,5 @@
 package org.haox.kerb.crypto;
 
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.security.GeneralSecurityException;
-
 public class Rc4 {
 
     private static byte[] L40 = "fortybits".getBytes();
@@ -16,10 +11,10 @@ public class Rc4 {
         if (exportable) {
             salt = new byte[14];
             System.arraycopy(L40, 0, salt, 0, 9);
-            Util.int2bytesLe(msUsage, salt, 10);
+            BytesUtil.int2bytes(msUsage, salt, 10, false);
         } else {
             salt = new byte[4];
-            Util.int2bytesLe(msUsage, salt, 0);
+            BytesUtil.int2bytes(msUsage, salt, 0, false);
         }
 
         return salt;

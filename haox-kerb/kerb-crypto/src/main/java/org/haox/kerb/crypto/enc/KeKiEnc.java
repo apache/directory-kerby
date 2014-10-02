@@ -1,7 +1,7 @@
 package org.haox.kerb.crypto.enc;
 
+import org.haox.kerb.crypto.BytesUtil;
 import org.haox.kerb.crypto.Confounder;
-import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.cksum.HashProvider;
 import org.haox.kerb.crypto.key.DkKeyMaker;
 import org.haox.kerb.spec.KrbException;
@@ -77,7 +77,7 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
 
         byte[] Ke, Ki;
         byte[] constant = new byte[5];
-        Util.int2bytesBe(usage, constant, 0);
+        BytesUtil.int2bytes(usage, constant, 0, true);
         constant[4] = (byte) 0xaa;
         Ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
         constant[4] = (byte) 0x55;
