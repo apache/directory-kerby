@@ -2,32 +2,40 @@ package org.haox.transport;
 
 public class BytesUtil {
 
-    public static short bytes2Short(byte[] bytes, boolean bigEndian) {
+    public static short bytes2short(byte[] bytes, int offset, boolean bigEndian) {
         short val = 0;
 
         if (bigEndian) {
-            val += (bytes[0] & 0xff) << 8;
-            val += (bytes[1] & 0xff);
+            val += (bytes[offset + 0] & 0xff) << 8;
+            val += (bytes[offset + 1] & 0xff);
         } else {
-            val += (bytes[1] & 0xff) << 8;
-            val += (bytes[0] & 0xff);
+            val += (bytes[offset + 1] & 0xff) << 8;
+            val += (bytes[offset + 0] & 0xff);
         }
 
         return val;
     }
 
-    public static byte[] short2bytesBe(int val, boolean bigEndian) {
+    public static short bytes2short(byte[] bytes, boolean bigEndian) {
+        return bytes2short(bytes, 0, bigEndian);
+    }
+
+    public static byte[] short2bytes(int val, boolean bigEndian) {
         byte[] bytes = new byte[2];
 
-        if (bigEndian) {
-            bytes[0] = (byte) ((val >> 8) & 0xff);
-            bytes[1] = (byte) ((val) & 0xff);
-        } else {
-            bytes[1] = (byte) ((val >>  8) & 0xff);
-            bytes[0] = (byte) ((val      ) & 0xff);
-        }
+        short2bytes(val, bytes, 0, bigEndian);
 
         return bytes;
+    }
+
+    public static void short2bytes(int val, byte[] bytes, int offset, boolean bigEndian) {
+        if (bigEndian) {
+            bytes[offset + 0] = (byte) ((val >> 8) & 0xff);
+            bytes[offset + 1] = (byte) ((val) & 0xff);
+        } else {
+            bytes[offset + 1] = (byte) ((val >>  8) & 0xff);
+            bytes[offset + 0] = (byte) ((val      ) & 0xff);
+        }
     }
 
     public static int bytes2int(byte[] bytes, boolean bigEndian) {
@@ -125,8 +133,12 @@ public class BytesUtil {
     }
 
     public static byte[] duplicate(byte[] bytes) {
-        byte[] dup = new byte[bytes.length];
-        System.arraycopy(bytes, 0, dup, 0, bytes.length);
+        return duplicate(bytes, 0, bytes.length);
+    }
+
+    public static byte[] duplicate(byte[] bytes, int offset, int len) {
+        byte[] dup = new byte[len];
+        System.arraycopy(bytes, offset, dup, 0, len);
         return dup;
     }
 }
