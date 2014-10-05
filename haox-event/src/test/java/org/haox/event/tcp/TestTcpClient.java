@@ -1,28 +1,29 @@
-package org.haox;
+package org.haox.event.tcp;
 
 import junit.framework.Assert;
 import org.haox.event.*;
 import org.haox.transport.Connector;
 import org.haox.transport.Transport;
 import org.haox.transport.event.MessageEvent;
-import org.haox.transport.udp.UdpConnector;
 import org.haox.transport.event.TransportEvent;
 import org.haox.transport.event.TransportEventType;
+import org.haox.transport.tcp.TcpConnector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class TestUdpClient extends TestUdpBase {
+public class TestTcpClient extends TestTcpBase {
 
     private EventHub eventHub;
     private EventWaiter eventWaiter;
@@ -47,14 +48,15 @@ public class TestUdpClient extends TestUdpBase {
     }
 
     private void doRunServer() throws IOException {
-        DatagramChannel serverSocketChannel;
+        ServerSocketChannel serverSocketChannel;
         Selector selector = Selector.open();
-        serverSocketChannel = DatagramChannel.open();
+        serverSocketChannel = ServerSocketChannel .open();
         serverSocketChannel.configureBlocking(false);
-        DatagramSocket serverSocket = serverSocketChannel.socket();
+        ServerSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress(serverPort));
-        serverSocketChannel.register(selector, SelectionKey.OP_READ);
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
+        SocketChannel socketChannel;
         while (true) {
             if (selector.selectNow() > 0) {
                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
@@ -62,12 +64,21 @@ public class TestUdpClient extends TestUdpBase {
                 while (iterator.hasNext()) {
                     SelectionKey selectionKey = iterator.next();
                     iterator.remove();
-                    if (selectionKey.isReadable()) {
+
+                    if (selectionKey.isAcceptable()) {
+                        while ((socketChannel = serverSocketChannel.accept()) != null) {
+                            socketChannel.configureBlocking(false);
+                            socketChannel.socket().setTcpNoDelay(true);
+                            socketChannel.socket().setKeepAlive(true);
+                            socketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, socketChannel);
+                            //selectionKey.attach(socketChannel);
+                        }
+                    } else if (selectionKey.isReadable()) {
                         ByteBuffer recvBuffer = ByteBuffer.allocate(65536);
-                        InetSocketAddress fromAddress = (InetSocketAddress) serverSocketChannel.receive(recvBuffer);
-                        if (fromAddress != null) {
+                        socketChannel = (SocketChannel) selectionKey.attachment();
+                        if (socketChannel.read(recvBuffer) > 0) {
                             recvBuffer.flip();
-                            serverSocketChannel.send(recvBuffer, fromAddress);
+                            socketChannel.write(recvBuffer);
                         }
                     }
                 }
@@ -106,7 +117,7 @@ public class TestUdpClient extends TestUdpBase {
         };
         eventHub.register(messageHandler);
 
-        Connector connector = new UdpConnector();
+        Connector connector = new TcpConnector(createStreamingDecoder());
         eventHub.register(connector);
 
         eventWaiter = eventHub.waitEvent(

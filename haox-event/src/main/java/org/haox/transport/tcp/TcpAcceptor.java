@@ -43,12 +43,10 @@ public class TcpAcceptor extends Acceptor {
             channel.configureBlocking(false);
             channel.socket().setTcpNoDelay(tcpNoDelay);
             channel.socket().setKeepAlive(true);
-            channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
 
             Transport transport = new TcpTransport(channel,
                     ((TcpTransportHandler) transportHandler).getStreamingDecoder());
-            key.attach(transport);
-
+            channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
             onNewTransport(transport);
         }
     }
@@ -76,7 +74,7 @@ public class TcpAcceptor extends Acceptor {
         serverSocketChannel.configureBlocking(false);
         ServerSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(event.getAddress());
-        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT, serverSocketChannel);
     }
 
 }

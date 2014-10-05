@@ -1,11 +1,11 @@
-package org.haox;
+package org.haox.event.tcp;
 
 import junit.framework.Assert;
 import org.haox.event.*;
 import org.haox.transport.Acceptor;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
-import org.haox.transport.udp.UdpAcceptor;
+import org.haox.transport.tcp.TcpAcceptor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
+import java.nio.channels.SocketChannel;
 
-public class TestUdpServer extends TestUdpBase {
+public class TestTcpServer extends TestTcpBase {
 
     private EventHub eventHub;
 
@@ -44,7 +44,7 @@ public class TestUdpServer extends TestUdpBase {
         };
         eventHub.register(messageHandler);
 
-        Acceptor acceptor = new UdpAcceptor();
+        Acceptor acceptor = new TcpAcceptor(createStreamingDecoder());
         eventHub.register(acceptor);
 
         eventHub.start();
@@ -55,12 +55,13 @@ public class TestUdpServer extends TestUdpBase {
     public void testUdpTransport() throws IOException, InterruptedException {
         Thread.sleep(10);
 
-        DatagramChannel socketChannel = DatagramChannel.open();
+        SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(true);
         SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
-        socketChannel.send(ByteBuffer.wrap(TEST_MESSAGE.getBytes()), sa);
+        socketChannel.connect(sa);
+        socketChannel.write(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
         ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
-        socketChannel.receive(byteBuffer);
+        socketChannel.read(byteBuffer);
         byteBuffer.flip();
         clientRecvedMessage = recvBuffer2String(byteBuffer);
 
