@@ -4,11 +4,11 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class SendBuffer {
+public class TransBuffer {
 
     private BlockingQueue<ByteBuffer> bufferQueue;
 
-    public SendBuffer() {
+    public TransBuffer() {
         bufferQueue = new ArrayBlockingQueue<ByteBuffer>(2);
     }
     public void write(ByteBuffer buffer) {

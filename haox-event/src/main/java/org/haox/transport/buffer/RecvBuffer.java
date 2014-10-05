@@ -1,10 +1,11 @@
 package org.haox.transport.buffer;
 
-import org.haox.transport.BytesUtil;
+import java.nio.ByteBuffer;
 
-public abstract class RecvBuffer {
+public class RecvBuffer {
 
     private byte[] buffer;
+    private int capacity;
     private int rIndex;
     private int wIndex;
 
@@ -16,67 +17,26 @@ public abstract class RecvBuffer {
     }
 
     public RecvBuffer(int capacity) {
+        this.capacity = capacity;
         buffer = new byte[capacity];
     }
 
-    public byte readByte() {
-        checkRead(1);
-
-        return buffer[rIndex ++];
+    public ByteBuffer getReadBuffer() {
+        ByteBuffer byteBuffer = ByteBuffer.wrap(buffer, rIndex, wIndex);
+        return byteBuffer;
     }
 
-    public short readShort() {
-        checkRead(2);
-
-        short val = BytesUtil.bytes2short(buffer, rIndex, true);
-        rIndex += 2;
-
-        return val;
+    public void setReadPosition(int position) {
+        rIndex = position;
     }
 
-    public int readInt() {
-        checkRead(4);
-
-        int val = BytesUtil.bytes2int(buffer, rIndex, true);
-        rIndex += 4;
-
-        return val;
+    public ByteBuffer getWriteBuffer() {
+        ByteBuffer byteBuffer = ByteBuffer.wrap(buffer, wIndex, capacity);
+        return byteBuffer;
     }
 
-    public byte[] readBytes(int len) {
-        checkRead(len);
-
-        byte[] result = BytesUtil.duplicate(buffer, rIndex, len);
-        rIndex += len;
-
-        return result;
-    }
-
-    public void writeByte(byte aByte) {
-        checkWrite(1);
-
-        buffer[wIndex ++] = aByte;
-    }
-
-    public void writeShort(short val) {
-        checkWrite(2);
-
-        BytesUtil.short2bytes(val, buffer, wIndex, true);
-        wIndex += 2;
-    }
-
-    public void writeInt(int val) {
-        checkWrite(4);
-
-        BytesUtil.int2bytes(val, buffer, wIndex, true);
-        wIndex += 4;
-    }
-
-    public void writeBytes(byte[] bytes) {
-        checkWrite(bytes.length);
-
-        System.arraycopy(bytes, 0, buffer, wIndex, bytes.length);
-        wIndex += bytes.length;
+    public void setWritePosition(int position) {
+        wIndex = position;
     }
 
     public int readable() {
@@ -113,7 +73,7 @@ public abstract class RecvBuffer {
     }
 
     protected void checkWrite(int toWrite) {
-        if (wIndex + toWrite >= buffer.length) {
+        if (wIndex + toWrite >= capacity) {
             throw new IndexOutOfBoundsException();
         }
     }

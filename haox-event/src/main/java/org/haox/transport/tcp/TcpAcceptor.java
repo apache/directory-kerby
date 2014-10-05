@@ -1,10 +1,10 @@
-package org.haox.transport;
+package org.haox.transport.tcp;
 
-import org.haox.event.Dispatcher;
 import org.haox.event.Event;
-import org.haox.event.EventHandler;
-import org.haox.transport.event.TransportEventType;
-import org.haox.transport.event.channel.TcpAddressBindEvent;
+import org.haox.event.EventType;
+import org.haox.transport.Acceptor;
+import org.haox.transport.event.AddressEvent;
+import org.haox.transport.Transport;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -17,9 +17,13 @@ public class TcpAcceptor extends Acceptor {
 
     private boolean tcpNoDelay = true;
 
+    public TcpAcceptor(StreamingDecoder streamingDecoder) {
+        super(new TcpTransportHandler(streamingDecoder));
+    }
+
     @Override
     protected void doListen(InetSocketAddress socketAddress) {
-        TcpAddressBindEvent event = new TcpAddressBindEvent(socketAddress);
+        AddressEvent event = TcpAddressEvent.createAddressBindEvent(socketAddress);
         dispatch(event);
     }
 
@@ -27,10 +31,8 @@ public class TcpAcceptor extends Acceptor {
     protected void dealKey(SelectionKey selectionKey) throws IOException {
         if (selectionKey.isAcceptable()) {
             doAccept(selectionKey);
-        } else if (selectionKey.isReadable()) {
-            doRead(selectionKey);
-        } else if (selectionKey.isWritable()) {
-            doWrite(selectionKey);
+        } else {
+            super.dealKey(selectionKey);
         }
     }
 
@@ -43,30 +45,19 @@ public class TcpAcceptor extends Acceptor {
             channel.socket().setKeepAlive(true);
             channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
 
-            Transport transport = new TcpTransport(channel, false);
+            Transport transport = new TcpTransport(channel,
+                    ((TcpTransportHandler) transportHandler).getStreamingDecoder());
             key.attach(transport);
 
             onNewTransport(transport);
         }
     }
 
-    void doRead(SelectionKey selectionKey) throws IOException {
-        TcpTransport transport = (TcpTransport) selectionKey.attachment();
-        transport.onReadable();
-        selectionKey.interestOps(SelectionKey.OP_WRITE);
-    }
-
-    void doWrite(SelectionKey selectionKey) throws IOException {
-        TcpTransport transport = (TcpTransport) selectionKey.attachment();
-        transport.onWriteable();
-        selectionKey.interestOps(SelectionKey.OP_READ);
-    }
-
     @Override
     public void handle(Event event) {
-        if (event.getEventType() == TransportEventType.TCP_ADDRESS_BIND) {
+        if (event.getEventType() == TcpEventType.ADDRESS_BIND) {
             try {
-                doBind((TcpAddressBindEvent) event);
+                doBind((AddressEvent) event);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -74,13 +65,13 @@ public class TcpAcceptor extends Acceptor {
     }
 
     @Override
-    public TransportEventType[] getInterestedEvents() {
-        return new TransportEventType[] {
-                TransportEventType.TCP_ADDRESS_BIND
+    public EventType[] getInterestedEvents() {
+        return new EventType[] {
+                TcpEventType.ADDRESS_BIND
         };
     }
 
-    protected void doBind(TcpAddressBindEvent event) throws IOException {
+    protected void doBind(AddressEvent event) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
         ServerSocket serverSocket = serverSocketChannel.socket();

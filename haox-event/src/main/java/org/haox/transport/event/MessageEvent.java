@@ -4,13 +4,19 @@ import org.haox.transport.Transport;
 
 import java.nio.ByteBuffer;
 
-public abstract class MessageEvent extends TransportEvent {
+public class MessageEvent extends TransportEvent {
 
-    public MessageEvent(Transport transport, ByteBuffer message, TransportEventType eventType) {
-        super(transport, eventType, message);
+    private MessageEvent(Transport transport, ByteBuffer message) {
+        super(transport, TransportEventType.INBOUND_MESSAGE, message);
     }
 
     public ByteBuffer getMessage() {
         return (ByteBuffer) getEventData();
     }
+
+    public static MessageEvent createInboundMessageEvent(
+            Transport transport, ByteBuffer message) {
+        return new MessageEvent(transport, message);
+    }
+
 }

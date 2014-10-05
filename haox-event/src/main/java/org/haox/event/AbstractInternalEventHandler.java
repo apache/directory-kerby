@@ -8,7 +8,7 @@ public abstract class AbstractInternalEventHandler extends AbstractEventHandler
     private int id = -1;
     protected EventHandler handler;
 
-    private static AtomicInteger idGen = new AtomicInteger();
+    private static AtomicInteger idGen = new AtomicInteger(1);
 
     public AbstractInternalEventHandler() {
         super();

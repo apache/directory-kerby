@@ -71,7 +71,7 @@ public class EventHub implements Dispatcher {
         EventType[] interestedEvents = handler.getInterestedEvents();
         Set<Integer> tmpHandlers;
         for (EventType eventType : interestedEvents) {
-            if (handlers.containsKey(eventType)) {
+            if (eventHandlersMap.containsKey(eventType)) {
                 tmpHandlers = eventHandlersMap.get(eventType);
             } else {
                 tmpHandlers = new HashSet<Integer>();

@@ -4,9 +4,8 @@ import junit.framework.Assert;
 import org.haox.event.*;
 import org.haox.transport.Connector;
 import org.haox.transport.Transport;
-import org.haox.transport.TransportHandler;
-import org.haox.transport.UdpConnector;
 import org.haox.transport.event.MessageEvent;
+import org.haox.transport.udp.UdpConnector;
 import org.haox.transport.event.TransportEvent;
 import org.haox.transport.event.TransportEventType;
 import org.junit.After;
@@ -109,7 +108,6 @@ public class TestUdpClient extends TestUdpBase {
 
         Connector connector = new UdpConnector();
         eventHub.register(connector);
-        eventHub.register(new TransportHandler());
 
         eventWaiter = eventHub.waitEvent(
                 TestEventType.FINISHED,

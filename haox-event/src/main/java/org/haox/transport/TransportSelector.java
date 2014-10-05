@@ -1,7 +1,8 @@
 package org.haox.transport;
 
+import org.haox.event.Dispatcher;
 import org.haox.event.LongRunningEventHandler;
-import org.haox.transport.event.NewTransportEvent;
+import org.haox.transport.event.TransportEvent;
 
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
@@ -9,9 +10,21 @@ import java.nio.channels.Selector;
 import java.util.Iterator;
 import java.util.Set;
 
-public abstract class AbstractSelector extends LongRunningEventHandler {
+public abstract class TransportSelector extends LongRunningEventHandler {
 
     protected Selector selector;
+    protected TransportHandler transportHandler;
+
+    public TransportSelector(TransportHandler transportHandler) {
+        super();
+        this.transportHandler = transportHandler;
+    }
+
+    @Override
+    public void setDispatcher(Dispatcher dispatcher) {
+        super.setDispatcher(dispatcher);
+        dispatcher.register(transportHandler);
+    }
 
     @Override
     public void init() {
@@ -45,11 +58,13 @@ public abstract class AbstractSelector extends LongRunningEventHandler {
         }
     }
 
-    protected abstract void dealKey(SelectionKey selectionKey) throws IOException;
+    protected void dealKey(SelectionKey selectionKey) throws IOException {
+        transportHandler.helpHandleSelectionKey(selectionKey);
+    }
 
     protected void onNewTransport(Transport transport) {
         transport.setDispatcher(getDispatcher());
-        dispatch(new NewTransportEvent(transport));
+        dispatch(TransportEvent.createNewTransportEvent(transport));
     }
 
     @Override

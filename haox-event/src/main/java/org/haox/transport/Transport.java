@@ -1,8 +1,7 @@
 package org.haox.transport;
 
 import org.haox.event.Dispatcher;
-import org.haox.transport.buffer.SendBuffer;
-import org.haox.transport.event.InboundMessageEvent;
+import org.haox.transport.buffer.TransBuffer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,15 +9,16 @@ import java.nio.ByteBuffer;
 
 public abstract class Transport {
     private InetSocketAddress remoteAddress;
-    private boolean isActive;
-    private Dispatcher dispatcher;
+    protected Dispatcher dispatcher;
 
-    private SendBuffer sendBuffer;
+    protected TransBuffer sendBuffer;
 
-    public Transport(InetSocketAddress remoteAddress, boolean isActive) {
+    private int readableCount = 0;
+    private int writableCount = 0;
+
+    public Transport(InetSocketAddress remoteAddress) {
         this.remoteAddress = remoteAddress;
-        this.isActive = isActive;
-        this.sendBuffer = new SendBuffer();
+        this.sendBuffer = new TransBuffer();
     }
 
     public void setDispatcher(Dispatcher dispatcher) {
@@ -30,26 +30,22 @@ public abstract class Transport {
     }
 
     public void sendMessage(ByteBuffer message) {
-        handleOutboundMessage(message);
+        sendBuffer.write(message);
     }
 
-    protected void onReadable() {
+    public void onWriteable() throws IOException {
+        this.writableCount ++;
 
-    }
-
-    protected void onWriteable() throws IOException {
         if (! sendBuffer.isEmpty()) {
             ByteBuffer message = sendBuffer.read();
-            sendOutMessage(message);
+            if (message != null) {
+                sendOutMessage(message);
+            }
         }
     }
 
-    protected void handleInboundMessage(ByteBuffer message) {
-        dispatcher.dispatch(new InboundMessageEvent(this, message));
-    }
-
-    protected void handleOutboundMessage(ByteBuffer message) {
-        sendBuffer.write(message);
+    public void onReadable() throws IOException {
+        this.readableCount++;
     }
 
     protected abstract void sendOutMessage(ByteBuffer message) throws IOException;

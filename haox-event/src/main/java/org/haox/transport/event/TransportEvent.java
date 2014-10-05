@@ -4,7 +4,9 @@ import org.haox.event.Event;
 import org.haox.event.EventType;
 import org.haox.transport.Transport;
 
-public abstract class TransportEvent extends Event {
+import java.nio.ByteBuffer;
+
+public class TransportEvent extends Event {
 
     private Transport transport;
 
@@ -21,4 +23,17 @@ public abstract class TransportEvent extends Event {
     public Transport getTransport() {
         return transport;
     }
+
+    public static TransportEvent createWritableTransportEvent(Transport transport) {
+        return new TransportEvent(transport, TransportEventType.TRANSPORT_WRITABLE);
+    }
+
+    public static TransportEvent createReadableTransportEvent(Transport transport) {
+        return new TransportEvent(transport, TransportEventType.TRANSPORT_READABLE);
+    }
+
+    public static TransportEvent createNewTransportEvent(Transport transport) {
+        return new TransportEvent(transport, TransportEventType.NEW_TRANSPORT);
+    }
+
 }
