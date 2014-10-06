@@ -1,80 +1,136 @@
 package org.haox.transport.buffer;
 
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class RecvBuffer {
 
-    private byte[] buffer;
-    private int capacity;
-    private int rIndex;
-    private int wIndex;
-
-    private int rMark;
-    private int wMark;
+    private LinkedList<ByteBuffer> bufferQueue;
 
     public RecvBuffer() {
-        this(512);
+        bufferQueue = new LinkedList<ByteBuffer>();
     }
 
-    public RecvBuffer(int capacity) {
-        this.capacity = capacity;
-        buffer = new byte[capacity];
+    public synchronized void write(ByteBuffer buffer) {
+        bufferQueue.addLast(buffer);
     }
 
-    public ByteBuffer getReadBuffer() {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(buffer, rIndex, wIndex);
-        return byteBuffer;
+    /**
+     * Put buffer as the first into the buffer queue
+     */
+    public synchronized void writeFirst(ByteBuffer buffer) {
+        bufferQueue.addFirst(buffer);
     }
 
-    public void setReadPosition(int position) {
-        rIndex = position;
-    }
-
-    public ByteBuffer getWriteBuffer() {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(buffer, wIndex, capacity);
-        return byteBuffer;
-    }
-
-    public void setWritePosition(int position) {
-        wIndex = position;
-    }
-
-    public int readable() {
-        return wIndex - rIndex;
-    }
-
-    public int writable() {
-        return buffer.length - wIndex;
-    }
-
-    public int discardable() {
-        return rIndex;
-    }
-
-    public void mark() {
-        rMark = rIndex;
-        wMark = wIndex;
-    }
-
-    public void restore() {
-        rIndex = rMark;
-        wIndex = wMark;
-    }
-
-    public void reset() {
-        rIndex = rMark = 0;
-        wIndex = wMark = 0;
-    }
-
-    protected void checkRead(int toRead) {
-        if (rIndex + toRead >= wIndex) {
-            throw new IndexOutOfBoundsException();
+    /**
+     * Read and return the first buffer if available
+     */
+    public synchronized ByteBuffer readFirst() {
+        if (! bufferQueue.isEmpty()) {
+            return bufferQueue.removeFirst();
         }
+        return null;
     }
 
-    protected void checkWrite(int toWrite) {
-        if (wIndex + toWrite >= capacity) {
-            throw new IndexOutOfBoundsException();
+    /**
+     * Read most available bytes into the dst buffer
+     */
+    public synchronized ByteBuffer readMostBytes() {
+        int len = remaining();
+        return readBytes(len);
+    }
+
+    /**
+     * Read len bytes into the dst buffer if available
+     */
+    public synchronized ByteBuffer readBytes(int len) {
+        if (remaining() < len) { // no enough data that's available
+            throw new BufferOverflowException();
         }
+
+        ByteBuffer result = null;
+
+        ByteBuffer takenBuffer;
+        if (bufferQueue.size() == 1) {
+            takenBuffer = bufferQueue.removeFirst();
+
+            if (takenBuffer.remaining() == len) {
+                return takenBuffer;
+            }
+
+            result = BufferPool.allocate(len);
+            for (int i = 0; i < len; i++) {
+                result.put(takenBuffer.get());
+            }
+            // Has left bytes so put it back for future reading
+            if (takenBuffer.remaining() > 0) {
+                bufferQueue.addFirst(takenBuffer);
+            }
+        } else {
+            result = BufferPool.allocate(len);
+
+            Iterator<ByteBuffer> iter = bufferQueue.iterator();
+            int alreadyGot = 0, toGet;
+            while (iter.hasNext()) {
+                takenBuffer = iter.next();
+                iter.remove();
+
+                toGet = takenBuffer.remaining() < len - alreadyGot ?
+                    takenBuffer.remaining() : len -alreadyGot;
+                byte[] toGetBytes = new byte[toGet];
+                takenBuffer.get(toGetBytes);
+                result.put(toGetBytes);
+
+                if (takenBuffer.remaining() > 0) {
+                    bufferQueue.addFirst(takenBuffer);
+                }
+
+                alreadyGot += toGet;
+                if (alreadyGot == len) {
+                    break;
+                }
+            }
+        }
+        result.flip();
+
+        return result;
+    }
+
+    public boolean isEmpty() {
+        return bufferQueue.isEmpty();
+    }
+
+    /**
+     * Return count of remaining and left bytes that's available
+     */
+    public int remaining() {
+        if (bufferQueue.isEmpty()) {
+            return 0;
+        } else if (bufferQueue.size() == 1) {
+            return bufferQueue.getFirst().remaining();
+        }
+
+        int result = 0;
+        Iterator<ByteBuffer> iter = bufferQueue.iterator();
+        while (iter.hasNext()) {
+            result += iter.next().remaining();
+        }
+        return result;
+    }
+
+    public synchronized void clear() {
+        if (bufferQueue.isEmpty()) {
+            return;
+        } else if (bufferQueue.size() == 1) {
+            BufferPool.release(bufferQueue.getFirst());
+        }
+
+        Iterator<ByteBuffer> iter = bufferQueue.iterator();
+        while (iter.hasNext()) {
+            BufferPool.release(iter.next());
+        }
+        bufferQueue.clear();
     }
 }

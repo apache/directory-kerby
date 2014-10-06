@@ -15,8 +15,6 @@ import java.nio.channels.SocketChannel;
 
 public class TcpAcceptor extends Acceptor {
 
-    private boolean tcpNoDelay = true;
-
     public TcpAcceptor(StreamingDecoder streamingDecoder) {
         super(new TcpTransportHandler(streamingDecoder));
     }
@@ -41,7 +39,7 @@ public class TcpAcceptor extends Acceptor {
         SocketChannel channel;
         while ((channel = server.accept()) != null) {
             channel.configureBlocking(false);
-            channel.socket().setTcpNoDelay(tcpNoDelay);
+            channel.socket().setTcpNoDelay(true);
             channel.socket().setKeepAlive(true);
 
             Transport transport = new TcpTransport(channel,

@@ -38,12 +38,6 @@ public class UdpTransport extends Transport {
     }
 
     @Override
-    public void sendMessage(ByteBuffer message) {
-        super.sendMessage(message);
-        dispatcher.dispatch(TransportEvent.createWritableTransportEvent(this));
-    }
-
-    @Override
     protected void sendOutMessage(ByteBuffer message) throws IOException {
         channel.send(message, getRemoteAddress());
     }

@@ -45,14 +45,14 @@ public class TcpTransportHandler extends TransportHandler {
     @Override
     public void helpHandleSelectionKey(SelectionKey selectionKey) throws IOException {
         if (selectionKey.isReadable()) {
+            selectionKey.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
             TcpTransport transport = (TcpTransport) selectionKey.attachment();
             dispatch(TransportEvent.createReadableTransportEvent(transport));
         } else if (selectionKey.isWritable()) {
+            selectionKey.interestOps(SelectionKey.OP_READ);
             TcpTransport transport = (TcpTransport) selectionKey.attachment();
             dispatch(TransportEvent.createWritableTransportEvent(transport));
         }
-
-        selectionKey.interestOps(SelectionKey.OP_WRITE | SelectionKey.OP_READ);
     }
 }
 

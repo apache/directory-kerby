@@ -3,6 +3,7 @@ package org.haox.event.tcp;
 import junit.framework.Assert;
 import org.haox.event.*;
 import org.haox.transport.Connector;
+import org.haox.transport.MessageHandler;
 import org.haox.transport.Transport;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEvent;
@@ -95,7 +96,7 @@ public class TestTcpClient extends TestTcpBase {
     private void setUpClient() throws IOException {
         eventHub = new EventHub();
 
-        EventHandler messageHandler = new AbstractEventHandler() {
+        EventHandler messageHandler = new MessageHandler() {
             @Override
             protected void doHandle(Event event) throws Exception {
                 MessageEvent msgEvent = (MessageEvent) event;
@@ -106,13 +107,6 @@ public class TestTcpClient extends TestTcpBase {
                     Boolean result = TEST_MESSAGE.equals(clientRecvedMessage);
                     dispatch(new Event(TestEventType.FINISHED, result));
                 }
-            }
-
-            @Override
-            public EventType[] getInterestedEvents() {
-                return new EventType[] {
-                        TransportEventType.INBOUND_MESSAGE
-                };
             }
         };
         eventHub.register(messageHandler);
@@ -129,7 +123,7 @@ public class TestTcpClient extends TestTcpBase {
     }
 
     @Test
-    public void testUdpTransport() {
+    public void testTcpTransport() {
         Event event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
         Transport transport = ((TransportEvent) event).getTransport();
         transport.sendMessage(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));

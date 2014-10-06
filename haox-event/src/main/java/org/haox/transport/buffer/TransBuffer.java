@@ -11,6 +11,7 @@ public class TransBuffer {
     public TransBuffer() {
         bufferQueue = new ArrayBlockingQueue<ByteBuffer>(2);
     }
+
     public void write(ByteBuffer buffer) {
         bufferQueue.add(buffer);
     }

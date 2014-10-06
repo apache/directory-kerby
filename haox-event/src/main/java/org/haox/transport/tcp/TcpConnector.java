@@ -63,10 +63,9 @@ public class TcpConnector extends Connector {
             channel.finishConnect();
         }
 
-        channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
         Transport transport = new TcpTransport(channel,
                 ((TcpTransportHandler) transportHandler).getStreamingDecoder());
-        key.attach(transport);
+        channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
         onNewTransport(transport);
     }
 }

@@ -3,6 +3,7 @@ package org.haox.event.udp;
 import junit.framework.Assert;
 import org.haox.event.*;
 import org.haox.transport.Acceptor;
+import org.haox.transport.MessageHandler;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
 import org.haox.transport.udp.UdpAcceptor;
@@ -28,18 +29,13 @@ public class TestUdpServer extends TestUdpBase {
     private void setUpServer() throws IOException {
         eventHub = new EventHub();
 
-        EventHandler messageHandler = new AbstractEventHandler() {
+        EventHandler messageHandler = new MessageHandler() {
             @Override
             protected void doHandle(Event event) throws Exception {
                 MessageEvent msgEvent = (MessageEvent) event;
                 if (msgEvent.getEventType() == TransportEventType.INBOUND_MESSAGE) {
                     msgEvent.getTransport().sendMessage(msgEvent.getMessage());
                 }
-            }
-
-            @Override
-            public EventType[] getInterestedEvents() {
-                return new EventType[] { TransportEventType.INBOUND_MESSAGE };
             }
         };
         eventHub.register(messageHandler);

@@ -2,6 +2,7 @@ package org.haox.transport;
 
 import org.haox.event.Dispatcher;
 import org.haox.transport.buffer.TransBuffer;
+import org.haox.transport.event.TransportEvent;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -31,6 +32,7 @@ public abstract class Transport {
 
     public void sendMessage(ByteBuffer message) {
         sendBuffer.write(message);
+        dispatcher.dispatch(TransportEvent.createWritableTransportEvent(this));
     }
 
     public void onWriteable() throws IOException {

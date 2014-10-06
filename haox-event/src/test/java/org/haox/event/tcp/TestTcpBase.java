@@ -1,6 +1,7 @@
 package org.haox.event.tcp;
 
 import org.haox.event.EventType;
+import org.haox.transport.tcp.DecodingCallback;
 import org.haox.transport.tcp.StreamingDecoder;
 
 import java.nio.ByteBuffer;
@@ -24,8 +25,13 @@ public class TestTcpBase {
     protected StreamingDecoder createStreamingDecoder() {
         return new StreamingDecoder() {
             @Override
-            public DecodingResult decode(ByteBuffer streaming) {
-                return new MessageResult(TEST_MESSAGE.getBytes().length);
+            public void decode(ByteBuffer streamingBuffer, DecodingCallback callback) {
+                int expectedMessageLength = TEST_MESSAGE.getBytes().length;
+                if (streamingBuffer.remaining() >= expectedMessageLength) {
+                    callback.onMessageComplete(expectedMessageLength);
+                } else {
+                    callback.onMoreDataNeeded(expectedMessageLength);
+                }
             }
         };
     }
