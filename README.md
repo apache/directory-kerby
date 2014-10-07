@@ -49,7 +49,12 @@ Independent with Kerberos codes in JRE, but rely on JCE
 | camellia | The Camellia family: camellia256-cts-cmac and camellia128-cts-cmac |
 
 ### Dependency
-It surely only depends on JRE. Currently it depends on SLF4J but that will be removed later.
+All the project including its subprojects will only depend on JRE, which ensures it can be easily embeded and integrated into your applications and systems. Currently it depends on SLF4J but that will be removed later.
+
+##### Sub Projects
+- haox-asn1. A model driven ASN-1 encoding and decoding framework
+- haox-event. A pure event driven application framework aiming to construct applications of asynchronous and concurrent handlers. It includes UDP and TCP transport based on pure Java NIO and concurrency pattern.
+- haox-config. A unified configuration API that aims to support various configuration file formats, like XML, JNI, CSV and Java Properties file.
 
 ### License
 Apache License V2.0
