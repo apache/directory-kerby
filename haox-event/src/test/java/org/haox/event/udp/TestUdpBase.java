@@ -1,4 +1,4 @@
-package org.haox;
+package org.haox.event.udp;
 
 import org.haox.event.EventType;
 

@@ -1,15 +1,15 @@
-package org.haox.transport.event.channel;
+package org.haox.transport.event;
 
 import org.haox.event.Event;
-import org.haox.transport.event.TransportEventType;
+import org.haox.event.EventType;
 
 import java.net.InetSocketAddress;
 
-public abstract class AddressEvent extends Event {
+public class AddressEvent extends Event {
 
     private InetSocketAddress address;
 
-    public AddressEvent(InetSocketAddress address, TransportEventType eventType) {
+    public AddressEvent(InetSocketAddress address, EventType eventType) {
         super(eventType);
         this.address = address;
     }

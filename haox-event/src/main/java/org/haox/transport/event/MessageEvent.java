@@ -1,15 +1,22 @@
 package org.haox.transport.event;
 
-import org.haox.transport.Message;
 import org.haox.transport.Transport;
 
-public abstract class MessageEvent extends TransportEvent {
+import java.nio.ByteBuffer;
 
-    public MessageEvent(Transport transport, Message message, TransportEventType eventType) {
-        super(transport, eventType, message);
+public class MessageEvent extends TransportEvent {
+
+    private MessageEvent(Transport transport, ByteBuffer message) {
+        super(transport, TransportEventType.INBOUND_MESSAGE, message);
     }
 
-    public Message getMessage() {
-        return (Message) getEventData();
+    public ByteBuffer getMessage() {
+        return (ByteBuffer) getEventData();
     }
+
+    public static MessageEvent createInboundMessageEvent(
+            Transport transport, ByteBuffer message) {
+        return new MessageEvent(transport, message);
+    }
+
 }

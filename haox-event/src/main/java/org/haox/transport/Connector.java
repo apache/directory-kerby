@@ -1,15 +1,12 @@
 package org.haox.transport;
 
-import org.haox.event.Dispatcher;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.channels.SelectionKey;
 
-public abstract class Connector extends AbstractSelector {
+public abstract class Connector extends TransportSelector {
 
-    public Connector() {
-        super();
+    public Connector(TransportHandler transportHandler) {
+        super(transportHandler);
     }
 
     public void connect(String serverAddress, short serverPort) throws IOException {
@@ -18,6 +15,4 @@ public abstract class Connector extends AbstractSelector {
     }
 
     protected abstract void doConnect(InetSocketAddress sa) throws IOException;
-
-    protected abstract void dealKey(SelectionKey selectionKey) throws IOException;
 }

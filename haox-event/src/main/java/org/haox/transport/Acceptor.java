@@ -1,13 +1,12 @@
 package org.haox.transport;
 
-import org.haox.event.*;
-import org.haox.transport.AbstractSelector;
-import org.haox.transport.event.TransportEventType;
-import org.haox.transport.event.channel.UdpAddressConnectEvent;
-
 import java.net.InetSocketAddress;
 
-public abstract class Acceptor extends AbstractSelector {
+public abstract class Acceptor extends TransportSelector {
+
+    public Acceptor(TransportHandler transportHandler) {
+        super(transportHandler);
+    }
 
     public void listen(String address, short listenPort) {
         InetSocketAddress socketAddress = new InetSocketAddress(address, listenPort);
