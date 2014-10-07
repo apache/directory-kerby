@@ -55,6 +55,7 @@ public abstract class TransportSelector extends LongRunningEventHandler {
                 dealKey(selectionKey);
                 iterator.remove();
             }
+            selectionKeys.clear();
         }
     }
 

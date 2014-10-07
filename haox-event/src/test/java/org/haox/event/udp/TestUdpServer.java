@@ -31,8 +31,7 @@ public class TestUdpServer extends TestUdpBase {
 
         EventHandler messageHandler = new MessageHandler() {
             @Override
-            protected void doHandle(Event event) throws Exception {
-                MessageEvent msgEvent = (MessageEvent) event;
+            protected void handleMessage(MessageEvent msgEvent) {
                 if (msgEvent.getEventType() == TransportEventType.INBOUND_MESSAGE) {
                     msgEvent.getTransport().sendMessage(msgEvent.getMessage());
                 }

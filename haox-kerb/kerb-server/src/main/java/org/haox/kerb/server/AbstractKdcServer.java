@@ -1,16 +1,12 @@
 package org.haox.kerb.server;
 
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.haox.event.EventHub;
 import org.haox.kerb.server.identity.IdentityService;
 import org.haox.kerb.server.identity.SimpleIdentityBackend;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.replay.ReplayCheckServiceImpl;
+import org.haox.transport.Acceptor;
+import org.haox.transport.tcp.TcpAcceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,11 +16,13 @@ public abstract class AbstractKdcServer
 {
     private static final Logger logger = LoggerFactory.getLogger(AbstractKdcServer.class);
 
-    private boolean started;
-    private String serviceName;
+    private String kdcHost;
+    private short kdcPort;
 
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
+    private boolean started;
+    private String serviceName = "HaoxKdc";
+
+    private EventHub eventHub;
 
     protected KdcConfig kdcConfig;
     protected IdentityService identityService;
@@ -39,27 +37,36 @@ public abstract class AbstractKdcServer
         return kdcConfig.getKdcRealm();
     }
 
-    public String getKdcHost() {
-        return kdcConfig.getKdcAddress();
+    private String getKdcHost() {
+        if (kdcHost != null) {
+            return kdcHost;
+        }
+        return kdcConfig.getKdcHost();
     }
 
-    public short getKdcPort() {
-        return (short) kdcConfig.getKdcPort();
+    private short getKdcPort() {
+        if (kdcPort > 0) {
+            return kdcPort;
+        }
+        return kdcConfig.getKdcPort();
+    }
+
+    public void setKdcHost(String kdcHost) {
+        this.kdcHost = kdcHost;
+    }
+
+    public void setKdcPort(short kdcPort) {
+        this.kdcPort = kdcPort;
     }
 
     public boolean enableDebug() {
         return kdcConfig.enableDebug();
     }
 
-    protected abstract String getServiceName();
-
     public void init() {
         initConfig();
 
-        this.serviceName = getServiceName();
         this.workDir = getWorkDir();
-        this.bossGroup = new NioEventLoopGroup();
-        this.workerGroup = new NioEventLoopGroup();
 
         initIdentityService();
         initReplayCheckService();
@@ -72,16 +79,14 @@ public abstract class AbstractKdcServer
         return file;
     }
 
-    protected void initConfig() {
-        kdcConfig = new KdcConfig();
-    }
+    protected abstract void initConfig();
 
     public void start() {
-        logger.info("Starting " + serviceName);
+        logger.info("Starting " + getServiceName());
         try {
             doStart();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to start " + getServiceName());
+            throw new RuntimeException("Failed to start " + getServiceName(), e);
         }
 
         started = true;
@@ -89,7 +94,16 @@ public abstract class AbstractKdcServer
         logger.info("Started " + serviceName);
     }
 
-    protected abstract void doStart() throws Exception;
+    protected void doStart() throws Exception {
+        this.eventHub = new EventHub();
+        eventHub.register(new KdcHandler());
+
+        Acceptor acceptor = new TcpAcceptor(new KrbStreamingDecoder());
+        eventHub.register(acceptor);
+
+        eventHub.start();
+        acceptor.listen(getKdcHost(), getKdcPort());
+    }
 
     public void stop() {
         logger.info("Stopping " + serviceName);
@@ -101,7 +115,9 @@ public abstract class AbstractKdcServer
         logger.info("Stopped " + serviceName);
     }
 
-    protected abstract void doStop() throws Exception;
+    protected void doStop() throws Exception {
+        eventHub.stop();
+    }
 
     public KdcConfig getConfig() {
         return kdcConfig;
@@ -119,6 +135,13 @@ public abstract class AbstractKdcServer
         this.serviceName = name;
     }
 
+    protected String getServiceName() {
+        if (serviceName != null) {
+            return serviceName;
+        }
+        return kdcConfig.getKdcServiceName();
+    }
+
     public IdentityService getIdentityService() {
         return identityService;
     }
@@ -134,30 +157,5 @@ public abstract class AbstractKdcServer
 
     protected void initReplayCheckService() {
         this.replayCheckService = new ReplayCheckServiceImpl();
-    }
-
-    protected void startTransport() throws Exception {
-        ServerBootstrap b = new ServerBootstrap();
-        b.group(bossGroup, workerGroup)
-                .channel(NioServerSocketChannel.class)
-                .childHandler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    public void initChannel(SocketChannel ch) throws Exception {
-                        initTransportChannel(ch);
-                    }
-                })
-                .option(ChannelOption.SO_BACKLOG, 128)
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
-
-        b.bind(kdcConfig.getKdcPort());
-    }
-
-    protected void initTransportChannel(SocketChannel ch) {
-        ch.pipeline().addLast(new KdcServerHandler());
-    }
-
-    protected void stopTransport() throws Exception {
-        workerGroup.shutdownGracefully();
-        bossGroup.shutdownGracefully();
     }
 }

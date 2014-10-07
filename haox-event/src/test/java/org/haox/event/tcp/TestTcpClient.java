@@ -98,10 +98,9 @@ public class TestTcpClient extends TestTcpBase {
 
         EventHandler messageHandler = new MessageHandler() {
             @Override
-            protected void doHandle(Event event) throws Exception {
-                MessageEvent msgEvent = (MessageEvent) event;
-                if (msgEvent.getEventType() == TransportEventType.INBOUND_MESSAGE) {
-                    ByteBuffer buffer = msgEvent.getMessage();
+            protected void handleMessage(MessageEvent event) {
+                if (event.getEventType() == TransportEventType.INBOUND_MESSAGE) {
+                    ByteBuffer buffer = event.getMessage();
                     clientRecvedMessage = recvBuffer2String(buffer);
                     System.out.println("Recved clientRecvedMessage: " + clientRecvedMessage);
                     Boolean result = TEST_MESSAGE.equals(clientRecvedMessage);
