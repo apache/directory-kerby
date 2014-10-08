@@ -1,9 +1,5 @@
 package org.haox.kerb.ccache;
 
-/**
- * 
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
- */
 public class Tag
 {
     int tag = 0;

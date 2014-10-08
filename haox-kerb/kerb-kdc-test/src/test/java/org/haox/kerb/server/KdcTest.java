@@ -12,7 +12,7 @@ public class KdcTest {
     private String clientPrincipal = "drankye@EXAMPLE.COM";
     private String password = "123456";
     private String hostname = "localhost";
-    private int port = 8088;
+    private short port = 8088;
 
     private SimpleKdcServer kdcServer;
 
@@ -23,7 +23,7 @@ public class KdcTest {
         kdcServer.start();
     }
 
-    //@Test
+    @Test
     public void testKdc() throws Exception {
         Assert.assertTrue(kdcServer.isStarted());
 

@@ -20,12 +20,13 @@ public class KrbConfig
         return conf.getBoolean(KrbConfigKey.KRB_DEBUG);
     }
 
-    public String getKdcAddress() {
+    public String getKdcHost() {
         return conf.getString(KrbConfigKey.KDC_HOST);
     }
 
-    public int getKdcPort() {
-        return conf.getInt(KrbConfigKey.KDC_PORT);
+    public short getKdcPort() {
+        Integer kdcPort = conf.getInt(KrbConfigKey.KDC_PORT);
+        return kdcPort.shortValue();
     }
 
     public String getKdcRealm() {

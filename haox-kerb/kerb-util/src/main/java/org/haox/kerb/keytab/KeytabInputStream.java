@@ -1,7 +1,6 @@
 package org.haox.kerb.keytab;
 
-import org.haox.kerb.common.KrbInputStream;
-import org.haox.kerb.common.KrbUtil;
+import org.haox.kerb.KrbInputStream;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;

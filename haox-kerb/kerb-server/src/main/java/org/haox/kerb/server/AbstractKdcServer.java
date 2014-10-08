@@ -1,6 +1,7 @@
 package org.haox.kerb.server;
 
 import org.haox.event.EventHub;
+import org.haox.kerb.common.KrbStreamingDecoder;
 import org.haox.kerb.server.identity.IdentityService;
 import org.haox.kerb.server.identity.SimpleIdentityBackend;
 import org.haox.kerb.server.replay.ReplayCheckService;

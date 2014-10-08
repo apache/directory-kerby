@@ -7,8 +7,6 @@ import org.haox.kerb.spec.type.common.EncryptionType;
 import java.util.List;
 
 public class KrbContext {
-    private String kdcHost;
-    private int kdcPort;
     private String clientPrincipal;
     private String password;
     private String realm;
@@ -67,22 +65,6 @@ public class KrbContext {
 
     public void setConfig(KrbConfig config) {
         this.config = config;
-    }
-
-    public String getKdcHost() {
-        return kdcHost;
-    }
-
-    public void setKdcHost(String kdcHost) {
-        this.kdcHost = kdcHost;
-    }
-
-    public int getKdcPort() {
-        return kdcPort;
-    }
-
-    public void setKdcPort(int kdcPort) {
-        this.kdcPort = kdcPort;
     }
 
     public List<EncryptionType> getDefaultEtypes() {

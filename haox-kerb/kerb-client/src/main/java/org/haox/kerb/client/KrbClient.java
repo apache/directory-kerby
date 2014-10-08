@@ -1,5 +1,6 @@
 package org.haox.kerb.client;
 
+import org.haox.event.EventHub;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
@@ -22,22 +23,52 @@ import java.nio.ByteBuffer;
 public class KrbClient {
     private static final Logger LOG = LoggerFactory.getLogger(KrbClient.class);
 
+    private EventHub eventHub;
     private KrbContext context;
-
     private KrbConfig config;
     private EncryptionType usedEtype;
+    private String kdcHost;
+    private short kdcPort;
 
-    public KrbClient(String kdcHost, int kdcPort) {
+    public KrbClient(String kdcHost, short kdcPort) {
         this(new KrbConfig());
 
-        context.setKdcHost(kdcHost);
-        context.setKdcPort(kdcPort);
+        setKdcHost(kdcHost);
+        setKdcPort(kdcPort);
     }
 
     public KrbClient(KrbConfig config) {
         this.config = config;
+        init();
+    }
+
+    private void init() {
         this.context = new KrbContext();
         context.setConfig(config);
+
+
+    }
+
+    public String getKdcHost() {
+        if (kdcHost != null) {
+            return kdcHost;
+        }
+        return config.getKdcHost();
+    }
+
+    public void setKdcHost(String kdcHost) {
+        this.kdcHost = kdcHost;
+    }
+
+    public short getKdcPort() {
+        if (kdcPort > 0) {
+            return kdcPort;
+        }
+        return config.getKdcPort();
+    }
+
+    public void setKdcPort(short kdcPort) {
+        this.kdcPort = kdcPort;
     }
 
     public TgtTicket requestTgtTicket(String principal, String password) throws KrbException {
@@ -128,7 +159,7 @@ public class KrbClient {
         }
 
         final String host = args[0];
-        final int port = Integer.parseInt(args[1]);
-        KrbClient krbClnt = new KrbClient(host, port);
+        final Integer port = Integer.parseInt(args[1]);
+        KrbClient krbClnt = new KrbClient(host, port.shortValue());
     }
 }

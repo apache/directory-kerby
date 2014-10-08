@@ -34,18 +34,14 @@ public class KdcTest {
         socketChannel.configureBlocking(true);
         SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
         socketChannel.connect(sa);
-        String TEST_MESSAGE = "Hello World!";
-        ByteBuffer writeBuffer = ByteBuffer.allocate(4 + TEST_MESSAGE.getBytes().length);
-        writeBuffer.putInt(TEST_MESSAGE.getBytes().length);
-        writeBuffer.put(TEST_MESSAGE.getBytes());
-        writeBuffer.flip();
-        socketChannel.write(writeBuffer);
-        ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
-        socketChannel.read(byteBuffer);
-        byteBuffer.flip();
-        //clientRecvedMessage = recvBuffer2String(byteBuffer);
 
-        //Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
+        String BAD_KRB_MESSAGE = "Hello World!";
+        ByteBuffer writeBuffer = ByteBuffer.allocate(4 + BAD_KRB_MESSAGE.getBytes().length);
+        writeBuffer.putInt(BAD_KRB_MESSAGE.getBytes().length);
+        writeBuffer.put(BAD_KRB_MESSAGE.getBytes());
+        writeBuffer.flip();
+
+        socketChannel.write(writeBuffer);
     }
 
     @After

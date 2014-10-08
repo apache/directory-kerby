@@ -11,12 +11,17 @@
     <artifactId>kerb-common</artifactId>
 
     <name>Haox-kerb Common</name>
-    <description>Haox-kerb Common facilities for both client and server, like crypto</description>
+    <description>Haox-kerb Common facilities for both client and server</description>
 
     <dependencies>
         <dependency>
             <groupId>org.haox</groupId>
             <artifactId>haox-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.haox</groupId>
+            <artifactId>haox-event</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

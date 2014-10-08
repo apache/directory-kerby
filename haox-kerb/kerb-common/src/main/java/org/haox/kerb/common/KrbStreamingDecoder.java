@@ -1,4 +1,4 @@
-package org.haox.kerb.server;
+package org.haox.kerb.common;
 
 import org.haox.transport.tcp.DecodingCallback;
 import org.haox.transport.tcp.StreamingDecoder;
