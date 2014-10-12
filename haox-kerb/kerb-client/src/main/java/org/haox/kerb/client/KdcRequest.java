@@ -10,6 +10,7 @@ import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.pa.PaEncTsEnc;
+import org.haox.transport.Transport;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -18,6 +19,7 @@ import java.util.List;
 
 public abstract class KdcRequest {
     private KrbContext context;
+    private Transport transport;
 
     private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
     private KdcOptions kdcOptions = new KdcOptions();
@@ -29,6 +31,14 @@ public abstract class KdcRequest {
 
     public KdcRequest(KrbContext context) {
         this.context = context;
+    }
+
+    public void setTransport(Transport transport) {
+        this.transport = transport;
+    }
+
+    public Transport getTransport() {
+        return this.transport;
     }
 
     public abstract KdcReq makeKdcRequest() throws KrbException;
@@ -57,7 +67,7 @@ public abstract class KdcRequest {
         return EncryptionHandler.encrypt(encodedData, getClientKey(), usage);
     }
 
-    protected byte[] decryptWithClientKey(EncryptedData data, KeyUsage usage) throws KrbException {
+    public byte[] decryptWithClientKey(EncryptedData data, KeyUsage usage) throws KrbException {
         return EncryptionHandler.decrypt(data, getClientKey(), usage);
     }
 

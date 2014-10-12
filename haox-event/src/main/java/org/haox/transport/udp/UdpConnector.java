@@ -36,7 +36,7 @@ public class UdpConnector extends Connector {
     }
 
     @Override
-    protected void doConnect(InetSocketAddress sa) throws IOException {
+    protected void doConnect(InetSocketAddress sa) {
         AddressEvent event = UdpAddressEvent.createAddressConnectEvent(sa);
         dispatch(event);
     }

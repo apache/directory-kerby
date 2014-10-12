@@ -1,6 +1,8 @@
-package org.haox.kerb.client;
+package org.haox.kerb.client.tgs;
 
 import org.haox.asn1.type.Asn1Type;
+import org.haox.kerb.client.KdcRequest;
+import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;

@@ -1,29 +1,43 @@
 package org.haox.kerb.client;
 
+import org.haox.event.Event;
 import org.haox.event.EventHub;
-import org.haox.kerb.codec.KrbCodec;
+import org.haox.event.EventWaiter;
+import org.haox.kerb.client.as.AsRequest;
+import org.haox.kerb.client.as.AsResponse;
+import org.haox.kerb.client.event.KrbClientEvent;
+import org.haox.kerb.client.event.KrbClientEventType;
+import org.haox.kerb.client.tgs.TgsRequest;
+import org.haox.kerb.client.tgs.TgsResponse;
+import org.haox.kerb.common.KrbStreamingDecoder;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KrbError;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
-import org.haox.kerb.spec.type.common.KrbMessage;
-import org.haox.kerb.spec.type.kdc.AsRep;
-import org.haox.kerb.spec.type.kdc.KdcReq;
-import org.haox.kerb.spec.type.kdc.TgsRep;
 import org.haox.kerb.spec.type.ticket.ServiceTicket;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
+import org.haox.transport.Connector;
+import org.haox.transport.Transport;
+import org.haox.transport.event.TransportEvent;
+import org.haox.transport.event.TransportEventType;
+import org.haox.transport.tcp.TcpConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
+/**
+ * A krb client API for applications to interact with KDC
+ */
 public class KrbClient {
     private static final Logger LOG = LoggerFactory.getLogger(KrbClient.class);
 
     private EventHub eventHub;
+    private EventWaiter eventWaiter;
+    private Transport transport;
+
     private KrbContext context;
     private KrbConfig config;
     private EncryptionType usedEtype;
@@ -39,14 +53,28 @@ public class KrbClient {
 
     public KrbClient(KrbConfig config) {
         this.config = config;
-        init();
-    }
-
-    private void init() {
         this.context = new KrbContext();
         context.setConfig(config);
+    }
 
+    public void init() {
+        this.eventHub = new EventHub();
+        eventHub.register(new KrbHandler());
 
+        Connector connector = new TcpConnector(new KrbStreamingDecoder());
+        eventHub.register(connector);
+
+        eventWaiter = eventHub.waitEvent(
+                TransportEventType.NEW_TRANSPORT,
+                KrbClientEventType.TGT_RESULT,
+                KrbClientEventType.TKT_RESULT
+        );
+
+        eventHub.start();
+
+        connector.connect(getKdcHost(), getKdcPort());
+        Event event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
+        transport = ((TransportEvent) event).getTransport();
     }
 
     public String getKdcHost() {
@@ -75,7 +103,9 @@ public class KrbClient {
         context.setClientPrincipal(principal);
         context.setPassword(password);
         context.setServerPrincipal(makeTgsPrincipal());
+
         AsRequest asRequest = new AsRequest(context);
+        asRequest.setTransport(transport);
         return requestTgtTicket(asRequest);
     }
 
@@ -110,22 +140,27 @@ public class KrbClient {
     }
 
     private TgtTicket doRequestTgtTicket(AsRequest tgtTktReq) throws KrbException {
-        KrbMessage respMsg;
-        respMsg = sendAndReceive(tgtTktReq);
-        if (respMsg instanceof KrbError) {
-            throw new KrbErrorException((KrbError) respMsg);
-        }
+        eventHub.dispatch(KrbClientEvent.createTgtIntentEvent(tgtTktReq));
+        Event resultEvent = eventWaiter.waitEvent(KrbClientEventType.TGT_RESULT);
+        AsResponse asResponse = (AsResponse) resultEvent.getEventData();
 
-        AsRep asRep = (AsRep) respMsg;
-        AsResponse asResponse = new AsResponse(context, asRep, tgtTktReq);
-        asResponse.handle();
+        //AsResponse asResponse = new AsResponse(context, asRep, tgtTktReq);
+        //asResponse.handle();
         return asResponse.getTicket();
     }
 
     public ServiceTicket requestServiceTicket(TgtTicket tgt, String serverPrincipal) throws KrbException {
         context.setServerPrincipal(serverPrincipal);
         TgsRequest ticketReq = new TgsRequest(context, tgt);
+        ticketReq.setTransport(transport);
 
+        eventHub.dispatch(KrbClientEvent.createTktIntentEvent(ticketReq));
+        Event resultEvent = eventWaiter.waitEvent(KrbClientEventType.TKT_RESULT);
+        TgsResponse tgsResponse = (TgsResponse) resultEvent.getEventData();
+
+        return tgsResponse.getServiceTicket();
+
+        /*
         KrbMessage respMsg;
         respMsg = sendAndReceive(ticketReq);
         if (respMsg instanceof KrbError) {
@@ -136,30 +171,7 @@ public class KrbClient {
         TgsResponse tgsResponse = new TgsResponse(context, tgsRep, ticketReq);
         tgsResponse.handle();
         return tgsResponse.getServiceTicket();
+        */
     }
 
-    private KrbMessage sendAndReceive(KdcRequest kdcRequest) throws KrbException {
-        KdcReq kdcReq = kdcRequest.makeKdcRequest();
-        ByteBuffer buffer = ByteBuffer.wrap(kdcReq.encode());
-
-        ByteBuffer respData = null;//sendAndReceive(buffer);
-        try {
-            return KrbCodec.decodeMessage(respData);
-        } catch (IOException e) {
-            throw new KrbException("Failed to decode krb message");
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
-        if (args.length < 2 || args.length > 3) {
-            System.err.println(
-                    "Usage: " + KrbClient.class.getSimpleName() +
-                            " <kdcHost> <kdcPort>");
-            return;
-        }
-
-        final String host = args[0];
-        final Integer port = Integer.parseInt(args[1]);
-        KrbClient krbClnt = new KrbClient(host, port.shortValue());
-    }
 }

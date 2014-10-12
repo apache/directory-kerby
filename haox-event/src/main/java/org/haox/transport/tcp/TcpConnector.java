@@ -35,7 +35,7 @@ public class TcpConnector extends Connector {
     }
 
     @Override
-    protected void doConnect(InetSocketAddress sa) throws IOException {
+    protected void doConnect(InetSocketAddress sa) {
         AddressEvent event = TcpAddressEvent.createAddressConnectEvent(sa);
         dispatch(event);
     }
