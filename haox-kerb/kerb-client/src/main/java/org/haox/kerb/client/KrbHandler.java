@@ -16,6 +16,7 @@ import org.haox.kerb.spec.type.common.KrbMessageType;
 import org.haox.kerb.spec.type.kdc.AsRep;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.kdc.TgsRep;
+import org.haox.transport.Transport;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
 import org.slf4j.Logger;
@@ -54,14 +55,21 @@ public class KrbHandler extends AbstractEventHandler {
 
     private void processTgtTicketRequest(AsRequest kdcRequest) throws KrbException {
         KdcReq kdcReq = kdcRequest.makeKdcRequest();
-        ByteBuffer buffer = ByteBuffer.wrap(kdcReq.encode());
-        kdcRequest.getTransport().sendMessage(buffer);
+        sendKdcReq(kdcReq, kdcRequest.getTransport());
     }
 
     private void processServiceTicketRequest(TgsRequest kdcRequest) throws KrbException {
         KdcReq kdcReq = kdcRequest.makeKdcRequest();
-        ByteBuffer buffer = ByteBuffer.wrap(kdcReq.encode());
-        kdcRequest.getTransport().sendMessage(buffer);
+        sendKdcReq(kdcReq, kdcRequest.getTransport());
+    }
+
+    private void sendKdcReq(KdcReq kdcReq, Transport transport) {
+        int bodyLen = kdcReq.encodingLength();
+        ByteBuffer buffer = ByteBuffer.allocate(bodyLen + 4);
+        buffer.putInt(bodyLen);
+        kdcReq.encode(buffer);
+        buffer.flip();
+        transport.sendMessage(buffer);
     }
 
     protected void handleMessage(MessageEvent event) throws Exception {

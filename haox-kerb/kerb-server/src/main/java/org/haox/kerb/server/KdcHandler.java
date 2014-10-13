@@ -55,6 +55,9 @@ public class KdcHandler extends MessageHandler {
         ByteBuffer message = event.getMessage();
         Transport transport = event.getTransport();
 
+        int bodyLen = message.getInt();
+        assert (message.remaining() >= bodyLen);
+
         KrbMessage krbRequest = null;
         krbRequest = KrbCodec.decodeMessage(message);
 

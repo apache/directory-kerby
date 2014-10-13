@@ -145,7 +145,7 @@ public class KrbClient {
         eventHub.dispatch(KrbClientEvent.createTgtIntentEvent(tgtTktReq));
         Event resultEvent = null;
         try {
-            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TGT_RESULT, 20, TimeUnit.SECONDS);
+            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TGT_RESULT, 20, TimeUnit.HOURS);
         } catch (TimeoutException e) {
             throw new KrbException("Network timeout", e);
         }
@@ -162,7 +162,7 @@ public class KrbClient {
         eventHub.dispatch(KrbClientEvent.createTktIntentEvent(ticketReq));
         Event resultEvent = null;
         try {
-            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TKT_RESULT, 20, TimeUnit.SECONDS);
+            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TKT_RESULT, 20, TimeUnit.HOURS);
         } catch (TimeoutException e) {
             throw new KrbException("Network timeout", e);
         }
