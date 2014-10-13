@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * A krb client API for applications to interact with KDC
@@ -141,11 +143,14 @@ public class KrbClient {
 
     private TgtTicket doRequestTgtTicket(AsRequest tgtTktReq) throws KrbException {
         eventHub.dispatch(KrbClientEvent.createTgtIntentEvent(tgtTktReq));
-        Event resultEvent = eventWaiter.waitEvent(KrbClientEventType.TGT_RESULT);
+        Event resultEvent = null;
+        try {
+            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TGT_RESULT, 20, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            throw new KrbException("Network timeout", e);
+        }
         AsResponse asResponse = (AsResponse) resultEvent.getEventData();
 
-        //AsResponse asResponse = new AsResponse(context, asRep, tgtTktReq);
-        //asResponse.handle();
         return asResponse.getTicket();
     }
 
@@ -155,23 +160,15 @@ public class KrbClient {
         ticketReq.setTransport(transport);
 
         eventHub.dispatch(KrbClientEvent.createTktIntentEvent(ticketReq));
-        Event resultEvent = eventWaiter.waitEvent(KrbClientEventType.TKT_RESULT);
+        Event resultEvent = null;
+        try {
+            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TKT_RESULT, 20, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            throw new KrbException("Network timeout", e);
+        }
         TgsResponse tgsResponse = (TgsResponse) resultEvent.getEventData();
 
         return tgsResponse.getServiceTicket();
-
-        /*
-        KrbMessage respMsg;
-        respMsg = sendAndReceive(ticketReq);
-        if (respMsg instanceof KrbError) {
-            throw new KrbErrorException((KrbError) respMsg);
-        }
-
-        TgsRep tgsRep = (TgsRep) respMsg;
-        TgsResponse tgsResponse = new TgsResponse(context, tgsRep, ticketReq);
-        tgsResponse.handle();
-        return tgsResponse.getServiceTicket();
-        */
     }
 
 }

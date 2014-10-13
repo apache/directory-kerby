@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class EventHub implements Dispatcher {
 
@@ -110,6 +112,17 @@ public class EventHub implements Dispatcher {
             @Override
             public Event waitEvent() {
                 return waitEventHandler.waitEvent();
+            }
+
+            @Override
+            public Event waitEvent(EventType event, long timeout,
+                                   TimeUnit timeUnit) throws TimeoutException {
+                return waitEventHandler.waitEvent(event, timeout, timeUnit);
+            }
+
+            @Override
+            public Event waitEvent(long timeout, TimeUnit timeUnit) throws TimeoutException {
+                return waitEventHandler.waitEvent(timeout, timeUnit);
             }
         };
 

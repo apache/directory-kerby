@@ -19,15 +19,18 @@ public class KdcTest {
     @Before
     public void setUp() throws Exception {
         kdcServer = new SimpleKdcServer();
+        kdcServer.setKdcHost(hostname);
+        kdcServer.setKdcPort(port);
         kdcServer.init();
         kdcServer.start();
     }
 
-    //@Test
+    @Test
     public void testKdc() throws Exception {
         Assert.assertTrue(kdcServer.isStarted());
 
         KrbClient krbClnt = new KrbClient(hostname, port);
+        krbClnt.init();
         TgtTicket tgt = krbClnt.requestTgtTicket(clientPrincipal, password);
         Assert.assertNotNull(tgt);
     }

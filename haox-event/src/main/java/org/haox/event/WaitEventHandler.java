@@ -15,6 +15,43 @@ public class WaitEventHandler extends BufferedEventHandler {
     }
 
     public Event waitEvent(final EventType eventType) {
+        Future<Event> future = doWaitEvent(eventType);
+
+        try {
+            return future.get();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Event waitEvent(final EventType eventType,
+                           long timeout, TimeUnit timeUnit) throws TimeoutException {
+        Future<Event> future = doWaitEvent(eventType);
+
+        try {
+            return future.get(timeout, timeUnit);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Event waitEvent(long timeout, TimeUnit timeUnit) throws TimeoutException {
+        Future<Event> future = doWaitEvent(null);
+
+        try {
+            return future.get(timeout, timeUnit);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Future<Event> doWaitEvent(final EventType eventType) {
         Future<Event> future = executorService.submit(new Callable<Event>() {
             @Override
             public Event call() throws Exception {
@@ -26,11 +63,7 @@ public class WaitEventHandler extends BufferedEventHandler {
             }
         });
 
-        try {
-            return future.get();
-        } catch (Exception e) {
-            return null;
-        }
+        return future;
     }
 
     private Event checkEvent() throws Exception {
