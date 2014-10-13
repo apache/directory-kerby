@@ -1,6 +1,6 @@
 package org.haox.kerb.ccache;
 
-import org.haox.kerb.common.KrbOutputStream;
+import org.haox.kerb.KrbOutputStream;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.ticket.Ticket;

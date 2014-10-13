@@ -9,10 +9,10 @@ public abstract class Connector extends TransportSelector {
         super(transportHandler);
     }
 
-    public void connect(String serverAddress, short serverPort) throws IOException {
+    public void connect(String serverAddress, short serverPort) {
         InetSocketAddress sa = new InetSocketAddress(serverAddress, serverPort);
         doConnect(sa);
     }
 
-    protected abstract void doConnect(InetSocketAddress sa) throws IOException;
+    protected abstract void doConnect(InetSocketAddress sa);
 }

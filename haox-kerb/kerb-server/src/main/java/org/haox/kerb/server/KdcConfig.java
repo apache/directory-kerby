@@ -28,12 +28,13 @@ public class KdcConfig
         return conf.getString(KdcConfigKey.WORK_DIR);
     }
 
-    public String getKdcAddress() {
+    public String getKdcHost() {
         return conf.getString(KdcConfigKey.KDC_HOST);
     }
 
-    public int getKdcPort() {
-        return conf.getInt(KdcConfigKey.KDC_PORT);
+    public short getKdcPort() {
+        Integer kdcPort = conf.getInt(KdcConfigKey.KDC_PORT);
+        return kdcPort.shortValue();
     }
 
     public String getKdcRealm() {

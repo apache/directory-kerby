@@ -17,6 +17,7 @@
         <module>kerb-core</module>
         <module>kerb-core-test</module>
         <module>kerb-common</module>
+        <module>kerb-util</module>
         <module>kerb-crypto</module>
         <module>kerb-client</module>
         <module>kerb-server</module>

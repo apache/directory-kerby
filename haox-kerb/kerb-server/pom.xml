@@ -30,9 +30,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>5.0.0.Alpha1</version>
+            <groupId>org.haox</groupId>
+            <artifactId>haox-event</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

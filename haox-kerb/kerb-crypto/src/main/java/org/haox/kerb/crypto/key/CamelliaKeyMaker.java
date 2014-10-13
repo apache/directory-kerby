@@ -1,8 +1,8 @@
 package org.haox.kerb.crypto.key;
 
+import org.haox.kerb.crypto.BytesUtil;
 import org.haox.kerb.crypto.Cmac;
 import org.haox.kerb.crypto.Pbkdf;
-import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.enc.provider.CamelliaProvider;
 import org.haox.kerb.spec.KrbException;
 
@@ -76,13 +76,13 @@ public class CamelliaKeyMaker extends DkKeyMaker {
 
         Ki = new byte[len];
         System.arraycopy(constant, 0, Ki, blocksize + 4, constant.length);
-        Util.int2bytesBe(keyInuptSize * 8, Ki, len - 4);
+        BytesUtil.int2bytes(keyInuptSize * 8, Ki, len - 4, true);
 
         int i, n = 0;
         byte[] tmp;
         for (i = 1, n = 0; n < keyInuptSize; i++) {
             // Update the block counter
-            Util.int2bytesBe(i, Ki, blocksize);
+            BytesUtil.int2bytes(i, Ki, blocksize, true);
 
             // Compute a CMAC checksum, update Ki with the result
             tmp = Cmac.cmac(encProvider(), key, Ki);

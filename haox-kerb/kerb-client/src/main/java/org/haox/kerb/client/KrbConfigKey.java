@@ -4,7 +4,7 @@ import org.haox.config.ConfigKey;
 
 public enum KrbConfigKey implements ConfigKey {
     KRB_DEBUG(true),
-    KDC_HOST("127.0.0.1"),
+    KDC_HOST("localhost"),
     KDC_PORT(8015),
     KDC_DOMAIN("example.com"),
     KDC_REALM("EXAMPLE.COM"),
@@ -20,7 +20,7 @@ public enum KrbConfigKey implements ConfigKey {
     PROXIABLE_ALLOWED(true),
     RENEWABLE_ALLOWED(true),
     VERIFY_BODY_CHECKSUM(true),
-    ENCRYPTION_TYPES(new String[] { "aes128-cts-hmac-sha1-96", "des-cbc-md5", "des3-cbc-sha1-kd" });
+    ENCRYPTION_TYPES(new String[] { "aes128-cts-hmac-sha1-96", "des-cbc-md5" });
 
     private Object defaultValue;
 

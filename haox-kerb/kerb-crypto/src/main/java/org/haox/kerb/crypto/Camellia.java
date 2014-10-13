@@ -17,7 +17,7 @@ public class Camellia {
     private void process128Block(byte[] in, int inOff,
                                 byte[] out, int outOff) {
         for (int i = 0; i < 4; i++) {
-            state[i] = Util.bytes2intBe(in, inOff + (i * 4));
+            state[i] = BytesUtil.bytes2int(in, inOff + (i * 4), true);
             state[i] ^= camKey.kw[i];
         }
 
@@ -38,16 +38,16 @@ public class Camellia {
         state[0] ^= camKey.kw[6];
         state[1] ^= camKey.kw[7];
 
-        Util.int2bytesBe(state[2], out, outOff);
-        Util.int2bytesBe(state[3], out, outOff + 4);
-        Util.int2bytesBe(state[0], out, outOff + 8);
-        Util.int2bytesBe(state[1], out, outOff + 12);
+        BytesUtil.int2bytes(state[2], out, outOff, true);
+        BytesUtil.int2bytes(state[3], out, outOff + 4, true);
+        BytesUtil.int2bytes(state[0], out, outOff + 8, true);
+        BytesUtil.int2bytes(state[1], out, outOff + 12, true);
     }
 
     private void processBlockLargerBlock(byte[] in, int inOff,
                                         byte[] out, int outOff) {
         for (int i = 0; i < 4; i++) {
-            state[i] = Util.bytes2intBe(in, inOff + (i * 4));
+            state[i] = BytesUtil.bytes2int(in, inOff + (i * 4), true);
             state[i] ^= camKey.kw[i];
         }
 
@@ -72,10 +72,10 @@ public class Camellia {
         state[0] ^= camKey.kw[6];
         state[1] ^= camKey.kw[7];
 
-        Util.int2bytesBe(state[2], out, outOff);
-        Util.int2bytesBe(state[3], out, outOff + 4);
-        Util.int2bytesBe(state[0], out, outOff + 8);
-        Util.int2bytesBe(state[1], out, outOff + 12);
+        BytesUtil.int2bytes(state[2], out, outOff, true);
+        BytesUtil.int2bytes(state[3], out, outOff + 4, true);
+        BytesUtil.int2bytes(state[0], out, outOff + 8, true);
+        BytesUtil.int2bytes(state[1], out, outOff + 12, true);
     }
 
     public void processBlock(byte[] in, int inOff) {
