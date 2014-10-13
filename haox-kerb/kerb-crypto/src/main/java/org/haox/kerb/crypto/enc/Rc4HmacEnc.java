@@ -1,9 +1,9 @@
 package org.haox.kerb.crypto.enc;
 
+import org.haox.kerb.crypto.BytesUtil;
 import org.haox.kerb.crypto.Confounder;
 import org.haox.kerb.crypto.Rc4;
 import org.haox.kerb.crypto.Hmac;
-import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.cksum.provider.Md5Provider;
 import org.haox.kerb.crypto.enc.provider.Rc4Provider;
 import org.haox.kerb.crypto.key.Rc4KeyMaker;
@@ -86,7 +86,7 @@ public class Rc4HmacEnc extends AbstractEncTypeHandler {
         byte[] tmpKey = usageKey;
 
         if (exportable) {
-            tmpKey = Util.duplicate(usageKey);
+            tmpKey = BytesUtil.duplicate(usageKey);
             for (int i = 0; i < 9; ++i) {
                 tmpKey[i + 7] = (byte) 0xab;
             }

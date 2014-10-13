@@ -1,6 +1,6 @@
 package org.haox.kerb.keytab;
 
-import org.haox.kerb.common.KrbOutputStream;
+import org.haox.kerb.KrbOutputStream;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.PrincipalName;
 

@@ -1,5 +1,7 @@
-package org.haox.kerb.client;
+package org.haox.kerb.client.tgs;
 
+import org.haox.kerb.client.KdcResponse;
+import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.kdc.EncTgsRepPart;

@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.cksum;
 
-import org.haox.kerb.crypto.Util;
+import org.haox.kerb.crypto.BytesUtil;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.crypto.key.DkKeyMaker;
 import org.haox.kerb.spec.KrbException;
@@ -17,7 +17,7 @@ public abstract class KcCheckSum extends AbstractKeyedCheckSumTypeHandler {
                                        byte[] key, int usage) throws KrbException {
         byte[] Kc;
         byte[] constant = new byte[5];
-        Util.int2bytesBe(usage, constant, 0);
+        BytesUtil.int2bytes(usage, constant, 0, true);
         constant[4] = (byte) 0x99;
         Kc = ((DkKeyMaker) keyMaker()).dk(key, constant);
 

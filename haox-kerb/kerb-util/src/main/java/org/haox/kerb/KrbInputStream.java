@@ -1,4 +1,4 @@
-package org.haox.kerb.common;
+package org.haox.kerb;
 
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionKey;

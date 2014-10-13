@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>org.haox</groupId>
-            <artifactId>kerb-common</artifactId>
+            <artifactId>kerb-util</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

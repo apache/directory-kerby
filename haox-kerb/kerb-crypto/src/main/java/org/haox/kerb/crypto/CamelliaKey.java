@@ -233,31 +233,31 @@ public class CamelliaKey {
 
         switch (key.length) {
             case 16:
-                k[0] = Util.bytes2intBe(key, 0);
-                k[1] = Util.bytes2intBe(key, 4);
-                k[2] = Util.bytes2intBe(key, 8);
-                k[3] = Util.bytes2intBe(key, 12);
+                k[0] = BytesUtil.bytes2int(key, 0, true);
+                k[1] = BytesUtil.bytes2int(key, 4, true);
+                k[2] = BytesUtil.bytes2int(key, 8, true);
+                k[3] = BytesUtil.bytes2int(key, 12, true);
                 k[4] = k[5] = k[6] = k[7] = 0;
                 break;
             case 24:
-                k[0] = Util.bytes2intBe(key, 0);
-                k[1] = Util.bytes2intBe(key, 4);
-                k[2] = Util.bytes2intBe(key, 8);
-                k[3] = Util.bytes2intBe(key, 12);
-                k[4] = Util.bytes2intBe(key, 16);
-                k[5] = Util.bytes2intBe(key, 20);
+                k[0] = BytesUtil.bytes2int(key, 0, true);
+                k[1] = BytesUtil.bytes2int(key, 4, true);
+                k[2] = BytesUtil.bytes2int(key, 8, true);
+                k[3] = BytesUtil.bytes2int(key, 12, true);
+                k[4] = BytesUtil.bytes2int(key, 16, true);
+                k[5] = BytesUtil.bytes2int(key, 20, true);
                 k[6] = ~k[4];
                 k[7] = ~k[5];
                 break;
             case 32:
-                k[0] = Util.bytes2intBe(key, 0);
-                k[1] = Util.bytes2intBe(key, 4);
-                k[2] = Util.bytes2intBe(key, 8);
-                k[3] = Util.bytes2intBe(key, 12);
-                k[4] = Util.bytes2intBe(key, 16);
-                k[5] = Util.bytes2intBe(key, 20);
-                k[6] = Util.bytes2intBe(key, 24);
-                k[7] = Util.bytes2intBe(key, 28);
+                k[0] = BytesUtil.bytes2int(key, 0, true);
+                k[1] = BytesUtil.bytes2int(key, 4, true);
+                k[2] = BytesUtil.bytes2int(key, 8, true);
+                k[3] = BytesUtil.bytes2int(key, 12, true);
+                k[4] = BytesUtil.bytes2int(key, 16, true);
+                k[5] = BytesUtil.bytes2int(key, 20, true);
+                k[6] = BytesUtil.bytes2int(key, 24, true);
+                k[7] = BytesUtil.bytes2int(key, 28, true);
                 break;
             default:
                 throw new

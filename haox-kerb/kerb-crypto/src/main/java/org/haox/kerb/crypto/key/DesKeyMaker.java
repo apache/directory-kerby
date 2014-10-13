@@ -1,7 +1,7 @@
 package org.haox.kerb.crypto.key;
 
+import org.haox.kerb.crypto.BytesUtil;
 import org.haox.kerb.crypto.Des;
-import org.haox.kerb.crypto.Util;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.spec.KrbException;
 
@@ -107,7 +107,8 @@ public class DesKeyMaker extends AbstractKeyMaker {
         int n = passwdBytes.length / keySize;
         long l, l1, l2 = 0;
         for (int i = 0; i < n; i++) {
-            l = Util.bytes2long(passwdBytes, i * keySize) & 0x7f7f7f7f7f7f7f7fL;
+            l = BytesUtil.bytes2long(passwdBytes,
+                    i * keySize, true) & 0x7f7f7f7f7f7f7f7fL;
             if (i % 2 == 1) {
                 l1 = 0;
                 for (int j = 0; j < 64; j++) {
@@ -125,10 +126,10 @@ public class DesKeyMaker extends AbstractKeyMaker {
         int keySize = 8;
 
         byte[] bytes = (new String(passwdChars)).getBytes();
-        byte[] passwdBytes = Util.padding(bytes, keySize);
+        byte[] passwdBytes = BytesUtil.padding(bytes, keySize);
         long lKey = passwd2long(passwdBytes);
 
-        byte[] keyBytes = Util.long2bytes(lKey);
+        byte[] keyBytes = BytesUtil.long2bytes(lKey, true);
         fixKey(keyBytes);
 
         byte[] iv = keyBytes;
