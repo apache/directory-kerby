@@ -48,7 +48,7 @@ public class KrbCodec {
         LimitedByteBuffer valueBuffer = new LimitedByteBuffer(limitedBuffer, length);
 
         KrbMessage msg = null;
-        KrbMessageType msgType = KrbMessageType.fromValue(tag);
+        KrbMessageType msgType = KrbMessageType.fromValue(tagNo);
         if (msgType == KrbMessageType.AS_REQ) {
             msg = new AsReq();
         } else if (msgType == KrbMessageType.AS_REP) {

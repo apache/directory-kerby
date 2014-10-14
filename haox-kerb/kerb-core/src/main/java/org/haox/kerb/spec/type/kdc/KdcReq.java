@@ -48,7 +48,7 @@ public class KdcReq extends KrbMessage {
     }
 
     public KdcReqBody getReqBody() {
-        return getFieldAs(PADATA, KdcReqBody.class);
+        return getFieldAs(REQ_BODY, KdcReqBody.class);
     }
 
     public void setReqBody(KdcReqBody reqBody) {

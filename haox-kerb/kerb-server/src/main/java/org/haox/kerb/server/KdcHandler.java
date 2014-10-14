@@ -23,9 +23,9 @@ public class KdcHandler extends MessageHandler {
         KrbMessage response = null;
 
         KrbMessageType messageType = message.getMsgType();
-        if (messageType == KrbMessageType.AP_REQ) {
+        if (messageType == KrbMessageType.AS_REQ) {
             response = processAsReq((AsReq) message);
-        } else if (messageType == KrbMessageType.AP_REQ) {
+        } else if (messageType == KrbMessageType.TGS_REQ) {
             response = processTgsReq((TgsReq) message);
         }
 
