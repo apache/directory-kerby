@@ -1,4 +1,4 @@
-package org.haox.kerb.server.identity;
+package org.haox.kerb.identity;
 
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionKey;

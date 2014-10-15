@@ -1,4 +1,4 @@
-package org.haox.kerb.server.identity;
+package org.haox.kerb.identity;
 
 public class SimpleAttribute extends Attribute {
     private String value;

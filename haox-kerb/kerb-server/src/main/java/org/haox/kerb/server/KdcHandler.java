@@ -3,7 +3,7 @@ package org.haox.kerb.server;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.server.as.AsContext;
 import org.haox.kerb.server.as.AsService;
-import org.haox.kerb.server.identity.IdentityService;
+import org.haox.kerb.identity.IdentityService;
 import org.haox.kerb.server.tgs.TgsService;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbMessage;
@@ -26,13 +26,7 @@ public class KdcHandler extends MessageHandler {
     private KdcService tgsService;
     private IdentityService identityService;
 
-    public KdcHandler() {
-        super();
-
-        initBackendServices();
-    }
-
-    private void initBackendServices() {
+    public void init() {
         this.asService = new AsService();
         this.tgsService = new TgsService();
 

@@ -1,8 +1,8 @@
 package org.haox.kerb.server;
 
 import org.haox.kerb.common.KrbUtil;
-import org.haox.kerb.server.identity.IdentityService;
-import org.haox.kerb.server.identity.KrbIdentity;
+import org.haox.kerb.identity.IdentityService;
+import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;

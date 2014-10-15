@@ -1,4 +1,4 @@
-package org.haox.kerb.server.identity;
+package org.haox.kerb.identity;
 
 import java.util.List;
 

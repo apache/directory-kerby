@@ -5,7 +5,7 @@ import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.KdcService;
-import org.haox.kerb.server.identity.KrbIdentity;
+import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.*;

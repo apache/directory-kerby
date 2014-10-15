@@ -1,6 +1,6 @@
 package org.haox.kerb.server;
 
-import org.haox.kerb.server.identity.SimpleIdentityBackend;
+import org.haox.kerb.identity.SimpleIdentityBackend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

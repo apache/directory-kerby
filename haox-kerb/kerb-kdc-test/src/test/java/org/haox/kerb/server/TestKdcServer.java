@@ -2,8 +2,8 @@ package org.haox.kerb.server;
 
 import org.haox.kerb.keytab.Keytab;
 import org.haox.kerb.keytab.KeytabEntry;
-import org.haox.kerb.server.identity.Identity;
-import org.haox.kerb.server.identity.KrbIdentity;
+import org.haox.kerb.identity.Identity;
+import org.haox.kerb.identity.KrbIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -2,7 +2,7 @@ package org.haox.kerb.server;
 
 import org.haox.event.EventHub;
 import org.haox.kerb.common.KrbStreamingDecoder;
-import org.haox.kerb.server.identity.IdentityService;
+import org.haox.kerb.identity.IdentityService;
 import org.haox.transport.Acceptor;
 import org.haox.transport.tcp.TcpAcceptor;
 import org.slf4j.Logger;
@@ -110,6 +110,7 @@ public abstract class AbstractKdcServer
         this.kdcHandler = new KdcHandler();
         kdcHandler.setConfig(kdcConfig);
         kdcHandler.setIdentityService(identityService);
+        kdcHandler.init();
     }
 
     public void stop() {

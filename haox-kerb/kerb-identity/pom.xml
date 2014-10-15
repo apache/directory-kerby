@@ -8,10 +8,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kerb-server</artifactId>
+    <artifactId>kerb-identity</artifactId>
 
-    <name>Haox-kerb Server</name>
-    <description>Haox-kerb Server</description>
+    <name>Haox-kerb Identity</name>
+    <description>Haox-kerb Identity</description>
 
     <dependencies>
         <dependency>
@@ -26,17 +26,7 @@
         </dependency>
         <dependency>
             <groupId>org.haox</groupId>
-            <artifactId>kerb-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.haox</groupId>
-            <artifactId>kerb-identity</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.haox</groupId>
-            <artifactId>haox-event</artifactId>
+            <artifactId>kerb-crypto</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
