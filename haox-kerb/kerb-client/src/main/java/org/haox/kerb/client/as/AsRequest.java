@@ -60,12 +60,11 @@ public class AsRequest extends KdcRequest {
         EncryptionType encryptionType = etypes.iterator().next();
         setChosenEtype(encryptionType);
 
-        AsReq req = new AsReq();
-        req.setReqBody(body);
+        asReq.setReqBody(body);
 
         if (isPreAuthEnabled()) {
             PaDataEntry tsPaEntry = makeTimeStampPaDataEntry();
-            req.addPaData(tsPaEntry);
+            asReq.addPaData(tsPaEntry);
         }
 
         return asReq;

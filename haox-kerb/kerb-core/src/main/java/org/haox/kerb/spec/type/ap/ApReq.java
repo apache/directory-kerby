@@ -22,11 +22,11 @@ public class ApReq extends KrbMessage {
     private static int AUTHENTICATOR = 4;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PVNO, 0, Asn1Integer.class),
-            new Asn1FieldInfo(MSG_TYPE, 1, Asn1Integer.class),
-            new Asn1FieldInfo(AP_OPTIONS, 2, ApOptions.class),
-            new Asn1FieldInfo(TICKET, 3, Ticket.class),
-            new Asn1FieldInfo(AUTHENTICATOR, 4, EncryptedData.class)
+            new Asn1FieldInfo(PVNO, Asn1Integer.class),
+            new Asn1FieldInfo(MSG_TYPE, Asn1Integer.class),
+            new Asn1FieldInfo(AP_OPTIONS, ApOptions.class),
+            new Asn1FieldInfo(TICKET, Ticket.class),
+            new Asn1FieldInfo(AUTHENTICATOR, EncryptedData.class)
     };
 
     private Authenticator authenticator;

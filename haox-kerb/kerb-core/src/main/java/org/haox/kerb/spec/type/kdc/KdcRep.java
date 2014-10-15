@@ -29,13 +29,13 @@ public class KdcRep extends KrbMessage {
     private static int ENC_PART = 6;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PVNO, 0, Asn1Integer.class),
-            new Asn1FieldInfo(MSG_TYPE, 1, Asn1Integer.class),
-            new Asn1FieldInfo(PADATA, 2, PaData.class),
-            new Asn1FieldInfo(CREALM, 3, KerberosString.class),
-            new Asn1FieldInfo(CNAME, 4, PrincipalName.class),
-            new Asn1FieldInfo(TICKET, 5, Ticket.class),
-            new Asn1FieldInfo(ENC_PART, 6, EncryptedData.class)
+            new Asn1FieldInfo(PVNO, Asn1Integer.class),
+            new Asn1FieldInfo(MSG_TYPE, Asn1Integer.class),
+            new Asn1FieldInfo(PADATA, PaData.class),
+            new Asn1FieldInfo(CREALM, KerberosString.class),
+            new Asn1FieldInfo(CNAME, PrincipalName.class),
+            new Asn1FieldInfo(TICKET, Ticket.class),
+            new Asn1FieldInfo(ENC_PART, EncryptedData.class)
     };
 
     private EncKdcRepPart encPart;

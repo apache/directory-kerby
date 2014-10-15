@@ -27,7 +27,10 @@ public abstract class Asn1String extends Asn1Simple<String>
 
     @Override
     protected int encodingBodyLength() {
-        return getValue().length();
+        if (getValue() != null) {
+            return getValue().length();
+        }
+        return 0;
     }
 
     protected void toValue() throws IOException {

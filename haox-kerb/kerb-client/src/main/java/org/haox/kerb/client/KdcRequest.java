@@ -23,7 +23,7 @@ public abstract class KdcRequest {
 
     private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
     private KdcOptions kdcOptions = new KdcOptions();
-    private boolean preAuthEnabled = false;
+    private boolean preAuthEnabled = true;
     private List<EncryptionType> etypes;
     private EncryptionType chosenEtype;
     private EncryptionKey clientKey;
