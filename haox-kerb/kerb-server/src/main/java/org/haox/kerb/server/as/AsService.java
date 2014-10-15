@@ -50,11 +50,11 @@ public class AsService extends KdcService {
             throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
         }
 
-        if (entry.isLockedOut()) {
+        if (entry.isLocked()) {
             throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
         }
 
-        if (entry.getExpiration().lessThan(new Date().getTime())) {
+        if (entry.getExpireTime().lessThan(new Date().getTime())) {
             throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
         }
     }
@@ -70,7 +70,7 @@ public class AsService extends KdcService {
         EncryptionKey clientKey = null;
 
         EncryptionType encryptionType = authContext.getEncryptionType();
-        clientKey = clientEntry.getKeyMap().get(encryptionType);
+        clientKey = clientEntry.getKeys().get(encryptionType);
 
         if (clientKey == null) {
             throw new KrbException(KrbErrorCode.KDC_ERR_NULL_KEY);
@@ -131,11 +131,9 @@ public class AsService extends KdcService {
 
     @Override
     protected void authenticate(KdcContext requestContext) throws KrbException {
-        KdcReq request = requestContext.getRequest();
         AsContext asContext = (AsContext) requestContext;
 
         selectEncryptionType(asContext);
-        getClientEntry(asContext);
         checkPolicy(asContext);
     }
 }

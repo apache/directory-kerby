@@ -3,10 +3,10 @@ package org.haox.kerb.identity;
 import java.util.List;
 
 public interface IdentityService {
-    public List<Identity> getIdentities();
+    public List<KrbIdentity> getIdentities();
     public boolean checkIdentity(String name);
-    public Identity getIdentity(String name);
-    public void addIdentity(Identity identity);
-    public void updateIdentity(Identity identity);
-    public void deleteIdentity(Identity identity);
+    public KrbIdentity getIdentity(String name);
+    public void addIdentity(KrbIdentity identity);
+    public void updateIdentity(KrbIdentity identity);
+    public void deleteIdentity(KrbIdentity identity);
 }

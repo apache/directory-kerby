@@ -123,7 +123,7 @@ public class TestKdcServer extends SimpleKdcServer {
 
     public synchronized void createPrincipal(String principal, String password)
             throws Exception {
-        Identity identity = new KrbIdentity(principal, password);
+        KrbIdentity identity = new KrbIdentity(principal);
         getIdentityService().addIdentity(identity);
     }
 

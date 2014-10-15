@@ -44,14 +44,6 @@ public abstract class KdcContext {
         return defaultEtypes;
     }
 
-    public IdentityService getIdentityService() {
-        return identityService;
-    }
-
-    public void setIdentityService(IdentityService identityService) {
-        this.identityService = identityService;
-    }
-
     public KdcReq getRequest() {
         return request;
     }

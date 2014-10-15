@@ -1,4 +1,7 @@
-package org.haox.kerb.identity;
+package org.haox.kerb.identity.backend;
+
+import org.haox.kerb.identity.Identity;
+import org.haox.kerb.identity.KrbIdentity;
 
 import java.io.File;
 import java.util.HashMap;
@@ -16,7 +19,7 @@ public class SimpleIdentityBackend extends AbstractIdentityBackend {
     }
 
     @Override
-    public List<Identity> getIdentities() {
+    public List<KrbIdentity> getIdentities() {
         checkAndload();
         return null;
     }
@@ -28,23 +31,23 @@ public class SimpleIdentityBackend extends AbstractIdentityBackend {
     }
 
     @Override
-    public Identity getIdentity(String name) {
+    public KrbIdentity getIdentity(String name) {
         checkAndload();
-        return null;
+        return new KrbIdentity(name); // todo:
     }
 
     @Override
-    public void addIdentity(Identity identity) {
-        checkAndload();
-    }
-
-    @Override
-    public void updateIdentity(Identity identity) {
+    public void addIdentity(KrbIdentity identity) {
         checkAndload();
     }
 
     @Override
-    public void deleteIdentity(Identity identity) {
+    public void updateIdentity(KrbIdentity identity) {
+        checkAndload();
+    }
+
+    @Override
+    public void deleteIdentity(KrbIdentity identity) {
         checkAndload();
     }
 

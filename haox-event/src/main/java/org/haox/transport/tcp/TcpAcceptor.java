@@ -38,13 +38,20 @@ public class TcpAcceptor extends Acceptor {
         ServerSocketChannel server = (ServerSocketChannel) key.channel();
         SocketChannel channel;
         while ((channel = server.accept()) != null) {
+            // Qukck fix: avoid exception during exiting
+            if (! selector.isOpen()) {
+                channel.close();
+                break;
+            };
+
             channel.configureBlocking(false);
             channel.socket().setTcpNoDelay(true);
             channel.socket().setKeepAlive(true);
 
             Transport transport = new TcpTransport(channel,
                     ((TcpTransportHandler) transportHandler).getStreamingDecoder());
-            channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
+            channel.register(selector,
+                    SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
             onNewTransport(transport);
         }
     }

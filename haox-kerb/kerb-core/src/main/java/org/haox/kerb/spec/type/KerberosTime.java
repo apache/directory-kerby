@@ -2,6 +2,7 @@ package org.haox.kerb.spec.type;
 
 import org.haox.asn1.type.Asn1GeneralizedTime;
 
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -57,5 +58,9 @@ public class KerberosTime extends Asn1GeneralizedTime {
         long delta = Math.abs(getValue().getTime() - System.currentTimeMillis());
 
         return delta < clockSkew;
+    }
+
+    public static KerberosTime now() {
+        return new KerberosTime(new Date().getTime());
     }
 }

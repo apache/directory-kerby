@@ -43,6 +43,7 @@ public abstract class KdcService {
     public void serve(KdcContext kdcContext) throws KrbException {
         checkVersion(kdcContext);
         checkClient(kdcContext);
+        checkServer(kdcContext);
         preAuthenticate(kdcContext);
         authenticate(kdcContext);
         KdcRep reply = makeReply(kdcContext);
@@ -63,7 +64,8 @@ public abstract class KdcService {
         KdcReq request = kdcContext.getRequest();
 
         String clientPrincipal = request.getReqBody().getCname().getName();
-        Identity clientIdentity = identityService.getIdentity(clientPrincipal);
+        KrbIdentity clientIdentity = getEntry(clientPrincipal,
+                KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
         kdcContext.setClientEntry((KrbIdentity) clientIdentity);
     }
 
@@ -76,7 +78,7 @@ public abstract class KdcService {
         PrincipalName serverPrincipal = request.getReqBody().getSname();
 
         EncryptionType encryptionType = authContext.getEncryptionType();
-        EncryptionKey serverKey = null;//authContext.getServerEntry().getAttributes().get(encryptionType);
+        EncryptionKey serverKey = null;//authContext.checkServer().getAttributes().get(encryptionType);
 
         PrincipalName ticketPrincipal = request.getReqBody().getSname();
 
@@ -281,13 +283,12 @@ public abstract class KdcService {
         return reply;
     }
 
-    private static void getServerEntry(KdcContext kdcContext) throws KrbException {
+    private void checkServer(KdcContext kdcContext) throws KrbException {
         PrincipalName principal = kdcContext.getRequest().getReqBody().getSname();
-        IdentityService store = kdcContext.getIdentityService();
 
-        KerberosPrincipal principalWithRealm = new KerberosPrincipal(principal.getName() + "@"
-                + kdcContext.getRequest().getReqBody().getRealm());
-        kdcContext.setServerEntry((KrbIdentity) getEntry(principalWithRealm, store,
+        String principalWithRealm = principal.getName() + "@"
+                + kdcContext.getRequest().getReqBody().getRealm();
+        kdcContext.setServerEntry(getEntry(principalWithRealm,
                 KrbErrorCode.KDC_ERR_S_PRINCIPAL_UNKNOWN));
     }
     
@@ -306,19 +307,17 @@ public abstract class KdcService {
         KrbIdentity clientEntry = kdcContext.getClientEntry();
 
         sb.append("\n\t" + "principal              " + clientPrincipal);
-        sb.append("\n\t" + "realm                  " + clientEntry.getRealmName());
         sb.append("\n\t" + "principal              " + clientEntry.getPrincipal());
 
         PrincipalName serverPrincipal = kdcContext.getRequest().getReqBody().getSname();
         KrbIdentity serverEntry = kdcContext.getServerEntry();
 
         sb.append("\n\t" + "principal              " + serverPrincipal);
-        sb.append("\n\t" + "realm                  " + serverEntry.getRealmName());
         sb.append("\n\t" + "principal              " + serverEntry.getPrincipal());
 
         EncryptionType encryptionType = kdcContext.getEncryptionType();
-        int clientKeyVersion = 0;//clientEntry.getKeyMap().get(encryptionType).getKeyVersion();
-        int serverKeyVersion = 0;//serverEntry.getKeyMap().get(encryptionType).getKeyVersion();
+        int clientKeyVersion = 0;//clientEntry.getKeys().get(encryptionType).getKeyVersion();
+        int serverKeyVersion = 0;//serverEntry.getKeys().get(encryptionType).getKeyVersion();
         sb.append("\n\t" + "Request key type       " + encryptionType);
         sb.append("\n\t" + "Client key version     " + clientKeyVersion);
         sb.append("\n\t" + "Server key version     " + serverKeyVersion);
@@ -395,24 +394,12 @@ public abstract class KdcService {
         return krbError;
     }
 
-    protected void getClientEntry(KdcContext kdcContext) throws KrbException {
-        KdcReqBody kdcReqBody = kdcContext.getRequest().getReqBody();
-        KerberosPrincipal principal = null;//getKerberosPrincipal(kdcReqBody.getCname(), kdcReqBody.getRealm();
-
-        KrbIdentity storeEntry = (KrbIdentity) getEntry(principal,
-                kdcContext.getIdentityService(),
-                KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
-        kdcContext.setClientEntry(storeEntry);
-    }
-
-    protected static Identity getEntry(KerberosPrincipal principal, IdentityService store,
-                                    KrbErrorCode KrbErrorCode) throws KrbException {
-        Identity entry = null;
+    protected KrbIdentity getEntry(String principal, KrbErrorCode KrbErrorCode) throws KrbException {
+        KrbIdentity entry = null;
 
         try {
-            entry = store.getIdentity(principal.getName());
-        }
-        catch (Exception e) {
+            entry = identityService.getIdentity(principal);
+        } catch (Exception e) {
             throw new KrbException(KrbErrorCode, e);
         }
 
