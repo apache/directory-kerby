@@ -1,12 +1,14 @@
 package org.haox.kerb.server;
 
 import org.haox.kerb.codec.KrbCodec;
+import org.haox.kerb.server.as.AsContext;
+import org.haox.kerb.server.as.AsService;
+import org.haox.kerb.server.identity.IdentityService;
+import org.haox.kerb.server.tgs.TgsService;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.common.KrbMessageType;
-import org.haox.kerb.spec.type.kdc.AsRep;
 import org.haox.kerb.spec.type.kdc.AsReq;
-import org.haox.kerb.spec.type.kdc.TgsRep;
 import org.haox.kerb.spec.type.kdc.TgsReq;
 import org.haox.transport.MessageHandler;
 import org.haox.transport.Transport;
@@ -18,6 +20,33 @@ import java.nio.ByteBuffer;
 
 public class KdcHandler extends MessageHandler {
     private static final Logger logger = LoggerFactory.getLogger(KdcHandler.class);
+
+    private KdcConfig kdcConfig;
+    private KdcService asService;
+    private KdcService tgsService;
+    private IdentityService identityService;
+
+    public KdcHandler() {
+        super();
+
+        initBackendServices();
+    }
+
+    private void initBackendServices() {
+        this.asService = new AsService();
+        this.tgsService = new TgsService();
+
+        asService.setIdentityService(identityService);
+        tgsService.setIdentityService(identityService);
+    }
+
+    public void setConfig(KdcConfig config) {
+        this.kdcConfig = config;
+    }
+
+    public void setIdentityService(IdentityService identityService) {
+        this.identityService = identityService;
+    }
 
     private KrbMessage processKrbMessage(KrbMessage message) throws KrbException {
         KrbMessage response = null;
@@ -32,22 +61,22 @@ public class KdcHandler extends MessageHandler {
         return response;
     }
 
-    private AsRep processAsReq(AsReq message) throws KrbException {
-        AsRep asRep = new AsRep();
+    private KrbMessage processAsReq(AsReq message) throws KrbException {
+        KdcContext kdcContext = new AsContext();
+        kdcContext.setConfig(kdcConfig);
+        kdcContext.setRequest(message);
 
-        asRep.setCname(message.getReqBody().getCname());
-        asRep.setCrealm(message.getReqBody().getRealm());
-
-        return asRep;
+        asService.serve(kdcContext);
+        return kdcContext.getReply();
     }
 
-    private TgsRep processTgsReq(TgsReq message) throws KrbException {
-        TgsRep tgsRep = new TgsRep();
+    private KrbMessage processTgsReq(TgsReq message) throws KrbException {
+        KdcContext kdcContext = new AsContext();
+        kdcContext.setConfig(kdcConfig);
+        kdcContext.setRequest(message);
 
-        tgsRep.setCname(message.getReqBody().getCname());
-        tgsRep.setCrealm(message.getReqBody().getRealm());
-
-        return tgsRep;
+        asService.serve(kdcContext);
+        return kdcContext.getReply();
     }
 
     @Override

@@ -11,7 +11,6 @@ import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.ap.ApOptions;
 import org.haox.kerb.spec.type.ap.ApReq;
 import org.haox.kerb.spec.type.ap.Authenticator;
 import org.haox.kerb.spec.type.common.*;
@@ -116,7 +115,9 @@ public class TgsService extends KdcService {
     }
 
     @Override
-    protected void preAuthenticate(KdcContext requestContext, KdcReq request) throws KrbException {
+    protected void preAuthenticate(KdcContext requestContext) throws KrbException {
+        KdcReq request = requestContext.getRequest();
+
         TgsContext authnContext = (TgsContext) requestContext;
 
         KdcConfig config = authnContext.getConfig();
@@ -138,7 +139,9 @@ public class TgsService extends KdcService {
     }
 
     @Override
-    protected void authenticate(KdcContext requestContext, KdcReq request) throws KrbException {
+    protected void authenticate(KdcContext requestContext) throws KrbException {
+        KdcReq request = requestContext.getRequest();
+
         TgsContext authnContext = (TgsContext) requestContext;
 
         selectEncryptionType(authnContext);

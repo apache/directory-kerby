@@ -20,12 +20,12 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
-public class AuthnService extends KdcService {
-    private static final Logger LOG = LoggerFactory.getLogger(AuthnService.class);
+public class AsService extends KdcService {
+    private static final Logger LOG = LoggerFactory.getLogger(AsService.class);
 
     private static final String SERVICE_NAME = "Authentication Service (AS)";
 
-    private void selectEncryptionType(AuthnContext authContext) throws KrbException {
+    private void selectEncryptionType(AsContext authContext) throws KrbException {
         KdcContext kdcContext = authContext;
         KdcConfig config = kdcContext.getConfig();
 
@@ -43,7 +43,7 @@ public class AuthnService extends KdcService {
         kdcContext.setEncryptionType(bestType);
     }
 
-    private static void checkPolicy(AuthnContext authContext) throws KrbException {
+    private static void checkPolicy(AsContext authContext) throws KrbException {
         KrbIdentity entry = authContext.getClientEntry();
 
         if (entry.isDisabled()) {
@@ -59,7 +59,7 @@ public class AuthnService extends KdcService {
         }
     }
 
-    private void verifyEncryptedTimestamp(AuthnContext authContext) throws KrbException {
+    private void verifyEncryptedTimestamp(AsContext authContext) throws KrbException {
         LOG.debug("Verifying using encrypted timestamp.");
 
         KdcConfig config = authContext.getConfig();
@@ -107,12 +107,13 @@ public class AuthnService extends KdcService {
     }
 
     @Override
-    protected void preAuthenticate(KdcContext requestContext, KdcReq request) throws KrbException {
-        AuthnContext authnContext = (AuthnContext) requestContext;
+    protected void preAuthenticate(KdcContext requestContext) throws KrbException {
+        KdcReq request = requestContext.getRequest();
+        AsContext asContext = (AsContext) requestContext;
 
-        KdcConfig config = authnContext.getConfig();
+        KdcConfig config = asContext.getConfig();
 
-        KrbIdentity clientEntry = authnContext.getClientEntry();
+        KrbIdentity clientEntry = asContext.getClientEntry();
         String clientName = clientEntry.getPrincipal().getName();
 
         EncryptionKey clientKey = null;
@@ -120,20 +121,21 @@ public class AuthnService extends KdcService {
         PaData preAuthData = request.getPaData();
 
         if ((preAuthData == null) || (preAuthData.getElements().size() == 0)) {
-            KrbError krbError = makePreAuthenticationError(authnContext);
+            KrbError krbError = makePreAuthenticationError(asContext);
             throw new KrbErrorException(krbError);
         }
 
-        authnContext.setClientKey(clientKey);
-        authnContext.setPreAuthenticated(true);
+        asContext.setClientKey(clientKey);
+        asContext.setPreAuthenticated(true);
     }
 
     @Override
-    protected void authenticate(KdcContext requestContext, KdcReq request) throws KrbException {
-        AuthnContext authnContext = (AuthnContext) requestContext;
+    protected void authenticate(KdcContext requestContext) throws KrbException {
+        KdcReq request = requestContext.getRequest();
+        AsContext asContext = (AsContext) requestContext;
 
-        selectEncryptionType(authnContext);
-        getClientEntry(authnContext);
-        checkPolicy(authnContext);
+        selectEncryptionType(asContext);
+        getClientEntry(asContext);
+        checkPolicy(asContext);
     }
 }

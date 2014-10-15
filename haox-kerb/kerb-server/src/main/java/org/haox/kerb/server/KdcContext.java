@@ -14,8 +14,7 @@ import org.haox.kerb.spec.type.ticket.Ticket;
 import java.net.InetAddress;
 import java.util.List;
 
-public abstract class KdcContext
-{
+public abstract class KdcContext {
     private KdcConfig config;
     private IdentityService identityService;
     private List<EncryptionType> defaultEtypes;
@@ -29,11 +28,12 @@ public abstract class KdcContext
     private EncryptionKey clientKey;
     private KrbIdentity clientEntry;
     private KrbIdentity serverEntry;
+
     public KdcConfig getConfig() {
         return config;
     }
 
-    public void setConfig( KdcConfig config ) {
+    public void setConfig(KdcConfig config) {
         this.config = config;
     }
 
@@ -44,63 +44,51 @@ public abstract class KdcContext
         return defaultEtypes;
     }
 
-    public IdentityService getIdentityService()
-    {
+    public IdentityService getIdentityService() {
         return identityService;
     }
 
-    public void setIdentityService(IdentityService identityService)
-    {
+    public void setIdentityService(IdentityService identityService) {
         this.identityService = identityService;
     }
 
-    public KdcReq getRequest()
-    {
+    public KdcReq getRequest() {
         return request;
     }
 
-    public void setRequest( KdcReq request )
-    {
+    public void setRequest(KdcReq request) {
         this.request = request;
     }
 
-    public KrbMessage getReply()
-    {
+    public KrbMessage getReply() {
         return reply;
     }
 
-    public void setReply(KdcRep reply )
-    {
+    public void setReply(KdcRep reply) {
         this.reply = reply;
     }
 
-    public InetAddress getClientAddress()
-    {
+    public InetAddress getClientAddress() {
         return clientAddress;
     }
 
-    public void setClientAddress( InetAddress clientAddress )
-    {
+    public void setClientAddress(InetAddress clientAddress) {
         this.clientAddress = clientAddress;
     }
 
-    public EncryptionType getEncryptionType()
-    {
+    public EncryptionType getEncryptionType() {
         return encryptionType;
     }
 
-    public void setEncryptionType( EncryptionType encryptionType )
-    {
+    public void setEncryptionType(EncryptionType encryptionType) {
         this.encryptionType = encryptionType;
     }
 
-    public void setReplayCache( ReplayCheckService replayCache )
-    {
+    public void setReplayCache(ReplayCheckService replayCache) {
         this.replayCache = replayCache;
     }
 
-    public ReplayCheckService getReplayCache()
-    {
+    public ReplayCheckService getReplayCache() {
         return replayCache;
     }
 
@@ -108,7 +96,7 @@ public abstract class KdcContext
         return ticket;
     }
 
-    public void setTicket( Ticket ticket ) {
+    public void setTicket(Ticket ticket) {
         this.ticket = ticket;
     }
 
@@ -116,7 +104,7 @@ public abstract class KdcContext
         return isPreAuthenticated;
     }
 
-    public void setPreAuthenticated( boolean isPreAuthenticated ) {
+    public void setPreAuthenticated(boolean isPreAuthenticated) {
         this.isPreAuthenticated = isPreAuthenticated;
     }
 
@@ -124,27 +112,23 @@ public abstract class KdcContext
         return serverEntry;
     }
 
-    public void setServerEntry(KrbIdentity serverEntry )
-    {
+    public void setServerEntry(KrbIdentity serverEntry) {
         this.serverEntry = serverEntry;
     }
 
-    public KrbIdentity getClientEntry()
-    {
+    public KrbIdentity getClientEntry() {
         return clientEntry;
     }
 
-    public void setClientEntry(KrbIdentity clientEntry ) {
+    public void setClientEntry(KrbIdentity clientEntry) {
         this.clientEntry = clientEntry;
     }
 
-    public EncryptionKey getClientKey()
-    {
+    public EncryptionKey getClientKey() {
         return clientKey;
     }
 
-    public void setClientKey( EncryptionKey clientKey )
-    {
+    public void setClientKey(EncryptionKey clientKey) {
         this.clientKey = clientKey;
     }
 }

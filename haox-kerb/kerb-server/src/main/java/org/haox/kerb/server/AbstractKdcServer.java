@@ -3,9 +3,6 @@ package org.haox.kerb.server;
 import org.haox.event.EventHub;
 import org.haox.kerb.common.KrbStreamingDecoder;
 import org.haox.kerb.server.identity.IdentityService;
-import org.haox.kerb.server.identity.SimpleIdentityBackend;
-import org.haox.kerb.server.replay.ReplayCheckService;
-import org.haox.kerb.server.replay.ReplayCheckServiceImpl;
 import org.haox.transport.Acceptor;
 import org.haox.transport.tcp.TcpAcceptor;
 import org.slf4j.Logger;
@@ -23,15 +20,48 @@ public abstract class AbstractKdcServer
     private boolean started;
     private String serviceName = "HaoxKdc";
 
+    private KdcHandler kdcHandler;
     private EventHub eventHub;
 
     protected KdcConfig kdcConfig;
     protected IdentityService identityService;
-    private ReplayCheckService replayCheckService;
     protected File workDir;
 
     public AbstractKdcServer() {
 
+    }
+
+    public void init() {
+        initConfig();
+
+        initWorkDir();
+
+        initIdentityService();
+
+        initHandler();
+    }
+
+    protected void initWorkDir() {
+        String path = kdcConfig.getWorkDir();
+        File file = new File(path);
+        file.mkdirs();
+
+        this.workDir = file;
+    }
+
+    protected abstract void initConfig();
+
+    public void start() {
+        logger.info("Starting " + getServiceName());
+        try {
+            doStart();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to start " + getServiceName(), e);
+        }
+
+        started = true;
+
+        logger.info("Started " + serviceName);
     }
 
     public String getKdcRealm() {
@@ -64,46 +94,22 @@ public abstract class AbstractKdcServer
         return kdcConfig.enableDebug();
     }
 
-    public void init() {
-        initConfig();
-
-        this.workDir = getWorkDir();
-
-        initIdentityService();
-        initReplayCheckService();
-    }
-
-    protected File getWorkDir() {
-        String path = kdcConfig.getWorkDir();
-        File file = new File(path);
-        file.mkdirs();
-        return file;
-    }
-
-    protected abstract void initConfig();
-
-    public void start() {
-        logger.info("Starting " + getServiceName());
-        try {
-            doStart();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to start " + getServiceName(), e);
-        }
-
-        started = true;
-
-        logger.info("Started " + serviceName);
-    }
-
     protected void doStart() throws Exception {
         this.eventHub = new EventHub();
-        eventHub.register(new KdcHandler());
+
+        eventHub.register(kdcHandler);
 
         Acceptor acceptor = new TcpAcceptor(new KrbStreamingDecoder());
         eventHub.register(acceptor);
 
         eventHub.start();
         acceptor.listen(getKdcHost(), getKdcPort());
+    }
+
+    private void initHandler() {
+        this.kdcHandler = new KdcHandler();
+        kdcHandler.setConfig(kdcConfig);
+        kdcHandler.setIdentityService(identityService);
     }
 
     public void stop() {
@@ -147,16 +153,5 @@ public abstract class AbstractKdcServer
         return identityService;
     }
 
-    protected void initIdentityService() {
-        File identityFile = new File(workDir, "simplekdb.dat");
-        this.identityService = new SimpleIdentityBackend(identityFile);
-    }
-
-    public ReplayCheckService getReplayCheckService() {
-        return replayCheckService;
-    }
-
-    protected void initReplayCheckService() {
-        this.replayCheckService = new ReplayCheckServiceImpl();
-    }
+    protected abstract void initIdentityService();
 }

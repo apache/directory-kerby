@@ -2,11 +2,13 @@ package org.haox.kerb.server;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.EncryptionHandler;
-import org.haox.kerb.server.as.AuthnContext;
+import org.haox.kerb.server.as.AsContext;
 import org.haox.kerb.server.identity.Identity;
 import org.haox.kerb.server.identity.IdentityService;
 import org.haox.kerb.server.identity.KrbIdentity;
 import org.haox.kerb.server.preauth.PaUtil;
+import org.haox.kerb.server.replay.ReplayCheckService;
+import org.haox.kerb.server.replay.ReplayCheckServiceImpl;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
@@ -27,25 +29,50 @@ import java.util.List;
 public abstract class KdcService {
     private static final Logger logger = LoggerFactory.getLogger(KdcService.class);
 
+    protected IdentityService identityService;
+    protected ReplayCheckService replayCheckService;
+
+    public KdcService() {
+        this.replayCheckService = new ReplayCheckServiceImpl();
+    }
+
+    public void setIdentityService(IdentityService identityService) {
+        this.identityService = identityService;
+    }
+
     public void serve(KdcContext kdcContext) throws KrbException {
+        checkVersion(kdcContext);
+        checkClient(kdcContext);
+        preAuthenticate(kdcContext);
+        authenticate(kdcContext);
+        KdcRep reply = makeReply(kdcContext);
+        issueTicket(kdcContext);
+        kdcContext.setReply(reply);
+    }
+
+    protected void checkVersion(KdcContext kdcContext) throws KrbException {
         KdcReq request = kdcContext.getRequest();
 
         int kerberosVersion = request.getPvno();
         if (kerberosVersion != KrbConstant.KRB_V5) {
             throw new KrbException(KrbErrorCode.KDC_ERR_BAD_PVNO);
         }
-
-        preAuthenticate(kdcContext, request);
-        authenticate(kdcContext, request);
-        KdcRep reply = makeReply(kdcContext, request);
-        issueTicket(kdcContext, request);
-        kdcContext.setReply(reply);
     }
 
-    protected abstract void preAuthenticate(KdcContext kdcContext, KdcReq request) throws KrbException;
-    protected abstract void authenticate(KdcContext kdcContext, KdcReq request) throws KrbException;
+    protected void checkClient(KdcContext kdcContext) throws KrbException {
+        KdcReq request = kdcContext.getRequest();
 
-    protected void issueTicket(KdcContext authContext, KdcReq request) throws KrbException {
+        String clientPrincipal = request.getReqBody().getCname().getName();
+        Identity clientIdentity = identityService.getIdentity(clientPrincipal);
+        kdcContext.setClientEntry((KrbIdentity) clientIdentity);
+    }
+
+    protected abstract void preAuthenticate(KdcContext kdcContext) throws KrbException;
+    protected abstract void authenticate(KdcContext kdcContext) throws KrbException;
+
+    protected void issueTicket(KdcContext authContext) throws KrbException {
+        KdcReq request = authContext.getRequest();
+
         PrincipalName serverPrincipal = request.getReqBody().getSname();
 
         EncryptionType encryptionType = authContext.getEncryptionType();
@@ -200,9 +227,11 @@ public abstract class KdcService {
         authContext.setTicket(newTicket);
     }
 
-    protected KdcRep makeReply(KdcContext kdcContext, KdcReq request) throws KrbException {
-        AuthnContext authnContext = (AuthnContext) kdcContext;
-        Ticket ticket = authnContext.getTicket();
+    protected KdcRep makeReply(KdcContext kdcContext) throws KrbException {
+        KdcReq request = kdcContext.getRequest();
+
+        AsContext asContext = (AsContext) kdcContext;
+        Ticket ticket = asContext.getTicket();
 
         AsRep reply = new AsRep();
 
@@ -239,10 +268,10 @@ public abstract class KdcService {
 
         EncAsRepPart encAsRepPart = new EncAsRepPart();
 
-        logContext(authnContext);
+        logContext(asContext);
         logReply(reply, encKdcRepPart);
 
-        EncryptionKey clientKey = authnContext.getClientKey();
+        EncryptionKey clientKey = asContext.getClientKey();
         EncryptedData encryptedData = EncryptionHandler.seal(encAsRepPart, clientKey,
                 KeyUsage.AS_REP_ENCPART);
         reply.setEncryptedEncPart(encryptedData);
