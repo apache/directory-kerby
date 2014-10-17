@@ -32,6 +32,10 @@ public abstract class KdcContext {
         this.config = config;
     }
 
+    public String getServerRealm() {
+        return config.getKdcRealm();
+    }
+
     public KdcReq getRequest() {
         return request;
     }

@@ -4,7 +4,7 @@ import org.haox.config.ConfigKey;
 
 public enum KdcConfigKey implements ConfigKey {
     KRB_DEBUG(true),
-    WORK_DIR("c:\\abc2\\haox\\krb5haoxkdc"), //"/var/krb5haoxkdc"
+    WORK_DIR,
     KDC_SERVICE_NAME("Haox_KDC_Server"),
     KDC_HOST("127.0.0.1"),
     KDC_PORT(8015),

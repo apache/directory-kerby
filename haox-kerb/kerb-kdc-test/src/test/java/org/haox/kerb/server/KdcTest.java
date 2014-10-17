@@ -9,12 +9,12 @@ import org.junit.Test;
 
 public class KdcTest {
 
-    private String clientPrincipal = "drankye@EXAMPLE.COM";
+    private String clientPrincipal;
     private String password = "123456";
     private String hostname = "localhost";
     private short port = 8088;
 
-    private SimpleKdcServer kdcServer;
+    private TestKdcServer kdcServer;
 
     @Before
     public void setUp() throws Exception {
@@ -23,6 +23,9 @@ public class KdcTest {
         kdcServer.setKdcPort(port);
         kdcServer.init();
         kdcServer.start();
+
+        clientPrincipal = "drankye@" + kdcServer.getKdcRealm();
+        kdcServer.createPrincipal(clientPrincipal, password);
     }
 
     @Test

@@ -36,19 +36,24 @@ public class TestKdcServer extends SimpleKdcServer {
         return (Properties) DEFAULT_CONFIG.clone();
     }
 
-    private File workDir;
-
     public TestKdcServer() {
         this(createConf());
     }
 
     public TestKdcServer(Properties conf) {
+        super();
         getConfig().getConf().addPropertiesConfig(conf);
+    }
 
-        this.workDir = new File(workDir, Long.toString(System.currentTimeMillis()));
-        if (! workDir.exists() && ! workDir.mkdirs()) {
-            throw new RuntimeException("Cannot create directory " + workDir);
-        }
+    @Override
+    public void init() {
+        super.init();
+
+        createPrincipals("krbtgt");
+    }
+
+    public String getKdcRealm() {
+        return getConfig().getKdcRealm();
     }
 
     public synchronized void createPrincipal(String principal, String password) {
@@ -56,7 +61,7 @@ public class TestKdcServer extends SimpleKdcServer {
         List<EncryptionType> encTypes = getConfig().getEncryptionTypes();
         List<EncryptionKey> encKeys = null;
         try {
-            encKeys = EncryptionUtil.generateKeys(principal, password, encTypes);
+            encKeys = EncryptionUtil.generateKeys(fixPrincipal(principal), password, encTypes);
         } catch (KrbException e) {
             throw new RuntimeException("Failed to generate encryption keys", e);
         }
@@ -68,8 +73,15 @@ public class TestKdcServer extends SimpleKdcServer {
         String passwd;
         for (String principal : principals) {
             passwd = UUID.randomUUID().toString();
-            createPrincipal(principal, passwd);
+            createPrincipal(fixPrincipal(principal), passwd);
         }
+    }
+
+    private String fixPrincipal(String principal) {
+        if (! principal.contains("@")) {
+            principal += "@" + getKdcRealm();
+        }
+        return principal;
     }
 
     public void exportPrincipals(File keytabFile) throws IOException {

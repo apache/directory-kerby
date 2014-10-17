@@ -60,8 +60,13 @@ public abstract class KdcService {
     protected void checkClient(KdcContext kdcContext) throws KrbException {
         KdcReq request = kdcContext.getRequest();
 
-        String clientPrincipal = request.getReqBody().getCname().getName();
-        KrbIdentity clientIdentity = getEntry(clientPrincipal,
+        PrincipalName clientPrincipal = request.getReqBody().getCname();
+        String clientRealm = request.getReqBody().getRealm();
+        if (clientRealm == null || clientRealm.isEmpty()) {
+            clientRealm = kdcContext.getServerRealm();
+        }
+        clientPrincipal.setRealm(clientRealm);
+        KrbIdentity clientIdentity = getEntry(clientPrincipal.getName(),
                 KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
         kdcContext.setClientEntry((KrbIdentity) clientIdentity);
     }
@@ -260,10 +265,13 @@ public abstract class KdcService {
 
     private void checkServer(KdcContext kdcContext) throws KrbException {
         PrincipalName principal = kdcContext.getRequest().getReqBody().getSname();
+        String serverRealm = kdcContext.getRequest().getReqBody().getRealm();
+        if (serverRealm == null || serverRealm.isEmpty()) {
+            serverRealm = kdcContext.getServerRealm();
+        }
+        principal.setRealm(serverRealm);
 
-        String principalWithRealm = principal.getName() + "@"
-                + kdcContext.getRequest().getReqBody().getRealm();
-        kdcContext.setServerEntry(getEntry(principalWithRealm,
+        kdcContext.setServerEntry(getEntry(principal.getName(),
                 KrbErrorCode.KDC_ERR_S_PRINCIPAL_UNKNOWN));
     }
     

@@ -28,7 +28,7 @@ public abstract class AbstractKdcServer
     protected File workDir;
 
     public AbstractKdcServer() {
-
+        kdcConfig = new KdcConfig();
     }
 
     public void init() {
@@ -43,13 +43,18 @@ public abstract class AbstractKdcServer
 
     protected void initWorkDir() {
         String path = kdcConfig.getWorkDir();
-        File file = new File(path);
-        file.mkdirs();
+        File file;
+        if (path != null) {
+            file = new File(path);
+            file.mkdirs();
+        } else {
+            file = new File(".");
+        }
 
         this.workDir = file;
     }
 
-    protected abstract void initConfig();
+    protected void initConfig() {}
 
     public void start() {
         logger.info("Starting " + getServiceName());

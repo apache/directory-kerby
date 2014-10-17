@@ -14,11 +14,6 @@ public class SimpleKdcServer extends AbstractKdcServer {
     }
 
     @Override
-    protected void initConfig() {
-        kdcConfig = new KdcConfig();
-    }
-
-    @Override
     protected void initIdentityService() {
         File identityFile = new File(workDir, "simplekdb.dat");
         this.identityService = new SimpleIdentityBackend(identityFile);
