@@ -101,7 +101,8 @@ public class Keytab implements KrbKeytab {
         addKeytabEntries(entries);
     }
 
-    private void addEntry(KeytabEntry entry) {
+    @Override
+    public void addEntry(KeytabEntry entry) {
         PrincipalName principal = entry.getPrincipal();
         List<KeytabEntry> entries = principalEntries.get(principal);
         if (entries == null) {

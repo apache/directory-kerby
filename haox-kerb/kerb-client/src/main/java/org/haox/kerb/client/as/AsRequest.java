@@ -51,14 +51,14 @@ public class AsRequest extends KdcRequest {
             body.setAddresses(addresses);
         }
 
-        List<EncryptionType> etypes = getEtypes();
+        List<EncryptionType> etypes = getEncryptionTypes();
         if (etypes.isEmpty()) {
             throw new KrbException("No encryption type is configured and available");
         }
         body.setEtypes(etypes);
 
         EncryptionType encryptionType = etypes.iterator().next();
-        setChosenEtype(encryptionType);
+        setChosenEncryptionType(encryptionType);
 
         asReq.setReqBody(body);
 

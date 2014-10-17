@@ -24,8 +24,8 @@ public abstract class KdcRequest {
     private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
     private KdcOptions kdcOptions = new KdcOptions();
     private boolean preAuthEnabled = true;
-    private List<EncryptionType> etypes;
-    private EncryptionType chosenEtype;
+    private List<EncryptionType> encryptionTypes;
+    private EncryptionType chosenEncryptionType;
     private EncryptionKey clientKey;
     private int chosenNonce;
 
@@ -104,23 +104,23 @@ public abstract class KdcRequest {
         this.preAuthEnabled = preAuthEnabled;
     }
 
-    public List<EncryptionType> getEtypes() {
-        if (etypes == null) {
-            etypes = context.getDefaultEtypes();
+    public List<EncryptionType> getEncryptionTypes() {
+        if (encryptionTypes == null) {
+            encryptionTypes = context.getConfig().getEncryptionTypes();
         }
-        return etypes;
+        return encryptionTypes;
     }
 
-    public void setEtypes(List<EncryptionType> etypes) {
-        this.etypes = etypes;
+    public void setEncryptionTypes(List<EncryptionType> encryptionTypes) {
+        this.encryptionTypes = encryptionTypes;
     }
 
-    public EncryptionType getChosenEtype() {
-        return chosenEtype;
+    public EncryptionType getChosenEncryptionType() {
+        return chosenEncryptionType;
     }
 
-    public void setChosenEtype(EncryptionType chosenEtype) {
-        this.chosenEtype = chosenEtype;
+    public void setChosenEncryptionType(EncryptionType chosenEncryptionType) {
+        this.chosenEncryptionType = chosenEncryptionType;
     }
 
     public int generateNonce() {
@@ -138,7 +138,7 @@ public abstract class KdcRequest {
     public EncryptionKey getClientKey() throws KrbException {
         if (clientKey == null) {
             clientKey = EncryptionHandler.string2Key(getClientPrincipal(),
-                context.getPassword(), getChosenEtype());
+                context.getPassword(), getChosenEncryptionType());
         }
         return clientKey;
     }

@@ -1,7 +1,5 @@
 package org.haox.kerb.server;
 
-import org.haox.kerb.common.KrbUtil;
-import org.haox.kerb.identity.IdentityService;
 import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.spec.type.common.EncryptionKey;
@@ -12,12 +10,9 @@ import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
 import java.net.InetAddress;
-import java.util.List;
 
 public abstract class KdcContext {
     private KdcConfig config;
-    private IdentityService identityService;
-    private List<EncryptionType> defaultEtypes;
     private Ticket ticket;
     private boolean isPreAuthenticated;
     private KdcReq request;
@@ -35,13 +30,6 @@ public abstract class KdcContext {
 
     public void setConfig(KdcConfig config) {
         this.config = config;
-    }
-
-    public List<EncryptionType> getDefaultEtypes() {
-        if (defaultEtypes == null || defaultEtypes.isEmpty()) {
-            defaultEtypes = KrbUtil.getEncryptionTypes(config.getEncryptionTypes());
-        }
-        return defaultEtypes;
     }
 
     public KdcReq getRequest() {

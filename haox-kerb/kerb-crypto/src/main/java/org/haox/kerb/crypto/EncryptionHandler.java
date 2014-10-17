@@ -11,20 +11,14 @@ import java.util.List;
 
 public class EncryptionHandler {
 
-    public static EncryptionType getBestEncryptionType(List<EncryptionType> requestedTypes,
-                                                       List<EncryptionType> configuredTypes) {
-        for (EncryptionType encryptionType : configuredTypes) {
-            if (requestedTypes.contains(encryptionType)) {
-                return encryptionType;
-            }
-        }
-
-        return null;
+    public static EncryptionType getEncryptionType(String eType) throws KrbException {
+        EncryptionType result = EncryptionType.fromName(eType);
+        return result;
     }
 
     public static EncTypeHandler getEncHandler(String eType) throws KrbException {
-        EncryptionType eTypeEnum = EncryptionType.fromName(eType);
-        return getEncHandler(eTypeEnum);
+        EncryptionType result = EncryptionType.fromName(eType);
+        return getEncHandler(result);
     }
 
     public static EncTypeHandler getEncHandler(int eType) throws KrbException {

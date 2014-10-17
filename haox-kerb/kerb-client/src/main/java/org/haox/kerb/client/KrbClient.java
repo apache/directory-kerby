@@ -130,7 +130,7 @@ public class KrbClient {
             KrbError krbError = e.getKrbError();
             if (krbError.getErrorCode() == KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED) {
                 try {
-                    tgtTktReq.setEtypes(KrbErrorUtil.getEtypes(krbError));
+                    tgtTktReq.setEncryptionTypes(KrbErrorUtil.getEtypes(krbError));
                 } catch (IOException ioe) {
                     throw new KrbException("Failed to decode and get etypes from krbError", ioe);
                 }

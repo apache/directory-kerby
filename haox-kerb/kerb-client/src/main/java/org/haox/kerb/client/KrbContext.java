@@ -1,6 +1,6 @@
 package org.haox.kerb.client;
 
-import org.haox.kerb.common.KrbUtil;
+import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.crypto.Nonce;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
@@ -65,12 +65,5 @@ public class KrbContext {
 
     public void setConfig(KrbConfig config) {
         this.config = config;
-    }
-
-    public List<EncryptionType> getDefaultEtypes() {
-        if (defaultEtypes == null || defaultEtypes.isEmpty()) {
-            defaultEtypes = KrbUtil.getEncryptionTypes(config.getEncryptionTypes());
-        }
-        return defaultEtypes;
     }
 }

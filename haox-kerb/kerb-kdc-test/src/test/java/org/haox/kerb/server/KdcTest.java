@@ -18,7 +18,7 @@ public class KdcTest {
 
     @Before
     public void setUp() throws Exception {
-        kdcServer = new SimpleKdcServer();
+        kdcServer = new TestKdcServer();
         kdcServer.setKdcHost(hostname);
         kdcServer.setKdcPort(port);
         kdcServer.init();

@@ -28,6 +28,8 @@ public interface KrbKeytab {
 
     public void load(InputStream inputStream) throws IOException;
 
+    void addEntry(KeytabEntry entry);
+
     public void store(File keytabFile) throws IOException;
 
     public void store(OutputStream outputStream) throws IOException;

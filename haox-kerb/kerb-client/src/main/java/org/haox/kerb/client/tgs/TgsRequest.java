@@ -74,7 +74,7 @@ public class TgsRequest extends KdcRequest {
         int nonce = generateNonce();
         tgsReqBody.setNonce(nonce);
         setChosenNonce(nonce);
-        tgsReqBody.setEtypes(getEtypes());
+        tgsReqBody.setEtypes(getEncryptionTypes());
 
         PrincipalName principalName = new PrincipalName(getServerPrincipal());
         tgsReqBody.setSname(principalName);

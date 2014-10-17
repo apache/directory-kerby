@@ -1,11 +1,12 @@
 package org.haox.kerb.server.tgs;
 
 import org.haox.kerb.codec.KrbCodec;
+import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.crypto.EncryptionHandler;
+import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.KdcService;
-import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
@@ -40,7 +41,8 @@ public class TgsService extends KdcService {
         List<EncryptionType> requestedTypes = kdcContext.getRequest().getReqBody().getEtypes();
         logger.debug("Encryption types requested by client {}.", requestedTypes);
 
-        EncryptionType bestType = EncryptionHandler.getBestEncryptionType(requestedTypes, kdcContext.getDefaultEtypes());
+        EncryptionType bestType = EncryptionUtil.getBestEncryptionType(requestedTypes,
+                kdcContext.getConfig().getEncryptionTypes());
 
         logger.debug("Session will use encryption type {}.", bestType);
 

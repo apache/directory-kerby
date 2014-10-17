@@ -1,6 +1,7 @@
 package org.haox.kerb.server.as;
 
 import org.haox.kerb.codec.KrbCodec;
+import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
@@ -32,7 +33,8 @@ public class AsService extends KdcService {
         List<EncryptionType> requestedTypes = kdcContext.getRequest().getReqBody().getEtypes();
         LOG.debug("Encryption types requested by client {}.", requestedTypes);
 
-        EncryptionType bestType = EncryptionHandler.getBestEncryptionType(requestedTypes, kdcContext.getDefaultEtypes());
+        EncryptionType bestType = EncryptionUtil.getBestEncryptionType(requestedTypes,
+                kdcContext.getConfig().getEncryptionTypes());
 
         LOG.debug("Session will use encryption type {}.", bestType);
 

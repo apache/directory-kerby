@@ -6,6 +6,7 @@ import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.PrincipalName;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KrbIdentity {
@@ -78,8 +79,14 @@ public class KrbIdentity {
         return locked;
     }
 
-    public void addKey(EncryptionKey key) {
-        keys.put(key.getKeyType(), key);
+    public void addKey(EncryptionKey encKey) {
+        keys.put(encKey.getKeyType(), encKey);
+    }
+
+    public void addKeys(List<EncryptionKey> encKeys) {
+        for (EncryptionKey key : encKeys) {
+            keys.put(key.getKeyType(), key);
+        }
     }
 
     public Map<EncryptionType, EncryptionKey> getKeys() {

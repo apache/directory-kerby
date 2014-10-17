@@ -1,6 +1,8 @@
 package org.haox.kerb.server;
 
 import org.haox.config.Conf;
+import org.haox.kerb.common.KrbConfHelper;
+import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.util.List;
 
@@ -89,8 +91,9 @@ public class KdcConfig
         return conf.getLong(KdcConfigKey.MINIMUM_TICKET_LIFETIME);
     }
 
-    public List<String> getEncryptionTypes() {
-        return conf.getList(KdcConfigKey.ENCRYPTION_TYPES);
+    public List<EncryptionType> getEncryptionTypes() {
+        List<String> eTypes = conf.getList(KdcConfigKey.ENCRYPTION_TYPES);
+        return KrbConfHelper.getEncryptionTypes(eTypes);
     }
 
     public boolean isPaEncTimestampRequired() {

@@ -7,25 +7,31 @@ import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class KrbUtil {
+public class EncryptionUtil {
 
-    public static List<EncryptionType> getEncryptionTypes(List<String> encryptionTypes) {
-        if (!encryptionTypes.isEmpty()) {
-            List<EncryptionType> results = new ArrayList<EncryptionType>();
-            EncryptionType etype;
-            for (String etypeName : encryptionTypes) {
-                etype = EncryptionType.fromName(etypeName);
-                if (etype != EncryptionType.NONE) {
-                    results.add(etype);
-                }
-            }
-            return results;
+    public static List<EncryptionKey> generateKeys(String principal, String passwd,
+                                                   List<EncryptionType> encryptionTypes) throws KrbException {
+        List<EncryptionKey> results = new ArrayList<EncryptionKey>(encryptionTypes.size());
+        EncryptionKey encKey;
+        for (EncryptionType eType : encryptionTypes) {
+            encKey = EncryptionHandler.string2Key(principal, passwd, eType);
+            results.add(encKey);
         }
 
-        return Collections.emptyList();
+        return results;
+    }
+
+    public static EncryptionType getBestEncryptionType(List<EncryptionType> requestedTypes,
+                                                       List<EncryptionType> configuredTypes) {
+        for (EncryptionType encryptionType : configuredTypes) {
+            if (requestedTypes.contains(encryptionType)) {
+                return encryptionType;
+            }
+        }
+
+        return null;
     }
 
     public static byte[] encrypt(EncryptionKey key,
