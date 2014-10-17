@@ -2,10 +2,9 @@ package org.haox.kerb.server;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.EncryptionHandler;
-import org.haox.kerb.server.as.AsContext;
-import org.haox.kerb.identity.Identity;
 import org.haox.kerb.identity.IdentityService;
 import org.haox.kerb.identity.KrbIdentity;
+import org.haox.kerb.server.as.AsContext;
 import org.haox.kerb.server.preauth.PaUtil;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.replay.ReplayCheckServiceImpl;
@@ -22,7 +21,6 @@ import org.haox.kerb.spec.type.ticket.TicketFlags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.kerberos.KerberosPrincipal;
 import java.net.InetAddress;
 import java.util.List;
 
@@ -46,9 +44,8 @@ public abstract class KdcService {
         checkServer(kdcContext);
         preAuthenticate(kdcContext);
         authenticate(kdcContext);
-        KdcRep reply = makeReply(kdcContext);
         issueTicket(kdcContext);
-        kdcContext.setReply(reply);
+        makeReply(kdcContext);
     }
 
     protected void checkVersion(KdcContext kdcContext) throws KrbException {
@@ -129,96 +126,75 @@ public abstract class KdcService {
         encTicketPart.setTransited(transEnc);
         String serverRealm = request.getReqBody().getRealm();
 
-        KerberosTime now = new KerberosTime();
-
+        KerberosTime now = KerberosTime.now();
         encTicketPart.setAuthTime(now);
 
-        KerberosTime startTime = request.getReqBody().getFrom();
-
-        if (startTime == null || startTime.lessThan(now) || startTime.isInClockSkew(config.getAllowableClockSkew())
-                && !request.getReqBody().getKdcOptions().isFlagSet(KdcOption.POSTDATED)) {
-            startTime = now;
+        KerberosTime krbStartTime = request.getReqBody().getFrom();
+        if (krbStartTime == null || krbStartTime.lessThan(now) ||
+                krbStartTime.isInClockSkew(config.getAllowableClockSkew())) {
+            krbStartTime = now;
         }
-
-        if ((startTime != null) && startTime.greaterThan(now)
-                && !startTime.isInClockSkew(config.getAllowableClockSkew())
-                && !request.getReqBody().getKdcOptions().isFlagSet(KdcOption.POSTDATED)) {
+        if (krbStartTime.greaterThan(now)
+                && !krbStartTime.isInClockSkew(config.getAllowableClockSkew())
+                && !kdcOptions.isFlagSet(KdcOption.POSTDATED)) {
             throw new KrbException(KrbErrorCode.KDC_ERR_CANNOT_POSTDATE);
         }
 
-        if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.POSTDATED)) {
+        if (kdcOptions.isFlagSet(KdcOption.POSTDATED)) {
             if (!config.isPostdatedAllowed()) {
                 throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
             }
 
             ticketFlags.setFlag(TicketFlag.POSTDATED);
-            ticketFlags.setFlag(TicketFlag.INVALID);
-            encTicketPart.setStartTime(startTime);
+            encTicketPart.setStartTime(krbStartTime);
         }
 
-        long till = 0;
-
-        if (request.getReqBody().getTill() == null) {
-            till = Long.MAX_VALUE;
-        } else {
-            till = request.getReqBody().getTill().getTimeInSeconds();
-        }
-
-        long endTime = Math.min(till, startTime.getTimeInSeconds() + config.getMaximumTicketLifetime());
-        KerberosTime kerberosEndTime = new KerberosTime(endTime);
-        encTicketPart.setEndTime(kerberosEndTime);
-
-        if (kerberosEndTime.lessThan(startTime)) {
+        KerberosTime krbEndTime = request.getReqBody().getTill();
+        if (krbEndTime == null) {
+            krbEndTime = krbStartTime.copy();
+            krbEndTime.extend(config.getMaximumTicketLifetime() * 1000);
+        } else if (krbStartTime.greaterThan(krbEndTime)) {
             throw new KrbException(KrbErrorCode.KDC_ERR_NEVER_VALID);
         }
 
-        long ticketLifeTime = Math.abs(startTime.getTimeInSeconds() - kerberosEndTime.getTimeInSeconds());
-
+        long ticketLifeTime = Math.abs(krbEndTime.diff(krbStartTime));
         if (ticketLifeTime < config.getMinimumTicketLifetime()) {
             throw new KrbException(KrbErrorCode.KDC_ERR_NEVER_VALID);
         }
 
-        KerberosTime tempRtime = request.getReqBody().getRtime();
-
-        if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.RENEWABLE_OK)
-                && request.getReqBody().getTill().greaterThan(kerberosEndTime)) {
-            if (!config.isRenewableAllowed()) {
-                throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
-            }
-
-            request.getReqBody().getKdcOptions().setFlag(KdcOption.RENEWABLE);
-            tempRtime = request.getReqBody().getTill();
+        KerberosTime krbRtime = request.getReqBody().getRtime();
+        if (kdcOptions.isFlagSet(KdcOption.RENEWABLE_OK)) {
+            kdcOptions.setFlag(KdcOption.RENEWABLE);
         }
-
-        if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.RENEWABLE)) {
+        if (kdcOptions.isFlagSet(KdcOption.RENEWABLE)) {
             if (!config.isRenewableAllowed()) {
                 throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
             }
 
             ticketFlags.setFlag(TicketFlag.RENEWABLE);
 
-            if (tempRtime == null || tempRtime.getTimeInSeconds() == 0) {
-                tempRtime = KerberosTime.NEVER;
+            if (krbRtime == null) {
+                krbRtime = KerberosTime.NEVER;
             }
-
-            long renewTill = Math.min(tempRtime.getTimeInSeconds(),
-                    startTime.getTimeInSeconds() + config.getMaximumRenewableLifetime());
-            encTicketPart.setRenewtill(new KerberosTime(renewTill));
-        }
-
-        if (request.getReqBody().getAddresses() != null
-                && request.getReqBody().getAddresses().getElements() != null
-                && request.getReqBody().getAddresses().getElements().size() > 0) {
-            encTicketPart.setClientAddresses(request.getReqBody().getAddresses());
-        }
-        else {
-            if (!config.isEmptyAddressesAllowed()) {
-                throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
+            KerberosTime allowedMaximumRenewableTime = krbStartTime;
+            allowedMaximumRenewableTime.extend(config.getMaximumRenewableLifetime() * 1000);
+            if (krbRtime.greaterThan(allowedMaximumRenewableTime)) {
+                krbRtime = allowedMaximumRenewableTime;
             }
+            encTicketPart.setRenewtill(krbRtime);
         }
 
-        EncryptedData encryptedData = EncryptionHandler.seal(encTicketPart, serverKey,
-                KeyUsage.KDC_REP_TICKET);
+        HostAddresses hostAddresses = request.getReqBody().getAddresses();
+        if (hostAddresses != null &&
+                hostAddresses.getElements() != null &&
+                hostAddresses.getElements().size() > 0) {
+            encTicketPart.setClientAddresses(hostAddresses);
+        } else if (!config.isEmptyAddressesAllowed()) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
+        }
+
+        EncryptedData encryptedData = EncryptionHandler.seal(encTicketPart,
+                serverKey, KeyUsage.KDC_REP_TICKET);
 
         Ticket newTicket = new Ticket();
         newTicket.setSname(ticketPrincipal);
@@ -229,10 +205,10 @@ public abstract class KdcService {
         authContext.setTicket(newTicket);
     }
 
-    protected KdcRep makeReply(KdcContext kdcContext) throws KrbException {
+    protected void makeReply(KdcContext kdcContext) throws KrbException {
         KdcReq request = kdcContext.getRequest();
-
         AsContext asContext = (AsContext) kdcContext;
+
         Ticket ticket = asContext.getTicket();
 
         AsRep reply = new AsRep();
@@ -279,8 +255,7 @@ public abstract class KdcService {
         reply.setEncryptedEncPart(encryptedData);
 
         reply.setEncPart(encKdcRepPart);
-
-        return reply;
+        kdcContext.setReply(reply);
     }
 
     private void checkServer(KdcContext kdcContext) throws KrbException {

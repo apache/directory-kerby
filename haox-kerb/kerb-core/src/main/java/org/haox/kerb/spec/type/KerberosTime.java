@@ -23,6 +23,9 @@ public class KerberosTime extends Asn1GeneralizedTime {
         super(0L);
     }
 
+    /**
+     * time in milliseconds
+     */
     public KerberosTime(long time) {
         super(time);
     }
@@ -37,12 +40,19 @@ public class KerberosTime extends Asn1GeneralizedTime {
         return 0L;
     }
 
+    /**
+     * time in milliseconds
+     */
+    public void setTime(long time) {
+        setValue(new Date(time));
+    }
+
     public long getTimeInSeconds() {
         return getTime() / 1000;
     }
 
     public boolean lessThan(KerberosTime ktime) {
-        return getValue().compareTo(ktime.getValue()) == -1;
+        return getValue().compareTo(ktime.getValue()) < 0;
     }
 
     public boolean lessThan(long time) {
@@ -50,14 +60,37 @@ public class KerberosTime extends Asn1GeneralizedTime {
     }
 
     public boolean greaterThan(KerberosTime ktime) {
-        return getValue().compareTo(ktime.getValue()) == 1;
+        return getValue().compareTo(ktime.getValue()) > 0;
     }
 
+    /**
+     * time in milliseconds
+     */
     public boolean isInClockSkew(long clockSkew) {
-        // The KerberosTime does not have milliseconds
-        long delta = Math.abs(getValue().getTime() - System.currentTimeMillis());
+        long delta = Math.abs(getTime() - System.currentTimeMillis());
 
         return delta < clockSkew;
+    }
+
+    public KerberosTime copy() {
+        long time = getTime();
+        KerberosTime result = new KerberosTime(time);
+        return result;
+    }
+
+    /**
+     * time in milliseconds
+     */
+    public void extend(long duration) {
+        long result = getTime() + duration;
+        setTime(result);
+    }
+
+    /**
+     * Return diff time in milliseconds
+     */
+    public long diff(KerberosTime other) {
+        return getTime() - other.getTime();
     }
 
     public static KerberosTime now() {

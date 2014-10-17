@@ -38,7 +38,7 @@ public class TcpAcceptor extends Acceptor {
         ServerSocketChannel server = (ServerSocketChannel) key.channel();
         SocketChannel channel;
         while ((channel = server.accept()) != null) {
-            // Qukck fix: avoid exception during exiting
+            // Quick fix: avoid exception during exiting
             if (! selector.isOpen()) {
                 channel.close();
                 break;
