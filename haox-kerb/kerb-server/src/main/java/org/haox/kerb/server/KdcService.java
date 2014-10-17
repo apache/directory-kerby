@@ -75,7 +75,7 @@ public abstract class KdcService {
         PrincipalName serverPrincipal = request.getReqBody().getSname();
 
         EncryptionType encryptionType = authContext.getEncryptionType();
-        EncryptionKey serverKey = null;//authContext.checkServer().getAttributes().get(encryptionType);
+        EncryptionKey serverKey = authContext.getServerEntry().getKeys().get(encryptionType);
 
         PrincipalName ticketPrincipal = request.getReqBody().getSname();
 

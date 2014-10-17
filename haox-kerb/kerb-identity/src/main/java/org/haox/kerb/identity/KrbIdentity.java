@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KrbIdentity {
+    private String principalName;
     private PrincipalName principal;
     private int keyVersion = 1;
     private int kdcFlags = 0;
@@ -16,8 +17,18 @@ public class KrbIdentity {
     private boolean locked = false;
     private KerberosTime expireTime = KerberosTime.NEVER;
     private KerberosTime createdTime = KerberosTime.now();
+
     private Map<EncryptionType, EncryptionKey> keys =
             new HashMap<EncryptionType, EncryptionKey>();
+
+    public KrbIdentity(String principalName) {
+        this.principalName = principalName;
+        this.principal = new PrincipalName(principalName);
+    }
+
+    public String getPrincipalName() {
+        return principalName;
+    }
 
     public void setPrincipal(PrincipalName principal) {
         this.principal = principal;
@@ -57,10 +68,6 @@ public class KrbIdentity {
 
     public void setCreatedTime(KerberosTime createdTime) {
         this.createdTime = createdTime;
-    }
-
-    public KrbIdentity(String principal) {
-        this.principal = new PrincipalName(principal);
     }
 
     public boolean isDisabled() {

@@ -1,67 +1,27 @@
 package org.haox.kerb.identity.backend;
 
-import org.haox.kerb.identity.Identity;
-import org.haox.kerb.identity.KrbIdentity;
-
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class SimpleIdentityBackend extends AbstractIdentityBackend {
+public class SimpleIdentityBackend extends InMemoryIdentityBackend {
+
     private File identityFile;
-    private Map<String, Identity> identities;
-    private boolean loaded = false;
 
     public SimpleIdentityBackend(File identityFile) {
+        super();
         this.identityFile = identityFile;
-        this.identities = new HashMap<String, Identity>();
     }
 
-    @Override
-    public List<KrbIdentity> getIdentities() {
-        checkAndload();
-        return null;
+    /**
+     * Load identities from file
+     */
+    public void load() {
+        // todo
     }
 
-    @Override
-    public boolean checkIdentity(String name) {
-        checkAndload();
-        return false;
-    }
-
-    @Override
-    public KrbIdentity getIdentity(String name) {
-        checkAndload();
-        return new KrbIdentity(name); // todo:
-    }
-
-    @Override
-    public void addIdentity(KrbIdentity identity) {
-        checkAndload();
-    }
-
-    @Override
-    public void updateIdentity(KrbIdentity identity) {
-        checkAndload();
-    }
-
-    @Override
-    public void deleteIdentity(KrbIdentity identity) {
-        checkAndload();
-    }
-
-    private void load() {
-
-    }
-
-    private void checkAndload() {
-        if (! loaded) {
-            load();
-        }
-    }
-
-    private void save() {
-
+    /**
+     * Persist the updated identities back
+     */
+    public void save() {
+        // todo
     }
 }
