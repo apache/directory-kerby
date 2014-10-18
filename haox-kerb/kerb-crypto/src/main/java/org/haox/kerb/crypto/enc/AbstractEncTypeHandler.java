@@ -67,7 +67,7 @@ public abstract class AbstractEncTypeHandler
 
     @Override
     public byte[] random2Key(byte[] randomBits) throws KrbException {
-        return new byte[0];
+        return keyMaker.random2Key(randomBits);
     }
 
     @Override

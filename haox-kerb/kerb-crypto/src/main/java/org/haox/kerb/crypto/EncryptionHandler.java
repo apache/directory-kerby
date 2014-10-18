@@ -121,34 +121,6 @@ public class EncryptionHandler {
         return plainData;
     }
 
-    public static EncryptionType[] getSupportedEncTypes() {
-        return new EncryptionType[0];
-    }
-
-    public static List<EncryptionKey> makeEncryptionKeys(
-            String principalName, String passPhrase) throws KrbException {
-        return makeEncryptionKeys(principalName, passPhrase, getSupportedEncTypes());
-    }
-
-    public static List<EncryptionKey> makeEncryptionKeys(
-            String principalName, String passPhrase, EncryptionType[] ciphers) throws KrbException {
-        List<EncryptionKey> resultKeys = new ArrayList<EncryptionKey>();
-        for (EncryptionType encryptionType : ciphers) {
-            resultKeys.add(string2Key(principalName, passPhrase, encryptionType));
-        }
-
-        return resultKeys;
-    }
-
-
-    public static List<EncryptionKey> makeRandomKeys() throws KrbException {
-        return null;
-    }
-
-    public static EncryptionKey makeRandomKey(EncryptionType encryptionType) throws KrbException {
-        return null;
-    }
-
     public static boolean isImplemented(EncryptionType eType) {
         EncTypeHandler handler = null;
         try {
@@ -162,25 +134,23 @@ public class EncryptionHandler {
     public static EncryptionKey string2Key(String principalName,
           String passPhrase, EncryptionType eType) throws KrbException {
         PrincipalName principal = new PrincipalName(principalName);
-        byte[] keyBytes = stringToKey(passPhrase,
+        return string2Key(passPhrase,
                 PrincipalName.makeSalt(principal), null, eType);
-        return new EncryptionKey(eType, keyBytes);
     }
 
-    public static byte[] stringToKey(String string, String salt,
+    public static EncryptionKey string2Key(String string, String salt,
                    byte[] s2kparams, EncryptionType eType) throws KrbException {
         EncTypeHandler handler = getEncHandler(eType);
         byte[] keyBytes = handler.str2key(string, salt, s2kparams);
-        return keyBytes;
+        return new EncryptionKey(eType, keyBytes);
     }
 
-    public static boolean isSupported(EncryptionType eType) {
-        EncryptionType[] supportedTypes = getSupportedEncTypes();
-        for (int i = 0; i < supportedTypes.length; i++) {
-            if (eType == supportedTypes[i]) {
-                return true;
-            }
-        }
-        return false;
+    public static EncryptionKey random2Key(EncryptionType eType) throws KrbException {
+        EncTypeHandler handler = getEncHandler(eType);
+
+        byte[] randomBytes = Random.makeBytes(256);
+        byte[] keyBytes = handler.random2Key(randomBytes);
+        EncryptionKey encKey = new EncryptionKey(eType, keyBytes);
+        return encKey;
     }
 }

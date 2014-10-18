@@ -24,7 +24,6 @@ import org.haox.kerb.spec.type.ticket.TicketFlags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetAddress;
 import java.util.List;
 
 public abstract class KdcService {
@@ -151,7 +150,7 @@ public abstract class KdcService {
 
         KdcOptions kdcOptions = request.getReqBody().getKdcOptions();
 
-        EncryptionKey sessionKey = EncryptionHandler.makeRandomKey(authContext.getEncryptionType());
+        EncryptionKey sessionKey = EncryptionHandler.random2Key(authContext.getEncryptionType());
         encTicketPart.setKey(sessionKey);
 
         encTicketPart.setCname(request.getReqBody().getCname());
@@ -279,9 +278,6 @@ public abstract class KdcService {
         encKdcRepPart.setSrealm(ticket.getRealm());
         encKdcRepPart.setCaddr(ticket.getEncPart().getClientAddresses());
 
-        logContext(asContext);
-        logReply(reply, encKdcRepPart);
-
         EncryptionKey clientKey = asContext.getClientKey();
         byte[] encoded = encKdcRepPart.encode();
         EncryptedData encryptedData = EncryptionHandler.encrypt(encoded,
@@ -302,64 +298,6 @@ public abstract class KdcService {
 
         kdcContext.setServerEntry(getEntry(principal.getName(),
                 KrbErrorCode.KDC_ERR_S_PRINCIPAL_UNKNOWN));
-    }
-    
-    protected static void logContext(KdcContext kdcContext) {
-        long clockSkew = kdcContext.getConfig().getAllowableClockSkew();
-        InetAddress clientAddress = kdcContext.getClientAddress();
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("Logging " + " context:");
-
-        sb.append("\n\t" + "clockSkew              " + clockSkew);
-        sb.append("\n\t" + "clientAddress          " + clientAddress);
-
-        PrincipalName clientPrincipal = kdcContext.getClientEntry().getPrincipal();
-        KrbIdentity clientEntry = kdcContext.getClientEntry();
-
-        sb.append("\n\t" + "principal              " + clientPrincipal);
-        sb.append("\n\t" + "principal              " + clientEntry.getPrincipal());
-
-        PrincipalName serverPrincipal = kdcContext.getRequest().getReqBody().getSname();
-        KrbIdentity serverEntry = kdcContext.getServerEntry();
-
-        sb.append("\n\t" + "principal              " + serverPrincipal);
-        sb.append("\n\t" + "principal              " + serverEntry.getPrincipal());
-
-        EncryptionType encryptionType = kdcContext.getEncryptionType();
-        int clientKeyVersion = 0;//clientEntry.getKeys().get(encryptionType).getKeyVersion();
-        int serverKeyVersion = 0;//serverEntry.getKeys().get(encryptionType).getKeyVersion();
-        sb.append("\n\t" + "Request key type       " + encryptionType);
-        sb.append("\n\t" + "Client key version     " + clientKeyVersion);
-        sb.append("\n\t" + "Server key version     " + serverKeyVersion);
-
-        String message = sb.toString();
-
-        logger.debug(message);
-    }
-
-
-    protected static void logReply(KdcRep reply, EncKdcRepPart part) {
-        StringBuffer sb = new StringBuffer();
-
-        sb.append("Responding with " + " reply:");
-        sb.append("\n\t" + "messageType:           " + reply.getMsgType());
-        sb.append("\n\t" + "protocolVersionNumber: " + reply.getPvno());
-        sb.append("\n\t" + "nonce:                 " + part.getNonce());
-        sb.append("\n\t" + "clientPrincipal:       " + reply.getCname());
-        sb.append("\n\t" + "client realm:          " + reply.getCrealm());
-        sb.append("\n\t" + "serverPrincipal:       " + part.getSname());
-        sb.append("\n\t" + "server realm:          " + part.getSrealm());
-        sb.append("\n\t" + "auth time:             " + part.getAuthTime());
-        sb.append("\n\t" + "start time:            " + part.getStartTime());
-        sb.append("\n\t" + "end time:              " + part.getEndTime());
-        sb.append("\n\t" + "renew-till time:       " + part.getRenewTill());
-        sb.append("\n\t" + "hostAddresses:         " + part.getCaddr());
-
-        String message = sb.toString();
-
-        logger.debug(message);
     }
 
     protected static KrbError makePreAuthenticationError(KdcContext kdcContext) throws KrbException {

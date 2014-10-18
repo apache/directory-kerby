@@ -1,6 +1,7 @@
 package org.haox.kerb.server;
 
 import org.haox.kerb.client.KrbClient;
+import org.haox.kerb.spec.type.ticket.ServiceTicket;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
 import org.junit.After;
 import org.junit.Assert;
@@ -9,8 +10,11 @@ import org.junit.Test;
 
 public class KdcTest {
 
+    private String kdcRealm;
     private String clientPrincipal;
     private String password = "123456";
+    private String serverPrincipal;
+
     private String hostname = "localhost";
     private short port = 8088;
 
@@ -29,8 +33,12 @@ public class KdcTest {
         kdcServer.setKdcPort(port);
         kdcServer.init();
 
-        clientPrincipal = "drankye@" + kdcServer.getKdcRealm();
+        kdcRealm = kdcServer.getKdcRealm();
+        clientPrincipal = "drankye@" + kdcRealm;
         kdcServer.createPrincipal(clientPrincipal, password);
+
+        serverPrincipal = "test-service/localhost@" + kdcRealm;
+        kdcServer.createPrincipals(serverPrincipal);
     }
 
     private void setUpClient() {
@@ -46,6 +54,9 @@ public class KdcTest {
         krbClnt.init();
         TgtTicket tgt = krbClnt.requestTgtTicket(clientPrincipal, password);
         Assert.assertNotNull(tgt);
+
+        ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal);
+        Assert.assertNotNull(tkt);
     }
 
     @After

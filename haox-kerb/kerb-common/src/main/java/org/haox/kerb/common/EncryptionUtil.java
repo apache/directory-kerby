@@ -11,6 +11,17 @@ import java.util.List;
 
 public class EncryptionUtil {
 
+    public static List<EncryptionKey> generateKeys(List<EncryptionType> encryptionTypes) throws KrbException {
+        List<EncryptionKey> results = new ArrayList<EncryptionKey>(encryptionTypes.size());
+        EncryptionKey encKey;
+        for (EncryptionType eType : encryptionTypes) {
+            encKey = EncryptionHandler.random2Key(eType);
+            results.add(encKey);
+        }
+
+        return results;
+    }
+
     public static List<EncryptionKey> generateKeys(String principal, String passwd,
                                                    List<EncryptionType> encryptionTypes) throws KrbException {
         List<EncryptionKey> results = new ArrayList<EncryptionKey>(encryptionTypes.size());
