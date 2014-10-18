@@ -19,30 +19,39 @@ public class KdcTest {
     private short port = 8088;
 
     private TestKdcServer kdcServer;
+    private KrbClient krbClnt;
 
     @Before
     public void setUp() throws Exception {
+        setUpKdcServer();
+        setUpClient();
+    }
+
+    private void setUpKdcServer() {
         kdcServer = new TestKdcServer();
         kdcServer.setKdcHost(hostname);
         kdcServer.setKdcPort(port);
         kdcServer.init();
-        kdcServer.start();
 
         clientPrincipal = "drankye@" + kdcServer.getKdcRealm();
         kdcServer.createPrincipal(clientPrincipal, password);
     }
 
-    @Test
-    public void testKdc() throws Exception {
-        Assert.assertTrue(kdcServer.isStarted());
-
+    private void setUpClient() {
         Properties props = new Properties();
         props.setProperty(KrbConfigKey.KDC_HOST.getPropertyKey(), hostname);
         props.setProperty(KrbConfigKey.KDC_PORT.getPropertyKey(), String.valueOf(port));
         props.setProperty(KrbConfigKey.KDC_REALM.getPropertyKey(), kdcServer.getKdcRealm());
         KrbConfig config = new KrbConfig();
         config.getConf().addPropertiesConfig(props);
-        KrbClient krbClnt = new KrbClient(config);
+        krbClnt = new KrbClient(config);
+    }
+
+    @Test
+    public void testKdc() throws Exception {
+        kdcServer.start();
+        Assert.assertTrue(kdcServer.isStarted());
+
         krbClnt.init();
         TgtTicket tgt = krbClnt.requestTgtTicket(clientPrincipal, password);
         Assert.assertNotNull(tgt);
