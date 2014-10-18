@@ -60,6 +60,10 @@ public class KrbClient {
         context.setConfig(config);
     }
 
+    public void setKdcRealm(String realm) {
+        context.setKdcRealm(realm);
+    }
+
     public void init() {
         this.eventHub = new EventHub();
         eventHub.register(new KrbHandler());
@@ -113,7 +117,7 @@ public class KrbClient {
     }
 
     private PrincipalName makeTgsPrincipal() {
-        return new PrincipalName(KrbConstant.TGS_PRINCIPAL + "@" + config.getKdcRealm());
+        return new PrincipalName(KrbConstant.TGS_PRINCIPAL + "@" + context.getKdcRealm());
     }
 
     public ServiceTicket requestServiceTicket(String clientPrincipal, String password,

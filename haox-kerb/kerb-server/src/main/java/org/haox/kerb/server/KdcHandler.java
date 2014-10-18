@@ -26,6 +26,7 @@ public class KdcHandler extends MessageHandler {
     private KdcService asService;
     private KdcService tgsService;
     private IdentityService identityService;
+    private String kdcRealm;
 
     public void init() {
         this.asService = new AsService();
@@ -33,6 +34,10 @@ public class KdcHandler extends MessageHandler {
 
         asService.setIdentityService(identityService);
         tgsService.setIdentityService(identityService);
+    }
+
+    public void setKdcRealm(String realm) {
+        this.kdcRealm = realm;
     }
 
     public void setConfig(KdcConfig config) {
@@ -59,6 +64,7 @@ public class KdcHandler extends MessageHandler {
     private KrbMessage processAsReq(AsReq message) throws KrbException {
         KdcContext kdcContext = new AsContext();
         kdcContext.setConfig(kdcConfig);
+        kdcContext.setKdcRealm(kdcRealm);
         kdcContext.setRequest(message);
 
         asService.serve(kdcContext);

@@ -1,21 +1,30 @@
 package org.haox.kerb.client;
 
-import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.crypto.Nonce;
-import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.PrincipalName;
-
-import java.util.List;
 
 public class KrbContext {
     private PrincipalName clientPrincipal;
     private String password;
     private PrincipalName serverPrincipal;
+    private String kdcRealm;
 
     private KrbConfig config;
 
     public KrbContext() {
 
+    }
+
+    public void setKdcRealm(String realm) {
+        this.kdcRealm = realm;
+    }
+
+    public String getKdcRealm() {
+        if (kdcRealm != null) {
+            return kdcRealm;
+        }
+
+        return config.getKdcRealm();
     }
 
     public int generateNonce() {

@@ -1,15 +1,11 @@
 package org.haox.kerb.server;
 
 import org.haox.kerb.client.KrbClient;
-import org.haox.kerb.client.KrbConfig;
-import org.haox.kerb.client.KrbConfigKey;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Properties;
 
 public class KdcTest {
 
@@ -38,13 +34,8 @@ public class KdcTest {
     }
 
     private void setUpClient() {
-        Properties props = new Properties();
-        props.setProperty(KrbConfigKey.KDC_HOST.getPropertyKey(), hostname);
-        props.setProperty(KrbConfigKey.KDC_PORT.getPropertyKey(), String.valueOf(port));
-        props.setProperty(KrbConfigKey.KDC_REALM.getPropertyKey(), kdcServer.getKdcRealm());
-        KrbConfig config = new KrbConfig();
-        config.getConf().addPropertiesConfig(props);
-        krbClnt = new KrbClient(config);
+        krbClnt = new KrbClient(hostname, port);
+        krbClnt.setKdcRealm(kdcServer.getKdcRealm());
     }
 
     @Test

@@ -16,6 +16,7 @@ public abstract class AbstractKdcServer
 
     private String kdcHost;
     private short kdcPort;
+    private String kdcRealm;
 
     private boolean started;
     private String serviceName = "HaoxKdc";
@@ -70,6 +71,9 @@ public abstract class AbstractKdcServer
     }
 
     public String getKdcRealm() {
+        if (kdcRealm != null) {
+            return kdcRealm;
+        }
         return kdcConfig.getKdcRealm();
     }
 
@@ -93,6 +97,10 @@ public abstract class AbstractKdcServer
 
     public void setKdcPort(short kdcPort) {
         this.kdcPort = kdcPort;
+    }
+
+    public void setKdcRealm(String realm) {
+        this.kdcRealm = realm;
     }
 
     public boolean enableDebug() {

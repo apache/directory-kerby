@@ -13,6 +13,7 @@ import java.net.InetAddress;
 
 public abstract class KdcContext {
     private KdcConfig config;
+    private String kdcRealm;
     private Ticket ticket;
     private boolean isPreAuthenticated;
     private KdcReq request;
@@ -30,6 +31,10 @@ public abstract class KdcContext {
 
     public void setConfig(KdcConfig config) {
         this.config = config;
+    }
+
+    public void setKdcRealm(String realm) {
+        this.kdcRealm = realm;
     }
 
     public String getServerRealm() {
