@@ -30,12 +30,12 @@ public class AsRequest extends KdcRequest {
         body.setFrom(new KerberosTime(startTime));
 
         PrincipalName cName = null;
-        cName = new PrincipalName(getClientPrincipal());
+        cName = getClientPrincipal();
         body.setCname(cName);
 
-        body.setRealm(getRealm());
+        body.setRealm(cName.getRealm());
 
-        PrincipalName sName = new PrincipalName(getServerPrincipal());
+        PrincipalName sName = getServerPrincipal();
         body.setSname(sName);
 
         body.setTill(new KerberosTime(startTime + getTicketValidTime()));
@@ -62,7 +62,7 @@ public class AsRequest extends KdcRequest {
 
         asReq.setReqBody(body);
 
-        if (isPreAuthEnabled()) {
+        if (isPreauthRequired()) {
             PaDataEntry tsPaEntry = makeTimeStampPaDataEntry();
             asReq.addPaData(tsPaEntry);
         }

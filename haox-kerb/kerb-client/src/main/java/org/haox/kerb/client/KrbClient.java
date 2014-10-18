@@ -16,6 +16,7 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KrbError;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
+import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.ticket.ServiceTicket;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
 import org.haox.transport.Connector;
@@ -102,7 +103,7 @@ public class KrbClient {
     }
 
     public TgtTicket requestTgtTicket(String principal, String password) throws KrbException {
-        context.setClientPrincipal(principal);
+        context.setClientPrincipal(new PrincipalName(principal));
         context.setPassword(password);
         context.setServerPrincipal(makeTgsPrincipal());
 
@@ -111,8 +112,8 @@ public class KrbClient {
         return requestTgtTicket(asRequest);
     }
 
-    private String makeTgsPrincipal() {
-        return KrbConstant.TGS_PRINCIPAL + "@EXAMPLE.COM";
+    private PrincipalName makeTgsPrincipal() {
+        return new PrincipalName(KrbConstant.TGS_PRINCIPAL + "@" + config.getKdcRealm());
     }
 
     public ServiceTicket requestServiceTicket(String clientPrincipal, String password,
@@ -134,7 +135,7 @@ public class KrbClient {
                 } catch (IOException ioe) {
                     throw new KrbException("Failed to decode and get etypes from krbError", ioe);
                 }
-                tgtTktReq.setPreAuthEnabled(true);
+                tgtTktReq.setPreauthRequired(true);
                 return requestTgtTicket(tgtTktReq);
             }
             throw e;
@@ -155,7 +156,7 @@ public class KrbClient {
     }
 
     public ServiceTicket requestServiceTicket(TgtTicket tgt, String serverPrincipal) throws KrbException {
-        context.setServerPrincipal(serverPrincipal);
+        context.setServerPrincipal(new PrincipalName(serverPrincipal));
         TgsRequest ticketReq = new TgsRequest(context, tgt);
         ticketReq.setTransport(transport);
 

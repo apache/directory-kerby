@@ -109,29 +109,6 @@ public class AsService extends KdcService {
     }
 
     @Override
-    protected void preAuthenticate(KdcContext requestContext) throws KrbException {
-        KdcReq request = requestContext.getRequest();
-        AsContext asContext = (AsContext) requestContext;
-
-        KdcConfig config = asContext.getConfig();
-
-        KrbIdentity clientEntry = asContext.getClientEntry();
-        String clientName = clientEntry.getPrincipal().getName();
-
-        EncryptionKey clientKey = null;
-
-        PaData preAuthData = request.getPaData();
-
-        if ((preAuthData == null) || (preAuthData.getElements().size() == 0)) {
-            KrbError krbError = makePreAuthenticationError(asContext);
-            throw new KrbErrorException(krbError);
-        }
-
-        asContext.setClientKey(clientKey);
-        asContext.setPreAuthenticated(true);
-    }
-
-    @Override
     protected void authenticate(KdcContext requestContext) throws KrbException {
         AsContext asContext = (AsContext) requestContext;
 

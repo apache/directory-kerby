@@ -6,8 +6,7 @@ import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.util.List;
 
-public class KrbConfig
-{
+public class KrbConfig {
     protected Conf conf;
 
     public KrbConfig() {

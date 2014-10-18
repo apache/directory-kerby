@@ -1,6 +1,7 @@
 package org.haox.kerb.server;
 
 import org.haox.kerb.codec.KrbCodec;
+import org.haox.kerb.common.KrbUtil;
 import org.haox.kerb.server.as.AsContext;
 import org.haox.kerb.server.as.AsService;
 import org.haox.kerb.identity.IdentityService;
@@ -78,16 +79,10 @@ public class KdcHandler extends MessageHandler {
         ByteBuffer message = event.getMessage();
         Transport transport = event.getTransport();
 
-        int bodyLen = message.getInt();
-        assert (message.remaining() >= bodyLen);
+        KrbMessage krbRequest = KrbUtil.decodeMessage(message);
 
-        KrbMessage krbRequest = null;
-        krbRequest = KrbCodec.decodeMessage(message);
+        KrbMessage krbResponse = processKrbMessage(krbRequest);
 
-        KrbMessage krbResponse = null;
-        krbResponse = processKrbMessage(krbRequest);
-
-        ByteBuffer response = ByteBuffer.wrap(krbResponse.encode());
-        transport.sendMessage(response);
+        KrbUtil.sendMessage(krbResponse, transport);
     }
 }

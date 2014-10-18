@@ -1,6 +1,7 @@
 package org.haox.kerb.server;
 
 import org.haox.kerb.codec.KrbCodec;
+import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.identity.IdentityService;
 import org.haox.kerb.identity.KrbIdentity;
@@ -9,10 +10,12 @@ import org.haox.kerb.server.preauth.PaUtil;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.replay.ReplayCheckServiceImpl;
 import org.haox.kerb.spec.KrbConstant;
+import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.kdc.*;
+import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
@@ -66,12 +69,39 @@ public abstract class KdcService {
             clientRealm = kdcContext.getServerRealm();
         }
         clientPrincipal.setRealm(clientRealm);
+
         KrbIdentity clientIdentity = getEntry(clientPrincipal.getName(),
                 KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
-        kdcContext.setClientEntry((KrbIdentity) clientIdentity);
+        kdcContext.setClientEntry(clientIdentity);
     }
 
-    protected abstract void preAuthenticate(KdcContext kdcContext) throws KrbException;
+    protected void preAuthenticate(KdcContext kdcContext) throws KrbException {
+        KdcReq request = kdcContext.getRequest();
+
+        KrbIdentity clientEntry = kdcContext.getClientEntry();
+
+        EncryptionKey clientKey = null;
+
+        PaData preAuthData = request.getPaData();
+
+        if (kdcContext.getConfig().isPreauthRequired()) {
+            if ((preAuthData == null) || (preAuthData.getElements().size() == 0)) {
+                KrbError krbError = makePreAuthenticationError(kdcContext);
+                throw new KrbErrorException(krbError);
+            }
+        }
+
+        List<EncryptionType> requestedEncTypes = request.getReqBody().getEtypes();
+        EncryptionType bestEncType = EncryptionUtil.getBestEncryptionType(requestedEncTypes,
+                kdcContext.getConfig().getEncryptionTypes());
+        if (bestEncType == null) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP);
+        }
+        clientKey = clientEntry.getKeys().get(bestEncType);
+        kdcContext.setClientKey(clientKey);
+        kdcContext.setPreAuthenticated(true);
+    }
+
     protected abstract void authenticate(KdcContext kdcContext) throws KrbException;
 
     protected void issueTicket(KdcContext authContext) throws KrbException {
@@ -198,7 +228,8 @@ public abstract class KdcService {
             throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
         }
 
-        EncryptedData encryptedData = EncryptionHandler.seal(encTicketPart,
+        byte[] encoded = encTicketPart.encode();
+        EncryptedData encryptedData = EncryptionHandler.encrypt(encoded,
                 serverKey, KeyUsage.KDC_REP_TICKET);
 
         Ticket newTicket = new Ticket();
@@ -218,8 +249,8 @@ public abstract class KdcService {
 
         AsRep reply = new AsRep();
 
-        reply.setCname(request.getReqBody().getCname());
-        reply.setCrealm(request.getReqBody().getRealm());
+        reply.setCname(kdcContext.getClientEntry().getPrincipal());
+        reply.setCrealm(kdcContext.getServerRealm());
         reply.setTicket(ticket);
 
         EncKdcRepPart encKdcRepPart = new EncAsRepPart();
@@ -232,7 +263,6 @@ public abstract class KdcService {
         entry.setLrValue(new KerberosTime());
         lastReq.getElements().add(entry);
         encKdcRepPart.setLastReq(lastReq);
-        // TODO - resp.key-expiration := client.expiration; requires identity
 
         encKdcRepPart.setNonce(request.getReqBody().getNonce());
 
@@ -249,14 +279,13 @@ public abstract class KdcService {
         encKdcRepPart.setSrealm(ticket.getRealm());
         encKdcRepPart.setCaddr(ticket.getEncPart().getClientAddresses());
 
-        EncAsRepPart encAsRepPart = new EncAsRepPart();
-
         logContext(asContext);
         logReply(reply, encKdcRepPart);
 
         EncryptionKey clientKey = asContext.getClientKey();
-        EncryptedData encryptedData = EncryptionHandler.seal(encAsRepPart, clientKey,
-                KeyUsage.AS_REP_ENCPART);
+        byte[] encoded = encKdcRepPart.encode();
+        EncryptedData encryptedData = EncryptionHandler.encrypt(encoded,
+                clientKey, KeyUsage.AS_REP_ENCPART);
         reply.setEncryptedEncPart(encryptedData);
 
         reply.setEncPart(encKdcRepPart);

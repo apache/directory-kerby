@@ -69,14 +69,14 @@ public class TgsRequest extends KdcRequest {
 
         KdcReqBody tgsReqBody = new KdcReqBody();
         tgsReqBody.setKdcOptions(getKdcOptions());
-        tgsReqBody.setRealm(PrincipalName.extractRealm(getRealm()));
+        tgsReqBody.setRealm(tgt.getRealm());
         tgsReqBody.setTill(new KerberosTime(ctime + getTicketTillTime()));
         int nonce = generateNonce();
         tgsReqBody.setNonce(nonce);
         setChosenNonce(nonce);
         tgsReqBody.setEtypes(getEncryptionTypes());
 
-        PrincipalName principalName = new PrincipalName(getServerPrincipal());
+        PrincipalName principalName = getServerPrincipal();
         tgsReqBody.setSname(principalName);
 
         TgsReq tgsReq = new TgsReq();

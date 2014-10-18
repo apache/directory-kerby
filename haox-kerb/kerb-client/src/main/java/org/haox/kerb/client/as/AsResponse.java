@@ -2,10 +2,8 @@ package org.haox.kerb.client.as;
 
 import org.haox.kerb.client.KdcResponse;
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.spec.type.common.KeyUsage;
+import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.HostAddress;
-import org.haox.kerb.spec.type.common.KrbErrorCode;
 import org.haox.kerb.spec.type.kdc.AsRep;
 import org.haox.kerb.spec.type.kdc.EncAsRepPart;
 import org.haox.kerb.spec.type.kdc.EncKdcRepPart;
@@ -26,12 +24,11 @@ public class AsResponse extends KdcResponse {
 
     @Override
     public void handle() throws KrbException  {
-        if (! getKdcRequest().getClientPrincipal().equals(getKdcRep().getCname().getName())) {
+        PrincipalName clientPrincipal = getKdcRep().getCname();
+        String clientRealm = getKdcRep().getCrealm();
+        clientPrincipal.setRealm(clientRealm);
+        if (! clientPrincipal.equals(getKdcRequest().getClientPrincipal())) {
             throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_NAME_MISMATCH);
-        }
-
-        if (! getKdcRequest().getRealm().equals(getKdcRep().getCrealm())) {
-            throw new KrbException(KrbErrorCode.WRONG_REALM);
         }
 
         byte[] decryptedData = getKdcRequest().decryptWithClientKey(getKdcRep().getEncryptedEncPart(),
@@ -48,20 +45,21 @@ public class AsResponse extends KdcResponse {
             throw new KrbException("Nonce didn't match");
         }
 
-        if (! getKdcRequest().getServerPrincipal().equals(encKdcRepPart.getSname().getName())) {
+        PrincipalName serverPrincipal = encKdcRepPart.getSname();
+        serverPrincipal.setRealm(encKdcRepPart.getSrealm());
+        if (! serverPrincipal.equals(getKdcRequest().getServerPrincipal())) {
             throw new KrbException(KrbErrorCode.KDC_ERR_SERVER_NOMATCH);
         }
 
-        if (! getKdcRequest().getRealm().equals(encKdcRepPart.getSrealm())) {
-            throw new KrbException("Realm didn't match");
-        }
-
-        List<HostAddress> requestHosts = getKdcRequest().getHostAddresses().getElements();
-        if(! requestHosts.isEmpty()) {
-            List<HostAddress> responseHosts = encKdcRepPart.getCaddr().getElements();
-            for(HostAddress h : requestHosts) {
-                if (! responseHosts.contains(h)) {
-                    throw new KrbException("Unexpected client host");
+        HostAddresses hostAddresses = getKdcRequest().getHostAddresses();
+        if (hostAddresses != null) {
+            List<HostAddress> requestHosts = hostAddresses.getElements();
+            if (!requestHosts.isEmpty()) {
+                List<HostAddress> responseHosts = encKdcRepPart.getCaddr().getElements();
+                for (HostAddress h : requestHosts) {
+                    if (!responseHosts.contains(h)) {
+                        throw new KrbException("Unexpected client host");
+                    }
                 }
             }
         }

@@ -108,10 +108,16 @@ public class PrincipalName extends KrbSequenceType {
 
     @Override
     public boolean equals(Object other) {
-        if (other == null || ! (other instanceof PrincipalName)) {
+        if (other == null) {
             return false;
         } else if (this == other) {
             return true;
+        } else if (other instanceof String) {
+            String otherPrincipal = (String) other;
+            String thisPrincipal = getName();
+            return thisPrincipal.equals(otherPrincipal);
+        } else if (! (other instanceof PrincipalName)) {
+            return false;
         }
 
         PrincipalName otherPrincipal = (PrincipalName) other;

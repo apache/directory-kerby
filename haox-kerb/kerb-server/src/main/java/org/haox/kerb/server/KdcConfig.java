@@ -6,8 +6,7 @@ import org.haox.kerb.spec.type.common.EncryptionType;
 
 import java.util.List;
 
-public class KdcConfig
-{
+public class KdcConfig {
     protected Conf conf;
 
     public KdcConfig() {
@@ -47,8 +46,8 @@ public class KdcConfig
         return conf.getString(KdcConfigKey.KDC_DOMAIN);
     }
 
-    public String getKdcDn() {
-        return conf.getString(KdcConfigKey.KDC_DN);
+    public boolean isPreauthRequired() {
+        return conf.getBoolean(KdcConfigKey.PREAUTH_REQUIRED);
     }
 
     public String getTgsPrincipal() {

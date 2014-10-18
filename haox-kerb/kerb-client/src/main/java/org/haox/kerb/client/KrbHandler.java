@@ -10,6 +10,7 @@ import org.haox.kerb.client.event.KrbClientEventType;
 import org.haox.kerb.client.tgs.TgsRequest;
 import org.haox.kerb.client.tgs.TgsResponse;
 import org.haox.kerb.codec.KrbCodec;
+import org.haox.kerb.common.KrbUtil;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.common.KrbMessageType;
@@ -55,26 +56,17 @@ public class KrbHandler extends AbstractEventHandler {
 
     private void processTgtTicketRequest(AsRequest kdcRequest) throws KrbException {
         KdcReq kdcReq = kdcRequest.makeKdcRequest();
-        sendKdcReq(kdcReq, kdcRequest.getTransport());
+        KrbUtil.sendMessage(kdcReq, kdcRequest.getTransport());
     }
 
     private void processServiceTicketRequest(TgsRequest kdcRequest) throws KrbException {
         KdcReq kdcReq = kdcRequest.makeKdcRequest();
-        sendKdcReq(kdcReq, kdcRequest.getTransport());
-    }
-
-    private void sendKdcReq(KdcReq kdcReq, Transport transport) {
-        int bodyLen = kdcReq.encodingLength();
-        ByteBuffer buffer = ByteBuffer.allocate(bodyLen + 4);
-        buffer.putInt(bodyLen);
-        kdcReq.encode(buffer);
-        buffer.flip();
-        transport.sendMessage(buffer);
+        KrbUtil.sendMessage(kdcReq, kdcRequest.getTransport());
     }
 
     protected void handleMessage(MessageEvent event) throws Exception {
         ByteBuffer message = event.getMessage();
-        KrbMessage kdcRep = KrbCodec.decodeMessage(message);
+        KrbMessage kdcRep = KrbUtil.decodeMessage(message);
         KdcResponse kdcResponse = null;
 
         KrbMessageType messageType = kdcRep.getMsgType();

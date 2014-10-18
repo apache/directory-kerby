@@ -3,15 +3,14 @@ package org.haox.kerb.client;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.crypto.Nonce;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.PrincipalName;
 
 import java.util.List;
 
 public class KrbContext {
-    private String clientPrincipal;
+    private PrincipalName clientPrincipal;
     private String password;
-    private String realm;
-    private String serverPrincipal;
-    private List<EncryptionType> defaultEtypes;
+    private PrincipalName serverPrincipal;
 
     private KrbConfig config;
 
@@ -27,11 +26,11 @@ public class KrbContext {
         return 8 * 60 * 60 * 1000;
     }
 
-    public String getClientPrincipal() {
+    public PrincipalName getClientPrincipal() {
         return clientPrincipal;
     }
 
-    public void setClientPrincipal(String clientPrincipal) {
+    public void setClientPrincipal(PrincipalName clientPrincipal) {
         this.clientPrincipal = clientPrincipal;
     }
 
@@ -43,19 +42,11 @@ public class KrbContext {
         this.password = password;
     }
 
-    public String getRealm() {
-        return realm;
-    }
-
-    public void setRealm(String realm) {
-        this.realm = realm;
-    }
-
-    public String getServerPrincipal() {
+    public PrincipalName getServerPrincipal() {
         return serverPrincipal;
     }
 
-    public void setServerPrincipal(String serverPrincipal) {
+    public void setServerPrincipal(PrincipalName serverPrincipal) {
         this.serverPrincipal = serverPrincipal;
     }
 

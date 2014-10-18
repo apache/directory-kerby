@@ -1,7 +1,5 @@
 package org.haox.kerb.crypto;
 
-import org.haox.asn1.type.Asn1Type;
-import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.enc.*;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.*;
@@ -96,12 +94,6 @@ public class EncryptionHandler {
 
         return encHandler;
     }
-
-    public static EncryptedData seal(Asn1Type message, EncryptionKey key, KeyUsage usage) throws KrbException {
-        byte[] encoded = KrbCodec.encode(message);
-        return encrypt(encoded, key, usage);
-    }
-
 
     public static EncryptedData encrypt(byte[] plainText, EncryptionKey key, KeyUsage usage) throws KrbException {
         EncTypeHandler handler = getEncHandler(key.getKeyType());

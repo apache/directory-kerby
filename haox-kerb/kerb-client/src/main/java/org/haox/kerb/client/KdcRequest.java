@@ -23,7 +23,7 @@ public abstract class KdcRequest {
 
     private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
     private KdcOptions kdcOptions = new KdcOptions();
-    private boolean preAuthEnabled = true;
+    private boolean preauthRequired = true;
     private List<EncryptionType> encryptionTypes;
     private EncryptionType chosenEncryptionType;
     private EncryptionKey clientKey;
@@ -96,12 +96,12 @@ public abstract class KdcRequest {
         this.kdcOptions = kdcOptions;
     }
 
-    public boolean isPreAuthEnabled() {
-        return preAuthEnabled;
+    public boolean isPreauthRequired() {
+        return preauthRequired;
     }
 
-    public void setPreAuthEnabled(boolean preAuthEnabled) {
-        this.preAuthEnabled = preAuthEnabled;
+    public void setPreauthRequired(boolean preauthRequired) {
+        this.preauthRequired = preauthRequired;
     }
 
     public List<EncryptionType> getEncryptionTypes() {
@@ -137,7 +137,7 @@ public abstract class KdcRequest {
 
     public EncryptionKey getClientKey() throws KrbException {
         if (clientKey == null) {
-            clientKey = EncryptionHandler.string2Key(getClientPrincipal(),
+            clientKey = EncryptionHandler.string2Key(getClientPrincipal().getName(),
                 context.getPassword(), getChosenEncryptionType());
         }
         return clientKey;
@@ -151,15 +151,11 @@ public abstract class KdcRequest {
         return KerberosTime.MINUTE * 60;
     }
 
-    public String getClientPrincipal() {
+    public PrincipalName getClientPrincipal() {
         return context.getClientPrincipal();
     }
 
-    public String getRealm() {
-        return context.getRealm();
-    }
-
-    public String getServerPrincipal() {
+    public PrincipalName getServerPrincipal() {
         return context.getServerPrincipal();
     }
 
