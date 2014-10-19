@@ -81,9 +81,9 @@ public class KerberosTime extends Asn1GeneralizedTime {
     /**
      * time in milliseconds
      */
-    public void extend(long duration) {
+    public KerberosTime extend(long duration) {
         long result = getTime() + duration;
-        setTime(result);
+        return new KerberosTime(result);
     }
 
     /**

@@ -5,6 +5,7 @@ import org.haox.kerb.common.KrbUtil;
 import org.haox.kerb.server.as.AsContext;
 import org.haox.kerb.server.as.AsService;
 import org.haox.kerb.identity.IdentityService;
+import org.haox.kerb.server.tgs.TgsContext;
 import org.haox.kerb.server.tgs.TgsService;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbMessage;
@@ -72,11 +73,11 @@ public class KdcHandler extends MessageHandler {
     }
 
     private KrbMessage processTgsReq(TgsReq message) throws KrbException {
-        KdcContext kdcContext = new AsContext();
+        KdcContext kdcContext = new TgsContext();
         kdcContext.setConfig(kdcConfig);
         kdcContext.setRequest(message);
 
-        asService.serve(kdcContext);
+        tgsService.serve(kdcContext);
         return kdcContext.getReply();
     }
 

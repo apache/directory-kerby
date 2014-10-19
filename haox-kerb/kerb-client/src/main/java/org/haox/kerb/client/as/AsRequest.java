@@ -24,41 +24,7 @@ public class AsRequest extends KdcRequest {
 
     @Override
     public KdcReq makeKdcRequest() throws KrbException {
-        KdcReqBody body = new KdcReqBody();
-
-        long startTime = System.currentTimeMillis();
-        body.setFrom(new KerberosTime(startTime));
-
-        PrincipalName cName = null;
-        cName = getClientPrincipal();
-        body.setCname(cName);
-
-        body.setRealm(cName.getRealm());
-
-        PrincipalName sName = getServerPrincipal();
-        body.setSname(sName);
-
-        body.setTill(new KerberosTime(startTime + getTicketValidTime()));
-
-        int nonce = generateNonce();
-        body.setNonce(nonce);
-        setChosenNonce(nonce);
-
-        body.setKdcOptions(getKdcOptions());
-
-        HostAddresses addresses = getHostAddresses();
-        if (addresses != null) {
-            body.setAddresses(addresses);
-        }
-
-        List<EncryptionType> etypes = getEncryptionTypes();
-        if (etypes.isEmpty()) {
-            throw new KrbException("No encryption type is configured and available");
-        }
-        body.setEtypes(etypes);
-
-        EncryptionType encryptionType = etypes.iterator().next();
-        setChosenEncryptionType(encryptionType);
+        KdcReqBody body = makeReqBody();
 
         asReq.setReqBody(body);
 

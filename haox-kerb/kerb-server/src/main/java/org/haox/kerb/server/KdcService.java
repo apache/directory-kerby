@@ -5,7 +5,6 @@ import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.identity.IdentityService;
 import org.haox.kerb.identity.KrbIdentity;
-import org.haox.kerb.server.as.AsContext;
 import org.haox.kerb.server.preauth.PaUtil;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.replay.ReplayCheckServiceImpl;
@@ -16,7 +15,9 @@ import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.kdc.*;
 import org.haox.kerb.spec.type.pa.PaData;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.spec.type.pa.PaEncTsEnc;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 import org.haox.kerb.spec.type.ticket.TicketFlag;
@@ -24,6 +25,7 @@ import org.haox.kerb.spec.type.ticket.TicketFlags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.List;
 
 public abstract class KdcService {
@@ -50,12 +52,31 @@ public abstract class KdcService {
         makeReply(kdcContext);
     }
 
+
+    protected abstract void makeReply(KdcContext kdcContext) throws KrbException;
+
     protected void checkVersion(KdcContext kdcContext) throws KrbException {
         KdcReq request = kdcContext.getRequest();
 
         int kerberosVersion = request.getPvno();
         if (kerberosVersion != KrbConstant.KRB_V5) {
             throw new KrbException(KrbErrorCode.KDC_ERR_BAD_PVNO);
+        }
+    }
+
+    protected void checkPolicy(KdcContext kdcContext) throws KrbException {
+        KrbIdentity entry = kdcContext.getClientEntry();
+
+        if (entry.isDisabled()) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
+        }
+
+        if (entry.isLocked()) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
+        }
+
+        if (entry.getExpireTime().lessThan(new Date().getTime())) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
         }
     }
 
@@ -101,26 +122,53 @@ public abstract class KdcService {
         kdcContext.setPreAuthenticated(true);
     }
 
-    protected abstract void authenticate(KdcContext kdcContext) throws KrbException;
+    protected void checkTimestamp(KdcContext kdcContext, PaDataEntry paDataEntry) throws KrbException {
+        EncryptionKey clientKey = kdcContext.getClientKey();
 
-    protected void issueTicket(KdcContext authContext) throws KrbException {
-        KdcReq request = authContext.getRequest();
+        EncryptedData dataValue = KrbCodec.decode(paDataEntry.getPaDataValue(), EncryptedData.class);
+        byte[] decryptedData = EncryptionHandler.decrypt(dataValue, clientKey,
+                KeyUsage.AS_REQ_PA_ENC_TS);
+        PaEncTsEnc timestamp = KrbCodec.decode(decryptedData, PaEncTsEnc.class);
 
-        PrincipalName serverPrincipal = request.getReqBody().getSname();
+        if (!timestamp.getPaTimestamp().isInClockSkew(kdcContext.getConfig().getAllowableClockSkew())) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED);
+        }
+    }
 
-        EncryptionType encryptionType = authContext.getEncryptionType();
-        EncryptionKey serverKey = authContext.getServerEntry().getKeys().get(encryptionType);
+    protected void checkEncryptionType(KdcContext kdcContext) throws KrbException {
+        List<EncryptionType> requestedTypes = kdcContext.getRequest().getReqBody().getEtypes();
+
+        EncryptionType bestType = EncryptionUtil.getBestEncryptionType(requestedTypes,
+                kdcContext.getConfig().getEncryptionTypes());
+
+        if (bestType == null) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP);
+        }
+
+        kdcContext.setEncryptionType(bestType);
+    }
+
+    protected void authenticate(KdcContext requestContext) throws KrbException {
+        checkEncryptionType(requestContext);
+        checkPolicy(requestContext);
+    }
+
+    protected void issueTicket(KdcContext kdcContext) throws KrbException {
+        KdcReq request = kdcContext.getRequest();
+
+        EncryptionType encryptionType = kdcContext.getEncryptionType();
+        EncryptionKey serverKey = kdcContext.getServerEntry().getKeys().get(encryptionType);
 
         PrincipalName ticketPrincipal = request.getReqBody().getSname();
 
         EncTicketPart encTicketPart = new EncTicketPart();
-        KdcConfig config = authContext.getConfig();
+        KdcConfig config = kdcContext.getConfig();
 
         TicketFlags ticketFlags = new TicketFlags();
         encTicketPart.setFlags(ticketFlags);
         ticketFlags.setFlag(TicketFlag.INITIAL);
 
-        if (authContext.isPreAuthenticated()) {
+        if (kdcContext.isPreAuthenticated()) {
             ticketFlags.setFlag(TicketFlag.PRE_AUTH);
         }
 
@@ -150,7 +198,7 @@ public abstract class KdcService {
 
         KdcOptions kdcOptions = request.getReqBody().getKdcOptions();
 
-        EncryptionKey sessionKey = EncryptionHandler.random2Key(authContext.getEncryptionType());
+        EncryptionKey sessionKey = EncryptionHandler.random2Key(kdcContext.getEncryptionType());
         encTicketPart.setKey(sessionKey);
 
         encTicketPart.setCname(request.getReqBody().getCname());
@@ -185,8 +233,7 @@ public abstract class KdcService {
 
         KerberosTime krbEndTime = request.getReqBody().getTill();
         if (krbEndTime == null) {
-            krbEndTime = krbStartTime.copy();
-            krbEndTime.extend(config.getMaximumTicketLifetime() * 1000);
+            krbEndTime = krbStartTime.extend(config.getMaximumTicketLifetime() * 1000);
         } else if (krbStartTime.greaterThan(krbEndTime)) {
             throw new KrbException(KrbErrorCode.KDC_ERR_NEVER_VALID);
         }
@@ -237,22 +284,15 @@ public abstract class KdcService {
         newTicket.setRealm(serverRealm);
         newTicket.setEncPart(encTicketPart);
 
-        authContext.setTicket(newTicket);
+        kdcContext.setTicket(newTicket);
     }
 
-    protected void makeReply(KdcContext kdcContext) throws KrbException {
+    protected EncKdcRepPart makeEncKdcRepPart(KdcContext kdcContext) {
         KdcReq request = kdcContext.getRequest();
-        AsContext asContext = (AsContext) kdcContext;
-
-        Ticket ticket = asContext.getTicket();
-
-        AsRep reply = new AsRep();
-
-        reply.setCname(kdcContext.getClientEntry().getPrincipal());
-        reply.setCrealm(kdcContext.getServerRealm());
-        reply.setTicket(ticket);
+        Ticket ticket = kdcContext.getTicket();
 
         EncKdcRepPart encKdcRepPart = new EncAsRepPart();
+
         //session key
         encKdcRepPart.setKey(ticket.getEncPart().getKey());
 
@@ -278,14 +318,7 @@ public abstract class KdcService {
         encKdcRepPart.setSrealm(ticket.getRealm());
         encKdcRepPart.setCaddr(ticket.getEncPart().getClientAddresses());
 
-        EncryptionKey clientKey = asContext.getClientKey();
-        byte[] encoded = encKdcRepPart.encode();
-        EncryptedData encryptedData = EncryptionHandler.encrypt(encoded,
-                clientKey, KeyUsage.AS_REP_ENCPART);
-        reply.setEncryptedEncPart(encryptedData);
-
-        reply.setEncPart(encKdcRepPart);
-        kdcContext.setReply(reply);
+        return encKdcRepPart;
     }
 
     private void checkServer(KdcContext kdcContext) throws KrbException {

@@ -2,13 +2,12 @@ package org.haox.kerb.client.tgs;
 
 import org.haox.kerb.client.KdcResponse;
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.spec.type.common.KeyUsage;
+import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.kdc.EncTgsRepPart;
 import org.haox.kerb.spec.type.kdc.TgsRep;
 import org.haox.kerb.spec.type.ticket.ServiceTicket;
-
-import java.io.IOException;
 
 public class TgsResponse extends KdcResponse {
 
@@ -26,13 +25,10 @@ public class TgsResponse extends KdcResponse {
 
     @Override
     public void handle() throws KrbException {
-        byte[] decryptedData = getTgsRequest().decryptWithSessionKey(getTgsRep().getEncryptedEncPart(), KeyUsage.TGS_REP_ENCPART_SESSKEY);
         EncTgsRepPart encTgsRepPart = new EncTgsRepPart();
-        try {
-            encTgsRepPart.decode(decryptedData);
-        } catch (IOException e) {
-            throw new KrbException("Failed to decode encTgsRepPart", e);
-        }
+        EncryptionUtil.unseal(getTgsRep().getEncryptedEncPart(),
+                getTgsRequest().getSessionKey(), KeyUsage.TGS_REP_ENCPART_SESSKEY, encTgsRepPart);
+
         getTgsRep().setEncPart(encTgsRepPart);
 
         if (getKdcRequest().getChosenNonce() != encTgsRepPart.getNonce()) {

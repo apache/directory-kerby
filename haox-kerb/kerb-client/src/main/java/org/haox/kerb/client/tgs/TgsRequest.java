@@ -3,6 +3,7 @@ package org.haox.kerb.client.tgs;
 import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.client.KdcRequest;
 import org.haox.kerb.client.KrbContext;
+import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.KrbException;
@@ -22,12 +23,9 @@ import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
 
 public class TgsRequest extends KdcRequest {
-    private TgsReq tgsReq;
     private TgtTicket tgt;
 
     private ApOptions apOptions = new ApOptions();
-
-    private EncryptionKey sessionKey;
 
     private KdcOptions kdcOptions = new KdcOptions();
 
@@ -36,52 +34,22 @@ public class TgsRequest extends KdcRequest {
         this.tgt = tgtTicket;
     }
 
-    public void setSessionKey(EncryptionKey sessionKey) {
-        this.sessionKey = sessionKey;
-    }
-
     public void setKdcOptions(KdcOptions kdcOptions) {
         this.kdcOptions = kdcOptions;
     }
 
+    public EncryptionKey getSessionKey() {
+        return tgt.getSessionKey();
+    }
+
     @Override
     public KdcReq makeKdcRequest() throws KrbException {
-        Authenticator authenticator = new Authenticator();
-        authenticator.setCname(new PrincipalName(tgt.getClientPrincipal()));
-        authenticator.setCrealm(tgt.getRealm());
-
-        long ctime = System.currentTimeMillis();
-        authenticator.setCtime(new KerberosTime(ctime));
-        authenticator.setCusec(0);
-
-        if(sessionKey == null) {
-            sessionKey = tgt.getSessionKey();
-        }
-        authenticator.setSubKey(sessionKey);
-
-        EncryptedData authnData = encodingAndEncryptWithSessionKey(authenticator,
-                KeyUsage.TGS_REQ_AUTH);
-
-        ApReq apReq = new ApReq();
-        apReq.setEncryptedAuthenticator(authnData);
-        apReq.setTicket(tgt.getTicket());
-        apReq.setApOptions(apOptions);
-
-        KdcReqBody tgsReqBody = new KdcReqBody();
-        tgsReqBody.setKdcOptions(getKdcOptions());
-        tgsReqBody.setRealm(tgt.getRealm());
-        tgsReqBody.setTill(new KerberosTime(ctime + getTicketTillTime()));
-        int nonce = generateNonce();
-        tgsReqBody.setNonce(nonce);
-        setChosenNonce(nonce);
-        tgsReqBody.setEtypes(getEncryptionTypes());
-
-        PrincipalName principalName = getServerPrincipal();
-        tgsReqBody.setSname(principalName);
-
         TgsReq tgsReq = new TgsReq();
+
+        KdcReqBody tgsReqBody = makeReqBody();
         tgsReq.setReqBody(tgsReqBody);
 
+        ApReq apReq = makeApReq();
         PaDataEntry authnHeader = new PaDataEntry();
         authnHeader.setPaDataType(PaDataType.TGS_REQ);
         authnHeader.setPaDataValue(apReq.encode());
@@ -90,12 +58,33 @@ public class TgsRequest extends KdcRequest {
         return tgsReq;
     }
 
-    protected EncryptedData encodingAndEncryptWithSessionKey(Asn1Type value, KeyUsage usage) throws KrbException {
-        byte[] encodedData = value.encode();
-        return EncryptionHandler.encrypt(encodedData, sessionKey, usage);
+    private ApReq makeApReq() throws KrbException {
+        ApReq apReq = new ApReq();
+
+        Authenticator authenticator = makeAuthenticator();
+        EncryptionKey sessionKey = tgt.getSessionKey();
+        EncryptedData authnData = EncryptionUtil.seal(authenticator,
+                sessionKey, KeyUsage.TGS_REQ_AUTH);
+        apReq.setEncryptedAuthenticator(authnData);
+
+        apReq.setTicket(tgt.getTicket());
+        apReq.setApOptions(apOptions);
+
+        return apReq;
     }
 
-    protected byte[] decryptWithSessionKey(EncryptedData data, KeyUsage usage) throws KrbException {
-        return EncryptionHandler.decrypt(data, sessionKey, usage);
+    private Authenticator makeAuthenticator() {
+        Authenticator authenticator = new Authenticator();
+        authenticator.setCname(new PrincipalName(tgt.getClientPrincipal()));
+        authenticator.setCrealm(tgt.getRealm());
+
+        long ctime = System.currentTimeMillis();
+        authenticator.setCtime(new KerberosTime(ctime));
+        authenticator.setCusec(0);
+
+        EncryptionKey sessionKey = tgt.getSessionKey();
+        authenticator.setSubKey(sessionKey);
+
+        return authenticator;
     }
 }
