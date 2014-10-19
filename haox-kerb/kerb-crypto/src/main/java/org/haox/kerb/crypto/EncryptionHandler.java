@@ -148,7 +148,7 @@ public class EncryptionHandler {
     public static EncryptionKey random2Key(EncryptionType eType) throws KrbException {
         EncTypeHandler handler = getEncHandler(eType);
 
-        byte[] randomBytes = Random.makeBytes(256);
+        byte[] randomBytes = Random.makeBytes(handler.keyInputSize());
         byte[] keyBytes = handler.random2Key(randomBytes);
         EncryptionKey encKey = new EncryptionKey(eType, keyBytes);
         return encKey;

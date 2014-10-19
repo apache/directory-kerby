@@ -52,6 +52,9 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     @Override
     protected int encodingBodyLength() {
+        if (getValue() == null) {
+            return 0;
+        }
         if (bytes == null) {
             toBytes();
         }

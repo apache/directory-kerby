@@ -8,6 +8,10 @@ public interface EncTypeHandler extends CryptoTypeHandler {
 
     public EncryptionType eType();
 
+    public int keyInputSize();
+
+    public int keySize();
+
     public int confounderSize();
 
     public int checksumSize();

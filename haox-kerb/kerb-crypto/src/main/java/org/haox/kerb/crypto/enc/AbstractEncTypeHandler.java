@@ -46,6 +46,16 @@ public abstract class AbstractEncTypeHandler
     }
 
     @Override
+    public int keyInputSize() {
+        return encProvider().keyInputSize();
+    }
+
+    @Override
+    public int keySize() {
+        return encProvider().keySize();
+    }
+
+    @Override
     public int confounderSize() {
         return encProvider().blockSize();
     }
