@@ -123,6 +123,7 @@ public abstract class AbstractKdcServer
         this.kdcHandler = new KdcHandler();
         kdcHandler.setConfig(kdcConfig);
         kdcHandler.setIdentityService(identityService);
+        kdcHandler.setKdcRealm(kdcRealm);
         kdcHandler.init();
     }
 

@@ -49,12 +49,12 @@ public class KrbCodec {
 
         KrbMessage msg = null;
         KrbMessageType msgType = KrbMessageType.fromValue(tagNo);
-        if (msgType == KrbMessageType.AS_REQ) {
-            msg = new AsReq();
+        if (msgType == KrbMessageType.TGS_REQ) {
+            msg = new TgsReq();
         } else if (msgType == KrbMessageType.AS_REP) {
             msg = new AsRep();
-        } else if (msgType == KrbMessageType.TGS_REQ) {
-            msg = new TgsReq();
+        } else if (msgType == KrbMessageType.AS_REQ) {
+            msg = new AsReq();
         } else if (msgType == KrbMessageType.TGS_REP) {
             msg = new TgsRep();
         } else if (msgType == KrbMessageType.AP_REQ) {

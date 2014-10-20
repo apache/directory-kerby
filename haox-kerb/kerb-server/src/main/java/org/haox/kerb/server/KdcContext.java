@@ -19,6 +19,7 @@ public abstract class KdcContext {
     private KdcReq request;
     private KdcRep reply;
     private InetAddress clientAddress;
+    private boolean isTcp;
     private EncryptionType encryptionType;
     private ReplayCheckService replayCache;
     private EncryptionKey clientKey;
@@ -47,6 +48,14 @@ public abstract class KdcContext {
 
     public void setRequest(KdcReq request) {
         this.request = request;
+    }
+
+    public boolean isTcp() {
+        return isTcp;
+    }
+
+    public void isTcp(boolean isTcp) {
+        this.isTcp = isTcp;
     }
 
     public KrbMessage getReply() {
