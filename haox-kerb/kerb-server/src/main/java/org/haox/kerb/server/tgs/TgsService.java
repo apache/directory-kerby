@@ -22,20 +22,14 @@ import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
+import java.util.List;
+
 public class TgsService extends KdcService {
 
     @Override
-    protected void preAuthenticate(KdcContext kdcContext) throws KrbException {
-        KdcReq request = kdcContext.getRequest();
-
-        PaData preAuthData = request.getPaData();
-        if ((preAuthData == null) || (preAuthData.getElements().size() == 0)) {
-            KrbError krbError = makePreAuthenticationError(kdcContext);
-            throw new KrbErrorException(krbError);
-        }
-
+    protected void processPaData(KdcContext kdcContext, List<PaDataEntry> paData) throws KrbException {
         PaDataType pdType;
-        for (PaDataEntry pd : preAuthData.getElements()) {
+        for (PaDataEntry pd : paData) {
             pdType = pd.getPaDataType();
             if (pdType == PaDataType.TGS_REQ) {
                 checkAuthenticator(kdcContext, pd);

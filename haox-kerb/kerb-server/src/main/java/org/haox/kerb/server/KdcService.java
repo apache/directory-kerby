@@ -90,17 +90,18 @@ public abstract class KdcService {
         }
         clientPrincipal.setRealm(clientRealm);
 
-        KrbIdentity clientIdentity = getEntry(clientPrincipal.getName(),
+        KrbIdentity clientEntry = getEntry(clientPrincipal.getName(),
                 KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
-        kdcContext.setClientEntry(clientIdentity);
+        kdcContext.setClientEntry(clientEntry);
+
+        // TODO
+        EncryptionType encType = request.getReqBody().getEtypes().listIterator().next();
+        EncryptionKey clientKey = clientEntry.getKeys().get(encType);
+        kdcContext.setClientKey(clientKey);
     }
 
     protected void preAuthenticate(KdcContext kdcContext) throws KrbException {
         KdcReq request = kdcContext.getRequest();
-
-        KrbIdentity clientEntry = kdcContext.getClientEntry();
-
-        EncryptionKey clientKey = null;
 
         PaData preAuthData = request.getPaData();
 
@@ -109,18 +110,14 @@ public abstract class KdcService {
                 KrbError krbError = makePreAuthenticationError(kdcContext);
                 throw new KrbErrorException(krbError);
             }
+            List<PaDataEntry> paData = preAuthData.getElements();
+            processPaData(kdcContext, paData);
         }
 
-        List<EncryptionType> requestedEncTypes = request.getReqBody().getEtypes();
-        EncryptionType bestEncType = EncryptionUtil.getBestEncryptionType(requestedEncTypes,
-                kdcContext.getConfig().getEncryptionTypes());
-        if (bestEncType == null) {
-            throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP);
-        }
-        clientKey = clientEntry.getKeys().get(bestEncType);
-        kdcContext.setClientKey(clientKey);
         kdcContext.setPreAuthenticated(true);
     }
+
+    protected abstract void processPaData(KdcContext kdcContext, List<PaDataEntry> paData) throws KrbException;
 
     protected void checkTimestamp(KdcContext kdcContext, PaDataEntry paDataEntry) throws KrbException {
         EncryptionKey clientKey = kdcContext.getClientKey();
@@ -130,7 +127,8 @@ public abstract class KdcService {
                 KeyUsage.AS_REQ_PA_ENC_TS);
         PaEncTsEnc timestamp = KrbCodec.decode(decryptedData, PaEncTsEnc.class);
 
-        if (!timestamp.getPaTimestamp().isInClockSkew(kdcContext.getConfig().getAllowableClockSkew())) {
+        long clockSkew = kdcContext.getConfig().getAllowableClockSkew() * 1000;
+        if (!timestamp.getAllTime().isInClockSkew(clockSkew)) {
             throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED);
         }
     }

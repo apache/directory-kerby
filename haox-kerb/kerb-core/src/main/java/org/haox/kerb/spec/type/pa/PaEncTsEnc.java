@@ -39,4 +39,9 @@ public class PaEncTsEnc extends KrbSequenceType {
     public void setPaUsec(int paUsec) {
         setFieldAsInt(PAUSEC, paUsec);
     }
+
+    public KerberosTime getAllTime() {
+        KerberosTime paTimestamp = getPaTimestamp();
+        return paTimestamp.extend(getPaUsec() / 1000);
+    }
 }

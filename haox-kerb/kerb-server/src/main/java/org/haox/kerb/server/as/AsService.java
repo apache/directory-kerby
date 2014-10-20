@@ -9,9 +9,26 @@ import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.kdc.AsRep;
 import org.haox.kerb.spec.type.kdc.EncKdcRepPart;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
+import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.ticket.Ticket;
 
+import java.util.List;
+
 public class AsService extends KdcService {
+
+    @Override
+    protected void processPaData(KdcContext kdcContext, List<PaDataEntry> paData) throws KrbException {
+        PaDataType pdType;
+        for (PaDataEntry pd : paData) {
+            pdType = pd.getPaDataType();
+            if (pdType == PaDataType.ENC_TIMESTAMP) {
+                checkTimestamp(kdcContext, pd);
+            }
+        }
+
+        kdcContext.setPreAuthenticated(true);
+    }
 
     @Override
     protected void makeReply(KdcContext kdcContext) throws KrbException {
