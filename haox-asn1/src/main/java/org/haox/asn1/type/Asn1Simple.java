@@ -63,8 +63,11 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     @Override
     protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        setBytes(content.readAllLeftBytes());
-        toValue();
+        byte[] leftBytes = content.readAllLeftBytes();
+        if (leftBytes.length > 0) {
+            setBytes(leftBytes);
+            toValue();
+        }
     }
 
     @Override

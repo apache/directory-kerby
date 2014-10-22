@@ -25,11 +25,12 @@ public class TgsResponse extends KdcResponse {
 
     @Override
     public void handle() throws KrbException {
-        EncTgsRepPart encTgsRepPart = new EncTgsRepPart();
-        EncryptionUtil.unseal(getTgsRep().getEncryptedEncPart(),
-                getTgsRequest().getSessionKey(), KeyUsage.TGS_REP_ENCPART_SESSKEY, encTgsRepPart);
+        TgsRep tgsRep = getTgsRep();
+        EncTgsRepPart encTgsRepPart = EncryptionUtil.unseal(tgsRep.getEncryptedEncPart(),
+                getTgsRequest().getSessionKey(),
+                KeyUsage.TGS_REP_ENCPART_SESSKEY, EncTgsRepPart.class);
 
-        getTgsRep().setEncPart(encTgsRepPart);
+        tgsRep.setEncPart(encTgsRepPart);
 
         if (getKdcRequest().getChosenNonce() != encTgsRepPart.getNonce()) {
             throw new KrbException("Nonce didn't match");
@@ -37,7 +38,8 @@ public class TgsResponse extends KdcResponse {
     }
 
     public ServiceTicket getServiceTicket() {
-        ServiceTicket serviceTkt = new ServiceTicket(getTgsRep().getTicket(), (EncTgsRepPart) getTgsRep().getEncPart());
+        ServiceTicket serviceTkt = new ServiceTicket(getTgsRep().getTicket(),
+                (EncTgsRepPart) getTgsRep().getEncPart());
         return serviceTkt;
     }
 }

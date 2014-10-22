@@ -2,6 +2,7 @@ package org.haox.kerb.common;
 
 import org.haox.asn1.type.AbstractAsn1Type;
 import org.haox.asn1.type.Asn1Type;
+import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.EncTypeHandler;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.spec.KrbException;
@@ -57,15 +58,10 @@ public class EncryptionUtil {
         return encrypted;
     }
 
-    public static AbstractAsn1Type unseal(EncryptedData encrypted, EncryptionKey key,
-                                          KeyUsage usage, AbstractAsn1Type container) throws KrbException {
+    public static <T extends Asn1Type> T unseal(EncryptedData encrypted, EncryptionKey key,
+                                          KeyUsage usage, Class<T> krbType) throws KrbException {
         byte[] encoded = EncryptionHandler.decrypt(encrypted, key, usage);
-        try {
-            container.decode(encoded);
-        } catch (IOException e) {
-            throw new KrbException("Failed to decode encTgsRepPart", e);
-        }
-        return container;
+        return KrbCodec.decode(encoded, krbType);
     }
 
     public static byte[] encrypt(EncryptionKey key,

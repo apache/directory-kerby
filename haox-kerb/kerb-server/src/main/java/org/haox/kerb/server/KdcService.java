@@ -90,11 +90,9 @@ public abstract class KdcService {
         }
         clientPrincipal.setRealm(clientRealm);
 
-        KrbIdentity clientEntry = getEntry(clientPrincipal.getName(),
-                KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
+        KrbIdentity clientEntry = getEntry(clientPrincipal.getName());
         kdcContext.setClientEntry(clientEntry);
 
-        // TODO
         EncryptionType encType = request.getReqBody().getEtypes().listIterator().next();
         EncryptionKey clientKey = clientEntry.getKeys().get(encType);
         kdcContext.setClientKey(clientKey);
@@ -123,9 +121,8 @@ public abstract class KdcService {
         EncryptionKey clientKey = kdcContext.getClientKey();
 
         EncryptedData dataValue = KrbCodec.decode(paDataEntry.getPaDataValue(), EncryptedData.class);
-        byte[] decryptedData = EncryptionHandler.decrypt(dataValue, clientKey,
-                KeyUsage.AS_REQ_PA_ENC_TS);
-        PaEncTsEnc timestamp = KrbCodec.decode(decryptedData, PaEncTsEnc.class);
+        PaEncTsEnc timestamp = EncryptionUtil.unseal(dataValue, clientKey,
+                KeyUsage.AS_REQ_PA_ENC_TS, PaEncTsEnc.class);
 
         long clockSkew = kdcContext.getConfig().getAllowableClockSkew() * 1000;
         if (!timestamp.getAllTime().isInClockSkew(clockSkew)) {
@@ -272,8 +269,7 @@ public abstract class KdcService {
             throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
         }
 
-        byte[] encoded = encTicketPart.encode();
-        EncryptedData encryptedData = EncryptionHandler.encrypt(encoded,
+        EncryptedData encryptedData = EncryptionUtil.seal(encTicketPart,
                 serverKey, KeyUsage.KDC_REP_TICKET);
 
         Ticket newTicket = new Ticket();
@@ -285,50 +281,25 @@ public abstract class KdcService {
         kdcContext.setTicket(newTicket);
     }
 
-    protected EncKdcRepPart makeEncKdcRepPart(KdcContext kdcContext) {
-        KdcReq request = kdcContext.getRequest();
-        Ticket ticket = kdcContext.getTicket();
-
-        EncKdcRepPart encKdcRepPart = new EncAsRepPart();
-
-        //session key
-        encKdcRepPart.setKey(ticket.getEncPart().getKey());
-
-        LastReq lastReq = new LastReq();
-        LastReqEntry entry = new LastReqEntry();
-        entry.setLrType(LastReqType.THE_LAST_INITIAL);
-        entry.setLrValue(new KerberosTime());
-        lastReq.getElements().add(entry);
-        encKdcRepPart.setLastReq(lastReq);
-
-        encKdcRepPart.setNonce(request.getReqBody().getNonce());
-
-        encKdcRepPart.setFlags(ticket.getEncPart().getFlags());
-        encKdcRepPart.setAuthTime(ticket.getEncPart().getAuthTime());
-        encKdcRepPart.setStartTime(ticket.getEncPart().getStartTime());
-        encKdcRepPart.setEndTime(ticket.getEncPart().getEndTime());
-
-        if (ticket.getEncPart().getFlags().isFlagSet(TicketFlag.RENEWABLE)) {
-            encKdcRepPart.setRenewTill(ticket.getEncPart().getRenewtill());
-        }
-
-        encKdcRepPart.setSname(ticket.getSname());
-        encKdcRepPart.setSrealm(ticket.getRealm());
-        encKdcRepPart.setCaddr(ticket.getEncPart().getClientAddresses());
-
-        return encKdcRepPart;
-    }
-
     private void checkServer(KdcContext kdcContext) throws KrbException {
-        PrincipalName principal = kdcContext.getRequest().getReqBody().getSname();
-        String serverRealm = kdcContext.getRequest().getReqBody().getRealm();
+        KdcReq request = kdcContext.getRequest();
+
+        KrbIdentity tgsEntry = getEntry(kdcContext.getTgsPrincipal().getName());
+        kdcContext.setTgsEntry(tgsEntry);
+
+        PrincipalName principal = request.getReqBody().getSname();
+        String serverRealm = request.getReqBody().getRealm();
         if (serverRealm == null || serverRealm.isEmpty()) {
             serverRealm = kdcContext.getServerRealm();
         }
         principal.setRealm(serverRealm);
 
-        kdcContext.setServerEntry(getEntry(principal.getName(),
-                KrbErrorCode.KDC_ERR_S_PRINCIPAL_UNKNOWN));
+        KrbIdentity serverEntry = getEntry(principal.getName());
+        kdcContext.setServerEntry(serverEntry);
+
+        EncryptionType encType = request.getReqBody().getEtypes().listIterator().next();
+        EncryptionKey serverKey = serverEntry.getKeys().get(encType);
+        kdcContext.setServerKey(serverKey);
     }
 
     protected static KrbError makePreAuthenticationError(KdcContext kdcContext) throws KrbException {
@@ -375,17 +346,18 @@ public abstract class KdcService {
         return krbError;
     }
 
-    protected KrbIdentity getEntry(String principal, KrbErrorCode KrbErrorCode) throws KrbException {
+    protected KrbIdentity getEntry(String principal) throws KrbException {
         KrbIdentity entry = null;
+        KrbErrorCode krbErrorCode = KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN;
 
         try {
             entry = identityService.getIdentity(principal);
         } catch (Exception e) {
-            throw new KrbException(KrbErrorCode, e);
+            throw new KrbException(krbErrorCode, e);
         }
 
         if (entry == null) {
-            throw new KrbException(KrbErrorCode);
+            throw new KrbException(krbErrorCode);
         }
 
         return entry;

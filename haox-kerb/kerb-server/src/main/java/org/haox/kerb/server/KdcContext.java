@@ -2,9 +2,11 @@ package org.haox.kerb.server;
 
 import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.server.replay.ReplayCheckService;
+import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KrbMessage;
+import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.kdc.KdcRep;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.ticket.Ticket;
@@ -25,6 +27,8 @@ public abstract class KdcContext {
     private EncryptionKey clientKey;
     private KrbIdentity clientEntry;
     private KrbIdentity serverEntry;
+    private EncryptionKey serverKey;
+    private KrbIdentity tgsEntry;
 
     public KdcConfig getConfig() {
         return config;
@@ -39,6 +43,13 @@ public abstract class KdcContext {
     }
 
     public String getServerRealm() {
+        return config.getKdcRealm();
+    }
+
+    public String getKdcRealm() {
+        if (kdcRealm != null) {
+            return kdcRealm;
+        }
         return config.getKdcRealm();
     }
 
@@ -128,5 +139,27 @@ public abstract class KdcContext {
 
     public void setClientKey(EncryptionKey clientKey) {
         this.clientKey = clientKey;
+    }
+
+    public EncryptionKey getServerKey() {
+        return serverKey;
+    }
+
+    public void setServerKey(EncryptionKey serverKey) {
+        this.serverKey = serverKey;
+    }
+
+    public KrbIdentity getTgsEntry() {
+        return tgsEntry;
+    }
+
+    public void setTgsEntry(KrbIdentity tgsEntry) {
+        this.tgsEntry = tgsEntry;
+    }
+
+    public PrincipalName getTgsPrincipal() {
+        PrincipalName result = new PrincipalName(config.getTgsPrincipal());
+        result.setRealm(getKdcRealm());
+        return result;
     }
 }

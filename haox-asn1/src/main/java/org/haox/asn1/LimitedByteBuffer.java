@@ -66,7 +66,9 @@ public class LimitedByteBuffer {
         checkLen(len);
 
         byte[] bytes = new byte[len];
-        byteBuffer.get(bytes);
+        if (len > 0) {
+            byteBuffer.get(bytes);
+        }
         return bytes;
     }
 

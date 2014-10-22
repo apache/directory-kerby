@@ -34,6 +34,7 @@ public class Ticket extends KrbAppSequenceType {
 
     public Ticket() {
         super(TAG, fieldInfos);
+        setTktKvno(TKT_KVNO);
     }
 
     private EncTicketPart encPart;
@@ -42,6 +43,9 @@ public class Ticket extends KrbAppSequenceType {
         return getFieldAsInt(TKT_VNO);
     }
 
+    public void setTktKvno(int kvno) {
+        setFieldAsInt(TKT_VNO, kvno);
+    }
     public PrincipalName getSname() {
         return getFieldAs(SNAME, PrincipalName.class);
     }

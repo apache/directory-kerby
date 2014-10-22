@@ -78,8 +78,7 @@ public class TgsRequest extends KdcRequest {
         authenticator.setCname(new PrincipalName(tgt.getClientPrincipal()));
         authenticator.setCrealm(tgt.getRealm());
 
-        long ctime = System.currentTimeMillis();
-        authenticator.setCtime(new KerberosTime(ctime));
+        authenticator.setCtime(KerberosTime.now());
         authenticator.setCusec(0);
 
         EncryptionKey sessionKey = tgt.getSessionKey();
