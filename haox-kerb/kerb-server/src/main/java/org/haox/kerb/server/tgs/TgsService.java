@@ -1,6 +1,5 @@
 package org.haox.kerb.server.tgs;
 
-import org.apache.directory.shared.kerberos.codec.options.ApOptions;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.server.KdcContext;
@@ -8,10 +7,14 @@ import org.haox.kerb.server.KdcService;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
+import org.haox.kerb.spec.type.ap.ApOption;
 import org.haox.kerb.spec.type.ap.ApReq;
 import org.haox.kerb.spec.type.ap.Authenticator;
 import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.kdc.*;
+import org.haox.kerb.spec.type.kdc.EncKdcRepPart;
+import org.haox.kerb.spec.type.kdc.EncTgsRepPart;
+import org.haox.kerb.spec.type.kdc.KdcReq;
+import org.haox.kerb.spec.type.kdc.TgsRep;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
@@ -107,7 +110,7 @@ public class TgsService extends KdcService {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_EXPIRED);
         }
 
-        authHeader.getApOptions().setFlag(ApOptions.MUTUAL_REQUIRED);
+        authHeader.getApOptions().setFlag(ApOption.MUTUAL_REQUIRED);
 
         kdcContext.setTgtSessionKey(ticket.getEncPart().getKey());
     }
