@@ -232,6 +232,7 @@ public abstract class KdcService {
         } else if (krbStartTime.greaterThan(krbEndTime)) {
             throw new KrbException(KrbErrorCode.KDC_ERR_NEVER_VALID);
         }
+        encTicketPart.setEndTime(krbEndTime);
 
         long ticketLifeTime = Math.abs(krbEndTime.diff(krbStartTime));
         if (ticketLifeTime < config.getMinimumTicketLifetime()) {
@@ -261,12 +262,12 @@ public abstract class KdcService {
         }
 
         HostAddresses hostAddresses = request.getReqBody().getAddresses();
-        if (hostAddresses != null &&
-                hostAddresses.getElements() != null &&
-                hostAddresses.getElements().size() > 0) {
+        if (hostAddresses == null || hostAddresses.isEmpty()) {
+            if (!config.isEmptyAddressesAllowed()) {
+                throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
+            }
+        } else {
             encTicketPart.setClientAddresses(hostAddresses);
-        } else if (!config.isEmptyAddressesAllowed()) {
-            throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
         }
 
         EncryptedData encryptedData = EncryptionUtil.seal(encTicketPart,

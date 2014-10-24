@@ -74,13 +74,12 @@ public class TgsService extends KdcService {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADMATCH);
         }
 
-        if (ticket.getEncPart().getClientAddresses() != null) {
-            HostAddress tmp = new HostAddress();
-            tmp.setAddress(kdcContext.getClientAddress().getAddress());
-            if (!ticket.getEncPart().getClientAddresses().getElements().contains(tmp)) {
-                //throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADADDR);
+        HostAddresses hostAddresses = ticket.getEncPart().getClientAddresses();
+        if (hostAddresses == null || hostAddresses.isEmpty()) {
+            if (!kdcContext.getConfig().isEmptyAddressesAllowed()) {
+                throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADADDR);
             }
-        } else if (! kdcContext.getConfig().isEmptyAddressesAllowed()) {
+        } else if (!hostAddresses.contains(kdcContext.getClientAddress())) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADADDR);
         }
 
@@ -90,22 +89,22 @@ public class TgsService extends KdcService {
         clientPrincipal.setRealm(authenticator.getCrealm());
 
         if (!authenticator.getCtime().isInClockSkew(
-                kdcContext.getConfig().getAllowableClockSkew())) {
-            //throw new KrbException(KrbErrorCode.KRB_AP_ERR_SKEW);
+                kdcContext.getConfig().getAllowableClockSkew() * 1000)) {
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_SKEW);
         }
 
-        KerberosTime startTime = (ticket.getEncPart().getStartTime() != null) ? ticket.getEncPart()
-                .getStartTime() : ticket.getEncPart().getAuthTime();
-
-        KerberosTime now = new KerberosTime();
-        boolean isValidStartTime = startTime.lessThan(now);
-
-        if (!isValidStartTime || (ticket.getEncPart().getFlags().isInvalid())) {
-            //throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_NYV);
+        KerberosTime now = KerberosTime.now();
+        KerberosTime startTime = ticket.getEncPart().getStartTime();
+        if (startTime == null) {
+            startTime = ticket.getEncPart().getAuthTime();
+        }
+        if (! startTime.lessThan(now)) {
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_NYV);
         }
 
-        if (!ticket.getEncPart().getEndTime().greaterThan(now)) {
-            //throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_EXPIRED);
+        KerberosTime endTime = ticket.getEncPart().getEndTime();
+        if (! endTime.greaterThan(now)) {
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_EXPIRED);
         }
 
         authHeader.getApOptions().setFlag(ApOptions.MUTUAL_REQUIRED);

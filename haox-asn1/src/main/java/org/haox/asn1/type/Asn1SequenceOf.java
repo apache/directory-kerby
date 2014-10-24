@@ -11,4 +11,8 @@ public class Asn1SequenceOf<T extends Asn1Type> extends Asn1CollectionOf<T>
     public Asn1SequenceOf() {
         super(TagClass.UNIVERSAL, UniversalTag.SEQUENCE_OF.getValue());
     }
+
+    public boolean isEmpty() {
+        return (getValue() == null || getElements().size() == 0);
+    }
 }

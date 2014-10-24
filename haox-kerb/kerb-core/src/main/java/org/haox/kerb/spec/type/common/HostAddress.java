@@ -6,6 +6,7 @@ import org.haox.asn1.type.Asn1OctetString;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
 import java.net.InetAddress;
+import java.util.Arrays;
 
 /*
 HostAddress     ::= SEQUENCE  {
@@ -48,5 +49,42 @@ public class HostAddress extends KrbSequenceType {
 
     public void setAddress(byte[] address) {
         setFieldAsOctets(ADDRESS, address);
+    }
+
+    public boolean equalsWith(InetAddress address) {
+        if (address == null) {
+            return false;
+        }
+        HostAddress that = new HostAddress(address);
+        return that.equals(this);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        if (other == this) {
+            return true;
+        } else if (! (other instanceof HostAddress)) {
+            return false;
+        }
+
+        HostAddress that = (HostAddress) other;
+        if (getAddrType() == that.getAddrType() &&
+                Arrays.equals(getAddress(), that.getAddress())) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getAddrType().getValue();
+        if (getAddress() != null) {
+            result = 31 * result + getAddress().hashCode();
+        }
+
+        return result;
     }
 }
