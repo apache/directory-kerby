@@ -1,6 +1,7 @@
 package org.haox.kerb.client;
 
 import org.haox.asn1.type.Asn1Type;
+import org.haox.kerb.common.KrbProcessor;
 import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.client.preauth.PreauthHandler;
 import org.haox.kerb.crypto.EncryptionHandler;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * A wrapper for KdcReq request
  */
-public abstract class KdcRequest {
+public abstract class KdcRequest implements KrbProcessor {
     private KrbContext context;
     private Transport transport;
 
@@ -32,6 +33,7 @@ public abstract class KdcRequest {
     private List<EncryptionType> encryptionTypes;
     private EncryptionType chosenEncryptionType;
     private int chosenNonce;
+    private KdcReq kdcReq;
 
     private PreauthHandler preauthHandler;
 
@@ -63,7 +65,13 @@ public abstract class KdcRequest {
         return paData;
     }
 
-    public abstract KdcReq makeRequest() throws KrbException;
+    public KdcReq getKdcReq() {
+        return kdcReq;
+    }
+
+    public void setKdcReq(KdcReq kdcReq) {
+        this.kdcReq = kdcReq;
+    }
 
     protected KdcReqBody makeReqBody() throws KrbException {
         KdcReqBody body = new KdcReqBody();

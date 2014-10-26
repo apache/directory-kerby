@@ -3,12 +3,10 @@ package org.haox.kerb.client;
 import org.haox.event.AbstractEventHandler;
 import org.haox.event.Event;
 import org.haox.event.EventType;
-import org.haox.kerb.client.as.AsRequest;
 import org.haox.kerb.client.as.AsResponse;
 import org.haox.kerb.client.event.KrbClientEvent;
 import org.haox.kerb.client.event.KrbClientEventType;
 import org.haox.kerb.client.preauth.PreauthHandler;
-import org.haox.kerb.client.tgs.TgsRequest;
 import org.haox.kerb.client.tgs.TgsResponse;
 import org.haox.kerb.common.KrbUtil;
 import org.haox.kerb.spec.KrbException;
@@ -47,28 +45,19 @@ public class KrbHandler extends AbstractEventHandler {
     protected void doHandle(Event event) throws Exception {
         EventType eventType = event.getEventType();
 
-        if (eventType == KrbClientEventType.TGT_INTENT) {
+        if (eventType == KrbClientEventType.TGT_INTENT ||
+                eventType == KrbClientEventType.TKT_INTENT) {
             KdcRequest kdcRequest = (KdcRequest) event.getEventData();
-            processTgtTicketRequest((AsRequest) kdcRequest);
-        } else if (eventType == KrbClientEventType.TKT_INTENT) {
-            KdcRequest kdcRequest = (KdcRequest) event.getEventData();
-            processServiceTicketRequest((TgsRequest) kdcRequest);
+            handleKdcRequest(kdcRequest);
         } else if (event.getEventType() == TransportEventType.INBOUND_MESSAGE) {
             handleMessage((MessageEvent) event);
         }
     }
 
-    private void processTgtTicketRequest(AsRequest kdcRequest) throws KrbException {
+    protected void handleKdcRequest(KdcRequest kdcRequest) throws KrbException {
         kdcRequest.setPreauthHandler(preauthHandler);
-        KdcReq kdcReq = kdcRequest.makeRequest();
-        Transport transport = kdcRequest.getTransport();
-        transport.setAttachment(kdcRequest);
-        KrbUtil.sendMessage(kdcReq, transport);
-    }
-
-    private void processServiceTicketRequest(TgsRequest kdcRequest) throws KrbException {
-        kdcRequest.setPreauthHandler(preauthHandler);
-        KdcReq kdcReq = kdcRequest.makeRequest();
+        kdcRequest.process();
+        KdcReq kdcReq = kdcRequest.getKdcReq();
         Transport transport = kdcRequest.getTransport();
         transport.setAttachment(kdcRequest);
         KrbUtil.sendMessage(kdcReq, transport);

@@ -60,7 +60,7 @@ public class TgsRequest extends KdcRequest {
     }
 
     @Override
-    public KdcReq makeRequest() throws KrbException {
+    public void process() throws KrbException {
         TgsReq tgsReq = new TgsReq();
 
         KdcReqBody tgsReqBody = makeReqBody();
@@ -73,7 +73,7 @@ public class TgsRequest extends KdcRequest {
         authnHeader.setPaDataValue(apReq.encode());
         tgsReq.addPaData(authnHeader);
 
-        return tgsReq;
+        setKdcReq(tgsReq);
     }
 
     private ApReq makeApReq() throws KrbException {

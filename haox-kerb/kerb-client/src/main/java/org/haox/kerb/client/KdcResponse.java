@@ -1,13 +1,13 @@
 package org.haox.kerb.client;
 
 import org.haox.kerb.client.preauth.PreauthContext;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.common.KrbProcessor;
 import org.haox.kerb.spec.type.kdc.KdcRep;
 
 /**
  * A wrapper for KdcRep response
  */
-public abstract class KdcResponse {
+public abstract class KdcResponse implements KrbProcessor {
     private KdcRequest kdcRequest;
     private KdcRep kdcRep;
 
@@ -28,6 +28,4 @@ public abstract class KdcResponse {
     public KdcRequest getKdcRequest() {
         return kdcRequest;
     }
-
-    public abstract void process() throws KrbException;
 }
