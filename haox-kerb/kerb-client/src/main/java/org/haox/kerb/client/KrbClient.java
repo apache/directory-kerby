@@ -4,11 +4,9 @@ import org.haox.event.Event;
 import org.haox.event.EventHub;
 import org.haox.event.EventWaiter;
 import org.haox.kerb.client.as.AsRequest;
-import org.haox.kerb.client.as.AsResponse;
 import org.haox.kerb.client.event.KrbClientEvent;
 import org.haox.kerb.client.event.KrbClientEventType;
 import org.haox.kerb.client.tgs.TgsRequest;
-import org.haox.kerb.client.tgs.TgsResponse;
 import org.haox.kerb.common.KrbStreamingDecoder;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
@@ -152,7 +150,7 @@ public class KrbClient {
         } catch (TimeoutException e) {
             throw new KrbException("Network timeout", e);
         }
-        AsResponse asResponse = (AsResponse) resultEvent.getEventData();
+        AsRequest asResponse = (AsRequest) resultEvent.getEventData();
 
         return asResponse.getTicket();
     }
@@ -169,7 +167,7 @@ public class KrbClient {
         } catch (TimeoutException e) {
             throw new KrbException("Network timeout", e);
         }
-        TgsResponse tgsResponse = (TgsResponse) resultEvent.getEventData();
+        TgsRequest tgsResponse = (TgsRequest) resultEvent.getEventData();
 
         return tgsResponse.getServiceTicket();
     }

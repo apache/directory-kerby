@@ -9,6 +9,7 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.kdc.KdcOptions;
+import org.haox.kerb.spec.type.kdc.KdcRep;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.kdc.KdcReqBody;
 import org.haox.kerb.spec.type.pa.PaData;
@@ -34,6 +35,7 @@ public abstract class KdcRequest implements KrbProcessor {
     private EncryptionType chosenEncryptionType;
     private int chosenNonce;
     private KdcReq kdcReq;
+    private KdcRep kdcRep;
 
     private PreauthHandler preauthHandler;
 
@@ -71,6 +73,14 @@ public abstract class KdcRequest implements KrbProcessor {
 
     public void setKdcReq(KdcReq kdcReq) {
         this.kdcReq = kdcReq;
+    }
+
+    public KdcRep getKdcRep() {
+        return kdcRep;
+    }
+
+    public void setKdcRep(KdcRep kdcRep) {
+        this.kdcRep = kdcRep;
     }
 
     protected KdcReqBody makeReqBody() throws KrbException {
@@ -217,4 +227,6 @@ public abstract class KdcRequest implements KrbProcessor {
         InetAddress address = InetAddress.getByName(hostNameOrIpAddress);
         hostAddresses.add(new HostAddress(address));
     }
+
+    public abstract void processResponse(KdcRep kdcRep) throws KrbException;
 }

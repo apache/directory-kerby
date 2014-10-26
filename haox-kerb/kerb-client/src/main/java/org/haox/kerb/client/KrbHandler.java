@@ -3,18 +3,17 @@ package org.haox.kerb.client;
 import org.haox.event.AbstractEventHandler;
 import org.haox.event.Event;
 import org.haox.event.EventType;
-import org.haox.kerb.client.as.AsResponse;
+import org.haox.kerb.client.as.AsRequest;
 import org.haox.kerb.client.event.KrbClientEvent;
 import org.haox.kerb.client.event.KrbClientEventType;
 import org.haox.kerb.client.preauth.PreauthHandler;
-import org.haox.kerb.client.tgs.TgsResponse;
+import org.haox.kerb.client.tgs.TgsRequest;
 import org.haox.kerb.common.KrbUtil;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.common.KrbMessageType;
-import org.haox.kerb.spec.type.kdc.AsRep;
+import org.haox.kerb.spec.type.kdc.KdcRep;
 import org.haox.kerb.spec.type.kdc.KdcReq;
-import org.haox.kerb.spec.type.kdc.TgsRep;
 import org.haox.transport.Transport;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
@@ -66,21 +65,16 @@ public class KrbHandler extends AbstractEventHandler {
     protected void handleMessage(MessageEvent event) throws Exception {
         ByteBuffer message = event.getMessage();
         KrbMessage kdcRep = KrbUtil.decodeMessage(message);
-        KdcResponse kdcResponse = null;
 
         KrbMessageType messageType = kdcRep.getMsgType();
         if (messageType == KrbMessageType.AS_REP) {
-            kdcResponse = new AsResponse((AsRep) kdcRep);
             KdcRequest kdcRequest = (KdcRequest) event.getTransport().getAttachment();
-            kdcResponse.setKdcRequest(kdcRequest);
-            kdcResponse.process();
-            dispatch(KrbClientEvent.createTgtResultEvent((AsResponse) kdcResponse));
+            kdcRequest.processResponse((KdcRep) kdcRep);
+            dispatch(KrbClientEvent.createTgtResultEvent((AsRequest) kdcRequest));
         } else if (messageType == KrbMessageType.TGS_REP) {
-            kdcResponse = new TgsResponse((TgsRep) kdcRep);
             KdcRequest kdcRequest = (KdcRequest) event.getTransport().getAttachment();
-            kdcResponse.setKdcRequest(kdcRequest);
-            kdcResponse.process();
-            dispatch(KrbClientEvent.createTktResultEvent((TgsResponse) kdcResponse));
+            kdcRequest.processResponse((KdcRep) kdcRep);
+            dispatch(KrbClientEvent.createTktResultEvent((TgsRequest) kdcRequest));
         }
     }
 }

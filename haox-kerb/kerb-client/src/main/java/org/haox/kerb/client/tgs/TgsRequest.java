@@ -13,12 +13,10 @@ import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.common.PrincipalName;
-import org.haox.kerb.spec.type.kdc.KdcOptions;
-import org.haox.kerb.spec.type.kdc.KdcReq;
-import org.haox.kerb.spec.type.kdc.KdcReqBody;
-import org.haox.kerb.spec.type.kdc.TgsReq;
+import org.haox.kerb.spec.type.kdc.*;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.spec.type.ticket.ServiceTicket;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
 
 public class TgsRequest extends KdcRequest {
@@ -103,5 +101,27 @@ public class TgsRequest extends KdcRequest {
         authenticator.setSubKey(sessionKey);
 
         return authenticator;
+    }
+
+    @Override
+    public void processResponse(KdcRep kdcRep) throws KrbException {
+        setKdcRep(kdcRep);
+
+        TgsRep tgsRep = (TgsRep) getKdcRep();
+        EncTgsRepPart encTgsRepPart = EncryptionUtil.unseal(tgsRep.getEncryptedEncPart(),
+                getSessionKey(),
+                KeyUsage.TGS_REP_ENCPART_SESSKEY, EncTgsRepPart.class);
+
+        tgsRep.setEncPart(encTgsRepPart);
+
+        if (getChosenNonce() != encTgsRepPart.getNonce()) {
+            throw new KrbException("Nonce didn't match");
+        }
+    }
+
+    public ServiceTicket getServiceTicket() {
+        ServiceTicket serviceTkt = new ServiceTicket(getKdcRep().getTicket(),
+                (EncTgsRepPart) getKdcRep().getEncPart());
+        return serviceTkt;
     }
 }
