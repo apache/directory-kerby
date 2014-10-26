@@ -25,9 +25,6 @@ import org.haox.kerb.spec.type.KerberosTime;
  }
  */
 public class KrbError extends KrbMessage {
-    public static final int TKT_KVNO = KrbConstant.KRB_V5;
-    public static final int TAG = 30;
-
     private static int CTIME = 2;
     private static int CUSEC = 3;
     private static int STIME = 4;
@@ -41,6 +38,8 @@ public class KrbError extends KrbMessage {
     private static int EDATA = 12;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new Asn1FieldInfo(PVNO, Asn1Integer.class),
+            new Asn1FieldInfo(MSG_TYPE, Asn1Integer.class),
             new Asn1FieldInfo(CTIME, KerberosTime.class),
             new Asn1FieldInfo(CUSEC, Asn1Integer.class),
             new Asn1FieldInfo(STIME, KerberosTime.class),
@@ -139,9 +138,9 @@ public class KrbError extends KrbMessage {
     }
 
     public byte[] getEdata() {
-        return getFieldAsOctetBytes(ETEXT);
+        return getFieldAsOctetBytes(EDATA);
     }
 
     public void setEdata(byte[] edata) {
-        setFieldAsOctetBytes(ETEXT, edata);
+        setFieldAsOctetBytes(EDATA, edata);
     }}

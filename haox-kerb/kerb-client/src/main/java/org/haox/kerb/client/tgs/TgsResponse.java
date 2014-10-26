@@ -1,7 +1,7 @@
 package org.haox.kerb.client.tgs;
 
 import org.haox.kerb.client.KdcResponse;
-import org.haox.kerb.client.KrbContext;
+import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KeyUsage;
@@ -11,8 +11,8 @@ import org.haox.kerb.spec.type.ticket.ServiceTicket;
 
 public class TgsResponse extends KdcResponse {
 
-    public TgsResponse(KrbContext context, TgsRep tgsRep, TgsRequest request) {
-        super(context, tgsRep, request);
+    public TgsResponse(TgsRep tgsRep) {
+        super(tgsRep);
     }
 
     public TgsRep getTgsRep() {
@@ -24,7 +24,14 @@ public class TgsResponse extends KdcResponse {
     }
 
     @Override
-    public void handle() throws KrbException {
+    protected PreauthContext getPreauthContext() {
+        return new PreauthContext() {
+
+        };
+    }
+
+    @Override
+    public void process() throws KrbException {
         TgsRep tgsRep = getTgsRep();
         EncTgsRepPart encTgsRepPart = EncryptionUtil.unseal(tgsRep.getEncryptedEncPart(),
                 getTgsRequest().getSessionKey(),

@@ -1,26 +1,33 @@
 package org.haox.kerb.client;
 
+import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.kdc.KdcRep;
 
+/**
+ * A wrapper for KdcRep response
+ */
 public abstract class KdcResponse {
-    private KrbContext context;
     private KdcRequest kdcRequest;
     private KdcRep kdcRep;
 
-    public KdcResponse(KrbContext context, KdcRep kdcRep, KdcRequest request) {
-        this.context = context;
+    public KdcResponse(KdcRep kdcRep) {
         this.kdcRep = kdcRep;
-        this.kdcRequest = request;
     }
 
     public KdcRep getKdcRep() {
         return kdcRep;
     }
 
+    protected abstract PreauthContext getPreauthContext();
+
+    public void setKdcRequest(KdcRequest request) {
+        this.kdcRequest = request;
+    }
+
     public KdcRequest getKdcRequest() {
         return kdcRequest;
     }
 
-    public abstract void handle() throws KrbException;
+    public abstract void process() throws KrbException;
 }

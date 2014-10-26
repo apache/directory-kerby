@@ -38,7 +38,7 @@ public class Credential
     }
 
     public Credential(TgtTicket tgt) {
-        PrincipalName clientPrincipal = new PrincipalName(tgt.getClientPrincipal());
+        PrincipalName clientPrincipal = tgt.getClientPrincipal();
 
         clientPrincipal.setRealm(tgt.getRealm());
 

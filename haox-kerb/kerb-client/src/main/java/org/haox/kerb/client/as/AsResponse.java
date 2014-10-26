@@ -2,6 +2,7 @@ package org.haox.kerb.client.as;
 
 import org.haox.kerb.client.KdcResponse;
 import org.haox.kerb.client.KrbContext;
+import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.kdc.AsRep;
@@ -14,8 +15,8 @@ import java.util.List;
 
 public class AsResponse extends KdcResponse {
 
-    public AsResponse(KrbContext context, AsRep asRep, AsRequest request) {
-        super(context, asRep, request);
+    public AsResponse(AsRep asRep) {
+        super(asRep);
     }
 
     public AsRep getAsRep() {
@@ -23,7 +24,14 @@ public class AsResponse extends KdcResponse {
     }
 
     @Override
-    public void handle() throws KrbException  {
+    protected PreauthContext getPreauthContext() {
+        return new PreauthContext() {
+
+        };
+    }
+
+    @Override
+    public void process() throws KrbException  {
         PrincipalName clientPrincipal = getKdcRep().getCname();
         String clientRealm = getKdcRep().getCrealm();
         clientPrincipal.setRealm(clientRealm);

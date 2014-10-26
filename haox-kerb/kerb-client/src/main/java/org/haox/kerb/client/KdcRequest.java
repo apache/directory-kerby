@@ -1,6 +1,8 @@
 package org.haox.kerb.client;
 
 import org.haox.asn1.type.Asn1Type;
+import org.haox.kerb.client.preauth.PreauthContext;
+import org.haox.kerb.client.preauth.PreauthHandler;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
@@ -8,9 +10,7 @@ import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.kdc.KdcOptions;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.kdc.KdcReqBody;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
-import org.haox.kerb.spec.type.pa.PaEncTsEnc;
+import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.transport.Transport;
 
 import java.net.InetAddress;
@@ -18,20 +18,29 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A wrapper for KdcReq request
+ */
 public abstract class KdcRequest {
     private KrbContext context;
     private Transport transport;
 
+    private PrincipalName serverPrincipal;
     private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
     private KdcOptions kdcOptions = new KdcOptions();
     private boolean preauthRequired = true;
     private List<EncryptionType> encryptionTypes;
     private EncryptionType chosenEncryptionType;
-    private EncryptionKey clientKey;
     private int chosenNonce;
+
+    private PreauthHandler preauthHandler;
 
     public KdcRequest(KrbContext context) {
         this.context = context;
+    }
+
+    public void setPreauthHandler(PreauthHandler preauthHandler) {
+        this.preauthHandler = preauthHandler;
     }
 
     public void setTransport(Transport transport) {
@@ -42,7 +51,19 @@ public abstract class KdcRequest {
         return this.transport;
     }
 
-    public abstract KdcReq makeKdcRequest() throws KrbException;
+    protected abstract PreauthContext getPreauthContext();
+
+    protected PaData preparePaData() throws KrbException {
+        PaData paData = new PaData();
+
+        if (isPreauthRequired()) {
+            preauthHandler.tryFirst(getPreauthContext(), paData);
+        }
+
+        return paData;
+    }
+
+    public abstract KdcReq makeRequest() throws KrbException;
 
     protected KdcReqBody makeReqBody() throws KrbException {
         KdcReqBody body = new KdcReqBody();
@@ -112,19 +133,6 @@ public abstract class KdcRequest {
         return EncryptionHandler.decrypt(data, getClientKey(), usage);
     }
 
-    protected PaDataEntry makeTimeStampPaDataEntry() throws KrbException {
-        PaEncTsEnc paTs = new PaEncTsEnc();
-        long paTimestamp = System.currentTimeMillis();
-        paTs.setPaTimestamp(new KerberosTime(paTimestamp));
-
-        EncryptedData paDataValue = encodingAndEncryptWithClientKey(paTs, KeyUsage.AS_REQ_PA_ENC_TS);
-        PaDataEntry tsPaEntry = new PaDataEntry();
-        tsPaEntry.setPaDataType(PaDataType.ENC_TIMESTAMP);
-        tsPaEntry.setPaDataValue(paDataValue.encode());
-
-        return tsPaEntry;
-    }
-
     public void setContext(KrbContext context) {
         this.context = context;
     }
@@ -135,6 +143,16 @@ public abstract class KdcRequest {
 
     public void setKdcOptions(KdcOptions kdcOptions) {
         this.kdcOptions = kdcOptions;
+    }
+
+    public abstract PrincipalName getClientPrincipal();
+
+    public PrincipalName getServerPrincipal() {
+        return serverPrincipal;
+    }
+
+    public void setServerPrincipal(PrincipalName serverPrincipal) {
+        this.serverPrincipal = serverPrincipal;
     }
 
     public boolean isPreauthRequired() {
@@ -176,13 +194,7 @@ public abstract class KdcRequest {
         this.chosenNonce = nonce;
     }
 
-    public EncryptionKey getClientKey() throws KrbException {
-        if (clientKey == null) {
-            clientKey = EncryptionHandler.string2Key(getClientPrincipal().getName(),
-                context.getPassword(), getChosenEncryptionType());
-        }
-        return clientKey;
-    }
+    public abstract EncryptionKey getClientKey() throws KrbException;
 
     public long getTicketValidTime() {
         return context.getTicketValidTime();
@@ -191,14 +203,6 @@ public abstract class KdcRequest {
     public KerberosTime getTicketTillTime() {
         long now = System.currentTimeMillis();
         return new KerberosTime(now + KerberosTime.MINUTE * 60 * 1000);
-    }
-
-    public PrincipalName getClientPrincipal() {
-        return context.getClientPrincipal();
-    }
-
-    public PrincipalName getServerPrincipal() {
-        return context.getServerPrincipal();
     }
 
     public void addHost(String hostNameOrIpAddress) throws UnknownHostException {

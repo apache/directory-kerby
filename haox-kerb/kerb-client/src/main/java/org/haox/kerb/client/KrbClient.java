@@ -13,7 +13,6 @@ import org.haox.kerb.common.KrbStreamingDecoder;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KrbError;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
 import org.haox.kerb.spec.type.common.PrincipalName;
@@ -24,8 +23,6 @@ import org.haox.transport.Transport;
 import org.haox.transport.event.TransportEvent;
 import org.haox.transport.event.TransportEventType;
 import org.haox.transport.tcp.TcpConnector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -35,15 +32,14 @@ import java.util.concurrent.TimeoutException;
  * A krb client API for applications to interact with KDC
  */
 public class KrbClient {
-    private static final Logger LOG = LoggerFactory.getLogger(KrbClient.class);
 
     private EventHub eventHub;
     private EventWaiter eventWaiter;
     private Transport transport;
 
+    private KrbHandler krbHandler;
     private KrbContext context;
     private KrbConfig config;
-    private EncryptionType usedEtype;
     private String kdcHost;
     private short kdcPort;
 
@@ -65,8 +61,11 @@ public class KrbClient {
     }
 
     public void init() {
+        this.krbHandler = new KrbHandler();
+        krbHandler.init(context);
+
         this.eventHub = new EventHub();
-        eventHub.register(new KrbHandler());
+        eventHub.register(krbHandler);
 
         Connector connector = new TcpConnector(new KrbStreamingDecoder());
         eventHub.register(connector);
@@ -107,11 +106,10 @@ public class KrbClient {
     }
 
     public TgtTicket requestTgtTicket(String principal, String password) throws KrbException {
-        context.setClientPrincipal(new PrincipalName(principal));
-        context.setPassword(password);
-        context.setServerPrincipal(makeTgsPrincipal());
-
         AsRequest asRequest = new AsRequest(context);
+        asRequest.setClientPrincipal(new PrincipalName(principal));
+        asRequest.setPassword(password);
+        asRequest.setServerPrincipal(makeTgsPrincipal());
         asRequest.setTransport(transport);
         return requestTgtTicket(asRequest);
     }
@@ -160,8 +158,8 @@ public class KrbClient {
     }
 
     public ServiceTicket requestServiceTicket(TgtTicket tgt, String serverPrincipal) throws KrbException {
-        context.setServerPrincipal(new PrincipalName(serverPrincipal));
         TgsRequest ticketReq = new TgsRequest(context, tgt);
+        ticketReq.setServerPrincipal(new PrincipalName(serverPrincipal));
         ticketReq.setTransport(transport);
 
         eventHub.dispatch(KrbClientEvent.createTktIntentEvent(ticketReq));
