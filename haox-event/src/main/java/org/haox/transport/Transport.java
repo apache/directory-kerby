@@ -11,6 +11,7 @@ import java.nio.ByteBuffer;
 public abstract class Transport {
     private InetSocketAddress remoteAddress;
     protected Dispatcher dispatcher;
+    private Object attachment;
 
     protected TransBuffer sendBuffer;
 
@@ -51,4 +52,12 @@ public abstract class Transport {
     }
 
     protected abstract void sendOutMessage(ByteBuffer message) throws IOException;
+
+    public void setAttachment(Object attachment) {
+        this.attachment = attachment;
+    }
+
+    public Object getAttachment() {
+        return attachment;
+    }
 }

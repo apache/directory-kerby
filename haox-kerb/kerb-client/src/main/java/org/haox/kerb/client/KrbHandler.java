@@ -17,6 +17,7 @@ import org.haox.kerb.spec.type.common.KrbMessageType;
 import org.haox.kerb.spec.type.kdc.AsRep;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.kdc.TgsRep;
+import org.haox.transport.Transport;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
 
@@ -26,7 +27,6 @@ public class KrbHandler extends AbstractEventHandler {
 
     private KrbContext context;
     private PreauthHandler preauthHandler;
-    private KdcRequest theKdcRequest;
 
     public void init(KrbContext context) {
         this.context = context;
@@ -48,11 +48,11 @@ public class KrbHandler extends AbstractEventHandler {
         EventType eventType = event.getEventType();
 
         if (eventType == KrbClientEventType.TGT_INTENT) {
-            theKdcRequest = (KdcRequest) event.getEventData();
-            processTgtTicketRequest((AsRequest) theKdcRequest);
+            KdcRequest kdcRequest = (KdcRequest) event.getEventData();
+            processTgtTicketRequest((AsRequest) kdcRequest);
         } else if (eventType == KrbClientEventType.TKT_INTENT) {
-            theKdcRequest = (KdcRequest) event.getEventData();
-            processServiceTicketRequest((TgsRequest) theKdcRequest);
+            KdcRequest kdcRequest = (KdcRequest) event.getEventData();
+            processServiceTicketRequest((TgsRequest) kdcRequest);
         } else if (event.getEventType() == TransportEventType.INBOUND_MESSAGE) {
             handleMessage((MessageEvent) event);
         }
@@ -61,13 +61,17 @@ public class KrbHandler extends AbstractEventHandler {
     private void processTgtTicketRequest(AsRequest kdcRequest) throws KrbException {
         kdcRequest.setPreauthHandler(preauthHandler);
         KdcReq kdcReq = kdcRequest.makeRequest();
-        KrbUtil.sendMessage(kdcReq, kdcRequest.getTransport());
+        Transport transport = kdcRequest.getTransport();
+        transport.setAttachment(kdcRequest);
+        KrbUtil.sendMessage(kdcReq, transport);
     }
 
     private void processServiceTicketRequest(TgsRequest kdcRequest) throws KrbException {
         kdcRequest.setPreauthHandler(preauthHandler);
         KdcReq kdcReq = kdcRequest.makeRequest();
-        KrbUtil.sendMessage(kdcReq, kdcRequest.getTransport());
+        Transport transport = kdcRequest.getTransport();
+        transport.setAttachment(kdcRequest);
+        KrbUtil.sendMessage(kdcReq, transport);
     }
 
     protected void handleMessage(MessageEvent event) throws Exception {
@@ -78,12 +82,14 @@ public class KrbHandler extends AbstractEventHandler {
         KrbMessageType messageType = kdcRep.getMsgType();
         if (messageType == KrbMessageType.AS_REP) {
             kdcResponse = new AsResponse((AsRep) kdcRep);
-            kdcResponse.setKdcRequest(theKdcRequest);
+            KdcRequest kdcRequest = (KdcRequest) event.getTransport().getAttachment();
+            kdcResponse.setKdcRequest(kdcRequest);
             kdcResponse.process();
             dispatch(KrbClientEvent.createTgtResultEvent((AsResponse) kdcResponse));
         } else if (messageType == KrbMessageType.TGS_REP) {
             kdcResponse = new TgsResponse((TgsRep) kdcRep);
-            kdcResponse.setKdcRequest(theKdcRequest);
+            KdcRequest kdcRequest = (KdcRequest) event.getTransport().getAttachment();
+            kdcResponse.setKdcRequest(kdcRequest);
             kdcResponse.process();
             dispatch(KrbClientEvent.createTktResultEvent((TgsResponse) kdcResponse));
         }
