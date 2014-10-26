@@ -1,9 +1,9 @@
-package org.haox.kerb.server.tgs;
+package org.haox.kerb.server;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.server.KdcContext;
-import org.haox.kerb.server.KdcService;
+import org.haox.kerb.server.KdcRequest;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
@@ -11,10 +11,7 @@ import org.haox.kerb.spec.type.ap.ApOption;
 import org.haox.kerb.spec.type.ap.ApReq;
 import org.haox.kerb.spec.type.ap.Authenticator;
 import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.kdc.EncKdcRepPart;
-import org.haox.kerb.spec.type.kdc.EncTgsRepPart;
-import org.haox.kerb.spec.type.kdc.KdcReq;
-import org.haox.kerb.spec.type.kdc.TgsRep;
+import org.haox.kerb.spec.type.kdc.*;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
@@ -23,7 +20,21 @@ import org.haox.kerb.spec.type.ticket.TicketFlag;
 
 import java.util.List;
 
-public class TgsService extends KdcService {
+public class TgsRequest extends KdcRequest {
+
+    private EncryptionKey tgtSessionKey;
+
+    public TgsRequest(TgsReq tgsReq) {
+        super(tgsReq);
+    }
+
+    public EncryptionKey getTgtSessionKey() {
+        return tgtSessionKey;
+    }
+
+    public void setTgtSessionKey(EncryptionKey tgtSessionKey) {
+        this.tgtSessionKey = tgtSessionKey;
+    }
 
     @Override
     protected void processPaData(KdcContext kdcContext, List<PaDataEntry> paData) throws KrbException {
@@ -31,16 +42,16 @@ public class TgsService extends KdcService {
         for (PaDataEntry pd : paData) {
             pdType = pd.getPaDataType();
             if (pdType == PaDataType.TGS_REQ) {
-                checkAuthenticator((TgsContext) kdcContext, pd);
+                checkAuthenticator(kdcContext, pd);
             } else if (pdType == PaDataType.ENC_TIMESTAMP) {
                 checkTimestamp(kdcContext, pd);
             }
         }
 
-        kdcContext.setPreAuthenticated(true);
+        setPreAuthenticated(true);
     }
 
-    private void checkAuthenticator(TgsContext kdcContext, PaDataEntry paDataEntry) throws KrbException {
+    private void checkAuthenticator(KdcContext kdcContext, PaDataEntry paDataEntry) throws KrbException {
         ApReq authHeader = KrbCodec.decode(paDataEntry.getPaDataValue(), ApReq.class);
 
         if (authHeader.getPvno() != KrbConstant.KRB_V5) {
@@ -51,8 +62,8 @@ public class TgsService extends KdcService {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
         }
 
-        EncryptionType encType = kdcContext.getRequest().getReqBody().getEtypes().listIterator().next();
-        EncryptionKey tgsKey = kdcContext.getTgsEntry().getKeys().get(encType);
+        EncryptionType encType = getKdcReq().getReqBody().getEtypes().listIterator().next();
+        EncryptionKey tgsKey = getTgsEntry().getKeys().get(encType);
 
         Ticket ticket = authHeader.getTicket();
         if (ticket.getTktvno() != KrbConstant.KRB_V5) {
@@ -82,7 +93,7 @@ public class TgsService extends KdcService {
             if (!kdcContext.getConfig().isEmptyAddressesAllowed()) {
                 throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADADDR);
             }
-        } else if (!hostAddresses.contains(kdcContext.getClientAddress())) {
+        } else if (!hostAddresses.contains(getClientAddress())) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADADDR);
         }
 
@@ -112,35 +123,33 @@ public class TgsService extends KdcService {
 
         authHeader.getApOptions().setFlag(ApOption.MUTUAL_REQUIRED);
 
-        kdcContext.setTgtSessionKey(ticket.getEncPart().getKey());
+        setTgtSessionKey(ticket.getEncPart().getKey());
     }
 
     @Override
     protected void makeReply(KdcContext kdcContext) throws KrbException {
-        TgsContext tgsContext = (TgsContext) kdcContext;
-
-        Ticket ticket = kdcContext.getTicket();
+        Ticket ticket = getTicket();
 
         TgsRep reply = new TgsRep();
 
-        reply.setCname(kdcContext.getClientEntry().getPrincipal());
+        reply.setCname(getClientEntry().getPrincipal());
         reply.setCrealm(kdcContext.getServerRealm());
         reply.setTicket(ticket);
 
         EncKdcRepPart encKdcRepPart = makeEncKdcRepPart(kdcContext);
         reply.setEncPart(encKdcRepPart);
 
-        EncryptionKey sessionKey = tgsContext.getTgtSessionKey();
+        EncryptionKey sessionKey = getTgtSessionKey();
         EncryptedData encryptedData = EncryptionUtil.seal(encKdcRepPart,
                 sessionKey, KeyUsage.TGS_REP_ENCPART_SESSKEY);
         reply.setEncryptedEncPart(encryptedData);
 
-        kdcContext.setReply(reply);
+        setReply(reply);
     }
 
     protected EncKdcRepPart makeEncKdcRepPart(KdcContext kdcContext) {
-        KdcReq request = kdcContext.getRequest();
-        Ticket ticket = kdcContext.getTicket();
+        KdcReq request = getKdcReq();
+        Ticket ticket = getTicket();
 
         EncKdcRepPart encKdcRepPart = new EncTgsRepPart();
 

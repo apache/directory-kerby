@@ -1,15 +1,12 @@
-package org.haox.kerb.server.as;
+package org.haox.kerb.server;
 
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.server.KdcContext;
-import org.haox.kerb.server.KdcService;
+import org.haox.kerb.server.KdcRequest;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.kdc.AsRep;
-import org.haox.kerb.spec.type.kdc.EncAsRepPart;
-import org.haox.kerb.spec.type.kdc.EncKdcRepPart;
-import org.haox.kerb.spec.type.kdc.KdcReq;
+import org.haox.kerb.spec.type.kdc.*;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.ticket.Ticket;
@@ -17,7 +14,11 @@ import org.haox.kerb.spec.type.ticket.TicketFlag;
 
 import java.util.List;
 
-public class AsService extends KdcService {
+public class AsRequest extends KdcRequest {
+
+    public AsRequest(AsReq asReq) {
+        super(asReq);
+    }
 
     @Override
     protected void processPaData(KdcContext kdcContext, List<PaDataEntry> paData) throws KrbException {
@@ -29,33 +30,33 @@ public class AsService extends KdcService {
             }
         }
 
-        kdcContext.setPreAuthenticated(true);
+        setPreAuthenticated(true);
     }
 
     @Override
     protected void makeReply(KdcContext kdcContext) throws KrbException {
-        Ticket ticket = kdcContext.getTicket();
+        Ticket ticket = getTicket();
 
         AsRep reply = new AsRep();
 
-        reply.setCname(kdcContext.getClientEntry().getPrincipal());
+        reply.setCname(getClientEntry().getPrincipal());
         reply.setCrealm(kdcContext.getServerRealm());
         reply.setTicket(ticket);
 
         EncKdcRepPart encKdcRepPart = makeEncKdcRepPart(kdcContext);
         reply.setEncPart(encKdcRepPart);
 
-        EncryptionKey clientKey = kdcContext.getClientKey();
+        EncryptionKey clientKey = getClientKey();
         EncryptedData encryptedData = EncryptionUtil.seal(encKdcRepPart,
                 clientKey, KeyUsage.AS_REP_ENCPART);
         reply.setEncryptedEncPart(encryptedData);
 
-        kdcContext.setReply(reply);
+        setReply(reply);
     }
 
     protected EncKdcRepPart makeEncKdcRepPart(KdcContext kdcContext) {
-        KdcReq request = kdcContext.getRequest();
-        Ticket ticket = kdcContext.getTicket();
+        KdcReq request = getKdcReq();
+        Ticket ticket = getTicket();
 
         EncKdcRepPart encKdcRepPart = new EncAsRepPart();
 

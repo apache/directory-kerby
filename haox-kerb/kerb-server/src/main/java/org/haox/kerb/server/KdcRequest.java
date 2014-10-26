@@ -3,17 +3,17 @@ package org.haox.kerb.server;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.crypto.EncryptionHandler;
-import org.haox.kerb.identity.IdentityService;
 import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.server.preauth.PaUtil;
-import org.haox.kerb.server.replay.ReplayCheckService;
-import org.haox.kerb.server.replay.ReplayCheckServiceImpl;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.kdc.*;
+import org.haox.kerb.spec.type.kdc.KdcOption;
+import org.haox.kerb.spec.type.kdc.KdcOptions;
+import org.haox.kerb.spec.type.kdc.KdcRep;
+import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
@@ -22,27 +22,37 @@ import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 import org.haox.kerb.spec.type.ticket.TicketFlag;
 import org.haox.kerb.spec.type.ticket.TicketFlags;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.List;
 
-public abstract class KdcService {
-    private static final Logger logger = LoggerFactory.getLogger(KdcService.class);
+public abstract class KdcRequest {
 
-    protected IdentityService identityService;
-    protected ReplayCheckService replayCheckService;
+    protected KdcContext kdcContext;
 
-    public KdcService() {
-        this.replayCheckService = new ReplayCheckServiceImpl();
+    private Ticket ticket;
+    private boolean isPreAuthenticated;
+    private KdcReq kdcReq;
+    private KdcRep reply;
+    private InetAddress clientAddress;
+    private boolean isTcp;
+    private EncryptionType encryptionType;
+    private EncryptionKey clientKey;
+    private KrbIdentity clientEntry;
+    private KrbIdentity serverEntry;
+    private EncryptionKey serverKey;
+    private KrbIdentity tgsEntry;
+
+    public KdcRequest(KdcReq kdcReq) {
+        this.kdcReq = kdcReq;
     }
 
-    public void setIdentityService(IdentityService identityService) {
-        this.identityService = identityService;
+    public void setContext(KdcContext kdcContext) {
+        this.kdcContext = kdcContext;
     }
 
-    public void serve(KdcContext kdcContext) throws KrbException {
+    public void process() throws KrbException {
         checkVersion(kdcContext);
         checkClient(kdcContext);
         checkServer(kdcContext);
@@ -52,11 +62,108 @@ public abstract class KdcService {
         makeReply(kdcContext);
     }
 
+    public KdcReq getKdcReq() {
+        return kdcReq;
+    }
+
+    public KrbIdentity getTgsEntry() {
+        return tgsEntry;
+    }
+
+    public void setTgsEntry(KrbIdentity tgsEntry) {
+        this.tgsEntry = tgsEntry;
+    }
+
+    public boolean isTcp() {
+        return isTcp;
+    }
+
+    public void isTcp(boolean isTcp) {
+        this.isTcp = isTcp;
+    }
+
+    public KrbMessage getReply() {
+        return reply;
+    }
+
+    public void setReply(KdcRep reply) {
+        this.reply = reply;
+    }
+
+    public InetAddress getClientAddress() {
+        return clientAddress;
+    }
+
+    public void setClientAddress(InetAddress clientAddress) {
+        this.clientAddress = clientAddress;
+    }
+
+    public EncryptionType getEncryptionType() {
+        return encryptionType;
+    }
+
+    public void setEncryptionType(EncryptionType encryptionType) {
+        this.encryptionType = encryptionType;
+    }
+
+    public Ticket getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
+    }
+
+    public boolean isPreAuthenticated() {
+        return isPreAuthenticated;
+    }
+
+    public void setPreAuthenticated(boolean isPreAuthenticated) {
+        this.isPreAuthenticated = isPreAuthenticated;
+    }
+
+    public KrbIdentity getServerEntry() {
+        return serverEntry;
+    }
+
+    public void setServerEntry(KrbIdentity serverEntry) {
+        this.serverEntry = serverEntry;
+    }
+
+    public KrbIdentity getClientEntry() {
+        return clientEntry;
+    }
+
+    public void setClientEntry(KrbIdentity clientEntry) {
+        this.clientEntry = clientEntry;
+    }
+
+    public EncryptionKey getClientKey() {
+        return clientKey;
+    }
+
+    public void setClientKey(EncryptionKey clientKey) {
+        this.clientKey = clientKey;
+    }
+
+    public EncryptionKey getServerKey() {
+        return serverKey;
+    }
+
+    public void setServerKey(EncryptionKey serverKey) {
+        this.serverKey = serverKey;
+    }
+
+    public PrincipalName getTgsPrincipal() {
+        PrincipalName result = new PrincipalName(kdcContext.getConfig().getTgsPrincipal());
+        result.setRealm(kdcContext.getKdcRealm());
+        return result;
+    }
 
     protected abstract void makeReply(KdcContext kdcContext) throws KrbException;
 
     protected void checkVersion(KdcContext kdcContext) throws KrbException {
-        KdcReq request = kdcContext.getRequest();
+        KdcReq request = getKdcReq();
 
         int kerberosVersion = request.getPvno();
         if (kerberosVersion != KrbConstant.KRB_V5) {
@@ -65,7 +172,7 @@ public abstract class KdcService {
     }
 
     protected void checkPolicy(KdcContext kdcContext) throws KrbException {
-        KrbIdentity entry = kdcContext.getClientEntry();
+        KrbIdentity entry = getClientEntry();
 
         if (entry.isDisabled()) {
             throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
@@ -81,7 +188,7 @@ public abstract class KdcService {
     }
 
     protected void checkClient(KdcContext kdcContext) throws KrbException {
-        KdcReq request = kdcContext.getRequest();
+        KdcReq request = getKdcReq();
 
         PrincipalName clientPrincipal = request.getReqBody().getCname();
         String clientRealm = request.getReqBody().getRealm();
@@ -91,15 +198,15 @@ public abstract class KdcService {
         clientPrincipal.setRealm(clientRealm);
 
         KrbIdentity clientEntry = getEntry(clientPrincipal.getName());
-        kdcContext.setClientEntry(clientEntry);
+        setClientEntry(clientEntry);
 
         EncryptionType encType = request.getReqBody().getEtypes().listIterator().next();
         EncryptionKey clientKey = clientEntry.getKeys().get(encType);
-        kdcContext.setClientKey(clientKey);
+        setClientKey(clientKey);
     }
 
     protected void preAuthenticate(KdcContext kdcContext) throws KrbException {
-        KdcReq request = kdcContext.getRequest();
+        KdcReq request = getKdcReq();
 
         PaData preAuthData = request.getPaData();
 
@@ -112,13 +219,13 @@ public abstract class KdcService {
             processPaData(kdcContext, paData);
         }
 
-        kdcContext.setPreAuthenticated(true);
+        setPreAuthenticated(true);
     }
 
     protected abstract void processPaData(KdcContext kdcContext, List<PaDataEntry> paData) throws KrbException;
 
     protected void checkTimestamp(KdcContext kdcContext, PaDataEntry paDataEntry) throws KrbException {
-        EncryptionKey clientKey = kdcContext.getClientKey();
+        EncryptionKey clientKey = getClientKey();
 
         EncryptedData dataValue = KrbCodec.decode(paDataEntry.getPaDataValue(), EncryptedData.class);
         PaEncTsEnc timestamp = EncryptionUtil.unseal(dataValue, clientKey,
@@ -131,7 +238,7 @@ public abstract class KdcService {
     }
 
     protected void checkEncryptionType(KdcContext kdcContext) throws KrbException {
-        List<EncryptionType> requestedTypes = kdcContext.getRequest().getReqBody().getEtypes();
+        List<EncryptionType> requestedTypes = getKdcReq().getReqBody().getEtypes();
 
         EncryptionType bestType = EncryptionUtil.getBestEncryptionType(requestedTypes,
                 kdcContext.getConfig().getEncryptionTypes());
@@ -140,7 +247,7 @@ public abstract class KdcService {
             throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP);
         }
 
-        kdcContext.setEncryptionType(bestType);
+        setEncryptionType(bestType);
     }
 
     protected void authenticate(KdcContext requestContext) throws KrbException {
@@ -149,10 +256,10 @@ public abstract class KdcService {
     }
 
     protected void issueTicket(KdcContext kdcContext) throws KrbException {
-        KdcReq request = kdcContext.getRequest();
+        KdcReq request = getKdcReq();
 
-        EncryptionType encryptionType = kdcContext.getEncryptionType();
-        EncryptionKey serverKey = kdcContext.getServerEntry().getKeys().get(encryptionType);
+        EncryptionType encryptionType = getEncryptionType();
+        EncryptionKey serverKey = getServerEntry().getKeys().get(encryptionType);
 
         PrincipalName ticketPrincipal = request.getReqBody().getSname();
 
@@ -163,7 +270,7 @@ public abstract class KdcService {
         encTicketPart.setFlags(ticketFlags);
         ticketFlags.setFlag(TicketFlag.INITIAL);
 
-        if (kdcContext.isPreAuthenticated()) {
+        if (isPreAuthenticated()) {
             ticketFlags.setFlag(TicketFlag.PRE_AUTH);
         }
 
@@ -193,7 +300,7 @@ public abstract class KdcService {
 
         KdcOptions kdcOptions = request.getReqBody().getKdcOptions();
 
-        EncryptionKey sessionKey = EncryptionHandler.random2Key(kdcContext.getEncryptionType());
+        EncryptionKey sessionKey = EncryptionHandler.random2Key(getEncryptionType());
         encTicketPart.setKey(sessionKey);
 
         encTicketPart.setCname(request.getReqBody().getCname());
@@ -279,14 +386,14 @@ public abstract class KdcService {
         newTicket.setRealm(serverRealm);
         newTicket.setEncPart(encTicketPart);
 
-        kdcContext.setTicket(newTicket);
+        setTicket(newTicket);
     }
 
     private void checkServer(KdcContext kdcContext) throws KrbException {
-        KdcReq request = kdcContext.getRequest();
+        KdcReq request = getKdcReq();
 
-        KrbIdentity tgsEntry = getEntry(kdcContext.getTgsPrincipal().getName());
-        kdcContext.setTgsEntry(tgsEntry);
+        KrbIdentity tgsEntry = getEntry(getTgsPrincipal().getName());
+        setTgsEntry(tgsEntry);
 
         PrincipalName principal = request.getReqBody().getSname();
         String serverRealm = request.getReqBody().getRealm();
@@ -296,15 +403,15 @@ public abstract class KdcService {
         principal.setRealm(serverRealm);
 
         KrbIdentity serverEntry = getEntry(principal.getName());
-        kdcContext.setServerEntry(serverEntry);
+        setServerEntry(serverEntry);
 
         EncryptionType encType = request.getReqBody().getEtypes().listIterator().next();
         EncryptionKey serverKey = serverEntry.getKeys().get(encType);
-        kdcContext.setServerKey(serverKey);
+        setServerKey(serverKey);
     }
 
-    protected static KrbError makePreAuthenticationError(KdcContext kdcContext) throws KrbException {
-        EncryptionType requestedType = kdcContext.getEncryptionType();
+    protected KrbError makePreAuthenticationError(KdcContext kdcContext) throws KrbException {
+        EncryptionType requestedType = getEncryptionType();
         List<EncryptionType> encryptionTypes = kdcContext.getConfig().getEncryptionTypes();
         boolean isNewEtype = true;
 
@@ -352,7 +459,7 @@ public abstract class KdcService {
         KrbErrorCode krbErrorCode = KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN;
 
         try {
-            entry = identityService.getIdentity(principal);
+            entry = kdcContext.getIdentityService().getIdentity(principal);
         } catch (Exception e) {
             throw new KrbException(krbErrorCode, e);
         }
