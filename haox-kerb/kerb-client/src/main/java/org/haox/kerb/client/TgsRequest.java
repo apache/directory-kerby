@@ -1,4 +1,4 @@
-package org.haox.kerb.client.tgs;
+package org.haox.kerb.client;
 
 import org.haox.kerb.client.KdcRequest;
 import org.haox.kerb.client.KrbContext;
