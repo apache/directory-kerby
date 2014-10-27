@@ -1,7 +1,6 @@
 package org.haox.kerb.client;
 
 import org.haox.asn1.type.Asn1Type;
-import org.haox.kerb.common.KrbProcessor;
 import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.client.preauth.PreauthHandler;
 import org.haox.kerb.crypto.EncryptionHandler;
@@ -23,7 +22,7 @@ import java.util.List;
 /**
  * A wrapper for KdcReq request
  */
-public abstract class KdcRequest implements KrbProcessor {
+public abstract class KdcRequest {
     private KrbContext context;
     private Transport transport;
 
@@ -228,5 +227,6 @@ public abstract class KdcRequest implements KrbProcessor {
         hostAddresses.add(new HostAddress(address));
     }
 
+    public abstract void process() throws KrbException;
     public abstract void processResponse(KdcRep kdcRep) throws KrbException;
 }

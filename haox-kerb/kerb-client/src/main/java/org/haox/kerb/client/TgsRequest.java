@@ -1,7 +1,5 @@
 package org.haox.kerb.client;
 
-import org.haox.kerb.client.KdcRequest;
-import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.spec.KrbException;
@@ -21,10 +19,6 @@ import org.haox.kerb.spec.type.ticket.TgtTicket;
 
 public class TgsRequest extends KdcRequest {
     private TgtTicket tgt;
-
-    private ApOptions apOptions = new ApOptions();
-
-    private KdcOptions kdcOptions = new KdcOptions();
 
     public TgsRequest(KrbContext context, TgtTicket tgtTicket) {
         super(context);
@@ -47,10 +41,6 @@ public class TgsRequest extends KdcRequest {
     @Override
     public EncryptionKey getClientKey() throws KrbException {
         return getSessionKey();
-    }
-
-    public void setKdcOptions(KdcOptions kdcOptions) {
-        this.kdcOptions = kdcOptions;
     }
 
     public EncryptionKey getSessionKey() {
@@ -84,6 +74,7 @@ public class TgsRequest extends KdcRequest {
         apReq.setEncryptedAuthenticator(authnData);
 
         apReq.setTicket(tgt.getTicket());
+        ApOptions apOptions = new ApOptions();
         apReq.setApOptions(apOptions);
 
         return apReq;
