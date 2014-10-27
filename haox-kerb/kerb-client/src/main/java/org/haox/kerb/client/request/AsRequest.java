@@ -1,6 +1,5 @@
-package org.haox.kerb.client;
+package org.haox.kerb.client.request;
 
-import org.haox.kerb.client.KdcRequest;
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.crypto.EncryptionHandler;

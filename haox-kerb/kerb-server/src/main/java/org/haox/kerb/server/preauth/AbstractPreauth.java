@@ -1,17 +1,17 @@
-package org.haox.kerb.client.preauth;
+package org.haox.kerb.server.preauth;
 
-import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.common.preauth.PaFlag;
 import org.haox.kerb.common.preauth.PaFlags;
+import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
 public abstract class AbstractPreauth implements Preauth {
 
-    private KrbContext context;
+    private KdcContext context;
 
-    public void init(KrbContext context) {
+    public void init(KdcContext context) {
         this.context = context;
     }
 
@@ -38,7 +38,7 @@ public abstract class AbstractPreauth implements Preauth {
         return paFlags;
     }
 
-    protected KrbContext getContext() {
+    protected KdcContext getContext() {
         return context;
     }
 

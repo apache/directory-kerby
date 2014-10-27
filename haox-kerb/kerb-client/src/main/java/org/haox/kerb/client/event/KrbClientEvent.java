@@ -1,8 +1,8 @@
 package org.haox.kerb.client.event;
 
 import org.haox.event.Event;
-import org.haox.kerb.client.AsRequest;
-import org.haox.kerb.client.TgsRequest;
+import org.haox.kerb.client.request.AsRequest;
+import org.haox.kerb.client.request.TgsRequest;
 
 public class KrbClientEvent {
 

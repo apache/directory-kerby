@@ -1,10 +1,11 @@
-package org.haox.kerb.server;
+package org.haox.kerb.server.request;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.identity.KrbIdentity;
-import org.haox.kerb.server.preauth.PaUtil;
+import org.haox.kerb.server.KdcConfig;
+import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
@@ -440,12 +441,12 @@ public abstract class KdcRequest {
         encTypeInfo2 = KrbCodec.encode(eTypeInfo2);
 
         MethodData methodData = new MethodData();
-        methodData.getElements().add(PaUtil.createPaDataEntry(PaDataType.ENC_TIMESTAMP, null));
+        methodData.getElements().add(new PaDataEntry(PaDataType.ENC_TIMESTAMP, null));
         if (!isNewEtype) {
-            methodData.getElements().add(PaUtil.createPaDataEntry(PaDataType.ETYPE_INFO, encTypeInfo));
+            methodData.getElements().add(new PaDataEntry(PaDataType.ETYPE_INFO, encTypeInfo));
         }
 
-        methodData.getElements().add(PaUtil.createPaDataEntry(PaDataType.ETYPE_INFO2, encTypeInfo2));
+        methodData.getElements().add(new PaDataEntry(PaDataType.ETYPE_INFO2, encTypeInfo2));
 
         KrbError krbError = new KrbError();
         krbError.setErrorCode(KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED);

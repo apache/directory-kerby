@@ -25,6 +25,12 @@ public class PaDataEntry extends KrbSequenceType {
         super(fieldInfos);
     }
 
+    public PaDataEntry(PaDataType type, byte[] paData) {
+        this();
+        setPaDataType(type);
+        setPaDataValue(paData);
+    }
+
     public PaDataType getPaDataType() {
         Integer value = getFieldAsInteger(PADATA_TYPE);
         return PaDataType.fromValue(value);

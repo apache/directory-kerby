@@ -1,6 +1,7 @@
-package org.haox.kerb.client;
+package org.haox.kerb.client.request;
 
 import org.haox.asn1.type.Asn1Type;
+import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.client.preauth.PreauthHandler;
 import org.haox.kerb.crypto.EncryptionHandler;

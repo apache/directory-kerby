@@ -1,9 +1,8 @@
-package org.haox.kerb.server;
+package org.haox.kerb.server.request;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.server.KdcContext;
-import org.haox.kerb.server.KdcRequest;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;

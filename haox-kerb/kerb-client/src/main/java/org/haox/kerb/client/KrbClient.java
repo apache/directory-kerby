@@ -5,6 +5,8 @@ import org.haox.event.EventHub;
 import org.haox.event.EventWaiter;
 import org.haox.kerb.client.event.KrbClientEvent;
 import org.haox.kerb.client.event.KrbClientEventType;
+import org.haox.kerb.client.request.AsRequest;
+import org.haox.kerb.client.request.TgsRequest;
 import org.haox.kerb.common.KrbStreamingDecoder;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;

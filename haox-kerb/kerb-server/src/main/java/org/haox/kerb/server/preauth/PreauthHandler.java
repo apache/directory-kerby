@@ -1,6 +1,6 @@
-package org.haox.kerb.client.preauth;
+package org.haox.kerb.server.preauth;
 
-import org.haox.kerb.client.KrbContext;
+import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
 
@@ -11,7 +11,7 @@ public class PreauthHandler {
 
     private List<Preauth> preauths;
 
-    public void init(KrbContext context) {
+    public void init(KdcContext context) {
         preauths = new ArrayList<Preauth>();
 
         Preauth preauth = new TimestampPreauth();
