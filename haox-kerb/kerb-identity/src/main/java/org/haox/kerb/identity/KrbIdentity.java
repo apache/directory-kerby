@@ -93,6 +93,10 @@ public class KrbIdentity {
         return keys;
     }
 
+    public EncryptionKey getKey(EncryptionType encType) {
+        return keys.get(encType);
+    }
+
     public int getKdcFlags() {
         return kdcFlags;
     }

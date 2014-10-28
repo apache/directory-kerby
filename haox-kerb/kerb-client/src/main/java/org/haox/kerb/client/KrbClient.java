@@ -51,7 +51,7 @@ public class KrbClient {
     public KrbClient(KrbConfig config) {
         this.config = config;
         this.context = new KrbContext();
-        context.setConfig(config);
+        context.init(config);
     }
 
     public void setKdcRealm(String realm) {
@@ -123,8 +123,6 @@ public class KrbClient {
     }
 
     private TgtTicket requestTgtTicket(AsRequest tgtTktReq) throws KrbException {
-        TgtTicket tgt = null;
-
         try {
             return doRequestTgtTicket(tgtTktReq);
         } catch(KrbErrorException e) {

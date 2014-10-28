@@ -55,13 +55,13 @@ public abstract class KdcRequest implements PreauthContext {
     }
 
     public void process() throws KrbException {
-        checkVersion(kdcContext);
-        checkClient(kdcContext);
-        checkServer(kdcContext);
-        preAuthenticate(kdcContext);
-        authenticate(kdcContext);
-        issueTicket(kdcContext);
-        makeReply(kdcContext);
+        checkVersion();
+        checkClient();
+        checkServer();
+        preAuthenticate();
+        authenticate();
+        issueTicket();
+        makeReply();
     }
 
     public KdcReq getKdcReq() {
@@ -140,6 +140,11 @@ public abstract class KdcRequest implements PreauthContext {
         this.clientEntry = clientEntry;
     }
 
+    @Override
+    public EncryptionKey getClientKey(EncryptionType encType) throws KrbException {
+        return getClientEntry().getKey(encType);
+    }
+
     public EncryptionKey getClientKey() {
         return clientKey;
     }
@@ -162,9 +167,9 @@ public abstract class KdcRequest implements PreauthContext {
         return result;
     }
 
-    protected abstract void makeReply(KdcContext kdcContext) throws KrbException;
+    protected abstract void makeReply() throws KrbException;
 
-    protected void checkVersion(KdcContext kdcContext) throws KrbException {
+    protected void checkVersion() throws KrbException {
         KdcReq request = getKdcReq();
 
         int kerberosVersion = request.getPvno();
@@ -173,7 +178,7 @@ public abstract class KdcRequest implements PreauthContext {
         }
     }
 
-    protected void checkPolicy(KdcContext kdcContext) throws KrbException {
+    protected void checkPolicy() throws KrbException {
         KrbIdentity entry = getClientEntry();
 
         if (entry.isDisabled()) {
@@ -189,7 +194,7 @@ public abstract class KdcRequest implements PreauthContext {
         }
     }
 
-    protected void checkClient(KdcContext kdcContext) throws KrbException {
+    protected void checkClient() throws KrbException {
         KdcReq request = getKdcReq();
 
         PrincipalName clientPrincipal = request.getReqBody().getCname();
@@ -207,39 +212,27 @@ public abstract class KdcRequest implements PreauthContext {
         setClientKey(clientKey);
     }
 
-    protected void preAuthenticate(KdcContext kdcContext) throws KrbException {
+    protected void preAuthenticate() throws KrbException {
         KdcReq request = getKdcReq();
 
         PaData preAuthData = request.getPaData();
 
         if (kdcContext.getConfig().isPreauthRequired()) {
-            if ((preAuthData == null) || (preAuthData.getElements().size() == 0)) {
+            if (preAuthData == null || preAuthData.isEmpty()) {
                 KrbError krbError = makePreAuthenticationError(kdcContext);
                 throw new KrbErrorException(krbError);
             }
-            List<PaDataEntry> paData = preAuthData.getElements();
-            processPaData(kdcContext, paData);
+            processPaData(preAuthData);
         }
 
         setPreAuthenticated(true);
     }
 
-    protected abstract void processPaData(KdcContext kdcContext, List<PaDataEntry> paData) throws KrbException;
-
-    protected void checkTimestamp(KdcContext kdcContext, PaDataEntry paDataEntry) throws KrbException {
-        EncryptionKey clientKey = getClientKey();
-
-        EncryptedData dataValue = KrbCodec.decode(paDataEntry.getPaDataValue(), EncryptedData.class);
-        PaEncTsEnc timestamp = EncryptionUtil.unseal(dataValue, clientKey,
-                KeyUsage.AS_REQ_PA_ENC_TS, PaEncTsEnc.class);
-
-        long clockSkew = kdcContext.getConfig().getAllowableClockSkew() * 1000;
-        if (!timestamp.getAllTime().isInClockSkew(clockSkew)) {
-            throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED);
-        }
+    protected void processPaData(PaData paData) throws KrbException {
+        kdcContext.getPreauthHandler().verify(this, paData);
     }
 
-    protected void checkEncryptionType(KdcContext kdcContext) throws KrbException {
+    protected void checkEncryptionType() throws KrbException {
         List<EncryptionType> requestedTypes = getKdcReq().getReqBody().getEtypes();
 
         EncryptionType bestType = EncryptionUtil.getBestEncryptionType(requestedTypes,
@@ -252,12 +245,12 @@ public abstract class KdcRequest implements PreauthContext {
         setEncryptionType(bestType);
     }
 
-    protected void authenticate(KdcContext requestContext) throws KrbException {
-        checkEncryptionType(requestContext);
-        checkPolicy(requestContext);
+    protected void authenticate() throws KrbException {
+        checkEncryptionType();
+        checkPolicy();
     }
 
-    protected void issueTicket(KdcContext kdcContext) throws KrbException {
+    protected void issueTicket() throws KrbException {
         KdcReq request = getKdcReq();
 
         EncryptionType encryptionType = getEncryptionType();
@@ -391,7 +384,7 @@ public abstract class KdcRequest implements PreauthContext {
         setTicket(newTicket);
     }
 
-    private void checkServer(KdcContext kdcContext) throws KrbException {
+    private void checkServer() throws KrbException {
         KdcReq request = getKdcReq();
 
         KrbIdentity tgsEntry = getEntry(getTgsPrincipal().getName());

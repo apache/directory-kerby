@@ -3,6 +3,8 @@ package org.haox.kerb.server.preauth;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
+import org.haox.kerb.spec.type.pa.PaDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +21,24 @@ public class PreauthHandler {
         preauths.add(preauth);
     }
 
-    public void tryFirst(PreauthContext preauthContext, PaData paData) throws KrbException {
+    public void provideEData(PreauthContext preauthContext) throws KrbException {
         for (KdcPreauth preauth : preauths) {
-            //preauth.tryFirst(preauthContext, paData);
+            preauth.provideEData(preauthContext);
         }
     }
 
-    public void process(PreauthContext preauthContext, PaData paData) throws KrbException {
-        for (KdcPreauth preauth : preauths) {
-            //preauth.process(preauthContext, paData);
+    public void verify(PreauthContext preauthContext, PaData paData) throws KrbException {
+        for (PaDataEntry paEntry : paData.getElements()) {
+            KdcPreauth preauth = getPreauth(paEntry.getPaDataType());
+            if (preauth != null) {
+                preauth.verify(preauthContext, paEntry);
+            }
         }
     }
 
-    public void tryAgain(PreauthContext preauthContext, PaData paData) {
+    public void providePaData(PreauthContext preauthContext, PaData paData) {
         for (KdcPreauth preauth : preauths) {
-            //preauth.tryAgain(preauthContext, paData);
+            preauth.providePaData(preauthContext, paData);
         }
     }
 
@@ -41,5 +46,17 @@ public class PreauthHandler {
         for (KdcPreauth preauth : preauths) {
             preauth.destroy();
         }
+    }
+
+    private KdcPreauth getPreauth(PaDataType paType) {
+        for (KdcPreauth preauth : preauths) {
+            for (PaDataType pt : preauth.getPaTypes()) {
+                if (pt == paType) {
+                    return preauth;
+                }
+            }
+        }
+
+        return null;
     }
 }

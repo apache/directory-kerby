@@ -10,8 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public abstract class AbstractKdcServer
-{
+public abstract class AbstractKdcServer {
     private static final Logger logger = LoggerFactory.getLogger(AbstractKdcServer.class);
 
     private String kdcHost;

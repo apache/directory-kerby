@@ -2,6 +2,7 @@ package org.haox.kerb.server;
 
 import org.haox.kerb.common.KrbUtil;
 import org.haox.kerb.identity.IdentityService;
+import org.haox.kerb.server.preauth.PreauthHandler;
 import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.request.AsRequest;
 import org.haox.kerb.server.request.KdcRequest;
@@ -28,7 +29,7 @@ public class KdcHandler extends MessageHandler {
 
     public void init() {
         kdcContext = new KdcContext();
-        kdcContext.setConfig(kdcConfig);
+        kdcContext.init(kdcConfig);
         kdcContext.setKdcRealm(kdcRealm);
         kdcContext.setIdentityService(identityService);
         kdcContext.setReplayCache(replayCheckService);

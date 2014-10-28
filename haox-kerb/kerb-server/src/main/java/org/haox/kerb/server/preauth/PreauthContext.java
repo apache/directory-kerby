@@ -12,9 +12,9 @@ import java.util.List;
 public interface PreauthContext {
 
     /**
-     * Get the client keys matching request enctypes.
+     * Get the client key matching request enctypes.
      */
-    public List<EncryptionKey> getClientKeys() throws KrbException;
+    public EncryptionKey getClientKey(EncryptionType encType) throws KrbException;
 
     public KrbIdentity getClientEntry() throws KrbException;
 

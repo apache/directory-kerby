@@ -1,7 +1,6 @@
 package org.haox.kerb.server.request;
 
 import org.haox.kerb.common.EncryptionUtil;
-import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
@@ -21,20 +20,7 @@ public class AsRequest extends KdcRequest {
     }
 
     @Override
-    protected void processPaData(KdcContext kdcContext, List<PaDataEntry> paData) throws KrbException {
-        PaDataType pdType;
-        for (PaDataEntry pd : paData) {
-            pdType = pd.getPaDataType();
-            if (pdType == PaDataType.ENC_TIMESTAMP) {
-                checkTimestamp(kdcContext, pd);
-            }
-        }
-
-        setPreAuthenticated(true);
-    }
-
-    @Override
-    protected void makeReply(KdcContext kdcContext) throws KrbException {
+    protected void makeReply() throws KrbException {
         Ticket ticket = getTicket();
 
         AsRep reply = new AsRep();
@@ -43,7 +29,7 @@ public class AsRequest extends KdcRequest {
         reply.setCrealm(kdcContext.getServerRealm());
         reply.setTicket(ticket);
 
-        EncKdcRepPart encKdcRepPart = makeEncKdcRepPart(kdcContext);
+        EncKdcRepPart encKdcRepPart = makeEncKdcRepPart();
         reply.setEncPart(encKdcRepPart);
 
         EncryptionKey clientKey = getClientKey();
@@ -54,7 +40,7 @@ public class AsRequest extends KdcRequest {
         setReply(reply);
     }
 
-    protected EncKdcRepPart makeEncKdcRepPart(KdcContext kdcContext) {
+    protected EncKdcRepPart makeEncKdcRepPart() {
         KdcReq request = getKdcReq();
         Ticket ticket = getTicket();
 
@@ -86,11 +72,6 @@ public class AsRequest extends KdcRequest {
         encKdcRepPart.setCaddr(ticket.getEncPart().getClientAddresses());
 
         return encKdcRepPart;
-    }
-
-    @Override
-    public List<EncryptionKey> getClientKeys() throws KrbException {
-        return null;
     }
 
     @Override

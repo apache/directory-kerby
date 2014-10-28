@@ -11,6 +11,7 @@ import org.haox.kerb.spec.type.ap.ApReq;
 import org.haox.kerb.spec.type.ap.Authenticator;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.kdc.*;
+import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
@@ -37,18 +38,16 @@ public class TgsRequest extends KdcRequest {
     }
 
     @Override
-    protected void processPaData(KdcContext kdcContext, List<PaDataEntry> paData) throws KrbException {
+    protected void processPaData(PaData paData) throws KrbException {
         PaDataType pdType;
-        for (PaDataEntry pd : paData) {
+        for (PaDataEntry pd : paData.getElements()) {
             pdType = pd.getPaDataType();
             if (pdType == PaDataType.TGS_REQ) {
                 checkAuthenticator(kdcContext, pd);
-            } else if (pdType == PaDataType.ENC_TIMESTAMP) {
-                checkTimestamp(kdcContext, pd);
             }
         }
 
-        setPreAuthenticated(true);
+        super.processPaData(paData);
     }
 
     private void checkAuthenticator(KdcContext kdcContext, PaDataEntry paDataEntry) throws KrbException {
@@ -127,7 +126,7 @@ public class TgsRequest extends KdcRequest {
     }
 
     @Override
-    protected void makeReply(KdcContext kdcContext) throws KrbException {
+    protected void makeReply() throws KrbException {
         Ticket ticket = getTicket();
 
         TgsRep reply = new TgsRep();
@@ -136,7 +135,7 @@ public class TgsRequest extends KdcRequest {
         reply.setCrealm(kdcContext.getServerRealm());
         reply.setTicket(ticket);
 
-        EncKdcRepPart encKdcRepPart = makeEncKdcRepPart(kdcContext);
+        EncKdcRepPart encKdcRepPart = makeEncKdcRepPart();
         reply.setEncPart(encKdcRepPart);
 
         EncryptionKey sessionKey = getTgtSessionKey();
@@ -147,7 +146,7 @@ public class TgsRequest extends KdcRequest {
         setReply(reply);
     }
 
-    protected EncKdcRepPart makeEncKdcRepPart(KdcContext kdcContext) {
+    private EncKdcRepPart makeEncKdcRepPart() {
         KdcReq request = getKdcReq();
         Ticket ticket = getTicket();
 
@@ -179,11 +178,6 @@ public class TgsRequest extends KdcRequest {
         encKdcRepPart.setCaddr(ticket.getEncPart().getClientAddresses());
 
         return encKdcRepPart;
-    }
-
-    @Override
-    public List<EncryptionKey> getClientKeys() throws KrbException {
-        return null;
     }
 
     @Override

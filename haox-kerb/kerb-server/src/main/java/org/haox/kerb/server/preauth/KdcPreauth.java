@@ -5,6 +5,7 @@ import org.haox.kerb.preauth.Preauth;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
 public interface KdcPreauth extends Preauth {
@@ -24,7 +25,7 @@ public interface KdcPreauth extends Preauth {
      * TKT_FLG_PRE_AUTH or TKT_FLG_HW_AUTH flag in the enc_tkt_reply's "flags"
      * field as appropriate.
      */
-    public void verify(PreauthContext preauthContext, PaData paData) throws KrbException;
+    public void verify(PreauthContext preauthContext, PaDataEntry paData) throws KrbException;
 
     /**
      * Optional: generate preauthentication response data to send to the client as
