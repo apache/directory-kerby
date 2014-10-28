@@ -3,6 +3,7 @@ package org.haox.kerb.client.request;
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.crypto.EncryptionHandler;
+import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.kdc.*;
@@ -19,6 +20,8 @@ public class AsRequest extends KdcRequest {
 
     public AsRequest(KrbContext context) {
         super(context);
+
+        setServerPrincipal(makeTgsPrincipal());
     }
 
     @Override
@@ -124,4 +127,7 @@ public class AsRequest extends KdcRequest {
         return TgtTicket;
     }
 
+    private PrincipalName makeTgsPrincipal() {
+        return new PrincipalName(KrbConstant.TGS_PRINCIPAL + "@" + getContext().getKdcRealm());
+    }
 }

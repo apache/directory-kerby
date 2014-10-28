@@ -6,9 +6,10 @@ import org.haox.event.EventWaiter;
 import org.haox.kerb.client.event.KrbClientEvent;
 import org.haox.kerb.client.event.KrbClientEventType;
 import org.haox.kerb.client.request.AsRequest;
+import org.haox.kerb.client.request.CertAsRequest;
 import org.haox.kerb.client.request.TgsRequest;
+import org.haox.kerb.client.request.TokenAsRequest;
 import org.haox.kerb.common.KrbStreamingDecoder;
-import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbError;
@@ -16,6 +17,8 @@ import org.haox.kerb.spec.type.common.KrbErrorCode;
 import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.ticket.ServiceTicket;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
+import org.haox.kerb.spec.type.x509.Certificate;
+import org.haox.token.KerbToken;
 import org.haox.transport.Connector;
 import org.haox.transport.Transport;
 import org.haox.transport.event.TransportEvent;
@@ -113,7 +116,7 @@ public class KrbClient {
     }
 
     /**
-     * Request a TGT with user plain credentials
+     * Request a TGT with user plain credential
      * @param principal
      * @param password
      * @return
@@ -123,13 +126,38 @@ public class KrbClient {
         AsRequest asRequest = new AsRequest(context);
         asRequest.setClientPrincipal(new PrincipalName(principal));
         asRequest.setPassword(password);
-        asRequest.setServerPrincipal(makeTgsPrincipal());
         asRequest.setTransport(transport);
         return requestTgtTicket(asRequest);
     }
 
-    private PrincipalName makeTgsPrincipal() {
-        return new PrincipalName(KrbConstant.TGS_PRINCIPAL + "@" + context.getKdcRealm());
+    /**
+     * Request a TGT with user x509 certificate credential
+     * @param principal
+     * @param certificate
+     * @return
+     * @throws KrbException
+     */
+    public TgtTicket requestTgtTicket(String principal, Certificate certificate) throws KrbException {
+        CertAsRequest asRequest = new CertAsRequest(context);
+        asRequest.setClientPrincipal(new PrincipalName(principal));
+        asRequest.setCertificate(certificate);
+        asRequest.setTransport(transport);
+        return requestTgtTicket(asRequest);
+    }
+
+    /**
+     * Request a TGT with user token credential
+     * @param principal
+     * @param token
+     * @return
+     * @throws KrbException
+     */
+    public TgtTicket requestTgtTicket(String principal, KerbToken token) throws KrbException {
+        TokenAsRequest asRequest = new TokenAsRequest(context);
+        asRequest.setClientPrincipal(new PrincipalName(principal));
+        asRequest.setToken(token);
+        asRequest.setTransport(transport);
+        return requestTgtTicket(asRequest);
     }
 
     /**
@@ -143,6 +171,20 @@ public class KrbClient {
     public ServiceTicket requestServiceTicket(String clientPrincipal, String password,
                                               String serverPrincipal) throws KrbException {
         TgtTicket tgt = requestTgtTicket(clientPrincipal, password);
+        return requestServiceTicket(tgt, serverPrincipal);
+    }
+
+    /**
+     * Request a service ticket targeting for a server with an user Access Token
+     * @param clientPrincipal
+     * @param token
+     * @param serverPrincipal
+     * @return
+     * @throws KrbException
+     */
+    public ServiceTicket requestServiceTicket(String clientPrincipal, KerbToken token,
+                                              String serverPrincipal) throws KrbException {
+        TgtTicket tgt = requestTgtTicket(clientPrincipal, token);
         return requestServiceTicket(tgt, serverPrincipal);
     }
 

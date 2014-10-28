@@ -34,5 +34,10 @@
             <artifactId>haox-event</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.haox</groupId>
+            <artifactId>haox-token</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
