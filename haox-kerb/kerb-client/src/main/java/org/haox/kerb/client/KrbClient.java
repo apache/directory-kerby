@@ -38,9 +38,12 @@ public class KrbClient {
     private KrbHandler krbHandler;
     private KrbContext context;
     private KrbConfig config;
-    private String kdcHost;
-    private short kdcPort;
 
+    /**
+     *
+     * @param kdcHost
+     * @param kdcPort
+     */
     public KrbClient(String kdcHost, short kdcPort) {
         this(new KrbConfig());
 
@@ -54,8 +57,36 @@ public class KrbClient {
         context.init(config);
     }
 
+    /**
+     * Set KDC realm for ticket request
+     * @param realm
+     */
     public void setKdcRealm(String realm) {
         context.setKdcRealm(realm);
+    }
+
+    /**
+     *
+     * @param kdcHost
+     */
+    public void setKdcHost(String kdcHost) {
+        context.setKdcHost(kdcHost);
+    }
+
+    /**
+     *
+     * @param kdcPort
+     */
+    public void setKdcPort(short kdcPort) {
+        context.setKdcPort(kdcPort);
+    }
+
+    /**
+     * Set time out for connection
+     * @param timeout in seconds
+     */
+    public void setTimeout(long timeout) {
+        context.setTimeout(timeout);
     }
 
     public void init() {
@@ -76,33 +107,18 @@ public class KrbClient {
 
         eventHub.start();
 
-        connector.connect(getKdcHost(), getKdcPort());
+        connector.connect(context.getKdcHost(), context.getKdcPort());
         Event event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
         transport = ((TransportEvent) event).getTransport();
     }
 
-    public String getKdcHost() {
-        if (kdcHost != null) {
-            return kdcHost;
-        }
-        return config.getKdcHost();
-    }
-
-    public void setKdcHost(String kdcHost) {
-        this.kdcHost = kdcHost;
-    }
-
-    public short getKdcPort() {
-        if (kdcPort > 0) {
-            return kdcPort;
-        }
-        return config.getKdcPort();
-    }
-
-    public void setKdcPort(short kdcPort) {
-        this.kdcPort = kdcPort;
-    }
-
+    /**
+     * Request a TGT with user plain credentials
+     * @param principal
+     * @param password
+     * @return
+     * @throws KrbException
+     */
     public TgtTicket requestTgtTicket(String principal, String password) throws KrbException {
         AsRequest asRequest = new AsRequest(context);
         asRequest.setClientPrincipal(new PrincipalName(principal));
@@ -116,6 +132,14 @@ public class KrbClient {
         return new PrincipalName(KrbConstant.TGS_PRINCIPAL + "@" + context.getKdcRealm());
     }
 
+    /**
+     * Request a service ticket targeting for a server with user plain credentials
+     * @param clientPrincipal
+     * @param password
+     * @param serverPrincipal
+     * @return
+     * @throws KrbException
+     */
     public ServiceTicket requestServiceTicket(String clientPrincipal, String password,
                                               String serverPrincipal) throws KrbException {
         TgtTicket tgt = requestTgtTicket(clientPrincipal, password);
@@ -144,7 +168,8 @@ public class KrbClient {
         eventHub.dispatch(KrbClientEvent.createTgtIntentEvent(tgtTktReq));
         Event resultEvent = null;
         try {
-            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TGT_RESULT, 20, TimeUnit.HOURS);
+            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TGT_RESULT,
+                    context.getTimeout(), TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             throw new KrbException("Network timeout", e);
         }
@@ -153,6 +178,13 @@ public class KrbClient {
         return asResponse.getTicket();
     }
 
+    /**
+     * Request a service ticket with a TGT targeting for a server
+     * @param tgt
+     * @param serverPrincipal
+     * @return
+     * @throws KrbException
+     */
     public ServiceTicket requestServiceTicket(TgtTicket tgt, String serverPrincipal) throws KrbException {
         TgsRequest ticketReq = new TgsRequest(context, tgt);
         ticketReq.setServerPrincipal(new PrincipalName(serverPrincipal));
@@ -161,7 +193,8 @@ public class KrbClient {
         eventHub.dispatch(KrbClientEvent.createTktIntentEvent(ticketReq));
         Event resultEvent = null;
         try {
-            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TKT_RESULT, 20, TimeUnit.HOURS);
+            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TKT_RESULT,
+                    context.getTimeout(), TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             throw new KrbException("Network timeout", e);
         }
