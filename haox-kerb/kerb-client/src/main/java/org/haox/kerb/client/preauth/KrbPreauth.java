@@ -1,14 +1,17 @@
-package org.haox.kerb.server.preauth;
+package org.haox.kerb.client.preauth;
 
-import org.haox.kerb.common.preauth.PaFlags;
-import org.haox.kerb.server.KdcContext;
+import org.haox.kerb.client.KrbContext;
+import org.haox.kerb.preauth.PaFlags;
+import org.haox.kerb.preauth.Preauth;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
-public interface Preauth {
+public interface KrbPreauth extends Preauth {
 
-    public void init(KdcContext context);
+    public String getName();
+
+    public void init(KrbContext context);
 
     /**
      * When first request to server, any paData to provide?

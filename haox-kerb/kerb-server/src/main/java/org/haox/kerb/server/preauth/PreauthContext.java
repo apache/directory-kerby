@@ -1,54 +1,31 @@
 package org.haox.kerb.server.preauth;
 
+import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
-public class PreauthContext {
+import java.nio.ByteBuffer;
+import java.util.List;
+
+public interface PreauthContext {
 
     /**
-     * Get the client-supplied reply key, possibly derived from password
+     * Get the client keys matching request enctypes.
      */
-    public EncryptionKey getAsKey() throws KrbException {
-        return null;
-    }
+    public List<EncryptionKey> getClientKeys() throws KrbException;
+
+    public KrbIdentity getClientEntry() throws KrbException;
 
     /**
-     * Replace the reply key to be used to decrypt the AS response.
+     * Get the encoded request body, which is sometimes needed for checksums.
+     * For a FAST request this is the encoded inner request body.
      */
-    public void setAsKey(EncryptionKey asKey) {
-
-    }
-
-    /**
-     * Get the enctype expected to be used to encrypt the encrypted portion of
-     * the AS_REP packet.  When handling a PREAUTH_REQUIRED error, this
-     * typically comes from etype-info2.  When handling an AS reply, it is
-     * initialized from the AS reply itself.
-     */
-    public EncryptionType getEncType() {
-        return null;
-    }
+    public abstract ByteBuffer getRequestBody() throws KrbException;
 
     /**
-     * Get a pointer to the FAST armor key, or NULL if the client is not using FAST.
+     * Get the FAST armor key, or NULL if the client is not using FAST.
      */
-    public EncryptionKey getArmorKey() {
-        return null;
-    }
-
-    /**
-     * Get the current time for use in a preauth response.  If
-     * allow_unauth_time is true and the library has been configured to allow
-     * it, the current time will be offset using unauthenticated timestamp
-     * information received from the KDC in the preauth-required error, if one
-     * has been received.  Otherwise, the timestamp in a preauth-required error
-     * will only be used if it is protected by a FAST channel.  Only set
-     * allow_unauth_time if using an unauthenticated time offset would not
-     * create a security issue.
-     */
-    public KerberosTime getPreauthTime() {
-        return KerberosTime.now();
-    }
+    public EncryptionKey getArmorKey() throws KrbException;
 }

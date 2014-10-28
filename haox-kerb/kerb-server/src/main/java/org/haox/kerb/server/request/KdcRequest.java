@@ -6,6 +6,7 @@ import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
+import org.haox.kerb.server.preauth.PreauthContext;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
@@ -28,7 +29,7 @@ import java.net.InetAddress;
 import java.util.Date;
 import java.util.List;
 
-public abstract class KdcRequest {
+public abstract class KdcRequest implements PreauthContext {
 
     protected KdcContext kdcContext;
 

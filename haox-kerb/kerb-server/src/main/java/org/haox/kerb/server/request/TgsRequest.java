@@ -17,6 +17,7 @@ import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 import org.haox.kerb.spec.type.ticket.TicketFlag;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 public class TgsRequest extends KdcRequest {
@@ -178,5 +179,20 @@ public class TgsRequest extends KdcRequest {
         encKdcRepPart.setCaddr(ticket.getEncPart().getClientAddresses());
 
         return encKdcRepPart;
+    }
+
+    @Override
+    public List<EncryptionKey> getClientKeys() throws KrbException {
+        return null;
+    }
+
+    @Override
+    public ByteBuffer getRequestBody() throws KrbException {
+        return null;
+    }
+
+    @Override
+    public EncryptionKey getArmorKey() throws KrbException {
+        return null;
     }
 }

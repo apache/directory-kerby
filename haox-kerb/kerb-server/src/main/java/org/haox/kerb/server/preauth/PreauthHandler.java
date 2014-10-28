@@ -9,36 +9,36 @@ import java.util.List;
 
 public class PreauthHandler {
 
-    private List<Preauth> preauths;
+    private List<KdcPreauth> preauths;
 
     public void init(KdcContext context) {
-        preauths = new ArrayList<Preauth>();
+        preauths = new ArrayList<KdcPreauth>();
 
-        Preauth preauth = new TimestampPreauth();
+        KdcPreauth preauth = new TimestampPreauth();
         preauth.init(context);
         preauths.add(preauth);
     }
 
     public void tryFirst(PreauthContext preauthContext, PaData paData) throws KrbException {
-        for (Preauth preauth : preauths) {
-            preauth.tryFirst(preauthContext, paData);
+        for (KdcPreauth preauth : preauths) {
+            //preauth.tryFirst(preauthContext, paData);
         }
     }
 
     public void process(PreauthContext preauthContext, PaData paData) throws KrbException {
-        for (Preauth preauth : preauths) {
-            preauth.process(preauthContext, paData);
+        for (KdcPreauth preauth : preauths) {
+            //preauth.process(preauthContext, paData);
         }
     }
 
     public void tryAgain(PreauthContext preauthContext, PaData paData) {
-        for (Preauth preauth : preauths) {
-            preauth.tryAgain(preauthContext, paData);
+        for (KdcPreauth preauth : preauths) {
+            //preauth.tryAgain(preauthContext, paData);
         }
     }
 
     public void destroy() {
-        for (Preauth preauth : preauths) {
+        for (KdcPreauth preauth : preauths) {
             preauth.destroy();
         }
     }

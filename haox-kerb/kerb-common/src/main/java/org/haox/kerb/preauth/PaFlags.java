@@ -1,4 +1,4 @@
-package org.haox.kerb.common.preauth;
+package org.haox.kerb.preauth;
 
 import org.haox.kerb.spec.type.common.KrbFlags;
 
