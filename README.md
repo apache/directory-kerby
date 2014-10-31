@@ -4,9 +4,9 @@ Haox
 Haox aims for a Java Kerberos binding and provides richful, inituitive and interoperable client library and various facilities that are desired in new environments like Hadoop and cloud. 
 
 ### Motivations  
-* Aims as a Java Kerberos binding, with richful and integrated facilities in both client and server sides.
+* Aims as a Java Kerberos binding, with richful and integrated facilities for both client and server sides.
 + Provide client APIs in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges.
-+ Provide a embeded KDC server that applications can easily integrate into products, unit tests or integration tests.
++ Provide an embeded KDC server that applications can easily integrate into products, unit tests or integration tests.
 + Supports FAST/Preauthentication framework to allow popular and useful authentication mechanisms.
 + Supports PKINIT mechanism to allow clients to request tickets using x509 certificate credential.
 + Supports Token Preauth mechanism to allow clients to request tickets using JWT tokens.
@@ -51,6 +51,7 @@ krbClient.requestServiceTicket(tgt, serverPrincipal);
 <pre>
 krbClient.requestServiceTicket(accessToken, serverPrincipal);
 </pre>
+
 ### The ASN-1 support
 Please look at [haox-asn1](https://github.com/drankye/haox/blob/master/haox-asn1/README.md) for details.
 
@@ -79,12 +80,13 @@ Independent with Kerberos codes in JRE, but rely on JCE
 | camellia | The Camellia family: camellia256-cts-cmac and camellia128-cts-cmac |
 
 ### Dependency
-All the project including its subprojects will only depend on JRE, which ensures it can be easily embeded and integrated into your applications and systems. Currently it depends on SLF4J but that will be removed later.
+The core part is ensured to only depend on JRE. Every external dependency is taken carefully and maintained separately.
 
 ##### Sub Projects
 - haox-asn1. A model driven ASN-1 encoding and decoding framework
 - haox-event. A pure event driven application framework aiming to construct applications of asynchronous and concurrent handlers. It includes UDP and TCP transport based on pure Java NIO and concurrency pattern.
 - haox-config. A unified configuration API that aims to support various configuration file formats, like XML, JNI, CSV and Java Properties file.
+- haox-token. Implements a JWT token API for Kerberos that's defined in TokenPreauth drafts.
 
 ### License
 Apache License V2.0
