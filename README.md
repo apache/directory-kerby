@@ -3,7 +3,7 @@ Haox
 
 Haox aims for a Java Kerberos binding and provides richful, inituitive and interoperable client library and various facilities that are desired in new environments like Hadoop and cloud. 
 
-### Motivations  
+### The Initiatives  
 * Aims as a Java Kerberos binding, with richful and integrated facilities for both client and server sides.
 + Provides client APIs in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges.
 + Provides an embeded KDC server that applications can easily integrate into products, unit tests or integration tests.
@@ -26,7 +26,7 @@ Token Preauth (ongoing)
 PKINIT (ongoing)
 </pre>
 
-### Krb Client APIs
+### KrbClient APIs
 * Initiate a KrbClient
 <pre>
 KrbClient krbClient = new KrbClient(kdcHost, kdcPort);
@@ -55,7 +55,7 @@ krbClient.requestServiceTicket(accessToken, serverPrincipal);
 ### The ASN-1 support
 Please look at [haox-asn1](https://github.com/drankye/haox/blob/master/haox-asn1/README.md) for details.
 
-### Kerberos Crypto and encryption types
+### Kerberos Crypto and Encryption Types
 Implementing des, des3, rc4, aes, camellia encryption and corresponding checksum types
 Interoperates with MIT Kerberos and Microsoft AD
 Independent with Kerberos codes in JRE, but rely on JCE
