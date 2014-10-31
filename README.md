@@ -5,8 +5,8 @@ Haox aims for a Java Kerberos binding and provides richful, inituitive and inter
 
 ### Motivations  
 * Aims as a Java Kerberos binding, with richful and integrated facilities for both client and server sides.
-+ Provide client APIs in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges.
-+ Provide an embeded KDC server that applications can easily integrate into products, unit tests or integration tests.
++ Provides client APIs in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges.
++ Provides an embeded KDC server that applications can easily integrate into products, unit tests or integration tests.
 + Supports FAST/Preauthentication framework to allow popular and useful authentication mechanisms.
 + Supports PKINIT mechanism to allow clients to request tickets using x509 certificate credential.
 + Supports Token Preauth mechanism to allow clients to request tickets using JWT tokens.
