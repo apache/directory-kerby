@@ -12,13 +12,14 @@ Haox is a Java client library binding for Kerberos as an effort to catch up with
 ### Status
 <pre>
 ASN-1 (done)
-Core spec types (done)
-Crypto (done)
+Kerberos core spec types (done)
+Kerberos Crypto (done)
 Keytab util (done)
 Credential Cache (done)
-AS client (going)
-Preauth framework (going)
-PKINIT (going)
+KrbClient (partial APIs done and available)
+Preauth/FAST framework (partially done)
+Token Preauth (ongoing)
+PKINIT (ongoing)
 </pre>
 
 ### The ASN-1 support
