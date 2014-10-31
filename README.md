@@ -1,30 +1,64 @@
 Haox
 ====
 
-Haox is a Java client library binding for Kerberos as an effort to catch up with latest Kerberos features. 
+Haox aims for a Java Kerberos binding and provides richful, inituitive and interoperable client library and various facilities that are desired in new environments like Hadoop and cloud. 
 
-### Motivations  
-* Provide Java client API in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges. With such API, you can write your own kinit like tool with maximum flexibility in your application.
-+ Provide new Kerberos features as soon as possible that can't just be done in JRE, like PKINIT and TokenPreauth mechanisms.
-+ Provide a simple KDC server that you can easily integrate into your unit tests and integration tests.
-+ Least dependency, it's ensured to depend only on JRE, for easy use and maintain.
+### The Initiatives  
+* Aims as a Java Kerberos binding, with richful and integrated facilities for both client and server sides.
++ Provides client APIs in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges.
++ Provides an embeded KDC server that applications can easily integrate into products, unit tests or integration tests.
++ Supports FAST/Preauthentication framework to allow popular and useful authentication mechanisms.
++ Supports PKINIT mechanism to allow clients to request tickets using x509 certificate credential.
++ Supports Token Preauth mechanism to allow clients to request tickets using JWT tokens.
++ Provides support for JAAS, GSSAPI and SASL frameworks that applications can leverage.
++ Least dependency, the core part is ensured to depend only on JRE, for easy use and maintain.
 
 ### Status
+As follows, with the core and critical parts done, important features are still ongoing.
+It's going to release 0.1 version in the end year, and do not suggest using it in production prior to the release.
 <pre>
 ASN-1 (done)
-Core spec types (done)
-Crypto (done)
+Kerberos core spec types (done)
+Kerberos Crypto (done)
+Embedded KDC (the core done)
+KrbClient (partial APIs done and available)
+Preauth/FAST framework (partially done)
+Token Preauth (ongoing)
+PKINIT (ongoing)
 Keytab util (done)
 Credential Cache (done)
-AS client (going)
-Preauth framework (going)
-PKINIT (going)
+</pre>
+
+### KrbClient APIs
+* Initiate a KrbClient
+<pre>
+KrbClient krbClient = new KrbClient(kdcHost, kdcPort);
+</pre>
+* Request a TGT with user plain password credential
+<pre>
+krbClient.requestTgtTicket(principal, password);
+</pre>
+* Request a TGT with user x509 certificate credential
+<pre>
+krbClient.requestTgtTicket(principal, certificate);
+</pre>
+* Request a TGT with user token credential
+<pre>
+krbClient.requestTgtTicket(principal, kerbToken);
+</pre>
+* Request a service ticket with user TGT credential for a server
+<pre>
+krbClient.requestServiceTicket(tgt, serverPrincipal);
+</pre>
+* Request a service ticket with user AccessToken credential for a server
+<pre>
+krbClient.requestServiceTicket(accessToken, serverPrincipal);
 </pre>
 
 ### The ASN-1 support
 Please look at [haox-asn1](https://github.com/drankye/haox/blob/master/haox-asn1/README.md) for details.
 
-### Kerberos Crypto and encryption types
+### Kerberos Crypto and Encryption Types
 Implementing des, des3, rc4, aes, camellia encryption and corresponding checksum types
 Interoperates with MIT Kerberos and Microsoft AD
 Independent with Kerberos codes in JRE, but rely on JCE
@@ -49,12 +83,16 @@ Independent with Kerberos codes in JRE, but rely on JCE
 | camellia | The Camellia family: camellia256-cts-cmac and camellia128-cts-cmac |
 
 ### Dependency
-All the project including its subprojects will only depend on JRE, which ensures it can be easily embeded and integrated into your applications and systems. Currently it depends on SLF4J but that will be removed later.
+The core part is ensured to only depend on JRE. Every external dependency is taken carefully and maintained separately.
 
 ##### Sub Projects
 - haox-asn1. A model driven ASN-1 encoding and decoding framework
 - haox-event. A pure event driven application framework aiming to construct applications of asynchronous and concurrent handlers. It includes UDP and TCP transport based on pure Java NIO and concurrency pattern.
 - haox-config. A unified configuration API that aims to support various configuration file formats, like XML, JNI, CSV and Java Properties file.
+- haox-token. Implements a JWT token API for Kerberos that's defined in TokenPreauth drafts.
+
+### Contribution
+Your feedback and contributions are very welcome. Please contact kaiDOTzhengATintelDOTcom. Thanks.
 
 ### License
 Apache License V2.0
