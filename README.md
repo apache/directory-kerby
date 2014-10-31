@@ -88,8 +88,8 @@ The core part is ensured to only depend on JRE. Every external dependency is tak
 - haox-config. A unified configuration API that aims to support various configuration file formats, like XML, JNI, CSV and Java Properties file.
 - haox-token. Implements a JWT token API for Kerberos that's defined in TokenPreauth drafts.
 
-### Contribution and Contact
-Contributions are welcome. Please contact kaiDOTzhengATintelDOTcom. Thanks.
+### Contribution
+Your feedback and contributions are very welcome. Please contact kaiDOTzhengATintelDOTcom. Thanks.
 
 ### License
 Apache License V2.0
