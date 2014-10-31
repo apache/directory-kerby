@@ -14,16 +14,19 @@ Haox aims for a Java Kerberos binding and provides richful, inituitive and inter
 + Least dependency, the core part is ensured to depend only on JRE, for easy use and maintain.
 
 ### Status
+As follows, with the core and critical parts done, important features are still ongoing.
+It's going to release 0.1 version in the end year, and do not suggest using it in production prior to the release.
 <pre>
 ASN-1 (done)
 Kerberos core spec types (done)
 Kerberos Crypto (done)
-Keytab util (done)
-Credential Cache (done)
+Embedded KDC (the core done)
 KrbClient (partial APIs done and available)
 Preauth/FAST framework (partially done)
 Token Preauth (ongoing)
 PKINIT (ongoing)
+Keytab util (done)
+Credential Cache (done)
 </pre>
 
 ### KrbClient APIs
