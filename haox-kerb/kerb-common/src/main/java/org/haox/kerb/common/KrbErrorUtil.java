@@ -1,4 +1,4 @@
-package org.haox.kerb.client;
+package org.haox.kerb.common;
 
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.pa.PaDataEntry;

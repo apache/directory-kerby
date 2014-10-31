@@ -9,6 +9,7 @@ import org.haox.kerb.client.request.AsRequest;
 import org.haox.kerb.client.request.CertAsRequest;
 import org.haox.kerb.client.request.TgsRequest;
 import org.haox.kerb.client.request.TokenAsRequest;
+import org.haox.kerb.common.KrbErrorUtil;
 import org.haox.kerb.common.KrbStreamingDecoder;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
@@ -17,7 +18,6 @@ import org.haox.kerb.spec.type.common.KrbErrorCode;
 import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.ticket.ServiceTicket;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
-import org.haox.kerb.spec.type.x509.Certificate;
 import org.haox.token.KerbToken;
 import org.haox.transport.Connector;
 import org.haox.transport.Transport;
@@ -26,6 +26,7 @@ import org.haox.transport.event.TransportEventType;
 import org.haox.transport.tcp.TcpConnector;
 
 import java.io.IOException;
+import java.security.cert.Certificate;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 

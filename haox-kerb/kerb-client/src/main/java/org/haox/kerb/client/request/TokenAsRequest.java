@@ -1,6 +1,7 @@
 package org.haox.kerb.client.request;
 
 import org.haox.kerb.client.KrbContext;
+import org.haox.kerb.spec.KrbException;
 import org.haox.token.KerbToken;
 
 public class TokenAsRequest extends AsRequest {
@@ -13,5 +14,10 @@ public class TokenAsRequest extends AsRequest {
 
     public void setToken(KerbToken token) {
         this.token = token;
+    }
+
+    @Override
+    public void process() throws KrbException {
+        throw new RuntimeException("To be implemented");
     }
 }
