@@ -1,13 +1,17 @@
 Haox
 ====
 
-Haox is a Java client library binding for Kerberos as an effort to catch up with latest Kerberos features. 
+Haox aims for a Java Kerberos binding and provides richful, inituitive and interoperable client library and various facilities that are desired in new environments like Hadoop and cloud. 
 
 ### Motivations  
-* Provide Java client API in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges. With such API, you can write your own kinit like tool with maximum flexibility in your application.
-+ Provide new Kerberos features as soon as possible that can't just be done in JRE, like PKINIT and TokenPreauth mechanisms.
-+ Provide a simple KDC server that you can easily integrate into your unit tests and integration tests.
-+ Least dependency, it's ensured to depend only on JRE, for easy use and maintain.
+* Aims as a Java Kerberos binding, with richful and integrated facilities in both client and server sides.
++ Provide client APIs in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges.
++ Provide a embeded KDC server that applications can easily integrate into products, unit tests or integration tests.
++ Supports FAST/Preauthentication framework to allow popular and useful authentication mechanisms.
++ Supports PKINIT mechanism to allow clients to request tickets using x509 certificate credential.
++ Supports Token Preauth mechanism to allow clients to request tickets using JWT tokens.
++ Provides support for JAAS, GSSAPI and SASL frameworks that applications can leverage.
++ Least dependency, the core part is ensured to depend only on JRE, for easy use and maintain.
 
 ### Status
 <pre>
@@ -22,6 +26,31 @@ Token Preauth (ongoing)
 PKINIT (ongoing)
 </pre>
 
+### Krb Client APIs
+* Initiate a KrbClient
+<pre>
+KrbClient krbClient = new KrbClient(kdcHost, kdcPort);
+</pre>
+* Request a TGT with user plain password credential
+<pre>
+krbClient.requestTgtTicket(principal, password);
+</pre>
+* Request a TGT with user x509 certificate credential
+<pre>
+krbClient.requestTgtTicket(principal, certificate);
+</pre>
+* Request a TGT with user token credential
+<pre>
+krbClient.requestTgtTicket(principal, kerbToken);
+</pre>
+* Request a service ticket with user TGT credential for a server
+<pre>
+krbClient.requestServiceTicket(tgt, serverPrincipal);
+</pre>
+* Request a service ticket with user AccessToken credential for a server
+<pre>
+krbClient.requestServiceTicket(accessToken, serverPrincipal);
+</pre>
 ### The ASN-1 support
 Please look at [haox-asn1](https://github.com/drankye/haox/blob/master/haox-asn1/README.md) for details.
 
