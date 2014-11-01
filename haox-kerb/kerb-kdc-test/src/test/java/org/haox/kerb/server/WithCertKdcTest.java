@@ -7,7 +7,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.Collection;
 
@@ -22,23 +24,32 @@ import java.util.Collection;
  */
 public class WithCertKdcTest extends KdcTestBase {
 
-    private Certificate cert;
+    private Certificate userCert;
 
     @Override
-    protected void setUpKdcServer() {
+    protected void setUpClient() throws Exception {
+        super.setUpClient();
+
+        loadCert();
+    }
+
+    @Override
+    protected void setUpKdcServer() throws Exception {
         super.setUpKdcServer();
         kdcServer.createPrincipals(clientPrincipal);
     }
 
     @Test
     public void testKdc() throws Exception {
+        Assert.assertNotNull(userCert);
+
         kdcServer.start();
         Assert.assertTrue(kdcServer.isStarted());
         krbClnt.init();
 
         TgtTicket tgt = null;
         try {
-            tgt = krbClnt.requestTgtTicket(clientPrincipal, cert);
+            tgt = krbClnt.requestTgtTicket(clientPrincipal, userCert);
         } catch (KrbException te) {
             Assert.assertTrue(te.getMessage().contains("timeout"));
             return;
@@ -49,9 +60,11 @@ public class WithCertKdcTest extends KdcTestBase {
         Assert.assertNull(tkt);
     }
 
-    private void loadCert() {
-        //CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-        //Collection<? extends Certificate> certs =
-        //        (Collection<? extends Certificate>) certFactory.generateCertificates(new ByteArrayInputStream(FileUtils.readFileToByteArray(serverCertFile)));
+    private void loadCert() throws CertificateException {
+        InputStream res = getClass().getResourceAsStream("/usercert.pem");
+        CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+        Collection<? extends Certificate> certs =
+                (Collection<? extends Certificate>) certFactory.generateCertificates(res);
+        userCert = certs.iterator().next();
     }
 }

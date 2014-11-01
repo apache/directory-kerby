@@ -10,7 +10,7 @@ public class KdcTest extends KdcTestBase {
     private String password = "123456";
 
     @Override
-    protected void setUpKdcServer() {
+    protected void setUpKdcServer() throws Exception {
         super.setUpKdcServer();
         kdcServer.createPrincipal(clientPrincipal, password);
     }

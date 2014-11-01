@@ -1,12 +1,8 @@
 package org.haox.kerb.server;
 
 import org.haox.kerb.client.KrbClient;
-import org.haox.kerb.spec.type.ticket.ServiceTicket;
-import org.haox.kerb.spec.type.ticket.TgtTicket;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 public abstract class KdcTestBase {
 
@@ -26,7 +22,7 @@ public abstract class KdcTestBase {
         setUpClient();
     }
 
-    protected void setUpKdcServer() {
+    protected void setUpKdcServer() throws Exception {
         kdcServer = new TestKdcServer();
         kdcServer.setKdcHost(hostname);
         kdcServer.setKdcPort(port);
@@ -39,7 +35,7 @@ public abstract class KdcTestBase {
         kdcServer.createPrincipals(serverPrincipal);
     }
 
-    protected void setUpClient() {
+    protected void setUpClient() throws Exception {
         krbClnt = new KrbClient(hostname, port);
         krbClnt.setTimeout(5);
         krbClnt.setKdcRealm(kdcServer.getKdcRealm());

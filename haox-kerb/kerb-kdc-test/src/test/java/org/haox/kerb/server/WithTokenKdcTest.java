@@ -12,7 +12,7 @@ public class WithTokenKdcTest extends KdcTestBase {
     private KerbToken token;
 
     @Override
-    protected void setUpKdcServer() {
+    protected void setUpKdcServer() throws Exception {
         super.setUpKdcServer();
         kdcServer.createPrincipals(clientPrincipal);
     }
