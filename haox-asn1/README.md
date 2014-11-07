@@ -26,7 +26,7 @@ With the following definition from Kerberos protocol
  ```
  
 You can model AuthzDataEntry as follows
-```
+```java
 public class AuthzDataEntry extends Asn1SequenceType {
     static int AD_TYPE = 0;
     static int AD_DATA = 1;
@@ -50,7 +50,7 @@ public class AuthzDataEntry extends Asn1SequenceType {
 ```
 
 And then define AuthorizationData simply
-```
+```java
 public class AuthorizationData extends Asn1SequenceOf<AuthzDataEntry> {
 
 }
@@ -89,7 +89,7 @@ EmployeeNumber ::= [APPLICATION 2] IMPLICIT INTEGER
 Date ::= [APPLICATION 3] IMPLICIT VisibleString -- YYYYMMDD
 ```
 Similarly as above, we can have (from the unit test codes):
-```
+```java
 public class PersonnelRecord extends TaggingSet {
     private static int NAME = 0;
     private static int TITLE = 1;
