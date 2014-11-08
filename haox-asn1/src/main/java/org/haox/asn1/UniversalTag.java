@@ -3,6 +3,7 @@ package org.haox.asn1;
 public enum UniversalTag
 {
     UNKNOWN             (-1),
+    CHOICE              (-2), // Only for internal using
     BOOLEAN             (0x01),
     INTEGER             (0x02),
     BIT_STRING          (0x03),

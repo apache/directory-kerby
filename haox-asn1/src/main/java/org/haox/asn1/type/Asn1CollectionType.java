@@ -55,7 +55,7 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
             field = fields[i];
             if (field != null) {
                 if (fieldInfos[i].isTagged()) {
-                    taggingOption = taggingOption = fieldInfos[i].getTaggingOption();
+                    taggingOption = fieldInfos[i].getTaggingOption();
                     field.taggedEncode(buffer, taggingOption);
                 } else {
                     field.encode(buffer);

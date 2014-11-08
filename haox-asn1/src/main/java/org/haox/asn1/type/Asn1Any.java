@@ -3,6 +3,7 @@ package org.haox.asn1.type;
 import org.haox.asn1.LimitedByteBuffer;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
 
@@ -13,6 +14,11 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     @Override
     protected int encodingBodyLength() {
         return ((AbstractAsn1Type) getValue()).encodingBodyLength();
+    }
+
+    @Override
+    protected void encodeBody(ByteBuffer buffer) {
+        ((AbstractAsn1Type) getValue()).encodeBody(buffer);
     }
 
     @Override
