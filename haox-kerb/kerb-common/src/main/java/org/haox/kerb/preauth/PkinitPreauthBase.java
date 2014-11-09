@@ -7,8 +7,8 @@ public class PkinitPreauthBase implements Preauth {
     private static String NAME = "PKINIT";
     private static int VERSION = 1;
     private static PaDataType[] PA_TYPES = new PaDataType[] {
+            PaDataType.PK_AS_REQ,
             PaDataType.PK_AS_REP,
-            PaDataType.AP_REQ
     };
 
     @Override
