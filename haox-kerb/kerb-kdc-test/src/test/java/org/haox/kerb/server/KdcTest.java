@@ -21,10 +21,10 @@ public class KdcTest extends KdcTestBase {
         Assert.assertTrue(kdcServer.isStarted());
 
         krbClnt.init();
-        TgtTicket tgt = krbClnt.requestTgtTicket(clientPrincipal, password);
+        TgtTicket tgt = krbClnt.requestTgtTicket(clientPrincipal, password, null);
         Assert.assertNotNull(tgt);
 
-        ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal);
+        ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal, null);
         Assert.assertNotNull(tkt);
     }
 }

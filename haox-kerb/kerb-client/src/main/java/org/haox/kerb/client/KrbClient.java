@@ -5,10 +5,7 @@ import org.haox.event.EventHub;
 import org.haox.event.EventWaiter;
 import org.haox.kerb.client.event.KrbClientEvent;
 import org.haox.kerb.client.event.KrbClientEventType;
-import org.haox.kerb.client.request.AsRequest;
-import org.haox.kerb.client.request.CertAsRequest;
-import org.haox.kerb.client.request.TgsRequest;
-import org.haox.kerb.client.request.TokenAsRequest;
+import org.haox.kerb.client.request.*;
 import org.haox.kerb.common.KrbErrorUtil;
 import org.haox.kerb.common.KrbStreamingDecoder;
 import org.haox.kerb.spec.KrbErrorException;
@@ -26,6 +23,7 @@ import org.haox.transport.event.TransportEventType;
 import org.haox.transport.tcp.TcpConnector;
 
 import java.io.IOException;
+import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -120,14 +118,19 @@ public class KrbClient {
      * Request a TGT with user plain credential
      * @param principal
      * @param password
+     * @param options
      * @return
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(String principal, String password) throws KrbException {
-        AsRequest asRequest = new AsRequest(context);
+    public TgtTicket requestTgtTicket(String principal, String password,
+                                      KrbOptions options) throws KrbException {
+        if (options == null) options = new KrbOptions();
+
+        AsRequest asRequest = new AsRequestWithPasswd(context);
         asRequest.setClientPrincipal(new PrincipalName(principal));
-        asRequest.setPassword(password);
         asRequest.setTransport(transport);
+        options.add(KrbOption.USER_PASSWD, password);
+        asRequest.setKrbOptions(options);
         return requestTgtTicket(asRequest);
     }
 
@@ -135,13 +138,20 @@ public class KrbClient {
      * Request a TGT with user x509 certificate credential
      * @param principal
      * @param certificate
+     * @param privateKey
+     * @param options
      * @return
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(String principal, Certificate certificate) throws KrbException {
-        CertAsRequest asRequest = new CertAsRequest(context);
+    public TgtTicket requestTgtTicket(String principal, Certificate certificate,
+                                      PrivateKey privateKey, KrbOptions options) throws KrbException {
+        if (options == null) options = new KrbOptions();
+
+        AsRequestWithCert asRequest = new AsRequestWithCert(context);
         asRequest.setClientPrincipal(new PrincipalName(principal));
-        asRequest.setCertificate(certificate);
+        options.add(KrbOption.PKINIT_X509_CERTIFICATE, certificate);
+        options.add(KrbOption.PKINIT_X509_PRIVATE_KEY, privateKey);
+        asRequest.setKrbOptions(options);
         asRequest.setTransport(transport);
         return requestTgtTicket(asRequest);
     }
@@ -150,14 +160,20 @@ public class KrbClient {
      * Request a TGT with user token credential
      * @param principal
      * @param token
+     * @param options
      * @return
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(String principal, KerbToken token) throws KrbException {
-        TokenAsRequest asRequest = new TokenAsRequest(context);
+    public TgtTicket requestTgtTicket(String principal, KerbToken token,
+                                      KrbOptions options) throws KrbException {
+        if (options == null) options = new KrbOptions();
+
+        AsRequestWithToken asRequest = new AsRequestWithToken(context);
         asRequest.setClientPrincipal(new PrincipalName(principal));
         asRequest.setToken(token);
         asRequest.setTransport(transport);
+        options.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
+        asRequest.setKrbOptions(options);
         return requestTgtTicket(asRequest);
     }
 
@@ -166,13 +182,16 @@ public class KrbClient {
      * @param clientPrincipal
      * @param password
      * @param serverPrincipal
+     * @param options
      * @return
      * @throws KrbException
      */
     public ServiceTicket requestServiceTicket(String clientPrincipal, String password,
-                                              String serverPrincipal) throws KrbException {
-        TgtTicket tgt = requestTgtTicket(clientPrincipal, password);
-        return requestServiceTicket(tgt, serverPrincipal);
+                                              String serverPrincipal, KrbOptions options) throws KrbException {
+        if (options == null) options = new KrbOptions();
+
+        TgtTicket tgt = requestTgtTicket(clientPrincipal, password, options);
+        return requestServiceTicket(tgt, serverPrincipal, options);
     }
 
     /**
@@ -180,13 +199,16 @@ public class KrbClient {
      * @param clientPrincipal
      * @param token
      * @param serverPrincipal
+     * @param options
      * @return
      * @throws KrbException
      */
     public ServiceTicket requestServiceTicket(String clientPrincipal, KerbToken token,
-                                              String serverPrincipal) throws KrbException {
-        TgtTicket tgt = requestTgtTicket(clientPrincipal, token);
-        return requestServiceTicket(tgt, serverPrincipal);
+                                              String serverPrincipal, KrbOptions options) throws KrbException {
+        if (options == null) options = new KrbOptions();
+
+        TgtTicket tgt = requestTgtTicket(clientPrincipal, token, options);
+        return requestServiceTicket(tgt, serverPrincipal, options);
     }
 
     private TgtTicket requestTgtTicket(AsRequest tgtTktReq) throws KrbException {
@@ -228,7 +250,10 @@ public class KrbClient {
      * @return
      * @throws KrbException
      */
-    public ServiceTicket requestServiceTicket(TgtTicket tgt, String serverPrincipal) throws KrbException {
+    public ServiceTicket requestServiceTicket(TgtTicket tgt, String serverPrincipal,
+                                              KrbOptions options) throws KrbException {
+        if (options == null) options = new KrbOptions();
+
         TgsRequest ticketReq = new TgsRequest(context, tgt);
         ticketReq.setServerPrincipal(new PrincipalName(serverPrincipal));
         ticketReq.setTransport(transport);

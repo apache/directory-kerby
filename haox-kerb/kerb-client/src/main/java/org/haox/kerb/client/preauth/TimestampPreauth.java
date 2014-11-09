@@ -1,6 +1,7 @@
 package org.haox.kerb.client.preauth;
 
 import org.haox.kerb.client.KrbContext;
+import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
@@ -13,12 +14,19 @@ import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.pa.PaEncTsEnc;
 
+import java.util.List;
+
 public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth {
 
     private KrbContext context;
 
     public void init(KrbContext context) {
         this.context = context;
+    }
+
+    @Override
+    public void setOptions(List<KrbOption> options) {
+        
     }
 
     @Override

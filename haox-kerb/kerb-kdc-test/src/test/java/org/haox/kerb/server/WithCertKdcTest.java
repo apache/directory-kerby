@@ -49,14 +49,14 @@ public class WithCertKdcTest extends KdcTestBase {
 
         TgtTicket tgt = null;
         try {
-            tgt = krbClnt.requestTgtTicket(clientPrincipal, userCert);
+            tgt = krbClnt.requestTgtTicket(clientPrincipal, userCert, null, null);
         } catch (KrbException te) {
             Assert.assertTrue(te.getMessage().contains("timeout"));
             return;
         }
         Assert.assertNull(tgt);
 
-        ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal);
+        ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal, null);
         Assert.assertNull(tkt);
     }
 

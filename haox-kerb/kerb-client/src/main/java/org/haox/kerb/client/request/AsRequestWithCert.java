@@ -2,18 +2,19 @@ package org.haox.kerb.client.request;
 
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.spec.KrbException;
-import org.haox.token.KerbToken;
 
-public class TokenAsRequest extends AsRequest {
+import java.security.cert.Certificate;
 
-    private KerbToken token;
+public class AsRequestWithCert extends AsRequest {
 
-    public TokenAsRequest(KrbContext context) {
+    private Certificate cert;
+
+    public AsRequestWithCert(KrbContext context) {
         super(context);
     }
 
-    public void setToken(KerbToken token) {
-        this.token = token;
+    public void setCertificate(Certificate cert) {
+        this.cert = cert;
     }
 
     @Override
