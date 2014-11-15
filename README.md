@@ -1,10 +1,10 @@
 Haox
 ====
 
-Haox aims for a Java Kerberos binding and provides richful, inituitive and interoperable client library and various facilities that are desired in new environments like Hadoop and cloud. 
+Haox aims for a Java Kerberos binding, and provides richful, inituitive and interoperable implementation, library and various facilities that integrate Kerberos, PKI and token (OAuth) as desired in modern environments such as mobile, cloud and Hadoop. 
 
-### The Initiatives  
-* Aims as a Java Kerberos binding, with richful and integrated facilities for both client and server sides.
+### The Initiatives/Goals 
+* Aims as a Java Kerberos binding, with richful and integrated facilities that integrate Kerberos, PKI and token (OAuth) for both client and server sides.
 + Provides client APIs in Kerberos protocol level to interact with a KDC server thru AS and TGS exchanges.
 + Provides an embeded KDC server that applications can easily integrate into products, unit tests or integration tests.
 + Supports FAST/Preauthentication framework to allow popular and useful authentication mechanisms.
@@ -90,9 +90,6 @@ The core part is ensured to only depend on JRE. Every external dependency is tak
 - haox-event. A pure event driven application framework aiming to construct applications of asynchronous and concurrent handlers. It includes UDP and TCP transport based on pure Java NIO and concurrency pattern.
 - haox-config. A unified configuration API that aims to support various configuration file formats, like XML, JNI, CSV and Java Properties file.
 - haox-token. Implements a JWT token API for Kerberos that's defined in TokenPreauth drafts.
-
-### Contribution
-Your feedback and contributions are very welcome. Please contact kaiDOTzhengATintelDOTcom. Thanks.
 
 ### License
 Apache License V2.0
