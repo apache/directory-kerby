@@ -1,20 +1,14 @@
 package org.haox.kerb.client.preauth;
 
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.client.KrbOption;
-import org.haox.kerb.common.EncryptionUtil;
+import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
 import org.haox.kerb.preauth.PkinitPreauthBase;
-import org.haox.kerb.preauth.TimestampPreauthBase;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.pa.PaData;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
-import org.haox.kerb.spec.type.pa.PaEncTsEnc;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +27,7 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     }
 
     @Override
-    public void setOptions(List<KrbOption> options) {
+    public void setPreauthOptions(KrbOptions options) {
 
     }
 

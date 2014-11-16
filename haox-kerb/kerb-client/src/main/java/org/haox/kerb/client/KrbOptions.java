@@ -8,7 +8,9 @@ public class KrbOptions {
     private Map<KrbOption, KrbOption> options = new HashMap<KrbOption, KrbOption>(4);
 
     public void add(KrbOption option) {
-        options.put(option, option);
+        if (option != null) {
+            options.put(option, option);
+        }
     }
 
     public void add(KrbOption option, Object optionValue) {
@@ -18,6 +20,14 @@ public class KrbOptions {
 
     public boolean contains(KrbOption option) {
         return options.containsKey(option);
+    }
+
+    public KrbOption getOption(KrbOption option) {
+        if (! options.containsKey(option)) {
+            return null;
+        }
+
+        return options.get(option);
     }
 
     public Object getOptionValue(KrbOption option) {

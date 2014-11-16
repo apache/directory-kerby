@@ -5,14 +5,10 @@ import org.haox.kerb.common.KrbStreamingDecoder;
 import org.haox.kerb.identity.IdentityService;
 import org.haox.transport.Acceptor;
 import org.haox.transport.tcp.TcpAcceptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public abstract class AbstractKdcServer {
-    private static final Logger logger = LoggerFactory.getLogger(AbstractKdcServer.class);
-
+public class KdcServer {
     private String kdcHost;
     private short kdcPort;
     private String kdcRealm;
@@ -27,7 +23,7 @@ public abstract class AbstractKdcServer {
     protected IdentityService identityService;
     protected File workDir;
 
-    public AbstractKdcServer() {
+    public KdcServer() {
         kdcConfig = new KdcConfig();
     }
 
@@ -35,10 +31,6 @@ public abstract class AbstractKdcServer {
         initConfig();
 
         initWorkDir();
-
-        initIdentityService();
-
-        initHandler();
     }
 
     protected void initWorkDir() {
@@ -57,7 +49,6 @@ public abstract class AbstractKdcServer {
     protected void initConfig() {}
 
     public void start() {
-        logger.info("Starting " + getServiceName());
         try {
             doStart();
         } catch (Exception e) {
@@ -65,8 +56,6 @@ public abstract class AbstractKdcServer {
         }
 
         started = true;
-
-        logger.info("Started " + serviceName);
     }
 
     public String getKdcRealm() {
@@ -107,6 +96,8 @@ public abstract class AbstractKdcServer {
     }
 
     protected void doStart() throws Exception {
+        prepareHandler();
+
         this.eventHub = new EventHub();
 
         eventHub.register(kdcHandler);
@@ -118,7 +109,7 @@ public abstract class AbstractKdcServer {
         acceptor.listen(getKdcHost(), getKdcPort());
     }
 
-    private void initHandler() {
+    private void prepareHandler() {
         this.kdcHandler = new KdcHandler();
         kdcHandler.setConfig(kdcConfig);
         kdcHandler.setIdentityService(identityService);
@@ -127,13 +118,11 @@ public abstract class AbstractKdcServer {
     }
 
     public void stop() {
-        logger.info("Stopping " + serviceName);
         try {
             doStop();
         } catch (Exception e) {
             throw new RuntimeException("Failed to stop " + getServiceName());
         }
-        logger.info("Stopped " + serviceName);
     }
 
     protected void doStop() throws Exception {
@@ -167,5 +156,7 @@ public abstract class AbstractKdcServer {
         return identityService;
     }
 
-    protected abstract void initIdentityService();
+    protected void setIdentityService(IdentityService identityService) {
+        this.identityService = identityService;
+    }
 }

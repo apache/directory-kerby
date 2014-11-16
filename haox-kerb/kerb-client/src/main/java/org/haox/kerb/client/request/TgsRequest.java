@@ -32,6 +32,21 @@ public class TgsRequest extends KdcRequest {
             public EncryptionKey getAsKey() throws KrbException {
                 return getClientKey();
             }
+
+            @Override
+            public String askFor(String question, String challenge) {
+                return TgsRequest.this.askFor(question, challenge);
+            }
+
+            @Override
+            public Object getCacheValue(String key) {
+                return credCache.get(key);
+            }
+
+            @Override
+            public void cacheValue(String key, Object value) {
+                credCache.put(key, value);
+            }
         };
     }
 
@@ -50,11 +65,13 @@ public class TgsRequest extends KdcRequest {
 
     @Override
     public void process() throws KrbException {
+        super.process();
+
         TgsReq tgsReq = new TgsReq();
 
         KdcReqBody tgsReqBody = makeReqBody();
         tgsReq.setReqBody(tgsReqBody);
-        //tgsReq.setPaData(preparePaData());
+        //tgsReq.setPaData(getPreauthData());
 
         ApReq apReq = makeApReq();
         PaDataEntry authnHeader = new PaDataEntry();

@@ -1,21 +1,24 @@
 package org.haox.kerb.server;
 
+import org.haox.kerb.identity.IdentityService;
 import org.haox.kerb.identity.backend.SimpleIdentityBackend;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public class SimpleKdcServer extends AbstractKdcServer {
-    private static final Logger logger = LoggerFactory.getLogger(SimpleKdcServer.class);
+public class SimpleKdcServer extends KdcServer {
 
     public SimpleKdcServer() {
         super();
     }
 
-    @Override
+    public void init() {
+        super.init();
+        initIdentityService();
+    }
+
     protected void initIdentityService() {
         File identityFile = new File(workDir, "simplekdb.dat");
-        this.identityService = new SimpleIdentityBackend(identityFile);
+        IdentityService identityService = new SimpleIdentityBackend(identityFile);
+        setIdentityService(identityService);
     }
 }

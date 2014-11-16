@@ -1,6 +1,8 @@
 package org.haox.kerb.client.preauth;
 
 import org.haox.kerb.client.KrbContext;
+import org.haox.kerb.client.KrbOption;
+import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
 
@@ -17,6 +19,16 @@ public class PreauthHandler {
         KrbPreauth preauth = new TimestampPreauth();
         preauth.init(context);
         preauths.add(preauth);
+
+        preauth = new PkinitPreauth();
+        preauth.init(context);
+        preauths.add(preauth);
+    }
+
+    public void setPreauthOptions(KrbOptions preauthOptions) throws KrbException {
+        for (KrbPreauth preauth : preauths) {
+            preauth.setPreauthOptions(preauthOptions);
+        }
     }
 
     public void tryFirst(PreauthContext preauthContext, PaData paData) throws KrbException {

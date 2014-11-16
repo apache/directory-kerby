@@ -127,11 +127,9 @@ public class KrbClient {
         if (options == null) options = new KrbOptions();
 
         AsRequest asRequest = new AsRequestWithPasswd(context);
-        asRequest.setClientPrincipal(new PrincipalName(principal));
-        asRequest.setTransport(transport);
         options.add(KrbOption.USER_PASSWD, password);
         asRequest.setKrbOptions(options);
-        return requestTgtTicket(asRequest);
+        return requestTgtTicket(principal, asRequest);
     }
 
     /**
@@ -148,12 +146,27 @@ public class KrbClient {
         if (options == null) options = new KrbOptions();
 
         AsRequestWithCert asRequest = new AsRequestWithCert(context);
-        asRequest.setClientPrincipal(new PrincipalName(principal));
         options.add(KrbOption.PKINIT_X509_CERTIFICATE, certificate);
         options.add(KrbOption.PKINIT_X509_PRIVATE_KEY, privateKey);
         asRequest.setKrbOptions(options);
-        asRequest.setTransport(transport);
-        return requestTgtTicket(asRequest);
+        return requestTgtTicket(principal, asRequest);
+    }
+
+    /**
+     * Request a TGT with using Anonymous PKINIT
+     * @param principal
+     * @param options
+     * @return
+     * @throws KrbException
+     */
+    public TgtTicket requestTgtTicket(String principal, KrbOptions options) throws KrbException {
+        if (options == null) options = new KrbOptions();
+
+        AsRequestWithCert asRequest = new AsRequestWithCert(context);
+        options.add(KrbOption.PKINIT_X509_ANONYMOUS);
+        asRequest.setKrbOptions(options);
+
+        return requestTgtTicket(principal, asRequest);
     }
 
     /**
@@ -169,12 +182,10 @@ public class KrbClient {
         if (options == null) options = new KrbOptions();
 
         AsRequestWithToken asRequest = new AsRequestWithToken(context);
-        asRequest.setClientPrincipal(new PrincipalName(principal));
         asRequest.setToken(token);
-        asRequest.setTransport(transport);
         options.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
         asRequest.setKrbOptions(options);
-        return requestTgtTicket(asRequest);
+        return requestTgtTicket(principal, asRequest);
     }
 
     /**
@@ -211,7 +222,10 @@ public class KrbClient {
         return requestServiceTicket(tgt, serverPrincipal, options);
     }
 
-    private TgtTicket requestTgtTicket(AsRequest tgtTktReq) throws KrbException {
+    private TgtTicket requestTgtTicket(String clientPrincipal, AsRequest tgtTktReq) throws KrbException {
+        tgtTktReq.setClientPrincipal(new PrincipalName(clientPrincipal));
+        tgtTktReq.setTransport(transport);
+
         try {
             return doRequestTgtTicket(tgtTktReq);
         } catch(KrbErrorException e) {
@@ -223,7 +237,7 @@ public class KrbClient {
                     throw new KrbException("Failed to decode and get etypes from krbError", ioe);
                 }
                 tgtTktReq.setPreauthRequired(true);
-                return requestTgtTicket(tgtTktReq);
+                return requestTgtTicket(clientPrincipal, tgtTktReq);
             }
             throw e;
         }

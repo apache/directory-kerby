@@ -1,7 +1,7 @@
 package org.haox.kerb.client.preauth;
 
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.client.KrbOption;
+import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
@@ -32,7 +32,7 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
     }
 
     @Override
-    public void setOptions(List<KrbOption> options) {
+    public void setPreauthOptions(KrbOptions options) {
         
     }
 

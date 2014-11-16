@@ -1,7 +1,7 @@
 package org.haox.kerb.client.preauth;
 
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.client.KrbOption;
+import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.preauth.PaFlags;
 import org.haox.kerb.preauth.Preauth;
 import org.haox.kerb.spec.KrbException;
@@ -25,7 +25,7 @@ public interface KrbPreauth extends Preauth {
     /**
      * Set krb options passed from user
      */
-    public void setOptions(List<KrbOption> options);
+    public void setPreauthOptions(KrbOptions preauthOptions);
 
     /**
      * When first request to server, any paData to provide?

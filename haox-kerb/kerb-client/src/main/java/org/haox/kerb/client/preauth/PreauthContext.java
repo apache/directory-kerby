@@ -5,7 +5,7 @@ import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 
-public class PreauthContext {
+public abstract class PreauthContext {
 
     /**
      * Get the client-supplied reply key, possibly derived from password
@@ -31,6 +31,8 @@ public class PreauthContext {
         return null;
     }
 
+    public abstract String askFor(String question, String challenge);
+
     /**
      * Get a pointer to the FAST armor key, or NULL if the client is not using FAST.
      */
@@ -51,4 +53,18 @@ public class PreauthContext {
     public KerberosTime getPreauthTime() {
         return KerberosTime.now();
     }
+
+    /**
+     * Get a state item from an input ccache, which may allow it
+     * to retrace the steps it took last time.  The returned data string is an
+     * alias and should not be freed.
+     */
+    public abstract Object getCacheValue(String key);
+
+    /**
+     * Set a state item which will be recorded to an output
+     * ccache, if the calling application supplied one.  Both key and data
+     * should be valid UTF-8 text.
+     */
+    public abstract void cacheValue(String key, Object value);
 }

@@ -15,21 +15,12 @@ import java.util.List;
 public class AsRequest extends KdcRequest {
 
     private PrincipalName clientPrincipal;
-    private KrbOptions krbOptions;
     private EncryptionKey clientKey;
 
     public AsRequest(KrbContext context) {
         super(context);
 
         setServerPrincipal(makeTgsPrincipal());
-    }
-
-    public void setKrbOptions(KrbOptions options) {
-        this.krbOptions = options;
-    }
-
-    public KrbOptions getKrbOptions() {
-        return krbOptions;
     }
 
     @Override
@@ -41,6 +32,21 @@ public class AsRequest extends KdcRequest {
 
             public void setAsKey(EncryptionKey asKey) {
                 setClientKey(asKey);
+            }
+
+            @Override
+            public String askFor(String question, String challenge) {
+                return AsRequest.this.askFor(question, challenge);
+            }
+
+            @Override
+            public Object getCacheValue(String key) {
+                return credCache.get(key);
+            }
+
+            @Override
+            public void cacheValue(String key, Object value) {
+                credCache.put(key, value);
             }
         };
     }
@@ -63,11 +69,13 @@ public class AsRequest extends KdcRequest {
 
     @Override
     public void process() throws KrbException {
+        super.process();
+
         KdcReqBody body = makeReqBody();
 
         AsReq asReq = new AsReq();
         asReq.setReqBody(body);
-        asReq.setPaData(preparePaData());
+        asReq.setPaData(getPreauthData());
 
         setKdcReq(asReq);
     }

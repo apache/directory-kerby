@@ -2,6 +2,8 @@ package org.haox.kerb.client.request;
 
 import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.client.KrbContext;
+import org.haox.kerb.client.KrbOption;
+import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.client.preauth.PreauthHandler;
 import org.haox.kerb.crypto.EncryptionHandler;
@@ -13,12 +15,12 @@ import org.haox.kerb.spec.type.kdc.KdcRep;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.kdc.KdcReqBody;
 import org.haox.kerb.spec.type.pa.PaData;
+import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.transport.Transport;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A wrapper for KdcReq request
@@ -27,6 +29,7 @@ public abstract class KdcRequest {
     private KrbContext context;
     private Transport transport;
 
+    private KrbOptions krbOptions;
     private PrincipalName serverPrincipal;
     private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
     private KdcOptions kdcOptions = new KdcOptions();
@@ -36,11 +39,19 @@ public abstract class KdcRequest {
     private int chosenNonce;
     private KdcReq kdcReq;
     private KdcRep kdcRep;
-
+    protected Map<String, Object> credCache;
+    protected PaDataType selectedPreauthType;
+    protected PaDataType allowedPreauthType;
     private PreauthHandler preauthHandler;
+    private PaData preauthData;
+    private boolean isRetrying;
 
     public KdcRequest(KrbContext context) {
         this.context = context;
+        this.isRetrying = false;
+        this.credCache = new HashMap<String, Object>();
+        this.selectedPreauthType = PaDataType.NONE;
+        this.allowedPreauthType = PaDataType.NONE;
     }
 
     public void setPreauthHandler(PreauthHandler preauthHandler) {
@@ -55,16 +66,22 @@ public abstract class KdcRequest {
         return this.transport;
     }
 
+    public void setKrbOptions(KrbOptions options) {
+        this.krbOptions = options;
+    }
+
+    public KrbOptions getKrbOptions() {
+        return krbOptions;
+    }
+
     protected abstract PreauthContext getPreauthContext();
 
-    protected PaData preparePaData() throws KrbException {
-        PaData paData = new PaData();
+    protected void loadCredCache() {
+        // TODO
+    }
 
-        if (isPreauthRequired()) {
-            preauthHandler.tryFirst(getPreauthContext(), paData);
-        }
-
-        return paData;
+    protected PaData getPreauthData() throws KrbException {
+        return preauthData;
     }
 
     public KdcReq getKdcReq() {
@@ -111,14 +128,7 @@ public abstract class KdcRequest {
             body.setAddresses(addresses);
         }
 
-        List<EncryptionType> etypes = getEncryptionTypes();
-        if (etypes.isEmpty()) {
-            throw new KrbException("No encryption type is configured and available");
-        }
-        body.setEtypes(etypes);
-
-        EncryptionType encryptionType = etypes.iterator().next();
-        setChosenEncryptionType(encryptionType);
+        body.setEtypes(getEncryptionTypes());
 
         return body;
     }
@@ -142,12 +152,7 @@ public abstract class KdcRequest {
         return context;
     }
 
-    protected EncryptedData encodingAndEncryptWithClientKey(Asn1Type value, KeyUsage usage) throws KrbException {
-        byte[] encodedData = value.encode();
-        return EncryptionHandler.encrypt(encodedData, getClientKey(), usage);
-    }
-
-    public byte[] decryptWithClientKey(EncryptedData data, KeyUsage usage) throws KrbException {
+    protected byte[] decryptWithClientKey(EncryptedData data, KeyUsage usage) throws KrbException {
         return EncryptionHandler.decrypt(data, getClientKey(), usage);
     }
 
@@ -228,6 +233,41 @@ public abstract class KdcRequest {
         hostAddresses.add(new HostAddress(address));
     }
 
-    public abstract void process() throws KrbException;
+    public void process() throws KrbException {
+        preauth();
+    }
+
     public abstract void processResponse(KdcRep kdcRep) throws KrbException;
+
+    protected KrbOptions getPreauthOptions() {
+        return new KrbOptions();
+    }
+
+    protected void preauth() throws KrbException {
+        loadCredCache();
+        preauthData = new PaData();
+
+        List<EncryptionType> etypes = getEncryptionTypes();
+        if (etypes.isEmpty()) {
+            throw new KrbException("No encryption type is configured and available");
+        }
+        EncryptionType encryptionType = etypes.iterator().next();
+        setChosenEncryptionType(encryptionType);
+
+        if (!isPreauthRequired()) {
+            return;
+        }
+
+        preauthHandler.setPreauthOptions(getPreauthOptions());
+
+        if (!isRetrying) {
+            preauthHandler.tryFirst(getPreauthContext(), preauthData);
+        } else {
+            preauthHandler.tryAgain(getPreauthContext(), preauthData);
+        }
+    }
+
+    protected String askFor(String question, String challenge) {
+        return null;
+    }
 }

@@ -2,6 +2,8 @@ package org.haox.kerb.preauth;
 
 import org.haox.kerb.spec.type.pa.PaDataType;
 
+import java.util.List;
+
 public class PkinitPreauthBase implements Preauth {
 
     private static String NAME = "PKINIT";
@@ -10,6 +12,8 @@ public class PkinitPreauthBase implements Preauth {
             PaDataType.PK_AS_REQ,
             PaDataType.PK_AS_REP,
     };
+
+    protected PkinitContext context;
 
     @Override
     public String getName() {

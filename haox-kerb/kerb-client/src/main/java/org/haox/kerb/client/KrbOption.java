@@ -29,6 +29,7 @@ public enum KrbOption {
     PKINIT_X509_PRIVATE_KEY("x509_privatekey", "X509 user private key"),
     PKINIT_X509_CERTIFICATE("x509_cert", "X509 user certificate"),
     PKINIT_X509_ANCHORS("x509_anchors", "X509 anchors"),
+    PKINIT_X509_ANONYMOUS("x509_anonymous", "X509 anonymous"),
     PKINIT_USING_RSA("using_rsa_or_dh", "Using RSA or DH"),
 
     TOKEN_USER_ID_TOKEN("user_id_token", "User identity token"),
