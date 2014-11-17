@@ -1,7 +1,7 @@
 package org.haox.kerb.client.request;
 
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.client.preauth.PreauthContext;
+import org.haox.kerb.client.preauth.PreauthCallback;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
@@ -27,8 +27,8 @@ public class TgsRequest extends KdcRequest {
     }
 
     @Override
-    protected PreauthContext getPreauthContext() {
-        return new PreauthContext() {
+    protected PreauthCallback getPreauthCallback() {
+        return new PreauthCallback() {
             public EncryptionKey getAsKey() throws KrbException {
                 return getClientKey();
             }

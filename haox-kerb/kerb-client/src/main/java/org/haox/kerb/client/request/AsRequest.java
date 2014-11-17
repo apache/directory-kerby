@@ -1,8 +1,7 @@
 package org.haox.kerb.client.request;
 
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.client.KrbOptions;
-import org.haox.kerb.client.preauth.PreauthContext;
+import org.haox.kerb.client.preauth.PreauthCallback;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.*;
@@ -24,8 +23,8 @@ public class AsRequest extends KdcRequest {
     }
 
     @Override
-    protected PreauthContext getPreauthContext() {
-        return new PreauthContext() {
+    protected PreauthCallback getPreauthCallback() {
+        return new PreauthCallback() {
             public EncryptionKey getAsKey() throws KrbException {
                 return getClientKey();
             }

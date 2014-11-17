@@ -1,24 +1,22 @@
-package org.haox.kerb.client.preauth;
+package org.haox.kerb.client.preauth.pkinit;
 
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOptions;
-import org.haox.kerb.common.EncryptionUtil;
+import org.haox.kerb.client.preauth.KrbPreauth;
+import org.haox.kerb.client.preauth.PreauthCallback;
+import org.haox.kerb.client.preauth.PreauthRequestContext;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
-import org.haox.kerb.preauth.TimestampPreauthBase;
+import org.haox.kerb.preauth.pkinit.PkinitPreauthBase;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.pa.PaData;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
-import org.haox.kerb.spec.type.pa.PaEncTsEnc;
 
 import java.util.Collections;
 import java.util.List;
 
-public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth {
+public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
 
     private KrbContext context;
 
@@ -40,19 +38,19 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
     @Override
     public void setPreauthOptions(PreauthCallback preauthCallback,
                                   PreauthRequestContext requestContext, KrbOptions options) {
-        
+
     }
 
     @Override
     public void tryFirst(PreauthCallback preauthCallback,
                          PreauthRequestContext requestContext, PaData paData) throws KrbException {
-        paData.addElement(makeEntry(preauthCallback));
+
     }
 
     @Override
     public void process(PreauthCallback preauthCallback,
                         PreauthRequestContext requestContext, PaData paData) throws KrbException {
-        paData.addElement(makeEntry(preauthCallback));
+
     }
 
     @Override
@@ -75,16 +73,4 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
 
     }
 
-    private PaDataEntry makeEntry(PreauthCallback preauthCallback) throws KrbException {
-        PaEncTsEnc paTs = new PaEncTsEnc();
-        paTs.setPaTimestamp(preauthCallback.getPreauthTime());
-
-        EncryptedData paDataValue = EncryptionUtil.seal(paTs,
-                preauthCallback.getAsKey(), KeyUsage.AS_REQ_PA_ENC_TS);
-        PaDataEntry tsPaEntry = new PaDataEntry();
-        tsPaEntry.setPaDataType(PaDataType.ENC_TIMESTAMP);
-        tsPaEntry.setPaDataValue(paDataValue.encode());
-
-        return tsPaEntry;
-    }
 }

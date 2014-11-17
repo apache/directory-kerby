@@ -1,8 +1,8 @@
 package org.haox.kerb.client.preauth;
 
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.client.KrbOptions;
+import org.haox.kerb.client.preauth.pkinit.PkinitPreauth;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
 
@@ -25,27 +25,47 @@ public class PreauthHandler {
         preauths.add(preauth);
     }
 
-    public void setPreauthOptions(KrbOptions preauthOptions) throws KrbException {
+    public PreauthContext preparePreauthContext(PreauthCallback preauthCallback) {
+        PreauthContext preauthContext = new PreauthContext();
+        preauthContext.preauthCallback = preauthCallback;
+
         for (KrbPreauth preauth : preauths) {
-            preauth.setPreauthOptions(preauthOptions);
+            preauthContext.handles.add(initHandle(preauth, preauthCallback));
+        }
+
+        return preauthContext;
+    }
+
+    private PreauthHandle initHandle(KrbPreauth preauth, PreauthCallback preauthCallback) {
+        PreauthHandle handle = new PreauthHandle();
+        handle.preauth = preauth;
+        handle.requestContext = preauth.initRequestContext(preauthCallback);
+
+        return handle;
+    }
+
+    public void setPreauthOptions(PreauthContext preauthContext,
+                                  KrbOptions preauthOptions) throws KrbException {
+        for (PreauthHandle handle : preauthContext.handles) {
+            handle.setPreauthOptions(preauthContext.preauthCallback, preauthOptions);
         }
     }
 
     public void tryFirst(PreauthContext preauthContext, PaData paData) throws KrbException {
-        for (KrbPreauth preauth : preauths) {
-            preauth.tryFirst(preauthContext, paData);
+        for (PreauthHandle handle : preauthContext.handles) {
+            handle.tryFirst(preauthContext.preauthCallback, paData);
         }
     }
 
     public void process(PreauthContext preauthContext, PaData paData) throws KrbException {
-        for (KrbPreauth preauth : preauths) {
-            preauth.process(preauthContext, paData);
+        for (PreauthHandle handle : preauthContext.handles) {
+            handle.process(preauthContext.preauthCallback, paData);
         }
     }
 
     public void tryAgain(PreauthContext preauthContext, PaData paData) {
-        for (KrbPreauth preauth : preauths) {
-            preauth.tryAgain(preauthContext, paData);
+        for (PreauthHandle handle : preauthContext.handles) {
+            handle.tryAgain(preauthContext.preauthCallback, paData);
         }
     }
 
@@ -54,4 +74,5 @@ public class PreauthHandler {
             preauth.destroy();
         }
     }
+
 }

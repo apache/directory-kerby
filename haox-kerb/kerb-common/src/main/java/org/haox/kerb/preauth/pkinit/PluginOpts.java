@@ -1,19 +1,19 @@
-package org.haox.kerb.preauth;
+package org.haox.kerb.preauth.pkinit;
 
 public class PluginOpts {
 
     // From MIT Krb5 _pkinit_plg_opts
 
     // require EKU checking (default is true)
-    protected boolean requireEku = true;
+    public boolean requireEku = true;
     // accept secondary EKU (default is false)
-    protected boolean acceptSecondaryEku = false;
+    public boolean acceptSecondaryEku = false;
     // allow UPN-SAN instead of pkinit-SAN
-    protected boolean allowUpn = true;
+    public boolean allowUpn = true;
     // selects DH or RSA based pkinit
-    protected boolean usingRsa = true;
+    public boolean usingRsa = true;
     // require CRL for a CA (default is false)
-    protected boolean requireCrlChecking = false;
+    public boolean requireCrlChecking = false;
     // minimum DH modulus size allowed
-    protected int dhMinBits;
+    public int dhMinBits;
 }

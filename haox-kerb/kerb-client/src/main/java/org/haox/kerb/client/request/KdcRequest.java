@@ -1,9 +1,8 @@
 package org.haox.kerb.client.request;
 
-import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.client.KrbOptions;
+import org.haox.kerb.client.preauth.PreauthCallback;
 import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.client.preauth.PreauthHandler;
 import org.haox.kerb.crypto.EncryptionHandler;
@@ -20,7 +19,10 @@ import org.haox.transport.Transport;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A wrapper for KdcReq request
@@ -40,6 +42,7 @@ public abstract class KdcRequest {
     private KdcReq kdcReq;
     private KdcRep kdcRep;
     protected Map<String, Object> credCache;
+    protected PreauthContext preauthContext;
     protected PaDataType selectedPreauthType;
     protected PaDataType allowedPreauthType;
     private PreauthHandler preauthHandler;
@@ -74,7 +77,14 @@ public abstract class KdcRequest {
         return krbOptions;
     }
 
-    protected abstract PreauthContext getPreauthContext();
+    protected abstract PreauthCallback getPreauthCallback();
+
+    protected PreauthContext getPreauthContext() {
+        if (preauthContext == null) {
+            preauthContext = preauthHandler.preparePreauthContext(getPreauthCallback());
+        }
+        return preauthContext;
+    }
 
     protected void loadCredCache() {
         // TODO
@@ -258,7 +268,7 @@ public abstract class KdcRequest {
             return;
         }
 
-        preauthHandler.setPreauthOptions(getPreauthOptions());
+        preauthHandler.setPreauthOptions(getPreauthContext(), getPreauthOptions());
 
         if (!isRetrying) {
             preauthHandler.tryFirst(getPreauthContext(), preauthData);
