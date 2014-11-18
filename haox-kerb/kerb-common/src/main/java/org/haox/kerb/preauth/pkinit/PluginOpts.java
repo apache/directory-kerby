@@ -14,6 +14,7 @@ public class PluginOpts {
     public boolean usingRsa = true;
     // require CRL for a CA (default is false)
     public boolean requireCrlChecking = false;
-    // minimum DH modulus size allowed
-    public int dhMinBits;
+    // the size of the Diffie-Hellman key the client will attempt to use.
+    // The acceptable values are 1024, 2048, and 4096. The default is 2048.
+    public int dhMinBits = 2048;
 }

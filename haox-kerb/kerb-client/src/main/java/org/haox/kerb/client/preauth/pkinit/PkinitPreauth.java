@@ -1,6 +1,7 @@
 package org.haox.kerb.client.preauth.pkinit;
 
 import org.haox.kerb.client.KrbContext;
+import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.preauth.KrbPreauth;
 import org.haox.kerb.client.preauth.PreauthCallback;
@@ -19,14 +20,20 @@ import java.util.List;
 public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
 
     private KrbContext context;
+    private PkinitContext pkinitContext;
 
     public void init(KrbContext context) {
         this.context = context;
+        this.pkinitContext = new PkinitContext();
     }
 
     @Override
     public PreauthRequestContext initRequestContext(PreauthCallback preauthCallback) {
-        return null;
+        PkinitRequestContext reqCtx = new PkinitRequestContext();
+
+        reqCtx.updateRequestOpts(pkinitContext.pluginOpts);
+
+        return reqCtx;
     }
 
     @Override
@@ -38,6 +45,20 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     @Override
     public void setPreauthOptions(PreauthCallback preauthCallback,
                                   PreauthRequestContext requestContext, KrbOptions options) {
+        if (options.contains(KrbOption.PKINIT_X509_IDENTITY)) {
+            pkinitContext.identityOpts.identity =
+                    options.getStringOption(KrbOption.PKINIT_X509_IDENTITY);
+        }
+
+        if (options.contains(KrbOption.PKINIT_X509_ANCHORS)) {
+            pkinitContext.identityOpts.anchors.add(
+                    options.getStringOption(KrbOption.PKINIT_X509_ANCHORS));
+        }
+
+        if (options.contains(KrbOption.PKINIT_USING_RSA)) {
+            pkinitContext.pluginOpts.usingRsa =
+                    options.getBooleanOption(KrbOption.PKINIT_USING_RSA);
+        }
 
     }
 

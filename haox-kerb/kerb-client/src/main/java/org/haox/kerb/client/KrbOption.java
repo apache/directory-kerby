@@ -25,7 +25,7 @@ public enum KrbOption {
 
     USER_PASSWD("user_passwd", "User plain password"),
 
-    PKINIT_X509_IDENTITIES("x509_identities", "X509 user private key and cert"),
+    PKINIT_X509_IDENTITY("x509_identities", "X509 user private key and cert"),
     PKINIT_X509_PRIVATE_KEY("x509_privatekey", "X509 user private key"),
     PKINIT_X509_CERTIFICATE("x509_cert", "X509 user certificate"),
     PKINIT_X509_ANCHORS("x509_anchors", "X509 anchors"),

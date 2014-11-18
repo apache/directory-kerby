@@ -1,15 +1,16 @@
 package org.haox.kerb.preauth.pkinit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class IdentityOpts {
 
     // From MIT Krb5 _pkinit_identity_opts
     public String identity;
-    public List<String> AltIdentities;
-    public List<String> anchors;
-    public List<String> intermediates;
-    public List<String> crls;
+    public List<String> AltIdentities = new ArrayList<String>(1);
+    public List<String> anchors = new ArrayList<String>(4);
+    public List<String> intermediates = new ArrayList<String>(2);
+    public List<String> crls = new ArrayList<String>(2);
     public String ocsp;
     public int  idtype;
     public String certFile;

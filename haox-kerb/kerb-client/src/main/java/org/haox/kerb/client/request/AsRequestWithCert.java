@@ -24,7 +24,7 @@ public class AsRequestWithCert extends AsRequest {
         results.add(krbOptions.getOption(KrbOption.PKINIT_X509_CERTIFICATE));
         results.add(krbOptions.getOption(KrbOption.PKINIT_X509_ANCHORS));
         results.add(krbOptions.getOption(KrbOption.PKINIT_X509_PRIVATE_KEY));
-        results.add(krbOptions.getOption(KrbOption.PKINIT_X509_IDENTITIES));
+        results.add(krbOptions.getOption(KrbOption.PKINIT_X509_IDENTITY));
         results.add(krbOptions.getOption(KrbOption.PKINIT_USING_RSA));
 
         return results;
