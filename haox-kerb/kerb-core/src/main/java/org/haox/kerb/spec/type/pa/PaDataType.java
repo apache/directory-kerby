@@ -21,8 +21,6 @@ public enum PaDataType implements KrbEnum {
     ETYPE_INFO          (11), // Etype info for preauth. RFC 4120
     SAM_CHALLENGE       (12), // SAM/OTP
     SAM_RESPONSE        (13), // SAM/OTP
-    PK_AS_REQ_OLD       (14), // PKINIT
-    PK_AS_REP_OLD       (15), // PKINIT
     PK_AS_REQ           (16), // PKINIT. RFC 4556
     PK_AS_REP           (17), // PKINIT. RFC 4556
     ETYPE_INFO2         (19), // RFC 4120
@@ -46,7 +44,9 @@ public enum PaDataType implements KrbEnum {
     OTP_REQUEST         (142), // RFC 6560 section 4.2
     OTP_PIN_CHANGE      (144), // RFC 6560 section 4.3
     PKINIT_KX           (147), // RFC 6112
-    ENCPADATA_REQ_ENC_PA_REP   (149); // RFC 6806
+    ENCPADATA_REQ_ENC_PA_REP   (149), // RFC 6806
+    TOKEN_REQUEST       (148), // TokenPreauth
+    TOKEN_CHALLENGE     (149);
 
     private final int value;
 

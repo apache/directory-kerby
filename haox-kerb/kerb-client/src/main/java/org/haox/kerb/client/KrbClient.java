@@ -182,7 +182,6 @@ public class KrbClient {
         if (options == null) options = new KrbOptions();
 
         AsRequestWithToken asRequest = new AsRequestWithToken(context);
-        asRequest.setToken(token);
         options.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
         asRequest.setKrbOptions(options);
         return requestTgtTicket(principal, asRequest);

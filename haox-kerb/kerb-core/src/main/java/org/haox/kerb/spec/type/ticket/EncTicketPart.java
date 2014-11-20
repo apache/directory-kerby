@@ -59,106 +59,85 @@ public class EncTicketPart extends KrbAppSequenceType {
         return getFieldAs(FLAGS, TicketFlags.class);
     }
 
-
     public void setFlags(TicketFlags flags) {
         setFieldAs(FLAGS, flags);
     }
-
 
     public EncryptionKey getKey() {
         return getFieldAs(KEY, EncryptionKey.class);
     }
 
-
     public void setKey(EncryptionKey key) {
         setFieldAs(KEY, key);
     }
-
 
     public String getCrealm() {
         return getFieldAsString(CREALM);
     }
 
-
     public void setCrealm(String crealm) {
         setFieldAsString(CREALM, crealm);
     }
-
 
     public PrincipalName getCname() {
         return getFieldAs(CNAME, PrincipalName.class);
     }
 
-
     public void setCname(PrincipalName cname) {
         setFieldAs(CNAME, cname);
     }
-
 
     public TransitedEncoding getTransited() {
         return getFieldAs(TRANSITED, TransitedEncoding.class);
     }
 
-
     public void setTransited(TransitedEncoding transited) {
         setFieldAs(TRANSITED, transited);
     }
-
 
     public KerberosTime getAuthTime() {
         return getFieldAs(AUTHTIME, KerberosTime.class);
     }
 
-
     public void setAuthTime(KerberosTime authTime) {
         setFieldAs(AUTHTIME, authTime);
     }
-
 
     public KerberosTime getStartTime() {
         return getFieldAs(STARTTIME, KerberosTime.class);
     }
 
-
     public void setStartTime(KerberosTime startTime) {
         setFieldAs(STARTTIME, startTime);
     }
-
 
     public KerberosTime getEndTime() {
         return getFieldAs(ENDTIME, KerberosTime.class);
     }
 
-
     public void setEndTime(KerberosTime endTime) {
         setFieldAs(ENDTIME, endTime);
     }
-
 
     public KerberosTime getRenewtill() {
         return getFieldAs(RENEW_TILL, KerberosTime.class);
     }
 
-
     public void setRenewtill(KerberosTime renewtill) {
         setFieldAs(RENEW_TILL, renewtill);
     }
-
 
     public HostAddresses getClientAddresses() {
         return getFieldAs(CADDR, HostAddresses.class);
     }
 
-
     public void setClientAddresses(HostAddresses clientAddresses) {
         setFieldAs(CADDR, clientAddresses);
     }
 
-
     public AuthorizationData getAuthorizationData() {
         return getFieldAs(AUTHORIZATION_DATA, AuthorizationData.class);
     }
-
 
     public void setAuthorizationData(AuthorizationData authorizationData) {
         setFieldAs(AUTHORIZATION_DATA, authorizationData);

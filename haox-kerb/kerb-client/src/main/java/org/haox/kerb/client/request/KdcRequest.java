@@ -94,6 +94,10 @@ public abstract class KdcRequest {
         return preauthData;
     }
 
+    public void setAllowedPreauth(PaDataType paType) {
+        this.allowedPreauthType = paType;
+    }
+
     public KdcReq getKdcReq() {
         return kdcReq;
     }

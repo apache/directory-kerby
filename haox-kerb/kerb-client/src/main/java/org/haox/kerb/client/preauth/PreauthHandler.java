@@ -3,6 +3,7 @@ package org.haox.kerb.client.preauth;
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.preauth.pkinit.PkinitPreauth;
+import org.haox.kerb.client.preauth.token.TokenPreauth;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
 
@@ -21,6 +22,10 @@ public class PreauthHandler {
         preauths.add(preauth);
 
         preauth = new PkinitPreauth();
+        preauth.init(context);
+        preauths.add(preauth);
+
+        preauth = new TokenPreauth();
         preauth.init(context);
         preauths.add(preauth);
     }

@@ -8,14 +8,8 @@ import org.haox.token.KerbToken;
 
 public class AsRequestWithToken extends AsRequest {
 
-    private KerbToken token;
-
     public AsRequestWithToken(KrbContext context) {
         super(context);
-    }
-
-    public void setToken(KerbToken token) {
-        this.token = token;
     }
 
     @Override
@@ -28,7 +22,9 @@ public class AsRequestWithToken extends AsRequest {
         KrbOptions results = new KrbOptions();
 
         KrbOptions krbOptions = getKrbOptions();
+        results.add(krbOptions.getOption(KrbOption.TOKEN_USING_IDTOKEN));
         results.add(krbOptions.getOption(KrbOption.TOKEN_USER_ID_TOKEN));
+        results.add(krbOptions.getOption(KrbOption.TOKEN_USER_AC_TOKEN));
 
         return results;
     }
