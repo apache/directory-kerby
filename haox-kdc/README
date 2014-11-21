@@ -1,0 +1,5 @@
+A KDC implementation that integrates PKI and OAuth Token with an LDAP backend.
+The KDC server can be standalone.
+The LDAP backend can be standalone or embedded.
+Various tools like kinit, kadmin will be provided or
+at least, existing tools can be supported.

@@ -22,6 +22,7 @@
         <module>haox-event</module>
         <module>haox-kerb</module>
         <module>haox-token</module>
+        <module>haox-kdc</module>
     </modules>
 
     <dependencies>
