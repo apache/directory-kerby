@@ -12,7 +12,7 @@ public class IdentityOpts {
     public List<String> intermediates = new ArrayList<String>(2);
     public List<String> crls = new ArrayList<String>(2);
     public String ocsp;
-    public int  idtype;
+    public IdentityType idType;
     public String certFile;
     public String keyFile;
 

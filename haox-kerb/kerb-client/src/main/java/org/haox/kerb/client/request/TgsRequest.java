@@ -47,6 +47,11 @@ public class TgsRequest extends KdcRequest {
             public void cacheValue(String key, Object value) {
                 credCache.put(key, value);
             }
+
+            @Override
+            public PrincipalName getClientPrincipal() {
+                return TgsRequest.this.getClientPrincipal();
+            }
         };
     }
 

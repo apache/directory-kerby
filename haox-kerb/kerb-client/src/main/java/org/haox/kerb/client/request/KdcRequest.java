@@ -275,9 +275,9 @@ public abstract class KdcRequest {
         preauthHandler.setPreauthOptions(getPreauthContext(), getPreauthOptions());
 
         if (!isRetrying) {
-            preauthHandler.tryFirst(getPreauthContext(), preauthData);
+            preauthHandler.process(getPreauthContext(), null, preauthData);
         } else {
-            preauthHandler.tryAgain(getPreauthContext(), preauthData);
+            preauthHandler.tryAgain(getPreauthContext(), null, null, preauthData);
         }
     }
 

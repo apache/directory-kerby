@@ -3,6 +3,8 @@ package org.haox.kerb.client.preauth;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
+import org.haox.kerb.spec.type.pa.PaDataType;
 
 public class PreauthHandle {
 
@@ -14,16 +16,14 @@ public class PreauthHandle {
         preauth.setPreauthOptions(preauthCallback, requestContext, preauthOptions);
     }
 
-    public void tryFirst(PreauthCallback preauthCallback, PaData paData) throws KrbException {
-        preauth.tryFirst(preauthCallback, requestContext, paData);
+    public void process(PreauthCallback preauthCallback,
+                        PaDataEntry inPadata, PaData outPadata) throws KrbException {
+        preauth.process(preauthCallback, requestContext, inPadata, outPadata);
     }
 
-    public void process(PreauthCallback preauthCallback, PaData paData) throws KrbException {
-        preauth.process(preauthCallback, requestContext, paData);
-    }
-
-    public void tryAgain(PreauthCallback preauthCallback, PaData paData) {
-        preauth.tryAgain(preauthCallback, requestContext, paData);
+    public void tryAgain(PreauthCallback preauthCallback,
+                         PaDataType preauthType, PaData errPadata, PaData paData) {
+        preauth.tryAgain(preauthCallback, requestContext, preauthType, errPadata, paData);
     }
 
 }

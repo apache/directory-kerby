@@ -47,6 +47,11 @@ public class AsRequest extends KdcRequest {
             public void cacheValue(String key, Object value) {
                 credCache.put(key, value);
             }
+
+            @Override
+            public PrincipalName getClientPrincipal() {
+                return AsRequest.this.getClientPrincipal();
+            }
         };
     }
 

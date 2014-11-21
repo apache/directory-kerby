@@ -32,6 +32,12 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
     }
 
     @Override
+    public void prepareQuestions(PreauthCallback preauthCallback,
+                                 PreauthRequestContext requestContext, KrbOptions preauthOptions) {
+
+    }
+
+    @Override
     public List<EncryptionType> getEncTypes(PreauthCallback preauthCallback,
                                             PreauthRequestContext requestContext) {
         return Collections.emptyList();
@@ -44,20 +50,15 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
     }
 
     @Override
-    public void tryFirst(PreauthCallback preauthCallback,
-                         PreauthRequestContext requestContext, PaData paData) throws KrbException {
-        paData.addElement(makeEntry(preauthCallback));
-    }
-
-    @Override
     public void process(PreauthCallback preauthCallback,
-                        PreauthRequestContext requestContext, PaData paData) throws KrbException {
-        paData.addElement(makeEntry(preauthCallback));
+                        PreauthRequestContext requestContext,
+                        PaDataEntry inPadata, PaData outPadata) throws KrbException {
+        outPadata.addElement(makeEntry(preauthCallback));
     }
 
     @Override
-    public void tryAgain(PreauthCallback preauthCallback,
-                         PreauthRequestContext requestContext, PaData paData) {
+    public void tryAgain(PreauthCallback preauthCallback, PreauthRequestContext requestContext,
+                         PaDataType preauthType, PaData errPadata, PaData outPadata) {
 
     }
 

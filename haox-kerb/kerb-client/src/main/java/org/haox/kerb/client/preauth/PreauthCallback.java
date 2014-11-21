@@ -4,6 +4,7 @@ import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.PrincipalName;
 
 public abstract class PreauthCallback {
 
@@ -67,4 +68,7 @@ public abstract class PreauthCallback {
      * should be valid UTF-8 text.
      */
     public abstract void cacheValue(String key, Object value);
+
+    public abstract PrincipalName getClientPrincipal();
+
 }

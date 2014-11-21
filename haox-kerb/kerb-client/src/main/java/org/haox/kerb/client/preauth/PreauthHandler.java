@@ -6,6 +6,8 @@ import org.haox.kerb.client.preauth.pkinit.PkinitPreauth;
 import org.haox.kerb.client.preauth.token.TokenPreauth;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
+import org.haox.kerb.spec.type.pa.PaDataEntry;
+import org.haox.kerb.spec.type.pa.PaDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,21 +58,17 @@ public class PreauthHandler {
         }
     }
 
-    public void tryFirst(PreauthContext preauthContext, PaData paData) throws KrbException {
+    public void process(PreauthContext preauthContext,
+                        PaDataEntry inPadata, PaData outPadata) throws KrbException {
         for (PreauthHandle handle : preauthContext.handles) {
-            handle.tryFirst(preauthContext.preauthCallback, paData);
+            handle.process(preauthContext.preauthCallback, inPadata, outPadata);
         }
     }
 
-    public void process(PreauthContext preauthContext, PaData paData) throws KrbException {
+    public void tryAgain(PreauthContext preauthContext, PaDataType preauthType,
+                         PaData errPadata, PaData outPadata) {
         for (PreauthHandle handle : preauthContext.handles) {
-            handle.process(preauthContext.preauthCallback, paData);
-        }
-    }
-
-    public void tryAgain(PreauthContext preauthContext, PaData paData) {
-        for (PreauthHandle handle : preauthContext.handles) {
-            handle.tryAgain(preauthContext.preauthCallback, paData);
+            handle.tryAgain(preauthContext.preauthCallback, preauthType, errPadata, outPadata);
         }
     }
 
