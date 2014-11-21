@@ -15,7 +15,7 @@ Haox aims for a Java Kerberos binding, and provides richful, inituitive and inte
 
 ### Status
 As follows, with the core and critical parts done, important features are still ongoing.
-It's going to release 0.1 version in the end year, and do not suggest using it in production prior to the release.
+It's going to release 0.1 version in the early next year. We do not suggest production usage prior to the release.
 <pre>
 ASN-1 (done)
 Kerberos core spec types (done)
