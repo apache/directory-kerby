@@ -16,7 +16,7 @@ import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.ticket.ServiceTicket;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
 import org.haox.token.KerbToken;
-import org.haox.transport.Connector;
+import org.haox.transport.TransportConnector;
 import org.haox.transport.Transport;
 import org.haox.transport.event.TransportEvent;
 import org.haox.transport.event.TransportEventType;
@@ -98,7 +98,7 @@ public class KrbClient {
         this.eventHub = new EventHub();
         eventHub.register(krbHandler);
 
-        Connector connector = new TcpConnector(new KrbStreamingDecoder());
+        TransportConnector connector = new TcpConnector(new KrbStreamingDecoder());
         eventHub.register(connector);
 
         eventWaiter = eventHub.waitEvent(

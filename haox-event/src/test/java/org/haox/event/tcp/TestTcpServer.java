@@ -1,9 +1,10 @@
 package org.haox.event.tcp;
 
 import junit.framework.Assert;
-import org.haox.event.*;
-import org.haox.transport.Acceptor;
+import org.haox.event.EventHandler;
+import org.haox.event.EventHub;
 import org.haox.transport.MessageHandler;
+import org.haox.transport.TransportAcceptor;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
 import org.haox.transport.tcp.TcpAcceptor;
@@ -39,7 +40,7 @@ public class TestTcpServer extends TestTcpBase {
         };
         eventHub.register(messageHandler);
 
-        Acceptor acceptor = new TcpAcceptor(createStreamingDecoder());
+        TransportAcceptor acceptor = new TcpAcceptor(createStreamingDecoder());
         eventHub.register(acceptor);
 
         eventHub.start();

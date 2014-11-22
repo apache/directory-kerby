@@ -2,7 +2,7 @@ package org.haox.event.udp;
 
 import junit.framework.Assert;
 import org.haox.event.*;
-import org.haox.transport.Acceptor;
+import org.haox.transport.TransportAcceptor;
 import org.haox.transport.MessageHandler;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
@@ -39,7 +39,7 @@ public class TestUdpServer extends TestUdpBase {
         };
         eventHub.register(messageHandler);
 
-        Acceptor acceptor = new UdpAcceptor();
+        TransportAcceptor acceptor = new UdpAcceptor();
         eventHub.register(acceptor);
 
         eventHub.start();

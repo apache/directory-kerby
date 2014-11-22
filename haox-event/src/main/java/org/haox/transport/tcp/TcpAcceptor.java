@@ -2,9 +2,9 @@ package org.haox.transport.tcp;
 
 import org.haox.event.Event;
 import org.haox.event.EventType;
-import org.haox.transport.Acceptor;
-import org.haox.transport.event.AddressEvent;
 import org.haox.transport.Transport;
+import org.haox.transport.TransportAcceptor;
+import org.haox.transport.event.AddressEvent;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,10 +13,14 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
-public class TcpAcceptor extends Acceptor {
+public class TcpAcceptor extends TransportAcceptor {
 
     public TcpAcceptor(StreamingDecoder streamingDecoder) {
-        super(new TcpTransportHandler(streamingDecoder));
+        this(new TcpTransportHandler(streamingDecoder));
+    }
+
+    public TcpAcceptor(TcpTransportHandler transportHandler) {
+        super(transportHandler);
     }
 
     @Override

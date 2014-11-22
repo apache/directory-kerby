@@ -2,7 +2,7 @@ package org.haox.event.udp;
 
 import junit.framework.Assert;
 import org.haox.event.*;
-import org.haox.transport.Connector;
+import org.haox.transport.TransportConnector;
 import org.haox.transport.MessageHandler;
 import org.haox.transport.Transport;
 import org.haox.transport.event.MessageEvent;
@@ -99,7 +99,7 @@ public class TestUdpClient extends TestUdpBase {
         };
         eventHub.register(messageHandler);
 
-        Connector connector = new UdpConnector();
+        TransportConnector connector = new UdpConnector();
         eventHub.register(connector);
 
         eventWaiter = eventHub.waitEvent(
