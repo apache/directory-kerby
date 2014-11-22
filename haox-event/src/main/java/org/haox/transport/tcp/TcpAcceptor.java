@@ -1,9 +1,10 @@
 package org.haox.transport.tcp;
 
+import org.haox.event.AbstractEventHandler;
 import org.haox.event.Event;
 import org.haox.event.EventType;
+import org.haox.transport.Acceptor;
 import org.haox.transport.Transport;
-import org.haox.transport.TransportAcceptor;
 import org.haox.transport.event.AddressEvent;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
-public class TcpAcceptor extends TransportAcceptor {
+public class TcpAcceptor extends Acceptor {
 
     public TcpAcceptor(StreamingDecoder streamingDecoder) {
         this(new TcpTransportHandler(streamingDecoder));
@@ -21,6 +22,26 @@ public class TcpAcceptor extends TransportAcceptor {
 
     public TcpAcceptor(TcpTransportHandler transportHandler) {
         super(transportHandler);
+
+        setEventHandler(new AbstractEventHandler() {
+            @Override
+            protected void doHandle(Event event) throws Exception {
+                if (event.getEventType() == TcpEventType.ADDRESS_BIND) {
+                    try {
+                        doBind((AddressEvent) event);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+            @Override
+            public EventType[] getInterestedEvents() {
+                return new EventType[] {
+                        TcpEventType.ADDRESS_BIND
+                };
+            }
+        });
     }
 
     @Override
@@ -58,24 +79,6 @@ public class TcpAcceptor extends TransportAcceptor {
                     SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
             onNewTransport(transport);
         }
-    }
-
-    @Override
-    public void handle(Event event) {
-        if (event.getEventType() == TcpEventType.ADDRESS_BIND) {
-            try {
-                doBind((AddressEvent) event);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
-    public EventType[] getInterestedEvents() {
-        return new EventType[] {
-                TcpEventType.ADDRESS_BIND
-        };
     }
 
     protected void doBind(AddressEvent event) throws IOException {

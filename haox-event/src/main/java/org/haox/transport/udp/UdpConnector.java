@@ -3,7 +3,7 @@ package org.haox.transport.udp;
 import org.haox.event.AbstractEventHandler;
 import org.haox.event.Event;
 import org.haox.event.EventType;
-import org.haox.transport.TransportConnector;
+import org.haox.transport.Connector;
 import org.haox.transport.event.AddressEvent;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 
-public class UdpConnector extends TransportConnector {
+public class UdpConnector extends Connector {
 
     public UdpConnector() {
         this(new UdpTransportHandler());

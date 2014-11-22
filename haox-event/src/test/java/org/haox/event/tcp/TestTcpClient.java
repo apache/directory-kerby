@@ -2,7 +2,7 @@ package org.haox.event.tcp;
 
 import junit.framework.Assert;
 import org.haox.event.*;
-import org.haox.transport.TransportConnector;
+import org.haox.transport.Connector;
 import org.haox.transport.MessageHandler;
 import org.haox.transport.Transport;
 import org.haox.transport.event.MessageEvent;
@@ -110,7 +110,7 @@ public class TestTcpClient extends TestTcpBase {
         };
         eventHub.register(messageHandler);
 
-        TransportConnector connector = new TcpConnector(createStreamingDecoder());
+        Connector connector = new TcpConnector(createStreamingDecoder());
         eventHub.register(connector);
 
         eventWaiter = eventHub.waitEvent(

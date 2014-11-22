@@ -3,7 +3,7 @@ package org.haox.kerb.server;
 import org.haox.event.EventHub;
 import org.haox.kerb.common.KrbStreamingDecoder;
 import org.haox.kerb.identity.IdentityService;
-import org.haox.transport.TransportAcceptor;
+import org.haox.transport.Acceptor;
 import org.haox.transport.tcp.TcpAcceptor;
 
 import java.io.File;
@@ -102,7 +102,7 @@ public class KdcServer {
 
         eventHub.register(kdcHandler);
 
-        TransportAcceptor acceptor = new TcpAcceptor(new KrbStreamingDecoder());
+        Acceptor acceptor = new TcpAcceptor(new KrbStreamingDecoder());
         eventHub.register(acceptor);
 
         eventHub.start();

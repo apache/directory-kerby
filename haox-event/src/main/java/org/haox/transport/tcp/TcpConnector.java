@@ -3,8 +3,8 @@ package org.haox.transport.tcp;
 import org.haox.event.AbstractEventHandler;
 import org.haox.event.Event;
 import org.haox.event.EventType;
+import org.haox.transport.Connector;
 import org.haox.transport.Transport;
-import org.haox.transport.TransportConnector;
 import org.haox.transport.event.AddressEvent;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 
-public class TcpConnector extends TransportConnector {
+public class TcpConnector extends Connector {
 
     public TcpConnector(StreamingDecoder streamingDecoder) {
         this(new TcpTransportHandler(streamingDecoder));

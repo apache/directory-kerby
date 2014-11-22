@@ -1,10 +1,11 @@
-package org.haox.event.tcp;
+package org.haox.event.network;
 
 import junit.framework.Assert;
 import org.haox.event.EventHandler;
 import org.haox.event.EventHub;
 import org.haox.transport.Acceptor;
 import org.haox.transport.MessageHandler;
+import org.haox.transport.Network;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
 import org.haox.transport.tcp.TcpAcceptor;
@@ -18,7 +19,7 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class TestTcpServer extends TestTcpBase {
+public class TestNetworkServer extends TestNetworkBase {
 
     private EventHub eventHub;
 
@@ -40,11 +41,12 @@ public class TestTcpServer extends TestTcpBase {
         };
         eventHub.register(messageHandler);
 
-        Acceptor acceptor = new TcpAcceptor(createStreamingDecoder());
-        eventHub.register(acceptor);
+        Network network = new Network();
+        network.setStreamingDecoder(createStreamingDecoder());
+        eventHub.register(network);
 
         eventHub.start();
-        acceptor.listen(serverHost, serverPort);
+        network.tcpListen(serverHost, serverPort);
     }
 
     @Test
