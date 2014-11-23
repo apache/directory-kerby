@@ -23,6 +23,6 @@
         <module>kerb-client</module>
         <module>kerb-server</module>
         <module>kerb-kdc-test</module>
-        <module>../pkinit-crypto</module>
+        <module>pkinit-crypto</module>
     </modules>
 </project>

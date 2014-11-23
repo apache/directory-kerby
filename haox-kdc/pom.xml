@@ -16,6 +16,6 @@
     <modules>
         <module>Ldap-identity-backend</module>
         <module>kdc-server</module>
-        <module>kdc-tool</module>
+        <module>tools</module>
     </modules>
 </project>
