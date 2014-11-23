@@ -2,11 +2,11 @@ package org.haox.kdc.tool;
 
 import org.haox.kerb.client.KrbClient;
 
+/**
+ * kinit like tool
+ */
 public class Kinit {
 
-    /**
-     * kinit like tool
-     */
     public static void main(String[] args) throws Exception {
         if (args.length < 2 || args.length > 3) {
             System.err.println(
