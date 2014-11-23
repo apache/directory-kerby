@@ -5,26 +5,22 @@ import org.haox.event.Event;
 import org.haox.event.EventHandler;
 import org.haox.event.EventHub;
 import org.haox.event.EventWaiter;
-import org.haox.transport.Connector;
 import org.haox.transport.MessageHandler;
 import org.haox.transport.Network;
 import org.haox.transport.Transport;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEvent;
 import org.haox.transport.event.TransportEventType;
-import org.haox.transport.tcp.TcpConnector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -44,7 +40,18 @@ public class TestNetworkClient extends TestNetworkBase {
             @Override
             public void run() {
                 try {
-                    doRunServer();
+                    doRunTcpServer();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    doRunUdpServer();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -52,13 +59,13 @@ public class TestNetworkClient extends TestNetworkBase {
         }).start();
     }
 
-    private void doRunServer() throws IOException {
+    private void doRunTcpServer() throws IOException {
         ServerSocketChannel serverSocketChannel;
         Selector selector = Selector.open();
         serverSocketChannel = ServerSocketChannel .open();
         serverSocketChannel.configureBlocking(false);
         ServerSocket serverSocket = serverSocketChannel.socket();
-        serverSocket.bind(new InetSocketAddress(serverPort));
+        serverSocket.bind(new InetSocketAddress(tcpPort));
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         SocketChannel socketChannel;
@@ -84,6 +91,41 @@ public class TestNetworkClient extends TestNetworkBase {
                         if (socketChannel.read(recvBuffer) > 0) {
                             recvBuffer.flip();
                             socketChannel.write(recvBuffer);
+                        }
+                    }
+                }
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void doRunUdpServer() throws IOException {
+        DatagramChannel serverSocketChannel;
+        Selector selector = Selector.open();
+        serverSocketChannel = DatagramChannel.open();
+        serverSocketChannel.configureBlocking(false);
+        DatagramSocket serverSocket = serverSocketChannel.socket();
+        serverSocket.bind(new InetSocketAddress(udpPort));
+        serverSocketChannel.register(selector, SelectionKey.OP_READ);
+
+        while (true) {
+            if (selector.selectNow() > 0) {
+                Set<SelectionKey> selectionKeys = selector.selectedKeys();
+                Iterator<SelectionKey> iterator = selectionKeys.iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey selectionKey = iterator.next();
+                    iterator.remove();
+                    if (selectionKey.isReadable()) {
+                        ByteBuffer recvBuffer = ByteBuffer.allocate(65536);
+                        InetSocketAddress fromAddress = (InetSocketAddress) serverSocketChannel.receive(recvBuffer);
+                        if (fromAddress != null) {
+                            recvBuffer.flip();
+                            serverSocketChannel.send(recvBuffer, fromAddress);
                         }
                     }
                 }
@@ -123,15 +165,21 @@ public class TestNetworkClient extends TestNetworkBase {
                 TransportEventType.NEW_TRANSPORT);
 
         eventHub.start();
-        network.tcpConnect(serverHost, serverPort);
+        network.tcpConnect(serverHost, tcpPort);
+        network.udpConnect(serverHost, udpPort);
     }
 
     @Test
-    public void testTcpTransport() {
+    public void testNetworkClient() {
         Event event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
         Transport transport = ((TransportEvent) event).getTransport();
         transport.sendMessage(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
+        event = eventWaiter.waitEvent(TestEventType.FINISHED);
+        Assert.assertTrue((Boolean) event.getEventData());
 
+        event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
+        transport = ((TransportEvent) event).getTransport();
+        transport.sendMessage(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
         event = eventWaiter.waitEvent(TestEventType.FINISHED);
         Assert.assertTrue((Boolean) event.getEventData());
     }

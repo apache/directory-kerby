@@ -14,14 +14,13 @@ public class EventHub implements Dispatcher {
         ALL
     }
 
+    private boolean started = false;
+
     private Map<Integer, InternalEventHandler> handlers =
             new ConcurrentHashMap<Integer, InternalEventHandler>();
 
     private Map<EventType, Set<Integer>> eventHandlersMap =
         new ConcurrentHashMap<EventType, Set<Integer>>();
-
-    private Map<EventType, EventWaiter> eventWaiters =
-            new ConcurrentHashMap<EventType, EventWaiter>();
 
     private InternalEventHandler builtInHandler;
 
@@ -67,8 +66,11 @@ public class EventHub implements Dispatcher {
     public void register(InternalEventHandler handler) {
         handler.setDispatcher(this);
         handler.init();
-
         handlers.put(handler.id(), handler);
+
+        if (started) {
+            handler.start();
+        }
 
         EventType[] interestedEvents = handler.getInterestedEvents();
         Set<Integer> tmpHandlers;
@@ -152,14 +154,20 @@ public class EventHub implements Dispatcher {
     }
 
     public void start() {
-        for (InternalEventHandler handler : handlers.values()) {
-            handler.start();
+        if (!started) {
+            for (InternalEventHandler handler : handlers.values()) {
+                handler.start();
+            }
+            started = true;
         }
     }
 
     public void stop() {
-        for (InternalEventHandler handler : handlers.values()) {
-            handler.stop();
+        if (started) {
+            for (InternalEventHandler handler : handlers.values()) {
+                handler.stop();
+            }
+            started = false;
         }
     }
 }

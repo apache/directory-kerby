@@ -3,12 +3,10 @@ package org.haox.event.network;
 import junit.framework.Assert;
 import org.haox.event.EventHandler;
 import org.haox.event.EventHub;
-import org.haox.transport.Acceptor;
 import org.haox.transport.MessageHandler;
 import org.haox.transport.Network;
 import org.haox.transport.event.MessageEvent;
 import org.haox.transport.event.TransportEventType;
-import org.haox.transport.tcp.TcpAcceptor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +15,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 import java.nio.channels.SocketChannel;
 
 public class TestNetworkServer extends TestNetworkBase {
@@ -46,23 +45,42 @@ public class TestNetworkServer extends TestNetworkBase {
         eventHub.register(network);
 
         eventHub.start();
-        network.tcpListen(serverHost, serverPort);
+        network.tcpListen(serverHost, tcpPort);
+        network.udpListen(serverHost, udpPort);
     }
 
     @Test
-    public void testTcpTransport() throws IOException, InterruptedException {
+    public void testNetworkServer() throws IOException, InterruptedException {
+        testTcpTransport();
+        testUdpTransport();
+    }
+
+    private void testTcpTransport() throws IOException, InterruptedException {
         Thread.sleep(10);
 
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(true);
-        SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
+        SocketAddress sa = new InetSocketAddress(serverHost, tcpPort);
         socketChannel.connect(sa);
         socketChannel.write(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
         ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
         socketChannel.read(byteBuffer);
         byteBuffer.flip();
         clientRecvedMessage = recvBuffer2String(byteBuffer);
+        Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
+    }
 
+    private void testUdpTransport() throws IOException, InterruptedException {
+        Thread.sleep(10);
+
+        DatagramChannel socketChannel = DatagramChannel.open();
+        socketChannel.configureBlocking(true);
+        SocketAddress sa = new InetSocketAddress(serverHost, udpPort);
+        socketChannel.send(ByteBuffer.wrap(TEST_MESSAGE.getBytes()), sa);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(65536);
+        socketChannel.receive(byteBuffer);
+        byteBuffer.flip();
+        clientRecvedMessage = recvBuffer2String(byteBuffer);
         Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
     }
 

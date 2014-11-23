@@ -97,6 +97,7 @@ public class Network extends LongRunningEventHandler {
      */
     public void udpConnect(String serverAddress, short serverPort) {
         InetSocketAddress sa = new InetSocketAddress(serverAddress, serverPort);
+        checkUdpTransportHandler();
         doUdpConnect(sa);
     }
 
@@ -152,7 +153,6 @@ public class Network extends LongRunningEventHandler {
                 throw new IllegalArgumentException("No streaming decoder set yet");
             }
             tcpTransportHandler = new TcpTransportHandler(streamingDecoder);
-            tcpTransportHandler.setDispatcher(getDispatcher());
             getDispatcher().register(tcpTransportHandler);
         }
     }
@@ -160,7 +160,6 @@ public class Network extends LongRunningEventHandler {
     private void checkUdpTransportHandler() {
         if (udpTransportHandler == null) {
             udpTransportHandler = new UdpTransportHandler();
-            udpTransportHandler.setDispatcher(getDispatcher());
             getDispatcher().register(udpTransportHandler);
         }
     }
