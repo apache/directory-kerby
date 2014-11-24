@@ -16,21 +16,18 @@
         <scala.version>2.10.3</scala.version>
     </properties>
 
-    <modules>
+    <modules>	    
         <module>haox-config</module>
         <module>haox-asn1</module>
         <module>haox-event</module>
+		<module>3rdparty</module>
         <module>haox-kerb</module>
         <module>haox-token</module>
         <module>haox-kdc</module>
+        <module>haox-pkix</module>
     </modules>
 
     <dependencies>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>${scala.version}</version>
-        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

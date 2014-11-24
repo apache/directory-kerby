@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>Commons-SSL - Utilities</title>
+<style type="text/css">
+h1, h2, h3 { margin: 0; border: 0; padding: 0; font-size: 100%; }
+h1 { float: left; color: red; }
+b.n { font-family: arial; font-weight: bold; }
+span.hl { color: white; background-color: green; }
+div.nav { float: left; margin-left: 20px; font-weight: bold; }
+.nav a, .nav span { padding: 0 5px; }
+.nav a { color: blue; }
+li.top { margin-top: 10px; }
+ul.openssl { float: left; width: 100px; margin-top: 8px; }
+ul.pkcs8 { float: left; width: 200px; margin-top: 8px; }
+</style>
+</head>
+<body>
+<h1>commons-ssl</h1>
+<div class="nav">
+<a href="index.html">main</a> |
+<a href="ssl.html">ssl</a> |
+<a href="pkcs8.html">pkcs8</a> |
+<a href="pbe.html">pbe</a> |
+<a href="rmi.html">rmi</a> |
+<span class="hl" href="utilities.html">utilities</span> |
+<a href="source.html">source</a> |
+<a href="javadocs/">javadocs</a> |
+<a href="download.html">download</a>
+</div>
+<br clear="all"/>
+<hr/>
+<h2>Ping</h2>
+
+<p>"org.apache.commons.ssl.Ping" contains a main method to help you diagnose SSL issues.
+It's modeled on OpenSSL's very handy "s_client" utility.  We've been very careful to
+make sure "org.apache.commons.ssl.Ping" can execute without any additional jar files
+on the classpath (except if using Java 1.3 - then you'll need jsse.jar).</p>
+
+<pre style="border: 1px solid red; padding: 10px; float: left;"><u><b>"Ping" Utility Attempts "HEAD / HTTP/1.1" Request</b></u>
+This utility is very handy because it can get you the server's public
+certificate even if your client certificate is bad (so even though the SSL
+handshake fails).  And unlike "openssl s_client", this utility can bind
+against any IP address available.
+
+Usage:  java -jar not-yet-commons-ssl-0.3.13.jar [options]
+Version: 0.3.13   Compiled: [PDT:2014-05-08/14:15:16.000]
+Options:   (*=required)
+*  -t  --target           [hostname[:port]]              default port=443
+   -b  --bind             [hostname[:port]]              default port=0 "ANY"
+   -r  --proxy            [hostname[:port]]              default port=80
+   -tm --trust-cert       [path to trust material]       {pem, der, crt, jks}
+   -km --client-cert      [path to client's private key] {jks, pkcs12, pkcs8}
+   -cc --cert-chain       [path to client's cert chain for pkcs8/OpenSSL key]
+   -p  --password         [client cert password]
+   -h  --host-header      [http-host-header]      in case -t is an IP address
+   -u  --path             [path for GET/HEAD request]    default=/
+   -m  --method           [http method to use]           default=HEAD
+
+Example:
+
+java -jar commons-ssl.jar -t host.com:443 -c ./client.pfx -p `cat ./pass.txt` </pre><br clear="all"/>
+
+<p style="margin-top: 8px;"><b>TODO:</b><br/>Apparently Java 6.0 includes support for grabbing passwords from
+standard-in without echoing the typed characters.  Would be nice to use that feature when it's
+available, instead of requiring the password to be specified as a command-line argument.</p>
+
+<hr/>
+<h2>KeyStoreBuilder</em></h2>
+<p><code>java -cp not-yet-commons-ssl-0.3.13.jar org.apache.commons.ssl.KeyStoreBuilder</code></p>
+
+<pre style="border: 1px solid red; padding: 10px; float: left;"><u><b>KeyStoreBuilder converts PKCS12 and PKCS8 to Java "Keystore", and vice versa.</b></u>
+KeyStoreBuilder:  creates '[alias].jks' (Java Key Store)
+    -topk8 mode:  creates '[alias].pem' (x509 chain + unencrypted pkcs8)
+[alias] will be set to the first CN value of the X509 certificate.
+-------------------------------------------------------------------
+Usage1: [password] [file:pkcs12]
+Usage2: [password] [file:private-key] [file:certificate-chain]
+Usage3: -topk8 [password] [file:jks]
+-------------------------------------------------------------------
+[private-key] can be openssl format, or pkcs8.
+[password] decrypts [private-key], and also encrypts outputted JKS file.
+All files can be PEM or DER.</pre><br clear="all"/>
+
+<br/><b>Warning:</b>
+&nbsp;<span style="color: red; font-weight: bold;">-topk8 outputs the private key UNENCRYPTED!
+Cut and paste the private key into a separate file, and then use "openssl rsa" or "openssl dsa"
+to encrypt it with a password.</span>
+<br/>&nbsp;
+<br/>&nbsp;
+
+
+</body>
+</html>

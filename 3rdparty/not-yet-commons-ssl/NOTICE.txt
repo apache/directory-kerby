@@ -1,0 +1,10 @@
+This product includes software developed by
+The Apache Software Foundation (http://www.apache.org/).
+
+The PKCS12 key derivation function was developed by BouncyCastle
+(bouncycastle.org).  (Look for the "pkcs12()" method inside PKCS8.java).
+
+Some of this software was originally developed by
+Credit Union Central of British Columbia (http://www.cucbc.com/).
+The CUCBC code was licensed to the Apache Software Foundation on
+August 23rd, 2006.

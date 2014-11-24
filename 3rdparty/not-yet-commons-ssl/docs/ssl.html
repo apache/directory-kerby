@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Julius Davies">
+<title>Java Examples for Creating SSL/TLS Sockets</title>
+<style type="text/css">
+h1, h2, h3 { margin: 0; border: 0; padding: 0; font-size: 100%; }
+h1 { float: left; color: red; }
+b.n { font-family: arial; font-weight: bold; }
+span.hl { color: white; background-color: green; }
+div.nav { float: left; margin-left: 20px; font-weight: bold; }
+.nav a, .nav span { padding: 0 5px; }
+.nav a { color: blue; }
+</style>
+</head>
+<body>
+<h1>not-yet-commons-ssl</h1>
+<div class="nav">
+<a href="index.html">main</a> |
+<span class="hl" href="ssl.html">ssl</span> |
+<a href="pkcs8.html">pkcs8</a> |
+<a href="pbe.html">pbe</a> |
+<a href="rmi.html">rmi</a> |
+<a href="utilities.html">utilities</a> |
+<a href="source.html">source</a> |
+<a href="javadocs/">javadocs</a> |
+<a href="download.html">download</a>
+</div>
+<br clear="all"/>
+<hr/>
+<h2>Code Examples For Creating SSL Sockets</h2>
+<div style="font-family: arial; margin-top: 18px;">
+<b class="n">Note:</b>
+<br/>SSLClient <b class="n">extends</b> SSLSocketFactory
+<br/>SSLServer <b class="n">extends</b> SSLServerSocketFactory
+</div>
+<pre style="border: 1px solid red; padding: 10px; float: left;"><u><b>Client Example:</b></u>
+
+SSLClient client = new SSLClient();
+
+<em style="color: green;">// Let's trust usual "cacerts" that come with Java.  Plus, let's also trust a self-signed cert</em>
+<em style="color: green;">// we know of.  We have some additional certs to trust inside a java keystore file.</em>
+client.addTrustMaterial( TrustMaterial.DEFAULT );
+client.addTrustMaterial( new TrustMaterial( "/path/to/self-signed.pem" ) );
+client.addTrustMaterial( new KeyMaterial( "/path/to/keystore.jks", "changeit".toCharArray() ) );
+
+<em style="color: green;">// To be different, let's allow for expired certificates (not recommended).</em>
+client.setCheckHostname( true );  <em style="color: green;">// default setting is "true" for SSLClient</em>
+client.setCheckExpiry( false );   <em style="color: green;">// default setting is "true" for SSLClient</em>
+client.setCheckCRL( true );       <em style="color: green;">// default setting is "true" for SSLClient</em>
+
+<em style="color: green;">// Let's load a client certificate (max: 1 per SSLClient instance).</em>
+client.setKeyMaterial( new KeyMaterial( "/path/to/client.pfx", "secret".toCharArray() ) );
+SSLSocket s = (SSLSocket) client.createSocket( "www.cucbc.com", 443 );</pre>
+
+<br clear="all"><pre style="border: 1px solid red; padding: 10px; float: left;"><u><b>Server Example (OpenSSL/Apache Style)</b></u>
+<em style="color: green;">// Compatible with the private key / certificate chain created from following the Apache2</em>
+<em style="color: green;">// TLS FAQ: "How do I create a self-signed SSL Certificate for testing purposes?"</em>
+<em style="color: green;">// <a href="http://httpd.apache.org/docs/2.2/ssl/ssl_faq.html#selfcert">http://httpd.apache.org/docs/2.2/ssl/ssl_faq.html#selfcert</a></em>
+
+SSLServer server = new SSLServer();
+
+<em style="color: green;">// Server needs some key material.  We'll use an OpenSSL/PKCS8 style key (possibly encrypted).</em>
+String certificateChain = "/path/to/this/server.crt";
+String privateKey = "/path/to/this/server.key";
+char[] password = "changeit".toCharArray();
+KeyMaterial km = new KeyMaterial( certificateChain, privateKey, password ); 
+
+server.setKeyMaterial( km );
+
+<em style="color: green;">// These settings have to do with how we'll treat client certificates that are presented</em>
+<em style="color: green;">// to us.  If the client doesn't present any client certificate, then these are ignored.</em>
+server.setCheckHostname( false ); <em style="color: green;">// default setting is "false" for SSLServer</em>
+server.setCheckExpiry( true );    <em style="color: green;">// default setting is "true" for SSLServer</em>
+server.setCheckCRL( true );       <em style="color: green;">// default setting is "true" for SSLServer</em>
+
+<em style="color: green;">// This server trusts all client certificates presented (usually people won't present</em>
+<em style="color: green;">// client certs, but if they do, we'll give them a socket at the very least).</em>
+server.addTrustMaterial( TrustMaterial.TRUST_ALL );
+SSLServerSocket ss = (SSLServerSocket) server.createServerSocket( 7443 );
+SSLSocket socket = (SSLSocket) ss.accept();</pre>
+
+<br clear="all"><pre style="border: 1px solid red; padding: 10px; float: left;"><u><b>Server Example (Traditional Java "KeyStore" Style)</b></u>
+
+SSLServer server = new SSLServer();
+
+<em style="color: green;">// Server needs some key material.   We'll use a Java Keystore (.jks) or Netscape</em>
+<em style="color: green;">// PKCS12 (.pfx or .p12) file.  Commons-ssl automatically detects the type.</em>
+String pathToKeyMaterial = "/path/to/.keystore";
+char[] password = "changeit".toCharArray();
+KeyMaterial km = new KeyMaterial( pathToKeyMaterial, password ); 
+
+server.setKeyMaterial( km );
+
+<em style="color: green;">// This server trusts all client certificates presented (usually people won't present</em>
+<em style="color: green;">// client certs, but if they do, we'll give them a socket at the very least).</em>
+server.addTrustMaterial( TrustMaterial.TRUST_ALL );
+SSLServerSocket ss = (SSLServerSocket) server.createServerSocket( 7443 );
+SSLSocket socket = (SSLSocket) ss.accept();</pre>
+
+
+<br clear="all">
+
+</body>
+</html>

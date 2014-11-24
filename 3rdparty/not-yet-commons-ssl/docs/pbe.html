@@ -1,0 +1,204 @@
+<html>
+<head>
+<title>OpenSSL's "enc" in Java (PBE / Password Based Encryption)</title>
+<style type="text/css">
+h1, h2, h3 { margin: 0; border: 0; padding: 0; font-size: 100%; }
+h1 { float: left; color: red; }
+b.n { font-family: arial; font-weight: bold; }
+span.hl { color: white; background-color: green; }
+div.nav { float: left; margin-left: 20px; font-weight: bold; }
+.nav a, .nav span { padding: 0 5px; }
+.nav a { color: blue; }
+li.top { margin-top: 10px; }
+li { margin-top: 6px; width: 750px; }
+ul.openssl { float: left; width: 100px; margin-top: 8px; }
+ul.pkcs8 { float: left; width: 200px; margin-top: 8px; }
+i { color: purple; }
+i.special { color: red; }
+dt { font-weight: bold; }
+dd { margin-top: 1em; margin-bottom: 1em; }
+sup a { text-decoration: none; }
+</style>
+</head>
+<body>
+<h1>not-yet-commons-ssl</h1>
+<div class="nav">
+<a href="index.html">main</a> |
+<a href="ssl.html">ssl</a> |
+<a href="pkcs8.html">pkcs8</a> |
+<span class="hl" href="pbe.html">pbe</span> |
+<a href="rmi.html">rmi</a> |
+<a href="utilities.html">utilities</a> |
+<a href="source.html">source</a> |
+<a href="javadocs/">javadocs</a> |
+<a href="download.html">download</a>
+</div>
+<br clear="all"/>
+<hr/>
+<h2>OpenSSL's "enc" in Java (PBE / Password Based Encryption)</h2>
+<p>Not-Yet-Commons-SSL has an implementation of PBE ("password based encryption") that is 100%
+compatible with OpenSSL's command-line "enc" utility.  PBE is a form of symmetric encryption where
+the same key or password is used to encrypt and decrypt the file.
+</p>
+<p>
+We are also compatible with <code>openssl enc -K [key] -iv [IV]</code>, where the key and IV are provided explicitly,
+instead of being derived from a password.  Look for encrypt()/decrypt() methods that take
+<a href="http://juliusdavies.ca/commons-ssl/javadocs/org/apache/commons/ssl/OpenSSL.html#encrypt(java.lang.String,%20byte[],%20byte[],%20byte[])">byte[] key, byte[] iv</a>
+instead of char[] password.  
+
+</p>
+<p>Please visit the <a href="#Quick-FAQ">Quick-FAQ</a> if you are having problems.</p>
+
+
+<pre style="border: 1px solid red; padding: 10px; float: left;"><u><b>PBE code example (DES-3):</b></u><sup><a href="#fn">*</a></sup>
+
+char[] password = {'c','h','a','n','g','e','i','t'};
+byte[] data = "Hello World!".getBytes();
+
+<em style="color: green;">// Encrypt!</em>
+byte[] encrypted = OpenSSL.encrypt("des3", password, data);
+System.out.println("ENCRYPTED: [" + new String(encrypted) + "]");
+
+<em style="color: green;">// Decrypt results of previous!</em>
+data = OpenSSL.decrypt("des3", password, encrypted);
+System.out.println("DECRYPTED: [" + new String(data) + "]");
+
+
+OUTPUT:
+=======================
+ENCRYPTED: [U2FsdGVkX19qplb9qVDVVEYxH8wjJDGpMS+F4/2pS2c=]
+DECRYPTED: [Hello World!]
+
+<sup><a name="fn">*</a></sup> <span style="font-size: 85%;">- This code example is <a href="#nqr">not quite right</a>.</span>
+</pre>
+<br clear="all"/>
+<p>Some notes:
+<ul>
+    <li>The OpenSSL.encrypt() and OpenSSL.decrypt() methods have InputStream and byte[] versions.  For large
+    files you're going to have to use the InputStream versions.</li>
+    <li>OpenSSL.encrypt() produces base64 output by default.  Use
+<a href="http://juliusdavies.ca/commons-ssl/javadocs/org/apache/commons/ssl/OpenSSL.html#encrypt(java.lang.String,%20char[],%20byte[],%20boolean)">OpenSSL.encrypt(alg, pwd, data, false)</a>
+    to turn that off.</li>
+    <li>OpenSSL.decrypt() auto-detects whether input is base64 or raw binary, so you don't need to worry about it
+    when decrypting.  The base64 "true/false" parameter is only applicable when encrypting.</li>
+    <li>We also have methods that are compatible with "<code>openssl enc -K [key] -iv [IV]</code>" where key and iv
+    are explicitly provided, rather than being derived from a password.  The [key] and [IV] should be specified
+    in either raw binary, or hexidecimal (4 bits per character).  This isn't really PBE anymore, but it's a
+    common use case.</li>
+</ul>
+</p>
+
+<p>Here's a list of supported OpenSSL ciphers.  The <i>purple ones</i> require the <a href="http://www.bouncycastle.org/latest_releases.html">BouncyCastle JCE</a>.
+The <i class="special">red ones (desx, desx-cbc)</i> probably require RSA's <a href="http://www.rsa.com/node.aspx?id=1204">BSAFE JCE</a>,
+and have not been tested.
+</p>
+<pre>
+aes-128-cbc               aes-128-cfb               <!-- aes-128-cfb1 -->
+aes-128-cfb8              aes-128-ecb               aes-128-ofb
+aes-192-cbc               aes-192-cfb               <!-- aes-192-cfb1 -->
+aes-192-cfb8              aes-192-ecb               aes-192-ofb
+aes-256-cbc               aes-256-cfb               <!-- aes-256-cfb1 -->
+aes-256-cfb8              aes-256-ecb               aes-256-ofb
+aes128                    aes192                    aes256
+bf                        bf-cbc                    bf-cfb
+bf-ecb                    bf-ofb                    blowfish
+<i>camellia-128-cbc</i>          <i>camellia-128-cfb</i>          <!-- <i>camellia-128-cfb1</i> -->
+<i>camellia-128-cfb8</i>         <i>camellia-128-ecb</i>          <i>camellia-128-ofb</i>
+<i>camellia-192-cbc</i>          <i>camellia-192-cfb</i>          <!-- <i>camellia-192-cfb1</i> -->
+<i>camellia-192-cfb8</i>         <i>camellia-192-ecb</i>          <i>camellia-192-ofb</i>
+<i>camellia-256-cbc</i>          <i>camellia-256-cfb</i>          <!-- <i>camellia-256-cfb1</i> -->
+<i>camellia-256-cfb8</i>         <i>camellia-256-ecb</i>          <i>camellia-256-ofb</i>
+<i>camellia128</i>               <i>camellia192</i>               <i>camellia256</i>
+<i>cast</i>                      <i>cast-cbc</i>                  <i>cast5-cbc</i>
+<i>cast5-cfb</i>                 <i>cast5-ecb</i>                 <i>cast5-ofb</i>
+des                       des-cbc                   des-cfb
+<!-- des-cfb1 -->                          des-cfb8                  des-ecb
+des-ede                   des-ede-cbc               des-ede-cfb
+des-ede-ofb               des-ede3                  des-ede3-cbc
+des-ede3-cfb              des-ede3-ofb              des-ofb
+des3                      <i class="special">desx</i>                      <i class="special">desx-cbc</i>
+<i>idea</i>                      <i>idea-cbc</i>                  <i>idea-cfb</i>
+<i>idea-ecb</i>                  <i>idea-ofb</i>                  rc2
+rc2-40-cbc                rc2-64-cbc                rc2-cbc
+rc2-cfb                   rc2-ecb                   rc2-ofb
+rc4                       rc4-40                    <i>rc5</i>
+<i>rc5-cbc</i>                   <i>rc5-cfb</i>                   <i>rc5-ecb</i>
+<i>rc5-ofb</i>
+</pre>
+
+<p>Here are some additional ciphers supported by BouncyCastle, but not by OpenSSL:</p>
+<pre>
+<i>cast6</i>
+<i>gost</i> (aka: <i>gost28147</i>)
+<i>rc6</i>
+<i>seed</i>
+<i>serpent</i>
+<i>skipjack</i>
+<i>tea</i>
+<i>twofish</i>
+<i>xtea</i>
+</pre>
+
+<hr/>
+<h3><a name="Quick-FAQ">Quick FAQ about PBE and Java</a></h3>
+<hr/>
+<dl>
+<dt>Why do I keep getting "java.security.InvalidKeyException: Illegal key size"?</dt>
+<dd>
+Don't forget to install your JVM's Unlimited Strength
+Jurisdiction Policy Files if you want AES-192 and AES-256 to work.  (Same is true
+for Camillia-192, Camellia-256, and GOST28147).
+
+Visit <a href="http://java.sun.com/javase/downloads/">http://java.sun.com/javase/downloads/</a>
+and scroll to the bottom:
+<blockquote>
+Other Downloads
+<br/>Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files 6
+</blockquote>
+You can use DES-3 (168 bit keys) without
+installing the extra policy files.
+</dd>
+<dt>Why do the encrypted files always start with "Salted__" ("U2FsdGVkX1" in base64)?
+Isn't giving away information like this insecure?</dt>
+<dd>
+The encrypted files must always start with "Salted__" to interoperate with OpenSSL.
+OpenSSL expects this.  The 8 bytes that spell "Salted__" are always immediately followed
+by another random 8 bytes of salt.  The encrypted stream starts at the 17th byte.
+This way, even if you use the same password to encrypt 2 different files, the actual
+secret keys used to encrypt these 2 files are very different.
+<br/>
+<br/>
+It is possible to omit the salt, but this is highly discouraged:
+
+<pre style="padding: 10px; float: left;">
+boolean useBase64 = true;
+boolean useSalt = false; <em style="color: green;">// Omitting the salt is bad for security!</em>
+byte[] result = <a href="http://juliusdavies.ca/commons-ssl/javadocs/org/apache/commons/ssl/OpenSSL.html#encrypt(java.lang.String,%20char[],%20byte[],%20boolean,%20boolean)">OpenSSL.encrypt(alg, pwd, data, useBase64, useSalt);</a>
+</pre>
+<br clear="all"/>
+</dd>
+<dt><a name="nqr">Why</a> is code example above "not quite right"?</dt>
+<dd>It relies on the platform's default character set.  Here is the proper version (forcing UTF-8):
+
+<pre style="border: 1px solid red; padding: 10px; float: left;"><u><b>PBE example (DES-3):</b></u>
+
+char[] password = {'c','h','a','n','g','e','i','t'};
+byte[] data = "Hello World!".getBytes("UTF-8");
+
+<em style="color: green;">// Encrypt!</em>
+byte[] encrypted = OpenSSL.encrypt("des3", password, data);
+System.out.println("ENCRYPTED: [" + new String(encrypted, "UTF-8") + "]");
+
+<em style="color: green;">// Decrypt results of previous!</em>
+data = OpenSSL.decrypt("des3", password, encrypted);
+System.out.println("DECRYPTED: [" + new String(data, "UTF-8") + "]");
+
+OUTPUT:
+======================
+ENCRYPTED: [U2FsdGVkX19qplb9qVDVVEYxH8wjJDGpMS+F4/2pS2c=]
+DECRYPTED: [Hello World!]
+</pre>
+</dd>
+</dl>
+</body>
+</html>

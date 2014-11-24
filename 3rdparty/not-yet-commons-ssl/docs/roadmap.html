@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>Not-Yet-Commons-SSL - Downloads, Features, Future Directions</title>
+<style type="text/css">
+dl, h1, h2, h3, h4 { margin: 0; border: 0; padding: 0; font-size: 100%; }
+h1 { float: left; color: red; }
+b.n { font-family: arial; font-weight: bold; }
+span.hl { color: white; background-color: green; }
+div.nav { float: left; margin-left: 20px; font-weight: bold; }
+.nav a, .nav span { padding: 0 5px; }
+.nav a { color: blue; }
+td.v { text-align: center; }
+dt { padding: 8px 0 8px 5px; }
+dd { padding-left: 15px; }
+li { padding-bottom: 6px; }
+tr.released td, tr.released th { background-color: yellow; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>not-yet-commons-ssl</h1>
+<div class="nav">
+<a href="index.html">main</a> |
+<a href="ssl.html">ssl</a> |
+
+<a href="pkcs8.html">pkcs8</a> |
+<a href="pbe.html">pbe</a> |
+<a href="rmi.html">rmi</a> |
+<a href="utilities.html">utilities</a> |
+<a href="source.html">source</a> |
+<a href="javadocs/">javadocs</a> |
+
+<span class="hl" href="download.html">download</span>
+</div>
+<br clear="all"/>
+<hr/>
+<h1>This page is out of date.  These days we just do maintenance releases to fix bugs reported on the mailing list.
+Current version is 0.3.15.</h1>
+<h3><a name="roadmap">Road Map For Future Versions</a></h3>
+<p>0.3.10 - 0.3.11 are just some feature ideas.  They might not be feasible.  <b style="background-color: yellow;">0.3.9 is the current version.</b></p>
+<table cellspacing="0" cellpadding="4" border="1">
+<tr><th>Version</th><th>Release&nbsp;Date?</th><th>Description</th></tr>
+<tr><td class="v">0.3.4</td><td class="v">Nov&nbsp;2006</td><td>90% feature complete.  Probably contains some bugs.</td></tr>
+
+<tr><td class="v">0.3.5</td><td class="v">Dec&nbsp;2006</td><td>PKCS8Key constructor is public now.  Whoops.  Hostname verification
+knows about more than just CN's now - also checks subjectAlts in the server's certificate.</td></tr>
+<tr><td class="v">0.3.6</td><td class="v">Jan&nbsp;2007</td><td>Fixed Java 1.4 bug with HttpsURLConnection.</td></tr>
+<tr><td class="v">0.3.7</td><td class="v">Feb&nbsp;2007</td><td>40 bit and 56 bit ciphers disabled by default.  RMI-SSL improved.  getSSLContext() added.  Various other improvements.</td></tr>
+<tr class="v"><td class="v">0.3.8</td><td class="v">Nov&nbsp;2007</td><td>PBE (password-based-encryption) formally introduced and improved.  40 bit and 56 bit ciphers still disabled by default, but working better when re-enabled.</td></tr>
+
+<tr class="released"><td class="v">0.3.9</td><td class="v">May&nbsp;2008</td><td>Some PBE fixes.  Using latest ASN.1 code from BouncyCastle.</td></tr>
+<tr class="unreleased"><td class="v">0.3.10</td><td class="v">May&nbsp;2008</td><td>
+<p>
+Socket monitoring.  Make it easier for long-running server applications to warn
+about impending certificate expiries.
+</p>
+<p>
+<a href="http://en.wikipedia.org/wiki/Online_Certificate_Status_Protocol">OCSP</a> - Online Certificate Status Protocol
+</p>
+
+<p>
+NotQuiteSoEasySSLProtocolSocketFactory will trust any server The First Time, and store that server's cert on disk for future accesses.
+</p>
+</td></tr>
+<tr><td class="v">0.3.11</td><td class="v">Jun&nbsp;2008</td><td><code>TrustMaterial.setAutoReload( true / false )</code>, and <code>KeyMaterial.setAutoReload( true / false )</code>,
+but only if no password, or "changeit" was provided.  (Question:  should this "reload" tear down all open sockets?).
+</td></tr>
+<tr><td class="v">0.4.0</td><td class="v">Jul&nbsp;2008</td><td>Non-public code (protected, private, etc) moved into a separate "impl" package where possible.</td></tr>
+
+<tr><td class="v">0.5.0</td><td class="v">Aug&nbsp;2008</td><td>API froven.  All future versions must be reverse-compatible with 0.5.0 (except for any parts of 0.5.0 later found to be insecure).</td></tr>
+<tr><td class="v">0.7.0</td><td class="v">Nov&nbsp;2008</td><td>JavaDocs written for all public methods and classes.</td></tr>
+<tr><td class="v">0.7.5</td><td class="v">Mar&nbsp;2009</td><td>JUnit tests written for all classes.</td></tr>
+<tr><td class="v">0.9.0</td><td class="v">May&nbsp;2009</td><td>First BETA release.  JUnit tests passing on all targetted platforms:
+
+<ol>
+<li>Intel/AMD: (Sun, IBM, BEA) x (Linux, Mac, Windows) x (1.3, 1.4, 5, 6, 7)</li>
+<li>All of the above with and without BouncyCastle.</li>
+<li>PowerPC:  Mac OS X 10.4, 10.5</li>
+<li>Linux: Latest GCJ, Kaffe, and Blackdown releases.  BouncyCastle added if necessary to get tests to pass.</li>
+<li>Anyone got an IBM mainframe we can test on?</li>
+</td></tr>
+<tr><td class="v">0.9.1&nbsp;-&nbsp;0.9.9</td><td class="v">Aug&nbsp;2009</td><td>Bug fixes.</td></tr>
+
+<tr><td class="v">1.0.0</td><td class="v">Jan&nbsp;2010</td><td>Development mostly stops.</td></tr>
+</table>
+<p>The problem we're solving with Commons-SSL
+is quite small, so I don't see any reason to ever go beyond 1.0.0, except for fixing bugs.</p>

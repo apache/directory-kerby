@@ -1,0 +1,166 @@
+<!--
+    $ ant -p
+    Buildfile: build.xml
+
+    Main targets:
+
+    clean     Deletes class files and other generated files.
+    jar       Jars compiled java class files.
+    javac     Compiles java source code.
+    javadocs  Generates javadocs.
+
+    Default target: jar
+-->
+<project name="not-yet-commons-ssl" default="jar" basedir=".">
+
+  <property name="src" location="src/main/java"/>
+  <property name="build" location="./build"/>
+  <property name="lib" location="./lib"/>
+  <property name="classes" value="${build}/classes"/>
+  <property name="jar-file" value="${ant.project.name}.jar"/>
+  <property name="javadocs" value="${build}/javadocs"/>
+  <property name="rmic.includes" value="**/*RMI.class"/>
+
+  <property name="test-src" location="./src/test"/>
+  <property name="test-classes" value="${build}/test-classes"/>
+  <property name="test-jar-file" value="${ant.project.name}-tests.jar"/>
+  <property name="test.report.dir" value="${build}/test-report"/>   
+
+  <path id="compile-classpath">
+    <fileset dir="lib">
+      <include name="*.jar"/>
+    </fileset>
+    <pathelement location="."/>    
+    <pathelement location="${classes}"/>
+    <pathelement location="${test-classes}"/>            
+  </path>
+
+  <target name="test-jar" depends="jar">
+    <mkdir dir="${test-classes}"/>
+    <javac
+      includeAntRuntime="false"
+      destdir="${test-classes}"
+      debug="true"
+      optimize="false"
+      srcdir="${test-src}"
+    >
+      <classpath refid="compile-classpath"/>
+    </javac>
+    <copy todir="${test-classes}">
+      <fileset dir="${test-src}" excludes="**/*.java"/>
+    </copy>
+    <jar
+      basedir="${test-classes}"
+      destfile="${build}/${test-jar-file}"
+      index="true"
+      whenempty="create"
+    />      
+  </target>
+
+  <target name="test" depends="test-jar">
+      <mkdir dir="${test.report.dir}"/>
+      <junit printsummary="on" haltonfailure="false" errorProperty="junit.failed"
+        failureProperty="junit.failed" fork="on" forkMode="perBatch"
+        timeout="600000" showoutput="on">
+        <syspropertyset><propertyref builtin="commandline"/></syspropertyset>
+        <formatter type="xml"/>
+        <classpath refid="compile-classpath"/>
+        <batchtest todir="${test.report.dir}">
+          <fileset dir="${test-src}" includes="**/Test*.java"/>
+        </batchtest>
+      </junit>
+      <junitreport todir="${test.report.dir}">
+        <fileset dir="${test.report.dir}">
+          <include name="TEST-*.xml"/>
+        </fileset>
+        <report todir="${test.report.dir}"/>
+      </junitreport>
+      <fail message="JUnit tests failed." if="test.failed"/>
+  </target>
+
+  <target name="init">
+    <echo>${ant.version}</echo>
+    <echo>Java version: ${java.version}</echo>
+    <tstamp>
+      <format property="date" pattern="zzz:yyyy-MM-dd/HH:mm:ss" locale="en"/>
+    </tstamp>
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="javac" depends="init" description="Compiles java source code.">
+    <mkdir dir="${classes}"/>
+    <javac
+      compiler="extJavac"
+      includeAntRuntime="false"
+      destdir="${classes}"
+      debug="true"
+      optimize="false"
+      srcdir="${src}"
+    >
+      <classpath refid="compile-classpath"/>
+    </javac>
+    <copy todir="${classes}">
+      <fileset dir="${src}" excludes="**/*.java"/>
+    </copy>
+  </target>
+
+  <target name="rmic" depends="javac" description="Rmics java class files named &quot;*RMI.class&quot;.">                   
+    <rmic
+      base="${classes}"
+      includes="${rmic.includes}"
+      classpathref="compile-classpath"
+    />
+  </target>
+
+  <target name="jar" depends="rmic" description="Jars compiled java class files.">
+    <jar
+      basedir="${classes}"
+      destfile="${build}/${jar-file}"
+      index="true"
+      duplicate="fail"
+    >
+      <manifest>
+        <attribute name="Built-By" value="Julius Davies"/>
+        <attribute name="Created-By" value="Julius Davies"/>
+        <attribute name="Main-Class" value="org.apache.commons.ssl.Ping"/>
+      </manifest>
+     </jar>
+  </target>
+
+  <!-- Alias for "javadocs". -->
+  <target name="javadoc" depends="javadocs"/>
+
+  <target name="javadocs" depends="init" description="Generates javadocs.">
+    <mkdir dir="${javadocs}"/>
+      <javadoc
+        sourcepath="${src}"
+        destdir="${javadocs}"
+        packagenames="*"
+        classpathref="compile-classpath"
+        access="private"
+        source="yes"
+        linksource="yes"
+      >
+        <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+        <link href="http://java.sun.com/j2ee/1.4/docs/api/"/>
+        <link href="http://jakarta.apache.org/commons/httpclient/apidocs/"/>
+      </javadoc>
+  </target>
+
+  <target name="clean" description="Deletes class files and other generated files.">
+    <delete dir="${build}"/>
+  </target>
+
+  <target name="all" depends="clean,jar"/>
+
+  <target name="classpath" depends="cp"/>
+
+  <target name='cp' depends='jar' description='Generates classpath.sh file'>
+    <property name='classdump' refid='compile-classpath'/>
+    <echo file='classpath.sh'>export CLASSPATH=${classdump}
+</echo>
+    <echo>Created classpath.sh file.</echo>
+  </target>
+
+
+</project>
