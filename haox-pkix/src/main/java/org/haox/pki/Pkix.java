@@ -17,17 +17,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class PkinitCrypto {
+public class Pkix {
 
     public static List<Certificate> getCerts(String certFile) throws IOException, CertificateException {
         InputStream is = new FileInputStream(new File(certFile));
         return getCerts(is);
     }
 
-    public static List<Certificate> getCerts(InputStream is) throws IOException, CertificateException {
+    public static List<Certificate> getCerts(InputStream inputStream) throws IOException, CertificateException {
         CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
         Collection<? extends Certificate> certs =
-                (Collection<? extends Certificate>) certFactory.generateCertificates(is);
+                (Collection<? extends Certificate>) certFactory.generateCertificates(inputStream);
 
         return new ArrayList<Certificate>(certs);
     }
@@ -37,15 +37,15 @@ public class PkinitCrypto {
         return getPrivateKey(in, password);
     }
 
-    public static PrivateKey getPrivateKey(InputStream in, String password) throws GeneralSecurityException, IOException {
+    public static PrivateKey getPrivateKey(InputStream inputStream, String password) throws GeneralSecurityException, IOException {
         if (password == null) password = "";
         // If the provided InputStream is encrypted, we need a password to decrypt
         // it. If the InputStream is not encrypted, then the password is ignored
         // (can be null).  The InputStream can be DER (raw ASN.1) or PEM (base64).
-        PKCS8Key pkcs8 = new PKCS8Key(in, password.toCharArray());
+        PKCS8Key pkcs8 = new PKCS8Key(inputStream, password.toCharArray());
 
         // If an unencrypted PKCS8 key was provided, then this actually returns
-        // exactly what was originally passed in (with no changes).  If an OpenSSL
+        // exactly what was originally passed inputStream (with no changes).  If an OpenSSL
         // key was provided, it gets reformatted as PKCS #8 first, and so these
         // bytes will still be PKCS #8, not OpenSSL.
         byte[] decrypted = pkcs8.getDecryptedBytes();
