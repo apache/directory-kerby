@@ -34,7 +34,7 @@ public class TgsRequest extends KdcRequest {
             }
 
             @Override
-            public String askFor(String question, String challenge) {
+            public String askQuestion(String question, String challenge) {
                 return TgsRequest.this.askFor(question, challenge);
             }
 

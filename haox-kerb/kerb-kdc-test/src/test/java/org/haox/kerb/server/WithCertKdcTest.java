@@ -3,11 +3,15 @@ package org.haox.kerb.server;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.ticket.ServiceTicket;
 import org.haox.kerb.spec.type.ticket.TgtTicket;
+import org.haox.pki.Pkix;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.GeneralSecurityException;
+import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -25,12 +29,13 @@ import java.util.Collection;
 public class WithCertKdcTest extends KdcTestBase {
 
     private Certificate userCert;
+    private PrivateKey userKey;
 
     @Override
     protected void setUpClient() throws Exception {
         super.setUpClient();
 
-        loadCert();
+        loadCredentials();
     }
 
     @Override
@@ -49,7 +54,7 @@ public class WithCertKdcTest extends KdcTestBase {
 
         TgtTicket tgt = null;
         try {
-            tgt = krbClnt.requestTgtTicket(clientPrincipal, userCert, null, null);
+            tgt = krbClnt.requestTgtTicket(clientPrincipal, userCert, userKey, null);
         } catch (KrbException te) {
             Assert.assertTrue(te.getMessage().contains("timeout"));
             return;
@@ -60,11 +65,11 @@ public class WithCertKdcTest extends KdcTestBase {
         Assert.assertNull(tkt);
     }
 
-    private void loadCert() throws CertificateException {
+    private void loadCredentials() throws IOException, GeneralSecurityException {
         InputStream res = getClass().getResourceAsStream("/usercert.pem");
-        CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-        Collection<? extends Certificate> certs =
-                (Collection<? extends Certificate>) certFactory.generateCertificates(res);
-        userCert = certs.iterator().next();
+        userCert = Pkix.getCerts(res).iterator().next();
+
+        res = getClass().getResourceAsStream("/userkey.pem");
+        userKey = Pkix.getPrivateKey(res, null);
     }
 }

@@ -35,6 +35,7 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
     public void prepareQuestions(PreauthCallback preauthCallback,
                                  PreauthRequestContext requestContext, KrbOptions preauthOptions) {
 
+        preauthCallback.needAsKey();
     }
 
     @Override

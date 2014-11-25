@@ -23,6 +23,13 @@ public abstract class PreauthCallback {
     }
 
     /**
+     * Indicate interest in the AS key.
+     */
+    public void needAsKey() {
+
+    }
+
+    /**
      * Get the enctype expected to be used to encrypt the encrypted portion of
      * the AS_REP packet.  When handling a PREAUTH_REQUIRED error, this
      * typically comes from etype-info2.  When handling an AS reply, it is
@@ -32,7 +39,7 @@ public abstract class PreauthCallback {
         return null;
     }
 
-    public abstract String askFor(String question, String challenge);
+    public abstract String askQuestion(String question, String challenge);
 
     /**
      * Get a pointer to the FAST armor key, or NULL if the client is not using FAST.
