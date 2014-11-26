@@ -53,11 +53,11 @@ public class PreauthCallback {
     }
 
     public void askQuestion(KrbContext krbContext,
-                              KdcRequest kdcRequest,
-                              String question,
-                              String challenge) {
+                            KdcRequest kdcRequest,
+                            String question,
+                            String challenge) {
 
-        kdcRequest.getResponser().askQuestion(question, challenge);
+        kdcRequest.getPreauthContext().getUserResponser().askQuestion(question, challenge);
     }
 
     /**
@@ -90,8 +90,8 @@ public class PreauthCallback {
      * alias and should not be freed.
      */
     public Object getCacheValue(KrbContext krbContext,
-                                         KdcRequest kdcRequest,
-                                         String key) {
+                                KdcRequest kdcRequest,
+                                String key) {
 
         return kdcRequest.getCredCache().get(key);
     }
@@ -102,9 +102,9 @@ public class PreauthCallback {
      * should be valid UTF-8 text.
      */
     public void cacheValue(KrbContext krbContext,
-                                    KdcRequest kdcRequest,
-                                    String key,
-                                    Object value) {
+                           KdcRequest kdcRequest,
+                           String key,
+                           Object value) {
 
         kdcRequest.getCredCache().put(key, value);
     }

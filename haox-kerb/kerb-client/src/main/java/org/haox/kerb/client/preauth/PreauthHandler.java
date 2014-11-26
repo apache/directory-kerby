@@ -6,6 +6,7 @@ import org.haox.kerb.client.preauth.pkinit.PkinitPreauth;
 import org.haox.kerb.client.preauth.token.TokenPreauth;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
@@ -47,29 +48,57 @@ public class PreauthHandler {
             handle.preauth = preauth;
             handle.requestContext = preauth.initRequestContext(
                     krbContext, kdcRequest, preauthCallback);
-            preauthContext.handles.add(handle);
+            preauthContext.getHandles().add(handle);
         }
 
         return preauthContext;
     }
 
+    public void preauth(KrbContext krbContext, KdcRequest kdcRequest) throws KrbException {
+        PreauthContext preauthContext = kdcRequest.getPreauthContext();
+
+        if (!preauthContext.isPreauthRequired()) {
+            return;
+        }
+
+        setPreauthOptions(krbContext, kdcRequest, kdcRequest.getPreauthOptions());
+
+        if (!kdcRequest.isRetrying()) {
+            process(krbContext, kdcRequest, null, preauthContext.getInputPaData());
+        } else {
+            tryAgain(krbContext, kdcRequest, null, null, preauthContext.getInputPaData());
+        }
+    }
+
+    public void prepareUserResponses(KrbContext krbContext, KdcRequest kdcRequest, PaData inPadata) {
+        PreauthContext preauthContext = kdcRequest.getPreauthContext();
+        for (PaDataEntry pae : inPadata.getElements()) {
+            if (! preauthContext.isPaTypeAllowed(pae.getPaDataType())) {
+                continue;
+            }
+        }
+    }
+
     public void setPreauthOptions(KrbContext krbContext, KdcRequest kdcRequest,
                                   KrbOptions preauthOptions) throws KrbException {
-        for (PreauthHandle handle : kdcRequest.getPreauthContext().handles) {
+        PreauthContext preauthContext = kdcRequest.getPreauthContext();
+        for (PreauthHandle handle : preauthContext.getHandles()) {
             handle.setPreauthOptions(krbContext, kdcRequest, preauthCallback, preauthOptions);
         }
     }
 
     public void process(KrbContext krbContext, KdcRequest kdcRequest,
                         PaDataEntry inPadata, PaData outPadata) throws KrbException {
-        for (PreauthHandle handle : kdcRequest.getPreauthContext().handles) {
+        PreauthContext preauthContext = kdcRequest.getPreauthContext();
+        for (PreauthHandle handle : preauthContext.getHandles()) {
             handle.process(krbContext, kdcRequest, preauthCallback, inPadata, outPadata);
         }
     }
 
     public void tryAgain(KrbContext krbContext, KdcRequest kdcRequest, PaDataType preauthType,
                          PaData errPadata, PaData outPadata) {
-        for (PreauthHandle handle : kdcRequest.getPreauthContext().handles) {
+        PreauthContext preauthContext = kdcRequest.getPreauthContext();
+        for (PreauthHandle handle : preauthContext.getHandles()) {
             handle.tryAgain(krbContext, kdcRequest, preauthCallback,
                     preauthType, errPadata, outPadata);
         }

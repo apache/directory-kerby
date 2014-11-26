@@ -46,7 +46,7 @@ public class AsRequest extends KdcRequest {
 
         AsReq asReq = new AsReq();
         asReq.setReqBody(body);
-        asReq.setPaData(getPreauthData());
+        asReq.setPaData(getPreauthContext().getPreauthData());
 
         setKdcReq(asReq);
     }

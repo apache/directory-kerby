@@ -33,19 +33,14 @@ public abstract class KdcRequest {
     private PrincipalName serverPrincipal;
     private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
     private KdcOptions kdcOptions = new KdcOptions();
-    private boolean preauthRequired = true;
     private List<EncryptionType> encryptionTypes;
     private EncryptionType chosenEncryptionType;
     private int chosenNonce;
     private KdcReq kdcReq;
     private KdcRep kdcRep;
     protected Map<String, Object> credCache;
+    private PreauthContext preauthContext;
     private FastContext fastContext = new FastContext();
-    private ResponseItems responseItems = new ResponseItems();
-    protected PreauthContext preauthContext;
-    protected PaDataType selectedPreauthType;
-    protected PaDataType allowedPreauthType;
-    private PaData preauthData;
     private boolean isRetrying;
     private EncryptionKey asKey;
 
@@ -53,8 +48,7 @@ public abstract class KdcRequest {
         this.context = context;
         this.isRetrying = false;
         this.credCache = new HashMap<String, Object>();
-        this.selectedPreauthType = PaDataType.NONE;
-        this.allowedPreauthType = PaDataType.NONE;
+        this.preauthContext = new PreauthContext();
     }
 
     public void setTransport(Transport transport) {
@@ -73,6 +67,10 @@ public abstract class KdcRequest {
         return krbOptions;
     }
 
+    public boolean isRetrying() {
+        return isRetrying;
+    }
+
     public void setAsKey(EncryptionKey asKey) {
         this.asKey = asKey;
     }
@@ -83,10 +81,6 @@ public abstract class KdcRequest {
 
     public FastContext getFastContext() {
         return fastContext;
-    }
-
-    public ResponseItems getResponser() {
-        return responseItems;
     }
 
     public Map<String, Object> getCredCache() {
@@ -103,14 +97,6 @@ public abstract class KdcRequest {
 
     protected void loadCredCache() {
         // TODO
-    }
-
-    protected PaData getPreauthData() throws KrbException {
-        return preauthData;
-    }
-
-    public void setAllowedPreauth(PaDataType paType) {
-        this.allowedPreauthType = paType;
     }
 
     public KdcReq getKdcReq() {
@@ -207,14 +193,6 @@ public abstract class KdcRequest {
         this.serverPrincipal = serverPrincipal;
     }
 
-    public boolean isPreauthRequired() {
-        return preauthRequired;
-    }
-
-    public void setPreauthRequired(boolean preauthRequired) {
-        this.preauthRequired = preauthRequired;
-    }
-
     public List<EncryptionType> getEncryptionTypes() {
         if (encryptionTypes == null) {
             encryptionTypes = context.getConfig().getEncryptionTypes();
@@ -268,13 +246,12 @@ public abstract class KdcRequest {
 
     public abstract void processResponse(KdcRep kdcRep) throws KrbException;
 
-    protected KrbOptions getPreauthOptions() {
+    public KrbOptions getPreauthOptions() {
         return new KrbOptions();
     }
 
     protected void preauth() throws KrbException {
         loadCredCache();
-        preauthData = new PaData();
 
         List<EncryptionType> etypes = getEncryptionTypes();
         if (etypes.isEmpty()) {
@@ -283,20 +260,10 @@ public abstract class KdcRequest {
         EncryptionType encryptionType = etypes.iterator().next();
         setChosenEncryptionType(encryptionType);
 
-        if (!isPreauthRequired()) {
-            return;
-        }
-
-        getContext().getPreauthHandler().setPreauthOptions(getContext(), this, getPreauthOptions());
-
-        if (!isRetrying) {
-            getContext().getPreauthHandler().process(getContext(), this, null, preauthData);
-        } else {
-            getContext().getPreauthHandler().tryAgain(getContext(), this, null, null, preauthData);
-        }
+        getPreauthHandler().preauth(getContext(), this);
     }
 
-    protected String askFor(String question, String challenge) {
-        return null;
+    protected PreauthHandler getPreauthHandler() {
+        return getContext().getPreauthHandler();
     }
 }

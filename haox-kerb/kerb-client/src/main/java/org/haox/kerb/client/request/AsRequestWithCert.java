@@ -17,7 +17,7 @@ public class AsRequestWithCert extends AsRequest {
     }
 
     @Override
-    protected KrbOptions getPreauthOptions() {
+    public KrbOptions getPreauthOptions() {
         KrbOptions results = new KrbOptions();
 
         KrbOptions krbOptions = getKrbOptions();

@@ -3,12 +3,12 @@ package org.haox.kerb.client.preauth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResponseItems {
+public class UserResponser {
 
-    private List<ResponseItem> items = new ArrayList<ResponseItem>(1);
+    private List<UserResponseItem> items = new ArrayList<UserResponseItem>(1);
 
-    public ResponseItem findQuestion(String question) {
-        for (ResponseItem ri : items) {
+    public UserResponseItem findQuestion(String question) {
+        for (UserResponseItem ri : items) {
             if (ri.question.equals(question)) {
                 return ri;
             }
@@ -17,16 +17,16 @@ public class ResponseItems {
     }
 
     public void askQuestion(String question, String challenge) {
-        ResponseItem ri = findQuestion(question);
+        UserResponseItem ri = findQuestion(question);
         if (ri == null) {
-            items.add(new ResponseItem(question, challenge));
+            items.add(new UserResponseItem(question, challenge));
         } else {
             ri.challenge = challenge;
         }
     }
 
     public String getChallenge(String question) {
-        ResponseItem ri = findQuestion(question);
+        UserResponseItem ri = findQuestion(question);
         if (ri != null) {
             return ri.challenge;
         }
@@ -34,7 +34,7 @@ public class ResponseItems {
     }
 
     public void setAnswer(String question, String answer) {
-        ResponseItem ri = findQuestion(question);
+        UserResponseItem ri = findQuestion(question);
         if (ri == null) {
             throw new IllegalArgumentException("Question isn't exist for the answer");
         }
@@ -42,7 +42,7 @@ public class ResponseItems {
     }
 
     public String getAnswer(String question) {
-        ResponseItem ri = findQuestion(question);
+        UserResponseItem ri = findQuestion(question);
         if (ri != null) {
             return ri.answer;
         }

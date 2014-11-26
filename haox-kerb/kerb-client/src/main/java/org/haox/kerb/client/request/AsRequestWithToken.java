@@ -18,7 +18,7 @@ public class AsRequestWithToken extends AsRequest {
     }
 
     @Override
-    protected KrbOptions getPreauthOptions() {
+    public KrbOptions getPreauthOptions() {
         KrbOptions results = new KrbOptions();
 
         KrbOptions krbOptions = getKrbOptions();

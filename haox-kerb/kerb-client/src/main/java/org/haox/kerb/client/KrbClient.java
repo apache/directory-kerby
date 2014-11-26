@@ -235,7 +235,7 @@ public class KrbClient {
                 } catch (IOException ioe) {
                     throw new KrbException("Failed to decode and get etypes from krbError", ioe);
                 }
-                tgtTktReq.setPreauthRequired(true);
+                tgtTktReq.getPreauthContext().setPreauthRequired(true);
                 return requestTgtTicket(clientPrincipal, tgtTktReq);
             }
             throw e;
