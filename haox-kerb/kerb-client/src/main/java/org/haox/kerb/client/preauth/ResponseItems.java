@@ -16,7 +16,7 @@ public class ResponseItems {
         return null;
     }
 
-    public void addQuestion(String question, String challenge) {
+    public void askQuestion(String question, String challenge) {
         ResponseItem ri = findQuestion(question);
         if (ri == null) {
             items.add(new ResponseItem(question, challenge));

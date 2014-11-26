@@ -1,11 +1,11 @@
 package org.haox.kerb.client.preauth.pkinit;
 
-import org.haox.kerb.client.preauth.PreauthRequestContext;
+import org.haox.kerb.client.preauth.PluginRequestContext;
 import org.haox.kerb.preauth.pkinit.IdentityOpts;
 import org.haox.kerb.preauth.pkinit.PluginOpts;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
-public class PkinitRequestContext implements PreauthRequestContext {
+public class PkinitRequestContext implements PluginRequestContext {
 
     public PkinitRequestOpts requestOpts = new PkinitRequestOpts();
     public IdentityOpts identityOpts = new IdentityOpts();

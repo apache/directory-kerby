@@ -2,9 +2,7 @@ package org.haox.kerb.client.request;
 
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOptions;
-import org.haox.kerb.client.preauth.PreauthCallback;
-import org.haox.kerb.client.preauth.PreauthContext;
-import org.haox.kerb.client.preauth.PreauthHandler;
+import org.haox.kerb.client.preauth.*;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
@@ -42,12 +40,14 @@ public abstract class KdcRequest {
     private KdcReq kdcReq;
     private KdcRep kdcRep;
     protected Map<String, Object> credCache;
+    private FastContext fastContext = new FastContext();
+    private ResponseItems responseItems = new ResponseItems();
     protected PreauthContext preauthContext;
     protected PaDataType selectedPreauthType;
     protected PaDataType allowedPreauthType;
-    private PreauthHandler preauthHandler;
     private PaData preauthData;
     private boolean isRetrying;
+    private EncryptionKey asKey;
 
     public KdcRequest(KrbContext context) {
         this.context = context;
@@ -55,10 +55,6 @@ public abstract class KdcRequest {
         this.credCache = new HashMap<String, Object>();
         this.selectedPreauthType = PaDataType.NONE;
         this.allowedPreauthType = PaDataType.NONE;
-    }
-
-    public void setPreauthHandler(PreauthHandler preauthHandler) {
-        this.preauthHandler = preauthHandler;
     }
 
     public void setTransport(Transport transport) {
@@ -77,11 +73,30 @@ public abstract class KdcRequest {
         return krbOptions;
     }
 
-    protected abstract PreauthCallback getPreauthCallback();
+    public void setAsKey(EncryptionKey asKey) {
+        this.asKey = asKey;
+    }
 
-    protected PreauthContext getPreauthContext() {
+    public EncryptionKey getAsKey() throws KrbException {
+        return asKey;
+    }
+
+    public FastContext getFastContext() {
+        return fastContext;
+    }
+
+    public ResponseItems getResponser() {
+        return responseItems;
+    }
+
+    public Map<String, Object> getCredCache() {
+        return credCache;
+    }
+
+    public PreauthContext getPreauthContext() {
         if (preauthContext == null) {
-            preauthContext = preauthHandler.preparePreauthContext(getPreauthCallback());
+            preauthContext = context.getPreauthHandler()
+                    .preparePreauthContext(getContext(), this);
         }
         return preauthContext;
     }
@@ -272,12 +287,12 @@ public abstract class KdcRequest {
             return;
         }
 
-        preauthHandler.setPreauthOptions(getPreauthContext(), getPreauthOptions());
+        getContext().getPreauthHandler().setPreauthOptions(getContext(), this, getPreauthOptions());
 
         if (!isRetrying) {
-            preauthHandler.process(getPreauthContext(), null, preauthData);
+            getContext().getPreauthHandler().process(getContext(), this, null, preauthData);
         } else {
-            preauthHandler.tryAgain(getPreauthContext(), null, null, preauthData);
+            getContext().getPreauthHandler().tryAgain(getContext(), this, null, null, preauthData);
         }
     }
 

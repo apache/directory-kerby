@@ -22,39 +22,6 @@ public class AsRequest extends KdcRequest {
         setServerPrincipal(makeTgsPrincipal());
     }
 
-    @Override
-    protected PreauthCallback getPreauthCallback() {
-        return new PreauthCallback() {
-            public EncryptionKey getAsKey() throws KrbException {
-                return getClientKey();
-            }
-
-            public void setAsKey(EncryptionKey asKey) {
-                setClientKey(asKey);
-            }
-
-            @Override
-            public String askQuestion(String question, String challenge) {
-                return AsRequest.this.askFor(question, challenge);
-            }
-
-            @Override
-            public Object getCacheValue(String key) {
-                return credCache.get(key);
-            }
-
-            @Override
-            public void cacheValue(String key, Object value) {
-                credCache.put(key, value);
-            }
-
-            @Override
-            public PrincipalName getClientPrincipal() {
-                return AsRequest.this.getClientPrincipal();
-            }
-        };
-    }
-
     public PrincipalName getClientPrincipal() {
         return clientPrincipal;
     }

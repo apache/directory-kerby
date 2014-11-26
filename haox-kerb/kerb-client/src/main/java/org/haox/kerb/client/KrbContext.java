@@ -1,5 +1,6 @@
 package org.haox.kerb.client;
 
+import org.haox.kerb.client.preauth.PreauthContext;
 import org.haox.kerb.client.preauth.PreauthHandler;
 import org.haox.kerb.crypto.Nonce;
 
@@ -70,5 +71,9 @@ public class KrbContext {
 
     public long getTicketValidTime() {
         return 8 * 60 * 60 * 1000;
+    }
+
+    public PreauthHandler getPreauthHandler() {
+        return preauthHandler;
     }
 }

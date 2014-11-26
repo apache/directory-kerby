@@ -2,6 +2,7 @@ package org.haox.kerb.client.preauth;
 
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOptions;
+import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
@@ -27,45 +28,63 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
     }
 
     @Override
-    public PreauthRequestContext initRequestContext(PreauthCallback preauthCallback) {
+    public PluginRequestContext initRequestContext(KrbContext krbContext,
+                                                    KdcRequest kdcRequest,
+                                                    PreauthCallback preauthCallback) {
         return null;
     }
 
     @Override
-    public void prepareQuestions(PreauthCallback preauthCallback,
-                                 PreauthRequestContext requestContext, KrbOptions preauthOptions) {
+    public void prepareQuestions(KrbContext krbContext,
+                                 KdcRequest kdcRequest,
+                                 PreauthCallback preauthCallback,
+                                 PluginRequestContext requestContext,
+                                 KrbOptions preauthOptions) throws KrbException {
 
-        preauthCallback.needAsKey();
+        preauthCallback.needAsKey(krbContext, kdcRequest);
     }
 
     @Override
-    public List<EncryptionType> getEncTypes(PreauthCallback preauthCallback,
-                                            PreauthRequestContext requestContext) {
+    public List<EncryptionType> getEncTypes(KrbContext krbContext,
+                                            KdcRequest kdcRequest,
+                                            PreauthCallback preauthCallback,
+                                            PluginRequestContext requestContext) {
         return Collections.emptyList();
     }
 
     @Override
-    public void setPreauthOptions(PreauthCallback preauthCallback,
-                                  PreauthRequestContext requestContext, KrbOptions options) {
+    public void setPreauthOptions(KrbContext krbContext,
+                                  KdcRequest kdcRequest,
+                                  PreauthCallback preauthCallback,
+                                  PluginRequestContext requestContext,
+                                  KrbOptions options) {
         
     }
 
     @Override
-    public void process(PreauthCallback preauthCallback,
-                        PreauthRequestContext requestContext,
-                        PaDataEntry inPadata, PaData outPadata) throws KrbException {
-        outPadata.addElement(makeEntry(preauthCallback));
+    public void process(KrbContext krbContext,
+                        KdcRequest kdcRequest,
+                        PreauthCallback preauthCallback,
+                        PluginRequestContext requestContext,
+                        PaDataEntry inPadata,
+                        PaData outPadata) throws KrbException {
+        outPadata.addElement(makeEntry(krbContext, kdcRequest, preauthCallback));
     }
 
     @Override
-    public void tryAgain(PreauthCallback preauthCallback, PreauthRequestContext requestContext,
-                         PaDataType preauthType, PaData errPadata, PaData outPadata) {
+    public void tryAgain(KrbContext krbContext,
+                         KdcRequest kdcRequest,
+                         PreauthCallback preauthCallback,
+                         PluginRequestContext requestContext,
+                         PaDataType preauthType,
+                         PaData errPadata,
+                         PaData outPadata) {
 
     }
 
     @Override
-    public PaFlags getFlags(PreauthCallback preauthCallback,
-                            PreauthRequestContext requestContext, PaDataType paType) {
+    public PaFlags getFlags(KrbContext krbContext,
+                            PaDataType paType) {
         PaFlags paFlags = new PaFlags(0);
         paFlags.setFlag(PaFlag.PA_REAL);
 
@@ -73,16 +92,18 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
     }
 
     @Override
-    public void destroy() {
+    public void destroy(KrbContext krbContext) {
 
     }
 
-    private PaDataEntry makeEntry(PreauthCallback preauthCallback) throws KrbException {
+    private PaDataEntry makeEntry(KrbContext krbContext,
+                                  KdcRequest kdcRequest,
+                                  PreauthCallback preauthCallback) throws KrbException {
         PaEncTsEnc paTs = new PaEncTsEnc();
-        paTs.setPaTimestamp(preauthCallback.getPreauthTime());
+        paTs.setPaTimestamp(preauthCallback.getPreauthTime(krbContext, kdcRequest));
 
         EncryptedData paDataValue = EncryptionUtil.seal(paTs,
-                preauthCallback.getAsKey(), KeyUsage.AS_REQ_PA_ENC_TS);
+                preauthCallback.getAsKey(krbContext, kdcRequest), KeyUsage.AS_REQ_PA_ENC_TS);
         PaDataEntry tsPaEntry = new PaDataEntry();
         tsPaEntry.setPaDataType(PaDataType.ENC_TIMESTAMP);
         tsPaEntry.setPaDataValue(paDataValue.encode());

@@ -55,7 +55,6 @@ public class KrbHandler extends AbstractEventHandler {
     }
 
     protected void handleKdcRequest(KdcRequest kdcRequest) throws KrbException {
-        kdcRequest.setPreauthHandler(preauthHandler);
         kdcRequest.process();
         KdcReq kdcReq = kdcRequest.getKdcReq();
         Transport transport = kdcRequest.getTransport();

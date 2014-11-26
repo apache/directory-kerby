@@ -1,7 +1,6 @@
 package org.haox.kerb.client.request;
 
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.client.preauth.PreauthCallback;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
@@ -24,35 +23,6 @@ public class TgsRequest extends KdcRequest {
     public TgsRequest(KrbContext context, TgtTicket tgtTicket) {
         super(context);
         this.tgt = tgtTicket;
-    }
-
-    @Override
-    protected PreauthCallback getPreauthCallback() {
-        return new PreauthCallback() {
-            public EncryptionKey getAsKey() throws KrbException {
-                return getClientKey();
-            }
-
-            @Override
-            public String askQuestion(String question, String challenge) {
-                return TgsRequest.this.askFor(question, challenge);
-            }
-
-            @Override
-            public Object getCacheValue(String key) {
-                return credCache.get(key);
-            }
-
-            @Override
-            public void cacheValue(String key, Object value) {
-                credCache.put(key, value);
-            }
-
-            @Override
-            public PrincipalName getClientPrincipal() {
-                return TgsRequest.this.getClientPrincipal();
-            }
-        };
     }
 
     public PrincipalName getClientPrincipal() {

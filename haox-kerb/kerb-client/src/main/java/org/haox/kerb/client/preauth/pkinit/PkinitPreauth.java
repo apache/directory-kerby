@@ -4,8 +4,9 @@ import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.preauth.KrbPreauth;
+import org.haox.kerb.client.preauth.PluginRequestContext;
 import org.haox.kerb.client.preauth.PreauthCallback;
-import org.haox.kerb.client.preauth.PreauthRequestContext;
+import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
 import org.haox.kerb.preauth.pkinit.PkinitIdenity;
@@ -31,7 +32,9 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     }
 
     @Override
-    public PreauthRequestContext initRequestContext(PreauthCallback preauthCallback) {
+    public PluginRequestContext initRequestContext(KrbContext krbContext,
+                                                    KdcRequest kdcRequest,
+                                                    PreauthCallback preauthCallback) {
         PkinitRequestContext reqCtx = new PkinitRequestContext();
 
         reqCtx.updateRequestOpts(pkinitContext.pluginOpts);
@@ -40,14 +43,19 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     }
 
     @Override
-    public List<EncryptionType> getEncTypes(PreauthCallback preauthCallback,
-                                            PreauthRequestContext requestContext) {
+    public List<EncryptionType> getEncTypes(KrbContext krbContext,
+                                            KdcRequest kdcRequest,
+                                            PreauthCallback preauthCallback,
+                                            PluginRequestContext requestContext) {
         return Collections.emptyList();
     }
 
     @Override
-    public void setPreauthOptions(PreauthCallback preauthCallback,
-                                  PreauthRequestContext requestContext, KrbOptions options) {
+    public void setPreauthOptions(KrbContext krbContext,
+                                  KdcRequest kdcRequest,
+                                  PreauthCallback preauthCallback,
+                                  PluginRequestContext requestContext,
+                                  KrbOptions options) {
         if (options.contains(KrbOption.PKINIT_X509_IDENTITY)) {
             pkinitContext.identityOpts.identity =
                     options.getStringOption(KrbOption.PKINIT_X509_IDENTITY);
@@ -66,13 +74,16 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     }
 
     @Override
-    public void prepareQuestions(PreauthCallback preauthCallback,
-                                  PreauthRequestContext requestContext, KrbOptions options) {
+    public void prepareQuestions(KrbContext krbContext,
+                                 KdcRequest kdcRequest,
+                                 PreauthCallback preauthCallback,
+                                 PluginRequestContext requestContext,
+                                 KrbOptions preauthOptions) {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
 
         if (!reqCtx.identityInitialized) {
-            PkinitIdenity.initialize(reqCtx.identityOpts, preauthCallback.getClientPrincipal());
+            PkinitIdenity.initialize(reqCtx.identityOpts, kdcRequest.getClientPrincipal());
             reqCtx.identityInitialized = true;
         }
 
@@ -80,8 +91,12 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     }
 
     @Override
-    public void process(PreauthCallback preauthCallback, PreauthRequestContext requestContext,
-                        PaDataEntry inPadata, PaData outPadata) throws KrbException {
+    public void process(KrbContext krbContext,
+                        KdcRequest kdcRequest,
+                        PreauthCallback preauthCallback,
+                        PluginRequestContext requestContext,
+                        PaDataEntry inPadata,
+                        PaData outPadata) throws KrbException {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
         if (inPadata == null) return;
@@ -98,8 +113,8 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
         if (processingRequest) {
             generateRequest(reqCtx, outPadata);
         } else {
-            EncryptionType encType = preauthCallback.getEncType();
-            processReply(preauthCallback, reqCtx, inPadata, encType);
+            EncryptionType encType = preauthCallback.getEncType(krbContext, kdcRequest);
+            processReply(krbContext, kdcRequest, preauthCallback, reqCtx, inPadata, encType);
         }
     }
 
@@ -107,19 +122,28 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
 
     }
 
-    private void processReply(PreauthCallback preauthCallback, PkinitRequestContext reqCtx,
-                              PaDataEntry inPadata, EncryptionType encType) {
+    private void processReply(KrbContext krbContext,
+                              KdcRequest kdcRequest,
+                              PreauthCallback preauthCallback,
+                              PkinitRequestContext reqCtx,
+                              PaDataEntry inPadata,
+                              EncryptionType encType) {
 
         EncryptionKey asKey = null;
 
         // TODO
 
-        preauthCallback.setAsKey(asKey);
+        preauthCallback.setAsKey(krbContext, kdcRequest, asKey);
     }
 
     @Override
-    public void tryAgain(PreauthCallback preauthCallback, PreauthRequestContext requestContext,
-                         PaDataType preauthType, PaData errPadata, PaData outPadata) {
+    public void tryAgain(KrbContext krbContext,
+                         KdcRequest kdcRequest,
+                         PreauthCallback preauthCallback,
+                         PluginRequestContext requestContext,
+                         PaDataType preauthType,
+                         PaData errPadata,
+                         PaData outPadata) {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
         if (reqCtx.paType != preauthType && errPadata == null) {
@@ -139,8 +163,8 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     }
 
     @Override
-    public PaFlags getFlags(PreauthCallback preauthCallback,
-                            PreauthRequestContext requestContext, PaDataType paType) {
+    public PaFlags getFlags(KrbContext krbContext,
+                            PaDataType paType) {
         PaFlags paFlags = new PaFlags(0);
         paFlags.setFlag(PaFlag.PA_REAL);
 
@@ -148,7 +172,7 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     }
 
     @Override
-    public void destroy() {
+    public void destroy(KrbContext krbContext) {
 
     }
 
