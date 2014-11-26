@@ -13,6 +13,12 @@ public class PreauthHandle {
     public KrbPreauth preauth;
     public PluginRequestContext requestContext;
 
+    public void prepareQuestions(KrbContext krbContext, KdcRequest kdcRequest,
+                                  PreauthCallback preauthCallback) throws KrbException {
+        preauth.prepareQuestions(krbContext, kdcRequest,
+                preauthCallback, requestContext);
+    }
+
     public void setPreauthOptions(KrbContext krbContext, KdcRequest kdcRequest,
                                   PreauthCallback preauthCallback,
                                   KrbOptions preauthOptions) throws KrbException {

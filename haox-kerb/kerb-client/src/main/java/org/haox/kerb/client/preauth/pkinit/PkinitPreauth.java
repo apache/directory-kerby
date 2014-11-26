@@ -77,8 +77,7 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     public void prepareQuestions(KrbContext krbContext,
                                  KdcRequest kdcRequest,
                                  PreauthCallback preauthCallback,
-                                 PluginRequestContext requestContext,
-                                 KrbOptions preauthOptions) {
+                                 PluginRequestContext requestContext) {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
 

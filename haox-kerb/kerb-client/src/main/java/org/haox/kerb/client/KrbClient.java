@@ -115,6 +115,21 @@ public class KrbClient {
     }
 
     /**
+     * Attempt to request a TGT and you'll be prompted to input a credential.
+     * Whatever credential requested to provide depends on KDC admin configuration.
+     * @param options
+     * @return
+     * @throws KrbException
+     */
+    public TgtTicket requestTgtTicket(String principal, KrbOptions options) throws KrbException {
+        if (options == null) options = new KrbOptions();
+
+        AsRequest asRequest = new AsRequest(context);
+        asRequest.setKrbOptions(options);
+        return requestTgtTicket(principal, asRequest);
+    }
+
+    /**
      * Request a TGT with user plain credential
      * @param principal
      * @param password
@@ -154,18 +169,18 @@ public class KrbClient {
 
     /**
      * Request a TGT with using Anonymous PKINIT
-     * @param principal
      * @param options
      * @return
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(String principal, KrbOptions options) throws KrbException {
+    public TgtTicket requestTgtTicket(KrbOptions options) throws KrbException {
         if (options == null) options = new KrbOptions();
 
         AsRequestWithCert asRequest = new AsRequestWithCert(context);
         options.add(KrbOption.PKINIT_X509_ANONYMOUS);
         asRequest.setKrbOptions(options);
 
+        String principal = AsRequestWithCert.ANONYMOUS_PRINCIPAL;
         return requestTgtTicket(principal, asRequest);
     }
 

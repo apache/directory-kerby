@@ -38,8 +38,7 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
     public void prepareQuestions(KrbContext krbContext,
                                  KdcRequest kdcRequest,
                                  PreauthCallback preauthCallback,
-                                 PluginRequestContext requestContext,
-                                 KrbOptions preauthOptions) throws KrbException {
+                                 PluginRequestContext requestContext) throws KrbException {
 
         preauthCallback.needAsKey(krbContext, kdcRequest);
     }

@@ -7,6 +7,13 @@ public class UserResponser {
 
     private List<UserResponseItem> items = new ArrayList<UserResponseItem>(1);
 
+    /**
+     * Let customize an interface like CMD or WEB UI to selectively respond all the questions
+     */
+    public void respondQuestions() {
+        // TODO
+    }
+
     public UserResponseItem findQuestion(String question) {
         for (UserResponseItem ri : items) {
             if (ri.question.equals(question)) {

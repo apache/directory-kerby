@@ -5,8 +5,10 @@ import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.preauth.pkinit.PkinitPreauth;
 import org.haox.kerb.client.preauth.token.TokenPreauth;
 import org.haox.kerb.client.request.KdcRequest;
+import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.EtypeInfo;
+import org.haox.kerb.spec.type.common.EtypeInfo2;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
@@ -61,7 +63,17 @@ public class PreauthHandler {
             return;
         }
 
+        if (!preauthContext.hasInputPaData()) {
+            return;
+        }
+
+        attemptETypeInfo(krbContext, kdcRequest, preauthContext.getInputPaData());
+
         setPreauthOptions(krbContext, kdcRequest, kdcRequest.getPreauthOptions());
+
+        prepareUserResponses(krbContext, kdcRequest, preauthContext.getInputPaData());
+
+        preauthContext.getUserResponser().respondQuestions();
 
         if (!kdcRequest.isRetrying()) {
             process(krbContext, kdcRequest, null, preauthContext.getInputPaData());
@@ -70,12 +82,21 @@ public class PreauthHandler {
         }
     }
 
-    public void prepareUserResponses(KrbContext krbContext, KdcRequest kdcRequest, PaData inPadata) {
+    public void prepareUserResponses(KrbContext krbContext, KdcRequest kdcRequest,
+                                     PaData inPadata) throws KrbException {
         PreauthContext preauthContext = kdcRequest.getPreauthContext();
+
         for (PaDataEntry pae : inPadata.getElements()) {
             if (! preauthContext.isPaTypeAllowed(pae.getPaDataType())) {
                 continue;
             }
+
+            PreauthHandle handle = findHandle(krbContext, kdcRequest, pae.getPaDataType());
+            if (handle == null) {
+                continue;
+            }
+
+            handle.prepareQuestions(krbContext, kdcRequest, preauthCallback);
         }
     }
 
@@ -110,4 +131,46 @@ public class PreauthHandler {
         }
     }
 
+    private PreauthHandle findHandle(KrbContext krbContext, KdcRequest kdcRequest,
+                                     PaDataType paType) {
+        PreauthContext preauthContext = kdcRequest.getPreauthContext();
+
+        for (PreauthHandle handle : preauthContext.getHandles()) {
+            for (PaDataType pt : handle.preauth.getPaTypes()) {
+                if (pt == paType) {
+                    return handle;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void attemptETypeInfo(KrbContext krbContext, KdcRequest kdcRequest,
+                                  PaData inPadata) throws KrbException {
+        PreauthContext preauthContext = kdcRequest.getPreauthContext();
+
+        // Find an etype-info2 or etype-info element in padata
+        EtypeInfo etypeInfo = null;
+        EtypeInfo2 etypeInfo2 = null;
+        PaDataEntry pae = inPadata.findEntry(PaDataType.ETYPE_INFO);
+        if (pae != null) {
+            etypeInfo = KrbCodec.decode(pae.getPaDataValue(), EtypeInfo.class);
+        } else {
+            pae = inPadata.findEntry(PaDataType.ETYPE_INFO2);
+            if (pae != null) {
+                etypeInfo2 = KrbCodec.decode(pae.getPaDataValue(), EtypeInfo2.class);
+            }
+        }
+
+        if (etypeInfo == null && etypeInfo2 == null) {
+            attemptSalt(krbContext, kdcRequest, inPadata);
+        }
+
+
+    }
+
+    private void attemptSalt(KrbContext krbContext, KdcRequest kdcRequest,
+                                  PaData inPadata) throws KrbException {
+
+    }
 }

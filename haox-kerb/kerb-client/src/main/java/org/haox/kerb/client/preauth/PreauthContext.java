@@ -44,6 +44,10 @@ public class PreauthContext {
         return preauthData;
     }
 
+    public boolean hasInputPaData() {
+        return  (inputPaData != null && ! inputPaData.isEmpty());
+    }
+
     public PaData getInputPaData() {
         return inputPaData;
     }

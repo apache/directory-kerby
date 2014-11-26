@@ -1,7 +1,6 @@
 package org.haox.kerb.client.request;
 
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.client.preauth.PreauthCallback;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.*;

@@ -11,4 +11,12 @@ import org.haox.kerb.spec.type.KrbSequenceOfType;
  */
 public class PaData extends KrbSequenceOfType<PaDataEntry> {
 
+    public PaDataEntry findEntry(PaDataType paType) {
+        for (PaDataEntry pae : getElements()) {
+            if (pae.getPaDataType() == paType) {
+                return pae;
+            }
+        }
+        return null;
+    }
 }

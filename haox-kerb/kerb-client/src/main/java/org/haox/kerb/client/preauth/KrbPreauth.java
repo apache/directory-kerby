@@ -35,8 +35,7 @@ public interface KrbPreauth extends Preauth {
     public void prepareQuestions(KrbContext krbContext,
                                  KdcRequest kdcRequest,
                                  PreauthCallback preauthCallback,
-                                 PluginRequestContext requestContext,
-                                 KrbOptions preauthOptions) throws KrbException;
+                                 PluginRequestContext requestContext) throws KrbException;
 
     /**
      * Get supported encryption types

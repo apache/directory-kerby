@@ -7,6 +7,8 @@ import org.haox.kerb.spec.KrbException;
 
 public class AsRequestWithCert extends AsRequest {
 
+    public static final String ANONYMOUS_PRINCIPAL = "ANONYMOUS@WELLKNOWN:ANONYMOUS";
+
     public AsRequestWithCert(KrbContext context) {
         super(context);
     }
