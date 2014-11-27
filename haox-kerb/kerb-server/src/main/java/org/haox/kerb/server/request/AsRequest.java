@@ -53,7 +53,7 @@ public class AsRequest extends KdcRequest {
         LastReqEntry entry = new LastReqEntry();
         entry.setLrType(LastReqType.THE_LAST_INITIAL);
         entry.setLrValue(new KerberosTime());
-        lastReq.getElements().add(entry);
+        lastReq.add(entry);
         encKdcRepPart.setLastReq(lastReq);
 
         encKdcRepPart.setNonce(request.getReqBody().getNonce());

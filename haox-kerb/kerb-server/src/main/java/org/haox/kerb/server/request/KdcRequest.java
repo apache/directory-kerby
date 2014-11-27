@@ -419,12 +419,12 @@ public abstract class KdcRequest implements PreauthContext {
                 EtypeInfoEntry etypeInfoEntry = new EtypeInfoEntry();
                 etypeInfoEntry.setEtype(encryptionType);
                 etypeInfoEntry.setSalt(null);
-                eTypeInfo.getElements().add(etypeInfoEntry);
+                eTypeInfo.add(etypeInfoEntry);
             }
 
             EtypeInfo2Entry etypeInfo2Entry = new EtypeInfo2Entry();
             etypeInfo2Entry.setEtype(encryptionType);
-            eTypeInfo2.getElements().add(etypeInfo2Entry);
+            eTypeInfo2.add(etypeInfo2Entry);
         }
 
         byte[] encTypeInfo = null;
@@ -435,17 +435,17 @@ public abstract class KdcRequest implements PreauthContext {
         encTypeInfo2 = KrbCodec.encode(eTypeInfo2);
 
         MethodData methodData = new MethodData();
-        methodData.getElements().add(new PaDataEntry(PaDataType.ENC_TIMESTAMP, null));
+        methodData.add(new PaDataEntry(PaDataType.ENC_TIMESTAMP, null));
         if (!isNewEtype) {
-            methodData.getElements().add(new PaDataEntry(PaDataType.ETYPE_INFO, encTypeInfo));
+            methodData.add(new PaDataEntry(PaDataType.ETYPE_INFO, encTypeInfo));
         }
-
-        methodData.getElements().add(new PaDataEntry(PaDataType.ETYPE_INFO2, encTypeInfo2));
+        methodData.add(new PaDataEntry(PaDataType.ETYPE_INFO2, encTypeInfo2));
 
         KrbError krbError = new KrbError();
         krbError.setErrorCode(KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED);
         byte[] encodedData = KrbCodec.encode(methodData);
         krbError.setEdata(encodedData);
+
         return krbError;
     }
 
