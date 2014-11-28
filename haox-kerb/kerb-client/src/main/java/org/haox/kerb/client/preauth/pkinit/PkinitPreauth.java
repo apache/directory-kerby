@@ -89,6 +89,14 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
         // Might have questions asking for password to access the private key
     }
 
+    public void tryFirst(KrbContext krbContext,
+                         KdcRequest kdcRequest,
+                         PreauthCallback preauthCallback,
+                         PluginRequestContext requestContext,
+                         PaData outPadata) throws KrbException {
+
+    }
+
     @Override
     public void process(KrbContext krbContext,
                         KdcRequest kdcRequest,

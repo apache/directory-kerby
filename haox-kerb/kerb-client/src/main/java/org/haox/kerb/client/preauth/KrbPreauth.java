@@ -55,6 +55,15 @@ public interface KrbPreauth extends Preauth {
                                   KrbOptions preauthOptions);
 
     /**
+     * Attempt to try any initial padata derived from user options
+     */
+    public void tryFirst(KrbContext krbContext,
+                        KdcRequest kdcRequest,
+                        PreauthCallback preauthCallback,
+                        PluginRequestContext requestContext,
+                        PaData outPadata) throws KrbException;
+
+    /**
      * Process server returned paData and return back any result paData
      */
     public void process(KrbContext krbContext,

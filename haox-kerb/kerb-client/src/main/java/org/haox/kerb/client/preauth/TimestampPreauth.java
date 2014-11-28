@@ -60,6 +60,18 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
         
     }
 
+    public void tryFirst(KrbContext krbContext,
+                         KdcRequest kdcRequest,
+                         PreauthCallback preauthCallback,
+                         PluginRequestContext requestContext,
+                         PaData outPadata) throws KrbException {
+
+        if (preauthCallback.getAsKey(krbContext, kdcRequest) == null) {
+            preauthCallback.needAsKey(krbContext, kdcRequest);
+        }
+        outPadata.addElement(makeEntry(krbContext, kdcRequest, preauthCallback));
+    }
+
     @Override
     public void process(KrbContext krbContext,
                         KdcRequest kdcRequest,
@@ -67,6 +79,10 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
                         PluginRequestContext requestContext,
                         PaDataEntry inPadata,
                         PaData outPadata) throws KrbException {
+
+        if (preauthCallback.getAsKey(krbContext, kdcRequest) == null) {
+            preauthCallback.needAsKey(krbContext, kdcRequest);
+        }
         outPadata.addElement(makeEntry(krbContext, kdcRequest, preauthCallback));
     }
 

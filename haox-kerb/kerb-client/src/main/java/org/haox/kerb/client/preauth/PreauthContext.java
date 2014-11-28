@@ -63,4 +63,8 @@ public class PreauthContext {
     public List<PreauthHandle> getHandles() {
         return handles;
     }
+
+    public PaDataType getAllowedPreauth() {
+        return allowedPreauthType;
+    }
 }

@@ -4,12 +4,15 @@ import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.token.KerbToken;
 
 public class AsRequestWithToken extends AsRequest {
 
     public AsRequestWithToken(KrbContext context) {
         super(context);
+
+        setAllowedPreauth(PaDataType.TOKEN_REQUEST);
     }
 
     @Override

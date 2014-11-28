@@ -4,6 +4,7 @@ import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.pa.PaDataType;
 
 public class AsRequestWithCert extends AsRequest {
 
@@ -11,6 +12,8 @@ public class AsRequestWithCert extends AsRequest {
 
     public AsRequestWithCert(KrbContext context) {
         super(context);
+
+        setAllowedPreauth(PaDataType.PK_AS_REQ);
     }
 
     @Override

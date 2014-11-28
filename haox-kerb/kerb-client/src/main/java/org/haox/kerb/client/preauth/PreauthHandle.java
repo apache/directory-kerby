@@ -26,6 +26,12 @@ public class PreauthHandle {
                 preauthCallback, requestContext, preauthOptions);
     }
 
+    public void tryFirst(KrbContext krbContext, KdcRequest kdcRequest,
+                        PreauthCallback preauthCallback, PaData outPadata) throws KrbException {
+        preauth.tryFirst(krbContext, kdcRequest,
+                preauthCallback, requestContext, outPadata);
+    }
+
     public void process(KrbContext krbContext, KdcRequest kdcRequest,
                         PreauthCallback preauthCallback,
                         PaDataEntry inPadata, PaData outPadata) throws KrbException {

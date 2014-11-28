@@ -48,7 +48,8 @@ public abstract class KdcRequest {
         this.context = context;
         this.isRetrying = false;
         this.credCache = new HashMap<String, Object>();
-        this.preauthContext = new PreauthContext();
+        this.preauthContext = context.getPreauthHandler()
+                .preparePreauthContext(getContext(), this);
     }
 
     public void setTransport(Transport transport) {
@@ -79,6 +80,10 @@ public abstract class KdcRequest {
         return asKey;
     }
 
+    public void setAllowedPreauth(PaDataType paType) {
+        preauthContext.setAllowedPreauth(paType);
+    }
+
     public FastContext getFastContext() {
         return fastContext;
     }
@@ -87,11 +92,11 @@ public abstract class KdcRequest {
         return credCache;
     }
 
+    public void setPreauthRequired(boolean preauthRequired) {
+        preauthContext.setPreauthRequired(preauthRequired);
+    }
+
     public PreauthContext getPreauthContext() {
-        if (preauthContext == null) {
-            preauthContext = context.getPreauthHandler()
-                    .preparePreauthContext(getContext(), this);
-        }
         return preauthContext;
     }
 

@@ -40,7 +40,7 @@ public class TgsRequest extends KdcRequest {
 
     @Override
     public void process() throws KrbException {
-        super.process();
+        // super.process(); // TODO
 
         TgsReq tgsReq = new TgsReq();
 
