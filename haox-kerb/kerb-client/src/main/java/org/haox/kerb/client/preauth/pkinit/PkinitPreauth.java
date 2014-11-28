@@ -5,7 +5,6 @@ import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.preauth.AbstractPreauthPlugin;
 import org.haox.kerb.client.preauth.PluginRequestContext;
-import org.haox.kerb.client.preauth.PreauthCallback;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
@@ -34,8 +33,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     @Override
     public PluginRequestContext initRequestContext(KrbContext krbContext,
-                                                    KdcRequest kdcRequest,
-                                                    PreauthCallback preauthCallback) {
+                                                    KdcRequest kdcRequest) {
         PkinitRequestContext reqCtx = new PkinitRequestContext();
 
         reqCtx.updateRequestOpts(pkinitContext.pluginOpts);
@@ -46,7 +44,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     @Override
     public void setPreauthOptions(KrbContext krbContext,
                                   KdcRequest kdcRequest,
-                                  PreauthCallback preauthCallback,
                                   PluginRequestContext requestContext,
                                   KrbOptions options) {
         if (options.contains(KrbOption.PKINIT_X509_IDENTITY)) {
@@ -69,7 +66,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     @Override
     public void prepareQuestions(KrbContext krbContext,
                                  KdcRequest kdcRequest,
-                                 PreauthCallback preauthCallback,
                                  PluginRequestContext requestContext) {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
@@ -84,7 +80,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     public void tryFirst(KrbContext krbContext,
                          KdcRequest kdcRequest,
-                         PreauthCallback preauthCallback,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
@@ -93,7 +88,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     @Override
     public boolean process(KrbContext krbContext,
                         KdcRequest kdcRequest,
-                        PreauthCallback preauthCallback,
                         PluginRequestContext requestContext,
                         PaDataEntry inPadata,
                         PaData outPadata) throws KrbException {
@@ -113,8 +107,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         if (processingRequest) {
             generateRequest(reqCtx, outPadata);
         } else {
-            EncryptionType encType = preauthCallback.getEncType(krbContext, kdcRequest);
-            processReply(krbContext, kdcRequest, preauthCallback, reqCtx, inPadata, encType);
+            EncryptionType encType = kdcRequest.getEncType();
+            processReply(krbContext, kdcRequest, reqCtx, inPadata, encType);
         }
 
         return false;
@@ -126,7 +120,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     private void processReply(KrbContext krbContext,
                               KdcRequest kdcRequest,
-                              PreauthCallback preauthCallback,
                               PkinitRequestContext reqCtx,
                               PaDataEntry inPadata,
                               EncryptionType encType) {
@@ -135,13 +128,12 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         // TODO
 
-        preauthCallback.setAsKey(krbContext, kdcRequest, asKey);
+        kdcRequest.setAsKey(asKey);
     }
 
     @Override
     public boolean tryAgain(KrbContext krbContext,
                          KdcRequest kdcRequest,
-                         PreauthCallback preauthCallback,
                          PluginRequestContext requestContext,
                          PaDataType preauthType,
                          PaData errPadata,

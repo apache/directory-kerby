@@ -3,7 +3,6 @@ package org.haox.kerb.client.preauth.builtin;
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.preauth.AbstractPreauthPlugin;
 import org.haox.kerb.client.preauth.PluginRequestContext;
-import org.haox.kerb.client.preauth.PreauthCallback;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.preauth.PaFlag;
@@ -26,36 +25,33 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
     @Override
     public void prepareQuestions(KrbContext krbContext,
                                  KdcRequest kdcRequest,
-                                 PreauthCallback preauthCallback,
                                  PluginRequestContext requestContext) throws KrbException {
 
-        preauthCallback.needAsKey(krbContext, kdcRequest);
+        kdcRequest.needAsKey();
     }
 
     public void tryFirst(KrbContext krbContext,
                          KdcRequest kdcRequest,
-                         PreauthCallback preauthCallback,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
-        if (preauthCallback.getAsKey(krbContext, kdcRequest) == null) {
-            preauthCallback.needAsKey(krbContext, kdcRequest);
+        if (kdcRequest.getAsKey() == null) {
+            kdcRequest.needAsKey();
         }
-        outPadata.addElement(makeEntry(krbContext, kdcRequest, preauthCallback));
+        outPadata.addElement(makeEntry(krbContext, kdcRequest));
     }
 
     @Override
     public boolean process(KrbContext krbContext,
-                        KdcRequest kdcRequest,
-                        PreauthCallback preauthCallback,
-                        PluginRequestContext requestContext,
-                        PaDataEntry inPadata,
-                        PaData outPadata) throws KrbException {
+                           KdcRequest kdcRequest,
+                           PluginRequestContext requestContext,
+                           PaDataEntry inPadata,
+                           PaData outPadata) throws KrbException {
 
-        if (preauthCallback.getAsKey(krbContext, kdcRequest) == null) {
-            preauthCallback.needAsKey(krbContext, kdcRequest);
+        if (kdcRequest.getAsKey() == null) {
+            kdcRequest.needAsKey();
         }
-        outPadata.addElement(makeEntry(krbContext, kdcRequest, preauthCallback));
+        outPadata.addElement(makeEntry(krbContext, kdcRequest));
 
         return true;
     }
@@ -70,13 +66,12 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
     }
 
     private PaDataEntry makeEntry(KrbContext krbContext,
-                                  KdcRequest kdcRequest,
-                                  PreauthCallback preauthCallback) throws KrbException {
+                                  KdcRequest kdcRequest) throws KrbException {
         PaEncTsEnc paTs = new PaEncTsEnc();
-        paTs.setPaTimestamp(preauthCallback.getPreauthTime(krbContext, kdcRequest));
+        paTs.setPaTimestamp(kdcRequest.getPreauthTime());
 
         EncryptedData paDataValue = EncryptionUtil.seal(paTs,
-                preauthCallback.getAsKey(krbContext, kdcRequest), KeyUsage.AS_REQ_PA_ENC_TS);
+                kdcRequest.getAsKey(), KeyUsage.AS_REQ_PA_ENC_TS);
         PaDataEntry tsPaEntry = new PaDataEntry();
         tsPaEntry.setPaDataType(PaDataType.ENC_TIMESTAMP);
         tsPaEntry.setPaDataValue(paDataValue.encode());

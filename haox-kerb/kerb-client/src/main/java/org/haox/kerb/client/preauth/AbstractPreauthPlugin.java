@@ -43,24 +43,21 @@ public class AbstractPreauthPlugin implements KrbPreauth {
 
     @Override
     public PluginRequestContext initRequestContext(KrbContext krbContext,
-                                                   KdcRequest kdcRequest,
-                                                   PreauthCallback preauthCallback) {
+                                                   KdcRequest kdcRequest) {
         return null;
     }
 
     @Override
     public void prepareQuestions(KrbContext krbContext,
                                  KdcRequest kdcRequest,
-                                 PreauthCallback preauthCallback,
                                  PluginRequestContext requestContext) throws KrbException {
 
-        preauthCallback.needAsKey(krbContext, kdcRequest);
+        kdcRequest.needAsKey();
     }
 
     @Override
     public List<EncryptionType> getEncTypes(KrbContext krbContext,
                                             KdcRequest kdcRequest,
-                                            PreauthCallback preauthCallback,
                                             PluginRequestContext requestContext) {
         return Collections.emptyList();
     }
@@ -68,7 +65,6 @@ public class AbstractPreauthPlugin implements KrbPreauth {
     @Override
     public void setPreauthOptions(KrbContext krbContext,
                                   KdcRequest kdcRequest,
-                                  PreauthCallback preauthCallback,
                                   PluginRequestContext requestContext,
                                   KrbOptions options) {
 
@@ -76,7 +72,6 @@ public class AbstractPreauthPlugin implements KrbPreauth {
 
     public void tryFirst(KrbContext krbContext,
                          KdcRequest kdcRequest,
-                         PreauthCallback preauthCallback,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
@@ -85,7 +80,6 @@ public class AbstractPreauthPlugin implements KrbPreauth {
     @Override
     public boolean process(KrbContext krbContext,
                            KdcRequest kdcRequest,
-                           PreauthCallback preauthCallback,
                            PluginRequestContext requestContext,
                            PaDataEntry inPadata,
                            PaData outPadata) throws KrbException {
@@ -96,7 +90,6 @@ public class AbstractPreauthPlugin implements KrbPreauth {
     @Override
     public boolean tryAgain(KrbContext krbContext,
                             KdcRequest kdcRequest,
-                            PreauthCallback preauthCallback,
                             PluginRequestContext requestContext,
                             PaDataType preauthType,
                             PaData errPadata,

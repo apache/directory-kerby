@@ -14,37 +14,27 @@ public class PreauthHandle {
     public KrbPreauth preauth;
     public PluginRequestContext requestContext;
 
-    public void prepareQuestions(KrbContext krbContext, KdcRequest kdcRequest,
-                                  PreauthCallback preauthCallback) throws KrbException {
-        preauth.prepareQuestions(krbContext, kdcRequest,
-                preauthCallback, requestContext);
+    public void prepareQuestions(KrbContext krbContext, KdcRequest kdcRequest) throws KrbException {
+        preauth.prepareQuestions(krbContext, kdcRequest, requestContext);
     }
 
     public void setPreauthOptions(KrbContext krbContext, KdcRequest kdcRequest,
-                                  PreauthCallback preauthCallback,
                                   KrbOptions preauthOptions) throws KrbException {
-        preauth.setPreauthOptions(krbContext, kdcRequest,
-                preauthCallback, requestContext, preauthOptions);
+        preauth.setPreauthOptions(krbContext, kdcRequest, requestContext, preauthOptions);
     }
 
-    public void tryFirst(KrbContext krbContext, KdcRequest kdcRequest,
-                        PreauthCallback preauthCallback, PaData outPadata) throws KrbException {
-        preauth.tryFirst(krbContext, kdcRequest,
-                preauthCallback, requestContext, outPadata);
+    public void tryFirst(KrbContext krbContext, KdcRequest kdcRequest, PaData outPadata) throws KrbException {
+        preauth.tryFirst(krbContext, kdcRequest, requestContext, outPadata);
     }
 
     public boolean process(KrbContext krbContext, KdcRequest kdcRequest,
-                        PreauthCallback preauthCallback,
                         PaDataEntry inPadata, PaData outPadata) throws KrbException {
-        return preauth.process(krbContext, kdcRequest,
-                preauthCallback, requestContext, inPadata, outPadata);
+        return preauth.process(krbContext, kdcRequest, requestContext, inPadata, outPadata);
     }
 
     public boolean tryAgain(KrbContext krbContext, KdcRequest kdcRequest,
-                         PreauthCallback preauthCallback,
                          PaDataType paType, PaData errPadata, PaData paData) {
-        return preauth.tryAgain(krbContext, kdcRequest,
-                preauthCallback, requestContext, paType, errPadata, paData);
+        return preauth.tryAgain(krbContext, kdcRequest, requestContext, paType, errPadata, paData);
     }
 
     public boolean isReal(KrbContext krbContext, PaDataType paType) {

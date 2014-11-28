@@ -2,7 +2,9 @@ package org.haox.kerb.client.request;
 
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOptions;
-import org.haox.kerb.client.preauth.*;
+import org.haox.kerb.client.preauth.FastContext;
+import org.haox.kerb.client.preauth.PreauthContext;
+import org.haox.kerb.client.preauth.PreauthHandler;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
@@ -271,5 +273,70 @@ public abstract class KdcRequest {
 
     protected PreauthHandler getPreauthHandler() {
         return getContext().getPreauthHandler();
+    }
+
+    /**
+     * Indicate interest in the AS key.
+     */
+    public void needAsKey() throws KrbException {
+        EncryptionKey clientKey = getClientKey();
+        if (clientKey == null) {
+            throw new RuntimeException("Client key should be prepared or prompted at this time!");
+        }
+        setAsKey(clientKey);
+    }
+
+    /**
+     * Get the enctype expected to be used to encrypt the encrypted portion of
+     * the AS_REP packet.  When handling a PREAUTH_REQUIRED error, this
+     * typically comes from etype-info2.  When handling an AS reply, it is
+     * initialized from the AS reply itself.
+     */
+    public EncryptionType getEncType() {
+
+        return getChosenEncryptionType();
+    }
+
+    public void askQuestion(String question, String challenge) {
+        preauthContext.getUserResponser().askQuestion(question, challenge);
+    }
+
+    /**
+     * Get a pointer to the FAST armor key, or NULL if the client is not using FAST.
+     */
+    public EncryptionKey getArmorKey() {
+        return fastContext.armorKey;
+    }
+
+    /**
+     * Get the current time for use in a preauth response.  If
+     * allow_unauth_time is true and the library has been configured to allow
+     * it, the current time will be offset using unauthenticated timestamp
+     * information received from the KDC in the preauth-required error, if one
+     * has been received.  Otherwise, the timestamp in a preauth-required error
+     * will only be used if it is protected by a FAST channel.  Only set
+     * allow_unauth_time if using an unauthenticated time offset would not
+     * create a security issue.
+     */
+    public KerberosTime getPreauthTime() {
+        return KerberosTime.now();
+    }
+
+    /**
+     * Get a state item from an input ccache, which may allow it
+     * to retrace the steps it took last time.  The returned data string is an
+     * alias and should not be freed.
+     */
+    public Object getCacheValue(String key) {
+        return credCache.get(key);
+    }
+
+    /**
+     * Set a state item which will be recorded to an output
+     * ccache, if the calling application supplied one.  Both key and data
+     * should be valid UTF-8 text.
+     */
+    public void cacheValue(String key, Object value) {
+        credCache.put(key, value);
     }
 }
