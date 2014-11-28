@@ -11,4 +11,8 @@ public class PaFlags extends KrbFlags {
     public PaFlags(int value) {
         setFlags(value);
     }
+
+    public boolean isReal() {
+        return isFlagSet(PaFlag.PA_REAL);
+    }
 }

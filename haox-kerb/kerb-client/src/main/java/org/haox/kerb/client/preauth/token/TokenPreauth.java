@@ -86,24 +86,25 @@ public class TokenPreauth extends TokenPreauthBase implements KrbPreauth {
     }
 
     @Override
-    public void process(KrbContext krbContext,
+    public boolean process(KrbContext krbContext,
                         KdcRequest kdcRequest,
                         PreauthCallback preauthCallback,
                         PluginRequestContext requestContext,
                         PaDataEntry inPadata,
                         PaData outPadata) throws KrbException {
 
+        return false;
     }
 
     @Override
-    public void tryAgain(KrbContext krbContext,
+    public boolean tryAgain(KrbContext krbContext,
                          KdcRequest kdcRequest,
                          PreauthCallback preauthCallback,
                          PluginRequestContext requestContext,
                          PaDataType preauthType,
                          PaData errPadata,
                          PaData outPadata) {
-
+        return false;
     }
 
     @Override

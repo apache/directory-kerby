@@ -73,7 +73,7 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
     }
 
     @Override
-    public void process(KrbContext krbContext,
+    public boolean process(KrbContext krbContext,
                         KdcRequest kdcRequest,
                         PreauthCallback preauthCallback,
                         PluginRequestContext requestContext,
@@ -84,17 +84,19 @@ public class TimestampPreauth extends TimestampPreauthBase implements KrbPreauth
             preauthCallback.needAsKey(krbContext, kdcRequest);
         }
         outPadata.addElement(makeEntry(krbContext, kdcRequest, preauthCallback));
+
+        return true;
     }
 
     @Override
-    public void tryAgain(KrbContext krbContext,
+    public boolean tryAgain(KrbContext krbContext,
                          KdcRequest kdcRequest,
                          PreauthCallback preauthCallback,
                          PluginRequestContext requestContext,
                          PaDataType preauthType,
                          PaData errPadata,
                          PaData outPadata) {
-
+        return false;
     }
 
     @Override

@@ -11,7 +11,6 @@ import org.haox.kerb.spec.type.kdc.KdcOptions;
 import org.haox.kerb.spec.type.kdc.KdcRep;
 import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.kdc.KdcReqBody;
-import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.transport.Transport;
 
@@ -41,8 +40,10 @@ public abstract class KdcRequest {
     protected Map<String, Object> credCache;
     private PreauthContext preauthContext;
     private FastContext fastContext = new FastContext();
-    private boolean isRetrying;
     private EncryptionKey asKey;
+
+    private KrbError errorReply;
+    private boolean isRetrying;
 
     public KdcRequest(KrbContext context) {
         this.context = context;
@@ -81,7 +82,7 @@ public abstract class KdcRequest {
     }
 
     public void setAllowedPreauth(PaDataType paType) {
-        preauthContext.setAllowedPreauth(paType);
+        preauthContext.setAllowedPaType(paType);
     }
 
     public FastContext getFastContext() {

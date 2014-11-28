@@ -98,7 +98,7 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     }
 
     @Override
-    public void process(KrbContext krbContext,
+    public boolean process(KrbContext krbContext,
                         KdcRequest kdcRequest,
                         PreauthCallback preauthCallback,
                         PluginRequestContext requestContext,
@@ -106,7 +106,7 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
                         PaData outPadata) throws KrbException {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
-        if (inPadata == null) return;
+        if (inPadata == null) return false;
 
         boolean processingRequest = false;
         switch (inPadata.getPaDataType()) {
@@ -123,6 +123,8 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
             EncryptionType encType = preauthCallback.getEncType(krbContext, kdcRequest);
             processReply(krbContext, kdcRequest, preauthCallback, reqCtx, inPadata, encType);
         }
+
+        return false;
     }
 
     private void generateRequest(PkinitRequestContext reqCtx, PaData outPadata) {
@@ -144,7 +146,7 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
     }
 
     @Override
-    public void tryAgain(KrbContext krbContext,
+    public boolean tryAgain(KrbContext krbContext,
                          KdcRequest kdcRequest,
                          PreauthCallback preauthCallback,
                          PluginRequestContext requestContext,
@@ -154,7 +156,7 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
         if (reqCtx.paType != preauthType && errPadata == null) {
-            return;
+            return false;
         }
 
         boolean doAgain = false;
@@ -167,6 +169,8 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
         if (doAgain) {
             generateRequest(reqCtx, outPadata);
         }
+
+        return false;
     }
 
     @Override

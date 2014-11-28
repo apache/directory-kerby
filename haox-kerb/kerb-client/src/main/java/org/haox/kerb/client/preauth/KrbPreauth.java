@@ -13,6 +13,9 @@ import org.haox.kerb.spec.type.pa.PaDataType;
 
 import java.util.List;
 
+/**
+ * Client side preauth plugin module
+ */
 public interface KrbPreauth extends Preauth {
 
     public String getName();
@@ -65,8 +68,9 @@ public interface KrbPreauth extends Preauth {
 
     /**
      * Process server returned paData and return back any result paData
+     * Return true indicating padata is added
      */
-    public void process(KrbContext krbContext,
+    public boolean process(KrbContext krbContext,
                         KdcRequest kdcRequest,
                         PreauthCallback preauthCallback,
                         PluginRequestContext requestContext,
@@ -75,8 +79,9 @@ public interface KrbPreauth extends Preauth {
 
     /**
      * When another request to server in the 4 pass, any paData to provide?
+     * Return true indicating padata is added
      */
-    public void tryAgain(KrbContext krbContext,
+    public boolean tryAgain(KrbContext krbContext,
                          KdcRequest kdcRequest,
                          PreauthCallback preauthCallback,
                          PluginRequestContext requestContext,

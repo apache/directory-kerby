@@ -3,6 +3,7 @@ package org.haox.kerb.client.preauth;
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.request.KdcRequest;
+import org.haox.kerb.preauth.PaFlags;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
@@ -32,18 +33,23 @@ public class PreauthHandle {
                 preauthCallback, requestContext, outPadata);
     }
 
-    public void process(KrbContext krbContext, KdcRequest kdcRequest,
+    public boolean process(KrbContext krbContext, KdcRequest kdcRequest,
                         PreauthCallback preauthCallback,
                         PaDataEntry inPadata, PaData outPadata) throws KrbException {
-        preauth.process(krbContext, kdcRequest,
+        return preauth.process(krbContext, kdcRequest,
                 preauthCallback, requestContext, inPadata, outPadata);
     }
 
-    public void tryAgain(KrbContext krbContext, KdcRequest kdcRequest,
+    public boolean tryAgain(KrbContext krbContext, KdcRequest kdcRequest,
                          PreauthCallback preauthCallback,
-                         PaDataType preauthType, PaData errPadata, PaData paData) {
-        preauth.tryAgain(krbContext, kdcRequest,
-                preauthCallback, requestContext, preauthType, errPadata, paData);
+                         PaDataType paType, PaData errPadata, PaData paData) {
+        return preauth.tryAgain(krbContext, kdcRequest,
+                preauthCallback, requestContext, paType, errPadata, paData);
+    }
+
+    public boolean isReal(KrbContext krbContext, PaDataType paType) {
+        PaFlags paFlags = preauth.getFlags(krbContext, paType);
+        return paFlags.isReal();
     }
 
 }

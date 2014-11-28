@@ -67,7 +67,7 @@ public class PreauthHandler {
         }
 
         if (!preauthContext.hasInputPaData()) {
-            tryFirst(krbContext, kdcRequest, preauthContext.getPreauthData());
+            tryFirst(krbContext, kdcRequest, preauthContext.getOutputPaData());
             return;
         }
 
@@ -80,9 +80,11 @@ public class PreauthHandler {
         preauthContext.getUserResponser().respondQuestions();
 
         if (!kdcRequest.isRetrying()) {
-            process(krbContext, kdcRequest, null, preauthContext.getInputPaData());
+            process(krbContext, kdcRequest, preauthContext.getInputPaData(),
+                    preauthContext.getOutputPaData());
         } else {
-            tryAgain(krbContext, kdcRequest, null, null, preauthContext.getInputPaData());
+            tryAgain(krbContext, kdcRequest, preauthContext.getInputPaData(),
+                    preauthContext.getOutputPaData());
         }
     }
 
@@ -107,6 +109,7 @@ public class PreauthHandler {
     public void setPreauthOptions(KrbContext krbContext, KdcRequest kdcRequest,
                                   KrbOptions preauthOptions) throws KrbException {
         PreauthContext preauthContext = kdcRequest.getPreauthContext();
+
         for (PreauthHandle handle : preauthContext.getHandles()) {
             handle.setPreauthOptions(krbContext, kdcRequest, preauthCallback, preauthOptions);
         }
@@ -117,7 +120,7 @@ public class PreauthHandler {
         PreauthContext preauthContext = kdcRequest.getPreauthContext();
 
         PreauthHandle handle = findHandle(krbContext, kdcRequest,
-                preauthContext.getAllowedPreauth());
+                preauthContext.getAllowedPaType());
         handle.tryFirst(krbContext, kdcRequest, preauthCallback, outPadata);
     }
 
@@ -125,19 +128,54 @@ public class PreauthHandler {
                         PaData inPadata, PaData outPadata) throws KrbException {
         PreauthContext preauthContext = kdcRequest.getPreauthContext();
 
-        for (PaDataEntry pae : inPadata.getElements()) {
-            for (PreauthHandle handle : preauthContext.getHandles()) {
-                handle.process(krbContext, kdcRequest, preauthCallback, pae, outPadata);
+        /**
+         * Process all informational padata types, then the first real preauth type
+         * we succeed on
+         */
+        for (int real = 0; real <= 1; real ++) {
+            for (PaDataEntry pae : inPadata.getElements()) {
+
+                // Restrict real mechanisms to the chosen one if we have one
+                if (real >0 && !preauthContext.isPaTypeAllowed(pae.getPaDataType())) {
+                    continue;
+                }
+
+                PreauthHandle handle = findHandle(krbContext, kdcRequest,
+                        preauthContext.getAllowedPaType());
+                if (handle == null) {
+                    continue;
+                }
+
+                // Make sure this type is for the current pass
+                int tmpReal = handle.isReal(krbContext, pae.getPaDataType()) ? 1 : 0;
+                if (tmpReal != real) {
+                    continue;
+                }
+
+                if (real > 0 && preauthContext.checkAndPutTried(pae.getPaDataType())) {
+                    continue;
+                }
+
+                boolean gotData = handle.process(krbContext, kdcRequest,
+                        preauthCallback, pae, outPadata);
+                if (real > 0 && gotData) {
+                    return;
+                }
             }
         }
     }
 
-    public void tryAgain(KrbContext krbContext, KdcRequest kdcRequest, PaDataType preauthType,
-                         PaData errPadata, PaData outPadata) {
+    public void tryAgain(KrbContext krbContext, KdcRequest kdcRequest,
+                         PaData inPadata, PaData outPadata) {
         PreauthContext preauthContext = kdcRequest.getPreauthContext();
-        for (PreauthHandle handle : preauthContext.getHandles()) {
-            handle.tryAgain(krbContext, kdcRequest, preauthCallback,
-                    preauthType, errPadata, outPadata);
+
+        PreauthHandle handle;
+        for (PaDataEntry pae : inPadata.getElements()) {
+            handle = findHandle(krbContext, kdcRequest, pae.getPaDataType());
+            if (handle == null) continue;
+
+            boolean gotData = handle.tryAgain(krbContext, kdcRequest, preauthCallback,
+                    pae.getPaDataType(), preauthContext.getErrorPaData(), outPadata);
         }
     }
 
