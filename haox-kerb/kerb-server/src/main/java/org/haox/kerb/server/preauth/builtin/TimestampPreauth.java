@@ -1,10 +1,12 @@
-package org.haox.kerb.server.preauth;
+package org.haox.kerb.server.preauth.builtin;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.preauth.PaFlags;
-import org.haox.kerb.preauth.TimestampPreauthBase;
+import org.haox.kerb.preauth.builtin.TimestampPreauthBase;
 import org.haox.kerb.server.KdcContext;
+import org.haox.kerb.server.preauth.KdcPreauth;
+import org.haox.kerb.server.preauth.PreauthContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;

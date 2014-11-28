@@ -1,12 +1,15 @@
-package org.haox.kerb.client.preauth;
+package org.haox.kerb.client.preauth.builtin;
 
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOptions;
+import org.haox.kerb.client.preauth.KrbPreauth;
+import org.haox.kerb.client.preauth.PluginRequestContext;
+import org.haox.kerb.client.preauth.PreauthCallback;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
-import org.haox.kerb.preauth.TimestampPreauthBase;
+import org.haox.kerb.preauth.builtin.TimestampPreauthBase;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionType;

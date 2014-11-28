@@ -19,10 +19,13 @@ import org.haox.kerb.spec.type.ticket.TgtTicket;
 
 public class TgsRequest extends KdcRequest {
     private TgtTicket tgt;
+    private ApReq apReq;
 
     public TgsRequest(KrbContext context, TgtTicket tgtTicket) {
         super(context);
         this.tgt = tgtTicket;
+
+        setAllowedPreauth(PaDataType.TGS_REQ);
     }
 
     public PrincipalName getClientPrincipal() {
@@ -39,20 +42,20 @@ public class TgsRequest extends KdcRequest {
     }
 
     @Override
+    protected void preauth() throws KrbException {
+        apReq = makeApReq();
+        super.preauth();
+    }
+
+    @Override
     public void process() throws KrbException {
-        // super.process(); // TODO
+        super.process();
 
         TgsReq tgsReq = new TgsReq();
 
         KdcReqBody tgsReqBody = makeReqBody();
         tgsReq.setReqBody(tgsReqBody);
-        //tgsReq.setPaData(getOutputPaData());
-
-        ApReq apReq = makeApReq();
-        PaDataEntry authnHeader = new PaDataEntry();
-        authnHeader.setPaDataType(PaDataType.TGS_REQ);
-        authnHeader.setPaDataValue(apReq.encode());
-        tgsReq.addPaData(authnHeader);
+        tgsReq.setPaData(getPreauthContext().getOutputPaData());
 
         setKdcReq(tgsReq);
     }
@@ -107,5 +110,9 @@ public class TgsRequest extends KdcRequest {
         ServiceTicket serviceTkt = new ServiceTicket(getKdcRep().getTicket(),
                 (EncTgsRepPart) getKdcRep().getEncPart());
         return serviceTkt;
+    }
+
+    public ApReq getApReq() {
+        return apReq;
     }
 }

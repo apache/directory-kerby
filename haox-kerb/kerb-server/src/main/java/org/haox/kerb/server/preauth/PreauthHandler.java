@@ -1,6 +1,7 @@
 package org.haox.kerb.server.preauth;
 
 import org.haox.kerb.server.KdcContext;
+import org.haox.kerb.server.preauth.builtin.TimestampPreauth;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;

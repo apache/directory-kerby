@@ -8,6 +8,7 @@ import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
+
 public interface KdcPreauth extends Preauth {
 
     public String getName();
