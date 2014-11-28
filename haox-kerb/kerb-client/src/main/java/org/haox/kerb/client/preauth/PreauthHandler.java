@@ -19,10 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PreauthHandler {
-
+    private KrbContext krbContext;
     private List<KrbPreauth> preauths;
 
     public void init(KrbContext krbContext) {
+        this.krbContext = krbContext;
         loadPreauthPlugins(krbContext);
     }
 
@@ -48,7 +49,7 @@ public class PreauthHandler {
 
     public PreauthContext preparePreauthContext(KdcRequest kdcRequest) {
         PreauthContext preauthContext = new PreauthContext();
-
+        preauthContext.setPreauthRequired(krbContext.getConfig().isPreauthRequired());
         for (KrbPreauth preauth : preauths) {
             PreauthHandle handle = new PreauthHandle(preauth);
             handle.initRequestContext(kdcRequest);

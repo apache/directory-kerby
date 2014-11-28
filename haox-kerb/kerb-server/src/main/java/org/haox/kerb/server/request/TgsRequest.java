@@ -11,9 +11,7 @@ import org.haox.kerb.spec.type.ap.ApReq;
 import org.haox.kerb.spec.type.ap.Authenticator;
 import org.haox.kerb.spec.type.common.*;
 import org.haox.kerb.spec.type.kdc.*;
-import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 import org.haox.kerb.spec.type.ticket.TicketFlag;
@@ -24,8 +22,10 @@ public class TgsRequest extends KdcRequest {
 
     private EncryptionKey tgtSessionKey;
 
-    public TgsRequest(TgsReq tgsReq) {
-        super(tgsReq);
+    public TgsRequest(TgsReq tgsReq, KdcContext kdcContext) {
+        super(tgsReq, kdcContext);
+
+        setPreauthRequired(true);
     }
 
     public EncryptionKey getTgtSessionKey() {
@@ -36,34 +36,21 @@ public class TgsRequest extends KdcRequest {
         this.tgtSessionKey = tgtSessionKey;
     }
 
-    @Override
-    protected void processPaData(PaData paData) throws KrbException {
-        PaDataType pdType;
-        for (PaDataEntry pd : paData.getElements()) {
-            pdType = pd.getPaDataType();
-            if (pdType == PaDataType.TGS_REQ) {
-                checkAuthenticator(kdcContext, pd);
-            }
-        }
+    public void verifyAuthenticator(PaDataEntry paDataEntry) throws KrbException {
+        ApReq apReq = KrbCodec.decode(paDataEntry.getPaDataValue(), ApReq.class);
 
-        super.processPaData(paData);
-    }
-
-    private void checkAuthenticator(KdcContext kdcContext, PaDataEntry paDataEntry) throws KrbException {
-        ApReq authHeader = KrbCodec.decode(paDataEntry.getPaDataValue(), ApReq.class);
-
-        if (authHeader.getPvno() != KrbConstant.KRB_V5) {
+        if (apReq.getPvno() != KrbConstant.KRB_V5) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
         }
 
-        if (authHeader.getMsgType() != KrbMessageType.AP_REQ) {
+        if (apReq.getMsgType() != KrbMessageType.AP_REQ) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
         }
 
         EncryptionType encType = getKdcReq().getReqBody().getEtypes().listIterator().next();
         EncryptionKey tgsKey = getTgsEntry().getKeys().get(encType);
 
-        Ticket ticket = authHeader.getTicket();
+        Ticket ticket = apReq.getTicket();
         if (ticket.getTktvno() != KrbConstant.KRB_V5) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
         }
@@ -73,13 +60,13 @@ public class TgsRequest extends KdcRequest {
         ticket.setEncPart(encPart);
 
         EncryptionKey encKey = null;
-        //if (authHeader.getApOptions().isFlagSet(ApOptions.USE_SESSION_KEY)) {
+        //if (apReq.getApOptions().isFlagSet(ApOptions.USE_SESSION_KEY)) {
         encKey = ticket.getEncPart().getKey();
 
         if (encKey == null) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_NOKEY);
         }
-        Authenticator authenticator = EncryptionUtil.unseal(authHeader.getEncryptedAuthenticator(),
+        Authenticator authenticator = EncryptionUtil.unseal(apReq.getEncryptedAuthenticator(),
                 encKey, KeyUsage.TGS_REQ_AUTH, Authenticator.class);
 
         if (!authenticator.getCname().equals(ticket.getEncPart().getCname())) {
@@ -119,7 +106,7 @@ public class TgsRequest extends KdcRequest {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_EXPIRED);
         }
 
-        authHeader.getApOptions().setFlag(ApOption.MUTUAL_REQUIRED);
+        apReq.getApOptions().setFlag(ApOption.MUTUAL_REQUIRED);
 
         setTgtSessionKey(ticket.getEncPart().getKey());
     }

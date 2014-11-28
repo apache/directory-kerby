@@ -1,8 +1,8 @@
 package org.haox.kerb.server.preauth;
 
-import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.preauth.builtin.EncTsPreauth;
+import org.haox.kerb.server.preauth.builtin.TgtPreauth;
 import org.haox.kerb.server.request.KdcRequest;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
@@ -13,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PreauthHandler {
-
+    private KdcContext kdcContext;
     private List<KdcPreauth> preauths;
 
     public void init(KdcContext context) {
+        this.kdcContext = context;
         loadPreauthPlugins(context);
     }
 
@@ -26,10 +27,15 @@ public class PreauthHandler {
         KdcPreauth preauth = new EncTsPreauth();
         preauth.init(context);
         preauths.add(preauth);
+
+        preauth = new TgtPreauth();
+        preauth.init(context);
+        preauths.add(preauth);
     }
 
     public PreauthContext preparePreauthContext(KdcRequest kdcRequest) {
         PreauthContext preauthContext = new PreauthContext();
+        preauthContext.setPreauthRequired(kdcContext.getConfig().isPreauthRequired());
 
         for (KdcPreauth preauth : preauths) {
             PreauthHandle handle = new PreauthHandle(preauth);

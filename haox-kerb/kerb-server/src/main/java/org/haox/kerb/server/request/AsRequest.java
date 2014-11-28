@@ -1,6 +1,7 @@
 package org.haox.kerb.server.request;
 
 import org.haox.kerb.common.EncryptionUtil;
+import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.common.*;
@@ -15,8 +16,8 @@ import java.util.List;
 
 public class AsRequest extends KdcRequest {
 
-    public AsRequest(AsReq asReq) {
-        super(asReq);
+    public AsRequest(AsReq asReq, KdcContext kdcContext) {
+        super(asReq, kdcContext);
     }
 
     @Override

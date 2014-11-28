@@ -8,6 +8,7 @@ import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.preauth.FastContext;
 import org.haox.kerb.server.preauth.PreauthContext;
+import org.haox.kerb.server.preauth.PreauthHandler;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
 import org.haox.kerb.spec.KrbException;
@@ -49,13 +50,12 @@ public abstract class KdcRequest {
     private PreauthContext preauthContext;
     private FastContext fastContext;
 
-    public KdcRequest(KdcReq kdcReq) {
+    public KdcRequest(KdcReq kdcReq, KdcContext kdcContext) {
         this.kdcReq = kdcReq;
-        this.fastContext = new FastContext();
-    }
-
-    public void setContext(KdcContext kdcContext) {
         this.kdcContext = kdcContext;
+        this.preauthContext = kdcContext.getPreauthHandler()
+                .preparePreauthContext(this);
+        this.fastContext = new FastContext();
     }
 
     public PreauthContext getPreauthContext() {
@@ -220,26 +220,32 @@ public abstract class KdcRequest {
     }
 
     protected void preauth() throws KrbException {
-        preauthContext = kdcContext.getPreauthHandler()
-                .preparePreauthContext(this);
-
         KdcReq request = getKdcReq();
 
         PaData preAuthData = request.getPaData();
 
-        if (kdcContext.getConfig().isPreauthRequired()) {
+        if (preauthContext.isPreauthRequired()) {
             if (preAuthData == null || preAuthData.isEmpty()) {
                 KrbError krbError = makePreAuthenticationError(kdcContext);
                 throw new KrbErrorException(krbError);
+            } else {
+                getPreauthHandler().verify(this, preAuthData);
             }
-            processPaData(preAuthData);
         }
 
         setPreAuthenticated(true);
     }
 
-    protected void processPaData(PaData paData) throws KrbException {
-        kdcContext.getPreauthHandler().verify(this, paData);
+    protected void setPreauthRequired(boolean preauthRequired) {
+        preauthContext.setPreauthRequired(preauthRequired);
+    }
+
+    protected boolean isPreauthRequired() {
+        return preauthContext.isPreauthRequired();
+    }
+
+    protected PreauthHandler getPreauthHandler() {
+        return kdcContext.getPreauthHandler();
     }
 
     protected void checkEncryptionType() throws KrbException {

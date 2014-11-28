@@ -57,11 +57,10 @@ public class KdcHandler extends MessageHandler {
 
         KrbMessageType messageType = krbRequest.getMsgType();
         if (messageType == KrbMessageType.TGS_REQ) {
-            kdcRequest = new TgsRequest((TgsReq) krbRequest);
+            kdcRequest = new TgsRequest((TgsReq) krbRequest, kdcContext);
         } else if (messageType == KrbMessageType.AS_REQ) {
-            kdcRequest = new AsRequest((AsReq) krbRequest);
+            kdcRequest = new AsRequest((AsReq) krbRequest, kdcContext);
         }
-        kdcRequest.setContext(kdcContext);
 
         InetSocketAddress clientAddress = transport.getRemoteAddress();
         kdcRequest.setClientAddress(clientAddress.getAddress());

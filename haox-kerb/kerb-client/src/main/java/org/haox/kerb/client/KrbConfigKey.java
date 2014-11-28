@@ -9,6 +9,7 @@ public enum KrbConfigKey implements ConfigKey {
     KDC_DOMAIN("example.com"),
     KDC_REALM("EXAMPLE.COM"),
     TGS_PRINCIPAL("krbtgt@EXAMPLE.COM"),
+    PREAUTH_REQUIRED(true),
     ALLOWABLE_CLOCKSKEW(5 * 60),
     EMPTY_ADDRESSES_ALLOWED(true),
     PA_ENC_TIMESTAMP_REQUIRED(true),

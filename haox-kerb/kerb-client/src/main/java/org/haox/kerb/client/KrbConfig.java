@@ -38,6 +38,10 @@ public class KrbConfig {
         return conf.getString(KrbConfigKey.KDC_DOMAIN);
     }
 
+    public boolean isPreauthRequired() {
+        return conf.getBoolean(KrbConfigKey.PREAUTH_REQUIRED);
+    }
+
     public String getTgsPrincipal() {
         return conf.getString(KrbConfigKey.TGS_PRINCIPAL);
     }
