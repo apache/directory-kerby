@@ -5,6 +5,7 @@ import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
+import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.preauth.PreauthPluginMeta;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -42,64 +43,52 @@ public class AbstractPreauthPlugin implements KrbPreauth {
     }
 
     @Override
-    public PluginRequestContext initRequestContext(KrbContext krbContext,
-                                                   KdcRequest kdcRequest) {
+    public PluginRequestContext initRequestContext(KdcRequest kdcRequest) {
         return null;
     }
 
     @Override
-    public void prepareQuestions(KrbContext krbContext,
-                                 KdcRequest kdcRequest,
+    public void prepareQuestions(KdcRequest kdcRequest,
                                  PluginRequestContext requestContext) throws KrbException {
 
         kdcRequest.needAsKey();
     }
 
     @Override
-    public List<EncryptionType> getEncTypes(KrbContext krbContext,
-                                            KdcRequest kdcRequest,
+    public List<EncryptionType> getEncTypes(KdcRequest kdcRequest,
                                             PluginRequestContext requestContext) {
         return Collections.emptyList();
     }
 
     @Override
-    public void setPreauthOptions(KrbContext krbContext,
-                                  KdcRequest kdcRequest,
-                                  PluginRequestContext requestContext,
-                                  KrbOptions options) {
+    public void setPreauthOptions(KdcRequest kdcRequest,
+                                  PluginRequestContext requestContext, KrbOptions options) {
 
     }
 
-    public void tryFirst(KrbContext krbContext,
-                         KdcRequest kdcRequest,
+    public void tryFirst(KdcRequest kdcRequest,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
     }
 
     @Override
-    public boolean process(KrbContext krbContext,
-                           KdcRequest kdcRequest,
-                           PluginRequestContext requestContext,
-                           PaDataEntry inPadata,
+    public boolean process(KdcRequest kdcRequest,
+                           PluginRequestContext requestContext, PaDataEntry inPadata,
                            PaData outPadata) throws KrbException {
 
         return false;
     }
 
     @Override
-    public boolean tryAgain(KrbContext krbContext,
-                            KdcRequest kdcRequest,
-                            PluginRequestContext requestContext,
-                            PaDataType preauthType,
-                            PaData errPadata,
-                            PaData outPadata) {
+    public boolean tryAgain(KdcRequest kdcRequest,
+                            PluginRequestContext requestContext, PaDataType preauthType,
+                            PaData errPadata, PaData outPadata) {
         return false;
     }
 
     @Override
-    public PaFlags getFlags(KrbContext krbContext,
-                            PaDataType paType) {
+    public PaFlags getFlags(PaDataType paType) {
         PaFlags paFlags = new PaFlags(0);
         paFlags.setFlag(PaFlag.PA_REAL);
 
@@ -107,7 +96,7 @@ public class AbstractPreauthPlugin implements KrbPreauth {
     }
 
     @Override
-    public void destroy(KrbContext krbContext) {
+    public void destroy() {
 
     }
 

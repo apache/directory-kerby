@@ -1,31 +1,25 @@
 package org.haox.kerb.server.preauth;
 
-import org.haox.kerb.identity.KrbIdentity;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.EncryptionType;
-
-import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
-public interface PreauthContext {
+public class PreauthContext {
+    private boolean preauthRequired = true;
+    private List<PreauthHandle> handles = new ArrayList<PreauthHandle>(5);
 
-    /**
-     * Get the client key matching request enctypes.
-     */
-    public EncryptionKey getClientKey(EncryptionType encType) throws KrbException;
+    public PreauthContext() {
 
-    public KrbIdentity getClientEntry() throws KrbException;
+    }
 
-    /**
-     * Get the encoded request body, which is sometimes needed for checksums.
-     * For a FAST request this is the encoded inner request body.
-     */
-    public abstract ByteBuffer getRequestBody() throws KrbException;
+    public boolean isPreauthRequired() {
+        return preauthRequired;
+    }
 
-    /**
-     * Get the FAST armor key, or NULL if the client is not using FAST.
-     */
-    public EncryptionKey getArmorKey() throws KrbException;
+    public void setPreauthRequired(boolean preauthRequired) {
+        this.preauthRequired = preauthRequired;
+    }
+
+    public List<PreauthHandle> getHandles() {
+        return handles;
+    }
 }

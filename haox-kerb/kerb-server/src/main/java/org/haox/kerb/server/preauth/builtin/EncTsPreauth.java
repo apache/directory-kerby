@@ -2,9 +2,10 @@ package org.haox.kerb.server.preauth.builtin;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.EncryptionUtil;
+import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.preauth.builtin.EncTsPreauthMeta;
 import org.haox.kerb.server.preauth.AbstractPreauthPlugin;
-import org.haox.kerb.server.preauth.PreauthContext;
+import org.haox.kerb.server.request.KdcRequest;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
@@ -20,9 +21,10 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
     }
 
     @Override
-    public void verify(PreauthContext preauthContext, PaDataEntry paData) throws KrbException {
+    public void verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
+                       PaDataEntry paData) throws KrbException {
         EncryptedData encData = KrbCodec.decode(paData.getPaDataValue(), EncryptedData.class);
-        EncryptionKey clientKey = preauthContext.getClientKey(encData.getEType());
+        EncryptionKey clientKey = kdcRequest.getClientKey(encData.getEType());
         PaEncTsEnc timestamp = EncryptionUtil.unseal(encData, clientKey,
                 KeyUsage.AS_REQ_PA_ENC_TS, PaEncTsEnc.class);
 

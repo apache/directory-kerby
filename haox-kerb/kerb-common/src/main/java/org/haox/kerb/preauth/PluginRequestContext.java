@@ -1,4 +1,4 @@
-package org.haox.kerb.client.preauth;
+package org.haox.kerb.preauth;
 
 /**
  * Per request per module

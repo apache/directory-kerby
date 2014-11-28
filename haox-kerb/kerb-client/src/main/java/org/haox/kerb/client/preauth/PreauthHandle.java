@@ -1,9 +1,9 @@
 package org.haox.kerb.client.preauth;
 
-import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.preauth.PaFlags;
+import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
@@ -14,31 +14,39 @@ public class PreauthHandle {
     public KrbPreauth preauth;
     public PluginRequestContext requestContext;
 
-    public void prepareQuestions(KrbContext krbContext, KdcRequest kdcRequest) throws KrbException {
-        preauth.prepareQuestions(krbContext, kdcRequest, requestContext);
+    public PreauthHandle(KrbPreauth preauth) {
+        this.preauth = preauth;
     }
 
-    public void setPreauthOptions(KrbContext krbContext, KdcRequest kdcRequest,
+    public void initRequestContext(KdcRequest kdcRequest) {
+        requestContext = preauth.initRequestContext(kdcRequest);
+    }
+
+    public void prepareQuestions(KdcRequest kdcRequest) throws KrbException {
+        preauth.prepareQuestions(kdcRequest, requestContext);
+    }
+
+    public void setPreauthOptions(KdcRequest kdcRequest,
                                   KrbOptions preauthOptions) throws KrbException {
-        preauth.setPreauthOptions(krbContext, kdcRequest, requestContext, preauthOptions);
+        preauth.setPreauthOptions(kdcRequest, requestContext, preauthOptions);
     }
 
-    public void tryFirst(KrbContext krbContext, KdcRequest kdcRequest, PaData outPadata) throws KrbException {
-        preauth.tryFirst(krbContext, kdcRequest, requestContext, outPadata);
+    public void tryFirst(KdcRequest kdcRequest, PaData outPadata) throws KrbException {
+        preauth.tryFirst(kdcRequest, requestContext, outPadata);
     }
 
-    public boolean process(KrbContext krbContext, KdcRequest kdcRequest,
+    public boolean process(KdcRequest kdcRequest,
                         PaDataEntry inPadata, PaData outPadata) throws KrbException {
-        return preauth.process(krbContext, kdcRequest, requestContext, inPadata, outPadata);
+        return preauth.process(kdcRequest, requestContext, inPadata, outPadata);
     }
 
-    public boolean tryAgain(KrbContext krbContext, KdcRequest kdcRequest,
+    public boolean tryAgain(KdcRequest kdcRequest,
                          PaDataType paType, PaData errPadata, PaData paData) {
-        return preauth.tryAgain(krbContext, kdcRequest, requestContext, paType, errPadata, paData);
+        return preauth.tryAgain(kdcRequest, requestContext, paType, errPadata, paData);
     }
 
-    public boolean isReal(KrbContext krbContext, PaDataType paType) {
-        PaFlags paFlags = preauth.getFlags(krbContext, paType);
+    public boolean isReal(PaDataType paType) {
+        PaFlags paFlags = preauth.getFlags(paType);
         return paFlags.isReal();
     }
 

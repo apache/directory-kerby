@@ -1,10 +1,9 @@
 package org.haox.kerb.client.preauth.builtin;
 
-import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.preauth.AbstractPreauthPlugin;
-import org.haox.kerb.client.preauth.PluginRequestContext;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.client.request.TgsRequest;
+import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.preauth.builtin.TgtPreauthMeta;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
@@ -17,28 +16,25 @@ public class TgtPreauth extends AbstractPreauthPlugin {
         super(new TgtPreauthMeta());
     }
 
-    public void tryFirst(KrbContext krbContext,
-                         KdcRequest kdcRequest,
+    public void tryFirst(KdcRequest kdcRequest,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
-        outPadata.addElement(makeEntry(krbContext, kdcRequest));
+        outPadata.addElement(makeEntry(kdcRequest));
     }
 
     @Override
-    public boolean process(KrbContext krbContext,
-                        KdcRequest kdcRequest,
+    public boolean process(KdcRequest kdcRequest,
                         PluginRequestContext requestContext,
                         PaDataEntry inPadata,
                         PaData outPadata) throws KrbException {
 
-        outPadata.addElement(makeEntry(krbContext, kdcRequest));
+        outPadata.addElement(makeEntry(kdcRequest));
 
         return true;
     }
 
-    private PaDataEntry makeEntry(KrbContext krbContext,
-                                  KdcRequest kdcRequest) throws KrbException {
+    private PaDataEntry makeEntry(KdcRequest kdcRequest) throws KrbException {
 
         TgsRequest tgsRequest = (TgsRequest) kdcRequest;
 

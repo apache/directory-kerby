@@ -6,6 +6,7 @@ import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
+import org.haox.kerb.server.preauth.FastContext;
 import org.haox.kerb.server.preauth.PreauthContext;
 import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.KrbErrorException;
@@ -19,17 +20,17 @@ import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
-import org.haox.kerb.spec.type.pa.PaEncTsEnc;
 import org.haox.kerb.spec.type.ticket.EncTicketPart;
 import org.haox.kerb.spec.type.ticket.Ticket;
 import org.haox.kerb.spec.type.ticket.TicketFlag;
 import org.haox.kerb.spec.type.ticket.TicketFlags;
 
 import java.net.InetAddress;
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.List;
 
-public abstract class KdcRequest implements PreauthContext {
+public abstract class KdcRequest {
 
     protected KdcContext kdcContext;
 
@@ -45,20 +46,27 @@ public abstract class KdcRequest implements PreauthContext {
     private KrbIdentity serverEntry;
     private EncryptionKey serverKey;
     private KrbIdentity tgsEntry;
+    private PreauthContext preauthContext;
+    private FastContext fastContext;
 
     public KdcRequest(KdcReq kdcReq) {
         this.kdcReq = kdcReq;
+        this.fastContext = new FastContext();
     }
 
     public void setContext(KdcContext kdcContext) {
         this.kdcContext = kdcContext;
     }
 
+    public PreauthContext getPreauthContext() {
+        return preauthContext;
+    }
+
     public void process() throws KrbException {
         checkVersion();
         checkClient();
         checkServer();
-        preAuthenticate();
+        preauth();
         authenticate();
         issueTicket();
         makeReply();
@@ -140,7 +148,6 @@ public abstract class KdcRequest implements PreauthContext {
         this.clientEntry = clientEntry;
     }
 
-    @Override
     public EncryptionKey getClientKey(EncryptionType encType) throws KrbException {
         return getClientEntry().getKey(encType);
     }
@@ -212,7 +219,10 @@ public abstract class KdcRequest implements PreauthContext {
         setClientKey(clientKey);
     }
 
-    protected void preAuthenticate() throws KrbException {
+    protected void preauth() throws KrbException {
+        preauthContext = kdcContext.getPreauthHandler()
+                .preparePreauthContext(this);
+
         KdcReq request = getKdcReq();
 
         PaData preAuthData = request.getPaData();
@@ -465,4 +475,13 @@ public abstract class KdcRequest implements PreauthContext {
 
         return entry;
     }
+
+    public ByteBuffer getRequestBody() throws KrbException {
+        return null;
+    }
+
+    public EncryptionKey getArmorKey() throws KrbException {
+        return fastContext.armorKey;
+    }
+
 }

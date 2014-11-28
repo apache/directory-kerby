@@ -1,4 +1,4 @@
-package org.haox.kerb.client.preauth.token;
+package org.haox.kerb.server.preauth.token;
 
 import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.spec.type.pa.PaDataType;

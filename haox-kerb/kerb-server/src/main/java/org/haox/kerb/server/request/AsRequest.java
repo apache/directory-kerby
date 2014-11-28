@@ -73,14 +73,4 @@ public class AsRequest extends KdcRequest {
 
         return encKdcRepPart;
     }
-
-    @Override
-    public ByteBuffer getRequestBody() throws KrbException {
-        return null;
-    }
-
-    @Override
-    public EncryptionKey getArmorKey() throws KrbException {
-        return null;
-    }
 }

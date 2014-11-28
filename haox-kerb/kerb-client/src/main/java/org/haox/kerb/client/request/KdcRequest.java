@@ -41,7 +41,7 @@ public abstract class KdcRequest {
     private KdcRep kdcRep;
     protected Map<String, Object> credCache;
     private PreauthContext preauthContext;
-    private FastContext fastContext = new FastContext();
+    private FastContext fastContext;
     private EncryptionKey asKey;
 
     private KrbError errorReply;
@@ -52,7 +52,8 @@ public abstract class KdcRequest {
         this.isRetrying = false;
         this.credCache = new HashMap<String, Object>();
         this.preauthContext = context.getPreauthHandler()
-                .preparePreauthContext(getContext(), this);
+                .preparePreauthContext(this);
+        this.fastContext = new FastContext();
     }
 
     public void setTransport(Transport transport) {
@@ -85,10 +86,6 @@ public abstract class KdcRequest {
 
     public void setAllowedPreauth(PaDataType paType) {
         preauthContext.setAllowedPaType(paType);
-    }
-
-    public FastContext getFastContext() {
-        return fastContext;
     }
 
     public Map<String, Object> getCredCache() {
@@ -268,7 +265,7 @@ public abstract class KdcRequest {
         EncryptionType encryptionType = etypes.iterator().next();
         setChosenEncryptionType(encryptionType);
 
-        getPreauthHandler().preauth(getContext(), this);
+        getPreauthHandler().preauth(this);
     }
 
     protected PreauthHandler getPreauthHandler() {

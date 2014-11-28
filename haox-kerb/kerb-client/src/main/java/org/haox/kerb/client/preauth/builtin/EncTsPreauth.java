@@ -1,12 +1,11 @@
 package org.haox.kerb.client.preauth.builtin;
 
-import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.preauth.AbstractPreauthPlugin;
-import org.haox.kerb.client.preauth.PluginRequestContext;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
+import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.preauth.builtin.EncTsPreauthMeta;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptedData;
@@ -23,27 +22,24 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
     }
 
     @Override
-    public void prepareQuestions(KrbContext krbContext,
-                                 KdcRequest kdcRequest,
+    public void prepareQuestions(KdcRequest kdcRequest,
                                  PluginRequestContext requestContext) throws KrbException {
 
         kdcRequest.needAsKey();
     }
 
-    public void tryFirst(KrbContext krbContext,
-                         KdcRequest kdcRequest,
+    public void tryFirst(KdcRequest kdcRequest,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
         if (kdcRequest.getAsKey() == null) {
             kdcRequest.needAsKey();
         }
-        outPadata.addElement(makeEntry(krbContext, kdcRequest));
+        outPadata.addElement(makeEntry(kdcRequest));
     }
 
     @Override
-    public boolean process(KrbContext krbContext,
-                           KdcRequest kdcRequest,
+    public boolean process(KdcRequest kdcRequest,
                            PluginRequestContext requestContext,
                            PaDataEntry inPadata,
                            PaData outPadata) throws KrbException {
@@ -51,22 +47,20 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
         if (kdcRequest.getAsKey() == null) {
             kdcRequest.needAsKey();
         }
-        outPadata.addElement(makeEntry(krbContext, kdcRequest));
+        outPadata.addElement(makeEntry(kdcRequest));
 
         return true;
     }
 
     @Override
-    public PaFlags getFlags(KrbContext krbContext,
-                            PaDataType paType) {
+    public PaFlags getFlags(PaDataType paType) {
         PaFlags paFlags = new PaFlags(0);
         paFlags.setFlag(PaFlag.PA_REAL);
 
         return paFlags;
     }
 
-    private PaDataEntry makeEntry(KrbContext krbContext,
-                                  KdcRequest kdcRequest) throws KrbException {
+    private PaDataEntry makeEntry(KdcRequest kdcRequest) throws KrbException {
         PaEncTsEnc paTs = new PaEncTsEnc();
         paTs.setPaTimestamp(kdcRequest.getPreauthTime());
 

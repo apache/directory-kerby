@@ -4,7 +4,7 @@ import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.preauth.AbstractPreauthPlugin;
-import org.haox.kerb.client.preauth.PluginRequestContext;
+import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
@@ -32,8 +32,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     }
 
     @Override
-    public PluginRequestContext initRequestContext(KrbContext krbContext,
-                                                    KdcRequest kdcRequest) {
+    public PluginRequestContext initRequestContext(KdcRequest kdcRequest) {
         PkinitRequestContext reqCtx = new PkinitRequestContext();
 
         reqCtx.updateRequestOpts(pkinitContext.pluginOpts);
@@ -42,8 +41,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     }
 
     @Override
-    public void setPreauthOptions(KrbContext krbContext,
-                                  KdcRequest kdcRequest,
+    public void setPreauthOptions(KdcRequest kdcRequest,
                                   PluginRequestContext requestContext,
                                   KrbOptions options) {
         if (options.contains(KrbOption.PKINIT_X509_IDENTITY)) {
@@ -64,8 +62,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     }
 
     @Override
-    public void prepareQuestions(KrbContext krbContext,
-                                 KdcRequest kdcRequest,
+    public void prepareQuestions(KdcRequest kdcRequest,
                                  PluginRequestContext requestContext) {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
@@ -78,16 +75,14 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         // Might have questions asking for password to access the private key
     }
 
-    public void tryFirst(KrbContext krbContext,
-                         KdcRequest kdcRequest,
+    public void tryFirst(KdcRequest kdcRequest,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
     }
 
     @Override
-    public boolean process(KrbContext krbContext,
-                        KdcRequest kdcRequest,
+    public boolean process(KdcRequest kdcRequest,
                         PluginRequestContext requestContext,
                         PaDataEntry inPadata,
                         PaData outPadata) throws KrbException {
@@ -108,7 +103,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             generateRequest(reqCtx, outPadata);
         } else {
             EncryptionType encType = kdcRequest.getEncType();
-            processReply(krbContext, kdcRequest, reqCtx, inPadata, encType);
+            processReply(kdcRequest, reqCtx, inPadata, encType);
         }
 
         return false;
@@ -118,8 +113,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     }
 
-    private void processReply(KrbContext krbContext,
-                              KdcRequest kdcRequest,
+    private void processReply(KdcRequest kdcRequest,
                               PkinitRequestContext reqCtx,
                               PaDataEntry inPadata,
                               EncryptionType encType) {
@@ -132,8 +126,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     }
 
     @Override
-    public boolean tryAgain(KrbContext krbContext,
-                         KdcRequest kdcRequest,
+    public boolean tryAgain(KdcRequest kdcRequest,
                          PluginRequestContext requestContext,
                          PaDataType preauthType,
                          PaData errPadata,
@@ -159,17 +152,11 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     }
 
     @Override
-    public PaFlags getFlags(KrbContext krbContext,
-                            PaDataType paType) {
+    public PaFlags getFlags(PaDataType paType) {
         PaFlags paFlags = new PaFlags(0);
         paFlags.setFlag(PaFlag.PA_REAL);
 
         return paFlags;
-    }
-
-    @Override
-    public void destroy(KrbContext krbContext) {
-
     }
 
 }
