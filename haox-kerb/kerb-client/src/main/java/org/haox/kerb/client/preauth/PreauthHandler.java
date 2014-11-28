@@ -2,8 +2,8 @@ package org.haox.kerb.client.preauth;
 
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOptions;
+import org.haox.kerb.client.preauth.builtin.EncTsPreauth;
 import org.haox.kerb.client.preauth.builtin.TgtPreauth;
-import org.haox.kerb.client.preauth.builtin.TimestampPreauth;
 import org.haox.kerb.client.preauth.pkinit.PkinitPreauth;
 import org.haox.kerb.client.preauth.token.TokenPreauth;
 import org.haox.kerb.client.request.KdcRequest;
@@ -31,7 +31,7 @@ public class PreauthHandler {
     private void loadPreauthPlugins(KrbContext context) {
         preauths = new ArrayList<KrbPreauth>();
 
-        KrbPreauth preauth = new TimestampPreauth();
+        KrbPreauth preauth = new EncTsPreauth();
         preauth.init(context);
         preauths.add(preauth);
 

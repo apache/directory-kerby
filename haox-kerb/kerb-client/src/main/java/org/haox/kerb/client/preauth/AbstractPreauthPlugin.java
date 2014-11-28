@@ -1,53 +1,60 @@
-package org.haox.kerb.client.preauth.token;
+package org.haox.kerb.client.preauth;
 
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.client.KrbOptions;
-import org.haox.kerb.client.preauth.AbstractPreauthPlugin;
-import org.haox.kerb.client.preauth.PluginRequestContext;
-import org.haox.kerb.client.preauth.PreauthCallback;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
-import org.haox.kerb.preauth.token.TokenPreauthMeta;
+import org.haox.kerb.preauth.PreauthPluginMeta;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
-import org.haox.token.KerbToken;
 
 import java.util.Collections;
 import java.util.List;
 
-public class TokenPreauth extends AbstractPreauthPlugin {
+public class AbstractPreauthPlugin implements KrbPreauth {
 
-    private TokenContext tokenContext;
+    private PreauthPluginMeta pluginMeta;
+    protected KrbContext context;
 
-    public TokenPreauth() {
-        super(new TokenPreauthMeta());
+    public AbstractPreauthPlugin(PreauthPluginMeta meta) {
+        this.pluginMeta = meta;
+    }
+
+    @Override
+    public String getName() {
+        return pluginMeta.getName();
+    }
+
+    public int getVersion() {
+        return pluginMeta.getVersion();
+    }
+
+    public PaDataType[] getPaTypes() {
+        return pluginMeta.getPaTypes();
     }
 
     public void init(KrbContext context) {
-        super.init(context);
-        this.tokenContext = new TokenContext();
+        this.context = context;
     }
 
     @Override
     public PluginRequestContext initRequestContext(KrbContext krbContext,
-                                                    KdcRequest kdcRequest,
-                                                    PreauthCallback preauthCallback) {
-        TokenRequestContext reqCtx = new TokenRequestContext();
-
-        return reqCtx;
+                                                   KdcRequest kdcRequest,
+                                                   PreauthCallback preauthCallback) {
+        return null;
     }
 
     @Override
     public void prepareQuestions(KrbContext krbContext,
                                  KdcRequest kdcRequest,
                                  PreauthCallback preauthCallback,
-                                 PluginRequestContext requestContext) {
+                                 PluginRequestContext requestContext) throws KrbException {
 
+        preauthCallback.needAsKey(krbContext, kdcRequest);
     }
 
     @Override
@@ -65,19 +72,6 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                                   PluginRequestContext requestContext,
                                   KrbOptions options) {
 
-        tokenContext.usingIdToken = options.getBooleanOption(KrbOption.TOKEN_USING_IDTOKEN);
-        if (tokenContext.usingIdToken) {
-            if (options.contains(KrbOption.TOKEN_USER_ID_TOKEN)) {
-                tokenContext.token =
-                        (KerbToken) options.getOptionValue(KrbOption.TOKEN_USER_ID_TOKEN);
-            }
-        } else {
-            if (options.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
-                tokenContext.token =
-                        (KerbToken) options.getOptionValue(KrbOption.TOKEN_USER_AC_TOKEN);
-            }
-        }
-
     }
 
     public void tryFirst(KrbContext krbContext,
@@ -90,23 +84,23 @@ public class TokenPreauth extends AbstractPreauthPlugin {
 
     @Override
     public boolean process(KrbContext krbContext,
-                        KdcRequest kdcRequest,
-                        PreauthCallback preauthCallback,
-                        PluginRequestContext requestContext,
-                        PaDataEntry inPadata,
-                        PaData outPadata) throws KrbException {
+                           KdcRequest kdcRequest,
+                           PreauthCallback preauthCallback,
+                           PluginRequestContext requestContext,
+                           PaDataEntry inPadata,
+                           PaData outPadata) throws KrbException {
 
         return false;
     }
 
     @Override
     public boolean tryAgain(KrbContext krbContext,
-                         KdcRequest kdcRequest,
-                         PreauthCallback preauthCallback,
-                         PluginRequestContext requestContext,
-                         PaDataType preauthType,
-                         PaData errPadata,
-                         PaData outPadata) {
+                            KdcRequest kdcRequest,
+                            PreauthCallback preauthCallback,
+                            PluginRequestContext requestContext,
+                            PaDataType preauthType,
+                            PaData errPadata,
+                            PaData outPadata) {
         return false;
     }
 

@@ -2,7 +2,7 @@ package org.haox.kerb.preauth;
 
 import org.haox.kerb.spec.type.pa.PaDataType;
 
-public interface Preauth {
+public interface PreauthPluginMeta {
 
     public String getName();
 

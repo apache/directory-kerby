@@ -1,17 +1,15 @@
-package org.haox.kerb.preauth.builtin;
+package org.haox.kerb.preauth.token;
 
-import org.haox.kerb.preauth.Preauth;
+import org.haox.kerb.preauth.PreauthPluginMeta;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
-/**
- * A faked preauth module for TGS request handling
- */
-public class TgtPreauthBase implements Preauth {
+public class TokenPreauthMeta implements PreauthPluginMeta {
 
-    private static String NAME = "TGT_preauth";
+    private static String NAME = "TokenPreauth";
     private static int VERSION = 1;
     private static PaDataType[] PA_TYPES = new PaDataType[] {
-            PaDataType.TGS_REQ
+            PaDataType.TOKEN_CHALLENGE,
+            PaDataType.TOKEN_REQUEST
     };
 
     @Override

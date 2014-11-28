@@ -3,14 +3,14 @@ package org.haox.kerb.client.preauth.pkinit;
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.client.KrbOptions;
-import org.haox.kerb.client.preauth.KrbPreauth;
+import org.haox.kerb.client.preauth.AbstractPreauthPlugin;
 import org.haox.kerb.client.preauth.PluginRequestContext;
 import org.haox.kerb.client.preauth.PreauthCallback;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
 import org.haox.kerb.preauth.pkinit.PkinitIdenity;
-import org.haox.kerb.preauth.pkinit.PkinitPreauthBase;
+import org.haox.kerb.preauth.pkinit.PkinitPreauthMeta;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
@@ -18,16 +18,17 @@ import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
-import java.util.Collections;
-import java.util.List;
+public class PkinitPreauth extends AbstractPreauthPlugin {
 
-public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
-
-    private KrbContext context;
     private PkinitContext pkinitContext;
 
+    public PkinitPreauth() {
+        super(new PkinitPreauthMeta());
+    }
+
+    @Override
     public void init(KrbContext context) {
-        this.context = context;
+        super.init(context);
         this.pkinitContext = new PkinitContext();
     }
 
@@ -40,14 +41,6 @@ public class PkinitPreauth extends PkinitPreauthBase implements KrbPreauth {
         reqCtx.updateRequestOpts(pkinitContext.pluginOpts);
 
         return reqCtx;
-    }
-
-    @Override
-    public List<EncryptionType> getEncTypes(KrbContext krbContext,
-                                            KdcRequest kdcRequest,
-                                            PreauthCallback preauthCallback,
-                                            PluginRequestContext requestContext) {
-        return Collections.emptyList();
     }
 
     @Override

@@ -1,15 +1,14 @@
-package org.haox.kerb.preauth.token;
+package org.haox.kerb.preauth.builtin;
 
-import org.haox.kerb.preauth.Preauth;
+import org.haox.kerb.preauth.PreauthPluginMeta;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
-public class TokenPreauthBase implements Preauth {
+public class EncTsPreauthMeta implements PreauthPluginMeta {
 
-    private static String NAME = "TokenPreauth";
+    private static String NAME = "encrypted_timestamp";
     private static int VERSION = 1;
     private static PaDataType[] PA_TYPES = new PaDataType[] {
-            PaDataType.TOKEN_CHALLENGE,
-            PaDataType.TOKEN_REQUEST
+            PaDataType.ENC_TIMESTAMP
     };
 
     @Override

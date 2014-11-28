@@ -1,14 +1,15 @@
-package org.haox.kerb.preauth.builtin;
+package org.haox.kerb.preauth.pkinit;
 
-import org.haox.kerb.preauth.Preauth;
+import org.haox.kerb.preauth.PreauthPluginMeta;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
-public class TimestampPreauthBase implements Preauth {
+public class PkinitPreauthMeta implements PreauthPluginMeta {
 
-    private static String NAME = "encrypted_timestamp";
+    private static String NAME = "PKINIT";
     private static int VERSION = 1;
     private static PaDataType[] PA_TYPES = new PaDataType[] {
-            PaDataType.ENC_TIMESTAMP
+            PaDataType.PK_AS_REQ,
+            PaDataType.PK_AS_REP,
     };
 
     @Override

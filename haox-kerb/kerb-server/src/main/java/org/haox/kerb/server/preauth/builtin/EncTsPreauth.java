@@ -2,32 +2,21 @@ package org.haox.kerb.server.preauth.builtin;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.EncryptionUtil;
-import org.haox.kerb.preauth.PaFlags;
-import org.haox.kerb.preauth.builtin.TimestampPreauthBase;
-import org.haox.kerb.server.KdcContext;
-import org.haox.kerb.server.preauth.KdcPreauth;
+import org.haox.kerb.preauth.builtin.EncTsPreauthMeta;
+import org.haox.kerb.server.preauth.AbstractPreauthPlugin;
 import org.haox.kerb.server.preauth.PreauthContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptedData;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.KeyUsage;
 import org.haox.kerb.spec.type.common.KrbErrorCode;
-import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
 import org.haox.kerb.spec.type.pa.PaEncTsEnc;
 
-public class TimestampPreauth extends TimestampPreauthBase implements KdcPreauth {
+public class EncTsPreauth extends AbstractPreauthPlugin {
 
-    private KdcContext kdcContext;
-
-    public void init(KdcContext kdcContext) {
-        this.kdcContext = kdcContext;
-    }
-
-    @Override
-    public void provideEData(PreauthContext preauthContext) throws KrbException {
-
+    public EncTsPreauth() {
+        super(new EncTsPreauthMeta());
     }
 
     @Override
@@ -43,18 +32,4 @@ public class TimestampPreauth extends TimestampPreauthBase implements KdcPreauth
         }
     }
 
-    @Override
-    public void providePaData(PreauthContext preauthContext, PaData paData) {
-
-    }
-
-    @Override
-    public PaFlags getFlags(PreauthContext preauthContext, PaDataType paType) {
-        return null;
-    }
-
-    @Override
-    public void destroy() {
-
-    }
 }

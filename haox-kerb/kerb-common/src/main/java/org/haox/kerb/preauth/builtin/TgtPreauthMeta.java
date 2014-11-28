@@ -1,15 +1,17 @@
-package org.haox.kerb.preauth.pkinit;
+package org.haox.kerb.preauth.builtin;
 
-import org.haox.kerb.preauth.Preauth;
+import org.haox.kerb.preauth.PreauthPluginMeta;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
-public class PkinitPreauthBase implements Preauth {
+/**
+ * A faked preauth module for TGS request handling
+ */
+public class TgtPreauthMeta implements PreauthPluginMeta {
 
-    private static String NAME = "PKINIT";
+    private static String NAME = "TGT_preauth";
     private static int VERSION = 1;
     private static PaDataType[] PA_TYPES = new PaDataType[] {
-            PaDataType.PK_AS_REQ,
-            PaDataType.PK_AS_REP,
+            PaDataType.TGS_REQ
     };
 
     @Override

@@ -4,7 +4,7 @@ import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOptions;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.preauth.PaFlags;
-import org.haox.kerb.preauth.Preauth;
+import org.haox.kerb.preauth.PreauthPluginMeta;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.pa.PaData;
@@ -16,9 +16,7 @@ import java.util.List;
 /**
  * Client side preauth plugin module
  */
-public interface KrbPreauth extends Preauth {
-
-    public String getName();
+public interface KrbPreauth extends PreauthPluginMeta {
 
     /**
      * Initializing preauth plugin context

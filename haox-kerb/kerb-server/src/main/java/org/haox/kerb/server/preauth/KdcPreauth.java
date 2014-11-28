@@ -1,17 +1,17 @@
 package org.haox.kerb.server.preauth;
 
 import org.haox.kerb.preauth.PaFlags;
-import org.haox.kerb.preauth.Preauth;
+import org.haox.kerb.preauth.PreauthPluginMeta;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
-
-public interface KdcPreauth extends Preauth {
-
-    public String getName();
+/**
+ * KDC side preauth plugin module
+ */
+public interface KdcPreauth extends PreauthPluginMeta {
 
     public void init(KdcContext context);
 
