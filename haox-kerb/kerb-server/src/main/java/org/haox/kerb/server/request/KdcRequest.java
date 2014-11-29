@@ -49,6 +49,7 @@ public abstract class KdcRequest {
     private KrbIdentity tgsEntry;
     private PreauthContext preauthContext;
     private FastContext fastContext;
+    private PrincipalName serverPrincipal;
 
     public KdcRequest(KdcReq kdcReq, KdcContext kdcContext) {
         this.kdcReq = kdcReq;
@@ -56,6 +57,10 @@ public abstract class KdcRequest {
         this.preauthContext = kdcContext.getPreauthHandler()
                 .preparePreauthContext(this);
         this.fastContext = new FastContext();
+    }
+
+    public KdcContext getKdcContext() {
+        return kdcContext;
     }
 
     public PreauthContext getPreauthContext() {
@@ -490,4 +495,7 @@ public abstract class KdcRequest {
         return fastContext.armorKey;
     }
 
+    public PrincipalName getServerPrincipal() {
+        return serverPrincipal;
+    }
 }

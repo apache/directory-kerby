@@ -7,9 +7,11 @@ import org.haox.kerb.server.replay.ReplayCheckService;
 import org.haox.kerb.server.request.AsRequest;
 import org.haox.kerb.server.request.KdcRequest;
 import org.haox.kerb.server.request.TgsRequest;
+import org.haox.kerb.spec.KrbException;
 import org.haox.kerb.spec.type.common.KrbMessage;
 import org.haox.kerb.spec.type.common.KrbMessageType;
 import org.haox.kerb.spec.type.kdc.AsReq;
+import org.haox.kerb.spec.type.kdc.KdcReq;
 import org.haox.kerb.spec.type.kdc.TgsReq;
 import org.haox.transport.MessageHandler;
 import org.haox.transport.Transport;
@@ -18,25 +20,51 @@ import org.haox.transport.tcp.TcpTransport;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class KdcHandler extends MessageHandler {
 
-    private KdcContext kdcContext;
+    private List<String> kdcRealms = new ArrayList<String>(1);
+    private Map<String, KdcContext> kdcContexts;
+
     private KdcConfig kdcConfig;
+    private PreauthHandler preauthHandler;
+
+    // TODO: per realm for below
     private IdentityService identityService;
     private ReplayCheckService replayCheckService;
-    private String kdcRealm;
 
+    /**
+     * Should be called when all the necessary properties are set
+     */
     public void init() {
-        kdcContext = new KdcContext();
+        loadKdcRealms();
+
+        preauthHandler = new PreauthHandler();
+        preauthHandler.init(kdcConfig);
+
+        kdcContexts = new HashMap<String, KdcContext>(1);
+        for (String realm : kdcRealms) {
+            initRealmContext(realm);
+        }
+    }
+
+    private void initRealmContext(String kdcRealm) {
+        KdcContext kdcContext = new KdcContext();
         kdcContext.init(kdcConfig);
         kdcContext.setKdcRealm(kdcRealm);
+        kdcContext.setPreauthHandler(preauthHandler);
         kdcContext.setIdentityService(identityService);
         kdcContext.setReplayCache(replayCheckService);
+
+        kdcContexts.put(kdcRealm, kdcContext);
     }
 
     public void setKdcRealm(String realm) {
-        this.kdcRealm = realm;
+        this.kdcRealms.add(realm);
     }
 
     public void setConfig(KdcConfig config) {
@@ -56,10 +84,19 @@ public class KdcHandler extends MessageHandler {
         KdcRequest kdcRequest = null;
 
         KrbMessageType messageType = krbRequest.getMsgType();
-        if (messageType == KrbMessageType.TGS_REQ) {
-            kdcRequest = new TgsRequest((TgsReq) krbRequest, kdcContext);
-        } else if (messageType == KrbMessageType.AS_REQ) {
-            kdcRequest = new AsRequest((AsReq) krbRequest, kdcContext);
+        if (messageType == KrbMessageType.TGS_REQ || messageType == KrbMessageType.AS_REQ) {
+            KdcReq kdcReq = (KdcReq) krbRequest;
+            String realm = getRequestRealm(kdcReq);
+            if (realm == null || !kdcContexts.containsKey(realm)) {
+                throw new KrbException("Invalid realm from kdc request: " + realm);
+            }
+
+            KdcContext kdcContext = kdcContexts.get(realm);
+            if (messageType == KrbMessageType.TGS_REQ) {
+                kdcRequest = new TgsRequest((TgsReq) kdcReq, kdcContext);
+            } else if (messageType == KrbMessageType.AS_REQ) {
+                kdcRequest = new AsRequest((AsReq) kdcReq, kdcContext);
+            }
         }
 
         InetSocketAddress clientAddress = transport.getRemoteAddress();
@@ -73,4 +110,20 @@ public class KdcHandler extends MessageHandler {
         KrbUtil.sendMessage(krbResponse, transport);
     }
 
+    private void loadKdcRealms() {
+        if (kdcRealms.isEmpty()) {
+            kdcRealms.add(kdcConfig.getKdcRealm());
+        }
+    }
+
+    private String getRequestRealm(KdcReq kdcReq) {
+        String realm = kdcReq.getReqBody().getRealm();
+        if (realm == null && kdcReq.getReqBody().getCname() != null) {
+            realm = kdcReq.getReqBody().getCname().getRealm();
+        }
+        if (realm == null || realm.isEmpty()) {
+            realm = "NULL-KDC-REALM";
+        }
+        return realm;
+    }
 }

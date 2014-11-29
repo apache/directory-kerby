@@ -113,7 +113,9 @@ public class KdcServer {
         this.kdcHandler = new KdcHandler();
         kdcHandler.setConfig(kdcConfig);
         kdcHandler.setIdentityService(identityService);
-        kdcHandler.setKdcRealm(kdcRealm);
+        if (kdcRealm != null) {
+            kdcHandler.setKdcRealm(kdcRealm);
+        }
         kdcHandler.init();
     }
 

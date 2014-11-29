@@ -10,12 +10,17 @@ import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
 
+import java.util.List;
+
 /**
  * KDC side preauth plugin module
  */
 public interface KdcPreauth extends PreauthPluginMeta {
 
-    public void init(KdcContext context);
+    /**
+     * Initializing plugin context for each realm
+     */
+    public void initWith(KdcContext context);
 
     /**
      * Initializing request context
@@ -34,8 +39,8 @@ public interface KdcPreauth extends PreauthPluginMeta {
      * TKT_FLG_PRE_AUTH or TKT_FLG_HW_AUTH flag in the enc_tkt_reply's "flags"
      * field as appropriate.
      */
-    public void verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
-                       PaDataEntry paData) throws KrbException;
+    public boolean verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
+                          PaDataEntry paData) throws KrbException;
 
     /**
      * Optional: generate preauthentication response data to send to the client as

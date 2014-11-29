@@ -1,5 +1,6 @@
 package org.haox.kerb.server.preauth;
 
+import org.haox.kerb.server.KdcConfig;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.preauth.builtin.EncTsPreauth;
 import org.haox.kerb.server.preauth.builtin.TgtPreauth;
@@ -13,28 +14,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PreauthHandler {
-    private KdcContext kdcContext;
+
     private List<KdcPreauth> preauths;
 
-    public void init(KdcContext context) {
-        this.kdcContext = context;
-        loadPreauthPlugins(context);
+    /**
+     * Should be called only once, for global
+     */
+    public void init(KdcConfig kdcConfig) {
+        loadPreauthPlugins(kdcConfig);
     }
 
-    private void loadPreauthPlugins(KdcContext context) {
+    private void loadPreauthPlugins(KdcConfig kdcConfig) {
         preauths = new ArrayList<KdcPreauth>();
 
         KdcPreauth preauth = new EncTsPreauth();
-        preauth.init(context);
         preauths.add(preauth);
 
         preauth = new TgtPreauth();
-        preauth.init(context);
         preauths.add(preauth);
+    }
+
+    /**
+     * Should be called per realm
+     * @param context
+     */
+    public void initWith(KdcContext context) {
+        for (KdcPreauth preauth : preauths) {
+            preauth.initWith(context);
+        }
     }
 
     public PreauthContext preparePreauthContext(KdcRequest kdcRequest) {
         PreauthContext preauthContext = new PreauthContext();
+
+        KdcContext kdcContext = kdcRequest.getKdcContext();
         preauthContext.setPreauthRequired(kdcContext.getConfig().isPreauthRequired());
 
         for (KdcPreauth preauth : preauths) {

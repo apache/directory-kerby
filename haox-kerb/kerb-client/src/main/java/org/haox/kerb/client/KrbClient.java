@@ -262,7 +262,7 @@ public class KrbClient {
         Event resultEvent = null;
         try {
             resultEvent = eventWaiter.waitEvent(KrbClientEventType.TGT_RESULT,
-                    context.getTimeout(), TimeUnit.HOURS);
+                    context.getTimeout(), TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             throw new KrbException("Network timeout", e);
         }
@@ -290,7 +290,7 @@ public class KrbClient {
         Event resultEvent = null;
         try {
             resultEvent = eventWaiter.waitEvent(KrbClientEventType.TKT_RESULT,
-                    context.getTimeout(), TimeUnit.HOURS);
+                    context.getTimeout(), TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             throw new KrbException("Network timeout", e);
         }

@@ -15,11 +15,12 @@ public class TgtPreauth extends AbstractPreauthPlugin {
     }
 
     @Override
-    public void verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
-                       PaDataEntry paData) throws KrbException {
+    public boolean verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
+                          PaDataEntry paData) throws KrbException {
 
         TgsRequest tgsRequest = (TgsRequest) kdcRequest;
         tgsRequest.verifyAuthenticator(paData);
+        return true;
     }
 
 }

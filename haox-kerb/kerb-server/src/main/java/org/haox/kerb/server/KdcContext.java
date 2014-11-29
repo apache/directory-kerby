@@ -4,8 +4,11 @@ import org.haox.kerb.identity.IdentityService;
 import org.haox.kerb.server.preauth.PreauthHandler;
 import org.haox.kerb.server.replay.ReplayCheckService;
 
+import java.util.List;
+
 public class KdcContext {
     private KdcConfig config;
+    private List<String> supportedKdcRealms;
     private String kdcRealm;
     private IdentityService identityService;
     private ReplayCheckService replayCache;
@@ -13,16 +16,26 @@ public class KdcContext {
 
     public void init(KdcConfig config) {
         this.config = config;
-        preauthHandler = new PreauthHandler();
-        preauthHandler.init(this);
     }
 
     public KdcConfig getConfig() {
         return config;
     }
 
+    public void setPreauthHandler(PreauthHandler preauthHandler) {
+        this.preauthHandler = preauthHandler;
+    }
+
     public PreauthHandler getPreauthHandler() {
         return this.preauthHandler;
+    }
+
+    public List<String> getSupportedKdcRealms() {
+        return supportedKdcRealms;
+    }
+
+    public void setSupportedKdcRealms(List<String> supportedKdcRealms) {
+        this.supportedKdcRealms = supportedKdcRealms;
     }
 
     public void setKdcRealm(String realm) {

@@ -13,7 +13,6 @@ import org.haox.kerb.spec.type.pa.PaDataType;
 public class AbstractPreauthPlugin implements KdcPreauth {
 
     private PreauthPluginMeta pluginMeta;
-    protected KdcContext kdcContext;
 
     public AbstractPreauthPlugin(PreauthPluginMeta meta) {
         this.pluginMeta = meta;
@@ -32,8 +31,9 @@ public class AbstractPreauthPlugin implements KdcPreauth {
         return pluginMeta.getPaTypes();
     }
 
-    public void init(KdcContext kdcContext) {
-        this.kdcContext = kdcContext;
+    @Override
+    public void initWith(KdcContext kdcContext) {
+
     }
 
     @Override
@@ -48,9 +48,9 @@ public class AbstractPreauthPlugin implements KdcPreauth {
     }
 
     @Override
-    public void verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
-                       PaDataEntry paData) throws KrbException {
-
+    public boolean verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
+                          PaDataEntry paData) throws KrbException {
+        return false;
     }
 
     @Override
