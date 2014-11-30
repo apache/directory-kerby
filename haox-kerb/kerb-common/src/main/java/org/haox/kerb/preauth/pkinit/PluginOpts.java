@@ -1,5 +1,10 @@
 package org.haox.kerb.preauth.pkinit;
 
+import org.haox.asn1.type.Asn1ObjectIdentifier;
+import org.haox.kerb.spec.type.pa.pkinit.AlgorithmIdentifiers;
+import org.haox.kerb.spec.type.pa.pkinit.TrustedCertifiers;
+import org.haox.kerb.spec.type.x509.AlgorithmIdentifier;
+
 public class PluginOpts {
 
     // From MIT Krb5 _pkinit_plg_opts
@@ -17,4 +22,27 @@ public class PluginOpts {
     // the size of the Diffie-Hellman key the client will attempt to use.
     // The acceptable values are 1024, 2048, and 4096. The default is 2048.
     public int dhMinBits = 2048;
+
+    public AlgorithmIdentifiers createSupportedCMSTypes() {
+        AlgorithmIdentifiers cmsAlgorithms = new AlgorithmIdentifiers();
+        AlgorithmIdentifier des3Alg = new AlgorithmIdentifier();
+        cmsAlgorithms.add(des3Alg);
+
+        String oidStr = "DES3-OID";
+        Asn1ObjectIdentifier des3Oid = new Asn1ObjectIdentifier(oidStr);
+        des3Alg.setAlgorithm(des3Oid);
+        des3Alg.setParameters(null);
+
+        return cmsAlgorithms;
+    }
+
+    public TrustedCertifiers createTrustedCertifiers() {
+        TrustedCertifiers trustedCertifiers = new TrustedCertifiers();
+
+        return trustedCertifiers;
+    }
+
+    public byte[] createIssuerAndSerial() {
+        return null;
+    }
 }

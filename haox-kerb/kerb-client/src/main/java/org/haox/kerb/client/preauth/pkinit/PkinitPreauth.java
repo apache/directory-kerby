@@ -11,11 +11,19 @@ import org.haox.kerb.preauth.PaFlags;
 import org.haox.kerb.preauth.pkinit.PkinitIdenity;
 import org.haox.kerb.preauth.pkinit.PkinitPreauthMeta;
 import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.spec.type.KerberosTime;
+import org.haox.kerb.spec.type.common.CheckSum;
 import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.type.common.PrincipalName;
 import org.haox.kerb.spec.type.pa.PaData;
 import org.haox.kerb.spec.type.pa.PaDataEntry;
 import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.spec.type.pa.pkinit.*;
+import org.haox.kerb.spec.type.x509.AlgorithmIdentifier;
+import org.haox.kerb.spec.type.x509.SubjectPublicKeyInfo;
+
+import java.util.List;
 
 public class PkinitPreauth extends AbstractPreauthPlugin {
 
@@ -100,7 +108,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         }
 
         if (processingRequest) {
-            generateRequest(reqCtx, outPadata);
+            generateRequest(reqCtx, kdcRequest, outPadata);
         } else {
             EncryptionType encType = kdcRequest.getEncType();
             processReply(kdcRequest, reqCtx, inPadata, encType);
@@ -109,8 +117,56 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         return false;
     }
 
-    private void generateRequest(PkinitRequestContext reqCtx, PaData outPadata) {
+    private void generateRequest(PkinitRequestContext reqCtx, KdcRequest kdcRequest,
+                                 PaData outPadata) {
 
+    }
+
+    private PaPkAsReq makePaPkAsReq(PkinitContext pkinitContext, PkinitRequestContext reqCtx,
+                                    KerberosTime ctime, int cusec, int nonce, byte[] checksum,
+                                    PrincipalName client, PrincipalName server) {
+
+        PaPkAsReq paPkAsReq = new PaPkAsReq();
+        AuthPack authPack = new AuthPack();
+        SubjectPublicKeyInfo pubInfo = new SubjectPublicKeyInfo();
+        PkAuthenticator pkAuthen = new PkAuthenticator();
+
+        boolean usingRsa = reqCtx.requestOpts.usingRsa;
+        PaDataType paType = reqCtx.paType = PaDataType.PK_AS_REQ;
+
+        pkAuthen.setCtime(ctime);
+        pkAuthen.setCusec(cusec);
+        pkAuthen.setNonce(nonce);
+        pkAuthen.setPaChecksum(checksum);
+
+        authPack.setPkAuthenticator(pkAuthen);
+        DHNonce dhNonce = new DHNonce();
+        authPack.setClientDhNonce(dhNonce);
+        authPack.setClientPublicValue(pubInfo);
+
+        authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
+
+        if (usingRsa) {
+            // DH case
+        } else {
+            authPack.setClientPublicValue(null);
+        }
+
+        byte[] signedAuthPack = signAuthPack(pkinitContext, reqCtx, authPack);
+        paPkAsReq.setSignedAuthPack(signedAuthPack);
+
+        TrustedCertifiers trustedCertifiers = pkinitContext.pluginOpts.createTrustedCertifiers();
+        paPkAsReq.setTrustedCertifiers(trustedCertifiers);
+
+        byte[] kdcPkId = pkinitContext.pluginOpts.createIssuerAndSerial();
+        paPkAsReq.setKdcPkId(kdcPkId);
+
+        return paPkAsReq;
+    }
+
+    private byte[] signAuthPack(PkinitContext pkinitContext,
+                                   PkinitRequestContext reqCtx, AuthPack authPack) {
+        return null;
     }
 
     private void processReply(KdcRequest kdcRequest,
@@ -145,7 +201,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         }
 
         if (doAgain) {
-            generateRequest(reqCtx, outPadata);
+            generateRequest(reqCtx, kdcRequest, outPadata);
         }
 
         return false;

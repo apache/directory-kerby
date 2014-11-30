@@ -34,7 +34,7 @@ public class AuthPack extends KrbSequenceType {
         return getFieldAs(PK_AUTHENTICATOR, PkAuthenticator.class);
     }
 
-    public void setPkAuthenticator(KerberosTime pkAuthenticator) {
+    public void setPkAuthenticator(PkAuthenticator pkAuthenticator) {
         setFieldAs(PK_AUTHENTICATOR, pkAuthenticator);
     }
 

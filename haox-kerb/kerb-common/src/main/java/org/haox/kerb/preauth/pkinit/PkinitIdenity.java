@@ -105,4 +105,5 @@ public class PkinitIdenity {
     public static void initialize(IdentityOpts identityOpts, PrincipalName principal) {
 
     }
+
 }

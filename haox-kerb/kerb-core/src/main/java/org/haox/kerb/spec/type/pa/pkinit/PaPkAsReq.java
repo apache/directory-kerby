@@ -27,12 +27,12 @@ public class PaPkAsReq extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public KerberosTime getPaTimestamp() {
-        return getFieldAsTime(SIGNED_AUTH_PACK);
+    public byte[] getSignedAuthPack() {
+        return getFieldAsOctets(SIGNED_AUTH_PACK);
     }
 
-    public void setPaTimestamp(KerberosTime paTimestamp) {
-        setFieldAs(SIGNED_AUTH_PACK, paTimestamp);
+    public void setSignedAuthPack(byte[] signedAuthPack) {
+        setFieldAsOctets(SIGNED_AUTH_PACK, signedAuthPack);
     }
 
     public TrustedCertifiers getTrustedCertifiers() {
