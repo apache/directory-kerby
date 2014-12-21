@@ -25,6 +25,7 @@
         <module>haox-token</module>
         <module>haox-kdc</module>
         <module>haox-pkix</module>
+        <module>benchmark</module>
     </modules>
 
     <dependencies>

@@ -24,6 +24,10 @@ public class KrbCodec {
     }
 
     public static <T extends Asn1Type> T decode(byte[] content, Class<T> krbType) throws KrbException {
+        return decode(ByteBuffer.wrap(content), krbType);
+    }
+
+    public static <T extends Asn1Type> T decode(ByteBuffer content, Class<T> krbType) throws KrbException {
         Asn1Type implObj = null;
         try {
             implObj = krbType.newInstance();
