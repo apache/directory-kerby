@@ -32,8 +32,10 @@ public abstract class Transport {
     }
 
     public void sendMessage(ByteBuffer message) {
-        sendBuffer.write(message);
-        dispatcher.dispatch(TransportEvent.createWritableTransportEvent(this));
+        if (message != null) {
+            sendBuffer.write(message);
+            dispatcher.dispatch(TransportEvent.createWritableTransportEvent(this));
+        }
     }
 
     public void onWriteable() throws IOException {

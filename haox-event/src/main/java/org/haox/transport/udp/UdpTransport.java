@@ -23,8 +23,10 @@ public class UdpTransport extends Transport {
     }
 
     protected void onRecvData(ByteBuffer data) {
-        recvBuffer.write(data);
-        dispatcher.dispatch(TransportEvent.createReadableTransportEvent(this));
+        if (data != null) {
+            recvBuffer.write(data);
+            dispatcher.dispatch(TransportEvent.createReadableTransportEvent(this));
+        }
     }
 
     @Override

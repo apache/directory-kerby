@@ -9,7 +9,7 @@
 
     <artifactId>benchmark</artifactId>
 
-    <name>haox benchmark</name>
+    <name>Haox benchmark</name>
     <description>Haox benchmark tests</description>
 
     <dependencies>
