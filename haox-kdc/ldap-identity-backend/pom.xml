@@ -4,13 +4,13 @@
 
     <parent>
         <groupId>org.haox</groupId>
-        <artifactId>haox-kerb</artifactId>
+        <artifactId>haox-kdc</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>ldap-identity-backend</artifactId>
 
-    <name>Ldap-identity-backend</name>
+    <name>Ldap identity backend</name>
     <description>Ldap identity backend</description>
 
     <dependencies>

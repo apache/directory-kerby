@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>Ldap-identity-backend</module>
+        <module>ldap-identity-backend</module>
         <module>kdc-server</module>
         <module>tools</module>
     </modules>

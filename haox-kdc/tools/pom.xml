@@ -4,14 +4,14 @@
 
     <parent>
         <groupId>org.haox</groupId>
-        <artifactId>haox-kerb</artifactId>
+        <artifactId>haox-kdc</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kdc-tool</artifactId>
+    <artifactId>tools</artifactId>
 
-    <name>KDC Tool</name>
-    <description>Haox KDC Tool</description>
+    <name>Tools</name>
+    <description>Haox KDC Tools</description>
 
     <dependencies>
         <dependency>
