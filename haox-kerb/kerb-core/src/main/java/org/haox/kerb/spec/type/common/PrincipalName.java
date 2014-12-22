@@ -77,7 +77,7 @@ public class PrincipalName extends KrbSequenceType {
 
     private String makeSingleName() {
         List<String> names = getNameStrings();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         boolean isFirst = true;
         for (String name : names) {
             sb.append(name);
@@ -166,7 +166,7 @@ public class PrincipalName extends KrbSequenceType {
     }
 
     public static String makeSalt(PrincipalName principalName) {
-        StringBuffer salt = new StringBuffer();
+        StringBuilder salt = new StringBuilder();
         if (principalName.getRealm() != null) {
             salt.append(principalName.getRealm().toString());
         }

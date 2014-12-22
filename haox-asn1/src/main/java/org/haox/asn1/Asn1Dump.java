@@ -1,8 +1,7 @@
 package org.haox.asn1;
 
-import org.haox.asn1.type.Asn1Simple;
-import org.haox.asn1.type.Asn1Collection;
 import org.haox.asn1.type.Asn1Item;
+import org.haox.asn1.type.Asn1Simple;
 import org.haox.asn1.type.Asn1Type;
 
 import java.io.IOException;
@@ -15,7 +14,7 @@ public class Asn1Dump {
     }
 
     public static String dumpAsString(byte[] content) throws IOException {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         Asn1InputBuffer buffer = new Asn1InputBuffer(content);
         Asn1Type value;
@@ -29,12 +28,12 @@ public class Asn1Dump {
     }
 
     public static String dumpAsString(Asn1Type value) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         dump(value, sb);
         return sb.toString();
     }
 
-    private static void dump(Asn1Type value, StringBuffer buffer) {
+    private static void dump(Asn1Type value, StringBuilder buffer) {
         if (value instanceof Asn1Simple) {
             buffer.append(((Asn1Simple) value).getValue().toString());
         } else if (value instanceof Asn1Item) {
@@ -42,7 +41,7 @@ public class Asn1Dump {
         }
     }
 
-    private static void dump(Asn1Item value, StringBuffer buffer) {
+    private static void dump(Asn1Item value, StringBuilder buffer) {
         if (value.isFullyDecoded()) {
             dump(value.getValue(), buffer);
         } else {

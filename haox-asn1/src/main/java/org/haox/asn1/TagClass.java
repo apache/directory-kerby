@@ -35,13 +35,19 @@ public enum TagClass
     }
 
     public static TagClass fromValue(int value) {
-        for (TagClass e : values()) {
-            if (e.getValue() == value) {
-                return (TagClass) e;
-            }
+        // Optimized by Emmanuel
+        switch (value) {
+            case 0x00:
+                return TagClass.UNIVERSAL;
+            case 0x40:
+                return TagClass.APPLICATION;
+            case 0x80:
+                return TagClass.CONTEXT_SPECIFIC;
+            case 0xC0:
+                return TagClass.PRIVATE;
+            default:
+                return TagClass.UNKNOWN;
         }
-
-        return UNKNOWN;
     }
 
     public static TagClass fromTagFlags(int tag) {

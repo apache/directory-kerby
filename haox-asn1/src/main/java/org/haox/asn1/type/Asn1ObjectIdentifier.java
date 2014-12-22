@@ -30,7 +30,7 @@ public class Asn1ObjectIdentifier extends Asn1Simple<String>
     }
 
     protected void toValue() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         byte[] bytes = getBytes();
         byte[][] bytesGroups = group(bytes);
