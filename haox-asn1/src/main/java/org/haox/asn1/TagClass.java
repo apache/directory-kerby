@@ -1,7 +1,6 @@
 package org.haox.asn1;
 
-public enum TagClass
-{
+public enum TagClass {
     UNKNOWN(-1),
     UNIVERSAL(0x00),
     APPLICATION(0x40),
