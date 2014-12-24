@@ -16,11 +16,9 @@
         <scala.version>2.10.3</scala.version>
     </properties>
 
-    <modules>	    
-        <module>haox-config</module>
-        <module>haox-asn1</module>
-        <module>haox-event</module>
+    <modules>
 		<module>3rdparty</module>
+        <module>contrib</module>
         <module>haox-kerb</module>
         <module>haox-token</module>
         <module>haox-kdc</module>

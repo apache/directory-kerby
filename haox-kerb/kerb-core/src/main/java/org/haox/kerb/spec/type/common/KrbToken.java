@@ -1,12 +1,10 @@
 package org.haox.kerb.spec.type.common;
 
-import org.haox.asn1.LimitedByteBuffer;
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Map;
 

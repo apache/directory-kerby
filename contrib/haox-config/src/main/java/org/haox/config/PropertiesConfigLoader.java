@@ -1,6 +1,5 @@
 package org.haox.config;
 
-import java.util.Map;
 import java.util.Properties;
 
 public class PropertiesConfigLoader extends ConfigLoader {

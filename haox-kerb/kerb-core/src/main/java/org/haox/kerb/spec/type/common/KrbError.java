@@ -3,7 +3,6 @@ package org.haox.kerb.spec.type.common;
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.asn1.type.Asn1Integer;
 import org.haox.asn1.type.Asn1OctetString;
-import org.haox.kerb.spec.KrbConstant;
 import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KerberosTime;
 

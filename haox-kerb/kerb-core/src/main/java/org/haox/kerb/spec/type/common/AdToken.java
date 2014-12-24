@@ -2,7 +2,6 @@ package org.haox.kerb.spec.type.common;
 
 import org.haox.asn1.type.Asn1FieldInfo;
 import org.haox.kerb.spec.type.KrbSequenceType;
-import org.haox.kerb.spec.type.common.KrbToken;
 
 /**
  AD-TOKEN ::= SEQUENCE {

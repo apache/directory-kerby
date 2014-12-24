@@ -2,9 +2,6 @@ package org.haox.kerb.spec.type.fast;
 
 import org.haox.asn1.type.Asn1Choice;
 import org.haox.asn1.type.Asn1FieldInfo;
-import org.haox.asn1.type.Asn1OctetString;
-import org.haox.kerb.spec.type.KrbSequenceOfType;
-import org.haox.kerb.spec.type.pa.pkinit.DHRepInfo;
 
 /**
  PA-FX-FAST-REPLY ::= CHOICE {

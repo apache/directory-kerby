@@ -1,9 +1,6 @@
 package org.haox.kerb.spec.type.pa.token;
 
 import org.haox.asn1.type.Asn1FieldInfo;
-import org.haox.asn1.type.Asn1OctetString;
-import org.haox.asn1.type.Asn1Utf8String;
-import org.haox.kerb.spec.type.KerberosString;
 import org.haox.kerb.spec.type.KrbSequenceType;
 
 /**

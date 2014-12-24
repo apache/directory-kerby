@@ -1,7 +1,6 @@
 package org.haox.kerb.spec.type.pa.pkinit;
 
 import org.haox.asn1.type.Asn1FieldInfo;
-import org.haox.kerb.spec.type.KerberosTime;
 import org.haox.kerb.spec.type.KrbSequenceType;
 import org.haox.kerb.spec.type.x509.SubjectPublicKeyInfo;
 

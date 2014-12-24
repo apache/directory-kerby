@@ -4,8 +4,6 @@ import org.haox.event.Event;
 import org.haox.event.EventType;
 import org.haox.transport.Transport;
 
-import java.nio.ByteBuffer;
-
 public class TransportEvent extends Event {
 
     private Transport transport;

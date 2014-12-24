@@ -11,7 +11,6 @@ import org.haox.kerb.spec.type.common.EncryptionKey;
 import org.haox.kerb.spec.type.common.EncryptionType;
 import org.haox.kerb.spec.type.common.KeyUsage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package org.haox.asn1.type;
 
-import org.haox.asn1.EncodingOption;
 import org.haox.asn1.UniversalTag;
 
 import java.io.IOException;
