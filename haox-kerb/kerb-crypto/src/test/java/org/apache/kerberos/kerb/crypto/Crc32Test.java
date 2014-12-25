@@ -92,7 +92,7 @@ public class Crc32Test {
     }
 
     private boolean testWith(TestCase testCase) {
-        byte[] data = Util.hex2bytes(testCase.data);
+        byte[] data = TestUtil.hex2bytes(testCase.data);
         long value = Crc32.crc(0, data, 0, data.length);
         return value == testCase.answer;
     }

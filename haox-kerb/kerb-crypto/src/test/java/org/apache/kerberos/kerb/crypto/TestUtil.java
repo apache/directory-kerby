@@ -1,6 +1,6 @@
 package org.apache.kerberos.kerb.crypto;
 
-public class Util {
+public class TestUtil {
 
     final static String HEX_CHARS_STR = "0123456789ABCDEF";
     final static char[] HEX_CHARS = HEX_CHARS_STR.toCharArray();

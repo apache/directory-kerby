@@ -190,16 +190,16 @@ public class KeyDeriveTest {
     }
 
     private boolean testWith(TestCase testCase) throws Exception {
-        byte[] answer = Util.hex2bytes(testCase.answer);
-        byte[] inkey = Util.hex2bytes(testCase.inkey);
-        byte[] constant = Util.hex2bytes(testCase.constant);
+        byte[] answer = TestUtil.hex2bytes(testCase.answer);
+        byte[] inkey = TestUtil.hex2bytes(testCase.inkey);
+        byte[] constant = TestUtil.hex2bytes(testCase.constant);
         byte[] outkey;
 
         DkKeyMaker km = getKeyMaker(testCase.encType);
         outkey = km.dk(inkey, constant);
         if (! Arrays.equals(answer, outkey)) {
             System.err.println("failed with:");
-            System.err.println("outKey:" + Util.bytesToHex(outkey));
+            System.err.println("outKey:" + TestUtil.bytesToHex(outkey));
             System.err.println("answer:" + testCase.answer);
             return false;
         }

@@ -49,7 +49,7 @@ public class CheckSumTest {
     }
 
     private void testWith(CksumTest testCase) throws Exception {
-        byte[] knownChecksum = Util.hex2bytes(testCase.knownChecksum);
+        byte[] knownChecksum = TestUtil.hex2bytes(testCase.knownChecksum);
         byte[] plainData = testCase.plainText.getBytes();
         CheckSum newCksum;
 

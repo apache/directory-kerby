@@ -41,25 +41,25 @@ public class CmacTest {
 
     @Test
     public void testCmac() throws KrbException, KrbException {
-        byte[] key = Util.hex2bytes(keyBytes);
-        byte[] input = Util.hex2bytes(inputBytes);
+        byte[] key = TestUtil.hex2bytes(keyBytes);
+        byte[] input = TestUtil.hex2bytes(inputBytes);
         EncryptProvider encProvider = new Camellia128Provider();
         byte[] result;
 
         // test 1
         result = Cmac.cmac(encProvider, key, input, 0, 0);
-        Assert.assertArrayEquals("Test 1", Util.hex2bytes(cmac1), result);
+        Assert.assertArrayEquals("Test 1", TestUtil.hex2bytes(cmac1), result);
 
         // test 2
         result = Cmac.cmac(encProvider, key, input, 0, 16);
-        Assert.assertArrayEquals("Test 2", Util.hex2bytes(cmac2), result);
+        Assert.assertArrayEquals("Test 2", TestUtil.hex2bytes(cmac2), result);
 
         // test 3
         result = Cmac.cmac(encProvider, key, input, 0, 40);
-        Assert.assertArrayEquals("Test 3", Util.hex2bytes(cmac3), result);
+        Assert.assertArrayEquals("Test 3", TestUtil.hex2bytes(cmac3), result);
 
         // test 4
         result = Cmac.cmac(encProvider, key, input, 0, 64);
-        Assert.assertArrayEquals("Test 4", Util.hex2bytes(cmac4), result);
+        Assert.assertArrayEquals("Test 4", TestUtil.hex2bytes(cmac4), result);
     }
 }
