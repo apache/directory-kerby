@@ -1,8 +1,8 @@
 package org.haox.kdc.server;
 
 import org.haox.kdc.identitybackend.LdapIdentityBackend;
-import org.haox.kerb.identity.IdentityService;
-import org.haox.kerb.server.KdcServer;
+import org.apache.kerberos.kerb.identity.IdentityService;
+import org.apache.kerberos.kerb.server.KdcServer;
 
 public class HaoxKdcServer extends KdcServer {
 

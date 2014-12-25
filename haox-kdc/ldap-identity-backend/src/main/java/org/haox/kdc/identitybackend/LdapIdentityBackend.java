@@ -1,7 +1,7 @@
 package org.haox.kdc.identitybackend;
 
-import org.haox.kerb.identity.KrbIdentity;
-import org.haox.kerb.identity.backend.AbstractIdentityBackend;
+import org.apache.kerberos.kerb.identity.KrbIdentity;
+import org.apache.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 
 import java.util.List;
 

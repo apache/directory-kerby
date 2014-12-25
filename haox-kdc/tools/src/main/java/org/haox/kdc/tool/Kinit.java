@@ -1,6 +1,6 @@
 package org.haox.kdc.tool;
 
-import org.haox.kerb.client.KrbClient;
+import org.apache.kerberos.kerb.client.KrbClient;
 
 /**
  * kinit like tool
