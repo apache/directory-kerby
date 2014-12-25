@@ -2,6 +2,8 @@ package org.apache.kerberos.kerb.crypto;
 
 /**
  * Camellia - based on RFC 3713, about half the size of CamelliaEngine.
+ *
+ * This is based on CamelliaEngine.java from bouncycastle library.
  */
 
 public class Camellia {
