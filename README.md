@@ -13,6 +13,9 @@ Haox aims for a Java Kerberos binding, and provides richful, inituitive and inte
 + Provides support for JAAS, GSSAPI and SASL frameworks that applications can leverage.
 + Least dependency, the core part is ensured to depend only on JRE, for easy use and maintain.
 
+### Update
+We’re collaborating with ApacheDS community and preparing this project to be ready for a sub project, named as Apache Kerberos. We welcome any feedback and contribution.
+
 ### Status
 As follows, with the core and critical parts done, important features are still ongoing.
 It's going to release 0.1 version in the early next year. We do not suggest production usage prior to the release.
