@@ -5,11 +5,11 @@ import org.haox.asn1.type.Asn1Type;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.EncTypeHandler;
 import org.haox.kerb.crypto.EncryptionHandler;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptedData;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.KeyUsage;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.common.EncryptedData;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.common.EncryptionType;
+import org.haox.kerb.spec.common.KeyUsage;
 
 import java.util.ArrayList;
 import java.util.List;

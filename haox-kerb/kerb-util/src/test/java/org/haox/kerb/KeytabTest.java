@@ -2,7 +2,7 @@ package org.haox.kerb;
 
 import org.haox.kerb.keytab.Keytab;
 import org.haox.kerb.keytab.KeytabEntry;
-import org.haox.kerb.spec.type.common.PrincipalName;
+import org.haox.kerb.spec.common.PrincipalName;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

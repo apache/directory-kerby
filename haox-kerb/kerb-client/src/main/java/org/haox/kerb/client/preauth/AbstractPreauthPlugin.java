@@ -7,11 +7,11 @@ import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
 import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.preauth.PreauthPluginMeta;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.pa.PaData;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.common.EncryptionType;
+import org.haox.kerb.spec.pa.PaData;
+import org.haox.kerb.spec.pa.PaDataEntry;
+import org.haox.kerb.spec.pa.PaDataType;
 
 import java.util.Collections;
 import java.util.List;

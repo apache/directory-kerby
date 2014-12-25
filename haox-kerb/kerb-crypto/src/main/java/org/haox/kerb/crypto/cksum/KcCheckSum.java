@@ -3,7 +3,7 @@ package org.haox.kerb.crypto.cksum;
 import org.haox.kerb.crypto.BytesUtil;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.crypto.key.DkKeyMaker;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 public abstract class KcCheckSum extends AbstractKeyedCheckSumTypeHandler {
 

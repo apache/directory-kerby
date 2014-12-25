@@ -3,9 +3,9 @@ package org.haox.kerb.client.request;
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.client.KrbOption;
 import org.haox.kerb.crypto.EncryptionHandler;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.pa.PaDataType;
 
 public class AsRequestWithPasswd extends AsRequest {
 

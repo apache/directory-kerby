@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.enc;
 
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 /**
  * krb5_enc_provider

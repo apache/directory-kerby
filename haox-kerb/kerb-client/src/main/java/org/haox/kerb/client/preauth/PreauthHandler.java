@@ -8,12 +8,12 @@ import org.haox.kerb.client.preauth.pkinit.PkinitPreauth;
 import org.haox.kerb.client.preauth.token.TokenPreauth;
 import org.haox.kerb.client.request.KdcRequest;
 import org.haox.kerb.codec.KrbCodec;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EtypeInfo;
-import org.haox.kerb.spec.type.common.EtypeInfo2;
-import org.haox.kerb.spec.type.pa.PaData;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.common.EtypeInfo;
+import org.haox.kerb.spec.common.EtypeInfo2;
+import org.haox.kerb.spec.pa.PaData;
+import org.haox.kerb.spec.pa.PaDataEntry;
+import org.haox.kerb.spec.pa.PaDataType;
 
 import java.util.ArrayList;
 import java.util.List;

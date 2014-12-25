@@ -5,10 +5,10 @@ import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.preauth.builtin.EncTsPreauth;
 import org.haox.kerb.server.preauth.builtin.TgtPreauth;
 import org.haox.kerb.server.request.KdcRequest;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.pa.PaData;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.pa.PaData;
+import org.haox.kerb.spec.pa.PaDataEntry;
+import org.haox.kerb.spec.pa.PaDataType;
 
 import java.util.ArrayList;
 import java.util.List;

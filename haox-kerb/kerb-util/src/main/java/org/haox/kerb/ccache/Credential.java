@@ -1,15 +1,15 @@
 package org.haox.kerb.ccache;
 
-import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.common.AuthorizationData;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.HostAddresses;
-import org.haox.kerb.spec.type.common.PrincipalName;
-import org.haox.kerb.spec.type.kdc.EncKdcRepPart;
-import org.haox.kerb.spec.type.ticket.AbstractServiceTicket;
-import org.haox.kerb.spec.type.ticket.TgtTicket;
-import org.haox.kerb.spec.type.ticket.Ticket;
-import org.haox.kerb.spec.type.ticket.TicketFlags;
+import org.haox.kerb.spec.KerberosTime;
+import org.haox.kerb.spec.common.AuthorizationData;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.common.HostAddresses;
+import org.haox.kerb.spec.common.PrincipalName;
+import org.haox.kerb.spec.kdc.EncKdcRepPart;
+import org.haox.kerb.spec.ticket.AbstractServiceTicket;
+import org.haox.kerb.spec.ticket.TgtTicket;
+import org.haox.kerb.spec.ticket.Ticket;
+import org.haox.kerb.spec.ticket.TicketFlags;
 
 import java.io.IOException;
 

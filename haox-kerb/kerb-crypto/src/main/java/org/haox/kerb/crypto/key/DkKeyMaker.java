@@ -1,8 +1,8 @@
 package org.haox.kerb.crypto.key;
 
+import org.haox.kerb.KrbException;
 import org.haox.kerb.crypto.Nfold;
 import org.haox.kerb.crypto.enc.EncryptProvider;
-import org.haox.kerb.spec.KrbException;
 
 public abstract class DkKeyMaker extends AbstractKeyMaker {
 

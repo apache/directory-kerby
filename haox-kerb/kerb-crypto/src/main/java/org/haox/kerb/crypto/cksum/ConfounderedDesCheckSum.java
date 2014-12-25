@@ -1,9 +1,8 @@
 package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.Confounder;
-import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.crypto.enc.provider.DesProvider;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 import javax.crypto.spec.DESKeySpec;
 import java.security.InvalidKeyException;

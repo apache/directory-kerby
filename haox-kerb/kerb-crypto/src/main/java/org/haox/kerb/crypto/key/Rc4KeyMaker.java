@@ -1,8 +1,7 @@
 package org.haox.kerb.crypto.key;
 
-import org.haox.kerb.crypto.EncTypeHandler;
 import org.haox.kerb.crypto.enc.EncryptProvider;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 import sun.security.provider.MD4;
 
 import java.io.UnsupportedEncodingException;

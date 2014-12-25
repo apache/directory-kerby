@@ -1,9 +1,9 @@
 package org.haox.kerb.client.preauth;
 
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.fast.FastOptions;
-import org.haox.kerb.spec.type.fast.KrbFastArmor;
-import org.haox.kerb.spec.type.kdc.KdcReq;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.fast.FastOptions;
+import org.haox.kerb.spec.fast.KrbFastArmor;
+import org.haox.kerb.spec.kdc.KdcReq;
 
 public class FastContext {
 

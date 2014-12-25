@@ -1,11 +1,11 @@
 package org.haox.kerb.crypto;
 
+import org.haox.kerb.KrbErrorCode;
+import org.haox.kerb.KrbException;
 import org.haox.kerb.crypto.cksum.*;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.CheckSum;
-import org.haox.kerb.spec.type.common.CheckSumType;
-import org.haox.kerb.spec.type.common.KeyUsage;
-import org.haox.kerb.spec.type.common.KrbErrorCode;
+import org.haox.kerb.spec.common.CheckSum;
+import org.haox.kerb.spec.common.CheckSumType;
+import org.haox.kerb.spec.common.KeyUsage;
 
 public class CheckSumHandler {
 

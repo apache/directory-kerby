@@ -1,5 +1,6 @@
 package org.haox.kerb.server.preauth.builtin;
 
+import org.haox.kerb.KrbErrorCode;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.preauth.PluginRequestContext;
@@ -7,13 +8,12 @@ import org.haox.kerb.preauth.builtin.EncTsPreauthMeta;
 import org.haox.kerb.server.KdcContext;
 import org.haox.kerb.server.preauth.AbstractPreauthPlugin;
 import org.haox.kerb.server.request.KdcRequest;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptedData;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.KeyUsage;
-import org.haox.kerb.spec.type.common.KrbErrorCode;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaEncTsEnc;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.common.EncryptedData;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.common.KeyUsage;
+import org.haox.kerb.spec.pa.PaDataEntry;
+import org.haox.kerb.spec.pa.PaEncTsEnc;
 
 public class EncTsPreauth extends AbstractPreauthPlugin {
 

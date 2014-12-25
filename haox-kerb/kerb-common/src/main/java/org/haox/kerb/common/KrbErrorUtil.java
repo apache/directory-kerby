@@ -1,8 +1,8 @@
 package org.haox.kerb.common;
 
-import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.spec.common.*;
+import org.haox.kerb.spec.pa.PaDataEntry;
+import org.haox.kerb.spec.pa.PaDataType;
 
 import java.io.IOException;
 import java.util.ArrayList;

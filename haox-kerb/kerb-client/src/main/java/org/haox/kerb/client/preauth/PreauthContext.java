@@ -1,8 +1,8 @@
 package org.haox.kerb.client.preauth;
 
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.pa.PaData;
-import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.pa.PaData;
+import org.haox.kerb.spec.pa.PaDataType;
 
 import java.util.ArrayList;
 import java.util.List;

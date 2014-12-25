@@ -1,20 +1,21 @@
 package org.haox.kerb.server.request;
 
+import org.haox.kerb.KrbErrorCode;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.server.KdcContext;
-import org.haox.kerb.spec.KrbConstant;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.ap.ApOption;
-import org.haox.kerb.spec.type.ap.ApReq;
-import org.haox.kerb.spec.type.ap.Authenticator;
-import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.kdc.*;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.ticket.EncTicketPart;
-import org.haox.kerb.spec.type.ticket.Ticket;
-import org.haox.kerb.spec.type.ticket.TicketFlag;
+import org.haox.kerb.KrbConstant;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.KerberosTime;
+import org.haox.kerb.spec.ap.ApOption;
+import org.haox.kerb.spec.ap.ApReq;
+import org.haox.kerb.spec.ap.Authenticator;
+import org.haox.kerb.spec.common.*;
+import org.haox.kerb.spec.kdc.*;
+import org.haox.kerb.spec.pa.PaDataEntry;
+import org.haox.kerb.spec.ticket.EncTicketPart;
+import org.haox.kerb.spec.ticket.Ticket;
+import org.haox.kerb.spec.ticket.TicketFlag;
 
 import java.nio.ByteBuffer;
 

@@ -1,7 +1,7 @@
 package org.haox.kerb.crypto;
 
 import org.haox.kerb.crypto.enc.EncryptProvider;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 import java.util.Arrays;
 

@@ -1,7 +1,7 @@
 package org.haox.kerb.crypto.enc.provider;
 
 import org.haox.kerb.crypto.Camellia;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 public abstract class CamelliaProvider extends AbstractEncryptProvider {
 

@@ -3,7 +3,7 @@ package org.haox.kerb.client.preauth.pkinit;
 import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.preauth.pkinit.IdentityOpts;
 import org.haox.kerb.preauth.pkinit.PluginOpts;
-import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.spec.pa.PaDataType;
 
 public class PkinitRequestContext implements PluginRequestContext {
 

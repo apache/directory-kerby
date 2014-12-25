@@ -4,8 +4,8 @@ import org.haox.kerb.crypto.cksum.provider.Sha1Provider;
 import org.haox.kerb.crypto.enc.provider.Aes128Provider;
 import org.haox.kerb.crypto.enc.provider.AesProvider;
 import org.haox.kerb.crypto.key.AesKeyMaker;
-import org.haox.kerb.spec.type.common.CheckSumType;
-import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.common.CheckSumType;
+import org.haox.kerb.spec.common.EncryptionType;
 
 public class Aes128CtsHmacSha1Enc extends KeKiHmacSha1Enc {
 

@@ -2,7 +2,7 @@ package org.haox.kerb.crypto.enc;
 
 import org.haox.kerb.crypto.Hmac;
 import org.haox.kerb.crypto.cksum.HashProvider;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 public abstract class KeKiHmacSha1Enc extends KeKiEnc {
 

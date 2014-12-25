@@ -1,9 +1,9 @@
 package org.haox.kerb;
 
-import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.PrincipalName;
+import org.haox.kerb.spec.KerberosTime;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.common.EncryptionType;
+import org.haox.kerb.spec.common.PrincipalName;
 
 import java.io.DataInputStream;
 import java.io.IOException;

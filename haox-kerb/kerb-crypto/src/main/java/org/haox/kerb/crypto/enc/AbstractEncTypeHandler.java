@@ -4,7 +4,7 @@ import org.haox.kerb.crypto.AbstractCryptoTypeHandler;
 import org.haox.kerb.crypto.EncTypeHandler;
 import org.haox.kerb.crypto.cksum.HashProvider;
 import org.haox.kerb.crypto.key.KeyMaker;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 public abstract class AbstractEncTypeHandler
         extends AbstractCryptoTypeHandler implements EncTypeHandler {

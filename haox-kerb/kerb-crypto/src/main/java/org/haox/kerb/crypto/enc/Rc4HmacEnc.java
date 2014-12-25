@@ -1,5 +1,6 @@
 package org.haox.kerb.crypto.enc;
 
+import org.haox.kerb.KrbErrorCode;
 import org.haox.kerb.crypto.BytesUtil;
 import org.haox.kerb.crypto.Confounder;
 import org.haox.kerb.crypto.Rc4;
@@ -7,10 +8,9 @@ import org.haox.kerb.crypto.Hmac;
 import org.haox.kerb.crypto.cksum.provider.Md5Provider;
 import org.haox.kerb.crypto.enc.provider.Rc4Provider;
 import org.haox.kerb.crypto.key.Rc4KeyMaker;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.CheckSumType;
-import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.KrbErrorCode;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.common.CheckSumType;
+import org.haox.kerb.spec.common.EncryptionType;
 
 public class Rc4HmacEnc extends AbstractEncTypeHandler {
     private boolean exportable;

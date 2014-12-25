@@ -2,7 +2,7 @@ package org.haox.kerb.client;
 
 import org.haox.config.Conf;
 import org.haox.kerb.common.KrbConfHelper;
-import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.common.EncryptionType;
 
 import java.util.List;
 

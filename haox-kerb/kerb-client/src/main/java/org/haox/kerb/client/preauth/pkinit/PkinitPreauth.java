@@ -10,20 +10,16 @@ import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
 import org.haox.kerb.preauth.pkinit.PkinitIdenity;
 import org.haox.kerb.preauth.pkinit.PkinitPreauthMeta;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.common.CheckSum;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.PrincipalName;
-import org.haox.kerb.spec.type.pa.PaData;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
-import org.haox.kerb.spec.type.pa.pkinit.*;
-import org.haox.kerb.spec.type.x509.AlgorithmIdentifier;
-import org.haox.kerb.spec.type.x509.SubjectPublicKeyInfo;
-
-import java.util.List;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.KerberosTime;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.common.EncryptionType;
+import org.haox.kerb.spec.common.PrincipalName;
+import org.haox.kerb.spec.pa.PaData;
+import org.haox.kerb.spec.pa.PaDataEntry;
+import org.haox.kerb.spec.pa.PaDataType;
+import org.haox.kerb.spec.pa.pkinit.*;
+import org.haox.kerb.spec.x509.SubjectPublicKeyInfo;
 
 public class PkinitPreauth extends AbstractPreauthPlugin {
 

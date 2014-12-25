@@ -2,7 +2,7 @@ package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.enc.provider.Aes128Provider;
 import org.haox.kerb.crypto.key.AesKeyMaker;
-import org.haox.kerb.spec.type.common.CheckSumType;
+import org.haox.kerb.spec.common.CheckSumType;
 
 public class HmacSha1Aes128CheckSum extends HmacKcCheckSum {
 

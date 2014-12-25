@@ -1,6 +1,6 @@
 package org.haox.kerb.preauth;
 
-import org.haox.kerb.spec.type.KrbEnum;
+import org.haox.kerb.spec.KrbEnum;
 
 public enum PaFlag implements KrbEnum {
     NONE(-1),

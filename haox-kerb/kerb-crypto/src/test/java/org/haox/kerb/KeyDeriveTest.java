@@ -5,7 +5,7 @@ import org.haox.kerb.crypto.key.AesKeyMaker;
 import org.haox.kerb.crypto.key.CamelliaKeyMaker;
 import org.haox.kerb.crypto.key.Des3KeyMaker;
 import org.haox.kerb.crypto.key.DkKeyMaker;
-import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.common.EncryptionType;
 import org.junit.Assert;
 import org.junit.Test;
 

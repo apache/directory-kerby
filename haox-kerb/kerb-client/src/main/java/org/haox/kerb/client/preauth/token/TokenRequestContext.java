@@ -1,7 +1,7 @@
 package org.haox.kerb.client.preauth.token;
 
 import org.haox.kerb.preauth.PluginRequestContext;
-import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.spec.pa.PaDataType;
 
 public class TokenRequestContext implements PluginRequestContext {
 

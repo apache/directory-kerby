@@ -1,7 +1,7 @@
 package org.haox.kerb.crypto.cksum.provider;
 
 import org.haox.kerb.crypto.cksum.HashProvider;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 public abstract class AbstractHashProvider implements HashProvider {
     private int blockSize;

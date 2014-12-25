@@ -1,21 +1,17 @@
 package org.haox.kerb.server;
 
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.ticket.ServiceTicket;
-import org.haox.kerb.spec.type.ticket.TgtTicket;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.ticket.ServiceTicket;
+import org.haox.kerb.spec.ticket.TgtTicket;
 import org.haox.pki.Pkix;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.util.Collection;
 
 /**
  openssl genrsa -out cakey.pem 2048

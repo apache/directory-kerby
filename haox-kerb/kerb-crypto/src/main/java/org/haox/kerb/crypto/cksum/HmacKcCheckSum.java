@@ -3,7 +3,7 @@ package org.haox.kerb.crypto.cksum;
 import org.haox.kerb.crypto.Hmac;
 import org.haox.kerb.crypto.cksum.provider.Sha1Provider;
 import org.haox.kerb.crypto.enc.EncryptProvider;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 public abstract class HmacKcCheckSum extends KcCheckSum {
 

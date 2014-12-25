@@ -1,9 +1,9 @@
 package org.haox.kerb.preauth.pkinit;
 
 import org.haox.asn1.type.Asn1ObjectIdentifier;
-import org.haox.kerb.spec.type.pa.pkinit.AlgorithmIdentifiers;
-import org.haox.kerb.spec.type.pa.pkinit.TrustedCertifiers;
-import org.haox.kerb.spec.type.x509.AlgorithmIdentifier;
+import org.haox.kerb.spec.pa.pkinit.AlgorithmIdentifiers;
+import org.haox.kerb.spec.pa.pkinit.TrustedCertifiers;
+import org.haox.kerb.spec.x509.AlgorithmIdentifier;
 
 public class PluginOpts {
 

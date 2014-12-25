@@ -6,9 +6,9 @@ import org.haox.kerb.crypto.key.AesKeyMaker;
 import org.haox.kerb.crypto.key.CamelliaKeyMaker;
 import org.haox.kerb.crypto.key.Des3KeyMaker;
 import org.haox.kerb.crypto.key.KeyMaker;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.KeyUsage;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.common.EncryptionType;
+import org.haox.kerb.spec.common.KeyUsage;
 import org.junit.Assert;
 import org.junit.Test;
 

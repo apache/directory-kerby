@@ -1,11 +1,11 @@
 package org.haox.kerb.keytab;
 
 import org.haox.kerb.KrbInputStream;
-import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.NameType;
-import org.haox.kerb.spec.type.common.PrincipalName;
+import org.haox.kerb.spec.KerberosTime;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.common.EncryptionType;
+import org.haox.kerb.spec.common.NameType;
+import org.haox.kerb.spec.common.PrincipalName;
 
 import java.io.IOException;
 import java.io.InputStream;

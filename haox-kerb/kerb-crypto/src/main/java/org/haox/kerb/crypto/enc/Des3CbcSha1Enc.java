@@ -3,8 +3,8 @@ package org.haox.kerb.crypto.enc;
 import org.haox.kerb.crypto.cksum.provider.Sha1Provider;
 import org.haox.kerb.crypto.enc.provider.Des3Provider;
 import org.haox.kerb.crypto.key.Des3KeyMaker;
-import org.haox.kerb.spec.type.common.CheckSumType;
-import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.common.CheckSumType;
+import org.haox.kerb.spec.common.EncryptionType;
 
 public class Des3CbcSha1Enc extends KeKiHmacSha1Enc {
 

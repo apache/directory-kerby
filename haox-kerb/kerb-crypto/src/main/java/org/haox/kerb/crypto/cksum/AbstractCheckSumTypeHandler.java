@@ -3,7 +3,7 @@ package org.haox.kerb.crypto.cksum;
 import org.haox.kerb.crypto.AbstractCryptoTypeHandler;
 import org.haox.kerb.crypto.CheckSumTypeHandler;
 import org.haox.kerb.crypto.enc.EncryptProvider;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 public abstract class AbstractCheckSumTypeHandler
         extends AbstractCryptoTypeHandler implements CheckSumTypeHandler {

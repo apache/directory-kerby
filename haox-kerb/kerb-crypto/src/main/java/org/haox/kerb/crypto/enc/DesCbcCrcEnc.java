@@ -1,9 +1,9 @@
 package org.haox.kerb.crypto.enc;
 
 import org.haox.kerb.crypto.cksum.provider.Crc32Provider;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.CheckSumType;
-import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.common.CheckSumType;
+import org.haox.kerb.spec.common.EncryptionType;
 
 public class DesCbcCrcEnc extends DesCbcEnc {
 

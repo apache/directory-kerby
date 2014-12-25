@@ -1,7 +1,7 @@
 package org.haox.kerb.crypto;
 
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.CheckSumType;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.common.CheckSumType;
 
 public interface CheckSumTypeHandler extends CryptoTypeHandler {
 

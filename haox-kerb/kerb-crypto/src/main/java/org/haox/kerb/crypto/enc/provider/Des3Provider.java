@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.enc.provider;
 
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

@@ -4,11 +4,11 @@ import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.identity.KrbIdentity;
 import org.haox.kerb.keytab.Keytab;
 import org.haox.kerb.keytab.KeytabEntry;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.PrincipalName;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.KerberosTime;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.common.EncryptionType;
+import org.haox.kerb.spec.common.PrincipalName;
 
 import java.io.File;
 import java.io.IOException;

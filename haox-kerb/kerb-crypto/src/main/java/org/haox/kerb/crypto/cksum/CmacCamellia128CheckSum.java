@@ -1,10 +1,8 @@
 package org.haox.kerb.crypto.cksum;
 
-import org.haox.kerb.crypto.enc.provider.Aes128Provider;
 import org.haox.kerb.crypto.enc.provider.Camellia128Provider;
-import org.haox.kerb.crypto.key.AesKeyMaker;
 import org.haox.kerb.crypto.key.CamelliaKeyMaker;
-import org.haox.kerb.spec.type.common.CheckSumType;
+import org.haox.kerb.spec.common.CheckSumType;
 
 public class CmacCamellia128CheckSum extends CmacKcCheckSum {
 

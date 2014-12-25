@@ -1,7 +1,7 @@
 package org.haox.kerb.ccache;
 
-import org.haox.kerb.spec.type.common.PrincipalName;
-import org.haox.kerb.spec.type.ticket.Ticket;
+import org.haox.kerb.spec.common.PrincipalName;
+import org.haox.kerb.spec.ticket.Ticket;
 
 import java.io.*;
 import java.util.ArrayList;

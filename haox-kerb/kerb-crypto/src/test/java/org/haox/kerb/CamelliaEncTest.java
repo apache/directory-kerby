@@ -1,9 +1,9 @@
 package org.haox.kerb;
 
+import org.haox.kerb.KrbException;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.crypto.enc.provider.Camellia128Provider;
 import org.haox.kerb.crypto.enc.provider.Camellia256Provider;
-import org.haox.kerb.spec.KrbException;
 import org.junit.Assert;
 import org.junit.Test;
 

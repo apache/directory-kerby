@@ -1,7 +1,7 @@
 package org.haox.kerb.crypto.enc;
 
 import org.haox.kerb.crypto.Cmac;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 public abstract class KeKiCmacEnc extends KeKiEnc {
 

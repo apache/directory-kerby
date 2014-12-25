@@ -4,7 +4,7 @@ import org.haox.kerb.crypto.BytesUtil;
 import org.haox.kerb.crypto.Cmac;
 import org.haox.kerb.crypto.Pbkdf;
 import org.haox.kerb.crypto.enc.provider.CamelliaProvider;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;

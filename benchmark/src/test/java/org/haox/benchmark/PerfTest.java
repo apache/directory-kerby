@@ -4,8 +4,8 @@ import org.apache.directory.api.asn1.DecoderException;
 import org.apache.directory.api.asn1.EncoderException;
 import org.apache.directory.api.asn1.ber.Asn1Decoder;
 import org.apache.directory.shared.kerberos.codec.apReq.ApReqContainer;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.ap.ApReq;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.ap.ApReq;
 
 import java.io.IOException;
 import java.io.InputStream;

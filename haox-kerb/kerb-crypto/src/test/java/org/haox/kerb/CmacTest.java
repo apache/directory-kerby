@@ -1,9 +1,9 @@
 package org.haox.kerb;
 
 import org.haox.kerb.crypto.Cmac;
+import org.haox.kerb.KrbException;
 import org.haox.kerb.crypto.enc.EncryptProvider;
 import org.haox.kerb.crypto.enc.provider.Camellia128Provider;
-import org.haox.kerb.spec.KrbException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class CmacTest {
 
 
     @Test
-    public void testCmac() throws KrbException {
+    public void testCmac() throws KrbException, KrbException {
         byte[] key = Util.hex2bytes(keyBytes);
         byte[] input = Util.hex2bytes(inputBytes);
         EncryptProvider encProvider = new Camellia128Provider();

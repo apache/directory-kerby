@@ -2,7 +2,7 @@ package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.enc.provider.Des3Provider;
 import org.haox.kerb.crypto.key.Des3KeyMaker;
-import org.haox.kerb.spec.type.common.CheckSumType;
+import org.haox.kerb.spec.common.CheckSumType;
 
 public class HmacSha1Des3CheckSum extends HmacKcCheckSum {
 

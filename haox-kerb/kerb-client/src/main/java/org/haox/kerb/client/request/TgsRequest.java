@@ -2,20 +2,19 @@ package org.haox.kerb.client.request;
 
 import org.haox.kerb.client.KrbContext;
 import org.haox.kerb.common.EncryptionUtil;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.ap.ApOptions;
-import org.haox.kerb.spec.type.ap.ApReq;
-import org.haox.kerb.spec.type.ap.Authenticator;
-import org.haox.kerb.spec.type.common.EncryptedData;
-import org.haox.kerb.spec.type.common.EncryptionKey;
-import org.haox.kerb.spec.type.common.KeyUsage;
-import org.haox.kerb.spec.type.common.PrincipalName;
-import org.haox.kerb.spec.type.kdc.*;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
-import org.haox.kerb.spec.type.ticket.ServiceTicket;
-import org.haox.kerb.spec.type.ticket.TgtTicket;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.KerberosTime;
+import org.haox.kerb.spec.ap.ApOptions;
+import org.haox.kerb.spec.ap.ApReq;
+import org.haox.kerb.spec.ap.Authenticator;
+import org.haox.kerb.spec.common.EncryptedData;
+import org.haox.kerb.spec.common.EncryptionKey;
+import org.haox.kerb.spec.common.KeyUsage;
+import org.haox.kerb.spec.common.PrincipalName;
+import org.haox.kerb.spec.kdc.*;
+import org.haox.kerb.spec.pa.PaDataType;
+import org.haox.kerb.spec.ticket.ServiceTicket;
+import org.haox.kerb.spec.ticket.TgtTicket;
 
 public class TgsRequest extends KdcRequest {
     private TgtTicket tgt;

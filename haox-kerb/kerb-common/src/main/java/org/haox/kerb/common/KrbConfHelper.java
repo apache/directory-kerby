@@ -1,6 +1,6 @@
 package org.haox.kerb.common;
 
-import org.haox.kerb.spec.type.common.EncryptionType;
+import org.haox.kerb.spec.common.EncryptionType;
 
 import java.util.ArrayList;
 import java.util.List;

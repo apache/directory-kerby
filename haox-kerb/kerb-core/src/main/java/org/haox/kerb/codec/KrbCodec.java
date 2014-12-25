@@ -3,16 +3,14 @@ package org.haox.kerb.codec;
 import org.haox.asn1.LimitedByteBuffer;
 import org.haox.asn1.type.AbstractAsn1Type;
 import org.haox.asn1.type.Asn1Type;
-import org.haox.kerb.spec.CodecMessageCode;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.KrbThrow;
-import org.haox.kerb.spec.type.ap.ApReq;
-import org.haox.kerb.spec.type.common.KrbMessage;
-import org.haox.kerb.spec.type.common.KrbMessageType;
-import org.haox.kerb.spec.type.kdc.AsRep;
-import org.haox.kerb.spec.type.kdc.AsReq;
-import org.haox.kerb.spec.type.kdc.TgsRep;
-import org.haox.kerb.spec.type.kdc.TgsReq;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.ap.ApReq;
+import org.haox.kerb.spec.common.KrbMessage;
+import org.haox.kerb.spec.common.KrbMessageType;
+import org.haox.kerb.spec.kdc.AsRep;
+import org.haox.kerb.spec.kdc.AsReq;
+import org.haox.kerb.spec.kdc.TgsRep;
+import org.haox.kerb.spec.kdc.TgsReq;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -32,13 +30,13 @@ public class KrbCodec {
         try {
             implObj = krbType.newInstance();
         } catch (Exception e) {
-            KrbThrow.out(CodecMessageCode.DECODING_FAILED, e);
+            throw new KrbException("Decoding failed", e);
         }
 
         try {
             implObj.decode(content);
         } catch (IOException e) {
-            KrbThrow.out(CodecMessageCode.DECODING_FAILED, e);
+            throw new KrbException("Decoding failed", e);
         }
 
         return (T) implObj;

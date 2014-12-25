@@ -1,11 +1,12 @@
 package org.haox.kerb.client.request;
 
+import org.haox.kerb.KrbErrorCode;
 import org.haox.kerb.client.KrbContext;
-import org.haox.kerb.spec.KrbConstant;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.kdc.*;
-import org.haox.kerb.spec.type.ticket.TgtTicket;
+import org.haox.kerb.KrbConstant;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.common.*;
+import org.haox.kerb.spec.kdc.*;
+import org.haox.kerb.spec.ticket.TgtTicket;
 
 import java.io.IOException;
 import java.util.List;

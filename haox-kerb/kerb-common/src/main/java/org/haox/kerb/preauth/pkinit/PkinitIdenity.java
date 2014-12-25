@@ -1,6 +1,6 @@
 package org.haox.kerb.preauth.pkinit;
 
-import org.haox.kerb.spec.type.common.PrincipalName;
+import org.haox.kerb.spec.common.PrincipalName;
 
 public class PkinitIdenity {
 

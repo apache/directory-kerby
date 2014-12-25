@@ -1,10 +1,10 @@
 package org.haox.kerb.ccache;
 
 import org.haox.kerb.KrbOutputStream;
-import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.ticket.Ticket;
-import org.haox.kerb.spec.type.ticket.TicketFlags;
+import org.haox.kerb.spec.KerberosTime;
+import org.haox.kerb.spec.common.*;
+import org.haox.kerb.spec.ticket.Ticket;
+import org.haox.kerb.spec.ticket.TicketFlags;
 
 import java.io.IOException;
 import java.io.OutputStream;

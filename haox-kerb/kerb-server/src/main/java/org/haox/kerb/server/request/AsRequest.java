@@ -1,18 +1,13 @@
 package org.haox.kerb.server.request;
 
+import org.haox.kerb.KrbException;
 import org.haox.kerb.common.EncryptionUtil;
 import org.haox.kerb.server.KdcContext;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.KerberosTime;
-import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.kdc.*;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
-import org.haox.kerb.spec.type.ticket.Ticket;
-import org.haox.kerb.spec.type.ticket.TicketFlag;
-
-import java.nio.ByteBuffer;
-import java.util.List;
+import org.haox.kerb.spec.KerberosTime;
+import org.haox.kerb.spec.common.*;
+import org.haox.kerb.spec.kdc.*;
+import org.haox.kerb.spec.ticket.Ticket;
+import org.haox.kerb.spec.ticket.TicketFlag;
 
 public class AsRequest extends KdcRequest {
 

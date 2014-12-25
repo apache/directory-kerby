@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.key;
 
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 public interface KeyMaker {
 

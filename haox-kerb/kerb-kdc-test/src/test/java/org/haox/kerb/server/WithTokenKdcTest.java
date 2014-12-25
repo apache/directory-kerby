@@ -1,8 +1,8 @@
 package org.haox.kerb.server;
 
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.ticket.ServiceTicket;
-import org.haox.kerb.spec.type.ticket.TgtTicket;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.ticket.ServiceTicket;
+import org.haox.kerb.spec.ticket.TgtTicket;
 import org.haox.token.KerbToken;
 import org.junit.Assert;
 import org.junit.Test;

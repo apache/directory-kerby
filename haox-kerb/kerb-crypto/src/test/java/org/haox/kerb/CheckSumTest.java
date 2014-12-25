@@ -1,7 +1,7 @@
 package org.haox.kerb;
 
 import org.haox.kerb.crypto.CheckSumHandler;
-import org.haox.kerb.spec.type.common.*;
+import org.haox.kerb.spec.common.*;
 import org.junit.Test;
 
 /**

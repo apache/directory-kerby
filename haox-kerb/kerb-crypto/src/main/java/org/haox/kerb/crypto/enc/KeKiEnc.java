@@ -1,11 +1,11 @@
 package org.haox.kerb.crypto.enc;
 
+import org.haox.kerb.KrbErrorCode;
 import org.haox.kerb.crypto.BytesUtil;
 import org.haox.kerb.crypto.Confounder;
 import org.haox.kerb.crypto.cksum.HashProvider;
 import org.haox.kerb.crypto.key.DkKeyMaker;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.KrbErrorCode;
+import org.haox.kerb.KrbException;
 
 public abstract class KeKiEnc extends AbstractEncTypeHandler {
 

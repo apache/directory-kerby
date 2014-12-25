@@ -7,13 +7,13 @@ import org.haox.kerb.preauth.PaFlag;
 import org.haox.kerb.preauth.PaFlags;
 import org.haox.kerb.preauth.PluginRequestContext;
 import org.haox.kerb.preauth.builtin.EncTsPreauthMeta;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.EncryptedData;
-import org.haox.kerb.spec.type.common.KeyUsage;
-import org.haox.kerb.spec.type.pa.PaData;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
-import org.haox.kerb.spec.type.pa.PaDataType;
-import org.haox.kerb.spec.type.pa.PaEncTsEnc;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.common.EncryptedData;
+import org.haox.kerb.spec.common.KeyUsage;
+import org.haox.kerb.spec.pa.PaData;
+import org.haox.kerb.spec.pa.PaDataEntry;
+import org.haox.kerb.spec.pa.PaDataType;
+import org.haox.kerb.spec.pa.PaEncTsEnc;
 
 public class EncTsPreauth extends AbstractPreauthPlugin {
 

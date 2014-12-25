@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.cksum.provider;
 
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

@@ -5,8 +5,8 @@ import org.haox.kerb.preauth.builtin.TgtPreauthMeta;
 import org.haox.kerb.server.preauth.AbstractPreauthPlugin;
 import org.haox.kerb.server.request.KdcRequest;
 import org.haox.kerb.server.request.TgsRequest;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.pa.PaDataEntry;
+import org.haox.kerb.KrbException;
+import org.haox.kerb.spec.pa.PaDataEntry;
 
 public class TgtPreauth extends AbstractPreauthPlugin {
 

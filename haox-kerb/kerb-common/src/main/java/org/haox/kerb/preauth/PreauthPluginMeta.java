@@ -1,6 +1,6 @@
 package org.haox.kerb.preauth;
 
-import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.spec.pa.PaDataType;
 
 public interface PreauthPluginMeta {
 

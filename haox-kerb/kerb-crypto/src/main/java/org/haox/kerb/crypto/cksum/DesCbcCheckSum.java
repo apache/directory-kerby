@@ -1,6 +1,6 @@
 package org.haox.kerb.crypto.cksum;
 
-import org.haox.kerb.spec.type.common.CheckSumType;
+import org.haox.kerb.spec.common.CheckSumType;
 
 public class DesCbcCheckSum extends ConfounderedDesCheckSum {
 

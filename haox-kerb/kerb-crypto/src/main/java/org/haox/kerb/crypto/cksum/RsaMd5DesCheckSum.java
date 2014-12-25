@@ -1,7 +1,7 @@
 package org.haox.kerb.crypto.cksum;
 
 import org.haox.kerb.crypto.cksum.provider.Md5Provider;
-import org.haox.kerb.spec.type.common.CheckSumType;
+import org.haox.kerb.spec.common.CheckSumType;
 
 public final class RsaMd5DesCheckSum extends ConfounderedDesCheckSum {
 

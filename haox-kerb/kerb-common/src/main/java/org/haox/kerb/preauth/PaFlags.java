@@ -1,6 +1,6 @@
 package org.haox.kerb.preauth;
 
-import org.haox.kerb.spec.type.common.KrbFlags;
+import org.haox.kerb.spec.common.KrbFlags;
 
 public class PaFlags extends KrbFlags {
 

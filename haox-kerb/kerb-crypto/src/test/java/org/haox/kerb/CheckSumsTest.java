@@ -2,10 +2,10 @@ package org.haox.kerb;
 
 import org.haox.kerb.crypto.CheckSumHandler;
 import org.haox.kerb.crypto.EncryptionHandler;
-import org.haox.kerb.spec.type.common.CheckSum;
-import org.haox.kerb.spec.type.common.CheckSumType;
-import org.haox.kerb.spec.type.common.EncryptionType;
-import org.haox.kerb.spec.type.common.KeyUsage;
+import org.haox.kerb.spec.common.CheckSum;
+import org.haox.kerb.spec.common.CheckSumType;
+import org.haox.kerb.spec.common.EncryptionType;
+import org.haox.kerb.spec.common.KeyUsage;
 import org.junit.Test;
 
 /**

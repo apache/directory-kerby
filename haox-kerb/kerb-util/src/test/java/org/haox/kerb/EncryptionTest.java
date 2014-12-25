@@ -1,13 +1,12 @@
 package org.haox.kerb;
 
 import org.haox.kerb.ccache.CredentialCache;
-import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.EncryptionHandler;
 import org.haox.kerb.keytab.Keytab;
-import org.haox.kerb.spec.KrbException;
-import org.haox.kerb.spec.type.common.*;
-import org.haox.kerb.spec.type.ticket.EncTicketPart;
-import org.haox.kerb.spec.type.ticket.Ticket;
+import org.haox.kerb.spec.common.*;
+import org.haox.kerb.spec.ticket.EncTicketPart;
+import org.haox.kerb.spec.ticket.Ticket;
+import org.haox.kerb.codec.KrbCodec;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,7 +77,7 @@ public class EncryptionTest {
         testEncWith("des3-cbc-sha1.cc");
     }
 
-    private void testEncWith(String ccFile) throws IOException, KrbException {
+    private void testEncWith(String ccFile) throws IOException, KrbException, org.haox.kerb.KrbException {
         InputStream cis = CcacheTest.class.getResourceAsStream("/" + ccFile);
         cc = new CredentialCache();
         cc.load(cis);

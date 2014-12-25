@@ -3,11 +3,9 @@ package org.haox.kerb.crypto.key;
 import org.haox.kerb.crypto.Des;
 import org.haox.kerb.crypto.Nfold;
 import org.haox.kerb.crypto.enc.EncryptProvider;
-import org.haox.kerb.spec.KrbException;
+import org.haox.kerb.KrbException;
 
-import javax.crypto.spec.DESKeySpec;
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
 
 public class Des3KeyMaker extends DkKeyMaker {
 

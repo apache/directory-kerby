@@ -1,6 +1,6 @@
 package org.haox.kerb.ccache;
 
-import org.haox.kerb.spec.type.common.PrincipalName;
+import org.haox.kerb.spec.common.PrincipalName;
 
 import java.io.File;
 import java.io.IOException;

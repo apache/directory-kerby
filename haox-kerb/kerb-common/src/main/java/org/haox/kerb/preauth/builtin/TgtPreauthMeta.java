@@ -1,7 +1,7 @@
 package org.haox.kerb.preauth.builtin;
 
 import org.haox.kerb.preauth.PreauthPluginMeta;
-import org.haox.kerb.spec.type.pa.PaDataType;
+import org.haox.kerb.spec.pa.PaDataType;
 
 /**
  * A faked preauth module for TGS request handling
