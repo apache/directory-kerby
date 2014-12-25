@@ -8,7 +8,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>haox-contrib</artifactId>
+    <artifactId>contrib</artifactId>
     <name>Contrib Projects</name>
     <description>Contrib Projects</description>
     <packaging>pom</packaging>
