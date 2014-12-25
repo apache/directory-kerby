@@ -1,6 +1,6 @@
 package org.haox.kerb.client.event;
 
-import org.haox.event.EventType;
+import org.apache.haox.event.EventType;
 
 public enum KrbClientEventType implements EventType {
     TGT_INTENT,

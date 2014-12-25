@@ -2,7 +2,7 @@ package org.haox.kerb.common;
 
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.spec.common.KrbMessage;
-import org.haox.transport.Transport;
+import org.apache.haox.transport.Transport;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

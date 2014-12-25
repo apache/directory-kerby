@@ -1,7 +1,7 @@
 package org.haox.kerb.spec.fast;
 
-import org.haox.asn1.type.Asn1Choice;
-import org.haox.asn1.type.Asn1FieldInfo;
+import org.apache.haox.asn1.type.Asn1Choice;
+import org.apache.haox.asn1.type.Asn1FieldInfo;
 
 /**
  PA-FX-FAST-REPLY ::= CHOICE {

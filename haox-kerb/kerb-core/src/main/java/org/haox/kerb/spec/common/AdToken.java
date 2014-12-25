@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.common;
 
-import org.haox.asn1.type.Asn1FieldInfo;
+import org.apache.haox.asn1.type.Asn1FieldInfo;
 import org.haox.kerb.spec.KrbSequenceType;
 
 /**

@@ -1,6 +1,6 @@
 package org.haox.kerb.spec;
 
-import org.haox.asn1.type.Asn1GeneralizedTime;
+import org.apache.haox.asn1.type.Asn1GeneralizedTime;
 
 import java.util.Date;
 import java.util.TimeZone;

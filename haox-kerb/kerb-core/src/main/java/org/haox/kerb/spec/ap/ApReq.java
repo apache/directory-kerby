@@ -1,7 +1,7 @@
 package org.haox.kerb.spec.ap;
 
-import org.haox.asn1.type.Asn1FieldInfo;
-import org.haox.asn1.type.Asn1Integer;
+import org.apache.haox.asn1.type.Asn1FieldInfo;
+import org.apache.haox.asn1.type.Asn1Integer;
 import org.haox.kerb.spec.common.KrbMessage;
 import org.haox.kerb.spec.common.EncryptedData;
 import org.haox.kerb.spec.common.KrbMessageType;

@@ -1,6 +1,6 @@
 package org.haox.kerb.preauth.pkinit;
 
-import org.haox.asn1.type.Asn1ObjectIdentifier;
+import org.apache.haox.asn1.type.Asn1ObjectIdentifier;
 import org.haox.kerb.spec.pa.pkinit.AlgorithmIdentifiers;
 import org.haox.kerb.spec.pa.pkinit.TrustedCertifiers;
 import org.haox.kerb.spec.x509.AlgorithmIdentifier;

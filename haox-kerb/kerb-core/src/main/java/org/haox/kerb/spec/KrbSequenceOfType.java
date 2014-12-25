@@ -1,8 +1,8 @@
 package org.haox.kerb.spec;
 
-import org.haox.asn1.type.Asn1SequenceOf;
-import org.haox.asn1.type.Asn1String;
-import org.haox.asn1.type.Asn1Type;
+import org.apache.haox.asn1.type.Asn1SequenceOf;
+import org.apache.haox.asn1.type.Asn1String;
+import org.apache.haox.asn1.type.Asn1Type;
 
 import java.util.ArrayList;
 import java.util.List;

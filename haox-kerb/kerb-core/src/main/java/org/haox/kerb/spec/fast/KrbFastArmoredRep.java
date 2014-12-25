@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.fast;
 
-import org.haox.asn1.type.Asn1FieldInfo;
+import org.apache.haox.asn1.type.Asn1FieldInfo;
 import org.haox.kerb.spec.KrbSequenceType;
 import org.haox.kerb.spec.common.EncryptedData;
 

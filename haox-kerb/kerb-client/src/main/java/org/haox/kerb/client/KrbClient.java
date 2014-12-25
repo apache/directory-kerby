@@ -1,8 +1,8 @@
 package org.haox.kerb.client;
 
-import org.haox.event.Event;
-import org.haox.event.EventHub;
-import org.haox.event.EventWaiter;
+import org.apache.haox.event.Event;
+import org.apache.haox.event.EventHub;
+import org.apache.haox.event.EventWaiter;
 import org.haox.kerb.KrbErrorCode;
 import org.haox.kerb.client.event.KrbClientEvent;
 import org.haox.kerb.client.event.KrbClientEventType;
@@ -16,11 +16,11 @@ import org.haox.kerb.spec.common.PrincipalName;
 import org.haox.kerb.spec.ticket.ServiceTicket;
 import org.haox.kerb.spec.ticket.TgtTicket;
 import org.haox.token.KerbToken;
-import org.haox.transport.Connector;
-import org.haox.transport.Transport;
-import org.haox.transport.event.TransportEvent;
-import org.haox.transport.event.TransportEventType;
-import org.haox.transport.tcp.TcpConnector;
+import org.apache.haox.transport.Connector;
+import org.apache.haox.transport.Transport;
+import org.apache.haox.transport.event.TransportEvent;
+import org.apache.haox.transport.event.TransportEventType;
+import org.apache.haox.transport.tcp.TcpConnector;
 
 import java.io.IOException;
 import java.security.PrivateKey;

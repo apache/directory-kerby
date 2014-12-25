@@ -1,7 +1,7 @@
 package org.haox.kerb.spec;
 
-import org.haox.asn1.type.Asn1FieldInfo;
-import org.haox.asn1.type.Asn1SequenceType;
+import org.apache.haox.asn1.type.Asn1FieldInfo;
+import org.apache.haox.asn1.type.Asn1SequenceType;
 
 public abstract class KrbSequenceType extends Asn1SequenceType {
 

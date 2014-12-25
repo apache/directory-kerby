@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.ticket;
 
-import org.haox.asn1.type.Asn1FieldInfo;
+import org.apache.haox.asn1.type.Asn1FieldInfo;
 import org.haox.kerb.spec.KerberosString;
 import org.haox.kerb.spec.KerberosTime;
 import org.haox.kerb.spec.KrbAppSequenceType;

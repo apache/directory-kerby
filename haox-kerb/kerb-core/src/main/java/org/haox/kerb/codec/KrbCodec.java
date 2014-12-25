@@ -1,8 +1,8 @@
 package org.haox.kerb.codec;
 
-import org.haox.asn1.LimitedByteBuffer;
-import org.haox.asn1.type.AbstractAsn1Type;
-import org.haox.asn1.type.Asn1Type;
+import org.apache.haox.asn1.LimitedByteBuffer;
+import org.apache.haox.asn1.type.AbstractAsn1Type;
+import org.apache.haox.asn1.type.Asn1Type;
 import org.haox.kerb.KrbException;
 import org.haox.kerb.spec.ap.ApReq;
 import org.haox.kerb.spec.common.KrbMessage;

@@ -1,6 +1,6 @@
 package org.haox.kerb.client;
 
-import org.haox.config.Conf;
+import org.apache.haox.config.Conf;
 import org.haox.kerb.common.KrbConfHelper;
 import org.haox.kerb.spec.common.EncryptionType;
 

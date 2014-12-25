@@ -13,10 +13,10 @@ import org.haox.kerb.spec.common.KrbMessageType;
 import org.haox.kerb.spec.kdc.AsReq;
 import org.haox.kerb.spec.kdc.KdcReq;
 import org.haox.kerb.spec.kdc.TgsReq;
-import org.haox.transport.MessageHandler;
-import org.haox.transport.Transport;
-import org.haox.transport.event.MessageEvent;
-import org.haox.transport.tcp.TcpTransport;
+import org.apache.haox.transport.MessageHandler;
+import org.apache.haox.transport.Transport;
+import org.apache.haox.transport.event.MessageEvent;
+import org.apache.haox.transport.tcp.TcpTransport;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

@@ -1,8 +1,8 @@
 package org.haox.kerb.spec.common;
 
-import org.haox.asn1.type.Asn1FieldInfo;
-import org.haox.asn1.type.Asn1Integer;
-import org.haox.asn1.type.Asn1OctetString;
+import org.apache.haox.asn1.type.Asn1FieldInfo;
+import org.apache.haox.asn1.type.Asn1Integer;
+import org.apache.haox.asn1.type.Asn1OctetString;
 import org.haox.kerb.spec.KerberosString;
 import org.haox.kerb.spec.KrbSequenceType;
 

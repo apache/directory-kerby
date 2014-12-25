@@ -1,7 +1,7 @@
 package org.haox.kerb.spec;
 
-import org.haox.asn1.type.Asn1FieldInfo;
-import org.haox.asn1.type.TaggingSequence;
+import org.apache.haox.asn1.type.Asn1FieldInfo;
+import org.apache.haox.asn1.type.TaggingSequence;
 
 /**
  * This is for application specific sequence tagged with a number.

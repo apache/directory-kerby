@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.x509;
 
-import org.haox.asn1.type.*;
+import org.apache.haox.asn1.type.*;
 
 /**
  AlgorithmIdentifier  ::=  SEQUENCE  {

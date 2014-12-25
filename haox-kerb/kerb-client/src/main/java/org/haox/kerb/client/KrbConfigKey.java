@@ -1,6 +1,6 @@
 package org.haox.kerb.client;
 
-import org.haox.config.ConfigKey;
+import org.apache.haox.config.ConfigKey;
 
 public enum KrbConfigKey implements ConfigKey {
     KRB_DEBUG(true),

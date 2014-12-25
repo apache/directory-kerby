@@ -3,7 +3,7 @@ package org.haox.token;
 import com.sun.security.jgss.AuthorizationDataEntry;
 import com.sun.security.jgss.ExtendedGSSContext;
 import com.sun.security.jgss.InquireType;
-import org.haox.asn1.type.Asn1SequenceOf;
+import org.apache.haox.asn1.type.Asn1SequenceOf;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 

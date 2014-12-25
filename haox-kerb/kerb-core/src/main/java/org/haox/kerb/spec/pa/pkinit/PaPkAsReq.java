@@ -1,7 +1,7 @@
 package org.haox.kerb.spec.pa.pkinit;
 
-import org.haox.asn1.type.Asn1FieldInfo;
-import org.haox.asn1.type.Asn1OctetString;
+import org.apache.haox.asn1.type.Asn1FieldInfo;
+import org.apache.haox.asn1.type.Asn1OctetString;
 import org.haox.kerb.spec.KrbSequenceType;
 
 /**

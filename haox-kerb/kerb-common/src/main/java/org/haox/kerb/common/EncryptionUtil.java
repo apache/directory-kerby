@@ -1,7 +1,7 @@
 package org.haox.kerb.common;
 
-import org.haox.asn1.type.AbstractAsn1Type;
-import org.haox.asn1.type.Asn1Type;
+import org.apache.haox.asn1.type.AbstractAsn1Type;
+import org.apache.haox.asn1.type.Asn1Type;
 import org.haox.kerb.codec.KrbCodec;
 import org.haox.kerb.crypto.EncTypeHandler;
 import org.haox.kerb.crypto.EncryptionHandler;

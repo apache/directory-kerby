@@ -1,6 +1,6 @@
 package org.haox.kerb.spec.common;
 
-import org.haox.asn1.type.Asn1BitString;
+import org.apache.haox.asn1.type.Asn1BitString;
 import org.haox.kerb.spec.KrbEnum;
 
 import java.io.IOException;

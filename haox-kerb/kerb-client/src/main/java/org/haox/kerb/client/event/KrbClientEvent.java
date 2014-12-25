@@ -1,6 +1,6 @@
 package org.haox.kerb.client.event;
 
-import org.haox.event.Event;
+import org.apache.haox.event.Event;
 import org.haox.kerb.client.request.AsRequest;
 import org.haox.kerb.client.request.TgsRequest;
 

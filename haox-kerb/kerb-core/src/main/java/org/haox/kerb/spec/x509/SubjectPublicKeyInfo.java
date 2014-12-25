@@ -1,8 +1,8 @@
 package org.haox.kerb.spec.x509;
 
-import org.haox.asn1.type.Asn1BitString;
-import org.haox.asn1.type.Asn1FieldInfo;
-import org.haox.asn1.type.Asn1SequenceType;
+import org.apache.haox.asn1.type.Asn1BitString;
+import org.apache.haox.asn1.type.Asn1FieldInfo;
+import org.apache.haox.asn1.type.Asn1SequenceType;
 
 /**
  SubjectPublicKeyInfo  ::=  SEQUENCE  {

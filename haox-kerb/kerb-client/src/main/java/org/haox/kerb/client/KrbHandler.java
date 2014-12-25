@@ -1,8 +1,8 @@
 package org.haox.kerb.client;
 
-import org.haox.event.AbstractEventHandler;
-import org.haox.event.Event;
-import org.haox.event.EventType;
+import org.apache.haox.event.AbstractEventHandler;
+import org.apache.haox.event.Event;
+import org.apache.haox.event.EventType;
 import org.haox.kerb.client.event.KrbClientEvent;
 import org.haox.kerb.client.event.KrbClientEventType;
 import org.haox.kerb.client.preauth.PreauthHandler;
@@ -15,9 +15,9 @@ import org.haox.kerb.spec.common.KrbMessage;
 import org.haox.kerb.spec.common.KrbMessageType;
 import org.haox.kerb.spec.kdc.KdcRep;
 import org.haox.kerb.spec.kdc.KdcReq;
-import org.haox.transport.Transport;
-import org.haox.transport.event.MessageEvent;
-import org.haox.transport.event.TransportEventType;
+import org.apache.haox.transport.Transport;
+import org.apache.haox.transport.event.MessageEvent;
+import org.apache.haox.transport.event.TransportEventType;
 
 import java.nio.ByteBuffer;
 

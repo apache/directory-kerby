@@ -14,7 +14,7 @@ import org.haox.kerb.spec.kdc.KdcRep;
 import org.haox.kerb.spec.kdc.KdcReq;
 import org.haox.kerb.spec.kdc.KdcReqBody;
 import org.haox.kerb.spec.pa.PaDataType;
-import org.haox.transport.Transport;
+import org.apache.haox.transport.Transport;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

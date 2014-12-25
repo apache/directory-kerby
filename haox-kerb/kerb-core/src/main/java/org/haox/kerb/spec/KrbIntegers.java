@@ -1,6 +1,6 @@
 package org.haox.kerb.spec;
 
-import org.haox.asn1.type.Asn1Integer;
+import org.apache.haox.asn1.type.Asn1Integer;
 
 import java.util.ArrayList;
 import java.util.List;

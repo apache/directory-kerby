@@ -1,6 +1,6 @@
 package org.haox.kerb.spec;
 
-import org.haox.asn1.type.Asn1GeneralString;
+import org.apache.haox.asn1.type.Asn1GeneralString;
 
 /**
  KerberosString  ::= GeneralString -- (IA5String)

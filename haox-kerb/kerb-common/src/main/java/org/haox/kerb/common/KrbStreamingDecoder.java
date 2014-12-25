@@ -1,7 +1,7 @@
 package org.haox.kerb.common;
 
-import org.haox.transport.tcp.DecodingCallback;
-import org.haox.transport.tcp.StreamingDecoder;
+import org.apache.haox.transport.tcp.DecodingCallback;
+import org.apache.haox.transport.tcp.StreamingDecoder;
 
 import java.nio.ByteBuffer;
 
