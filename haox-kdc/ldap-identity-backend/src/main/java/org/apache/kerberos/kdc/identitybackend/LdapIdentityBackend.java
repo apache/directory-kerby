@@ -1,4 +1,4 @@
-package org.haox.kdc.identitybackend;
+package org.apache.kerberos.kdc.identitybackend;
 
 import org.apache.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerberos.kerb.identity.backend.AbstractIdentityBackend;

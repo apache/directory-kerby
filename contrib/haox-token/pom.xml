@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>org.haox</groupId>
-        <artifactId>haox-all</artifactId>
+        <artifactId>haox-contrib</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 

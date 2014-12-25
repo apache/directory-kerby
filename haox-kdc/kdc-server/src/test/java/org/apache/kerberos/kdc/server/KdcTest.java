@@ -1,5 +1,6 @@
-package org.haox.kdc.server;
+package org.apache.kerberos.kdc.server;
 
+import org.apache.kerberos.kdc.server.ApacheKdcServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,11 +16,11 @@ public class KdcTest {
     private String serverHost = "localhost";
     private short serverPort = 8088;
 
-    private HaoxKdcServer kdcServer;
+    private ApacheKdcServer kdcServer;
 
     @Before
     public void setUp() throws Exception {
-        kdcServer = new HaoxKdcServer();
+        kdcServer = new ApacheKdcServer();
         kdcServer.setKdcHost(serverHost);
         kdcServer.setKdcPort(serverPort);
         kdcServer.init();

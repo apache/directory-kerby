@@ -1,4 +1,4 @@
-package org.haox.kdc.tool;
+package org.apache.kerberos.tool;
 
 import org.apache.kerberos.kerb.client.KrbClient;
 
