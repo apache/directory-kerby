@@ -49,7 +49,7 @@ public class TestTcpServer extends TestTcpBase {
 
     @Test
     public void testTcpTransport() throws IOException, InterruptedException {
-        Thread.sleep(10);
+        Thread.sleep(15);
 
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(true);

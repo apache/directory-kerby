@@ -61,7 +61,7 @@ public class TcpConnector extends Connector {
         }
     }
 
-    void doConnect(SelectionKey key) throws IOException {
+    private void doConnect(SelectionKey key) throws IOException {
         SocketChannel channel = (SocketChannel) key.channel();
         if (channel.isConnectionPending()) {
             channel.finishConnect();

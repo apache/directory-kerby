@@ -13,7 +13,7 @@ import java.nio.channels.SocketChannel;
 public class KdcTest {
 
     private String serverHost = "localhost";
-    private short serverPort = 8088;
+    private short serverPort = 8089;
 
     private SimpleKdcServer kdcServer;
 
@@ -28,7 +28,7 @@ public class KdcTest {
 
     @Test
     public void testKdc() throws IOException, InterruptedException {
-        Thread.sleep(10);
+        Thread.sleep(15);
 
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(true);

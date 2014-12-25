@@ -75,8 +75,12 @@ public class TcpAcceptor extends Acceptor {
 
             Transport transport = new TcpTransport(channel,
                     ((TcpTransportHandler) transportHandler).getStreamingDecoder());
+
+            if (! selector.isOpen()) {
+                break;
+            }
             channel.register(selector,
-                    SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
+                SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
             onNewTransport(transport);
         }
     }

@@ -17,7 +17,7 @@ public class WithTokenKdcTest extends KdcTestBase {
         kdcServer.createPrincipals(clientPrincipal);
     }
 
-    @Test
+    //@Test
     public void testKdc() throws Exception {
         kdcServer.start();
         Assert.assertTrue(kdcServer.isStarted());

@@ -147,10 +147,12 @@ public class TestNetworkClient extends TestNetworkBase {
             protected void handleMessage(MessageEvent event) {
                 if (event.getEventType() == TransportEventType.INBOUND_MESSAGE) {
                     ByteBuffer buffer = event.getMessage();
-                    clientRecvedMessage = recvBuffer2String(buffer);
-                    System.out.println("Recved clientRecvedMessage: " + clientRecvedMessage);
-                    Boolean result = TEST_MESSAGE.equals(clientRecvedMessage);
-                    dispatch(new Event(TestEventType.FINISHED, result));
+                    if (buffer != null) {
+                        clientRecvedMessage = recvBuffer2String(buffer);
+                        System.out.println("Recved clientRecvedMessage: " + clientRecvedMessage);
+                        Boolean result = TEST_MESSAGE.equals(clientRecvedMessage);
+                        dispatch(new Event(TestEventType.FINISHED, result));
+                    }
                 }
             }
         };

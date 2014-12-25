@@ -27,7 +27,7 @@ public abstract class AbstractEventHandler implements EventHandler {
         try {
             doHandle(event);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(event.toString(), e);
         }
     }
 

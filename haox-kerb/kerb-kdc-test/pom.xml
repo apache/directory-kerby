@@ -39,5 +39,10 @@
             <artifactId>kerb-client</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.haox</groupId>
+            <artifactId>haox-pkix</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

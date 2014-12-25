@@ -40,7 +40,7 @@ public class WithCertKdcTest extends KdcTestBase {
         kdcServer.createPrincipals(clientPrincipal);
     }
 
-    @Test
+    //@Test
     public void testKdc() throws Exception {
         Assert.assertNotNull(userCert);
 
