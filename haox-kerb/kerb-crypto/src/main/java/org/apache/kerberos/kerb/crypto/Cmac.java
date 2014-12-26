@@ -5,6 +5,9 @@ import org.apache.kerberos.kerb.KrbException;
 
 import java.util.Arrays;
 
+/**
+ * Based on MIT krb5 cmac.c
+ */
 public class Cmac {
 
     private static byte[] constRb = {

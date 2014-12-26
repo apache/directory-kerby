@@ -3,6 +3,11 @@ package org.apache.kerberos.kerb.crypto;
 import org.apache.kerberos.kerb.crypto.cksum.HashProvider;
 import org.apache.kerberos.kerb.KrbException;
 
+import java.util.Arrays;
+
+/**
+ * Based on MIT krb5 hmac.c
+ */
 public class Hmac {
 
     public static byte[] hmac(HashProvider hashProvider, byte[] key,
@@ -28,23 +33,28 @@ public class Hmac {
                               byte[] key, byte[] data, int start, int len) throws KrbException {
 
         int blockLen = hashProvider.blockSize();
-        byte[] ipad = new byte[blockLen];
-        byte[] opad = new byte[blockLen];
+        byte[] innerPaddedKey = new byte[blockLen];
+        byte[] outerPaddedKey = new byte[blockLen];
 
-        int ki;
-        for (int i = 0; i < blockLen; i++) {
-            ki = (i < key.length) ? key[i] : 0;
-            ipad[i] = (byte)(ki ^ 0x36);
-            opad[i] = (byte)(ki ^ 0x5c);
+        // Create the inner padded key
+        Arrays.fill(innerPaddedKey, (byte)0x36);
+        for (int i = 0; i < key.length; i++) {
+            innerPaddedKey[i] ^= key[i];
         }
 
-        hashProvider.hash(ipad);
+        // Create the outer padded key
+        Arrays.fill(outerPaddedKey, (byte)0x5c);
+        for (int i = 0; i < key.length; i++) {
+            outerPaddedKey[i] ^= key[i];
+        }
+
+        hashProvider.hash(innerPaddedKey);
 
         hashProvider.hash(data, start, len);
 
         byte[] tmp = hashProvider.output();
 
-        hashProvider.hash(opad);
+        hashProvider.hash(outerPaddedKey);
         hashProvider.hash(tmp);
 
         tmp = hashProvider.output();
