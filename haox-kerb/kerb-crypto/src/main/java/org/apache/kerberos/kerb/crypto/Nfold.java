@@ -2,56 +2,82 @@ package org.apache.kerberos.kerb.crypto;
 
 import java.util.Arrays;
 
+/**
+ * Based on MIT krb5 nfold.c
+ */
+
+/*
+ * n-fold(k-bits):
+ * l = lcm(n,k)
+ * r = l/k
+ * s = k-bits | k-bits rot 13 | k-bits rot 13*2 | ... | k-bits rot 13*(r-1)
+ * compute the 1's complement sum:
+ * n-fold = s[0..n-1]+s[n..2n-1]+s[2n..3n-1]+..+s[(k-1)*n..k*n-1]
+ */
 public class Nfold {
 
-    public static byte[] nfold(byte[] input, int size) {
-
-        int inbits = input.length;
+    /**
+     * representation: msb first, assume n and k are multiples of 8, and
+     * that k>=16.  this is the case of all the cryptosystems which are
+     * likely to be used.  this function can be replaced if that
+     * assumption ever fails.
+     */
+    public static byte[] nfold(byte[] inBytes, int size) {
+        int inBytesNum = inBytes.length; // count inBytes byte
+        int outBytesNum = size; // count inBytes byte
 
         int a, b, c, lcm;
-        a = size;
-        b = inbits;
+        a = outBytesNum;
+        b = inBytesNum;
 
         while (b != 0) {
             c = b;
             b = a % b;
             a = c;
         }
-        lcm = size*inbits/a;
+        lcm = (outBytesNum * inBytesNum) / a;
 
-        byte[] out = new byte[size];
-        Arrays.fill(out, (byte)0);
+        byte[] outBytes = new byte[outBytesNum];
+        Arrays.fill(outBytes, (byte)0);
 
-        int thisbyte = 0;
-        int msbit, i, bval, oval;
+        int tmpByte = 0;
+        int msbit, i, tmp;
 
         for (i = lcm-1; i >= 0; i--) {
-            msbit = (
-                ((inbits<<3)-1)
-                + (((inbits<<3)+13)*(i/inbits))
-                + ((inbits-(i%inbits)) << 3)) % (inbits << 3);
+            // first, start with the msbit inBytes the first, unrotated byte
+            tmp = ((inBytesNum<<3)-1);
+            // then, for each byte, shift to the right for each repetition
+            tmp += (((inBytesNum<<3)+13)*(i/inBytesNum));
+            // last, pick outBytes the correct byte within that shifted repetition
+            tmp += ((inBytesNum-(i%inBytesNum)) << 3);
 
-            bval =  ((((input[((inbits-1)-(msbit>>>3))%inbits]&0xff)<<8)|
-                (input[((inbits)-(msbit>>>3))%inbits]&0xff))
-                >>>((msbit&7)+1))&0xff;
+            msbit = tmp % (inBytesNum << 3);
 
-            thisbyte += bval;
-            oval = (out[i%size]&0xff);
-            thisbyte += oval;
-            out[i%size] = (byte) (thisbyte&0xff);
+            // pull outBytes the byte value itself
+            tmp =  ((((inBytes[((inBytesNum - 1)-(msbit >>> 3)) % inBytesNum] & 0xff) << 8) |
+                (inBytes[((inBytesNum) - (msbit >>> 3)) % inBytesNum] & 0xff))
+                >>>((msbit & 7)+1)) & 0xff;
 
-            thisbyte >>>= 8;
+            tmpByte += tmp;
+            tmp = (outBytes[i % outBytesNum] & 0xff);
+            tmpByte += tmp;
+
+            outBytes[i % outBytesNum] = (byte) (tmpByte & 0xff);
+
+            tmpByte >>>= 8;
         }
 
-        if (thisbyte != 0) {
-            for (i = size-1; i >= 0; i--) {
-                thisbyte += (out[i]&0xff);
-                out[i] = (byte) (thisbyte&0xff);
+        // if there's a carry bit left over, add it back inBytes
+        if (tmpByte != 0) {
+            for (i = outBytesNum-1; i >= 0; i--) {
+                // do the addition
+                tmpByte += (outBytes[i] & 0xff);
+                outBytes[i] = (byte) (tmpByte & 0xff);
 
-                thisbyte >>>= 8;
+                tmpByte >>>= 8;
             }
         }
 
-        return out;
+        return outBytes;
     }
 }
