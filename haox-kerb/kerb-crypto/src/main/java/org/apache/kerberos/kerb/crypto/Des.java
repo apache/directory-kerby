@@ -37,10 +37,15 @@ public class Des {
             {(byte) 0xfe,(byte) 0xe0,(byte) 0xfe,(byte) 0xe0,(byte) 0xfe,(byte) 0xf1,(byte) 0xfe,(byte) 0xf1}
     };
 
-    public static boolean isWeakKey(byte[] key) {
+    public static boolean isWeakKey(byte[] key, int offset, int len) {
         for (byte[] weakKey : WEAK_KEYS) {
-            if (Arrays.equals(weakKey, key)) {
-                return true;
+            if (weakKey.length != len)
+                return false;
+
+            for (int i = 0; i < len; i++) {
+                if (weakKey[i] != key[i]) {
+                    return false;
+                }
             }
         }
         return false;
@@ -49,10 +54,9 @@ public class Des {
     /**
      * MIT krb5 FIXUP(k) in s2k_des.c
      */
-    public static byte[] fixKey(byte[] key) {
-        if (isWeakKey(key)) {
-            key[7] ^= (byte) 0xf0;
+    public static void fixKey(byte[] key, int offset, int len) {
+        if (isWeakKey(key, offset, len)) {
+            key[offset + 7] ^= (byte) 0xf0;
         }
-        return key;
     }
 }

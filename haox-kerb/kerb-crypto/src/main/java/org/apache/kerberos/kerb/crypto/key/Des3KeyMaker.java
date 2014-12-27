@@ -1,9 +1,9 @@
 package org.apache.kerberos.kerb.crypto.key;
 
+import org.apache.kerberos.kerb.KrbException;
 import org.apache.kerberos.kerb.crypto.Des;
 import org.apache.kerberos.kerb.crypto.Nfold;
 import org.apache.kerberos.kerb.crypto.enc.EncryptProvider;
-import org.apache.kerberos.kerb.KrbException;
 
 import java.io.UnsupportedEncodingException;
 
@@ -26,76 +26,39 @@ public class Des3KeyMaker extends DkKeyMaker {
         }
     }
 
-    /*
-     * The 168 bits of random key data are converted to a protocol key value
-     * as follows.  First, the 168 bits are divided into three groups of 56
-     * bits, which are expanded individually into 64 bits as in des3Expand().
-     * Result is a 24 byte (192-bit) key.
-     */
     @Override
     public byte[] random2Key(byte[] randomBits) throws KrbException {
-        byte[] one = Des.fixKey(des3Expand(randomBits, 0, 7));
-        byte[] two = Des.fixKey(des3Expand(randomBits, 7, 14));
-        byte[] three = Des.fixKey(des3Expand(randomBits, 14, 21));
-
+        /**
+         * Ref. k5_rand2key_des3 in random_to_key.c
+         * Take the seven bytes, move them around into the top 7 bits of the
+         * 8 key bytes, then compute the parity bits.  Do this three times.
+         */
         byte[] key = new byte[24];
-        System.arraycopy(one, 0, key, 0, 8);
-        System.arraycopy(two, 0, key, 8, 8);
-        System.arraycopy(three, 0, key, 16, 8);
+        int nthByte;
+        int tmp;
+        for (int i = 0; i < 3; i++) {
+            System.arraycopy(randomBits, i * 7, key, i * 8, 7);
+            nthByte = i * 8;
 
-        return key;
-    }
+            key[nthByte + 7] = (byte) (((key[nthByte + 0] & 1) << 1) |
+                    ((key[nthByte + 1] & 1) << 2) |
+                    ((key[nthByte + 2] & 1) << 3) |
+                    ((key[nthByte + 3] & 1) << 4) |
+                    ((key[nthByte + 4] & 1) << 5) |
+                    ((key[nthByte + 5] & 1) << 6) |
+                    ((key[nthByte + 6] & 1) << 7));
 
-    /**
-     * Expands a 7-byte array into an 8-byte array that contains parity bits.
-     * The 56 bits are expanded into 64 bits as follows:
-     *   1  2  3  4  5  6  7  p
-     *   9 10 11 12 13 14 15  p
-     *   17 18 19 20 21 22 23  p
-     *   25 26 27 28 29 30 31  p
-     *   33 34 35 36 37 38 39  p
-     *   41 42 43 44 45 46 47  p
-     *   49 50 51 52 53 54 55  p
-     *   56 48 40 32 24 16  8  p
-     *
-     * (PI,P2,...,P8) are reserved for parity bits computed on the preceding
-     * seven independent bits and set so that the parity of the octet is odd,
-     * i.e., there is an odd number of "1" bits in the octet.
-     */
-    private static byte[] des3Expand(byte[] input, int start, int end) {
-        if ((end - start) != 7)
-            throw new IllegalArgumentException(
-                    "Invalid length of DES Key Value:" + start + "," + end);
-
-        byte[] result = new byte[8];
-        byte last = 0;
-        System.arraycopy(input, start, result, 0, 7);
-        byte posn = 0;
-
-        // Fill in last row
-        for (int i = start; i < end; i++) {
-            byte bit = (byte) (input[i]&0x01);
-
-            ++posn;
-            if (bit != 0) {
-                last |= (bit<<posn);
+            for (int j = 0; j < 8; j++) {
+                tmp = key[nthByte + j] & 0xfe;
+                tmp |= (Integer.bitCount(tmp) & 1) ^ 1;
+                key[nthByte + j] = (byte) tmp;
             }
         }
 
-        result[7] = last;
-        setParityBit(result);
-        return result;
-    }
-
-    /**
-     * Sets the parity bit (0th bit) in each byte so that each byte
-     * contains an odd number of 1's.
-     */
-    private static void setParityBit(byte[] key) {
-        for (int i = 0; i < key.length; i++) {
-            int b = key[i] & 0xfe;
-            b |= (Integer.bitCount(b) & 1) ^ 1;
-            key[i] = (byte) b;
+        for (int i = 0; i < 3; i++) {
+            Des.fixKey(key, i * 8, 8);
         }
+
+        return key;
     }
 }

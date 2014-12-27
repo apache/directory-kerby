@@ -150,8 +150,8 @@ public class DesKeyMaker extends AbstractKeyMaker {
 
     private void fixKey(byte[] key) {
         setParity(key);
-        if (Des.isWeakKey(key)) {
-            Des.fixKey(key);
+        if (Des.isWeakKey(key, 0, key.length)) {
+            Des.fixKey(key, 0, key.length);
         }
     }
 }
