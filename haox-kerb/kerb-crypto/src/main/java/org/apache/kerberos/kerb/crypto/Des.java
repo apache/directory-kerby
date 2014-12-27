@@ -1,21 +1,57 @@
 package org.apache.kerberos.kerb.crypto;
 
-import javax.crypto.spec.DESKeySpec;
-import java.security.InvalidKeyException;
+import java.util.Arrays;
 
+/**
+ * Based on MIT krb5 weak_key.c
+ */
 public class Des {
 
+    /*
+     * The following are the weak DES keys:
+     */
+    static byte[][] WEAK_KEYS = {
+    /* weak keys */
+            {(byte) 0x01,(byte) 0x01,(byte) 0x01,(byte) 0x01,(byte) 0x01,(byte) 0x01,(byte) 0x01,(byte) 0x01},
+            {(byte) 0xfe,(byte) 0xfe,(byte) 0xfe,(byte) 0xfe,(byte) 0xfe,(byte) 0xfe,(byte) 0xfe,(byte) 0xfe},
+            {(byte) 0x1f,(byte) 0x1f,(byte) 0x1f,(byte) 0x1f,(byte) 0x0e,(byte) 0x0e,(byte) 0x0e,(byte) 0x0e},
+            {(byte) 0xe0,(byte) 0xe0,(byte) 0xe0,(byte) 0xe0,(byte) 0xf1,(byte) 0xf1,(byte) 0xf1,(byte) 0xf1},
+
+    /* semi-weak */
+            {(byte) 0x01,(byte) 0xfe,(byte) 0x01,(byte) 0xfe,(byte) 0x01,(byte) 0xfe,(byte) 0x01,(byte) 0xfe},
+            {(byte) 0xfe,(byte) 0x01,(byte) 0xfe,(byte) 0x01,(byte) 0xfe,(byte) 0x01,(byte) 0xfe,(byte) 0x01},
+
+            {(byte) 0x1f,(byte) 0xe0,(byte) 0x1f,(byte) 0xe0,(byte) 0x0e,(byte) 0xf1,(byte) 0x0e,(byte) 0xf1},
+            {(byte) 0xe0,(byte) 0x1f,(byte) 0xe0,(byte) 0x1f,(byte) 0xf1,(byte) 0x0e,(byte) 0xf1,(byte) 0x0e},
+
+            {(byte) 0x01,(byte) 0xe0,(byte) 0x01,(byte) 0xe0,(byte) 0x01,(byte) 0xf1,(byte) 0x01,(byte) 0xf1},
+            {(byte) 0xe0,(byte) 0x01,(byte) 0xe0,(byte) 0x01,(byte) 0xf1,(byte) 0x01,(byte) 0xf1,(byte) 0x01},
+
+            {(byte) 0x1f,(byte) 0xfe,(byte) 0x1f,(byte) 0xfe,(byte) 0x0e,(byte) 0xfe,(byte) 0x0e,(byte) 0xfe},
+            {(byte) 0xfe,(byte) 0x1f,(byte) 0xfe,(byte) 0x1f,(byte) 0xfe,(byte) 0x0e,(byte) 0xfe,(byte) 0x0e},
+
+            {(byte) 0x01,(byte) 0x1f,(byte) 0x01,(byte) 0x1f,(byte) 0x01,(byte) 0x0e,(byte) 0x01,(byte) 0x0e},
+            {(byte) 0x1f,(byte) 0x01,(byte) 0x1f,(byte) 0x01,(byte) 0x0e,(byte) 0x01,(byte) 0x0e,(byte) 0x01},
+
+            {(byte) 0xe0,(byte) 0xfe,(byte) 0xe0,(byte) 0xfe,(byte) 0xf1,(byte) 0xfe,(byte) 0xf1,(byte) 0xfe},
+            {(byte) 0xfe,(byte) 0xe0,(byte) 0xfe,(byte) 0xe0,(byte) 0xfe,(byte) 0xf1,(byte) 0xfe,(byte) 0xf1}
+    };
+
     public static boolean isWeakKey(byte[] key) {
-        try {
-            return (DESKeySpec.isWeak(key, 0));
-        } catch (InvalidKeyException ex) {
-            return true;
+        for (byte[] weakKey : WEAK_KEYS) {
+            if (Arrays.equals(weakKey, key)) {
+                return true;
+            }
         }
+        return false;
     }
 
+    /**
+     * MIT krb5 FIXUP(k) in s2k_des.c
+     */
     public static byte[] fixKey(byte[] key) {
-        if (Des.isWeakKey(key)) {
-            key[7] ^= 0xf0;
+        if (isWeakKey(key)) {
+            key[7] ^= (byte) 0xf0;
         }
         return key;
     }
