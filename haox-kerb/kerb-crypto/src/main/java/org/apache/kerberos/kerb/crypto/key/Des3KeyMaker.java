@@ -28,12 +28,15 @@ public class Des3KeyMaker extends DkKeyMaker {
 
     @Override
     public byte[] random2Key(byte[] randomBits) throws KrbException {
+        if (randomBits.length != encProvider().keyInputSize()) {
+            throw new KrbException("Invalid random bits, not of correct bytes size");
+        }
         /**
-         * Ref. k5_rand2key_des3 in random_to_key.c
+         * Ref. k5_rand2key_des3 in random_to_key.c in MIT krb5
          * Take the seven bytes, move them around into the top 7 bits of the
          * 8 key bytes, then compute the parity bits.  Do this three times.
          */
-        byte[] key = new byte[24];
+        byte[] key = new byte[encProvider().keySize()];
         int nthByte;
         int tmp;
         for (int i = 0; i < 3; i++) {
