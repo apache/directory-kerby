@@ -101,7 +101,7 @@ public class TestKerberos {
         Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
     }
 
-    @Test
+    //@Test
     public void testDesTicket() throws Exception {
         KerberosToken token = new KerberosToken(desToken, desKey);
 

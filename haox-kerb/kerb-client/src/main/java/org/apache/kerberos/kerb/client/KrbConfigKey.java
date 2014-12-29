@@ -21,7 +21,7 @@ public enum KrbConfigKey implements ConfigKey {
     PROXIABLE_ALLOWED(true),
     RENEWABLE_ALLOWED(true),
     VERIFY_BODY_CHECKSUM(true),
-    ENCRYPTION_TYPES(new String[] { "aes128-cts-hmac-sha1-96", "des-cbc-md5" });
+    ENCRYPTION_TYPES(new String[] { "aes128-cts-hmac-sha1-96" });
 
     private Object defaultValue;
 

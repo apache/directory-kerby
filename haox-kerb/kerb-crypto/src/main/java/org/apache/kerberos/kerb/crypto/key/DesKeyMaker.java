@@ -12,7 +12,33 @@ public class DesKeyMaker extends AbstractKeyMaker {
 
     @Override
     public byte[] str2key(String string, String salt, byte[] param) throws KrbException {
-        throw new RuntimeException("It's weak and not recommended. To be supported.");
+        String error = null;
+        int type = 0;
+
+        if (param != null) {
+            if (param.length != 1) {
+                error = "Invalid param to S2K";
+            }
+            type = param[0];
+            if (type != 0 && type != 1) {
+                error = "Invalid param to S2K";
+            }
+        }
+        if (type == 1) {
+            error = "AFS not supported yet";
+        }
+
+        if (error != null) {
+            throw new KrbException(error);
+        }
+
+        char[] passwdSalt = makePasswdSalt(string, salt);
+        byte[] key = passwd2key(passwdSalt);
+        return key;
+    }
+
+    private byte[] passwd2key(char[] passwdSalt) throws KrbException {
+        throw new KrbException("Implementation not complete yet");
     }
 
     /**
