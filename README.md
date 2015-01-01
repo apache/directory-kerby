@@ -14,25 +14,24 @@ Haox aims for a Java Kerberos binding, and provides richful, inituitive and inte
 + Least dependency, the core part is ensured to depend only on JRE, for easy use and maintain.
 
 ### Update
-We’re collaborating with ApacheDS community and preparing this project to be ready for a sub project, named as Apache Kerberos. We welcome any feedback and contribution.
+We’re collaborating with ApacheDS community and preparing this project to be ready for a sub project. Feedback is welcome.
 
 ### Status
 As follows, with the core and critical parts done, important features are still ongoing.
 It's going to release 0.1 version in the early next year. We do not suggest production usage prior to the release.
 <pre>
 ASN-1 (done)
-Kerberos core spec types (done)
+Kerberos core and codec (done)
 Kerberos Crypto (done)
 Embedded KDC (the core done)
 KrbClient (partial APIs done and available)
 Preauth/FAST framework (partially done)
 Token Preauth (ongoing)
 PKINIT (ongoing)
-Keytab util (done)
-Credential Cache (done)
+Keytab util (credential cache and keytab support, done)
 </pre>
 
-### KrbClient APIs
+### Desired KrbClient APIs (partialy done)
 * Initiate a KrbClient
 <pre>
 KrbClient krbClient = new KrbClient(kdcHost, kdcPort);
@@ -88,7 +87,7 @@ Independent with Kerberos codes in JRE, but rely on JCE
 ### Dependency
 The core part is ensured to only depend on JRE. Every external dependency is taken carefully and maintained separately.
 
-##### Sub Projects
+##### Contrib Projects
 - haox-asn1. A model driven ASN-1 encoding and decoding framework
 - haox-event. A pure event driven application framework aiming to construct applications of asynchronous and concurrent handlers. It includes UDP and TCP transport based on pure Java NIO and concurrency pattern.
 - haox-config. A unified configuration API that aims to support various configuration file formats, like XML, JNI, CSV and Java Properties file.
