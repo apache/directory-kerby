@@ -1,0 +1,102 @@
+<html>
+<head>
+<title>Not-Yet-Commons-SSL - RMI over SSL Java Example</title>
+<style type="text/css">
+h1, h2, h3 { margin: 0; border: 0; padding: 0; font-size: 100%; }
+h1 { float: left; color: red; }
+b.n { font-family: arial; font-weight: bold; }
+span.hl { color: white; background-color: green; }
+div.nav { float: left; margin-left: 20px; font-weight: bold; }
+.nav a, .nav span { padding: 0 5px; }
+.nav a { color: blue; }
+li.top { margin-top: 10px; }
+ul.openssl { float: left; width: 100px; margin-top: 8px; }
+ul.pkcs8 { float: left; width: 200px; margin-top: 8px; }
+ol.points li { margin-top: 8px; }
+</style>
+</head>
+<body>
+<h1>not-yet-commons-ssl</h1>
+<div class="nav">
+<a href="index.html">main</a> |
+<a href="ssl.html">ssl</a> |
+<a href="pkcs8.html">pkcs8</a> |
+<a href="pbe.html">pbe</a> |
+<span class="hl" href="rmi.html">rmi</span> |
+<a href="utilities.html">utilities</a> |
+<a href="source.html">source</a> |
+<a href="javadocs/">javadocs</a> |
+<a href="download.html">download</a>
+</div>
+<br clear="all"/>
+<hr/>
+<h2>RMI over SSL <em style="color: red; font-weight: normal;">(experimental)</em></h2>
+<br/><b>3 points to consider:</b>
+<ol class="points">
+<li>To run the RMI-SSL server, you must invoke <code>LocateRegistry.createRegistry( 1099 )</code>
+from within your own application.  You must do this AFTER calling <code>RMISocketFactory.setSocketFactory( impl )</code>.
+RMISocketFactoryImpl will open the registry on 1099, and will open anonymous RMI servers (where port 0 is
+specified) on port 31099.
+RMI-SSL, as shown here, doesn't work with <code>$JAVA_HOME/bin/rmiregistry</code>.
+<br/>See the example code below for help with <code>RMISocketFactory.setSocketFactory( impl )</code>.
+</li>
+<li>To run the RMI-SSL client, you need to find an RMI-SSL server to connect to.  See #1, above. &nbsp;;-)</li>
+<li>If you don't manage to find an RMI-SSL server, then the RMI-SSL client will automatically downgrade itself
+to plain-socket.  There is an important security consideration to consider regarding this:  RMISocketFactoryImpl
+at this time only guarantees the security of the registry and the server sockets it opens.  Client sockets
+it creates might be plain-socket.</li>
+</ol>
+
+<pre style="border: 1px solid red; padding: 10px; float: left;"><u><b>RMI over SSL Example</b></u>
+
+import org.apache.commons.ssl.RMISocketFactoryImpl;
+
+<em style="color: green;">// RMISocketFactoryImpl tries to detect plain sockets, so you should be able to use</em>
+<em style="color: green;">// this even in situations where not all of the RMI servers you are talking to are</em>
+<em style="color: green;">// using SSL.</em>
+RMISocketFactoryImpl impl = new RMISocketFactoryImpl();
+
+<em style="color: green;">// Let's change some settings on our default SSL client.</em>
+SSLClient defaultClient = (SSLClient) impl.getDefaultClient();
+client.setCheckHostname( false );
+client.setCheckCRL( true );
+client.setCheckExpiry( false );
+
+<em style="color: green;">// By default we trust Java's "cacerts", as well as whatever cert is on localhost:1099,</em>
+<em style="color: green;">// so this is redundant:   (Trusting localhost:1099 is some commons-ssl magic).</em>
+client.addTrustMaterial( TrustMaterial.DEFAULT );
+
+<em style="color: green;">// But if we had used setTrustMaterial() instead of addTrustMaterial(), we would (probably)</em>
+<em style="color: green;">// no longer trust localhost:1099!  Using set instead of add causes all previous "adds" to</em>
+<em style="color: green;">// to be thrown out.</em>
+
+<em style="color: green;">// Meanwhile, RMI calls to rmi://special.com:1099/ need to trust a self-signed certificate,</em>
+<em style="color: green;">// but we don't want to pollute our default trust with this shoddy cert.  So only calls</em>
+<em style="color: green;">// specifically to "special.com" (any port) will use this.</em>
+SSLClient specialClient = new SSLClient();
+TrustMaterial tm = new TrustMaterial( "special.pem" );
+specialClient.addTrustMaterial( tm );
+<em style="color: green;">// Here's where the special cert gets associated with "special.com":</em>
+impl.setClient( "special.com", specialClient );
+
+
+<em style="color: green;">// We're might also want to be an RMI server ourselves!</em>
+<em style="color: green;">// By default commons-ssl looks for "~/.keystore" and tries password "changeit",</em>
+<em style="color: green;">// but we can change things if we want:</em>
+SSLServer server = (SSLServer) impl.getDefaultServer();
+tm = new TrustMaterial( "trust_only_these_client_certs.pem" );
+KeyMaterial km = new KeyMaterial( "/path/to/myKey.p12", "password".toCharArray() );
+server.setTrustMaterial( tm );
+server.setKeyMaterial( km );
+<em style="color: green;">// This particular RMI server will only accept connections with client certs!</em>
+server.setNeedClientAuth( true );
+
+<em style="color: green;">// Finally, we tell Java to use our new RMI socket factory!</em>
+RMISocketFactory.setSocketFactory( impl );</pre>
+<br clear="all">
+<pre>
+<!-- make the page scroll a little more -->
+
+</pre>
+</body>
+</html>

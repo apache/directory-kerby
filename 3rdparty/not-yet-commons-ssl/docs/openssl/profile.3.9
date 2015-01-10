@@ -1,0 +1,72 @@
+Flat profile of 3230.62 secs (320463 total ticks): main
+
+  Interpreted + native   Method                        
+  0.0%     0  +    17    java.lang.System.arraycopy
+  0.0%     0  +     7    java.io.FileOutputStream.writeBytes
+  0.0%     0  +     6    java.io.FileInputStream.read
+  0.0%     0  +     4    java.lang.Object.clone
+  0.0%     0  +     3    java.io.FileInputStream.readBytes
+  0.0%     2  +     0    com.sun.crypto.provider.SunJCE_e.<clinit>
+  0.0%     2  +     0    java.lang.StringCoding.trim
+  0.0%     0  +     2    java.util.zip.Inflater.inflateBytes
+  0.0%     2  +     0    java.math.BigInteger.multiplyToLen
+  0.0%     2  +     0    com.sun.crypto.provider.SunJCE_h.a
+  0.0%     1  +     0    sun.security.util.DerValue.init
+  0.0%     1  +     0    com.sun.crypto.provider.SunJCE_y.a
+  0.0%     1  +     0    org.apache.commons.ssl.Base64.decodeBase64
+  0.0%     1  +     0    com.sun.crypto.provider.SunJCE_y.c
+  0.0%     1  +     0    com.sun.crypto.provider.SunJCE_h.a
+  0.0%     1  +     0    java.lang.String.toLowerCase
+  0.0%     1  +     0    sun.security.pkcs.PKCS7.parse
+  0.0%     0  +     1    java.lang.ClassLoader.findBootstrapClass
+  0.0%     1  +     0    sun.misc.CharacterDecoder.decodeLinePrefix
+  0.0%     1  +     0    java.lang.String.lastIndexOf
+  0.0%     1  +     0    java.util.AbstractList.iterator
+  0.0%     1  +     0    java.util.HashMap.newValueIterator
+  0.0%     1  +     0    java.io.DataInputStream.<init>
+  0.0%     0  +     1    org.apache.commons.ssl.JavaImpl.<clinit>
+  0.0%     1  +     0    java.util.HashMap.resize
+  0.0%    28  +    42    Total interpreted (including elided)
+
+     Compiled + native   Method                        
+  0.0%   111  +     0    com.sun.crypto.provider.SunJCE_y.c
+  0.0%     0  +    76    javax.crypto.Cipher.update
+  0.0%    16  +     0    org.apache.commons.ssl.Util.readLine
+  0.0%    12  +     0    org.apache.commons.ssl.Base64.decodeBase64
+  0.0%    11  +     0    java.nio.charset.CharsetEncoder.encode
+  0.0%     9  +     0    org.apache.commons.ssl.Base64InputStream.getLine
+  0.0%     7  +     1    java.lang.StringCoding$CharsetSE.encode
+  0.0%     5  +     0    com.sun.crypto.provider.SunJCE_m.b
+  0.0%     3  +     0    org.apache.commons.ssl.Util.pipeStream
+  0.0%     1  +     0    javax.crypto.CipherInputStream.read
+  0.0%     0  +     1    org.apache.commons.ssl.Base64.discardNonBase64
+  0.0%     1  +     0    java.lang.StringCoding.encode
+  0.0%     1  +     0    java.math.BigInteger.squareToLen
+  0.1%   177  +    78    Total compiled
+
+         Stub + native   Method                        
+ 92.6%     0  + 296801   java.io.FileInputStream.read
+  7.3%     0  + 23277    java.io.FileOutputStream.writeBytes
+ 99.9%     0  + 320078   Total stub
+
+  Thread-local ticks:
+  0.0%    22             Blocked (of total)
+  0.0%     7             Class loader
+  0.0%     1             Compilation
+  0.0%     1             Unknown: no last frame
+  0.0%    29             Unknown: thread_state
+
+
+Flat profile of 0.01 secs (1 total ticks): DestroyJavaVM
+
+  Thread-local ticks:
+100.0%     1             Blocked (of total)
+
+
+Global summary of 3230.64 seconds:
+100.0% 320556            Received ticks
+  0.0%    73             Received GC ticks
+  0.0%    61             Compilation
+  0.0%    16             Other VM operations
+  0.0%     7             Class loader
+  0.0%    30             Unknown code

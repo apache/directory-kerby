@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<TITLE>/home/julius/dev/commons-ssl/src/java/TrustExample.java</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="KEYWORDS" CONTENT="IntelliJ_IDEA_Html">
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+/home/julius/dev/commons-ssl/src/java/TrustExample.java</FONT>
+</center></TD></TR></TABLE>
+<PRE>
+
+<FONT COLOR=0 STYLE="font-style:normal">1    </FONT><FONT style="font-family:monospaced;" COLOR="#000000"> 
+<FONT COLOR=0 STYLE="font-style:normal">2    </FONT></FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>import</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> org.apache.commons.httpclient.HttpClient; 
+<FONT COLOR=0 STYLE="font-style:normal">3    </FONT></FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>import</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> org.apache.commons.httpclient.methods.GetMethod; 
+<FONT COLOR=0 STYLE="font-style:normal">4    </FONT></FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>import</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> org.apache.commons.httpclient.protocol.Protocol; 
+<FONT COLOR=0 STYLE="font-style:normal">5    </FONT></FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>import</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> org.apache.commons.ssl.HttpSecureProtocol; 
+<FONT COLOR=0 STYLE="font-style:normal">6    </FONT></FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>import</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> org.apache.commons.ssl.TrustMaterial; 
+<FONT COLOR=0 STYLE="font-style:normal">7    </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">8    </FONT></FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>import</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> javax.net.ssl.SSLHandshakeException; 
+<FONT COLOR=0 STYLE="font-style:normal">9    </FONT></FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>import</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> java.net.URL; 
+<FONT COLOR=0 STYLE="font-style:normal">10   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">11   </FONT></FONT><FONT style="font-family:monospaced;" COLOR="#008000"><I>/** 
+<FONT COLOR=0 STYLE="font-style:normal">12   </FONT> * 
+<FONT COLOR=0 STYLE="font-style:normal">13   </FONT> * Example of trusting certs to answer a question Sudip Shrestha posed on the 
+<FONT COLOR=0 STYLE="font-style:normal">14   </FONT> * httpclient-user@jakarta.apache.org mailing list, Fri 5/5/2006. 
+<FONT COLOR=0 STYLE="font-style:normal">15   </FONT> * 
+<FONT COLOR=0 STYLE="font-style:normal">16   </FONT> * </I></FONT><FONT style="font-family:monospaced;" COLOR="#008000"><B>@author</B></FONT><FONT style="font-family:monospaced;" COLOR="#008000"><I> Julius Davies 
+<FONT COLOR=0 STYLE="font-style:normal">17   </FONT> * </I></FONT><FONT style="font-family:monospaced;" COLOR="#008000"><B>@since</B></FONT><FONT style="font-family:monospaced;" COLOR="#008000"><I> May 5, 2006 
+<FONT COLOR=0 STYLE="font-style:normal">18   </FONT> */</I></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> 
+<FONT COLOR=0 STYLE="font-style:normal">19   </FONT></FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>class</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> TrustExample { 
+<FONT COLOR=0 STYLE="font-style:normal">20   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">21   </FONT></FONT><FONT style="font-family:monospaced;" COLOR="#008000"><I>/* 
+<FONT COLOR=0 STYLE="font-style:normal">22   </FONT>Microsoft IE trusts usertrust.com CA certs by default, but Java doesn't, so we need 
+<FONT COLOR=0 STYLE="font-style:normal">23   </FONT>to tell Java to. 
+<FONT COLOR=0 STYLE="font-style:normal">24   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">25   </FONT>Cert is good until 2019 ! 
+<FONT COLOR=0 STYLE="font-style:normal">26   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">27   </FONT>openssl x509 -in cert.pem -noout -text 
+<FONT COLOR=0 STYLE="font-style:normal">28   </FONT>======================================= 
+<FONT COLOR=0 STYLE="font-style:normal">29   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">30   </FONT>Serial Number: 
+<FONT COLOR=0 STYLE="font-style:normal">31   </FONT>    44:be:0c:8b:50:00:24:b4:11:d3:36:2a:fe:65:0a:fd 
+<FONT COLOR=0 STYLE="font-style:normal">32   </FONT>Signature Algorithm: sha1WithRSAEncryption 
+<FONT COLOR=0 STYLE="font-style:normal">33   </FONT>Issuer: C=US, ST=UT, L=Salt Lake City, O=The USERTRUST Network, OU=http://www.usertrust.com, CN=UTN-USERFirst-Hardware 
+<FONT COLOR=0 STYLE="font-style:normal">34   </FONT>Validity 
+<FONT COLOR=0 STYLE="font-style:normal">35   </FONT>    Not Before: Jul  9 18:10:42 1999 GMT 
+<FONT COLOR=0 STYLE="font-style:normal">36   </FONT>    Not After : Jul  9 18:19:22 2019 GMT 
+<FONT COLOR=0 STYLE="font-style:normal">37   </FONT>Subject: C=US, ST=UT, L=Salt Lake City, O=The USERTRUST Network, OU=http://www.usertrust.com, CN=UTN-USERFirst-Hardware 
+<FONT COLOR=0 STYLE="font-style:normal">38   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">39   </FONT>X509v3 extensions: 
+<FONT COLOR=0 STYLE="font-style:normal">40   </FONT>    X509v3 Key Usage: 
+<FONT COLOR=0 STYLE="font-style:normal">41   </FONT>        Digital Signature, Non Repudiation, Certificate Sign, CRL Sign 
+<FONT COLOR=0 STYLE="font-style:normal">42   </FONT>    X509v3 Basic Constraints: critical 
+<FONT COLOR=0 STYLE="font-style:normal">43   </FONT>        CA:TRUE 
+<FONT COLOR=0 STYLE="font-style:normal">44   </FONT>    X509v3 Subject Key Identifier: 
+<FONT COLOR=0 STYLE="font-style:normal">45   </FONT>        A1:72:5F:26:1B:28:98:43:95:5D:07:37:D5:85:96:9D:4B:D2:C3:45 
+<FONT COLOR=0 STYLE="font-style:normal">46   </FONT>    X509v3 CRL Distribution Points: 
+<FONT COLOR=0 STYLE="font-style:normal">47   </FONT>        URI:http://crl.usertrust.com/UTN-USERFirst-Hardware.crl 
+<FONT COLOR=0 STYLE="font-style:normal">48   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">49   </FONT>    X509v3 Extended Key Usage: 
+<FONT COLOR=0 STYLE="font-style:normal">50   </FONT>        TLS Web Server Authentication, IPSec End System, IPSec Tunnel, IPSec User 
+<FONT COLOR=0 STYLE="font-style:normal">51   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">52   </FONT>*/</I></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> 
+<FONT COLOR=0 STYLE="font-style:normal">53   </FONT>    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>private</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>byte</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000">[] pemCert = ( 
+<FONT COLOR=0 STYLE="font-style:normal">54   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;-----BEGIN CERTIFICATE-----</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">55   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;MIIEdDCCA1ygAwIBAgIQRL4Mi1AAJLQR0zYq/mUK/TANBgkqhkiG9w0BAQUFADCB</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">56   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;lzELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQHEw5TYWx0IExha2Ug</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">57   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;Q2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQLExho</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">58   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;dHRwOi8vd3d3LnVzZXJ0cnVzdC5jb20xHzAdBgNVBAMTFlVUTi1VU0VSRmlyc3Qt</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">59   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;SGFyZHdhcmUwHhcNOTkwNzA5MTgxMDQyWhcNMTkwNzA5MTgxOTIyWjCBlzELMAkG</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">60   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;A1UEBhMCVVMxCzAJBgNVBAgTAlVUMRcwFQYDVQQHEw5TYWx0IExha2UgQ2l0eTEe</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">61   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;MBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQLExhodHRwOi8v</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">62   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;d3d3LnVzZXJ0cnVzdC5jb20xHzAdBgNVBAMTFlVUTi1VU0VSRmlyc3QtSGFyZHdh</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">63   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;cmUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCx98M4P7Sof885glFn</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">64   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;0G2f0v9Y8+efK+wNiVSZuTiZFvfgIXlIwrthdBKWHTxqctU8EGc6Oe0rE81m65UJ</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">65   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;M6Rsl7HoxuzBdXmcRl6Nq9Bq/bkqVRcQVLMZ8Jr28bFdtqdt++BxF2uiiPsA3/4a</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">66   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;MXcMmgF6sTLjKwEHOG7DpV4jvEWbe1DByTCP2+UretNb+zNAHqDVmBe8i4fDidNd</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">67   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;oI6yqqr2jmmIBsX6iSHzCJ1pLgkzmykNRg+MzEk0sGlRvfkGzWitZky8PqxhvQqI</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">68   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;DsjfPe58BEydCl5rkdbux+0ojatNh4lz0G6k0B4WixThdkQDf2Os5M1JnMWS9Ksy</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">69   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;oUhbAgMBAAGjgbkwgbYwCwYDVR0PBAQDAgHGMA8GA1UdEwEB/wQFMAMBAf8wHQYD</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">70   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;VR0OBBYEFKFyXyYbKJhDlV0HN9WFlp1L0sNFMEQGA1UdHwQ9MDswOaA3oDWGM2h0</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">71   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4tVVNFUkZpcnN0LUhhcmR3YXJlLmNy</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">72   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;bDAxBgNVHSUEKjAoBggrBgEFBQcDAQYIKwYBBQUHAwUGCCsGAQUFBwMGBggrBgEF</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">73   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;BQcDBzANBgkqhkiG9w0BAQUFAAOCAQEARxkP3nTGmZev/K0oXnWO6y1n7k57K9cM</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">74   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;//bey1WiCuFMVGWTYGufEpytXoMs61quwOQt9ABjHbjAbPLPSbtNk28Gpgoiskli</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">75   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;CE7/yMgUsogWXecB5BKV5UU0s4tpvc+0hY91UZ59Ojg6FEgSxvunOxqNDYJAB+gE</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">76   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;CJChicsZUN/KHAG8HQQZexB2lzvukJDKxA4fFm517zP4029bHpbj4HR3dHuKom4t</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">77   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;3XbWOTCC8KucUvIqx69JXn7HaOWCgchqJ/kniCrVWFCVH/A7HFe7fRQ5YiuayZSS</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">78   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;KqMiDP+JJn1fIytH1xUdqWqeUQ0qUZ6B+dQ7XnASfxAynB67nfhmqA==</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + 
+<FONT COLOR=0 STYLE="font-style:normal">79   </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;-----END CERTIFICATE-----</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>\n</B></FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> ).getBytes(); 
+<FONT COLOR=0 STYLE="font-style:normal">80   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">81   </FONT>    </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>public</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>static</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>void</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> main( String[] args ) </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>throws</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> Exception 
+<FONT COLOR=0 STYLE="font-style:normal">82   </FONT>    { 
+<FONT COLOR=0 STYLE="font-style:normal">83   </FONT>        HttpSecureProtocol f = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> HttpSecureProtocol(); 
+<FONT COLOR=0 STYLE="font-style:normal">84   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">85   </FONT>        </FONT><FONT style="font-family:monospaced;" COLOR="#008000"><I>// might as well trust the usual suspects:</I></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> 
+<FONT COLOR=0 STYLE="font-style:normal">86   </FONT>        f.addTrustMaterial(TrustMaterial.CACERTS); 
+<FONT COLOR=0 STYLE="font-style:normal">87   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">88   </FONT>        </FONT><FONT style="font-family:monospaced;" COLOR="#008000"><I>// here's where we start trusting usertrust.com's CA:</I></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> 
+<FONT COLOR=0 STYLE="font-style:normal">89   </FONT>        f.addTrustMaterial(</FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> TrustMaterial( pemCert )); 
+<FONT COLOR=0 STYLE="font-style:normal">90   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">91   </FONT>        Protocol trustHttps = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> Protocol(</FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;https&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000">, f, </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">443</FONT><FONT style="font-family:monospaced;" COLOR="#000000">); 
+<FONT COLOR=0 STYLE="font-style:normal">92   </FONT>        Protocol.registerProtocol(</FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;https&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000">, trustHttps); 
+<FONT COLOR=0 STYLE="font-style:normal">93   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">94   </FONT>        HttpClient client = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> HttpClient(); 
+<FONT COLOR=0 STYLE="font-style:normal">95   </FONT>        GetMethod httpget = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> GetMethod(</FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;https://www.usertrust.com/&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000">); 
+<FONT COLOR=0 STYLE="font-style:normal">96   </FONT>        client.executeMethod(httpget); 
+<FONT COLOR=0 STYLE="font-style:normal">97   </FONT>        String s = httpget.getStatusLine().toString(); 
+<FONT COLOR=0 STYLE="font-style:normal">98   </FONT>        System.out.println( </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;HTTPClient: &quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + s ); 
+<FONT COLOR=0 STYLE="font-style:normal">99   </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">100  </FONT>        </FONT><FONT style="font-family:monospaced;" COLOR="#008000"><I>// Notice that Java still can't access it.  Only HTTPClient knows</I></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> 
+<FONT COLOR=0 STYLE="font-style:normal">101  </FONT>        </FONT><FONT style="font-family:monospaced;" COLOR="#008000"><I>// to trust the cert!</I></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> 
+<FONT COLOR=0 STYLE="font-style:normal">102  </FONT>        URL u = </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>new</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> URL( </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;https://www.usertrust.com/&quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> ); 
+<FONT COLOR=0 STYLE="font-style:normal">103  </FONT>        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>try</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> 
+<FONT COLOR=0 STYLE="font-style:normal">104  </FONT>        { 
+<FONT COLOR=0 STYLE="font-style:normal">105  </FONT>            </FONT><FONT style="font-family:monospaced;" COLOR="#008000"><I>// This will throw an SSLHandshakeException</I></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> 
+<FONT COLOR=0 STYLE="font-style:normal">106  </FONT>            u.openStream(); 
+<FONT COLOR=0 STYLE="font-style:normal">107  </FONT>        } 
+<FONT COLOR=0 STYLE="font-style:normal">108  </FONT>        </FONT><FONT style="font-family:monospaced;" COLOR="#000080"><B>catch</B></FONT><FONT style="font-family:monospaced;" COLOR="#000000"> ( SSLHandshakeException she ) 
+<FONT COLOR=0 STYLE="font-style:normal">109  </FONT>        { 
+<FONT COLOR=0 STYLE="font-style:normal">110  </FONT>            System.out.println( </FONT><FONT style="font-family:monospaced;" COLOR="#0000ff">&quot;Java:       &quot;</FONT><FONT style="font-family:monospaced;" COLOR="#000000"> + she ); 
+<FONT COLOR=0 STYLE="font-style:normal">111  </FONT>        } 
+<FONT COLOR=0 STYLE="font-style:normal">112  </FONT>    } 
+<FONT COLOR=0 STYLE="font-style:normal">113  </FONT> 
+<FONT COLOR=0 STYLE="font-style:normal">114  </FONT>} 
+<FONT COLOR=0 STYLE="font-style:normal">115  </FONT></FONT></PRE>
+</BODY>
+</HTML>

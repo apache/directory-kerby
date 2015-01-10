@@ -1,0 +1,28 @@
+
+Performance of org.apache.commons.ssl.OpenSSL.decrypt()
+
+Decrypting the same 946MB Base64 DES-3 encrypted file.
+
+
+OpenSSL 0.9.7l 28 Sep 2006
+--------------------
+real	1m40.578s
+user	1m34.223s
+sys	0m04.039s
+
+
+not-yet-commons-ssl-0.3.10
+(22% slower than OpenSSL!)
+--------------------
+real	2m03.270s
+user	1m56.959s
+sys	0m03.605s
+
+
+not-yet-commons-ssl-0.3.9
+(3,000% slower than OpenSSL!)
+--------------------
+real	50m47.424s
+user	18m47.687s
+sys	31m30.298s
+

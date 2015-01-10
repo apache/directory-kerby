@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Julius Davies">
+<title>About Not-Yet-Commons-SSL</title>
+<style type="text/css">
+dl, h1, h2, h3, h4 { margin: 0; border: 0; padding: 0; font-size: 100%; }
+h1 { float: left; color: red; }
+b.n { font-family: arial; font-weight: bold; }
+span.hl, a.hl { color: white; background-color: green; }
+div.nav { float: left; margin-left: 20px; font-weight: bold; }
+.nav a, .nav span { padding: 0 5px; }
+.nav a { color: blue; }
+.nav a.hl { color: white; }
+dt { padding: 8px 0 8px 5px; }
+li { padding-bottom: 6px; }
+</style>
+</head>
+<body>
+<h1>not-yet-commons-ssl</h1>
+<div class="nav">
+<a href="index.html" class="hl">main</a> |
+<a href="ssl.html">ssl</a> |
+<a href="pkcs8.html">pkcs8</a> |
+<a href="pbe.html">pbe</a> |
+<a href="rmi.html">rmi</a> |
+<a href="utilities.html">utilities</a> |
+<a href="source.html">source</a> |
+<a href="javadocs/">javadocs</a> |
+<a href="download.html">download</a>
+</div>
+<br clear="all"/>
+<hr/>
+<h2>About Not-Yet-Commons-SSL</h2>
+
+<h4 style="margin-top: 1em;">5 Design Goals:</h4>
+<ol>
+<li  style="margin-top: 6px;"><b>Make SSL and Java Easier.</b>  Ever wanted to work with self-signed
+certificates in your Java application in a secure fashion?  Ever wanted to use more than one client
+certificate in a single running JVM?  You can edit your <code>$JAVA_HOME/jre/lib/security/cacerts</code>
+file, and you can invoke Java with <code>-Djavax.net.ssl.keyStore=/path/to/keystore</code>.  Both of
+these approaches are great at first, but they don't scale well.  Do you really want to pollute every
+SSL socket in your JVM (HTTP, LDAP, JDBC, RMI, etc...) with those system-wide changes?  Commons-SSL let's you
+control the SSL options you need in an natural way for each SSLSocketFactory, and those options
+won't bleed into the rest of your system.</li>
+<li  style="margin-top: 6px;"><b>Improve Security.</b>
+<a href="http://en.wikipedia.org/wiki/Certificate_revocation_list">CRL</a> checking turned on by default.
+We hope to add support for
+<a href="http://en.wikipedia.org/wiki/Online_Certificate_Status_Protocol">OCSP</a> soon!
+It's obnoxious to have to download CRL files around 500KB each from Thawte and Verisign every 24 hours.
+OCSP improves on that.</li>
+<li  style="margin-top: 6px;"><b>Improve Flexibility.</b>  Checking hostnames, expirations, CRL's, and many
+other options can be enabled/disabled for each SSLSocketFactory created.</li>
+<li style="margin-top: 6px;"><b>Support more file formats, and support these formats more robustly.</b>
+<ul>
+<li>commons-ssl supports over <a href="samples/rsa_result.html">50 formats</a> of PKCS8 and OpenSSL Encrypted Private Keys in PEM or DER</li>
+<li>X.509 Certificates can be PEM or DER encoded.  Can also come in PKCS7 chains.  (To be fair, Java always supported this.)</li>
+<li>PKCS12 files can be in <a href="samples/pkcs12/pkcs12_client_cert.pem">PEM</a> (as created by <code>openssl pkcs12</code>).</li>
+<li>Parsing of Base64-PEM is more tolerant of extra whitespace or comments, especially outside the Base64 sections:
+<pre style="padding-left: 100px;">any comments or whitespace up here are ignored
+
+-----BEGIN TYPE-----
+[...base64....]
+-----END TYPE-----
+
+any comments or whitespace down here are also ignored</pre></li></ul></li>
+<li><b>Automatically detect type of KeyMaterial or TrustMaterial.</b>  Consumer does not need to know
+whether keystore is PKCS12 or JKS.  They just need to know the password to decrypt the private key.</li>
+</ol>
+
+</body>
+</html>

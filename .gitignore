@@ -1,0 +1,12 @@
+.idea/
+*.iml
+*.class
+target/
+.settings/
+.metadata/
+*.classpath
+*.project
+bc.zip
+log.txt
+*.ipr
+*.iws
