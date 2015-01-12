@@ -1,6 +1,5 @@
 package org.apache.kerberos.kdc.server;
 
-import org.apache.kerberos.kdc.server.ApacheKdcServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
