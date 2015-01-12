@@ -425,7 +425,7 @@ public class String2keyTest {
             System.err.println("outKey:" + TestUtil.bytesToHex(outkey.getKeyData()));
             System.err.println("answer:" + tc.answer);
             // Will un-comment below when passed all the tests.
-            //return false;
+            return false;
         }
         return true;
     }

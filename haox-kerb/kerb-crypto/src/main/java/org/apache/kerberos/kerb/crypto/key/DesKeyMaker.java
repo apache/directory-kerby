@@ -103,32 +103,10 @@ public class DesKeyMaker extends AbstractKeyMaker {
             throw new KrbException("Invalid random bits, not of correct bytes size");
         }
 
-        /**
-         * Ref. k5_rand2key_des in random_to_key.c in MIT krb5
-         * Take the seven bytes, move them around into the top 7 bits of the
-         * 8 key bytes, then compute the parity bits.  Do this three times.
-         */
-        byte[] key = new byte[encProvider().keySize()];
-        int tmp;
-        System.arraycopy(randomBits, 0, key, 0, 7);
+        byte[] keyBytes = addParityBits(randomBits);
+        keyCorrection(keyBytes);
 
-        key[7] = (byte) (((key[0] & 1) << 1) |
-                ((key[1] & 1) << 2) |
-                ((key[2] & 1) << 3) |
-                ((key[3] & 1) << 4) |
-                ((key[4] & 1) << 5) |
-                ((key[5] & 1) << 6) |
-                ((key[6] & 1) << 7));
-
-        for (int i = 0; i < 8; i++) {
-            tmp = key[i] & 0xfe;
-            tmp |= (Integer.bitCount(tmp) & 1) ^ 1;
-            key[i] = (byte) tmp;
-        }
-
-        Des.fixKey(key, 0, 8);
-
-        return key;
+        return keyBytes;
     }
 
     // Processing an 8bytesblock
@@ -214,6 +192,7 @@ public class DesKeyMaker extends AbstractKeyMaker {
         for (int i = 0; i < 8; i++) {
             bits56[i] <<= 1;
         }
+        
         addParity(bits56);
 
         return bits56;
@@ -221,9 +200,7 @@ public class DesKeyMaker extends AbstractKeyMaker {
 
     private static void keyCorrection(byte[] key) {
         addParity(key);
-        if (Des.isWeakKey(key, 0, key.length)) {
-            Des.fixKey(key, 0, key.length);
-        }
+        Des.fixKey(key, 0, key.length);
     }
 
     private static int smask(int step) {

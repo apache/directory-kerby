@@ -33,16 +33,16 @@ public class EncryptionHandler {
          */
         switch (eType) {
             case DES_CBC_CRC:
-                //encHandler = new DesCbcCrcEnc();
+                encHandler = new DesCbcCrcEnc();
                 break;
 
             case DES_CBC_MD5:
             case DES:
-                //encHandler = new DesCbcMd5Enc();
+                encHandler = new DesCbcMd5Enc();
                 break;
 
             case DES_CBC_MD4:
-                //encHandler = new DesCbcMd4Enc();
+                encHandler = new DesCbcMd4Enc();
                 break;
 
             case DES3_CBC_SHA1:
