@@ -22,6 +22,7 @@ package org.apache.kerberos.kerb.crypto;
 import org.apache.kerberos.kerb.spec.common.EncryptionKey;
 import org.apache.kerberos.kerb.spec.common.EncryptionType;
 import org.apache.kerberos.kerb.spec.common.KeyUsage;
+import org.haox.util.HexUtil;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -58,8 +59,8 @@ public class DecryptionTest {
     private boolean testDecrypt(TestCase testCase) throws Exception {
         KeyUsage ku = KeyUsage.fromValue(testCase.keyUsage);
 
-        byte[] cipherBytes = TestUtil.hex2bytes(testCase.cipher);
-        byte[] keyBytes = TestUtil.hex2bytes(testCase.key);
+        byte[] cipherBytes = HexUtil.hex2bytes(testCase.cipher);
+        byte[] keyBytes = HexUtil.hex2bytes(testCase.key);
 
         EncryptionKey encKey = new EncryptionKey(testCase.encType, keyBytes);
         byte[] decrypted = EncryptionHandler.decrypt(cipherBytes, encKey, ku);

@@ -19,6 +19,7 @@
     <module>haox-asn1</module>
     <module>haox-pkix</module>
     <module>haox-token</module>
+    <module>haox-util</module>
   </modules>
 
   <dependencies>

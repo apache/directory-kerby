@@ -3,7 +3,6 @@ package org.apache.kerberos.kerb.crypto.key;
 import org.apache.kerberos.kerb.KrbException;
 import org.apache.kerberos.kerb.crypto.BytesUtil;
 import org.apache.kerberos.kerb.crypto.Des;
-import org.apache.kerberos.kerb.crypto.Util;
 import org.apache.kerberos.kerb.crypto.enc.EncryptProvider;
 
 public class DesKeyMaker extends AbstractKeyMaker {
@@ -75,7 +74,7 @@ public class DesKeyMaker extends AbstractKeyMaker {
                 reverse(bits56);
             }
             odd = ! odd;
-            Util.xor(bits56, 0, tempString);
+            BytesUtil.xor(bits56, 0, tempString);
         }
 
         byte[] keyBytes = addParityBits(tempString);

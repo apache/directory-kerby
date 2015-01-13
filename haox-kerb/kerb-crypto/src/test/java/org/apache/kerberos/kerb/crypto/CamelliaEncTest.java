@@ -4,6 +4,7 @@ import org.apache.kerberos.kerb.KrbException;
 import org.apache.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerberos.kerb.crypto.enc.provider.Camellia128Provider;
 import org.apache.kerberos.kerb.crypto.enc.provider.Camellia256Provider;
+import org.haox.util.HexUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -75,7 +76,7 @@ public class CamelliaEncTest {
     }
 
     private void hexDump(String label, byte[] bytes) {
-        String line = label + "=" + TestUtil.bytesToHex(bytes);
+        String line = label + "=" + HexUtil.bytesToHex(bytes);
         outputs.add(line);
     }
 

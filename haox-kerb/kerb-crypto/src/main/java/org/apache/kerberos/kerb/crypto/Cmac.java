@@ -81,10 +81,10 @@ public class Cmac {
         byte[] lastBlock = new byte[lastLen];
         System.arraycopy(data, lastPos, lastBlock, 0, lastLen);
         if (lastIsComplete) {
-            Util.xor(lastBlock, K1, mLast);
+            BytesUtil.xor(lastBlock, K1, mLast);
         } else {
             padding(lastBlock, padded);
-            Util.xor(padded, K2, mLast);
+            BytesUtil.xor(padded, K2, mLast);
         }
 
         // Step 6 (last block)
@@ -108,7 +108,7 @@ public class Cmac {
         } else {
             byte[] tmp = new byte[K1.length];
             leftShiftByOne(L, tmp);
-            Util.xor(tmp, constRb, K1);
+            BytesUtil.xor(tmp, constRb, K1);
         }
 
         // K2 := (MSB(K1) == 0) ? K1 << 1 : (K1 << 1) XOR const_Rb
@@ -117,7 +117,7 @@ public class Cmac {
         } else {
             byte[] tmp = new byte[K1.length];
             leftShiftByOne(K1, tmp);
-            Util.xor(tmp, constRb, K2);
+            BytesUtil.xor(tmp, constRb, K2);
         }
     }
 

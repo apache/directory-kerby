@@ -16,7 +16,7 @@
   <dependencies>
     <dependency>
       <groupId>org.haox</groupId>
-      <artifactId>haox-config</artifactId>
+      <artifactId>haox-util</artifactId>
       <version>${project.version}</version>
     </dependency>
 

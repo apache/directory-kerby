@@ -199,7 +199,7 @@ public class Camellia {
         byte[] cipher = new byte[BLOCK_SIZE];
         for (int i = 0; i < blocksNum; ++i) {
             System.arraycopy(data, offset + i * BLOCK_SIZE, cipher, 0, BLOCK_SIZE);
-            Util.xor(cipherState, 0, cipher);
+            BytesUtil.xor(cipherState, 0, cipher);
             processBlock(cipher, 0);
             System.arraycopy(cipher, 0, data, offset + i * BLOCK_SIZE, BLOCK_SIZE);
             System.arraycopy(cipher, 0, cipherState, 0, BLOCK_SIZE);
@@ -219,9 +219,9 @@ public class Camellia {
             processBlock(cipher, 0);
 
             if (i == 1) {
-                Util.xor(cipherState, 0, cipher);
+                BytesUtil.xor(cipherState, 0, cipher);
             } else {
-                Util.xor(data, offset + (i - 2) * BLOCK_SIZE, cipher);
+                BytesUtil.xor(data, offset + (i - 2) * BLOCK_SIZE, cipher);
             }
 
             System.arraycopy(cipher, 0, data, offset + (i - 1) * BLOCK_SIZE, BLOCK_SIZE);

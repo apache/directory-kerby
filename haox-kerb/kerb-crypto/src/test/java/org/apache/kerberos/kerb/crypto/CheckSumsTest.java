@@ -4,6 +4,7 @@ import org.apache.kerberos.kerb.spec.common.CheckSum;
 import org.apache.kerberos.kerb.spec.common.CheckSumType;
 import org.apache.kerberos.kerb.spec.common.EncryptionType;
 import org.apache.kerberos.kerb.spec.common.KeyUsage;
+import org.haox.util.HexUtil;
 import org.junit.Test;
 
 /**
@@ -121,7 +122,7 @@ public class CheckSumsTest {
     }
 
     private void testWith(CksumTest testCase) throws Exception {
-        byte[] answer = TestUtil.hex2bytes(testCase.answer);
+        byte[] answer = HexUtil.hex2bytes(testCase.answer);
         byte[] plainData = testCase.plainText.getBytes();
         CheckSum newCksum;
 
@@ -137,7 +138,7 @@ public class CheckSumsTest {
                 return;
             }
 
-            byte[] key = TestUtil.hex2bytes(testCase.key);
+            byte[] key = HexUtil.hex2bytes(testCase.key);
             KeyUsage keyUsage = KeyUsage.fromValue(testCase.keyUsage);
             newCksum = CheckSumHandler.checksumWithKey(testCase.cksumType, plainData, key, keyUsage);
             if (CheckSumHandler.verifyWithKey(newCksum, plainData, key, keyUsage)) {

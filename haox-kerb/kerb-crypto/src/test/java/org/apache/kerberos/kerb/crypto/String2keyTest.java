@@ -2,6 +2,7 @@ package org.apache.kerberos.kerb.crypto;
 
 import org.apache.kerberos.kerb.spec.common.EncryptionKey;
 import org.apache.kerberos.kerb.spec.common.EncryptionType;
+import org.haox.util.HexUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -417,12 +418,12 @@ public class String2keyTest {
     }
 
     private boolean testWith(TestCase tc) throws Exception {
-        byte[] answer = TestUtil.hex2bytes(tc.answer);
-        byte[] params = tc.param != null ? TestUtil.hex2bytes(tc.param) : null;
+        byte[] answer = HexUtil.hex2bytes(tc.answer);
+        byte[] params = tc.param != null ? HexUtil.hex2bytes(tc.param) : null;
         EncryptionKey outkey = EncryptionHandler.string2Key(tc.string, tc.salt, params, tc.encType);
         if (! Arrays.equals(answer, outkey.getKeyData())) {
             System.err.println("failed with:");
-            System.err.println("outKey:" + TestUtil.bytesToHex(outkey.getKeyData()));
+            System.err.println("outKey:" + HexUtil.bytesToHex(outkey.getKeyData()));
             System.err.println("answer:" + tc.answer);
             // Will un-comment below when passed all the tests.
             //return false;

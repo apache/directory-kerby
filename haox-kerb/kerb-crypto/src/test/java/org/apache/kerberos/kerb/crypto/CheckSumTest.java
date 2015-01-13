@@ -1,6 +1,7 @@
 package org.apache.kerberos.kerb.crypto;
 
 import org.apache.kerberos.kerb.spec.common.*;
+import org.haox.util.HexUtil;
 import org.junit.Test;
 
 /**
@@ -49,7 +50,7 @@ public class CheckSumTest {
     }
 
     private void testWith(CksumTest testCase) throws Exception {
-        byte[] knownChecksum = TestUtil.hex2bytes(testCase.knownChecksum);
+        byte[] knownChecksum = HexUtil.hex2bytes(testCase.knownChecksum);
         byte[] plainData = testCase.plainText.getBytes();
         CheckSum newCksum;
 

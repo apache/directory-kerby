@@ -1,5 +1,6 @@
 package org.apache.kerberos.kerb.crypto;
 
+import org.haox.util.HexUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -92,7 +93,7 @@ public class Crc32Test {
     }
 
     private boolean testWith(TestCase testCase) {
-        byte[] data = TestUtil.hex2bytes(testCase.data);
+        byte[] data = HexUtil.hex2bytes(testCase.data);
         long value = Crc32.crc(0, data, 0, data.length);
         return value == testCase.answer;
     }

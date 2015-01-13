@@ -6,6 +6,7 @@ import org.apache.kerberos.kerb.crypto.key.CamelliaKeyMaker;
 import org.apache.kerberos.kerb.crypto.key.Des3KeyMaker;
 import org.apache.kerberos.kerb.crypto.key.DkKeyMaker;
 import org.apache.kerberos.kerb.spec.common.EncryptionType;
+import org.haox.util.HexUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -190,16 +191,16 @@ public class KeyDeriveTest {
     }
 
     private boolean testWith(TestCase testCase) throws Exception {
-        byte[] answer = TestUtil.hex2bytes(testCase.answer);
-        byte[] inkey = TestUtil.hex2bytes(testCase.inkey);
-        byte[] constant = TestUtil.hex2bytes(testCase.constant);
+        byte[] answer = HexUtil.hex2bytes(testCase.answer);
+        byte[] inkey = HexUtil.hex2bytes(testCase.inkey);
+        byte[] constant = HexUtil.hex2bytes(testCase.constant);
         byte[] outkey;
 
         DkKeyMaker km = getKeyMaker(testCase.encType);
         outkey = km.dk(inkey, constant);
         if (! Arrays.equals(answer, outkey)) {
             System.err.println("failed with:");
-            System.err.println("outKey:" + TestUtil.bytesToHex(outkey));
+            System.err.println("outKey:" + HexUtil.bytesToHex(outkey));
             System.err.println("answer:" + testCase.answer);
             return false;
         }
