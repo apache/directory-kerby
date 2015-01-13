@@ -24,8 +24,6 @@ import org.apache.kerberos.kerb.crypto.Des;
 import org.apache.kerberos.kerb.crypto.Nfold;
 import org.apache.kerberos.kerb.crypto.enc.EncryptProvider;
 
-import java.io.UnsupportedEncodingException;
-
 public class Des3KeyMaker extends DkKeyMaker {
 
     public Des3KeyMaker(EncryptProvider encProvider) {
@@ -34,15 +32,10 @@ public class Des3KeyMaker extends DkKeyMaker {
 
     @Override
     public byte[] str2key(String string, String salt, byte[] param) throws KrbException {
-        char[] passwdSalt = makePasswdSalt(string, salt);
+        byte[] utf8Bytes = makePasswdSalt(string, salt);
         int keyInputSize = encProvider().keyInputSize();
-        try {
-            byte[] utf8Bytes = new String(passwdSalt).getBytes("UTF-8");
-            byte[] tmpKey = random2Key(Nfold.nfold(utf8Bytes, keyInputSize));
-            return dk(tmpKey, KERBEROS_CONSTANT);
-        } catch (UnsupportedEncodingException e) {
-            throw new KrbException("str2key failed", e);
-        }
+        byte[] tmpKey = random2Key(Nfold.nfold(utf8Bytes, keyInputSize));
+        return dk(tmpKey, KERBEROS_CONSTANT);
     }
 
     @Override

@@ -44,12 +44,19 @@ public abstract class AbstractKeyMaker implements KeyMaker {
         return new byte[0];
     }
 
-    protected static char[] makePasswdSalt(String password, String salt) {
-        char[] result = new char[password.length() + salt.length()];
-        System.arraycopy(password.toCharArray(), 0, result, 0, password.length());
-        System.arraycopy(salt.toCharArray(), 0, result, password.length(), salt.length());
+    /**
+     * Visible for test
+     */
+    public static byte[] makePasswdSalt(String password, String salt) {
+        char[] chars = new char[password.length() + salt.length()];
+        System.arraycopy(password.toCharArray(), 0, chars, 0, password.length());
+        System.arraycopy(salt.toCharArray(), 0, chars, password.length(), salt.length());
 
-        return result;
+        try {
+            return new String(chars).getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Character decoding failed", e);
+        }
     }
 
     protected static int getIterCount(byte[] param, int defCount) {

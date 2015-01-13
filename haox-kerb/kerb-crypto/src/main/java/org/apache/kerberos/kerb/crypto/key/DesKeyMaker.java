@@ -52,8 +52,7 @@ public class DesKeyMaker extends AbstractKeyMaker {
             throw new KrbException(error);
         }
 
-        char[] passwdSalt = makePasswdSalt(string, salt);
-        byte[] key = toKey(passwdSalt);
+        byte[] key = toKey(string, salt);
         return key;
     }
 
@@ -74,15 +73,30 @@ public class DesKeyMaker extends AbstractKeyMaker {
        return(key);
      }
      */
-    private byte[] toKey(char[] passwdChars) throws KrbException {
-        int keySize = encProvider().keySize();
-
-        byte[] bytes = (new String(passwdChars)).getBytes();
-
+    private byte[] toKey(String string, String salt) throws KrbException {
+        byte[] bytes = makePasswdSalt(string, salt);
         // padded with zero-valued octets to a multiple of eight octets.
-        byte[] paddedBytes = BytesUtil.padding(bytes, keySize);
+        byte[] paddedBytes = BytesUtil.padding(bytes, 8);
 
-        int blocksOfbytes8 = paddedBytes.length / keySize;
+        byte[] fanFoldedKey = fanFold(string, salt, paddedBytes);
+
+        byte[] intermediateKey = intermediateKey(fanFoldedKey);
+
+        byte[] key = desEncryptedKey(intermediateKey, paddedBytes);
+        return key;
+    }
+
+    /**
+     * Visible for test
+     */
+    public static byte[] fanFold(String string, String salt, byte[] paddedBytes) {
+        if (paddedBytes == null) {
+            byte[] bytes = makePasswdSalt(string, salt);
+            // padded with zero-valued octets to a multiple of eight octets.
+            paddedBytes = BytesUtil.padding(bytes, 8);
+        }
+
+        int blocksOfbytes8 = paddedBytes.length / 8;
         boolean odd = true;
         byte[] bits56 = new byte[8];
         byte[] tempString = new byte[8];
@@ -92,16 +106,27 @@ public class DesKeyMaker extends AbstractKeyMaker {
             if (odd) {
                 reverse(bits56);
             }
-            odd = ! odd;
+            odd = !odd;
             BytesUtil.xor(bits56, 0, tempString);
         }
 
-        byte[] keyBytes = addParityBits(tempString);
+        return tempString;
+    }
+
+    /**
+     * Visible for test
+     */
+    public static byte[] intermediateKey(byte[] fanFoldedKey) {
+        byte[] keyBytes = addParityBits(fanFoldedKey);
         keyCorrection(keyBytes);
 
+        return keyBytes;
+    }
+
+    private byte[] desEncryptedKey(byte[] intermediateKey, byte[] originalBytes) throws KrbException {
         byte[] resultKey = null;
         if (encProvider().supportCbcMac()) {
-            resultKey = encProvider().cbcMac(keyBytes, keyBytes, paddedBytes);
+            resultKey = encProvider().cbcMac(intermediateKey, intermediateKey, originalBytes);
         } else {
             throw new KrbException("cbcMac should be supported by the provider: "
                     + encProvider().getClass());
