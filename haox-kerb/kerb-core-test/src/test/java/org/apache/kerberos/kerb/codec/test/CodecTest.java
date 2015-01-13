@@ -1,10 +1,10 @@
 package org.apache.kerberos.kerb.codec.test;
 
-import junit.framework.Assert;
 import org.apache.kerberos.kerb.KrbException;
 import org.apache.kerberos.kerb.codec.KrbCodec;
 import org.apache.kerberos.kerb.spec.common.CheckSum;
 import org.apache.kerberos.kerb.spec.common.CheckSumType;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
