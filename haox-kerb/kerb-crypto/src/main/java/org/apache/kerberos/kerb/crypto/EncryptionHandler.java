@@ -47,9 +47,7 @@ public class EncryptionHandler {
 
     private static EncTypeHandler getEncHandler(EncryptionType eType, boolean check) throws KrbException {
         EncTypeHandler encHandler = null;
-        /**
-         * As it's still incomplete yet for the DesKeyMaker, commented DES_* types for now.
-         */
+
         switch (eType) {
             case DES_CBC_CRC:
                 encHandler = new DesCbcCrcEnc();

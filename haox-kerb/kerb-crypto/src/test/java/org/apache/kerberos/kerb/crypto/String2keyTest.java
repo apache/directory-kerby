@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * Based on MIT krb5 t_str2key.c
+ * By ref. MIT krb5 t_str2key.c and RFC3961 test vectors
  *
  * String 2 key test with known values.
  */

@@ -5,6 +5,9 @@ import org.haox.util.HexUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * This is just for my experimental tweaking, so pleas bear it.
+ */
 public class DesKeyMakerTest {
 
     /**
@@ -48,7 +51,10 @@ public class DesKeyMakerTest {
         // finalKey check ignored here and it's done in String2keyTest.
     }
 
-    @Test
+    /**
+     * This is just for my experimental tweaking, so pleas bear it.
+     */
+    //@Test
     public void testCase1() {
         TestCase tc = new TestCase("ATHENA.MIT.EDUraeburn",
                 "password", "70617373776f7264415448454e412e4d49542e4544557261656275726e",
