@@ -57,14 +57,19 @@ public class Des {
     };
 
     public static boolean isWeakKey(byte[] key, int offset, int len) {
+        boolean match;
         for (byte[] weakKey : WEAK_KEYS) {
-            if (weakKey.length != len)
-                return false;
-
-            for (int i = 0; i < len; i++) {
-                if (weakKey[i] != key[i]) {
-                    return false;
+            match = true;
+            if (weakKey.length == len) {
+                for (int i = 0; i < len; i++) {
+                    if (weakKey[i] != key[i]) {
+                        match = false;
+                        break;
+                    }
                 }
+            }
+            if (match) {
+                return true;
             }
         }
         return false;

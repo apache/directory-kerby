@@ -38,7 +38,7 @@ public class DesKeyMakerTest {
         Assert.assertArrayEquals("PasswdSalt bytes", expectedValue, value);
 
         expectedValue = HexUtil.hex2bytes(tc.fanFoldedKey);
-        value = DesKeyMaker.fanFold(tc.salt, tc.passwd, null);
+        value = DesKeyMaker.fanFold(tc.passwd, tc.salt, null);
         Assert.assertArrayEquals("FanFold result", expectedValue, value);
 
         expectedValue = HexUtil.hex2bytes(tc.intermediateKey);

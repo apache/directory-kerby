@@ -73,12 +73,6 @@ public class DecryptionTest {
      * Perform all the checks for a testcase
      */
     private void performTestDecrypt(TestCase testCase) {
-
-        /**
-         * As DES_* related encryption types are still on-going so they're
-         * currently marked as not implemented yet. Will allow the following
-         * check when they're finished.
-         */
         //assertTrue(EncryptionHandler.isImplemented(testCase.encType));
         if (! EncryptionHandler.isImplemented(testCase.encType)) {
             System.err.println("Not implemented yet: " + testCase.encType.getDisplayName());

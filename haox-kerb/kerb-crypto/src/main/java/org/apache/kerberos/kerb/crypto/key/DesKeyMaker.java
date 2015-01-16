@@ -83,6 +83,8 @@ public class DesKeyMaker extends AbstractKeyMaker {
         byte[] intermediateKey = intermediateKey(fanFoldedKey);
 
         byte[] key = desEncryptedKey(intermediateKey, paddedBytes);
+        keyCorrection(key);
+
         return key;
     }
 
@@ -103,7 +105,7 @@ public class DesKeyMaker extends AbstractKeyMaker {
         for (int i = 0; i < blocksOfbytes8; ++i) {
             System.arraycopy(paddedBytes, 8 * i, bits56, 0, 8);
             removeMSBits(bits56);
-            if (odd) {
+            if (!odd) {
                 reverse(bits56);
             }
             odd = !odd;
