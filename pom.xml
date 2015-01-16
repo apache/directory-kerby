@@ -15,6 +15,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>16</version>
+    <relativePath />
+  </parent>
+
   <groupId>org.haox</groupId>
   <artifactId>haox-all</artifactId>
   <version>1.0-SNAPSHOT</version>
@@ -72,7 +79,44 @@
             <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
-        
+
+        <plugin>
+          <groupId>org.apache.rat</groupId>
+          <artifactId>apache-rat-plugin</artifactId>
+          <version>0.11</version>
+          <configuration>
+            <excludeSubProjects>false</excludeSubProjects>
+            <excludes>
+              <!-- camellia files -->
+              <exclude>**/camellia-expect-vt.txt</exclude>
+              <!-- CCache files -->
+              <exclude>**/ccache.txt</exclude>
+              <!-- Keytab files -->
+              <exclude>**/keytab.txt</exclude>
+              <!-- MAVEN_DEFAULT_EXCLUDES -->
+              <exclude>**/target/**/*</exclude>
+              <exclude>**/cobertura.ser</exclude>
+              <!-- ECLIPSE_DEFAULT_EXCLUDES -->
+              <exclude>**/.classpath</exclude>
+              <exclude>**/.project</exclude>
+              <exclude>**/.settings/**/*</exclude>
+              <!-- ECLIPSE_LAUNCH_EXCLUDES -->
+              <exclude>**/*.launch</exclude>
+              <!-- IDEA_DEFAULT_EXCLUDES -->
+              <exclude>**/*.iml</exclude>
+              <exclude>**/*.ipr</exclude>
+              <exclude>**/*.iws</exclude>
+              <!-- MANIFEST_MF_EXCLUDES -->
+              <exclude>**/MANIFEST.MF</exclude>
+              <!-- LOG_FILES_EXCLUDES -->
+              <exclude>**/*.log</exclude>
+              <!-- 3RD_PARTY_EXCLUDES -->
+              <exclude>3rdparty/**/*</exclude>
+              <!-- BMP_IMAGES_EXCLUDES -->
+              <exclude>**/*.bmp</exclude>
+            </excludes>
+          </configuration>
+        </plugin>  
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
@@ -135,6 +179,11 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
