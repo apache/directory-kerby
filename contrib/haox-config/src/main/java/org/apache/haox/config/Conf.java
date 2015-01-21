@@ -98,7 +98,7 @@ public class Conf implements Config {
         } else {
             for (ConfigLoader loader : resourceConfigs) {
                 Config loaded = loader.load();
-                config.set(loaded.getResource(), loaded);
+                config.add(loaded);
             }
         }
     }

@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.haox.config;
 
@@ -25,23 +25,26 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class ConfigImpl implements Config {
-	private static final Logger logger = LoggerFactory.getLogger(Config.class);
+    private static final Logger logger = LoggerFactory.getLogger(Config.class);
 
     private String resource;
-	private Map<String, ConfigObject> properties;
-    private List<Config> subConfigs;
+    private Map<String, ConfigObject> properties;
+    /**
+     * Config resources
+     */
+    private List<Config> configs;
 
     private Set<String> propNames;
 
     protected ConfigImpl(String resource) {
         this.resource = resource;
         this.properties = new HashMap<String, ConfigObject>();
-        this.subConfigs = new ArrayList<Config>(0);
+        this.configs = new ArrayList<Config>(0);
     }
 
     protected void reset() {
         this.properties.clear();
-        this.subConfigs.clear();
+        this.configs.clear();
     }
 
     @Override
@@ -56,23 +59,23 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-	public String getString(String name) {
-		String result = null;
+    public String getString(String name) {
+        String result = null;
 
         ConfigObject co = properties.get(name);
-		if (co != null) {
+        if (co != null) {
             result = co.getPropertyValue();
-		}
+        }
 
         if (result == null) {
-            for (Config sub : subConfigs) {
-                result = sub.getString(name);
+            for (Config config : configs) {
+                result = config.getString(name);
                 if (result != null) break;
             }
         }
 
-		return result;
-	}
+        return result;
+    }
 
     @Override
     public String getString(ConfigKey name) {
@@ -214,14 +217,14 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-	public List<String> getList(String name) {
+    public List<String> getList(String name) {
         List<String> results = null;
-		ConfigObject co = properties.get(name);
-		if (co != null) {
-			results = co.getListValues();
-		}
-		return results;
-	}
+        ConfigObject co = properties.get(name);
+        if (co != null) {
+            results = co.getListValues();
+        }
+        return results;
+    }
 
     @Override
     public List<String> getList(String name, String[] defaultValue) {
@@ -313,23 +316,21 @@ public class ConfigImpl implements Config {
     }
 
     protected void set(String name, String value) {
-		ConfigObject co = new ConfigObject(value);
-		set(name, co);
-	}
+        ConfigObject co = new ConfigObject(value);
+        set(name, co);
+    }
 
     protected void set(String name, Config value) {
         ConfigObject co = new ConfigObject(value);
         set(name, co);
-
-        addSubConfig(value);
     }
 
     protected void set(String name, ConfigObject value) {
         this.properties.put(name, value);
     }
 
-    private void addSubConfig(Config config) {
-        this.subConfigs.add(config);
+    protected void add(Config config) {
+        this.configs.add(config);
     }
 
     private void reloadNames() {
@@ -337,8 +338,8 @@ public class ConfigImpl implements Config {
             propNames.clear();
         }
         propNames = new HashSet<String>(properties.keySet());
-        for (Config sub : subConfigs) {
-            propNames.addAll(sub.getNames());
+        for (Config config : configs) {
+            propNames.addAll(config.getNames());
         }
     }
 }
