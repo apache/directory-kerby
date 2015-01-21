@@ -53,12 +53,12 @@ public class KdcConfig {
     }
 
     public short getKdcTcpPort() {
-        Integer kdcTcpPort = conf.getInt(KdcConfigKey.KDC_TCP_PORT);
+        Integer kdcTcpPort =  KrbConfHelper.getIntUnderSection(conf, KdcConfigKey.KDC_TCP_PORT);
         return kdcTcpPort.shortValue();
     }
 
     public short getKdcUdpPort() {
-        Integer kdcUdpPort = conf.getInt(KdcConfigKey.KDC_UDP_PORT);
+        Integer kdcUdpPort = KrbConfHelper.getIntUnderSection(conf, KdcConfigKey.KDC_UDP_PORT);
         return kdcUdpPort.shortValue();
     }
 
@@ -125,5 +125,29 @@ public class KdcConfig {
 
     public boolean isBodyChecksumVerified() {
         return conf.getBoolean(KdcConfigKey.VERIFY_BODY_CHECKSUM);
+    }
+
+    public String getDefaultLoggingLocation() {
+        return KrbConfHelper.getStringUnderSection(conf, KdcConfigKey.DEFAULT);
+    }
+
+    public String getKdcLoggingLocation() {
+        return KrbConfHelper.getStringUnderSection(conf, KdcConfigKey.KDC);
+    }
+
+    public String getAdminLoggingLocation() {
+        return KrbConfHelper.getStringUnderSection(conf, KdcConfigKey.ADMIN_SERVER);
+    }
+
+    public boolean isRestrictAnonymousToTgt() {
+        return KrbConfHelper.getBooleanUnderSection(conf, KdcConfigKey.RESTRICT_ANONYMOUS_TO_TGT);
+    }
+
+    public int getKdcMaxDgramReplySize() {
+        return KrbConfHelper.getIntUnderSection(conf, KdcConfigKey.KDC_MAX_DGRAM_REPLY_SIZE);
+    }
+
+    public String[] getLdapKerberosContainerDn() {
+        return KrbConfHelper.getStringArrayUnderSection(conf, KdcConfigKey.LDAP_KERBEROS_CONTAINER_DN);
     }
 }

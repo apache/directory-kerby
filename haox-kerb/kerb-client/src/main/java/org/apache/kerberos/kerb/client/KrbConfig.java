@@ -102,7 +102,7 @@ public class KrbConfig {
     }
 
     public List<EncryptionType> getEncryptionTypes() {
-        return KrbConfHelper.getEnctypesUnderSection(conf, KrbConfigKey.PERMITTED_ENCTYPES);
+        return KrbConfHelper.getEncTypesUnderSection(conf, KrbConfigKey.PERMITTED_ENCTYPES);
     }
 
     public boolean isPaEncTimestampRequired() {
@@ -138,11 +138,11 @@ public class KrbConfig {
     }
 
     public List<EncryptionType> getDefaultTgsEnctypes() {
-        return KrbConfHelper.getEnctypesUnderSection(conf, KrbConfigKey.DEFAULT_TGS_ENCTYPES);
+        return KrbConfHelper.getEncTypesUnderSection(conf, KrbConfigKey.DEFAULT_TGS_ENCTYPES);
     }
 
     public List<EncryptionType> getDefaultTktEnctypes() {
-        return KrbConfHelper.getEnctypesUnderSection(conf, KrbConfigKey.DEFAULT_TKT_ENCTYPES);
+        return KrbConfHelper.getEncTypesUnderSection(conf, KrbConfigKey.DEFAULT_TKT_ENCTYPES);
     }
 
     public String getDefaultLoggingLocation() {

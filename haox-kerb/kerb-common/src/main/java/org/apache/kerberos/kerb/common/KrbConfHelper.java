@@ -7,6 +7,7 @@
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
  *
+
  *    http://www.apache.org/licenses/LICENSE-2.0
  *
  *  Unless required by applicable law or agreed to in writing,
@@ -63,10 +64,24 @@ public class KrbConfHelper {
         }
     }
 
-    public static List<EncryptionType> getEnctypesUnderSection(Conf conf, SectionConfigKey key) {
-        String enctypesNamesString = getStringUnderSection(conf, key);
-        String[] enctypesNames = enctypesNamesString.split(LIST_SPLITTER);
-        return getEncryptionTypes(enctypesNames);
+    public static int getIntUnderSection(Conf conf, SectionConfigKey key) {
+        Config subConfig = conf.getConfig(key.getSectionName());
+        if (subConfig != null) {
+            return subConfig.getInt(key);
+        } else {
+            return (Integer) key.getDefaultValue();
+        }
+    }
+
+    public static String[] getStringArrayUnderSection(Conf conf, SectionConfigKey key) {
+        String value = getStringUnderSection(conf, key);
+        String[] values = value.split(LIST_SPLITTER);
+        return values;
+    }
+
+    public static List<EncryptionType> getEncTypesUnderSection(Conf conf, SectionConfigKey key) {
+        String[] encTypesNames = getStringArrayUnderSection(conf, key);
+        return getEncryptionTypes(encTypesNames);
     }
 
     public static List<EncryptionType> getEncryptionTypes(String[] encTypeNames) {
@@ -76,11 +91,11 @@ public class KrbConfHelper {
     public static List<EncryptionType> getEncryptionTypes(List<String> encTypeNames) {
         List<EncryptionType> results = new ArrayList<EncryptionType>(encTypeNames.size());
 
-        EncryptionType etype;
-        for (String etypeName : encTypeNames) {
-            etype = EncryptionType.fromName(etypeName);
-            if (etype != EncryptionType.NONE) {
-                results.add(etype);
+        EncryptionType eType;
+        for (String eTypeName : encTypeNames) {
+            eType = EncryptionType.fromName(eTypeName);
+            if (eType != EncryptionType.NONE) {
+                results.add(eType);
             }
         }
         return results;
