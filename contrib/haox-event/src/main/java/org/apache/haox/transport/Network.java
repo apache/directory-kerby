@@ -260,25 +260,25 @@ public class Network extends LongRunningEventHandler {
         dispatch(event);
     }
 
-    void doTcpAccept(SelectionKey key) throws IOException {
+    protected void doTcpAccept(SelectionKey key) throws IOException {
         ServerSocketChannel server = (ServerSocketChannel) key.channel();
         SocketChannel channel;
-        while ((channel = server.accept()) != null) {
-            // Quick fix: avoid exception during exiting
-            if (! selector.isOpen()) {
-                channel.close();
-                break;
-            };
 
-            channel.configureBlocking(false);
-            channel.socket().setTcpNoDelay(true);
-            channel.socket().setKeepAlive(true);
+        try {
+            while ((channel = server.accept()) != null) {
+                channel.configureBlocking(false);
+                channel.socket().setTcpNoDelay(true);
+                channel.socket().setKeepAlive(true);
 
-            Transport transport = new TcpTransport(channel,
+                Transport transport = new TcpTransport(channel,
                     tcpTransportHandler.getStreamingDecoder());
-            channel.register(selector,
+
+                channel.register(selector,
                     SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
-            onNewTransport(transport);
+                onNewTransport(transport);
+            }
+        } catch (ClosedByInterruptException e) {
+            // No op as normal
         }
     }
 

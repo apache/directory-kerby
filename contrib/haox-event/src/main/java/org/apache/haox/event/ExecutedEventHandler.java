@@ -35,6 +35,10 @@ public class ExecutedEventHandler extends AbstractInternalEventHandler {
 
     @Override
     protected void doHandle(final Event event) throws Exception {
+        if (executorService.isTerminated()) {
+            return;
+        }
+
         executorService.execute(new Runnable() {
             @Override
             public void run() {

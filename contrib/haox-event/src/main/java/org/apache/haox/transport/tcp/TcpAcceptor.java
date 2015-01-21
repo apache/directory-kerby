@@ -29,6 +29,7 @@ import org.apache.haox.transport.event.AddressEvent;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -81,26 +82,22 @@ public class TcpAcceptor extends Acceptor {
     void doAccept(SelectionKey key) throws IOException {
         ServerSocketChannel server = (ServerSocketChannel) key.channel();
         SocketChannel channel;
-        while ((channel = server.accept()) != null) {
-            // Quick fix: avoid exception during exiting
-            if (! selector.isOpen()) {
-                channel.close();
-                break;
-            };
 
-            channel.configureBlocking(false);
-            channel.socket().setTcpNoDelay(true);
-            channel.socket().setKeepAlive(true);
+        try {
+            while ((channel = server.accept()) != null) {
+                channel.configureBlocking(false);
+                channel.socket().setTcpNoDelay(true);
+                channel.socket().setKeepAlive(true);
 
-            Transport transport = new TcpTransport(channel,
+                Transport transport = new TcpTransport(channel,
                     ((TcpTransportHandler) transportHandler).getStreamingDecoder());
 
-            if (! selector.isOpen()) {
-                break;
+                channel.register(selector,
+                    SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
+                onNewTransport(transport);
             }
-            channel.register(selector,
-                SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
-            onNewTransport(transport);
+        } catch (ClosedByInterruptException e) {
+            // No op as normal
         }
     }
 
