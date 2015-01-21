@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerberos.kerb.client;
 
@@ -66,7 +66,7 @@ public class KrbConfig {
     }
 
     public long getAllowableClockSkew() {
-        return conf.getLong(KrbConfigKey.ALLOWABLE_CLOCKSKEW);
+        return KrbConfHelper.getLongUnderSection(conf, KrbConfigKey.CLOCKSKEW);
     }
 
     public boolean isEmptyAddressesAllowed() {
@@ -74,7 +74,7 @@ public class KrbConfig {
     }
 
     public boolean isForwardableAllowed() {
-        return conf.getBoolean(KrbConfigKey.FORWARDABLE_ALLOWED);
+        return KrbConfHelper.getBooleanUnderSection(conf, KrbConfigKey.FORWARDABLE);
     }
 
     public boolean isPostdatedAllowed() {
@@ -82,7 +82,7 @@ public class KrbConfig {
     }
 
     public boolean isProxiableAllowed() {
-        return conf.getBoolean(KrbConfigKey.PROXIABLE_ALLOWED);
+        return KrbConfHelper.getBooleanUnderSection(conf, KrbConfigKey.PROXIABLE);
     }
 
     public boolean isRenewableAllowed() {
@@ -102,8 +102,7 @@ public class KrbConfig {
     }
 
     public List<EncryptionType> getEncryptionTypes() {
-        return KrbConfHelper.getEncryptionTypes(
-                conf.getList(KrbConfigKey.ENCRYPTION_TYPES));
+        return KrbConfHelper.getEnctypesUnderSection(conf, KrbConfigKey.PERMITTED_ENCTYPES);
     }
 
     public boolean isPaEncTimestampRequired() {
@@ -113,4 +112,50 @@ public class KrbConfig {
     public boolean isBodyChecksumVerified() {
         return conf.getBoolean(KrbConfigKey.VERIFY_BODY_CHECKSUM);
     }
+
+    public String getDefaultRealm() {
+        return KrbConfHelper.getStringUnderSection(conf, KrbConfigKey.DEFAULT_REALM);
+    }
+
+    public boolean getDnsLookUpKdc() {
+        return KrbConfHelper.getBooleanUnderSection(conf, KrbConfigKey.DNS_LOOKUP_KDC);
+    }
+
+    public boolean getDnsLookUpRealm() {
+        return KrbConfHelper.getBooleanUnderSection(conf, KrbConfigKey.DNS_LOOKUP_REALM);
+    }
+
+    public boolean getAllowWeakCrypto() {
+        return KrbConfHelper.getBooleanUnderSection(conf, KrbConfigKey.ALLOW_WEAK_CRYPTO);
+    }
+
+    public long getTicketLifetime() {
+        return KrbConfHelper.getLongUnderSection(conf, KrbConfigKey.TICKET_LIFETIME);
+    }
+
+    public long getRenewLifetime() {
+        return KrbConfHelper.getLongUnderSection(conf, KrbConfigKey.RENEW_LIFETIME);
+    }
+
+    public List<EncryptionType> getDefaultTgsEnctypes() {
+        return KrbConfHelper.getEnctypesUnderSection(conf, KrbConfigKey.DEFAULT_TGS_ENCTYPES);
+    }
+
+    public List<EncryptionType> getDefaultTktEnctypes() {
+        return KrbConfHelper.getEnctypesUnderSection(conf, KrbConfigKey.DEFAULT_TKT_ENCTYPES);
+    }
+
+    public String getDefaultLoggingLocation() {
+        return KrbConfHelper.getStringUnderSection(conf, KrbConfigKey.DEFAULT);
+    }
+
+    public String getKdcLoggingLocation() {
+        return KrbConfHelper.getStringUnderSection(conf, KrbConfigKey.KDC);
+    }
+
+    public String getAdminLoggingLocation() {
+        return KrbConfHelper.getStringUnderSection(conf, KrbConfigKey.ADMIN_SERVER);
+    }
+
+
 }

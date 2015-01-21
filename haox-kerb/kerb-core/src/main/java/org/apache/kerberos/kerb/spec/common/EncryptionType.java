@@ -122,7 +122,7 @@ public enum EncryptionType implements KrbEnum {
     public static EncryptionType fromName(String name) {
         if (name != null) {
             for (EncryptionType e : values()) {
-                if (e.getName() == name) {
+                if (e.getName().equals(name)) {
                     return (EncryptionType) e;
                 }
             }
