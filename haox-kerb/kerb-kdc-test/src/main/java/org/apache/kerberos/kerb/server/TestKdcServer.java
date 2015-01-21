@@ -40,13 +40,13 @@ public class TestKdcServer extends SimpleKdcServer {
     public static final String ORG_DOMAIN = KdcConfigKey.KDC_DOMAIN.getPropertyKey();
     public static final String KDC_REALM = KdcConfigKey.KDC_REALM.getPropertyKey();
     public static final String KDC_HOST = KdcConfigKey.KDC_HOST.getPropertyKey();
-    public static final String KDC_PORT = KdcConfigKey.KDC_PORT.getPropertyKey();
+    public static final String KDC_TCP_PORT = KdcConfigKey.KDC_TCP_PORT.getPropertyKey();
     public static final String WORK_DIR = KdcConfigKey.WORK_DIR.getPropertyKey();
 
     private static final Properties DEFAULT_CONFIG = new Properties();
     static {
         DEFAULT_CONFIG.setProperty(KDC_HOST, "localhost");
-        DEFAULT_CONFIG.setProperty(KDC_PORT, "8018");
+        DEFAULT_CONFIG.setProperty(KDC_TCP_PORT, "8018");
         DEFAULT_CONFIG.setProperty(ORG_DOMAIN, "test.com");
         DEFAULT_CONFIG.setProperty(KDC_REALM, "TEST.COM");
     }

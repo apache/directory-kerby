@@ -31,7 +31,8 @@ public abstract class KdcTestBase {
     protected String serverPrincipal;
 
     protected String hostname = "localhost";
-    protected short port = 8088;
+    protected short tcpPort = 8088;
+    protected short udpPort = 8089;
 
     protected TestKdcServer kdcServer;
     protected KrbClient krbClnt;
@@ -45,7 +46,8 @@ public abstract class KdcTestBase {
     protected void setUpKdcServer() throws Exception {
         kdcServer = new TestKdcServer();
         kdcServer.setKdcHost(hostname);
-        kdcServer.setKdcPort(port);
+        kdcServer.setKdcTcpPort(tcpPort);
+        kdcServer.setKdcUdpPort(udpPort);
         kdcServer.init();
 
         kdcRealm = kdcServer.getKdcRealm();
@@ -56,10 +58,12 @@ public abstract class KdcTestBase {
     }
 
     protected void setUpClient() throws Exception {
-        krbClnt = new KrbClient(hostname, port);
+        krbClnt = new KrbClient(hostname, tcpPort);
         krbClnt.setTimeout(5);
         krbClnt.setKdcRealm(kdcServer.getKdcRealm());
     }
+
+
 
     @After
     public void tearDown() throws Exception {

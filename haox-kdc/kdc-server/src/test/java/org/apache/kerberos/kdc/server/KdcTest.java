@@ -40,7 +40,7 @@ public class KdcTest {
     public void setUp() throws Exception {
         kdcServer = new ApacheKdcServer();
         kdcServer.setKdcHost(serverHost);
-        kdcServer.setKdcPort(serverPort);
+        kdcServer.setKdcTcpPort(serverPort);
         kdcServer.init();
         kdcServer.start();
     }

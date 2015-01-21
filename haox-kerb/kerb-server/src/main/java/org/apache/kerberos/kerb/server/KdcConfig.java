@@ -52,9 +52,14 @@ public class KdcConfig {
         return conf.getString(KdcConfigKey.KDC_HOST);
     }
 
-    public short getKdcPort() {
-        Integer kdcPort = conf.getInt(KdcConfigKey.KDC_PORT);
-        return kdcPort.shortValue();
+    public short getKdcTcpPort() {
+        Integer kdcTcpPort = conf.getInt(KdcConfigKey.KDC_TCP_PORT);
+        return kdcTcpPort.shortValue();
+    }
+
+    public short getKdcUdpPort() {
+        Integer kdcUdpPort = conf.getInt(KdcConfigKey.KDC_UDP_PORT);
+        return kdcUdpPort.shortValue();
     }
 
     public String getKdcRealm() {

@@ -22,14 +22,14 @@ package org.apache.kerberos.kerb.server;
 import org.apache.haox.event.EventHub;
 import org.apache.kerberos.kerb.common.KrbStreamingDecoder;
 import org.apache.kerberos.kerb.identity.IdentityService;
-import org.apache.haox.transport.Acceptor;
-import org.apache.haox.transport.tcp.TcpAcceptor;
+import org.apache.haox.transport.Network;
 
 import java.io.File;
 
 public class KdcServer {
     private String kdcHost;
-    private short kdcPort;
+    private short kdcTcpPort;
+    private short kdcUdpPort;
     private String kdcRealm;
 
     private boolean started;
@@ -91,19 +91,30 @@ public class KdcServer {
         return kdcConfig.getKdcHost();
     }
 
-    private short getKdcPort() {
-        if (kdcPort > 0) {
-            return kdcPort;
+    private short getKdcTcpPort() {
+        if (kdcTcpPort > 0) {
+            return kdcTcpPort;
         }
-        return kdcConfig.getKdcPort();
+        return kdcConfig.getKdcTcpPort();
+    }
+
+    private short getKdcUdpPort() {
+        if (kdcUdpPort > 0) {
+            return kdcUdpPort;
+        }
+        return kdcConfig.getKdcUdpPort();
     }
 
     public void setKdcHost(String kdcHost) {
         this.kdcHost = kdcHost;
     }
 
-    public void setKdcPort(short kdcPort) {
-        this.kdcPort = kdcPort;
+    public void setKdcTcpPort(short kdcTcpPort) {
+        this.kdcTcpPort = kdcTcpPort;
+    }
+
+    public void setKdcUdpPort(short kdcUdpPort) {
+        this.kdcUdpPort = kdcUdpPort;
     }
 
     public void setKdcRealm(String realm) {
@@ -121,11 +132,13 @@ public class KdcServer {
 
         eventHub.register(kdcHandler);
 
-        Acceptor acceptor = new TcpAcceptor(new KrbStreamingDecoder());
-        eventHub.register(acceptor);
+        Network network = new Network();
+        network.setStreamingDecoder(new KrbStreamingDecoder());
+        eventHub.register(network);
 
         eventHub.start();
-        acceptor.listen(getKdcHost(), getKdcPort());
+        network.tcpListen(getKdcHost(), getKdcTcpPort());
+        network.udpListen(getKdcHost(), getKdcUdpPort());
     }
 
     private void prepareHandler() {
