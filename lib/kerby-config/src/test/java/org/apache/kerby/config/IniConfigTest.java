@@ -62,8 +62,8 @@ public class IniConfigTest {
         Conf conf = new Conf();
         conf.addIniConfig(TEST_FILE);
 
-        Assert.assertEquals(conf.getString("default"), "FILE:/var/log/krb5libs.log");
-        Assert.assertEquals(conf.getString("#note"), null);//Comments should be ignored when loading.
+        Assert.assertEquals("FILE:/var/log/krb5libs.log", conf.getString("default"));
+        Assert.assertNull(conf.getString("#note"));//Comments should be ignored when loading.
 
         Config config = conf.getConfig("libdefaults");
         Assert.assertFalse(config.getBoolean("dns_lookup_realm"));

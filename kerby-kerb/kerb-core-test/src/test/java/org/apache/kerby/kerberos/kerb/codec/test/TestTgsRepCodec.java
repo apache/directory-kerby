@@ -41,30 +41,29 @@ public class TestTgsRepCodec {
         TgsRep tgsRep = new TgsRep();
         tgsRep.decode(bytes);
 
-        Assert.assertEquals(tgsRep.getPvno(), 5);
-        Assert.assertEquals(tgsRep.getMsgType(), KrbMessageType.TGS_REP);
-        Assert.assertEquals(tgsRep.getCrealm(), "DENYDC.COM");
+        Assert.assertEquals(5, tgsRep.getPvno());
+        Assert.assertEquals(KrbMessageType.TGS_REP, tgsRep.getMsgType());
+        Assert.assertEquals("DENYDC.COM", tgsRep.getCrealm());
 
-        PrincipalName cname = tgsRep.getCname();
-        Assert.assertEquals(cname.getNameType(), NameType.NT_PRINCIPAL);
-        Assert.assertEquals(cname.getNameStrings().size(), 1);
-        Assert.assertEquals(cname.getNameStrings().iterator().next(), "des");
+        PrincipalName cName = tgsRep.getCname();
+        Assert.assertEquals(NameType.NT_PRINCIPAL, cName.getNameType());
+        Assert.assertEquals(1, cName.getNameStrings().size());
+        Assert.assertEquals("des", cName.getNameStrings().get(0));
 
         Ticket ticket = tgsRep.getTicket();
-        Assert.assertEquals(ticket.getTktvno(), 5);
-        Assert.assertEquals(ticket.getRealm(), "DENYDC.COM");
-        PrincipalName sname = ticket.getSname();
-        Assert.assertEquals(sname.getNameType(), NameType.NT_SRV_HST);
-        Assert.assertEquals(sname.getNameStrings().size(), 2);
-        Assert.assertEquals(sname.getNameStrings().get(0), "host");
-        Assert.assertEquals(sname.getNameStrings().get(1), "xp1.denydc.com");
-        //EncTicketPart encTicketPart = ticket.getEncPart();//FIXME null pointer!!
-        //Assert.assertEquals(encTicketPart.getKey().getKeyType().getValue(), 23);
-        //Assert.assertEquals(encTicketPart.getKey().getKvno(), 2);
-        //TODO decode cipher
+        Assert.assertEquals(5, ticket.getTktvno());
+        Assert.assertEquals("DENYDC.COM", ticket.getRealm());
+        PrincipalName sName = ticket.getSname();
+        Assert.assertEquals(NameType.NT_SRV_HST, sName.getNameType());
+        Assert.assertEquals(2, sName.getNameStrings().size());
+        Assert.assertEquals("host", sName.getNameStrings().get(0));
+        Assert.assertEquals("xp1.denydc.com", sName.getNameStrings().get(1));
+        //FIXME
+        //EncTicketPart encTicketPart = ticket.getEncPart();
+        //Assert.assertEquals(23, encTicketPart.getKey().getKeyType().getValue());
+        //Assert.assertEquals(2, encTicketPart.getKey().getKvno());
 
-        //EncKdcRepPart encKdcRepPart = tgsRep.getEncPart();//FIXME null pointer!!
-        //Assert.assertEquals(encKdcRepPart.getKey().getKeyType().getValue(), 3);
-        //TODO decode cinpher
+        //EncKdcRepPart encKdcRepPart = tgsRep.getEncPart();
+        //Assert.assertEquals(3, encKdcRepPart.getKey().getKeyType().getValue());
     }
 }

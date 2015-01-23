@@ -46,17 +46,17 @@ public class ConfigImplTest {
         rootConfig.set("logging", sectionB);
         sectionB.set("kdc", "FILE:/var/log/krb5kdc.log");
 
-        Assert.assertEquals(rootConfig.getString("globalConfig"), "true");
-        Assert.assertEquals(rootConfig.getString("default_realm"), null);
+        Assert.assertEquals("true", rootConfig.getString("globalConfig"));
+        Assert.assertNull(rootConfig.getString("default_realm"));//section config should not get the global value
 
         Config subA = rootConfig.getConfig("libdefaults");
-        Assert.assertEquals(subA.getString("default_realm"), "EXAMPLE.COM");
-        Assert.assertEquals(subA.getString("globalConfig"), null);
-        Assert.assertEquals(subA.getString("kdc"), null);
+        Assert.assertEquals("EXAMPLE.COM", subA.getString("default_realm"));
+        Assert.assertNull(subA.getString("globalConfig"));
+        Assert.assertNull(subA.getString("kdc"));
 
         Config subB = rootConfig.getConfig("logging");
-        Assert.assertEquals(subB.getString("kdc"), "FILE:/var/log/krb5kdc.log");
-        Assert.assertEquals(subB.getString("globalConfig"), null);
-        Assert.assertEquals(subB.getBoolean("forwardable"), null);
+        Assert.assertEquals("FILE:/var/log/krb5kdc.log", subB.getString("kdc"));
+        Assert.assertNull(subB.getString("globalConfig"));
+        Assert.assertNull(subB.getBoolean("forwardable"));
     }
 }

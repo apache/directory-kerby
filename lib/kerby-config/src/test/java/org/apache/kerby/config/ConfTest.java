@@ -44,9 +44,9 @@ public class ConfTest {
 
         Conf conf = new Conf();
         conf.addMapConfig(mapConfig);
-        Assert.assertEquals(conf.getString("strProp"), strProp);
-        Assert.assertEquals(conf.getInt("intProp"), intProp);
-        Assert.assertEquals(conf.getBoolean("boolProp"), boolProp);
+        Assert.assertEquals(strProp, conf.getString("strProp"));
+        Assert.assertEquals(intProp, conf.getInt("intProp"));
+        Assert.assertEquals(boolProp, conf.getBoolean("boolProp"));
     }
 
     @Test
@@ -61,9 +61,9 @@ public class ConfTest {
 
         Conf conf = new Conf();
         conf.addPropertiesConfig(properties);
-        Assert.assertEquals(conf.getString("strProp"), strProp);
-        Assert.assertEquals(conf.getInt("intProp"), intProp);
-        Assert.assertEquals(conf.getBoolean("boolProp"), boolProp);
+        Assert.assertEquals(strProp, conf.getString("strProp"));
+        Assert.assertEquals(intProp, conf.getInt("intProp"));
+        Assert.assertEquals(boolProp, conf.getBoolean("boolProp"));
     }
 
     /**
@@ -86,11 +86,11 @@ public class ConfTest {
         Conf conf = new Conf();
         conf.addMapConfig(mapConfig);
         conf.addPropertiesConfig(properties);
-        Assert.assertEquals(conf.getConfig("mapConfig"), null);
-        Assert.assertEquals(conf.getString("mapStrProp"), mapStrProp);
-        Assert.assertEquals(conf.getString("propertiesStrProp"), propertiesStrProp);
-        Assert.assertEquals(conf.getInt("intProp"), intProp);
-        Assert.assertEquals(conf.getBoolean("boolProp"), boolProp);
+        Assert.assertNull(conf.getConfig("mapConfig"));
+        Assert.assertEquals(mapStrProp, conf.getString("mapStrProp"));
+        Assert.assertEquals(propertiesStrProp, conf.getString("propertiesStrProp"));
+        Assert.assertEquals(intProp, conf.getInt("intProp"));
+        Assert.assertEquals(boolProp, conf.getBoolean("boolProp"));
     }
 
     static enum TestConfKey implements ConfigKey {
@@ -124,10 +124,8 @@ public class ConfTest {
         String myAddress = "www.google.com";
         mapConfig.put(TestConfKey.ADDRESS.getPropertyKey(), myAddress);
         conf.addMapConfig(mapConfig);
-        Assert.assertEquals(conf.getString(TestConfKey.ADDRESS), myAddress);
-        Assert.assertEquals(conf.getInt(TestConfKey.PORT),
-                TestConfKey.PORT.getDefaultValue());
-        Assert.assertEquals(conf.getBoolean(TestConfKey.ENABLE),
-                TestConfKey.ENABLE.getDefaultValue());
+        Assert.assertEquals(myAddress, conf.getString(TestConfKey.ADDRESS));
+        Assert.assertEquals(TestConfKey.PORT.getDefaultValue(), conf.getInt(TestConfKey.PORT));
+        Assert.assertEquals(TestConfKey.ENABLE.getDefaultValue(), conf.getBoolean(TestConfKey.ENABLE));
     }
 }

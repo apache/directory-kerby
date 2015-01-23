@@ -39,19 +39,19 @@ public class TestKdcConfigLoad {
         Conf conf = krbConfig.getConf();
         conf.addIniConfig(confFile);
 
-        Assert.assertEquals(krbConfig.getDefaultLoggingLocation(), "FILE:/var/log/krb5libs.log");
-        Assert.assertEquals(krbConfig.getKdcLoggingLocation(), "FILE:/var/log/krb5kdc.log");
-        Assert.assertEquals(krbConfig.getAdminLoggingLocation(), "FILE:/var/log/kadmind.log");
+        Assert.assertEquals("FILE:/var/log/krb5libs.log", krbConfig.getDefaultLoggingLocation());
+        Assert.assertEquals("FILE:/var/log/krb5kdc.log", krbConfig.getKdcLoggingLocation());
+        Assert.assertEquals("FILE:/var/log/kadmind.log", krbConfig.getAdminLoggingLocation());
 
-        Assert.assertEquals(krbConfig.getKdcUdpPort(), 88);
-        Assert.assertEquals(krbConfig.getKdcTcpPort(), 8014);
+        Assert.assertEquals(88, krbConfig.getKdcUdpPort());
+        Assert.assertEquals(8014, krbConfig.getKdcTcpPort());
         Assert.assertTrue(krbConfig.isRestrictAnonymousToTgt());
-        Assert.assertEquals(krbConfig.getKdcMaxDgramReplySize(), 4096);
+        Assert.assertEquals(4096, krbConfig.getKdcMaxDgramReplySize());
 
         String[] ldapContainerDn = krbConfig.getLdapKerberosContainerDn();
-        Assert.assertEquals(ldapContainerDn.length, 3);
-        Assert.assertEquals(ldapContainerDn[0], "cn=krbcontainer");
-        Assert.assertEquals(ldapContainerDn[1], "dc=mit");
-        Assert.assertEquals(ldapContainerDn[2], "dc=edu");
+        Assert.assertEquals(3, ldapContainerDn.length);
+        Assert.assertEquals("cn=krbcontainer", ldapContainerDn[0]);
+        Assert.assertEquals("dc=mit", ldapContainerDn[1]);
+        Assert.assertEquals("dc=edu", ldapContainerDn[2]);
     }
 }

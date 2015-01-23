@@ -44,31 +44,30 @@ public class TestAsRepCodec {
         AsRep asRep = new AsRep();
         asRep.decode(asRepToken);
 
-        Assert.assertEquals(asRep.getPvno(), 5);
-        Assert.assertEquals(asRep.getMsgType(), KrbMessageType.AS_REP);
-        Assert.assertEquals(asRep.getCrealm(), "DENYDC.COM");
+        Assert.assertEquals(5, asRep.getPvno());
+        Assert.assertEquals(KrbMessageType.AS_REP, asRep.getMsgType());
+        Assert.assertEquals("DENYDC.COM", asRep.getCrealm());
 
-        PrincipalName cname = asRep.getCname();
-        Assert.assertEquals(cname.getNameType(), NameType.NT_PRINCIPAL);
-        Assert.assertEquals(cname.getNameStrings().size(), 1);
-        Assert.assertEquals(cname.getNameStrings().get(0), "u5");
+        PrincipalName cName = asRep.getCname();
+        Assert.assertEquals(NameType.NT_PRINCIPAL, cName.getNameType());
+        Assert.assertEquals(1, cName.getNameStrings().size());
+        Assert.assertEquals("u5", cName.getNameStrings().get(0));
 
         Ticket ticket = asRep.getTicket();
-        Assert.assertEquals(ticket.getTktvno(), 5);
-        Assert.assertEquals(ticket.getRealm(), "DENYDC.COM");
-        PrincipalName sname = ticket.getSname();
-        Assert.assertEquals(sname.getNameType(), NameType.NT_SRV_INST);
-        Assert.assertEquals(sname.getNameStrings().size(), 2);
-        Assert.assertEquals(sname.getNameStrings().get(0), "krbtgt");
-        Assert.assertEquals(sname.getNameStrings().get(1), "DENYDC.COM");
-        //EncTicketPart encTicketPart = ticket.getEncPart();//FIXME
-        //Assert.assertEquals(encTicketPart.getKey().getKvno(), 2);
-        //Assert.assertEquals(encTicketPart.getKey().getKeyType().getValue(), 0x0017);
-        //TODO decode cinpher
+        Assert.assertEquals(5, ticket.getTktvno());
+        Assert.assertEquals("DENYDC.COM", ticket.getRealm());
+        PrincipalName sName = ticket.getSname();
+        Assert.assertEquals(NameType.NT_SRV_INST, sName.getNameType());
+        Assert.assertEquals(2, sName.getNameStrings().size());
+        Assert.assertEquals("krbtgt", sName.getNameStrings().get(0));
+        Assert.assertEquals("DENYDC.COM", sName.getNameStrings().get(1));
+        //FIXME
+        //EncTicketPart encTicketPart = ticket.getEncPart();
+        //Assert.assertEquals(2, encTicketPart.getKey().getKvno());
+        //Assert.assertEquals(0x0017, encTicketPart.getKey().getKeyType().getValue());
 
-        //EncKdcRepPart encKdcRepPart = asRep.getEncPart();//FIXME
-        //Assert.assertEquals(encKdcRepPart.getKey().getKeyType().getValue(), 0x0017);
-        //Assert.assertEquals(encKdcRepPart.getKey().getKvno(), 7);
-        //TODO decode cinpher
+        //EncKdcRepPart encKdcRepPart = asRep.getEncPart();
+        //Assert.assertEquals(0x0017, encKdcRepPart.getKey().getKeyType().getValue());
+        //Assert.assertEquals(7, encKdcRepPart.getKey().getKvno());
     }
 }

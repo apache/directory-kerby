@@ -34,7 +34,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.SimpleTimeZone;
@@ -51,44 +50,43 @@ public class TestTgsReqCodec {
         TgsReq tgsReq = new TgsReq();
         tgsReq.decode(bytes);
 
-        Assert.assertEquals(tgsReq.getPvno(), 5);
-        Assert.assertEquals(tgsReq.getMsgType(), KrbMessageType.TGS_REQ);
+        Assert.assertEquals(5, tgsReq.getPvno());
+        Assert.assertEquals(KrbMessageType.TGS_REQ, tgsReq.getMsgType());
 
         PaData paData = tgsReq.getPaData();
-        Assert.assertEquals(paData.getElements().size(), 1);
+        Assert.assertEquals(1, paData.getElements().size());
         PaDataEntry entry = paData.getElements().iterator().next();
-        Assert.assertEquals(entry.getPaDataType(), PaDataType.TGS_REQ);
-        //TODO Decode:padata-value
+        Assert.assertEquals(PaDataType.TGS_REQ, entry.getPaDataType());
 
         //request body
         KdcReqBody body = tgsReq.getReqBody();
-        Assert.assertEquals(body.getKdcOptions().getPadding(), 0);
+        Assert.assertEquals(0, body.getKdcOptions().getPadding());
         byte[] kdcOptionsValue = {64, (byte) 128, 0, 0};
-        Assert.assertTrue(Arrays.equals(body.getKdcOptions().getValue(), kdcOptionsValue));
+        Assert.assertArrayEquals(kdcOptionsValue, body.getKdcOptions().getValue());
 
-        Assert.assertEquals(body.getRealm(), "DENYDC.COM");
+        Assert.assertEquals("DENYDC.COM", body.getRealm());
 
-        PrincipalName sname = body.getSname();
-        Assert.assertEquals(sname.getNameType(), NameType.NT_SRV_HST);
-        Assert.assertEquals(sname.getNameStrings().size(), 2);
-        Assert.assertEquals(sname.getNameStrings().get(0), "host");
-        Assert.assertEquals(sname.getNameStrings().get(1), "xp1.denydc.com");
+        PrincipalName sName = body.getSname();
+        Assert.assertEquals(NameType.NT_SRV_HST, sName.getNameType());
+        Assert.assertEquals(2, sName.getNameStrings().size());
+        Assert.assertEquals("host", sName.getNameStrings().get(0));
+        Assert.assertEquals("xp1.denydc.com", sName.getNameStrings().get(1));
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
         Date date = sdf.parse("20370913024805");
-        Assert.assertEquals(tgsReq.getReqBody().getTill().getTime(), date.getTime());
+        Assert.assertEquals(date.getTime(), body.getTill().getTime());
 
-        Assert.assertEquals(body.getNonce(), 197296424);
+        Assert.assertEquals(197296424, body.getNonce());
 
         List<EncryptionType> eTypes = body.getEtypes();
-        Assert.assertEquals(eTypes.size(), 7);
-        Assert.assertEquals(eTypes.get(0).getValue(), 23);
-        //Assert.assertEquals(eTypes.get(1).getValue(), -133);//FIXME
-        //Assert.assertEquals(eTypes.get(2).getValue(), -128);//FIXME
-        Assert.assertEquals(eTypes.get(3).getValue(), 3);
-        Assert.assertEquals(eTypes.get(4).getValue(), 1);
-        Assert.assertEquals(eTypes.get(5).getValue(), 24);
-        //Assert.assertEquals(eTypes.get(6).getValue(), -135);//FIXME
+        Assert.assertEquals(7, eTypes.size());
+        Assert.assertEquals(0x0017, eTypes.get(0).getValue());
+        //Assert.assertEquals(-133, eTypes.get(1).getValue());//FIXME
+        //Assert.assertEquals(-128, eTypes.get(2).getValue());//FIXME
+        Assert.assertEquals(0x0003, eTypes.get(3).getValue());
+        Assert.assertEquals(0x0001, eTypes.get(4).getValue());
+        Assert.assertEquals(0x0018, eTypes.get(5).getValue());
+        //Assert.assertEquals(-135, eTypes.get(6).getValue());//FIXME
     }
 }
