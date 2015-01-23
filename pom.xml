@@ -15,21 +15,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.apache</groupId>
-    <artifactId>apache</artifactId>
-    <version>16</version>
-    <relativePath />
-  </parent>
-
-  <groupId>org.haox</groupId>
-  <artifactId>haox-all</artifactId>
+  <groupId>org.apache.kerby</groupId>
+  <artifactId>kerby-all</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Haox Project</name>
-  <description>Haox, just for the way</description>
-  <url>http://www.haox.org</url>
+  <name>Apache Kerby Project</name>
+  <description>Apache Kerby project</description>
+  <url>http://www.kerby.org</url>
   <inceptionYear>2014</inceptionYear>
 
   <properties>
@@ -44,9 +37,12 @@
 
   <modules>
     <module>3rdparty</module>
-    <module>contrib</module>
-    <module>haox-kerb</module>
-    <module>haox-kdc</module>
+    <module>lib</module>
+    <module>kerby-asn1</module>
+    <module>kerby-kerb</module>
+    <module>kerby-kdc</module>
+    <module>tool</module>
+    <module>kdc-backend</module>
     <module>benchmark</module>
   </modules>
 
