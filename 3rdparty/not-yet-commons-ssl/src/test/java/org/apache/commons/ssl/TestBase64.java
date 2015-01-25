@@ -1,6 +1,9 @@
 package org.apache.commons.ssl;
 
 import static org.junit.Assert.assertTrue;
+
+import org.apache.kerby.util.Base64;
+import org.apache.kerby.util.Base64InputStream;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

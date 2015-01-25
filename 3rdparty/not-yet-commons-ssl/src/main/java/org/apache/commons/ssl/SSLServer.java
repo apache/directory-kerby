@@ -71,40 +71,6 @@ public class SSLServer extends SSLServerSocketFactory {
         }
     }
 
-    /**
-     * Tries to extract the TrustMaterial and KeyMaterial being used by a Tomcat
-     * SSL server (usually on 8443) by analyzing Tomcat's "server.xml" file.  If
-     * the extraction is successful, the TrustMaterial and KeyMaterial are
-     * applied to this SSLServer.
-     *
-     * @return true if the operation was successful.
-     * @throws java.security.GeneralSecurityException setKeyMaterial() failed
-     * @throws java.io.IOException              setKeyMaterial() failed
-     */
-    public boolean useTomcatSSLMaterial()
-        throws GeneralSecurityException, IOException {
-        // If running inside Tomcat, let's try to re-use Tomcat's SSL
-        // certificate for our own stuff (e.g. RMI-SSL).
-        Integer p8443 = Integer.valueOf(8443);
-        KeyMaterial km;
-        TrustMaterial tm;
-        km = (KeyMaterial) TomcatServerXML.KEY_MATERIAL_BY_PORT.get(p8443);
-        tm = (TrustMaterial) TomcatServerXML.TRUST_MATERIAL_BY_PORT.get(p8443);
-
-        // If 8443 isn't set, let's take lowest secure port.
-        km = km == null ? TomcatServerXML.KEY_MATERIAL : km;
-        tm = tm == null ? TomcatServerXML.TRUST_MATERIAL : tm;
-        boolean success = false;
-        if (km != null) {
-            setKeyMaterial(km);
-            success = true;
-            if (tm != null && !TrustMaterial.DEFAULT.equals(tm)) {
-                setTrustMaterial(tm);
-            }
-        }
-        return success;
-    }
-
     private boolean useDefaultKeyMaterial()
         throws GeneralSecurityException, IOException {
         // If we're not able to re-use Tomcat's SSLServerSocket configuration,

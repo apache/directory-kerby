@@ -219,14 +219,6 @@ public class SSL {
 
     {
         Object obj = getSSLContextAsObject();
-        if (JavaImpl.isJava13()) {
-            try {
-                return (SSLContext) obj;
-            }
-            catch (ClassCastException cce) {
-                throw new ClassCastException("When using Java13 SSL, you must call SSL.getSSLContextAsObject() - " + cce);
-            }
-        }
         return (SSLContext) obj;
     }
 

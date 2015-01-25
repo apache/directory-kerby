@@ -31,6 +31,8 @@
 
 package org.apache.commons.ssl;
 
+import org.apache.kerby.util.Base64;
+
 import javax.naming.InvalidNameException;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;

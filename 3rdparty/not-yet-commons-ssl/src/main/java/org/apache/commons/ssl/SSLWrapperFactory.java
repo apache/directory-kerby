@@ -82,10 +82,7 @@ public interface SSLWrapperFactory {
         // the accept() call.
         public SSLServerSocket wrap(SSLServerSocket s, SSL ssl)
             throws IOException {
-            // Can't wrap with Java 1.3 because SSLServerSocket's constructor has
-            // default access instead of protected access in Java 1.3.
-            boolean java13 = JavaImpl.isJava13();
-            return java13 ? s : new SSLServerSocketWrapper(s, ssl, this);
+            return new SSLServerSocketWrapper(s, ssl, this);
         }
     };
 
@@ -99,10 +96,7 @@ public interface SSLWrapperFactory {
 
         public SSLServerSocket wrap(SSLServerSocket s, SSL ssl)
             throws IOException {
-            // Can't wrap with Java 1.3 because SSLServerSocket's constructor has
-            // default access instead of protected access in Java 1.3.
-            boolean java13 = JavaImpl.isJava13();
-            return java13 ? s : new SSLServerSocketWrapper(s, ssl, this);
+            return new SSLServerSocketWrapper(s, ssl, this);
         }
     };
 

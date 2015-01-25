@@ -31,7 +31,7 @@
 
 package org.apache.commons.ssl;
 
-import org.apache.commons.ssl.util.Hex;
+import org.apache.kerby.util.Hex;
 
 import java.util.Collections;
 import java.util.Map;

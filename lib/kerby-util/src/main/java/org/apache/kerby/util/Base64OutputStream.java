@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.ssl;
+package org.apache.kerby.util;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;

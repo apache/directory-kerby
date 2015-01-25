@@ -25,8 +25,8 @@
 
 package org.apache.commons.ssl;
 
-import org.apache.commons.ssl.util.Hex;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.util.Hex;
 
 import java.util.*;
 

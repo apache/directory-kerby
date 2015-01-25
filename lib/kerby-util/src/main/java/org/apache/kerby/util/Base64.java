@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.ssl;
-
-import org.apache.commons.ssl.util.UTF8;
+package org.apache.kerby.util;
 
 import java.math.BigInteger;
 

@@ -1,9 +1,4 @@
 /*
- * $HeadURL: http://juliusdavies.ca/svn/not-yet-commons-ssl/tags/commons-ssl-0.3.16/src/java/org/apache/commons/ssl/util/Hex.java $
- * $Revision: 121 $
- * $Date: 2007-11-13 21:26:57 -0800 (Tue, 13 Nov 2007) $
- *
- * ====================================================================
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +15,6 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- * ====================================================================
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation.  For more
@@ -29,7 +23,7 @@
  *
  */
 
-package org.apache.commons.ssl.util;
+package org.apache.kerby.util;
 
 /**
  * Utility class for dealing with hex-encoding of binary data.

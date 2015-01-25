@@ -25,9 +25,9 @@
 
 package org.apache.commons.ssl;
 
-import org.apache.commons.ssl.util.Hex;
 import org.apache.kerby.asn1.Asn1InputBuffer;
 import org.apache.kerby.asn1.type.*;
+import org.apache.kerby.util.Hex;
 
 import java.io.FileInputStream;
 import java.io.IOException;

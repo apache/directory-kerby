@@ -1,3 +1,0 @@
-AddType text/html .html
-AddHandler server-parsed .html
-ErrorDocument 404 /commons-ssl/404.html 
