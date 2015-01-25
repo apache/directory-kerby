@@ -1,9 +1,4 @@
 /*
- * $HeadURL: http://juliusdavies.ca/svn/not-yet-commons-ssl/tags/commons-ssl-0.3.16/src/java/org/apache/commons/ssl/ASN1Structure.java $
- * $Revision: 121 $
- * $Date: 2007-11-13 21:26:57 -0800 (Tue, 13 Nov 2007) $
- *
- * ====================================================================
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +15,6 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- * ====================================================================
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation.  For more
@@ -32,12 +26,9 @@
 package org.apache.commons.ssl;
 
 import org.apache.commons.ssl.util.Hex;
+import org.apache.kerby.asn1.type.Asn1Integer;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author Credit Union Central of British Columbia
@@ -45,8 +36,12 @@ import java.util.TreeSet;
  * @author <a href="mailto:juliusdavies@cucbc.com">juliusdavies@cucbc.com</a>
  * @since 16-Nov-2005
  */
-class ASN1Structure {
-    List derIntegers = new LinkedList();
+
+/**
+ * Adapted from not-yet-commons-ssl ASN1Structure
+ */
+class Asn1PkcsStructure {
+    List<Asn1Integer> derIntegers = new LinkedList<Asn1Integer>();
     Set oids = new TreeSet();
     String oid1;
     String oid2;

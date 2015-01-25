@@ -61,10 +61,10 @@ public class TestAsn1Integer {
         testDecodingWith(1234567890, "0x02 04 49 96 02 D2");
     }
 
-    private void testDecodingWith(Integer expectedValue, String content) throws IOException {
+    private void testDecodingWith(int expectedValue, String content) throws IOException {
         Asn1Integer decoded = new Asn1Integer();
         decoded.setEncodingOption(EncodingOption.DER);
         decoded.decode(Util.hex2bytes(content));
-        Assert.assertEquals(expectedValue, decoded.getValue());
+        Assert.assertEquals(expectedValue, decoded.getValue().intValue());
     }
 }

@@ -169,8 +169,8 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
 
     protected Integer getFieldAsInteger(int index) {
         Asn1Integer value = getFieldAs(index, Asn1Integer.class);
-        if (value != null) {
-            return value.getValue();
+        if (value != null && value.getValue() != null) {
+            return value.getValue().intValue();
         }
         return null;
     }

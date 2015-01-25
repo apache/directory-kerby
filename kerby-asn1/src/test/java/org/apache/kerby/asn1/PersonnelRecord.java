@@ -191,8 +191,10 @@ public class PersonnelRecord extends TaggingSet {
             super(2, new Asn1Integer(value), true);
             setEncodingOption(EncodingOption.IMPLICIT);
         }
+
         public EmployeeNumber() {
-            this(null);
+            super(2, new Asn1Integer(), true);
+            setEncodingOption(EncodingOption.IMPLICIT);
         }
     }
 

@@ -24,13 +24,15 @@ import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 
-public class Asn1Null extends Asn1Simple<Object>
-{
-    public static final Asn1Null NULL = new Asn1Null();
+/**
+ * The Asn1 Null type
+ */
+public class Asn1Null extends Asn1Simple<Object> {
+    public static final Asn1Null INSTANCE = new Asn1Null();
     private static final byte[]  EMPTY_BYTES = new byte[0];
 
     public Asn1Null() {
-        super(null, UniversalTag.NULL);
+        super(UniversalTag.NULL, null);
     }
 
     @Override

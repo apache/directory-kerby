@@ -31,26 +31,12 @@
 
 package org.apache.commons.ssl;
 
-import org.apache.commons.ssl.asn1.ASN1EncodableVector;
-import org.apache.commons.ssl.asn1.DERInteger;
-import org.apache.commons.ssl.asn1.DERSequence;
+import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1Sequence;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
-import java.security.GeneralSecurityException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.UnrecoverableKeyException;
+import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -59,13 +45,7 @@ import java.security.interfaces.DSAParams;
 import java.security.interfaces.DSAPrivateKey;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Builds Java Key Store files out of pkcs12 files, or out of pkcs8 files +
@@ -363,13 +343,13 @@ public class KeyStoreBuilder {
 
         boolean isProbablyPKCS12 = false;
         boolean isASN = false;
-        ASN1Structure asn1 = null;
+        Asn1PkcsStructure asn1 = null;
         try {
-            asn1 = ASN1Util.analyze(stuff);
+            asn1 = Asn1PkcsUtil.analyze(stuff);
             isASN = true;
             isProbablyPKCS12 = asn1.oids.contains(PKCS7_ENCRYPTED);
             if (!isProbablyPKCS12 && asn1.bigPayload != null) {
-                asn1 = ASN1Util.analyze(asn1.bigPayload);
+                asn1 = Asn1PkcsUtil.analyze(asn1.bigPayload);
                 isProbablyPKCS12 = asn1.oids.contains(PKCS7_ENCRYPTED);
             }
         }
@@ -632,18 +612,17 @@ public class KeyStoreBuilder {
             byte[] pkcs8DerBytes = null;
             if (key instanceof RSAPrivateCrtKey) {
                 RSAPrivateCrtKey rsa = (RSAPrivateCrtKey) key;
-                ASN1EncodableVector vec = new ASN1EncodableVector();
-                vec.add(new DERInteger(BigInteger.ZERO));
-                vec.add(new DERInteger(rsa.getModulus()));
-                vec.add(new DERInteger(rsa.getPublicExponent()));
-                vec.add(new DERInteger(rsa.getPrivateExponent()));
-                vec.add(new DERInteger(rsa.getPrimeP()));
-                vec.add(new DERInteger(rsa.getPrimeQ()));
-                vec.add(new DERInteger(rsa.getPrimeExponentP()));
-                vec.add(new DERInteger(rsa.getPrimeExponentQ()));
-                vec.add(new DERInteger(rsa.getCrtCoefficient()));
-                DERSequence seq = new DERSequence(vec);
-                byte[] derBytes = PKCS8Key.encode(seq);
+                Asn1Sequence seq = new Asn1Sequence();
+                seq.addItem(new Asn1Integer(BigInteger.ZERO));
+                seq.addItem(new Asn1Integer(rsa.getModulus()));
+                seq.addItem(new Asn1Integer(rsa.getPublicExponent()));
+                seq.addItem(new Asn1Integer(rsa.getPrivateExponent()));
+                seq.addItem(new Asn1Integer(rsa.getPrimeP()));
+                seq.addItem(new Asn1Integer(rsa.getPrimeQ()));
+                seq.addItem(new Asn1Integer(rsa.getPrimeExponentP()));
+                seq.addItem(new Asn1Integer(rsa.getPrimeExponentQ()));
+                seq.addItem(new Asn1Integer(rsa.getCrtCoefficient()));
+                byte[] derBytes = seq.encode();
                 PKCS8Key pkcs8 = new PKCS8Key(derBytes, null);
                 pkcs8DerBytes = pkcs8.getDecryptedBytes();
             } else if (key instanceof DSAPrivateKey) {
@@ -655,15 +634,14 @@ public class KeyStoreBuilder {
                 BigInteger x = dsa.getX();
                 BigInteger y = q.modPow(x, p);
 
-                ASN1EncodableVector vec = new ASN1EncodableVector();
-                vec.add(new DERInteger(BigInteger.ZERO));
-                vec.add(new DERInteger(p));
-                vec.add(new DERInteger(q));
-                vec.add(new DERInteger(g));
-                vec.add(new DERInteger(y));
-                vec.add(new DERInteger(x));
-                DERSequence seq = new DERSequence(vec);
-                byte[] derBytes = PKCS8Key.encode(seq);
+                Asn1Sequence seq = new Asn1Sequence();
+                seq.addItem(new Asn1Integer(BigInteger.ZERO));
+                seq.addItem(new Asn1Integer(p));
+                seq.addItem(new Asn1Integer(q));
+                seq.addItem(new Asn1Integer(g));
+                seq.addItem(new Asn1Integer(y));
+                seq.addItem(new Asn1Integer(x));
+                byte[] derBytes = seq.encode();
                 PKCS8Key pkcs8 = new PKCS8Key(derBytes, null);
                 pkcs8DerBytes = pkcs8.getDecryptedBytes();
             }

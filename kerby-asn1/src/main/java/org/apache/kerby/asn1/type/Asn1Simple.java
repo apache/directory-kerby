@@ -128,6 +128,11 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
         }
     }
 
+    /**
+     * Create a simple ASN1 object given tagNo, using the default constructor with no value provided
+     * @param tagNo
+     * @return
+     */
     public static Asn1Type createSimple(int tagNo) {
         if (! isSimple(tagNo)) {
             throw new IllegalArgumentException("Not simple type, tag: " + tagNo);
@@ -135,6 +140,11 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
         return createSimple(UniversalTag.fromValue(tagNo));
     }
 
+    /**
+     * Create a simple ASN1 object given tagNo, using the default constructor with no value provided
+     * @param tagNo
+     * @return
+     */
     public static Asn1Type createSimple(UniversalTag tagNo) {
         if (! isSimple(tagNo)) {
             throw new IllegalArgumentException("Not simple type, tag: " + tagNo);
@@ -158,7 +168,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
             case INTEGER:
                 return new Asn1Integer();
             case NULL:
-                return new Asn1Null();
+                return Asn1Null.INSTANCE;
             case NUMERIC_STRING:
                 return new Asn1NumericsString();
             case OBJECT_IDENTIFIER:

@@ -47,7 +47,7 @@ public class KrbIntegers extends KrbSequenceOfType<Asn1Integer> {
     public List<Integer> getValues() {
         List<Integer> results = new ArrayList<Integer>();
         for (Asn1Integer value : getElements()) {
-            results.add(value.getValue());
+            results.add(value.getValue().intValue());
         }
         return results;
     }

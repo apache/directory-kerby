@@ -162,7 +162,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
     protected Integer getFieldAsInteger(int index) {
         Asn1Integer value = getFieldAs(index, Asn1Integer.class);
         if (value != null) {
-            return value.getValue();
+            return value.getValue().intValue();
         }
         return null;
     }

@@ -31,7 +31,7 @@
 
 package org.apache.commons.ssl;
 
-import org.apache.commons.ssl.asn1.*;
+import org.apache.kerby.asn1.type.*;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -182,9 +182,9 @@ public class PKCS8Key {
             }
         }
 
-        ASN1Structure pkcs8;
+        Asn1PkcsStructure pkcs8;
         try {
-            pkcs8 = ASN1Util.analyze(derBytes);
+            pkcs8 = Asn1PkcsUtil.analyze(derBytes);
         }
         catch (Exception e) {
             throw new ProbablyNotPKCS8Exception("asn1 parse failure: " + e);
@@ -239,7 +239,7 @@ public class PKCS8Key {
         }
         if (encrypted) {
             try {
-                pkcs8 = ASN1Util.analyze(decryptedPKCS8);
+                pkcs8 = Asn1PkcsUtil.analyze(decryptedPKCS8);
             }
             catch (Exception e) {
                 throw new ProbablyBadPasswordException("Decrypted stream not ASN.1.  Probably bad decryption password.");
@@ -438,7 +438,7 @@ public class PKCS8Key {
         return new DecryptResult(transformation, keySize, decryptedBytes);
     }
 
-    private static DecryptResult decryptPKCS8(ASN1Structure pkcs8,
+    private static DecryptResult decryptPKCS8(Asn1PkcsStructure pkcs8,
                                               char[] password)
         throws GeneralSecurityException {
         boolean isVersion1 = true;
@@ -898,57 +898,50 @@ public class PKCS8Key {
     }
 
     public static byte[] formatAsPKCS8(byte[] privateKey, String oid,
-                                       ASN1Structure pkcs8) {
-        DERInteger derZero = new DERInteger(BigInteger.ZERO);
-        ASN1EncodableVector outterVec = new ASN1EncodableVector();
-        ASN1EncodableVector innerVec = new ASN1EncodableVector();
-        DEROctetString octetsToAppend;
-        try {
-            DERObjectIdentifier derOID = new DERObjectIdentifier(oid);
-            innerVec.add(derOID);
-            if (DSA_OID.equals(oid)) {
-                if (pkcs8 == null) {
-                    try {
-                        pkcs8 = ASN1Util.analyze(privateKey);
-                    }
-                    catch (Exception e) {
-                        throw new RuntimeException("asn1 parse failure " + e);
-                    }
+                                       Asn1PkcsStructure pkcs8) {
+        Asn1Integer derZero = new Asn1Integer(BigInteger.ZERO);
+        Asn1Sequence outterSeq = new Asn1Sequence();
+        Asn1Sequence innerSeq = new Asn1Sequence();
+        Asn1OctetString octetsToAppend;
+        Asn1ObjectIdentifier derOID = new Asn1ObjectIdentifier(oid);
+        innerSeq.addItem(derOID);
+        if (DSA_OID.equals(oid)) {
+            if (pkcs8 == null) {
+                try {
+                    pkcs8 = Asn1PkcsUtil.analyze(privateKey);
                 }
-                if (pkcs8.derIntegers == null || pkcs8.derIntegers.size() < 6) {
-                    throw new RuntimeException("invalid DSA key - can't find P, Q, G, X");
+                catch (Exception e) {
+                    throw new RuntimeException("asn1 parse failure " + e);
                 }
-
-                DERInteger[] ints = new DERInteger[pkcs8.derIntegers.size()];
-                pkcs8.derIntegers.toArray(ints);
-                DERInteger p = ints[1];
-                DERInteger q = ints[2];
-                DERInteger g = ints[3];
-                DERInteger x = ints[5];
-
-                byte[] encodedX = encode(x);
-                octetsToAppend = new DEROctetString(encodedX);
-                ASN1EncodableVector pqgVec = new ASN1EncodableVector();
-                pqgVec.add(p);
-                pqgVec.add(q);
-                pqgVec.add(g);
-                DERSequence pqg = new DERSequence(pqgVec);
-                innerVec.add(pqg);
-            } else {
-                innerVec.add(DERNull.INSTANCE);
-                octetsToAppend = new DEROctetString(privateKey);
+            }
+            if (pkcs8.derIntegers == null || pkcs8.derIntegers.size() < 6) {
+                throw new RuntimeException("invalid DSA key - can't find P, Q, G, X");
             }
 
-            DERSequence inner = new DERSequence(innerVec);
-            outterVec.add(derZero);
-            outterVec.add(inner);
-            outterVec.add(octetsToAppend);
-            DERSequence outter = new DERSequence(outterVec);
-            return encode(outter);
+            Asn1Integer[] ints = new Asn1Integer[pkcs8.derIntegers.size()];
+            pkcs8.derIntegers.toArray(ints);
+            Asn1Integer p = ints[1];
+            Asn1Integer q = ints[2];
+            Asn1Integer g = ints[3];
+            Asn1Integer x = ints[5];
+
+            byte[] encodedX = x.encode();
+            octetsToAppend = new Asn1OctetString(encodedX);
+            Asn1Sequence pqgSeq = new Asn1Sequence();
+            pqgSeq.addItem(p);
+            pqgSeq.addItem(q);
+            pqgSeq.addItem(g);
+            innerSeq.addItem(pqgSeq);
+        } else {
+            innerSeq.addItem(Asn1Null.INSTANCE);
+            octetsToAppend = new Asn1OctetString(privateKey);
         }
-        catch (IOException ioe) {
-            throw JavaImpl.newRuntimeException(ioe);
-        }
+
+        outterSeq.addItem(derZero);
+        outterSeq.addItem(innerSeq);
+        outterSeq.addItem(octetsToAppend);
+
+        return outterSeq.encode();
     }
 
     private static boolean allZeroes(byte[] b) {
@@ -958,14 +951,6 @@ public class PKCS8Key {
             }
         }
         return true;
-    }
-
-    public static byte[] encode(DEREncodable der) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-        ASN1OutputStream out = new ASN1OutputStream(baos);
-        out.writeObject(der);
-        out.close();
-        return baos.toByteArray();
     }
 
     public static void main(String[] args) throws Exception {

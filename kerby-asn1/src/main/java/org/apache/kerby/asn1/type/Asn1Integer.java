@@ -24,23 +24,29 @@ import org.apache.kerby.asn1.UniversalTag;
 import java.io.IOException;
 import java.math.BigInteger;
 
-public class Asn1Integer extends Asn1Simple<Integer>
+public class Asn1Integer extends Asn1Simple<BigInteger>
 {
     public Asn1Integer() {
-        this(null);
+        this((BigInteger) null);
     }
 
     public Asn1Integer(Integer value) {
+        this(BigInteger.valueOf(value));
+    }
+
+    public Asn1Integer(Long value) {
+        this(BigInteger.valueOf(value));
+    }
+
+    public Asn1Integer(BigInteger value) {
         super(UniversalTag.INTEGER, value);
     }
 
-    @Override
     protected void toBytes() {
-        setBytes(BigInteger.valueOf(getValue()).toByteArray());
+        setBytes(getValue().toByteArray());
     }
 
-    @Override
     protected void toValue() throws IOException {
-        setValue(new BigInteger(getBytes()).intValue());
+        setValue(new BigInteger(getBytes()));
     }
 }
