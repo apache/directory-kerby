@@ -61,7 +61,7 @@ public class TestKdcServer extends SimpleKdcServer {
 
     public TestKdcServer(Properties conf) {
         super();
-        getConfig().getConf().addPropertiesConfig(conf);
+        getKdcConfig().getConf().addPropertiesConfig(conf);
     }
 
     @Override
@@ -72,12 +72,12 @@ public class TestKdcServer extends SimpleKdcServer {
     }
 
     public String getKdcRealm() {
-        return getConfig().getKdcRealm();
+        return getKdcConfig().getKdcRealm();
     }
 
     public synchronized void createPrincipal(String principal, String password) {
         KrbIdentity identity = new KrbIdentity(principal);
-        List<EncryptionType> encTypes = getConfig().getEncryptionTypes();
+        List<EncryptionType> encTypes = getKdcConfig().getEncryptionTypes();
         List<EncryptionKey> encKeys = null;
         try {
             encKeys = EncryptionUtil.generateKeys(fixPrincipal(principal), password, encTypes);

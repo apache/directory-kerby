@@ -26,7 +26,6 @@
   <inceptionYear>2014</inceptionYear>
 
   <properties>
-    <scala.version>2.10.3</scala.version>
     <junit.version>4.12</junit.version>
     <slf4j.version>1.7.10</slf4j.version>
   </properties>

@@ -34,11 +34,11 @@ public class KdcTest {
     private String serverHost = "localhost";
     private short serverPort = 8088;
 
-    private ApacheKdcServer kdcServer;
+    private KerbyKdcServer kdcServer;
 
     @Before
     public void setUp() throws Exception {
-        kdcServer = new ApacheKdcServer();
+        kdcServer = new KerbyKdcServer();
         kdcServer.setKdcHost(serverHost);
         kdcServer.setKdcTcpPort(serverPort);
         kdcServer.init();

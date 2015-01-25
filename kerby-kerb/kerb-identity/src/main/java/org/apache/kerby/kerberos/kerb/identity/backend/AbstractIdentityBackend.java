@@ -19,8 +19,22 @@
  */
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
+import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 
+/**
+ * Identity backend for KdcServer
+ */
 public abstract class AbstractIdentityBackend implements IdentityService {
 
+    // config prepared and passed by KdcServer to initialize the backend.
+    protected Config config;
+
+    public AbstractIdentityBackend() {
+
+    }
+
+    public AbstractIdentityBackend(Config config) {
+        this.config = config;
+    }
 }

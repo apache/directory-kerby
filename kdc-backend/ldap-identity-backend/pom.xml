@@ -27,9 +27,9 @@
   <description>Ldap identity backend</description>
 
   <properties>
-   <ldap.api.version>1.0.0-M28</ldap.api.version>
+    <ldap.api.version>1.0.0-M28</ldap.api.version>
   </properties>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>

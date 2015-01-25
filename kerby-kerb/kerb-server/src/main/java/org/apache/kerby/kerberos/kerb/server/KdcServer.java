@@ -163,7 +163,7 @@ public class KdcServer {
         eventHub.stop();
     }
 
-    public KdcConfig getConfig() {
+    public KdcConfig getKdcConfig() {
         return kdcConfig;
     }
 

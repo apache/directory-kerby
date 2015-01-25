@@ -17,25 +17,30 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.codec.pac;
+package org.apache.kerby.kerberos.kdc.server;
 
-public class PacSidAttributes {
+import org.apache.kerby.config.Config;
+import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
+import org.apache.kerby.kerberos.kerb.identity.IdentityService;
+import org.apache.kerby.kerberos.kerb.server.KdcServer;
 
-    private PacSid id;
-    private int attributes;
+/**
+ * The mentioned Kerby KDC server implementation
+ */
+public class KerbyKdcServer extends KdcServer {
 
-    public PacSidAttributes(PacSid id, int attributes) {
+    public KerbyKdcServer() {
         super();
-        this.id = id;
-        this.attributes = attributes;
     }
 
-    public PacSid getId() {
-        return id;
+    public void init() {
+        super.init();
+        initIdentityService();
     }
 
-    public int getAttributes() {
-        return attributes;
+    protected void initIdentityService() {
+        Config config = getKdcConfig().getBackendConfig();
+        IdentityService identityService = new LdapIdentityBackend(config);
+        setIdentityService(identityService);
     }
-
 }

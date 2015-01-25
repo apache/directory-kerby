@@ -19,24 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.codec.test;
 
-import org.apache.kerby.kerberos.kerb.codec.kerberos.AuthzDataUtil;
-import org.apache.kerby.kerberos.kerb.codec.kerberos.KerberosCredentials;
 import org.apache.kerby.kerberos.kerb.codec.kerberos.KerberosTicket;
 import org.apache.kerby.kerberos.kerb.codec.kerberos.KerberosToken;
-import org.apache.kerby.kerberos.kerb.codec.pac.Pac;
-import org.apache.kerby.kerberos.kerb.codec.pac.PacLogonInfo;
-import org.apache.kerby.kerberos.kerb.codec.pac.PacSid;
-import org.apache.kerby.kerberos.kerb.spec.common.AuthorizationData;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestKerberos {
 
@@ -44,12 +35,10 @@ public class TestKerberos {
     private byte[] desToken;
     private byte[] aes128Token;
     private byte[] aes256Token;
-    private byte[] corruptToken;
     private EncryptionKey rc4Key;
     private EncryptionKey desKey;
     private EncryptionKey aes128Key;
     private EncryptionKey aes256Key;
-    private EncryptionKey corruptKey;
 
     @Before
     public void setUp() throws IOException {
@@ -76,8 +65,6 @@ public class TestKerberos {
         file.read(aes256Token);
         file.close();
 
-        corruptToken = new byte[]{1, 2, 3, 4, 5, 6};
-
         file = this.getClass().getClassLoader().getResourceAsStream("rc4-key-data");
         keyData = new byte[file.available()];
         file.read(keyData);
@@ -101,8 +88,6 @@ public class TestKerberos {
         file.read(keyData);
         aes256Key = new EncryptionKey(18, keyData, 2);
         file.close();
-
-        corruptKey = new EncryptionKey(23, new byte[]{5, 4, 2, 1, 5, 4, 2, 1, 3}, 2);
     }
 
     @Test
@@ -168,57 +153,6 @@ public class TestKerberos {
     }
 
     @Test
-    public void testCorruptTicket() {
-        KerberosToken token = null;
-        try {
-            token = new KerberosToken(corruptToken, rc4Key);
-            Assert.fail("Should have thrown Exception.");
-        } catch(Exception e) {
-            Assert.assertNotNull(e);
-            Assert.assertNull(token);
-        }
-    }
-
-    @Test
-    public void testEmptyTicket() {
-        KerberosToken token = null;
-        try {
-            token = new KerberosToken(new byte[0], rc4Key);
-            Assert.fail("Should have thrown Exception.");
-        } catch(Exception e) {
-            Assert.assertNotNull(e);
-            Assert.assertNull(token);
-        }
-    }
-
-    @Test
-    public void testNullTicket() throws Exception {
-        KerberosToken token = null;
-        try {
-            token = new KerberosToken(null, rc4Key);
-            Assert.fail("Should have thrown NullPointerException.");
-        } catch(IOException e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        } catch(NullPointerException e) {
-            Assert.assertNotNull(e);
-            Assert.assertNull(token);
-        }
-    }
-
-    @Test
-    public void testCorruptKey() {
-        KerberosToken token = null;
-        try {
-            token = new KerberosToken(rc4Token, corruptKey);
-            Assert.fail("Should have thrown Exception.");
-        } catch(Exception e) {
-            Assert.assertNotNull(e);
-            Assert.assertNull(token);
-        }
-    }
-
-    @Test
     public void testNoMatchingKey() {
         KerberosToken token = null;
         try {
@@ -228,40 +162,5 @@ public class TestKerberos {
             Assert.assertNotNull(e);
             Assert.assertNull(token);
         }
-    }
-
-    @Test
-    public void testKerberosPac() throws Exception {
-        KerberosToken token = new KerberosToken(rc4Token, rc4Key);
-
-        Assert.assertNotNull(token);
-        Assert.assertNotNull(token.getApRequest());
-
-        KerberosTicket ticket = token.getApRequest().getTicket();
-        Assert.assertNotNull(ticket);
-
-        AuthorizationData authzData = ticket.getAuthorizationData();
-        Assert.assertNotNull(authzData);
-        Assert.assertTrue(authzData.getElements().size() > 0);
-
-        EncryptionType eType = ticket.getTicket().getEncPart().getKey().getKeyType();
-        Pac pac = AuthzDataUtil.getPac(authzData,
-                KerberosCredentials.getServerKey(eType).getKeyData());
-        Assert.assertNotNull(pac);
-
-        PacLogonInfo logonInfo = pac.getLogonInfo();
-        Assert.assertNotNull(logonInfo);
-
-        List<String> sids = new ArrayList<String>();
-        if(logonInfo.getGroupSid() != null)
-            sids.add(logonInfo.getGroupSid().toString());
-        for(PacSid pacSid : logonInfo.getGroupSids())
-            sids.add(pacSid.toString());
-        for(PacSid pacSid : logonInfo.getExtraSids())
-            sids.add(pacSid.toString());
-        for(PacSid pacSid : logonInfo.getResourceGroupSids())
-            sids.add(pacSid.toString());
-
-        Assert.assertEquals(ticket.getUserPrincipalName(), logonInfo.getUserName());
     }
 }

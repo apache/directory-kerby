@@ -47,13 +47,11 @@ public enum KdcConfigKey implements SectionConfigKey {
     RESTRICT_ANONYMOUS_TO_TGT(false, "kdcdefaults"),
     KDC_MAX_DGRAM_REPLY_SIZE(4096, "kdcdefaults"),
 
-    //logging location TODO the default log location need to be determinded.
+    //logging location
+    //TODO: the default log location need to be determinded.
     DEFAULT(null, "logging"),
     KDC(null, "logging"),
-    ADMIN_SERVER(null, "logging"),
-
-    //dbdefaults
-    LDAP_KERBEROS_CONTAINER_DN(null, "dbdefaults");
+    ADMIN_SERVER(null, "logging");
 
     private Object defaultValue;
     /**

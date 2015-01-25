@@ -48,10 +48,12 @@ public class TestKdcConfigLoad {
         Assert.assertTrue(krbConfig.isRestrictAnonymousToTgt());
         Assert.assertEquals(4096, krbConfig.getKdcMaxDgramReplySize());
 
+        /* will be moved to LdapLdentityBackend module
         String[] ldapContainerDn = krbConfig.getLdapKerberosContainerDn();
         Assert.assertEquals(3, ldapContainerDn.length);
         Assert.assertEquals("cn=krbcontainer", ldapContainerDn[0]);
         Assert.assertEquals("dc=mit", ldapContainerDn[1]);
         Assert.assertEquals("dc=edu", ldapContainerDn[2]);
+        */
     }
 }

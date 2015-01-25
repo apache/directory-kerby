@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import org.apache.directory.api.ldap.model.name.Dn;
 import org.apache.directory.ldap.client.api.LdapConnection;
+import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 
@@ -38,7 +39,16 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     private LdapConnection connection;
 
     private Dn baseDn;
-    
+
+    /**
+     * Constructing an instance using specified config that contains anything to be used
+     * to initialize an LdapConnection and necessary baseDn.
+     * @param config
+     */
+    public LdapIdentityBackend(Config config) {
+        super(config);
+    }
+
     public LdapIdentityBackend(LdapConnection connection, Dn baseDn) {
         super();
         this.connection = connection;

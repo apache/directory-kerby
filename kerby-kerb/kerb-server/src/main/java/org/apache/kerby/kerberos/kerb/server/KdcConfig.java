@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.config.Conf;
+import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.common.KrbConfHelper;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 
@@ -34,6 +35,14 @@ public class KdcConfig {
 
     public Conf getConf() {
         return this.conf;
+    }
+
+    /**
+     * Prepare and return backend config
+     * @return
+     */
+    public Config getBackendConfig() {
+        return conf.getConfig("IdentityBackend");
     }
 
     public boolean enableDebug() {
@@ -145,9 +154,5 @@ public class KdcConfig {
 
     public int getKdcMaxDgramReplySize() {
         return KrbConfHelper.getIntUnderSection(conf, KdcConfigKey.KDC_MAX_DGRAM_REPLY_SIZE);
-    }
-
-    public String[] getLdapKerberosContainerDn() {
-        return KrbConfHelper.getStringArrayUnderSection(conf, KdcConfigKey.LDAP_KERBEROS_CONTAINER_DN);
     }
 }
