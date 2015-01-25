@@ -26,6 +26,10 @@
   <name>Ldap identity backend</name>
   <description>Ldap identity backend</description>
 
+  <properties>
+   <ldap.api.version>1.0.0-M28</ldap.api.version>
+  </properties>
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>
@@ -36,6 +40,11 @@
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-identity</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.directory.api</groupId>
+      <artifactId>api-ldap-client-api</artifactId>
+      <version>${ldap.api.version}</version>
     </dependency>
   </dependencies>
 </project>

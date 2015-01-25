@@ -19,16 +19,30 @@
  */
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
+import org.apache.directory.api.ldap.model.name.Dn;
+import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 
 import java.util.List;
 
+/**
+ * An LDAP based backend implementation.
+ *
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ */
 public class LdapIdentityBackend extends AbstractIdentityBackend {
 
+    /** the connection to the LDAP server */
+    // in case of ApacheDS this will be an istance of LdapCoreSessionConnection
+    private LdapConnection connection;
 
-    public LdapIdentityBackend() {
+    private Dn baseDn;
+    
+    public LdapIdentityBackend(LdapConnection connection, Dn baseDn) {
         super();
+        this.connection = connection;
+        this.baseDn = baseDn;
     }
 
     /**
@@ -52,6 +66,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     public boolean checkIdentity(String name) {
+        
         return false;
     }
 
