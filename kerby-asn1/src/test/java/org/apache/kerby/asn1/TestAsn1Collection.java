@@ -23,10 +23,11 @@ import org.apache.kerby.asn1.type.AbstractAsn1Type;
 import org.apache.kerby.asn1.type.Asn1Boolean;
 import org.apache.kerby.asn1.type.Asn1IA5String;
 import org.apache.kerby.asn1.type.Asn1Sequence;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAsn1Collection {
     static String TEST_STR = "Jones";
@@ -42,7 +43,7 @@ public class TestAsn1Collection {
         seq.addItem(new Asn1IA5String(TEST_STR));
         seq.addItem(new Asn1Boolean(TEST_BOOL));
 
-        Assert.assertArrayEquals(EXPECTED_BYTES, seq.encode());
+        assertThat(seq.encode()).isEqualTo(EXPECTED_BYTES);
     }
 
     @Test
@@ -50,9 +51,9 @@ public class TestAsn1Collection {
         Asn1Sequence seq = new Asn1Sequence();
         seq.decode(EXPECTED_BYTES);
         AbstractAsn1Type field = (AbstractAsn1Type) seq.getValue().get(0).getValue();
-        Assert.assertEquals(TEST_STR, field.getValue());
+        assertThat(field.getValue()).isEqualTo(TEST_STR);
 
         field = (AbstractAsn1Type) seq.getValue().get(1).getValue();
-        Assert.assertEquals(TEST_BOOL, field.getValue());
+        assertThat(field.getValue()).isEqualTo(TEST_BOOL);
     }
 }

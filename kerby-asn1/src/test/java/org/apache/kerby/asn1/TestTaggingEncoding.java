@@ -21,10 +21,11 @@ package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.type.Asn1Tagging;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  Ref. X.690-0207 8.14 Encoding of a tagged value
@@ -125,34 +126,34 @@ public class TestTaggingEncoding {
         Type4 aType4 = new Type4(aType3);
         Type5 aType5 = new Type5(aType2);
 
-        Assert.assertArrayEquals(TYPE1_EXPECTED_BYTES, aType1.encode());
-        Assert.assertArrayEquals(TYPE2_EXPECTED_BYTES, aType2.encode());
-        Assert.assertArrayEquals(TYPE3_EXPECTED_BYTES, aType3.encode());
-        Assert.assertArrayEquals(TYPE4_EXPECTED_BYTES, aType4.encode());
-        Assert.assertArrayEquals(TYPE5_EXPECTED_BYTES, aType5.encode());
+        assertThat(aType1.encode()).isEqualTo(TYPE1_EXPECTED_BYTES);
+        assertThat(aType2.encode()).isEqualTo(TYPE2_EXPECTED_BYTES);
+        assertThat(aType3.encode()).isEqualTo(TYPE3_EXPECTED_BYTES);
+        assertThat(aType4.encode()).isEqualTo(TYPE4_EXPECTED_BYTES);
+        assertThat(aType5.encode()).isEqualTo(TYPE5_EXPECTED_BYTES);
     }
 
     @Test
     public void testAsn1TaggingDecoding() throws IOException {
         Type1 aType1 = new Type1();
         aType1.decode(TYPE1_EXPECTED_BYTES);
-        Assert.assertEquals(TEST_STRING, aType1.getValue());
+        assertThat(aType1.getValue()).isEqualTo(TEST_STRING);
 
         Type2 aType2 = new Type2();
         aType2.decode(TYPE2_EXPECTED_BYTES);
-        Assert.assertEquals(TEST_STRING, aType2.getValue().getValue());
+        assertThat(aType2.getValue().getValue()).isEqualTo(TEST_STRING);
 
         Type3 aType3 = new Type3();
         aType3.decode(TYPE3_EXPECTED_BYTES);
-        Assert.assertEquals(TEST_STRING, aType3.getValue().getValue().getValue());
+        assertThat(aType3.getValue().getValue().getValue()).isEqualTo(TEST_STRING);
 
         Type4 aType4 = new Type4();
         aType4.decode(TYPE4_EXPECTED_BYTES);
-        Assert.assertEquals(TEST_STRING, aType4.getValue().getValue().getValue().getValue());
+        assertThat(aType4.getValue().getValue().getValue().getValue()).isEqualTo(TEST_STRING);
 
         Type5 aType5 = new Type5();
         aType5.decode(TYPE5_EXPECTED_BYTES);
-        Assert.assertEquals(TEST_STRING, aType5.getValue().getValue().getValue());
+        assertThat(aType5.getValue().getValue().getValue()).isEqualTo(TEST_STRING);
     }
 
     @Test
@@ -163,41 +164,41 @@ public class TestTaggingEncoding {
         Type4 aType4 = new Type4(aType3);
         Type5 aType5 = new Type5(aType2);
 
-        Assert.assertArrayEquals(TYPE1_EXPECTED_BYTES, aType1.encode());
-        Assert.assertArrayEquals(TYPE2_EXPECTED_BYTES,
-                aType1.taggedEncode(TaggingOption.newImplicitAppSpecific(3))); // for Type2
-        Assert.assertArrayEquals(TYPE3_EXPECTED_BYTES,
-                aType2.taggedEncode(TaggingOption.newExplicitContextSpecific(2))); // for Type3
-        Assert.assertArrayEquals(TYPE4_EXPECTED_BYTES,
-                aType3.taggedEncode(TaggingOption.newImplicitAppSpecific(7))); // for Type4
-        Assert.assertArrayEquals(TYPE5_EXPECTED_BYTES,
-                aType2.taggedEncode(TaggingOption.newImplicitContextSpecific(2)));  // for Type5
+        assertThat(aType1.encode()).isEqualTo(TYPE1_EXPECTED_BYTES);
+        assertThat(TYPE2_EXPECTED_BYTES)
+                .isEqualTo(aType1.taggedEncode(TaggingOption.newImplicitAppSpecific(3)));// for Type2
+        assertThat(TYPE3_EXPECTED_BYTES)
+                .isEqualTo(aType2.taggedEncode(TaggingOption.newExplicitContextSpecific(2)));// for Type3
+        assertThat(TYPE4_EXPECTED_BYTES)
+                .isEqualTo(aType3.taggedEncode(TaggingOption.newImplicitAppSpecific(7)));// for Type4
+        assertThat(TYPE5_EXPECTED_BYTES)
+                .isEqualTo(aType2.taggedEncode(TaggingOption.newImplicitContextSpecific(2)));// for Type5
     }
 
     @Test
     public void testTaggingDecodingOption() throws IOException {
         Type1 aType1 = new Type1();
         aType1.decode(TYPE1_EXPECTED_BYTES);
-        Assert.assertEquals(TEST_STRING, aType1.getValue());
+        assertThat(aType1.getValue()).isEqualTo(TEST_STRING);
 
         // for Type2
         aType1 = new Type1();
         aType1.taggedDecode(TYPE2_EXPECTED_BYTES, TaggingOption.newImplicitAppSpecific(3));
-        Assert.assertEquals(TEST_STRING, aType1.getValue());
+        assertThat(aType1.getValue()).isEqualTo(TEST_STRING);
 
         // for Type3
         Type2 aType2 = new Type2();
         aType2.taggedDecode(TYPE3_EXPECTED_BYTES, TaggingOption.newExplicitContextSpecific(2));
-        Assert.assertEquals(TEST_STRING, aType2.getValue().getValue());
+        assertThat(aType2.getValue().getValue()).isEqualTo(TEST_STRING);
 
         // for Type4
         Type3 aType3 = new Type3();
         aType3.taggedDecode(TYPE4_EXPECTED_BYTES, TaggingOption.newImplicitAppSpecific(7));
-        Assert.assertEquals(TEST_STRING, aType3.getValue().getValue().getValue());
+        assertThat(aType3.getValue().getValue().getValue()).isEqualTo(TEST_STRING);
 
         // for Type5
         aType2 = new Type2();
         aType2.taggedDecode(TYPE5_EXPECTED_BYTES, TaggingOption.newImplicitContextSpecific(2));
-        Assert.assertEquals(TEST_STRING, aType2.getValue().getValue());
+        assertThat(aType2.getValue().getValue()).isEqualTo(TEST_STRING);
     }
 }

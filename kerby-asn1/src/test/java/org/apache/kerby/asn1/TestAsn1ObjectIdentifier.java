@@ -20,10 +20,11 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAsn1ObjectIdentifier {
 
@@ -46,7 +47,7 @@ public class TestAsn1ObjectIdentifier {
         Asn1ObjectIdentifier aValue = new Asn1ObjectIdentifier(oid);
         aValue.setEncodingOption(EncodingOption.DER);
         byte[] encodingBytes = aValue.encode();
-        Assert.assertArrayEquals(expected, encodingBytes);
+        assertThat(encodingBytes).isEqualTo(expected);
     }
 
     @Test
@@ -59,6 +60,6 @@ public class TestAsn1ObjectIdentifier {
         Asn1ObjectIdentifier decoded = new Asn1ObjectIdentifier();
         decoded.setEncodingOption(EncodingOption.DER);
         decoded.decode(Util.hex2bytes(content));
-        Assert.assertEquals(expectedValue, decoded.getValue());
+        assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }
 }

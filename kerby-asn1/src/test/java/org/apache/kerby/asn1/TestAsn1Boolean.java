@@ -20,10 +20,11 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.type.Asn1Boolean;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAsn1Boolean {
 
@@ -38,7 +39,7 @@ public class TestAsn1Boolean {
         Asn1Boolean aValue = new Asn1Boolean(value);
         aValue.setEncodingOption(EncodingOption.DER);
         byte[] encodingBytes = aValue.encode();
-        Assert.assertArrayEquals(expected, encodingBytes);
+        assertThat(encodingBytes).isEqualTo(expected);
     }
 
     @Test
@@ -51,6 +52,6 @@ public class TestAsn1Boolean {
         Asn1Boolean decoded = new Asn1Boolean();
         decoded.setEncodingOption(EncodingOption.DER);
         decoded.decode(Util.hex2bytes(content));
-        Assert.assertEquals(expectedValue, decoded.getValue());
+        assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }
 }

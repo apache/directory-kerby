@@ -20,13 +20,14 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.type.Asn1UtcTime;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SimpleTimeZone;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAsn1UtcTime {
 
@@ -49,7 +50,7 @@ public class TestAsn1UtcTime {
         Asn1UtcTime aValue = new Asn1UtcTime(value);
         aValue.setEncodingOption(EncodingOption.DER);
         byte[] encodingBytes = aValue.encode();
-        Assert.assertArrayEquals(expected, encodingBytes);
+        assertThat(encodingBytes).isEqualTo(expected);
     }
 
     @Test
@@ -65,6 +66,6 @@ public class TestAsn1UtcTime {
         Asn1UtcTime decoded = new Asn1UtcTime();
         decoded.setEncodingOption(EncodingOption.DER);
         decoded.decode(Util.hex2bytes(content));
-        Assert.assertEquals(expectedValue, decoded.getValue());
+        assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }
 }

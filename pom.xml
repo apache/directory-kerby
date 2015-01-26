@@ -28,6 +28,7 @@
   <properties>
     <junit.version>4.12</junit.version>
     <slf4j.version>1.7.10</slf4j.version>
+    <assertj.version>1.7.1</assertj.version>
   </properties>
 
   <prerequisites>
@@ -52,6 +53,13 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>
