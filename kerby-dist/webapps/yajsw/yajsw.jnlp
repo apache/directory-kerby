@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://yajsw.sourceforge.net/yajsw" href="">
+    <information>
+    <title>yajsw</title>
+    <vendor>yajsw</vendor>
+    <description>yajsw</description>
+    </information>
+    <resources>
+        <!-- Application Resources -->
+        <j2se version="1.5+" href="http://java.sun.com/products/autodl/j2se"/>
+        <jar href="wrapperWS.jar" main="true" />
+    </resources>
+    <application-desc
+         name="yajsw"
+         main-class="org.rzo.yajsw.ws.WebStartBooter"
+         width="300"
+         height="300">
+     <argument>http://downloads.sourceforge.net/project/yajsw/yajsw/yajsw-beta-10.3/yajsw-beta-10.3.zip</argument>
+     <argument>yajswWebstartDemo</argument>
+     <argument>-ity</argument>
+     <argument>http://yajsw.sourceforge.net/yajsw/wrapper.conf</argument>
+     </application-desc>
+     <update check="background"/>
+     <security>
+   		<all-permissions/>
+		</security> 
+
+</jnlp>		

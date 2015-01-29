@@ -77,6 +77,27 @@ public class KdcServer {
         started = true;
     }
 
+    private static KdcServer server;
+
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            //FIXME host and config should be loaded from configuration.
+            String serverHost = "localhost";
+            short serverPort = 8087;
+
+            server = new KdcServer();
+            server.setKdcHost(serverHost);
+            server.setKdcTcpPort(serverPort);
+            server.init();
+            server.start();
+            System.out.println("KDC Server started.");
+        } else if (args[0].equals("stop")){
+            System.out.println("server is null? " + (server == null));
+//            server.stop();//FIXME can't get the server instance here
+            System.out.println("KDC Server stoped.");
+        }
+    }
+
     public String getKdcRealm() {
         if (kdcRealm != null) {
             return kdcRealm;

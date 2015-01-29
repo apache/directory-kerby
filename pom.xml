@@ -29,6 +29,8 @@
     <junit.version>4.12</junit.version>
     <slf4j.version>1.7.10</slf4j.version>
     <assertj.version>1.7.1</assertj.version>
+    <dependency.directory>target/dependences</dependency.directory>
+    <server.dist.directory>kerby-dist/kerby-server</server.dist.directory>
   </properties>
 
   <prerequisites>
@@ -116,17 +118,18 @@
               <exclude>**/*.log</exclude>
               <!-- 3RD_PARTY_EXCLUDES -->
               <exclude>3rdparty/**/*</exclude>
+              <exclude>kerby-dist/**/*</exclude>
               <!-- BMP_IMAGES_EXCLUDES -->
               <exclude>**/*.bmp</exclude>
             </excludes>
           </configuration>
-        </plugin>  
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>2.5</version>
         </plugin>
-        
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
@@ -162,11 +165,40 @@
           <version>2.8.2</version>
           <inherited>true</inherited>
         </plugin>
-    
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
           <version>2.6.1</version>
+        </plugin>
+
+        <plugin>
+          <!--installation-->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <inherited>false</inherited>
+          <version>1.8</version>
+          <executions>
+            <execution>
+              <id>default-cli</id>
+              <phase>package</phase>
+              <configuration>
+                <tasks>
+                  <!--copy libs about kerby-server to dist directory-->
+                  <copy todir="${server.dist.directory}">
+                    <fileset dir="kerby-kerb/kerb-server/${dependency.directory}">
+                      <include name="*" />
+                    </fileset>
+                  </copy>
+                  <copy file="kerby-kerb/kerb-server/target/kerb-server-${project.version}.jar"
+                        tofile="${server.dist.directory}/kerb-server-${project.version}.jar"/>
+                </tasks>
+              </configuration>
+              <goals>
+                <goal>run</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -191,4 +223,35 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+        <id>dependency</id>
+        <!-- Profile for generating dependent jars preparing for installation. -->
+        <!-- For installation, call mvn antrun:run. -->
+        <build>
+            <plugins>
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                  <execution>
+                    <id>copy-dependencies</id>
+                    <phase>package</phase>
+                    <goals>
+                      <goal>copy-dependencies</goal>
+                    </goals>
+                    <configuration>
+                      <outputDirectory>${dependency.directory}</outputDirectory>
+                      <overWriteReleases>false</overWriteReleases>
+                      <overWriteSnapshots>false</overWriteSnapshots>
+                      <overWriteIfNewer>true</overWriteIfNewer>
+                    </configuration>
+                  </execution>
+                </executions>
+              </plugin>
+            </plugins>
+        </build>
+    </profile>
+  </profiles>
 </project>
