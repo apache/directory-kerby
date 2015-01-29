@@ -19,49 +19,95 @@
  */
 package org.apache.kerby.asn1;
 
-public class TaggingOption
-{
+/**
+ * Tagging option for tagging an ASN1 type.
+ */
+public class TaggingOption {
     private int tagNo;
     private boolean isImplicit;
     private boolean isAppSpecific;
 
+    /**
+     * Create an implicit application specific tagging option with tagNo.
+     * @param tagNo
+     * @return tagging option
+     */
     public static TaggingOption newImplicitAppSpecific(int tagNo) {
         return new TaggingOption(tagNo, true, true);
     }
 
+    /**
+     * Create an explicit application specific tagging option with tagNo.
+     * @param tagNo
+     * @return tagging option
+     */
     public static TaggingOption newExplicitAppSpecific(int tagNo) {
         return new TaggingOption(tagNo, false, true);
     }
 
+    /**
+     * Create an implicit context specific tagging option with tagNo.
+     * @param tagNo
+     * @return tagging option
+     */
     public static TaggingOption newImplicitContextSpecific(int tagNo) {
         return new TaggingOption(tagNo, true, false);
     }
 
+    /**
+     * Create an explicit context specific tagging option with tagNo.
+     * @param tagNo
+     * @return tagging option
+     */
     public static TaggingOption newExplicitContextSpecific(int tagNo) {
         return new TaggingOption(tagNo, false, false);
     }
 
+    /**
+     * The private constructor.
+     * @param tagNo
+     * @param isImplicit
+     * @param isAppSpecific
+     */
     private TaggingOption(int tagNo, boolean isImplicit, boolean isAppSpecific) {
         this.tagNo = tagNo;
         this.isImplicit = isImplicit;
         this.isAppSpecific = isAppSpecific;
     }
 
+    /**
+     * Make tag flags giving it's tagged constructed.
+     * @param isTaggedConstructed
+     * @return tag flag
+     */
     public int tagFlags(boolean isTaggedConstructed) {
         boolean isConstructed = isImplicit ? isTaggedConstructed : true;
         TagClass tagClass = isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC;
         int flags = tagClass.getValue() | (isConstructed ? EncodingOption.CONSTRUCTED_FLAG : 0x00);
+
         return flags;
     }
 
+    /**
+     * Get the tag number.
+     * @return tag number
+     */
     public int getTagNo() {
         return tagNo;
     }
 
+    /**
+     * Tell it's application specific or not.
+     * @return true if it's application specific otherwise false
+     */
     public boolean isAppSpecific() {
         return isAppSpecific;
     }
 
+    /**
+     * Tell it's implicit or not.
+     * @return true if it's implicit otherwise false
+     */
     public boolean isImplicit() {
         return isImplicit;
     }
