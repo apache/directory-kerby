@@ -19,8 +19,9 @@
  */
 package org.apache.kerby.config;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * The test is on ConfigImpl level.
@@ -46,17 +47,17 @@ public class ConfigImplTest {
         rootConfig.set("logging", sectionB);
         sectionB.set("kdc", "FILE:/var/log/krb5kdc.log");
 
-        Assert.assertEquals("true", rootConfig.getString("globalConfig"));
-        Assert.assertNull(rootConfig.getString("default_realm"));//section config should not get the global value
+        assertThat(rootConfig.getString("globalConfig")).isEqualTo("true");
+        assertThat(rootConfig.getString("default_realm")).isNull();//section config should not get the global value
 
         Config subA = rootConfig.getConfig("libdefaults");
-        Assert.assertEquals("EXAMPLE.COM", subA.getString("default_realm"));
-        Assert.assertNull(subA.getString("globalConfig"));
-        Assert.assertNull(subA.getString("kdc"));
+        assertThat(subA.getString("default_realm")).isEqualTo("EXAMPLE.COM");
+        assertThat(subA.getString("globalConfig")).isNull();
+        assertThat(subA.getString("kdc")).isNull();
 
         Config subB = rootConfig.getConfig("logging");
-        Assert.assertEquals("FILE:/var/log/krb5kdc.log", subB.getString("kdc"));
-        Assert.assertNull(subB.getString("globalConfig"));
-        Assert.assertNull(subB.getBoolean("forwardable"));
+        assertThat(subB.getString("kdc")).isEqualTo("FILE:/var/log/krb5kdc.log");
+        assertThat(subB.getString("globalConfig")).isNull();
+        assertThat(subB.getBoolean("forwardable")).isNull();
     }
 }

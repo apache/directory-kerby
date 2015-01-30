@@ -19,13 +19,14 @@
  */
 package org.apache.kerby.config;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class IniConfigTest {
 
@@ -62,15 +63,15 @@ public class IniConfigTest {
         Conf conf = new Conf();
         conf.addIniConfig(TEST_FILE);
 
-        Assert.assertEquals("FILE:/var/log/krb5libs.log", conf.getString("default"));
-        Assert.assertNull(conf.getString("#note"));//Comments should be ignored when loading.
+        assertThat(conf.getString("default")).isEqualTo("FILE:/var/log/krb5libs.log");
+        assertThat(conf.getString("#note")).isNull();//Comments should be ignored when loading.
 
         Config config = conf.getConfig("libdefaults");
-        Assert.assertFalse(config.getBoolean("dns_lookup_realm"));
-        Assert.assertTrue(config.getBoolean("forwardable"));
+        assertThat(config.getBoolean("dns_lookup_realm")).isFalse();
+        assertThat(config.getBoolean("forwardable")).isTrue();
 
         Config config1 = conf.getConfig("lib1");
-        Assert.assertTrue(config1.getBoolean("dns_lookup_realm"));
+        assertThat(config1.getBoolean("dns_lookup_realm")).isTrue();
     }
 
 }

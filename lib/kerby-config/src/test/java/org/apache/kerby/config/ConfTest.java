@@ -19,12 +19,13 @@
  */
 package org.apache.kerby.config;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * The test is base on the Conf level.
@@ -44,9 +45,9 @@ public class ConfTest {
 
         Conf conf = new Conf();
         conf.addMapConfig(mapConfig);
-        Assert.assertEquals(strProp, conf.getString("strProp"));
-        Assert.assertEquals(intProp, conf.getInt("intProp"));
-        Assert.assertEquals(boolProp, conf.getBoolean("boolProp"));
+        assertThat(conf.getString("strProp")).isEqualTo(strProp);
+        assertThat(conf.getInt("intProp")).isEqualTo(intProp);
+        assertThat(conf.getBoolean("boolProp")).isEqualTo(boolProp);
     }
 
     @Test
@@ -61,9 +62,9 @@ public class ConfTest {
 
         Conf conf = new Conf();
         conf.addPropertiesConfig(properties);
-        Assert.assertEquals(strProp, conf.getString("strProp"));
-        Assert.assertEquals(intProp, conf.getInt("intProp"));
-        Assert.assertEquals(boolProp, conf.getBoolean("boolProp"));
+        assertThat(conf.getString("strProp")).isEqualTo(strProp);
+        assertThat(conf.getInt("intProp")).isEqualTo(intProp);
+        assertThat(conf.getBoolean("boolProp")).isEqualTo(boolProp);
     }
 
     /**
@@ -86,11 +87,11 @@ public class ConfTest {
         Conf conf = new Conf();
         conf.addMapConfig(mapConfig);
         conf.addPropertiesConfig(properties);
-        Assert.assertNull(conf.getConfig("mapConfig"));
-        Assert.assertEquals(mapStrProp, conf.getString("mapStrProp"));
-        Assert.assertEquals(propertiesStrProp, conf.getString("propertiesStrProp"));
-        Assert.assertEquals(intProp, conf.getInt("intProp"));
-        Assert.assertEquals(boolProp, conf.getBoolean("boolProp"));
+        assertThat(conf.getConfig("mapConfig")).isNull();
+        assertThat(conf.getString("mapStrProp")).isEqualTo(mapStrProp);
+        assertThat(conf.getString("propertiesStrProp")).isEqualTo(propertiesStrProp);
+        assertThat(conf.getInt("intProp")).isEqualTo(intProp);
+        assertThat(conf.getBoolean("boolProp")).isEqualTo(boolProp);
     }
 
     static enum TestConfKey implements ConfigKey {
@@ -118,14 +119,13 @@ public class ConfTest {
     @Test
     public void testConfKey() {
         Conf conf = new Conf();
-        Assert.assertEquals(conf.getString(TestConfKey.ADDRESS),
-                TestConfKey.ADDRESS.getDefaultValue());
+        assertThat(conf.getString(TestConfKey.ADDRESS)).isEqualTo(TestConfKey.ADDRESS.getDefaultValue());
         Map<String, String> mapConfig = new HashMap<String, String>();
         String myAddress = "www.google.com";
         mapConfig.put(TestConfKey.ADDRESS.getPropertyKey(), myAddress);
         conf.addMapConfig(mapConfig);
-        Assert.assertEquals(myAddress, conf.getString(TestConfKey.ADDRESS));
-        Assert.assertEquals(TestConfKey.PORT.getDefaultValue(), conf.getInt(TestConfKey.PORT));
-        Assert.assertEquals(TestConfKey.ENABLE.getDefaultValue(), conf.getBoolean(TestConfKey.ENABLE));
+        assertThat(conf.getString(TestConfKey.ADDRESS)).isEqualTo(myAddress);
+        assertThat(conf.getInt(TestConfKey.PORT)).isEqualTo(TestConfKey.PORT.getDefaultValue());
+        assertThat(conf.getBoolean(TestConfKey.ENABLE)).isEqualTo(TestConfKey.ENABLE.getDefaultValue());
     }
 }

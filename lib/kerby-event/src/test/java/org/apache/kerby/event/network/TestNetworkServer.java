@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.event.network;
 
-import junit.framework.Assert;
 import org.apache.kerby.event.EventHandler;
 import org.apache.kerby.event.EventHub;
 import org.apache.kerby.transport.MessageHandler;
@@ -36,6 +35,8 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SocketChannel;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestNetworkServer extends TestNetworkBase {
 
@@ -86,7 +87,7 @@ public class TestNetworkServer extends TestNetworkBase {
         socketChannel.read(byteBuffer);
         byteBuffer.flip();
         clientRecvedMessage = recvBuffer2String(byteBuffer);
-        Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
+        assertThat(clientRecvedMessage).isEqualTo(TEST_MESSAGE);
     }
 
     private void testUdpTransport() throws IOException, InterruptedException {
@@ -100,7 +101,7 @@ public class TestNetworkServer extends TestNetworkBase {
         socketChannel.receive(byteBuffer);
         byteBuffer.flip();
         clientRecvedMessage = recvBuffer2String(byteBuffer);
-        Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
+        assertThat(clientRecvedMessage).isEqualTo(TEST_MESSAGE);
     }
 
     @After

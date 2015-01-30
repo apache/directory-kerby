@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.event.tcp;
 
-import junit.framework.Assert;
 import org.apache.kerby.event.EventHandler;
 import org.apache.kerby.event.EventHub;
 import org.apache.kerby.transport.Acceptor;
@@ -36,6 +35,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestTcpServer extends TestTcpBase {
 
@@ -80,7 +81,7 @@ public class TestTcpServer extends TestTcpBase {
         byteBuffer.flip();
         clientRecvedMessage = recvBuffer2String(byteBuffer);
 
-        Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
+        assertThat(clientRecvedMessage).isEqualTo(TEST_MESSAGE);
     }
 
     @After

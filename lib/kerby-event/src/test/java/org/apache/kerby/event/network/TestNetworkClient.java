@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.event.network;
 
-import junit.framework.Assert;
 import org.apache.kerby.event.Event;
 import org.apache.kerby.event.EventHandler;
 import org.apache.kerby.event.EventHub;
@@ -42,6 +41,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestNetworkClient extends TestNetworkBase {
 
@@ -196,13 +197,13 @@ public class TestNetworkClient extends TestNetworkBase {
         Transport transport = ((TransportEvent) event).getTransport();
         transport.sendMessage(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
         event = eventWaiter.waitEvent(TestEventType.FINISHED);
-        Assert.assertTrue((Boolean) event.getEventData());
+        assertThat((Boolean) event.getEventData()).isTrue();
 
         event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
         transport = ((TransportEvent) event).getTransport();
         transport.sendMessage(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
         event = eventWaiter.waitEvent(TestEventType.FINISHED);
-        Assert.assertTrue((Boolean) event.getEventData());
+        assertThat((Boolean) event.getEventData()).isTrue();
     }
 
     @After
