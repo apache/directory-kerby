@@ -25,7 +25,6 @@ import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -36,6 +35,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.SimpleTimeZone;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test AsReq message using a real 'correct' network packet captured from MS-AD to detective programming errors
@@ -51,49 +52,49 @@ public class TestAsReqCodec {
         AsReq asReq = new AsReq();
         asReq.decode(asReqToken);
 
-        Assert.assertEquals(5, asReq.getPvno());
-        Assert.assertEquals(KrbMessageType.AS_REQ, asReq.getMsgType());
+        assertThat(asReq.getPvno()).isEqualTo(5);
+        assertThat(asReq.getMsgType()).isEqualTo(KrbMessageType.AS_REQ);
 
         PaData paData = asReq.getPaData();
         PaDataEntry encTimestampEntry = paData.findEntry(PaDataType.ENC_TIMESTAMP);
-        Assert.assertEquals(PaDataType.ENC_TIMESTAMP, encTimestampEntry.getPaDataType());
-        Assert.assertArrayEquals(Arrays.copyOfRange(bytes, 33, 96), encTimestampEntry.getPaDataValue());
+        assertThat(encTimestampEntry.getPaDataType()).isEqualTo(PaDataType.ENC_TIMESTAMP);
+        assertThat(encTimestampEntry.getPaDataValue()).isEqualTo(Arrays.copyOfRange(bytes, 33, 96));
         PaDataEntry pacRequestEntry = paData.findEntry(PaDataType.PAC_REQUEST);
-        Assert.assertEquals(PaDataType.PAC_REQUEST, pacRequestEntry.getPaDataType());
-        Assert.assertArrayEquals(Arrays.copyOfRange(bytes, 108, 115), pacRequestEntry.getPaDataValue());
+        assertThat(pacRequestEntry.getPaDataType()).isEqualTo(PaDataType.PAC_REQUEST);
+        assertThat(pacRequestEntry.getPaDataValue()).isEqualTo(Arrays.copyOfRange(bytes, 108, 115));
 
         KdcReqBody body = asReq.getReqBody();
-        Assert.assertEquals(0, body.getKdcOptions().getPadding());
-        Assert.assertArrayEquals(Arrays.copyOfRange(bytes, 126, 130), body.getKdcOptions().getValue());
+        assertThat(body.getKdcOptions().getPadding()).isEqualTo(0);
+        assertThat(body.getKdcOptions().getValue()).isEqualTo(Arrays.copyOfRange(bytes, 126, 130));
         PrincipalName cName = body.getCname();
-        Assert.assertEquals(NameType.NT_PRINCIPAL, cName.getNameType());
-        Assert.assertEquals("des", cName.getName());
-        Assert.assertEquals("DENYDC", body.getRealm());
+        assertThat(cName.getNameType()).isEqualTo(NameType.NT_PRINCIPAL);
+        assertThat(cName.getName()).isEqualTo("des");
+        assertThat(body.getRealm()).isEqualTo("DENYDC");
         PrincipalName sName = body.getSname();
-        Assert.assertEquals(NameType.NT_SRV_INST, sName.getNameType());
-        Assert.assertEquals(2, sName.getNameStrings().size());
-        Assert.assertEquals("krbtgt", sName.getNameStrings().get(0));
-        Assert.assertEquals("DENYDC", sName.getNameStrings().get(1));
+        assertThat(sName.getNameType()).isEqualTo(NameType.NT_SRV_INST);
+        assertThat(sName.getNameStrings()).hasSize(2)
+                .contains("krbtgt", "DENYDC");
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
         Date date = sdf.parse("20370913024805");
-        Assert.assertEquals(date.getTime(), body.getTill().getTime());
-        Assert.assertEquals(date.getTime(), body.getRtime().getTime());
+        assertThat(body.getTill().getTime()).isEqualTo(date.getTime());
+        assertThat(body.getRtime().getTime()).isEqualTo(date.getTime());
 
-        Assert.assertEquals(197451134, body.getNonce());
+        assertThat(body.getNonce()).isEqualTo(197451134);
 
         List<EncryptionType> types = body.getEtypes();
-        Assert.assertEquals(0x0017, types.get(0).getValue());
-        //Assert.assertEquals(0xff7b, types.get(1).getValue());//FIXME
-        //Assert.assertEquals(0x0080, types.get(2).getValue());//FIXME
-        Assert.assertEquals(0x0003, types.get(3).getValue());
-        Assert.assertEquals(0x0001, types.get(4).getValue());
-        Assert.assertEquals(0x0018, types.get(5).getValue());
-        //Assert.assertEquals(0xff79, types.get(6).getValue());//FIXME
+        assertThat(types).hasSize(7);
+        assertThat(types.get(0).getValue()).isEqualTo(0x0017);
+        //assertThat(types.get(1).getValue()).isEqualTo(0xff7b);//FIXME
+        //assertThat(types.get(2).getValue()).isEqualTo(0x0080);//FIXME
+        assertThat(types.get(3).getValue()).isEqualTo(0x0003);
+        assertThat(types.get(4).getValue()).isEqualTo(0x0001);
+        assertThat(types.get(5).getValue()).isEqualTo(0x0018);
+        //assertThat(types.get(6).getValue()).isEqualTo(0xff79);//FIXME
 
         List<HostAddress> hostAddress = body.getAddresses().getElements();
-        Assert.assertEquals(1, hostAddress.size());
-        Assert.assertEquals(HostAddrType.ADDRTYPE_NETBIOS, hostAddress.get(0).getAddrType());
+        assertThat(hostAddress).hasSize(1);
+        assertThat(hostAddress.get(0).getAddrType()).isEqualTo(HostAddrType.ADDRTYPE_NETBIOS);
     }
 }

@@ -23,7 +23,8 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.token.KerbToken;
-import org.junit.Assert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class WithTokenKdcTest extends KdcTestBase {
 
@@ -38,19 +39,19 @@ public class WithTokenKdcTest extends KdcTestBase {
     //@Test
     public void testKdc() throws Exception {
         kdcServer.start();
-        Assert.assertTrue(kdcServer.isStarted());
+        assertThat(kdcServer.isStarted()).isTrue();
         krbClnt.init();
 
         TgtTicket tgt = null;
         try {
             tgt = krbClnt.requestTgtTicket(clientPrincipal, token, null);
         } catch (KrbException te) {
-            Assert.assertTrue(te.getMessage().contains("timeout"));
+            assertThat(te.getMessage().contains("timeout")).isTrue();
             return;
         }
-        Assert.assertNull(tgt);
+        assertThat(tgt).isNull();
 
         ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal, null);
-        Assert.assertNull(tkt);
+        assertThat(tkt).isNull();
     }
 }

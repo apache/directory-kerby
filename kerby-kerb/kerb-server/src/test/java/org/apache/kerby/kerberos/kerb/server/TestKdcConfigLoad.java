@@ -20,13 +20,14 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.config.Conf;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestKdcConfigLoad {
 
@@ -39,21 +40,21 @@ public class TestKdcConfigLoad {
         Conf conf = krbConfig.getConf();
         conf.addIniConfig(confFile);
 
-        Assert.assertEquals("FILE:/var/log/krb5libs.log", krbConfig.getDefaultLoggingLocation());
-        Assert.assertEquals("FILE:/var/log/krb5kdc.log", krbConfig.getKdcLoggingLocation());
-        Assert.assertEquals("FILE:/var/log/kadmind.log", krbConfig.getAdminLoggingLocation());
+        assertThat(krbConfig.getDefaultLoggingLocation()).isEqualTo("FILE:/var/log/krb5libs.log");
+        assertThat(krbConfig.getKdcLoggingLocation()).isEqualTo("FILE:/var/log/krb5kdc.log");
+        assertThat(krbConfig.getAdminLoggingLocation()).isEqualTo("FILE:/var/log/kadmind.log");
 
-        Assert.assertEquals(88, krbConfig.getKdcUdpPort());
-        Assert.assertEquals(8014, krbConfig.getKdcTcpPort());
-        Assert.assertTrue(krbConfig.isRestrictAnonymousToTgt());
-        Assert.assertEquals(4096, krbConfig.getKdcMaxDgramReplySize());
+        assertThat(krbConfig.getKdcUdpPort()).isEqualTo(88);
+        assertThat(krbConfig.getKdcTcpPort()).isEqualTo(8014);
+        assertThat(krbConfig.isRestrictAnonymousToTgt()).isTrue();
+        assertThat(krbConfig.getKdcMaxDgramReplySize()).isEqualTo(4096);
 
         /* will be moved to LdapLdentityBackend module
         String[] ldapContainerDn = krbConfig.getLdapKerberosContainerDn();
-        Assert.assertEquals(3, ldapContainerDn.length);
-        Assert.assertEquals("cn=krbcontainer", ldapContainerDn[0]);
-        Assert.assertEquals("dc=mit", ldapContainerDn[1]);
-        Assert.assertEquals("dc=edu", ldapContainerDn[2]);
+        assertThat(ldapContainerDn.length).isEqualTo(3);
+        assertThat(ldapContainerDn[0]).isEqualTo("cn=krbcontainer");
+        assertThat(ldapContainerDn[1]).isEqualTo("dc=mit");
+        assertThat(ldapContainerDn[2]).isEqualTo("dc=edu");
         */
     }
 }

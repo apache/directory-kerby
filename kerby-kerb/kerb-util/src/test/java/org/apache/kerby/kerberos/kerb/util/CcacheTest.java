@@ -21,12 +21,13 @@ package org.apache.kerby.kerberos.kerb.util;
 
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /*
 Default principal: drankye@SH.INTEL.COM
@@ -48,10 +49,10 @@ public class CcacheTest {
 
     @Test
     public void testCc() {
-        Assert.assertNotNull(cc);
+        assertThat(cc).isNotNull();
 
         PrincipalName princ = cc.getPrimaryPrincipal();
-        Assert.assertNotNull(princ);
-        Assert.assertTrue(princ.getName().equals("drankye@SH.INTEL.COM"));
+        assertThat(princ).isNotNull();
+        assertThat(princ.getName().equals("drankye@SH.INTEL.COM")).isTrue();
     }
 }

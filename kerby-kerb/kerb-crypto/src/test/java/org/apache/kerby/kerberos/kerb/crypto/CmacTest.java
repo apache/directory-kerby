@@ -23,8 +23,9 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia128Provider;
 import org.apache.kerby.util.HexUtil;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CmacTest {
 
@@ -68,18 +69,18 @@ public class CmacTest {
 
         // test 1
         result = Cmac.cmac(encProvider, key, input, 0, 0);
-        Assert.assertArrayEquals("Test 1", HexUtil.hex2bytes(cmac1), result);
+        assertThat(result).as("Test 1").isEqualTo(HexUtil.hex2bytes(cmac1));
 
         // test 2
         result = Cmac.cmac(encProvider, key, input, 0, 16);
-        Assert.assertArrayEquals("Test 2", HexUtil.hex2bytes(cmac2), result);
+        assertThat(result).as("Test 2").isEqualTo(HexUtil.hex2bytes(cmac2));
 
         // test 3
         result = Cmac.cmac(encProvider, key, input, 0, 40);
-        Assert.assertArrayEquals("Test 3", HexUtil.hex2bytes(cmac3), result);
+        assertThat(result).as("Test 3").isEqualTo(HexUtil.hex2bytes(cmac3));
 
         // test 4
         result = Cmac.cmac(encProvider, key, input, 0, 64);
-        Assert.assertArrayEquals("Test 4", HexUtil.hex2bytes(cmac4), result);
+        assertThat(result).as("Test 4").isEqualTo(HexUtil.hex2bytes(cmac4));
     }
 }

@@ -23,10 +23,9 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.codec.KrbCodec;
 import org.apache.kerby.kerberos.kerb.spec.common.CheckSum;
 import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodecTest {
 
@@ -36,11 +35,11 @@ public class CodecTest {
         mcs.setCksumtype(CheckSumType.CRC32);
         mcs.setChecksum(new byte[] {0x10});
         byte[] bytes = KrbCodec.encode(mcs);
-        Assert.assertNotNull(bytes);
+        assertThat(bytes).isNotNull();
 
         CheckSum restored = KrbCodec.decode(bytes, CheckSum.class);
-        Assert.assertNotNull(restored);
-        Assert.assertEquals(mcs.getCksumtype(), restored.getCksumtype());
-        Assert.assertTrue(Arrays.equals(mcs.getChecksum(), restored.getChecksum()));
+        assertThat(restored).isNotNull();
+        assertThat(restored.getCksumtype()).isEqualTo(mcs.getCksumtype());
+        assertThat(mcs.getChecksum()).isEqualTo(restored.getChecksum());
     }
 }

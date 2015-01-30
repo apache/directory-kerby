@@ -23,13 +23,14 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.pki.Pkix;
-import org.junit.Assert;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  openssl genrsa -out cakey.pem 2048
@@ -60,23 +61,23 @@ public class WithCertKdcTest extends KdcTestBase {
 
     //@Test
     public void testKdc() throws Exception {
-        Assert.assertNotNull(userCert);
+        assertThat(userCert).isNotNull();
 
         kdcServer.start();
-        Assert.assertTrue(kdcServer.isStarted());
+        assertThat(kdcServer.isStarted()).isTrue();
         krbClnt.init();
 
         TgtTicket tgt = null;
         try {
             tgt = krbClnt.requestTgtTicket(clientPrincipal, userCert, userKey, null);
         } catch (KrbException te) {
-            Assert.assertTrue(te.getMessage().contains("timeout"));
+            assertThat(te.getMessage().contains("timeout")).isTrue();
             return;
         }
-        Assert.assertNull(tgt);
+        assertThat(tgt).isNull();
 
         ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal, null);
-        Assert.assertNull(tkt);
+        assertThat(tkt).isNull();
     }
 
     private void loadCredentials() throws IOException, GeneralSecurityException {

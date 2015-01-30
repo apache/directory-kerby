@@ -20,8 +20,9 @@
 package org.apache.kerby.kerberos.kerb.crypto;
 
 import org.apache.kerby.util.HexUtil;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class Crc32Test {
 
@@ -108,7 +109,7 @@ public class Crc32Test {
             }
         }
 
-        Assert.assertTrue(isOk);
+        assertThat(isOk).isTrue();
     }
 
     private boolean testWith(TestCase testCase) {

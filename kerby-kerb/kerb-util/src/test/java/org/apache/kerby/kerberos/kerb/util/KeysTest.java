@@ -26,13 +26,14 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.fail;
 
 /*
 The principal was created with password '123456'
@@ -72,7 +73,7 @@ public class KeysTest {
                 genKey = EncryptionHandler.string2Key(principal.getName(),
                         TEST_PASSWORD, keyType);
                 if(! ke.getKey().equals(genKey)) {
-                    Assert.fail("str2key failed for key type: " + keyType.getName());
+                    fail("str2key failed for key type: " + keyType.getName());
                     //System.err.println("str2key failed for key type: " + keyType.getName());
                 }
             }
