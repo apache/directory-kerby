@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.key;
 
-import org.apache.kerby.kerberos.kerb.crypto.BytesUtil;
+import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
 import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 

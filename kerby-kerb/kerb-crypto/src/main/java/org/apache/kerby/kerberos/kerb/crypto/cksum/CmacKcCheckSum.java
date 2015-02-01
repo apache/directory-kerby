@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.cksum;
 
-import org.apache.kerby.kerberos.kerb.crypto.Cmac;
+import org.apache.kerby.kerberos.kerb.crypto.util.Cmac;
 import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 

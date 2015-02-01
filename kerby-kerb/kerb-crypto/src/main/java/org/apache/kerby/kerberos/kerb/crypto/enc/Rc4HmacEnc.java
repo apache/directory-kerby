@@ -20,10 +20,10 @@
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
-import org.apache.kerby.kerberos.kerb.crypto.BytesUtil;
-import org.apache.kerby.kerberos.kerb.crypto.Confounder;
-import org.apache.kerby.kerberos.kerb.crypto.Rc4;
-import org.apache.kerby.kerberos.kerb.crypto.Hmac;
+import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
+import org.apache.kerby.kerberos.kerb.crypto.util.Confounder;
+import org.apache.kerby.kerberos.kerb.crypto.util.Rc4;
+import org.apache.kerby.kerberos.kerb.crypto.util.Hmac;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Md5Provider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Rc4Provider;
 import org.apache.kerby.kerberos.kerb.crypto.key.Rc4KeyMaker;

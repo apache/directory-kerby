@@ -49,7 +49,8 @@ public abstract class AbstractCryptoTypeHandler implements CryptoTypeHandler {
         return Arrays.equals(cksum1, cksum2);
     }
 
-    protected static boolean checksumEqual(byte[] cksum1, byte[] cksum2, int cksum2Start, int len) {
+    protected static boolean checksumEqual(byte[] cksum1,
+                                           byte[] cksum2, int cksum2Start, int len) {
         if (cksum1 == cksum2)
             return true;
         if (cksum1 == null || cksum2 == null)

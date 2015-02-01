@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.crypto;
+package org.apache.kerby.kerberos.kerb.crypto.util;
 
 /**
  * Reference: http://introcs.cs.princeton.edu/java/51data/CRC32.java

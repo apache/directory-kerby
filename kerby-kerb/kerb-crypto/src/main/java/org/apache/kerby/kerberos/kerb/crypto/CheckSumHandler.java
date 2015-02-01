@@ -26,6 +26,11 @@ import org.apache.kerby.kerberos.kerb.spec.common.CheckSum;
 import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
 import org.apache.kerby.kerberos.kerb.spec.common.KeyUsage;
 
+/**
+ * Checksum handler as the highest level API for checksum stuffs defined in
+ * Kerberos RFC3961. It supports all the checksum types. New checksum type
+ * should be added updating this.
+ */
 public class CheckSumHandler {
 
     public static CheckSumTypeHandler getCheckSumHandler(String cksumType) throws KrbException {
@@ -42,11 +47,13 @@ public class CheckSumHandler {
         return getCheckSumHandler(cksumType, true) != null;
     }
 
-    public static CheckSumTypeHandler getCheckSumHandler(CheckSumType cksumType) throws KrbException {
+    public static CheckSumTypeHandler getCheckSumHandler(
+            CheckSumType cksumType) throws KrbException {
         return getCheckSumHandler(cksumType, false);
     }
 
-    private static CheckSumTypeHandler getCheckSumHandler(CheckSumType cksumType, boolean check) throws KrbException {
+    private static CheckSumTypeHandler getCheckSumHandler(CheckSumType cksumType,
+                                                          boolean check) throws KrbException {
         CheckSumTypeHandler cksumHandler = null;
         switch (cksumType) {
             case CRC32:
@@ -118,7 +125,8 @@ public class CheckSumHandler {
         return cksumHandler;
     }
 
-    public static CheckSum checksum(CheckSumType checkSumType, byte[] bytes) throws KrbException {
+    public static CheckSum checksum(CheckSumType checkSumType,
+                                    byte[] bytes) throws KrbException {
         CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
         byte[] checksumBytes = handler.checksum(bytes);
         CheckSum checkSum = new CheckSum();

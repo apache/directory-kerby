@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.crypto;
+package org.apache.kerby.kerberos.kerb.crypto.util;
 
 import org.apache.kerby.kerberos.kerb.crypto.cksum.HashProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import java.util.Arrays;
 
 /**
- * Based on MIT krb5 hmac.c
+ * Ref. MIT krb5 hmac.c
  */
 public class Hmac {
 

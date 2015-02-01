@@ -22,8 +22,14 @@ package org.apache.kerby.kerberos.kerb.crypto;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.crypto.enc.*;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.crypto.util.Random;
 import org.apache.kerby.kerberos.kerb.spec.common.*;
 
+/**
+ * Encryption handler as the highest level API for encryption stuffs defined in
+ * Kerberos RFC3961. It supports all the encryption types. New encryption type
+ * should be added updating this.
+ */
 public class EncryptionHandler {
 
     public static EncryptionType getEncryptionType(String eType) throws KrbException {
@@ -45,7 +51,8 @@ public class EncryptionHandler {
         return getEncHandler(eType, false);
     }
 
-    private static EncTypeHandler getEncHandler(EncryptionType eType, boolean check) throws KrbException {
+    private static EncTypeHandler getEncHandler(EncryptionType eType,
+                                                boolean check) throws KrbException {
         EncTypeHandler encHandler = null;
 
         switch (eType) {
@@ -113,7 +120,8 @@ public class EncryptionHandler {
         return encHandler;
     }
 
-    public static EncryptedData encrypt(byte[] plainText, EncryptionKey key, KeyUsage usage) throws KrbException {
+    public static EncryptedData encrypt(byte[] plainText, EncryptionKey key,
+                                        KeyUsage usage) throws KrbException {
         EncTypeHandler handler = getEncHandler(key.getKeyType());
         byte[] cipher = handler.encrypt(plainText, key.getKeyData(), usage.getValue());
 
@@ -125,17 +133,20 @@ public class EncryptionHandler {
         return ed;
     }
 
-    public static byte[] decrypt(byte[] data, EncryptionKey key, KeyUsage usage) throws KrbException {
+    public static byte[] decrypt(byte[] data, EncryptionKey key,
+                                 KeyUsage usage) throws KrbException {
         EncTypeHandler handler = getEncHandler(key.getKeyType());
 
         byte[] plainData = handler.decrypt(data, key.getKeyData(), usage.getValue());
         return plainData;
     }
 
-    public static byte[] decrypt(EncryptedData data, EncryptionKey key, KeyUsage usage) throws KrbException {
+    public static byte[] decrypt(EncryptedData data, EncryptionKey key,
+                                 KeyUsage usage) throws KrbException {
         EncTypeHandler handler = getEncHandler(key.getKeyType());
 
-        byte[] plainData = handler.decrypt(data.getCipher(), key.getKeyData(), usage.getValue());
+        byte[] plainData = handler.decrypt(data.getCipher(),
+                key.getKeyData(), usage.getValue());
         return plainData;
     }
 

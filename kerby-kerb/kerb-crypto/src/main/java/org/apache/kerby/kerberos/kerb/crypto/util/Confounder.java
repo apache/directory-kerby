@@ -17,17 +17,17 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.crypto;
+package org.apache.kerby.kerberos.kerb.crypto.util;
 
 import java.security.SecureRandom;
 
-public final class Random {
+public final class Confounder {
 
-    private static SecureRandom srand = new SecureRandom();
+    private static SecureRandom instance = new SecureRandom();
 
     public static byte[] makeBytes(int size) {
         byte[] data = new byte[size];
-        srand.nextBytes(data);
+        instance.nextBytes(data);
         return data;
     }
 }

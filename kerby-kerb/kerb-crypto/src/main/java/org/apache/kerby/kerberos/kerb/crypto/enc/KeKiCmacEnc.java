@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
-import org.apache.kerby.kerberos.kerb.crypto.Cmac;
+import org.apache.kerby.kerberos.kerb.crypto.util.Cmac;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 public abstract class KeKiCmacEnc extends KeKiEnc {

@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.cksum;
 
-import org.apache.kerby.kerberos.kerb.crypto.Confounder;
+import org.apache.kerby.kerberos.kerb.crypto.util.Confounder;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.DesProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 

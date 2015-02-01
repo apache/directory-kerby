@@ -17,12 +17,12 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.crypto;
+package org.apache.kerby.kerberos.kerb.crypto.util;
 
 import java.util.Arrays;
 
 /**
- * Based on MIT krb5 nfold.c
+ * Based on RFC3961, with ref. MIT krb5 nfold.c
  */
 
 /*

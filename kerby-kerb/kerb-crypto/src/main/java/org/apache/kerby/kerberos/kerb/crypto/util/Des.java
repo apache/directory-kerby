@@ -17,10 +17,10 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.crypto;
+package org.apache.kerby.kerberos.kerb.crypto.util;
 
 /**
- * Based on MIT krb5 weak_key.c
+ * Ref. MIT krb5 weak_key.c
  */
 public class Des {
 

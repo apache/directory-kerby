@@ -23,11 +23,13 @@ import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.crypto.key.KeyMaker;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
-public abstract class AbstractKeyedCheckSumTypeHandler extends AbstractCheckSumTypeHandler {
+public abstract class AbstractKeyedCheckSumTypeHandler
+        extends AbstractCheckSumTypeHandler {
 
     private KeyMaker keyMaker;
 
-    public AbstractKeyedCheckSumTypeHandler(EncryptProvider encProvider, HashProvider hashProvider,
+    public AbstractKeyedCheckSumTypeHandler(EncryptProvider encProvider,
+                                            HashProvider hashProvider,
                                             int computeSize, int outputSize) {
         super(encProvider, hashProvider, computeSize, outputSize);
     }

@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.crypto.key;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.crypto.BytesUtil;
-import org.apache.kerby.kerberos.kerb.crypto.Des;
+import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
+import org.apache.kerby.kerberos.kerb.crypto.util.Des;
 import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 
 public class DesKeyMaker extends AbstractKeyMaker {

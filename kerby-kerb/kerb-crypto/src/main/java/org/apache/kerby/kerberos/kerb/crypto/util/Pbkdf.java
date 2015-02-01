@@ -17,17 +17,24 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.crypto;
+package org.apache.kerby.kerberos.kerb.crypto.util;
 
-import java.security.SecureRandom;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.GeneralSecurityException;
 
-public final class Confounder {
+public class Pbkdf {
 
-    private static SecureRandom srand = new SecureRandom();
+    public static byte[] PBKDF2(char[] secret, byte[] salt,
+                                   int count, int keySize) throws GeneralSecurityException {
 
-    public static byte[] makeBytes(int size) {
-        byte[] data = new byte[size];
-        srand.nextBytes(data);
-        return data;
+        PBEKeySpec ks = new PBEKeySpec(secret, salt, count, keySize * 8);
+        SecretKeyFactory skf =
+                SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        SecretKey key = skf.generateSecret(ks);
+        byte[] result = key.getEncoded();
+
+        return result;
     }
 }

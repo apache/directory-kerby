@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.crypto.key;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.crypto.Des;
-import org.apache.kerby.kerberos.kerb.crypto.Nfold;
+import org.apache.kerby.kerberos.kerb.crypto.util.Des;
+import org.apache.kerby.kerberos.kerb.crypto.util.Nfold;
 import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 
 public class Des3KeyMaker extends DkKeyMaker {

@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.cksum;
 
-import org.apache.kerby.kerberos.kerb.crypto.BytesUtil;
+import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
 import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.crypto.key.DkKeyMaker;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -44,5 +44,6 @@ public abstract class KcCheckSum extends AbstractKeyedCheckSumTypeHandler {
         return mac;
     }
 
-    protected abstract byte[] mac(byte[] Kc, byte[] data, int start, int len) throws KrbException;
+    protected abstract byte[] mac(byte[] Kc, byte[] data, int start,
+                                  int len) throws KrbException;
 }

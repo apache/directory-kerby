@@ -22,7 +22,12 @@ package org.apache.kerby.kerberos.kerb.crypto.cksum;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 /**
- * krb5_hash_provider
+ * Ref. MIT Krb5: krb5_hash_provider
+ */
+
+/**
+ * Hash provider that provides hash function
+ * for implementing a checksum type defined by Kerberos RFC3961.
  */
 public interface HashProvider {
 

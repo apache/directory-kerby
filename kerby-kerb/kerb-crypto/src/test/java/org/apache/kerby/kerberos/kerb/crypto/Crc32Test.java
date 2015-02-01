@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto;
 
+import org.apache.kerby.kerberos.kerb.crypto.util.Crc32;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 

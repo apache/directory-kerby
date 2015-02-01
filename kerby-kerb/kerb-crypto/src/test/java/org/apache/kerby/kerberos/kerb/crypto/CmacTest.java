@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.crypto;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia128Provider;
+import org.apache.kerby.kerberos.kerb.crypto.util.Cmac;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 

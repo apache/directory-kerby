@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.cksum.provider;
 
-import org.apache.kerby.kerberos.kerb.crypto.Crc32;
+import org.apache.kerby.kerberos.kerb.crypto.util.Crc32;
 
 public class Crc32Provider extends AbstractHashProvider {
     private byte[] output;

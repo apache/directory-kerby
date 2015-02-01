@@ -30,7 +30,8 @@ public abstract class AbstractCheckSumTypeHandler
     private int computeSize;
     private int outputSize;
 
-    public AbstractCheckSumTypeHandler(EncryptProvider encProvider, HashProvider hashProvider,
+    public AbstractCheckSumTypeHandler(EncryptProvider encProvider,
+                                       HashProvider hashProvider,
                                        int computeSize, int outputSize) {
         super(encProvider, hashProvider);
         this.computeSize = computeSize;
@@ -89,7 +90,8 @@ public abstract class AbstractCheckSumTypeHandler
     }
 
     @Override
-    public boolean verify(byte[] data, int start, int size, byte[] checksum) throws KrbException {
+    public boolean verify(byte[] data, int start, int size,
+                          byte[] checksum) throws KrbException {
         throw new UnsupportedOperationException();
     }
 
@@ -106,7 +108,8 @@ public abstract class AbstractCheckSumTypeHandler
     }
     @Override
     public boolean verifyWithKey(byte[] data,
-                                 byte[] key, int usage, byte[] checksum) throws KrbException {
+                                 byte[] key, int usage,
+                                 byte[] checksum) throws KrbException {
         throw new UnsupportedOperationException();
     }
 }
