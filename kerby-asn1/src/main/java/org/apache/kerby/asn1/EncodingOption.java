@@ -19,6 +19,11 @@
  */
 package org.apache.kerby.asn1;
 
+/**
+ * An enum used to represent the various Encoding options.
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ */
 public enum EncodingOption
 {
     UNKNOWN(-1),
@@ -32,65 +37,114 @@ public enum EncodingOption
     DER(8),
     CER(9);
 
+    /** 
+     * A mask to determinate if a Tag is CONSTRUCTED. The fifth bit should be set to 1 if
+     * the type is constructed (0010-0000).
+     */
+    public static int CONSTRUCTED_FLAG = 0x20;
+
+    /** The associated value */
     private int value;
 
+    /** Create a instance of EncodingOption */
     private EncodingOption(int value) {
         this.value = value;
     }
 
-    public static int CONSTRUCTED_FLAG = 0x20;
+
+    /**
+     * @return The integer value associated with the ENcodingOption instance
+     */
+    public int getValue() {
+        return value;
+    }
 
     public static boolean isConstructed(int tag) {
         return (tag & CONSTRUCTED_FLAG) != 0;
     }
 
-    public int getValue() {
-        return value;
-    }
-
+    /**
+     * Tells if the EncodingOption is PRIMITIVE
+     * 
+     * @return true if using PRIMITIVE, false otherwise
+     */
     public boolean isPrimitive() {
         return this == PRIMITIVE;
     }
 
+    /**
+     * Tells if the EncodingOption is for an encoded type (CONSTRUCTED, CONSTRUCTED_DEFLEN
+     * or CONSTRUCTED_INDEFLEN)
+     * 
+     * @return true if the EncodingOption is CONSTRUCTED, false otherwise
+     */
     public boolean isConstructed() {
         return this == CONSTRUCTED || this == CONSTRUCTED_DEFLEN || this == CONSTRUCTED_INDEFLEN;
     }
 
+    /**
+     * Tells if the EncodingOption is IMPLICIT
+     * 
+     * @return true if using IMPLICIT, false otherwise
+     */
     public boolean isImplicit() {
         return this == IMPLICIT;
     }
 
+    /**
+     * Tells if the EncodingOption is EXPLICIT
+     * 
+     * @return true if using EXPLICIT, false otherwise
+     */
     public boolean isExplicit() {
         return this == EXPLICIT;
     }
 
     /**
-     * Is DER encoding ?
-     * @return true if using DER otherwise false
+     * Tells if the EncodingOption is DER
+     * 
+     * @return true if using DER, false otherwise
      */
     public boolean isDer() {
         return this == DER;
     }
 
+    /**
+     * Tells if the EncodingOption is CER
+     * 
+     * @return true if using CER, false otherwise
+     */
     public boolean isCer() {
         return this == CER;
     }
 
     /**
-     * Is BER encoding ?
-     * @return true if using BER otherwise false
+     * Tells if the EncodingOption is BER
+     * 
+     * @return true if using BER, false otherwise
      */
     public boolean isBer() {
         return this == BER;
     }
 
+    
+    /**
+     * Get the EncodingOption given an interger value
+     * @param value The value to translate
+     * @return The associated EncodingOption
+     */
     public static EncodingOption fromValue(int value) {
-        for (EncodingOption e : values()) {
-            if (e.getValue() == value) {
-                return (EncodingOption) e;
-            }
+        switch (value) {
+            case 1 : return PRIMITIVE;
+            case 2 : return CONSTRUCTED;
+            case 3 : return CONSTRUCTED_DEFLEN;
+            case 4 : return CONSTRUCTED_INDEFLEN;
+            case 5 : return IMPLICIT;
+            case 6 : return EXPLICIT;
+            case 7 : return BER;
+            case 8 : return DER;
+            case 9 : return CER;
+            default : return UNKNOWN;
         }
-
-        return UNKNOWN;
     }
 }
