@@ -38,7 +38,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     private TagClass tagClass = TagClass.UNKNOWN;
     private int tagNo = -1;
     private int tagFlags = -1;
-    protected EncodingOption encodingOption = EncodingOption.UNKNOWN;
+    private EncodingOption encodingOption = EncodingOption.UNKNOWN;
     private int encodingLen = -1;
     // The wrapped real value.
     private T value;
@@ -67,8 +67,20 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         this.value = value;
     }
 
+    /**
+     * Set encoding option
+     * @param encodingOption
+     */
     public void setEncodingOption(EncodingOption encodingOption) {
         this.encodingOption = encodingOption;
+    }
+
+    /**
+     * Get encoding option
+     * @return encoding option
+     */
+    public EncodingOption getEncodingOption() {
+        return this.encodingOption;
     }
 
     public T getValue() {
