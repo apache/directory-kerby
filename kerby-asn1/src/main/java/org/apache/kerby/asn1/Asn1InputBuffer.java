@@ -27,23 +27,43 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * Asn1 decoder
+ * Asn1 decoder. Given an input stream, it validates and parses
+ * according to ASN1 spec, and the resultant object can be read
+ * and read until exhausted.
  */
 public class Asn1InputBuffer {
     private final LimitedByteBuffer limitedBuffer;
 
+    /**
+     * Constructor with bytes.
+     * @param bytes
+     */
     public Asn1InputBuffer(byte[] bytes) {
         this(new LimitedByteBuffer(bytes));
     }
 
+    /**
+     * Constructor with a ByteBuffer.
+     * @param byteBuffer
+     */
     public Asn1InputBuffer(ByteBuffer byteBuffer) {
         this(new LimitedByteBuffer(byteBuffer));
     }
 
+    /**
+     * Constructor with LimitedByteBuffer.
+     * @param limitedByteBuffer
+     */
     public Asn1InputBuffer(LimitedByteBuffer limitedByteBuffer) {
         this.limitedBuffer = limitedByteBuffer;
     }
 
+    /**
+     * Parse and read ASN1 object from the stream. If it's already
+     * exhausted then null will be returned to indicate the end.
+     * @return an ASN1 object if available otherwise null
+     * @throws IOException
+     */
     public Asn1Type read() throws IOException {
         if (! limitedBuffer.available()) {
             return null;
@@ -60,6 +80,11 @@ public class Asn1InputBuffer {
         return one;
     }
 
+    /**
+     *
+     * @param bytes
+     * @throws IOException
+     */
     public void readBytes(byte[] bytes) throws IOException {
         limitedBuffer.readBytes(bytes);
     }

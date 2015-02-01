@@ -23,8 +23,16 @@ import org.apache.kerby.asn1.type.Asn1Collection;
 import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;
 
+/**
+ * ASN1 type factory
+ */
 public class Asn1Factory {
 
+    /**
+     * Create an ASN1 type with specified tag number
+     * @param tagNo
+     * @return ASN1 type
+     */
     public static Asn1Type create(int tagNo) {
         UniversalTag tagNoEnum = UniversalTag.fromValue(tagNo);
         if (tagNoEnum != UniversalTag.UNKNOWN) {
@@ -33,6 +41,11 @@ public class Asn1Factory {
         throw new IllegalArgumentException("Unexpected tag " + tagNo);
     }
 
+    /**
+     * Create an ASN1 type with specified tag
+     * @param tagNo
+     * @return ASN1 type
+     */
     public static Asn1Type create(UniversalTag tagNo) {
         if (Asn1Simple.isSimple(tagNo)) {
             return Asn1Simple.createSimple(tagNo);
