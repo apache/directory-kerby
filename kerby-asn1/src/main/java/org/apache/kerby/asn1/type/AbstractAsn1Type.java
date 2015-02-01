@@ -38,7 +38,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     private TagClass tagClass = TagClass.UNKNOWN;
     private int tagNo = -1;
     private int tagFlags = -1;
-    private EncodingOption encodingOption = EncodingOption.UNKNOWN;
+    private EncodingOption encodingOption = EncodingOption.BER;
     private int encodingLen = -1;
     // The wrapped real value.
     private T value;

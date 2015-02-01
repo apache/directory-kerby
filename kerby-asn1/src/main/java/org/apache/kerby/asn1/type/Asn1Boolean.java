@@ -58,14 +58,19 @@ public class Asn1Boolean extends Asn1Simple<Boolean>
         setBytes(getValue() ? TRUE_BYTE : FALSE_BYTE);
     }
 
+    @Override
     protected void toValue() throws IOException {
         byte[] bytes = getBytes();
         if (bytes[0] == 0) {
             setValue(false);
-        } else if (bytes[0] == 0xff) {
+        } else if ((bytes[0] & 0xff) == 0xff) {
+            // DER only accepts 0xFF as true
+            setValue(true);
+        } else if (getEncodingOption().isBer()) {
+            // BER accepts any non-zero as true
             setValue(true);
         } else {
-            setValue(true);
+            setValue(false);
         }
     }
 }
