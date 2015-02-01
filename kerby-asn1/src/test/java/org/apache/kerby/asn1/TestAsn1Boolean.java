@@ -30,27 +30,33 @@ public class TestAsn1Boolean {
 
     @Test
     public void testEncoding() {
-        testEncodingWith(true, "0x01 01 FF");
-        testEncodingWith(false, "0x01 01 00");
+        testEncodingWith(true, "0x01 01 FF", true);
+        testEncodingWith(false, "0x01 01 00", true);
     }
 
-    private void testEncodingWith(Boolean value, String expectedEncoding) {
+    private void testEncodingWith(Boolean value, String expectedEncoding,
+                                  boolean isDer) {
         byte[] expected = Util.hex2bytes(expectedEncoding);
         Asn1Boolean aValue = new Asn1Boolean(value);
-        aValue.setEncodingOption(EncodingOption.DER);
+        aValue.setEncodingOption(isDer ? EncodingOption.DER :
+                EncodingOption.BER);
         byte[] encodingBytes = aValue.encode();
         assertThat(encodingBytes).isEqualTo(expected);
     }
 
     @Test
     public void testDecoding() throws IOException {
-        testDecodingWith(true, "0x01 01 FF");
-        testDecodingWith(false, "0x01 01 00");
+        testDecodingWith(true, "0x01 01 FF", true);
+        testDecodingWith(false, "0x01 01 7F", true);
+        testDecodingWith(true, "0x01 01 7F", false);
+        testDecodingWith(false, "0x01 01 00", true);
     }
 
-    private void testDecodingWith(Boolean expectedValue, String content) throws IOException {
+    private void testDecodingWith(Boolean expectedValue, String content,
+                                  boolean isDer) throws IOException {
         Asn1Boolean decoded = new Asn1Boolean();
-        decoded.setEncodingOption(EncodingOption.DER);
+        decoded.setEncodingOption(isDer ? EncodingOption.DER :
+                EncodingOption.BER);
         decoded.decode(Util.hex2bytes(content));
         assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }

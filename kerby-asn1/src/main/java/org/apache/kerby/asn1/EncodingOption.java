@@ -64,12 +64,24 @@ public enum EncodingOption
         return this == EXPLICIT;
     }
 
+    /**
+     * Is DER encoding ?
+     * @return true if using DER otherwise false
+     */
     public boolean isDer() {
         return this == DER;
     }
 
     public boolean isCer() {
         return this == CER;
+    }
+
+    /**
+     * Is BER encoding ?
+     * @return true if using BER otherwise false
+     */
+    public boolean isBer() {
+        return this == BER;
     }
 
     public static EncodingOption fromValue(int value) {

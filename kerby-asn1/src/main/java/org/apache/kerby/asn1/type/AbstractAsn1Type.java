@@ -28,14 +28,26 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/**
+ * The abstract ASN1 type for all the ASN1 types. It provides basic
+ * encoding and decoding utilities.
+ *
+ * @param <T> the type of the value encoded/decoded or wrapped by this
+ */
 public abstract class AbstractAsn1Type<T> implements Asn1Type {
     private TagClass tagClass = TagClass.UNKNOWN;
     private int tagNo = -1;
     private int tagFlags = -1;
-    protected EncodingOption encodingOption = EncodingOption.UNKNOWN;
+    private EncodingOption encodingOption = EncodingOption.BER;
     private int encodingLen = -1;
+    // The wrapped real value.
     private T value;
 
+    /**
+     *
+     * @param tagClass
+     * @param tagNo
+     */
     public AbstractAsn1Type(TagClass tagClass, int tagNo) {
         this(tagClass, tagNo, null);
     }
@@ -55,8 +67,20 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         this.value = value;
     }
 
+    /**
+     * Set encoding option
+     * @param encodingOption
+     */
     public void setEncodingOption(EncodingOption encodingOption) {
         this.encodingOption = encodingOption;
+    }
+
+    /**
+     * Get encoding option
+     * @return encoding option
+     */
+    public EncodingOption getEncodingOption() {
+        return this.encodingOption;
     }
 
     public T getValue() {

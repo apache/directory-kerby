@@ -47,9 +47,9 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
     @Override
     protected int encodingBodyLength() {
         AbstractAsn1Type value = (AbstractAsn1Type) getValue();
-        if (encodingOption.isExplicit()) {
+        if (getEncodingOption().isExplicit()) {
             return value.encodingLength();
-        } else if (encodingOption.isImplicit()) {
+        } else if (getEncodingOption().isImplicit()) {
             return value.encodingBodyLength();
         } else {
             throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
@@ -58,9 +58,9 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     @Override
     public boolean isConstructed() {
-        if (encodingOption.isExplicit()) {
+        if (getEncodingOption().isExplicit()) {
             return true;
-        } else if (encodingOption.isImplicit()) {
+        } else if (getEncodingOption().isImplicit()) {
             AbstractAsn1Type value = (AbstractAsn1Type) getValue();
             return value.isConstructed();
         }
@@ -70,9 +70,9 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
     @Override
     protected void encodeBody(ByteBuffer buffer) {
         AbstractAsn1Type value = (AbstractAsn1Type) getValue();
-        if (encodingOption.isExplicit()) {
+        if (getEncodingOption().isExplicit()) {
             value.encode(buffer);
-        } else if (encodingOption.isImplicit()) {
+        } else if (getEncodingOption().isImplicit()) {
             value.encodeBody(buffer);
         } else {
             throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
@@ -82,9 +82,9 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
     @Override
     protected void decodeBody(LimitedByteBuffer content) throws IOException {
         AbstractAsn1Type value = (AbstractAsn1Type) getValue();
-        if (encodingOption.isExplicit()) {
+        if (getEncodingOption().isExplicit()) {
             value.decode(content);
-        } else if (encodingOption.isImplicit()) {
+        } else if (getEncodingOption().isImplicit()) {
             value.decodeBody(content);
         } else {
             throw new RuntimeException("Invalid util option, only allowing explicit/implicit");

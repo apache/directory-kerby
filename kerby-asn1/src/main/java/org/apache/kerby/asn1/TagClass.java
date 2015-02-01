@@ -19,6 +19,9 @@
  */
 package org.apache.kerby.asn1;
 
+/**
+ * Tag class defined by the spec.
+ */
 public enum TagClass {
     UNKNOWN(-1),
     UNIVERSAL(0x00),
@@ -28,14 +31,26 @@ public enum TagClass {
 
     private int value;
 
+    /**
+     * The constructor given the value.
+     * @param value
+     */
     private TagClass(int value) {
         this.value = value;
     }
 
+    /**
+     * Get the tag class value.
+     * @return value
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * Tell it's universal or not.
+     * @return true if it's universal otherwise false
+     */
     public boolean isUniversal() {
         return this == UNIVERSAL;
     }
@@ -52,6 +67,11 @@ public enum TagClass {
         return this == APPLICATION || this == CONTEXT_SPECIFIC;
     }
 
+    /**
+     * Converted from an integer
+     * @param value
+     * @return tag class
+     */
     public static TagClass fromValue(int value) {
         // Optimized by Emmanuel
         switch (value) {
@@ -68,6 +88,11 @@ public enum TagClass {
         }
     }
 
+    /**
+     * Converted from a tag value, which contains tag class info.
+     * @param tag
+     * @return tag class
+     */
     public static TagClass fromTagFlags(int tag) {
         return fromValue(tag & 0xC0);
     }
