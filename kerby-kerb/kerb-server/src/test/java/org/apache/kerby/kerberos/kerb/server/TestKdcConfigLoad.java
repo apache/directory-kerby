@@ -44,8 +44,8 @@ public class TestKdcConfigLoad {
         assertThat(krbConfig.getKdcLoggingLocation()).isEqualTo("FILE:/var/log/krb5kdc.log");
         assertThat(krbConfig.getAdminLoggingLocation()).isEqualTo("FILE:/var/log/kadmind.log");
 
-        assertThat(krbConfig.getKdcUdpPort()).isEqualTo(88);
-        assertThat(krbConfig.getKdcTcpPort()).isEqualTo(8014);
+        assertThat(krbConfig.getKdcUdpPort()).isEqualTo((short)88);
+        assertThat(krbConfig.getKdcTcpPort()).isEqualTo((short)8014);
         assertThat(krbConfig.isRestrictAnonymousToTgt()).isTrue();
         assertThat(krbConfig.getKdcMaxDgramReplySize()).isEqualTo(4096);
 
