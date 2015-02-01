@@ -44,7 +44,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     private T value;
 
     /**
-     *
+     * Default constructor, generally for decoding as a value container
      * @param tagClass
      * @param tagNo
      */
@@ -52,15 +52,31 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         this(tagClass, tagNo, null);
     }
 
+    /**
+     * Default constructor, generally for decoding as a value container
+     * @param tagFlags
+     * @param tagNo
+     */
     public AbstractAsn1Type(int tagFlags, int tagNo) {
         this(tagFlags, tagNo, null);
     }
 
+    /**
+     * Constructor with a value, generally for encoding of the value
+     * @param tagFlags
+     * @param tagNo
+     * @param value
+     */
     public AbstractAsn1Type(int tagFlags, int tagNo, T value) {
         this(TagClass.fromTagFlags(tagFlags), tagNo, value);
         setTagFlags(tagFlags);
     }
 
+    /**
+     * Constructor with a value, generally for encoding of the value
+     * @param tagNo
+     * @param value
+     */
     public AbstractAsn1Type(TagClass tagClass, int tagNo, T value) {
         this.tagClass = tagClass;
         this.tagNo = tagNo;

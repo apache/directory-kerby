@@ -29,8 +29,7 @@ import java.util.Date;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-public class Asn1GeneralizedTime extends Asn1Simple<Date>
-{
+public class Asn1GeneralizedTime extends Asn1Simple<Date> {
     public Asn1GeneralizedTime() {
         this(null);
     }

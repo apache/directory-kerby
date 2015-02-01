@@ -27,13 +27,26 @@ import org.apache.kerby.asn1.UniversalTag;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/**
+ * ASN1 simple type, of single value other than complex type of multiple values.
+ * @param <T>
+ */
 public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
     private byte[] bytes;
 
+    /**
+     * Default constructor, generally for decoding as a value container
+     * @param tagNo
+     */
     public Asn1Simple(UniversalTag tagNo) {
         this(tagNo, null);
     }
 
+    /**
+     * Constructor with a value, generally for encoding of the value
+     * @param tagNo
+     * @param value
+     */
     public Asn1Simple(UniversalTag tagNo, T value) {
         super(TagClass.UNIVERSAL, tagNo.getValue(), value);
         setEncodingOption(EncodingOption.PRIMITIVE);

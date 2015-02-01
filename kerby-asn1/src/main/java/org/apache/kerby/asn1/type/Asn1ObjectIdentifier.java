@@ -24,8 +24,10 @@ import org.apache.kerby.asn1.UniversalTag;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
-public class Asn1ObjectIdentifier extends Asn1Simple<String>
-{
+/**
+ * ASN1 object identifier.
+ */
+public class Asn1ObjectIdentifier extends Asn1Simple<String> {
     public Asn1ObjectIdentifier() {
         this(null);
     }

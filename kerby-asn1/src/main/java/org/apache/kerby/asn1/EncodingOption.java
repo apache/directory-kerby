@@ -24,8 +24,7 @@ package org.apache.kerby.asn1;
  * 
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
-public enum EncodingOption
-{
+public enum EncodingOption {
     UNKNOWN(-1),
     PRIMITIVE(1),
     CONSTRUCTED(2),
@@ -53,7 +52,7 @@ public enum EncodingOption
 
 
     /**
-     * @return The integer value associated with the ENcodingOption instance
+     * @return The integer value associated with the EncodingOption instance
      */
     public int getValue() {
         return value;
@@ -129,7 +128,7 @@ public enum EncodingOption
 
     
     /**
-     * Get the EncodingOption given an interger value
+     * Get the EncodingOption given an integer value
      * @param value The value to translate
      * @return The associated EncodingOption
      */

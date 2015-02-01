@@ -29,8 +29,10 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>>
-{
+/**
+ * ASN1 complex type, may be better named.
+ */
+public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
     public Asn1Collection(TagClass tagClass, int tagNo) {
         super(tagClass, tagNo);
         setValue(new ArrayList<Asn1Item>());
