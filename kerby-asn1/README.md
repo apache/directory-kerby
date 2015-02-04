@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-haox-asn1
+kerby-asn1
 =========
 
 ### A ASN1 parser with easy and simple API
