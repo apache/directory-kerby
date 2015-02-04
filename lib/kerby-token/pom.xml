@@ -32,7 +32,7 @@
     <dependency>
       <groupId>com.nimbusds</groupId>
       <artifactId>nimbus-jose-jwt</artifactId>
-      <version>3.2</version>
+      <version>3.8.2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
