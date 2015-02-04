@@ -77,6 +77,8 @@ public class TestUdpClient extends TestUdpBase {
         DatagramSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress(serverPort));
         serverSocketChannel.register(selector, SelectionKey.OP_READ);
+        
+        serverPort = serverSocket.getLocalPort();
 
         while (true) {
             if (selector.selectNow() > 0) {

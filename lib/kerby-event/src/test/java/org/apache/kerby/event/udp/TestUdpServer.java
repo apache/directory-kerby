@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -62,6 +63,10 @@ public class TestUdpServer extends TestUdpBase {
 
         Acceptor acceptor = new UdpAcceptor();
         eventHub.register(acceptor);
+        
+        ServerSocket serverSocket = new ServerSocket(0);
+        serverPort = serverSocket.getLocalPort();
+        serverSocket.close();
 
         eventHub.start();
         acceptor.listen(serverHost, serverPort);

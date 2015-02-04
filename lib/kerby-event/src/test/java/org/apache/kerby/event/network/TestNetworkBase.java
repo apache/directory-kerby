@@ -27,8 +27,8 @@ import java.nio.ByteBuffer;
 
 public class TestNetworkBase {
     protected String serverHost = "127.0.0.1";
-    protected short tcpPort = 8183;
-    protected short udpPort = 8184;
+    protected int tcpPort = 0;
+    protected int udpPort = 0;
     protected String TEST_MESSAGE = "Hello world!";
     protected String clientRecvedMessage;
 

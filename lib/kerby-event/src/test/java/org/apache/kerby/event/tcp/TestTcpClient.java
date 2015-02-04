@@ -73,11 +73,13 @@ public class TestTcpClient extends TestTcpBase {
 
     private void doRunServer() throws IOException {
         Selector selector = Selector.open();
-        ServerSocketChannel serverSocketChannel = ServerSocketChannel .open();
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
         ServerSocket serverSocket = serverSocketChannel.socket();
-        serverSocket.bind(new InetSocketAddress(serverPort));
+        serverSocket.bind(new InetSocketAddress(0));
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        
+        serverPort = serverSocket.getLocalPort();
 
         SocketChannel socketChannel;
         while (true) {

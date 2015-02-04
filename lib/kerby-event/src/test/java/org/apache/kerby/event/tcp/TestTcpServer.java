@@ -19,6 +19,15 @@
  */
 package org.apache.kerby.event.tcp;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+
 import org.apache.kerby.event.EventHandler;
 import org.apache.kerby.event.EventHub;
 import org.apache.kerby.transport.Acceptor;
@@ -29,14 +38,6 @@ import org.apache.kerby.transport.tcp.TcpAcceptor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestTcpServer extends TestTcpBase {
 
@@ -62,6 +63,10 @@ public class TestTcpServer extends TestTcpBase {
 
         Acceptor acceptor = new TcpAcceptor(createStreamingDecoder());
         eventHub.register(acceptor);
+        
+        ServerSocket serverSocket = new ServerSocket(0);
+        serverPort = serverSocket.getLocalPort();
+        serverSocket.close();
 
         eventHub.start();
         acceptor.listen(serverHost, serverPort);
