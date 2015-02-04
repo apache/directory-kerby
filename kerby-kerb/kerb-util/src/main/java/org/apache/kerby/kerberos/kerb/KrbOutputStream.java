@@ -29,7 +29,7 @@ import java.io.OutputStream;
 
 public abstract class KrbOutputStream extends DataOutputStream
 {
-	public KrbOutputStream(OutputStream out) {
+    public KrbOutputStream(OutputStream out) {
         super(out);
     }
 
@@ -42,11 +42,11 @@ public abstract class KrbOutputStream extends DataOutputStream
     public abstract void writeKey(EncryptionKey key, int version) throws IOException;
 
     public void writeTime(KerberosTime ktime) throws IOException {
-    	int time = 0;
-    	if (ktime != null) {
-    		time = (int) (ktime.getValue().getTime() / 1000);
-    	}
-    	writeInt(time);
+        int time = 0;
+        if (ktime != null) {
+            time = (int) (ktime.getValue().getTime() / 1000);
+        }
+        writeInt(time);
     }
 
     public void writeCountedString(String string) throws IOException {

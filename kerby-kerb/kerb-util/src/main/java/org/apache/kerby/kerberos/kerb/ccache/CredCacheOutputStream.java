@@ -31,7 +31,7 @@ import java.util.List;
 
 public class CredCacheOutputStream extends KrbOutputStream
 {
-	public CredCacheOutputStream(OutputStream out) {
+    public CredCacheOutputStream(OutputStream out) {
         super(out);
     }
 
@@ -39,8 +39,8 @@ public class CredCacheOutputStream extends KrbOutputStream
     public void writePrincipal(PrincipalName principal, int version) throws IOException {
         List<String> nameComponents = principal.getNameStrings();
 
-    	if (version != CredentialCache.FCC_FVNO_1) {
-        	writeInt(principal.getNameType().getValue());
+        if (version != CredentialCache.FCC_FVNO_1) {
+            writeInt(principal.getNameType().getValue());
         }
 
         int numComponents = nameComponents.size();
@@ -48,9 +48,9 @@ public class CredCacheOutputStream extends KrbOutputStream
             numComponents ++;
         }
         writeInt(numComponents);
-        
+
         writeRealm(principal.getRealm());
-        
+
         for (String nameCom : nameComponents) {
             writeCountedString(nameCom);
         }
@@ -58,10 +58,10 @@ public class CredCacheOutputStream extends KrbOutputStream
 
     @Override
     public void writeKey(EncryptionKey key, int version) throws IOException {
-    	writeShort(key.getKeyType().getValue());
-    	if (version == CredentialCache.FCC_FVNO_3) {
-    		writeShort(key.getKeyType().getValue());
-    	}
+        writeShort(key.getKeyType().getValue());
+        if (version == CredentialCache.FCC_FVNO_3) {
+            writeShort(key.getKeyType().getValue());
+        }
 
         writeCountedOctets(key.getKeyData());
     }
@@ -73,36 +73,36 @@ public class CredCacheOutputStream extends KrbOutputStream
     }
 
     public void writeAddresses(HostAddresses addrs) throws IOException {
-    	if (addrs == null) {
-    		writeInt(0);
-    	} else {
+        if (addrs == null) {
+            writeInt(0);
+        } else {
             List<HostAddress> addresses = addrs.getElements();
-    		write(addresses.size());
-    		for (HostAddress addr : addresses) {
+            write(addresses.size());
+            for (HostAddress addr : addresses) {
                 writeAddress(addr);
-    		}
-    	}
+            }
+        }
     }
 
     public void writeAddress(HostAddress address) throws IOException {
         write(address.getAddrType().getValue());
         write(address.getAddress().length);
         write(address.getAddress(), 0,
-                address.getAddress().length);
+              address.getAddress().length);
     }
 
     public void writeAuthzData(AuthorizationData authData) throws IOException  {
-    	if (authData == null) {
-    		writeInt(0);
-    	} else {
-    		for (AuthorizationDataEntry entry : authData.getElements()) {
-    			write(entry.getAuthzType().getValue());
-    			write(entry.getAuthzData().length);
-    			write(entry.getAuthzData());
-    		}
-    	}
+        if (authData == null) {
+            writeInt(0);
+        } else {
+            for (AuthorizationDataEntry entry : authData.getElements()) {
+                write(entry.getAuthzType().getValue());
+                write(entry.getAuthzData().length);
+                write(entry.getAuthzData());
+            }
+        }
     }
-    
+
     public void writeTicket(Ticket t) throws IOException  {
         if (t == null) {
             writeInt(0);

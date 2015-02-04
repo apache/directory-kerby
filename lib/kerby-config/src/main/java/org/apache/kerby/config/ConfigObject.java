@@ -23,25 +23,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigObject {
-	protected static enum VALUE_TYPE { PROPERTY, LIST, CONFIG };
-		
-	private VALUE_TYPE valueType;
-	private Object value;
-	
-	public ConfigObject(String value) {
-		this.value = value;
-		this.valueType = VALUE_TYPE.PROPERTY;
-	}
-	
-	public ConfigObject(String[] values) {
-		List<String> valuesList = new ArrayList<String>();
-		for (String v : values) {
-			valuesList.add(v);
-		}
+    protected static enum VALUE_TYPE { PROPERTY, LIST, CONFIG };
 
-		this.value = valuesList;
-		this.valueType = VALUE_TYPE.LIST;
-	}
+    private VALUE_TYPE valueType;
+    private Object value;
+
+    public ConfigObject(String value) {
+        this.value = value;
+        this.valueType = VALUE_TYPE.PROPERTY;
+    }
+
+    public ConfigObject(String[] values) {
+        List<String> valuesList = new ArrayList<String>();
+        for (String v : values) {
+            valuesList.add(v);
+        }
+
+        this.value = valuesList;
+        this.valueType = VALUE_TYPE.LIST;
+    }
 
     public ConfigObject(List<String> values) {
         if (values != null) {
@@ -52,34 +52,34 @@ public class ConfigObject {
         this.valueType = VALUE_TYPE.LIST;
     }
 
-	public ConfigObject(Config value) {
-		this.value = value;
-		this.valueType = VALUE_TYPE.CONFIG;
-	}
+    public ConfigObject(Config value) {
+        this.value = value;
+        this.valueType = VALUE_TYPE.CONFIG;
+    }
 
-	public String getPropertyValue() {
-		String result = null;
-		if (valueType == VALUE_TYPE.PROPERTY) {
-			result = (String) value;
-		}
-		return result;
-	}
-	
-	@SuppressWarnings("unchecked")
+    public String getPropertyValue() {
+        String result = null;
+        if (valueType == VALUE_TYPE.PROPERTY) {
+            result = (String) value;
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
     public List<String> getListValues() {
-		List<String> results = null;
-		if (valueType == VALUE_TYPE.LIST && value instanceof List<?>) {
+        List<String> results = null;
+        if (valueType == VALUE_TYPE.LIST && value instanceof List<?>) {
             results = (List<String>) value;
-		}
-		
-		return results;
-	}
+        }
 
-	public Config getConfigValue() {
-		Config result = null;
-		if (valueType == VALUE_TYPE.CONFIG) {
-			result = (Config) value;
-		}
-		return result;
-	}
+        return results;
+    }
+
+    public Config getConfigValue() {
+        Config result = null;
+        if (valueType == VALUE_TYPE.CONFIG) {
+            result = (Config) value;
+        }
+        return result;
+    }
 }
