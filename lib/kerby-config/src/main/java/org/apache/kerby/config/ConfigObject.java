@@ -44,7 +44,11 @@ public class ConfigObject {
 	}
 
     public ConfigObject(List<String> values) {
-        this.value = new ArrayList<String>(values);
+        if (values != null) {
+            this.value = new ArrayList<String>(values);
+        } else {
+            this.value = new ArrayList<String>();
+        }
         this.valueType = VALUE_TYPE.LIST;
     }
 
@@ -61,9 +65,10 @@ public class ConfigObject {
 		return result;
 	}
 	
-	public List<String> getListValues() {
+	@SuppressWarnings("unchecked")
+    public List<String> getListValues() {
 		List<String> results = null;
-		if (valueType == VALUE_TYPE.LIST) {
+		if (valueType == VALUE_TYPE.LIST && value instanceof List<?>) {
             results = (List<String>) value;
 		}
 		

@@ -75,10 +75,7 @@ public class XmlConfigLoader extends ConfigLoader {
         return valid;
     }
 
-    private void loadConfig(ConfigImpl conifg, Element element) {
-        String name;
-        ConfigObject value;
-
+    private void loadConfig(ConfigImpl config, Element element) {
         NodeList props = element.getChildNodes();
         for (int i = 0; i < props.getLength(); i++) {
             Node subNode = props.item(i);
@@ -87,12 +84,12 @@ public class XmlConfigLoader extends ConfigLoader {
             }
 
             Element prop = (Element)subNode;
-            name = getElementName(prop);
+            String name = getElementName(prop);
             if (name == null) {
                 continue;
             }
 
-            value = null;
+            ConfigObject value = null;
             String tagName = prop.getTagName();
             if ("property".equals(tagName) && prop.hasChildNodes()) {
                 value = loadProperty(prop);
@@ -103,26 +100,25 @@ public class XmlConfigLoader extends ConfigLoader {
             }
 
             if (name != null) {
-                conifg.set(name, value);
+                config.set(name, value);
             }
         }
     }
 
     private static ConfigObject loadProperty(Element ele) {
-        String value = null;
         if (ele.getFirstChild() instanceof Text) {
-            value = ((Text)ele.getFirstChild()).getData();
+            String value = ((Text)ele.getFirstChild()).getData();
             return new ConfigObject(value);
         }
 
-        ConfigObject result = null;
         NodeList nodes = ele.getChildNodes();
         List<String> values = new ArrayList<String>(nodes.getLength());
         for (int i = 0; i < nodes.getLength(); i++) {
-            value = null;
+            String value = null;
             Node valueNode = nodes.item(i);
-            if (!(valueNode instanceof Element))
+            if (!(valueNode instanceof Element)) {
                 continue;
+            }
 
             Element valueEle = (Element)valueNode;
             if ("value".equals(valueEle.getTagName()) && valueEle.hasChildNodes()) {
@@ -137,21 +133,16 @@ public class XmlConfigLoader extends ConfigLoader {
     }
 
     private static String getElementName(Element ele) {
-        String name, value;
-        Node node;
-        Attr attr;
-
         NamedNodeMap nnm = ele.getAttributes();
         for (int i = 0; i < nnm.getLength(); ++i) {
-            node = nnm.item(i);
-            if (!(node instanceof Attr))
+            Node node = nnm.item(i);
+            if (!(node instanceof Attr)) {
                 continue;
-            attr = (Attr) node;
-            name = attr.getName();
-            value = attr.getValue();
+            }
+            Attr attr = (Attr) node;
 
-            if ("name".equals(name)) {
-                return value;
+            if ("name".equals(attr.getName())) {
+                return attr.getValue();
             }
         }
         return null;

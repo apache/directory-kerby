@@ -76,6 +76,7 @@ public class Conf implements Config {
         try {
             loader = loaderClass.newInstance();
         } catch (Exception e) {
+            logger.error("Failed to create org.haox.config loader for " + loaderClass.getName(), e);
             throw new RuntimeException("Failed to create org.haox.config loader for " + loaderClass.getName(), e);
         }
         loader.setResource(resource);

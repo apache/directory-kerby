@@ -71,7 +71,9 @@ public class ConfigImpl implements Config {
         if (result == null) {
             for (Config config : configs) {
                 result = config.getString(name);
-                if (result != null) break;
+                if (result != null) {
+                    break;
+                }
             }
         }
 

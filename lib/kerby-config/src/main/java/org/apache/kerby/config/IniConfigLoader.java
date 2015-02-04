@@ -48,6 +48,10 @@ public class IniConfigLoader extends ConfigLoader {
     }
 
     private void parseLine(String line) {
+        if (line == null) {
+            return;
+        }
+        
         line = line.trim();
 
         if (line.startsWith(COMMENT_SYMBOL)) {
