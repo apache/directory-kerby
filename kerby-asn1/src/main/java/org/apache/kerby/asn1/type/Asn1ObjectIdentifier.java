@@ -101,7 +101,9 @@ public class Asn1ObjectIdentifier extends Asn1Simple<String> {
     private byte[][] group(byte[] bytes) {
         int count = 0, i, j;
         int[] countArr = new int[bytes.length]; // how many bytes for each group
-        for (i = 0; i < countArr.length; ++i) countArr[i] = 0;
+        for (i = 0; i < countArr.length; ++i) {
+            countArr[i] = 0;
+        }
 
         for (j = 0, i = 0; i < bytes.length; ++i) {
             if ((bytes[i] & 0x80) != 0) {

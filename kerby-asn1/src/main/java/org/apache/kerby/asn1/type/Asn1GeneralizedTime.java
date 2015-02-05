@@ -105,7 +105,9 @@ public class Asn1GeneralizedTime extends Asn1Simple<Date> {
                 chr = dateStr.charAt(i);
                 if ('0' <= chr && chr <= '9') {
                     millDigits[j++] = chr;
-                } else break;
+                } else {
+                    break;
+                }
             }
         }
 

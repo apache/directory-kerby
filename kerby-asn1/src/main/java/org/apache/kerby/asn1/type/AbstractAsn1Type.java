@@ -155,7 +155,9 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     public int tagFlags() {
         if (tagFlags == -1) {
             int flags = tagClass.getValue();
-            if (isConstructed()) flags |= EncodingOption.CONSTRUCTED_FLAG;
+            if (isConstructed()) {
+                flags |= EncodingOption.CONSTRUCTED_FLAG;
+            }
             return flags;
         }
         return tagFlags;

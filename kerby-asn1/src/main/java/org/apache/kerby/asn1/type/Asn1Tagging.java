@@ -46,7 +46,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     @Override
     protected int encodingBodyLength() {
-        AbstractAsn1Type value = (AbstractAsn1Type) getValue();
+        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
         if (getEncodingOption().isExplicit()) {
             return value.encodingLength();
         } else if (getEncodingOption().isImplicit()) {
@@ -61,7 +61,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         if (getEncodingOption().isExplicit()) {
             return true;
         } else if (getEncodingOption().isImplicit()) {
-            AbstractAsn1Type value = (AbstractAsn1Type) getValue();
+            AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
             return value.isConstructed();
         }
         return false;
@@ -69,7 +69,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        AbstractAsn1Type value = (AbstractAsn1Type) getValue();
+        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
         if (getEncodingOption().isExplicit()) {
             value.encode(buffer);
         } else if (getEncodingOption().isImplicit()) {
@@ -81,7 +81,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     @Override
     protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        AbstractAsn1Type value = (AbstractAsn1Type) getValue();
+        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
         if (getEncodingOption().isExplicit()) {
             value.decode(content);
         } else if (getEncodingOption().isImplicit()) {
@@ -93,9 +93,9 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     private void initValue() {
         Class<? extends Asn1Type> valueType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        AbstractAsn1Type value = null;
+        AbstractAsn1Type<?> value = null;
         try {
-            value = (AbstractAsn1Type) valueType.newInstance();
+            value = (AbstractAsn1Type<?>) valueType.newInstance();
         } catch (Exception e) {
             throw new RuntimeException("Failed to create tagged value", e);
         }

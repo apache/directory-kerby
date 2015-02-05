@@ -44,13 +44,11 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
 
     @Override
     protected int encodingBodyLength() {
-        AbstractAsn1Type field;
-        TaggingOption taggingOption;
         for (int i = 0; i < fields.length; ++i) {
-            field = (AbstractAsn1Type) fields[i];
+            AbstractAsn1Type<?> field = (AbstractAsn1Type<?>) fields[i];
             if (field != null) {
                 if (fieldInfos[i].isTagged()) {
-                    taggingOption = fieldInfos[i].getTaggingOption();
+                    TaggingOption taggingOption = fieldInfos[i].getTaggingOption();
                     return field.taggedEncodingLength(taggingOption);
                 } else {
                     return field.encodingLength();
@@ -62,13 +60,11 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        Asn1Type field;
-        TaggingOption taggingOption;
         for (int i = 0; i < fields.length; ++i) {
-            field = fields[i];
+            Asn1Type field = fields[i];
             if (field != null) {
                 if (fieldInfos[i].isTagged()) {
-                    taggingOption = fieldInfos[i].getTaggingOption();
+                    TaggingOption taggingOption = fieldInfos[i].getTaggingOption();
                     field.taggedEncode(buffer, taggingOption);
                 } else {
                     field.encode(buffer);
@@ -105,7 +101,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
         }
 
         if (! item.isFullyDecoded()) {
-            AbstractAsn1Type fieldValue = (AbstractAsn1Type) fields[foundPos];
+            AbstractAsn1Type<?> fieldValue = (AbstractAsn1Type<?>) fields[foundPos];
             if (item.isContextSpecific()) {
                 item.decodeValueWith(fieldValue, fieldInfos[foundPos].getTaggingOption());
             } else {
@@ -139,7 +135,9 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
 
     protected String getFieldAsString(int index) {
         Asn1Type value = fields[index];
-        if (value == null) return null;
+        if (value == null) {
+            return null;
+        }
 
         if (value instanceof Asn1String) {
             return ((Asn1String) value).getValue();
@@ -150,7 +148,9 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
 
     protected byte[] getFieldAsOctets(int index) {
         Asn1OctetString value = getFieldAs(index, Asn1OctetString.class);
-        if (value != null) return value.getValue();
+        if (value != null) {
+            return value.getValue();
+        }
         return null;
     }
 

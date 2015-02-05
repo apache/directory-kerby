@@ -50,13 +50,11 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
     @Override
     protected int encodingBodyLength() {
         int allLen = 0;
-        AbstractAsn1Type field;
-        TaggingOption taggingOption;
         for (int i = 0; i < fields.length; ++i) {
-            field = (AbstractAsn1Type) fields[i];
+            AbstractAsn1Type<?> field = (AbstractAsn1Type<?>) fields[i];
             if (field != null) {
                 if (fieldInfos[i].isTagged()) {
-                    taggingOption = fieldInfos[i].getTaggingOption();
+                    TaggingOption taggingOption = fieldInfos[i].getTaggingOption();
                     allLen += field.taggedEncodingLength(taggingOption);
                 } else {
                     allLen += field.encodingLength();
@@ -68,13 +66,11 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        Asn1Type field;
-        TaggingOption taggingOption;
         for (int i = 0; i < fields.length; ++i) {
-            field = fields[i];
+            Asn1Type field = fields[i];
             if (field != null) {
                 if (fieldInfos[i].isTagged()) {
-                    taggingOption = fieldInfos[i].getTaggingOption();
+                    TaggingOption taggingOption = fieldInfos[i].getTaggingOption();
                     field.taggedEncode(buffer, taggingOption);
                 } else {
                     field.encode(buffer);
@@ -111,7 +107,7 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
             }
 
             if (! item.isFullyDecoded()) {
-                AbstractAsn1Type fieldValue = (AbstractAsn1Type) fields[foundPos];
+                AbstractAsn1Type<?> fieldValue = (AbstractAsn1Type<?>) fields[foundPos];
                 if (item.isContextSpecific()) {
                     item.decodeValueWith(fieldValue, fieldInfos[foundPos].getTaggingOption());
                 } else {
@@ -137,7 +133,9 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
 
     protected <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
         Asn1Type value = fields[index];
-        if (value == null) return null;
+        if (value == null) {
+            return null;
+        }
         return (T) value;
     }
 
@@ -147,7 +145,9 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
 
     protected String getFieldAsString(int index) {
         Asn1Type value = fields[index];
-        if (value == null) return null;
+        if (value == null) {
+            return null;
+        }
 
         if (value instanceof Asn1String) {
             return ((Asn1String) value).getValue();
@@ -158,7 +158,9 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
 
     protected byte[] getFieldAsOctets(int index) {
         Asn1OctetString value = getFieldAs(index, Asn1OctetString.class);
-        if (value != null) return value.getValue();
+        if (value != null) {
+            return value.getValue();
+        }
         return null;
     }
 

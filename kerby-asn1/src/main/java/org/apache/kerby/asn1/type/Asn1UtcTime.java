@@ -66,8 +66,7 @@ public class Asn1UtcTime extends Asn1Simple<Date>
             throw new IllegalArgumentException("Bad utc time string " + dateStr);
         }
 
-        SimpleDateFormat sdf;
-        sdf = new SimpleDateFormat("yyMMddHHmmssZ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmssZ");
         sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
         try {
             setValue(sdf.parse(fixedDateStr));

@@ -50,7 +50,7 @@ public class Util {
      * 0x02 02 00 80
      */
     public static byte[] hex2bytes(String hexString) {
-        if (hexString==null) {
+        if (hexString == null) {
             throw new IllegalArgumentException("Invalid hex string to convert : null");
         }
         
@@ -60,7 +60,7 @@ public class Util {
             throw new IllegalArgumentException("Invalid hex string to convert : length below 4");
         }
         
-        if (( hexStr[0] != '0') || ((hexStr[1]!='x') && (hexStr[1]!='X'))) {
+        if (( hexStr[0] != '0') || ((hexStr[1] != 'x') && (hexStr[1] != 'X'))) {
             throw new IllegalArgumentException("Invalid hex string to convert : not starting with '0x'");
         }
         
@@ -69,9 +69,9 @@ public class Util {
         boolean high = false;
         boolean prefix = true;
         
-        for (char c:hexStr) {
+        for (char c : hexStr) {
             if (prefix) {
-                if ((c == 'x')|| (c=='X')) {
+                if ((c == 'x') || (c=='X')) {
                     prefix = false;
                 }
                 

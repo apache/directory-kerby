@@ -56,7 +56,7 @@ public class Asn1OutputBuffer {
         int allLen = 0;
         for (Asn1Type item : objects) {
             if (item != null) {
-                allLen += ((AbstractAsn1Type) item).encodingLength();
+                allLen += ((AbstractAsn1Type<?>) item).encodingLength();
             }
         }
         return allLen;
