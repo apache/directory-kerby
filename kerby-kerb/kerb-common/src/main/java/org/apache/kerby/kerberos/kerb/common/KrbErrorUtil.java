@@ -42,7 +42,7 @@ public class KrbErrorUtil {
                 return getEtypes(pd.getPaDataValue());
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     private static List<EncryptionType> getEtypes(byte[] data) throws IOException {

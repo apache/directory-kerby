@@ -67,10 +67,9 @@ public class PkinitIdenity {
 
     public static void parseFileOption(IdentityOpts identityOpts, String residual) {
         String[] parts = residual.split(",");
-        String certName = null;
+        String certName = parts[0];
         String keyName = null;
 
-        certName = parts[0];
         if (parts.length > 1) {
             keyName = parts[1];
         }

@@ -37,9 +37,8 @@ public class EncryptionUtil {
 
     public static List<EncryptionKey> generateKeys(List<EncryptionType> encryptionTypes) throws KrbException {
         List<EncryptionKey> results = new ArrayList<EncryptionKey>(encryptionTypes.size());
-        EncryptionKey encKey;
         for (EncryptionType eType : encryptionTypes) {
-            encKey = EncryptionHandler.random2Key(eType);
+            EncryptionKey encKey = EncryptionHandler.random2Key(eType);
             results.add(encKey);
         }
 
@@ -49,9 +48,8 @@ public class EncryptionUtil {
     public static List<EncryptionKey> generateKeys(String principal, String passwd,
                                                    List<EncryptionType> encryptionTypes) throws KrbException {
         List<EncryptionKey> results = new ArrayList<EncryptionKey>(encryptionTypes.size());
-        EncryptionKey encKey;
         for (EncryptionType eType : encryptionTypes) {
-            encKey = EncryptionHandler.string2Key(principal, passwd, eType);
+            EncryptionKey encKey = EncryptionHandler.string2Key(principal, passwd, eType);
             results.add(encKey);
         }
 
@@ -69,7 +67,7 @@ public class EncryptionUtil {
         return null;
     }
 
-    public static EncryptedData seal(AbstractAsn1Type asn1Type,
+    public static EncryptedData seal(AbstractAsn1Type<?> asn1Type,
                                      EncryptionKey key, KeyUsage usage) throws KrbException {
         byte[] encoded = asn1Type.encode();
         EncryptedData encrypted = EncryptionHandler.encrypt(encoded, key, usage);

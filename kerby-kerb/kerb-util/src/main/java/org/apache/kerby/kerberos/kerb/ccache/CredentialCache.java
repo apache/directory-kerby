@@ -185,7 +185,7 @@ public class CredentialCache implements KrbCredentialCache
 
         Credential cred;
         while (ccis.available() > 0) {
-            cred =  new Credential();
+            cred = new Credential();
             cred.load(ccis, version);
 
             results.add(cred);
@@ -267,9 +267,8 @@ public class CredentialCache implements KrbCredentialCache
         CredentialCache cc = new CredentialCache();
         cc.load(new File(cacheFile));
 
-        Ticket tkt;
         for (Credential cred : cc.getCredentials()) {
-            tkt = cred.getTicket();
+            Ticket tkt = cred.getTicket();
             System.out.println("Tkt server name: " + tkt.getSname().getName());
             System.out.println("Tkt client name: " + cred.getClientName().getName());
             System.out.println("Tkt encrypt type: " + tkt.getEncryptedEncPart().getEType().getName());
