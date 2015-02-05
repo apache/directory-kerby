@@ -33,7 +33,7 @@ public class KerberosApRequest {
     private KerberosTicket ticket;
 
     public KerberosApRequest(byte[] token, EncryptionKey key) throws Exception {
-        if(token.length <= 0) {
+        if (token.length <= 0) {
             throw new IOException("kerberos request empty");
         }
 

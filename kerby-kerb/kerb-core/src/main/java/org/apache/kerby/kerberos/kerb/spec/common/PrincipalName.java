@@ -75,7 +75,7 @@ public class PrincipalName extends KrbSequenceType {
         if (krbStrings != null) {
             return krbStrings.getAsStrings();
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     public void setNameStrings(List<String> nameStrings) {

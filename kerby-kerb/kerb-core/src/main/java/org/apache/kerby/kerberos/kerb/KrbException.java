@@ -21,6 +21,11 @@ package org.apache.kerby.kerberos.kerb;
 
 public class KrbException extends Exception {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3561718983481823145L;
+
     public KrbException(String message) {
         super(message);
     }

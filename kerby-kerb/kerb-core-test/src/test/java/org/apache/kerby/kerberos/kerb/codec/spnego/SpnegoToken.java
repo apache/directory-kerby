@@ -33,8 +33,9 @@ public abstract class SpnegoToken {
     public static SpnegoToken parse(byte[] token) throws IOException {
         SpnegoToken spnegoToken = null;
 
-        if(token.length <= 0)
+        if (token.length <= 0) {
             throw new IOException("spnego.token.empty");
+        }
 
         switch (token[0]) {
         case (byte)0x60:
@@ -45,7 +46,6 @@ public abstract class SpnegoToken {
             break;
         default:
             spnegoToken = null;
-            Object[] args = new Object[]{token[0]};
             throw new IOException("spnego.token.invalid");
         }
 

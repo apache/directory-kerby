@@ -39,9 +39,8 @@ public class TestSpnego {
 
     //@Before
     public void setUp() throws IOException {
-        InputStream file;
 
-        file = this.getClass().getClassLoader().getResourceAsStream("rc4-spnego-data");
+        InputStream file = this.getClass().getClassLoader().getResourceAsStream("rc4-spnego-data");
         rc4Token = new byte[file.available()];
         file.read(rc4Token);
         file.close();

@@ -44,10 +44,8 @@ public class TestKerberos {
 
     @Before
     public void setUp() throws IOException {
-        InputStream file;
-        byte[] keyData;
 
-        file = this.getClass().getClassLoader().getResourceAsStream("rc4-kerberos-data");
+        InputStream file = this.getClass().getClassLoader().getResourceAsStream("rc4-kerberos-data");
         rc4Token = new byte[file.available()];
         file.read(rc4Token);
         file.close();
@@ -68,7 +66,7 @@ public class TestKerberos {
         file.close();
 
         file = this.getClass().getClassLoader().getResourceAsStream("rc4-key-data");
-        keyData = new byte[file.available()];
+        byte[] keyData = new byte[file.available()];
         file.read(keyData);
         rc4Key = new EncryptionKey(23, keyData, 2);
         file.close();

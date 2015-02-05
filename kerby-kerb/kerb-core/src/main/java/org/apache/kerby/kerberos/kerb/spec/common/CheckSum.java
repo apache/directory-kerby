@@ -75,12 +75,18 @@ public class CheckSum extends KrbSequenceType {
 
     @Override
     public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
 
         CheckSum that = (CheckSum) other;
 
-        if (getCksumtype() != that.getCksumtype()) return false;
+        if (getCksumtype() != that.getCksumtype()) {
+            return false;
+        }
 
         return Arrays.equals(getChecksum(), that.getChecksum());
     }

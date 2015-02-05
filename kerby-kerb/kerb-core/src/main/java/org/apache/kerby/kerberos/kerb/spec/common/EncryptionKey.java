@@ -93,14 +93,22 @@ public class EncryptionKey extends KrbSequenceType {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         EncryptionKey that = (EncryptionKey) o;
 
-        if (kvno != -1 && that.kvno != -1 && kvno != that.kvno) return false;
+        if (kvno != -1 && that.kvno != -1 && kvno != that.kvno) {
+            return false;
+        }
 
-        if (getKeyType() != that.getKeyType()) return false;
+        if (getKeyType() != that.getKeyType()) {
+            return false;
+        }
 
         return Arrays.equals(getKeyData(), that.getKeyData());
     }

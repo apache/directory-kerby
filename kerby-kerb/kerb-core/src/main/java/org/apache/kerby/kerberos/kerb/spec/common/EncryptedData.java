@@ -79,8 +79,12 @@ public class EncryptedData extends KrbSequenceType {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         EncryptedData that = (EncryptedData) o;
 
@@ -89,7 +93,9 @@ public class EncryptedData extends KrbSequenceType {
                 getKvno() != that.getKvno()) return false;
         */
 
-        if (getEType() != that.getEType()) return false;
+        if (getEType() != that.getEType()) {
+            return false;
+        }
 
         return Arrays.equals(getCipher(), that.getCipher());
     }

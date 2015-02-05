@@ -23,10 +23,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class CodecTestUtil {
-  /*package*/ static byte[] readBinaryFile(String path) throws IOException {
-    InputStream is = CodecTestUtil.class.getResourceAsStream(path);
-    byte[] bytes = new byte[is.available()];
-    is.read(bytes);
-    return bytes;
-  }
+    /*package*/ 
+    static byte[] readBinaryFile(String path) throws IOException {
+        InputStream is = CodecTestUtil.class.getResourceAsStream(path);
+        byte[] bytes = new byte[is.available()];
+        is.read(bytes);
+        return bytes;
+    }
 }
