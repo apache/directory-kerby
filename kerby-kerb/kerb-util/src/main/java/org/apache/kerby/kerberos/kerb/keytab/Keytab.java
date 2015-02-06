@@ -98,6 +98,18 @@ public class Keytab implements KrbKeytab {
         return null;
     }
 
+    public static Keytab loadKeytab(File keytabFile) throws IOException {
+        Keytab keytab = new Keytab();
+        keytab.load(keytabFile);
+        return keytab;
+    }
+
+    public static Keytab loadKeytab(InputStream inputStream) throws IOException {
+        Keytab keytab = new Keytab();
+        keytab.load(inputStream);
+        return keytab;
+    }
+
     @Override
     public void load(File keytabFile) throws IOException {
         if (! keytabFile.exists() || ! keytabFile.canRead()) {

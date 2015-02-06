@@ -52,8 +52,7 @@ public class KeytabTest {
     @Before
     public void setUp() throws IOException {
         InputStream kis = KeytabTest.class.getResourceAsStream("/test.keytab");
-        keytab = new Keytab();
-        keytab.load(kis);
+        keytab = Keytab.loadKeytab(kis);
     }
 
     @Test
@@ -70,8 +69,7 @@ public class KeytabTest {
 
     public static void main(String[] args) throws IOException {
         InputStream kis = KeytabTest.class.getResourceAsStream("test.keytab");
-        Keytab keytab = new Keytab();
-        keytab.load(kis);
+        Keytab keytab = Keytab.loadKeytab(kis);
         System.out.println("Principals:" + keytab.getPrincipals().size());
     }
 }
