@@ -97,15 +97,27 @@ public class KeytabEntry
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         KeytabEntry that = (KeytabEntry) o;
 
-        if (kvno != that.kvno) return false;
-        if (!key.equals(that.key)) return false;
-        if (!principal.equals(that.principal)) return false;
-        if (!timestamp.equals(that.timestamp)) return false;
+        if (kvno != that.kvno) {
+            return false;
+        }
+        if (!key.equals(that.key)) {
+            return false;
+        }
+        if (!principal.equals(that.principal)) {
+            return false;
+        }
+        if (!timestamp.equals(that.timestamp)) {
+            return false;
+        }
 
         return true;
     }

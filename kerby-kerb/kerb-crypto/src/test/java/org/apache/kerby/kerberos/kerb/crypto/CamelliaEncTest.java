@@ -24,7 +24,6 @@ import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia128Provider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia256Provider;
 import org.apache.kerby.util.HexUtil;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -34,6 +33,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CamelliaEncTest {
 
@@ -69,8 +70,7 @@ public class CamelliaEncTest {
         outputs.add("==========");
 
         List<String> newLines = expectedLines;
-        Assert.assertEquals("Comparing new lines with expected lines",
-                expectedLines, outputs);
+        assertThat(expectedLines).as("Comparing new lines with expected lines").isEqualTo(outputs);
     }
 
     private void testWith(int keySize) throws KrbException {

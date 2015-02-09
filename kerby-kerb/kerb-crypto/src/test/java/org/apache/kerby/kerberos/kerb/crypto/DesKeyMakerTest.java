@@ -2,7 +2,8 @@ package org.apache.kerby.kerberos.kerb.crypto;
 
 import org.apache.kerby.kerberos.kerb.crypto.key.DesKeyMaker;
 import org.apache.kerby.util.HexUtil;
-import org.junit.Assert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * This is just for my experimental tweaking, so pleas bear it.
@@ -37,15 +38,15 @@ public class DesKeyMakerTest {
     private void test(TestCase tc) {
         byte[] expectedValue = HexUtil.hex2bytes(tc.passwdSaltBytes);
         byte[] value = DesKeyMaker.makePasswdSalt(tc.passwd, tc.salt);
-        Assert.assertArrayEquals("PasswdSalt bytes", expectedValue, value);
+        assertThat(value).as("PasswdSalt bytes").isEqualTo(expectedValue);
 
         expectedValue = HexUtil.hex2bytes(tc.fanFoldedKey);
         value = DesKeyMaker.fanFold(tc.passwd, tc.salt, null);
-        Assert.assertArrayEquals("FanFold result", expectedValue, value);
+        assertThat(value).as("FanFold result").isEqualTo(expectedValue);
 
         expectedValue = HexUtil.hex2bytes(tc.intermediateKey);
         value = DesKeyMaker.intermediateKey(value);
-        Assert.assertArrayEquals("IntermediateKey result", expectedValue, value);
+        assertThat(value).as("IntermediateKey result").isEqualTo(expectedValue);
 
         // finalKey check ignored here and it's done in String2keyTest.
     }

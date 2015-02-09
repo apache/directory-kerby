@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
-import org.apache.kerby.kerberos.kerb.crypto.Confounder;
+import org.apache.kerby.kerberos.kerb.crypto.util.Confounder;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.HashProvider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.DesProvider;
 import org.apache.kerby.kerberos.kerb.crypto.key.DesKeyMaker;

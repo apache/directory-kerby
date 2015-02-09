@@ -22,7 +22,12 @@ package org.apache.kerby.kerberos.kerb.crypto.enc;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 /**
- * krb5_enc_provider
+ * Ref. MIT Krb5:krb5_enc_provider
+ */
+
+/**
+ * Encryption provider that provides encryption/decryption functions
+ * for implementing an encryption type defined by Kerberos RFC3961.
  */
 public interface EncryptProvider {
 
@@ -37,7 +42,4 @@ public interface EncryptProvider {
     public byte[] cbcMac(byte[] key, byte[] iv, byte[] data) throws KrbException;
     public boolean supportCbcMac();
 
-    public byte[] initState(byte[] key, int keyUsage);
-    public void cleanState();
-    public void cleanKey();
 }

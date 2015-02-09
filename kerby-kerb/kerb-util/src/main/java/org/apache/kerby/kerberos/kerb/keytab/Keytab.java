@@ -19,13 +19,21 @@
  */
 package org.apache.kerby.kerberos.kerb.keytab;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
-
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.util.*;
 
 public class Keytab implements KrbKeytab {
 
@@ -63,9 +71,8 @@ public class Keytab implements KrbKeytab {
         List<KeytabEntry> entries = principalEntries.get(principal);
         if (entries != null) {
             Iterator<KeytabEntry> iter = entries.iterator();
-            KeytabEntry tmp;
             while (iter.hasNext()) {
-                tmp = iter.next();
+                KeytabEntry tmp = iter.next();
                 if (entry.equals(tmp)) {
                     iter.remove();
                     break;
@@ -89,6 +96,18 @@ public class Keytab implements KrbKeytab {
         }
 
         return null;
+    }
+
+    public static Keytab loadKeytab(File keytabFile) throws IOException {
+        Keytab keytab = new Keytab();
+        keytab.load(keytabFile);
+        return keytab;
+    }
+
+    public static Keytab loadKeytab(InputStream inputStream) throws IOException {
+        Keytab keytab = new Keytab();
+        keytab.load(inputStream);
+        return keytab;
     }
 
     @Override
@@ -138,15 +157,12 @@ public class Keytab implements KrbKeytab {
     private List<KeytabEntry> readEntries(KeytabInputStream kis) throws IOException {
         List<KeytabEntry> entries = new ArrayList<KeytabEntry>();
 
-        int entrySize;
-        ByteBuffer entryData;
-        KeytabEntry entry;
         while (kis.available() > 0) {
-            entrySize = kis.readInt();
+            int entrySize = kis.readInt();
             if (kis.available() < entrySize) {
                 throw new IOException("Bad input stream with less data than expected: " + entrySize);
             }
-            entry = readEntry(kis);
+            KeytabEntry entry = readEntry(kis);
             entries.add(entry);
         }
 

@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.enc.provider;
 
-import org.apache.kerby.kerberos.kerb.crypto.Camellia;
+import org.apache.kerby.kerberos.kerb.crypto.util.Camellia;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 public abstract class CamelliaProvider extends AbstractEncryptProvider {

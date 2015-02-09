@@ -27,7 +27,6 @@ import org.apache.kerby.kerberos.kerb.spec.common.*;
 import org.apache.kerby.kerberos.kerb.spec.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.codec.KrbCodec;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /*
 The principal keys for krbtgt/SH.INTEL.COM@SH.INTEL.COM
@@ -58,8 +59,7 @@ public class EncryptionTest {
     @Before
     public void setUp() throws IOException {
         InputStream kis = EncryptionTest.class.getResourceAsStream("/krbtgt.keytab");
-        keytab = new Keytab();
-        keytab.load(kis);
+        keytab = Keytab.loadKeytab(kis);
     }
 
     @Test
@@ -112,10 +112,10 @@ public class EncryptionTest {
 
         byte[] decrypted = EncryptionHandler.decrypt(
                 ticket.getEncryptedEncPart(), key, KeyUsage.KDC_REP_TICKET);
-        Assert.assertNotNull(decrypted);
+        assertThat(decrypted).isNotNull();
 
         EncTicketPart encPart = KrbCodec.decode(decrypted, EncTicketPart.class);
-        Assert.assertNotNull(encPart);
+        assertThat(encPart).isNotNull();
         ticket.setEncPart(encPart);
 
         EncryptedData encrypted = EncryptionHandler.encrypt(

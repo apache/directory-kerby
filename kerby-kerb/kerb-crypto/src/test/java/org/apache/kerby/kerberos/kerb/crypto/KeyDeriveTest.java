@@ -26,10 +26,11 @@ import org.apache.kerby.kerberos.kerb.crypto.key.Des3KeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.key.DkKeyMaker;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 import org.apache.kerby.util.HexUtil;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Key derivation test with known values.
@@ -205,7 +206,7 @@ public class KeyDeriveTest {
         }
 
         if (!overallResult) {
-            Assert.fail();
+            fail(null);
         }
     }
 

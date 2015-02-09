@@ -102,7 +102,7 @@ public class Network extends LongRunningEventHandler {
      * @param serverAddress
      * @param serverPort
      */
-    public void tcpConnect(String serverAddress, short serverPort) {
+    public void tcpConnect(String serverAddress, int serverPort) {
         InetSocketAddress sa = new InetSocketAddress(serverAddress, serverPort);
         checkTcpTransportHandler();
         doTcpConnect(sa);
@@ -114,7 +114,7 @@ public class Network extends LongRunningEventHandler {
      * @param serverAddress
      * @param serverPort
      */
-    public void udpConnect(String serverAddress, short serverPort) {
+    public void udpConnect(String serverAddress, int serverPort) {
         InetSocketAddress sa = new InetSocketAddress(serverAddress, serverPort);
         checkUdpTransportHandler();
         doUdpConnect(sa);
@@ -126,7 +126,7 @@ public class Network extends LongRunningEventHandler {
      * @param serverAddress
      * @param serverPort
      */
-    public void tcpListen(String serverAddress, short serverPort) {
+    public void tcpListen(String serverAddress, int serverPort) {
         InetSocketAddress sa = new InetSocketAddress(serverAddress, serverPort);
         checkTcpTransportHandler();
         doTcpListen(sa);
@@ -138,7 +138,7 @@ public class Network extends LongRunningEventHandler {
      * @param serverAddress
      * @param serverPort
      */
-    public void udpListen(String serverAddress, short serverPort) {
+    public void udpListen(String serverAddress, int serverPort) {
         InetSocketAddress sa = new InetSocketAddress(serverAddress, serverPort);
         checkUdpTransportHandler();
         doUdpListen(sa);

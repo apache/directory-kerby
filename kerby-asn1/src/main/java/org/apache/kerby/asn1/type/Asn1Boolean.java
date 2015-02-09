@@ -24,18 +24,27 @@ import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 
-public class Asn1Boolean extends Asn1Simple<Boolean>
-{
+/**
+ * ASN1 Boolean type
+ */
+public class Asn1Boolean extends Asn1Simple<Boolean> {
     private static final byte[] TRUE_BYTE = new byte[] { (byte)0xff };
     private static final byte[] FALSE_BYTE = new byte[] { (byte)0x00 };
 
     public static final Asn1Boolean TRUE = new Asn1Boolean(true);
     public static final Asn1Boolean FALSE = new Asn1Boolean(false);
 
+    /**
+     * Default constructor, generally for decoding as a container
+     */
     public Asn1Boolean() {
         this(null);
     }
 
+    /**
+     * Constructor with a value, generally for encoding of the value
+     * @param value
+     */
     public Asn1Boolean(Boolean value) {
         super(UniversalTag.BOOLEAN, value);
     }
@@ -58,14 +67,19 @@ public class Asn1Boolean extends Asn1Simple<Boolean>
         setBytes(getValue() ? TRUE_BYTE : FALSE_BYTE);
     }
 
+    @Override
     protected void toValue() throws IOException {
         byte[] bytes = getBytes();
         if (bytes[0] == 0) {
             setValue(false);
-        } else if (bytes[0] == 0xff) {
+        } else if ((bytes[0] & 0xff) == 0xff) {
+            // DER only accepts 0xFF as true
+            setValue(true);
+        } else if (getEncodingOption().isBer()) {
+            // BER accepts any non-zero as true
             setValue(true);
         } else {
-            setValue(true);
+            setValue(false);
         }
     }
 }

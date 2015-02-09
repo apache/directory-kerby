@@ -20,10 +20,11 @@
 package org.apache.kerby.event;
 
 import org.apache.kerby.transport.buffer.RecvBuffer;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestBuffer {
 
@@ -36,7 +37,7 @@ public class TestBuffer {
         RecvBuffer testBuffer = new RecvBuffer();
         testBuffer.write(testMessage);
         tmp = testBuffer.readMostBytes();
-        Assert.assertArrayEquals(testString.getBytes(), tmp.array());
+        assertThat(tmp.array()).isEqualTo(testString.getBytes());
 
         int nTimes = 10;
         testBuffer.clear();
@@ -45,6 +46,6 @@ public class TestBuffer {
         }
         int expectedBytes = nTimes * testMessage.limit();
         tmp = testBuffer.readMostBytes();
-        Assert.assertEquals(expectedBytes, tmp.limit());
+        assertThat(tmp.limit()).isEqualTo(expectedBytes);
     }
 }

@@ -26,13 +26,14 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.fail;
 
 /*
 The principal was created with password '123456'
@@ -55,8 +56,7 @@ public class KeysTest {
     @Before
     public void setUp() throws IOException {
         InputStream kis = KeysTest.class.getResourceAsStream("/test.keytab");
-        keytab = new Keytab();
-        keytab.load(kis);
+        keytab = Keytab.loadKeytab(kis);
     }
 
     @Test
@@ -64,15 +64,14 @@ public class KeysTest {
         List<PrincipalName> principals = keytab.getPrincipals();
         PrincipalName principal = principals.get(0);
         List<KeytabEntry> entries = keytab.getKeytabEntries(principal);
-        EncryptionKey genKey;
-        EncryptionType keyType;
+
         for (KeytabEntry ke : entries) {
-            keyType = ke.getKey().getKeyType();
+            EncryptionType keyType = ke.getKey().getKeyType();
             if (EncryptionHandler.isImplemented(keyType)) {
-                genKey = EncryptionHandler.string2Key(principal.getName(),
+                EncryptionKey genKey = EncryptionHandler.string2Key(principal.getName(),
                         TEST_PASSWORD, keyType);
                 if(! ke.getKey().equals(genKey)) {
-                    Assert.fail("str2key failed for key type: " + keyType.getName());
+                    fail("str2key failed for key type: " + keyType.getName());
                     //System.err.println("str2key failed for key type: " + keyType.getName());
                 }
             }

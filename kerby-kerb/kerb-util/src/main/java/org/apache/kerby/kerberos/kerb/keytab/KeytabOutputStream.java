@@ -29,7 +29,7 @@ import java.util.List;
 
 public class KeytabOutputStream extends KrbOutputStream
 {
-	public KeytabOutputStream(OutputStream out) {
+    public KeytabOutputStream(OutputStream out) {
         super(out);
     }
 
@@ -51,7 +51,7 @@ public class KeytabOutputStream extends KrbOutputStream
 
     @Override
     public void writeKey(EncryptionKey key, int version) throws IOException {
-    	writeShort(key.getKeyType().getValue());
+        writeShort(key.getKeyType().getValue());
         writeCountedOctets(key.getKeyData());
     }
 

@@ -41,8 +41,7 @@ public abstract class KrbSequenceType extends Asn1SequenceType {
     }
 
     protected KerberosTime getFieldAsTime(int index) {
-        KerberosTime value = getFieldAs(index, KerberosTime.class);
-        return value;
+        return getFieldAs(index, KerberosTime.class);
     }
 
     protected void setFieldAsTime(int index, long value) {

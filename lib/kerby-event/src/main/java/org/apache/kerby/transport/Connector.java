@@ -27,7 +27,7 @@ public abstract class Connector extends TransportSelector {
         super(transportHandler);
     }
 
-    public void connect(String serverAddress, short serverPort) {
+    public void connect(String serverAddress, int serverPort) {
         InetSocketAddress sa = new InetSocketAddress(serverAddress, serverPort);
         doConnect(sa);
     }

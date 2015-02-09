@@ -57,7 +57,9 @@ public class Pkix {
     }
 
     public static PrivateKey getPrivateKey(InputStream inputStream, String password) throws GeneralSecurityException, IOException {
-        if (password == null) password = "";
+        if (password == null) {
+            password = "";
+        }
         // If the provided InputStream is encrypted, we need a password to decrypt
         // it. If the InputStream is not encrypted, then the password is ignored
         // (can be null).  The InputStream can be DER (raw ASN.1) or PEM (base64).

@@ -19,25 +19,30 @@
  */
 package org.apache.kerby.asn1;
 
-// Optimized by Emmanuel
+/**
+ * An enumeration for every ASN.1 UNIVERSAL type.
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ */
 public enum UniversalTag {
     UNKNOWN             (-1),
-    CHOICE              (-2), // Only for internal using
+    CHOICE              (-2),   // Only for internal using
+    BER_UNDEFINED_LENGTH(0),    // Used to encode undefined length with BER
     BOOLEAN             (0x01),
     INTEGER             (0x02),
     BIT_STRING          (0x03),
     OCTET_STRING        (0x04),
     NULL                (0x05),
     OBJECT_IDENTIFIER   (0x06),
-    OBJECT_DESCRIPTOR   (0x07),     // Added for completness
+    OBJECT_DESCRIPTOR   (0x07),
     EXTERNAL            (0x08),
     REAL                (0x09),
     ENUMERATED          (0x0a),
-    EMBEDDED_PDV        (0x0b),     // Added for completness
+    EMBEDDED_PDV        (0x0b),
     UTF8_STRING         (0x0c),
-    RELATIVE_OID        (0x0d),     // Added for completness
-    RESERVED_14         (0x0e),     // Added for completness
-    RESERVED_15         (0x0f),     // Added for completness
+    RELATIVE_OID        (0x0d),
+    RESERVED_14         (0x0e),
+    RESERVED_15         (0x0f),
     SEQUENCE            (0x10),
     SEQUENCE_OF         (0x10),
     SET                 (0x11),
@@ -53,22 +58,35 @@ public enum UniversalTag {
     VISIBLE_STRING      (0x1a),
     GENERAL_STRING      (0x1b),
     UNIVERSAL_STRING    (0x1c),
-    CHARACTER_STRING    (0x1d),     // Added for completness
+    CHARACTER_STRING    (0x1d),
     BMP_STRING          (0x1e),
-    RESERVED_31         (0x1f);     // Added for completness
+    RESERVED_31         (0x1f);
 
+    /** The tag value */
     private int value;
 
+    /**
+     * Create an instance of this class
+     */
     private UniversalTag(int value) {
         this.value = value;
     }
 
+    /**
+     * @return The associated tag value
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * Retrieve the UniversalTag associated with a given value
+     * @param value The integer value
+     * @return The associated UniversalTag
+     */
     public static UniversalTag fromValue(int value) {
         switch (value) {
+            case 0x00 : return BER_UNDEFINED_LENGTH;
             case 0x01 : return BOOLEAN;
             case 0x02 : return INTEGER;
             case 0x03 : return BIT_STRING;

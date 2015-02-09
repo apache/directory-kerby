@@ -20,6 +20,7 @@
 package org.apache.kerby.event.tcp;
 
 import org.apache.kerby.event.EventType;
+import org.apache.kerby.event.NetworkUtil;
 import org.apache.kerby.transport.tcp.DecodingCallback;
 import org.apache.kerby.transport.tcp.StreamingDecoder;
 
@@ -27,12 +28,16 @@ import java.nio.ByteBuffer;
 
 public class TestTcpBase {
     protected String serverHost = "127.0.0.1";
-    protected short serverPort = 8181;
+    protected int serverPort = 0;
     protected String TEST_MESSAGE = "Hello world!";
     protected String clientRecvedMessage;
 
     protected enum TestEventType implements EventType {
         FINISHED
+    }
+
+    protected void preparePort() {
+        serverPort = NetworkUtil.getServerPort();
     }
 
     protected String recvBuffer2String(ByteBuffer buffer) {

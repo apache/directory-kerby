@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.event.udp;
 
-import junit.framework.Assert;
 import org.apache.kerby.event.EventHandler;
 import org.apache.kerby.event.EventHub;
 import org.apache.kerby.transport.Acceptor;
@@ -33,9 +32,12 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUdpServer extends TestUdpBase {
 
@@ -43,6 +45,8 @@ public class TestUdpServer extends TestUdpBase {
 
     @Before
     public void setUp() throws IOException {
+        preparePort();
+
         setUpServer();
     }
 
@@ -79,7 +83,7 @@ public class TestUdpServer extends TestUdpBase {
         byteBuffer.flip();
         clientRecvedMessage = recvBuffer2String(byteBuffer);
 
-        Assert.assertEquals(TEST_MESSAGE, clientRecvedMessage);
+        assertThat(clientRecvedMessage).isEqualTo(TEST_MESSAGE);
     }
 
     @After

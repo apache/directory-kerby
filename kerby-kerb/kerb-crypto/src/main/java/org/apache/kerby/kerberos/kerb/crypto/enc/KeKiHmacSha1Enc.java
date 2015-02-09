@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
-import org.apache.kerby.kerberos.kerb.crypto.Hmac;
+import org.apache.kerby.kerberos.kerb.crypto.util.Hmac;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.HashProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 

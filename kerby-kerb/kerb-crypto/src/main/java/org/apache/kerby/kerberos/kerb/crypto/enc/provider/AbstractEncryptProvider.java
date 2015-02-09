@@ -49,11 +49,6 @@ public abstract class AbstractEncryptProvider implements EncryptProvider {
     }
 
     @Override
-    public byte[] initState(byte[] key, int keyUsage) {
-        return new byte[0];
-    }
-
-    @Override
     public void encrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException {
         doEncrypt(data, key, cipherState, true);
     }
@@ -87,13 +82,4 @@ public abstract class AbstractEncryptProvider implements EncryptProvider {
         return false;
     }
 
-    @Override
-    public void cleanState() {
-
-    }
-
-    @Override
-    public void cleanKey() {
-
-    }
 }

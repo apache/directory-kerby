@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
-import org.apache.kerby.kerberos.kerb.crypto.Nonce;
+import org.apache.kerby.kerberos.kerb.crypto.util.Nonce;
 
 public class KrbContext {
 

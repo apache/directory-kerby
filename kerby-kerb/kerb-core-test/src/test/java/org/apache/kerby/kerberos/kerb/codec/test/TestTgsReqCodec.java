@@ -28,7 +28,6 @@ import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -37,6 +36,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.SimpleTimeZone;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test TgsReq message using a real 'correct' network packet captured from MS-AD to detective programming errors
@@ -50,43 +51,42 @@ public class TestTgsReqCodec {
         TgsReq tgsReq = new TgsReq();
         tgsReq.decode(bytes);
 
-        Assert.assertEquals(5, tgsReq.getPvno());
-        Assert.assertEquals(KrbMessageType.TGS_REQ, tgsReq.getMsgType());
+        assertThat(tgsReq.getPvno()).isEqualTo(5);
+        assertThat(tgsReq.getMsgType()).isEqualTo(KrbMessageType.TGS_REQ);
 
         PaData paData = tgsReq.getPaData();
-        Assert.assertEquals(1, paData.getElements().size());
+        assertThat(paData.getElements()).hasSize(1);
         PaDataEntry entry = paData.getElements().iterator().next();
-        Assert.assertEquals(PaDataType.TGS_REQ, entry.getPaDataType());
+        assertThat(entry.getPaDataType()).isEqualTo(PaDataType.TGS_REQ);
 
         //request body
         KdcReqBody body = tgsReq.getReqBody();
-        Assert.assertEquals(0, body.getKdcOptions().getPadding());
+        assertThat(body.getKdcOptions().getPadding()).isEqualTo(0);
         byte[] kdcOptionsValue = {64, (byte) 128, 0, 0};
-        Assert.assertArrayEquals(kdcOptionsValue, body.getKdcOptions().getValue());
+        assertThat(body.getKdcOptions().getValue()).isEqualTo(kdcOptionsValue);
 
-        Assert.assertEquals("DENYDC.COM", body.getRealm());
+        assertThat(body.getRealm()).isEqualTo("DENYDC.COM");
 
         PrincipalName sName = body.getSname();
-        Assert.assertEquals(NameType.NT_SRV_HST, sName.getNameType());
-        Assert.assertEquals(2, sName.getNameStrings().size());
-        Assert.assertEquals("host", sName.getNameStrings().get(0));
-        Assert.assertEquals("xp1.denydc.com", sName.getNameStrings().get(1));
+        assertThat(sName.getNameType()).isEqualTo(NameType.NT_SRV_HST);
+        assertThat(sName.getNameStrings()).hasSize(2)
+                .contains("host", "xp1.denydc.com");
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
         Date date = sdf.parse("20370913024805");
-        Assert.assertEquals(date.getTime(), body.getTill().getTime());
+        assertThat(body.getTill().getTime()).isEqualTo(date.getTime());
 
-        Assert.assertEquals(197296424, body.getNonce());
+        assertThat(body.getNonce()).isEqualTo(197296424);
 
         List<EncryptionType> eTypes = body.getEtypes();
-        Assert.assertEquals(7, eTypes.size());
-        Assert.assertEquals(0x0017, eTypes.get(0).getValue());
-        //Assert.assertEquals(-133, eTypes.get(1).getValue());//FIXME
-        //Assert.assertEquals(-128, eTypes.get(2).getValue());//FIXME
-        Assert.assertEquals(0x0003, eTypes.get(3).getValue());
-        Assert.assertEquals(0x0001, eTypes.get(4).getValue());
-        Assert.assertEquals(0x0018, eTypes.get(5).getValue());
-        //Assert.assertEquals(-135, eTypes.get(6).getValue());//FIXME
+        assertThat(eTypes).hasSize(7);
+        assertThat(eTypes.get(0).getValue()).isEqualTo(0x0017);
+        //assertThat(eTypes.get(1).getValue()).isEqualTo(-133);//FIXME
+        //assertThat(eTypes.get(2).getValue()).isEqualTo(-128);//FIXME
+        assertThat(eTypes.get(3).getValue()).isEqualTo(0x0003);
+        assertThat(eTypes.get(4).getValue()).isEqualTo(0x0001);
+        assertThat(eTypes.get(5).getValue()).isEqualTo(0x0018);
+        //assertThat(eTypes.get(6).getValue()).isEqualTo(-135);//FIXME
     }
 }

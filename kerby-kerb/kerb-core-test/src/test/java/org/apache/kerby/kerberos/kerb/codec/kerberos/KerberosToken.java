@@ -35,14 +35,16 @@ public class KerberosToken {
 
     public KerberosToken(byte[] token, EncryptionKey key) throws Exception {
 
-        if(token.length <= 0)
+        if (token.length <= 0) {
             throw new IOException("kerberos.token.empty");
+        }
 
         Asn1InputBuffer buffer = new Asn1InputBuffer(token);
 
         Asn1Item value = (Asn1Item) buffer.read();
-        if(! value.isAppSpecific() && ! value.isConstructed())
+        if(! value.isAppSpecific() && ! value.isConstructed()) {
             throw new IOException("kerberos.token.malformed");
+        }
 
         buffer = new Asn1InputBuffer(value.getBodyContent());
         buffer.skipNext();

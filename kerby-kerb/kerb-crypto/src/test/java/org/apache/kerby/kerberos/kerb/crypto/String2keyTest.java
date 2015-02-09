@@ -27,8 +27,8 @@ import org.junit.Test;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * By ref. MIT krb5 t_str2key.c and RFC3961 test vectors
@@ -552,14 +552,14 @@ public class String2keyTest {
      * Perform all the checks for a testcase
      */
     private void performTest(TestCase testCase) {
-        //assertTrue(EncryptionHandler.isImplemented(testCase.encType));
+        //assertThat(EncryptionHandler.isImplemented(testCase.encType)).isTrue();
         if (! EncryptionHandler.isImplemented(testCase.encType)) {
             System.err.println("Not implemented yet: " + testCase.encType.getDisplayName());
             return;
         }
 
         try {
-            assertTrue(testWith(testCase));
+            assertThat(testWith(testCase)).isTrue();
         } catch (Exception e) {
             fail(e.getMessage());
         }

@@ -27,7 +27,7 @@ public abstract class Acceptor extends TransportSelector {
         super(transportHandler);
     }
 
-    public void listen(String address, short listenPort) {
+    public void listen(String address, int listenPort) {
         InetSocketAddress socketAddress = new InetSocketAddress(address, listenPort);
         doListen(socketAddress);
     }

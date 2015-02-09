@@ -100,7 +100,9 @@ public class TcpTransport extends Transport {
         }
 
         public void handle() {
-            if (recvBuffer.isEmpty()) return;
+            if (recvBuffer.isEmpty()) {
+                return;
+            }
 
             streamingBuffer = recvBuffer.readMostBytes();
 

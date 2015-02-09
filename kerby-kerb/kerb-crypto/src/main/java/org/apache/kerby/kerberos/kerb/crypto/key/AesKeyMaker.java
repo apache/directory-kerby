@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.crypto.key;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.crypto.Pbkdf;
+import org.apache.kerby.kerberos.kerb.crypto.util.Pbkdf;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.AesProvider;
 
 import java.io.UnsupportedEncodingException;
@@ -49,7 +49,7 @@ public class AesKeyMaker extends DkKeyMaker {
         }
 
         int keySize = encProvider().keySize();
-        byte[] random = new byte[0];
+        byte[] random;
         try {
             random = Pbkdf.PBKDF2(string.toCharArray(), saltBytes, iterCount, keySize);
         } catch (GeneralSecurityException e) {

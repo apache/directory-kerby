@@ -26,7 +26,7 @@ import org.apache.kerby.kerberos.kerb.spec.common.KeyUsage;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * These are to test the checksums of good answers, and the checksums

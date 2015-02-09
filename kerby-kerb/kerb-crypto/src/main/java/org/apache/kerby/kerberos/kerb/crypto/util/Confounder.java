@@ -17,21 +17,17 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.crypto.cksum;
+package org.apache.kerby.kerberos.kerb.crypto.util;
 
-import org.apache.kerby.kerberos.kerb.crypto.util.Hmac;
-import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Sha1Provider;
-import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
-import org.apache.kerby.kerberos.kerb.KrbException;
+import java.security.SecureRandom;
 
-public abstract class HmacKcCheckSum extends KcCheckSum {
+public final class Confounder {
 
-    public HmacKcCheckSum(EncryptProvider encProvider, int computeSize, int outputSize) {
-        super(encProvider, new Sha1Provider(), computeSize, outputSize);
-    }
+    private static SecureRandom instance = new SecureRandom();
 
-    protected byte[] mac(byte[] Kc, byte[] data, int start, int len) throws KrbException {
-        byte[] hmac = Hmac.hmac(hashProvider(), Kc, data, start, len);
-        return hmac;
+    public static byte[] makeBytes(int size) {
+        byte[] data = new byte[size];
+        instance.nextBytes(data);
+        return data;
     }
 }

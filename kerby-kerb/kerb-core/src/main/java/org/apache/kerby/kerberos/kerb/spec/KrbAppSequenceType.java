@@ -43,8 +43,7 @@ public abstract class KrbAppSequenceType extends TaggingSequence {
     }
 
     protected KerberosTime getFieldAsTime(int index) {
-        KerberosTime value = getFieldAs(index, KerberosTime.class);
-        return value;
+        return getFieldAs(index, KerberosTime.class);
     }
 
     protected void setFieldAsTime(int index, long value) {

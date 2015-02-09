@@ -53,9 +53,8 @@ public class KeytabInputStream extends KrbInputStream
         String realm = readCountedString();
 
         List<String> nameStrings = new ArrayList<String>();
-        String component;
         for (int i = 0; i < numComponents; i++) { // sub 1 if version 0x501
-            component = readCountedString();
+            String component = readCountedString();
             nameStrings.add(component);
         }
         int type = readInt(); // not present if version 0x501

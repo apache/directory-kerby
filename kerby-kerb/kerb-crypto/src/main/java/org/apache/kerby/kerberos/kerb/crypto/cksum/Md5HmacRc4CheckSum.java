@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.cksum;
 
-import org.apache.kerby.kerberos.kerb.crypto.Hmac;
-import org.apache.kerby.kerberos.kerb.crypto.Rc4;
+import org.apache.kerby.kerberos.kerb.crypto.util.Hmac;
+import org.apache.kerby.kerberos.kerb.crypto.util.Rc4;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Md5Provider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Rc4Provider;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -55,7 +55,6 @@ public class Md5HmacRc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
     @Override
     protected byte[] doChecksumWithKey(byte[] data, int start, int len,
                                        byte[] key, int usage) throws KrbException {
-
         byte[] Ksign = key;
 
         byte[] salt = Rc4.getSalt(usage, false);

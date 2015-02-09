@@ -34,8 +34,7 @@ public class KerberosCredentials {
 
     private static void init() throws IOException {
         InputStream kis = KerberosCredentials.class.getResourceAsStream("/server.keytab");
-        keytab = new Keytab();
-        keytab.load(kis);
+        keytab = Keytab.loadKeytab(kis);
     }
 
     public static EncryptionKey getServerKey(EncryptionType etype) throws IOException {

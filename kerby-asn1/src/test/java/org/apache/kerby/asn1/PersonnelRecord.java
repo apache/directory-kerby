@@ -44,7 +44,7 @@ public class PersonnelRecord extends TaggingSet {
 
     public PersonnelRecord() {
         super(0, fieldInfos, true);
-        setEncodingOption(EncodingOption.IMPLICIT);
+        getEncodingOption().useImplicit();
     }
 
     public void setName(Name name) {
@@ -151,7 +151,7 @@ public class PersonnelRecord extends TaggingSet {
 
         public Name() {
             super(1, tags, true);
-            setEncodingOption(EncodingOption.IMPLICIT);
+            getEncodingOption().useImplicit();
         }
 
         public Name(String givenName, String initial, String familyName) {
@@ -189,19 +189,19 @@ public class PersonnelRecord extends TaggingSet {
     public static class EmployeeNumber extends Asn1Tagging<Asn1Integer> {
         public EmployeeNumber(Integer value) {
             super(2, new Asn1Integer(value), true);
-            setEncodingOption(EncodingOption.IMPLICIT);
+            getEncodingOption().useImplicit();
         }
 
         public EmployeeNumber() {
             super(2, new Asn1Integer(), true);
-            setEncodingOption(EncodingOption.IMPLICIT);
+            getEncodingOption().useImplicit();
         }
     }
 
     public static class Date extends Asn1Tagging<Asn1VisibleString> {
         public Date(String value) {
             super(3, new Asn1VisibleString(value), true);
-            setEncodingOption(EncodingOption.IMPLICIT);
+            getEncodingOption().useImplicit();
         }
         public Date() {
             this(null);

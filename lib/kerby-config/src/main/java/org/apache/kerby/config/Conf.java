@@ -29,19 +29,19 @@ import java.util.*;
 public class Conf implements Config {
     private static final Logger logger = LoggerFactory.getLogger(Conf.class);
 
-	private List<ConfigLoader> resourceConfigs;
+    private List<ConfigLoader> resourceConfigs;
     private final ConfigImpl config;
     private boolean needReload;
 
-	public Conf() {
+    public Conf() {
         this.resourceConfigs = new ArrayList<ConfigLoader>(1);
         this.config = new ConfigImpl("Conf");
         this.needReload = true;
-	}
+    }
 
-	public void addXmlConfig(File xmlFile) throws IOException {
+    public void addXmlConfig(File xmlFile) throws IOException {
         addResource(Resource.createXmlResource(xmlFile));
-	}
+    }
 
     public void addIniConfig(File iniFile) throws IOException {
         addResource(Resource.createIniResource(iniFile));
@@ -76,6 +76,7 @@ public class Conf implements Config {
         try {
             loader = loaderClass.newInstance();
         } catch (Exception e) {
+            logger.error("Failed to create org.haox.config loader for " + loaderClass.getName(), e);
             throw new RuntimeException("Failed to create org.haox.config loader for " + loaderClass.getName(), e);
         }
         loader.setResource(resource);

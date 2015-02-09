@@ -21,8 +21,9 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class KdcTest extends KdcTestBase {
 
@@ -37,13 +38,13 @@ public class KdcTest extends KdcTestBase {
     @Test
     public void testKdc() throws Exception {
         kdcServer.start();
-        Assert.assertTrue(kdcServer.isStarted());
+        assertThat(kdcServer.isStarted()).isTrue();
 
         krbClnt.init();
         TgtTicket tgt = krbClnt.requestTgtTicket(clientPrincipal, password, null);
-        Assert.assertNotNull(tgt);
+        assertThat(tgt).isNotNull();
 
         ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal, null);
-        Assert.assertNotNull(tkt);
+        assertThat(tkt).isNotNull();
     }
 }

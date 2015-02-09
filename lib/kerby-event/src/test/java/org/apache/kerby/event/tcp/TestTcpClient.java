@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.event.tcp;
 
-import junit.framework.Assert;
 import org.apache.kerby.event.Event;
 import org.apache.kerby.event.EventHandler;
 import org.apache.kerby.event.EventHub;
@@ -46,6 +45,8 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class TestTcpClient extends TestTcpBase {
 
     private EventHub eventHub;
@@ -53,6 +54,8 @@ public class TestTcpClient extends TestTcpBase {
 
     @Before
     public void setUp() throws IOException {
+        preparePort();
+
         setUpServer();
         setUpClient();
     }
@@ -71,9 +74,8 @@ public class TestTcpClient extends TestTcpBase {
     }
 
     private void doRunServer() throws IOException {
-        ServerSocketChannel serverSocketChannel;
         Selector selector = Selector.open();
-        serverSocketChannel = ServerSocketChannel .open();
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
         ServerSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress(serverPort));
@@ -150,7 +152,7 @@ public class TestTcpClient extends TestTcpBase {
         transport.sendMessage(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
 
         event = eventWaiter.waitEvent(TestEventType.FINISHED);
-        Assert.assertTrue((Boolean) event.getEventData());
+        assertThat((Boolean) event.getEventData()).isTrue();
     }
 
     @After

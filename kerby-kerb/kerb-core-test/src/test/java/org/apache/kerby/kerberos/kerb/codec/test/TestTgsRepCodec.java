@@ -24,10 +24,11 @@ import org.apache.kerby.kerberos.kerb.spec.common.NameType;
 import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.TgsRep;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test TgsRep message using a real 'correct' network packet captured from MS-AD to detective programming errors
@@ -41,29 +42,27 @@ public class TestTgsRepCodec {
         TgsRep tgsRep = new TgsRep();
         tgsRep.decode(bytes);
 
-        Assert.assertEquals(5, tgsRep.getPvno());
-        Assert.assertEquals(KrbMessageType.TGS_REP, tgsRep.getMsgType());
-        Assert.assertEquals("DENYDC.COM", tgsRep.getCrealm());
+        assertThat(tgsRep.getPvno()).isEqualTo(5);
+        assertThat(tgsRep.getMsgType()).isEqualTo(KrbMessageType.TGS_REP);
+        assertThat(tgsRep.getCrealm()).isEqualTo("DENYDC.COM");
 
         PrincipalName cName = tgsRep.getCname();
-        Assert.assertEquals(NameType.NT_PRINCIPAL, cName.getNameType());
-        Assert.assertEquals(1, cName.getNameStrings().size());
-        Assert.assertEquals("des", cName.getNameStrings().get(0));
+        assertThat(cName.getNameType()).isEqualTo(NameType.NT_PRINCIPAL);
+        assertThat(cName.getNameStrings()).hasSize(1).contains("des");
 
         Ticket ticket = tgsRep.getTicket();
-        Assert.assertEquals(5, ticket.getTktvno());
-        Assert.assertEquals("DENYDC.COM", ticket.getRealm());
+        assertThat(ticket.getTktvno()).isEqualTo(5);
+        assertThat(ticket.getRealm()).isEqualTo("DENYDC.COM");
         PrincipalName sName = ticket.getSname();
-        Assert.assertEquals(NameType.NT_SRV_HST, sName.getNameType());
-        Assert.assertEquals(2, sName.getNameStrings().size());
-        Assert.assertEquals("host", sName.getNameStrings().get(0));
-        Assert.assertEquals("xp1.denydc.com", sName.getNameStrings().get(1));
+        assertThat(sName.getNameType()).isEqualTo(NameType.NT_SRV_HST);
+        assertThat(sName.getNameStrings()).hasSize(2)
+                .contains("host", "xp1.denydc.com");
         //FIXME
         //EncTicketPart encTicketPart = ticket.getEncPart();
-        //Assert.assertEquals(23, encTicketPart.getKey().getKeyType().getValue());
-        //Assert.assertEquals(2, encTicketPart.getKey().getKvno());
+        //assertThat(encTicketPart.getKey().getKeyType().getValue()).isEqualTo(23);
+        //assertThat(encTicketPart.getKey().getKvno()).isEqualTo(2);
 
         //EncKdcRepPart encKdcRepPart = tgsRep.getEncPart();
-        //Assert.assertEquals(3, encKdcRepPart.getKey().getKeyType().getValue());
+        //assertThat(encKdcRepPart.getKey().getKeyType().getValue()).isEqualTo(3);
     }
 }

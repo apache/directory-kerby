@@ -91,9 +91,8 @@ public class KrbConfHelper {
     public static List<EncryptionType> getEncryptionTypes(List<String> encTypeNames) {
         List<EncryptionType> results = new ArrayList<EncryptionType>(encTypeNames.size());
 
-        EncryptionType eType;
         for (String eTypeName : encTypeNames) {
-            eType = EncryptionType.fromName(eTypeName);
+            EncryptionType eType = EncryptionType.fromName(eTypeName);
             if (eType != EncryptionType.NONE) {
                 results.add(eType);
             }

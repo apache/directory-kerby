@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.event.network;
 
-import junit.framework.Assert;
 import org.apache.kerby.event.Event;
 import org.apache.kerby.event.EventHandler;
 import org.apache.kerby.event.EventHub;
@@ -43,6 +42,8 @@ import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class TestNetworkClient extends TestNetworkBase {
 
     private EventHub eventHub;
@@ -50,6 +51,8 @@ public class TestNetworkClient extends TestNetworkBase {
 
     @Before
     public void setUp() throws IOException {
+        preparePorts();
+
         setUpServer();
         setUpClient();
     }
@@ -79,9 +82,8 @@ public class TestNetworkClient extends TestNetworkBase {
     }
 
     private void doRunTcpServer() throws IOException {
-        ServerSocketChannel serverSocketChannel;
         Selector selector = Selector.open();
-        serverSocketChannel = ServerSocketChannel .open();
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
         ServerSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress(tcpPort));
@@ -124,9 +126,8 @@ public class TestNetworkClient extends TestNetworkBase {
     }
 
     private void doRunUdpServer() throws IOException {
-        DatagramChannel serverSocketChannel;
         Selector selector = Selector.open();
-        serverSocketChannel = DatagramChannel.open();
+        DatagramChannel serverSocketChannel = DatagramChannel.open();
         serverSocketChannel.configureBlocking(false);
         DatagramSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress(udpPort));
@@ -196,13 +197,13 @@ public class TestNetworkClient extends TestNetworkBase {
         Transport transport = ((TransportEvent) event).getTransport();
         transport.sendMessage(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
         event = eventWaiter.waitEvent(TestEventType.FINISHED);
-        Assert.assertTrue((Boolean) event.getEventData());
+        assertThat((Boolean) event.getEventData()).isTrue();
 
         event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
         transport = ((TransportEvent) event).getTransport();
         transport.sendMessage(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
         event = eventWaiter.waitEvent(TestEventType.FINISHED);
-        Assert.assertTrue((Boolean) event.getEventData());
+        assertThat((Boolean) event.getEventData()).isTrue();
     }
 
     @After

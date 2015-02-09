@@ -21,13 +21,14 @@ package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test for loading configurations form krb5.conf.
@@ -44,26 +45,25 @@ public class TestKrbConfigLoad {
         Conf conf = krbConfig.getConf();
         conf.addIniConfig(confFile);
 
-        Assert.assertEquals("KRB.COM", krbConfig.getDefaultRealm());
-        Assert.assertFalse(krbConfig.getDnsLookUpKdc());
-        Assert.assertFalse(krbConfig.getDnsLookUpRealm());
-        Assert.assertTrue(krbConfig.getAllowWeakCrypto());
-        Assert.assertEquals(24 * 3600, krbConfig.getTicketLifetime());
-        Assert.assertEquals(7 * 24 * 3600, krbConfig.getRenewLifetime());
-        Assert.assertTrue(krbConfig.isForwardableAllowed());
-        Assert.assertEquals(2, krbConfig.getEncryptionTypes().size());
-        Assert.assertEquals(EncryptionType.DES_CBC_CRC, krbConfig.getEncryptionTypes().get(0));
-        Assert.assertEquals(EncryptionType.AES128_CTS_HMAC_SHA1_96, krbConfig.getEncryptionTypes().get(1));
-        Assert.assertEquals(300, krbConfig.getAllowableClockSkew());
-        Assert.assertTrue(krbConfig.isProxiableAllowed());
-        Assert.assertEquals(1, krbConfig.getDefaultTgsEnctypes().size());
-        Assert.assertEquals(EncryptionType.DES_CBC_CRC, krbConfig.getDefaultTgsEnctypes().get(0));
-        Assert.assertEquals(1, krbConfig.getDefaultTktEnctypes().size());
-        Assert.assertEquals(EncryptionType.DES_CBC_CRC, krbConfig.getDefaultTktEnctypes().get(0));
+        assertThat(krbConfig.getDefaultRealm()).isEqualTo("KRB.COM");
+        assertThat(krbConfig.getDnsLookUpKdc()).isFalse();
+        assertThat(krbConfig.getDnsLookUpRealm()).isFalse();
+        assertThat(krbConfig.getAllowWeakCrypto()).isTrue();
+        assertThat(krbConfig.getTicketLifetime()).isEqualTo(24 * 3600);
+        assertThat(krbConfig.getRenewLifetime()).isEqualTo(7 * 24 * 3600);
+        assertThat(krbConfig.isForwardableAllowed()).isTrue();
+        assertThat(krbConfig.getEncryptionTypes()).hasSize(2)
+                .contains(EncryptionType.DES_CBC_CRC, EncryptionType.AES128_CTS_HMAC_SHA1_96);
+        assertThat(krbConfig.getAllowableClockSkew()).isEqualTo(300);
+        assertThat(krbConfig.isProxiableAllowed()).isTrue();
+        assertThat(krbConfig.getDefaultTgsEnctypes()).hasSize(1)
+                .contains(EncryptionType.DES_CBC_CRC);
+        assertThat(krbConfig.getDefaultTktEnctypes()).hasSize(1)
+                .contains(EncryptionType.DES_CBC_CRC);
 
-        Assert.assertEquals("FILE:/var/log/krb5libs.log", krbConfig.getDefaultLoggingLocation());
-        Assert.assertEquals("FILE:/var/log/krb5kdc.log", krbConfig.getKdcLoggingLocation());
-        Assert.assertEquals("FILE:/var/log/kadmind.log", krbConfig.getAdminLoggingLocation());
+        assertThat(krbConfig.getDefaultLoggingLocation()).isEqualTo("FILE:/var/log/krb5libs.log");
+        assertThat(krbConfig.getKdcLoggingLocation()).isEqualTo("FILE:/var/log/krb5kdc.log");
+        assertThat(krbConfig.getAdminLoggingLocation()).isEqualTo("FILE:/var/log/kadmind.log");
 
     }
 }

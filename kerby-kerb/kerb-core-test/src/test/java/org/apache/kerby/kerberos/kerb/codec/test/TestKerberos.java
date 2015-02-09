@@ -22,12 +22,14 @@ package org.apache.kerby.kerberos.kerb.codec.test;
 import org.apache.kerby.kerberos.kerb.codec.kerberos.KerberosTicket;
 import org.apache.kerby.kerberos.kerb.codec.kerberos.KerberosToken;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class TestKerberos {
 
@@ -42,10 +44,8 @@ public class TestKerberos {
 
     @Before
     public void setUp() throws IOException {
-        InputStream file;
-        byte[] keyData;
 
-        file = this.getClass().getClassLoader().getResourceAsStream("rc4-kerberos-data");
+        InputStream file = this.getClass().getClassLoader().getResourceAsStream("rc4-kerberos-data");
         rc4Token = new byte[file.available()];
         file.read(rc4Token);
         file.close();
@@ -66,7 +66,7 @@ public class TestKerberos {
         file.close();
 
         file = this.getClass().getClassLoader().getResourceAsStream("rc4-key-data");
-        keyData = new byte[file.available()];
+        byte[] keyData = new byte[file.available()];
         file.read(keyData);
         rc4Key = new EncryptionKey(23, keyData, 2);
         file.close();
@@ -94,30 +94,30 @@ public class TestKerberos {
     public void testRc4Ticket() throws Exception {
         KerberosToken token = new KerberosToken(rc4Token, rc4Key);
 
-        Assert.assertNotNull(token);
-        Assert.assertNotNull(token.getApRequest());
+        assertThat(token).isNotNull();
+        assertThat(token.getApRequest()).isNotNull();
 
         KerberosTicket ticket = token.getApRequest().getTicket();
-        Assert.assertNotNull(ticket);
-        Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
-        Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
-        Assert.assertEquals("user.test", ticket.getUserPrincipalName());
-        Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
+        assertThat(ticket).isNotNull();
+        assertThat(ticket.getServerPrincipalName()).isEqualTo("HTTP/server.test.domain.com");
+        assertThat(ticket.getServerRealm()).isEqualTo("DOMAIN.COM");
+        assertThat(ticket.getUserPrincipalName()).isEqualTo("user.test");
+        assertThat(ticket.getUserRealm()).isEqualTo("DOMAIN.COM");
     }
 
     //@Test
     public void testDesTicket() throws Exception {
         KerberosToken token = new KerberosToken(desToken, desKey);
 
-        Assert.assertNotNull(token);
-        Assert.assertNotNull(token.getApRequest());
+        assertThat(token).isNotNull();
+        assertThat(token.getApRequest()).isNotNull();
 
         KerberosTicket ticket = token.getApRequest().getTicket();
-        Assert.assertNotNull(ticket);
-        Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
-        Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
-        Assert.assertEquals("user.test@domain.com", ticket.getUserPrincipalName());
-        Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
+        assertThat(ticket).isNotNull();
+        assertThat(ticket.getServerPrincipalName()).isEqualTo("HTTP/server.test.domain.com");
+        assertThat(ticket.getServerRealm()).isEqualTo("DOMAIN.COM");
+        assertThat(ticket.getUserPrincipalName()).isEqualTo("user.test@domain.com");
+        assertThat(ticket.getUserRealm()).isEqualTo("DOMAIN.COM");
     }
 
     @Test
@@ -125,15 +125,15 @@ public class TestKerberos {
         KerberosToken token = null;
         token = new KerberosToken(aes128Token, aes128Key);
 
-        Assert.assertNotNull(token);
-        Assert.assertNotNull(token.getApRequest());
+        assertThat(token).isNotNull();
+        assertThat(token.getApRequest()).isNotNull();
 
         KerberosTicket ticket = token.getApRequest().getTicket();
-        Assert.assertNotNull(ticket);
-        Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
-        Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
-        Assert.assertEquals("user.test", ticket.getUserPrincipalName());
-        Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
+        assertThat(ticket).isNotNull();
+        assertThat(ticket.getServerPrincipalName()).isEqualTo("HTTP/server.test.domain.com");
+        assertThat(ticket.getServerRealm()).isEqualTo("DOMAIN.COM");
+        assertThat(ticket.getUserPrincipalName()).isEqualTo("user.test");
+        assertThat(ticket.getUserRealm()).isEqualTo("DOMAIN.COM");
     }
 
     @Test
@@ -141,15 +141,15 @@ public class TestKerberos {
         KerberosToken token = null;
         token = new KerberosToken(aes256Token, aes256Key);
 
-        Assert.assertNotNull(token);
-        Assert.assertNotNull(token.getApRequest());
+        assertThat(token).isNotNull();
+        assertThat(token.getApRequest()).isNotNull();
 
         KerberosTicket ticket = token.getApRequest().getTicket();
-        Assert.assertNotNull(ticket);
-        Assert.assertEquals("HTTP/server.test.domain.com", ticket.getServerPrincipalName());
-        Assert.assertEquals("DOMAIN.COM", ticket.getServerRealm());
-        Assert.assertEquals("user.test", ticket.getUserPrincipalName());
-        Assert.assertEquals("DOMAIN.COM", ticket.getUserRealm());
+        assertThat(ticket).isNotNull();
+        assertThat(ticket.getServerPrincipalName()).isEqualTo("HTTP/server.test.domain.com");
+        assertThat(ticket.getServerRealm()).isEqualTo("DOMAIN.COM");
+        assertThat(ticket.getUserPrincipalName()).isEqualTo("user.test");
+        assertThat(ticket.getUserRealm()).isEqualTo("DOMAIN.COM");
     }
 
     @Test
@@ -157,10 +157,10 @@ public class TestKerberos {
         KerberosToken token = null;
         try {
             token = new KerberosToken(rc4Token, desKey);
-            Assert.fail("Should have thrown Exception.");
+            fail("Should have thrown Exception.");
         } catch(Exception e) {
-            Assert.assertNotNull(e);
-            Assert.assertNull(token);
+            assertThat(e).isNotNull();
+            assertThat(token).isNull();
         }
     }
 }

@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.key;
 
-import org.apache.kerby.kerberos.kerb.crypto.BytesUtil;
-import org.apache.kerby.kerberos.kerb.crypto.Cmac;
-import org.apache.kerby.kerberos.kerb.crypto.Pbkdf;
+import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
+import org.apache.kerby.kerberos.kerb.crypto.util.Cmac;
+import org.apache.kerby.kerberos.kerb.crypto.util.Pbkdf;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.CamelliaProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
@@ -51,7 +51,7 @@ public class CamelliaKeyMaker extends DkKeyMaker {
         }
 
         int keySize = encProvider().keySize();
-        byte[] random = new byte[0];
+        byte[] random;
         try {
             random = Pbkdf.PBKDF2(string.toCharArray(), saltBytes, iterCount, keySize);
         } catch (GeneralSecurityException e) {

@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.event.udp;
 
-import junit.framework.Assert;
 import org.apache.kerby.event.Event;
 import org.apache.kerby.event.EventHandler;
 import org.apache.kerby.event.EventHub;
@@ -45,6 +44,8 @@ import java.nio.channels.Selector;
 import java.util.Iterator;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class TestUdpClient extends TestUdpBase {
 
     private EventHub eventHub;
@@ -52,6 +53,8 @@ public class TestUdpClient extends TestUdpBase {
 
     @Before
     public void setUp() throws IOException {
+        preparePort();
+
         setUpServer();
         setUpClient();
     }
@@ -70,9 +73,8 @@ public class TestUdpClient extends TestUdpBase {
     }
 
     private void doRunServer() throws IOException {
-        DatagramChannel serverSocketChannel;
         Selector selector = Selector.open();
-        serverSocketChannel = DatagramChannel.open();
+        DatagramChannel serverSocketChannel = DatagramChannel.open();
         serverSocketChannel.configureBlocking(false);
         DatagramSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress(serverPort));
@@ -139,7 +141,7 @@ public class TestUdpClient extends TestUdpBase {
         transport.sendMessage(ByteBuffer.wrap(TEST_MESSAGE.getBytes()));
 
         event = eventWaiter.waitEvent(TestEventType.FINISHED);
-        Assert.assertTrue((Boolean) event.getEventData());
+        assertThat((Boolean) event.getEventData()).isTrue();
     }
 
     @After

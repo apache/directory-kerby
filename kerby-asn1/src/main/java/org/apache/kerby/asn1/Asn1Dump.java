@@ -39,7 +39,9 @@ public class Asn1Dump {
         Asn1Type value;
         while (true) {
             value = buffer.read();
-            if (value == null) break;
+            if (value == null) {
+                break;
+            }
             dump(value, sb);
         }
 
@@ -54,7 +56,7 @@ public class Asn1Dump {
 
     private static void dump(Asn1Type value, StringBuilder buffer) {
         if (value instanceof Asn1Simple) {
-            buffer.append(((Asn1Simple) value).getValue().toString());
+            buffer.append(((Asn1Simple<?>) value).getValue().toString());
         } else if (value instanceof Asn1Item) {
             dump((Asn1Item) value, buffer);
         }

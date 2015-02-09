@@ -38,7 +38,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     public Asn1Tagging(int tagNo, T value, boolean isAppSpecific) {
         super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC, tagNo, value);
-        setEncodingOption(EncodingOption.EXPLICIT);
+        getEncodingOption().useExplicit();
         if (value == null) {
             initValue();
         }
@@ -46,22 +46,23 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     @Override
     protected int encodingBodyLength() {
-        AbstractAsn1Type value = (AbstractAsn1Type) getValue();
-        if (encodingOption.isExplicit()) {
+        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
+        if (getEncodingOption().isExplicit()) {
             return value.encodingLength();
-        } else if (encodingOption.isImplicit()) {
+        } else if (getEncodingOption().isImplicit()) {
             return value.encodingBodyLength();
         } else {
-            throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
+            throw new RuntimeException("Invalid decoding option, " +
+                    "only allowing explicit/implicit");
         }
     }
 
     @Override
     public boolean isConstructed() {
-        if (encodingOption.isExplicit()) {
+        if (getEncodingOption().isExplicit()) {
             return true;
-        } else if (encodingOption.isImplicit()) {
-            AbstractAsn1Type value = (AbstractAsn1Type) getValue();
+        } else if (getEncodingOption().isImplicit()) {
+            AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
             return value.isConstructed();
         }
         return false;
@@ -69,33 +70,35 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        AbstractAsn1Type value = (AbstractAsn1Type) getValue();
-        if (encodingOption.isExplicit()) {
+        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
+        if (getEncodingOption().isExplicit()) {
             value.encode(buffer);
-        } else if (encodingOption.isImplicit()) {
+        } else if (getEncodingOption().isImplicit()) {
             value.encodeBody(buffer);
         } else {
-            throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
+            throw new RuntimeException("Invalid decoding option, " +
+                    "only allowing explicit/implicit");
         }
     }
 
     @Override
     protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        AbstractAsn1Type value = (AbstractAsn1Type) getValue();
-        if (encodingOption.isExplicit()) {
+        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
+        if (getEncodingOption().isExplicit()) {
             value.decode(content);
-        } else if (encodingOption.isImplicit()) {
+        } else if (getEncodingOption().isImplicit()) {
             value.decodeBody(content);
         } else {
-            throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
+            throw new RuntimeException("Invalid decoding option, " +
+                    "only allowing explicit/implicit");
         }
     }
 
     private void initValue() {
         Class<? extends Asn1Type> valueType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        AbstractAsn1Type value = null;
+        AbstractAsn1Type<?> value = null;
         try {
-            value = (AbstractAsn1Type) valueType.newInstance();
+            value = (AbstractAsn1Type<?>) valueType.newInstance();
         } catch (Exception e) {
             throw new RuntimeException("Failed to create tagged value", e);
         }

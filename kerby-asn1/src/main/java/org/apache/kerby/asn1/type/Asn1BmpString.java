@@ -44,9 +44,9 @@ public class Asn1BmpString extends Asn1Simple<String>
         String strValue = getValue();
         int len = strValue.length();
         byte[] bytes = new byte[len * 2];
-        char c;
+        
         for (int i = 0; i != len; i++) {
-            c = strValue.charAt(i);
+            char c = strValue.charAt(i);
             bytes[2 * i] = (byte)(c >> 8);
             bytes[2 * i + 1] = (byte)c;
         }
@@ -55,7 +55,7 @@ public class Asn1BmpString extends Asn1Simple<String>
 
     protected void toValue() throws IOException {
         byte[] bytes = getBytes();
-        char[]  chars = new char[bytes.length / 2];
+        char[] chars = new char[bytes.length / 2];
         for (int i = 0; i != chars.length; i++) {
             chars[i] = (char)((bytes[2 * i] << 8) | (bytes[2 * i + 1] & 0xff));
         }

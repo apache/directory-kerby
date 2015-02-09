@@ -30,10 +30,9 @@ public class PropertiesConfigLoader extends ConfigLoader {
     }
 
     protected void loadConfig(ConfigImpl config, Properties propConfig) {
-        Object value;
         for (Object key : propConfig.keySet()) {
             if (key instanceof String) {
-                value = propConfig.getProperty((String) key);
+                Object value = propConfig.getProperty((String) key);
                 if (value != null && value instanceof String) {
                     config.set((String) key, (String) value);
                 }

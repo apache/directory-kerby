@@ -38,13 +38,19 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
         this.tagged = createTaggedCollection(tags);
         setValue(tagged);
         this.tagging = new Asn1Tagging<Asn1CollectionType>(taggingTagNo, tagged, isAppSpecific);
-        setEncodingOption(EncodingOption.EXPLICIT);
+        getEncodingOption().useExplicit();
     }
 
     protected abstract Asn1CollectionType createTaggedCollection(Asn1FieldInfo[] tags);
 
+    @Override
     public void setEncodingOption(EncodingOption encodingOption) {
         tagging.setEncodingOption(encodingOption);
+    }
+
+    @Override
+    public EncodingOption getEncodingOption() {
+        return tagging.getEncodingOption();
     }
 
     @Override

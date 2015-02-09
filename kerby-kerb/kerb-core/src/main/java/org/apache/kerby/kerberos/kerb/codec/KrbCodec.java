@@ -45,7 +45,7 @@ public class KrbCodec {
     }
 
     public static <T extends Asn1Type> T decode(ByteBuffer content, Class<T> krbType) throws KrbException {
-        Asn1Type implObj = null;
+        Asn1Type implObj;
         try {
             implObj = krbType.newInstance();
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public class KrbCodec {
         int length = AbstractAsn1Type.readLength(limitedBuffer);
         LimitedByteBuffer valueBuffer = new LimitedByteBuffer(limitedBuffer, length);
 
-        KrbMessage msg = null;
+        KrbMessage msg;
         KrbMessageType msgType = KrbMessageType.fromValue(tagNo);
         if (msgType == KrbMessageType.TGS_REQ) {
             msg = new TgsReq();

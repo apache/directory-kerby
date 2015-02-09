@@ -22,10 +22,12 @@ package org.apache.kerby.kerberos.kerb.codec.test;
 import org.apache.kerby.kerberos.kerb.codec.spnego.SpnegoConstants;
 import org.apache.kerby.kerberos.kerb.codec.spnego.SpnegoInitToken;
 import org.apache.kerby.kerberos.kerb.codec.spnego.SpnegoToken;
-import org.junit.Assert;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.fail;
 
 public class TestSpnego {
 
@@ -37,9 +39,8 @@ public class TestSpnego {
 
     //@Before
     public void setUp() throws IOException {
-        InputStream file;
 
-        file = this.getClass().getClassLoader().getResourceAsStream("rc4-spnego-data");
+        InputStream file = this.getClass().getClassLoader().getResourceAsStream("rc4-spnego-data");
         rc4Token = new byte[file.available()];
         file.read(rc4Token);
         file.close();
@@ -67,15 +68,15 @@ public class TestSpnego {
         try {
             SpnegoToken spnegoToken = SpnegoToken.parse(rc4Token);
 
-            Assert.assertNotNull(spnegoToken);
-            Assert.assertTrue(spnegoToken instanceof SpnegoInitToken);
-            Assert.assertNotNull(spnegoToken.getMechanismToken());
-            Assert.assertTrue(spnegoToken.getMechanismToken().length < rc4Token.length);
-            Assert.assertNotNull(spnegoToken.getMechanism());
-            Assert.assertEquals(SpnegoConstants.LEGACY_KERBEROS_MECHANISM, spnegoToken.getMechanism());
+            assertThat(spnegoToken).isNotNull();
+            assertThat(spnegoToken instanceof SpnegoInitToken).isTrue();
+            assertThat(spnegoToken.getMechanismToken()).isNotNull();
+            assertThat(spnegoToken.getMechanismToken().length < rc4Token.length).isTrue();
+            assertThat(spnegoToken.getMechanism()).isNotNull();
+            assertThat(spnegoToken.getMechanism()).isEqualTo(SpnegoConstants.LEGACY_KERBEROS_MECHANISM);
         } catch(IOException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -84,15 +85,15 @@ public class TestSpnego {
         try {
             SpnegoToken spnegoToken = SpnegoToken.parse(desToken);
 
-            Assert.assertNotNull(spnegoToken);
-            Assert.assertTrue(spnegoToken instanceof SpnegoInitToken);
-            Assert.assertNotNull(spnegoToken.getMechanismToken());
-            Assert.assertTrue(spnegoToken.getMechanismToken().length < desToken.length);
-            Assert.assertNotNull(spnegoToken.getMechanism());
-            Assert.assertEquals(SpnegoConstants.LEGACY_KERBEROS_MECHANISM, spnegoToken.getMechanism());
+            assertThat(spnegoToken).isNotNull();
+            assertThat(spnegoToken instanceof SpnegoInitToken).isTrue();
+            assertThat(spnegoToken.getMechanismToken()).isNotNull();
+            assertThat(spnegoToken.getMechanismToken().length < desToken.length).isTrue();
+            assertThat(spnegoToken.getMechanism()).isNotNull();
+            assertThat(spnegoToken.getMechanism()).isEqualTo(SpnegoConstants.LEGACY_KERBEROS_MECHANISM);
         } catch(IOException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -101,15 +102,15 @@ public class TestSpnego {
         try {
             SpnegoToken spnegoToken = SpnegoToken.parse(aes128Token);
 
-            Assert.assertNotNull(spnegoToken);
-            Assert.assertTrue(spnegoToken instanceof SpnegoInitToken);
-            Assert.assertNotNull(spnegoToken.getMechanismToken());
-            Assert.assertTrue(spnegoToken.getMechanismToken().length < aes128Token.length);
-            Assert.assertNotNull(spnegoToken.getMechanism());
-            Assert.assertEquals(SpnegoConstants.LEGACY_KERBEROS_MECHANISM, spnegoToken.getMechanism());
+            assertThat(spnegoToken).isNotNull();
+            assertThat(spnegoToken instanceof SpnegoInitToken).isTrue();
+            assertThat(spnegoToken.getMechanismToken()).isNotNull();
+            assertThat(spnegoToken.getMechanismToken().length < aes128Token.length).isTrue();
+            assertThat(spnegoToken.getMechanism()).isNotNull();
+            assertThat(spnegoToken.getMechanism()).isEqualTo(SpnegoConstants.LEGACY_KERBEROS_MECHANISM);
         } catch(IOException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -118,15 +119,15 @@ public class TestSpnego {
         try {
             SpnegoToken spnegoToken = SpnegoToken.parse(aes256Token);
 
-            Assert.assertNotNull(spnegoToken);
-            Assert.assertTrue(spnegoToken instanceof SpnegoInitToken);
-            Assert.assertNotNull(spnegoToken.getMechanismToken());
-            Assert.assertTrue(spnegoToken.getMechanismToken().length < aes256Token.length);
-            Assert.assertNotNull(spnegoToken.getMechanism());
-            Assert.assertEquals(SpnegoConstants.LEGACY_KERBEROS_MECHANISM, spnegoToken.getMechanism());
+            assertThat(spnegoToken).isNotNull();
+            assertThat(spnegoToken instanceof SpnegoInitToken).isTrue();
+            assertThat(spnegoToken.getMechanismToken()).isNotNull();
+            assertThat(spnegoToken.getMechanismToken().length < aes256Token.length).isTrue();
+            assertThat(spnegoToken.getMechanism()).isNotNull();
+            assertThat(spnegoToken.getMechanism()).isEqualTo(SpnegoConstants.LEGACY_KERBEROS_MECHANISM);
         } catch(IOException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -135,10 +136,10 @@ public class TestSpnego {
         SpnegoToken spnegoToken = null;
         try {
             spnegoToken = SpnegoToken.parse(new byte[0]);
-            Assert.fail("Should have thrown DecodingException.");
+            fail("Should have thrown DecodingException.");
         } catch(IOException e) {
-            Assert.assertNotNull(e);
-            Assert.assertNull(spnegoToken);
+            assertThat(e).isNotNull();
+            assertThat(spnegoToken).isNull();
         }
     }
 
@@ -147,10 +148,10 @@ public class TestSpnego {
         SpnegoToken spnegoToken = null;
         try {
             spnegoToken = SpnegoToken.parse(corruptToken);
-            Assert.fail("Should have thrown DecodingException.");
+            fail("Should have thrown DecodingException.");
         } catch(IOException e) {
-            Assert.assertNotNull(e);
-            Assert.assertNull(spnegoToken);
+            assertThat(e).isNotNull();
+            assertThat(spnegoToken).isNull();
         }
     }
 
@@ -159,13 +160,13 @@ public class TestSpnego {
         SpnegoToken spnegoToken = null;
         try {
             spnegoToken = SpnegoToken.parse(null);
-            Assert.fail("Should have thrown NullPointerException.");
+            fail("Should have thrown NullPointerException.");
         } catch(IOException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            fail(e.getMessage());
         } catch(NullPointerException e) {
-            Assert.assertNotNull(e);
-            Assert.assertNull(spnegoToken);
+            assertThat(e).isNotNull();
+            assertThat(spnegoToken).isNull();
         }
     }
 

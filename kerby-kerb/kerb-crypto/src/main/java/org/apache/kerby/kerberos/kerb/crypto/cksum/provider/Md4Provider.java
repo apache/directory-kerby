@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.cksum.provider;
 
-import org.apache.kerby.kerberos.kerb.crypto.Md4;
+import org.apache.kerby.kerberos.kerb.crypto.util.Md4;
 
 public class Md4Provider extends MessageDigestHashProvider {
 

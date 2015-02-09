@@ -24,8 +24,9 @@ import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.common.KeyUsage;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Decryption test with known ciphertexts.
@@ -73,14 +74,14 @@ public class DecryptionTest {
      * Perform all the checks for a testcase
      */
     private void performTestDecrypt(TestCase testCase) {
-        //assertTrue(EncryptionHandler.isImplemented(testCase.encType));
+        //assertThat(EncryptionHandler.isImplemented(testCase.encType)).isTrue();
         if (! EncryptionHandler.isImplemented(testCase.encType)) {
             System.err.println("Not implemented yet: " + testCase.encType.getDisplayName());
             return;
         }
 
         try {
-            assertTrue(testDecrypt(testCase));
+            assertThat(testDecrypt(testCase)).isTrue();
         } catch (Exception e) {
             fail(e.getMessage());
         }

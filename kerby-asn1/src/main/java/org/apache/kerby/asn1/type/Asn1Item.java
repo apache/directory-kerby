@@ -58,7 +58,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
     @Override
     protected int encodingBodyLength() {
         if (getValue() != null) {
-            return ((AbstractAsn1Type) getValue()).encodingBodyLength();
+            return ((AbstractAsn1Type<?>) getValue()).encodingBodyLength();
         }
         return (int) bodyContent.hasLeft();
     }
@@ -66,7 +66,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
     @Override
     protected void encodeBody(ByteBuffer buffer) {
         if (getValue() != null) {
-            ((AbstractAsn1Type) getValue()).encodeBody(buffer);
+            ((AbstractAsn1Type<?>) getValue()).encodeBody(buffer);
         } else {
             try {
                 buffer.put(bodyContent.readAllLeftBytes());
@@ -86,7 +86,9 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
     }
 
     public void decodeValueAsSimple() throws IOException {
-        if (getValue() != null) return;
+        if (getValue() != null) {
+            return;
+        }
         if (! isSimple()) {
             throw new IllegalArgumentException("Attempting to decode non-simple value as simple");
         }
@@ -96,7 +98,9 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
     }
 
     public void decodeValueAsCollection() throws IOException {
-        if (getValue() != null) return;
+        if (getValue() != null) {
+            return;
+        }
         if (! isCollection()) {
             throw new IllegalArgumentException("Attempting to decode non-collection value as collection");
         }
@@ -117,7 +121,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
 
     public void decodeValueWith(Asn1Type value) throws IOException {
         setValue(value);
-        ((AbstractAsn1Type) value).decode(tagFlags(), tagNo(), bodyContent);
+        ((AbstractAsn1Type<?>) value).decode(tagFlags(), tagNo(), bodyContent);
     }
 
     public void decodeValueAsImplicitTagged(int originalTag, int originalTagNo) throws IOException {
@@ -149,7 +153,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
         if (! isTagged()) {
             throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
         }
-        ((AbstractAsn1Type) value).taggedDecode(tagFlags(), tagNo(), getBodyContent(), taggingOption);
+        ((AbstractAsn1Type<?>) value).taggedDecode(tagFlags(), tagNo(), getBodyContent(), taggingOption);
         setValue(value);
     }
 }

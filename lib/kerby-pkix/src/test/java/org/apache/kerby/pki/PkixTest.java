@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.pki;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -29,6 +28,8 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  openssl genrsa -out cakey.pem 2048
@@ -47,7 +48,7 @@ public class PkixTest {
         List<Certificate> certs = Pkix.getCerts(res);
         Certificate userCert = certs.iterator().next();
 
-        Assert.assertNotNull(userCert);
+        assertThat(userCert).isNotNull();
     }
 
     @Test
@@ -55,6 +56,6 @@ public class PkixTest {
         InputStream res = getClass().getResourceAsStream("/userkey.pem");
         PrivateKey key = Pkix.getPrivateKey(res, null);
 
-        Assert.assertNotNull(key);
+        assertThat(key).isNotNull();
     }
 }

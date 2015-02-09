@@ -19,66 +19,184 @@
  */
 package org.apache.kerby.asn1;
 
-public enum EncodingOption
-{
-    UNKNOWN(-1),
-    PRIMITIVE(1),
-    CONSTRUCTED(2),
-    CONSTRUCTED_DEFLEN(3),
-    CONSTRUCTED_INDEFLEN(4),
-    IMPLICIT(5),
-    EXPLICIT(6),
-    BER(7),
-    DER(8),
-    CER(9);
-
-    private int value;
-
-    private EncodingOption(int value) {
-        this.value = value;
+/**
+ * A class used to hold the various encoding options for a type.
+ *
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ */
+public class EncodingOption {
+    /**
+     * Encoding type
+     */
+    protected static enum EncodingType {
+        BER,
+        DER,
+        CER;
     }
 
+    private EncodingType encodingType;
+    private boolean isPrimitive;
+    private boolean isDefLen;
+    private boolean isImplicit;
+
+    /**
+     * The default constructor with default values.
+     */
+    public EncodingOption() {
+        this.encodingType = EncodingType.BER;
+        this.isPrimitive = true;
+        this.isImplicit = true;
+    }
+
+    /** 
+     * A mask to determinate if a Tag is CONSTRUCTED. The fifth bit should be set to 1 if
+     * the type is constructed (0010-0000).
+     */
     public static int CONSTRUCTED_FLAG = 0x20;
 
     public static boolean isConstructed(int tag) {
         return (tag & CONSTRUCTED_FLAG) != 0;
     }
 
-    public int getValue() {
-        return value;
+    /**
+     * Use primitive.
+     */
+    public void usePrimitive() {
+        this.isPrimitive = true;
     }
 
+    /**
+     * Tells if the EncodingOption is PRIMITIVE
+     * 
+     * @return true if using PRIMITIVE, false otherwise
+     */
     public boolean isPrimitive() {
-        return this == PRIMITIVE;
+        return this.isPrimitive;
     }
 
+    /**
+     * Use constructed.
+     */
+    public void useConstructed() {
+        this.isPrimitive = false;
+        useNonDefLen();
+    }
+
+    /**
+     * Tells if it's constructed (not primitive).
+     * 
+     * @return true if it's constructed, false otherwise
+     */
     public boolean isConstructed() {
-        return this == CONSTRUCTED || this == CONSTRUCTED_DEFLEN || this == CONSTRUCTED_INDEFLEN;
+        return ! isPrimitive;
     }
 
-    public boolean isImplicit() {
-        return this == IMPLICIT;
-    }
-
-    public boolean isExplicit() {
-        return this == EXPLICIT;
-    }
-
-    public boolean isDer() {
-        return this == DER;
-    }
-
-    public boolean isCer() {
-        return this == CER;
-    }
-
-    public static EncodingOption fromValue(int value) {
-        for (EncodingOption e : values()) {
-            if (e.getValue() == value) {
-                return (EncodingOption) e;
-            }
+    /**
+     * Use definitive length, only makes sense when it's constructed.
+     */
+    public void useDefLen() {
+        if (isPrimitive()) {
+            throw new IllegalArgumentException("It's only for constructed");
         }
-
-        return UNKNOWN;
+        this.isDefLen = true;
     }
+
+    /**
+     * Use non-definitive length, only makes sense when it's constructed.
+     */
+    public void useNonDefLen() {
+        if (isPrimitive()) {
+            throw new IllegalArgumentException("It's only for constructed");
+        }
+        this.isDefLen = false;
+    }
+
+    /**
+     * Tells if it's definitive length or not.
+     * @return
+     */
+    public boolean isDefLen() {
+        return this.isDefLen;
+    }
+
+    /**
+     * Use implicit, which will discard the value set by useExplicit.
+     */
+    public void useImplicit() {
+        this.isImplicit = true;
+    }
+
+    /**
+     * Tells if it's is IMPLICIT
+     * 
+     * @return true if using IMPLICIT, false otherwise
+     */
+    public boolean isImplicit() {
+        return isImplicit;
+    }
+
+    /**
+     * Use explicit, which will discard the value set by useImplicit.
+     */
+    public void useExplicit() {
+        this.isImplicit = false;
+    }
+
+    /**
+     * Tells if it's is EXPLICIT
+     * 
+     * @return true if using EXPLICIT, false otherwise
+     */
+    public boolean isExplicit() {
+        return ! isImplicit;
+    }
+
+    /**
+     * Set encoding type as DER.
+     */
+    public void useDer() {
+        this.encodingType = EncodingType.DER;
+    }
+
+    /**
+     * Tells if it's is DER
+     * 
+     * @return true if using DER, false otherwise
+     */
+    public boolean isDer() {
+        return encodingType == EncodingType.DER;
+    }
+
+    /**
+     * Set encoding type as BER.
+     */
+    public void useBer() {
+        this.encodingType = EncodingType.BER;
+    }
+
+    /**
+     * Tells if it's is BER
+     *
+     * @return true if using BER, false otherwise
+     */
+    public boolean isBer() {
+        return encodingType == EncodingType.BER;
+    }
+
+    /**
+     * Set encoding type as CER.
+     */
+    public void useCer() {
+        this.encodingType = EncodingType.CER;
+    }
+
+    /**
+     * Tells if it's is CER
+     * 
+     * @return true if using CER, false otherwise
+     */
+    public boolean isCer() {
+        return encodingType == EncodingType.CER;
+    }
+
 }

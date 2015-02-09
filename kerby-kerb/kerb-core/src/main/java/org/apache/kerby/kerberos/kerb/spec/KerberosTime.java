@@ -19,17 +19,14 @@
  */
 package org.apache.kerby.kerberos.kerb.spec;
 
-import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
-
 import java.util.Date;
-import java.util.TimeZone;
+
+import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 
 /**
  KerberosTime    ::= GeneralizedTime -- with no fractional seconds
  */
 public class KerberosTime extends Asn1GeneralizedTime {
-    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
-
     public static final KerberosTime NEVER = new KerberosTime(Long.MAX_VALUE);
 
     public static final int MINUTE = 60000;
@@ -93,8 +90,7 @@ public class KerberosTime extends Asn1GeneralizedTime {
 
     public KerberosTime copy() {
         long time = getTime();
-        KerberosTime result = new KerberosTime(time);
-        return result;
+        return new KerberosTime(time);
     }
 
     /**
