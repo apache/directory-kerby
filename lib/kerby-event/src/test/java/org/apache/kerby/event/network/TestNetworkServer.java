@@ -45,6 +45,8 @@ public class TestNetworkServer extends TestNetworkBase {
 
     @Before
     public void setUp() throws IOException {
+        preparePorts();
+
         setUpServer();
     }
 
@@ -66,17 +68,8 @@ public class TestNetworkServer extends TestNetworkBase {
         eventHub.register(network);
 
         eventHub.start();
-        
-        ServerSocket serverSocket = new ServerSocket(0);
-        tcpPort = serverSocket.getLocalPort();
-        serverSocket.close();
-        
+
         network.tcpListen(serverHost, tcpPort);
-        
-        serverSocket = new ServerSocket(0);
-        udpPort = serverSocket.getLocalPort();
-        serverSocket.close();
-        
         network.udpListen(serverHost, udpPort);
     }
 

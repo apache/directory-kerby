@@ -20,6 +20,7 @@
 package org.apache.kerby.event.tcp;
 
 import org.apache.kerby.event.EventType;
+import org.apache.kerby.event.NetworkUtil;
 import org.apache.kerby.transport.tcp.DecodingCallback;
 import org.apache.kerby.transport.tcp.StreamingDecoder;
 
@@ -33,6 +34,10 @@ public class TestTcpBase {
 
     protected enum TestEventType implements EventType {
         FINISHED
+    }
+
+    protected void preparePort() {
+        serverPort = NetworkUtil.getServerPort();
     }
 
     protected String recvBuffer2String(ByteBuffer buffer) {

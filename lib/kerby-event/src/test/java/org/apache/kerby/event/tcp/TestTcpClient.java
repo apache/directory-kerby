@@ -54,6 +54,8 @@ public class TestTcpClient extends TestTcpBase {
 
     @Before
     public void setUp() throws IOException {
+        preparePort();
+
         setUpServer();
         setUpClient();
     }
@@ -76,10 +78,8 @@ public class TestTcpClient extends TestTcpBase {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
         ServerSocket serverSocket = serverSocketChannel.socket();
-        serverSocket.bind(new InetSocketAddress(0));
+        serverSocket.bind(new InetSocketAddress(serverPort));
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-        
-        serverPort = serverSocket.getLocalPort();
 
         SocketChannel socketChannel;
         while (true) {

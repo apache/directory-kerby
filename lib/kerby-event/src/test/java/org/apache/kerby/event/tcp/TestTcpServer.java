@@ -45,6 +45,8 @@ public class TestTcpServer extends TestTcpBase {
 
     @Before
     public void setUp() throws IOException {
+        preparePort();
+
         setUpServer();
     }
 
@@ -63,10 +65,6 @@ public class TestTcpServer extends TestTcpBase {
 
         Acceptor acceptor = new TcpAcceptor(createStreamingDecoder());
         eventHub.register(acceptor);
-        
-        ServerSocket serverSocket = new ServerSocket(0);
-        serverPort = serverSocket.getLocalPort();
-        serverSocket.close();
 
         eventHub.start();
         acceptor.listen(serverHost, serverPort);
