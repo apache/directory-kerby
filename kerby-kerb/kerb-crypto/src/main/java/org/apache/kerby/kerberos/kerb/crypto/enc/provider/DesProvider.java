@@ -22,8 +22,6 @@ package org.apache.kerby.kerberos.kerb.crypto.enc.provider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.GeneralSecurityException;
@@ -47,10 +45,7 @@ public class DesProvider extends AbstractEncryptProvider {
         IvParameterSpec params = new IvParameterSpec(cipherState);
         SecretKeySpec skSpec = new SecretKeySpec(key, "DES");
         try {
-            SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
-            SecretKey sk = (SecretKey) skSpec;
-
-            cipher.init(encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, sk, params);
+            cipher.init(encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, skSpec, params);
 
             byte[] output = cipher.doFinal(input);
             System.arraycopy(output, 0, input, 0, output.length);
@@ -74,13 +69,10 @@ public class DesProvider extends AbstractEncryptProvider {
 
         byte[] output = null;
         try {
-            SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
-            // SecretKey sk = skf.generateSecret(skSpec);
-            SecretKey sk = (SecretKey) skSpec;
-            cipher.init(Cipher.ENCRYPT_MODE, sk, params);
+            cipher.init(Cipher.ENCRYPT_MODE, skSpec, params);
             for (int i = 0; i < data.length / 8; i++) {
                 output = cipher.doFinal(data, i * 8, 8);
-                cipher.init(Cipher.ENCRYPT_MODE, sk, (new IvParameterSpec(output)));
+                cipher.init(Cipher.ENCRYPT_MODE, skSpec, (new IvParameterSpec(output)));
             }
         }
         catch (GeneralSecurityException e) {

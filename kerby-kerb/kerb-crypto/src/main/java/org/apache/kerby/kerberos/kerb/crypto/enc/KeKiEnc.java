@@ -47,16 +47,16 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         int inputLen = workLens[2];
         int paddingLen = workLens[3];
 
-        byte[] Ke, Ki;
         byte[] constant = new byte[5];
         constant[0] = (byte) ((usage>>24)&0xff);
         constant[1] = (byte) ((usage>>16)&0xff);
         constant[2] = (byte) ((usage>>8)&0xff);
         constant[3] = (byte) (usage&0xff);
         constant[4] = (byte) 0xaa;
-        Ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
+        
+        byte[] Ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
         constant[4] = (byte) 0x55;
-        Ki = ((DkKeyMaker) keyMaker()).dk(key, constant);
+        byte[] Ki = ((DkKeyMaker) keyMaker()).dk(key, constant);
 
         /**
          * Instead of E(Confounder | Checksum | Plaintext | Padding),
@@ -79,8 +79,7 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         }
 
         // checksum & encrypt
-        byte[] checksum;
-        checksum = makeChecksum(Ki, tmpEnc, checksumLen);
+        byte[] checksum = makeChecksum(Ki, tmpEnc, checksumLen);
         encProvider().encrypt(Ke, iv, tmpEnc);
 
         System.arraycopy(tmpEnc, 0, workBuffer, 0, tmpEnc.length);
@@ -94,13 +93,12 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         int checksumLen = workLens[1];
         int dataLen = workLens[2];
 
-        byte[] Ke, Ki;
         byte[] constant = new byte[5];
         BytesUtil.int2bytes(usage, constant, 0, true);
         constant[4] = (byte) 0xaa;
-        Ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
+        byte[] Ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
         constant[4] = (byte) 0x55;
-        Ki = ((DkKeyMaker) keyMaker()).dk(key, constant);
+        byte[] Ki = ((DkKeyMaker) keyMaker()).dk(key, constant);
 
         // decrypt and verify checksum
 
@@ -111,9 +109,8 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         System.arraycopy(workBuffer, confounderLen + dataLen,
                 checksum, 0, checksumLen);
 
-        byte[] newChecksum;
         encProvider().decrypt(Ke, iv, tmpEnc);
-        newChecksum = makeChecksum(Ki, tmpEnc, checksumLen);
+        byte[] newChecksum = makeChecksum(Ki, tmpEnc, checksumLen);
 
         if (! checksumEqual(checksum, newChecksum)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);

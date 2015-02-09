@@ -33,8 +33,6 @@ public class Pbkdf {
         SecretKeyFactory skf =
                 SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         SecretKey key = skf.generateSecret(ks);
-        byte[] result = key.getEncoded();
-
-        return result;
+        return key.getEncoded();
     }
 }

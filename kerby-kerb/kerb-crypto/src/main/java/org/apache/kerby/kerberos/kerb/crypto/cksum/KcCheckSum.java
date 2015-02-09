@@ -34,14 +34,12 @@ public abstract class KcCheckSum extends AbstractKeyedCheckSumTypeHandler {
     @Override
     protected byte[] doChecksumWithKey(byte[] data, int start, int len,
                                        byte[] key, int usage) throws KrbException {
-        byte[] Kc;
         byte[] constant = new byte[5];
         BytesUtil.int2bytes(usage, constant, 0, true);
         constant[4] = (byte) 0x99;
-        Kc = ((DkKeyMaker) keyMaker()).dk(key, constant);
+        byte[] Kc = ((DkKeyMaker) keyMaker()).dk(key, constant);
 
-        byte[] mac = mac(Kc, data, start, len);
-        return mac;
+        return mac(Kc, data, start, len);
     }
 
     protected abstract byte[] mac(byte[] Kc, byte[] data, int start,

@@ -71,7 +71,6 @@ public class CheckSumTest {
     private void testWith(CksumTest testCase) throws Exception {
         byte[] knownChecksum = HexUtil.hex2bytes(testCase.knownChecksum);
         byte[] plainData = testCase.plainText.getBytes();
-        CheckSum newCksum;
 
         if (! CheckSumHandler.isImplemented(testCase.cksumType)) {
             System.err.println("Checksum type not supported yet: "
@@ -81,7 +80,7 @@ public class CheckSumTest {
 
         EncryptionKey key = new EncryptionKey(EncryptionType.DES_CBC_CRC, TESTKEY);
 
-        newCksum = CheckSumHandler.checksumWithKey(testCase.cksumType, plainData, key.getKeyData(), KeyUsage.NONE);
+        CheckSum newCksum = CheckSumHandler.checksumWithKey(testCase.cksumType, plainData, key.getKeyData(), KeyUsage.NONE);
 
         if (CheckSumHandler.verifyWithKey(newCksum, plainData, key.getKeyData(), KeyUsage.NONE)) {
             System.err.println("Checksum verifying is OK for " + testCase.cksumType.getName());

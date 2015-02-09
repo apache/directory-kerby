@@ -63,7 +63,6 @@ public class Md5HmacRc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
         hashProvider().hash(data, start, len);
         byte[] hashTmp = hashProvider().output();
 
-        byte[] hmac = Hmac.hmac(hashProvider(), Ksign, hashTmp);
-        return hmac;
+        return Hmac.hmac(hashProvider(), Ksign, hashTmp);
     }
 }

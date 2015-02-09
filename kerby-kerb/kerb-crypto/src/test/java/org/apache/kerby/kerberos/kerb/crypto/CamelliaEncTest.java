@@ -70,7 +70,7 @@ public class CamelliaEncTest {
         outputs.add("==========");
 
         List<String> newLines = expectedLines;
-        assertThat(expectedLines).as("Comparing new lines with expected lines").isEqualTo(outputs);
+        assertThat(newLines).as("Comparing new lines with expected lines").isEqualTo(outputs);
     }
 
     private void testWith(int keySize) throws KrbException {

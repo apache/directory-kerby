@@ -45,32 +45,29 @@ public class Nfold {
         int inBytesNum = inBytes.length; // count inBytes byte
         int outBytesNum = size; // count inBytes byte
 
-        int a, b, c, lcm;
-        a = outBytesNum;
-        b = inBytesNum;
+        int a = outBytesNum;
+        int b = inBytesNum;
 
         while (b != 0) {
-            c = b;
+            int c = b;
             b = a % b;
             a = c;
         }
-        lcm = (outBytesNum * inBytesNum) / a;
+        int lcm = (outBytesNum * inBytesNum) / a;
 
         byte[] outBytes = new byte[outBytesNum];
         Arrays.fill(outBytes, (byte)0);
 
         int tmpByte = 0;
-        int msbit, i, tmp;
-
-        for (i = lcm-1; i >= 0; i--) {
+        for (int i = lcm - 1; i >= 0; i--) {
             // first, start with the msbit inBytes the first, unrotated byte
-            tmp = ((inBytesNum<<3)-1);
+            int tmp = ((inBytesNum<<3)-1);
             // then, for each byte, shift to the right for each repetition
             tmp += (((inBytesNum<<3)+13)*(i/inBytesNum));
             // last, pick outBytes the correct byte within that shifted repetition
             tmp += ((inBytesNum-(i%inBytesNum)) << 3);
 
-            msbit = tmp % (inBytesNum << 3);
+            int msbit = tmp % (inBytesNum << 3);
 
             // pull outBytes the byte value itself
             tmp =  ((((inBytes[((inBytesNum - 1)-(msbit >>> 3)) % inBytesNum] & 0xff) << 8) |
@@ -88,7 +85,7 @@ public class Nfold {
 
         // if there's a carry bit left over, add it back inBytes
         if (tmpByte != 0) {
-            for (i = outBytesNum-1; i >= 0; i--) {
+            for (int i = outBytesNum-1; i >= 0; i--) {
                 // do the addition
                 tmpByte += (outBytes[i] & 0xff);
                 outBytes[i] = (byte) (tmpByte & 0xff);

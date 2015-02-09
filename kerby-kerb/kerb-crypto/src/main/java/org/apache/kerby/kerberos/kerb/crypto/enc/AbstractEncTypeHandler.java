@@ -123,7 +123,7 @@ public abstract class AbstractEncTypeHandler
         byte[] workBuffer = new byte[workLength];
         System.arraycopy(data, 0, workBuffer, headerLen, data.length);
 
-        int [] workLens = new int[] {confounderLen, checksumLen,
+        int[] workLens = new int[] {confounderLen, checksumLen,
                 inputLen, paddingLen};
 
         encryptWith(workBuffer, workLens, key, iv, usage);

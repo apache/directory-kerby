@@ -49,11 +49,9 @@ public class Des3KeyMaker extends DkKeyMaker {
          * 8 key bytes, then compute the parity bits.  Do this three times.
          */
         byte[] key = new byte[encProvider().keySize()];
-        int nthByte;
-        int tmp;
         for (int i = 0; i < 3; i++) {
             System.arraycopy(randomBits, i * 7, key, i * 8, 7);
-            nthByte = i * 8;
+            int nthByte = i * 8;
 
             key[nthByte + 7] = (byte) (((key[nthByte + 0] & 1) << 1) |
                     ((key[nthByte + 1] & 1) << 2) |
@@ -64,7 +62,7 @@ public class Des3KeyMaker extends DkKeyMaker {
                     ((key[nthByte + 6] & 1) << 7));
 
             for (int j = 0; j < 8; j++) {
-                tmp = key[nthByte + j] & 0xfe;
+                int tmp = key[nthByte + j] & 0xfe;
                 tmp |= (Integer.bitCount(tmp) & 1) ^ 1;
                 key[nthByte + j] = (byte) tmp;
             }

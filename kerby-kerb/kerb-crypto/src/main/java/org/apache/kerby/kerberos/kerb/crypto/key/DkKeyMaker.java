@@ -55,7 +55,7 @@ public abstract class DkKeyMaker extends AbstractKeyMaker {
             System.arraycopy(constant, 0, Ki, 0, constant.length);
         }
 
-        int n = 0, len;
+        int n = 0;
         while (n < keyInuptSize) {
             encProvider().encrypt(key, Ki);
 

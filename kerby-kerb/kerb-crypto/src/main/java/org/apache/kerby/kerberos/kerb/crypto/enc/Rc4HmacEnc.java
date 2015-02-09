@@ -97,8 +97,7 @@ public class Rc4HmacEnc extends AbstractEncTypeHandler {
 
     protected byte[] makeUsageKey(byte[] key, int usage) throws KrbException {
         byte[] salt = Rc4.getSalt(usage, exportable);
-        byte[] usageKey = Hmac.hmac(hashProvider(), key, salt);
-        return usageKey;
+        return Hmac.hmac(hashProvider(), key, salt);
     }
 
     protected byte[] makeEncKey(byte[] usageKey, byte[] checksum) throws KrbException {
@@ -111,8 +110,7 @@ public class Rc4HmacEnc extends AbstractEncTypeHandler {
             }
         }
 
-        byte[] encKey = Hmac.hmac(hashProvider(), tmpKey, checksum);
-        return encKey;
+        return Hmac.hmac(hashProvider(), tmpKey, checksum);
     }
 
     @Override
