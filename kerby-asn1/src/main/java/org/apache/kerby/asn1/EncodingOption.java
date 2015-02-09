@@ -20,7 +20,7 @@
 package org.apache.kerby.asn1;
 
 /**
- * An enum used to represent the various Encoding options.
+ * A class used to hold the various encoding options for a type.
  *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
