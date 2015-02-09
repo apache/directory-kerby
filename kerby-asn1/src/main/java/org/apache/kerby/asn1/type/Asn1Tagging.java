@@ -38,7 +38,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     public Asn1Tagging(int tagNo, T value, boolean isAppSpecific) {
         super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC, tagNo, value);
-        setEncodingOption(EncodingOption.EXPLICIT);
+        getEncodingOption().useExplicit();
         if (value == null) {
             initValue();
         }
@@ -52,7 +52,8 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         } else if (getEncodingOption().isImplicit()) {
             return value.encodingBodyLength();
         } else {
-            throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
+            throw new RuntimeException("Invalid decoding option, " +
+                    "only allowing explicit/implicit");
         }
     }
 
@@ -75,7 +76,8 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         } else if (getEncodingOption().isImplicit()) {
             value.encodeBody(buffer);
         } else {
-            throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
+            throw new RuntimeException("Invalid decoding option, " +
+                    "only allowing explicit/implicit");
         }
     }
 
@@ -87,7 +89,8 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         } else if (getEncodingOption().isImplicit()) {
             value.decodeBody(content);
         } else {
-            throw new RuntimeException("Invalid util option, only allowing explicit/implicit");
+            throw new RuntimeException("Invalid decoding option, " +
+                    "only allowing explicit/implicit");
         }
     }
 

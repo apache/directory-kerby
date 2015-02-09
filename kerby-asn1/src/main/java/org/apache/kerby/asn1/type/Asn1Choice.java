@@ -34,7 +34,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
         setValue(this);
         this.fieldInfos = fieldInfos;
         this.fields = new Asn1Type[fieldInfos.length];
-        setEncodingOption(EncodingOption.CONSTRUCTED);
+        getEncodingOption().useConstructed();
     }
 
     @Override

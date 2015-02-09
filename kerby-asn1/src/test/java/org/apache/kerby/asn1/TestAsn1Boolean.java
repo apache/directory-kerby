@@ -38,8 +38,11 @@ public class TestAsn1Boolean {
                                   boolean isDer) {
         byte[] expected = Util.hex2bytes(expectedEncoding);
         Asn1Boolean aValue = new Asn1Boolean(value);
-        aValue.setEncodingOption(isDer ? EncodingOption.DER :
-                EncodingOption.BER);
+        if (isDer) {
+            aValue.getEncodingOption().useDer();
+        } else {
+            aValue.getEncodingOption().useBer();
+        }
         byte[] encodingBytes = aValue.encode();
         assertThat(encodingBytes).isEqualTo(expected);
     }
@@ -55,8 +58,11 @@ public class TestAsn1Boolean {
     private void testDecodingWith(Boolean expectedValue, String content,
                                   boolean isDer) throws IOException {
         Asn1Boolean decoded = new Asn1Boolean();
-        decoded.setEncodingOption(isDer ? EncodingOption.DER :
-                EncodingOption.BER);
+        if (isDer) {
+            decoded.getEncodingOption().useDer();
+        } else {
+            decoded.getEncodingOption().useBer();
+        }
         decoded.decode(Util.hex2bytes(content));
         assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }

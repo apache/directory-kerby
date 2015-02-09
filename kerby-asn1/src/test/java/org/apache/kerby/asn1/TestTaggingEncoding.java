@@ -62,11 +62,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestTaggingEncoding {
     static final String TEST_STRING = "Jones";
-    static byte[] TYPE1_EXPECTED_BYTES = new byte[] {(byte) 0x1A, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
-    static byte[] TYPE2_EXPECTED_BYTES = new byte[] {(byte) 0x43, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
-    static byte[] TYPE3_EXPECTED_BYTES = new byte[] {(byte) 0xA2, (byte) 0x07, (byte) 0x43, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
-    static byte[] TYPE4_EXPECTED_BYTES = new byte[] {(byte) 0x67, (byte) 0x07, (byte) 0x43, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
-    static byte[] TYPE5_EXPECTED_BYTES = new byte[] {(byte) 0x82, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
+    static byte[] TYPE1_EXPECTED_BYTES = new byte[] {(byte) 0x1A, (byte) 0x05,
+            (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
+    static byte[] TYPE2_EXPECTED_BYTES = new byte[] {(byte) 0x43, (byte) 0x05,
+            (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
+    static byte[] TYPE3_EXPECTED_BYTES = new byte[] {(byte) 0xA2, (byte) 0x07,
+            (byte) 0x43, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E,
+            (byte) 0x65, (byte) 0x73};
+    static byte[] TYPE4_EXPECTED_BYTES = new byte[] {(byte) 0x67, (byte) 0x07,
+            (byte) 0x43, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E,
+            (byte) 0x65, (byte) 0x73};
+    static byte[] TYPE5_EXPECTED_BYTES = new byte[] {(byte) 0x82, (byte) 0x05,
+            (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
 
 
     public static class Type1 extends Asn1VisibleString {
@@ -81,7 +88,7 @@ public class TestTaggingEncoding {
     public static class Type2 extends Asn1Tagging<Type1> {
         public Type2(Type1 value) {
             super(3, value, true);
-            setEncodingOption(EncodingOption.IMPLICIT);
+            getEncodingOption().useImplicit();
         }
         public Type2() {
             this(null);
@@ -91,7 +98,7 @@ public class TestTaggingEncoding {
     public static class Type3 extends Asn1Tagging<Type2> {
         public Type3(Type2 value) {
             super(2, value, false);
-            setEncodingOption(EncodingOption.EXPLICIT);
+            getEncodingOption().useExplicit();
         }
         public Type3() {
             this(null);
@@ -101,7 +108,7 @@ public class TestTaggingEncoding {
     public static class Type4 extends Asn1Tagging<Type3> {
         public Type4(Type3 value) {
             super(7, value, true);
-            setEncodingOption(EncodingOption.IMPLICIT);
+            getEncodingOption().useImplicit();
         }
         public Type4() {
             this(null);
@@ -111,7 +118,7 @@ public class TestTaggingEncoding {
     public static class Type5 extends Asn1Tagging<Type2> {
         public Type5(Type2 value) {
             super(2, value, false);
-            setEncodingOption(EncodingOption.IMPLICIT);
+            getEncodingOption().useImplicit();
         }
         public Type5() {
             this(null);

@@ -36,7 +36,7 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
     public Asn1Collection(TagClass tagClass, int tagNo) {
         super(tagClass, tagNo);
         setValue(new ArrayList<Asn1Item>());
-        setEncodingOption(EncodingOption.CONSTRUCTED);
+        getEncodingOption().useConstructed();
     }
 
     @Override

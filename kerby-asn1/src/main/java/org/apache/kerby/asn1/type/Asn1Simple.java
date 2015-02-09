@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.EncodingOption;
 import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.UniversalTag;
@@ -49,7 +48,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
      */
     public Asn1Simple(UniversalTag tagNo, T value) {
         super(TagClass.UNIVERSAL, tagNo.getValue(), value);
-        setEncodingOption(EncodingOption.PRIMITIVE);
+        getEncodingOption().usePrimitive();
     }
 
     protected byte[] getBytes() {
