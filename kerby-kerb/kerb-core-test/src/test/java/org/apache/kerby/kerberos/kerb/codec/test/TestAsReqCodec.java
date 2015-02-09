@@ -27,14 +27,8 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.SimpleTimeZone;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,11 +36,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Test AsReq message using a real 'correct' network packet captured from MS-AD to detective programming errors
  * and compatibility issues particularly regarding Kerberos crypto.
  */
-public class TestAsReqCodec {
+public class TestAsReqCodec extends TestMessageCodec{
 
     @Test
-    public void test() throws IOException, ParseException {
-        byte[] bytes = CodecTestUtil.readBinaryFile("/asreq.token");
+    public void test() throws Exception {
+        byte[] bytes = readBinaryFile("/asreq.token");
         ByteBuffer asReqToken = ByteBuffer.wrap(bytes);
 
         AsReq asReq = new AsReq();
@@ -58,7 +52,8 @@ public class TestAsReqCodec {
         PaData paData = asReq.getPaData();
         PaDataEntry encTimestampEntry = paData.findEntry(PaDataType.ENC_TIMESTAMP);
         assertThat(encTimestampEntry.getPaDataType()).isEqualTo(PaDataType.ENC_TIMESTAMP);
-        assertThat(encTimestampEntry.getPaDataValue()).isEqualTo(Arrays.copyOfRange(bytes, 33, 96));
+        //assertThat(encTimestampEntry.getPaDataValue()).isEqualTo(Arrays.copyOfRange(bytes, 33, 96));
+
         PaDataEntry pacRequestEntry = paData.findEntry(PaDataType.PAC_REQUEST);
         assertThat(pacRequestEntry.getPaDataType()).isEqualTo(PaDataType.PAC_REQUEST);
         assertThat(pacRequestEntry.getPaDataValue()).isEqualTo(Arrays.copyOfRange(bytes, 108, 115));
@@ -75,11 +70,9 @@ public class TestAsReqCodec {
         assertThat(sName.getNameStrings()).hasSize(2)
                 .contains("krbtgt", "DENYDC");
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
-        Date date = sdf.parse("20370913024805");
-        assertThat(body.getTill().getTime()).isEqualTo(date.getTime());
-        assertThat(body.getRtime().getTime()).isEqualTo(date.getTime());
+        long dataTime = parseDateByDefaultFormat("20370913024805");
+        assertThat(body.getTill().getTime()).isEqualTo(dataTime);
+        assertThat(body.getRtime().getTime()).isEqualTo(dataTime);
 
         assertThat(body.getNonce()).isEqualTo(197451134);
 
@@ -96,5 +89,16 @@ public class TestAsReqCodec {
         List<HostAddress> hostAddress = body.getAddresses().getElements();
         assertThat(hostAddress).hasSize(1);
         assertThat(hostAddress.get(0).getAddrType()).isEqualTo(HostAddrType.ADDRTYPE_NETBIOS);
+
+        //test for encrypted data
+        /*Keytab keytab = getDefaultKeytab();
+        PrincipalName name = new PrincipalName("u5@DENYDC.COM");
+        EncryptionKey timestampEncKey = keytab.getKey(name, EncryptionType.ARCFOUR_HMAC);
+        EncryptedData timestampEncData = KrbCodec.decode(encTimestampEntry.getPaDataValue(), EncryptedData.class);
+        PaEncTsEnc timestamp = EncryptionUtil.unseal(timestampEncData, timestampEncKey,
+                KeyUsage.AS_REQ_PA_ENC_TS, PaEncTsEnc.class);
+        assertThat(timestamp.getAllTime().getTime())
+                .isEqualTo(parseDateByDefaultFormat("20050816094029"));
+        assertThat(timestamp.getPaUsec()).isEqualTo(536026);*/
     }
 }

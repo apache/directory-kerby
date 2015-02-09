@@ -30,8 +30,6 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -43,11 +41,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Test TgsReq message using a real 'correct' network packet captured from MS-AD to detective programming errors
  * and compatibility issues particularly regarding Kerberos crypto.
  */
-public class TestTgsReqCodec {
+public class TestTgsReqCodec extends TestMessageCodec{
 
     @Test
-    public void test() throws IOException, ParseException {
-        byte[] bytes = CodecTestUtil.readBinaryFile("/tgsreq.token");
+    public void test() throws Exception {
+        byte[] bytes = readBinaryFile("/tgsreq.token");
         TgsReq tgsReq = new TgsReq();
         tgsReq.decode(bytes);
 

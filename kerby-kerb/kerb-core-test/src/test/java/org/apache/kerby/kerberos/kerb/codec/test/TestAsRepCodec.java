@@ -19,15 +19,17 @@
  */
 package org.apache.kerby.kerberos.kerb.codec.test;
 
-import org.apache.kerby.kerberos.kerb.spec.common.KrbMessageType;
-import org.apache.kerby.kerberos.kerb.spec.common.NameType;
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
+import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.keytab.Keytab;
+import org.apache.kerby.kerberos.kerb.spec.common.*;
 import org.apache.kerby.kerberos.kerb.spec.kdc.AsRep;
+import org.apache.kerby.kerberos.kerb.spec.kdc.EncAsRepPart;
+import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,11 +37,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Test AsRep message using a real 'correct' network packet captured from MS-AD to detective programming errors
  * and compatibility issues particularly regarding Kerberos crypto.
  */
-public class TestAsRepCodec {
+public class TestAsRepCodec extends TestMessageCodec {
 
     @Test
-    public void test() throws IOException {
-        byte[] bytes = CodecTestUtil.readBinaryFile("/asrep.token");
+    public void test() throws Exception {
+        byte[] bytes = readBinaryFile("/asrep.token");
         ByteBuffer asRepToken = ByteBuffer.wrap(bytes);
 
         AsRep asRep = new AsRep();
@@ -60,13 +62,34 @@ public class TestAsRepCodec {
         assertThat(sName.getNameType()).isEqualTo(NameType.NT_SRV_INST);
         assertThat(sName.getNameStrings()).hasSize(2)
                 .contains("krbtgt", "DENYDC.COM");
-        //FIXME
-        //EncTicketPart encTicketPart = ticket.getEncPart();
-        //assertThat(encTicketPart.getKey().getKvno()).isEqualTo(2);
-        //assertThat(encTicketPart.getKey().getKeyType().getValue()).isEqualTo(0x0017);
 
-        //EncKdcRepPart encKdcRepPart = asRep.getEncPart();
-        //assertThat(encKdcRepPart.getKey().getKeyType().getValue()).isEqualTo(0x0017);
-        //assertThat(encKdcRepPart.getKey().getKvno()).isEqualTo(7);
+        //test for encrypted data
+        Keytab keytab = getDefaultKeytab();
+        cName.setRealm(asRep.getCrealm());
+        EncryptionKey key = keytab.getKey(cName, EncryptionType.ARCFOUR_HMAC);
+        EncKdcRepPart encKdcRepPart = EncryptionUtil.unseal(asRep.getEncryptedEncPart(), key,
+                KeyUsage.AS_REP_ENCPART, EncAsRepPart.class);
+
+        List<LastReqEntry> lastReqEntries = encKdcRepPart.getLastReq().getElements();
+        assertThat(lastReqEntries).hasSize(1);
+        LastReqEntry entry = lastReqEntries.get(0);
+        assertThat(entry.getLrType()).isEqualTo(LastReqType.NONE);
+        assertThat(entry.getLrValue().getTime()).isEqualTo(parseDateByDefaultFormat("20050816094134"));
+
+        assertThat(encKdcRepPart.getNonce()).isEqualTo(854491315);
+        assertThat(encKdcRepPart.getKeyExpiration().getTime())
+                .isEqualTo(parseDateByDefaultFormat("20370914024805"));
+        byte[] ticketFlags = new byte[]{64, -32, 0, 0};
+        assertThat(encKdcRepPart.getFlags().getValue()).isEqualTo(ticketFlags);
+        assertThat(encKdcRepPart.getAuthTime().getTime()).isEqualTo(parseDateByDefaultFormat("20050816094134"));
+        assertThat(encKdcRepPart.getStartTime().getTime()).isEqualTo(parseDateByDefaultFormat("20050816094134"));
+        assertThat(encKdcRepPart.getEndTime().getTime()).isEqualTo(parseDateByDefaultFormat("20050816194134"));
+        assertThat(encKdcRepPart.getRenewTill().getTime()).isEqualTo(parseDateByDefaultFormat("20050817050000"));
+        assertThat(encKdcRepPart.getSrealm()).isEqualTo("DENYDC.COM");
+
+        PrincipalName encSName = encKdcRepPart.getSname();
+        assertThat(encSName.getName()).isEqualTo("krbtgt/DENYDC.COM");
+        assertThat(encSName.getNameType()).isEqualTo(NameType.NT_SRV_INST);
+        assertThat(encSName.getNameStrings()).hasSize(2).contains("krbtgt").contains("DENYDC.COM");
     }
 }
