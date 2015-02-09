@@ -24,13 +24,32 @@ wrapper.working.dir=C:\\Users\\hazel\\workspace\\directory-kerberos\\kerby-dist\
 or
 wrapper.working.dir=/hazel/workspace/directory-kerberos/kerby-dist/kerby-server
 
-2.Everytime you want to reinstall, just run:
+2.Every time you want to reinstall, just run:
 mvn package -Pdependency
 mvn antrun:run
 
-3.Then you can run the service by
+3.Then you can run or manage the service via the following scripts.
+On windows:
 bat/runConsole.bat,
 bat/installService.bat,
 bat/startService.bat,
 bat/stopService.bat,
-bat/uninstallService.bat in Windows. And bin/... in Linux.
+bat/uninstallService.bat in Windows.
+
+On Linux:
+bin/genConfig.sh
+bin/installDaemonNoPriv.sh
+bin/installDaemon.sh
+bin/queryDaemon.sh
+bin/runConsole.sh
+bin/runHelloWorld.sh
+bin/setenv.sh
+bin/startDaemonNoPriv.sh
+bin/startDaemon.sh
+bin/stopDaemonNoPriv.sh
+bin/stopDaemon.sh
+bin/systemTrayIcon.sh
+bin/uninstallDaemonNoPriv.sh
+bin/uninstallDaemon.sh
+bin/wrapper.sh
+

@@ -29,7 +29,7 @@
     <junit.version>4.12</junit.version>
     <slf4j.version>1.7.10</slf4j.version>
     <assertj.version>1.7.1</assertj.version>
-    <dependency.directory>target/dependences</dependency.directory>
+    <dependency.directory>target/dependencies</dependency.directory>
     <server.dist.directory>kerby-dist/kerby-server</server.dist.directory>
   </properties>
 
@@ -226,32 +226,32 @@
 
   <profiles>
     <profile>
-        <id>dependency</id>
-        <!-- Profile for generating dependent jars preparing for installation. -->
-        <!-- For installation, call mvn antrun:run. -->
-        <build>
-            <plugins>
-              <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                  <execution>
-                    <id>copy-dependencies</id>
-                    <phase>package</phase>
-                    <goals>
-                      <goal>copy-dependencies</goal>
-                    </goals>
-                    <configuration>
-                      <outputDirectory>${dependency.directory}</outputDirectory>
-                      <overWriteReleases>false</overWriteReleases>
-                      <overWriteSnapshots>false</overWriteSnapshots>
-                      <overWriteIfNewer>true</overWriteIfNewer>
-                    </configuration>
-                  </execution>
-                </executions>
-              </plugin>
-            </plugins>
-        </build>
+      <id>dependency</id>
+      <!-- Profile for generating dependent jars preparing for installation. -->
+      <!-- For installation, call mvn antrun:run. -->
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-dependencies</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>copy-dependencies</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${dependency.directory}</outputDirectory>
+                  <overWriteReleases>false</overWriteReleases>
+                  <overWriteSnapshots>false</overWriteSnapshots>
+                  <overWriteIfNewer>true</overWriteIfNewer>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>
