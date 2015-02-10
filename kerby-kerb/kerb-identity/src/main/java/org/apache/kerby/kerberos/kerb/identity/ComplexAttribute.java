@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ComplexAttribute extends Attribute {
-    private List<String> values;
+    private final List<String> values;
 
     public ComplexAttribute(String name) {
         super(name);

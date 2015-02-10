@@ -141,7 +141,9 @@ public class KrbClient {
      * @throws KrbException
      */
     public TgtTicket requestTgtTicket(String principal, KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         AsRequest asRequest = new AsRequest(context);
         asRequest.setKrbOptions(options);
@@ -158,7 +160,9 @@ public class KrbClient {
      */
     public TgtTicket requestTgtTicket(String principal, String password,
                                       KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         AsRequest asRequest = new AsRequestWithPasswd(context);
         options.add(KrbOption.USER_PASSWD, password);
@@ -177,7 +181,9 @@ public class KrbClient {
      */
     public TgtTicket requestTgtTicket(String principal, Certificate certificate,
                                       PrivateKey privateKey, KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         AsRequestWithCert asRequest = new AsRequestWithCert(context);
         options.add(KrbOption.PKINIT_X509_CERTIFICATE, certificate);
@@ -193,7 +199,9 @@ public class KrbClient {
      * @throws KrbException
      */
     public TgtTicket requestTgtTicket(KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         AsRequestWithCert asRequest = new AsRequestWithCert(context);
         options.add(KrbOption.PKINIT_X509_ANONYMOUS);
@@ -213,7 +221,9 @@ public class KrbClient {
      */
     public TgtTicket requestTgtTicket(String principal, KerbToken token,
                                       KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         AsRequestWithToken asRequest = new AsRequestWithToken(context);
         options.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
@@ -232,7 +242,9 @@ public class KrbClient {
      */
     public ServiceTicket requestServiceTicket(String clientPrincipal, String password,
                                               String serverPrincipal, KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         TgtTicket tgt = requestTgtTicket(clientPrincipal, password, options);
         return requestServiceTicket(tgt, serverPrincipal, options);
@@ -249,7 +261,9 @@ public class KrbClient {
      */
     public ServiceTicket requestServiceTicket(String clientPrincipal, KerbToken token,
                                               String serverPrincipal, KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         TgtTicket tgt = requestTgtTicket(clientPrincipal, token, options);
         return requestServiceTicket(tgt, serverPrincipal, options);
@@ -299,7 +313,9 @@ public class KrbClient {
      */
     public ServiceTicket requestServiceTicket(TgtTicket tgt, String serverPrincipal,
                                               KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         TgsRequest ticketReq = new TgsRequest(context, tgt);
         ticketReq.setServerPrincipal(new PrincipalName(serverPrincipal));

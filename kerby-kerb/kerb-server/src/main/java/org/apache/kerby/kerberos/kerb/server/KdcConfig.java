@@ -61,14 +61,14 @@ public class KdcConfig {
         return conf.getString(KdcConfigKey.KDC_HOST);
     }
 
-    public short getKdcTcpPort() {
+    public int getKdcTcpPort() {
         Integer kdcTcpPort =  KrbConfHelper.getIntUnderSection(conf, KdcConfigKey.KDC_TCP_PORT);
-        return kdcTcpPort.shortValue();
+        return kdcTcpPort.intValue();
     }
 
-    public short getKdcUdpPort() {
+    public int getKdcUdpPort() {
         Integer kdcUdpPort = KrbConfHelper.getIntUnderSection(conf, KdcConfigKey.KDC_UDP_PORT);
-        return kdcUdpPort.shortValue();
+        return kdcUdpPort.intValue();
     }
 
     public String getKdcRealm() {

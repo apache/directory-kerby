@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class InMemoryIdentityBackend extends AbstractIdentityBackend {
 
-    private Map<String, KrbIdentity> identities;
+    private final Map<String, KrbIdentity> identities;
 
     public InMemoryIdentityBackend() {
         this.identities = new HashMap<String, KrbIdentity>();

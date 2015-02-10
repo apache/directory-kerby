@@ -34,15 +34,27 @@ public class RequestRecord {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         RequestRecord that = (RequestRecord) o;
 
-        if (microseconds != that.microseconds) return false;
-        if (requestTime != that.requestTime) return false;
-        if (!clientPrincipal.equals(that.clientPrincipal)) return false;
-        if (!serverPrincipal.equals(that.serverPrincipal)) return false;
+        if (microseconds != that.microseconds) {
+            return false;
+        }
+        if (requestTime != that.requestTime) {
+            return false;
+        }
+        if (!clientPrincipal.equals(that.clientPrincipal)) {
+            return false;
+        }
+        if (!serverPrincipal.equals(that.serverPrincipal)) {
+            return false;
+        }
 
         return true;
     }

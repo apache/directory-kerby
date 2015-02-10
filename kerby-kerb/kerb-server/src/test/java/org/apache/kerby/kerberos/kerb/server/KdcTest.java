@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -32,7 +33,7 @@ import java.nio.channels.SocketChannel;
 public class KdcTest {
 
     private String serverHost = "localhost";
-    private short serverPort = 8089;
+    private int serverPort = 0;
 
     private SimpleKdcServer kdcServer;
 
@@ -40,6 +41,7 @@ public class KdcTest {
     public void setUp() throws Exception {
         kdcServer = new SimpleKdcServer();
         kdcServer.setKdcHost(serverHost);
+        serverPort = getServerPort();
         kdcServer.setKdcTcpPort(serverPort);
         kdcServer.init();
         kdcServer.start();
@@ -61,6 +63,24 @@ public class KdcTest {
         writeBuffer.flip();
 
         socketChannel.write(writeBuffer);
+    }
+    
+    /**
+     * Get a server socket point for testing usage, either TCP or UDP.
+     * @return server socket point
+     */
+    private static int getServerPort() {
+        int serverPort = 0;
+
+        try {
+            ServerSocket serverSocket = new ServerSocket(0);
+            serverPort = serverSocket.getLocalPort();
+            serverSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get a server socket point");
+        }
+
+        return serverPort;
     }
 
     @After

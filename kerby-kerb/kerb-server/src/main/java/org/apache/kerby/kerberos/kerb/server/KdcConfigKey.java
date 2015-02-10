@@ -24,7 +24,7 @@ import org.apache.kerby.kerberos.kerb.common.SectionConfigKey;
 public enum KdcConfigKey implements SectionConfigKey {
     KRB_DEBUG(true),
     WORK_DIR,
-    KDC_SERVICE_NAME("Haox_KDC_Server"),
+    KDC_SERVICE_NAME("Kerby_KDC_Server"),
     KDC_HOST("127.0.0.1"),
     KDC_UDP_PORT(8016, "kdcdefaults"),
     KDC_TCP_PORT(8015, "kdcdefaults"),
@@ -48,7 +48,7 @@ public enum KdcConfigKey implements SectionConfigKey {
     KDC_MAX_DGRAM_REPLY_SIZE(4096, "kdcdefaults"),
 
     //logging location
-    //TODO: the default log location need to be determinded.
+    //TODO: the default log location need to be determined.
     DEFAULT(null, "logging"),
     KDC(null, "logging"),
     ADMIN_SERVER(null, "logging");

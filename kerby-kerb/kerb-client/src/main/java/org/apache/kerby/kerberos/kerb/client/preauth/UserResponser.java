@@ -24,7 +24,7 @@ import java.util.List;
 
 public class UserResponser {
 
-    private List<UserResponseItem> items = new ArrayList<UserResponseItem>(1);
+    private final List<UserResponseItem> items = new ArrayList<UserResponseItem>(1);
 
     /**
      * Let customize an interface like CMD or WEB UI to selectively respond all the questions

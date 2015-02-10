@@ -33,8 +33,8 @@ public class KrbIdentity {
     private PrincipalName principal;
     private int keyVersion = 1;
     private int kdcFlags = 0;
-    private boolean disabled = false;
-    private boolean locked = false;
+    private boolean disabled;
+    private boolean locked;
     private KerberosTime expireTime = KerberosTime.NEVER;
     private KerberosTime createdTime = KerberosTime.now();
 

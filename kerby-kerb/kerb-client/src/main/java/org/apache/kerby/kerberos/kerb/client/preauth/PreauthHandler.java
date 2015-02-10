@@ -158,7 +158,7 @@ public class PreauthHandler {
             for (PaDataEntry pae : inPadata.getElements()) {
 
                 // Restrict real mechanisms to the chosen one if we have one
-                if (real >0 && !preauthContext.isPaTypeAllowed(pae.getPaDataType())) {
+                if (real > 0 && !preauthContext.isPaTypeAllowed(pae.getPaDataType())) {
                     continue;
                 }
 
@@ -190,10 +190,11 @@ public class PreauthHandler {
                          PaData inPadata, PaData outPadata) {
         PreauthContext preauthContext = kdcRequest.getPreauthContext();
 
-        PreauthHandle handle;
         for (PaDataEntry pae : inPadata.getElements()) {
-            handle = findHandle(kdcRequest, pae.getPaDataType());
-            if (handle == null) continue;
+            PreauthHandle handle = findHandle(kdcRequest, pae.getPaDataType());
+            if (handle == null) {
+                continue;
+            }
 
             boolean gotData = handle.tryAgain(kdcRequest,
                     pae.getPaDataType(), preauthContext.getErrorPaData(), outPadata);

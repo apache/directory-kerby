@@ -23,7 +23,7 @@ import java.util.*;
 
 public class Identity {
     private String name;
-    private Map<String, Attribute> attributes;
+    private final Map<String, Attribute> attributes;
 
     public Identity(String name) {
         this.name = name;
@@ -53,7 +53,7 @@ public class Identity {
     public String getSimpleAttribute(String name) {
         Attribute attr = attributes.get(name);
         if (! (attr instanceof SimpleAttribute)) {
-            throw new RuntimeException("Not simple attribute");
+            throw new RuntimeException("Not a simple attribute");
         }
         return ((SimpleAttribute) attr).getValue();
     }
