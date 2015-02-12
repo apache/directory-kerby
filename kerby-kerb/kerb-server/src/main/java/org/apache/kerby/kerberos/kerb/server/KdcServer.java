@@ -113,7 +113,7 @@ public class KdcServer {
         this.kdcTcpPort = kdcTcpPort;
     }
 
-    public void setKdcUdpPort(short kdcUdpPort) {
+    public void setKdcUdpPort(int kdcUdpPort) {
         this.kdcUdpPort = kdcUdpPort;
     }
 

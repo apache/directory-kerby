@@ -27,7 +27,7 @@ public class KrbContext {
     private String kdcRealm;
     private KrbConfig config;
     private String kdcHost;
-    private short kdcPort;
+    private int kdcPort;
     private long timeout = 10L;
     private PreauthHandler preauthHandler;
 
@@ -48,14 +48,14 @@ public class KrbContext {
         this.kdcHost = kdcHost;
     }
 
-    public short getKdcPort() {
+    public int getKdcPort() {
         if (kdcPort > 0) {
             return kdcPort;
         }
         return config.getKdcPort();
     }
 
-    public void setKdcPort(short kdcPort) {
+    public void setKdcPort(int kdcPort) {
         this.kdcPort = kdcPort;
     }
 

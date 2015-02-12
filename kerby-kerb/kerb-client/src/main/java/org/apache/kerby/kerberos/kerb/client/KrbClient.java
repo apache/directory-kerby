@@ -65,7 +65,7 @@ public class KrbClient {
      * @param kdcHost
      * @param kdcPort
      */
-    public KrbClient(String kdcHost, short kdcPort) {
+    public KrbClient(String kdcHost, int kdcPort) {
         this(new KrbConfig());
 
         setKdcHost(kdcHost);
@@ -98,7 +98,7 @@ public class KrbClient {
      *
      * @param kdcPort
      */
-    public void setKdcPort(short kdcPort) {
+    public void setKdcPort(int kdcPort) {
         context.setKdcPort(kdcPort);
     }
 
