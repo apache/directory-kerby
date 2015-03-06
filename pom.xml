@@ -12,7 +12,7 @@
   See the License for the specific language governing permissions and
   limitations under the License. See accompanying LICENSE file.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.apache.kerby</groupId>
@@ -29,8 +29,6 @@
     <junit.version>4.12</junit.version>
     <slf4j.version>1.7.10</slf4j.version>
     <assertj.version>1.7.1</assertj.version>
-    <dependency.directory>target/dependencies</dependency.directory>
-    <server.dist.directory>kerby-dist/kerby-server</server.dist.directory>
   </properties>
 
   <prerequisites>
@@ -46,6 +44,7 @@
     <module>tool</module>
     <module>kdc-backend</module>
     <module>benchmark</module>
+    <module>kerby-dist</module>
   </modules>
 
   <dependencyManagement>
@@ -171,35 +170,6 @@
           <artifactId>maven-clean-plugin</artifactId>
           <version>2.6.1</version>
         </plugin>
-
-        <plugin>
-          <!--installation-->
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <inherited>false</inherited>
-          <version>1.8</version>
-          <executions>
-            <execution>
-              <id>default-cli</id>
-              <phase>package</phase>
-              <configuration>
-                <tasks>
-                  <!--copy libs about kerby-server to dist directory-->
-                  <copy todir="${server.dist.directory}">
-                    <fileset dir="kerby-kerb/kerb-server/${dependency.directory}">
-                      <include name="*" />
-                    </fileset>
-                  </copy>
-                  <copy file="kerby-kerb/kerb-server/target/kerb-server-${project.version}.jar"
-                        tofile="${server.dist.directory}/kerb-server-${project.version}.jar"/>
-                </tasks>
-              </configuration>
-              <goals>
-                <goal>run</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -223,35 +193,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>dependency</id>
-      <!-- Profile for generating dependent jars preparing for installation. -->
-      <!-- For installation, call mvn antrun:run. -->
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-dependencies</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>copy-dependencies</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${dependency.directory}</outputDirectory>
-                  <overWriteReleases>false</overWriteReleases>
-                  <overWriteSnapshots>false</overWriteSnapshots>
-                  <overWriteIfNewer>true</overWriteIfNewer>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>
