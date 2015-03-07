@@ -108,6 +108,14 @@ public enum EncryptionType implements KrbEnum {
         return displayName;
     }
 
+    /**
+     * Is the type uses AES256 or not
+     * @return true if uses AES256, false otherwise.
+     */
+    public boolean usesAES256() {
+        return name.contains("aes256");
+    }
+
     public static EncryptionType fromValue(Integer value) {
         if (value != null) {
             for (KrbEnum e : values()) {
