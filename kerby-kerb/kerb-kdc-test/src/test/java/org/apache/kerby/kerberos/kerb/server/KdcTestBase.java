@@ -33,26 +33,39 @@ public abstract class KdcTestBase {
     protected String serverPrincipal;
 
     protected String hostname = "localhost";
-    protected int tcpPort;
-    protected int udpPort;
+    protected int tcpPort = -1;
+    protected int udpPort = -1;
 
     protected TestKdcServer kdcServer;
     protected KrbClient krbClnt;
 
+    protected boolean allowUdp() {
+        return true;
+    }
+
     @Before
     public void setUp() throws Exception {
+        tcpPort = getServerPort();
+
+        if (allowUdp()) {
+            udpPort = getServerPort();
+        }
+
         setUpKdcServer();
         setUpClient();
     }
 
     protected void setUpKdcServer() throws Exception {
-        tcpPort = getServerPort();
-        udpPort = getServerPort();
-        
         kdcServer = new TestKdcServer();
         kdcServer.setKdcHost(hostname);
-        kdcServer.setKdcTcpPort(tcpPort);
-        kdcServer.setKdcUdpPort(udpPort);
+        if (tcpPort > 0) {
+            kdcServer.setKdcTcpPort(tcpPort);
+        }
+        kdcServer.setAllowUdp(allowUdp());
+        if (udpPort > 0) {
+            kdcServer.setKdcUdpPort(udpPort);
+        }
+
         kdcServer.init();
 
         kdcRealm = kdcServer.getKdcRealm();
@@ -63,7 +76,17 @@ public abstract class KdcTestBase {
     }
 
     protected void setUpClient() throws Exception {
-        krbClnt = new KrbClient(hostname, tcpPort);
+        krbClnt = new KrbClient();
+
+        krbClnt.setKdcHost(hostname);
+        if (tcpPort > 0) {
+            krbClnt.setKdcTcpPort(tcpPort);
+        }
+        krbClnt.setAllowUdp(allowUdp());
+        if (udpPort > 0) {
+            krbClnt.setKdcUdpPort(udpPort);
+        }
+
         krbClnt.setTimeout(5);
         krbClnt.setKdcRealm(kdcServer.getKdcRealm());
     }

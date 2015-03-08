@@ -61,14 +61,36 @@ public class KdcConfig {
         return conf.getString(KdcConfigKey.KDC_HOST);
     }
 
+    public int getKdcPort() {
+        Integer kdcPort =  KrbConfHelper.getIntUnderSection(conf,
+                KdcConfigKey.KDC_PORT);
+        return kdcPort.intValue();
+    }
+
     public int getKdcTcpPort() {
-        Integer kdcTcpPort =  KrbConfHelper.getIntUnderSection(conf, KdcConfigKey.KDC_TCP_PORT);
-        return kdcTcpPort.intValue();
+        Integer kdcTcpPort =  KrbConfHelper.getIntUnderSection(conf,
+                KdcConfigKey.KDC_TCP_PORT);
+        if (kdcTcpPort > 0) {
+            return kdcTcpPort.intValue();
+        }
+        return getKdcPort();
+    }
+
+    /**
+     * Is to allow UDP for KDC
+     * @return true to allow UDP, false otherwise
+     */
+    public boolean allowKdcUdp() {
+        return conf.getBoolean(KdcConfigKey.KDC_ALLOW_UDP);
     }
 
     public int getKdcUdpPort() {
-        Integer kdcUdpPort = KrbConfHelper.getIntUnderSection(conf, KdcConfigKey.KDC_UDP_PORT);
-        return kdcUdpPort.intValue();
+        Integer kdcUdpPort = KrbConfHelper.getIntUnderSection(conf,
+                KdcConfigKey.KDC_UDP_PORT);
+        if (kdcUdpPort > 0) {
+            return kdcUdpPort.intValue();
+        }
+        return getKdcPort();
     }
 
     public String getKdcRealm() {

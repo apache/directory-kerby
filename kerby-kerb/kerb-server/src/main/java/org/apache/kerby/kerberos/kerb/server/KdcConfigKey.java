@@ -26,6 +26,8 @@ public enum KdcConfigKey implements SectionConfigKey {
     WORK_DIR,
     KDC_SERVICE_NAME("Kerby_KDC_Server"),
     KDC_HOST("127.0.0.1"),
+    KDC_PORT(8015, "kdcdefaults"),
+    KDC_ALLOW_UDP(true, "kdcdefaults"),
     KDC_UDP_PORT(8016, "kdcdefaults"),
     KDC_TCP_PORT(8015, "kdcdefaults"),
     KDC_DOMAIN("example.com"),

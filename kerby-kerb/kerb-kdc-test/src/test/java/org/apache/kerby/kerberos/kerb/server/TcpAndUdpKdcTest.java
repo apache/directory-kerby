@@ -19,33 +19,17 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public abstract class KdcTest extends KdcTestBase {
-
-    private String password = "123456";
+public class TcpAndUdpKdcTest extends KdcTest {
 
     @Override
-    protected void setUpKdcServer() throws Exception {
-        super.setUpKdcServer();
-        kdcServer.createPrincipal(clientPrincipal, password);
+    protected boolean allowUdp() {
+        return true;
     }
 
-    protected void performKdcTest() throws Exception {
-        kdcServer.start();
-        assertThat(kdcServer.isStarted()).isTrue();
-
-        krbClnt.init();
-        TgtTicket tgt = krbClnt.requestTgtTicket(clientPrincipal,
-                password, null);
-        assertThat(tgt).isNotNull();
-
-        ServiceTicket tkt = krbClnt.requestServiceTicket(tgt,
-                serverPrincipal, null);
-        assertThat(tkt).isNotNull();
+    @Test
+    public void testKdc() throws Exception {
+        performKdcTest();
     }
 }

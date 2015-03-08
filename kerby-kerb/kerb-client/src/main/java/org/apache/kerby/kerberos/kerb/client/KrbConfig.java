@@ -40,13 +40,53 @@ public class KrbConfig {
         return conf.getBoolean(KrbConfigKey.KRB_DEBUG);
     }
 
+    /**
+     * Get KDC host name
+     * @return
+     */
     public String getKdcHost() {
         return conf.getString(KrbConfigKey.KDC_HOST);
     }
 
-    public short getKdcPort() {
+    /**
+     * Get KDC port, as both TCP and UDP ports
+     * @return
+     */
+    public int getKdcPort() {
         Integer kdcPort = conf.getInt(KrbConfigKey.KDC_PORT);
         return kdcPort.shortValue();
+    }
+
+    /**
+     * Get KDC TCP port
+     * @return
+     */
+    public int getKdcTcpPort() {
+        Integer kdcPort = conf.getInt(KrbConfigKey.KDC_TCP_PORT);
+        if (kdcPort > 0) {
+            return kdcPort.shortValue();
+        }
+        return getKdcPort();
+    }
+
+    /**
+     * Is to allow UDP for KDC
+     * @return true to allow UDP, false otherwise
+     */
+    public boolean allowKdcUdp() {
+        return conf.getBoolean(KrbConfigKey.KDC_ALLOW_UDP);
+    }
+
+    /**
+     * Get KDC UDP port
+     * @return
+     */
+    public int getKdcUdpPort() {
+        Integer kdcPort = conf.getInt(KrbConfigKey.KDC_UDP_PORT);
+        if (kdcPort > 0) {
+            return kdcPort.shortValue();
+        }
+        return getKdcPort();
     }
 
     public String getKdcRealm() {
