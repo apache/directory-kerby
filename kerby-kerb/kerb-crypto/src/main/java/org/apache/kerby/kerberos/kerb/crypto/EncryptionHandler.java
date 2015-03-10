@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto;
 
+import javax.crypto.Cipher;
+
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.crypto.enc.*;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -31,6 +33,21 @@ import org.apache.kerby.kerberos.kerb.spec.common.*;
  * should be added updating this.
  */
 public class EncryptionHandler {
+
+    private static boolean isAES256Enabled = false;
+
+    static {
+        try {
+            isAES256Enabled = Cipher.getMaxAllowedKeyLength("AES") >= 256;
+        } catch (Exception e) {
+            // should not happen
+        }
+
+    }
+
+    public static boolean isAES256Enabled() {
+        return isAES256Enabled;
+    }
 
     public static EncryptionType getEncryptionType(String eType) throws KrbException {
         EncryptionType result = EncryptionType.fromName(eType);

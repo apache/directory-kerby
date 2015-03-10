@@ -69,6 +69,10 @@ public class EncryptionTest {
 
     @Test
     public void testAes256() throws IOException, KrbException {
+        if(!EncryptionHandler.isAES256Enabled()) {
+            return;
+        }
+
         testEncWith("aes256-cts-hmac-sha1-96.cc");
     }
 

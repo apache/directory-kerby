@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.codec.test;
 
 import org.apache.kerby.kerberos.kerb.codec.kerberos.KerberosTicket;
 import org.apache.kerby.kerberos.kerb.codec.kerberos.KerberosToken;
+import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
 import org.junit.Before;
 import org.junit.Test;
@@ -138,6 +139,10 @@ public class TestKerberos {
 
     @Test
     public void testAes256Ticket() throws Exception {
+        if(!EncryptionHandler.isAES256Enabled()) {
+            return;
+        }
+
         KerberosToken token = null;
         token = new KerberosToken(aes256Token, aes256Key);
 

@@ -111,6 +111,10 @@ public class CheckSumsTest {
 
     @Test
     public void testCheckSums_HMAC_SHA1_96_AES256() throws Exception {
+        if(!EncryptionHandler.isAES256Enabled()) {
+            return;
+        }
+
         performTest(new CksumTest(
             "fourteen",
             CheckSumType.HMAC_SHA1_96_AES256, EncryptionType.AES256_CTS_HMAC_SHA1_96, 4,

@@ -67,6 +67,9 @@ public class KeysTest {
 
         for (KeytabEntry ke : entries) {
             EncryptionType keyType = ke.getKey().getKeyType();
+            if (keyType.usesAES256()) {
+                continue;
+            }
             if (EncryptionHandler.isImplemented(keyType)) {
                 EncryptionKey genKey = EncryptionHandler.string2Key(principal.getName(),
                         TEST_PASSWORD, keyType);
