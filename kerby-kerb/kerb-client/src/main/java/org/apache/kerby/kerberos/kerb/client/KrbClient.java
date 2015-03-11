@@ -34,7 +34,7 @@ import org.apache.kerby.kerberos.kerb.spec.common.KrbError;
 import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.token.KerbToken;
+import org.apache.kerby.kerberos.kerb.spec.pa.token.KerbToken;
 import org.apache.kerby.transport.Network;
 import org.apache.kerby.transport.Transport;
 import org.apache.kerby.transport.event.TransportEvent;

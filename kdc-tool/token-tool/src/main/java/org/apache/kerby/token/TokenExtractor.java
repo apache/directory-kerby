@@ -23,6 +23,7 @@ import com.sun.security.jgss.AuthorizationDataEntry;
 import com.sun.security.jgss.ExtendedGSSContext;
 import com.sun.security.jgss.InquireType;
 import org.apache.kerby.asn1.type.Asn1SequenceOf;
+import org.apache.kerby.kerberos.kerb.spec.pa.token.KerbToken;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 

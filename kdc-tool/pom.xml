@@ -28,5 +28,6 @@
 
   <modules>
     <module>kinit</module>
+    <module>token-tool</module>
   </modules>
 </project>

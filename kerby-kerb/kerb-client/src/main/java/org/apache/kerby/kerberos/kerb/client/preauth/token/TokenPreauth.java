@@ -33,7 +33,7 @@ import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.token.KerbToken;
+import org.apache.kerby.kerberos.kerb.spec.pa.token.KerbToken;
 
 import java.util.Collections;
 import java.util.List;
