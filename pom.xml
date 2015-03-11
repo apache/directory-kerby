@@ -62,7 +62,7 @@
     <module>kerby-asn1</module>
     <module>kerby-kerb</module>
     <module>kerby-kdc</module>
-    <module>tool</module>
+    <module>kdc-tool</module>
     <module>kdc-backend</module>
     <module>benchmark</module>
   </modules>

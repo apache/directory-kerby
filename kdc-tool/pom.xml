@@ -21,25 +21,12 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tool</artifactId>
-  <name>Tool</name>
-  <description>Kerby KDC and client tools</description>
+  <artifactId>kdc-tool</artifactId>
+  <name>Kdc Tool Project</name>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerby-config</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-client</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerby-token</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
+  <modules>
+    <module>kinit</module>
+  </modules>
 </project>
