@@ -34,8 +34,8 @@ public class PreauthContext {
     private UserResponser userResponser = new UserResponser();
     private PaDataType selectedPaType;
     private PaDataType allowedPaType;
-    private List<PaDataType> triedPaTypes = new ArrayList<PaDataType>(1);
-    private List<PreauthHandle> handles = new ArrayList<PreauthHandle>(5);
+    private final List<PaDataType> triedPaTypes = new ArrayList<PaDataType>(1);
+    private final List<PreauthHandle> handles = new ArrayList<PreauthHandle>(5);
 
     public PreauthContext() {
         this.selectedPaType = PaDataType.NONE;

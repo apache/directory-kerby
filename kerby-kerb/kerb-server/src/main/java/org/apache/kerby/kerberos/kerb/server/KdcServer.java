@@ -28,12 +28,13 @@ import java.io.File;
 
 public class KdcServer {
     private String kdcHost;
-    private short kdcTcpPort;
-    private short kdcUdpPort;
+    private int kdcTcpPort;
+    private Boolean allowUdp;
+    private int kdcUdpPort;
     private String kdcRealm;
 
     private boolean started;
-    private String serviceName = "HaoxKdc";
+    private String serviceName = "KerbyKdc";
 
     private KdcHandler kdcHandler;
     private EventHub eventHub;
@@ -112,14 +113,21 @@ public class KdcServer {
         return kdcConfig.getKdcHost();
     }
 
-    private short getKdcTcpPort() {
+    private int getKdcTcpPort() {
         if (kdcTcpPort > 0) {
             return kdcTcpPort;
         }
         return kdcConfig.getKdcTcpPort();
     }
 
-    private short getKdcUdpPort() {
+    private boolean allowUdp() {
+        if (allowUdp != null) {
+            return allowUdp;
+        }
+        return kdcConfig.allowKdcUdp();
+    }
+
+    private int getKdcUdpPort() {
         if (kdcUdpPort > 0) {
             return kdcUdpPort;
         }
@@ -130,14 +138,34 @@ public class KdcServer {
         this.kdcHost = kdcHost;
     }
 
-    public void setKdcTcpPort(short kdcTcpPort) {
+    /**
+     * Set to allow UDP or not.
+     * @param allowUdp
+     */
+    public void setAllowUdp(boolean allowUdp) {
+        this.allowUdp = allowUdp;
+    }
+
+    /**
+     * Set KDC tcp port.
+     * @param kdcTcpPort
+     */
+    public void setKdcTcpPort(int kdcTcpPort) {
         this.kdcTcpPort = kdcTcpPort;
     }
 
-    public void setKdcUdpPort(short kdcUdpPort) {
+    /**
+     * Set KDC udp port. Only makes sense when allowUdp is set.
+     * @param kdcUdpPort
+     */
+    public void setKdcUdpPort(int kdcUdpPort) {
         this.kdcUdpPort = kdcUdpPort;
     }
 
+    /**
+     * Set KDC realm.
+     * @param realm
+     */
     public void setKdcRealm(String realm) {
         this.kdcRealm = realm;
     }
@@ -159,7 +187,9 @@ public class KdcServer {
 
         eventHub.start();
         network.tcpListen(getKdcHost(), getKdcTcpPort());
-        network.udpListen(getKdcHost(), getKdcUdpPort());
+        if (allowUdp()) {
+            network.udpListen(getKdcHost(), getKdcUdpPort());
+        }
     }
 
     private void prepareHandler() {

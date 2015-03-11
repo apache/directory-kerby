@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class KrbOptions {
 
-    private Map<KrbOption, KrbOption> options = new HashMap<KrbOption, KrbOption>(4);
+    private final Map<KrbOption, KrbOption> options = new HashMap<KrbOption, KrbOption>(4);
 
     public void add(KrbOption option) {
         if (option != null) {
@@ -33,8 +33,10 @@ public class KrbOptions {
     }
 
     public void add(KrbOption option, Object optionValue) {
-        option.setValue(optionValue);
-        add(option);
+        if (option != null) {
+            option.setValue(optionValue);
+            add(option);
+        }
     }
 
     public boolean contains(KrbOption option) {
@@ -58,7 +60,7 @@ public class KrbOptions {
 
     public String getStringOption(KrbOption option) {
         Object value = getOptionValue(option);
-        if (value != null && value instanceof String) {
+        if (value instanceof String) {
             return (String) value;
         }
         return null;
@@ -66,30 +68,26 @@ public class KrbOptions {
 
     public boolean getBooleanOption(KrbOption option) {
         Object value = getOptionValue(option);
-        if (value != null) {
-            if (value instanceof String) {
-                String strVal = (String) value;
-                if (strVal.equalsIgnoreCase("true") ||
-                        strVal.equalsIgnoreCase("yes") ||
-                        strVal.equals("1")) {
-                    return true;
-                }
-            } else if (value instanceof Boolean) {
-                return (Boolean) value;
+        if (value instanceof String) {
+            String strVal = (String) value;
+            if (strVal.equalsIgnoreCase("true") ||
+                strVal.equalsIgnoreCase("yes") ||
+                strVal.equals("1")) {
+                return true;
             }
+        } else if (value instanceof Boolean) {
+            return (Boolean) value;
         }
         return false;
     }
 
     public int getIntegerOption(KrbOption option) {
         Object value = getOptionValue(option);
-        if (value != null) {
-            if (value instanceof String) {
-                String strVal = (String) value;
-                return Integer.valueOf(strVal);
-            } else if (value instanceof Integer) {
-                return (Integer) value;
-            }
+        if (value instanceof String) {
+            String strVal = (String) value;
+            return Integer.valueOf(strVal);
+        } else if (value instanceof Integer) {
+            return (Integer) value;
         }
         return -1;
     }

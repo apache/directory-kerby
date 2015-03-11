@@ -23,23 +23,22 @@ import org.apache.kerby.event.Event;
 import org.apache.kerby.event.EventHub;
 import org.apache.kerby.event.EventWaiter;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
+import org.apache.kerby.kerberos.kerb.KrbErrorException;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.event.KrbClientEvent;
 import org.apache.kerby.kerberos.kerb.client.event.KrbClientEventType;
 import org.apache.kerby.kerberos.kerb.client.request.*;
 import org.apache.kerby.kerberos.kerb.common.KrbErrorUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbStreamingDecoder;
-import org.apache.kerby.kerberos.kerb.KrbErrorException;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.common.KrbError;
 import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.token.KerbToken;
-import org.apache.kerby.transport.Connector;
+import org.apache.kerby.kerberos.kerb.spec.pa.token.KerbToken;
+import org.apache.kerby.transport.Network;
 import org.apache.kerby.transport.Transport;
 import org.apache.kerby.transport.event.TransportEvent;
 import org.apache.kerby.transport.event.TransportEventType;
-import org.apache.kerby.transport.tcp.TcpConnector;
 
 import java.io.IOException;
 import java.security.PrivateKey;
@@ -58,24 +57,41 @@ public class KrbClient {
 
     private KrbHandler krbHandler;
     private KrbContext context;
-    private KrbConfig config;
+    private String kdcHost;
+    private int kdcTcpPort;
+    private Boolean allowUdp;
+    private int kdcUdpPort;
+    private KrbConfig krbConfig;
 
     /**
-     *
+     * Default constructor.
+     */
+    public KrbClient() {
+        this(new KrbConfig());
+    }
+
+    /**
+     * Construct a KrbClient with host and port. The port can be TCP, UDP or
+     * both, but TCP will try first.
      * @param kdcHost
      * @param kdcPort
      */
-    public KrbClient(String kdcHost, short kdcPort) {
+    public KrbClient(String kdcHost, int kdcPort) {
         this(new KrbConfig());
 
         setKdcHost(kdcHost);
-        setKdcPort(kdcPort);
+        setKdcTcpPort(kdcPort);
+        setKdcUdpPort(kdcPort);
     }
 
-    public KrbClient(KrbConfig config) {
-        this.config = config;
+    /**
+     * Construct with prepared KrbConfig
+     * @param krbConfig
+     */
+    public KrbClient(KrbConfig krbConfig) {
+        this.krbConfig = krbConfig;
         this.context = new KrbContext();
-        context.init(config);
+        context.init(krbConfig);
     }
 
     /**
@@ -86,20 +102,64 @@ public class KrbClient {
         context.setKdcRealm(realm);
     }
 
-    /**
-     *
-     * @param kdcHost
-     */
-    public void setKdcHost(String kdcHost) {
-        context.setKdcHost(kdcHost);
+    private String getKdcHost() {
+        if (kdcHost != null) {
+            return kdcHost;
+        }
+        return krbConfig.getKdcHost();
+    }
+
+    private int getKdcTcpPort() {
+        if (kdcTcpPort > 0) {
+            return kdcTcpPort;
+        }
+        return krbConfig.getKdcTcpPort();
+    }
+
+    private boolean allowUdp() {
+        if (allowUdp != null) {
+            return allowUdp;
+        }
+        return krbConfig.allowKdcUdp();
+    }
+
+    private int getKdcUdpPort() {
+        if (kdcUdpPort > 0) {
+            return kdcUdpPort;
+        }
+        return krbConfig.getKdcUdpPort();
     }
 
     /**
-     *
-     * @param kdcPort
+     * Set KDC host.
+     * @param kdcHost
      */
-    public void setKdcPort(short kdcPort) {
-        context.setKdcPort(kdcPort);
+    public void setKdcHost(String kdcHost) {
+        this.kdcHost = kdcHost;
+    }
+
+    /**
+     * Set KDC tcp port.
+     * @param kdcTcpPort
+     */
+    public void setKdcTcpPort(int kdcTcpPort) {
+        this.kdcTcpPort = kdcTcpPort;
+    }
+
+    /**
+     * Set to allow UDP or not.
+     * @param allowUdp
+     */
+    public void setAllowUdp(boolean allowUdp) {
+        this.allowUdp = allowUdp;
+    }
+
+    /**
+     * Set KDC udp port. Only makes sense when allowUdp is set.
+     * @param kdcUdpPort
+     */
+    public void setKdcUdpPort(int kdcUdpPort) {
+        this.kdcUdpPort = kdcUdpPort;
     }
 
     /**
@@ -117,8 +177,9 @@ public class KrbClient {
         this.eventHub = new EventHub();
         eventHub.register(krbHandler);
 
-        Connector connector = new TcpConnector(new KrbStreamingDecoder());
-        eventHub.register(connector);
+        Network network = new Network();
+        network.setStreamingDecoder(new KrbStreamingDecoder());
+        eventHub.register(network);
 
         eventWaiter = eventHub.waitEvent(
                 TransportEventType.NEW_TRANSPORT,
@@ -128,7 +189,10 @@ public class KrbClient {
 
         eventHub.start();
 
-        connector.connect(context.getKdcHost(), context.getKdcPort());
+        network.tcpConnect(getKdcHost(), getKdcTcpPort());
+        if (allowUdp()) {
+            network.udpConnect(getKdcHost(), getKdcUdpPort());
+        }
         Event event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
         transport = ((TransportEvent) event).getTransport();
     }
@@ -141,7 +205,9 @@ public class KrbClient {
      * @throws KrbException
      */
     public TgtTicket requestTgtTicket(String principal, KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         AsRequest asRequest = new AsRequest(context);
         asRequest.setKrbOptions(options);
@@ -158,7 +224,9 @@ public class KrbClient {
      */
     public TgtTicket requestTgtTicket(String principal, String password,
                                       KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         AsRequest asRequest = new AsRequestWithPasswd(context);
         options.add(KrbOption.USER_PASSWD, password);
@@ -177,7 +245,9 @@ public class KrbClient {
      */
     public TgtTicket requestTgtTicket(String principal, Certificate certificate,
                                       PrivateKey privateKey, KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         AsRequestWithCert asRequest = new AsRequestWithCert(context);
         options.add(KrbOption.PKINIT_X509_CERTIFICATE, certificate);
@@ -193,7 +263,9 @@ public class KrbClient {
      * @throws KrbException
      */
     public TgtTicket requestTgtTicket(KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         AsRequestWithCert asRequest = new AsRequestWithCert(context);
         options.add(KrbOption.PKINIT_X509_ANONYMOUS);
@@ -213,7 +285,9 @@ public class KrbClient {
      */
     public TgtTicket requestTgtTicket(String principal, KerbToken token,
                                       KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         AsRequestWithToken asRequest = new AsRequestWithToken(context);
         options.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
@@ -232,7 +306,9 @@ public class KrbClient {
      */
     public ServiceTicket requestServiceTicket(String clientPrincipal, String password,
                                               String serverPrincipal, KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         TgtTicket tgt = requestTgtTicket(clientPrincipal, password, options);
         return requestServiceTicket(tgt, serverPrincipal, options);
@@ -249,7 +325,9 @@ public class KrbClient {
      */
     public ServiceTicket requestServiceTicket(String clientPrincipal, KerbToken token,
                                               String serverPrincipal, KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         TgtTicket tgt = requestTgtTicket(clientPrincipal, token, options);
         return requestServiceTicket(tgt, serverPrincipal, options);
@@ -299,7 +377,9 @@ public class KrbClient {
      */
     public ServiceTicket requestServiceTicket(TgtTicket tgt, String serverPrincipal,
                                               KrbOptions options) throws KrbException {
-        if (options == null) options = new KrbOptions();
+        if (options == null) {
+            options = new KrbOptions();
+        }
 
         TgsRequest ticketReq = new TgsRequest(context, tgt);
         ticketReq.setServerPrincipal(new PrincipalName(serverPrincipal));

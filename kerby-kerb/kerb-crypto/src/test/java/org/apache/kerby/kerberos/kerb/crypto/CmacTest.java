@@ -66,10 +66,9 @@ public class CmacTest {
         byte[] key = HexUtil.hex2bytes(keyBytes);
         byte[] input = HexUtil.hex2bytes(inputBytes);
         EncryptProvider encProvider = new Camellia128Provider();
-        byte[] result;
 
         // test 1
-        result = Cmac.cmac(encProvider, key, input, 0, 0);
+        byte[] result = Cmac.cmac(encProvider, key, input, 0, 0);
         assertThat(result).as("Test 1").isEqualTo(HexUtil.hex2bytes(cmac1));
 
         // test 2

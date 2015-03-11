@@ -30,7 +30,6 @@ public abstract class CmacKcCheckSum extends KcCheckSum {
     }
 
     protected byte[] mac(byte[] Kc, byte[] data, int start, int len) throws KrbException {
-        byte[] mac = Cmac.cmac(encProvider(), Kc, data, start, len);
-        return mac;
+        return Cmac.cmac(encProvider(), Kc, data, start, len);
     }
 }

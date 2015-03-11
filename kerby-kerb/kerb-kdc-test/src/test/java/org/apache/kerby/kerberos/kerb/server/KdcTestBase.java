@@ -19,6 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.junit.After;
 import org.junit.Before;
@@ -30,14 +33,24 @@ public abstract class KdcTestBase {
     protected String serverPrincipal;
 
     protected String hostname = "localhost";
-    protected short tcpPort = 8088;
-    protected short udpPort = 8089;
+    protected int tcpPort = -1;
+    protected int udpPort = -1;
 
     protected TestKdcServer kdcServer;
     protected KrbClient krbClnt;
 
+    protected boolean allowUdp() {
+        return true;
+    }
+
     @Before
     public void setUp() throws Exception {
+        tcpPort = getServerPort();
+
+        if (allowUdp()) {
+            udpPort = getServerPort();
+        }
+
         setUpKdcServer();
         setUpClient();
     }
@@ -45,8 +58,14 @@ public abstract class KdcTestBase {
     protected void setUpKdcServer() throws Exception {
         kdcServer = new TestKdcServer();
         kdcServer.setKdcHost(hostname);
-        kdcServer.setKdcTcpPort(tcpPort);
-        kdcServer.setKdcUdpPort(udpPort);
+        if (tcpPort > 0) {
+            kdcServer.setKdcTcpPort(tcpPort);
+        }
+        kdcServer.setAllowUdp(allowUdp());
+        if (udpPort > 0) {
+            kdcServer.setKdcUdpPort(udpPort);
+        }
+
         kdcServer.init();
 
         kdcRealm = kdcServer.getKdcRealm();
@@ -57,12 +76,38 @@ public abstract class KdcTestBase {
     }
 
     protected void setUpClient() throws Exception {
-        krbClnt = new KrbClient(hostname, tcpPort);
+        krbClnt = new KrbClient();
+
+        krbClnt.setKdcHost(hostname);
+        if (tcpPort > 0) {
+            krbClnt.setKdcTcpPort(tcpPort);
+        }
+        krbClnt.setAllowUdp(allowUdp());
+        if (udpPort > 0) {
+            krbClnt.setKdcUdpPort(udpPort);
+        }
+
         krbClnt.setTimeout(5);
         krbClnt.setKdcRealm(kdcServer.getKdcRealm());
     }
 
+    /**
+     * Get a server socket point for testing usage, either TCP or UDP.
+     * @return server socket point
+     */
+    private static int getServerPort() {
+        int serverPort = 0;
 
+        try {
+            ServerSocket serverSocket = new ServerSocket(0);
+            serverPort = serverSocket.getLocalPort();
+            serverSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get a server socket point");
+        }
+
+        return serverPort;
+    }
 
     @After
     public void tearDown() throws Exception {

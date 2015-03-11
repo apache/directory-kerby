@@ -57,9 +57,7 @@ public class AesKeyMaker extends DkKeyMaker {
         }
 
         byte[] tmpKey = random2Key(random);
-        byte[] result = dk(tmpKey, KERBEROS_CONSTANT);
-
-        return result;
+        return dk(tmpKey, KERBEROS_CONSTANT);
     }
 
 }

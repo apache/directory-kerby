@@ -59,15 +59,12 @@ public class CamelliaKeyMaker extends DkKeyMaker {
         }
 
         byte[] tmpKey = random2Key(random);
-        byte[] result = dk(tmpKey, KERBEROS_CONSTANT);
-
-        return result;
+        return dk(tmpKey, KERBEROS_CONSTANT);
     }
 
     private String getPepper() {
         int keySize = encProvider().keySize();
-        String pepper = keySize == 16 ? "camellia128-cts-cmac" : "camellia256-cts-cmac";
-        return pepper;
+        return keySize == 16 ? "camellia128-cts-cmac" : "camellia256-cts-cmac";
     }
 
     /*
@@ -79,7 +76,6 @@ public class CamelliaKeyMaker extends DkKeyMaker {
         int blocksize = encProvider().blockSize();
         int keyInuptSize = encProvider().keyInputSize();
         byte[] keyBytes = new byte[keyInuptSize];
-        byte[] Ki;
 
         int len = 0;
         // K(i-1): the previous block of PRF output, initially all-zeros.
@@ -93,18 +89,16 @@ public class CamelliaKeyMaker extends DkKeyMaker {
         // four-byte big-endian binary string giving the output length
         len += 4;
 
-        Ki = new byte[len];
+        byte[] Ki = new byte[len];
         System.arraycopy(constant, 0, Ki, blocksize + 4, constant.length);
         BytesUtil.int2bytes(keyInuptSize * 8, Ki, len - 4, true);
 
-        int i, n = 0;
-        byte[] tmp;
-        for (i = 1, n = 0; n < keyInuptSize; i++) {
+        for (int i = 1, n = 0; n < keyInuptSize; i++) {
             // Update the block counter
             BytesUtil.int2bytes(i, Ki, blocksize, true);
 
             // Compute a CMAC checksum, update Ki with the result
-            tmp = Cmac.cmac(encProvider(), key, Ki);
+            byte[] tmp = Cmac.cmac(encProvider(), key, Ki);
             System.arraycopy(tmp, 0, Ki, 0, blocksize);
 
             if (n + blocksize >= keyInuptSize) {

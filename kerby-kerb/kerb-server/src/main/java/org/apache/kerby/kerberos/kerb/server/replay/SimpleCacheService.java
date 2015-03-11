@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SimpleCacheService implements CacheService {
-    private Set<RequestRecord> requests;
+    private final Set<RequestRecord> requests;
 
     public SimpleCacheService() {
         requests = new HashSet<RequestRecord>();

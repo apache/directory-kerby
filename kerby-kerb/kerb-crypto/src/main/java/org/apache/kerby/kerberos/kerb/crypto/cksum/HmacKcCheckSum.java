@@ -31,7 +31,6 @@ public abstract class HmacKcCheckSum extends KcCheckSum {
     }
 
     protected byte[] mac(byte[] Kc, byte[] data, int start, int len) throws KrbException {
-        byte[] hmac = Hmac.hmac(hashProvider(), Kc, data, start, len);
-        return hmac;
+        return Hmac.hmac(hashProvider(), Kc, data, start, len);
     }
 }

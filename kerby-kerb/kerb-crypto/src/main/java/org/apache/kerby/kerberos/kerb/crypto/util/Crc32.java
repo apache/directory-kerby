@@ -67,9 +67,8 @@ public class Crc32 {
     public static long crc(long initial, byte[] data, int start, int len) {
         long c = initial;
 
-        int idx;
         for (int i = 0; i < len; i++) {
-            idx = (int) ((data[start + i] ^ c) & 0xff);
+            int idx = (int) ((data[start + i] ^ c) & 0xff);
             c = ((c & 0xffffffffL) >>> 8) ^ table[idx]; // why?
         }
 

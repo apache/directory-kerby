@@ -52,8 +52,7 @@ public class DesKeyMaker extends AbstractKeyMaker {
             throw new KrbException(error);
         }
 
-        byte[] key = toKey(string, salt);
-        return key;
+        return toKey(string, salt);
     }
 
     /**
@@ -233,7 +232,6 @@ public class DesKeyMaker extends AbstractKeyMaker {
          =>
          11000001 00011111 00111000  01101000 10001010 11001000 01101101 00101111
          */
-        byte bt;
         for (int i = 0; i < 8; i++) {
             bits56[i] <<= 1;
         }

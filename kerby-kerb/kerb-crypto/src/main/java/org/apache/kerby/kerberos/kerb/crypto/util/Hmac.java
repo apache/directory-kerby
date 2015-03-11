@@ -76,7 +76,6 @@ public class Hmac {
         hashProvider.hash(outerPaddedKey);
         hashProvider.hash(tmp);
 
-        tmp = hashProvider.output();
-        return tmp;
+        return hashProvider.output();
     }
 }

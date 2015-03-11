@@ -712,6 +712,10 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_0() {
+        if(!EncryptionHandler.isAES256Enabled()) {
+            return;
+        }
+
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "", 0,
@@ -730,6 +734,10 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_1() {
+        if(!EncryptionHandler.isAES256Enabled()) {
+            return;
+        }
+
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "1", 1,
@@ -748,6 +756,10 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_9() {
+        if(!EncryptionHandler.isAES256Enabled()) {
+            return;
+        }
+
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "9 bytesss", 2,
@@ -767,6 +779,9 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_13() {
+        if(!EncryptionHandler.isAES256Enabled()) {
+            return;
+        }
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "13 bytes byte", 3,
@@ -786,6 +801,10 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_30() {
+        if(!EncryptionHandler.isAES256Enabled()) {
+            return;
+        }
+
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "30 bytes bytes bytes bytes byt", 4,

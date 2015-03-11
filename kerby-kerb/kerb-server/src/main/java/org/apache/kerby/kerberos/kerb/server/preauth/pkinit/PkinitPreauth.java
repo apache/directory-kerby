@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class PkinitPreauth extends AbstractPreauthPlugin {
 
-    private Map<String, PkinitKdcContext> pkinitContexts;
+    private final Map<String, PkinitKdcContext> pkinitContexts;
 
     public PkinitPreauth() {
         super(new PkinitPreauthMeta());

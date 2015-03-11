@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class KdcTest extends KdcTestBase {
+public abstract class KdcTest extends KdcTestBase {
 
     private String password = "123456";
 
@@ -35,16 +35,17 @@ public class KdcTest extends KdcTestBase {
         kdcServer.createPrincipal(clientPrincipal, password);
     }
 
-    @Test
-    public void testKdc() throws Exception {
+    protected void performKdcTest() throws Exception {
         kdcServer.start();
         assertThat(kdcServer.isStarted()).isTrue();
 
         krbClnt.init();
-        TgtTicket tgt = krbClnt.requestTgtTicket(clientPrincipal, password, null);
+        TgtTicket tgt = krbClnt.requestTgtTicket(clientPrincipal,
+                password, null);
         assertThat(tgt).isNotNull();
 
-        ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal, null);
+        ServiceTicket tkt = krbClnt.requestServiceTicket(tgt,
+                serverPrincipal, null);
         assertThat(tkt).isNotNull();
     }
 }
