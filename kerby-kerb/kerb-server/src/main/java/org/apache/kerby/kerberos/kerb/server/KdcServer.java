@@ -84,7 +84,7 @@ public class KdcServer {
         if (args.length == 0) {
             //FIXME host and config should be loaded from configuration.
             String serverHost = "localhost";
-            short serverPort = 8087;
+            short serverPort = 8015;
 
             server = new KdcServer();
             server.setKdcHost(serverHost);
