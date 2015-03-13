@@ -15,6 +15,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-confdir=/etc/kerby/conf
-workingdir=/usr/kerby/kdc/
-java -jar ../kerby-kdc/kerby-kdc-1.0-SNAPSHOT-jar-with-dependencies.jar -start ${confdir} ${workingdir}
+java -jar ../kerby-kdc/kerby-kdc-1.0-SNAPSHOT-jar-with-dependencies.jar $@

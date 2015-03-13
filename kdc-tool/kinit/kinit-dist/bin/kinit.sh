@@ -16,4 +16,4 @@
 # specific language governing permissions and limitations
 # under the License.
 confdir=/etc/kerby/krb/conf
-java -jar ../kinit/kinit-1.0-SNAPSHOT-jar-with-dependencies.jar confdir $@
+java -jar ../kinit/kinit-1.0-SNAPSHOT-jar-with-dependencies.jar ${confdir} $@
