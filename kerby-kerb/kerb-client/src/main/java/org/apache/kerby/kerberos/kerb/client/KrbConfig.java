@@ -90,7 +90,7 @@ public class KrbConfig {
     }
 
     public String getKdcRealm() {
-        return conf.getString(KrbConfigKey.KDC_REALM);
+        return KrbConfHelper.getStringUnderSection(conf, KrbConfigKey.KDC_REALM);
     }
 
     public String getKdcDomain() {

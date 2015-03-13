@@ -19,10 +19,14 @@
  */
 package org.apache.kerby.kerberos.tool;
 
+import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
+import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 
 import java.io.Console;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -49,36 +53,40 @@ public class Kinit {
         }
     }
 
+    /**
+     * args[0] is the configuration directory written in script.
+     * args[length - 1] is principal
+     */
     private int execute(String[] args) {
-        if (args.length < 1 || args.length > 3) {
+        if (args.length < 2 || args.length > 4) {
             printUsage("");
             return -1;
         }
 
         //no options
-        if (args.length == 1) {
-            return requestTicket(args, 0);
+        if (args.length == 2) {
+            return requestTicket(args, 1);
         }
 
         int exitCode = -1;
-        int i = 0;
+        int i = 1;
         String cmd = args[i];
 
         //
         // verify that we have enough option parameters
         //
         if ("-l".equals(cmd)) {
-            if (args.length != 3) {
+            if (args.length != 4) {
                 printUsage(cmd);
                 return exitCode;
             }
         } else if ("-f".equals(cmd)) {
-            if (args.length != 2) {
+            if (args.length != 3) {
                 printUsage(cmd);
                 return exitCode;
             }
         } else if ("-F".equals(cmd)) {
-            if (args.length != 2) {
+            if (args.length != 3) {
                 printUsage(cmd);
                 return exitCode;
             }
@@ -101,11 +109,23 @@ public class Kinit {
     /**
      * Init the KrbClient
      */
-    private KrbClient getClient() {
-        KrbClient krbClient = new KrbClient();
+    private KrbClient createClient(String confDirString) {
+        KrbConfig krbConfig = new KrbConfig();
+        Conf conf = krbConfig.getConf();
+
+        File confDir = new File(confDirString);
+        File[] files = confDir.listFiles();
+        try {
+            for (File file : files) {
+                conf.addIniConfig(file);
+            }
+        } catch (IOException e) {
+            System.err.println("Something wrong with krb configuration.");
+            e.printStackTrace();
+        }
+
+        KrbClient krbClient = new KrbClient(krbConfig);
         krbClient.init();
-        //TODO should be read from configuration
-        krbClient.setKdcRealm("TEST.COM");
         return krbClient;
     }
 
@@ -129,7 +149,7 @@ public class Kinit {
 
     private int requestTicket(String[] args, int i) {
         String principal = args[i];
-        KrbClient client = getClient();
+        KrbClient client = createClient(args[0]);
         String password = getPassword(principal);
 
         try {
@@ -144,7 +164,7 @@ public class Kinit {
     private int ticketWithLifetime(String[] args, int i) {
         String lifetime = args[i];
         String principal = args[i];
-        KrbClient client = getClient();
+        KrbClient client = createClient(args[0]);
         String password = getPassword(principal);
         try {
             //TODO
@@ -157,7 +177,7 @@ public class Kinit {
 
     private int ticketForwardable(String[] args, int i) {
         String principal = args[i];
-        KrbClient client = getClient();
+        KrbClient client = createClient(args[0]);
         String password = getPassword(principal);
         try {
             //TODO
@@ -170,7 +190,7 @@ public class Kinit {
 
     private int ticketNonForwardable(String[] args, int i) {
         String principal = args[i];
-        KrbClient client = getClient();
+        KrbClient client = createClient(args[0]);
         String password = getPassword(principal);
         try {
             //TODO
