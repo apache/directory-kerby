@@ -38,6 +38,42 @@ public class KerbyKdcServer extends KdcServer {
         initIdentityService();
     }
 
+    private static KdcServer server;
+    private static final String USAGE = "Usage: " + KerbyKdcServer.class.getSimpleName() + " -start conf-dir working-dir|-stop";
+
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.err.println(USAGE);
+            return;
+        }
+
+        if (args[0].equals("-start")) {
+            if (args.length != 3) {
+                System.err.println(USAGE);
+                return;
+            }
+            String confDir = args[1];
+            String workingDir = args[2];
+
+            //FIXME host and config should be loaded from configuration.
+            String serverHost = "localhost";
+            short serverPort = 8015;
+
+            server = new KdcServer();
+            server.setKdcHost(serverHost);
+            server.setKdcTcpPort(serverPort);
+            server.init();
+            server.start();
+            System.out.println("KDC Server(" + KerbyKdcServer.class.getSimpleName() + ") started.");
+        } else if (args[0].equals("-stop")) {
+            //server.stop();//FIXME can't get the server instance here
+            System.out.println("KDC Server stoped.");
+        } else {
+            System.err.println(USAGE);
+        }
+
+    }
+
     protected void initIdentityService() {
         Config config = getKdcConfig().getBackendConfig();
         IdentityService identityService = new LdapIdentityBackend(config);

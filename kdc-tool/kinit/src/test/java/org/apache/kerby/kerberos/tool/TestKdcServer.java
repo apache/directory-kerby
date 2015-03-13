@@ -22,18 +22,12 @@ package org.apache.kerby.kerberos.tool;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.keytab.Keytab;
-import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -116,22 +110,5 @@ public class TestKdcServer extends SimpleKdcServer {
             principal += "@" + getKdcRealm();
         }
         return principal;
-    }
-
-    public void exportPrincipals(File keytabFile) throws IOException {
-        Keytab keytab = new Keytab();
-
-        List<KrbIdentity> identities = getIdentityService().getIdentities();
-        for (KrbIdentity identity : identities) {
-            PrincipalName principal = identity.getPrincipal();
-            KerberosTime timestamp = new KerberosTime();
-            for (EncryptionType encType : identity.getKeys().keySet()) {
-                EncryptionKey ekey = identity.getKeys().get(encType);
-                int keyVersion = ekey.getKvno();
-                keytab.addEntry(new KeytabEntry(principal, timestamp, keyVersion, ekey));
-            }
-        }
-
-        keytab.store(keytabFile);
     }
 }
