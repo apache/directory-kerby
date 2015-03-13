@@ -58,7 +58,7 @@ public class KdcConfig {
     }
 
     public String getKdcHost() {
-        return conf.getString(KdcConfigKey.KDC_HOST);
+        return KrbConfHelper.getStringUnderSection(conf, KdcConfigKey.KDC_HOST);
     }
 
     public int getKdcPort() {
@@ -94,7 +94,7 @@ public class KdcConfig {
     }
 
     public String getKdcRealm() {
-        return conf.getString(KdcConfigKey.KDC_REALM);
+        return KrbConfHelper.getStringUnderSection(conf, KdcConfigKey.KDC_REALM);
     }
 
     public String getKdcDomain() {

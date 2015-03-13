@@ -29,7 +29,7 @@ public enum KrbConfigKey implements SectionConfigKey {
     KDC_UDP_PORT(8016),
     KDC_TCP_PORT(8015),
     KDC_DOMAIN("example.com"),
-    KDC_REALM("EXAMPLE.COM"),
+    KDC_REALM("EXAMPLE.COM", "libdefaults"),
     TGS_PRINCIPAL("krbtgt@EXAMPLE.COM"),
     PREAUTH_REQUIRED(true),
     CLOCKSKEW(5 * 60L, "libdefaults"),

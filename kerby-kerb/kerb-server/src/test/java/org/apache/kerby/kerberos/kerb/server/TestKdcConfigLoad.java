@@ -36,18 +36,20 @@ public class TestKdcConfigLoad {
         URL confFileUrl = TestKdcConfigLoad.class.getResource("/kdc.conf");
         File confFile = new File(confFileUrl.toURI());
 
-        KdcConfig krbConfig = new KdcConfig();
-        Conf conf = krbConfig.getConf();
+        KdcConfig kdcConfig = new KdcConfig();
+        Conf conf = kdcConfig.getConf();
         conf.addIniConfig(confFile);
 
-        assertThat(krbConfig.getDefaultLoggingLocation()).isEqualTo("FILE:/var/log/krb5libs.log");
-        assertThat(krbConfig.getKdcLoggingLocation()).isEqualTo("FILE:/var/log/krb5kdc.log");
-        assertThat(krbConfig.getAdminLoggingLocation()).isEqualTo("FILE:/var/log/kadmind.log");
+        assertThat(kdcConfig.getDefaultLoggingLocation()).isEqualTo("FILE:/var/log/krb5libs.log");
+        assertThat(kdcConfig.getKdcLoggingLocation()).isEqualTo("FILE:/var/log/krb5kdc.log");
+        assertThat(kdcConfig.getAdminLoggingLocation()).isEqualTo("FILE:/var/log/kadmind.log");
 
-        assertThat(krbConfig.getKdcUdpPort()).isEqualTo(88);
-        assertThat(krbConfig.getKdcTcpPort()).isEqualTo(8014);
-        assertThat(krbConfig.isRestrictAnonymousToTgt()).isTrue();
-        assertThat(krbConfig.getKdcMaxDgramReplySize()).isEqualTo(4096);
+        assertThat(kdcConfig.getKdcHost()).isEqualTo("localhost");
+        assertThat(kdcConfig.getKdcUdpPort()).isEqualTo(88);
+        assertThat(kdcConfig.getKdcTcpPort()).isEqualTo(8014);
+        assertThat(kdcConfig.getKdcRealm()).isEqualTo("TEST.COM");
+        assertThat(kdcConfig.isRestrictAnonymousToTgt()).isTrue();
+        assertThat(kdcConfig.getKdcMaxDgramReplySize()).isEqualTo(4096);
 
         /* will be moved to LdapLdentityBackend module
         String[] ldapContainerDn = krbConfig.getLdapKerberosContainerDn();
