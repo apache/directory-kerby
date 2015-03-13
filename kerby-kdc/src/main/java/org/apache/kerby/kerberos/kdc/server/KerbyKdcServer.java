@@ -22,11 +22,19 @@ package org.apache.kerby.kerberos.kdc.server;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
+import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.identity.backend.InMemoryIdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
+import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * The mentioned Kerby KDC server implementation
@@ -55,6 +63,10 @@ public class KerbyKdcServer extends KdcServer {
 
         File confDir = new File(confDirString);
         File[] files = confDir.listFiles();
+        if (files == null) {
+            throw new IOException("There are no file in configuration directory");
+        }
+
         for (File file : files) {
             conf.addIniConfig(file);
         }
@@ -83,8 +95,13 @@ public class KerbyKdcServer extends KdcServer {
                 server.init(confDir, workDir);
             } catch (IOException e) {
                 System.err.println("Something wrong with configuration files or work files");
+                e.printStackTrace();
                 return;
             }
+            //TODO add a default principal for test
+            server.createPrincipal("test", "123456");
+            server.createPrincipals("krbtgt", "test-service/localhost");
+
             server.start();
             System.out.println(KerbyKdcServer.class.getSimpleName() + " started.");
         } else if (args[0].equals("-stop")) {
@@ -98,7 +115,40 @@ public class KerbyKdcServer extends KdcServer {
 
     protected void initIdentityService() {
         Config config = getKdcConfig().getBackendConfig();
-        IdentityService identityService = new LdapIdentityBackend(config);
+
+        //FIXME
+        InMemoryIdentityBackend identityService = new InMemoryIdentityBackend();
+//        IdentityService identityService = new LdapIdentityBackend(config);
         setIdentityService(identityService);
+    }
+
+
+    //create default principal for test
+    private synchronized void createPrincipal(String principal, String password) {
+        KrbIdentity identity = new KrbIdentity(fixPrincipal(principal));
+        List<EncryptionType> encTypes = getKdcConfig().getEncryptionTypes();
+        List<EncryptionKey> encKeys = null;
+        try {
+            encKeys = EncryptionUtil.generateKeys(fixPrincipal(principal), password, encTypes);
+        } catch (KrbException e) {
+            throw new RuntimeException("Failed to generate encryption keys", e);
+        }
+        identity.addKeys(encKeys);
+        getIdentityService().addIdentity(identity);
+    }
+
+    private void createPrincipals(String ... principals) {
+        String passwd;
+        for (String principal : principals) {
+            passwd = UUID.randomUUID().toString();
+            createPrincipal(fixPrincipal(principal), passwd);
+        }
+    }
+
+    private String fixPrincipal(String principal) {
+        if (! principal.contains("@")) {
+            principal += "@" + getKdcRealm();
+        }
+        return principal;
     }
 }

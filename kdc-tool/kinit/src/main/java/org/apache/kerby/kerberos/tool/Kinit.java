@@ -113,9 +113,13 @@ public class Kinit {
         KrbConfig krbConfig = new KrbConfig();
         Conf conf = krbConfig.getConf();
 
-        File confDir = new File(confDirString);
-        File[] files = confDir.listFiles();
         try {
+            File confDir = new File(confDirString);
+            File[] files = confDir.listFiles();
+            if (files == null) {
+                throw new IOException("There are no file in configuration directory: " + confDirString);
+            }
+
             for (File file : files) {
                 conf.addIniConfig(file);
             }
