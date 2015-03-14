@@ -17,18 +17,34 @@
 
   <parent>
     <groupId>org.apache.kerby</groupId>
-    <artifactId>kerby-all</artifactId>
+    <artifactId>kdc-backend</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>kdc-backend</artifactId>
-  <name>Kdc Backend Project</name>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
+  <artifactId>zookeeper-backend</artifactId>
 
-  <modules>
-    <module>ldap-backend</module>
-    <module>json-backend</module>
-    <module>zookeeper-backend</module>
-  </modules>
+  <name>Zookeeper identity backend</name>
+  <description>Zookeeper identity backend</description>
+
+  <properties>
+    <zookeeper.version>3.4.6</zookeeper.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerby-config</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-identity</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>${zookeeper.version}</version>
+    </dependency>
+  </dependencies>
 </project>

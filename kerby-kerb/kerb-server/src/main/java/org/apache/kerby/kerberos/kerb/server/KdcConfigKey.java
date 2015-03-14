@@ -56,8 +56,10 @@ public enum KdcConfigKey implements SectionConfigKey {
     ADMIN_SERVER(null, "logging");
 
     private Object defaultValue;
+
     /**
-     * The name of a section where a config key is contained in MIT Kerberos config file.
+     * The name of a section where a config key is contained
+     * in section-able config file.
      */
     private String sectionName;
 
@@ -74,9 +76,6 @@ public enum KdcConfigKey implements SectionConfigKey {
         this.sectionName = sectionName;
     }
 
-    /**
-     * Use the propertyKey, we can get the configuration value from Object Conf.
-     */
     @Override
     public String getPropertyKey() {
         return name().toLowerCase();

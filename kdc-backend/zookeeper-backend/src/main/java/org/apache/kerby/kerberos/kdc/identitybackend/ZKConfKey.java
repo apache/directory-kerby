@@ -14,18 +14,37 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License.
+ *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.common;
+package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import org.apache.kerby.config.ConfigKey;
 
 /**
- * Config Keys with section name, to support formats like
- * MIT Kerberos configuration.
+ * Define all the ZK backend related configuration items with default values.
  */
-public interface SectionConfigKey extends ConfigKey {
+public enum ZKConfKey implements ConfigKey {
+    ZK_HOST("127.0.0.1"),
+    ZK_PORT(9015);
 
-    public String getSectionName();
+    private Object defaultValue;
+
+    private ZKConfKey() {
+        this.defaultValue = null;
+    }
+
+    private ZKConfKey(Object defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    @Override
+    public String getPropertyKey() {
+        return name().toLowerCase();
+    }
+
+    @Override
+    public Object getDefaultValue() {
+        return this.defaultValue;
+    }
 }

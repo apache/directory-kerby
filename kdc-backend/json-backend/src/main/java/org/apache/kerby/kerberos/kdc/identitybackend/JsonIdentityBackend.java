@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * An LDAP based backend implementation.
+ * An Json file based backend implementation.
  *
  */
 public class JsonIdentityBackend extends InMemoryIdentityBackend {

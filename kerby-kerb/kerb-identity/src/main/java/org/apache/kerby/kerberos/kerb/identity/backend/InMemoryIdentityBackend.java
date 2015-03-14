@@ -26,6 +26,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A memory map based identity backend that loads and keeps all the identities
+ * in a hashmap for fast lookup and operation.
+ *
+ * It's subject to be improved to only keep limited recently active identities
+ * in the map, and leave other identities in persistent storage by delegation
+ * to another backend.
+ */
 public class InMemoryIdentityBackend extends AbstractIdentityBackend {
 
     private final Map<String, KrbIdentity> identities;
