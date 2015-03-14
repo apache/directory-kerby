@@ -17,33 +17,20 @@
 
   <parent>
     <groupId>org.apache.kerby</groupId>
-    <artifactId>kdc-tool</artifactId>
+    <artifactId>kerby-dist</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>kinit</artifactId>
-  <name>Kinit</name>
-  <description>Kerby KDC kinit tool</description>
+  <artifactId>tool-dist</artifactId>
+  <name>Tool Dist</name>
+  <description>Tool Dist Project</description>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kerby-config</artifactId>
+      <artifactId>kerby-kerb</artifactId>
       <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-client</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-server</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
 </project>
