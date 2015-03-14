@@ -26,6 +26,10 @@
   <name>Json identity backend</name>
   <description>Json identity backend</description>
 
+  <properties>
+    <json.version>2.3.1</json.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>
@@ -38,9 +42,10 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.googlecode.json-simple</groupId>
-      <artifactId>json-simple</artifactId>
-      <version>1.1.1</version>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>${json.version}</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

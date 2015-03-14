@@ -28,12 +28,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * An Json file based backend implementation.
+ * A Json file based backend implementation.
  *
  */
 public class JsonIdentityBackend extends InMemoryIdentityBackend {
-    public static final String JSON_IDENTITY_BACKEND_FILE =
-            "kdc.identitybackend.json.file";
+    public static final String JSON_IDENTITY_BACKEND_FILE = "backend.json.file";
     private Config config;
     private File jsonKdbFile;
 
