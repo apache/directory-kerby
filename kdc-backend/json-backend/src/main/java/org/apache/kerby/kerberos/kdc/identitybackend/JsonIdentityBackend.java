@@ -21,17 +21,19 @@ package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.InMemoryIdentityBackend;
+import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
+import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * A Json file based backend implementation.
  *
  */
-public class JsonIdentityBackend extends InMemoryIdentityBackend {
+public class JsonIdentityBackend extends AbstractIdentityBackend {
     public static final String JSON_IDENTITY_BACKEND_FILE = "backend.json.file";
     private Config config;
     private File jsonKdbFile;
@@ -75,28 +77,22 @@ public class JsonIdentityBackend extends InMemoryIdentityBackend {
     }
 
     @Override
-    public KrbIdentity getIdentity(String name) {
-        return super.getIdentity(name);
+    protected KrbIdentity doGetIdentity(String principalName) {
+        return null;
     }
 
     @Override
-    public void addIdentity(KrbIdentity identity) {
-        super.addIdentity(identity);
-
-        // TODO: save
+    protected KrbIdentity doAddIdentity(KrbIdentity identity) {
+        return null;
     }
 
     @Override
-    public void updateIdentity(KrbIdentity identity) {
-        super.updateIdentity(identity);
-
-        // TODO: save
+    protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
+        return null;
     }
 
     @Override
-    public void deleteIdentity(KrbIdentity identity) {
-        super.deleteIdentity(identity);
-
-        // TODO: save
+    public List<String> getIdentities(int start, int limit) {
+        return null;
     }
 }

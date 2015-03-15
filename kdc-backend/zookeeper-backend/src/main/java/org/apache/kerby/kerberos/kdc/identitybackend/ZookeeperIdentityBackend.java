@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.InMemoryIdentityBackend;
+import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
@@ -30,6 +30,7 @@ import org.apache.zookeeper.server.ZooKeeperServerMain;
 import org.apache.zookeeper.server.quorum.QuorumPeerConfig;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -38,7 +39,7 @@ import java.util.Properties;
  * cluster for replication and reliability.
  *
  */
-public class ZookeeperIdentityBackend extends InMemoryIdentityBackend
+public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         implements Watcher {
     private Config config;
     private String zkHost;
@@ -109,44 +110,31 @@ public class ZookeeperIdentityBackend extends InMemoryIdentityBackend
     }
 
     /**
-     * Persist the updated identities back
-     */
-    public void save() {
-        // TODO: save into the kdb file
-    }
-
-    @Override
-    public KrbIdentity getIdentity(String name) {
-        return super.getIdentity(name);
-    }
-
-    @Override
-    public void addIdentity(KrbIdentity identity) {
-        super.addIdentity(identity);
-
-        // TODO: save
-    }
-
-    @Override
-    public void updateIdentity(KrbIdentity identity) {
-        super.updateIdentity(identity);
-
-        // TODO: save
-    }
-
-    @Override
-    public void deleteIdentity(KrbIdentity identity) {
-        super.deleteIdentity(identity);
-
-        // TODO: save
-    }
-
-    /**
      * This will watch all the kdb update event so that it's timely synced.
      * @param event
      */
     @Override
     public void process(WatchedEvent event) {
         System.out.print("I got an event: " + event);
+    }
+
+    @Override
+    protected KrbIdentity doGetIdentity(String principalName) {
+        return null;
+    }
+
+    @Override
+    protected KrbIdentity doAddIdentity(KrbIdentity identity) {
+        return null;
+    }
+
+    @Override
+    protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
+        return null;
+    }
+
+    @Override
+    public List<String> getIdentities(int start, int limit) {
+        return null;
     }
 }

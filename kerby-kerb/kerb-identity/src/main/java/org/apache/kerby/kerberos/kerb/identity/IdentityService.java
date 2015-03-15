@@ -21,11 +21,43 @@ package org.apache.kerby.kerberos.kerb.identity;
 
 import java.util.List;
 
+/**
+ * Identity service for KDC backend to create, get and manage principal accounts.
+ */
 public interface IdentityService {
-    public List<KrbIdentity> getIdentities();
-    public boolean checkIdentity(String name);
-    public KrbIdentity getIdentity(String name);
-    public void addIdentity(KrbIdentity identity);
-    public void updateIdentity(KrbIdentity identity);
-    public void deleteIdentity(KrbIdentity identity);
+
+    /**
+     * Get the identity principal names, from start offset, with count of limit.
+     * Note it's ordered by principal name.
+     * @return principal names
+     */
+    public List<String> getIdentities(int start, int limit);
+
+    /**
+     * Get the identity account specified by name.
+     * @param principalName
+     * @return identity
+     */
+    public KrbIdentity getIdentity(String principalName);
+
+    /**
+     * Add an identity, and return the newly created result.
+     * @param identity
+     * @return identity
+     */
+    public KrbIdentity addIdentity(KrbIdentity identity);
+
+    /**
+     * Update an identity, and return the updated result.
+     * @param identity
+     * @return identity
+     */
+    public KrbIdentity updateIdentity(KrbIdentity identity);
+
+    /**
+     * Delete the identity specified by principal name
+     * @param principalName
+     *
+     */
+    public void deleteIdentity(String principalName);
 }

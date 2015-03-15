@@ -17,41 +17,21 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kdc.identitybackend;
+package org.apache.kerby.kerberos.kerb.identity.backend;
 
-import org.apache.directory.api.ldap.model.name.Dn;
-import org.apache.directory.ldap.client.api.LdapConnection;
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An LDAP based backend implementation.
- *
+ * A memory map based identity backend, which is purely relying on the
+ * underlying cache as the storage.
  */
-public class LdapIdentityBackend extends AbstractIdentityBackend {
+public class MemoryIdentityBackend extends AbstractIdentityBackend {
 
-    // the connection to the LDAP server
-    // in case of ApacheDS this will be an instance of LdapCoreSessionConnection
-    private LdapConnection connection;
-
-    private Dn baseDn;
-
-    /**
-     * Constructing an instance using specified config that contains anything
-     * to be used to initialize an LdapConnection and necessary baseDn.
-     * @param config
-     */
-    public LdapIdentityBackend(Config config) {
-        setConfig(config);
-    }
-
-    public void initialize() {
-        super.initialize();
-
-        // init Ldap connection and baseDn.
+    public MemoryIdentityBackend() {
+        setCacheSize(100000000); // Just no idea, configurable ?
     }
 
     @Override
@@ -61,16 +41,16 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
-        return null;
+        return identity;
     }
 
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
-        return null;
+        return identity;
     }
 
     @Override
     public List<String> getIdentities(int start, int limit) {
-        return null;
+        return new ArrayList<>(getCache().keySet());
     }
 }

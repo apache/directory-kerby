@@ -6,27 +6,23 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kdc.server;
 
 import org.apache.kerby.config.Conf;
-import org.apache.kerby.config.Config;
-import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
-import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.InMemoryIdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
@@ -37,44 +33,14 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The mentioned Kerby KDC server implementation
+ * The mentioned Kerby KDC server implementation.
  */
 public class KerbyKdcServer extends KdcServer {
-
-    public KerbyKdcServer() {
-        super();
-    }
-
-    public void init() {
-        super.init();
-        initIdentityService();
-    }
-
-    public void init(String confDir, String workDir) throws IOException {
-        init();
-        initConfig(confDir);
-    }
-
-    /**
-     * init config from configuration file
-     */
-    private void initConfig(String confDirString) throws IOException {
-        Conf conf = kdcConfig.getConf();
-
-        File confDir = new File(confDirString);
-        File[] files = confDir.listFiles();
-        if (files == null) {
-            throw new IOException("There are no file in configuration directory");
-        }
-
-        for (File file : files) {
-            conf.addIniConfig(file);
-        }
-
-    }
-
     private static KerbyKdcServer server;
-    private static final String USAGE = "Usage: " + KerbyKdcServer.class.getSimpleName() + " -start conf-dir working-dir|-stop";
+
+    private static final String USAGE = "Usage: " +
+            KerbyKdcServer.class.getSimpleName() +
+            " -start conf-dir working-dir|-stop";
 
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -91,40 +57,27 @@ public class KerbyKdcServer extends KdcServer {
             String workDir = args[2];
 
             server = new KerbyKdcServer();
-            try {
-                server.init(confDir, workDir);
-            } catch (IOException e) {
-                System.err.println("Something wrong with configuration files or work files");
-                e.printStackTrace();
-                return;
-            }
-            //TODO add a default principal for test
+            server.setWorkDir(new File(workDir));
+            server.setConfDir(new File(confDir));
+            server.init();
+
+            server.createPrincipals("krbtgt");
+
+            //TODO: add a default principal for test, will be removed.
             server.createPrincipal("test", "123456");
-            server.createPrincipals("krbtgt", "test-service/localhost");
 
             server.start();
-            System.out.println(KerbyKdcServer.class.getSimpleName() + " started.");
+            System.out.println("KDC started.");
         } else if (args[0].equals("-stop")) {
             //server.stop();//FIXME can't get the server instance here
             System.out.println("KDC Server stoped.");
         } else {
             System.err.println(USAGE);
         }
-
     }
 
-    protected void initIdentityService() {
-        Config config = getKdcConfig().getBackendConfig();
-
-        //FIXME
-        InMemoryIdentityBackend identityService = new InMemoryIdentityBackend();
-//        IdentityService identityService = new LdapIdentityBackend(config);
-        setIdentityService(identityService);
-    }
-
-
-    //create default principal for test
-    private synchronized void createPrincipal(String principal, String password) {
+    //create some principal for test
+    private void createPrincipal(String principal, String password) {
         KrbIdentity identity = new KrbIdentity(fixPrincipal(principal));
         List<EncryptionType> encTypes = getKdcConfig().getEncryptionTypes();
         List<EncryptionKey> encKeys = null;

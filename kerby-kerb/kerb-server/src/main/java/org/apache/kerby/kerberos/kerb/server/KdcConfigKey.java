@@ -20,11 +20,12 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.common.SectionConfigKey;
+import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
 
 public enum KdcConfigKey implements SectionConfigKey {
     KRB_DEBUG(true),
-    WORK_DIR,
-    KDC_SERVICE_NAME("Kerby_KDC_Server"),
+    KDC_SERVICE_NAME("KDC-Server"),
+    KDC_IDENTITY_BACKEND,
     KDC_HOST("127.0.0.1", "kdcdefaults"),
     KDC_PORT(8015, "kdcdefaults"),
     KDC_ALLOW_UDP(true, "kdcdefaults"),

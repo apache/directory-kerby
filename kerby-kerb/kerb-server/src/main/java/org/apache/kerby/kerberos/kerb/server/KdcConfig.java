@@ -37,24 +37,12 @@ public class KdcConfig {
         return this.conf;
     }
 
-    /**
-     * Prepare and return backend config
-     * @return
-     */
-    public Config getBackendConfig() {
-        return conf.getConfig("IdentityBackend");
-    }
-
     public boolean enableDebug() {
         return conf.getBoolean(KdcConfigKey.KRB_DEBUG);
     }
 
     public String getKdcServiceName() {
         return conf.getString(KdcConfigKey.KDC_SERVICE_NAME);
-    }
-
-    public String getWorkDir() {
-        return conf.getString(KdcConfigKey.WORK_DIR);
     }
 
     public String getKdcHost() {

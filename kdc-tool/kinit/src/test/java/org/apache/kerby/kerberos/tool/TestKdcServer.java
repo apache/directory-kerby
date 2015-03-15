@@ -41,7 +41,6 @@ public class TestKdcServer extends SimpleKdcServer {
     public static final String KDC_REALM = KdcConfigKey.KDC_REALM.getPropertyKey();
     public static final String KDC_HOST = KdcConfigKey.KDC_HOST.getPropertyKey();
     public static final String KDC_TCP_PORT = KdcConfigKey.KDC_TCP_PORT.getPropertyKey();
-    public static final String WORK_DIR = KdcConfigKey.WORK_DIR.getPropertyKey();
 
     private static final Properties DEFAULT_CONFIG = new Properties();
     static {
@@ -55,19 +54,12 @@ public class TestKdcServer extends SimpleKdcServer {
         return (Properties) DEFAULT_CONFIG.clone();
     }
 
-    public TestKdcServer() {
-        this(createConf());
-    }
-
-    public TestKdcServer(Properties conf) {
-        super();
-        getKdcConfig().getConf().addPropertiesConfig(conf);
-    }
-
     @Override
     public void init() {
         super.init();
 
+        getKdcConfig().getConf().addPropertiesConfig(createConf());
+        
         createPrincipals("krbtgt", "test-service/localhost");
 
         createPrincipal("client@TEST.COM", "123456");

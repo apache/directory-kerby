@@ -19,11 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
@@ -41,7 +41,6 @@ public class TestKdcServer extends SimpleKdcServer {
     public static final String KDC_REALM = KdcConfigKey.KDC_REALM.getPropertyKey();
     public static final String KDC_HOST = KdcConfigKey.KDC_HOST.getPropertyKey();
     public static final String KDC_TCP_PORT = KdcConfigKey.KDC_TCP_PORT.getPropertyKey();
-    public static final String WORK_DIR = KdcConfigKey.WORK_DIR.getPropertyKey();
 
     private static final Properties DEFAULT_CONFIG = new Properties();
     static {
@@ -55,18 +54,11 @@ public class TestKdcServer extends SimpleKdcServer {
         return (Properties) DEFAULT_CONFIG.clone();
     }
 
-    public TestKdcServer() {
-        this(createConf());
-    }
-
-    public TestKdcServer(Properties conf) {
-        super();
-        getKdcConfig().getConf().addPropertiesConfig(conf);
-    }
-
     @Override
     public void init() {
         super.init();
+
+        getKdcConfig().getConf().addPropertiesConfig(createConf());
 
         createPrincipals("krbtgt");
     }
@@ -106,8 +98,9 @@ public class TestKdcServer extends SimpleKdcServer {
     public void exportPrincipals(File keytabFile) throws IOException {
         Keytab keytab = new Keytab();
 
-        List<KrbIdentity> identities = getIdentityService().getIdentities();
-        for (KrbIdentity identity : identities) {
+        List<String> principals = getIdentityService().getIdentities(-1, -1);
+        for (String pn : principals) {
+            KrbIdentity identity = getIdentityService().getIdentity(pn);
             PrincipalName principal = identity.getPrincipal();
             KerberosTime timestamp = new KerberosTime();
             for (EncryptionType encType : identity.getKeys().keySet()) {
