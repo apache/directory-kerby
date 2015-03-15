@@ -35,7 +35,8 @@ import java.util.Scanner;
  */
 public class Kinit {
 
-    private static final String COMMON_USAGE = "Usage: " + Kinit.class.getSimpleName() + " [-l lifetime] [-f | -F] principal\n" +
+    private static final String COMMON_USAGE = "Usage: " +
+            Kinit.class.getSimpleName() + " [-l lifetime] [-f | -F] principal\n" +
             "\n" +
             "    options:\t-l lifetime\n" +
             "\t-f forwardable\n" +
