@@ -204,7 +204,8 @@ public class KrbClient {
      * @return
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(String principal, KrbOptions options) throws KrbException {
+    public TgtTicket requestTgtTicket(String principal,
+                                      KrbOptions options) throws KrbException {
         if (options == null) {
             options = new KrbOptions();
         }
@@ -243,8 +244,9 @@ public class KrbClient {
      * @return
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(String principal, Certificate certificate,
-                                      PrivateKey privateKey, KrbOptions options) throws KrbException {
+    public TgtTicket requestTgtTicket(
+            String principal, Certificate certificate, PrivateKey privateKey,
+            KrbOptions options) throws KrbException {
         if (options == null) {
             options = new KrbOptions();
         }
@@ -304,8 +306,9 @@ public class KrbClient {
      * @return
      * @throws KrbException
      */
-    public ServiceTicket requestServiceTicket(String clientPrincipal, String password,
-                                              String serverPrincipal, KrbOptions options) throws KrbException {
+    public ServiceTicket requestServiceTicket(
+            String clientPrincipal, String password, String serverPrincipal,
+            KrbOptions options) throws KrbException {
         if (options == null) {
             options = new KrbOptions();
         }
@@ -323,8 +326,9 @@ public class KrbClient {
      * @return
      * @throws KrbException
      */
-    public ServiceTicket requestServiceTicket(String clientPrincipal, KerbToken token,
-                                              String serverPrincipal, KrbOptions options) throws KrbException {
+    public ServiceTicket requestServiceTicket(
+            String clientPrincipal, KerbToken token, String serverPrincipal,
+            KrbOptions options) throws KrbException {
         if (options == null) {
             options = new KrbOptions();
         }
@@ -333,7 +337,8 @@ public class KrbClient {
         return requestServiceTicket(tgt, serverPrincipal, options);
     }
 
-    private TgtTicket requestTgtTicket(String clientPrincipal, AsRequest tgtTktReq) throws KrbException {
+    private TgtTicket requestTgtTicket(String clientPrincipal,
+                                       AsRequest tgtTktReq) throws KrbException {
         tgtTktReq.setClientPrincipal(new PrincipalName(clientPrincipal));
         tgtTktReq.setTransport(transport);
 
@@ -356,7 +361,7 @@ public class KrbClient {
 
     private TgtTicket doRequestTgtTicket(AsRequest tgtTktReq) throws KrbException {
         eventHub.dispatch(KrbClientEvent.createTgtIntentEvent(tgtTktReq));
-        Event resultEvent = null;
+        Event resultEvent;
         try {
             resultEvent = eventWaiter.waitEvent(KrbClientEventType.TGT_RESULT,
                     context.getTimeout(), TimeUnit.SECONDS);
@@ -386,7 +391,7 @@ public class KrbClient {
         ticketReq.setTransport(transport);
 
         eventHub.dispatch(KrbClientEvent.createTktIntentEvent(ticketReq));
-        Event resultEvent = null;
+        Event resultEvent;
         try {
             resultEvent = eventWaiter.waitEvent(KrbClientEventType.TKT_RESULT,
                     context.getTimeout(), TimeUnit.SECONDS);

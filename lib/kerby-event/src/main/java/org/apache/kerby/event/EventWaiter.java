@@ -28,8 +28,10 @@ public interface EventWaiter {
 
     public abstract Event waitEvent();
 
-    public abstract Event waitEvent(EventType event, long timeout, TimeUnit timeUnit) throws TimeoutException;
+    public abstract Event waitEvent(EventType event, long timeout,
+                                    TimeUnit timeUnit) throws TimeoutException;
 
-    public abstract Event waitEvent(long timeout, TimeUnit timeUnit) throws TimeoutException;
+    public abstract Event waitEvent(long timeout,
+                                    TimeUnit timeUnit) throws TimeoutException;
 
 }

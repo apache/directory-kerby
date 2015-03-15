@@ -44,10 +44,6 @@ public abstract class BufferedEventHandler extends AbstractInternalEventHandler 
 
     @Override
     protected void doHandle(Event event) throws Exception {
-        try {
-            eventQueue.put(event);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventQueue.put(event);
     }
 }

@@ -90,15 +90,13 @@ public class WaitEventHandler extends BufferedEventHandler {
     }
 
     private Event checkEvent(EventType eventType) throws Exception {
-        Event event = null;
-
         while (true) {
             if (eventQueue.size() == 1) {
                 if (eventQueue.peek().getEventType() == eventType) {
                     return eventQueue.take();
                 }
             } else {
-                event = eventQueue.take();
+                Event event = eventQueue.take();
                 if (event.getEventType() == eventType) {
                     return event;
                 } else {
@@ -110,7 +108,7 @@ public class WaitEventHandler extends BufferedEventHandler {
 
     @Override
     public void start() {
-        executorService = Executors.newFixedThreadPool(2);
+        executorService = Executors.newFixedThreadPool(1);
     }
 
     @Override

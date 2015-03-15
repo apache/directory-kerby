@@ -142,7 +142,8 @@ public class EventHub implements Dispatcher {
             }
 
             @Override
-            public Event waitEvent(long timeout, TimeUnit timeUnit) throws TimeoutException {
+            public Event waitEvent(long timeout,
+                                   TimeUnit timeUnit) throws TimeoutException {
                 return waitEventHandler.waitEvent(timeout, timeUnit);
             }
         };

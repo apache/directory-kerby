@@ -103,7 +103,8 @@ public class KdcHandler extends MessageHandler {
         KdcRequest kdcRequest = null;
 
         KrbMessageType messageType = krbRequest.getMsgType();
-        if (messageType == KrbMessageType.TGS_REQ || messageType == KrbMessageType.AS_REQ) {
+        if (messageType == KrbMessageType.TGS_REQ || messageType
+                == KrbMessageType.AS_REQ) {
             KdcReq kdcReq = (KdcReq) krbRequest;
             String realm = getRequestRealm(kdcReq);
             if (realm == null || !kdcContexts.containsKey(realm)) {
@@ -123,10 +124,16 @@ public class KdcHandler extends MessageHandler {
         boolean isTcp = (transport instanceof TcpTransport);
         kdcRequest.isTcp(isTcp);
 
-        kdcRequest.process();
+        try {
+            kdcRequest.process();
 
-        KrbMessage krbResponse = kdcRequest.getReply();
-        KrbUtil.sendMessage(krbResponse, transport);
+            KrbMessage krbResponse = kdcRequest.getReply();
+            KrbUtil.sendMessage(krbResponse, transport);
+        } catch (Exception e) {
+            //TODO: log the error
+            System.out.println("Error occured while processing request:"
+                    + e.getMessage());
+        }
     }
 
     private void loadKdcRealms() {
