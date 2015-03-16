@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kdc.server;
 
-import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
@@ -28,7 +27,6 @@ import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,7 +68,7 @@ public class KerbyKdcServer extends KdcServer {
             System.out.println("KDC started.");
         } else if (args[0].equals("-stop")) {
             //server.stop();//FIXME can't get the server instance here
-            System.out.println("KDC Server stoped.");
+            System.out.println("KDC Server stopped.");
         } else {
             System.err.println(USAGE);
         }
