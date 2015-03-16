@@ -118,6 +118,10 @@ public abstract class AbstractIdentityBackend
         if (idCache.containsKey(principalName)) {
             idCache.remove(principalName);
         }
+
+        doDeleteIdentity(principalName);
     }
+
+    protected abstract void doDeleteIdentity(String principalName);
 
 }

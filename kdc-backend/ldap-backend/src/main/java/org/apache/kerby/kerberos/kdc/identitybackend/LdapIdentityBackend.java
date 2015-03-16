@@ -70,6 +70,11 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     }
 
     @Override
+    protected void doDeleteIdentity(String principalName) {
+
+    }
+
+    @Override
     public List<String> getIdentities(int start, int limit) {
         return null;
     }
