@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
+import org.apache.kerby.config.Conf;
 import org.apache.kerby.event.Event;
 import org.apache.kerby.event.EventHub;
 import org.apache.kerby.event.EventWaiter;
@@ -40,6 +41,7 @@ import org.apache.kerby.transport.Transport;
 import org.apache.kerby.transport.event.TransportEvent;
 import org.apache.kerby.transport.event.TransportEventType;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
@@ -62,6 +64,7 @@ public class KrbClient {
     private Boolean allowUdp;
     private int kdcUdpPort;
     private KrbConfig krbConfig;
+    private File confDir;
 
     /**
      * Default constructor.
@@ -92,6 +95,24 @@ public class KrbClient {
         this.krbConfig = krbConfig;
         this.context = new KrbContext();
         context.init(krbConfig);
+    }
+
+    /**
+     * Prepare krb config, loading krb5.conf.
+     * It can be override to add more configuration resources.
+     *
+     * @throws IOException
+     */
+    protected void initConfig() throws IOException {
+        if (confDir == null) {
+            confDir = new File("/etc/"); // for Linux. TODO: fix for Win etc.
+        }
+        if (confDir != null && confDir.exists()) {
+            File kdcConfFile = new File(confDir, "krb5.conf");
+            if (kdcConfFile.exists()) {
+                krbConfig.getConf().addIniConfig(kdcConfFile);
+            }
+        }
     }
 
     /**
@@ -171,6 +192,12 @@ public class KrbClient {
     }
 
     public void init() {
+        try {
+            initConfig();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load config", e);
+        }
+
         this.krbHandler = new KrbHandler();
         krbHandler.init(context);
 

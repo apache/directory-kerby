@@ -19,21 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
-public interface KOption {
-
-    public void setType(KOptionType type);
-
-    public KOptionType getType();
-
-    public void setName(String name);
-
-    public String getName();
-
-    public void setDescription(String description);
-
-    public String getDescription();
-
-    public void setValue(Object value);
-
-    public Object getValue();
+/**
+ * Option type.
+ */
+public enum KOptionType {
+    NONE,
+    NOV, // no value, a control flag
+    STR, // string value
+    INT, // integer value
+    BOOL, // boolean value
+    FILE, // file path value
+    DIR // dir path value
 }

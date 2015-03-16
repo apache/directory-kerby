@@ -19,14 +19,14 @@
  */
 package org.apache.kerby.kerberos.tool.kinit;
 
-import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.KOptionType;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
-import org.apache.kerby.kerberos.kerb.client.KrbConfig;
+import org.apache.kerby.kerberos.kerb.client.KrbOptions;
+import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.tool.ToolUtil;
 
 import java.io.Console;
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -35,113 +35,55 @@ import java.util.Scanner;
  */
 public class Kinit {
 
-    private static final String TOOL_NAME = Kinit.class.getSimpleName();
-    private static final String COMMON_USAGE = "Usage: " + TOOL_NAME +
-            " [-l lifetime]" +
-            " [-f | -F] principal\n" + "\n" +
-            "    options:\t-l lifetime\n" +
-            "\t-f forwardable\n" +
-            "\t-F not forwardable";
+    private static final String USAGE =
+            "Usage: kinit [-V] [-l lifetime] [-s start_time]\n" +
+                    "\t\t[-r renewable_life] [-f | -F] [-p | -P] -n [-a | -A] [-C] [-E]\n" +
+                    "\t\t[-v] [-R] [-k [-i|-t keytab_file]] [-c cachename]\n" +
+                    "\t\t[-S service_name] [-T ticket_armor_cache]\n" +
+                    "\t\t[-X <attribute>[=<value>]] <principal>\n\n" +
+                    "\tDESCRIPTION:\n" +
+                    "\t\tkinit obtains and caches an initial ticket-granting ticket for principal.\n\n" +
+                    "\tOPTIONS:\n" +
+                    "\t\t-V verbose\n" +
+                    "\t\t-l lifetime\n" +
+                    "\t\t--s start time\n" +
+                    "\t\t-r renewable lifetime\n" +
+                    "\t\t-f forwardable\n" +
+                    "\t\t-F not forwardable\n" +
+                    "\t\t-p proxiable\n" +
+                    "\t\t-P not proxiable\n" +
+                    "\t\t-n anonymous\n" +
+                    "\t\t-a include addresses\n" +
+                    "\t\t-A do not include addresses\n" +
+                    "\t\t-v validate\n" +
+                    "\t\t-R renew\n" +
+                    "\t\t-C canonicalize\n" +
+                    "\t\t-E client is enterprise principal name\n" +
+                    "\t\t-k use keytab\n" +
+                    "\t\t-i use default client keytab (with -k)\n" +
+                    "\t\t-t filename of keytab to use\n" +
+                    "\t\t-c Kerberos 5 cache name\n" +
+                    "\t\t-S service\n" +
+                    "\t\t-T armor credential cache\n" +
+                    "\t\t-X <attribute>[=<value>]\n" +
+                    "\n";
 
-    private void printUsage(String cmd) {
-        if ("-l".equals(cmd)) {
-            System.err.println("Usage: " + TOOL_NAME + " -l lifetime principal");
-        } else if ("-f".equals(cmd)) {
-            System.err.println("Usage: " + TOOL_NAME + " -f principal");
-        } else if ("-F".equals(cmd)) {
-            System.err.println("Usage: " + TOOL_NAME + " -F principal");
-        } else {
-            System.err.println(COMMON_USAGE);
-        }
-    }
 
-    /**
-     * args[0] is the configuration directory written in script.
-     * args[length - 1] is principal
-     */
-    private int execute(String[] args) {
-        if (args.length < 2 || args.length > 4) {
-            printUsage("");
-            return -1;
-        }
-
-        //no options
-        if (args.length == 2) {
-            return requestTicket(args, 1);
-        }
-
-        int exitCode = -1;
-        int i = 1;
-        String cmd = args[i];
-
-        //
-        // verify that we have enough option parameters
-        //
-        if ("-l".equals(cmd)) {
-            if (args.length != 4) {
-                printUsage(cmd);
-                return exitCode;
-            }
-        } else if ("-f".equals(cmd)) {
-            if (args.length != 3) {
-                printUsage(cmd);
-                return exitCode;
-            }
-        } else if ("-F".equals(cmd)) {
-            if (args.length != 3) {
-                printUsage(cmd);
-                return exitCode;
-            }
-        }
-
-        //
-        //execute the command
-        //
-        if ("-l".equals(cmd)) {
-            exitCode = ticketWithLifetime(args, i);
-        } else if ("-f".equals(cmd)) {
-            exitCode = ticketForwardable(args, i);
-        } else if ("-F".equals(cmd)) {
-            exitCode = ticketNonForwardable(args, i);
-        }
-
-        return exitCode;
-    }
-
-    /**
-     * Init the KrbClient
-     */
-    private KrbClient createClient(String confDirString) {
-        KrbConfig krbConfig = new KrbConfig();
-        Conf conf = krbConfig.getConf();
-
-        try {
-            File confDir = new File(confDirString);
-            File[] files = confDir.listFiles();
-            if (files == null) {
-                throw new IOException("There are no file in configuration directory: " + confDirString);
-            }
-
-            for (File file : files) {
-                conf.addIniConfig(file);
-            }
-        } catch (IOException e) {
-            System.err.println("Something wrong with krb configuration.");
-            e.printStackTrace();
-        }
-
-        KrbClient krbClient = new KrbClient(krbConfig);
-        krbClient.init();
-        return krbClient;
+    private static void printUsage(String error) {
+        System.err.println(error + "\n");
+        System.err.println(USAGE);
+        System.exit(-1);
     }
 
     /**
      * Get password for the input principal from console
      */
-    private String getPassword(String principal) {
+    private static String getPassword(String principal) {
         Console console = System.console();
         if (console == null) {
-            System.out.println("Couldn't get Console instance, maybe you're running this from within an IDE. Use scanner to read password.");
+            System.out.println("Couldn't get Console instance, " +
+                    "maybe you're running this from within an IDE. " +
+                    "Use scanner to read password.");
             System.out.println("Password for " + principal + ":");
             Scanner scanner = new Scanner(System.in);
             return scanner.nextLine().trim();
@@ -150,67 +92,72 @@ public class Kinit {
         char[] passwordChars = console.readPassword();
         String password = new String(passwordChars).trim();
         Arrays.fill(passwordChars, ' ');
+
         return password;
     }
 
-    private int requestTicket(String[] args, int i) {
-        String principal = args[i];
-        KrbClient client = createClient(args[0]);
+    public static int requestTicket(String principal, KrbOptions options) {
+        KrbClient krbClient = new KrbClient();
+        krbClient.init();
+
         String password = getPassword(principal);
 
         try {
-            client.requestTgtTicket(principal, password, null);
+            TgtTicket tgt = krbClient.requestTgtTicket(principal, password, null);
+            // TODO: write tgt into credentials cache.
             return 0;
         } catch (KrbException e) {
-            System.err.println("Something error.");
-            return -1;
-        }
-    }
-
-    private int ticketWithLifetime(String[] args, int i) {
-        String lifetime = args[i];
-        String principal = args[i];
-        KrbClient client = createClient(args[0]);
-        String password = getPassword(principal);
-        try {
-            //TODO
-            return 0;
-        } catch (Exception e) {
-            System.err.println("Something error.");
-            return -1;
-        }
-    }
-
-    private int ticketForwardable(String[] args, int i) {
-        String principal = args[i];
-        KrbClient client = createClient(args[0]);
-        String password = getPassword(principal);
-        try {
-            //TODO
-            return 0;
-        } catch (Exception e) {
-            System.err.println("Something error.");
-            return -1;
-        }
-    }
-
-    private int ticketNonForwardable(String[] args, int i) {
-        String principal = args[i];
-        KrbClient client = createClient(args[0]);
-        String password = getPassword(principal);
-        try {
-            //TODO
-            return 0;
-        } catch (Exception e) {
-            System.err.println("Something error.");
+            System.err.println("Error occurred:" + e.getMessage());
             return -1;
         }
     }
 
     public static void main(String[] args) throws Exception {
-        Kinit kinit = new Kinit();
-        int exitCode = kinit.execute(args);
-        System.exit(exitCode);
+        KrbOptions ktOptions = new KrbOptions();
+        KinitOption kto;
+        String principal = null;
+
+        int i = 0;
+        String opt, param, error;
+        while (i < args.length) {
+            error = null;
+
+            opt = args[i++];
+            if (opt.startsWith("-")) {
+                kto = KinitOption.fromName(opt);
+                if (kto == KinitOption.NONE) {
+                    error = "Invalid option:" + opt;
+                    break;
+                }
+            } else {
+                principal = opt;
+                break;
+            }
+
+            if (kto.getType() != KOptionType.NOV) { // require a parameter
+                param = null;
+                if (i < args.length) {
+                    param = args[i++];
+                }
+                if (param != null) {
+                    ToolUtil.parseSetValue(kto, param);
+                } else {
+                    error = "Option " + opt + " require a parameter";
+                }
+            }
+
+            if (error != null) {
+                printUsage(error);
+            }
+            ktOptions.add(kto);
+        }
+
+        if (principal == null) {
+            printUsage("No principal is specified");
+        }
+
+        int errNo = Kinit.requestTicket(principal, ktOptions);
+        System.exit(errNo);
     }
 
 }

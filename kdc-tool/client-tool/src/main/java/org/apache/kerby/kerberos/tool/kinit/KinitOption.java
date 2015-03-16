@@ -20,12 +20,13 @@
 package org.apache.kerby.kerberos.tool.kinit;
 
 import org.apache.kerby.kerberos.kerb.client.KOption;
+import org.apache.kerby.kerberos.kerb.client.KOptionType;
 
 public enum KinitOption implements KOption {
     NONE("NONE"),
-    LIFE_TIME("-l", "lifetime"),
-    START_TIME("-s", "start time"),
-    RENEWABLE_TIME("-r", "renewable lifetime"),
+    LIFE_TIME("-l", "lifetime", KOptionType.INT),
+    START_TIME("-s", "start time", KOptionType.INT),
+    RENEWABLE_LIFE("-r", "renewable lifetime", KOptionType.INT),
     FORWARDABLE("-f", "forwardable"),
     NOT_FORWARDABLE("-F", "not forwardable"),
     PROXIABLE("-p", "proxiable"),
@@ -39,24 +40,43 @@ public enum KinitOption implements KOption {
     AS_ENTERPRISE_PN("-E", "client is enterprise principal name"),
     USE_KEYTAB("-k", "use keytab"),
     USE_DFT_KEYTAB("-i", "use default client keytab (with -k)"),
-    USER_KEYTAB_FILE("-t", "filename of keytab to use"),
-    KRB5_CACHE("-c", "Kerberos 5 cache name"),
-    SERVICE("-S", "service"),
-    ARMOR_CACHE("-T", "armor credential cache"),
-    XATTR("-X", "<attribute>[=<value>]"),
+    USER_KEYTAB_FILE("-t", "filename of keytab to use", KOptionType.STR),
+    KRB5_CACHE("-c", "Kerberos 5 cache name", KOptionType.STR),
+    SERVICE("-S", "service", KOptionType.STR),
+    ARMOR_CACHE("-T", "armor credential cache", KOptionType.FILE),
+    XATTR("-X", "<attribute>[=<value>]", KOptionType.STR),
     ;
 
     private String name;
+    private KOptionType type = KOptionType.NONE;
     private String description;
     private Object value;
 
     KinitOption(String description) {
+        this(description, KOptionType.NOV); // As a flag by default
+    }
+
+    KinitOption(String description, KOptionType type) {
         this.description = description;
+        this.type = type;
     }
 
     KinitOption(String name, String description) {
+        this(name, description, KOptionType.NOV); // As a flag by default
+    }
+
+    KinitOption(String name, String description, KOptionType type) {
         this.name = name;
         this.description = description;
+        this.type = type;
+    }
+
+    public void setType(KOptionType type) {
+        this.type = type;
+    }
+
+    public KOptionType getType() {
+        return this.type;
     }
 
     @Override

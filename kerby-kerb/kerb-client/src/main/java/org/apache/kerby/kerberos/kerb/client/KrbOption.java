@@ -21,53 +21,73 @@ package org.apache.kerby.kerberos.kerb.client;
 
 public enum KrbOption implements KOption {
     NONE("NONE"),
-    LIFE_TIME("lifetime"),
-    START_TIME("start-time"),
-    RENEWABLE_TIME("renewable-lifetime"),
+    LIFE_TIME("life time", KOptionType.INT),
+    START_TIME("start time", KOptionType.INT),
+    RENEWABLE_TIME("renewable lifetime", KOptionType.INT),
     FORWARDABLE("forwardable"),
-    NOT_FORWARDABLE("not-forwardable"),
+    NOT_FORWARDABLE("not forwardable"),
     PROXIABLE("proxiable"),
-    NOT_PROXIABLE("not-proxiable"),
+    NOT_PROXIABLE("not proxiable"),
     ANONYMOUS("anonymous"),
-    INCLUDE_ADDRESSES("include-addresses"),
-    NOT_INCLUDE_ADDRESSES("do-not-include-addresses"),
+    INCLUDE_ADDRESSES("include addresses"),
+    NOT_INCLUDE_ADDRESSES("do not include addresses"),
     VALIDATE("validate"),
     RENEW("renew"),
     CANONICALIZE("canonicalize"),
     AS_ENTERPRISE_PN("as-enterprise-pn", "client is enterprise principal name"),
-    USE_KEYTAB("use-keytab", "use-keytab"),
+    USE_KEYTAB("use-keytab", "use keytab"),
     USE_DFT_KEYTAB("user-default-keytab", "use default client keytab"),
-    USER_KEYTAB_FILE("user-keytab-file", "filename of keytab to use"),
-    KRB5_CACHE("krb5-cache", "K5 cache name"),
-    SERVICE("service"),
-    ARMOR_CACHE("armor-cache", "armor credential cache"),
+    USER_KEYTAB_FILE("user-keytab-file", "filename of keytab to use", KOptionType.FILE),
+    KRB5_CACHE("krb5-cache", "K5 cache name", KOptionType.FILE),
+    SERVICE("service", KOptionType.STR),
+    ARMOR_CACHE("armor-cache", "armor credential cache", KOptionType.STR),
 
+    CONF_DIR("conf dir", KOptionType.DIR),
     USER_PASSWD("user-passwd", "User plain password"),
 
-    PKINIT_X509_IDENTITY("x509-identities", "X509 user private key and cert"),
-    PKINIT_X509_PRIVATE_KEY("x509-privatekey", "X509 user private key"),
-    PKINIT_X509_CERTIFICATE("x509-cert", "X509 user certificate"),
-    PKINIT_X509_ANCHORS("x509-anchors", "X509 anchors"),
+    PKINIT_X509_IDENTITY("x509-identities", "X509 user private key and cert", KOptionType.STR),
+    PKINIT_X509_PRIVATE_KEY("x509-privatekey", "X509 user private key", KOptionType.STR),
+    PKINIT_X509_CERTIFICATE("x509-cert", "X509 user certificate", KOptionType.STR),
+    PKINIT_X509_ANCHORS("x509-anchors", "X509 anchors", KOptionType.STR),
     PKINIT_X509_ANONYMOUS("x509-anonymous", "X509 anonymous"),
     PKINIT_USING_RSA("using-rsa-or-dh", "Using RSA or DH"),
 
     TOKEN_USING_IDTOKEN("using-id-token", "Using identity token"),
-    TOKEN_USER_ID_TOKEN("user-id-token", "User identity token"),
-    TOKEN_USER_AC_TOKEN("user-ac-token", "User access token"),
+    TOKEN_USER_ID_TOKEN("user-id-token", "User identity token", KOptionType.STR),
+    TOKEN_USER_AC_TOKEN("user-ac-token", "User access token", KOptionType.STR),
 
     ;
 
     private String name;
+    private KOptionType type;
     private String description;
     private Object value;
 
     KrbOption(String description) {
+        this(description, KOptionType.NOV); // As a flag by default
+    }
+
+    KrbOption(String description, KOptionType type) {
         this.description = description;
+        this.type = type;
     }
 
     KrbOption(String name, String description) {
+        this(name, description, KOptionType.NOV); // As a flag by default
+    }
+
+    KrbOption(String name, String description, KOptionType type) {
         this.name = name;
         this.description = description;
+        this.type = type;
+    }
+
+    public void setType(KOptionType type) {
+        this.type = type;
+    }
+
+    public KOptionType getType() {
+        return this.type;
     }
 
     @Override
