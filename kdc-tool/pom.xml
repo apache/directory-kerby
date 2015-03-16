@@ -27,7 +27,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>kinit</module>
+    <module>client-tool</module>
     <module>token-tool</module>
   </modules>
 

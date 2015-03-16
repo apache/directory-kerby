@@ -17,18 +17,14 @@
 
   <parent>
     <groupId>org.apache.kerby</groupId>
-    <artifactId>kdc-backend</artifactId>
+    <artifactId>kerby-kerb</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>Json-identity-backend</artifactId>
+  <artifactId>kerb-identity-test</artifactId>
 
-  <name>Json identity backend</name>
-  <description>Json identity backend</description>
-
-  <properties>
-    <json.version>2.3.1</json.version>
-  </properties>
+  <name>Kerby-kerb Identity Test</name>
+  <description>Kerby-kerb Identity Test</description>
 
   <dependencies>
     <dependency>
@@ -38,26 +34,23 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-identity</artifactId>
+      <artifactId>kerb-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-identity-test</artifactId>
+      <artifactId>kerb-crypto</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>${json.version}</version>
-      <scope>compile</scope>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-common</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-identity</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>

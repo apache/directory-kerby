@@ -123,4 +123,43 @@ public class KrbIdentity {
     public int getKeyVersion() {
         return keyVersion;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        KrbIdentity identity = (KrbIdentity) o;
+
+        if (disabled != identity.disabled) return false;
+        if (kdcFlags != identity.kdcFlags) return false;
+        if (keyVersion != identity.keyVersion) return false;
+        if (locked != identity.locked) return false;
+        if (createdTime != null ? !createdTime.equals(identity.createdTime) :
+                identity.createdTime != null)
+            return false;
+        if (expireTime != null ? !expireTime.equals(identity.expireTime) :
+                identity.expireTime != null)
+            return false;
+        if (keys != null ? !keys.equals(identity.keys) : identity.keys != null)
+            return false;
+        if (principalName != null ? !principalName.equals(
+                identity.principalName) : identity.principalName != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = principalName != null ? principalName.hashCode() : 0;
+        result = 31 * result + keyVersion;
+        result = 31 * result + kdcFlags;
+        result = 31 * result + (disabled ? 1 : 0);
+        result = 31 * result + (locked ? 1 : 0);
+        result = 31 * result + (expireTime != null ? expireTime.hashCode() : 0);
+        result = 31 * result + (createdTime != null ? createdTime.hashCode() : 0);
+        result = 31 * result + (keys != null ? keys.hashCode() : 0);
+        return result;
+    }
 }

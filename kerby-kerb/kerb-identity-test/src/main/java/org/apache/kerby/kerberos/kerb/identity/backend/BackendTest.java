@@ -19,7 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
-import org.apache.kerby.kerberos.kerb.identity.IdentityService;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
@@ -27,11 +28,14 @@ import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A common backend test utility
  */
 public abstract class BackendTest {
+
+    static final String TEST_PRINCIPAL = "test@EXAMPLE.COM";
 
     static final EncryptionType[] encTypes = new EncryptionType[]{
             EncryptionType.AES128_CTS,
@@ -41,14 +45,27 @@ public abstract class BackendTest {
             EncryptionType.CAMELLIA256_CTS_CMAC
     };
 
-    protected void testStoreAndGet(IdentityService identityService) {
-        KrbIdentity[] ids = createManyIdentities();
-        //identityService.addIdentity();
+    protected void testGet(IdentityBackend backend) {
+
+    }
+
+    protected void testStore(IdentityBackend backend) {
+        KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
+        backend.addIdentity(kid);
+        KrbIdentity kid2 = backend.getIdentity(TEST_PRINCIPAL);
+        // kid == kid2
+    }
+
+    protected void testUpdate(IdentityBackend backend) {
+
+    }
+
+    protected void testDelete(IdentityBackend backend) {
+
     }
 
     protected KrbIdentity[] createManyIdentities() {
         return new KrbIdentity[] {
-                createOneIdentity("test@EXAMPLE.COM"),
                 createOneIdentity("test1@EXAMPLE.COM"),
                 createOneIdentity("test2@EXAMPLE.COM"),
                 createOneIdentity("test3@EXAMPLE.COM"),
@@ -69,7 +86,14 @@ public abstract class BackendTest {
         return kid;
     }
 
-    protected abstract List<EncryptionKey> generateKeys(String principal);
+    protected List<EncryptionKey> generateKeys(String principal) {
+        String passwd = UUID.randomUUID().toString();
+        try {
+            return EncryptionUtil.generateKeys(principal, passwd, getEncryptionTypes());
+        } catch (KrbException e) {
+            throw new RuntimeException("Failed to create keys", e);
+        }
+    }
 
     protected List<EncryptionType> getEncryptionTypes() {
         return Arrays.asList(encTypes);

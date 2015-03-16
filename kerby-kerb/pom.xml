@@ -33,6 +33,7 @@
     <module>kerb-util</module>
     <module>kerb-crypto</module>
     <module>kerb-identity</module>
+    <module>kerb-identity-test</module>
     <module>kerb-client</module>
     <module>kerb-server</module>
     <module>kerb-kdc-test</module>
