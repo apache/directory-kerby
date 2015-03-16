@@ -24,26 +24,27 @@ import java.util.Map;
 
 public class KrbOptions {
 
-    private final Map<KrbOption, KrbOption> options = new HashMap<KrbOption, KrbOption>(4);
+    private final Map<KOption, KOption> options =
+            new HashMap<KOption, KOption>();
 
-    public void add(KrbOption option) {
+    public void add(KOption option) {
         if (option != null) {
             options.put(option, option);
         }
     }
 
-    public void add(KrbOption option, Object optionValue) {
+    public void add(KOption option, Object optionValue) {
         if (option != null) {
             option.setValue(optionValue);
             add(option);
         }
     }
 
-    public boolean contains(KrbOption option) {
+    public boolean contains(KOption option) {
         return options.containsKey(option);
     }
 
-    public KrbOption getOption(KrbOption option) {
+    public KOption getOption(KOption option) {
         if (! options.containsKey(option)) {
             return null;
         }
@@ -51,14 +52,14 @@ public class KrbOptions {
         return options.get(option);
     }
 
-    public Object getOptionValue(KrbOption option) {
+    public Object getOptionValue(KOption option) {
         if (! contains(option)) {
             return null;
         }
         return options.get(option).getValue();
     }
 
-    public String getStringOption(KrbOption option) {
+    public String getStringOption(KOption option) {
         Object value = getOptionValue(option);
         if (value instanceof String) {
             return (String) value;
@@ -66,7 +67,7 @@ public class KrbOptions {
         return null;
     }
 
-    public boolean getBooleanOption(KrbOption option) {
+    public boolean getBooleanOption(KOption option) {
         Object value = getOptionValue(option);
         if (value instanceof String) {
             String strVal = (String) value;
@@ -81,7 +82,7 @@ public class KrbOptions {
         return false;
     }
 
-    public int getIntegerOption(KrbOption option) {
+    public int getIntegerOption(KOption option) {
         Object value = getOptionValue(option);
         if (value instanceof String) {
             String strVal = (String) value;

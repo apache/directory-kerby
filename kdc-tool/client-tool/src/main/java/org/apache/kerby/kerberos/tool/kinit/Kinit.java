@@ -17,7 +17,7 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.tool;
+package org.apache.kerby.kerberos.tool.kinit;
 
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -35,20 +35,21 @@ import java.util.Scanner;
  */
 public class Kinit {
 
-    private static final String COMMON_USAGE = "Usage: " +
-            Kinit.class.getSimpleName() + " [-l lifetime] [-f | -F] principal\n" +
-            "\n" +
+    private static final String TOOL_NAME = Kinit.class.getSimpleName();
+    private static final String COMMON_USAGE = "Usage: " + TOOL_NAME +
+            " [-l lifetime]" +
+            " [-f | -F] principal\n" + "\n" +
             "    options:\t-l lifetime\n" +
             "\t-f forwardable\n" +
             "\t-F not forwardable";
 
     private void printUsage(String cmd) {
         if ("-l".equals(cmd)) {
-            System.err.println("Usage: " + Kinit.class.getSimpleName() + " -l lifetime principal");
+            System.err.println("Usage: " + TOOL_NAME + " -l lifetime principal");
         } else if ("-f".equals(cmd)) {
-            System.err.println("Usage: " + Kinit.class.getSimpleName() + " -f principal");
+            System.err.println("Usage: " + TOOL_NAME + " -f principal");
         } else if ("-F".equals(cmd)) {
-            System.err.println("Usage: " + Kinit.class.getSimpleName() + " -F principal");
+            System.err.println("Usage: " + TOOL_NAME + " -F principal");
         } else {
             System.err.println(COMMON_USAGE);
         }
