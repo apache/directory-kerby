@@ -46,5 +46,11 @@
       <artifactId>zookeeper</artifactId>
       <version>${zookeeper.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-identity-test</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

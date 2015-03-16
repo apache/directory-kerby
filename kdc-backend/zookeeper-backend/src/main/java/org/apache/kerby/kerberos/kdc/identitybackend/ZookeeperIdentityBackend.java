@@ -29,6 +29,7 @@ import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.ZooKeeperServerMain;
 import org.apache.zookeeper.server.quorum.QuorumPeerConfig;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -44,6 +45,8 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
     private Config config;
     private String zkHost;
     private int zkPort;
+    private File dataDir;
+    private File dataLogDir;
 
     /**
      * Constructing an instance using specified config that contains anything
@@ -58,6 +61,9 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
     private void init() {
         zkHost = config.getString(ZKConfKey.ZK_HOST);
         zkPort = config.getInt(ZKConfKey.ZK_PORT);
+        dataDir = new File(config.getString(ZKConfKey.DATA_DIR));
+        dataLogDir = new File(config.getString(ZKConfKey.DATA_LOG_DIR));
+
         startEmbeddedZookeeper();
         connectZK();
     }
@@ -84,7 +90,11 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
     }
 
     private void startEmbeddedZookeeper() {
+
         Properties startupProperties = new Properties();
+        startupProperties.put("dataDir", dataDir.getAbsolutePath());
+        startupProperties.put("dataLogDir", dataLogDir.getAbsolutePath());
+        startupProperties.put("clientPort", zkPort);
 
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();
         try {
@@ -102,6 +112,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
                 try {
                     zooKeeperServer.runFromConfig(configuration);
                 } catch (IOException e) {
+                    e.printStackTrace();
                     //log.error("ZooKeeper Failed", e);
                 }
             }
