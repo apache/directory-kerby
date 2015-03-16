@@ -20,9 +20,7 @@
 package org.apache.kerby.kerberos.tool.kinit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.client.KOptionType;
-import org.apache.kerby.kerberos.kerb.client.KrbClient;
-import org.apache.kerby.kerberos.kerb.client.KrbOptions;
+import org.apache.kerby.kerberos.kerb.client.*;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.tool.ToolUtil;
 
@@ -96,14 +94,15 @@ public class Kinit {
         return password;
     }
 
-    public static int requestTicket(String principal, KrbOptions options) {
+    private static int requestTicket(String principal, KrbOptions kinitOptions) {
         KrbClient krbClient = new KrbClient();
         krbClient.init();
 
         String password = getPassword(principal);
 
         try {
-            TgtTicket tgt = krbClient.requestTgtTicket(principal, password, null);
+            TgtTicket tgt = krbClient.requestTgtTicket(principal, password,
+                    ToolUtil.convertOptions(kinitOptions));
             // TODO: write tgt into credentials cache.
             return 0;
         } catch (KrbException e) {

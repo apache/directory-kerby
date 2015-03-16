@@ -25,6 +25,8 @@ public interface KOption {
 
     public KOptionType getType();
 
+    public String getOptionName();
+
     public void setName(String name);
 
     public String getName();

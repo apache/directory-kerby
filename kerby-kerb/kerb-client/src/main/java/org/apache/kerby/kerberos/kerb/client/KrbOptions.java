@@ -19,7 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KrbOptions {
@@ -42,6 +44,10 @@ public class KrbOptions {
 
     public boolean contains(KOption option) {
         return options.containsKey(option);
+    }
+
+    public List<KOption> getOptions() {
+        return new ArrayList<>(options.keySet());
     }
 
     public KOption getOption(KOption option) {

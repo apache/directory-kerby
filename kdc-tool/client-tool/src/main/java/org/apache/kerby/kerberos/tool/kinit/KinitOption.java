@@ -71,10 +71,17 @@ public enum KinitOption implements KOption {
         this.type = type;
     }
 
+    @Override
+    public String getOptionName() {
+        return name();
+    }
+
+    @Override
     public void setType(KOptionType type) {
         this.type = type;
     }
 
+    @Override
     public KOptionType getType() {
         return this.type;
     }

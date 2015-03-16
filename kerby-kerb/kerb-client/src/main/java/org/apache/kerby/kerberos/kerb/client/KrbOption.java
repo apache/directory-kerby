@@ -82,6 +82,11 @@ public enum KrbOption implements KOption {
         this.type = type;
     }
 
+    @Override
+    public String getOptionName() {
+        return name();
+    }
+
     public void setType(KOptionType type) {
         this.type = type;
     }
@@ -127,6 +132,17 @@ public enum KrbOption implements KOption {
         if (name != null) {
             for (KrbOption ko : values()) {
                 if (ko.getName().equals(name)) {
+                    return (KrbOption) ko;
+                }
+            }
+        }
+        return NONE;
+    }
+
+    public static KrbOption fromOptionName(String optionName) {
+        if (optionName != null) {
+            for (KrbOption ko : values()) {
+                if (ko.getOptionName().equals(optionName)) {
                     return (KrbOption) ko;
                 }
             }
