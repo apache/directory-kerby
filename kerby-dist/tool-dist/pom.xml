@@ -24,13 +24,47 @@
   <artifactId>tool-dist</artifactId>
   <name>Tool Dist</name>
   <description>Tool Dist Project</description>
+  <packaging>pom</packaging>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kerby-kerb</artifactId>
+      <artifactId>kinit</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>token-tool</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>dist</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <configuration>
+                  <tasks>
+                    <copy file="../../kerby-kerb/kerb-client/target/kerb-client-${project.version}-jar-with-dependencies.jar" tofile="lib/kerb-client-${project.version}-jar-with-dependencies.jar"/>
+                    <copy file="../../kdc-tool/client-tool/target/kinit-${project.version}.jar" tofile="lib/kinit-${project.version}.jar"/>
+                  </tasks>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
