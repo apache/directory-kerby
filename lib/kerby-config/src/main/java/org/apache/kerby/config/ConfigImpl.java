@@ -20,13 +20,9 @@
  */
 package org.apache.kerby.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 public class ConfigImpl implements Config {
-    private static final Logger logger = LoggerFactory.getLogger(Config.class);
 
     private String resource;
     private Map<String, ConfigObject> properties;
@@ -139,6 +135,16 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public void setInt(String name, int value) {
+        set(name, String.valueOf(value));
+    }
+
+    @Override
+    public void setInt(ConfigKey name, int value) {
+        set(name.getPropertyKey(), String.valueOf(value));
+    }
+
+    @Override
     public Long getLong(String name) {
         Long result = null;
         String value = getTrimmed(name);
@@ -163,6 +169,16 @@ public class ConfigImpl implements Config {
             result = defaultValue;
         }
         return result;
+    }
+
+    @Override
+    public void setLong(String name, long value) {
+        set(name, String.valueOf(value));
+    }
+
+    @Override
+    public void setLong(ConfigKey name, long value) {
+        set(name.getPropertyKey(), String.valueOf(value));
     }
 
     @Override
@@ -193,6 +209,16 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public void setFloat(String name, float value) {
+        set(name, String.valueOf(value));
+    }
+
+    @Override
+    public void setFloat(ConfigKey name, float value) {
+        set(name.getPropertyKey(), String.valueOf(value));
+    }
+
+    @Override
     public Boolean getBoolean(String name) {
         Boolean result = null;
         String value = getTrimmed(name);
@@ -217,6 +243,16 @@ public class ConfigImpl implements Config {
             result = defaultValue;
         }
         return result;
+    }
+
+    @Override
+    public void setBoolean(String name, boolean value) {
+        set(name, String.valueOf(value));
+    }
+
+    @Override
+    public void setBoolean(ConfigKey name, boolean value) {
+        set(name.getPropertyKey(), String.valueOf(value));
     }
 
     @Override
@@ -316,6 +352,17 @@ public class ConfigImpl implements Config {
         }
 
         return result;
+    }
+
+
+    @Override
+    public void setString(String name, String value) {
+        set(name, value);
+    }
+
+    @Override
+    public void setString(ConfigKey name, String value) {
+        set(name.getPropertyKey(), value);
     }
 
     protected void set(String name, String value) {

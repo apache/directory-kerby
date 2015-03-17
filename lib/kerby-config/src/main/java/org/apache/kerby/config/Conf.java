@@ -135,6 +135,16 @@ public class Conf implements Config {
     }
 
     @Override
+    public void setString(String name, String value) {
+        config.setString(name, value);
+    }
+
+    @Override
+    public void setString(ConfigKey name, String value) {
+        config.setString(name, value);
+    }
+
+    @Override
     public String getTrimmed(String name) {
         checkAndLoad();
         return config.getTrimmed(name);
@@ -165,6 +175,16 @@ public class Conf implements Config {
     }
 
     @Override
+    public void setBoolean(String name, boolean value) {
+        config.setBoolean(name, value);
+    }
+
+    @Override
+    public void setBoolean(ConfigKey name, boolean value) {
+        config.setBoolean(name, value);
+    }
+
+    @Override
     public Integer getInt(String name) {
         checkAndLoad();
         return config.getInt(name);
@@ -180,6 +200,16 @@ public class Conf implements Config {
     public Integer getInt(String name, int defaultValue) {
         checkAndLoad();
         return config.getInt(name, defaultValue);
+    }
+
+    @Override
+    public void setInt(String name, int value) {
+        setInt(name, value);
+    }
+
+    @Override
+    public void setInt(ConfigKey name, int value) {
+        setInt(name, value);
     }
 
     @Override
@@ -201,6 +231,16 @@ public class Conf implements Config {
     }
 
     @Override
+    public void setLong(String name, long value) {
+        setLong(name, value);
+    }
+
+    @Override
+    public void setLong(ConfigKey name, long value) {
+        setLong(name, value);
+    }
+
+    @Override
     public Float getFloat(String name) {
         checkAndLoad();
         return config.getFloat(name);
@@ -216,6 +256,16 @@ public class Conf implements Config {
     public Float getFloat(String name, float defaultValue) {
         checkAndLoad();
         return config.getFloat(name, defaultValue);
+    }
+
+    @Override
+    public void setFloat(String name, float value) {
+        setFloat(name, value);
+    }
+
+    @Override
+    public void setFloat(ConfigKey name, float value) {
+        setFloat(name, value);
     }
 
     @Override
