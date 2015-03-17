@@ -58,7 +58,7 @@ krbClient.requestServiceTicket(accessToken, serverPrincipal);
 </pre>
 
 ### ASN-1 support
-Please look at [kerby-asn1](https://git-wip-us.apache.org/repos/asf?p=directory-kerberos.git;a=blob;f=kerby-asn1/README.md;h=eb35929d15bc88e91063df9ed0de78ae8fc255eb;hb=HEAD) for details.
+Please look at [kerby-asn1](kerby-asn1/) for details.
 
 ### Kerberos Crypto and Encryption Types
 Implementing des, des3, rc4, aes, camellia encryption and corresponding checksum types
