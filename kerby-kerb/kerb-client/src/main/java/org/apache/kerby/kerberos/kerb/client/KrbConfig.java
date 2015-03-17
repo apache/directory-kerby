@@ -25,19 +25,13 @@ import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 
 import java.util.List;
 
-public class KrbConfig {
-    protected Conf conf;
-
-    public KrbConfig() {
-        this.conf = new Conf();
-    }
-
-    public Conf getConf() {
-        return this.conf;
-    }
+/**
+ * Kerb client side configuration API.
+ */
+public class KrbConfig extends Conf {
 
     public boolean enableDebug() {
-        return conf.getBoolean(KrbConfigKey.KRB_DEBUG);
+        return getBoolean(KrbConfigKey.KRB_DEBUG);
     }
 
     /**
@@ -45,7 +39,7 @@ public class KrbConfig {
      * @return
      */
     public String getKdcHost() {
-        return conf.getString(KrbConfigKey.KDC_HOST);
+        return getString(KrbConfigKey.KDC_HOST);
     }
 
     /**
@@ -53,7 +47,7 @@ public class KrbConfig {
      * @return
      */
     public int getKdcPort() {
-        Integer kdcPort = conf.getInt(KrbConfigKey.KDC_PORT);
+        Integer kdcPort = getInt(KrbConfigKey.KDC_PORT);
         return kdcPort.shortValue();
     }
 
@@ -62,7 +56,7 @@ public class KrbConfig {
      * @return
      */
     public int getKdcTcpPort() {
-        Integer kdcPort = conf.getInt(KrbConfigKey.KDC_TCP_PORT);
+        Integer kdcPort = getInt(KrbConfigKey.KDC_TCP_PORT);
         if (kdcPort > 0) {
             return kdcPort.shortValue();
         }
@@ -74,7 +68,7 @@ public class KrbConfig {
      * @return true to allow UDP, false otherwise
      */
     public boolean allowKdcUdp() {
-        return conf.getBoolean(KrbConfigKey.KDC_ALLOW_UDP);
+        return getBoolean(KrbConfigKey.KDC_ALLOW_UDP);
     }
 
     /**
@@ -82,7 +76,7 @@ public class KrbConfig {
      * @return
      */
     public int getKdcUdpPort() {
-        Integer kdcPort = conf.getInt(KrbConfigKey.KDC_UDP_PORT);
+        Integer kdcPort = getInt(KrbConfigKey.KDC_UDP_PORT);
         if (kdcPort > 0) {
             return kdcPort.shortValue();
         }
@@ -90,111 +84,111 @@ public class KrbConfig {
     }
 
     public String getKdcRealm() {
-        return KrbConfHelper.getStringUnderSection(conf, KrbConfigKey.KDC_REALM);
+        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.KDC_REALM);
     }
 
     public String getKdcDomain() {
-        return conf.getString(KrbConfigKey.KDC_DOMAIN);
+        return getString(KrbConfigKey.KDC_DOMAIN);
     }
 
     public boolean isPreauthRequired() {
-        return conf.getBoolean(KrbConfigKey.PREAUTH_REQUIRED);
+        return getBoolean(KrbConfigKey.PREAUTH_REQUIRED);
     }
 
     public String getTgsPrincipal() {
-        return conf.getString(KrbConfigKey.TGS_PRINCIPAL);
+        return getString(KrbConfigKey.TGS_PRINCIPAL);
     }
 
     public long getAllowableClockSkew() {
-        return KrbConfHelper.getLongUnderSection(conf, KrbConfigKey.CLOCKSKEW);
+        return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.CLOCKSKEW);
     }
 
     public boolean isEmptyAddressesAllowed() {
-        return conf.getBoolean(KrbConfigKey.EMPTY_ADDRESSES_ALLOWED);
+        return getBoolean(KrbConfigKey.EMPTY_ADDRESSES_ALLOWED);
     }
 
     public boolean isForwardableAllowed() {
-        return KrbConfHelper.getBooleanUnderSection(conf, KrbConfigKey.FORWARDABLE);
+        return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.FORWARDABLE);
     }
 
     public boolean isPostdatedAllowed() {
-        return conf.getBoolean(KrbConfigKey.POSTDATED_ALLOWED);
+        return getBoolean(KrbConfigKey.POSTDATED_ALLOWED);
     }
 
     public boolean isProxiableAllowed() {
-        return KrbConfHelper.getBooleanUnderSection(conf, KrbConfigKey.PROXIABLE);
+        return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.PROXIABLE);
     }
 
     public boolean isRenewableAllowed() {
-        return conf.getBoolean(KrbConfigKey.RENEWABLE_ALLOWED);
+        return getBoolean(KrbConfigKey.RENEWABLE_ALLOWED);
     }
 
     public long getMaximumRenewableLifetime() {
-        return conf.getLong(KrbConfigKey.MAXIMUM_RENEWABLE_LIFETIME);
+        return getLong(KrbConfigKey.MAXIMUM_RENEWABLE_LIFETIME);
     }
 
     public long getMaximumTicketLifetime() {
-        return conf.getLong(KrbConfigKey.MAXIMUM_TICKET_LIFETIME);
+        return getLong(KrbConfigKey.MAXIMUM_TICKET_LIFETIME);
     }
 
     public long getMinimumTicketLifetime() {
-        return conf.getLong(KrbConfigKey.MINIMUM_TICKET_LIFETIME);
+        return getLong(KrbConfigKey.MINIMUM_TICKET_LIFETIME);
     }
 
     public List<EncryptionType> getEncryptionTypes() {
-        return KrbConfHelper.getEncTypesUnderSection(conf, KrbConfigKey.PERMITTED_ENCTYPES);
+        return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.PERMITTED_ENCTYPES);
     }
 
     public boolean isPaEncTimestampRequired() {
-        return conf.getBoolean(KrbConfigKey.PA_ENC_TIMESTAMP_REQUIRED);
+        return getBoolean(KrbConfigKey.PA_ENC_TIMESTAMP_REQUIRED);
     }
 
     public boolean isBodyChecksumVerified() {
-        return conf.getBoolean(KrbConfigKey.VERIFY_BODY_CHECKSUM);
+        return getBoolean(KrbConfigKey.VERIFY_BODY_CHECKSUM);
     }
 
     public String getDefaultRealm() {
-        return KrbConfHelper.getStringUnderSection(conf, KrbConfigKey.DEFAULT_REALM);
+        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.DEFAULT_REALM);
     }
 
     public boolean getDnsLookUpKdc() {
-        return KrbConfHelper.getBooleanUnderSection(conf, KrbConfigKey.DNS_LOOKUP_KDC);
+        return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.DNS_LOOKUP_KDC);
     }
 
     public boolean getDnsLookUpRealm() {
-        return KrbConfHelper.getBooleanUnderSection(conf, KrbConfigKey.DNS_LOOKUP_REALM);
+        return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.DNS_LOOKUP_REALM);
     }
 
     public boolean getAllowWeakCrypto() {
-        return KrbConfHelper.getBooleanUnderSection(conf, KrbConfigKey.ALLOW_WEAK_CRYPTO);
+        return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.ALLOW_WEAK_CRYPTO);
     }
 
     public long getTicketLifetime() {
-        return KrbConfHelper.getLongUnderSection(conf, KrbConfigKey.TICKET_LIFETIME);
+        return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.TICKET_LIFETIME);
     }
 
     public long getRenewLifetime() {
-        return KrbConfHelper.getLongUnderSection(conf, KrbConfigKey.RENEW_LIFETIME);
+        return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.RENEW_LIFETIME);
     }
 
     public List<EncryptionType> getDefaultTgsEnctypes() {
-        return KrbConfHelper.getEncTypesUnderSection(conf, KrbConfigKey.DEFAULT_TGS_ENCTYPES);
+        return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TGS_ENCTYPES);
     }
 
     public List<EncryptionType> getDefaultTktEnctypes() {
-        return KrbConfHelper.getEncTypesUnderSection(conf, KrbConfigKey.DEFAULT_TKT_ENCTYPES);
+        return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TKT_ENCTYPES);
     }
 
     public String getDefaultLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(conf, KrbConfigKey.DEFAULT);
+        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.DEFAULT);
     }
 
     public String getKdcLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(conf, KrbConfigKey.KDC);
+        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.KDC);
     }
 
     public String getAdminLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(conf, KrbConfigKey.ADMIN_SERVER);
+        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.ADMIN_SERVER);
     }
 
 

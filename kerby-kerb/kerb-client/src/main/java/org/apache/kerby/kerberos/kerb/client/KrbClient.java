@@ -110,7 +110,7 @@ public class KrbClient {
         if (confDir != null && confDir.exists()) {
             File kdcConfFile = new File(confDir, "krb5.conf");
             if (kdcConfFile.exists()) {
-                krbConfig.getConf().addIniConfig(kdcConfFile);
+                krbConfig.addIniConfig(kdcConfFile);
             }
         }
     }

@@ -58,7 +58,7 @@ public class TestKdcServer extends SimpleKdcServer {
     public void init() {
         super.init();
 
-        getKdcConfig().getConf().addPropertiesConfig(createConf());
+        getKdcConfig().addPropertiesConfig(createConf());
 
         createPrincipals("krbtgt");
     }

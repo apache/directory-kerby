@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
-import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 import org.junit.Test;
 
@@ -42,8 +41,7 @@ public class TestKrbConfigLoad {
         File confFile = new File(confFileUrl.toURI());
 
         KrbConfig krbConfig = new KrbConfig();
-        Conf conf = krbConfig.getConf();
-        conf.addIniConfig(confFile);
+        krbConfig.addIniConfig(confFile);
 
         assertThat(krbConfig.getDefaultRealm()).isEqualTo("KRB.COM");
         assertThat(krbConfig.getKdcRealm()).isEqualTo("TEST.COM");

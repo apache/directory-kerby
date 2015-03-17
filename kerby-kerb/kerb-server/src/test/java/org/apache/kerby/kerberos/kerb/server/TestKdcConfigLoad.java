@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.config.Conf;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,8 +36,7 @@ public class TestKdcConfigLoad {
         File confFile = new File(confFileUrl.toURI());
 
         KdcConfig kdcConfig = new KdcConfig();
-        Conf conf = kdcConfig.getConf();
-        conf.addIniConfig(confFile);
+        kdcConfig.addIniConfig(confFile);
 
         assertThat(kdcConfig.getDefaultLoggingLocation()).isEqualTo("FILE:/var/log/krb5libs.log");
         assertThat(kdcConfig.getKdcLoggingLocation()).isEqualTo("FILE:/var/log/krb5kdc.log");

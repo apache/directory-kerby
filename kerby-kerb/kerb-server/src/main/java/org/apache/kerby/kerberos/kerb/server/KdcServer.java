@@ -108,7 +108,7 @@ public class KdcServer {
         if (confDir != null && confDir.exists()) {
             File kdcConfFile = new File(confDir, "kdc.conf");
             if (kdcConfFile.exists()) {
-                kdcConfig.getConf().addIniConfig(kdcConfFile);
+                kdcConfig.addIniConfig(kdcConfFile);
             }
 
             File backendConfFile = new File(confDir, "backend.conf");

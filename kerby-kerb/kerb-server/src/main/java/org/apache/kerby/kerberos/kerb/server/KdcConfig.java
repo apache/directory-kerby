@@ -20,43 +20,36 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.config.Conf;
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.common.KrbConfHelper;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 
 import java.util.List;
 
-public class KdcConfig {
-    protected Conf conf;
-
-    public KdcConfig() {
-        this.conf = new Conf();
-    }
-
-    public Conf getConf() {
-        return this.conf;
-    }
+/**
+ * Kerb KDC side configuration API.
+ */
+public class KdcConfig extends Conf {
 
     public boolean enableDebug() {
-        return conf.getBoolean(KdcConfigKey.KRB_DEBUG);
+        return getBoolean(KdcConfigKey.KRB_DEBUG);
     }
 
     public String getKdcServiceName() {
-        return conf.getString(KdcConfigKey.KDC_SERVICE_NAME);
+        return getString(KdcConfigKey.KDC_SERVICE_NAME);
     }
 
     public String getKdcHost() {
-        return KrbConfHelper.getStringUnderSection(conf, KdcConfigKey.KDC_HOST);
+        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.KDC_HOST);
     }
 
     public int getKdcPort() {
-        Integer kdcPort =  KrbConfHelper.getIntUnderSection(conf,
+        Integer kdcPort =  KrbConfHelper.getIntUnderSection(this,
                 KdcConfigKey.KDC_PORT);
         return kdcPort.intValue();
     }
 
     public int getKdcTcpPort() {
-        Integer kdcTcpPort =  KrbConfHelper.getIntUnderSection(conf,
+        Integer kdcTcpPort =  KrbConfHelper.getIntUnderSection(this,
                 KdcConfigKey.KDC_TCP_PORT);
         if (kdcTcpPort > 0) {
             return kdcTcpPort.intValue();
@@ -69,11 +62,11 @@ public class KdcConfig {
      * @return true to allow UDP, false otherwise
      */
     public boolean allowKdcUdp() {
-        return conf.getBoolean(KdcConfigKey.KDC_ALLOW_UDP);
+        return getBoolean(KdcConfigKey.KDC_ALLOW_UDP);
     }
 
     public int getKdcUdpPort() {
-        Integer kdcUdpPort = KrbConfHelper.getIntUnderSection(conf,
+        Integer kdcUdpPort = KrbConfHelper.getIntUnderSection(this,
                 KdcConfigKey.KDC_UDP_PORT);
         if (kdcUdpPort > 0) {
             return kdcUdpPort.intValue();
@@ -82,87 +75,90 @@ public class KdcConfig {
     }
 
     public String getKdcRealm() {
-        return KrbConfHelper.getStringUnderSection(conf, KdcConfigKey.KDC_REALM);
+        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.KDC_REALM);
     }
 
     public String getKdcDomain() {
-        return conf.getString(KdcConfigKey.KDC_DOMAIN);
+        return getString(KdcConfigKey.KDC_DOMAIN);
     }
 
     public boolean isPreauthRequired() {
-        return conf.getBoolean(KdcConfigKey.PREAUTH_REQUIRED);
+        return getBoolean(KdcConfigKey.PREAUTH_REQUIRED);
     }
 
     public String getTgsPrincipal() {
-        return conf.getString(KdcConfigKey.TGS_PRINCIPAL);
+        return getString(KdcConfigKey.TGS_PRINCIPAL);
     }
 
     public long getAllowableClockSkew() {
-        return conf.getLong(KdcConfigKey.ALLOWABLE_CLOCKSKEW);
+        return getLong(KdcConfigKey.ALLOWABLE_CLOCKSKEW);
     }
 
     public boolean isEmptyAddressesAllowed() {
-        return conf.getBoolean(KdcConfigKey.EMPTY_ADDRESSES_ALLOWED);
+        return getBoolean(KdcConfigKey.EMPTY_ADDRESSES_ALLOWED);
     }
 
     public boolean isForwardableAllowed() {
-        return conf.getBoolean(KdcConfigKey.FORWARDABLE_ALLOWED);
+        return getBoolean(KdcConfigKey.FORWARDABLE_ALLOWED);
     }
 
     public boolean isPostdatedAllowed() {
-        return conf.getBoolean(KdcConfigKey.POSTDATED_ALLOWED);
+        return getBoolean(KdcConfigKey.POSTDATED_ALLOWED);
     }
 
     public boolean isProxiableAllowed() {
-        return conf.getBoolean(KdcConfigKey.PROXIABLE_ALLOWED);
+        return getBoolean(KdcConfigKey.PROXIABLE_ALLOWED);
     }
 
     public boolean isRenewableAllowed() {
-        return conf.getBoolean(KdcConfigKey.RENEWABLE_ALLOWED);
+        return getBoolean(KdcConfigKey.RENEWABLE_ALLOWED);
     }
 
     public long getMaximumRenewableLifetime() {
-        return conf.getLong(KdcConfigKey.MAXIMUM_RENEWABLE_LIFETIME);
+        return getLong(KdcConfigKey.MAXIMUM_RENEWABLE_LIFETIME);
     }
 
     public long getMaximumTicketLifetime() {
-        return conf.getLong(KdcConfigKey.MAXIMUM_TICKET_LIFETIME);
+        return getLong(KdcConfigKey.MAXIMUM_TICKET_LIFETIME);
     }
 
     public long getMinimumTicketLifetime() {
-        return conf.getLong(KdcConfigKey.MINIMUM_TICKET_LIFETIME);
+        return getLong(KdcConfigKey.MINIMUM_TICKET_LIFETIME);
     }
 
     public List<EncryptionType> getEncryptionTypes() {
-        List<String> eTypes = conf.getList(KdcConfigKey.ENCRYPTION_TYPES);
+        List<String> eTypes = getList(KdcConfigKey.ENCRYPTION_TYPES);
         return KrbConfHelper.getEncryptionTypes(eTypes);
     }
 
     public boolean isPaEncTimestampRequired() {
-        return conf.getBoolean(KdcConfigKey.PA_ENC_TIMESTAMP_REQUIRED);
+        return getBoolean(KdcConfigKey.PA_ENC_TIMESTAMP_REQUIRED);
     }
 
     public boolean isBodyChecksumVerified() {
-        return conf.getBoolean(KdcConfigKey.VERIFY_BODY_CHECKSUM);
+        return getBoolean(KdcConfigKey.VERIFY_BODY_CHECKSUM);
     }
 
     public String getDefaultLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(conf, KdcConfigKey.DEFAULT);
+        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.DEFAULT);
     }
 
     public String getKdcLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(conf, KdcConfigKey.KDC);
+        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.KDC);
     }
 
     public String getAdminLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(conf, KdcConfigKey.ADMIN_SERVER);
+        return KrbConfHelper.getStringUnderSection(this,
+                KdcConfigKey.ADMIN_SERVER);
     }
 
     public boolean isRestrictAnonymousToTgt() {
-        return KrbConfHelper.getBooleanUnderSection(conf, KdcConfigKey.RESTRICT_ANONYMOUS_TO_TGT);
+        return KrbConfHelper.getBooleanUnderSection(this,
+                KdcConfigKey.RESTRICT_ANONYMOUS_TO_TGT);
     }
 
     public int getKdcMaxDgramReplySize() {
-        return KrbConfHelper.getIntUnderSection(conf, KdcConfigKey.KDC_MAX_DGRAM_REPLY_SIZE);
+        return KrbConfHelper.getIntUnderSection(this,
+                KdcConfigKey.KDC_MAX_DGRAM_REPLY_SIZE);
     }
 }
