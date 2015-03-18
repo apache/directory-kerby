@@ -37,28 +37,23 @@ import java.util.UUID;
 
 public class TestKdcServer extends SimpleKdcServer {
 
-    public static final String ORG_DOMAIN = KdcConfigKey.KDC_DOMAIN.getPropertyKey();
-    public static final String KDC_REALM = KdcConfigKey.KDC_REALM.getPropertyKey();
-    public static final String KDC_HOST = KdcConfigKey.KDC_HOST.getPropertyKey();
-    public static final String KDC_TCP_PORT = KdcConfigKey.KDC_TCP_PORT.getPropertyKey();
+    /**
+     * Prepare KDC configuration for the test.
+     */
+    protected void prepareKdcConfig() {
+        KdcConfig kdcConfig = getKdcConfig();
 
-    private static final Properties DEFAULT_CONFIG = new Properties();
-    static {
-        DEFAULT_CONFIG.setProperty(KDC_HOST, "localhost");
-        DEFAULT_CONFIG.setProperty(KDC_TCP_PORT, "8018");
-        DEFAULT_CONFIG.setProperty(ORG_DOMAIN, "test.com");
-        DEFAULT_CONFIG.setProperty(KDC_REALM, "TEST.COM");
-    }
-
-    public static Properties createConf() {
-        return (Properties) DEFAULT_CONFIG.clone();
+        kdcConfig.setString(KdcConfigKey.KDC_HOST, "localhost");
+        kdcConfig.setInt(KdcConfigKey.KDC_TCP_PORT, 8018);
+        kdcConfig.setString(KdcConfigKey.KDC_DOMAIN, "test.com");
+        kdcConfig.setString(KdcConfigKey.KDC_REALM, "TEST.COM");
     }
 
     @Override
     public void init() {
         super.init();
 
-        getKdcConfig().addPropertiesConfig(createConf());
+        prepareKdcConfig();
 
         createPrincipals("krbtgt");
     }

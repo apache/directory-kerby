@@ -62,9 +62,7 @@ public class ConfigImpl implements Config {
         ConfigObject co = properties.get(name);
         if (co != null) {
             result = co.getPropertyValue();
-        }
-
-        if (result == null) {
+        } else {
             for (Config config : configs) {
                 result = config.getString(name);
                 if (result != null) {
@@ -261,6 +259,13 @@ public class ConfigImpl implements Config {
         ConfigObject co = properties.get(name);
         if (co != null) {
             results = co.getListValues();
+        } else {
+            for (Config config : configs) {
+                results = config.getList(name);
+                if (results != null) {
+                    break;
+                }
+            }
         }
         return results;
     }
@@ -288,7 +293,15 @@ public class ConfigImpl implements Config {
         ConfigObject co = properties.get(name);
         if (co != null) {
             result = co.getConfigValue();
+        } else {
+            for (Config config : configs) {
+                result = config.getConfig(name);
+                if (result != null) {
+                    break;
+                }
+            }
         }
+
         return result;
     }
 
@@ -380,7 +393,13 @@ public class ConfigImpl implements Config {
     }
 
     protected void add(Config config) {
-        this.configs.add(config);
+        if (config != null) {
+            if (this == config) {
+                throw new IllegalArgumentException(
+                        "You can not add a config to itself");
+            }
+            this.configs.add(config);
+        }
     }
 
     private void reloadNames() {

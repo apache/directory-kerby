@@ -27,7 +27,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Properties;
 
 /**
  * Ldap backend test
@@ -39,18 +38,15 @@ public class ZookeeperBackendTest extends BackendTest {
     public static void setup() {
         Conf config = new Conf();
 
-        Properties prop = new Properties();
         File testdir = new File(System.getProperty("test.dir", "target"));
         File instanceDir = new File(testdir, "zookeeper");
         instanceDir.mkdirs();
         File dataDir = new File(instanceDir, "data");
         dataDir.mkdirs();
-        prop.put(ZKConfKey.DATA_DIR.getPropertyKey(), dataDir.getAbsolutePath());
+        config.setString(ZKConfKey.DATA_DIR.getPropertyKey(), dataDir.getAbsolutePath());
         File dataLogDir = new File(instanceDir, "log");
         dataLogDir.mkdirs();
-        prop.put(ZKConfKey.DATA_LOG_DIR.getPropertyKey(), dataLogDir.getAbsolutePath());
-
-        config.addPropertiesConfig(prop);
+        config.setString(ZKConfKey.DATA_LOG_DIR.getPropertyKey(), dataLogDir.getAbsolutePath());
 
         backend = new ZookeeperIdentityBackend(config);
         backend.initialize();

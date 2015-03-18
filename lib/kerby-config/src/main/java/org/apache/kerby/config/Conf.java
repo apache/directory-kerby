@@ -31,12 +31,16 @@ public class Conf implements Config {
 
     private List<ConfigLoader> resourceConfigs;
     private final ConfigImpl config;
+    private final Map<String, String> setValues;
     private boolean needReload;
 
     public Conf() {
         this.resourceConfigs = new ArrayList<ConfigLoader>(1);
         this.config = new ConfigImpl("Conf");
+        this.setValues = new HashMap<>(10);
         this.needReload = true;
+
+        addMapConfig(setValues);
     }
 
     public void addXmlConfig(File xmlFile) throws IOException {
@@ -92,15 +96,10 @@ public class Conf implements Config {
 
     public void reload() {
         config.reset();
-        if (resourceConfigs.size() == 1) {
-            ConfigLoader loader = resourceConfigs.get(0);
-            loader.setConfig(config);
-            loader.load();
-        } else {
-            for (ConfigLoader loader : resourceConfigs) {
-                Config loaded = loader.load();
-                config.add(loaded);
-            }
+
+        for (ConfigLoader loader : resourceConfigs) {
+            Config loaded = loader.load();
+            config.add(loaded);
         }
     }
 
@@ -136,12 +135,12 @@ public class Conf implements Config {
 
     @Override
     public void setString(String name, String value) {
-        config.setString(name, value);
+        setValues.put(name, value);
     }
 
     @Override
     public void setString(ConfigKey name, String value) {
-        config.setString(name, value);
+        setString(name.getPropertyKey(), value);
     }
 
     @Override
@@ -176,12 +175,12 @@ public class Conf implements Config {
 
     @Override
     public void setBoolean(String name, boolean value) {
-        config.setBoolean(name, value);
+        setString(name, String.valueOf(value));
     }
 
     @Override
     public void setBoolean(ConfigKey name, boolean value) {
-        config.setBoolean(name, value);
+        setString(name.getPropertyKey(), String.valueOf(value));
     }
 
     @Override
@@ -204,12 +203,12 @@ public class Conf implements Config {
 
     @Override
     public void setInt(String name, int value) {
-        setInt(name, value);
+        setString(name, String.valueOf(value));
     }
 
     @Override
     public void setInt(ConfigKey name, int value) {
-        setInt(name, value);
+        setString(name.getPropertyKey(), String.valueOf(value));
     }
 
     @Override
@@ -232,12 +231,12 @@ public class Conf implements Config {
 
     @Override
     public void setLong(String name, long value) {
-        setLong(name, value);
+        setString(name, String.valueOf(value));
     }
 
     @Override
     public void setLong(ConfigKey name, long value) {
-        setLong(name, value);
+        setString(name.getPropertyKey(), String.valueOf(value));
     }
 
     @Override
@@ -260,12 +259,12 @@ public class Conf implements Config {
 
     @Override
     public void setFloat(String name, float value) {
-        setFloat(name, value);
+        setString(name, String.valueOf(value));
     }
 
     @Override
     public void setFloat(ConfigKey name, float value) {
-        setFloat(name, value);
+        setString(name.getPropertyKey(), String.valueOf(value));
     }
 
     @Override
