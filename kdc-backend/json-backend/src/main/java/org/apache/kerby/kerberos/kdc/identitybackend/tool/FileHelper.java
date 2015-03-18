@@ -23,7 +23,7 @@ import java.io.*;
 
 public class FileHelper {
 
-    public static String getStringFromFile(File file) {
+    public static String readFromFile(File file) {
         assert (file != null);
 
         BufferedReader reader = null;
@@ -51,7 +51,7 @@ public class FileHelper {
         return null;
     }
 
-    public static void writeStringToFile(String string, File file) {
+    public static void writeToFile(String string, File file) {
         assert (file != null);
 
         BufferedWriter bufferedWriter = null;

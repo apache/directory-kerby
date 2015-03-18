@@ -68,7 +68,6 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         super.initialize();
         createGson();
         load();
-        setCacheSize(0);
     }
 
     /**
@@ -101,7 +100,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
 
         if (kdbFileTimeStamp == 0 || nowTimeStamp != kdbFileTimeStamp) {
             //load ids
-            String existsFileJson = FileHelper.getStringFromFile(jsonKdbFile);
+            String existsFileJson = FileHelper.readFromFile(jsonKdbFile);
 
             ids = gson.fromJson(existsFileJson,
                     new TypeToken<LinkedHashMap<String, KrbIdentity>>() {
@@ -174,6 +173,6 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
 
     private void idsToFile(Map<String, KrbIdentity> ids) {
         String newFileJson = gson.toJson(ids);
-        FileHelper.writeStringToFile(newFileJson, jsonKdbFile);
+        FileHelper.writeToFile(newFileJson, jsonKdbFile);
     }
 }

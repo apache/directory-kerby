@@ -32,12 +32,11 @@ import java.io.File;
  */
 public class JsonBackendTest extends BackendTest {
     private IdentityBackend backend;
-    private String jsonBackendFileString;
 
     @Before
     public void setup() {
         File testDir = new File(System.getProperty("test.dir", "target"));
-        jsonBackendFileString = new File(testDir, "json-identity-backend-file").getAbsolutePath();
+        String jsonBackendFileString = new File(testDir, "json-identity-backend-file").getAbsolutePath();
 
         Config backendConfig = new Conf();
         backendConfig.setString(JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE, jsonBackendFileString);
