@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.spec;
 
-import java.util.Date;
-
 import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
+
+import java.util.Date;
 
 /**
  KerberosTime    ::= GeneralizedTime -- with no fractional seconds
@@ -110,5 +110,19 @@ public class KerberosTime extends Asn1GeneralizedTime {
 
     public static KerberosTime now() {
         return new KerberosTime(new Date().getTime());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        KerberosTime time = (KerberosTime) o;
+        return this.getTime() == time.getTime();
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * (int) this.getTime();
     }
 }
