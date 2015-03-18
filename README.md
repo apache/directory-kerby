@@ -13,12 +13,8 @@ Apache Kerby is a Java Kerberos binding. It provides a rich, intuitive and inter
 + Provides support for JAAS, GSSAPI and SASL frameworks that applications can leverage.
 + Minimal dependencies, the core part is ensured to depend only on JRE, for easy use and maintenance.
 
-### Update
-We’re collaborating with ApacheDS community and preparing this project to be ready for a sub project. Feedback is welcome.
-
 ### Status
-As follows, with the core and critical parts done, important features are still ongoing.
-The 0.1 version will be released early next year. We do not suggest production usage prior to the release.
+As follows, with the core and critical parts done, important features are still ongoing. We're expecting a major release this year.
 <pre>
 ASN-1 (done)
 Kerberos core and codec (done)
