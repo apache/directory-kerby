@@ -1,33 +1,21 @@
 Apache Kerby
 ============
 
-Apache Kerby is a Java Kerberos binding. It provides a rich, intuitive and interoperable implementation, library and various facilities that integrate Kerberos, PKI and token (OAuth) as desired in modern environments such as mobile, cloud and Hadoop. 
+Apache Kerby is a Java Kerberos binding. It provides a rich, intuitive and interoperable implementation, library, standalone KDC and various facilities that bases on Kerberos, and integrates PKI, OTP and token (OAuth2) as desired in modern environments such as cloud, Hadoop and mobile.
 
 ### The Initiatives/Goals 
-* Aims as a Java Kerberos binding, with rich and integrated facilities that integrate Kerberos, PKI and token (OAuth) for both client and server sides.
+* Aims as a Java Kerberos binding, with rich and integrated facilities that integrate Kerberos, PKI and token (OAuth2) for both client and server sides.
 + Provides client APIs at the Kerberos protocol level to interact with a KDC server through AS and TGS exchanges.
++ Provides a standalone KDC server that supports various identity back ends including memory based, Json file based, LDAP backed and even Zookeeper backed.
 + Provides an embedded KDC server that applications can easily integrate into products, unit tests or integration tests.
 + Supports FAST/Preauthentication framework to allow popular and useful authentication mechanisms.
 + Supports PKINIT mechanism to allow clients to request tickets using x509 certificate credentials.
 + Supports Token Preauth mechanism to allow clients to request tickets using JWT tokens.
++ Supports OTP mechanism to allow clients to request tickets using One Time Password.
 + Provides support for JAAS, GSSAPI and SASL frameworks that applications can leverage.
-+ Minimal dependencies, the core part is ensured to depend only on JRE, for easy use and maintenance.
++ Minimal dependencies, the core part is ensured to depend only on JRE and SLF4J, for easy use and maintenance.
 
-### Status
-As follows, with the core and critical parts done, important features are still ongoing. We're expecting a major release this year.
-<pre>
-ASN-1 (done)
-Kerberos core and codec (done)
-Kerberos Crypto (done)
-Embedded KDC (the core done)
-KrbClient (partial APIs done and available)
-Preauth/FAST framework (partially done)
-Token Preauth (ongoing)
-PKINIT (ongoing)
-Keytab util (credential cache and keytab support, done)
-</pre>
-
-### Desired KrbClient APIs (partially done)
+### KrbClient APIs (Working In Progress)
 * Initiate a KrbClient
 <pre>
 KrbClient krbClient = new KrbClient(kdcHost, kdcPort);
@@ -35,6 +23,10 @@ KrbClient krbClient = new KrbClient(kdcHost, kdcPort);
 * Request a TGT with user plain password credential
 <pre>
 krbClient.requestTgtTicket(principal, password);
+</pre>
+* Request a TGT with a keytab file
+<pre>
+krbClient.requestTgtTicket(principal, keytab);
 </pre>
 * Request a TGT with user x509 certificate credential
 <pre>
@@ -81,13 +73,12 @@ Independent of Kerberos code in JRE, but rely on JCE
 | camellia | The Camellia family: camellia256-cts-cmac and camellia128-cts-cmac |
 
 ### Dependency
-The core part is ensured to only depend on the JRE. Every external dependency is taken carefully and maintained separately.
+The core part is ensured to only depend on the JRE and SLF4J. Every external dependency is taken carefully and maintained separately.
 
 ##### Contrib Projects
 - kerby-asn1. A model driven ASN-1 encoding and decoding framework
 - kerby-event. A pure event driven application framework aiming to construct applications of asynchronous and concurrent handlers. It includes UDP and TCP transports based on pure Java NIO and concurrency pattern.
 - kerby-config. A unified configuration API that aims to support various configuration file formats, like XML, JNI, CSV and Java Properties file.
-- kerby-token. Implements a JWT token API for Kerberos that's defined in TokenPreauth drafts.
 
 ### License
 Apache License V2.0
