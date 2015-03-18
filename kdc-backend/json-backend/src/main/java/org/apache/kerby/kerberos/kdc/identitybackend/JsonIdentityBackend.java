@@ -19,15 +19,24 @@
  */
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.apache.kerby.config.Config;
+import org.apache.kerby.kerberos.kdc.identitybackend.tool.FileHelper;
+import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.EncryptionKeyAdapter;
+import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.KerberosTimeAdapter;
+import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.PrincipalNameAdapter;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
-import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
+import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
+import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * A Json file based backend implementation.
@@ -37,6 +46,13 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     public static final String JSON_IDENTITY_BACKEND_FILE = "backend.json.file";
     private Config config;
     private File jsonKdbFile;
+    private Gson gson;
+
+    /**
+     * Identities loaded from file
+     */
+    private Map<String, KrbIdentity> ids;
+    private long kdbFileTimeStamp;
 
     /**
      * Constructing an instance using specified config that contains anything
@@ -47,10 +63,18 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         this.config = config;
     }
 
+    @Override
+    public void initialize() {
+        super.initialize();
+        createGson();
+        load();
+        setCacheSize(0);
+    }
+
     /**
      * Load identities from file
      */
-    public void load() throws IOException {
+    public void load() {
         String jsonFile = config.getString(JSON_IDENTITY_BACKEND_FILE);
         if (jsonFile == null || jsonFile.isEmpty()) {
             throw new RuntimeException("No json kdb file is found");
@@ -58,46 +82,98 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
 
         jsonKdbFile = new File(jsonFile);
         if (! jsonKdbFile.exists()) {
-            throw new FileNotFoundException("File not found:" + jsonFile);
+            try {
+                jsonKdbFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        // TODO: load the kdb file.
-    }
-
-    private void checkAndLoad() {
-        // TODO: check kdb file timestamp to see if it's changed or not. If
-        // necessary load the kdb again.
+        checkAndLoad();
     }
 
     /**
-     * Persist the updated identities back
+     * check kdb file timestamp to see if it's changed or not. If
+     * necessary load the kdb again.
      */
-    public void save() {
-        // TODO: save into the kdb file
+    private void checkAndLoad() {
+        long nowTimeStamp = jsonKdbFile.lastModified();
+
+        if (kdbFileTimeStamp == 0 || nowTimeStamp != kdbFileTimeStamp) {
+            //load ids
+            String existsFileJson = FileHelper.getStringFromFile(jsonKdbFile);
+
+            ids = gson.fromJson(existsFileJson,
+                    new TypeToken<LinkedHashMap<String, KrbIdentity>>() {
+                    }.getType());
+        }
+
+        if (ids == null) {
+            ids = new LinkedHashMap<>();
+        }
     }
 
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
-        return null;
+        checkAndLoad();
+        return ids.get(principalName);
     }
 
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
-        return null;
+        checkAndLoad();
+        ids.put(identity.getPrincipalName(), identity);
+        idsToFile(ids);
+
+        return identity;
     }
 
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
-        return null;
+        checkAndLoad();
+        ids.put(identity.getPrincipalName(), identity);
+        idsToFile(ids);
+
+        return identity;
     }
 
     @Override
     protected void doDeleteIdentity(String principalName) {
-
+        checkAndLoad();
+        ids.remove(principalName);
+        idsToFile(ids);
     }
 
     @Override
     public List<String> getIdentities(int start, int limit) {
-        return null;
+        LinkedHashMap<String, KrbIdentity> linkedIds = (LinkedHashMap<String, KrbIdentity>) ids;
+        Iterator<Entry<String, KrbIdentity>> iterator = linkedIds.entrySet().iterator();
+
+        int index = 0;
+        for(; index < start; index++) {
+            iterator.next();
+        }
+
+        List<String> principals = new ArrayList<>();
+        for (; index < limit; index++) {
+            Entry<String, KrbIdentity> entry = iterator.next();
+            principals.add(entry.getKey());
+        }
+
+        return principals;
+    }
+
+    private void createGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(EncryptionKey.class, new EncryptionKeyAdapter());
+        gsonBuilder.registerTypeAdapter(PrincipalName.class, new PrincipalNameAdapter());
+        gsonBuilder.registerTypeAdapter(KerberosTime.class, new KerberosTimeAdapter());
+        gsonBuilder.enableComplexMapKeySerialization();
+        gson = gsonBuilder.create();
+    }
+
+    private void idsToFile(Map<String, KrbIdentity> ids) {
+        String newFileJson = gson.toJson(ids);
+        FileHelper.writeStringToFile(newFileJson, jsonKdbFile);
     }
 }

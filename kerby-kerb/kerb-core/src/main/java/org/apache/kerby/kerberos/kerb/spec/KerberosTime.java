@@ -118,11 +118,11 @@ public class KerberosTime extends Asn1GeneralizedTime {
         if (o == null || getClass() != o.getClass()) return false;
 
         KerberosTime time = (KerberosTime) o;
-        return this.getTime() == time.getTime();
+        return this.getValue().equals(time.getValue());
     }
 
     @Override
     public int hashCode() {
-        return 31 * (int) this.getTime();
+        return getValue().hashCode();
     }
 }

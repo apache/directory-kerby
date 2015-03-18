@@ -19,20 +19,56 @@
  */
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
+import org.apache.kerby.config.Conf;
+import org.apache.kerby.config.Config;
+import org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * Json backend test
  */
 public class JsonBackendTest extends BackendTest {
     private IdentityBackend backend;
+    private String jsonBackendFileString;
 
+    @Before
     public void setup() {
+        File testDir = new File(System.getProperty("test.dir", "target"));
+        jsonBackendFileString = new File(testDir, "json-identity-backend-file").getAbsolutePath();
 
+        Config backendConfig = new Conf();
+        backendConfig.setString(JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE, jsonBackendFileString);
+
+        backend = new JsonIdentityBackend(backendConfig);
+        backend.initialize();
     }
 
     @Test
     public void testGet() {
         super.testGet(backend);
     }
+
+    @Test
+    public void testStore() {
+        super.testStore(backend);
+    }
+
+    @Test
+    public void testUpdate() {
+        super.testUpdate(backend);
+    }
+
+    @Test
+    public void testDelete() {
+        super.testDelete(backend);
+    }
+
+    @Test
+    public void testGetIdentities() {
+        super.testGetIdentities(backend);
+    }
+
 }

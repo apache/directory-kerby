@@ -30,6 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * A common backend test utility
  */
@@ -39,29 +41,69 @@ public abstract class BackendTest {
 
     static final EncryptionType[] encTypes = new EncryptionType[]{
             EncryptionType.AES128_CTS,
-            EncryptionType.AES256_CTS,
-            EncryptionType.ARCFOUR_HMAC,
-            EncryptionType.CAMELLIA128_CTS,
-            EncryptionType.CAMELLIA256_CTS_CMAC
+            EncryptionType.DES3_CBC_SHA1_KD
     };
 
     protected void testGet(IdentityBackend backend) {
+        KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
+        backend.addIdentity(kid);
 
+        assertThat(backend.getIdentity(TEST_PRINCIPAL)).isNotNull();
+
+        //tearDown
+        backend.deleteIdentity(TEST_PRINCIPAL);
     }
 
     protected void testStore(IdentityBackend backend) {
         KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
         KrbIdentity kid2 = backend.getIdentity(TEST_PRINCIPAL);
-        // kid == kid2
+
+        assertThat(kid).isEqualTo(kid2);
+
+        //tearDown
+        backend.deleteIdentity(TEST_PRINCIPAL);
     }
 
     protected void testUpdate(IdentityBackend backend) {
+        KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
+        backend.addIdentity(kid);
 
+        kid.setDisabled(true);
+        backend.updateIdentity(kid);
+
+        assertThat(backend.getIdentity(TEST_PRINCIPAL)).isEqualTo(kid);
+
+        //tearDown
+        backend.deleteIdentity(TEST_PRINCIPAL);
     }
 
     protected void testDelete(IdentityBackend backend) {
+        KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
+        backend.addIdentity(kid);
+        assertThat(backend.getIdentity(TEST_PRINCIPAL)).isNotNull();
 
+        backend.deleteIdentity(TEST_PRINCIPAL);
+        assertThat(backend.getIdentity(TEST_PRINCIPAL)).isNull();
+    }
+
+    protected void testGetIdentities(IdentityBackend backend) {
+        KrbIdentity[] identities = createManyIdentities();
+
+        for (KrbIdentity identity : identities) {
+            backend.addIdentity(identity);
+        }
+
+        List<String> principals = backend.getIdentities(2, 5);
+        assertThat(principals).hasSize(3)
+                .contains(identities[2].getPrincipalName())
+                .contains(identities[3].getPrincipalName())
+                .contains(identities[4].getPrincipalName());
+
+        //tearDown
+        for (KrbIdentity identity : identities) {
+            backend.deleteIdentity(identity.getPrincipalName());
+        }
     }
 
     protected KrbIdentity[] createManyIdentities() {
