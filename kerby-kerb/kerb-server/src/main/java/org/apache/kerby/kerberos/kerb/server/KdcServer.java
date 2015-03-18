@@ -308,4 +308,8 @@ public class KdcServer {
         }
         return kdcConfig.getKdcServiceName();
     }
+
+    protected void setBackend(IdentityBackend backend) {
+        this.backend = backend;
+    }
 }

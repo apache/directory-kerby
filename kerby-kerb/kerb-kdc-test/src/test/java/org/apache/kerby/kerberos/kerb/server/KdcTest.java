@@ -22,7 +22,6 @@ package org.apache.kerby.kerberos.kerb.server;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
-import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,8 +30,8 @@ public abstract class KdcTest extends KdcTestBase {
     private String password = "123456";
 
     @Override
-    protected void setUpKdcServer() throws Exception {
-        super.setUpKdcServer();
+    protected void createPrincipals() {
+        super.createPrincipals();
         kdcServer.createPrincipal(clientPrincipal, password);
     }
 

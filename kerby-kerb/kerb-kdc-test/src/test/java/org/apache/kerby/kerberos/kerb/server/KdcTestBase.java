@@ -19,12 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.junit.After;
 import org.junit.Before;
+
+import java.io.IOException;
+import java.net.ServerSocket;
 
 public abstract class KdcTestBase {
 
@@ -53,6 +53,7 @@ public abstract class KdcTestBase {
 
         setUpKdcServer();
         setUpClient();
+        createPrincipals();
     }
 
     protected void setUpKdcServer() throws Exception {
@@ -72,7 +73,6 @@ public abstract class KdcTestBase {
         clientPrincipal = "drankye@" + kdcRealm;
 
         serverPrincipal = "test-service/localhost@" + kdcRealm;
-        kdcServer.createPrincipals(serverPrincipal);
     }
 
     protected void setUpClient() throws Exception {
@@ -89,6 +89,11 @@ public abstract class KdcTestBase {
 
         krbClnt.setTimeout(5);
         krbClnt.setKdcRealm(kdcServer.getKdcRealm());
+    }
+
+    protected void createPrincipals() {
+        kdcServer.createKrbtgtPrincipal();
+        kdcServer.createPrincipals(serverPrincipal);
     }
 
     /**

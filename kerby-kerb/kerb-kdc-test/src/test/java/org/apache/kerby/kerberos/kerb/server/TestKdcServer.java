@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.server;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
@@ -32,7 +33,6 @@ import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 
 public class TestKdcServer extends SimpleKdcServer {
@@ -54,7 +54,9 @@ public class TestKdcServer extends SimpleKdcServer {
         super.init();
 
         prepareKdcConfig();
+    }
 
+    public void createKrbtgtPrincipal() {
         createPrincipals("krbtgt");
     }
 
@@ -74,6 +76,11 @@ public class TestKdcServer extends SimpleKdcServer {
         identity.addKeys(encKeys);
         getIdentityService().addIdentity(identity);
     }
+
+    public void setBackend(IdentityBackend backend) {
+        super.setBackend(backend);
+    }
+
 
     public void createPrincipals(String ... principals) {
         String passwd;
