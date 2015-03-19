@@ -44,7 +44,6 @@ import java.util.Map.Entry;
  */
 public class JsonIdentityBackend extends AbstractIdentityBackend {
     public static final String JSON_IDENTITY_BACKEND_FILE = "backend.json.file";
-    private Config config;
     private File jsonKdbFile;
     private Gson gson;
 
@@ -54,13 +53,16 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     private Map<String, KrbIdentity> ids;
     private long kdbFileTimeStamp;
 
+    public JsonIdentityBackend() {
+    }
+
     /**
      * Constructing an instance using specified config that contains anything
      * to be used to initialize the json format database.
      * @param config
      */
     public JsonIdentityBackend(Config config) {
-        this.config = config;
+        setConfig(config);
     }
 
     @Override
@@ -74,7 +76,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * Load identities from file
      */
     public void load() {
-        String jsonFile = config.getString(JSON_IDENTITY_BACKEND_FILE);
+        String jsonFile = getConfig().getString(JSON_IDENTITY_BACKEND_FILE);
         if (jsonFile == null || jsonFile.isEmpty()) {
             throw new RuntimeException("No json kdb file is found");
         }
@@ -175,4 +177,6 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         String newFileJson = gson.toJson(ids);
         FileHelper.writeToFile(newFileJson, jsonKdbFile);
     }
+
+
 }

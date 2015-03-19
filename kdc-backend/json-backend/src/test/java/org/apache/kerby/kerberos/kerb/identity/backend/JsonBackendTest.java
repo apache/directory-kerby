@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.kerb.identity.backend;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -31,10 +31,10 @@ import java.io.File;
  * Json backend test
  */
 public class JsonBackendTest extends BackendTest {
-    private IdentityBackend backend;
+    private static IdentityBackend backend;
 
-    @Before
-    public void setup() {
+    @BeforeClass
+    public static void setup() {
         File testDir = new File(System.getProperty("test.dir", "target"));
         String jsonBackendFileString = new File(testDir, "json-identity-backend-file").getAbsolutePath();
 

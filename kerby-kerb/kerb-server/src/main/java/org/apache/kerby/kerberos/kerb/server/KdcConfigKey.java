@@ -20,7 +20,6 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.common.SectionConfigKey;
-import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
 
 public enum KdcConfigKey implements SectionConfigKey {
     KRB_DEBUG(true),

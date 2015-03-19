@@ -20,7 +20,9 @@
 package org.apache.kerby.kerberos.tool.kinit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.client.*;
+import org.apache.kerby.kerberos.kerb.client.KOptionType;
+import org.apache.kerby.kerberos.kerb.client.KOptions;
+import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.tool.ToolUtil;
 

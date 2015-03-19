@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
-import org.junit.Test;
+import org.junit.Before;
 
 /**
  * Ldap backend test
@@ -29,12 +29,14 @@ import org.junit.Test;
 public class LdapBackendTest extends BackendTest {
     private IdentityBackend backend;
 
+    @Before
     public void setup() {
         Conf config = new Conf();
         backend = new LdapIdentityBackend(config);
+        backend.initialize();
     }
 
-    @Test
+    //@Test
     public void testGet() {
         super.testGet(backend);
     }
