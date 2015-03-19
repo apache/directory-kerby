@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client.preauth;
 
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOptions;
+import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.preauth.builtin.EncTsPreauth;
 import org.apache.kerby.kerberos.kerb.client.preauth.builtin.TgtPreauth;
 import org.apache.kerby.kerberos.kerb.client.preauth.pkinit.PkinitPreauth;
@@ -129,7 +129,7 @@ public class PreauthHandler {
     }
 
     public void setPreauthOptions(KdcRequest kdcRequest,
-                                  KrbOptions preauthOptions) throws KrbException {
+                                  KOptions preauthOptions) throws KrbException {
         PreauthContext preauthContext = kdcRequest.getPreauthContext();
 
         for (PreauthHandle handle : preauthContext.getHandles()) {

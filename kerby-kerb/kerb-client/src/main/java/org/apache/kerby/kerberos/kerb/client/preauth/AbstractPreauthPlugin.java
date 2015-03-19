@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client.preauth;
 
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOptions;
+import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlag;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlags;
@@ -81,7 +81,7 @@ public class AbstractPreauthPlugin implements KrbPreauth {
 
     @Override
     public void setPreauthOptions(KdcRequest kdcRequest,
-                                  PluginRequestContext requestContext, KrbOptions options) {
+                                  PluginRequestContext requestContext, KOptions options) {
 
     }
 

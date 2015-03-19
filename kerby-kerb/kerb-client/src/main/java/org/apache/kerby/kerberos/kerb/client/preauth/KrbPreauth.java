@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client.preauth;
 
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOptions;
+import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlags;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
@@ -65,7 +65,7 @@ public interface KrbPreauth extends PreauthPluginMeta {
      */
     public void setPreauthOptions(KdcRequest kdcRequest,
                                   PluginRequestContext requestContext,
-                                  KrbOptions preauthOptions);
+                                  KOptions preauthOptions);
 
     /**
      * Attempt to try any initial padata derived from user options

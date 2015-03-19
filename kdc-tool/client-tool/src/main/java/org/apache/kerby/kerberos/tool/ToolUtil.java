@@ -22,8 +22,7 @@ package org.apache.kerby.kerberos.tool;
 import org.apache.kerby.kerberos.kerb.client.KOption;
 import org.apache.kerby.kerberos.kerb.client.KOptionType;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.kerberos.kerb.client.KrbOptions;
-import org.apache.kerby.kerberos.tool.kinit.KinitOption;
+import org.apache.kerby.kerberos.kerb.client.KOptions;
 
 import java.io.File;
 
@@ -77,8 +76,8 @@ public class ToolUtil {
      * @param krbOptions
      * @return krb options
      */
-    public static KrbOptions convertOptions(KrbOptions krbOptions) {
-        KrbOptions results = new KrbOptions();
+    public static KOptions convertOptions(KOptions krbOptions) {
+        KOptions results = new KOptions();
 
         for (KOption toolOpt : krbOptions.getOptions()) {
             KrbOption krbOpt = KrbOption.fromOptionName(toolOpt.getOptionName());

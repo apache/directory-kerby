@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
-import org.apache.kerby.config.Conf;
 import org.apache.kerby.event.Event;
 import org.apache.kerby.event.EventHub;
 import org.apache.kerby.event.EventWaiter;
@@ -232,9 +231,9 @@ public class KrbClient {
      * @throws KrbException
      */
     public TgtTicket requestTgtTicket(String principal,
-                                      KrbOptions options) throws KrbException {
+                                      KOptions options) throws KrbException {
         if (options == null) {
-            options = new KrbOptions();
+            options = new KOptions();
         }
 
         AsRequest asRequest = new AsRequest(context);
@@ -251,9 +250,9 @@ public class KrbClient {
      * @throws KrbException
      */
     public TgtTicket requestTgtTicket(String principal, String password,
-                                      KrbOptions options) throws KrbException {
+                                      KOptions options) throws KrbException {
         if (options == null) {
-            options = new KrbOptions();
+            options = new KOptions();
         }
 
         AsRequest asRequest = new AsRequestWithPasswd(context);
@@ -273,9 +272,9 @@ public class KrbClient {
      */
     public TgtTicket requestTgtTicket(
             String principal, Certificate certificate, PrivateKey privateKey,
-            KrbOptions options) throws KrbException {
+            KOptions options) throws KrbException {
         if (options == null) {
-            options = new KrbOptions();
+            options = new KOptions();
         }
 
         AsRequestWithCert asRequest = new AsRequestWithCert(context);
@@ -291,9 +290,9 @@ public class KrbClient {
      * @return
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(KrbOptions options) throws KrbException {
+    public TgtTicket requestTgtTicket(KOptions options) throws KrbException {
         if (options == null) {
-            options = new KrbOptions();
+            options = new KOptions();
         }
 
         AsRequestWithCert asRequest = new AsRequestWithCert(context);
@@ -313,9 +312,9 @@ public class KrbClient {
      * @throws KrbException
      */
     public TgtTicket requestTgtTicket(String principal, KerbToken token,
-                                      KrbOptions options) throws KrbException {
+                                      KOptions options) throws KrbException {
         if (options == null) {
-            options = new KrbOptions();
+            options = new KOptions();
         }
 
         AsRequestWithToken asRequest = new AsRequestWithToken(context);
@@ -335,9 +334,9 @@ public class KrbClient {
      */
     public ServiceTicket requestServiceTicket(
             String clientPrincipal, String password, String serverPrincipal,
-            KrbOptions options) throws KrbException {
+            KOptions options) throws KrbException {
         if (options == null) {
-            options = new KrbOptions();
+            options = new KOptions();
         }
 
         TgtTicket tgt = requestTgtTicket(clientPrincipal, password, options);
@@ -355,9 +354,9 @@ public class KrbClient {
      */
     public ServiceTicket requestServiceTicket(
             String clientPrincipal, KerbToken token, String serverPrincipal,
-            KrbOptions options) throws KrbException {
+            KOptions options) throws KrbException {
         if (options == null) {
-            options = new KrbOptions();
+            options = new KOptions();
         }
 
         TgtTicket tgt = requestTgtTicket(clientPrincipal, token, options);
@@ -408,9 +407,9 @@ public class KrbClient {
      * @throws KrbException
      */
     public ServiceTicket requestServiceTicket(TgtTicket tgt, String serverPrincipal,
-                                              KrbOptions options) throws KrbException {
+                                              KOptions options) throws KrbException {
         if (options == null) {
-            options = new KrbOptions();
+            options = new KOptions();
         }
 
         TgsRequest ticketReq = new TgsRequest(context, tgt);

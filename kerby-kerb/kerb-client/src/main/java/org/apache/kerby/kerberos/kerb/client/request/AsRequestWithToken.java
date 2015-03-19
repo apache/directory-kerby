@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.kerberos.kerb.client.KrbOptions;
+import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 
@@ -39,10 +39,10 @@ public class AsRequestWithToken extends AsRequest {
     }
 
     @Override
-    public KrbOptions getPreauthOptions() {
-        KrbOptions results = new KrbOptions();
+    public KOptions getPreauthOptions() {
+        KOptions results = new KOptions();
 
-        KrbOptions krbOptions = getKrbOptions();
+        KOptions krbOptions = getKrbOptions();
         results.add(krbOptions.getOption(KrbOption.TOKEN_USING_IDTOKEN));
         results.add(krbOptions.getOption(KrbOption.TOKEN_USER_ID_TOKEN));
         results.add(krbOptions.getOption(KrbOption.TOKEN_USER_AC_TOKEN));

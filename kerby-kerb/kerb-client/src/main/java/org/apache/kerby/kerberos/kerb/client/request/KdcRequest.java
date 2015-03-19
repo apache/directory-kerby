@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOptions;
+import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.preauth.FastContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
@@ -49,7 +49,7 @@ public abstract class KdcRequest {
     private KrbContext context;
     private Transport transport;
 
-    private KrbOptions krbOptions;
+    private KOptions krbOptions;
     private PrincipalName serverPrincipal;
     private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
     private KdcOptions kdcOptions = new KdcOptions();
@@ -83,11 +83,11 @@ public abstract class KdcRequest {
         return this.transport;
     }
 
-    public void setKrbOptions(KrbOptions options) {
+    public void setKrbOptions(KOptions options) {
         this.krbOptions = options;
     }
 
-    public KrbOptions getKrbOptions() {
+    public KOptions getKrbOptions() {
         return krbOptions;
     }
 
@@ -270,8 +270,8 @@ public abstract class KdcRequest {
 
     public abstract void processResponse(KdcRep kdcRep) throws KrbException;
 
-    public KrbOptions getPreauthOptions() {
-        return new KrbOptions();
+    public KOptions getPreauthOptions() {
+        return new KOptions();
     }
 
     protected void preauth() throws KrbException {

@@ -94,7 +94,7 @@ public class Kinit {
         return password;
     }
 
-    private static int requestTicket(String principal, KrbOptions kinitOptions) {
+    private static int requestTicket(String principal, KOptions kinitOptions) {
         KrbClient krbClient = new KrbClient();
         krbClient.init();
 
@@ -112,7 +112,7 @@ public class Kinit {
     }
 
     public static void main(String[] args) throws Exception {
-        KrbOptions ktOptions = new KrbOptions();
+        KOptions ktOptions = new KOptions();
         KinitOption kto;
         String principal = null;
 

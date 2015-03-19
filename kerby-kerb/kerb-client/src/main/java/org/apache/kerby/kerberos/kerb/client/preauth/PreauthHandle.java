@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth;
 
-import org.apache.kerby.kerberos.kerb.client.KrbOptions;
+import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlags;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
@@ -46,7 +46,7 @@ public class PreauthHandle {
     }
 
     public void setPreauthOptions(KdcRequest kdcRequest,
-                                  KrbOptions preauthOptions) throws KrbException {
+                                  KOptions preauthOptions) throws KrbException {
         preauth.setPreauthOptions(kdcRequest, requestContext, preauthOptions);
     }
 

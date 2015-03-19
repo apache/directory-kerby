@@ -24,7 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class KrbOptions {
+/**
+ * A KOption container.
+ */
+public class KOptions {
 
     private final Map<KOption, KOption> options =
             new HashMap<KOption, KOption>();
