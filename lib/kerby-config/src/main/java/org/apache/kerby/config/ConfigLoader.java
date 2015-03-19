@@ -40,7 +40,7 @@ public abstract class ConfigLoader {
         try {
             loadConfig(config, resource);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to load org.haox.config", e);
+            throw new RuntimeException("Failed to load " + ConfigLoader.class.getPackage().getName(), e);
         }
 
         return this.config;
