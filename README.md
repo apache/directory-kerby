@@ -3,6 +3,8 @@ Apache Kerby
 
 Apache Kerby is a Java Kerberos binding. It provides a rich, intuitive and interoperable implementation, library, KDC and various facilities that integrates PKI, OTP and token (OAuth2) as desired in modern environments such as cloud, Hadoop and mobile.
 
+![](https://github.com/apache/directory-kerby/blob/master/doc/logo/logo.png)
+
 ### The Initiatives/Goals 
 * Aims as a Java Kerberos binding, with rich and integrated facilities that integrate Kerberos, PKI and token (OAuth2) for both client and server sides.
 + Provides client APIs at the Kerberos protocol level to interact with a KDC server through AS and TGS exchanges.
