@@ -1,7 +1,7 @@
 Apache Kerby
 ============
 
-Apache Kerby is a Java Kerberos binding. It provides a rich, intuitive and interoperable implementation, library, standalone KDC and various facilities that bases on Kerberos, and integrates PKI, OTP and token (OAuth2) as desired in modern environments such as cloud, Hadoop and mobile.
+Apache Kerby is a Java Kerberos binding. It provides a rich, intuitive and interoperable implementation, library, KDC and various facilities that integrates PKI, OTP and token (OAuth2) as desired in modern environments such as cloud, Hadoop and mobile.
 
 ### The Initiatives/Goals 
 * Aims as a Java Kerberos binding, with rich and integrated facilities that integrate Kerberos, PKI and token (OAuth2) for both client and server sides.
@@ -78,7 +78,7 @@ The core part is ensured to only depend on the JRE and SLF4J. Every external dep
 ##### Contrib Projects
 - kerby-asn1. A model driven ASN-1 encoding and decoding framework
 - kerby-event. A pure event driven application framework aiming to construct applications of asynchronous and concurrent handlers. It includes UDP and TCP transports based on pure Java NIO and concurrency pattern.
-- kerby-config. A unified configuration API that aims to support various configuration file formats, like XML, JNI, CSV and Java Properties file.
+- kerby-config. A unified configuration API that aims to support various configuration file formats, like XML, INI, even Java Map and Properties.
 
 ### License
 Apache License V2.0
