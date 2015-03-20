@@ -31,4 +31,12 @@
     <module>json-backend</module>
     <module>zookeeper-backend</module>
   </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerby-util</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 </project>

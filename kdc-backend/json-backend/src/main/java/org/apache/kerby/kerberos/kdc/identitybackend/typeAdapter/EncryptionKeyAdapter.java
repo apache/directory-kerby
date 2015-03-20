@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter;
 import com.google.gson.*;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
+import org.apache.kerby.util.HexUtil;
 
 import java.lang.reflect.Type;
 
@@ -38,14 +39,7 @@ public class EncryptionKeyAdapter implements JsonSerializer<EncryptionKey>,
         String encryptionTypeString = jsonObject.get("keyType").getAsString();
         EncryptionType encryptionType = EncryptionType.fromName(encryptionTypeString);
         encryptionKey.setKeyType(encryptionType);
-
-        JsonArray jsonArray = jsonObject.get("keyData").getAsJsonArray();
-        byte[] keyData = new byte[jsonArray.size()];
-        for (int i = 0; i < jsonArray.size(); i++) {
-            JsonElement element = jsonArray.get(i);
-            keyData[i] = element.getAsByte();
-        }
-        encryptionKey.setKeyData(keyData);
+        encryptionKey.setKeyData(HexUtil.hex2bytes(jsonObject.get("keyData").getAsString()));
         return encryptionKey;
     }
 
@@ -55,13 +49,7 @@ public class EncryptionKeyAdapter implements JsonSerializer<EncryptionKey>,
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("kvno", encryptionKey.getKvno());
         jsonObject.addProperty("keyType", encryptionKey.getKeyType().getName());
-
-        JsonArray jsonArray = new JsonArray();
-        byte[] keyData = encryptionKey.getKeyData();
-        for (byte aData : keyData) {
-            jsonArray.add(new JsonPrimitive(aData));
-        }
-        jsonObject.add("keyData", jsonArray);
+        jsonObject.addProperty("keyData", HexUtil.bytesToHex(encryptionKey.getKeyData()));
         return jsonObject;
     }
 }
