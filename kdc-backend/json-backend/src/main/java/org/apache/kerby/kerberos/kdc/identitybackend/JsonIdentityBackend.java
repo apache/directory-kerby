@@ -170,6 +170,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         gsonBuilder.registerTypeAdapter(PrincipalName.class, new PrincipalNameAdapter());
         gsonBuilder.registerTypeAdapter(KerberosTime.class, new KerberosTimeAdapter());
         gsonBuilder.enableComplexMapKeySerialization();
+        gsonBuilder.setPrettyPrinting();
         gson = gsonBuilder.create();
     }
 
