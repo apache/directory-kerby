@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.spec.kdc;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.spec.common.KrbMessage;
-import org.apache.kerby.kerberos.kerb.spec.common.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 

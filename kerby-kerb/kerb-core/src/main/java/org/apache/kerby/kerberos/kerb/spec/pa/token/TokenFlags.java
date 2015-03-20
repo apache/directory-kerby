@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.pa.token;
 
-import org.apache.kerby.kerberos.kerb.spec.common.KrbFlags;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbFlags;
 
 import static org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlag.INVALID;
 

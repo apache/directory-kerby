@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.server.request;
 
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
-import org.apache.kerby.kerberos.kerb.codec.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
@@ -33,7 +33,7 @@ import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbErrorException;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.common.*;
+import org.apache.kerby.kerberos.kerb.spec.base.*;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;

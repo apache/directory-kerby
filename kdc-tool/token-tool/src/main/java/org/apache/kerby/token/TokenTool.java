@@ -23,7 +23,7 @@ import com.nimbusds.jose.PlainHeader;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
-import org.apache.kerby.kerberos.kerb.spec.common.AuthToken;
+import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
 import java.text.ParseException;
 import java.util.*;

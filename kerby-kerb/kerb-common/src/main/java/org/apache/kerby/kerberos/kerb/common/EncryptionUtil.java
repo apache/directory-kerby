@@ -21,14 +21,14 @@ package org.apache.kerby.kerberos.kerb.common;
 
 import org.apache.kerby.asn1.type.AbstractAsn1Type;
 import org.apache.kerby.asn1.type.Asn1Type;
-import org.apache.kerby.kerberos.kerb.codec.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptedData;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.common.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 
 import java.util.ArrayList;
 import java.util.List;

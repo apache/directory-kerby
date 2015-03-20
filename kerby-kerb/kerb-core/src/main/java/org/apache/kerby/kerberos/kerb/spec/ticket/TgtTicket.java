@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.ticket;
 
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.EncAsRepPart;
 
 public class TgtTicket extends AbstractServiceTicket {

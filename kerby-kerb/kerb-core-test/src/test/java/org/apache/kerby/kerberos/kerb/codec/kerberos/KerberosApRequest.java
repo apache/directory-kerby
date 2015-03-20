@@ -21,10 +21,10 @@ package org.apache.kerby.kerberos.kerb.codec.kerberos;
 
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.codec.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApOptions;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 
 import java.io.IOException;
 

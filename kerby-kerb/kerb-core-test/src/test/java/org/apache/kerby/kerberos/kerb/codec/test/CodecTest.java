@@ -20,9 +20,9 @@
 package org.apache.kerby.kerberos.kerb.codec.test;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.codec.KrbCodec;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -20,10 +20,10 @@
 package org.apache.kerby.kerberos.kerb.ccache;
 
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.common.AuthorizationData;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.common.HostAddresses;
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.AbstractServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;

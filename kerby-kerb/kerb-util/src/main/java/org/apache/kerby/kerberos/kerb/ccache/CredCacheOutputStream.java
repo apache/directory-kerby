@@ -21,7 +21,9 @@ package org.apache.kerby.kerberos.kerb.ccache;
 
 import org.apache.kerby.kerberos.kerb.KrbOutputStream;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.common.*;
+import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationData;
+import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationDataEntry;
+import org.apache.kerby.kerberos.kerb.spec.base.*;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
 

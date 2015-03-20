@@ -21,9 +21,9 @@ package org.apache.kerby.kerberos.kerb.codec.kerberos;
 
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
 import java.io.IOException;
 import java.io.InputStream;

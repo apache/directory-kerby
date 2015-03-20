@@ -23,8 +23,8 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 import java.io.File;
 import java.util.List;

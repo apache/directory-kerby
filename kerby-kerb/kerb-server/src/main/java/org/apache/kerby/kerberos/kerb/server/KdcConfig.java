@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.common.KrbConfHelper;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 import java.util.List;
 

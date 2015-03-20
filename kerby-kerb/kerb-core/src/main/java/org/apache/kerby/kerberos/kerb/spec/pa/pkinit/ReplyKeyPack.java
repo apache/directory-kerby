@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 
 /**
  ReplyKeyPack ::= SEQUENCE {

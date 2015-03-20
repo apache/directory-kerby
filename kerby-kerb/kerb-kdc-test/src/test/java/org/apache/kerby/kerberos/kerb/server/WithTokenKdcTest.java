@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.kerb.server;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.common.AuthToken;
+import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

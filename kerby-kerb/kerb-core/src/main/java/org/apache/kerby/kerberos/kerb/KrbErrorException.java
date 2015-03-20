@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb;
 
-import org.apache.kerby.kerberos.kerb.spec.common.KrbError;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
 
 public class KrbErrorException extends KrbException {
     /**

@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.crypto.enc.*;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.util.Random;
-import org.apache.kerby.kerberos.kerb.spec.common.*;
+import org.apache.kerby.kerberos.kerb.spec.base.*;
 
 /**
  * Encryption handler as the highest level API for encryption stuffs defined in

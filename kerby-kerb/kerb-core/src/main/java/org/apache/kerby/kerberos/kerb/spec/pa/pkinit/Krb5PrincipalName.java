@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.common.Realm;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.Realm;
 
 /**
  KRB5PrincipalName ::= SEQUENCE {

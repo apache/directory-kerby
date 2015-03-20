@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.ticket;
 
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
 
 public class AbstractServiceTicket {

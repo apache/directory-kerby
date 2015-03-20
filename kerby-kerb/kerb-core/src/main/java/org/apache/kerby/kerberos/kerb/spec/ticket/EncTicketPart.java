@@ -23,7 +23,8 @@ import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbAppSequenceType;
-import org.apache.kerby.kerberos.kerb.spec.common.*;
+import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationData;
+import org.apache.kerby.kerberos.kerb.spec.base.*;
 
 /**
  -- Encrypted part of ticket

@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter;
 
 import com.google.gson.*;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.apache.kerby.util.HexUtil;
 
 import java.lang.reflect.Type;

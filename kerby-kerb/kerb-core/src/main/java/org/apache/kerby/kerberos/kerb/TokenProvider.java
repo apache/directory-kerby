@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb;
 
-import org.apache.kerby.kerberos.kerb.spec.common.TokenEncoder;
+import org.apache.kerby.kerberos.kerb.spec.base.TokenEncoder;
 
 /**
  * Token provider for TokenPreauth mechanism. This is needed because JWT token

@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.ccache;
 
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 
 import java.io.*;

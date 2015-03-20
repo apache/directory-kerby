@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
 import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Md5Provider;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 public class DesCbcMd5Enc extends DesCbcEnc {
 

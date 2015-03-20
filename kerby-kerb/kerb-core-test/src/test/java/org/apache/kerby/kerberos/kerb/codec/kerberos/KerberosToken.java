@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.codec.kerberos;
 
 import org.apache.kerby.asn1.Asn1InputBuffer;
 import org.apache.kerby.asn1.type.Asn1Item;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 
 import java.io.IOException;
 

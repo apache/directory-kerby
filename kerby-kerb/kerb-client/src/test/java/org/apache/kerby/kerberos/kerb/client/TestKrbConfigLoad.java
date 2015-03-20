@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.junit.Test;
 
 import java.io.File;

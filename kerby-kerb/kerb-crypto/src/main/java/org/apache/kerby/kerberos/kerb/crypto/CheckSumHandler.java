@@ -22,9 +22,9 @@ package org.apache.kerby.kerberos.kerb.crypto;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.*;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.common.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 
 /**
  * Checksum handler as the highest level API for checksum stuffs defined in

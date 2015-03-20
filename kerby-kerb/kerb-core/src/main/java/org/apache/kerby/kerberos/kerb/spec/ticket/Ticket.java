@@ -24,8 +24,8 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KrbAppSequenceType;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptedData;
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
 /**
  Ticket          ::= [APPLICATION 1] SEQUENCE {

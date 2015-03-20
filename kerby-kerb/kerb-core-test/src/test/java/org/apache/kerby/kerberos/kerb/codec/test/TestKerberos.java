@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.kerb.codec.test;
 import org.apache.kerby.kerberos.kerb.codec.kerberos.KerberosTicket;
 import org.apache.kerby.kerberos.kerb.codec.kerberos.KerberosToken;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.junit.Before;
 import org.junit.Test;
 

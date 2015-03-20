@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.kdc;
 
-import org.apache.kerby.kerberos.kerb.spec.common.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 
 /**
  AS-REQ          ::= [APPLICATION 10] KDC-REQ

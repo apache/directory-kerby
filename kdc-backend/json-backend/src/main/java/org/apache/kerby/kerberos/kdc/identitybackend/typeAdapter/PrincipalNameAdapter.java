@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter;
 
 import com.google.gson.*;
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
 import java.lang.reflect.Type;
 

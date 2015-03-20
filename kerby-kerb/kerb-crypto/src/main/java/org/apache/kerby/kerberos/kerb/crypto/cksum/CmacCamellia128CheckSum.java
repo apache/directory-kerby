@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.crypto.cksum;
 
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia128Provider;
 import org.apache.kerby.kerberos.kerb.crypto.key.CamelliaKeyMaker;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 
 public class CmacCamellia128CheckSum extends CmacKcCheckSum {
 

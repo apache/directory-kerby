@@ -24,7 +24,7 @@ import org.apache.kerby.kerberos.kerb.crypto.util.Rc4;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Md5Provider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Rc4Provider;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 
 public class Md5HmacRc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
 

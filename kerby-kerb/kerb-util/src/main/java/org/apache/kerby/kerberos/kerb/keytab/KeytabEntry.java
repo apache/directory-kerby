@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.keytab;
 
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

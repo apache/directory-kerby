@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.codec.test;
 
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.common.KrbMessageType;
-import org.apache.kerby.kerberos.kerb.spec.common.NameType;
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.spec.base.NameType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;

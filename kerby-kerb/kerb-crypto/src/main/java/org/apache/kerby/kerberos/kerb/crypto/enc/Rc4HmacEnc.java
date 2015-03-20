@@ -28,8 +28,8 @@ import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Md5Provider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Rc4Provider;
 import org.apache.kerby.kerberos.kerb.crypto.key.Rc4KeyMaker;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 public class Rc4HmacEnc extends AbstractEncTypeHandler {
     private boolean exportable;

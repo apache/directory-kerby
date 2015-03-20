@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 public class Rc4HmacExpEnc extends Rc4HmacEnc {
 

@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.fast;
 
-import org.apache.kerby.kerberos.kerb.spec.common.KrbFlags;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbFlags;
 
 public class FastOptions extends KrbFlags {
 

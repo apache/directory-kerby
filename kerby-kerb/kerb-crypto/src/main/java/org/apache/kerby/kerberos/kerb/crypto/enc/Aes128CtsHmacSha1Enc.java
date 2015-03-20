@@ -23,8 +23,8 @@ import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Sha1Provider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Aes128Provider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.AesProvider;
 import org.apache.kerby.kerberos.kerb.crypto.key.AesKeyMaker;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 public class Aes128CtsHmacSha1Enc extends KeKiHmacSha1Enc {
 

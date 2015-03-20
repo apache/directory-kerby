@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.ap;
 
-import org.apache.kerby.kerberos.kerb.spec.common.KrbFlags;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbFlags;
 
 public class ApOptions extends KrbFlags {
 

@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.crypto.cksum;
 
 import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.AbstractUnkeyedCheckSumTypeHandler;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Crc32Provider;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 
 public class Crc32CheckSum extends AbstractUnkeyedCheckSumTypeHandler {
 

@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.crypto.cksum;
 
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Des3Provider;
 import org.apache.kerby.kerberos.kerb.crypto.key.Des3KeyMaker;
-import org.apache.kerby.kerberos.kerb.spec.common.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 
 public class HmacSha1Des3CheckSum extends HmacKcCheckSum {
 

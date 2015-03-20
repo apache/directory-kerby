@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.fast;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
-import org.apache.kerby.kerberos.kerb.spec.common.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
 
 /**
  KrbFastArmoredRep ::= SEQUENCE {

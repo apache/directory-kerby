@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.util;
 
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
-import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.junit.Before;
 import org.junit.Test;
 
