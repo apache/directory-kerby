@@ -109,9 +109,17 @@ public class KrbClient {
         if (confDir != null && confDir.exists()) {
             File kdcConfFile = new File(confDir, "krb5.conf");
             if (kdcConfFile.exists()) {
-                //krbConfig.addIniConfig(kdcConfFile);
+                krbConfig.addIniConfig(kdcConfFile);
             }
         }
+    }
+
+    /**
+     * Set the conf dir
+     * @param file
+     */
+    public void setConfDir(File file) throws IOException {
+        confDir = file;
     }
 
     /**
