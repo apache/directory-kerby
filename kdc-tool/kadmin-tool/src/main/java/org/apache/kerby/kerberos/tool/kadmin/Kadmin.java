@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.tool.kadmin;
 
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
+import org.apache.kerby.kerberos.tool.kadmin.executor.AddPrincipalExecutor;
 import org.apache.kerby.kerberos.tool.kadmin.executor.KadminCommandExecutor;
 
 import java.io.File;
@@ -73,7 +74,11 @@ public class Kadmin {
         }
 
         KadminCommandExecutor executor = null;
-        //TODO execute commands.
+        if (command.startsWith("add_principal") ||
+                command.startsWith("addprinc") ||
+                command.startsWith("ank")) {
+            executor = new AddPrincipalExecutor(kdcConfig, backendConfig);
+        }
 
         if (executor == null) {
             System.out.println("Unknown request \"" + command + "\". Type \"?\" for a request list.");
