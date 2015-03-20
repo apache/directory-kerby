@@ -34,6 +34,11 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
+      <artifactId>kadmin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
       <artifactId>token-tool</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -54,6 +59,7 @@
                   <tasks>
                     <copy file="../../kerby-kerb/kerb-client/target/kerb-client-${project.version}-jar-with-dependencies.jar" tofile="lib/kerb-client-${project.version}-jar-with-dependencies.jar"/>
                     <copy file="../../kdc-tool/client-tool/target/kinit-${project.version}.jar" tofile="lib/kinit-${project.version}.jar"/>
+                    <copy file="../../kdc-tool/kadmin-tool/target/kadmin-${project.version}-jar-with-dependencies.jar" tofile="lib/kadmin-${project.version}-jar-with-dependencies.jar"/>
                   </tasks>
                 </configuration>
                 <goals>
