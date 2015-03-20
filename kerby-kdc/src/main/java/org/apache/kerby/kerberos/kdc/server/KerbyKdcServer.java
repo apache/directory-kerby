@@ -61,9 +61,6 @@ public class KerbyKdcServer extends KdcServer {
 
             server.createPrincipals("krbtgt");
 
-            //TODO: add a default principal for test, will be removed.
-            server.createPrincipal("test", "123456");
-
             server.start();
             System.out.println("KDC started.");
         } else if (args[0].equals("-stop")) {
