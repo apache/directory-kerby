@@ -23,7 +23,7 @@ import com.nimbusds.jose.PlainHeader;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
-import org.apache.kerby.kerberos.kerb.spec.pa.token.KerbToken;
+import org.apache.kerby.kerberos.kerb.spec.common.AuthToken;
 
 import java.text.ParseException;
 import java.util.*;
@@ -81,9 +81,9 @@ public class TokenTool {
         return jwt;
     }
 
-    public static KerbToken fromJwtToken(String token) throws ParseException {
+    public static AuthToken fromJwtToken(String token) throws ParseException {
         Map<String, Object> attrs = decodeAndExtractTokenAttributes(token);
-        return new KerbToken(attrs);
+        return null;//new AuthToken(attrs);
     }
 
     public static Map<String, Object> decodeAndExtractTokenAttributes(String token) throws ParseException {

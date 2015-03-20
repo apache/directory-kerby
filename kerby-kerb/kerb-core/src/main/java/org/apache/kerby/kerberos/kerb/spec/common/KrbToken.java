@@ -22,9 +22,13 @@ package org.apache.kerby.kerberos.kerb.spec.common;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,13 +37,13 @@ import java.util.Map;
     token-value  [1] OCTET STRING,
  }
  */
-public class KrbToken extends KrbSequenceType {
-    private static KrbTokenEncoder tokenEncoder;
+public class KrbToken extends KrbSequenceType implements AuthToken {
+    private static TokenEncoder tokenEncoder;
 
     private static int TOKEN_FORMAT = 0;
     private static int TOKEN_VALUE = 1;
 
-    private Map<String, Object> attributes;
+    private AuthToken innerToken = null;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(TOKEN_FORMAT, 0, Asn1Integer.class),
@@ -52,20 +56,21 @@ public class KrbToken extends KrbSequenceType {
 
     @Override
     public void encode(ByteBuffer buffer) {
-        setTokenValue(tokenEncoder.encode(this));
+        setTokenValue(getTokenEncoder().encode(this));
         super.encode(buffer);
     }
 
-    /*
     @Override
     public void decode(ByteBuffer content) throws IOException {
         super.decode(content);
-        this.attributes = tokenEncoder.decode(this);
+        this.innerToken = getTokenEncoder().decode(getTokenValue());
     }
-    */
 
-    public static void setTokenEncoder(KrbTokenEncoder encoder) {
-        tokenEncoder = encoder;
+    private static TokenEncoder getTokenEncoder() {
+        if (tokenEncoder == null) {
+            tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        }
+        return tokenEncoder;
     }
 
     public TokenFormat getTokenFormat() {
@@ -85,15 +90,58 @@ public class KrbToken extends KrbSequenceType {
         setFieldAsOctets(TOKEN_VALUE, tokenValue);
     }
 
-    public Map<String, Object> getAttributes() {
-        if (attributes == null) {
-            this.attributes = tokenEncoder.decode(this);
-        }
-        return attributes;
+    @Override
+    public String getSubject() {
+        return innerToken.getSubject();
     }
 
-    public String getPrincipal() {
-        return (String) attributes.get("sub");
+    @Override
+    public String getIssuer() {
+        return innerToken.getIssuer();
     }
 
+    @Override
+    public List<String> getAudiences() {
+        return innerToken.getAudiences();
+    }
+
+    @Override
+    public boolean isIdToken() {
+        return innerToken.isIdToken();
+    }
+
+    @Override
+    public boolean isAcToken() {
+        return innerToken.isAcToken();
+    }
+
+    @Override
+    public boolean isBearerToken() {
+        return innerToken.isBearerToken();
+    }
+
+    @Override
+    public boolean isHolderOfKeyToken() {
+        return innerToken.isHolderOfKeyToken();
+    }
+
+    @Override
+    public Date getExpiredTime() {
+        return innerToken.getExpiredTime();
+    }
+
+    @Override
+    public Date getNotBeforeTime() {
+        return innerToken.getNotBeforeTime();
+    }
+
+    @Override
+    public Date getIssuedAtTime() {
+        return innerToken.getIssuedAtTime();
+    }
+
+    @Override
+    public Map<String, String> getAttributes() {
+        return innerToken.getAttributes();
+    }
 }

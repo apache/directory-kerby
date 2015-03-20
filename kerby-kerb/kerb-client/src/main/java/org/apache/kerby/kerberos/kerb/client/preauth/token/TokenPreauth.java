@@ -33,7 +33,7 @@ import org.apache.kerby.kerberos.kerb.spec.common.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.spec.pa.token.KerbToken;
+import org.apache.kerby.kerberos.kerb.spec.common.AuthToken;
 
 import java.util.Collections;
 import java.util.List;
@@ -79,12 +79,12 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         if (tokenContext.usingIdToken) {
             if (options.contains(KrbOption.TOKEN_USER_ID_TOKEN)) {
                 tokenContext.token =
-                        (KerbToken) options.getOptionValue(KrbOption.TOKEN_USER_ID_TOKEN);
+                        (AuthToken) options.getOptionValue(KrbOption.TOKEN_USER_ID_TOKEN);
             }
         } else {
             if (options.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
                 tokenContext.token =
-                        (KerbToken) options.getOptionValue(KrbOption.TOKEN_USER_AC_TOKEN);
+                        (AuthToken) options.getOptionValue(KrbOption.TOKEN_USER_AC_TOKEN);
             }
         }
 

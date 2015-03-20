@@ -14,37 +14,14 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.spec.pa.token;
-
-import java.util.Map;
+package org.apache.kerby.kerberos.kerb;
 
 /**
- * This is the token definition according to TokenPreauth draft.
+ * Krb provider for allowing to hook external dependencies.
  */
-public class KerbToken {
-
-    private Map<String, Object> attributes;
-
-    public KerbToken(Map<String, Object> attributes) {
-        this.attributes = attributes;
-    }
-
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
-
-    public String getPrincipal() {
-        return (String) attributes.get("sub");
-    }
-
-    public String[] getGroups() {
-        String grp = (String) attributes.get("group");
-        if (grp != null) {
-            return new String[] { grp };
-        }
-        return new String[0];
-    }
+public interface KrbProvider {
+    // no op, just an interface mark.
 }

@@ -34,7 +34,7 @@ import org.apache.kerby.kerberos.kerb.spec.common.KrbError;
 import org.apache.kerby.kerberos.kerb.spec.common.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.pa.token.KerbToken;
+import org.apache.kerby.kerberos.kerb.spec.common.AuthToken;
 import org.apache.kerby.transport.Network;
 import org.apache.kerby.transport.Transport;
 import org.apache.kerby.transport.event.TransportEvent;
@@ -311,7 +311,7 @@ public class KrbClient {
      * @return
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(String principal, KerbToken token,
+    public TgtTicket requestTgtTicket(String principal, AuthToken token,
                                       KOptions options) throws KrbException {
         if (options == null) {
             options = new KOptions();
@@ -353,7 +353,7 @@ public class KrbClient {
      * @throws KrbException
      */
     public ServiceTicket requestServiceTicket(
-            String clientPrincipal, KerbToken token, String serverPrincipal,
+            String clientPrincipal, AuthToken token, String serverPrincipal,
             KOptions options) throws KrbException {
         if (options == null) {
             options = new KOptions();

@@ -22,13 +22,13 @@ package org.apache.kerby.kerberos.kerb.server;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.pa.token.KerbToken;
+import org.apache.kerby.kerberos.kerb.spec.common.AuthToken;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WithTokenKdcTest extends KdcTestBase {
 
-    private KerbToken token;
+    private AuthToken token;
 
     @Override
     protected void setUpKdcServer() throws Exception {

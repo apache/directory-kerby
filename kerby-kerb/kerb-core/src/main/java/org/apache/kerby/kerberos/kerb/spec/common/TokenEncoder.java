@@ -17,12 +17,24 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.token;
+package org.apache.kerby.kerberos.kerb.spec.common;
 
-import org.apache.kerby.kerberos.kerb.spec.common.AuthToken;
+/**
+ * An AuthToken encoder and decoder.
+ */
+public interface TokenEncoder {
 
-public class TokenContext {
+    /**
+     * Encode a token resulting in a bytes array.
+     * @param token
+     * @return bytes array
+     */
+    public byte[] encode(AuthToken token);
 
-    public boolean usingIdToken = true;
-    public AuthToken token = null;
+    /**
+     * Decode a token from a bytes array.
+     * @param content
+     * @return token
+     */
+    public AuthToken decode(byte[] content);
 }

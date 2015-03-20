@@ -23,7 +23,7 @@ import com.sun.security.jgss.AuthorizationDataEntry;
 import com.sun.security.jgss.ExtendedGSSContext;
 import com.sun.security.jgss.InquireType;
 import org.apache.kerby.asn1.type.Asn1SequenceOf;
-import org.apache.kerby.kerberos.kerb.spec.pa.token.KerbToken;
+import org.apache.kerby.kerberos.kerb.spec.common.AuthToken;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSException;
 
@@ -44,7 +44,7 @@ public class TokenExtractor {
 
     }
 
-    public static KerbToken checkAuthzData(GSSContext context) throws GSSException, IOException {
+    public static AuthToken checkAuthzData(GSSContext context) throws GSSException, IOException {
         System.out.println("Looking for token from authorization data in GSSContext");
 
         Object authzData = null;
@@ -56,7 +56,7 @@ public class TokenExtractor {
 
         if (authzData != null) {
             AuthorizationDataEntry[] authzEntries = (AuthorizationDataEntry[]) authzData;
-            KerbToken resultToken = null;
+            AuthToken resultToken = null;
             for (int i = 0; i < authzEntries.length; ++i) {
                 resultToken = getAuthzToken(authzEntries[i]);
                 if (resultToken != null) {
@@ -67,7 +67,7 @@ public class TokenExtractor {
         return null;
     }
 
-    public static KerbToken getAuthzToken(AuthorizationDataEntry authzDataEntry) throws IOException {
+    public static AuthToken getAuthzToken(AuthorizationDataEntry authzDataEntry) throws IOException {
         if (authzDataEntry.getType() == AD_IF_RELEVANT_TYPE) {
             String token = getToken(authzDataEntry);
             if (token == null) {
