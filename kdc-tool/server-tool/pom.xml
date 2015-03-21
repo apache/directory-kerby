@@ -21,9 +21,9 @@
       <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kadmin</artifactId>
-    <name>Kadmin</name>
-    <description>Kerby KDC kadmin tool</description>
+    <artifactId>server-tool</artifactId>
+    <name>Server Tool</name>
+    <description>Kerby KDC server tool</description>
 
     <dependencies>
       <dependency>

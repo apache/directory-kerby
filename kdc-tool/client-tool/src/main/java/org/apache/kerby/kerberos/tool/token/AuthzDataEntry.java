@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.token;
+package org.apache.kerby.kerberos.tool.token;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;

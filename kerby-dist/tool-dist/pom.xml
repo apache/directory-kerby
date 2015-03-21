@@ -29,17 +29,12 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kinit</artifactId>
+      <artifactId>client-tool</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kadmin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>token-tool</artifactId>
+      <artifactId>server-tool</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -51,15 +46,15 @@
         <plugins>
           <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.8</version>
+            <version>1.7</version>
             <executions>
               <execution>
                 <phase>package</phase>
                 <configuration>
                   <tasks>
                     <copy file="../../kerby-kerb/kerb-client/target/kerb-client-${project.version}-jar-with-dependencies.jar" tofile="lib/kerb-client-${project.version}-jar-with-dependencies.jar"/>
-                    <copy file="../../kdc-tool/client-tool/target/kinit-${project.version}.jar" tofile="lib/kinit-${project.version}.jar"/>
-                    <copy file="../../kdc-tool/kadmin-tool/target/kadmin-${project.version}-jar-with-dependencies.jar" tofile="lib/kadmin-${project.version}-jar-with-dependencies.jar"/>
+                    <copy file="../../kdc-tool/client-tool/target/client-tool-${project.version}.jar" tofile="lib/client-tool-${project.version}.jar"/>
+                    <copy file="../../kdc-tool/server-tool/target/server-tool-${project.version}.jar" tofile="lib/server-tool-${project.version}.jar"/>
                   </tasks>
                 </configuration>
                 <goals>

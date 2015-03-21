@@ -28,8 +28,7 @@
 
   <modules>
     <module>client-tool</module>
-    <module>token-tool</module>
-    <module>kadmin-tool</module>
+    <module>server-tool</module>
   </modules>
 
 </project>

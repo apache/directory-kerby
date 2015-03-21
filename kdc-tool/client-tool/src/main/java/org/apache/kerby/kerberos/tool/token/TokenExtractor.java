@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.token;
+package org.apache.kerby.kerberos.tool.token;
 
 import com.sun.security.jgss.AuthorizationDataEntry;
 import com.sun.security.jgss.ExtendedGSSContext;

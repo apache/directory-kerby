@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.token;
+package org.apache.kerby.kerberos.tool.token;
 
 import java.io.*;
 
