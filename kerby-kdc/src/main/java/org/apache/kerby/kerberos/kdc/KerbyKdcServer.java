@@ -17,7 +17,7 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kdc.server;
+package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;

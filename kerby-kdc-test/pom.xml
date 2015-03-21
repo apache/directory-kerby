@@ -17,14 +17,14 @@
 
   <parent>
     <groupId>org.apache.kerby</groupId>
-    <artifactId>kerby-kerb</artifactId>
+    <artifactId>kerby-all</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>kerb-kdc-test</artifactId>
+  <artifactId>kerby-kdc-test</artifactId>
 
-  <name>Kerb Kdc Test</name>
-  <description>Kerb Kdc Test</description>
+  <name>Kerby Kdc Test</name>
+  <description>Kerby Kdc Test</description>
 
   <dependencies>
     <dependency>
@@ -53,14 +53,24 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>compile</scope>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-kdc-test</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <scope>compile</scope>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>Json-identity-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>token-provider</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>pki-provider</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>

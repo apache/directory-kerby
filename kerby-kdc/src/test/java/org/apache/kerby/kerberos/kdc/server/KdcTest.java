@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kdc.server;
 
+import org.apache.kerby.kerberos.kdc.KerbyKdcServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

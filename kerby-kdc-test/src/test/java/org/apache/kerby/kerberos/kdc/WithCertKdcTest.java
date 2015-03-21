@@ -17,18 +17,52 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.server;
+package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
+import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+import org.apache.kerby.kerberos.provider.pki.KerbyPkiProvider;
+import org.junit.Before;
+
+import java.io.InputStream;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class WithTokenKdcTest extends KdcTestBase {
+/**
+ openssl genrsa -out cakey.pem 2048
+ openssl req -key cakey.pem -new -x509 -out cacert.pem -days 3650
+ vi extensions.kdc
+ openssl genrsa -out kdckey.pem 2048
+ openssl req -new -out kdc.req -key kdckey.pem
+ env REALM=SH.INTEL.COM openssl x509 -req -in kdc.req -CAkey cakey.pem \
+ -CA cacert.pem -out kdc.pem -days 365 -extfile extensions.kdc -extensions kdc_cert -CAcreateserial
+ */
+public class WithCertKdcTest extends KdcTestBase {
+    private PkiLoader pkiLoader;
 
-    private AuthToken token;
+    private Certificate userCert;
+    private PrivateKey userKey;
+
+    @Before
+    public void setUp() throws Exception {
+        KrbRuntime.setPkiProvider(new KerbyPkiProvider());
+        pkiLoader = KrbRuntime.getPkiProvider().createPkiLoader();
+
+        super.setUp();
+    }
+
+    @Override
+    protected void setUpClient() throws Exception {
+        super.setUpClient();
+
+        loadCredentials();
+    }
 
     @Override
     protected void setUpKdcServer() throws Exception {
@@ -38,13 +72,15 @@ public class WithTokenKdcTest extends KdcTestBase {
 
     //@Test
     public void testKdc() throws Exception {
+        assertThat(userCert).isNotNull();
+
         kdcServer.start();
         assertThat(kdcServer.isStarted()).isTrue();
         krbClnt.init();
 
         TgtTicket tgt = null;
         try {
-            tgt = krbClnt.requestTgtTicket(clientPrincipal, token, null);
+            tgt = krbClnt.requestTgtTicket(clientPrincipal, userCert, userKey, null);
         } catch (KrbException te) {
             assertThat(te.getMessage().contains("timeout")).isTrue();
             return;
@@ -53,5 +89,13 @@ public class WithTokenKdcTest extends KdcTestBase {
 
         ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal, null);
         assertThat(tkt).isNull();
+    }
+
+    private void loadCredentials() throws KrbException {
+        InputStream res = getClass().getResourceAsStream("/usercert.pem");
+        userCert = pkiLoader.loadCerts(res).iterator().next();
+
+        res = getClass().getResourceAsStream("/userkey.pem");
+        userKey = pkiLoader.loadPrivateKey(res, null);
     }
 }
