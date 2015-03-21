@@ -17,16 +17,16 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.pki;
+package org.apache.kerby.kerberos.provider.pki;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,21 +40,27 @@ import static org.assertj.core.api.Assertions.assertThat;
  env REALM=SH.INTEL.COM openssl x509 -req -in kdc.req -CAkey cakey.pem \
  -CA cacert.pem -out kdc.pem -days 365 -extfile extensions.kdc -extensions kdc_cert -CAcreateserial
  */
-public class PkixTest {
+public class KerbyPkiLoaderTest {
+    private PkiLoader pkiLoader;
+
+    @Before
+    public void setup() {
+        pkiLoader = new KerbyPkiLoader();
+    }
 
     @Test
-    public void loadCert() throws CertificateException, IOException {
+    public void loadCert() throws KrbException {
         InputStream res = getClass().getResourceAsStream("/usercert.pem");
-        List<Certificate> certs = Pkix.getCerts(res);
+        List<Certificate> certs = pkiLoader.loadCerts(res);
         Certificate userCert = certs.iterator().next();
 
         assertThat(userCert).isNotNull();
     }
 
     @Test
-    public void loadKey() throws GeneralSecurityException, IOException {
+    public void loadKey() throws KrbException {
         InputStream res = getClass().getResourceAsStream("/userkey.pem");
-        PrivateKey key = Pkix.getPrivateKey(res, null);
+        PrivateKey key = pkiLoader.loadPrivateKey(res, null);
 
         assertThat(key).isNotNull();
     }

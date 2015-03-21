@@ -1,2 +1,4 @@
+Kerby-kerb - the Kerberos library
+
 A Kerberos protocol and standards implementation with least dependencies (only relying on JCE).
 The provided APIs and facilities can be used as Kerberos library.

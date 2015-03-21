@@ -17,9 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb;
-
-import org.apache.kerby.kerberos.kerb.spec.base.TokenEncoder;
+package org.apache.kerby.kerberos.kerb.provider;
 
 /**
  * Token provider for TokenPreauth mechanism. This is needed because JWT token

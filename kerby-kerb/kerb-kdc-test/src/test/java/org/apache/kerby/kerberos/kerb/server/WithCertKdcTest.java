@@ -20,13 +20,13 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.pki.Pkix;
+import org.junit.Before;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
@@ -42,9 +42,17 @@ import static org.assertj.core.api.Assertions.assertThat;
  -CA cacert.pem -out kdc.pem -days 365 -extfile extensions.kdc -extensions kdc_cert -CAcreateserial
  */
 public class WithCertKdcTest extends KdcTestBase {
-
+    private PkiLoader pkiLoader;
     private Certificate userCert;
     private PrivateKey userKey;
+
+    @Before
+    public void setUp() throws Exception {
+        //KrbRuntime.setPkiProvider(new KerbyPkiProvider());
+        pkiLoader = KrbRuntime.getPkiProvider().createPkiLoader();
+
+        super.setUp();
+    }
 
     @Override
     protected void setUpClient() throws Exception {
@@ -80,11 +88,11 @@ public class WithCertKdcTest extends KdcTestBase {
         assertThat(tkt).isNull();
     }
 
-    private void loadCredentials() throws IOException, GeneralSecurityException {
+    private void loadCredentials() throws KrbException {
         InputStream res = getClass().getResourceAsStream("/usercert.pem");
-        userCert = Pkix.getCerts(res).iterator().next();
+        userCert = pkiLoader.loadCerts(res).iterator().next();
 
         res = getClass().getResourceAsStream("/userkey.pem");
-        userKey = Pkix.getPrivateKey(res, null);
+        userKey = pkiLoader.loadPrivateKey(res, null);
     }
 }

@@ -17,11 +17,19 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb;
+package org.apache.kerby.kerberos.provider.token;
+
+import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
+import org.apache.kerby.kerberos.kerb.provider.TokenProvider;
 
 /**
- * Krb provider for allowing to hook external dependencies.
+ * Kerby Token provider.
  */
-public interface KrbProvider {
-    // no op, just an interface mark.
+public class KerbyTokenProvider implements TokenProvider {
+
+    @Override
+    public TokenEncoder createTokenEncoder() {
+        return new KerbyTokenEncoder();
+    }
+
 }

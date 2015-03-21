@@ -17,14 +17,13 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.pki;
+package org.apache.kerby.kerberos.provider.pki;
 
 import org.apache.commons.ssl.PKCS8Key;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -36,27 +35,56 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Pkix {
+public class KerbyPkiLoader implements PkiLoader {
 
-    public static List<Certificate> getCerts(String certFile) throws IOException, CertificateException {
-        InputStream is = new FileInputStream(new File(certFile));
-        return getCerts(is);
+    @Override
+    public List<Certificate> loadCerts(String certFile) throws KrbException {
+        InputStream is;
+        try {
+            is = new FileInputStream(new File(certFile));
+        } catch (FileNotFoundException e) {
+            throw new KrbException("No cert file found", e);
+        }
+        return loadCerts(is);
     }
 
-    public static List<Certificate> getCerts(InputStream inputStream) throws IOException, CertificateException {
-        CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-        Collection<? extends Certificate> certs =
-                (Collection<? extends Certificate>) certFactory.generateCertificates(inputStream);
-
-        return new ArrayList<Certificate>(certs);
+    @Override
+    public List<Certificate> loadCerts(InputStream inputStream) throws KrbException {
+        CertificateFactory certFactory = null;
+        try {
+            certFactory = CertificateFactory.getInstance("X.509");
+            Collection<? extends Certificate> certs = (Collection<? extends Certificate>)
+                    certFactory.generateCertificates(inputStream);
+            return new ArrayList<Certificate>(certs);
+        } catch (CertificateException e) {
+            throw new KrbException("Failed to load certificates", e);
+        }
     }
 
-    public static PrivateKey getPrivateKey(String keyFile, String password) throws IOException, GeneralSecurityException {
-        InputStream in = new FileInputStream("/path/to/pkcs8_private_key.der");
-        return getPrivateKey(in, password);
+    @Override
+    public PrivateKey loadPrivateKey(String keyFile, String password) throws KrbException {
+        InputStream in = null;
+        try {
+            in = new FileInputStream("/path/to/pkcs8_private_key.der");
+        } catch (FileNotFoundException e) {
+            throw new KrbException("No cert file found", e);
+        }
+        return loadPrivateKey(in, password);
     }
 
-    public static PrivateKey getPrivateKey(InputStream inputStream, String password) throws GeneralSecurityException, IOException {
+    @Override
+    public PrivateKey loadPrivateKey(InputStream inputStream, String password) throws KrbException {
+        try {
+            return doLoadPrivateKey(inputStream, password);
+        } catch (GeneralSecurityException e) {
+            throw new KrbException("Failed to load private key", e);
+        } catch (IOException e) {
+            throw new KrbException("Failed to load private key", e);
+        }
+    }
+
+    private PrivateKey doLoadPrivateKey(
+            InputStream inputStream, String password) throws GeneralSecurityException, IOException {
         if (password == null) {
             password = "";
         }

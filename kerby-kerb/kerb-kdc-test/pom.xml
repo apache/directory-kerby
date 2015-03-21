@@ -23,8 +23,8 @@
 
   <artifactId>kerb-kdc-test</artifactId>
 
-  <name>Kerby-kerb-KdcTest</name>
-  <description>Kerby-kerb Kdc Test</description>
+  <name>Kerb Kdc Test</name>
+  <description>Kerb Kdc Test</description>
 
   <dependencies>
     <dependency>
@@ -50,11 +50,6 @@
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-client</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerby-pkix</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

@@ -19,13 +19,19 @@
  */
 package org.apache.kerby.kerberos.kerb;
 
+import org.apache.kerby.kerberos.kerb.provider.PkiProvider;
+import org.apache.kerby.kerberos.kerb.provider.TokenProvider;
+
 /**
  * This runtime allows hook external dependencies thru ServiceProvider interface.
  * The hook behavior should be done at the very initial time during startup.
+ *
+ * TODO: to be enhanced to allow arbitrary provider to be hooked into.
  */
 public class KrbRuntime {
 
     private static TokenProvider tokenProvider;
+    private static PkiProvider pkiProvider;
 
     /**
      * Set up token provider, should be done at very initial time
@@ -39,10 +45,27 @@ public class KrbRuntime {
     }
 
     /**
-     * Get token provider.
-     * @param tokenProvider
+     * Set token provider.
      */
-    public static void setTokenProvider(TokenProvider tokenProvider) {
+    public synchronized static void setTokenProvider(TokenProvider tokenProvider) {
         KrbRuntime.tokenProvider = tokenProvider;
+    }
+
+    /**
+     * Get pki provider
+     * @return pki provider
+     */
+    public synchronized static PkiProvider getPkiProvider() {
+        if (pkiProvider == null) {
+            throw new RuntimeException("No token provider is hooked into yet");
+        }
+        return pkiProvider;
+    }
+
+    /**
+     * Setup pkiProvider.
+     */
+    public synchronized static void setPkiProvider(PkiProvider pkiProvider) {
+        KrbRuntime.pkiProvider = pkiProvider;
     }
 }

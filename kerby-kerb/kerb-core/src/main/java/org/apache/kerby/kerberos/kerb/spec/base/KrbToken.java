@@ -23,6 +23,7 @@ import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
 import java.io.IOException;

@@ -45,6 +45,7 @@
     <module>kdc-backend</module>
     <module>kerby-dist</module>
     <module>benchmark</module>
+    <module>kerby-provider</module>
   </modules>
 
   <dependencyManagement>
