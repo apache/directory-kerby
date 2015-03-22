@@ -17,11 +17,11 @@
 
   <parent>
     <groupId>org.apache.kerby</groupId>
-    <artifactId>kdc-backend</artifactId>
+    <artifactId>kerby-backend</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>ldap-identity-backend</artifactId>
+  <artifactId>ldap-backend</artifactId>
 
   <name>Ldap identity backend</name>
   <description>Ldap identity backend</description>
