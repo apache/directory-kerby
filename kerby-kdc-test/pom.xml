@@ -59,7 +59,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>Json-identity-backend</artifactId>
+      <artifactId>json-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
