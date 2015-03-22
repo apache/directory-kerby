@@ -57,14 +57,14 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     @Override
     public void encode(ByteBuffer buffer) {
-        setTokenValue(getTokenEncoder().encode(this));
+        setTokenValue(getTokenEncoder().encodeAsBytes(this));
         super.encode(buffer);
     }
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
         super.decode(content);
-        this.innerToken = getTokenEncoder().decode(getTokenValue());
+        this.innerToken = getTokenEncoder().decodeFromBytes(getTokenValue());
     }
 
     private static TokenEncoder getTokenEncoder() {
@@ -97,13 +97,28 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     }
 
     @Override
+    public void setSubject(String sub) {
+        innerToken.setSubject(sub);
+    }
+
+    @Override
     public String getIssuer() {
         return innerToken.getIssuer();
     }
 
     @Override
+    public void setIssuer(String issuer) {
+        innerToken.setIssuer(issuer);
+    }
+
+    @Override
     public List<String> getAudiences() {
         return innerToken.getAudiences();
+    }
+
+    @Override
+    public void setAudiences(List<String> audiences) {
+        innerToken.setAudiences(audiences);
     }
 
     @Override
@@ -132,8 +147,18 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     }
 
     @Override
+    public void setExpiredTime(Date exp) {
+        innerToken.setExpiredTime(exp);
+    }
+
+    @Override
     public Date getNotBeforeTime() {
         return innerToken.getNotBeforeTime();
+    }
+
+    @Override
+    public void setNotBeforeTime(Date nbt) {
+        innerToken.setNotBeforeTime(nbt);
     }
 
     @Override
@@ -142,7 +167,17 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     }
 
     @Override
+    public void setIssuedAtTime(Date iat) {
+        innerToken.setIssuedAtTime(iat);
+    }
+
+    @Override
     public Map<String, String> getAttributes() {
         return innerToken.getAttributes();
+    }
+
+    @Override
+    public void addAttribute(String name, String value) {
+        innerToken.addAttribute(name, value);
     }
 }

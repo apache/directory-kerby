@@ -21,14 +21,12 @@ package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
-import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
-import org.apache.kerby.kerberos.provider.pki.KerbyPkiProvider;
-import org.apache.kerby.kerberos.provider.token.KerbyTokenProvider;
+import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
 import org.junit.Before;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,7 +38,7 @@ public class WithTokenKdcTest extends KdcTestBase {
 
     @Before
     public void setUp() throws Exception {
-        KrbRuntime.setTokenProvider(new KerbyTokenProvider());
+        KrbRuntime.setTokenProvider(new JwtTokenProvider());
         tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
 
         super.setUp();

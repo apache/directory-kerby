@@ -35,16 +35,34 @@ public interface AuthToken {
     public String getSubject();
 
     /**
+     * Set token subject
+     * @param sub
+     */
+    public void setSubject(String sub);
+
+    /**
      * Get the token issuer
      * @return token issuer
      */
     public String getIssuer();
 
     /**
+     * Set token issuer
+     * @param issuer
+     */
+    public void setIssuer(String issuer);
+
+    /**
      * Get token audiences
      * @return token audiences
      */
     public List<String> getAudiences();
+
+    /**
+     * Set token audiences
+     * @param audiences
+     */
+    public void setAudiences(List<String> audiences);
 
     /**
      * Is an Identity Token ?
@@ -77,10 +95,22 @@ public interface AuthToken {
     public Date getExpiredTime();
 
     /**
+     * Set token expired time
+     * @param exp
+     */
+    public void setExpiredTime(Date exp);
+
+    /**
      * Get token not before time.
      * @return not before time
      */
     public Date getNotBeforeTime();
+
+    /**
+     * Set token not before time.
+     * @param nbt
+     */
+    public void setNotBeforeTime(Date nbt);
 
     /**
      * Get token issued at time when the token is issued.
@@ -89,8 +119,22 @@ public interface AuthToken {
     public Date getIssuedAtTime();
 
     /**
+     * Set token issued at time.
+     * @param iat
+     */
+    public void setIssuedAtTime(Date iat);
+
+    /**
      * Get token attributes.
      * @return token attributes
      */
     public Map<String, String> getAttributes();
+
+    /**
+     * Add a token attribute.
+     * @param name
+     * @param value
+     */
+    public void addAttribute(String name, String value);
+
 }
