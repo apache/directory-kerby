@@ -28,7 +28,7 @@
 
   <modules>
     <module>client-tool</module>
-    <module>server-tool</module>
+    <module>kdc-tool</module>
   </modules>
 
 </project>

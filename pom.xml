@@ -41,9 +41,9 @@
     <module>kerby-asn1</module>
     <module>kerby-kerb</module>
     <module>kerby-kdc</module>
-    <module>kdc-tool</module>
+    <module>kerby-tool</module>
     <module>kerby-kdc-test</module>
-    <module>kdc-backend</module>
+    <module>kerby-backend</module>
     <module>kerby-dist</module>
     <module>benchmark</module>
     <module>kerby-provider</module>
