@@ -98,7 +98,7 @@ public interface AuthToken {
      * Set token expired time
      * @param exp
      */
-    public void setExpiredTime(Date exp);
+    public void setExpirationTime(Date exp);
 
     /**
      * Get token not before time.

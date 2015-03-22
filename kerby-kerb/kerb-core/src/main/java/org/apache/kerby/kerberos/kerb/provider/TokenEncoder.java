@@ -55,6 +55,6 @@ public interface TokenEncoder {
      * @param content
      * @return token
      */
-    public AuthToken decodeFromString(String content) throws IOException, KrbException;
+    public AuthToken decodeFromString(String content) throws IOException;
 
 }

@@ -152,8 +152,8 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     }
 
     @Override
-    public void setExpiredTime(Date exp) {
-        innerToken.setExpiredTime(exp);
+    public void setExpirationTime(Date exp) {
+        innerToken.setExpirationTime(exp);
     }
 
     @Override

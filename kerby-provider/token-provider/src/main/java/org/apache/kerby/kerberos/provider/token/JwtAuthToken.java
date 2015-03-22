@@ -118,7 +118,7 @@ public class JwtAuthToken implements AuthToken {
     }
 
     @Override
-    public void setExpiredTime(Date exp) {
+    public void setExpirationTime(Date exp) {
         jwtClaims.setExpirationTime(exp);
     }
 

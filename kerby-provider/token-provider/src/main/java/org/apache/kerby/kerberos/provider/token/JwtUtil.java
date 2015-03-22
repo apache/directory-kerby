@@ -9,8 +9,7 @@ import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 public class JwtUtil {
 
     public static JWTClaimsSet from(ReadOnlyJWTClaimsSet readOnlyClaims) {
-        JWTClaimsSet result = new JWTClaimsSet();
-        //readOnlyClaims.getAudience()
+        JWTClaimsSet result = new JWTClaimsSet(readOnlyClaims);
 
         return result;
     }

@@ -41,7 +41,9 @@ public class JwtTokenEncoder implements TokenEncoder {
 
     @Override
     public AuthToken decodeFromBytes(byte[] content) throws IOException {
-        return null;
+        String tokenStr = String.valueOf(content);
+
+        return decodeFromString(tokenStr);
     }
 
     @Override
@@ -58,12 +60,12 @@ public class JwtTokenEncoder implements TokenEncoder {
     }
 
     @Override
-    public AuthToken decodeFromString(String content) throws KrbException {
+    public AuthToken decodeFromString(String content) throws IOException {
         try {
             PlainJWT jwt = PlainJWT.parse(content);
             return new JwtAuthToken(jwt.getJWTClaimsSet());
         } catch (ParseException e) {
-            throw new KrbException("Failed to parse JWT token string", e);
+            throw new IOException("Failed to parse JWT token string", e);
         }
     }
 }
