@@ -19,10 +19,14 @@
  */
 package org.apache.kerby.kerberos.provider.token;
 
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.PlainJWT;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * JWT token encoder, implemented using Nimbus JWT library.
@@ -30,8 +34,9 @@ import java.io.IOException;
 public class JwtTokenEncoder implements TokenEncoder {
 
     @Override
-    public byte[] encodeAsBytes(AuthToken token) {
-        return new byte[0];
+    public byte[] encodeAsBytes(AuthToken token) throws KrbException {
+        String tokenStr = encodeAsString(token);
+        return tokenStr.getBytes();
     }
 
     @Override
@@ -40,12 +45,25 @@ public class JwtTokenEncoder implements TokenEncoder {
     }
 
     @Override
-    public String encodeAsString(AuthToken token) {
-        return null;
+    public String encodeAsString(AuthToken token) throws KrbException {
+        if (! (token instanceof JwtAuthToken) ) {
+            throw new KrbException("Unexpected AuthToken, not JwtAuthToken");
+        }
+
+        JwtAuthToken jwtAuthToken = (JwtAuthToken) token;
+        JWT jwt = jwtAuthToken.getJwt();
+
+        String tokenStr = jwt.serialize();
+        return tokenStr;
     }
 
     @Override
-    public AuthToken decodeFromString(String content) throws IOException {
-        return null;
+    public AuthToken decodeFromString(String content) throws KrbException {
+        try {
+            PlainJWT jwt = PlainJWT.parse(content);
+            return new JwtAuthToken(jwt.getJWTClaimsSet());
+        } catch (ParseException e) {
+            throw new KrbException("Failed to parse JWT token string", e);
+        }
     }
 }

@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.provider;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public interface TokenEncoder {
      * @param token
      * @return bytes array
      */
-    public byte[] encodeAsBytes(AuthToken token);
+    public byte[] encodeAsBytes(AuthToken token) throws KrbException;
 
     /**
      * Decode a token from a bytes array.
@@ -47,13 +48,13 @@ public interface TokenEncoder {
      * @param token
      * @return string representation
      */
-    public String encodeAsString(AuthToken token);
+    public String encodeAsString(AuthToken token) throws KrbException;
 
     /**
      * Decode a token from a string.
      * @param content
      * @return token
      */
-    public AuthToken decodeFromString(String content) throws IOException;
+    public AuthToken decodeFromString(String content) throws IOException, KrbException;
 
 }

@@ -116,25 +116,25 @@ public interface AuthToken {
      * Get token issued at time when the token is issued.
      * @return issued at time
      */
-    public Date getIssuedAtTime();
+    public Date getIssueTime();
 
     /**
      * Set token issued at time.
      * @param iat
      */
-    public void setIssuedAtTime(Date iat);
+    public void setIssueTime(Date iat);
 
     /**
      * Get token attributes.
      * @return token attributes
      */
-    public Map<String, String> getAttributes();
+    public Map<String, Object> getAttributes();
 
     /**
      * Add a token attribute.
      * @param name
      * @param value
      */
-    public void addAttribute(String name, String value);
+    public void addAttribute(String name, Object value);
 
 }

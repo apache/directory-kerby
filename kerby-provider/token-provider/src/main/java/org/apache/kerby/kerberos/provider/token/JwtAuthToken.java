@@ -19,50 +19,82 @@
  */
 package org.apache.kerby.kerberos.provider.token;
 
+import com.nimbusds.jose.PlainHeader;
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.PlainJWT;
+import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * JWT auth token backed by JWT token.
  */
 public class JwtAuthToken implements AuthToken {
 
+    private JWTClaimsSet jwtClaims;
+
+    protected JwtAuthToken() {
+        this(new JWTClaimsSet());
+    }
+
+    protected JwtAuthToken(JWTClaimsSet jwtClaims) {
+        this.jwtClaims = jwtClaims;
+    }
+
+    protected JwtAuthToken(ReadOnlyJWTClaimsSet jwtClaims) {
+        this.jwtClaims = JwtUtil.from(jwtClaims);
+    }
+
+    protected JWT getJwt() {
+        String jti = jwtClaims.getJWTID();
+        if (jti == null || jti.isEmpty()) {
+            jti = UUID.randomUUID().toString();
+            jwtClaims.setJWTID(jti);
+        }
+
+        PlainHeader header = new PlainHeader();
+        PlainJWT jwt = new PlainJWT(header, jwtClaims);
+        return jwt;
+    }
+
     @Override
     public String getSubject() {
-        return null;
+        return jwtClaims.getSubject();
     }
 
     @Override
     public void setSubject(String sub) {
-
+        jwtClaims.setSubject(sub);
     }
 
     @Override
     public String getIssuer() {
-        return null;
+        return jwtClaims.getIssuer();
     }
 
     @Override
     public void setIssuer(String issuer) {
-
+        jwtClaims.setIssuer(issuer);
     }
 
     @Override
     public List<String> getAudiences() {
-        return null;
+        return jwtClaims.getAudience();
     }
 
     @Override
     public void setAudiences(List<String> audiences) {
-
+        jwtClaims.setAudience(audiences);
     }
 
     @Override
     public boolean isIdToken() {
-        return false;
+        return true;
     }
 
     @Override
@@ -72,7 +104,7 @@ public class JwtAuthToken implements AuthToken {
 
     @Override
     public boolean isBearerToken() {
-        return false;
+        return true;
     }
 
     @Override
@@ -82,41 +114,41 @@ public class JwtAuthToken implements AuthToken {
 
     @Override
     public Date getExpiredTime() {
-        return null;
+        return jwtClaims.getExpirationTime();
     }
 
     @Override
     public void setExpiredTime(Date exp) {
-
+        jwtClaims.setExpirationTime(exp);
     }
 
     @Override
     public Date getNotBeforeTime() {
-        return null;
+        return jwtClaims.getNotBeforeTime();
     }
 
     @Override
     public void setNotBeforeTime(Date nbt) {
-
+        jwtClaims.setNotBeforeTime(nbt);
     }
 
     @Override
-    public Date getIssuedAtTime() {
-        return null;
+    public Date getIssueTime() {
+        return jwtClaims.getIssueTime();
     }
 
     @Override
-    public void setIssuedAtTime(Date iat) {
-
+    public void setIssueTime(Date iat) {
+        jwtClaims.setIssueTime(iat);
     }
 
     @Override
-    public Map<String, String> getAttributes() {
-        return null;
+    public Map<String, Object> getAttributes() {
+        return jwtClaims.getAllClaims();
     }
 
     @Override
-    public void addAttribute(String name, String value) {
-
+    public void addAttribute(String name, Object value) {
+        jwtClaims.setCustomClaim(name, value);
     }
 }

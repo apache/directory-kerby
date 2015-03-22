@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.base;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
@@ -57,7 +58,11 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     @Override
     public void encode(ByteBuffer buffer) {
-        setTokenValue(getTokenEncoder().encodeAsBytes(this));
+        try {
+            setTokenValue(getTokenEncoder().encodeAsBytes(this));
+        } catch (KrbException e) {
+            throw new RuntimeException(e);
+        }
         super.encode(buffer);
     }
 
@@ -162,22 +167,22 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     }
 
     @Override
-    public Date getIssuedAtTime() {
-        return innerToken.getIssuedAtTime();
+    public Date getIssueTime() {
+        return innerToken.getIssueTime();
     }
 
     @Override
-    public void setIssuedAtTime(Date iat) {
-        innerToken.setIssuedAtTime(iat);
+    public void setIssueTime(Date iat) {
+        innerToken.setIssueTime(iat);
     }
 
     @Override
-    public Map<String, String> getAttributes() {
+    public Map<String, Object> getAttributes() {
         return innerToken.getAttributes();
     }
 
     @Override
-    public void addAttribute(String name, String value) {
-        innerToken.addAttribute(name, value);
+    public void addAttribute(String name, Object value) {
+
     }
 }
