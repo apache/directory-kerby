@@ -38,7 +38,7 @@ public class KerbyKdcServer extends KdcServer {
 
     private static final String USAGE = "Usage: " +
             KerbyKdcServer.class.getSimpleName() +
-            " -start conf-dir working-dir|-stop";
+            " -start conf-dir working-dir|-start|-stop";
 
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -47,13 +47,18 @@ public class KerbyKdcServer extends KdcServer {
         }
 
         if (args[0].equals("-start")) {
-            if (args.length != 3) {
+            String confDir;
+            String workDir;
+            if(args.length == 1) {
+                confDir = "/etc/kerby/";
+                workDir = "/tmp/";
+            } else if (args.length == 3) {
+                confDir = args[1];
+                workDir = args[2];
+            } else {
                 System.err.println(USAGE);
                 return;
             }
-            String confDir = args[1];
-            String workDir = args[2];
-
             server = new KerbyKdcServer();
             server.setWorkDir(new File(workDir));
             server.setConfDir(new File(confDir));
