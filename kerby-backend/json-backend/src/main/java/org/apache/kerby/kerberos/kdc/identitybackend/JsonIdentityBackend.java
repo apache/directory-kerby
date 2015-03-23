@@ -123,6 +123,12 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
         checkAndLoad();
+
+        String principal = identity.getPrincipalName();
+        if (ids.containsKey(principal)) {
+            throw new RuntimeException("Principal already exists.");
+        }
+
         ids.put(identity.getPrincipalName(), identity);
         idsToFile(ids);
 

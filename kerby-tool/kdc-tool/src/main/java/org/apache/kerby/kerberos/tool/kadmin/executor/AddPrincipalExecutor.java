@@ -133,7 +133,11 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
         IdentityBackend backend = initBackend();
 
         KrbIdentity identity = createIdentity(principal, password);
-        backend.addIdentity(identity);
+        try {
+            backend.addIdentity(identity);
+        } catch (Exception e) {
+            System.err.println("Principal or policy already exists while creating \"" + principal + "\".");
+        }
     }
 
     private IdentityBackend initBackend() {
