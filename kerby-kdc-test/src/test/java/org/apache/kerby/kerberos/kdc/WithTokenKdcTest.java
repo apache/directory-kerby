@@ -29,19 +29,55 @@ import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
 import org.junit.Before;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WithTokenKdcTest extends KdcTestBase {
+    static final String SUBJECT = "test-sub";
+    static final String AUDIENCE = "krbtgt@EXAMPLE.COM";
+    static final String ISSUER = "oauth2.com";
+    static final String GROUP = "sales-group";
+    static final String ROLE = "ADMIN";
+
     private TokenEncoder tokenEncoder;
 
-    private AuthToken token;
+    private AuthToken authToken;
 
     @Before
     public void setUp() throws Exception {
         KrbRuntime.setTokenProvider(new JwtTokenProvider());
         tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        prepareToken();
 
         super.setUp();
+    }
+
+    private void prepareToken() {
+        authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();
+
+        authToken.setIssuer(ISSUER);
+        authToken.setSubject(SUBJECT);
+
+        authToken.addAttribute("group", GROUP);
+        authToken.addAttribute("role", ROLE);
+
+        List<String> aud = new ArrayList<String>();
+        aud.add(AUDIENCE);
+        authToken.setAudiences(aud);
+
+        // Set expiration in 60 minutes
+        final Date NOW =  new Date(new Date().getTime() / 1000 * 1000);
+        Date exp = new Date(NOW.getTime() + 1000 * 60 * 60);
+        authToken.setExpirationTime(exp);
+
+        Date nbf = NOW;
+        authToken.setNotBeforeTime(nbf);
+
+        Date iat = NOW;
+        authToken.setIssueTime(iat);
     }
 
     @Override
@@ -58,7 +94,7 @@ public class WithTokenKdcTest extends KdcTestBase {
 
         TgtTicket tgt;
         try {
-            tgt = krbClnt.requestTgtTicket(clientPrincipal, token, null);
+            tgt = krbClnt.requestTgtTicket(clientPrincipal, authToken, null);
         } catch (KrbException te) {
             assertThat(te.getMessage().contains("timeout")).isTrue();
             return;

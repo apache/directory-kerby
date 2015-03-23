@@ -19,13 +19,16 @@
  */
 package org.apache.kerby.kerberos.kerb.client.request;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.kerberos.kerb.client.KOptions;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 
-public class AsRequestWithToken extends AsRequest {
+/**
+ * This initiates an AS-REQ using TokenPreauth mechanism.
+ */
+public class AsRequestWithToken extends ArmoredAsRequest {
 
     public AsRequestWithToken(KrbContext context) {
         super(context);
@@ -40,12 +43,12 @@ public class AsRequestWithToken extends AsRequest {
 
     @Override
     public KOptions getPreauthOptions() {
-        KOptions results = new KOptions();
-
+        KOptions results = super.getPreauthOptions();
         KOptions krbOptions = getKrbOptions();
+
         results.add(krbOptions.getOption(KrbOption.TOKEN_USING_IDTOKEN));
         results.add(krbOptions.getOption(KrbOption.TOKEN_USER_ID_TOKEN));
-        results.add(krbOptions.getOption(KrbOption.TOKEN_USER_AC_TOKEN));
+        //results.add(krbOptions.getOption(KrbOption.TOKEN_USER_AC_TOKEN));
 
         return results;
     }
