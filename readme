@@ -1,0 +1,51 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+How to run with a standalone kdc server, kinit and kadmin?
+
+1. Generate libraries for distribution:
+    mvn package -Pdist
+
+2. Run kadmin to add principals:
+    sh kerby-dist/tool-dist/bin/kadmin.sh [server-conf-dir]
+    In kadmin, you can type "?" for help. For now, the kadmin only supports to add principals to json-backend.
+
+3. Run kerby-kdc-server:
+    sh kerby-dist/kdc-dist/bin/start-kdc.sh –start [server-conf-dir] [work-dir]
+
+4. Run kinit:
+    sh kerby-dist/tool-dist/bin/kinit.sh [principal-name]
+
+    If you don't specify [server-conf-dir] in step 2 or 3, it will be set as /etc/kerby. In [server-conf-dir],
+there should be kdc.conf, backend.conf. And in /etc/, there should be krb5.conf.
+
+An example of kdc.conf:
+    [kdcdefaults]
+        kdc_host = localhost
+        kdc_tcp_port = 8015
+        kdc_realm = TEST.COM
+
+An example of backend.conf:
+    kdc_identity_backend = org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend
+    backend.json.file = /tmp/kerby/jsonbackend
+
+An example of krb5.conf:
+    [libdefaults]
+        kdc_realm=TEST.COM
+
+
+
