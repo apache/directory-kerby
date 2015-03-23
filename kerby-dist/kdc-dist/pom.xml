@@ -49,9 +49,9 @@
                   <tasks>
                     <copy file="../../kerby-kerb/kerb-server/target/kerb-server-${project.version}-jar-with-dependencies.jar" tofile="lib/kerb-server-${project.version}-jar-with-dependencies.jar"/>
                     <copy file="../../kerby-kdc/target/kerby-kdc-${project.version}.jar" tofile="lib/kerby-kdc-${project.version}.jar"/>
-                    <copy file="../../kdc-backend/json-backend/target/Json-identity-backend-${project.version}.jar" tofile="lib/Json-identity-backend-${project.version}.jar"/>
-                    <copy file="../../kdc-backend/ldap-backend/target/ldap-identity-backend-${project.version}.jar" tofile="lib/ldap-identity-backend-${project.version}.jar"/>
-                    <copy file="../../kdc-backend/zookeeper-backend/target/zookeeper-backend-${project.version}.jar" tofile="lib/zookeeper-backend-${project.version}.jar"/>
+                    <copy file="../../kerby-backend/json-backend/target/json-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/json-backend-${project.version}-jar-with-dependencies.jar"/>
+                    <copy file="../../kerby-backend/ldap-backend/target/ldap-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/ldap-backend-${project.version}-jar-with-dependencies.jar"/>
+                    <copy file="../../kerby-backend/zookeeper-backend/target/zookeeper-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/zookeeper-backend-${project.version}-jar-with-dependencies.jar"/>
                   </tasks>
                 </configuration>
                 <goals>

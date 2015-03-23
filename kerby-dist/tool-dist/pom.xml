@@ -52,9 +52,18 @@
                 <phase>package</phase>
                 <configuration>
                   <tasks>
+                    <!--client tool-->
                     <copy file="../../kerby-kerb/kerb-client/target/kerb-client-${project.version}-jar-with-dependencies.jar" tofile="lib/kerb-client-${project.version}-jar-with-dependencies.jar"/>
-                    <copy file="../../kdc-tool/client-tool/target/client-tool-${project.version}.jar" tofile="lib/client-tool-${project.version}.jar"/>
-                    <copy file="../../kdc-tool/kdc-tool/target/kdc-tool-${project.version}.jar" tofile="lib/kdc-tool-${project.version}.jar"/>
+                    <copy file="../../kerby-tool/client-tool/target/client-tool-${project.version}.jar" tofile="lib/client-tool-${project.version}.jar"/>
+                    <copy file="../../kerby-provider/pki-provider/target/pki-provider-${project.version}-jar-with-dependencies.jar" tofile="lib/pki-provider-tool-${project.version}-jar-with-dependencies.jar"/>
+                    <copy file="../../kerby-provider/token-provider/target/token-provider-${project.version}-jar-with-dependencies.jar" tofile="lib/token-provider-tool-${project.version}-jar-with-dependencies.jar"/>
+
+                    <!--kadmin tool-->
+                    <copy file="../../kerby-tool/kdc-tool/target/server-tool-${project.version}.jar" tofile="lib/server-tool-${project.version}.jar"/>
+                    <copy file="../../kerby-kerb/kerb-server/target/kerb-server-${project.version}-jar-with-dependencies.jar" tofile="lib/kerb-server-${project.version}-jar-with-dependencies.jar"/>
+                    <copy file="../../kerby-backend/json-backend/target/json-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/json-backend-${project.version}-jar-with-dependencies.jar"/>
+                    <copy file="../../kerby-backend/ldap-backend/target/ldap-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/ldap-backend-${project.version}-jar-with-dependencies.jar"/>
+                    <copy file="../../kerby-backend/zookeeper-backend/target/zookeeper-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/zookeeper-backend-${project.version}-jar-with-dependencies.jar"/>
                   </tasks>
                 </configuration>
                 <goals>

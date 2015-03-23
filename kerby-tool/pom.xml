@@ -21,7 +21,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>kdc-tool</artifactId>
+  <artifactId>kerby-tool</artifactId>
   <name>Kdc Tool Project</name>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
