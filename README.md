@@ -74,8 +74,13 @@ Independent of Kerberos code in JRE, but rely on JCE
 | rc4 |	The RC4 family: arcfour-hmac |
 | camellia | The Camellia family: camellia256-cts-cmac and camellia128-cts-cmac |
 
+### How to run with a standalone kdc server
+ [Kerby Distribution README](kerby-dist/README.md)
+
 ### Dependency
-The core part is ensured to only depend on the JRE and SLF4J. Every external dependency is taken carefully and maintained separately.
+- The core part is ensured to only depend on the JRE and SLF4J. Every external dependency is taken carefully and maintained separately.
+- [Not-Yet-Commons-SSL](http://juliusdavies.ca/not-yet-commons-ssl-0.3.9/), required by pki-provider and PKINIT mechanism.
+- [Nimbus JOSE + JWT](http://connect2id.com/products/nimbus-jose-jwt), needed by token-provider and TokenPreauth mechanism.
 
 ##### Lib Projects
 - kerby-asn1. A model driven ASN-1 encoding and decoding framework
@@ -88,6 +93,3 @@ Apache License V2.0
 ### How to contribute
 - Git repo in Apache: [Source codes](https://git-wip-us.apache.org/repos/asf/directory-kerby.git)
 - Umbrella JIRA: it's tracked in the master JIRA [DIRKRB-102](https://issues.apache.org/jira/browse/DIRKRB-102), and find tasks there.
-
-### How to run with a standalone kdc server
- [Kerby Distribution README](https://github.com/apache/directory-kerby/blob/master/kerby-dist/README.md)
