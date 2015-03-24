@@ -17,7 +17,7 @@ Apache Kerby is a Java Kerberos binding. It provides a rich, intuitive and inter
 + Provides support for JAAS, GSSAPI and SASL frameworks that applications can leverage.
 + Minimal dependencies, the core part is ensured to depend only on JRE and SLF4J, for easy use and maintenance.
 
-### KrbClient APIs (Working In Progress)
+### KrbClient APIs
 * Initiate a KrbClient
 <pre>
 KrbClient krbClient = new KrbClient(kdcHost, kdcPort);
@@ -88,3 +88,6 @@ Apache License V2.0
 ### How to contribute
 - Git repo in Apache: [Source codes](https://git-wip-us.apache.org/repos/asf/directory-kerby.git)
 - Umbrella JIRA: it's tracked in the master JIRA [DIRKRB-102](https://issues.apache.org/jira/browse/DIRKRB-102), and find tasks there.
+
+### How to run with a standalone kdc server
+ [Kerby Distribution README](https://github.com/apache/directory-kerby/blob/master/kerby-dist/README.md)

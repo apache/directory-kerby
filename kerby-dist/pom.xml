@@ -24,8 +24,8 @@
   </parent>
 
   <artifactId>kerby-dist</artifactId>
-  <name>Kerby KDC Distribution</name>
-  <description>Kerby KDC Distribution</description>
+  <name>Kerby Distribution</name>
+  <description>Kerby Distribution</description>
   <packaging>pom</packaging>
 
   <modules>
