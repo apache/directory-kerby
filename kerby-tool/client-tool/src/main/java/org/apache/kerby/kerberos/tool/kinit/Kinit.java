@@ -20,13 +20,18 @@
 package org.apache.kerby.kerberos.tool.kinit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.ccache.Credential;
+import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.KOptionType;
 import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
+import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.tool.ToolUtil;
 
 import java.io.Console;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -96,21 +101,29 @@ public class Kinit {
         return password;
     }
 
-    private static int requestTicket(String principal, KOptions kinitOptions) {
+    private static void requestTicket(String principal, KOptions kinitOptions) throws KrbException, IOException {
         KrbClient krbClient = new KrbClient();
         krbClient.init();
 
         String password = getPassword(principal);
 
-        try {
-            TgtTicket tgt = krbClient.requestTgtTicket(principal, password,
-                    ToolUtil.convertOptions(kinitOptions));
-            // TODO: write tgt into credentials cache.
-            return 0;
-        } catch (KrbException e) {
-            System.err.println("Error occurred:" + e.getMessage());
-            return -1;
+        TgtTicket tgt = krbClient.requestTgtTicket(principal, password,
+                ToolUtil.convertOptions(kinitOptions));
+
+        // write tgt into credentials cache.
+        Credential credential = new Credential(tgt);
+        CredentialCache cCache = new CredentialCache();
+        cCache.addCredential(credential);
+        cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
+
+        String fileName;
+        if (kinitOptions.contains(KrbOption.KRB5_CACHE)) {
+            fileName = kinitOptions.getStringOption(KrbOption.KRB5_CACHE);
+        } else {
+            fileName = "krb5_" + principal + ".cc";
         }
+        File cCacheFile = new File("/tmp/", fileName);
+        cCache.store(cCacheFile);
     }
 
     public static void main(String[] args) throws Exception {
@@ -157,8 +170,7 @@ public class Kinit {
             printUsage("No principal is specified");
         }
 
-        int errNo = Kinit.requestTicket(principal, ktOptions);
-        System.exit(errNo);
+        Kinit.requestTicket(principal, ktOptions);
     }
 
 }
