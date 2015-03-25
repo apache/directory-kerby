@@ -199,4 +199,14 @@ public class EncryptionHandler {
         EncryptionKey encKey = new EncryptionKey(eType, keyBytes);
         return encKey;
     }
+
+    /**
+     * Generate a secure and random key seeded with an existing encryption key.
+     * @param encKey
+     * @return encryption key
+     */
+    public static EncryptionKey makeSubkey(EncryptionKey encKey) {
+        //TODO: to implement.
+        return encKey;
+    }
 }

@@ -26,7 +26,7 @@ import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
-import org.apache.kerby.kerberos.kerb.server.preauth.FastContext;
+import org.apache.kerby.kerberos.kerb.server.preauth.KdcFastContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
@@ -68,7 +68,7 @@ public abstract class KdcRequest {
     private EncryptionKey serverKey;
     private KrbIdentity tgsEntry;
     private PreauthContext preauthContext;
-    private FastContext fastContext;
+    private KdcFastContext fastContext;
     private PrincipalName serverPrincipal;
 
     public KdcRequest(KdcReq kdcReq, KdcContext kdcContext) {
@@ -76,7 +76,7 @@ public abstract class KdcRequest {
         this.kdcContext = kdcContext;
         this.preauthContext = kdcContext.getPreauthHandler()
                 .preparePreauthContext(this);
-        this.fastContext = new FastContext();
+        this.fastContext = new KdcFastContext();
     }
 
     public KdcContext getKdcContext() {
@@ -512,7 +512,7 @@ public abstract class KdcRequest {
     }
 
     public EncryptionKey getArmorKey() throws KrbException {
-        return fastContext.armorKey;
+        return fastContext.getArmorKey();
     }
 
     public PrincipalName getServerPrincipal() {

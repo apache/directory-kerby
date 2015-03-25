@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KOptions;
-import org.apache.kerby.kerberos.kerb.client.preauth.FastContext;
+import org.apache.kerby.kerberos.kerb.client.preauth.KrbFastContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
@@ -60,7 +60,7 @@ public abstract class KdcRequest {
     private KdcRep kdcRep;
     protected Map<String, Object> credCache;
     private PreauthContext preauthContext;
-    private FastContext fastContext;
+    private KrbFastContext fastContext;
     private EncryptionKey asKey;
 
     private KrbError errorReply;
@@ -72,7 +72,7 @@ public abstract class KdcRequest {
         this.credCache = new HashMap<String, Object>();
         this.preauthContext = context.getPreauthHandler()
                 .preparePreauthContext(this);
-        this.fastContext = new FastContext();
+        this.fastContext = new KrbFastContext();
     }
 
     public void setTransport(Transport transport) {
@@ -321,7 +321,7 @@ public abstract class KdcRequest {
      * Get a pointer to the FAST armor key, or NULL if the client is not using FAST.
      */
     public EncryptionKey getArmorKey() {
-        return fastContext.armorKey;
+        return fastContext.getArmorKey();
     }
 
     /**

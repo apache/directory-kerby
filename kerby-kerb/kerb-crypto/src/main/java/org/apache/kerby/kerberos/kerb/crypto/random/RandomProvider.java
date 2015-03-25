@@ -6,31 +6,43 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
-package org.apache.kerby.kerberos.kerb.client.preauth;
+package org.apache.kerby.kerberos.kerb.crypto.random;
 
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.fast.FastOptions;
-import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmor;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
+/**
+ * A provider to generate random and secure bytes provided with seeds, as Java
+ * SecureRandom does.
+ */
+public interface RandomProvider {
 
-public class FastContext {
+    /**
+     * To init.
+     */
+    public void init();
+    /**
+     * Provide entropy seed for the provider.
+     * @param seed
+     */
+    public void setSeed(byte[] seed);
 
-    public KdcReq fastOuterRequest;
-    public EncryptionKey armorKey;
-    public KrbFastArmor fastArmor;
-    public FastOptions fastOptions;
-    public int nonce;
-    public int fastFlags;
+    /**
+     * Generate random bytes into the specified array.
+     * @param bytes
+     */
+    public void nextBytes(byte[] bytes);
 
+    /**
+     * To clean up.
+     */
+    public void destroy();
 }
