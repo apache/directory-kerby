@@ -41,6 +41,11 @@
         <artifactId>kerb-server</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.kerby</groupId>
+        <artifactId>kerb-util</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
 
     <profiles>

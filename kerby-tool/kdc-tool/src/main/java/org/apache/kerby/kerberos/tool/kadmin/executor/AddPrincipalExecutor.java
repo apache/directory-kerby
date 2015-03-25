@@ -25,9 +25,9 @@ import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
-import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
 
 import java.io.Console;
 import java.util.Arrays;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AddPrincipalExecutor implements KadminCommandExecutor{
-    private static final String USAGE = "usage: add_principal [options] principal\n" +
+    private static final String USAGE = "Usage: add_principal [options] principal\n" +
             "\toptions are:\n" +
             "\t\t[-randkey|-nokey] [-x db_princ_args]* [-expire expdate] [-pwexpire pwexpdate] [-maxlife maxtixlife]\n" +
             "\t\t[-kvno kvno] [-policy policy] [-clearpolicy]\n" +
@@ -130,7 +130,7 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
     }
 
     private void addPrincipal(String principal, String password) {
-        IdentityBackend backend = initBackend();
+        IdentityBackend backend = KadminTool.getBackend(backendConfig);
 
         KrbIdentity identity = createIdentity(principal, password);
         try {
@@ -138,34 +138,6 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
         } catch (Exception e) {
             System.err.println("Principal or policy already exists while creating \"" + principal + "\".");
         }
-    }
-
-    private IdentityBackend initBackend() {
-        String backendClassName = backendConfig.getString(
-                KdcConfigKey.KDC_IDENTITY_BACKEND);
-        if (backendClassName == null) {
-            throw new RuntimeException("Can not find the IdentityBackend class");
-        }
-
-        Class backendClass = null;
-        try {
-            backendClass = Class.forName(backendClassName);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Failed to load backend class: "
-                    + backendClassName);
-        }
-
-        IdentityBackend backend;
-        try {
-            backend = (IdentityBackend) backendClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to create backend: "
-                    + backendClassName);
-        }
-
-        backend.setConfig(backendConfig);
-        backend.initialize();
-        return backend;
     }
 
     protected KrbIdentity createIdentity(String principal, String password) {

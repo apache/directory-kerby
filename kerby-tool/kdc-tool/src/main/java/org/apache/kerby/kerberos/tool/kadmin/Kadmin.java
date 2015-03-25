@@ -23,6 +23,7 @@ import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.tool.kadmin.executor.AddPrincipalExecutor;
 import org.apache.kerby.kerberos.tool.kadmin.executor.KadminCommandExecutor;
+import org.apache.kerby.kerberos.tool.kadmin.executor.KeytabAddExecutor;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +79,9 @@ public class Kadmin {
                 command.startsWith("addprinc") ||
                 command.startsWith("ank")) {
             executor = new AddPrincipalExecutor(kdcConfig, backendConfig);
+        } else if (command.startsWith("ktadd") ||
+                command.startsWith("xst")) {
+            executor = new KeytabAddExecutor(backendConfig);
         }
 
         if (executor == null) {
