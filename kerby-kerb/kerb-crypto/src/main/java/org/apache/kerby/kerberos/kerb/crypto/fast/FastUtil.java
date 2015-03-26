@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
  * Implementing FAST (RFC6113) armor key related algorithms.
  * Take two keys and two pepper strings as input and return a combined key.
  */
-public class FastArmor {
+public class FastUtil {
 
     /**
      * Call the PRF function multiple times with the pepper prefixed with
@@ -41,5 +41,27 @@ public class FastArmor {
                                     EncryptionKey key2, String pepper2) {
         // TODO
         return null;
+    }
+
+    /**
+     * Make an encryption key for replying.
+     * @param strengthenKey
+     * @param existingKey
+     * @return encryption key
+     */
+    public static EncryptionKey makeReplyKey(EncryptionKey strengthenKey,
+                                      EncryptionKey existingKey) {
+        return cf2(strengthenKey, "strengthenkey", existingKey, "replykey");
+    }
+
+    /**
+     * Make an encryption key for armoring.
+     * @param subkey
+     * @param ticketKey
+     * @return encryption key
+     */
+    public static EncryptionKey makeArmorKey(EncryptionKey subkey,
+                                             EncryptionKey ticketKey) {
+        return cf2(subkey, "subkeyarmor", ticketKey, "ticketarmor");
     }
 }

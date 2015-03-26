@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth;
 
-import org.apache.kerby.kerberos.kerb.crypto.fast.FastArmor;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.fast.FastOptions;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmor;

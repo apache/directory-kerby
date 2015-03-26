@@ -24,7 +24,7 @@ import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.kerberos.kerb.crypto.fast.FastArmor;
+import org.apache.kerby.kerberos.kerb.crypto.fast.FastUtil;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 
 import java.io.File;
@@ -57,8 +57,7 @@ public abstract class ArmoredAsRequest extends AsRequest {
     protected EncryptionKey makeArmorKey() throws KrbException {
         EncryptionKey subKey = null;
         EncryptionKey armorCacheKey = getArmorCacheKey();
-        EncryptionKey armorKey = FastArmor.cf2(subKey, "subkeyarmor",
-                armorCacheKey, "ticketarmor");
+        EncryptionKey armorKey = FastUtil.cf2(subKey, "subkeyarmor", armorCacheKey, "ticketarmor");
 
         return armorKey;
     }
