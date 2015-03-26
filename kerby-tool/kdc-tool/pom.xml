@@ -17,7 +17,7 @@
 
     <parent>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kdc-tool</artifactId>
+      <artifactId>kerby-tool</artifactId>
       <version>1.0-SNAPSHOT</version>
     </parent>
 
