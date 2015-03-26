@@ -62,7 +62,7 @@ public class ToolUtil {
             } catch (NumberFormatException nfe) {
                 throw new IllegalArgumentException("Invalid integer:" + strValue);
             }
-        } else if (kt == KOptionType.FILE) {
+        } else if (kt == KOptionType.STR) {
             kopt.setValue(strValue);
         } else {
             throw new IllegalArgumentException("Not recognised option:" + strValue);

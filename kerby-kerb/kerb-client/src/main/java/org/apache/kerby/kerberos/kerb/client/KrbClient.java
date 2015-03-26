@@ -244,7 +244,13 @@ public class KrbClient {
             options = new KOptions();
         }
 
-        AsRequest asRequest = new AsRequest(context);
+        AsRequest asRequest;
+        if (options.contains(KrbOption.USE_KEYTAB)) {
+            asRequest = new AsRequestWithKeytab(context);
+        } else {
+            asRequest = new AsRequest(context);
+        }
+
         asRequest.setKrbOptions(options);
         return requestTgtTicket(principal, asRequest);
     }

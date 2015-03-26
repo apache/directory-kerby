@@ -101,16 +101,35 @@ public class Kinit {
         return password;
     }
 
-    private static void requestTicket(String principal, KOptions kinitOptions) throws KrbException, IOException {
+    private static void requestTicket(String principal, KOptions krbOptions) throws KrbException, IOException {
+        KrbClient krbClient = getClient();
+        TgtTicket tgt;
+
+        if (krbOptions.contains(KrbOption.USE_KEYTAB)) {
+            tgt = krbClient.requestTgtTicket(principal, krbOptions);
+        } else {
+            String password = getPassword(principal);
+            tgt = krbClient.requestTgtTicket(principal, password,
+                    krbOptions);
+        }
+
+        writeTgtToCache(tgt, principal, krbOptions);
+    }
+
+    /**
+     * Init the client.
+     */
+    private static KrbClient getClient() {
         KrbClient krbClient = new KrbClient();
         krbClient.init();
+        return krbClient;
+    }
 
-        String password = getPassword(principal);
-
-        TgtTicket tgt = krbClient.requestTgtTicket(principal, password,
-                ToolUtil.convertOptions(kinitOptions));
-
-        // write tgt into credentials cache.
+    /**
+     * Write tgt into credentials cache.
+     */
+    private static void writeTgtToCache(TgtTicket tgt, String principal, KOptions kinitOptions)
+            throws IOException {
         Credential credential = new Credential(tgt);
         CredentialCache cCache = new CredentialCache();
         cCache.addCredential(credential);
@@ -145,7 +164,7 @@ public class Kinit {
                 }
             } else {
                 principal = opt;
-                break;
+                kto = KinitOption.NONE;
             }
 
             if (kto.getType() != KOptionType.NOV) { // require a parameter
@@ -170,7 +189,8 @@ public class Kinit {
             printUsage("No principal is specified");
         }
 
-        Kinit.requestTicket(principal, ktOptions);
+        Kinit.requestTicket(principal, ToolUtil.convertOptions(ktOptions));
+        System.exit(0);
     }
 
 }

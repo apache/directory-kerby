@@ -37,7 +37,7 @@ public class KeytabAddExecutor implements KadminCommandExecutor{
     private static final String USAGE =
             "Usage: ktadd [-k[eytab] keytab] [-q] [-e keysaltlist] [-norandkey] [principal | -glob princ-exp] [...]";
 
-    private static final String DEFAULT_KEYTAB_FILE_LOCATION = "krb5.keytab";
+    private static final String DEFAULT_KEYTAB_FILE_LOCATION = "/etc/krb5.keytab";
 
     private Config backendConfig;
 
