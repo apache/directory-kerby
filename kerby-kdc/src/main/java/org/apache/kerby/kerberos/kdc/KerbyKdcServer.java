@@ -64,7 +64,7 @@ public class KerbyKdcServer extends KdcServer {
             server.setConfDir(new File(confDir));
             server.init();
 
-            server.createPrincipals("krbtgt");
+            server.createTgtPrincipal();
 
             server.start();
             System.out.println("KDC started.");
@@ -76,7 +76,18 @@ public class KerbyKdcServer extends KdcServer {
         }
     }
 
-    //create some principal for test
+    /**
+     * Verify whether tgt identity has been added.
+     * If no, add it to identity backend.
+     */
+    private void createTgtPrincipal() {
+        String tgtPrincipal = "krbtgt";
+        KrbIdentity tgtIdentity = getIdentityService().getIdentity(tgtPrincipal);
+        if (tgtIdentity == null) {
+            createPrincipals(tgtPrincipal);
+        }
+    }
+
     private void createPrincipal(String principal, String password) {
         KrbIdentity identity = new KrbIdentity(fixPrincipal(principal));
         List<EncryptionType> encTypes = getKdcConfig().getEncryptionTypes();
