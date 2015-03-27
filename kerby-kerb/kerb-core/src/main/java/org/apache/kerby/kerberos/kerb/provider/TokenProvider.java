@@ -33,6 +33,12 @@ public interface TokenProvider extends KrbProvider {
     public TokenEncoder createTokenEncoder();
 
     /**
+     * Create a token decoder.
+     * @return token decoder
+     */
+    public TokenDecoder createTokenDecoder();
+
+    /**
      * Create a token factory that can be used to construct concrete token.
      * @return token factory
      */

@@ -24,6 +24,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
@@ -41,6 +42,7 @@ import java.util.Map;
  */
 public class KrbToken extends KrbSequenceType implements AuthToken {
     private static TokenEncoder tokenEncoder;
+    private static TokenDecoder tokenDecoder;
 
     private static int TOKEN_FORMAT = 0;
     private static int TOKEN_VALUE = 1;
@@ -69,7 +71,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     @Override
     public void decode(ByteBuffer content) throws IOException {
         super.decode(content);
-        this.innerToken = getTokenEncoder().decodeFromBytes(getTokenValue());
+        this.innerToken = getTokenDecoder().decodeFromBytes(getTokenValue());
     }
 
     private static TokenEncoder getTokenEncoder() {
@@ -77,6 +79,13 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
             tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         }
         return tokenEncoder;
+    }
+
+    private static TokenDecoder getTokenDecoder() {
+        if (tokenDecoder == null) {
+            tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        }
+        return tokenDecoder;
     }
 
     public TokenFormat getTokenFormat() {

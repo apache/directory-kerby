@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.provider.token;
 
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.assertj.core.api.Assertions;
@@ -77,7 +78,8 @@ public class TokenTest {
         System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
-        AuthToken token2 = tokenEncoder.decodeFromString(tokenStr);
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);

@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.tool.token;
 
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
@@ -91,7 +92,8 @@ public class TokenInit {
         TokenCache.writeToken(tokenStr);
         System.out.println("Issued token: " + tokenStr);
 
-        AuthToken token2 = tokenEncoder.decodeFromString(tokenStr);
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         System.out.println("Decoded token's subject: " + token2.getSubject());
     }
 }
