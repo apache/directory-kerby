@@ -94,14 +94,14 @@ public class WithTokenKdcTest extends KdcTestBase {
 
         TgtTicket tgt;
         try {
-            tgt = krbClnt.requestTgtTicket(clientPrincipal, authToken, null);
+            tgt = krbClnt.requestTgtWithToken(authToken);
         } catch (KrbException te) {
             assertThat(te.getMessage().contains("timeout")).isTrue();
             return;
         }
         assertThat(tgt).isNull();
 
-        ServiceTicket tkt = krbClnt.requestServiceTicket(tgt, serverPrincipal, null);
+        ServiceTicket tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
         assertThat(tkt).isNull();
     }
 }

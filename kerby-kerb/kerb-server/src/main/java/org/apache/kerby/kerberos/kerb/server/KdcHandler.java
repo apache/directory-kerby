@@ -99,7 +99,7 @@ public class KdcHandler extends MessageHandler {
         ByteBuffer message = event.getMessage();
         Transport transport = event.getTransport();
 
-        KrbMessage krbRequest = KrbUtil.decodeMessage(message);
+        KrbMessage krbRequest = KrbUtil.decodeMessageOld(message);
         KdcRequest kdcRequest = null;
 
         KrbMessageType messageType = krbRequest.getMsgType();
@@ -128,7 +128,7 @@ public class KdcHandler extends MessageHandler {
             kdcRequest.process();
 
             KrbMessage krbResponse = kdcRequest.getReply();
-            KrbUtil.sendMessage(krbResponse, transport);
+            KrbUtil.sendMessageOld(krbResponse, transport);
         } catch (Exception e) {
             //TODO: log the error
             System.out.println("Error occured while processing request:"

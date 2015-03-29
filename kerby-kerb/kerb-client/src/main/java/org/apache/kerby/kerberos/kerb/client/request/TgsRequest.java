@@ -39,6 +39,10 @@ public class TgsRequest extends KdcRequest {
     private TgtTicket tgt;
     private ApReq apReq;
 
+    public TgsRequest(KrbContext context) {
+        super(context);
+    }
+
     public TgsRequest(KrbContext context, TgtTicket tgtTicket) {
         super(context);
         this.tgt = tgtTicket;

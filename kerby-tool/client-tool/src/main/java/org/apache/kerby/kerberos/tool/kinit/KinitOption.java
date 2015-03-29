@@ -19,11 +19,12 @@
  */
 package org.apache.kerby.kerberos.tool.kinit;
 
-import org.apache.kerby.kerberos.kerb.client.KOption;
-import org.apache.kerby.kerberos.kerb.client.KOptionType;
+import org.apache.kerby.KOption;
+import org.apache.kerby.KOptionType;
 
 public enum KinitOption implements KOption {
     NONE("NONE"),
+    CLIENT_PRINCIPAL("client-principal", "Client principal", KOptionType.STR),
     LIFE_TIME("-l", "lifetime", KOptionType.INT),
     START_TIME("-s", "start time", KOptionType.INT),
     RENEWABLE_LIFE("-r", "renewable lifetime", KOptionType.INT),
@@ -38,6 +39,7 @@ public enum KinitOption implements KOption {
     RENEW("-R", "renew"),
     CANONICALIZE("-C", "canonicalize"),
     AS_ENTERPRISE_PN("-E", "client is enterprise principal name"),
+    USER_PASSWD("user-passwd", "User plain password"),
     USE_KEYTAB("-k", "use keytab"),
     USE_DFT_KEYTAB("-i", "use default client keytab (with -k)"),
     USER_KEYTAB_FILE("-t", "filename of keytab to use", KOptionType.STR),

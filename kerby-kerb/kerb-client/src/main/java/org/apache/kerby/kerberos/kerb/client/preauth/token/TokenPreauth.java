@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.preauth.token;
 
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.kerberos.kerb.client.KOptions;
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
@@ -75,7 +75,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                                   PluginRequestContext requestContext,
                                   KOptions options) {
 
-        tokenContext.usingIdToken = options.getBooleanOption(KrbOption.TOKEN_USING_IDTOKEN);
+        tokenContext.usingIdToken = options.getBooleanOption(KrbOption.USE_TOKEN);
         if (tokenContext.usingIdToken) {
             if (options.contains(KrbOption.TOKEN_USER_ID_TOKEN)) {
                 tokenContext.token =

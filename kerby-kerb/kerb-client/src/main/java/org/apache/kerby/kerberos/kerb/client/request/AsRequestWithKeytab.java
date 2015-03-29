@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.client.request;
 
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
@@ -31,9 +31,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class AsRequestWithKeytab extends AsRequest{
-    private static final String DEFAULT_KEY_LOCATION = "/etc/krb5.keytab";
-    private static final String DEFAULT_CLIENT_KEY_LOCATION = "/usr/local/var/krb5/user/0/client.keytab";
-
 
     public AsRequestWithKeytab(KrbContext context) {
         super(context);
@@ -45,12 +42,8 @@ public class AsRequestWithKeytab extends AsRequest{
         File keytabFile = null;
         KOptions kOptions = getKrbOptions();
 
-        if (kOptions.contains(KrbOption.USE_DFT_KEYTAB)) {
-            keytabFile = new File(DEFAULT_CLIENT_KEY_LOCATION);
-        } else if (kOptions.contains(KrbOption.USER_KEYTAB_FILE)) {
-            keytabFile = new File(kOptions.getStringOption(KrbOption.USER_KEYTAB_FILE));
-        } else {
-            keytabFile = new File(DEFAULT_KEY_LOCATION);
+        if (kOptions.contains(KrbOption.KEYTAB_FILE)) {
+            keytabFile = kOptions.getFileOption(KrbOption.KEYTAB_FILE);
         }
 
         Keytab keytab = null;

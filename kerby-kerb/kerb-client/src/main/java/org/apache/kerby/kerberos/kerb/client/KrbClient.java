@@ -19,51 +19,27 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
-import org.apache.kerby.event.Event;
-import org.apache.kerby.event.EventHub;
-import org.apache.kerby.event.EventWaiter;
-import org.apache.kerby.kerberos.kerb.KrbErrorCode;
-import org.apache.kerby.kerberos.kerb.KrbErrorException;
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.client.event.KrbClientEvent;
-import org.apache.kerby.kerberos.kerb.client.event.KrbClientEventType;
-import org.apache.kerby.kerberos.kerb.client.request.*;
-import org.apache.kerby.kerberos.kerb.common.KrbErrorUtil;
-import org.apache.kerby.kerberos.kerb.common.KrbStreamingDecoder;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.client.impl.blocking.BlockModeKrbClient;
+import org.apache.kerby.kerberos.kerb.client.impl.event.EventBasedKrbClient;
+import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClient;
+import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
-import org.apache.kerby.transport.Network;
-import org.apache.kerby.transport.Transport;
-import org.apache.kerby.transport.event.TransportEvent;
-import org.apache.kerby.transport.event.TransportEventType;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
- * A krb client API for applications to interact with KDC
+ * A Krb client API for applications to interact with KDC
  */
 public class KrbClient {
 
-    private EventHub eventHub;
-    private EventWaiter eventWaiter;
-    private Transport transport;
-
-    private KrbHandler krbHandler;
-    private KrbContext context;
-    private String kdcHost;
-    private int kdcTcpPort;
-    private Boolean allowUdp;
-    private int kdcUdpPort;
-    private KrbConfig krbConfig;
-    private File confDir;
+    private KOptions commonOptions;
+    private InternalKrbClient innerClient;
 
     /**
      * Default constructor.
@@ -73,45 +49,12 @@ public class KrbClient {
     }
 
     /**
-     * Construct a KrbClient with host and port. The port can be TCP, UDP or
-     * both, but TCP will try first.
-     * @param kdcHost
-     * @param kdcPort
-     */
-    public KrbClient(String kdcHost, int kdcPort) {
-        this(new KrbConfig());
-
-        setKdcHost(kdcHost);
-        setKdcTcpPort(kdcPort);
-        setKdcUdpPort(kdcPort);
-    }
-
-    /**
-     * Construct with prepared KrbConfig
+     * Construct with prepared KrbConfig.
      * @param krbConfig
      */
     public KrbClient(KrbConfig krbConfig) {
-        this.krbConfig = krbConfig;
-        this.context = new KrbContext();
-        context.init(krbConfig);
-    }
-
-    /**
-     * Prepare krb config, loading krb5.conf.
-     * It can be override to add more configuration resources.
-     *
-     * @throws IOException
-     */
-    protected void initConfig() throws IOException {
-        if (confDir == null) {
-            confDir = new File("/etc/"); // for Linux. TODO: fix for Win etc.
-        }
-        if (confDir != null && confDir.exists()) {
-            File kdcConfFile = new File(confDir, "krb5.conf");
-            if (kdcConfFile.exists()) {
-                krbConfig.addIniConfig(kdcConfFile);
-            }
-        }
+        commonOptions = new KOptions();
+        commonOptions.add(KrbOption.KRB_CONFIG, krbConfig);
     }
 
     /**
@@ -119,7 +62,7 @@ public class KrbClient {
      * @param file
      */
     public void setConfDir(File file) throws IOException {
-        confDir = file;
+        commonOptions.add(KrbOption.CONF_DIR, file);
     }
 
     /**
@@ -127,35 +70,7 @@ public class KrbClient {
      * @param realm
      */
     public void setKdcRealm(String realm) {
-        context.setKdcRealm(realm);
-    }
-
-    private String getKdcHost() {
-        if (kdcHost != null) {
-            return kdcHost;
-        }
-        return krbConfig.getKdcHost();
-    }
-
-    private int getKdcTcpPort() {
-        if (kdcTcpPort > 0) {
-            return kdcTcpPort;
-        }
-        return krbConfig.getKdcTcpPort();
-    }
-
-    private boolean allowUdp() {
-        if (allowUdp != null) {
-            return allowUdp;
-        }
-        return krbConfig.allowKdcUdp();
-    }
-
-    private int getKdcUdpPort() {
-        if (kdcUdpPort > 0) {
-            return kdcUdpPort;
-        }
-        return krbConfig.getKdcUdpPort();
+        commonOptions.add(KrbOption.KDC_REALM, realm);
     }
 
     /**
@@ -163,7 +78,7 @@ public class KrbClient {
      * @param kdcHost
      */
     public void setKdcHost(String kdcHost) {
-        this.kdcHost = kdcHost;
+        commonOptions.add(KrbOption.KDC_HOST, kdcHost);
     }
 
     /**
@@ -171,7 +86,7 @@ public class KrbClient {
      * @param kdcTcpPort
      */
     public void setKdcTcpPort(int kdcTcpPort) {
-        this.kdcTcpPort = kdcTcpPort;
+        commonOptions.add(KrbOption.KDC_TCP_PORT, kdcTcpPort);
     }
 
     /**
@@ -179,7 +94,7 @@ public class KrbClient {
      * @param allowUdp
      */
     public void setAllowUdp(boolean allowUdp) {
-        this.allowUdp = allowUdp;
+        commonOptions.add(KrbOption.ALLOW_UDP, allowUdp);
     }
 
     /**
@@ -187,92 +102,69 @@ public class KrbClient {
      * @param kdcUdpPort
      */
     public void setKdcUdpPort(int kdcUdpPort) {
-        this.kdcUdpPort = kdcUdpPort;
+        commonOptions.add(KrbOption.KDC_UDP_PORT, kdcUdpPort);
     }
 
     /**
      * Set time out for connection
      * @param timeout in seconds
      */
-    public void setTimeout(long timeout) {
-        context.setTimeout(timeout);
-    }
-
-    public void init() {
-        try {
-            initConfig();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load config", e);
-        }
-
-        this.krbHandler = new KrbHandler();
-        krbHandler.init(context);
-
-        this.eventHub = new EventHub();
-        eventHub.register(krbHandler);
-
-        Network network = new Network();
-        network.setStreamingDecoder(new KrbStreamingDecoder());
-        eventHub.register(network);
-
-        eventWaiter = eventHub.waitEvent(
-                TransportEventType.NEW_TRANSPORT,
-                KrbClientEventType.TGT_RESULT,
-                KrbClientEventType.TKT_RESULT
-        );
-
-        eventHub.start();
-
-        network.tcpConnect(getKdcHost(), getKdcTcpPort());
-        if (allowUdp()) {
-            network.udpConnect(getKdcHost(), getKdcUdpPort());
-        }
-        Event event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
-        transport = ((TransportEvent) event).getTransport();
+    public void setTimeout(int timeout) {
+        commonOptions.add(KrbOption.CONN_TIMEOUT, timeout);
     }
 
     /**
-     * Attempt to request a TGT and you'll be prompted to input a credential.
-     * Whatever credential requested to provide depends on KDC admin configuration.
-     * @param options
-     * @return
+     * Use event model. By default blocking model is used.
+     */
+    public void useEventModel() {
+        commonOptions.add(KrbOption.USE_EVENT_MODEL);
+    }
+
+    /**
+     * Init the client.
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(String principal,
-                                      KOptions options) throws KrbException {
-        if (options == null) {
-            options = new KOptions();
-        }
-
-        AsRequest asRequest;
-        if (options.contains(KrbOption.USE_KEYTAB)) {
-            asRequest = new AsRequestWithKeytab(context);
+    public void init() throws KrbException {
+        if (commonOptions.contains(KrbOption.USE_EVENT_MODEL)) {
+            innerClient = new EventBasedKrbClient();
         } else {
-            asRequest = new AsRequest(context);
+            innerClient = new BlockModeKrbClient();
         }
-
-        asRequest.setKrbOptions(options);
-        return requestTgtTicket(principal, asRequest);
+        innerClient.init(commonOptions);
     }
 
     /**
      * Request a TGT with user plain credential
      * @param principal
      * @param password
-     * @param options
      * @return
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(String principal, String password,
-                                      KOptions options) throws KrbException {
-        if (options == null) {
-            options = new KOptions();
-        }
+    public TgtTicket requestTgtWithPassword(String principal,
+                                      String password) throws KrbException {
 
-        AsRequest asRequest = new AsRequestWithPasswd(context);
-        options.add(KrbOption.USER_PASSWD, password);
-        asRequest.setKrbOptions(options);
-        return requestTgtTicket(principal, asRequest);
+        KOptions requestOptions = new KOptions();
+        requestOptions.add(KrbOption.CLIENT_PRINCIPAL, principal);
+        requestOptions.add(KrbOption.USE_PASSWD, true);
+        requestOptions.add(KrbOption.USER_PASSWD, password);
+        return requestTgtWithOptions(requestOptions);
+    }
+
+    /**
+     * Request a TGT with user plain credential
+     * @param principal
+     * @param keytabFile
+     * @return TGT
+     * @throws KrbException
+     */
+    public TgtTicket requestTgtWithKeytab(String principal,
+                                      String keytabFile) throws KrbException {
+
+        KOptions requestOptions = new KOptions();
+        requestOptions.add(KrbOption.CLIENT_PRINCIPAL, principal);
+        requestOptions.add(KrbOption.USE_KEYTAB, true);
+        requestOptions.add(KrbOption.KEYTAB_FILE, keytabFile);
+        return requestTgtWithOptions(requestOptions);
     }
 
     /**
@@ -280,137 +172,56 @@ public class KrbClient {
      * @param principal
      * @param certificate
      * @param privateKey
-     * @param options
-     * @return
+     * @return TGT
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(
-            String principal, Certificate certificate, PrivateKey privateKey,
-            KOptions options) throws KrbException {
-        if (options == null) {
-            options = new KOptions();
-        }
-
-        AsRequestWithCert asRequest = new AsRequestWithCert(context);
-        options.add(KrbOption.PKINIT_X509_CERTIFICATE, certificate);
-        options.add(KrbOption.PKINIT_X509_PRIVATE_KEY, privateKey);
-        asRequest.setKrbOptions(options);
-        return requestTgtTicket(principal, asRequest);
+    public TgtTicket requestTgtWithCert(String principal, Certificate certificate,
+                                        PrivateKey privateKey) throws KrbException {
+        KOptions requestOptions = new KOptions();
+        requestOptions.add(KrbOption.PKINIT_X509_CERTIFICATE, certificate);
+        requestOptions.add(KrbOption.PKINIT_X509_PRIVATE_KEY, privateKey);
+        return requestTgtWithOptions(requestOptions);
     }
 
     /**
      * Request a TGT with using Anonymous PKINIT
-     * @param options
-     * @return
+     * @return TGT
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(KOptions options) throws KrbException {
-        if (options == null) {
-            options = new KOptions();
-        }
-
-        AsRequestWithCert asRequest = new AsRequestWithCert(context);
-        options.add(KrbOption.PKINIT_X509_ANONYMOUS);
-        asRequest.setKrbOptions(options);
-
-        String principal = AsRequestWithCert.ANONYMOUS_PRINCIPAL;
-        return requestTgtTicket(principal, asRequest);
+    public TgtTicket requestTgtWithPkintAnonymous() throws KrbException {
+        KOptions requestOptions = new KOptions();
+        requestOptions.add(KrbOption.USE_PKINIT_ANONYMOUS);
+        return requestTgtWithOptions(requestOptions);
     }
 
     /**
      * Request a TGT with user token credential
-     * @param principal
      * @param token
-     * @param options
-     * @return
+     * @return TGT
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(String principal, AuthToken token,
-                                      KOptions options) throws KrbException {
-        if (options == null) {
-            options = new KOptions();
+    public TgtTicket requestTgtWithToken(AuthToken token) throws KrbException {
+        if (! token.isIdToken()) {
+            throw new IllegalArgumentException("Identity token is expected");
         }
 
-        AsRequestWithToken asRequest = new AsRequestWithToken(context);
-        options.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
-        asRequest.setKrbOptions(options);
-        return requestTgtTicket(principal, asRequest);
+        KOptions requestOptions = new KOptions();
+        requestOptions.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
+        return requestTgtWithOptions(requestOptions);
     }
 
     /**
-     * Request a service ticket targeting for a server with user plain credentials
-     * @param clientPrincipal
-     * @param password
-     * @param serverPrincipal
-     * @param options
-     * @return
+     * Request a TGT with using well prepared requestOptions.
+     * @param requestOptions
+     * @return TGT
      * @throws KrbException
      */
-    public ServiceTicket requestServiceTicket(
-            String clientPrincipal, String password, String serverPrincipal,
-            KOptions options) throws KrbException {
-        if (options == null) {
-            options = new KOptions();
+    public TgtTicket requestTgtWithOptions(KOptions requestOptions) throws KrbException {
+        if (requestOptions == null) {
+            throw new IllegalArgumentException("Null KrbOptions specified");
         }
 
-        TgtTicket tgt = requestTgtTicket(clientPrincipal, password, options);
-        return requestServiceTicket(tgt, serverPrincipal, options);
-    }
-
-    /**
-     * Request a service ticket targeting for a server with an user Access Token
-     * @param clientPrincipal
-     * @param token
-     * @param serverPrincipal
-     * @param options
-     * @return
-     * @throws KrbException
-     */
-    public ServiceTicket requestServiceTicket(
-            String clientPrincipal, AuthToken token, String serverPrincipal,
-            KOptions options) throws KrbException {
-        if (options == null) {
-            options = new KOptions();
-        }
-
-        TgtTicket tgt = requestTgtTicket(clientPrincipal, token, options);
-        return requestServiceTicket(tgt, serverPrincipal, options);
-    }
-
-    private TgtTicket requestTgtTicket(String clientPrincipal,
-                                       AsRequest tgtTktReq) throws KrbException {
-        tgtTktReq.setClientPrincipal(new PrincipalName(clientPrincipal));
-        tgtTktReq.setTransport(transport);
-
-        try {
-            return doRequestTgtTicket(tgtTktReq);
-        } catch(KrbErrorException e) {
-            KrbError krbError = e.getKrbError();
-            if (krbError.getErrorCode() == KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED) {
-                try {
-                    tgtTktReq.setEncryptionTypes(KrbErrorUtil.getEtypes(krbError));
-                } catch (IOException ioe) {
-                    throw new KrbException("Failed to decode and get etypes from krbError", ioe);
-                }
-                tgtTktReq.getPreauthContext().setPreauthRequired(true);
-                return requestTgtTicket(clientPrincipal, tgtTktReq);
-            }
-            throw e;
-        }
-    }
-
-    private TgtTicket doRequestTgtTicket(AsRequest tgtTktReq) throws KrbException {
-        eventHub.dispatch(KrbClientEvent.createTgtIntentEvent(tgtTktReq));
-        Event resultEvent;
-        try {
-            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TGT_RESULT,
-                    context.getTimeout(), TimeUnit.SECONDS);
-        } catch (TimeoutException e) {
-            throw new KrbException("Network timeout", e);
-        }
-        AsRequest asResponse = (AsRequest) resultEvent.getEventData();
-
-        return asResponse.getTicket();
+        return innerClient.requestTgtTicket(requestOptions);
     }
 
     /**
@@ -420,27 +231,22 @@ public class KrbClient {
      * @return
      * @throws KrbException
      */
-    public ServiceTicket requestServiceTicket(TgtTicket tgt, String serverPrincipal,
-                                              KOptions options) throws KrbException {
-        if (options == null) {
-            options = new KOptions();
+    public ServiceTicket requestServiceTicketWithTgt(
+            TgtTicket tgt, String serverPrincipal) throws KrbException {
+        return innerClient.requestServiceTicketWithTgt(tgt, serverPrincipal);
+    }
+
+    /**
+     * Request a service ticket using an Access Token.
+     * @return service ticket
+     * @throws KrbException
+     */
+    public ServiceTicket requestServiceTicketWithAccessToken(
+            AuthToken token, String serverPrincipal) throws KrbException {
+        if (! token.isAcToken()) {
+            throw new IllegalArgumentException("Access token is expected");
         }
-
-        TgsRequest ticketReq = new TgsRequest(context, tgt);
-        ticketReq.setServerPrincipal(new PrincipalName(serverPrincipal));
-        ticketReq.setTransport(transport);
-
-        eventHub.dispatch(KrbClientEvent.createTktIntentEvent(ticketReq));
-        Event resultEvent;
-        try {
-            resultEvent = eventWaiter.waitEvent(KrbClientEventType.TKT_RESULT,
-                    context.getTimeout(), TimeUnit.SECONDS);
-        } catch (TimeoutException e) {
-            throw new KrbException("Network timeout", e);
-        }
-        TgsRequest tgsResponse = (TgsRequest) resultEvent.getEventData();
-
-        return tgsResponse.getServiceTicket();
+        return innerClient.requestServiceTicketWithAccessToken(token, serverPrincipal);
     }
 
 }

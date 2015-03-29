@@ -19,8 +19,21 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
+import org.apache.kerby.KOption;
+import org.apache.kerby.KOptionType;
+
 public enum KrbOption implements KOption {
     NONE("NONE"),
+    USE_EVENT_MODEL("use event model", KOptionType.NOV),
+    CLIENT_PRINCIPAL("client-principal", "Client principal", KOptionType.STR),
+    KRB_CONFIG("krb config", KOptionType.OBJ),
+    CONF_DIR("conf dir", KOptionType.DIR),
+    KDC_REALM("kdc realm", KOptionType.STR),
+    KDC_HOST("kdc host", KOptionType.STR),
+    KDC_TCP_PORT("kdc tcp port", KOptionType.INT),
+    ALLOW_UDP("allow udp", KOptionType.BOOL),
+    KDC_UDP_PORT("kdc udp port", KOptionType.INT),
+    CONN_TIMEOUT("connection timeout", KOptionType.INT),
     LIFE_TIME("life time", KOptionType.INT),
     START_TIME("start time", KOptionType.INT),
     RENEWABLE_TIME("renewable lifetime", KOptionType.INT),
@@ -35,24 +48,28 @@ public enum KrbOption implements KOption {
     RENEW("renew"),
     CANONICALIZE("canonicalize"),
     AS_ENTERPRISE_PN("as-enterprise-pn", "client is enterprise principal name"),
-    USE_KEYTAB("use-keytab", "use keytab"),
-    USE_DFT_KEYTAB("user-default-keytab", "use default client keytab"),
-    USER_KEYTAB_FILE("user-keytab-file", "filename of keytab to use", KOptionType.FILE),
-    KRB5_CACHE("krb5-cache", "K5 cache name", KOptionType.FILE),
-    SERVICE("service", KOptionType.STR),
-    ARMOR_CACHE("armor-cache", "armor credential cache", KOptionType.STR),
 
-    CONF_DIR("conf dir", KOptionType.DIR),
+    USE_PASSWD("using password", "using password"),
     USER_PASSWD("user-passwd", "User plain password"),
 
+    USE_KEYTAB("use-keytab", "use keytab"),
+    USE_DFT_KEYTAB("-i", "use default client keytab (with -k)"),
+    KEYTAB_FILE("keytab-file", "filename of keytab to use", KOptionType.FILE),
+
+    KRB5_CACHE("krb5-cache", "K5 cache name", KOptionType.FILE),
+    SERVICE_PRINCIPAL("service-principal", "service principal", KOptionType.STR),
+    ARMOR_CACHE("armor-cache", "armor credential cache", KOptionType.STR),
+
+    USE_PKINIT("use-pkinit", "using pkinit"),
     PKINIT_X509_IDENTITY("x509-identities", "X509 user private key and cert", KOptionType.STR),
     PKINIT_X509_PRIVATE_KEY("x509-privatekey", "X509 user private key", KOptionType.STR),
     PKINIT_X509_CERTIFICATE("x509-cert", "X509 user certificate", KOptionType.STR),
     PKINIT_X509_ANCHORS("x509-anchors", "X509 anchors", KOptionType.STR),
-    PKINIT_X509_ANONYMOUS("x509-anonymous", "X509 anonymous"),
     PKINIT_USING_RSA("using-rsa-or-dh", "Using RSA or DH"),
 
-    TOKEN_USING_IDTOKEN("using-id-token", "Using identity token"),
+    USE_PKINIT_ANONYMOUS("use-pkinit-anonymous", "X509 anonymous"),
+
+    USE_TOKEN("use-id-token", "Using identity token"),
     TOKEN_USER_ID_TOKEN("user-id-token", "User identity token", KOptionType.STR),
     TOKEN_USER_AC_TOKEN("user-ac-token", "User access token", KOptionType.STR),
 

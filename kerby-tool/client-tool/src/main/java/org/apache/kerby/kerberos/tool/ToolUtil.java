@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.kerberos.tool;
 
-import org.apache.kerby.kerberos.kerb.client.KOption;
-import org.apache.kerby.kerberos.kerb.client.KOptionType;
+import org.apache.kerby.KOption;
+import org.apache.kerby.KOptionType;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.kerberos.kerb.client.KOptions;
+import org.apache.kerby.KOptions;
 
 import java.io.File;
 

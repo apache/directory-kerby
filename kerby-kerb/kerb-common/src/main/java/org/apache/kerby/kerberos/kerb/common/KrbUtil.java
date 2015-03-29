@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.common;
 
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.transport.Transport;
 
 import java.io.IOException;
@@ -28,7 +29,8 @@ import java.nio.ByteBuffer;
 
 public class KrbUtil {
 
-    public static void sendMessage(KrbMessage message, Transport transport) {
+    public static void sendMessage(KrbMessage message,
+                                   KrbTransport transport) throws IOException {
         int bodyLen = message.encodingLength();
         ByteBuffer buffer = ByteBuffer.allocate(bodyLen + 4);
         buffer.putInt(bodyLen);
@@ -37,10 +39,38 @@ public class KrbUtil {
         transport.sendMessage(buffer);
     }
 
-    public static KrbMessage decodeMessage(ByteBuffer message) throws IOException {
+    /**
+     * To be cleaned up
+     * @param message
+     * @param transport
+     * @throws IOException
+     */
+    public static void sendMessageOld(KrbMessage message,
+                                   Transport transport) throws IOException {
+        int bodyLen = message.encodingLength();
+        ByteBuffer buffer = ByteBuffer.allocate(bodyLen + 4);
+        buffer.putInt(bodyLen);
+        message.encode(buffer);
+        buffer.flip();
+        transport.sendMessage(buffer);
+    }
+
+    /**
+     * To be cleaned.
+     * @param message
+     * @return
+     * @throws IOException
+     */
+    public static KrbMessage decodeMessageOld(ByteBuffer message) throws IOException {
         int bodyLen = message.getInt();
         assert (message.remaining() >= bodyLen);
 
+        KrbMessage krbMessage = KrbCodec.decodeMessage(message);
+
+        return krbMessage;
+    }
+
+    public static KrbMessage decodeMessage(ByteBuffer message) throws IOException {
         KrbMessage krbMessage = KrbCodec.decodeMessage(message);
 
         return krbMessage;

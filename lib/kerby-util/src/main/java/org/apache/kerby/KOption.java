@@ -17,27 +17,25 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client.event;
+package org.apache.kerby;
 
-import org.apache.kerby.event.Event;
-import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
-import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
+public interface KOption {
 
-public class KrbClientEvent {
+    public void setType(KOptionType type);
 
-    public static Event createTgtIntentEvent(AsRequest asRequest) {
-        return new Event(KrbClientEventType.TGT_INTENT, asRequest);
-    }
+    public KOptionType getType();
 
-    public static Event createTktIntentEvent(TgsRequest tgsRequest) {
-        return new Event(KrbClientEventType.TKT_INTENT, tgsRequest);
-    }
+    public String getOptionName();
 
-    public static Event createTgtResultEvent(AsRequest asRequest) {
-        return new Event(KrbClientEventType.TGT_RESULT, asRequest);
-    }
+    public void setName(String name);
 
-    public static Event createTktResultEvent(TgsRequest tgsRequest) {
-        return new Event(KrbClientEventType.TKT_RESULT, tgsRequest);
-    }
+    public String getName();
+
+    public void setDescription(String description);
+
+    public String getDescription();
+
+    public void setValue(Object value);
+
+    public Object getValue();
 }

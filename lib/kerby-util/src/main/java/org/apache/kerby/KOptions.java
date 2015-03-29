@@ -17,8 +17,9 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client;
+package org.apache.kerby;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +77,7 @@ public class KOptions {
         return null;
     }
 
-    public boolean getBooleanOption(KOption option) {
+    public Boolean getBooleanOption(KOption option) {
         Object value = getOptionValue(option);
         if (value instanceof String) {
             String strVal = (String) value;
@@ -88,7 +89,8 @@ public class KOptions {
         } else if (value instanceof Boolean) {
             return (Boolean) value;
         }
-        return false;
+
+        return null;
     }
 
     public int getIntegerOption(KOption option) {
@@ -100,5 +102,21 @@ public class KOptions {
             return (Integer) value;
         }
         return -1;
+    }
+
+    public File getFileOption(KOption option) {
+        Object value = getOptionValue(option);
+        if (value instanceof File) {
+            return (File) value;
+        }
+        return null;
+    }
+
+    public File getDirOption(KOption option) {
+        Object value = getOptionValue(option);
+        if (value instanceof File) {
+            return (File) value;
+        }
+        return null;
     }
 }

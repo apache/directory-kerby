@@ -17,17 +17,13 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client;
+package org.apache.kerby.kerberos.kerb.client.impl.event;
 
-/**
- * Option type.
- */
-public enum KOptionType {
-    NONE,
-    NOV, // no value, a control flag
-    STR, // string value
-    INT, // integer value
-    BOOL, // boolean value
-    FILE, // file path value
-    DIR // dir path value
+import org.apache.kerby.event.EventType;
+
+public enum KrbClientEventType implements EventType {
+    TGT_INTENT,
+    TGT_RESULT,
+    TKT_INTENT,
+    TKT_RESULT
 }

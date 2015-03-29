@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client.preauth;
 
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KOptions;
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlag;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlags;

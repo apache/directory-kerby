@@ -19,11 +19,11 @@
  */
 package org.apache.kerby.kerberos.tool.kinit;
 
+import org.apache.kerby.KOptionType;
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
-import org.apache.kerby.kerberos.kerb.client.KOptionType;
-import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -101,25 +101,25 @@ public class Kinit {
         return password;
     }
 
-    private static void requestTicket(String principal, KOptions krbOptions) throws KrbException, IOException {
-        KrbClient krbClient = getClient();
-        TgtTicket tgt;
-
-        if (krbOptions.contains(KrbOption.USE_KEYTAB)) {
-            tgt = krbClient.requestTgtTicket(principal, krbOptions);
-        } else {
+    private static void requestTicket(String principal,
+                                      KOptions ktOptions) throws Exception {
+        ktOptions.add(KinitOption.CLIENT_PRINCIPAL, principal);
+        if (! ktOptions.contains(KinitOption.USE_KEYTAB)) {
             String password = getPassword(principal);
-            tgt = krbClient.requestTgtTicket(principal, password,
-                    krbOptions);
+            ktOptions.add(KinitOption.USER_PASSWD, password);
         }
 
-        writeTgtToCache(tgt, principal, krbOptions);
+        KrbClient krbClient = getClient();
+        TgtTicket tgt = krbClient.requestTgtWithOptions(
+                ToolUtil.convertOptions(ktOptions));
+
+        writeTgtToCache(tgt, principal, ktOptions);
     }
 
     /**
      * Init the client.
      */
-    private static KrbClient getClient() {
+    private static KrbClient getClient() throws KrbException {
         KrbClient krbClient = new KrbClient();
         krbClient.init();
         return krbClient;
@@ -128,8 +128,8 @@ public class Kinit {
     /**
      * Write tgt into credentials cache.
      */
-    private static void writeTgtToCache(TgtTicket tgt, String principal, KOptions kinitOptions)
-            throws IOException {
+    private static void writeTgtToCache(
+            TgtTicket tgt, String principal, KOptions kinitOptions) throws IOException {
         Credential credential = new Credential(tgt);
         CredentialCache cCache = new CredentialCache();
         cCache.addCredential(credential);
@@ -189,7 +189,7 @@ public class Kinit {
             printUsage("No principal is specified");
         }
 
-        Kinit.requestTicket(principal, ToolUtil.convertOptions(ktOptions));
+        Kinit.requestTicket(principal, ktOptions);
         System.exit(0);
     }
 

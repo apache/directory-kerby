@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.kerberos.kerb.client.KOptions;
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;

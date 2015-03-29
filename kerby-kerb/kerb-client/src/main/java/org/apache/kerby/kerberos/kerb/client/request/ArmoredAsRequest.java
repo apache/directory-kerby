@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
-import org.apache.kerby.kerberos.kerb.client.KOptions;
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.crypto.fast.FastUtil;

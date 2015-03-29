@@ -17,30 +17,28 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client;
+package org.apache.kerby.kerberos.kerb.client.impl.event;
 
 import org.apache.kerby.event.AbstractEventHandler;
 import org.apache.kerby.event.Event;
 import org.apache.kerby.event.EventType;
-import org.apache.kerby.kerberos.kerb.client.event.KrbClientEvent;
-import org.apache.kerby.kerberos.kerb.client.event.KrbClientEventType;
+import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
-import org.apache.kerby.transport.Transport;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.transport.event.MessageEvent;
 import org.apache.kerby.transport.event.TransportEventType;
 
 import java.nio.ByteBuffer;
 
-public class KrbHandler extends AbstractEventHandler {
+public class EventKrbHandler extends AbstractEventHandler {
 
     private KrbContext context;
     private PreauthHandler preauthHandler;
@@ -73,17 +71,17 @@ public class KrbHandler extends AbstractEventHandler {
         }
     }
 
-    protected void handleKdcRequest(KdcRequest kdcRequest) throws KrbException {
+    protected void handleKdcRequest(KdcRequest kdcRequest) throws Exception {
         kdcRequest.process();
         KdcReq kdcReq = kdcRequest.getKdcReq();
-        Transport transport = kdcRequest.getTransport();
+        KrbTransport transport = kdcRequest.getTransport();
         transport.setAttachment(kdcRequest);
         KrbUtil.sendMessage(kdcReq, transport);
     }
 
     protected void handleMessage(MessageEvent event) throws Exception {
         ByteBuffer message = event.getMessage();
-        KrbMessage kdcRep = KrbUtil.decodeMessage(message);
+        KrbMessage kdcRep = KrbUtil.decodeMessageOld(message);
 
         KrbMessageType messageType = kdcRep.getMsgType();
         if (messageType == KrbMessageType.AS_REP) {

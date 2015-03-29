@@ -19,13 +19,13 @@
  */
 package org.apache.kerby.kerberos.kerb.client.request;
 
+import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KOptions;
 import org.apache.kerby.kerberos.kerb.client.preauth.KrbFastContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.*;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOptions;
@@ -33,7 +33,7 @@ import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.transport.Transport;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -47,7 +47,7 @@ import java.util.Map;
  */
 public abstract class KdcRequest {
     private KrbContext context;
-    private Transport transport;
+    private KrbTransport transport;
 
     private KOptions krbOptions;
     private PrincipalName serverPrincipal;
@@ -75,11 +75,11 @@ public abstract class KdcRequest {
         this.fastContext = new KrbFastContext();
     }
 
-    public void setTransport(Transport transport) {
+    public void setTransport(KrbTransport transport) {
         this.transport = transport;
     }
 
-    public Transport getTransport() {
+    public KrbTransport getTransport() {
         return this.transport;
     }
 
