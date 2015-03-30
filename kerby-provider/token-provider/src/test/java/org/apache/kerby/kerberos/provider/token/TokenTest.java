@@ -27,6 +27,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,5 +88,36 @@ public class TokenTest {
         System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
+    }
+
+    @Test
+    public void testTokenWithEncryptedJWT() throws Exception {
+        setEncryptKey();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        String tokenStr = tokenEncoder.encodeAsString(authToken);
+        System.out.println("Auth token: " + tokenStr);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
+        System.out.println("Decoded token's subject: " + token2.getSubject());
+        Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
+        Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
+    }
+
+    private void setEncryptKey() {
+        KeyPair encryptionKeyPair = getKeyPair();
+        JwtTokenEncoder.setEncryptionKey((RSAPublicKey) encryptionKeyPair.getPublic());
+        JwtTokenDecoder.setDecryptionKey((RSAPrivateKey) encryptionKeyPair.getPrivate());
+    }
+
+    private KeyPair getKeyPair() {
+        KeyPairGenerator kpg = null;
+        try {
+            kpg = KeyPairGenerator.getInstance("RSA");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return kpg.generateKeyPair();
     }
 }

@@ -19,19 +19,27 @@
  */
 package org.apache.kerby.kerberos.provider.token;
 
+import com.nimbusds.jose.EncryptionMethod;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.crypto.RSAEncrypter;
+import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.PlainJWT;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
-import java.io.IOException;
+import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 
 /**
  * JWT token encoder, implemented using Nimbus JWT library.
  */
 public class JwtTokenEncoder implements TokenEncoder {
+    private static JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP;
+    private static EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM;
+    private static RSAPublicKey encryptionKey;
 
     @Override
     public byte[] encodeAsBytes(AuthToken token) throws KrbException {
@@ -48,7 +56,35 @@ public class JwtTokenEncoder implements TokenEncoder {
         JwtAuthToken jwtAuthToken = (JwtAuthToken) token;
         JWT jwt = jwtAuthToken.getJwt();
 
-        String tokenStr = jwt.serialize();
+        String tokenStr = null;
+        // Encrypt
+        if (encryptionKey != null) {
+            JWEHeader header = new JWEHeader(jweAlgorithm, encryptionMethod);
+            EncryptedJWT encryptedJWT = null;
+            try {
+                encryptedJWT = new EncryptedJWT(header, jwt.getJWTClaimsSet());
+            } catch (ParseException e) {
+                throw new KrbException("Failed to get JWT claims set", e);
+            }
+            try {
+                encryptedJWT.encrypt(new RSAEncrypter(encryptionKey));
+            } catch (JOSEException e) {
+                throw new KrbException("Failed to encrypt the encrypted JWT", e);
+            }
+            tokenStr = encryptedJWT.serialize();
+
+        } else {
+            tokenStr = jwt.serialize();
+        }
         return tokenStr;
+    }
+
+    /**
+     * set the encryption key
+     *
+     * @param key a public key
+     */
+    public static void setEncryptionKey(RSAPublicKey key) {
+        encryptionKey = key;
     }
 }
