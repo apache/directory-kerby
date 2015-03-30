@@ -20,16 +20,20 @@
 package org.apache.kerby.kerberos.provider.token;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSADecrypter;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.PlainJWT;
+import com.nimbusds.jwt.SignedJWT;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
 import java.io.IOException;
 import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 
 /**
@@ -37,6 +41,7 @@ import java.text.ParseException;
  */
 public class JwtTokenDecoder implements TokenDecoder {
     private static RSAPrivateKey decryptionKey;
+    private static RSAPublicKey verifyKey;
 
     @Override
     public AuthToken decodeFromBytes(byte[] content) throws IOException {
@@ -65,10 +70,36 @@ public class JwtTokenDecoder implements TokenDecoder {
         } else if (jwt instanceof EncryptedJWT) {
             EncryptedJWT encryptedJWT = (EncryptedJWT) jwt;
             decryptEncryptedJWT(encryptedJWT);
-            try {
-                return new JwtAuthToken(encryptedJWT.getJWTClaimsSet());
-            } catch (ParseException e) {
-                throw new IOException("Failed to get JWT claims set", e);
+            SignedJWT signedJWT = encryptedJWT.getPayload().toSignedJWT();
+            if (signedJWT != null) {
+                boolean success = verifySignedJWT(signedJWT);
+                if (success) {
+                    try {
+                        return new JwtAuthToken(signedJWT.getJWTClaimsSet());
+                    } catch (ParseException e) {
+                        throw new IOException("Failed to get JWT claims set", e);
+                    }
+                } else {
+                    return null;
+                }
+            } else {
+                try {
+                    return new JwtAuthToken(encryptedJWT.getJWTClaimsSet());
+                } catch (ParseException e) {
+                    throw new IOException("Failed to get JWT claims set", e);
+                }
+            }
+        } else if (jwt instanceof SignedJWT) {
+            SignedJWT signedJWT = (SignedJWT) jwt;
+            boolean success = verifySignedJWT(signedJWT);
+            if (success) {
+                try {
+                    return new JwtAuthToken(signedJWT.getJWTClaimsSet());
+                } catch (ParseException e) {
+                    throw new IOException("Failed to get JWT claims set", e);
+                }
+            } else {
+                return null;
             }
         } else {
             throw new IOException("Unexpected JWT type: " + jwt);
@@ -97,4 +128,29 @@ public class JwtTokenDecoder implements TokenDecoder {
     public static void setDecryptionKey(RSAPrivateKey key) {
         decryptionKey = key;
     }
+
+    /**
+     * verify the Signed JWT
+     *
+     * @param signedJWT
+     * @return whether verify success
+     */
+    public boolean verifySignedJWT(SignedJWT signedJWT) throws IOException {
+        JWSVerifier verifier = new RSASSAVerifier(verifyKey);
+        try {
+            return signedJWT.verify(verifier);
+        } catch (JOSEException e) {
+            throw new IOException("Failed to verify the signed JWT", e);
+        }
+    }
+
+    /**
+     * set the verify key
+     *
+     * @param key a public key
+     */
+    public static void setVerifyKey(RSAPublicKey key) {
+        verifyKey = key;
+    }
+
 }

@@ -105,6 +105,37 @@ public class TokenTest {
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
 
+    @Test
+    public void testTokenWithSignedJWT() throws Exception {
+        setSignKey();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        String tokenStr = tokenEncoder.encodeAsString(authToken);
+        System.out.println("Auth token: " + tokenStr);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
+        System.out.println("Decoded token's subject: " + token2.getSubject());
+        Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
+        Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
+    }
+
+    @Test
+    public void testTokenWithSingedAndEncryptedJWT() throws Exception {
+        setSignKey();
+        setEncryptKey();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        String tokenStr = tokenEncoder.encodeAsString(authToken);
+        System.out.println("Auth token: " + tokenStr);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
+        System.out.println("Decoded token's subject: " + token2.getSubject());
+        Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
+        Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
+    }
+
     private void setEncryptKey() {
         KeyPair encryptionKeyPair = getKeyPair();
         JwtTokenEncoder.setEncryptionKey((RSAPublicKey) encryptionKeyPair.getPublic());
@@ -119,5 +150,11 @@ public class TokenTest {
             e.printStackTrace();
         }
         return kpg.generateKeyPair();
+    }
+
+    private void setSignKey() {
+        KeyPair signKeyPair = getKeyPair();
+        JwtTokenEncoder.setSignKey((RSAPrivateKey) signKeyPair.getPrivate());
+        JwtTokenDecoder.setVerifyKey((RSAPublicKey)signKeyPair.getPublic());
     }
 }

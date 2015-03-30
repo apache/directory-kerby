@@ -23,13 +23,21 @@ import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.JWEObject;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.RSAEncrypter;
+import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.SignedJWT;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
+import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 
@@ -40,6 +48,8 @@ public class JwtTokenEncoder implements TokenEncoder {
     private static JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP;
     private static EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM;
     private static RSAPublicKey encryptionKey;
+    private static JWSAlgorithm jwsAlgorithm = JWSAlgorithm.RS256;
+    private static RSAPrivateKey signKey;
 
     @Override
     public byte[] encodeAsBytes(AuthToken token) throws KrbException {
@@ -57,8 +67,36 @@ public class JwtTokenEncoder implements TokenEncoder {
         JWT jwt = jwtAuthToken.getJwt();
 
         String tokenStr = null;
-        // Encrypt
-        if (encryptionKey != null) {
+        if (signKey != null) {
+            // Create signer with the private key
+            JWSSigner signer = new RSASSASigner(signKey);
+            SignedJWT signedJWT = null;
+            try {
+                signedJWT = new SignedJWT(new JWSHeader(jwsAlgorithm), jwt.getJWTClaimsSet());
+            } catch (ParseException e) {
+                throw new KrbException("Failed to get JWT claims set", e);
+            }
+            try {
+                signedJWT.sign(signer);
+            } catch (JOSEException e) {
+                throw new KrbException("Failed to sign the Signed JWT", e);
+            }
+            // Encrypt
+            if (encryptionKey != null) {
+                // Create JWE object with signedJWT as payload
+                JWEObject jweObject = new JWEObject(
+                    new JWEHeader.Builder(jweAlgorithm, encryptionMethod).contentType("JWT").build(),
+                    new Payload(signedJWT));
+                try {
+                    jweObject.encrypt(new RSAEncrypter(encryptionKey));
+                } catch (JOSEException e) {
+                    throw new KrbException("Failed to encrypt the JWE object", e);
+                }
+                tokenStr = jweObject.serialize();
+            } else {
+                tokenStr = signedJWT.serialize();
+            }
+        } else if (encryptionKey != null) {
             JWEHeader header = new JWEHeader(jweAlgorithm, encryptionMethod);
             EncryptedJWT encryptedJWT = null;
             try {
@@ -86,5 +124,14 @@ public class JwtTokenEncoder implements TokenEncoder {
      */
     public static void setEncryptionKey(RSAPublicKey key) {
         encryptionKey = key;
+    }
+
+    /**
+     * set the sign key
+     *
+     * @param key a private key
+     */
+    public static void setSignKey(RSAPrivateKey key) {
+        signKey = key;
     }
 }
