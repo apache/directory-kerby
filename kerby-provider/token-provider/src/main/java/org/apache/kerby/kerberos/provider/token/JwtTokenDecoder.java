@@ -40,8 +40,8 @@ import java.text.ParseException;
  * JWT token decoder, implemented using Nimbus JWT library.
  */
 public class JwtTokenDecoder implements TokenDecoder {
-    private static RSAPrivateKey decryptionKey;
-    private static RSAPublicKey verifyKey;
+    private RSAPrivateKey decryptionKey;
+    private RSAPublicKey verifyKey;
 
     @Override
     public AuthToken decodeFromBytes(byte[] content) throws IOException {
@@ -125,7 +125,7 @@ public class JwtTokenDecoder implements TokenDecoder {
      *
      * @param key a private key
      */
-    public static void setDecryptionKey(RSAPrivateKey key) {
+    public void setDecryptionKey(RSAPrivateKey key) {
         decryptionKey = key;
     }
 
@@ -149,7 +149,7 @@ public class JwtTokenDecoder implements TokenDecoder {
      *
      * @param key a public key
      */
-    public static void setVerifyKey(RSAPublicKey key) {
+    public void setVerifyKey(RSAPublicKey key) {
         verifyKey = key;
     }
 

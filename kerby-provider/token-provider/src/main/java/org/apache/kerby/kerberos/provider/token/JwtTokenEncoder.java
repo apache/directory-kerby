@@ -47,9 +47,9 @@ import java.text.ParseException;
 public class JwtTokenEncoder implements TokenEncoder {
     private static JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP;
     private static EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM;
-    private static RSAPublicKey encryptionKey;
     private static JWSAlgorithm jwsAlgorithm = JWSAlgorithm.RS256;
-    private static RSAPrivateKey signKey;
+    private RSAPublicKey encryptionKey;
+    private RSAPrivateKey signKey;
 
     @Override
     public byte[] encodeAsBytes(AuthToken token) throws KrbException {
@@ -122,7 +122,7 @@ public class JwtTokenEncoder implements TokenEncoder {
      *
      * @param key a public key
      */
-    public static void setEncryptionKey(RSAPublicKey key) {
+    public void setEncryptionKey(RSAPublicKey key) {
         encryptionKey = key;
     }
 
@@ -131,7 +131,7 @@ public class JwtTokenEncoder implements TokenEncoder {
      *
      * @param key a private key
      */
-    public static void setSignKey(RSAPrivateKey key) {
+    public void setSignKey(RSAPrivateKey key) {
         signKey = key;
     }
 }

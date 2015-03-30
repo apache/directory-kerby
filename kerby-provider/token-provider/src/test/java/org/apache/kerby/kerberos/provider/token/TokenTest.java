@@ -92,13 +92,14 @@ public class TokenTest {
 
     @Test
     public void testTokenWithEncryptedJWT() throws Exception {
-        setEncryptKey();
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        setEncryptKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
         String tokenStr = tokenEncoder.encodeAsString(authToken);
         System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
@@ -107,13 +108,14 @@ public class TokenTest {
 
     @Test
     public void testTokenWithSignedJWT() throws Exception {
-        setSignKey();
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        setSignKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
         String tokenStr = tokenEncoder.encodeAsString(authToken);
         System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
@@ -122,24 +124,26 @@ public class TokenTest {
 
     @Test
     public void testTokenWithSingedAndEncryptedJWT() throws Exception {
-        setSignKey();
-        setEncryptKey();
+
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        setSignKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
+        setEncryptKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
         String tokenStr = tokenEncoder.encodeAsString(authToken);
         System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
 
-    private void setEncryptKey() {
+    private void setEncryptKey(JwtTokenEncoder encoder, JwtTokenDecoder decoder) {
         KeyPair encryptionKeyPair = getKeyPair();
-        JwtTokenEncoder.setEncryptionKey((RSAPublicKey) encryptionKeyPair.getPublic());
-        JwtTokenDecoder.setDecryptionKey((RSAPrivateKey) encryptionKeyPair.getPrivate());
+        encoder.setEncryptionKey((RSAPublicKey) encryptionKeyPair.getPublic());
+        decoder.setDecryptionKey((RSAPrivateKey) encryptionKeyPair.getPrivate());
     }
 
     private KeyPair getKeyPair() {
@@ -152,9 +156,9 @@ public class TokenTest {
         return kpg.generateKeyPair();
     }
 
-    private void setSignKey() {
+    private void setSignKey(JwtTokenEncoder encoder, JwtTokenDecoder decoder) {
         KeyPair signKeyPair = getKeyPair();
-        JwtTokenEncoder.setSignKey((RSAPrivateKey) signKeyPair.getPrivate());
-        JwtTokenDecoder.setVerifyKey((RSAPublicKey)signKeyPair.getPublic());
+        encoder.setSignKey((RSAPrivateKey) signKeyPair.getPrivate());
+        decoder.setVerifyKey((RSAPublicKey)signKeyPair.getPublic());
     }
 }
