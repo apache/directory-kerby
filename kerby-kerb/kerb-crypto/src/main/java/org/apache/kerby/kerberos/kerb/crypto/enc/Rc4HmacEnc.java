@@ -39,13 +39,19 @@ public class Rc4HmacEnc extends AbstractEncTypeHandler {
     }
 
     public Rc4HmacEnc(boolean exportable) {
-        super(new Rc4Provider(), new Md5Provider());
+        super(new Rc4Provider(), new Md5Provider(), 20);
         keyMaker(new Rc4KeyMaker(this.encProvider()));
         this.exportable = exportable;
     }
 
     public EncryptionType eType() {
         return EncryptionType.ARCFOUR_HMAC;
+    }
+
+    @Override
+    public byte[] prf(byte[] key, byte[] seed) {
+        // TODO: krb5int_arcfour_prf
+        return null;
     }
 
     @Override

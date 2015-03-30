@@ -29,8 +29,14 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 abstract class DesCbcEnc extends AbstractEncTypeHandler {
 
     public DesCbcEnc(HashProvider hashProvider) {
-        super(new DesProvider(), hashProvider);
+        super(new DesProvider(), hashProvider, 16);
         keyMaker(new DesKeyMaker(this.encProvider()));
+    }
+
+    @Override
+    public byte[] prf(byte[] key, byte[] seed) {
+        // TODO: krb5int_des_prf
+        return null;
     }
 
     @Override

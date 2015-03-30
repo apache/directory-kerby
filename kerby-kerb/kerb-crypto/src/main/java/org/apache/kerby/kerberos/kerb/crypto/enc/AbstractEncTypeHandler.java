@@ -28,11 +28,13 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 public abstract class AbstractEncTypeHandler
         extends AbstractCryptoTypeHandler implements EncTypeHandler {
 
+    private int prfSize;
     private KeyMaker keyMaker;
 
     public AbstractEncTypeHandler(EncryptProvider encProvider,
-                                  HashProvider hashProvider) {
+                                  HashProvider hashProvider, int prfSize) {
         super(encProvider, hashProvider);
+        this.prfSize = prfSize;
     }
 
     protected void keyMaker(KeyMaker keyMaker) {
@@ -41,6 +43,11 @@ public abstract class AbstractEncTypeHandler
 
     protected KeyMaker keyMaker() {
         return keyMaker;
+    }
+
+    @Override
+    public int prfSize() {
+        return this.prfSize;
     }
 
     @Override

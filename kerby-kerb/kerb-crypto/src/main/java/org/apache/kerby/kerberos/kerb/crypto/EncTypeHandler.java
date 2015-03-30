@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.crypto;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 public interface EncTypeHandler extends CryptoTypeHandler {
@@ -34,6 +35,10 @@ public interface EncTypeHandler extends CryptoTypeHandler {
     public int confounderSize();
 
     public int checksumSize();
+
+    public int prfSize();
+
+    public byte[] prf(byte[] key, byte[] seed);
 
     public int paddingSize();
 

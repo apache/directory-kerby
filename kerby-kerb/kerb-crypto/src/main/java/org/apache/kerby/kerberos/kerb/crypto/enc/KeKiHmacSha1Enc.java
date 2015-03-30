@@ -36,6 +36,12 @@ public abstract class KeKiHmacSha1Enc extends KeKiEnc {
     }
 
     @Override
+    public byte[] prf(byte[] key, byte[] seed) {
+        // TODO: krb5int_dk_prf
+        return null;
+    }
+
+    @Override
     protected byte[] makeChecksum(byte[] key, byte[] data, int hashSize)
             throws KrbException {
 

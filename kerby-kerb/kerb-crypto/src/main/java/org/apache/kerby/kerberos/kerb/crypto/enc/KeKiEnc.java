@@ -30,7 +30,7 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
 
     public KeKiEnc(EncryptProvider encProvider,
                    HashProvider hashProvider) {
-        super(encProvider, hashProvider);
+        super(encProvider, hashProvider, 16);
     }
 
     @Override
