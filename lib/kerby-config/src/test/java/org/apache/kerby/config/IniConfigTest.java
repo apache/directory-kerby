@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.config;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -30,9 +32,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class IniConfigTest {
 
-    private final static String TEST_DIR = new File(System.getProperty(
-            "test.build.data", "/tmp")).getAbsolutePath();
-    private final static File TEST_FILE = new File(TEST_DIR, "test-ini-config");
+    private final File TEST_DIR = new File(System.getProperty("test.dir","target"));
+    private final File TEST_FILE = new File(TEST_DIR, "test-ini-config");
+
+    @Before
+    public void setUp() throws IOException {
+        if (TEST_FILE.exists()){
+            TEST_FILE.delete();
+        }
+        buildFile();
+    }
 
     /**
      * Build a INI format configuration file.
@@ -58,8 +67,6 @@ public class IniConfigTest {
 
     @Test
     public void testIniConfig() throws IOException {
-        buildFile();
-
         Conf conf = new Conf();
         conf.addIniConfig(TEST_FILE);
 
@@ -74,4 +81,8 @@ public class IniConfigTest {
         assertThat(config1.getBoolean("dns_lookup_realm")).isTrue();
     }
 
+    @After
+    public void tearDown() {
+        TEST_FILE.delete();
+    }
 }
