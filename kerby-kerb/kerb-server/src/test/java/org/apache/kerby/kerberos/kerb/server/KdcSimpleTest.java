@@ -30,7 +30,7 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class KdcTest {
+public class KdcSimpleTest {
 
     private String serverHost = "localhost";
     private int serverPort = 0;

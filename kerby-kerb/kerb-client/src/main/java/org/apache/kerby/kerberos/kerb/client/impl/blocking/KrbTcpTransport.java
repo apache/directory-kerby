@@ -22,9 +22,12 @@ package org.apache.kerby.kerberos.kerb.client.impl.blocking;
 import org.apache.kerby.kerberos.kerb.transport.AbstractKrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -35,52 +38,40 @@ import java.nio.channels.SocketChannel;
  */
 public class KrbTcpTransport
         extends AbstractKrbTransport implements KrbTransport {
-    private SocketChannel socketChannel;
-    private ReadableByteChannel wrappedChannel; // for timeout stuff.
+    private Socket socketChannel;
+    private DataOutputStream outputStream;
+    private DataInputStream inputStream;
     private InetSocketAddress remoteAddress;
-    private ByteBuffer headerBuffer; // for message length
-    private ByteBuffer messageBuffer; // for message body
+    private byte[] headerBuffer; // for message length
+    private byte[] messageBuffer; // for message body
 
     public KrbTcpTransport(InetSocketAddress remoteAddress) throws IOException {
         this.remoteAddress = remoteAddress;
-        this.headerBuffer = ByteBuffer.allocate(4);
-        this.messageBuffer = ByteBuffer.allocate(1024 * 1024); // TODO.
+        this.headerBuffer = new byte[4];
+        this.messageBuffer = new byte[1024 * 1024]; // TODO.
         doConnect();
     }
 
     private void doConnect() throws IOException {
-        socketChannel = SocketChannel.open();
-        socketChannel.configureBlocking(true);
-        socketChannel.socket().setSoTimeout(100); // TODO.
+        socketChannel = new Socket();
+        socketChannel.setSoTimeout(1000);
         socketChannel.connect(remoteAddress);
-
-        InputStream inStream = socketChannel.socket().getInputStream();
-        wrappedChannel = Channels.newChannel(inStream);
+        outputStream = new DataOutputStream(socketChannel.getOutputStream());
+        inputStream = new DataInputStream(socketChannel.getInputStream());
     }
 
     @Override
     public void sendMessage(ByteBuffer message) throws IOException {
-        socketChannel.write(message);
+        outputStream.write(message.array());
     }
 
     @Override
     public ByteBuffer receiveMessage() {
         try {
-            headerBuffer.clear();
-            headerBuffer.position(0);
-            headerBuffer.limit(4);
-            wrappedChannel.read(headerBuffer);
-            headerBuffer.flip();
-
-            int msgLen = headerBuffer.getInt();
+            int msgLen = inputStream.readInt();
             if (msgLen > 0) {
-                messageBuffer.clear();
-                messageBuffer.position(0);
-                messageBuffer.limit(msgLen);
-                wrappedChannel.read(messageBuffer);
-                messageBuffer.flip();
-
-                return messageBuffer;
+                inputStream.readFully(messageBuffer, 0, msgLen);
+                return ByteBuffer.wrap(messageBuffer, 0, msgLen);
             }
         } catch (IOException e) {
             return null;

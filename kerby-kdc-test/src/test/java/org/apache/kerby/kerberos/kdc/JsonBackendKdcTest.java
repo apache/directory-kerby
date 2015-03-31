@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-public class JsonBackendKdcTest extends KdcTest {
+public class JsonBackendKdcTest extends KerbyKdcTest {
     private static File jsonBackendFile;
 
     @Override

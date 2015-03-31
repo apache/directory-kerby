@@ -28,7 +28,7 @@ import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public abstract class KdcTest extends KdcTestBase {
+public abstract class KerbyKdcTest extends KdcTestBase {
 
     private String password = "123456";
 
