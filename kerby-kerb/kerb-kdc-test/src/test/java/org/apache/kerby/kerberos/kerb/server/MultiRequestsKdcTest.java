@@ -17,18 +17,18 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kdc;
+package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public abstract class KerbyKdcTest extends KdcTestBase {
+public class MultiRequestsKdcTest extends KdcTestBase {
 
     private String password = "123456";
 
@@ -38,7 +38,8 @@ public abstract class KerbyKdcTest extends KdcTestBase {
         kdcServer.createPrincipal(clientPrincipal, password);
     }
 
-    protected void performKdcTest() throws Exception {
+    @Test
+    public void multiRequestsTest() throws Exception {
         kdcServer.start();
         assertThat(kdcServer.isStarted()).isTrue();
 
@@ -50,6 +51,7 @@ public abstract class KerbyKdcTest extends KdcTestBase {
         TgtTicket tgt;
         ServiceTicket tkt;
 
+        // With good password
         try {
             tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
             assertThat(tgt).isNotNull();
@@ -58,6 +60,26 @@ public abstract class KerbyKdcTest extends KdcTestBase {
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password");
+            e.printStackTrace();
+            Assert.fail();
+        }
+
+        // With bad password
+        try {
+            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, "badpassword");
+        } catch (Exception e) {
+            System.out.println("Exception occurred with bad password");
+        }
+
+        // With good password again
+        try {
+            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
+            assertThat(tgt).isNotNull();
+
+            tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
+            assertThat(tkt).isNotNull();
+        } catch (Exception e) {
+            System.out.println("Exception occurred with good password again");
             e.printStackTrace();
             Assert.fail();
         }

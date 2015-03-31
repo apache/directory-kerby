@@ -49,7 +49,6 @@ public abstract class KdcTest extends KdcTestBase {
         TgtTicket tgt;
         ServiceTicket tkt;
 
-        // With good password
         try {
             tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
             assertThat(tgt).isNotNull();
@@ -58,26 +57,6 @@ public abstract class KdcTest extends KdcTestBase {
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password");
-            e.printStackTrace();
-            Assert.fail();
-        }
-
-        // With bad password
-        try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, "badpassword");
-        } catch (Exception e) {
-            System.out.println("Exception occurred with bad password");
-        }
-
-        // With good password again
-        try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
-            assertThat(tgt).isNotNull();
-
-            tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
-            assertThat(tkt).isNotNull();
-        } catch (Exception e) {
-            System.out.println("Exception occurred with good password again");
             e.printStackTrace();
             Assert.fail();
         }

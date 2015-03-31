@@ -25,44 +25,38 @@ import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.SocketChannel;
 
 /**
  * Default implementation of {@Link KrbTransport} using TCP in block mode.
  */
 public class KrbTcpTransport
         extends AbstractKrbTransport implements KrbTransport {
-    private Socket socketChannel;
+    private Socket socket;
     private DataOutputStream outputStream;
     private DataInputStream inputStream;
     private InetSocketAddress remoteAddress;
-    private byte[] headerBuffer; // for message length
     private byte[] messageBuffer; // for message body
 
     public KrbTcpTransport(InetSocketAddress remoteAddress) throws IOException {
         this.remoteAddress = remoteAddress;
-        this.headerBuffer = new byte[4];
         this.messageBuffer = new byte[1024 * 1024]; // TODO.
         doConnect();
     }
 
     private void doConnect() throws IOException {
-        socketChannel = new Socket();
-        socketChannel.setSoTimeout(1000);
-        socketChannel.connect(remoteAddress);
-        outputStream = new DataOutputStream(socketChannel.getOutputStream());
-        inputStream = new DataInputStream(socketChannel.getInputStream());
+        socket = new Socket();
+        socket.setSoTimeout(10 * 1000); // 10 seconds. TODO: from config
+        socket.connect(remoteAddress);
+        outputStream = new DataOutputStream(socket.getOutputStream());
+        inputStream = new DataInputStream(socket.getInputStream());
     }
 
     @Override
     public void sendMessage(ByteBuffer message) throws IOException {
-        outputStream.write(message.array());
+        outputStream.write(message.array()); // TODO: may not be backed by array
     }
 
     @Override
@@ -74,6 +68,7 @@ public class KrbTcpTransport
                 return ByteBuffer.wrap(messageBuffer, 0, msgLen);
             }
         } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
 
