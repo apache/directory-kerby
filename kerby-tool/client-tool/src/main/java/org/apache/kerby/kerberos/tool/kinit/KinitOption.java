@@ -39,6 +39,7 @@ public enum KinitOption implements KOption {
     RENEW("-R", "renew"),
     CANONICALIZE("-C", "canonicalize"),
     AS_ENTERPRISE_PN("-E", "client is enterprise principal name"),
+    USE_PASSWD("using password", "using password"),
     USER_PASSWD("user-passwd", "User plain password"),
     USE_KEYTAB("-k", "use keytab"),
     USE_DFT_KEYTAB("-i", "use default client keytab (with -k)"),
