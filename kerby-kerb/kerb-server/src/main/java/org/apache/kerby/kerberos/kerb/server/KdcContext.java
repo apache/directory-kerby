@@ -23,22 +23,23 @@ import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.server.replay.ReplayCheckService;
 
-import java.util.List;
-
 public class KdcContext {
-    private KdcConfig config;
-    private List<String> supportedKdcRealms;
-    private String kdcRealm;
+    private final KdcSetting kdcSetting;
+
     private IdentityService identityService;
     private ReplayCheckService replayCache;
     private PreauthHandler preauthHandler;
 
-    public void init(KdcConfig config) {
-        this.config = config;
+    public KdcContext(KdcSetting kdcSetting) {
+        this.kdcSetting = kdcSetting;
+    }
+
+    public KdcSetting getKdcSetting() {
+        return kdcSetting;
     }
 
     public KdcConfig getConfig() {
-        return config;
+        return kdcSetting.getKdcConfig();
     }
 
     public void setPreauthHandler(PreauthHandler preauthHandler) {
@@ -47,29 +48,6 @@ public class KdcContext {
 
     public PreauthHandler getPreauthHandler() {
         return this.preauthHandler;
-    }
-
-    public List<String> getSupportedKdcRealms() {
-        return supportedKdcRealms;
-    }
-
-    public void setSupportedKdcRealms(List<String> supportedKdcRealms) {
-        this.supportedKdcRealms = supportedKdcRealms;
-    }
-
-    public void setKdcRealm(String realm) {
-        this.kdcRealm = realm;
-    }
-
-    public String getServerRealm() {
-        return config.getKdcRealm();
-    }
-
-    public String getKdcRealm() {
-        if (kdcRealm != null) {
-            return kdcRealm;
-        }
-        return config.getKdcRealm();
     }
 
     public void setReplayCache(ReplayCheckService replayCache) {
@@ -84,8 +62,11 @@ public class KdcContext {
         this.identityService = identityService;
     }
 
-
     public IdentityService getIdentityService() {
         return identityService;
+    }
+
+    public String getKdcRealm() {
+        return kdcSetting.getKdcRealm();
     }
 }

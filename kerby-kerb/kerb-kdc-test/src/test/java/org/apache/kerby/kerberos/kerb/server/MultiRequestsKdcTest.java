@@ -41,7 +41,6 @@ public class MultiRequestsKdcTest extends KdcTestBase {
     @Test
     public void multiRequestsTest() throws Exception {
         kdcServer.start();
-        assertThat(kdcServer.isStarted()).isTrue();
 
         File testDir = new File(System.getProperty("test.dir", "target"));
         File testConfDir = new File(testDir, "conf");

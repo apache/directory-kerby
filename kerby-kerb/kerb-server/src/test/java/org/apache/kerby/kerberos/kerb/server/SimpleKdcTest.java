@@ -30,16 +30,16 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class KdcSimpleTest {
+public class SimpleKdcTest {
 
     private String serverHost = "localhost";
     private int serverPort = 0;
 
-    private SimpleKdcServer kdcServer;
+    private KdcServer kdcServer;
 
     @Before
     public void setUp() throws Exception {
-        kdcServer = new SimpleKdcServer();
+        kdcServer = new KdcServer();
         kdcServer.setKdcHost(serverHost);
         serverPort = getServerPort();
         kdcServer.setKdcTcpPort(serverPort);

@@ -41,7 +41,7 @@ public class AsRequest extends KdcRequest {
         AsRep reply = new AsRep();
 
         reply.setCname(getClientEntry().getPrincipal());
-        reply.setCrealm(kdcContext.getServerRealm());
+        reply.setCrealm(kdcContext.getKdcRealm());
         reply.setTicket(ticket);
 
         EncKdcRepPart encKdcRepPart = makeEncKdcRepPart();

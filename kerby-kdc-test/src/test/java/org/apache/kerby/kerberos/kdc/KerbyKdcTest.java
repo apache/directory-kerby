@@ -40,7 +40,6 @@ public abstract class KerbyKdcTest extends KdcTestBase {
 
     protected void performKdcTest() throws Exception {
         kdcServer.start();
-        assertThat(kdcServer.isStarted()).isTrue();
 
         File testDir = new File(System.getProperty("test.dir", "target"));
         File testConfDir = new File(testDir, "conf");

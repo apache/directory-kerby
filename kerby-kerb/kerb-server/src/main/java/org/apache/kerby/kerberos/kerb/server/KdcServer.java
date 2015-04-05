@@ -19,189 +19,67 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.config.Conf;
-import org.apache.kerby.config.Config;
-import org.apache.kerby.event.EventHub;
-import org.apache.kerby.kerberos.kerb.common.KrbStreamingDecoder;
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
-import org.apache.kerby.transport.Network;
+import org.apache.kerby.kerberos.kerb.server.impl.InternalKdcServer;
+import org.apache.kerby.kerberos.kerb.server.impl.event.EventBasedKdcServer;
 
 import java.io.File;
-import java.io.IOException;
 
 public class KdcServer {
-    private String kdcHost;
-    private int kdcTcpPort;
-    private Boolean allowUdp;
-    private int kdcUdpPort;
-    private String kdcRealm;
-
-    private boolean started;
-    private String serviceName;
-
-    private KdcHandler kdcHandler;
-    private EventHub eventHub;
-
-    private KdcConfig kdcConfig;
-    private Conf backendConfig;
-
-    private IdentityBackend backend;
-    private File workDir;
-    private File confDir;
+    private KOptions commonOptions;
+    private InternalKdcServer innerKdc;
 
     /**
-     * Set runtime folder.
-     * @param workDir
+     * Default constructor.
      */
-    public void setWorkDir(File workDir) {
-        this.workDir = workDir;
+    public KdcServer() {
+        commonOptions = new KOptions();
+    }
+
+    /**
+     * Set KDC config.
+     * @param kdcConfig
+     */
+    public void setKdcConfig(KdcConfig kdcConfig) {
+        commonOptions.add(KdcServerOption.KDC_CONFIG, kdcConfig);
+    }
+
+    /**
+     * Set backend config.
+     * @param backendConfig
+     */
+    public void setBackendConfig(BackendConfig backendConfig) {
+        commonOptions.add(KdcServerOption.BACKEND_CONFIG, backendConfig);
     }
 
     /**
      * Set conf dir where configuration resources can be loaded. Mainly:
      * kdc.conf, that contains kdc server related items.
      * backend.conf, that contains identity backend related items.
+     *
+     * Note confDir is only used when KDC and backend config aren't set.
+     *
      * @param confDir
      */
     public void setConfDir(File confDir) {
-        this.confDir = confDir;
+        commonOptions.add(KdcServerOption.CONF_DIR, confDir);
     }
 
     /**
-     * Get configuration folder.
-     * @return
+     * Set KDC realm for ticket request
+     * @param realm
      */
-    public File getConfDir() {
-        return confDir;
+    public void setKdcRealm(String realm) {
+        commonOptions.add(KdcServerOption.KDC_REALM, realm);
     }
 
     /**
-     * Get the backend identity service.
-     * @return
+     * Set KDC host.
+     * @param kdcHost
      */
-    public IdentityService getIdentityService() {
-        return backend;
-    }
-
-    public void init() {
-        try {
-            initConfig();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load configurations", e);
-        }
-
-        initBackend();
-    }
-
-    /**
-     * Prepare kdc and backend config, loading kdc.conf and backend.conf.
-     * It can be override to add more configuration resources.
-     *
-     * @throws IOException
-     */
-    protected void initConfig() throws IOException {
-        kdcConfig = new KdcConfig();
-        backendConfig = new Conf();
-
-        if (confDir != null && confDir.exists()) {
-            File kdcConfFile = new File(confDir, "kdc.conf");
-            if (kdcConfFile.exists()) {
-                kdcConfig.addIniConfig(kdcConfFile);
-            }
-
-            File backendConfFile = new File(confDir, "backend.conf");
-            if (backendConfFile.exists()) {
-                backendConfig.addIniConfig(backendConfFile);
-            }
-        }
-    }
-
-    private void initBackend() {
-        String backendClassName = backendConfig.getString(
-                KdcConfigKey.KDC_IDENTITY_BACKEND);
-        if (backendClassName == null) {
-            backendClassName = MemoryIdentityBackend.class.getCanonicalName();
-        }
-
-        Class backendClass = null;
-        try {
-            backendClass = Class.forName(backendClassName);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Failed to load backend class: "
-                    + backendClassName);
-        }
-
-        try {
-            backend = (IdentityBackend) backendClass.newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException("Failed to create backend: "
-                    + backendClassName);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Failed to create backend: "
-                    + backendClassName);
-        }
-
-        backend.setConfig(backendConfig);
-        backend.initialize();
-    }
-
-    public void start() {
-        try {
-            doStart();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to start " + getServiceName(), e);
-        }
-
-        started = true;
-    }
-
-    public String getKdcRealm() {
-        if (kdcRealm != null) {
-            return kdcRealm;
-        }
-        return kdcConfig.getKdcRealm();
-    }
-
-    private String getKdcHost() {
-        if (kdcHost != null) {
-            return kdcHost;
-        }
-        return kdcConfig.getKdcHost();
-    }
-
-    private int getKdcTcpPort() {
-        if (kdcTcpPort > 0) {
-            return kdcTcpPort;
-        }
-        return kdcConfig.getKdcTcpPort();
-    }
-
-    private boolean allowUdp() {
-        if (allowUdp != null) {
-            return allowUdp;
-        }
-        return kdcConfig.allowKdcUdp();
-    }
-
-    private int getKdcUdpPort() {
-        if (kdcUdpPort > 0) {
-            return kdcUdpPort;
-        }
-        return kdcConfig.getKdcUdpPort();
-    }
-
     public void setKdcHost(String kdcHost) {
-        this.kdcHost = kdcHost;
-    }
-
-    /**
-     * Set to allow UDP or not.
-     * @param allowUdp
-     */
-    public void setAllowUdp(boolean allowUdp) {
-        this.allowUdp = allowUdp;
+        commonOptions.add(KdcServerOption.KDC_HOST, kdcHost);
     }
 
     /**
@@ -209,7 +87,15 @@ public class KdcServer {
      * @param kdcTcpPort
      */
     public void setKdcTcpPort(int kdcTcpPort) {
-        this.kdcTcpPort = kdcTcpPort;
+        commonOptions.add(KdcServerOption.KDC_TCP_PORT, kdcTcpPort);
+    }
+
+    /**
+     * Set to allow UDP or not.
+     * @param allowUdp
+     */
+    public void setAllowUdp(boolean allowUdp) {
+        commonOptions.add(KdcServerOption.ALLOW_UDP, allowUdp);
     }
 
     /**
@@ -217,99 +103,61 @@ public class KdcServer {
      * @param kdcUdpPort
      */
     public void setKdcUdpPort(int kdcUdpPort) {
-        this.kdcUdpPort = kdcUdpPort;
+        commonOptions.add(KdcServerOption.KDC_UDP_PORT, kdcUdpPort);
     }
 
     /**
-     * Set KDC realm.
-     * @param realm
+     * Use event model. By default blocking model is used.
      */
-    public void setKdcRealm(String realm) {
-        this.kdcRealm = realm;
+    public void useEventModel() {
+        commonOptions.add(KdcServerOption.USE_EVENT_MODEL);
     }
 
-    public boolean enableDebug() {
-        return kdcConfig.enableDebug();
+    /**
+     * Set runtime folder.
+     * @param workDir
+     */
+    public void setWorkDir(File workDir) {
+        commonOptions.add(KdcServerOption.USE_EVENT_MODEL);
     }
 
-    protected void doStart() throws Exception {
-        backend.start();
+    public void enableDebug() {
+        commonOptions.add(KdcServerOption.USE_EVENT_MODEL);
+    }
 
-        prepareHandler();
+    /**
+     * Get KDC setting.
+     * @return setting
+     */
+    public KdcSetting getKdcSetting() {
+        return innerKdc.getKdcSetting();
+    }
 
-        this.eventHub = new EventHub();
+    /**
+     * Get identity service.
+     * @return IdentityService
+     */
+    public IdentityService getIdentityService() {
+        return innerKdc.getIdentityService();
+    }
 
-        eventHub.register(kdcHandler);
-
-        Network network = new Network();
-        network.setStreamingDecoder(new KrbStreamingDecoder());
-        eventHub.register(network);
-
-        eventHub.start();
-        network.tcpListen(getKdcHost(), getKdcTcpPort());
-        if (allowUdp()) {
-            network.udpListen(getKdcHost(), getKdcUdpPort());
+    /**
+     * Init the KDC server.
+     */
+    public void init() {
+        if (commonOptions.contains(KdcServerOption.USE_EVENT_MODEL)) {
+            innerKdc = new EventBasedKdcServer();
+        } else {
+            innerKdc = new EventBasedKdcServer(); //TODO
         }
+        innerKdc.init(commonOptions);
     }
 
-    private void prepareHandler() {
-        this.kdcHandler = new KdcHandler();
-        kdcHandler.setConfig(kdcConfig);
-        kdcHandler.setIdentityService(backend);
-        if (kdcRealm != null) {
-            kdcHandler.setKdcRealm(kdcRealm);
-        }
-        kdcHandler.init();
+    public void start() {
+        innerKdc.start();
     }
 
     public void stop() {
-        try {
-            doStop();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to stop " + getServiceName());
-        }
-
-        started = false;
-    }
-
-    protected void doStop() throws Exception {
-        backend.stop();
-
-        eventHub.stop();
-    }
-
-    /**
-     * Get the KDC config.
-     * @return
-     */
-    protected KdcConfig getKdcConfig() {
-        return kdcConfig;
-    }
-
-    /**
-     * Get backend config.
-     * @return
-     */
-    protected Config getBackendConfig() {
-        return backendConfig;
-    }
-
-    public boolean isStarted() {
-        return started;
-    }
-
-    protected void setServiceName(String name) {
-        this.serviceName = name;
-    }
-
-    protected String getServiceName() {
-        if (serviceName != null) {
-            return serviceName;
-        }
-        return kdcConfig.getKdcServiceName();
-    }
-
-    protected void setBackend(IdentityBackend backend) {
-        this.backend = backend;
+        innerKdc.stop();
     }
 }

@@ -81,15 +81,14 @@ public class WithTokenKdcTest extends KdcTestBase {
     }
 
     @Override
-    protected void setUpKdcServer() throws Exception {
-        super.setUpKdcServer();
+    protected void prepareKdcServer() throws Exception {
+        super.prepareKdcServer();
         kdcServer.createPrincipals(clientPrincipal);
     }
 
     //@Test
     public void testKdc() throws Exception {
         kdcServer.start();
-        assertThat(kdcServer.isStarted()).isTrue();
         krbClnt.init();
 
         TgtTicket tgt;

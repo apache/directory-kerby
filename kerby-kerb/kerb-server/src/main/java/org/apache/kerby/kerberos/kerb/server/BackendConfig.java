@@ -19,7 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-public class SimpleKdcServer extends KdcServer {
+import org.apache.kerby.config.Conf;
+import org.apache.kerby.kerberos.kerb.common.KrbConfHelper;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
+import java.util.List;
+
+/**
+ * Kerb KDC side backend configuration API.
+ */
+public class BackendConfig extends Conf {
 
 }

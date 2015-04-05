@@ -65,8 +65,8 @@ public class WithCertKdcTest extends KdcTestBase {
     }
 
     @Override
-    protected void setUpKdcServer() throws Exception {
-        super.setUpKdcServer();
+    protected void prepareKdcServer() throws Exception {
+        super.prepareKdcServer();
         kdcServer.createPrincipals(clientPrincipal);
     }
 
@@ -75,7 +75,6 @@ public class WithCertKdcTest extends KdcTestBase {
         assertThat(userCert).isNotNull();
 
         kdcServer.start();
-        assertThat(kdcServer.isStarted()).isTrue();
         krbClnt.init();
 
         TgtTicket tgt = null;

@@ -138,7 +138,7 @@ public class TgsRequest extends KdcRequest {
         TgsRep reply = new TgsRep();
 
         reply.setCname(getClientEntry().getPrincipal());
-        reply.setCrealm(kdcContext.getServerRealm());
+        reply.setCrealm(kdcContext.getKdcRealm());
         reply.setTicket(ticket);
 
         EncKdcRepPart encKdcRepPart = makeEncKdcRepPart();

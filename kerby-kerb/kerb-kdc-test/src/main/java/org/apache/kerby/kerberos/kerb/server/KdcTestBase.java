@@ -51,13 +51,17 @@ public abstract class KdcTestBase {
             udpPort = getServerPort();
         }
 
-        setUpKdcServer();
+        setUpKkdcServer();
+
         setUpClient();
         createPrincipals();
     }
 
-    protected void setUpKdcServer() throws Exception {
-        kdcServer = new TestKdcServer();
+    /**
+     * Prepare KDC startup options and config.
+     * @throws Exception
+     */
+    protected void prepareKdcServer() throws Exception {
         kdcServer.setKdcHost(hostname);
         if (tcpPort > 0) {
             kdcServer.setKdcTcpPort(tcpPort);
@@ -66,12 +70,15 @@ public abstract class KdcTestBase {
         if (udpPort > 0) {
             kdcServer.setKdcUdpPort(udpPort);
         }
+    }
 
+    protected void setUpKkdcServer() throws Exception {
+        kdcServer = new TestKdcServer();
+        prepareKdcServer();
         kdcServer.init();
 
         kdcRealm = kdcServer.getKdcRealm();
         clientPrincipal = "drankye@" + kdcRealm;
-
         serverPrincipal = "test-service/localhost@" + kdcRealm;
     }
 

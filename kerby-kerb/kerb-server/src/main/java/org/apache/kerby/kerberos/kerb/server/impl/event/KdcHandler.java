@@ -17,16 +17,14 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.server;
+package org.apache.kerby.kerberos.kerb.server.impl.event;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
-import org.apache.kerby.kerberos.kerb.identity.IdentityService;
-import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
-import org.apache.kerby.kerberos.kerb.server.replay.ReplayCheckService;
+import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.server.request.TgsRequest;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
@@ -39,59 +37,16 @@ import org.apache.kerby.transport.tcp.TcpTransport;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+/**
+ * KDC handler to process client requests. Currently only one realm is supported.
+ */
 public class KdcHandler extends MessageHandler {
 
-    private List<String> kdcRealms = new ArrayList<String>(1);
-    private Map<String, KdcContext> kdcContexts;
+    private final KdcContext kdcContext;
 
-    private KdcConfig kdcConfig;
-    private PreauthHandler preauthHandler;
-
-    // TODO: per realm for below
-    private IdentityService identityService;
-    private ReplayCheckService replayCheckService;
-
-    /**
-     * Should be called when all the necessary properties are set
-     */
-    public void init() {
-        loadKdcRealms();
-
-        preauthHandler = new PreauthHandler();
-        preauthHandler.init(kdcConfig);
-
-        kdcContexts = new HashMap<String, KdcContext>(1);
-        for (String realm : kdcRealms) {
-            initRealmContext(realm);
-        }
-    }
-
-    private void initRealmContext(String kdcRealm) {
-        KdcContext kdcContext = new KdcContext();
-        kdcContext.init(kdcConfig);
-        kdcContext.setKdcRealm(kdcRealm);
-        kdcContext.setPreauthHandler(preauthHandler);
-        kdcContext.setIdentityService(identityService);
-        kdcContext.setReplayCache(replayCheckService);
-
-        kdcContexts.put(kdcRealm, kdcContext);
-    }
-
-    public void setKdcRealm(String realm) {
-        this.kdcRealms.add(realm);
-    }
-
-    public void setConfig(KdcConfig config) {
-        this.kdcConfig = config;
-    }
-
-    public void setIdentityService(IdentityService identityService) {
-        this.identityService = identityService;
+    public KdcHandler(KdcContext kdcContext) {
+        this.kdcContext = kdcContext;
     }
 
     @Override
@@ -107,11 +62,10 @@ public class KdcHandler extends MessageHandler {
                 == KrbMessageType.AS_REQ) {
             KdcReq kdcReq = (KdcReq) krbRequest;
             String realm = getRequestRealm(kdcReq);
-            if (realm == null || !kdcContexts.containsKey(realm)) {
+            if (realm == null || ! kdcContext.getKdcRealm().equals(realm)) {
                 throw new KrbException("Invalid realm from kdc request: " + realm);
             }
 
-            KdcContext kdcContext = kdcContexts.get(realm);
             if (messageType == KrbMessageType.TGS_REQ) {
                 kdcRequest = new TgsRequest((TgsReq) kdcReq, kdcContext);
             } else if (messageType == KrbMessageType.AS_REQ) {
@@ -136,20 +90,12 @@ public class KdcHandler extends MessageHandler {
         }
     }
 
-    private void loadKdcRealms() {
-        if (kdcRealms.isEmpty()) {
-            kdcRealms.add(kdcConfig.getKdcRealm());
-        }
-    }
-
     private String getRequestRealm(KdcReq kdcReq) {
         String realm = kdcReq.getReqBody().getRealm();
         if (realm == null && kdcReq.getReqBody().getCname() != null) {
             realm = kdcReq.getReqBody().getCname().getRealm();
         }
-        if (realm == null || realm.isEmpty()) {
-            realm = "NULL-KDC-REALM";
-        }
+
         return realm;
     }
 }

@@ -35,13 +35,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-public class TestKdcServer extends SimpleKdcServer {
+public class TestKdcServer extends KdcServer {
 
     /**
      * Prepare KDC configuration for the test.
      */
     protected void prepareKdcConfig() {
-        KdcConfig kdcConfig = getKdcConfig();
+        KdcConfig kdcConfig = getKdcSetting().getKdcConfig();
 
         kdcConfig.setString(KdcConfigKey.KDC_HOST, "localhost");
         kdcConfig.setInt(KdcConfigKey.KDC_TCP_PORT, 8018);
@@ -61,12 +61,12 @@ public class TestKdcServer extends SimpleKdcServer {
     }
 
     public String getKdcRealm() {
-        return getKdcConfig().getKdcRealm();
+        return getKdcSetting().getKdcRealm();
     }
 
     public synchronized void createPrincipal(String principal, String password) {
         KrbIdentity identity = new KrbIdentity(principal);
-        List<EncryptionType> encTypes = getKdcConfig().getEncryptionTypes();
+        List<EncryptionType> encTypes = getKdcSetting().getKdcConfig().getEncryptionTypes();
         List<EncryptionKey> encKeys = null;
         try {
             encKeys = EncryptionUtil.generateKeys(fixPrincipal(principal), password, encTypes);
@@ -76,11 +76,6 @@ public class TestKdcServer extends SimpleKdcServer {
         identity.addKeys(encKeys);
         getIdentityService().addIdentity(identity);
     }
-
-    public void setBackend(IdentityBackend backend) {
-        super.setBackend(backend);
-    }
-
 
     public void createPrincipals(String ... principals) {
         String passwd;

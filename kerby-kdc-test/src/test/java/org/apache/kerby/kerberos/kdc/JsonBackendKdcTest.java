@@ -19,10 +19,8 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
-import org.apache.kerby.config.Conf;
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.server.BackendConfig;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -32,21 +30,19 @@ public class JsonBackendKdcTest extends KerbyKdcTest {
     private static File jsonBackendFile;
 
     @Override
-    protected void setUpKdcServer() throws Exception {
-        super.setUpKdcServer();
+    protected void prepareKdcServer() throws Exception {
+        super.prepareKdcServer();
 
         File testDir = new File(System.getProperty("test.dir", "target"));
         jsonBackendFile = new File(testDir, "json-backend-file");
         String jsonBackendFileString = jsonBackendFile.getAbsolutePath();
 
-        Config backendConfig = new Conf();
+        BackendConfig backendConfig = new BackendConfig();
         backendConfig.setString(
                 JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE, jsonBackendFileString);
+        kdcServer.setBackendConfig(backendConfig);
 
-        IdentityBackend backend = new JsonIdentityBackend(backendConfig);
-        backend.initialize();
-
-        kdcServer.setBackend(backend);
+        kdcServer.init();
     }
 
     @Test

@@ -232,7 +232,7 @@ public abstract class KdcRequest {
         PrincipalName clientPrincipal = request.getReqBody().getCname();
         String clientRealm = request.getReqBody().getRealm();
         if (clientRealm == null || clientRealm.isEmpty()) {
-            clientRealm = kdcContext.getServerRealm();
+            clientRealm = kdcContext.getKdcRealm();
         }
         clientPrincipal.setRealm(clientRealm);
 
@@ -434,7 +434,7 @@ public abstract class KdcRequest {
         PrincipalName principal = request.getReqBody().getSname();
         String serverRealm = request.getReqBody().getRealm();
         if (serverRealm == null || serverRealm.isEmpty()) {
-            serverRealm = kdcContext.getServerRealm();
+            serverRealm = kdcContext.getKdcRealm();
         }
         principal.setRealm(serverRealm);
 
