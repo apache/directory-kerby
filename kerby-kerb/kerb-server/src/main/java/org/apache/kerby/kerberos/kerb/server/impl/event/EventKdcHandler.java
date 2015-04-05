@@ -41,11 +41,11 @@ import java.nio.ByteBuffer;
 /**
  * KDC handler to process client requests. Currently only one realm is supported.
  */
-public class KdcHandler extends MessageHandler {
+public class EventKdcHandler extends MessageHandler {
 
     private final KdcContext kdcContext;
 
-    public KdcHandler(KdcContext kdcContext) {
+    public EventKdcHandler(KdcContext kdcContext) {
         this.kdcContext = kdcContext;
     }
 

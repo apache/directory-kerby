@@ -42,7 +42,7 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
     private IdentityBackend backend;
 
     @Override
-    public KdcSetting getKdcSetting() {
+    public KdcSetting getSetting() {
         return kdcSetting;
     }
 
@@ -66,7 +66,7 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
             throw new RuntimeException("Failed to load configurations", e);
         }
 
-        this.kdcSetting = new KdcSetting(startupOptions, kdcConfig);
+        kdcSetting = new KdcSetting(startupOptions, kdcConfig);
 
         initBackend();
     }
@@ -74,15 +74,13 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
     /**
      * Prepare kdc and backend config, loading kdc.conf and backend.conf.
      * It can be override to add more configuration resources.
-     *
-     * @throws java.io.IOException
      */
     private void initConfig(KOptions startupOptions) throws IOException {
         if (startupOptions.contains(KdcServerOption.KDC_CONFIG)) {
-            this.kdcConfig = (KdcConfig) startupOptions.getOptionValue(
+            kdcConfig = (KdcConfig) startupOptions.getOptionValue(
                     KdcServerOption.KDC_CONFIG);
         } else {
-            this.kdcConfig = new KdcConfig();
+            kdcConfig = new KdcConfig();
             File confDir = startupOptions.getDirOption(KdcServerOption.CONF_DIR);
             if (confDir != null && confDir.exists()) {
                 File kdcConfFile = new File(confDir, "kdc.conf");
@@ -93,7 +91,7 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
         }
 
         if (startupOptions.contains(KdcServerOption.BACKEND_CONFIG)) {
-            this.backendConfig = (BackendConfig) startupOptions.getOptionValue(
+            backendConfig = (BackendConfig) startupOptions.getOptionValue(
                     KdcServerOption.BACKEND_CONFIG);
         } else {
             backendConfig = new BackendConfig();

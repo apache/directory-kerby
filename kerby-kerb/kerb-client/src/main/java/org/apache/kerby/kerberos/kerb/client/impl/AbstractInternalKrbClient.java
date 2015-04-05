@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.client.KrbSetting;
 import org.apache.kerby.kerberos.kerb.client.request.*;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
@@ -39,92 +40,50 @@ import java.io.IOException;
 public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     private KrbContext context;
     private KrbConfig krbConfig;
-    private KOptions commonOptions;
+    private KrbSetting krbSetting;
 
     protected KrbContext getContext() {
         return context;
     }
 
-    /**
-     * Prepare krb config, loading krb5.conf.
-     * It can be override to add more configuration resources.
-     *
-     * @throws java.io.IOException
-     */
-    protected void initConfig() throws IOException {
-        this.krbConfig = (KrbConfig) commonOptions.getOptionValue(KrbOption.KRB_CONFIG);
-        if (krbConfig == null) {
-            krbConfig = new KrbConfig();
-        }
-
-        File confDir = getConfDir();
-        if (confDir == null) {
-            confDir = new File("/etc/"); // for Linux. TODO: fix for Win etc.
-        }
-        if (confDir != null && confDir.exists()) {
-            File kdcConfFile = new File(confDir, "krb5.conf");
-            if (kdcConfFile.exists()) {
-                krbConfig.addIniConfig(kdcConfFile);
-            }
-        }
-    }
-
-    protected File getConfDir() {
-        return  commonOptions.getDirOption(KrbOption.CONF_DIR);
-    }
-
-    protected String getKdcHost() {
-        String kdcHost = commonOptions.getStringOption(KrbOption.KDC_HOST);
-        if (kdcHost == null) {
-            return krbConfig.getKdcHost();
-        }
-        return kdcHost;
-    }
-
-    protected int getKdcTcpPort() {
-        int tcpPort = commonOptions.getIntegerOption(KrbOption.KDC_TCP_PORT);
-        if (tcpPort > 0) {
-            return tcpPort;
-        }
-        return krbConfig.getKdcTcpPort();
-    }
-
-    protected boolean allowUdp() {
-        Boolean allowUdp = commonOptions.getBooleanOption(KrbOption.ALLOW_UDP);
-        if (allowUdp != null) {
-            return allowUdp;
-        }
-        return krbConfig.allowKdcUdp();
-    }
-
-    protected int getKdcUdpPort() {
-        int udpPort = commonOptions.getIntegerOption(KrbOption.KDC_UDP_PORT);
-        if (udpPort > 0) {
-            return udpPort;
-        }
-        return krbConfig.getKdcUdpPort();
-    }
-
-    protected int getTimeout() {
-        int timeout = commonOptions.getIntegerOption(KrbOption.CONN_TIMEOUT);
-        if (timeout > 0) {
-            return timeout;
-        }
-        return 1000; // by default
+    @Override
+    public KrbSetting getSetting() {
+        return krbSetting;
     }
 
     @Override
     public void init(KOptions commonOptions) throws KrbException {
-        this.commonOptions = commonOptions;
 
         try {
-            initConfig();
+            initConfig(commonOptions);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load config", e);
         }
 
-        this.context = new KrbContext();
+        krbSetting = new KrbSetting(commonOptions, krbConfig);
+        context = new KrbContext();
         context.init(krbConfig);
+    }
+
+    /**
+     * Prepare krb config, loading krb5.conf if necessary.
+     */
+    private void initConfig(KOptions commonOptions) throws IOException {
+        krbConfig = (KrbConfig) commonOptions.getOptionValue(KrbOption.KRB_CONFIG);
+        if (krbConfig == null) {
+            krbConfig = new KrbConfig();
+
+            File confDir = commonOptions.getDirOption(KrbOption.CONF_DIR);
+            if (confDir == null) {
+                confDir = new File("/etc/"); // for Linux. TODO: fix for Win etc.
+            }
+            if (confDir != null && confDir.exists()) {
+                File kdcConfFile = new File(confDir, "krb5.conf");
+                if (kdcConfFile.exists()) {
+                    krbConfig.addIniConfig(kdcConfFile);
+                }
+            }
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.client.KrbSetting;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -35,6 +36,12 @@ public interface InternalKrbClient {
      * @param options
      */
     public void init(KOptions options) throws KrbException;
+
+    /**
+     * Get krb client settings.
+     * @return setting
+     */
+    public KrbSetting getSetting();
 
     /**
      * Request a Ticket Granting Ticket.

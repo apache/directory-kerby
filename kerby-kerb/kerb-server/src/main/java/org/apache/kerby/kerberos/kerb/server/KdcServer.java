@@ -126,11 +126,15 @@ public class KdcServer {
     }
 
     /**
-     * Get KDC setting.
+     * Get KDC setting from startup options and configs.
+     * Note it must be called after init().
      * @return setting
      */
-    public KdcSetting getKdcSetting() {
-        return innerKdc.getKdcSetting();
+    public KdcSetting getSetting() {
+        if (innerKdc == null) {
+            throw new RuntimeException("Not init yet");
+        }
+        return innerKdc.getSetting();
     }
 
     /**
@@ -138,6 +142,9 @@ public class KdcServer {
      * @return IdentityService
      */
     public IdentityService getIdentityService() {
+        if (innerKdc == null) {
+            throw new RuntimeException("Not init yet");
+        }
         return innerKdc.getIdentityService();
     }
 

@@ -21,7 +21,6 @@ package org.apache.kerby.kerberos.kerb.client.impl.blocking;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.impl.AbstractInternalKrbClient;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
@@ -48,9 +47,11 @@ public class BlockModeKrbClient extends AbstractInternalKrbClient {
         krbHandler.init(getContext());
 
         InetSocketAddress tcpAddress, udpAddress = null;
-        tcpAddress=  new InetSocketAddress(getKdcHost(), getKdcTcpPort());
-        if (allowUdp()) {
-            udpAddress = new InetSocketAddress(getKdcHost(), getKdcUdpPort());
+        tcpAddress=  new InetSocketAddress(getSetting().getKdcHost(),
+                getSetting().getKdcTcpPort());
+        if (getSetting().allowUdp()) {
+            udpAddress = new InetSocketAddress(getSetting().getKdcHost(),
+                    getSetting().getKdcUdpPort());
         }
         try {
             transport = new KrbCombinedTransport(tcpAddress, udpAddress);

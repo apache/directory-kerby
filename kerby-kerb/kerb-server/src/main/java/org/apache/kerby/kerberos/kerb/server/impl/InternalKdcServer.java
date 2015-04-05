@@ -49,7 +49,7 @@ public interface InternalKdcServer {
      * Get KDC setting.
      * @return setting
      */
-    public KdcSetting getKdcSetting();
+    public KdcSetting getSetting();
 
     /**
      * Get identity service.

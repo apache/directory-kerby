@@ -31,7 +31,7 @@ import org.apache.kerby.transport.Network;
  */
 public class EventBasedKdcServer extends AbstractInternalKdcServer {
 
-    private KdcHandler kdcHandler;
+    private EventKdcHandler kdcHandler;
     private EventHub eventHub;
 
     @Override
@@ -49,22 +49,22 @@ public class EventBasedKdcServer extends AbstractInternalKdcServer {
         eventHub.register(network);
 
         eventHub.start();
-        network.tcpListen(getKdcSetting().getKdcHost(),
-                getKdcSetting().getKdcTcpPort());
-        if (getKdcSetting().allowUdp()) {
-            network.udpListen(getKdcSetting().getKdcHost(),
-                    getKdcSetting().getKdcUdpPort());
+        network.tcpListen(getSetting().getKdcHost(),
+                getSetting().getKdcTcpPort());
+        if (getSetting().allowUdp()) {
+            network.udpListen(getSetting().getKdcHost(),
+                    getSetting().getKdcUdpPort());
         }
     }
 
     private void prepareHandler() {
-        KdcContext kdcContext = new KdcContext(getKdcSetting());
+        KdcContext kdcContext = new KdcContext(getSetting());
         kdcContext.setIdentityService(getBackend());
         PreauthHandler preauthHandler = new PreauthHandler();
         preauthHandler.init(kdcContext.getConfig());
         kdcContext.setPreauthHandler(preauthHandler);
 
-        this.kdcHandler = new KdcHandler(kdcContext);
+        this.kdcHandler = new EventKdcHandler(kdcContext);
     }
 
     @Override

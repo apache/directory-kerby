@@ -134,6 +134,18 @@ public class KrbClient {
     }
 
     /**
+     * Get krb client settings from options and configs.
+     * Note it must be called after init().
+     * @return setting
+     */
+    public KrbSetting getSetting() {
+        if (innerClient == null) {
+            throw new RuntimeException("Not init yet");
+        }
+        return innerClient.getSetting();
+    }
+
+    /**
      * Request a TGT with user plain credential
      * @param principal
      * @param password
