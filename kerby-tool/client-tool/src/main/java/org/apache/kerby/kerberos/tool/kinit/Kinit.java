@@ -104,7 +104,10 @@ public class Kinit {
     private static void requestTicket(String principal,
                                       KOptions ktOptions) throws Exception {
         ktOptions.add(KinitOption.CLIENT_PRINCIPAL, principal);
+
+        //If not request tickets by keytab than by password.
         if (! ktOptions.contains(KinitOption.USE_KEYTAB)) {
+            ktOptions.add(KinitOption.USE_PASSWD);
             String password = getPassword(principal);
             ktOptions.add(KinitOption.USER_PASSWD, password);
         }

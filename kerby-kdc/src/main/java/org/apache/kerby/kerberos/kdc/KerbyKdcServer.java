@@ -82,7 +82,7 @@ public class KerbyKdcServer extends KdcServer {
      * If no, add it to identity backend.
      */
     private void createTgtPrincipal() {
-        String tgtPrincipal = "krbtgt";
+        String tgtPrincipal = fixPrincipal("krbtgt");
         KrbIdentity tgtIdentity = getIdentityService().getIdentity(tgtPrincipal);
         if (tgtIdentity == null) {
             createPrincipals(tgtPrincipal);
