@@ -37,6 +37,7 @@ import org.apache.kerby.transport.event.TransportEvent;
 import org.apache.kerby.transport.event.TransportEventType;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -95,6 +96,11 @@ public class EventBasedKrbClient extends AbstractInternalKrbClient {
             }
 
             @Override
+            public InetAddress getRemoteAddress() {
+                return eventTransport.getRemoteAddress().getAddress();
+            }
+
+            @Override
             public void setAttachment(Object attachment) {
                 eventTransport.setAttachment(attachment);
             }
@@ -102,6 +108,11 @@ public class EventBasedKrbClient extends AbstractInternalKrbClient {
             @Override
             public Object getAttachment() {
                 return eventTransport.getAttachment();
+            }
+
+            @Override
+            public void release() throws IOException {
+
             }
         };
     }

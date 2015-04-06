@@ -19,9 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.transport;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
 /**
  * Abstract Krb transport.
  */

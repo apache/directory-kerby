@@ -17,33 +17,33 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client.impl.blocking;
+package org.apache.kerby.kerberos.kerb.client.impl;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.client.impl.AbstractInternalKrbClient;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
 /**
- * An event based krb client implementation.
+ * A default krb client implementation.
  */
-public class BlockModeKrbClient extends AbstractInternalKrbClient {
+public class InternalKrbClientImpl extends AbstractInternalKrbClient {
 
-    private BlockingKrbHandler krbHandler;
+    private KrbHandler krbHandler;
     private KrbTransport transport;
 
     @Override
     public void init(KOptions commonOptions) throws KrbException {
         super.init(commonOptions);
 
-        this.krbHandler = new BlockingKrbHandler();
+        this.krbHandler = new KrbHandler();
         krbHandler.init(getContext());
 
         InetSocketAddress tcpAddress, udpAddress = null;
@@ -53,8 +53,10 @@ public class BlockModeKrbClient extends AbstractInternalKrbClient {
             udpAddress = new InetSocketAddress(getSetting().getKdcHost(),
                     getSetting().getKdcUdpPort());
         }
+
+        KrbNetwork network = new KrbNetwork();
         try {
-            transport = new KrbCombinedTransport(tcpAddress, udpAddress);
+            transport = network.connect(tcpAddress, udpAddress);
         } catch (IOException e) {
             throw new KrbException("Failed to create transport", e);
         }

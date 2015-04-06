@@ -64,11 +64,12 @@ public class MultiRequestsKdcTest extends KdcTestBase {
         }
 
         // With bad password
+        /*
         try {
             tgt = krbClnt.requestTgtWithPassword(clientPrincipal, "badpassword");
         } catch (Exception e) {
             System.out.println("Exception occurred with bad password");
-        }
+        }*/
 
         // With good password again
         try {

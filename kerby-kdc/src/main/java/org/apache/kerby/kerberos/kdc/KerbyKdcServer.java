@@ -91,7 +91,7 @@ public class KerbyKdcServer extends KdcServer {
 
     private void createPrincipal(String principal, String password) {
         KrbIdentity identity = new KrbIdentity(fixPrincipal(principal));
-        List<EncryptionType> encTypes = getKdcSetting().getKdcConfig().getEncryptionTypes();
+        List<EncryptionType> encTypes = getSetting().getKdcConfig().getEncryptionTypes();
         List<EncryptionKey> encKeys = null;
         try {
             encKeys = EncryptionUtil.generateKeys(fixPrincipal(principal), password, encTypes);
@@ -112,7 +112,7 @@ public class KerbyKdcServer extends KdcServer {
 
     private String fixPrincipal(String principal) {
         if (! principal.contains("@")) {
-            principal += "@" + getKdcSetting().getKdcRealm();
+            principal += "@" + getSetting().getKdcRealm();
         }
         return principal;
     }

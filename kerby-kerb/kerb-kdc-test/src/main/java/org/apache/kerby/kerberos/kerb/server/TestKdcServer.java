@@ -41,7 +41,7 @@ public class TestKdcServer extends KdcServer {
      * Prepare KDC configuration for the test.
      */
     protected void prepareKdcConfig() {
-        KdcConfig kdcConfig = getKdcSetting().getKdcConfig();
+        KdcConfig kdcConfig = getSetting().getKdcConfig();
 
         kdcConfig.setString(KdcConfigKey.KDC_HOST, "localhost");
         kdcConfig.setInt(KdcConfigKey.KDC_TCP_PORT, 8018);
@@ -61,12 +61,12 @@ public class TestKdcServer extends KdcServer {
     }
 
     public String getKdcRealm() {
-        return getKdcSetting().getKdcRealm();
+        return getSetting().getKdcRealm();
     }
 
     public synchronized void createPrincipal(String principal, String password) {
         KrbIdentity identity = new KrbIdentity(principal);
-        List<EncryptionType> encTypes = getKdcSetting().getKdcConfig().getEncryptionTypes();
+        List<EncryptionType> encTypes = getSetting().getKdcConfig().getEncryptionTypes();
         List<EncryptionKey> encKeys = null;
         try {
             encKeys = EncryptionUtil.generateKeys(fixPrincipal(principal), password, encTypes);

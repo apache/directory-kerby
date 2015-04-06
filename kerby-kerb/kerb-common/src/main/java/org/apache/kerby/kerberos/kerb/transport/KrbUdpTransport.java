@@ -6,69 +6,63 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *
+ *  
  *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *
+ *  
  */
-package org.apache.kerby.kerberos.kerb.client.impl.blocking;
+package org.apache.kerby.kerberos.kerb.transport;
 
 import org.apache.kerby.kerberos.kerb.transport.AbstractKrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 
 /**
- * Default implementation of {@Link KrbTransport} combining TCP and UDP.
+ * Default implementation of {@Link KrbTransport} using UDP.
  */
-public class KrbCombinedTransport
+public class KrbUdpTransport
         extends AbstractKrbTransport implements KrbTransport {
-    private KrbTransport tcpTransport;
-    private KrbTransport udpTransport;
+    private DatagramChannel channel;
+    private InetSocketAddress remoteAddress;
+    private ByteBuffer recvBuffer;
 
-    private InetSocketAddress tcpAddress;
-    private InetSocketAddress udpAddress;
-
-    public KrbCombinedTransport(InetSocketAddress tcpAddress,
-                                InetSocketAddress udpAddress) throws IOException {
-        this.tcpAddress = tcpAddress;
-        this.udpAddress = udpAddress;
-
-        /**
-         * Try TCP first.
-         */
-        try {
-            this.tcpTransport = new KrbTcpTransport(tcpAddress);
-        } catch (IOException e) {
-            this.tcpTransport = null;
-            this.udpTransport = new KrbUdpTransport(udpAddress);
-        }
+    public KrbUdpTransport(InetSocketAddress remoteAddress) throws IOException {
+        this.remoteAddress = remoteAddress;
+        this.channel = DatagramChannel.open();
+        this.recvBuffer = ByteBuffer.allocate(1024 * 1024); // TODO.
+        channel.connect(remoteAddress);
     }
 
     @Override
     public void sendMessage(ByteBuffer message) throws IOException {
-        if (tcpTransport != null) {
-            tcpTransport.sendMessage(message);
-        } else if (udpTransport != null) {
-            udpTransport.sendMessage(message);
-        }
+        channel.send(message, remoteAddress);
     }
 
     @Override
     public ByteBuffer receiveMessage() throws IOException {
-        if (tcpTransport != null) {
-            return tcpTransport.receiveMessage();
-        } else if (udpTransport != null) {
-            return udpTransport.receiveMessage();
-        }
-        return null;
+        recvBuffer.reset();
+        channel.receive(recvBuffer);
+        return recvBuffer;
+    }
+
+    @Override
+    public InetAddress getRemoteAddress() {
+        return remoteAddress.getAddress();
+    }
+
+    @Override
+    public void release() throws IOException {
+        channel.close();
     }
 }

@@ -20,10 +20,11 @@
 package org.apache.kerby.kerberos.kerb.transport;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
 /**
- * Krb client transport.
+ * Krb transport.
  */
 public interface KrbTransport {
 
@@ -40,6 +41,12 @@ public interface KrbTransport {
     public ByteBuffer receiveMessage() throws IOException;
 
     /**
+     * Get address from remote side.
+     * @return address
+     */
+    public InetAddress getRemoteAddress();
+
+    /**
      * Set an attachment.
      * @param attachment
      */
@@ -50,4 +57,9 @@ public interface KrbTransport {
      * @return attachment
      */
     public Object getAttachment();
+
+    /**
+     * Release and close related resources like connection.
+     */
+    public void release() throws IOException;
 }

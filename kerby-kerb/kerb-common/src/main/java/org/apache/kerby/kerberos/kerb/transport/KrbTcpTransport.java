@@ -17,14 +17,12 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client.impl.blocking;
-
-import org.apache.kerby.kerberos.kerb.transport.AbstractKrbTransport;
-import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
+package org.apache.kerby.kerberos.kerb.transport;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -37,21 +35,13 @@ public class KrbTcpTransport
     private Socket socket;
     private DataOutputStream outputStream;
     private DataInputStream inputStream;
-    private InetSocketAddress remoteAddress;
     private byte[] messageBuffer; // for message body
 
-    public KrbTcpTransport(InetSocketAddress remoteAddress) throws IOException {
-        this.remoteAddress = remoteAddress;
+    public KrbTcpTransport(Socket socket) throws IOException {
+        this.socket = socket;
+        this.outputStream = new DataOutputStream(socket.getOutputStream());
+        this.inputStream = new DataInputStream(socket.getInputStream());
         this.messageBuffer = new byte[1024 * 1024]; // TODO.
-        doConnect();
-    }
-
-    private void doConnect() throws IOException {
-        socket = new Socket();
-        socket.setSoTimeout(10 * 1000); // 10 seconds. TODO: from config
-        socket.connect(remoteAddress);
-        outputStream = new DataOutputStream(socket.getOutputStream());
-        inputStream = new DataInputStream(socket.getInputStream());
     }
 
     @Override
@@ -73,5 +63,15 @@ public class KrbTcpTransport
         }
 
         return null;
+    }
+
+    @Override
+    public InetAddress getRemoteAddress() {
+        return socket.getInetAddress();
+    }
+
+    @Override
+    public void release() throws IOException {
+        socket.close();
     }
 }

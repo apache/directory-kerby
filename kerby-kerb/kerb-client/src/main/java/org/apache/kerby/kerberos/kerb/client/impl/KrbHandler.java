@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client.impl.blocking;
+package org.apache.kerby.kerberos.kerb.client.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
@@ -33,7 +33,7 @@ import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class BlockingKrbHandler {
+public class KrbHandler {
 
     private PreauthHandler preauthHandler;
 
