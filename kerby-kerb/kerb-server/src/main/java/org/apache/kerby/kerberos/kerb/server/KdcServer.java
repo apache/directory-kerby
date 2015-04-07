@@ -119,11 +119,11 @@ public class KdcServer {
      * @param workDir
      */
     public void setWorkDir(File workDir) {
-        commonOptions.add(KdcServerOption.USE_EVENT_MODEL);
+        commonOptions.add(KdcServerOption.WORK_DIR, workDir);
     }
 
     public void enableDebug() {
-        commonOptions.add(KdcServerOption.USE_EVENT_MODEL);
+        commonOptions.add(KdcServerOption.ENABLE_DEBUG);
     }
 
     /**
