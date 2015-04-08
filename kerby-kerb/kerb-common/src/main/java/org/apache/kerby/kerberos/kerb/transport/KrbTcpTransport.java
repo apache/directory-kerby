@@ -58,7 +58,7 @@ public class KrbTcpTransport
                 return ByteBuffer.wrap(messageBuffer, 0, msgLen);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
 
