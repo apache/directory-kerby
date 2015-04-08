@@ -22,12 +22,15 @@ package org.apache.kerby.kerberos.kdc.identitybackend;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
+import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.ZooKeeperServerMain;
 import org.apache.zookeeper.server.quorum.QuorumPeerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,11 +45,13 @@ import java.util.Properties;
  */
 public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         implements Watcher {
+    private static final Logger LOG = LoggerFactory.getLogger(ZookeeperIdentityBackend.class);
     private Config config;
     private String zkHost;
     private int zkPort;
     private File dataDir;
     private File dataLogDir;
+    private ZooKeeper zooKeeper;
 
     /**
      * Constructing an instance using specified config that contains anything
@@ -66,6 +71,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
 
         startEmbeddedZookeeper();
         connectZK();
+
     }
 
     /**
@@ -73,7 +79,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
      */
     private void connectZK() {
         try {
-            ZooKeeper zooKeeper = new ZooKeeper(zkHost, zkPort, null);
+            zooKeeper = new ZooKeeper(zkHost, zkPort, null);
         } catch (IOException e) {
             throw new RuntimeException("Failed to prepare Zookeeper connection");
         }
@@ -136,7 +142,12 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
 
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
-        return null;
+        try {
+            setIdentity(identity);
+        } catch (KeeperException e) {
+            LOG.error("Fail to add identity to zookeeper", e);
+        }
+        return identity;
     }
 
     @Override
@@ -152,5 +163,17 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
     @Override
     public List<String> getIdentities(int start, int limit) {
         return null;
+    }
+
+    private void setIdentity(KrbIdentity identity) throws KeeperException {
+        IdentityZNode identityZNode = new IdentityZNode(zooKeeper, identity.getPrincipalName());
+        identityZNode.setPrincipalName(identity.getPrincipalName());
+        identityZNode.setCreatedTime(identity.getCreatedTime());
+        identityZNode.setDisabled(identity.isDisabled());
+        identityZNode.setExpireTime(identity.getExpireTime());
+        identityZNode.setKdcFlags(identity.getKdcFlags());
+        identityZNode.setKeys(identity.getKeys());
+        identityZNode.setKeyVersion(identity.getKeyVersion());
+        identityZNode.setLocked(identity.isLocked());
     }
 }
