@@ -45,7 +45,7 @@ public class KrbClient {
      * Default constructor.
      */
     public KrbClient() {
-        this(new KrbConfig());
+        commonOptions = new KOptions();
     }
 
     /**
