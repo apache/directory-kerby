@@ -79,7 +79,7 @@ public class CredCacheOutputStream extends KrbOutputStream
             writeInt(0);
         } else {
             List<HostAddress> addresses = addrs.getElements();
-            write(addresses.size());
+            writeInt(addresses.size());
             for (HostAddress addr : addresses) {
                 writeAddress(addr);
             }

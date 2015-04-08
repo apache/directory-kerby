@@ -172,8 +172,9 @@ public class CredentialCache implements KrbCredentialCache
 
     private void doLoad(CredCacheInputStream ccis) throws IOException {
         this.version = readVersion(ccis);
-
-        this.tags = readTags(ccis);
+        if (version == FCC_FVNO_4) {
+            this.tags = readTags(ccis);
+        }
 
         this.primaryPrincipal = ccis.readPrincipal(version);
 
