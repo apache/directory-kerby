@@ -29,7 +29,7 @@ import org.junit.Test;
 import java.io.File;
 
 /**
- * Ldap backend test
+ * Zookeeper backend test
  */
 public class ZookeeperBackendTest extends BackendTest {
     private static IdentityBackend backend;
@@ -53,14 +53,14 @@ public class ZookeeperBackendTest extends BackendTest {
         backend.start();
     }
 
-    //@Test
-    public void testGet() {
-        super.testGet(backend);
-    }
-
     @AfterClass
     public static void tearDown() {
         backend.stop();
         backend.release();
+    }
+
+    @Test
+    public void testGet() {
+        super.testGet(backend);
     }
 }

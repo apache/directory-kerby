@@ -23,13 +23,16 @@ import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.util.UTF8;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class IdentityZNode {
@@ -42,10 +45,58 @@ public class IdentityZNode {
         this.identityName = identityName;
     }
 
+    public boolean exist() throws KeeperException {
+        String znode = IdentityZNodeHelper.getIndentityZNode(this.identityName);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public PrincipalName getPrincipalName() throws KeeperException {
+        String znode = IdentityZNodeHelper.getPrincipalNameZnode(this.identityName);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        byte[] data;
+        try {
+            data = ZKUtil.getData(this.zk, znode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        }
+        if (data != null) {
+            return new PrincipalName(UTF8.toString(data));
+        } else {
+            LOG.warn("can't get the date from znode: " + znode);
+            return null;
+        }
+    }
+
     public void setPrincipalName(String principal) throws KeeperException {
         ZKUtil.createSetData(this.zk,
                 IdentityZNodeHelper.getPrincipalNameZnode(this.identityName),
                 UTF8.toBytes(principal));
+    }
+
+    public int getKeyVersion() throws KeeperException {
+        String znode = IdentityZNodeHelper.getKeyVersionZNode(this.identityName);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        byte[] data = new byte[0];
+        try {
+            data = ZKUtil.getData(this.zk, znode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        if (data != null) {
+            return BytesUtil.bytes2int(data, true);
+        } else {
+            LOG.warn("can't get the date from znode: " + znode);
+            return -1;
+        }
     }
 
     public void setKeyVersion(int keyVersion) throws KeeperException {
@@ -54,10 +105,49 @@ public class IdentityZNode {
                 BytesUtil.int2bytes(keyVersion, true));
     }
 
+    public int getKdcFlags() throws KeeperException {
+        String znode = IdentityZNodeHelper.getKdcFlagsZNode(this.identityName);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        byte[] data = new byte[0];
+        try {
+            data = ZKUtil.getData(this.zk, znode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        if (data != null) {
+            return BytesUtil.bytes2int(data, true);
+        } else {
+            LOG.warn("can't get the date from znode: " + znode);
+            return -1;
+        }
+    }
+
     public void setKdcFlags(int kdcFlags) throws KeeperException {
         ZKUtil.createSetData(this.zk,
                 IdentityZNodeHelper.getKdcFlagsZNode(this.identityName),
                 BytesUtil.int2bytes(kdcFlags, true));
+    }
+
+    public boolean getDisabled() throws KeeperException {
+        String znode = IdentityZNodeHelper.getDisabledZNode(this.identityName);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        byte[] data = new byte[0];
+        try {
+            data = ZKUtil.getData(this.zk, znode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        if (data != null) {
+            int disabled = BytesUtil.bytes2int(data, true);
+            return disabled == 1;
+        } else {
+            LOG.warn("can't get the date from znode: " + znode);
+            return false;
+        }
     }
 
     public void setDisabled(boolean disabled) throws KeeperException {
@@ -72,6 +162,26 @@ public class IdentityZNode {
                 BytesUtil.int2bytes(value, true));
     }
 
+    public boolean getLocked() throws KeeperException {
+        String znode = IdentityZNodeHelper.getLockedZNode(this.identityName);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        byte[] data = new byte[0];
+        try {
+            data = ZKUtil.getData(this.zk, znode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        if (data != null) {
+            int locked = BytesUtil.bytes2int(data, true);
+            return locked == 1;
+        } else {
+            LOG.warn("can't get the date from znode: " + znode);
+            return false;
+        }
+    }
+
     public void setLocked(boolean locked) throws KeeperException {
         int value;
         if (locked) {
@@ -84,16 +194,127 @@ public class IdentityZNode {
                 BytesUtil.int2bytes(value, true));
     }
 
+    public KerberosTime getExpireTime() throws KeeperException {
+        String znode = IdentityZNodeHelper.getExpireTimeZNode(this.identityName);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        byte[] data = new byte[0];
+        try {
+            data = ZKUtil.getData(this.zk, znode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        if (data != null) {
+            long time = BytesUtil.bytes2long(data, true);
+            return new KerberosTime(time);
+        } else {
+            LOG.warn("can't get the date from znode:" + znode);
+            return null;
+        }
+    }
+
     public void setExpireTime(KerberosTime time) throws KeeperException {
         ZKUtil.createSetData(this.zk,
                 IdentityZNodeHelper.getExpireTimeZNode(this.identityName),
                 BytesUtil.long2bytes(time.getTime(), true));
     }
 
+    public KerberosTime getCreatedTime() throws KeeperException {
+        String znode = IdentityZNodeHelper.getCreatedTimeZNode(this.identityName);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        byte[] data = new byte[0];
+        try {
+            data = ZKUtil.getData(this.zk, znode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        if (data != null) {
+            long time = BytesUtil.bytes2long(data, true);
+            return new KerberosTime(time);
+        } else {
+            LOG.warn("can't get the date from znode: " + znode);
+            return null;
+        }
+    }
+
     public void setCreatedTime(KerberosTime time) throws KeeperException {
         ZKUtil.createSetData(this.zk,
                 IdentityZNodeHelper.getCreatedTimeZNode(this.identityName),
                 BytesUtil.long2bytes(time.getTime(), true));
+    }
+
+    public EncryptionType getEncryptionKeyType(String type) throws KeeperException {
+        String znode = IdentityZNodeHelper.getEncryptionKeyTypeZNode(this.identityName, type);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        byte[] data = new byte[0];
+        try {
+            data = ZKUtil.getData(this.zk, znode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        if (data != null) {
+            return EncryptionType.fromName(UTF8.toString(data));
+        } else {
+            LOG.warn("can't get the date from znode: " + znode);
+            return null;
+        }
+    }
+
+    public byte[] getEncryptionKeyData(String type) throws KeeperException {
+        String znode = IdentityZNodeHelper.getEncryptionKeyDataZNode(this.identityName, type);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        byte[] data = new byte[0];
+        try {
+            data = ZKUtil.getData(this.zk, znode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        if (data == null) {
+            LOG.warn("can't get the date from znode: " + znode);
+        }
+        return data;
+    }
+
+    public int getEncryptionKeyNo(String type) throws KeeperException {
+        String znode = IdentityZNodeHelper.getEncryptionKeyNoZNode(this.identityName, type);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        byte[] data = new byte[0];
+        try {
+            data = ZKUtil.getData(this.zk, znode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        if (data != null) {
+            return BytesUtil.bytes2int(data, true);
+        } else {
+            LOG.warn("can't get the date from znode: " + znode);
+            return -1;
+        }
+    }
+
+    public List<EncryptionKey> getKeys() throws KeeperException {
+        String znode = IdentityZNodeHelper.getKeysZNode(this.identityName);
+        if (ZKUtil.checkExists(this.zk, znode) == -1) {
+            throw new IllegalArgumentException("The znode " + znode + " is not found");
+        }
+        List<String> typeNames = ZKUtil.listChildrenNoWatch(this.zk, znode);
+        List<EncryptionKey> keys = new ArrayList<EncryptionKey>(typeNames.size());
+        for (String typeName : typeNames) {
+            EncryptionType type = getEncryptionKeyType(typeName);
+            byte[] data = getEncryptionKeyData(typeName);
+            int no = getEncryptionKeyNo(typeName);
+            keys.add(new EncryptionKey(type, data, no));
+        }
+        return keys;
     }
 
     public void setKeys(Map<EncryptionType, EncryptionKey> keys) throws KeeperException {

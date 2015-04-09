@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * utility class for ZooKeeper
@@ -129,5 +130,40 @@ public class ZKUtil {
     public static String getParent(String node) {
         int idx = node.lastIndexOf(ZNODE_PATH_SEPARATOR);
         return idx <= 0 ? null : node.substring(0, idx);
+    }
+
+    /**
+     * Get znode data. Does not set a watcher.
+     */
+    public static byte[] getData(ZooKeeper zk, String node)
+        throws KeeperException, InterruptedException {
+        try {
+            byte[] data = zk.getData(node, false, null);
+            return data;
+        } catch (KeeperException.NoNodeException e) {
+            LOG.debug("Unable to get data of znode " + node + " because node does not exist");
+            return null;
+        } catch (KeeperException e) {
+            LOG.warn("Unable to get data of znode " + node, e);
+            return null;
+        }
+    }
+
+    /**
+     * Lists the children of the specified node without setting any watches.
+     * null if parent does not exist
+     */
+    public static List<String> listChildrenNoWatch(ZooKeeper zk, String node)
+            throws KeeperException {
+        List<String> children = null;
+        try {
+            // List the children without watching
+            children = zk.getChildren(node, null);
+        } catch (KeeperException.NoNodeException nne) {
+            return null;
+        } catch (InterruptedException ie) {
+
+        }
+        return children;
     }
 }

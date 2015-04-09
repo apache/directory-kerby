@@ -137,7 +137,24 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
 
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
-        return null;
+        IdentityZNode identityZNode = new IdentityZNode(zooKeeper, principalName);
+        KrbIdentity krb = new KrbIdentity(principalName);
+        try {
+            if (!identityZNode.exist()) {
+                return null;
+            }
+            krb.setPrincipal(identityZNode.getPrincipalName());
+            krb.setCreatedTime(identityZNode.getCreatedTime());
+            krb.setDisabled(identityZNode.getDisabled());
+            krb.setExpireTime(identityZNode.getExpireTime());
+            krb.setKdcFlags(identityZNode.getKdcFlags());
+            krb.addKeys(identityZNode.getKeys());
+            krb.setKeyVersion(identityZNode.getKeyVersion());
+            krb.setLocked(identityZNode.getLocked());
+        } catch (KeeperException e) {
+            LOG.error("Fail to get identity from zookeeper", e);
+        }
+        return krb;
     }
 
     @Override
