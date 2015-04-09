@@ -47,8 +47,21 @@ public abstract class BackendTest {
     protected void testGet(IdentityBackend backend) {
         KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
+        // clear the identity cache.
+        backend.release();
 
-        assertThat(backend.getIdentity(TEST_PRINCIPAL)).isNotNull();
+        KrbIdentity identity = backend.getIdentity(TEST_PRINCIPAL);
+        assertThat(identity).isNotNull();
+        assertThat(identity.getExpireTime()).isEqualTo(kid.getExpireTime());
+        assertThat(identity.isDisabled()).isEqualTo(kid.isDisabled());
+        assertThat(identity.getKeyVersion()).isEqualTo(kid.getKeyVersion());
+        for (EncryptionKey expectedKey : kid.getKeys().values()) {
+            EncryptionType actualType = EncryptionType.fromValue(expectedKey.getKeyType().getValue());
+            EncryptionKey actualKey = identity.getKey(actualType);
+            assertThat(actualKey.getKeyType().getValue()).isEqualTo(expectedKey.getKeyType().getValue());
+            assertThat(actualKey.getKeyData()).isEqualTo(expectedKey.getKeyData());
+            assertThat(actualKey.getKvno()).isEqualTo(expectedKey.getKvno());
+        }
 
         //tearDown
         backend.deleteIdentity(TEST_PRINCIPAL);
@@ -57,6 +70,8 @@ public abstract class BackendTest {
     protected void testStore(IdentityBackend backend) {
         KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
+        // clear the identity cache.
+        backend.release();
         KrbIdentity kid2 = backend.getIdentity(TEST_PRINCIPAL);
 
         assertThat(kid).isEqualTo(kid2);
@@ -72,6 +87,9 @@ public abstract class BackendTest {
         kid.setDisabled(true);
         backend.updateIdentity(kid);
 
+        // clear the identity cache.
+        backend.release();
+
         assertThat(backend.getIdentity(TEST_PRINCIPAL)).isEqualTo(kid);
 
         //tearDown
@@ -81,6 +99,9 @@ public abstract class BackendTest {
     protected void testDelete(IdentityBackend backend) {
         KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
+        // clear the identity cache.
+        backend.release();
+
         assertThat(backend.getIdentity(TEST_PRINCIPAL)).isNotNull();
 
         backend.deleteIdentity(TEST_PRINCIPAL);
@@ -93,6 +114,9 @@ public abstract class BackendTest {
         for (KrbIdentity identity : identities) {
             backend.addIdentity(identity);
         }
+
+        // clear the identity cache.
+        backend.release();
 
         List<String> principals = backend.getIdentities(2, 5);
         assertThat(principals).hasSize(3)
