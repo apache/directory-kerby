@@ -49,6 +49,7 @@ public class TokenTest {
     static final String ROLE = "ADMIN";
 
     private AuthToken authToken;
+    private List<String> auds = new ArrayList<String>();
 
     @Before
     public void setUp() {
@@ -60,9 +61,8 @@ public class TokenTest {
         authToken.addAttribute("group", GROUP);
         authToken.addAttribute("role", ROLE);
 
-        List<String> aud = new ArrayList<String>();
-        aud.add(AUDIENCE);
-        authToken.setAudiences(aud);
+        auds.add(AUDIENCE);
+        authToken.setAudiences(auds);
 
         // Set expiration in 60 minutes
         final Date NOW =  new Date(new Date().getTime() / 1000 * 1000);
@@ -84,6 +84,9 @@ public class TokenTest {
         Assertions.assertThat(tokenStr).isNotNull();
 
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
+        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
@@ -94,11 +97,13 @@ public class TokenTest {
     public void testTokenWithEncryptedJWT() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
         setEncryptKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
+        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+
         String tokenStr = tokenEncoder.encodeAsString(authToken);
         System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
-
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         System.out.println("Decoded token's subject: " + token2.getSubject());
@@ -110,11 +115,13 @@ public class TokenTest {
     public void testTokenWithSignedJWT() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
-        setSignKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
+
+        setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
+
         String tokenStr = tokenEncoder.encodeAsString(authToken);
         System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
-
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         System.out.println("Decoded token's subject: " + token2.getSubject());
@@ -124,20 +131,60 @@ public class TokenTest {
 
     @Test
     public void testTokenWithSingedAndEncryptedJWT() throws Exception {
-
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
-        setSignKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
-        setEncryptKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
+
+        setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+
         String tokenStr = tokenEncoder.encodeAsString(authToken);
         System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
-
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
+    }
+
+    @Test
+    public void testInvalidAudienceJWT() throws Exception {
+        List<String> audiences = new ArrayList<String>();
+        audiences.add("invalid@EXAMPLE.COM");
+
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
+        setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setAudience((JwtTokenDecoder)tokenDecoder, audiences);
+
+        String tokenStr = tokenEncoder.encodeAsString(authToken);
+        System.out.println("Auth token: " + tokenStr);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
+        Assertions.assertThat(token2).isNull();
+    }
+
+    @Test
+    public void testExpiredJWT() throws Exception {
+        authToken.setExpirationTime(new Date(new Date().getTime() - 100));
+
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
+        setSignKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
+        setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
+
+        String tokenStr = tokenEncoder.encodeAsString(authToken);
+        System.out.println("Auth token: " + tokenStr);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
+        Assertions.assertThat(token2).isNull();
     }
 
     private void setEncryptKey(JwtTokenEncoder encoder, JwtTokenDecoder decoder) {
@@ -159,6 +206,10 @@ public class TokenTest {
     private void setSignKey(JwtTokenEncoder encoder, JwtTokenDecoder decoder) {
         KeyPair signKeyPair = getKeyPair();
         encoder.setSignKey((RSAPrivateKey) signKeyPair.getPrivate());
-        decoder.setVerifyKey((RSAPublicKey)signKeyPair.getPublic());
+        decoder.setVerifyKey((RSAPublicKey) signKeyPair.getPublic());
+    }
+
+    private void setAudience(JwtTokenDecoder decoder, List<String> auds) {
+        decoder.setAudiences(auds);
     }
 }

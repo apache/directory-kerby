@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
 
 /**
  * JWT token decoder, implemented using Nimbus JWT library.
@@ -42,6 +44,7 @@ import java.text.ParseException;
 public class JwtTokenDecoder implements TokenDecoder {
     private RSAPrivateKey decryptionKey;
     private RSAPublicKey verifyKey;
+    private List<String> audiences = null;
 
     @Override
     public AuthToken decodeFromBytes(byte[] content) throws IOException {
@@ -59,11 +62,17 @@ public class JwtTokenDecoder implements TokenDecoder {
             // Invalid JWT encoding
             throw new IOException("Failed to parse JWT token string", e);
         }
+
         // Check the JWT type
         if (jwt instanceof PlainJWT) {
             PlainJWT plainObject = (PlainJWT) jwt;
             try {
-                return new JwtAuthToken(plainObject.getJWTClaimsSet());
+
+                if(verifyToken(jwt)) {
+                    return new JwtAuthToken(plainObject.getJWTClaimsSet());
+                } else {
+                    return null;
+                }
             } catch (ParseException e) {
                 throw new IOException("Failed to get JWT claims set", e);
             }
@@ -72,7 +81,7 @@ public class JwtTokenDecoder implements TokenDecoder {
             decryptEncryptedJWT(encryptedJWT);
             SignedJWT signedJWT = encryptedJWT.getPayload().toSignedJWT();
             if (signedJWT != null) {
-                boolean success = verifySignedJWT(signedJWT);
+                boolean success = verifySignedJWT(signedJWT) && verifyToken(signedJWT);
                 if (success) {
                     try {
                         return new JwtAuthToken(signedJWT.getJWTClaimsSet());
@@ -84,14 +93,18 @@ public class JwtTokenDecoder implements TokenDecoder {
                 }
             } else {
                 try {
-                    return new JwtAuthToken(encryptedJWT.getJWTClaimsSet());
+                    if(verifyToken(encryptedJWT)) {
+                        return new JwtAuthToken(encryptedJWT.getJWTClaimsSet());
+                    } else {
+                        return null;
+                    }
                 } catch (ParseException e) {
                     throw new IOException("Failed to get JWT claims set", e);
                 }
             }
         } else if (jwt instanceof SignedJWT) {
             SignedJWT signedJWT = (SignedJWT) jwt;
-            boolean success = verifySignedJWT(signedJWT);
+            boolean success = verifySignedJWT(signedJWT) && verifyToken(signedJWT);
             if (success) {
                 try {
                     return new JwtAuthToken(signedJWT.getJWTClaimsSet());
@@ -153,4 +166,51 @@ public class JwtTokenDecoder implements TokenDecoder {
         verifyKey = key;
     }
 
+    /**
+     * set the token audiences
+     *
+     * @param auds the list of token audiences
+     */
+    public void setAudiences(List<String> auds) {
+        audiences = auds;
+    }
+
+    private boolean verifyToken(JWT jwtToken) throws IOException {
+        boolean audValid = verifyAudiences(jwtToken);
+        boolean expValid = verifyExpiration(jwtToken);
+        return  audValid && expValid;
+    }
+
+    private boolean verifyAudiences(JWT jwtToken) throws IOException {
+        boolean valid = false;
+        try {
+            List<String> tokenAudiences = jwtToken.getJWTClaimsSet().getAudience();
+            if(audiences == null) {
+                valid = true;
+            } else {
+                for(String audience : tokenAudiences) {
+                    if(audiences.contains(audience)) {
+                        valid = true;
+                        break;
+                    }
+                }
+            }
+        } catch (ParseException e) {
+            throw new IOException("Failed to get JWT claims set", e);
+        }
+        return valid;
+    }
+
+    private boolean verifyExpiration(JWT jwtToken) throws IOException {
+        boolean valid = false;
+        try {
+            Date expire = jwtToken.getJWTClaimsSet().getExpirationTime();
+            if(expire != null && new Date().before(expire)) {
+                valid = true;
+            }
+        } catch (ParseException e) {
+            throw new IOException("Failed to get JWT claims set", e);
+        }
+        return valid;
+    }
 }
