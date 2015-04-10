@@ -169,7 +169,12 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
 
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
-        return null;
+        try {
+            setIdentity(identity);
+        } catch (KeeperException e) {
+            LOG.error("Fail to update identity in zookeeper", e);
+        }
+        return identity;
     }
 
     @Override

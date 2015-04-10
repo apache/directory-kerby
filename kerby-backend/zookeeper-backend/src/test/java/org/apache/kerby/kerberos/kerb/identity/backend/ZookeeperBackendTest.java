@@ -63,4 +63,14 @@ public class ZookeeperBackendTest extends BackendTest {
     public void testGet() {
         super.testGet(backend);
     }
+
+    @Test
+    public void testStore() {
+        super.testStore(backend);
+    }
+
+    @Test
+    public void testUpdate() {
+        super.testUpdate(backend);
+    }
 }
