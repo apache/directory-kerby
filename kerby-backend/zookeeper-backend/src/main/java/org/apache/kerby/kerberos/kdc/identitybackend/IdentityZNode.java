@@ -335,4 +335,8 @@ public class IdentityZNode {
                     BytesUtil.int2bytes(value.getKvno(), true));
         }
     }
+
+    public void deleteIdentity() throws KeeperException {
+        ZKUtil.deleteNodeRecursively(this.zk, IdentityZNodeHelper.getIndentityZNode(this.identityName));
+    }
 }

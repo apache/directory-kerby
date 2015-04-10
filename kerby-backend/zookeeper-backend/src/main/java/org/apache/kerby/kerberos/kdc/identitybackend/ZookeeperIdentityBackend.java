@@ -179,7 +179,12 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
 
     @Override
     protected void doDeleteIdentity(String principalName) {
-
+        IdentityZNode identityZNode = new IdentityZNode(zooKeeper, principalName);
+        try {
+            identityZNode.deleteIdentity();
+        } catch (KeeperException e) {
+            LOG.error("Fail to delete identity in zookeeper", e);
+        }
     }
 
     @Override

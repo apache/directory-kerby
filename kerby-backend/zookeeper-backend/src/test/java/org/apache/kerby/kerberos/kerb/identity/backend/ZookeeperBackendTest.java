@@ -73,4 +73,9 @@ public class ZookeeperBackendTest extends BackendTest {
     public void testUpdate() {
         super.testUpdate(backend);
     }
+
+    @Test
+    public void testDelete() {
+        super.testDelete(backend);
+    }
 }
