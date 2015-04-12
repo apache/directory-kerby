@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
+import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -30,12 +31,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class KerbyKdcTest extends KdcTestBase {
 
-    private String password = "123456";
+    @Override
+    protected void prepareKdcServer() throws Exception {
+        super.prepareKdcServer();
+        kdcServer.setInnerKdcImpl(new NettyKdcServerImpl());
+    }
 
     @Override
     protected void createPrincipals() {
         super.createPrincipals();
-        kdcServer.createPrincipal(clientPrincipal, password);
+        kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);
     }
 
     protected void performKdcTest() throws Exception {
@@ -50,7 +55,7 @@ public abstract class KerbyKdcTest extends KdcTestBase {
         ServiceTicket tkt;
 
         try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
+            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, TEST_PASSWORD);
             assertThat(tgt).isNotNull();
 
             tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);

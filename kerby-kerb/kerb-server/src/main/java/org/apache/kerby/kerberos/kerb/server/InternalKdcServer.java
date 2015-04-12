@@ -17,7 +17,7 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.server.impl;
+package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;

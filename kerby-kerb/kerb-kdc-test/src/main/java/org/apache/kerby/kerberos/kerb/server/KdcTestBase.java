@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 public abstract class KdcTestBase {
+    protected static final String TEST_PASSWORD = "123456";
 
     protected String kdcRealm;
     protected String clientPrincipal;

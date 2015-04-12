@@ -17,11 +17,10 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.server.impl;
+package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
-import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.server.request.TgsRequest;
@@ -30,9 +29,6 @@ import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
-import org.apache.kerby.kerberos.kerb.transport.KrbTcpTransport;
-import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
-import org.apache.kerby.transport.tcp.TcpTransport;
 
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -40,33 +36,15 @@ import java.nio.ByteBuffer;
 /**
  * KDC handler to process client requests. Currently only one realm is supported.
  */
-public class KdcHandler implements Runnable {
-    private final KrbTransport transport;
+public class KdcHandler {
     private final KdcContext kdcContext;
 
-    public KdcHandler(KdcContext kdcContext, KrbTransport transport) {
+    public KdcHandler(KdcContext kdcContext) {
         this.kdcContext = kdcContext;
-        this.transport  = transport;
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                ByteBuffer message = transport.receiveMessage();
-                if (message == null) {
-                    System.out.println("No valid request recved. Disconnect actively");
-                    transport.release();
-                    break;
-                }
-                handleMessage(message);
-            } catch (Exception e) {
-                System.out.println("Transport or decoding error occurred" + e.getMessage());
-            }
-        }
-    }
-
-    protected void handleMessage(ByteBuffer message) throws Exception {
+    public ByteBuffer handleMessage(ByteBuffer message, boolean isTcp,
+                                       InetAddress remoteAddress) throws Exception {
         KrbMessage krbRequest = KrbUtil.decodeMessage(message);
         KdcRequest kdcRequest = null;
 
@@ -86,21 +64,19 @@ public class KdcHandler implements Runnable {
             }
         }
 
-        InetAddress clientAddress = transport.getRemoteAddress();
-        kdcRequest.setClientAddress(clientAddress);
-        boolean isTcp = (transport instanceof KrbTcpTransport);
+        kdcRequest.setClientAddress(remoteAddress);
         kdcRequest.isTcp(isTcp);
 
-        try {
-            kdcRequest.process();
+        kdcRequest.process();
 
-            KrbMessage krbResponse = kdcRequest.getReply();
-            KrbUtil.sendMessage(krbResponse, transport);
-        } catch (Exception e) {
-            //TODO: log the error
-            System.out.println("Error occured while processing request:"
-                    + e.getMessage());
-        }
+        KrbMessage krbResponse = kdcRequest.getReply();
+        int bodyLen = krbResponse.encodingLength();
+        ByteBuffer responseMessage = ByteBuffer.allocate(bodyLen + 4);
+        responseMessage.putInt(bodyLen);
+        krbResponse.encode(responseMessage);
+        responseMessage.flip();
+
+        return responseMessage;
     }
 
     private String getRequestRealm(KdcReq kdcReq) {

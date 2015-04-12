@@ -17,41 +17,40 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.server.impl.event;
+package org.apache.kerby.kerberos.kdc.impl;
 
-import org.apache.kerby.kerberos.kerb.server.KdcHandler;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
-import org.apache.kerby.transport.MessageHandler;
-import org.apache.kerby.transport.Transport;
-import org.apache.kerby.transport.event.MessageEvent;
-import org.apache.kerby.transport.tcp.TcpTransport;
+import org.apache.kerby.kerberos.kerb.server.KdcHandler;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
-/**
- * KDC handler to process client requests. Currently only one realm is supported.
- */
-public class EventKdcHandler extends MessageHandler {
-
+public class NettyKdcHandler extends ChannelInboundHandlerAdapter {
     private final KdcHandler myKdcHandler;
 
-    public EventKdcHandler(KdcContext kdcContext) {
+    public NettyKdcHandler(KdcContext kdcContext) {
         this.myKdcHandler = new KdcHandler(kdcContext);
     }
 
     @Override
-    protected void handleMessage(MessageEvent event) throws Exception {
-        ByteBuffer message = event.getMessage();
-        Transport transport = event.getTransport();
+    public void channelRead(ChannelHandlerContext ctx,
+                            Object msg) throws Exception {
+        ByteBuf byteBuf = (ByteBuf) msg;
+        byte[] msgBytes = new byte[byteBuf.readableBytes()];
+        byteBuf.readBytes(msgBytes);
+        ByteBuffer requestMessage = ByteBuffer.wrap(msgBytes);
 
-        InetSocketAddress clientAddress = transport.getRemoteAddress();
-        boolean isTcp = (transport instanceof TcpTransport);
-
+        InetSocketAddress clientAddress =
+                (InetSocketAddress) ctx.channel().remoteAddress();
+        boolean isTcp = true; //TODO:
         try {
-            ByteBuffer krbResponse = myKdcHandler.handleMessage(message, isTcp,
-                    clientAddress.getAddress());
-            transport.sendMessage(krbResponse);
+            ByteBuffer responseMessage = myKdcHandler.handleMessage(requestMessage,
+                    isTcp, clientAddress.getAddress());
+            ctx.writeAndFlush(Unpooled.wrappedBuffer(responseMessage));
         } catch (Exception e) {
             //TODO: log the error
             System.out.println("Error occured while processing request:"

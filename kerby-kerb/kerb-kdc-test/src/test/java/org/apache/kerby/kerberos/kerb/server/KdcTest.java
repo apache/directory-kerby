@@ -29,12 +29,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class KdcTest extends KdcTestBase {
 
-    private String password = "123456";
-
     @Override
     protected void createPrincipals() {
         super.createPrincipals();
-        kdcServer.createPrincipal(clientPrincipal, password);
+        kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);
     }
 
     protected void performKdcTest() throws Exception {
@@ -49,7 +47,7 @@ public abstract class KdcTest extends KdcTestBase {
         ServiceTicket tkt;
 
         try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
+            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, TEST_PASSWORD);
             assertThat(tgt).isNotNull();
 
             tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);

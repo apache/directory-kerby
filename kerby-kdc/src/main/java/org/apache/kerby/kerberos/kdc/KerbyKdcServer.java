@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
+import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
@@ -36,44 +37,10 @@ import java.util.UUID;
 public class KerbyKdcServer extends KdcServer {
     private static KerbyKdcServer server;
 
-    private static final String USAGE = "Usage: " +
-            KerbyKdcServer.class.getSimpleName() +
-            " -start conf-dir working-dir|-start|-stop";
-
-    public static void main(String[] args) {
-        if (args.length == 0) {
-            System.err.println(USAGE);
-            return;
-        }
-
-        if (args[0].equals("-start")) {
-            String confDir;
-            String workDir;
-            if(args.length == 1) {
-                confDir = "/etc/kerby/";
-                workDir = "/tmp/";
-            } else if (args.length == 3) {
-                confDir = args[1];
-                workDir = args[2];
-            } else {
-                System.err.println(USAGE);
-                return;
-            }
-            server = new KerbyKdcServer();
-            server.setWorkDir(new File(workDir));
-            server.setConfDir(new File(confDir));
-            server.init();
-
-            server.createTgtPrincipal();
-
-            server.start();
-            System.out.println("KDC started.");
-        } else if (args[0].equals("-stop")) {
-            //server.stop();//FIXME can't get the server instance here
-            System.out.println("KDC Server stopped.");
-        } else {
-            System.err.println(USAGE);
-        }
+    @Override
+    public void init() {
+        innerKdc = new NettyKdcServerImpl();
+        innerKdc.init(commonOptions);
     }
 
     /**
@@ -115,5 +82,45 @@ public class KerbyKdcServer extends KdcServer {
             principal += "@" + getSetting().getKdcRealm();
         }
         return principal;
+    }
+
+    private static final String USAGE = "Usage: " +
+            KerbyKdcServer.class.getSimpleName() +
+            " -start conf-dir working-dir|-start|-stop";
+
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.err.println(USAGE);
+            return;
+        }
+
+        if (args[0].equals("-start")) {
+            String confDir;
+            String workDir;
+            if(args.length == 1) {
+                confDir = "/etc/kerby/";
+                workDir = "/tmp/";
+            } else if (args.length == 3) {
+                confDir = args[1];
+                workDir = args[2];
+            } else {
+                System.err.println(USAGE);
+                return;
+            }
+            server = new KerbyKdcServer();
+            server.setWorkDir(new File(workDir));
+            server.setConfDir(new File(confDir));
+            server.init();
+
+            server.createTgtPrincipal();
+
+            server.start();
+            System.out.println("KDC started.");
+        } else if (args[0].equals("-stop")) {
+            //server.stop();//FIXME can't get the server instance here
+            System.out.println("KDC Server stopped.");
+        } else {
+            System.err.println(USAGE);
+        }
     }
 }

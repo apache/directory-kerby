@@ -21,15 +21,14 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
-import org.apache.kerby.kerberos.kerb.server.impl.InternalKdcServer;
-import org.apache.kerby.kerberos.kerb.server.impl.InternalKdcServerImpl;
+import org.apache.kerby.kerberos.kerb.server.impl.DefaultInternalKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.server.impl.event.EventBasedKdcServer;
 
 import java.io.File;
 
 public class KdcServer {
-    private KOptions commonOptions;
-    private InternalKdcServer innerKdc;
+    protected KOptions commonOptions;
+    protected InternalKdcServer innerKdc;
 
     /**
      * Default constructor.
@@ -122,8 +121,19 @@ public class KdcServer {
         commonOptions.add(KdcServerOption.WORK_DIR, workDir);
     }
 
+    /**
+     * Allow to debug so have more logs.
+     */
     public void enableDebug() {
         commonOptions.add(KdcServerOption.ENABLE_DEBUG);
+    }
+
+    /**
+     * Allow to hook customized kdc implementation.
+     * @param innerKdcImpl
+     */
+    public void setInnerKdcImpl(InternalKdcServer innerKdcImpl) {
+        commonOptions.add(KdcServerOption.INNER_KDC_IMPL, innerKdcImpl);
     }
 
     /**
@@ -153,10 +163,13 @@ public class KdcServer {
      * Init the KDC server.
      */
     public void init() {
-        if (commonOptions.contains(KdcServerOption.USE_EVENT_MODEL)) {
+        if (commonOptions.contains(KdcServerOption.INNER_KDC_IMPL)) {
+            innerKdc = (InternalKdcServer) commonOptions.getOptionValue(
+                    KdcServerOption.INNER_KDC_IMPL);
+        } else if (commonOptions.contains(KdcServerOption.USE_EVENT_MODEL)) {
             innerKdc = new EventBasedKdcServer();
         } else {
-            innerKdc = new InternalKdcServerImpl();
+            innerKdc = new DefaultInternalKdcServerImpl();
         }
         innerKdc.init(commonOptions);
     }

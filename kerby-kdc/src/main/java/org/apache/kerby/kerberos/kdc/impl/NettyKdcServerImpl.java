@@ -17,24 +17,23 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.server.impl;
+package org.apache.kerby.kerberos.kdc.impl;
 
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
+import org.apache.kerby.kerberos.kerb.server.impl.AbstractInternalKdcServer;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
-import org.apache.kerby.kerberos.kerb.transport.KdcNetwork;
-import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * A default KDC server implementation.
+ * A Netty based KDC server implementation.
  */
-public class InternalKdcServerImpl extends AbstractInternalKdcServer {
+public class NettyKdcServerImpl extends AbstractInternalKdcServer {
     private ExecutorService executor;
     private KdcContext kdcContext;
-    private KdcNetwork network;
+    private NettyKdcNetwork network;
 
     @Override
     protected void doStart() throws Exception {
@@ -44,15 +43,9 @@ public class InternalKdcServerImpl extends AbstractInternalKdcServer {
 
         executor = Executors.newCachedThreadPool();
 
-        network = new KdcNetwork() {
-            @Override
-            protected void onNewTransport(KrbTransport transport) {
-                KdcHandler kdcHandler = new KdcHandler(kdcContext, transport);
-                executor.execute(kdcHandler);
-            }
-        };
+        network = new NettyKdcNetwork();
 
-        network.init();
+        network.init(kdcContext);
 
         InetSocketAddress tcpAddress, udpAddress = null;
         tcpAddress = new InetSocketAddress(getSetting().getKdcHost(),

@@ -60,7 +60,7 @@ public abstract class KdcRequest {
     private KdcReq kdcReq;
     private KdcRep reply;
     private InetAddress clientAddress;
-    private boolean isTcp;
+    private boolean isTcp = true;
     private EncryptionType encryptionType;
     private EncryptionKey clientKey;
     private KrbIdentity clientEntry;
