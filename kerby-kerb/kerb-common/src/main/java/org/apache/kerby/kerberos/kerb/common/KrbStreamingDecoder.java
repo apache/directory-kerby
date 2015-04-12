@@ -31,7 +31,7 @@ public class KrbStreamingDecoder implements StreamingDecoder {
         if (streamingBuffer.remaining() >= 4) {
             int len = streamingBuffer.getInt();
             if (streamingBuffer.remaining() >= len) {
-                callback.onMessageComplete(len + 4);
+                callback.onMessageComplete(len + 4, 4); //Remove the prefix length
             } else {
                 callback.onMoreDataNeeded(len + 4);
             }

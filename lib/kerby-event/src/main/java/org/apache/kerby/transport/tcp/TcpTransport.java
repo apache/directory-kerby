@@ -69,7 +69,7 @@ public class TcpTransport extends Transport {
         private ByteBuffer streamingBuffer;
 
         @Override
-        public void onMessageComplete(int messageLength) {
+        public void onMessageComplete(int messageLength, int adjustOffset) {
             ByteBuffer message = null;
 
             int remaining = streamingBuffer.remaining();
@@ -85,7 +85,11 @@ public class TcpTransport extends Transport {
             }
 
             if (message != null) {
-                dispatcher.dispatch(MessageEvent.createInboundMessageEvent(TcpTransport.this, message));
+                if (adjustOffset > 0) {
+                    message.position(message.position() + adjustOffset);
+                }
+                dispatcher.dispatch(MessageEvent.createInboundMessageEvent(
+                        TcpTransport.this, message));
             }
         }
 

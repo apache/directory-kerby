@@ -54,7 +54,7 @@ public class TestNetworkBase {
             public void decode(ByteBuffer streamingBuffer, DecodingCallback callback) {
                 int expectedMessageLength = TEST_MESSAGE.getBytes().length;
                 if (streamingBuffer.remaining() >= expectedMessageLength) {
-                    callback.onMessageComplete(expectedMessageLength);
+                    callback.onMessageComplete(expectedMessageLength, -1);
                 } else {
                     callback.onMoreDataNeeded(expectedMessageLength);
                 }

@@ -30,15 +30,11 @@ import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.common.KrbStreamingDecoder;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.transport.Network;
 import org.apache.kerby.transport.Transport;
 import org.apache.kerby.transport.event.TransportEvent;
 import org.apache.kerby.transport.event.TransportEventType;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -50,8 +46,7 @@ public class EventBasedKrbClient extends AbstractInternalKrbClient {
     private EventKrbHandler krbHandler;
     private EventHub eventHub;
     private EventWaiter eventWaiter;
-    private Transport eventTransport;
-    private KrbTransport transport;
+    private Transport transport;
 
     @Override
     public void init(KOptions commonOptions) throws KrbException {
@@ -82,44 +77,13 @@ public class EventBasedKrbClient extends AbstractInternalKrbClient {
                     getSetting().getKdcUdpPort());
         }
         final Event event = eventWaiter.waitEvent(TransportEventType.NEW_TRANSPORT);
-        eventTransport = ((TransportEvent) event).getTransport();
-
-        transport = new KrbTransport() {
-            @Override
-            public void sendMessage(ByteBuffer message) throws IOException {
-                eventTransport.sendMessage(message);
-            }
-
-            @Override
-            public ByteBuffer receiveMessage() throws IOException {
-                return null; // NOOP, should not be here, since event based.
-            }
-
-            @Override
-            public InetAddress getRemoteAddress() {
-                return eventTransport.getRemoteAddress().getAddress();
-            }
-
-            @Override
-            public void setAttachment(Object attachment) {
-                eventTransport.setAttachment(attachment);
-            }
-
-            @Override
-            public Object getAttachment() {
-                return eventTransport.getAttachment();
-            }
-
-            @Override
-            public void release() throws IOException {
-
-            }
-        };
+        transport = ((TransportEvent) event).getTransport();
     }
 
     @Override
     protected TgtTicket doRequestTgtTicket(AsRequest tgtTktReq) throws KrbException {
-        tgtTktReq.setTransport(transport);
+        tgtTktReq.setSessionData(transport);
+        transport.setAttachment(tgtTktReq);
 
         eventHub.dispatch(KrbClientEvent.createTgtIntentEvent(tgtTktReq));
         Event resultEvent;
@@ -136,7 +100,8 @@ public class EventBasedKrbClient extends AbstractInternalKrbClient {
 
     @Override
     protected ServiceTicket doRequestServiceTicket(TgsRequest ticketReq) throws KrbException {
-        ticketReq.setTransport(transport);
+        ticketReq.setSessionData(transport);
+        transport.setAttachment(ticketReq);
 
         eventHub.dispatch(KrbClientEvent.createTktIntentEvent(ticketReq));
         Event resultEvent;
@@ -150,5 +115,4 @@ public class EventBasedKrbClient extends AbstractInternalKrbClient {
 
         return tgsResponse.getServiceTicket();
     }
-
 }

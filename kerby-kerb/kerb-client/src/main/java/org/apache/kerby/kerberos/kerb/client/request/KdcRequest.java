@@ -33,7 +33,6 @@ import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -47,7 +46,7 @@ import java.util.Map;
  */
 public abstract class KdcRequest {
     private KrbContext context;
-    private KrbTransport transport;
+    private Object sessionData;
 
     private KOptions krbOptions;
     private PrincipalName serverPrincipal;
@@ -75,12 +74,12 @@ public abstract class KdcRequest {
         this.fastContext = new KrbFastContext();
     }
 
-    public void setTransport(KrbTransport transport) {
-        this.transport = transport;
+    public void setSessionData(Object sessionData) {
+        this.sessionData = sessionData;
     }
 
-    public KrbTransport getTransport() {
-        return this.transport;
+    public Object getSessionData() {
+        return this.sessionData;
     }
 
     public void setKrbOptions(KOptions options) {

@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client.impl;
+package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.KOptions;

@@ -17,22 +17,19 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.transport.tcp;
+package org.apache.kerby.kerberos.kerb.server;
 
-public interface DecodingCallback {
+import org.junit.Test;
 
-    /**
-     * OK, enough data is ready, a message can be out
-     */
-    public void onMessageComplete(int messageLength, int adjustOffset);
+public class KdcTestUsingEventKdc extends KdcTest {
 
-    /**
-     * Need more data to be available
-     */
-    public void onMoreDataNeeded();
+    @Override
+    protected boolean useEventModelKdc() {
+        return false;
+    }
 
-    /**
-     * Need more data to be available, with determined more data length given
-     */
-    public void onMoreDataNeeded(int needDataLength);
+    @Test
+    public void testKdc() throws Exception {
+        performKdcTest();
+    }
 }

@@ -52,10 +52,20 @@ public abstract class KdcTestBase {
             udpPort = getServerPort();
         }
 
-        setUpKkdcServer();
+        setUpKdcServer();
 
         setUpClient();
         createPrincipals();
+    }
+
+    /**
+     * Prepare KrbClient startup options and config.
+     * @throws Exception
+     */
+    protected void prepareKrbClient() throws Exception {
+        if (useEventModelClient()) {
+            krbClnt.useEventModel();
+        }
     }
 
     /**
@@ -67,13 +77,26 @@ public abstract class KdcTestBase {
         if (tcpPort > 0) {
             kdcServer.setKdcTcpPort(tcpPort);
         }
+
         kdcServer.setAllowUdp(allowUdp());
         if (udpPort > 0) {
             kdcServer.setKdcUdpPort(udpPort);
         }
+
+        if (useEventModelKdc()) {
+            kdcServer.useEventModel();
+        }
     }
 
-    protected void setUpKkdcServer() throws Exception {
+    protected boolean useEventModelKdc() {
+        return false;
+    }
+
+    protected boolean useEventModelClient() {
+        return false;
+    }
+
+    protected void setUpKdcServer() throws Exception {
         kdcServer = new TestKdcServer();
         prepareKdcServer();
         kdcServer.init();
@@ -85,6 +108,7 @@ public abstract class KdcTestBase {
 
     protected void setUpClient() throws Exception {
         krbClnt = new KrbClient();
+        prepareKrbClient();
 
         krbClnt.setKdcHost(hostname);
         if (tcpPort > 0) {

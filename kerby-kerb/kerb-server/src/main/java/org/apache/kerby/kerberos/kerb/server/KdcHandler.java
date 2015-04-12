@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.server.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.server.request.TgsRequest;
@@ -30,6 +30,7 @@ import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
@@ -43,9 +44,15 @@ public class KdcHandler {
         this.kdcContext = kdcContext;
     }
 
-    public ByteBuffer handleMessage(ByteBuffer message, boolean isTcp,
-                                       InetAddress remoteAddress) throws Exception {
-        KrbMessage krbRequest = KrbUtil.decodeMessage(message);
+    public ByteBuffer handleMessage(ByteBuffer receivedMessage, boolean isTcp,
+                                       InetAddress remoteAddress) throws KrbException {
+        KrbMessage krbRequest = null;
+        try {
+            krbRequest = KrbCodec.decodeMessage(receivedMessage);
+        } catch (IOException e) {
+            throw new KrbException("Krb decoding message failed", e);
+        }
+
         KdcRequest kdcRequest = null;
 
         KrbMessageType messageType = krbRequest.getMsgType();

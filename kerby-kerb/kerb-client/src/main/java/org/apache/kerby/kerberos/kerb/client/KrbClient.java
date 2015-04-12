@@ -21,9 +21,8 @@ package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClientImpl;
+import org.apache.kerby.kerberos.kerb.client.impl.DefaultInternalKrbClient;
 import org.apache.kerby.kerberos.kerb.client.impl.event.EventBasedKrbClient;
-import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClient;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -128,7 +127,7 @@ public class KrbClient {
         if (commonOptions.contains(KrbOption.USE_EVENT_MODEL)) {
             innerClient = new EventBasedKrbClient();
         } else {
-            innerClient = new InternalKrbClientImpl();
+            innerClient = new DefaultInternalKrbClient();
         }
         innerClient.init(commonOptions);
     }

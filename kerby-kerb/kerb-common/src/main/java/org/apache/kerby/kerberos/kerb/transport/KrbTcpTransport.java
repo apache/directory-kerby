@@ -50,16 +50,11 @@ public class KrbTcpTransport
     }
 
     @Override
-    public ByteBuffer receiveMessage() {
-        try {
-            int msgLen = inputStream.readInt();
-            if (msgLen > 0) {
-                inputStream.readFully(messageBuffer, 0, msgLen);
-                return ByteBuffer.wrap(messageBuffer, 0, msgLen);
-            }
-        } catch (IOException e) {
-            //e.printStackTrace();
-            return null;
+    public ByteBuffer receiveMessage() throws IOException {
+        int msgLen = inputStream.readInt();
+        if (msgLen > 0) {
+            inputStream.readFully(messageBuffer, 0, msgLen);
+            return ByteBuffer.wrap(messageBuffer, 0, msgLen);
         }
 
         return null;

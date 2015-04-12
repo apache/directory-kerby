@@ -34,16 +34,16 @@ import java.net.InetSocketAddress;
 /**
  * A default krb client implementation.
  */
-public class InternalKrbClientImpl extends AbstractInternalKrbClient {
+public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
 
-    private KrbHandler krbHandler;
+    private DefaultKrbHandler krbHandler;
     private KrbTransport transport;
 
     @Override
     public void init(KOptions commonOptions) throws KrbException {
         super.init(commonOptions);
 
-        this.krbHandler = new KrbHandler();
+        this.krbHandler = new DefaultKrbHandler();
         krbHandler.init(getContext());
 
         InetSocketAddress tcpAddress, udpAddress = null;
@@ -64,7 +64,7 @@ public class InternalKrbClientImpl extends AbstractInternalKrbClient {
 
     @Override
     protected TgtTicket doRequestTgtTicket(AsRequest tgtTktReq) throws KrbException {
-        tgtTktReq.setTransport(transport);
+        tgtTktReq.setSessionData(transport);
 
         krbHandler.handleRequest(tgtTktReq);
 
@@ -73,7 +73,7 @@ public class InternalKrbClientImpl extends AbstractInternalKrbClient {
 
     @Override
     protected ServiceTicket doRequestServiceTicket(TgsRequest ticketReq) throws KrbException {
-        ticketReq.setTransport(transport);
+        ticketReq.setSessionData(transport);
 
         krbHandler.handleRequest(ticketReq);
 

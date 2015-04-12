@@ -21,52 +21,38 @@ package org.apache.kerby.kerberos.kerb.client.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
+import org.apache.kerby.kerberos.kerb.client.KrbHandler;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
-import org.apache.kerby.kerberos.kerb.common.KrbUtil;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class KrbHandler {
-
-    private PreauthHandler preauthHandler;
+public class DefaultKrbHandler extends KrbHandler {
 
     public void init(KrbContext context) {
-        preauthHandler = new PreauthHandler();
-        preauthHandler.init(context);
+        super.init(context);
     }
 
+    @Override
     public void handleRequest(KdcRequest kdcRequest) throws KrbException {
-        kdcRequest.process();
-        KdcReq kdcReq = kdcRequest.getKdcReq();
-        KrbTransport transport = kdcRequest.getTransport();
+        KrbTransport transport = (KrbTransport) kdcRequest.getSessionData();
         transport.setAttachment(kdcRequest);
-        KrbMessage kdcRep = null;
 
+        super.handleRequest(kdcRequest);
+        ByteBuffer receivedMessage = null;
         try {
-            KrbUtil.sendMessage(kdcReq, transport);
-
-            ByteBuffer message = transport.receiveMessage();
-            if (message != null) {
-                kdcRep = KrbUtil.decodeMessage(message);
-            } else {
-                throw new KrbException("No valid response recved");
-            }
+            receivedMessage = transport.receiveMessage();
         } catch (IOException e) {
-            throw new KrbException("Transport or decoding error occurred", e);
+            throw new KrbException("Receiving response message failed", e);
         }
+        super.onResponseMessage(kdcRequest, receivedMessage);
+    }
 
-        KrbMessageType messageType = kdcRep.getMsgType();
-        if (messageType == KrbMessageType.AS_REP) {
-            kdcRequest.processResponse((KdcRep) kdcRep);
-        } else if (messageType == KrbMessageType.TGS_REP) {
-            kdcRequest.processResponse((KdcRep) kdcRep);
-        }
+    @Override
+    protected void sendMessage(KdcRequest kdcRequest,
+                               ByteBuffer requestMessage) throws IOException {
+        KrbTransport transport = (KrbTransport) kdcRequest.getSessionData();
+        transport.sendMessage(requestMessage);
     }
 }
