@@ -19,6 +19,11 @@
  */
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooKeeper;
+
+import java.util.List;
+
 public class IdentityZNodeHelper {
 
     private final static String IDENTITIES_ZNODE_NAME = "identities";
@@ -93,5 +98,10 @@ public class IdentityZNodeHelper {
 
     public static String getEncryptionKeyNoZNode(String principalName, String type) {
         return ZKUtil.joinZNode(getKeyTypeZNode(principalName, type), ENCRYPTION_KEY_NO_ZNODE_NAME);
+    }
+
+    public static List<String> getIdentityNames(ZooKeeper zk) throws KeeperException {
+        List<String> identityNames = ZKUtil.listChildrenNoWatch(zk, getIdentitiesZNode());
+        return identityNames;
     }
 }

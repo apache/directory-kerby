@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -189,7 +190,15 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
 
     @Override
     public List<String> getIdentities(int start, int limit) {
-        return null;
+        List<String> identityNames = null;
+        try {
+            // The identities getting from zookeeper is unordered
+            identityNames = IdentityZNodeHelper.getIdentityNames(zooKeeper);
+        } catch (KeeperException e) {
+            LOG.error("Fail to get identities from zookeeper", e);
+        }
+        Collections.sort(identityNames);
+        return identityNames.subList(start, limit);
     }
 
     private void setIdentity(KrbIdentity identity) throws KeeperException {

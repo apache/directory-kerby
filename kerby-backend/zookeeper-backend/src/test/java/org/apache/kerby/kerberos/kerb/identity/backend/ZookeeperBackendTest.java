@@ -78,4 +78,9 @@ public class ZookeeperBackendTest extends BackendTest {
     public void testDelete() {
         super.testDelete(backend);
     }
+
+    @Test
+    public void testGetIdentities() {
+        super.testGetIdentities(backend);
+    }
 }
