@@ -60,6 +60,10 @@ public class TestKdcServer extends KdcServer {
         createPrincipals("krbtgt");
     }
 
+    public void deleteKrbtgtPrincipal() {
+        deletePrincipals("krbtgt");
+    }
+
     public String getKdcRealm() {
         return getSetting().getKdcRealm();
     }
@@ -90,6 +94,16 @@ public class TestKdcServer extends KdcServer {
             principal += "@" + getKdcRealm();
         }
         return principal;
+    }
+
+    public void deletePrincipals(String ... principals) {
+        for (String principal : principals) {
+            deletePrincipal(fixPrincipal(principal));
+        }
+    }
+
+    public synchronized void deletePrincipal(String principal) {
+        getIdentityService().deleteIdentity(principal);
     }
 
     public void exportPrincipals(File keytabFile) throws IOException {

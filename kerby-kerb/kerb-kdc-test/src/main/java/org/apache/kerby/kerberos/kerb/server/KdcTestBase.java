@@ -40,6 +40,24 @@ public abstract class KdcTestBase {
     protected TestKdcServer kdcServer;
     protected KrbClient krbClnt;
 
+    /**
+     * Get a server socket point for testing usage, either TCP or UDP.
+     * @return server socket point
+     */
+    private static int getServerPort() {
+        int serverPort = 0;
+
+        try {
+            ServerSocket serverSocket = new ServerSocket(0);
+            serverPort = serverSocket.getLocalPort();
+            serverSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get a server socket point");
+        }
+
+        return serverPort;
+    }
+
     protected boolean allowUdp() {
         return true;
     }
@@ -128,26 +146,14 @@ public abstract class KdcTestBase {
         kdcServer.createPrincipals(serverPrincipal);
     }
 
-    /**
-     * Get a server socket point for testing usage, either TCP or UDP.
-     * @return server socket point
-     */
-    private static int getServerPort() {
-        int serverPort = 0;
-
-        try {
-            ServerSocket serverSocket = new ServerSocket(0);
-            serverPort = serverSocket.getLocalPort();
-            serverSocket.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to get a server socket point");
-        }
-
-        return serverPort;
+    protected void deletePrincipals() {
+        kdcServer.deleteKrbtgtPrincipal();
+        kdcServer.deletePrincipals(serverPrincipal);
     }
 
     @After
     public void tearDown() throws Exception {
+        deletePrincipals();
         kdcServer.stop();
     }
 }

@@ -66,4 +66,10 @@ public abstract class KerbyKdcTest extends KdcTestBase {
             Assert.fail();
         }
     }
+
+    @Override
+    protected void deletePrincipals() {
+        super.deletePrincipals();
+        kdcServer.deletePrincipal(clientPrincipal);
+    }
 }

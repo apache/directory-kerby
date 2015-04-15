@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -54,25 +55,33 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
     private File dataLogDir;
     private ZooKeeper zooKeeper;
 
+    public ZookeeperIdentityBackend() {
+
+    }
+
     /**
      * Constructing an instance using specified config that contains anything
      * to be used to init the Zookeeper backend.
      * @param config
      */
     public ZookeeperIdentityBackend(Config config) {
-        this.config = config;
+         setConfig(config);
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
         init();
     }
 
     private void init() {
-        zkHost = config.getString(ZKConfKey.ZK_HOST);
-        zkPort = config.getInt(ZKConfKey.ZK_PORT);
-        dataDir = new File(config.getString(ZKConfKey.DATA_DIR));
-        dataLogDir = new File(config.getString(ZKConfKey.DATA_LOG_DIR));
+        zkHost = getConfig().getString(ZKConfKey.ZK_HOST);
+        zkPort = getConfig().getInt(ZKConfKey.ZK_PORT);
+        dataDir = new File(getConfig().getString(ZKConfKey.DATA_DIR));
+        dataLogDir = new File(getConfig().getString(ZKConfKey.DATA_LOG_DIR));
 
         startEmbeddedZookeeper();
         connectZK();
-
     }
 
     /**
@@ -138,6 +147,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
 
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
+        principalName = replaceSlash(principalName);
         IdentityZNode identityZNode = new IdentityZNode(zooKeeper, principalName);
         KrbIdentity krb = new KrbIdentity(principalName);
         try {
@@ -180,6 +190,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
 
     @Override
     protected void doDeleteIdentity(String principalName) {
+        principalName = replaceSlash(principalName);
         IdentityZNode identityZNode = new IdentityZNode(zooKeeper, principalName);
         try {
             identityZNode.deleteIdentity();
@@ -197,12 +208,21 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         } catch (KeeperException e) {
             LOG.error("Fail to get identities from zookeeper", e);
         }
-        Collections.sort(identityNames);
-        return identityNames.subList(start, limit);
+        List<String> newIdentities = new ArrayList<>(identityNames.size());
+        for(String name : identityNames) {
+            if(name.contains("\\")) {
+                name = name.replace("\\", "/");
+            }
+            newIdentities.add(name);
+        }
+        Collections.sort(newIdentities);
+        return newIdentities.subList(start, limit);
     }
 
     private void setIdentity(KrbIdentity identity) throws KeeperException {
-        IdentityZNode identityZNode = new IdentityZNode(zooKeeper, identity.getPrincipalName());
+        String principalName = identity.getPrincipalName();
+        principalName = replaceSlash(principalName);
+        IdentityZNode identityZNode = new IdentityZNode(zooKeeper, principalName);
         identityZNode.setPrincipalName(identity.getPrincipalName());
         identityZNode.setCreatedTime(identity.getCreatedTime());
         identityZNode.setDisabled(identity.isDisabled());
@@ -211,5 +231,12 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         identityZNode.setKeys(identity.getKeys());
         identityZNode.setKeyVersion(identity.getKeyVersion());
         identityZNode.setLocked(identity.isLocked());
+    }
+
+    private String replaceSlash(String name) {
+        if(name.contains("/")) {
+            name = name.replace("/", "\\");
+        }
+        return name;
     }
 }
