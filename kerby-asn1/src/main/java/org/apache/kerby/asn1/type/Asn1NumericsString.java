@@ -29,21 +29,17 @@ public class Asn1NumericsString extends Asn1String
 
     public Asn1NumericsString(String value) {
         super(UniversalTag.NUMERIC_STRING, value);
-        if (value != null) {
-            if (!isNumeric(value)) {
-                throw new IllegalArgumentException("Invalid numeric string");
-            }
+        if (value != null && !isNumeric(value)) {
+             throw new IllegalArgumentException("Invalid numeric string");
         }
     }
 
     public static boolean isNumeric(String  s) {
-        char c;
         for (int i = s.length() - 1; i >= 0; i--) {
-            c = s.charAt(i);
-            if ((c >= '0' && c <= '9') || c == ' ') {
-                continue;
+            char c = s.charAt(i);
+            if (!(c >= '0' && c <= '9' || c == ' ')) {
+                return false;
             }
-            return false;
         }
         return true;
     }

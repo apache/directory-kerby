@@ -21,21 +21,21 @@ package org.apache.kerby;
 
 public interface KOption {
 
-    public void setType(KOptionType type);
+    void setType(KOptionType type);
 
-    public KOptionType getType();
+    KOptionType getType();
 
-    public String getOptionName();
+    String getOptionName();
 
-    public void setName(String name);
+    void setName(String name);
 
-    public String getName();
+    String getName();
 
-    public void setDescription(String description);
+    void setDescription(String description);
 
-    public String getDescription();
+    String getDescription();
 
-    public void setValue(Object value);
+    void setValue(Object value);
 
-    public Object getValue();
+    Object getValue();
 }

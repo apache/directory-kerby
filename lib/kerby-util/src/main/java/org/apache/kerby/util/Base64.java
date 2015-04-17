@@ -589,7 +589,7 @@ public class Base64 {
      * @since 1.4
      */
     public static boolean isBase64(byte octet) {
-        return octet == PAD || (octet >= 0 && octet < DECODE_TABLE.length && DECODE_TABLE[octet] != -1);
+        return octet == PAD || octet >= 0 && octet < DECODE_TABLE.length && DECODE_TABLE[octet] != -1;
     }
 
     /**
@@ -1013,7 +1013,7 @@ public class Base64 {
         bitlen = ((bitlen + 7) >> 3) << 3;
         byte[] bigBytes = bigInt.toByteArray();
 
-        if (((bigInt.bitLength() % 8) != 0) && (((bigInt.bitLength() / 8) + 1) == (bitlen / 8))) {
+        if (bigInt.bitLength() % 8 != 0 && (bigInt.bitLength() / 8 + 1) == bitlen / 8) {
             return bigBytes;
         }
         // set up params for copying everything but sign bit
@@ -1021,7 +1021,7 @@ public class Base64 {
         int len = bigBytes.length;
 
         // if bigInt is exactly byte-aligned, just skip signbit in copy
-        if ((bigInt.bitLength() % 8) == 0) {
+        if (bigInt.bitLength() % 8 == 0) {
             startSrc = 1;
             len--;
         }

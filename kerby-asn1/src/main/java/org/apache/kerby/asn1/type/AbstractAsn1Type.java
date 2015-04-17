@@ -311,7 +311,6 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     public static Asn1Item decodeOne(LimitedByteBuffer content) throws IOException {
         int tag = readTag(content);
         int tagNo = readTagNo(content, tag);
-        boolean isConstructed = EncodingOption.isConstructed(tag);
         int length = readLength(content);
         if (length < 0) {
             throw new IOException("Unexpected length");
@@ -328,7 +327,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     public static void skipOne(LimitedByteBuffer content) throws IOException {
         int tag = readTag(content);
-        int tagNo = readTagNo(content, tag);
+        readTagNo(content, tag);
         int length = readLength(content);
         if (length < 0) {
             throw new IOException("Unexpected length");
@@ -431,13 +430,13 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
                 throw new IOException("Invalid high tag number found");
             }
 
-            while ((b >= 0) && ((b & 0x80) != 0)) {
-                tagNo |= (b & 0x7f);
+            while (b >= 0 && (b & 0x80) != 0) {
+                tagNo |= b & 0x7f;
                 tagNo <<= 7;
                 b = buffer.readByte();
             }
 
-            tagNo |= (b & 0x7f);
+            tagNo |= b & 0x7f;
         }
 
         return tagNo;

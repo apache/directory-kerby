@@ -156,7 +156,7 @@ public abstract class Asn1String extends Asn1Simple<String>
                 if (W1 > 0xDBFF) {
                     throw new IllegalStateException("invalid UTF-16 codepoint");
                 }
-                int codePoint = (((W1 & 0x03FF) << 10) | (W2 & 0x03FF)) + 0x10000;
+                int codePoint = ((W1 & 0x03FF) << 10) | (W2 & 0x03FF) + 0x10000;
                 sOut.write(0xf0 | (codePoint >> 18));
                 sOut.write(0x80 | ((codePoint >> 12) & 0x3F));
                 sOut.write(0x80 | ((codePoint >> 6) & 0x3F));

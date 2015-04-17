@@ -29,7 +29,7 @@ public class Asn1SequenceOf<T extends Asn1Type> extends Asn1CollectionOf<T>
     }
 
     public boolean isEmpty() {
-        return (getValue() == null || getElements().size() == 0);
+        return getValue() == null || getElements().size() == 0;
     }
 
     public void add(T element) {
