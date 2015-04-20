@@ -99,9 +99,9 @@ public class AsRequest extends KdcRequest {
             throw new KrbException("Nonce didn't match");
         }
 
-        PrincipalName serverPrincipal = encKdcRepPart.getSname();
-        serverPrincipal.setRealm(encKdcRepPart.getSrealm());
-        if (! serverPrincipal.equals(getServerPrincipal())) {
+        PrincipalName tmpServerPrincipal = encKdcRepPart.getSname();
+        tmpServerPrincipal.setRealm(encKdcRepPart.getSrealm());
+        if (! tmpServerPrincipal.equals(getServerPrincipal())) {
             throw new KrbException(KrbErrorCode.KDC_ERR_SERVER_NOMATCH);
         }
 
@@ -126,7 +126,8 @@ public class AsRequest extends KdcRequest {
     }
 
     private PrincipalName makeTgsPrincipal() {
-        return new PrincipalName(KrbConstant.TGS_PRINCIPAL + "@" + getContext().getKdcRealm());
+        return new PrincipalName(KrbConstant.TGS_PRINCIPAL + "@" +
+                getContext().getKrbSetting().getKdcRealm());
     }
 
     protected CredentialCache resolveCredCache(File ccacheFile) throws IOException {

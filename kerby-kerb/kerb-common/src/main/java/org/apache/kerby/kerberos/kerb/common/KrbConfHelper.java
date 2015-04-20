@@ -42,7 +42,7 @@ public class KrbConfHelper {
         if (subConfig != null) {
             return subConfig.getString(key);
         } else {
-            return (String) key.getDefaultValue();
+            return (String) conf.getString(key);
         }
     }
 
@@ -51,7 +51,7 @@ public class KrbConfHelper {
         if (subConfig != null) {
             return subConfig.getBoolean(key);
         } else {
-            return (Boolean) key.getDefaultValue();
+            return (Boolean) conf.getBoolean(key);
         }
     }
 
@@ -60,7 +60,7 @@ public class KrbConfHelper {
         if (subConfig != null) {
             return subConfig.getLong(key);
         } else {
-            return (Long) key.getDefaultValue();
+            return (Long) conf.getLong(key);
         }
     }
 
@@ -69,17 +69,19 @@ public class KrbConfHelper {
         if (subConfig != null) {
             return subConfig.getInt(key);
         } else {
-            return (Integer) key.getDefaultValue();
+            return (Integer) conf.getInt(key);
         }
     }
 
-    public static String[] getStringArrayUnderSection(Conf conf, SectionConfigKey key) {
+    public static String[] getStringArrayUnderSection(Conf conf,
+                                                      SectionConfigKey key) {
         String value = getStringUnderSection(conf, key);
         String[] values = value.split(LIST_SPLITTER);
         return values;
     }
 
-    public static List<EncryptionType> getEncTypesUnderSection(Conf conf, SectionConfigKey key) {
+    public static List<EncryptionType> getEncTypesUnderSection(
+            Conf conf, SectionConfigKey key) {
         String[] encTypesNames = getStringArrayUnderSection(conf, key);
         return getEncryptionTypes(encTypesNames);
     }
@@ -88,8 +90,10 @@ public class KrbConfHelper {
         return getEncryptionTypes(Arrays.asList(encTypeNames));
     }
 
-    public static List<EncryptionType> getEncryptionTypes(List<String> encTypeNames) {
-        List<EncryptionType> results = new ArrayList<EncryptionType>(encTypeNames.size());
+    public static List<EncryptionType> getEncryptionTypes(
+            List<String> encTypeNames) {
+        List<EncryptionType> results = new ArrayList<EncryptionType>(
+                encTypeNames.size());
 
         for (String eTypeName : encTypeNames) {
             EncryptionType eType = EncryptionType.fromName(eTypeName);

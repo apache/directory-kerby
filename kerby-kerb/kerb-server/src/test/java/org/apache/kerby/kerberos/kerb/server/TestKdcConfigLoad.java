@@ -57,4 +57,31 @@ public class TestKdcConfigLoad {
         assertThat(ldapContainerDn[2]).isEqualTo("dc=edu");
         */
     }
+
+    @Test
+    public void testManualConfiguration() {
+        KdcConfig kdcConfig = new KdcConfig();
+
+        kdcConfig.setString(KdcConfigKey.KDC_HOST, "localhost");
+        kdcConfig.setInt(KdcConfigKey.KDC_TCP_PORT, 12345);
+        kdcConfig.setString(KdcConfigKey.KDC_REALM, "TEST2.COM");
+
+        assertThat(kdcConfig.getKdcHost()).isEqualTo("localhost");
+        assertThat(kdcConfig.getKdcTcpPort()).isEqualTo(12345);
+        assertThat(kdcConfig.getKdcRealm()).isEqualTo("TEST2.COM");
+    }
+
+    @Test
+    public void testConfigurationDefaults() {
+        KdcConfig kdcConfig = new KdcConfig();
+
+        assertThat(kdcConfig.getKdcHost()).isEqualTo(
+                KdcConfigKey.KDC_HOST.getDefaultValue());
+        assertThat(kdcConfig.getKdcTcpPort()).isEqualTo(
+                KdcConfigKey.KDC_TCP_PORT.getDefaultValue()
+        );
+        assertThat(kdcConfig.getKdcRealm()).isEqualTo(
+                KdcConfigKey.KDC_REALM.getDefaultValue()
+        );
+    }
 }

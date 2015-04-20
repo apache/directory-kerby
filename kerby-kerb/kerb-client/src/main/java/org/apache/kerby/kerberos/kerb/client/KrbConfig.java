@@ -87,10 +87,6 @@ public class KrbConfig extends Conf {
         return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.KDC_REALM);
     }
 
-    public String getKdcDomain() {
-        return getString(KrbConfigKey.KDC_DOMAIN);
-    }
-
     public boolean isPreauthRequired() {
         return getBoolean(KrbConfigKey.PREAUTH_REQUIRED);
     }

@@ -24,63 +24,21 @@ import org.apache.kerby.kerberos.kerb.crypto.util.Nonce;
 
 public class KrbContext {
 
-    private String kdcRealm;
-    private KrbConfig config;
-    private String kdcHost;
-    private int kdcPort;
-    private long timeout = 10L;
+    private KrbSetting krbSetting;
     private PreauthHandler preauthHandler;
 
-    public void init(KrbConfig config) {
-        this.config = config;
+    public void init(KrbSetting krbSetting) {
+        this.krbSetting = krbSetting;
         preauthHandler = new PreauthHandler();
         preauthHandler.init(this);
     }
 
-    public String getKdcHost() {
-        if (kdcHost != null) {
-            return kdcHost;
-        }
-        return config.getKdcHost();
-    }
-
-    public void setKdcHost(String kdcHost) {
-        this.kdcHost = kdcHost;
-    }
-
-    public int getKdcPort() {
-        if (kdcPort > 0) {
-            return kdcPort;
-        }
-        return config.getKdcPort();
-    }
-
-    public void setKdcPort(int kdcPort) {
-        this.kdcPort = kdcPort;
-    }
-
-    public void setTimeout(long timeout) {
-        this.timeout = timeout;
-    }
-
-    public long getTimeout() {
-        return this.timeout;
+    public KrbSetting getKrbSetting() {
+        return krbSetting;
     }
 
     public KrbConfig getConfig() {
-        return config;
-    }
-
-    public void setKdcRealm(String realm) {
-        this.kdcRealm = realm;
-    }
-
-    public String getKdcRealm() {
-        if (kdcRealm != null) {
-            return kdcRealm;
-        }
-
-        return config.getKdcRealm();
+        return krbSetting.getKrbConfig();
     }
 
     public int generateNonce() {

@@ -33,6 +33,18 @@ public class KrbSetting {
         this.krbConfig = config;
     }
 
+    public KrbConfig getKrbConfig() {
+        return krbConfig;
+    }
+
+    public String getKdcRealm() {
+        String kdcRealm = commonOptions.getStringOption(KrbOption.KDC_REALM);
+        if (kdcRealm == null || kdcRealm.isEmpty()) {
+            kdcRealm = krbConfig.getKdcRealm();
+        }
+        return kdcRealm;
+    }
+
     public String getKdcHost() {
         String kdcHost = commonOptions.getStringOption(KrbOption.KDC_HOST);
         if (kdcHost == null) {

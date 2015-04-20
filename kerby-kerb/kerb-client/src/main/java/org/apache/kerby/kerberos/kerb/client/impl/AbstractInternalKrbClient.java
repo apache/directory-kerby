@@ -59,7 +59,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
 
         krbSetting = new KrbSetting(commonOptions, krbConfig);
         context = new KrbContext();
-        context.init(krbConfig);
+        context.init(krbSetting);
     }
 
     /**
