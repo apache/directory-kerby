@@ -61,5 +61,5 @@ public interface KrbTransport {
     /**
      * Release and close related resources like connection.
      */
-    public void release() throws IOException;
+    public void release();
 }

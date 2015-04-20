@@ -62,7 +62,11 @@ public class KrbUdpTransport
     }
 
     @Override
-    public void release() throws IOException {
-        channel.close();
+    public void release() {
+        try {
+            channel.close();
+        } catch (IOException e) {
+            //NOOP
+        }
     }
 }

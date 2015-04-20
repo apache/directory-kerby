@@ -66,7 +66,11 @@ public class KrbTcpTransport
     }
 
     @Override
-    public void release() throws IOException {
-        socket.close();
+    public void release() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            // NOOP
+        }
     }
 }

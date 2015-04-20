@@ -23,11 +23,15 @@ import org.apache.kerby.kerberos.kerb.server.KdcHandler;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.transport.KrbTcpTransport;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
 public class DefaultKdcHandler extends KdcHandler implements Runnable {
+    private static Logger logger = LoggerFactory.getLogger(DefaultKdcHandler.class);
     private final KrbTransport transport;
 
     public DefaultKdcHandler(KdcContext kdcContext, KrbTransport transport) {
@@ -41,19 +45,21 @@ public class DefaultKdcHandler extends KdcHandler implements Runnable {
             try {
                 ByteBuffer message = transport.receiveMessage();
                 if (message == null) {
-                    System.out.println("No valid request recved. Disconnect actively");
+                    logger.debug("No valid request recved. Disconnect actively");
                     transport.release();
                     break;
                 }
                 handleMessage(message);
-            } catch (Exception e) {
-                System.out.println("Transport or decoding error occurred"
-                        + e.getMessage());
+            } catch (IOException e) {
+                transport.release();
+                logger.debug("Transport or decoding error occurred, " +
+                        "disconnecting abnormally", e);
+                break;
             }
         }
     }
 
-    protected void handleMessage(ByteBuffer message) throws Exception {
+    protected void handleMessage(ByteBuffer message) {
         InetAddress clientAddress = transport.getRemoteAddress();
         boolean isTcp = (transport instanceof KrbTcpTransport);
 
@@ -61,9 +67,7 @@ public class DefaultKdcHandler extends KdcHandler implements Runnable {
             ByteBuffer krbResponse = handleMessage(message, isTcp, clientAddress);
             transport.sendMessage(krbResponse);
         } catch (Exception e) {
-            //TODO: log the error
-            System.out.println("Error occured while processing request:"
-                    + e.getMessage());
+            logger.debug("Error occured while processing request:", e);
         }
     }
 }
