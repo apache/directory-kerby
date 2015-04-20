@@ -21,14 +21,14 @@ package org.apache.kerby.event;
 
 public interface InternalEventHandler extends EventHandler {
 
-    public int id();
+    int id();
 
-    public void init();
+    void init();
 
-    public void start();
+    void start();
 
-    public void stop();
+    void stop();
 
-    public boolean isStopped();
+    boolean isStopped();
 }
 

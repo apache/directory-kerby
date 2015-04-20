@@ -21,9 +21,9 @@ package org.apache.kerby.event;
 
 public interface Dispatcher {
 
-    public void dispatch(Event event);
+    void dispatch(Event event);
 
-    public void register(EventHandler handler);
+    void register(EventHandler handler);
 
-    public void register(InternalEventHandler internalHandler);
+    void register(InternalEventHandler internalHandler);
 }

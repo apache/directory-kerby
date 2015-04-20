@@ -22,5 +22,5 @@ package org.apache.kerby.transport.tcp;
 import java.nio.ByteBuffer;
 
 public interface StreamingDecoder {
-    public void decode(ByteBuffer streamingBuffer, DecodingCallback callback);
+    void decode(ByteBuffer streamingBuffer, DecodingCallback callback);
 }

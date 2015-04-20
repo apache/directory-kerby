@@ -34,8 +34,8 @@ public abstract class Transport {
 
     protected TransBuffer sendBuffer;
 
-    private int readableCount = 0;
-    private int writableCount = 0;
+    protected int readableCount = 0;
+    protected int writableCount = 0;
 
     public Transport(InetSocketAddress remoteAddress) {
         this.remoteAddress = remoteAddress;

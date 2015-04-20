@@ -24,14 +24,14 @@ import java.util.concurrent.TimeoutException;
 
 public interface EventWaiter {
 
-    public abstract Event waitEvent(EventType event);
+    Event waitEvent(EventType event);
 
-    public abstract Event waitEvent();
+    Event waitEvent();
 
-    public abstract Event waitEvent(EventType event, long timeout,
+    Event waitEvent(EventType event, long timeout,
                                     TimeUnit timeUnit) throws TimeoutException;
 
-    public abstract Event waitEvent(long timeout,
+    Event waitEvent(long timeout,
                                     TimeUnit timeUnit) throws TimeoutException;
 
 }

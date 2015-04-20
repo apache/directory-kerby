@@ -28,112 +28,112 @@ import java.util.Set;
  * set configuration properties to ease the preparation of a Config.
  */
 public interface Config {
-    public String getResource();
-    public Set<String> getNames();
+    String getResource();
+    Set<String> getNames();
 
-    public String getString(String name);
-    public String getString(ConfigKey name);
-    public String getString(String name, String defaultValue);
-
-    /**
-     * Set a string value for the specified property
-     * @param name
-     * @param value
-     */
-    public void setString(String name, String value);
+    String getString(String name);
+    String getString(ConfigKey name);
+    String getString(String name, String defaultValue);
 
     /**
      * Set a string value for the specified property
      * @param name
      * @param value
      */
-    public void setString(ConfigKey name, String value);
+    void setString(String name, String value);
 
-    public String getTrimmed(String name);
-    public String getTrimmed(ConfigKey name);
-    public Boolean getBoolean(String name);
-    public Boolean getBoolean(ConfigKey name);
-    public Boolean getBoolean(String name, boolean defaultValue);
+    /**
+     * Set a string value for the specified property
+     * @param name
+     * @param value
+     */
+    void setString(ConfigKey name, String value);
+
+    String getTrimmed(String name);
+    String getTrimmed(ConfigKey name);
+    Boolean getBoolean(String name);
+    Boolean getBoolean(ConfigKey name);
+    Boolean getBoolean(String name, boolean defaultValue);
 
     /**
      * Set a boolean value for the specified property
      * @param name
      * @param value
      */
-    public void setBoolean(String name, boolean value);
+    void setBoolean(String name, boolean value);
 
     /**
      * Set a boolean value for the specified property
      * @param name
      * @param value
      */
-    public void setBoolean(ConfigKey name, boolean value);
+    void setBoolean(ConfigKey name, boolean value);
 
-    public Integer getInt(String name);
-    public Integer getInt(ConfigKey name);
-    public Integer getInt(String name, int defaultValue);
-
-    /**
-     * Set an int value for the specified property
-     * @param name
-     * @param value
-     */
-    public void setInt(String name, int value);
+    Integer getInt(String name);
+    Integer getInt(ConfigKey name);
+    Integer getInt(String name, int defaultValue);
 
     /**
      * Set an int value for the specified property
      * @param name
      * @param value
      */
-    public void setInt(ConfigKey name, int value);
+    void setInt(String name, int value);
+
+    /**
+     * Set an int value for the specified property
+     * @param name
+     * @param value
+     */
+    void setInt(ConfigKey name, int value);
 
 
-    public Long getLong(String name);
-    public Long getLong(ConfigKey name);
-    public Long getLong(String name, long defaultValue);
+    Long getLong(String name);
+    Long getLong(ConfigKey name);
+    Long getLong(String name, long defaultValue);
 
     /**
      * Set a long value for the specified property
      * @param name
      * @param value
      */
-    public void setLong(String name, long value);
+    void setLong(String name, long value);
 
     /**
      * Set a long value for the specified property
      * @param name
      * @param value
      */
-    public void setLong(ConfigKey name, long value);
+    void setLong(ConfigKey name, long value);
 
-    public Float getFloat(String name);
-    public Float getFloat(ConfigKey name);
-    public Float getFloat(String name, float defaultValue);
-
-    /**
-     * Set a float value for the specified property
-     * @param name
-     * @param value
-     */
-    public void setFloat(String name, float value);
+    Float getFloat(String name);
+    Float getFloat(ConfigKey name);
+    Float getFloat(String name, float defaultValue);
 
     /**
      * Set a float value for the specified property
      * @param name
      * @param value
      */
-    public void setFloat(ConfigKey name, float value);
+    void setFloat(String name, float value);
 
-    public List<String> getList(String name);
-    public List<String> getList(String name, String[] defaultValue);
-    public List<String> getList(ConfigKey name);
-    public Config getConfig(String name);
-    public Config getConfig(ConfigKey name);
+    /**
+     * Set a float value for the specified property
+     * @param name
+     * @param value
+     */
+    void setFloat(ConfigKey name, float value);
 
-    public Class<?> getClass(String name) throws ClassNotFoundException;
-    public Class<?> getClass(String name, Class<?> defaultValue) throws ClassNotFoundException;
-    public Class<?> getClass(ConfigKey name) throws ClassNotFoundException;
-    public <T> T getInstance(String name) throws ClassNotFoundException;
-    public <T> T getInstance(ConfigKey name) throws ClassNotFoundException;
-    public <T> T getInstance(String name, Class<T> xface) throws ClassNotFoundException;
+    List<String> getList(String name);
+    List<String> getList(String name, String[] defaultValue);
+    List<String> getList(ConfigKey name);
+    Config getConfig(String name);
+    Config getConfig(ConfigKey name);
+
+    Class<?> getClass(String name) throws ClassNotFoundException;
+    Class<?> getClass(String name, Class<?> defaultValue) throws ClassNotFoundException;
+    Class<?> getClass(ConfigKey name) throws ClassNotFoundException;
+    <T> T getInstance(String name) throws ClassNotFoundException;
+    <T> T getInstance(ConfigKey name) throws ClassNotFoundException;
+    <T> T getInstance(String name, Class<T> xface) throws ClassNotFoundException;
 }

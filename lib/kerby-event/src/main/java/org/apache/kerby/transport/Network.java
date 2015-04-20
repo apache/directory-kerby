@@ -277,7 +277,7 @@ public class Network extends LongRunningEventHandler {
                     SelectionKey.OP_READ | SelectionKey.OP_WRITE, transport);
                 onNewTransport(transport);
             }
-        } catch (ClosedByInterruptException e) {
+        } catch (ClosedByInterruptException e) { //NOPMD
             // No op as normal
         }
     }

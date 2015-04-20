@@ -24,7 +24,7 @@ package org.apache.kerby.config;
  */
 public interface Configurable {
 
-    public void setConfig(Config config);
+    void setConfig(Config config);
 
-    public Config getConfig();
+    Config getConfig();
 }

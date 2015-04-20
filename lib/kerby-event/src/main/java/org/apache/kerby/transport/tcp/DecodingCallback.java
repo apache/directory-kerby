@@ -24,15 +24,15 @@ public interface DecodingCallback {
     /**
      * OK, enough data is ready, a message can be out
      */
-    public void onMessageComplete(int messageLength, int adjustOffset);
+    void onMessageComplete(int messageLength, int adjustOffset);
 
     /**
      * Need more data to be available
      */
-    public void onMoreDataNeeded();
+    void onMoreDataNeeded();
 
     /**
      * Need more data to be available, with determined more data length given
      */
-    public void onMoreDataNeeded(int needDataLength);
+    void onMoreDataNeeded(int needDataLength);
 }

@@ -21,11 +21,11 @@ package org.apache.kerby.event;
 
 public interface EventHandler {
 
-    public void handle(Event event);
+    void handle(Event event);
 
-    public EventType[] getInterestedEvents();
+    EventType[] getInterestedEvents();
 
-    public Dispatcher getDispatcher();
+    Dispatcher getDispatcher();
 
-    public void setDispatcher(Dispatcher dispatcher);
+    void setDispatcher(Dispatcher dispatcher);
 }

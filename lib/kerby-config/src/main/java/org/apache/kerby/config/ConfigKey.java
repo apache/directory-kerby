@@ -20,6 +20,6 @@
 package org.apache.kerby.config;
 
 public interface ConfigKey {
-    public String getPropertyKey();
-    public Object getDefaultValue();
+    String getPropertyKey();
+    Object getDefaultValue();
 }
