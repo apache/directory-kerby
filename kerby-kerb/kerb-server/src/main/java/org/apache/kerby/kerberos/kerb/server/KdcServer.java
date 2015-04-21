@@ -179,6 +179,8 @@ public class KdcServer {
     }
 
     public void stop() {
-        innerKdc.stop();
+        if (innerKdc != null) {
+            innerKdc.stop();
+        }
     }
 }
