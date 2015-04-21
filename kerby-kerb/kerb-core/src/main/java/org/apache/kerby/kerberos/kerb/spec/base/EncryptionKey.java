@@ -112,4 +112,16 @@ public class EncryptionKey extends KrbSequenceType {
 
         return Arrays.equals(getKeyData(), that.getKeyData());
     }
+    
+    @Override
+    public int hashCode() {
+        int result = kvno;
+        if (getKeyType() != null) {
+            result = 31 * result + getKeyType().hashCode();
+        }
+        if (getKeyData() != null) {
+            result = 31 * result + Arrays.hashCode(getKeyData());
+        }
+        return result;
+    }
 }

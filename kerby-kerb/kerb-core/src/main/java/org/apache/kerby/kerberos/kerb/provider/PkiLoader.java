@@ -37,7 +37,7 @@ public interface PkiLoader {
      * @return
      * @throws KrbException
      */
-    public List<Certificate> loadCerts(String certFile) throws KrbException;
+    List<Certificate> loadCerts(String certFile) throws KrbException;
 
     /**
      * Load certificates from an input stream.
@@ -45,7 +45,7 @@ public interface PkiLoader {
      * @return
      * @throws KrbException
      */
-    public List<Certificate> loadCerts(InputStream inputStream) throws KrbException;
+    List<Certificate> loadCerts(InputStream inputStream) throws KrbException;
 
     /**
      * Load private key from a key file with a password.
@@ -54,7 +54,7 @@ public interface PkiLoader {
      * @return private key
      * @throws KrbException
      */
-    public PrivateKey loadPrivateKey(String keyFile,
+    PrivateKey loadPrivateKey(String keyFile,
                                     String password) throws KrbException;
 
     /**
@@ -64,7 +64,7 @@ public interface PkiLoader {
      * @return private key
      * @throws KrbException
      */
-    public PrivateKey loadPrivateKey(InputStream inputStream,
+    PrivateKey loadPrivateKey(InputStream inputStream,
                                     String password) throws KrbException;
 
 }

@@ -99,4 +99,16 @@ public class EncryptedData extends KrbSequenceType {
 
         return Arrays.equals(getCipher(), that.getCipher());
     }
+    
+    @Override
+    public int hashCode() {
+        int result = 0;
+        if (getEType() != null) {
+            result = 31 * result + getEType().hashCode();
+        }
+        if (getCipher() != null) {
+            result = 31 * result + Arrays.hashCode(getCipher());
+        }
+        return result;
+    }
 }

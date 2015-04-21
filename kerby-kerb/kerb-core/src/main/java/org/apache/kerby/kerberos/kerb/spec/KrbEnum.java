@@ -20,5 +20,5 @@
 package org.apache.kerby.kerberos.kerb.spec;
 
 public interface KrbEnum {
-    public int getValue();
+    int getValue();
 }

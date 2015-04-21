@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb;
 
 public interface KrbConstant {
-    public final static int KRB_V5 = 5;
+    int KRB_V5 = 5;
 
-    public final static String TGS_PRINCIPAL = "krbtgt";
+    String TGS_PRINCIPAL = "krbtgt";
 }

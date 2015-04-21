@@ -28,6 +28,6 @@ public interface PkiProvider extends KrbProvider {
      * Create a pki loader.
      * @return pki loader
      */
-    public PkiLoader createPkiLoader();
+    PkiLoader createPkiLoader();
 
 }

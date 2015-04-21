@@ -32,109 +32,109 @@ public interface AuthToken {
      * Get the token subject
      * @return token subject
      */
-    public String getSubject();
+    String getSubject();
 
     /**
      * Set token subject
      * @param sub
      */
-    public void setSubject(String sub);
+    void setSubject(String sub);
 
     /**
      * Get the token issuer
      * @return token issuer
      */
-    public String getIssuer();
+    String getIssuer();
 
     /**
      * Set token issuer
      * @param issuer
      */
-    public void setIssuer(String issuer);
+    void setIssuer(String issuer);
 
     /**
      * Get token audiences
      * @return token audiences
      */
-    public List<String> getAudiences();
+    List<String> getAudiences();
 
     /**
      * Set token audiences
      * @param audiences
      */
-    public void setAudiences(List<String> audiences);
+    void setAudiences(List<String> audiences);
 
     /**
      * Is an Identity Token ?
      * @return true if it's an identity token, false otherwise
      */
-    public boolean isIdToken();
+    boolean isIdToken();
 
     /**
      * Is an Access Token ?
      * @return true if it's an access token, false otherwise
      */
-    public boolean isAcToken();
+    boolean isAcToken();
 
     /**
      * Is a Bearer Token ?
      * @return true if it's an bearer token, false otherwise
      */
-    public boolean isBearerToken();
+    boolean isBearerToken();
 
     /**
      * Is an Holder-of-Key Token (HOK) ?
      * @return true if it's a HOK token, false otherwise
      */
-    public boolean isHolderOfKeyToken();
+    boolean isHolderOfKeyToken();
 
     /**
      * Get token expired data time.
      * @return expired time
      */
-    public Date getExpiredTime();
+    Date getExpiredTime();
 
     /**
      * Set token expired time
      * @param exp
      */
-    public void setExpirationTime(Date exp);
+    void setExpirationTime(Date exp);
 
     /**
      * Get token not before time.
      * @return not before time
      */
-    public Date getNotBeforeTime();
+    Date getNotBeforeTime();
 
     /**
      * Set token not before time.
      * @param nbt
      */
-    public void setNotBeforeTime(Date nbt);
+    void setNotBeforeTime(Date nbt);
 
     /**
      * Get token issued at time when the token is issued.
      * @return issued at time
      */
-    public Date getIssueTime();
+    Date getIssueTime();
 
     /**
      * Set token issued at time.
      * @param iat
      */
-    public void setIssueTime(Date iat);
+    void setIssueTime(Date iat);
 
     /**
      * Get token attributes.
      * @return token attributes
      */
-    public Map<String, Object> getAttributes();
+    Map<String, Object> getAttributes();
 
     /**
      * Add a token attribute.
      * @param name
      * @param value
      */
-    public void addAttribute(String name, Object value);
+    void addAttribute(String name, Object value);
 
 }

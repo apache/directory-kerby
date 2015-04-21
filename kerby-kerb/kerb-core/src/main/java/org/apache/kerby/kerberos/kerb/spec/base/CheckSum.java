@@ -90,6 +90,18 @@ public class CheckSum extends KrbSequenceType {
 
         return Arrays.equals(getChecksum(), that.getChecksum());
     }
+    
+    @Override
+    public int hashCode() {
+        int result = 0;
+        if (getCksumtype() != null) {
+            result = 31 * result + getCksumtype().hashCode();
+        }
+        if (getChecksum() != null) {
+            result = 31 * result + Arrays.hashCode(getChecksum());
+        }
+        return result;
+    }
 
     public boolean isEqual(CheckSum other) {
         return this.equals(other);

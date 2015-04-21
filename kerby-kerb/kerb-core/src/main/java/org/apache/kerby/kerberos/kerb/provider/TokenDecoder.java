@@ -33,12 +33,12 @@ public interface TokenDecoder {
      * @param content
      * @return token
      */
-    public AuthToken decodeFromBytes(byte[] content) throws IOException;
+    AuthToken decodeFromBytes(byte[] content) throws IOException;
 
     /**
      * Decode a token from a string.
      * @param content
      * @return token
      */
-    public AuthToken decodeFromString(String content) throws IOException;
+    AuthToken decodeFromString(String content) throws IOException;
 }

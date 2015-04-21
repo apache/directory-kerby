@@ -32,14 +32,14 @@ public interface TokenEncoder {
      * @param token
      * @return bytes array
      */
-    public byte[] encodeAsBytes(AuthToken token) throws KrbException;
+    byte[] encodeAsBytes(AuthToken token) throws KrbException;
 
     /**
      * Encode a token resulting in a string.
      * @param token
      * @return string representation
      */
-    public String encodeAsString(AuthToken token) throws KrbException;
+    String encodeAsString(AuthToken token) throws KrbException;
 
 
 }
