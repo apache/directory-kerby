@@ -239,9 +239,13 @@ public abstract class KdcRequest {
         KrbIdentity clientEntry = getEntry(clientPrincipal.getName());
         setClientEntry(clientEntry);
 
-        EncryptionType encType = request.getReqBody().getEtypes().listIterator().next();
-        EncryptionKey clientKey = clientEntry.getKeys().get(encType);
-        setClientKey(clientKey);
+        for (EncryptionType encType : request.getReqBody().getEtypes()) {
+            if (clientEntry.getKeys().containsKey(encType)) {
+                EncryptionKey clientKey = clientEntry.getKeys().get(encType);
+                setClientKey(clientKey);
+                break;
+            }
+        }
     }
 
     protected void preauth() throws KrbException {
