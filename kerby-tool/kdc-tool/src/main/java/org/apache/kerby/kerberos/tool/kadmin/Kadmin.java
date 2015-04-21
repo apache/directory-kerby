@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.tool.kadmin;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.tool.kadmin.executor.AddPrincipalExecutor;
+import org.apache.kerby.kerberos.tool.kadmin.executor.DeletePrincipalExecutor;
 import org.apache.kerby.kerberos.tool.kadmin.executor.KadminCommandExecutor;
 import org.apache.kerby.kerberos.tool.kadmin.executor.KeytabAddExecutor;
 
@@ -82,8 +83,10 @@ public class Kadmin {
         } else if (command.startsWith("ktadd") ||
                 command.startsWith("xst")) {
             executor = new KeytabAddExecutor(backendConfig);
+        } else if (command.startsWith("delete_principal") ||
+                command.startsWith("delprinc")) {
+            executor = new DeletePrincipalExecutor(backendConfig);
         }
-
         if (executor == null) {
             System.out.println("Unknown request \"" + command + "\". Type \"?\" for a request list.");
             return;

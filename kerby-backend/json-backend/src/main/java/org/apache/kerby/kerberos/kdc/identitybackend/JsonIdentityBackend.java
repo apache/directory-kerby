@@ -147,7 +147,11 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected void doDeleteIdentity(String principalName) {
         checkAndLoad();
-        ids.remove(principalName);
+        if (ids.containsKey(principalName)) {
+            ids.remove(principalName);
+        } else {
+            throw new RuntimeException("Principal does not exist.");
+        }
         idsToFile(ids);
     }
 
