@@ -370,7 +370,7 @@ public abstract class KdcRequest {
         }
 
         KerberosTime krbEndTime = request.getReqBody().getTill();
-        if (krbEndTime == null) {
+        if (krbEndTime == null || krbEndTime.getTime() == 0) {
             krbEndTime = krbStartTime.extend(config.getMaximumTicketLifetime() * 1000);
         } else if (krbStartTime.greaterThan(krbEndTime)) {
             throw new KrbException(KrbErrorCode.KDC_ERR_NEVER_VALID);
@@ -393,7 +393,7 @@ public abstract class KdcRequest {
 
             ticketFlags.setFlag(TicketFlag.RENEWABLE);
 
-            if (krbRtime == null) {
+            if (krbRtime == null || krbRtime.getTime() == 0) {
                 krbRtime = KerberosTime.NEVER;
             }
             KerberosTime allowedMaximumRenewableTime = krbStartTime;
