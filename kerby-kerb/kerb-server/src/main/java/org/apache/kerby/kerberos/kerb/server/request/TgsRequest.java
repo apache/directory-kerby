@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.server.request;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -54,6 +55,11 @@ public class TgsRequest extends KdcRequest {
 
     public void setTgtSessionKey(EncryptionKey tgtSessionKey) {
         this.tgtSessionKey = tgtSessionKey;
+    }
+
+    @Override
+    protected void checkClient() throws KrbException {
+        // Nothing to do at this phase because client couldn't be checked out yet.
     }
 
     public void verifyAuthenticator(PaDataEntry paDataEntry) throws KrbException {
@@ -106,6 +112,8 @@ public class TgsRequest extends KdcRequest {
         serverPrincipal.setRealm(ticket.getRealm());
         PrincipalName clientPrincipal = authenticator.getCname();
         clientPrincipal.setRealm(authenticator.getCrealm());
+        KrbIdentity clientEntry = getEntry(clientPrincipal.getName());
+        setClientEntry(clientEntry);
 
         if (!authenticator.getCtime().isInClockSkew(
                 kdcContext.getConfig().getAllowableClockSkew() * 1000)) {

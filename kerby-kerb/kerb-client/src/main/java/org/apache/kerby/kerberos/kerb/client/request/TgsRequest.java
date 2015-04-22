@@ -51,7 +51,7 @@ public class TgsRequest extends KdcRequest {
     }
 
     public PrincipalName getClientPrincipal() {
-        return tgt.getClientPrincipal();
+        return null;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class TgsRequest extends KdcRequest {
 
     private Authenticator makeAuthenticator() {
         Authenticator authenticator = new Authenticator();
-        authenticator.setCname(getClientPrincipal());
+        authenticator.setCname(tgt.getClientPrincipal());
         authenticator.setCrealm(tgt.getRealm());
 
         authenticator.setCtime(KerberosTime.now());

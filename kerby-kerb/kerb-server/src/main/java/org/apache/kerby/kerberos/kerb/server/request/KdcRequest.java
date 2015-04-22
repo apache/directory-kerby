@@ -226,27 +226,7 @@ public abstract class KdcRequest {
         }
     }
 
-    protected void checkClient() throws KrbException {
-        KdcReq request = getKdcReq();
-
-        PrincipalName clientPrincipal = request.getReqBody().getCname();
-        String clientRealm = request.getReqBody().getRealm();
-        if (clientRealm == null || clientRealm.isEmpty()) {
-            clientRealm = kdcContext.getKdcRealm();
-        }
-        clientPrincipal.setRealm(clientRealm);
-
-        KrbIdentity clientEntry = getEntry(clientPrincipal.getName());
-        setClientEntry(clientEntry);
-
-        for (EncryptionType encType : request.getReqBody().getEtypes()) {
-            if (clientEntry.getKeys().containsKey(encType)) {
-                EncryptionKey clientKey = clientEntry.getKeys().get(encType);
-                setClientKey(clientKey);
-                break;
-            }
-        }
-    }
+    protected abstract void checkClient() throws KrbException;
 
     protected void preauth() throws KrbException {
         KdcReq request = getKdcReq();

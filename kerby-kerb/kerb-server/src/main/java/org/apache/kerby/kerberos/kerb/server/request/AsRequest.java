@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.server.request;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.*;
@@ -32,6 +33,29 @@ public class AsRequest extends KdcRequest {
 
     public AsRequest(AsReq asReq, KdcContext kdcContext) {
         super(asReq, kdcContext);
+    }
+
+    @Override
+    protected void checkClient() throws KrbException {
+        KdcReq request = getKdcReq();
+
+        PrincipalName clientPrincipal = request.getReqBody().getCname();
+        String clientRealm = request.getReqBody().getRealm();
+        if (clientRealm == null || clientRealm.isEmpty()) {
+            clientRealm = kdcContext.getKdcRealm();
+        }
+        clientPrincipal.setRealm(clientRealm);
+
+        KrbIdentity clientEntry = getEntry(clientPrincipal.getName());
+        setClientEntry(clientEntry);
+
+        for (EncryptionType encType : request.getReqBody().getEtypes()) {
+            if (clientEntry.getKeys().containsKey(encType)) {
+                EncryptionKey clientKey = clientEntry.getKeys().get(encType);
+                setClientKey(clientKey);
+                break;
+            }
+        }
     }
 
     @Override

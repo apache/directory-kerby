@@ -144,11 +144,10 @@ public abstract class KdcRequest {
         long startTime = System.currentTimeMillis();
         body.setFrom(new KerberosTime(startTime));
 
-        PrincipalName cName = null;
-        cName = getClientPrincipal();
+        PrincipalName cName = getClientPrincipal();
         body.setCname(cName);
 
-        body.setRealm(cName.getRealm());
+        body.setRealm(getContext().getKrbSetting().getKdcRealm());
 
         PrincipalName sName = getServerPrincipal();
         body.setSname(sName);
