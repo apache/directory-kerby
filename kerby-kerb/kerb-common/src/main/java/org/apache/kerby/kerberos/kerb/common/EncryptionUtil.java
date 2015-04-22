@@ -22,18 +22,68 @@ package org.apache.kerby.kerberos.kerb.common;
 import org.apache.kerby.asn1.type.AbstractAsn1Type;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EncryptionUtil {
+
+    /**
+     * an order preserved map containing cipher names to the corresponding algorithm
+     * names in the descending order of strength
+     */
+    private static final Map<String, String> cipherAlgoMap = new LinkedHashMap<String, String>();
+
+    static {
+        cipherAlgoMap.put("rc4", "ArcFourHmac");
+        cipherAlgoMap.put("aes256", "AES256");
+        cipherAlgoMap.put("aes128", "AES128");
+        cipherAlgoMap.put("des3", "DESede");
+        cipherAlgoMap.put("des", "DES");
+    }
+
+    public static String getAlgoNameFromEncType(EncryptionType encType) {
+        String cipherName = encType.getName().toLowerCase();
+
+        for (String c : cipherAlgoMap.keySet()) {
+            if (cipherName.startsWith(c)) {
+                return cipherAlgoMap.get(c);
+            }
+        }
+
+        throw new IllegalArgumentException("Unknown algorithm name for the encryption type " + encType);
+    }
+
+    /**
+     * Order a list of EncryptionType in a decreasing strength order
+     *
+     * @param etypes The ETypes to order
+     * @return A list of ordered ETypes. The strongest is on the left.
+     */
+    public static List<EncryptionType> orderEtypesByStrength(List<EncryptionType> etypes) {
+        List<EncryptionType> ordered = new ArrayList<>(etypes.size());
+
+        for (String algo : cipherAlgoMap.values()) {
+            for (EncryptionType encType : etypes) {
+                String foundAlgo = getAlgoNameFromEncType(encType);
+
+                if (algo.equals(foundAlgo)) {
+                    ordered.add(encType);
+                }
+            }
+        }
+
+        return ordered;
+    }
 
     public static List<EncryptionKey> generateKeys(
             List<EncryptionType> encryptionTypes) throws KrbException {

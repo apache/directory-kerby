@@ -25,6 +25,7 @@ import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.KrbFastContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
+import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.*;
@@ -219,7 +220,7 @@ public abstract class KdcRequest {
         if (encryptionTypes == null) {
             encryptionTypes = context.getConfig().getEncryptionTypes();
         }
-        return encryptionTypes;
+        return EncryptionUtil.orderEtypesByStrength(encryptionTypes);
     }
 
     public void setEncryptionTypes(List<EncryptionType> encryptionTypes) {

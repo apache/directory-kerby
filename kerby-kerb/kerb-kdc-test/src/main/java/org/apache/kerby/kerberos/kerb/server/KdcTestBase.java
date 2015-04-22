@@ -20,6 +20,8 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
+import org.apache.kerby.kerberos.kerb.client.KrbConfig;
+import org.apache.kerby.kerberos.kerb.client.KrbConfigKey;
 import org.junit.After;
 import org.junit.Before;
 
@@ -125,7 +127,11 @@ public abstract class KdcTestBase {
     }
 
     protected void setUpClient() throws Exception {
-        krbClnt = new KrbClient();
+        KrbConfig krbConfig = new KrbConfig();
+        krbConfig.setString(KrbConfigKey.PERMITTED_ENCTYPES,
+            "aes128-cts-hmac-sha1-96 des-cbc-crc des-cbc-md5 des3-cbc-sha1");
+
+        krbClnt = new KrbClient(krbConfig);
         prepareKrbClient();
 
         krbClnt.setKdcHost(hostname);
