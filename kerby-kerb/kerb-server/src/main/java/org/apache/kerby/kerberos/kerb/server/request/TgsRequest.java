@@ -58,17 +58,20 @@ public class TgsRequest extends KdcRequest {
         this.tgtSessionKey = tgtSessionKey;
     }
 
-    protected PrincipalName getIssueTicketServerPrincipal() {
-        return tgtTicket.getSname();
-    }
-
-    protected PrincipalName getIssueTicketClientPrincipal() {
-        return tgtTicket.getEncPart().getCname();
-    }
-
     @Override
     protected void checkClient() throws KrbException {
         // Nothing to do at this phase because client couldn't be checked out yet.
+    }
+
+    protected Ticket getTgtTicket() {
+        return tgtTicket;
+    }
+
+    @Override
+    protected void issueTicket() throws KrbException {
+        TickertIssuer issuer = new ServiceTickertIssuer(this);
+        Ticket newTicket = issuer.issueTicket();
+        setTicket(newTicket);
     }
 
     public void verifyAuthenticator(PaDataEntry paDataEntry) throws KrbException {
@@ -109,7 +112,7 @@ public class TgsRequest extends KdcRequest {
 
         HostAddresses hostAddresses = tgtTicket.getEncPart().getClientAddresses();
         if (hostAddresses == null || hostAddresses.isEmpty()) {
-            if (!kdcContext.getConfig().isEmptyAddressesAllowed()) {
+            if (!getKdcContext().getConfig().isEmptyAddressesAllowed()) {
                 throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADADDR);
             }
         } else if (!hostAddresses.contains(getClientAddress())) {
@@ -124,7 +127,7 @@ public class TgsRequest extends KdcRequest {
         setClientEntry(clientEntry);
 
         if (!authenticator.getCtime().isInClockSkew(
-                kdcContext.getConfig().getAllowableClockSkew() * 1000)) {
+                getKdcContext().getConfig().getAllowableClockSkew() * 1000)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_SKEW);
         }
 
@@ -154,7 +157,7 @@ public class TgsRequest extends KdcRequest {
         TgsRep reply = new TgsRep();
 
         reply.setCname(getClientEntry().getPrincipal());
-        reply.setCrealm(kdcContext.getKdcRealm());
+        reply.setCrealm(getKdcContext().getKdcRealm());
         reply.setTicket(ticket);
 
         EncKdcRepPart encKdcRepPart = makeEncKdcRepPart();

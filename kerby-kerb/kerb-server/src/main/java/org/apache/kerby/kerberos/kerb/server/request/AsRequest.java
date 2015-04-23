@@ -42,7 +42,7 @@ public class AsRequest extends KdcRequest {
         PrincipalName clientPrincipal = request.getReqBody().getCname();
         String clientRealm = request.getReqBody().getRealm();
         if (clientRealm == null || clientRealm.isEmpty()) {
-            clientRealm = kdcContext.getKdcRealm();
+            clientRealm = getKdcContext().getKdcRealm();
         }
         clientPrincipal.setRealm(clientRealm);
 
@@ -59,13 +59,20 @@ public class AsRequest extends KdcRequest {
     }
 
     @Override
+    protected void issueTicket() throws KrbException {
+        TickertIssuer issuer = new TgtTickertIssuer(this);
+        Ticket newTicket = issuer.issueTicket();
+        setTicket(newTicket);
+    }
+
+    @Override
     protected void makeReply() throws KrbException {
         Ticket ticket = getTicket();
 
         AsRep reply = new AsRep();
 
         reply.setCname(getClientEntry().getPrincipal());
-        reply.setCrealm(kdcContext.getKdcRealm());
+        reply.setCrealm(getKdcContext().getKdcRealm());
         reply.setTicket(ticket);
 
         EncKdcRepPart encKdcRepPart = makeEncKdcRepPart();

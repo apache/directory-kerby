@@ -19,32 +19,20 @@
  */
 package org.apache.kerby.kerberos.kerb.server.request;
 
-import org.apache.kerby.kerberos.kerb.KrbErrorCode;
-import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.*;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
-import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.KdcFastContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
-import org.apache.kerby.kerberos.kerb.KrbConstant;
-import org.apache.kerby.kerberos.kerb.KrbErrorException;
-import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.*;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.spec.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlag;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
 
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -53,11 +41,11 @@ import java.util.List;
 
 public abstract class KdcRequest {
 
-    protected KdcContext kdcContext;
+    private final KdcReq kdcReq;
+    private final KdcContext kdcContext;
 
     private Ticket ticket;
     private boolean isPreAuthenticated;
-    private KdcReq kdcReq;
     private KdcRep reply;
     private InetAddress clientAddress;
     private boolean isTcp = true;
@@ -74,6 +62,7 @@ public abstract class KdcRequest {
     public KdcRequest(KdcReq kdcReq, KdcContext kdcContext) {
         this.kdcReq = kdcReq;
         this.kdcContext = kdcContext;
+
         this.preauthContext = kdcContext.getPreauthHandler()
                 .preparePreauthContext(this);
         this.fastContext = new KdcFastContext();
@@ -81,6 +70,10 @@ public abstract class KdcRequest {
 
     public KdcContext getKdcContext() {
         return kdcContext;
+    }
+
+    public KdcReq getKdcReq() {
+        return kdcReq;
     }
 
     public PreauthContext getPreauthContext() {
@@ -95,10 +88,6 @@ public abstract class KdcRequest {
         authenticate();
         issueTicket();
         makeReply();
-    }
-
-    public KdcReq getKdcReq() {
-        return kdcReq;
     }
 
     public KrbIdentity getTgsEntry() {
@@ -275,149 +264,7 @@ public abstract class KdcRequest {
         checkPolicy();
     }
 
-    protected void issueTicket() throws KrbException {
-        KdcReq request = getKdcReq();
-
-        EncryptionType encryptionType = getEncryptionType();
-        EncryptionKey serverKey = getServerEntry().getKeys().get(encryptionType);
-
-        PrincipalName ticketPrincipal = getIssueTicketServerPrincipal();
-
-        EncTicketPart encTicketPart = new EncTicketPart();
-        KdcConfig config = kdcContext.getConfig();
-
-        TicketFlags ticketFlags = new TicketFlags();
-        encTicketPart.setFlags(ticketFlags);
-        ticketFlags.setFlag(TicketFlag.INITIAL);
-
-        if (isPreAuthenticated()) {
-            ticketFlags.setFlag(TicketFlag.PRE_AUTH);
-        }
-
-        if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.FORWARDABLE)) {
-            if (!config.isForwardableAllowed()) {
-                throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
-            }
-
-            ticketFlags.setFlag(TicketFlag.FORWARDABLE);
-        }
-
-        if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.PROXIABLE)) {
-            if (!config.isProxiableAllowed()) {
-                throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
-            }
-
-            ticketFlags.setFlag(TicketFlag.PROXIABLE);
-        }
-
-        if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.ALLOW_POSTDATE)) {
-            if (!config.isPostdatedAllowed()) {
-                throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
-            }
-
-            ticketFlags.setFlag(TicketFlag.MAY_POSTDATE);
-        }
-
-        KdcOptions kdcOptions = request.getReqBody().getKdcOptions();
-
-        EncryptionKey sessionKey = EncryptionHandler.random2Key(getEncryptionType());
-        encTicketPart.setKey(sessionKey);
-
-        encTicketPart.setCname(getIssueTicketClientPrincipal());
-        encTicketPart.setCrealm(request.getReqBody().getRealm());
-
-        TransitedEncoding transEnc = new TransitedEncoding();
-        encTicketPart.setTransited(transEnc);
-        String serverRealm = request.getReqBody().getRealm();
-
-        KerberosTime now = KerberosTime.now();
-        encTicketPart.setAuthTime(now);
-
-        KerberosTime krbStartTime = request.getReqBody().getFrom();
-        if (krbStartTime == null || krbStartTime.lessThan(now) ||
-                krbStartTime.isInClockSkew(config.getAllowableClockSkew())) {
-            krbStartTime = now;
-        }
-        if (krbStartTime.greaterThan(now)
-                && !krbStartTime.isInClockSkew(config.getAllowableClockSkew())
-                && !kdcOptions.isFlagSet(KdcOption.POSTDATED)) {
-            throw new KrbException(KrbErrorCode.KDC_ERR_CANNOT_POSTDATE);
-        }
-
-        if (kdcOptions.isFlagSet(KdcOption.POSTDATED)) {
-            if (!config.isPostdatedAllowed()) {
-                throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
-            }
-
-            ticketFlags.setFlag(TicketFlag.POSTDATED);
-            encTicketPart.setStartTime(krbStartTime);
-        }
-
-        KerberosTime krbEndTime = request.getReqBody().getTill();
-        if (krbEndTime == null || krbEndTime.getTime() == 0) {
-            krbEndTime = krbStartTime.extend(config.getMaximumTicketLifetime() * 1000);
-        } else if (krbStartTime.greaterThan(krbEndTime)) {
-            throw new KrbException(KrbErrorCode.KDC_ERR_NEVER_VALID);
-        }
-        encTicketPart.setEndTime(krbEndTime);
-
-        long ticketLifeTime = Math.abs(krbEndTime.diff(krbStartTime));
-        if (ticketLifeTime < config.getMinimumTicketLifetime()) {
-            throw new KrbException(KrbErrorCode.KDC_ERR_NEVER_VALID);
-        }
-
-        KerberosTime krbRtime = request.getReqBody().getRtime();
-        if (kdcOptions.isFlagSet(KdcOption.RENEWABLE_OK)) {
-            kdcOptions.setFlag(KdcOption.RENEWABLE);
-        }
-        if (kdcOptions.isFlagSet(KdcOption.RENEWABLE)) {
-            if (!config.isRenewableAllowed()) {
-                throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
-            }
-
-            ticketFlags.setFlag(TicketFlag.RENEWABLE);
-
-            if (krbRtime == null || krbRtime.getTime() == 0) {
-                krbRtime = KerberosTime.NEVER;
-            }
-            KerberosTime allowedMaximumRenewableTime = krbStartTime;
-            allowedMaximumRenewableTime.extend(config.getMaximumRenewableLifetime() * 1000);
-            if (krbRtime.greaterThan(allowedMaximumRenewableTime)) {
-                krbRtime = allowedMaximumRenewableTime;
-            }
-            encTicketPart.setRenewtill(krbRtime);
-        }
-
-        HostAddresses hostAddresses = request.getReqBody().getAddresses();
-        if (hostAddresses == null || hostAddresses.isEmpty()) {
-            if (!config.isEmptyAddressesAllowed()) {
-                throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
-            }
-        } else {
-            encTicketPart.setClientAddresses(hostAddresses);
-        }
-
-        EncryptedData encryptedData = EncryptionUtil.seal(encTicketPart,
-                serverKey, KeyUsage.KDC_REP_TICKET);
-
-        Ticket newTicket = new Ticket();
-        newTicket.setSname(ticketPrincipal);
-        newTicket.setEncryptedEncPart(encryptedData);
-        newTicket.setRealm(serverRealm);
-        newTicket.setEncPart(encTicketPart);
-
-        setTicket(newTicket);
-    }
-
-    protected PrincipalName getIssueTicketServerPrincipal() {
-        KdcReq request = getKdcReq();
-        return request.getReqBody().getSname();
-    }
-
-    protected PrincipalName getIssueTicketClientPrincipal() {
-        KdcReq request = getKdcReq();
-        return request.getReqBody().getCname();
-    }
+    protected abstract void issueTicket() throws KrbException;
 
     private void checkServer() throws KrbException {
         KdcReq request = getKdcReq();
