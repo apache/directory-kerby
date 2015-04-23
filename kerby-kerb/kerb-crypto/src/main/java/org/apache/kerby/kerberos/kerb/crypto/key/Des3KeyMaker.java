@@ -38,6 +38,21 @@ public class Des3KeyMaker extends DkKeyMaker {
         return dk(tmpKey, KERBEROS_CONSTANT);
     }
 
+    /**
+     * To turn a 54-bit block into a 64-bit block, see
+     *  Ref. eighth_byte in random_to_key.c in MIT krb5
+     * @param bits56
+     * @return
+     */
+    private static byte[] getEightBits(byte[] bits56){
+        byte[] bits64 = new byte[8];
+        System.arraycopy(bits56, 0, bits64, 0, 7);
+        bits64[7] = (byte) (((bits56[0] & 1) << 1) | ((bits56[1] & 1) << 2) | ((bits56[2] & 1) << 3) |
+                ((bits56[3] & 1) << 4) | ((bits56[4] & 1) << 5) | ((bits56[5] & 1) << 6) |
+                ((bits56[6] & 1) << 7));
+        return bits64;
+    }
+
     @Override
     public byte[] random2Key(byte[] randomBits) throws KrbException {
         if (randomBits.length != encProvider().keyInputSize()) {
@@ -49,10 +64,14 @@ public class Des3KeyMaker extends DkKeyMaker {
          * 8 key bytes, then compute the parity bits.  Do this three times.
          */
         byte[] key = new byte[encProvider().keySize()];
+        byte[] tmp1 = new byte[7];
+        byte[] tmp2;
         for (int i = 0; i < 3; i++) {
             System.arraycopy(randomBits, i * 7, key, i * 8, 7);
+            System.arraycopy(randomBits, i * 7, tmp1, 0, 7);
+            tmp2 = getEightBits(tmp1);
+            key[8 * (i + 1) - 1] = tmp2[7];
             int nthByte = i * 8;
-
             key[nthByte + 7] = (byte) (((key[nthByte + 0] & 1) << 1) |
                     ((key[nthByte + 1] & 1) << 2) |
                     ((key[nthByte + 2] & 1) << 3) |
