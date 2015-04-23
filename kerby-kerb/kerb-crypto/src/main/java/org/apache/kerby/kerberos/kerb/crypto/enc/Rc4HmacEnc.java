@@ -6,20 +6,21 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Sha1Provider;
 import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
 import org.apache.kerby.kerberos.kerb.crypto.util.Confounder;
 import org.apache.kerby.kerberos.kerb.crypto.util.Rc4;
@@ -49,9 +50,8 @@ public class Rc4HmacEnc extends AbstractEncTypeHandler {
     }
 
     @Override
-    public byte[] prf(byte[] key, byte[] seed) {
-        // TODO: krb5int_arcfour_prf
-        return null;
+    public byte[] prf(byte[] key, byte[] seed) throws KrbException {
+        return Hmac.hmac(new Sha1Provider(), key, seed, 20);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class Rc4HmacEnc extends AbstractEncTypeHandler {
     }
 
     protected void encryptWith(byte[] workBuffer, int[] workLens,
-         byte[] key, byte[] iv, int usage) throws KrbException {
+                               byte[] key, byte[] iv, int usage) throws KrbException {
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
         int dataLen = workLens[2];

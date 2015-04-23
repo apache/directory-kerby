@@ -126,6 +126,26 @@ public class PrfTest {
         ));
     }
 
+    @Test
+    public void testPrf_RC4_HMAC() throws Exception {
+        performTest(new TestCase(
+                EncryptionType.RC4_HMAC,
+                "key1",
+                "0161",
+                "c882f5310c3b65e4b99c19709d986dedc154f234"
+        ));
+    }
+
+    @Test
+    public void testPrf_RC4_HMAC_EXP() throws Exception {
+        performTest(new TestCase(
+                EncryptionType.RC4_HMAC_EXP,
+                "key1",
+                "0161",
+                "c882f5310c3b65e4b99c19709d986dedc154f234"
+        ));
+    }
+
     private static void performTest(TestCase testCase) throws Exception {
         byte[] keyData = EncryptionHandler.getEncHandler(testCase.encType).str2key(testCase.keyData, testCase.keyData, null);
         byte[] seed = HexUtil.hex2bytes(testCase.seed);
