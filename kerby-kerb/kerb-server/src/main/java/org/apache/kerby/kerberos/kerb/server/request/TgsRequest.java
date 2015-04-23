@@ -42,6 +42,7 @@ import java.nio.ByteBuffer;
 public class TgsRequest extends KdcRequest {
 
     private EncryptionKey tgtSessionKey;
+    private Ticket tgtTicket;
 
     public TgsRequest(TgsReq tgsReq, KdcContext kdcContext) {
         super(tgsReq, kdcContext);
@@ -55,6 +56,14 @@ public class TgsRequest extends KdcRequest {
 
     public void setTgtSessionKey(EncryptionKey tgtSessionKey) {
         this.tgtSessionKey = tgtSessionKey;
+    }
+
+    protected PrincipalName getIssueTicketServerPrincipal() {
+        return tgtTicket.getSname();
+    }
+
+    protected PrincipalName getIssueTicketClientPrincipal() {
+        return tgtTicket.getEncPart().getCname();
     }
 
     @Override
@@ -73,20 +82,20 @@ public class TgsRequest extends KdcRequest {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
         }
 
-        Ticket ticket = apReq.getTicket();
-        EncryptionType encType = ticket.getEncryptedEncPart().getEType();
+        tgtTicket = apReq.getTicket();
+        EncryptionType encType = tgtTicket.getEncryptedEncPart().getEType();
         EncryptionKey tgsKey = getTgsEntry().getKeys().get(encType);
-        if (ticket.getTktvno() != KrbConstant.KRB_V5) {
+        if (tgtTicket.getTktvno() != KrbConstant.KRB_V5) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
         }
 
-        EncTicketPart encPart = EncryptionUtil.unseal(ticket.getEncryptedEncPart(),
+        EncTicketPart encPart = EncryptionUtil.unseal(tgtTicket.getEncryptedEncPart(),
                 tgsKey, KeyUsage.KDC_REP_TICKET, EncTicketPart.class);
-        ticket.setEncPart(encPart);
+        tgtTicket.setEncPart(encPart);
 
         EncryptionKey encKey = null;
         //if (apReq.getApOptions().isFlagSet(ApOptions.USE_SESSION_KEY)) {
-        encKey = ticket.getEncPart().getKey();
+        encKey = tgtTicket.getEncPart().getKey();
 
         if (encKey == null) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_NOKEY);
@@ -94,11 +103,11 @@ public class TgsRequest extends KdcRequest {
         Authenticator authenticator = EncryptionUtil.unseal(apReq.getEncryptedAuthenticator(),
                 encKey, KeyUsage.TGS_REQ_AUTH, Authenticator.class);
 
-        if (!authenticator.getCname().equals(ticket.getEncPart().getCname())) {
+        if (!authenticator.getCname().equals(tgtTicket.getEncPart().getCname())) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADMATCH);
         }
 
-        HostAddresses hostAddresses = ticket.getEncPart().getClientAddresses();
+        HostAddresses hostAddresses = tgtTicket.getEncPart().getClientAddresses();
         if (hostAddresses == null || hostAddresses.isEmpty()) {
             if (!kdcContext.getConfig().isEmptyAddressesAllowed()) {
                 throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADADDR);
@@ -107,8 +116,8 @@ public class TgsRequest extends KdcRequest {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADADDR);
         }
 
-        PrincipalName serverPrincipal = ticket.getSname();
-        serverPrincipal.setRealm(ticket.getRealm());
+        PrincipalName serverPrincipal = tgtTicket.getSname();
+        serverPrincipal.setRealm(tgtTicket.getRealm());
         PrincipalName clientPrincipal = authenticator.getCname();
         clientPrincipal.setRealm(authenticator.getCrealm());
         KrbIdentity clientEntry = getEntry(clientPrincipal.getName());
@@ -120,22 +129,22 @@ public class TgsRequest extends KdcRequest {
         }
 
         KerberosTime now = KerberosTime.now();
-        KerberosTime startTime = ticket.getEncPart().getStartTime();
+        KerberosTime startTime = tgtTicket.getEncPart().getStartTime();
         if (startTime == null) {
-            startTime = ticket.getEncPart().getAuthTime();
+            startTime = tgtTicket.getEncPart().getAuthTime();
         }
         if (! startTime.lessThan(now)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_NYV);
         }
 
-        KerberosTime endTime = ticket.getEncPart().getEndTime();
+        KerberosTime endTime = tgtTicket.getEncPart().getEndTime();
         if (! endTime.greaterThan(now)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_EXPIRED);
         }
 
         apReq.getApOptions().setFlag(ApOption.MUTUAL_REQUIRED);
 
-        setTgtSessionKey(ticket.getEncPart().getKey());
+        setTgtSessionKey(tgtTicket.getEncPart().getKey());
     }
 
     @Override

@@ -281,7 +281,7 @@ public abstract class KdcRequest {
         EncryptionType encryptionType = getEncryptionType();
         EncryptionKey serverKey = getServerEntry().getKeys().get(encryptionType);
 
-        PrincipalName ticketPrincipal = request.getReqBody().getSname();
+        PrincipalName ticketPrincipal = getIssueTicketServerPrincipal();
 
         EncTicketPart encTicketPart = new EncTicketPart();
         KdcConfig config = kdcContext.getConfig();
@@ -323,7 +323,7 @@ public abstract class KdcRequest {
         EncryptionKey sessionKey = EncryptionHandler.random2Key(getEncryptionType());
         encTicketPart.setKey(sessionKey);
 
-        encTicketPart.setCname(request.getReqBody().getCname());
+        encTicketPart.setCname(getIssueTicketClientPrincipal());
         encTicketPart.setCrealm(request.getReqBody().getRealm());
 
         TransitedEncoding transEnc = new TransitedEncoding();
@@ -407,6 +407,16 @@ public abstract class KdcRequest {
         newTicket.setEncPart(encTicketPart);
 
         setTicket(newTicket);
+    }
+
+    protected PrincipalName getIssueTicketServerPrincipal() {
+        KdcReq request = getKdcReq();
+        return request.getReqBody().getSname();
+    }
+
+    protected PrincipalName getIssueTicketClientPrincipal() {
+        KdcReq request = getKdcReq();
+        return request.getReqBody().getCname();
     }
 
     private void checkServer() throws KrbException {
