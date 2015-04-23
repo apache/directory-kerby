@@ -31,10 +31,10 @@ import org.apache.kerby.kerberos.kerb.KrbException;
  */
 public interface HashProvider {
 
-    public int hashSize();
-    public int blockSize();
+    int hashSize();
+    int blockSize();
 
-    public void hash(byte[] data, int start, int size) throws KrbException;
-    public void hash(byte[] data) throws KrbException;
-    public byte[] output();
+    void hash(byte[] data, int start, int size) throws KrbException;
+    void hash(byte[] data) throws KrbException;
+    byte[] output();
 }

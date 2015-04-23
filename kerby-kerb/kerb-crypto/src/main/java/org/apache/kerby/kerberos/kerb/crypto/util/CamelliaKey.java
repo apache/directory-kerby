@@ -25,6 +25,7 @@ package org.apache.kerby.kerberos.kerb.crypto.util;
  * This is based on CamelliaEngine.java from bouncycastle library.
  */
 
+@SuppressWarnings("PMD")
 public class CamelliaKey {
     private int keySize;
 

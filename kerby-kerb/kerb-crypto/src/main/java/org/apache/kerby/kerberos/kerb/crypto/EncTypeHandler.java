@@ -21,43 +21,42 @@ package org.apache.kerby.kerberos.kerb.crypto;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 public interface EncTypeHandler extends CryptoTypeHandler {
 
-    public EncryptionType eType();
+    EncryptionType eType();
 
-    public int keyInputSize();
+    int keyInputSize();
 
-    public int keySize();
+    int keySize();
 
-    public int confounderSize();
+    int confounderSize();
 
-    public int checksumSize();
+    int checksumSize();
 
-    public int prfSize();
+    int prfSize();
 
-    public byte[] prf(byte[] key, byte[] seed) throws KrbException;
+    byte[] prf(byte[] key, byte[] seed) throws KrbException;
 
-    public int paddingSize();
+    int paddingSize();
 
-    public byte[] str2key(String string,
+    byte[] str2key(String string,
                           String salt, byte[] param) throws KrbException;
 
-    public byte[] random2Key(byte[] randomBits) throws KrbException;
+    byte[] random2Key(byte[] randomBits) throws KrbException;
 
-    public CheckSumType checksumType();
+    CheckSumType checksumType();
 
-    public byte[] encrypt(byte[] data, byte[] key, int usage)
+    byte[] encrypt(byte[] data, byte[] key, int usage)
         throws KrbException;
 
-    public byte[] encrypt(byte[] data, byte[] key, byte[] ivec,
+    byte[] encrypt(byte[] data, byte[] key, byte[] ivec,
         int usage) throws KrbException;
 
-    public byte[] decrypt(byte[] cipher, byte[] key, int usage)
+    byte[] decrypt(byte[] cipher, byte[] key, int usage)
         throws KrbException;
 
-    public byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec,
+    byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec,
         int usage) throws KrbException;
 }

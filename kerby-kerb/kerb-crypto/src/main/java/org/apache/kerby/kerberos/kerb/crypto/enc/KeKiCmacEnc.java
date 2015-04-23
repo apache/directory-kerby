@@ -19,20 +19,17 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
-import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
-import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia128Provider;
-import org.apache.kerby.kerberos.kerb.crypto.key.CamelliaKeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.key.DkKeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.util.Cmac;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 public abstract class KeKiCmacEnc extends KeKiEnc {
 
-    private EncryptionType eType;
     private DkKeyMaker km;
+    private EncryptionType eType; //NOPMD
+    
     public KeKiCmacEnc(EncryptProvider encProvider,
                        EncryptionType eType, DkKeyMaker km) {
         super(encProvider, null);

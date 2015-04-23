@@ -28,21 +28,21 @@ public interface RandomProvider {
     /**
      * To init.
      */
-    public void init();
+    void init();
     /**
      * Provide entropy seed for the provider.
      * @param seed
      */
-    public void setSeed(byte[] seed);
+    void setSeed(byte[] seed);
 
     /**
      * Generate random bytes into the specified array.
      * @param bytes
      */
-    public void nextBytes(byte[] bytes);
+    void nextBytes(byte[] bytes);
 
     /**
      * To clean up.
      */
-    public void destroy();
+    void destroy();
 }

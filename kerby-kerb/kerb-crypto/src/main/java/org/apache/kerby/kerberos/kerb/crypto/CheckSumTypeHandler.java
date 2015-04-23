@@ -24,34 +24,34 @@ import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 
 public interface CheckSumTypeHandler extends CryptoTypeHandler {
 
-    public int confounderSize();
+    int confounderSize();
 
-    public CheckSumType cksumType();
+    CheckSumType cksumType();
 
-    public int computeSize(); // allocation size for checksum computation
+    int computeSize(); // allocation size for checksum computation
 
-    public int outputSize(); // possibly truncated output size
+    int outputSize(); // possibly truncated output size
 
-    public boolean isSafe();
+    boolean isSafe();
 
-    public int cksumSize();
+    int cksumSize();
 
-    public int keySize();
+    int keySize();
 
-    public byte[] checksum(byte[] data) throws KrbException;
+    byte[] checksum(byte[] data) throws KrbException;
 
-    public byte[] checksum(byte[] data, int start, int len) throws KrbException;
+    byte[] checksum(byte[] data, int start, int len) throws KrbException;
 
-    public boolean verify(byte[] data, byte[] checksum) throws KrbException;
+    boolean verify(byte[] data, byte[] checksum) throws KrbException;
 
-    public boolean verify(byte[] data, int start, int len, byte[] checksum) throws KrbException;
+    boolean verify(byte[] data, int start, int len, byte[] checksum) throws KrbException;
 
-    public byte[] checksumWithKey(byte[] data,
+    byte[] checksumWithKey(byte[] data,
                                   byte[] key, int usage) throws KrbException;
 
-    public byte[] checksumWithKey(byte[] data, int start, int len,
+    byte[] checksumWithKey(byte[] data, int start, int len,
                                   byte[] key, int usage) throws KrbException;
 
-    public boolean verifyWithKey(byte[] data,
+    boolean verifyWithKey(byte[] data,
                                  byte[] key, int usage, byte[] checksum) throws KrbException;
 }

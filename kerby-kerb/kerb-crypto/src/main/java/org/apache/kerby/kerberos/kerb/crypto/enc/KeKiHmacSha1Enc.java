@@ -19,8 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
-import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Aes128Provider;
-import org.apache.kerby.kerberos.kerb.crypto.key.AesKeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.key.DkKeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.util.Hmac;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.HashProvider;

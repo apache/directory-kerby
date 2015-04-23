@@ -96,7 +96,7 @@ public abstract class ConfounderedDesCheckSum extends AbstractKeyedCheckSumTypeH
     @Override
     public boolean verifyWithKey(byte[] data,byte[] key,
                                  int usage, byte[] checksum) throws KrbException {
-        int computeSize = computeSize();
+        // int computeSize = computeSize();
         int blockSize = encProvider().blockSize();
         int hashSize = hashProvider().hashSize();
 

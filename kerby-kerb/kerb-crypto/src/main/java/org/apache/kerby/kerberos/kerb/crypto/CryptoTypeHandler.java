@@ -24,11 +24,11 @@ import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 
 public interface CryptoTypeHandler {
 
-    public String name();
+    String name();
 
-    public String displayName();
+    String displayName();
 
-    public EncryptProvider encProvider();
+    EncryptProvider encProvider();
 
-    public HashProvider hashProvider();
+    HashProvider hashProvider();
 }

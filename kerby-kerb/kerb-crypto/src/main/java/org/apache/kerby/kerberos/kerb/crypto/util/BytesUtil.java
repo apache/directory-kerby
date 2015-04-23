@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.util;
 
+@SuppressWarnings("PMD")
 public class BytesUtil {
 
     public static short bytes2short(byte[] bytes, int offset, boolean bigEndian) {
