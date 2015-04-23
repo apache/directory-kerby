@@ -38,7 +38,7 @@ public interface EncTypeHandler extends CryptoTypeHandler {
 
     public int prfSize();
 
-    public byte[] prf(byte[] key, byte[] seed);
+    public byte[] prf(byte[] key, byte[] seed) throws KrbException;
 
     public int paddingSize();
 

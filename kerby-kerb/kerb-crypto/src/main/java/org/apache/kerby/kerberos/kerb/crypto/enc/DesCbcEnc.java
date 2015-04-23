@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Md5Provider;
 import org.apache.kerby.kerberos.kerb.crypto.util.Confounder;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.HashProvider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.DesProvider;
@@ -34,9 +35,13 @@ abstract class DesCbcEnc extends AbstractEncTypeHandler {
     }
 
     @Override
-    public byte[] prf(byte[] key, byte[] seed) {
-        // TODO: krb5int_des_prf
-        return null;
+    public byte[] prf(byte[] key, byte[] seed) throws KrbException {
+        byte[] output;
+        Md5Provider md5Provider = new Md5Provider();
+        md5Provider.hash(seed);
+        output = md5Provider.output();
+        encProvider().encrypt(key, output);
+        return output;
     }
 
     @Override
