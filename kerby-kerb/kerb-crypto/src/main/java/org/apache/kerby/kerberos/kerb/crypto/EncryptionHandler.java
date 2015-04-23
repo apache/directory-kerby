@@ -200,6 +200,15 @@ public class EncryptionHandler {
         return encKey;
     }
 
+    public static EncryptionKey random2Key(EncryptionType eType, byte[] randomBytes) throws KrbException {
+        EncTypeHandler handler = getEncHandler(eType);
+
+        byte[] randomBytes1 = randomBytes;
+        byte[] keyBytes = handler.random2Key(randomBytes1);
+        EncryptionKey encKey = new EncryptionKey(eType, keyBytes);
+        return encKey;
+    }
+
     /**
      * Generate a secure and random key seeded with an existing encryption key.
      * @param encKey
