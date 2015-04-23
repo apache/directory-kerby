@@ -31,15 +31,15 @@ import org.apache.kerby.kerberos.kerb.KrbException;
  */
 public interface EncryptProvider {
 
-    public int keyInputSize(); //input size to make key
-    public int keySize(); //output key size
-    public int blockSize(); //crypto block size
+    int keyInputSize(); //input size to make key
+    int keySize(); //output key size
+    int blockSize(); //crypto block size
 
-    public void encrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException;
-    public void decrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException;
-    public void encrypt(byte[] key, byte[] data) throws KrbException;
-    public void decrypt(byte[] key, byte[] data) throws KrbException;
-    public byte[] cbcMac(byte[] key, byte[] iv, byte[] data) throws KrbException;
-    public boolean supportCbcMac();
+    void encrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException;
+    void decrypt(byte[] key, byte[] cipherState, byte[] data) throws KrbException;
+    void encrypt(byte[] key, byte[] data) throws KrbException;
+    void decrypt(byte[] key, byte[] data) throws KrbException;
+    byte[] cbcMac(byte[] key, byte[] iv, byte[] data) throws KrbException;
+    boolean supportCbcMac();
 
 }

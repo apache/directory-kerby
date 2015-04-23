@@ -72,7 +72,7 @@ public class DesProvider extends AbstractEncryptProvider {
             cipher.init(Cipher.ENCRYPT_MODE, skSpec, params);
             for (int i = 0; i < data.length / 8; i++) {
                 output = cipher.doFinal(data, i * 8, 8);
-                cipher.init(Cipher.ENCRYPT_MODE, skSpec, (new IvParameterSpec(output)));
+                cipher.init(Cipher.ENCRYPT_MODE, skSpec, new IvParameterSpec(output));
             }
         }
         catch (GeneralSecurityException e) {

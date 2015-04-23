@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
 import org.apache.kerby.kerberos.kerb.crypto.util.Des;
 import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 
+@SuppressWarnings("PMD")
 public class DesKeyMaker extends AbstractKeyMaker {
 
     public DesKeyMaker(EncryptProvider encProvider) {

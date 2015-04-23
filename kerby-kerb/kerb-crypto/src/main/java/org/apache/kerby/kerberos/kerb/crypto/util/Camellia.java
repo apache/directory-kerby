@@ -24,7 +24,7 @@ package org.apache.kerby.kerberos.kerb.crypto.util;
  *
  * This is based on CamelliaEngine.java from bouncycastle library.
  */
-
+@SuppressWarnings("PMD")
 public class Camellia {
     private static final int BLOCK_SIZE = 16;
     private int[] state = new int[4]; // for encryption and decryption

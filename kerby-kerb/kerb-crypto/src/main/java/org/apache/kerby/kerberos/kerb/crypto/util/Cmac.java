@@ -27,6 +27,7 @@ import java.util.Arrays;
 /**
  * Based on MIT krb5 cmac.c
  */
+@SuppressWarnings("PMD")
 public class Cmac {
 
     private static byte[] constRb = {

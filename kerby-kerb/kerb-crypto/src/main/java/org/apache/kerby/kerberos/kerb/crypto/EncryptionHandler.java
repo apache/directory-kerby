@@ -39,7 +39,7 @@ public class EncryptionHandler {
     static {
         try {
             isAES256Enabled = Cipher.getMaxAllowedKeyLength("AES") >= 256;
-        } catch (Exception e) {
+        } catch (Exception e) { //NOPMD
             // should not happen
         }
 

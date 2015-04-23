@@ -33,6 +33,7 @@ import java.util.Arrays;
  * compute the 1's complement sum:
  * n-fold = s[0..n-1]+s[n..2n-1]+s[2n..3n-1]+..+s[(k-1)*n..k*n-1]
  */
+@SuppressWarnings("PMD")
 public class Nfold {
 
     /**

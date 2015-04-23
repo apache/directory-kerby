@@ -38,6 +38,7 @@ import java.security.MessageDigest;
 /**
  * Copied from Mina project and modified a bit
  */
+@SuppressWarnings("PMD")
 public class Md4 extends MessageDigest {
 
     /**
