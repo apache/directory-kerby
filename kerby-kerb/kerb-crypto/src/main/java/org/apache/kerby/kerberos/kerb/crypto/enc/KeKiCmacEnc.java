@@ -6,26 +6,39 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
+import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
+import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
+import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia128Provider;
+import org.apache.kerby.kerberos.kerb.crypto.key.CamelliaKeyMaker;
+import org.apache.kerby.kerberos.kerb.crypto.key.DkKeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.util.Cmac;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 public abstract class KeKiCmacEnc extends KeKiEnc {
 
-    public KeKiCmacEnc(EncryptProvider encProvider) {
+    private EncryptionType eType;
+    private DkKeyMaker km;
+    public KeKiCmacEnc(EncryptProvider encProvider,
+                       EncryptionType eType, DkKeyMaker km) {
         super(encProvider, null);
+        this.eType = eType;
+        this.km = km;
+
     }
 
     @Override
@@ -39,9 +52,13 @@ public abstract class KeKiCmacEnc extends KeKiEnc {
     }
 
     @Override
-    public byte[] prf(byte[] key, byte[] seed) {
-        // TODO: krb5int_dk_cmac_prf
-        return null;
+    public byte[] prf(byte[] key, byte[] seed) throws KrbException {
+        byte[] prfConst = "prf".getBytes();
+        byte[] kp;
+        if (EncryptionHandler.getEncHandler(this.eType()).prfSize() != encProvider().blockSize())
+            return null;
+        kp = km.dk(key, prfConst);
+        return Cmac.cmac(encProvider(), kp, seed);
     }
 
     @Override

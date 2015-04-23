@@ -27,6 +27,9 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.fail;
 
+/**
+ * Created by yaningxu on 4/13/2015.
+ */
 public class PrfTest {
     static class TestCase {
         EncryptionType encType;
@@ -100,6 +103,26 @@ public class PrfTest {
                 "key1",
                 "0161",
                 "bb6f4a7caa25fce1ee9baef36f1f9ee7"
+        ));
+    }
+
+    @Test
+    public void testPrf_CAMELLIA128_CTS_CMAC() throws Exception {
+        performTest(new TestCase(
+                EncryptionType.CAMELLIA128_CTS_CMAC,
+                "key1",
+                "0161",
+                "e9bfccec1ec08740efcfdb020b48cf17"
+        ));
+    }
+
+    @Test
+    public void testPrf_CAMELLIA256_CTS_CMAC() throws Exception {
+        performTest(new TestCase(
+                EncryptionType.CAMELLIA256_CTS_CMAC,
+                "key1",
+                "0161",
+                "d0bb1a19fd311388dc2eeb67268ff90b"
         ));
     }
 
