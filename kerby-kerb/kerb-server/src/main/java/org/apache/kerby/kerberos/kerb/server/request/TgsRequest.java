@@ -73,10 +73,9 @@ public class TgsRequest extends KdcRequest {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
         }
 
-        EncryptionType encType = getKdcReq().getReqBody().getEtypes().listIterator().next();
-        EncryptionKey tgsKey = getTgsEntry().getKeys().get(encType);
-
         Ticket ticket = apReq.getTicket();
+        EncryptionType encType = ticket.getEncryptedEncPart().getEType();
+        EncryptionKey tgsKey = getTgsEntry().getKeys().get(encType);
         if (ticket.getTktvno() != KrbConstant.KRB_V5) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
         }
