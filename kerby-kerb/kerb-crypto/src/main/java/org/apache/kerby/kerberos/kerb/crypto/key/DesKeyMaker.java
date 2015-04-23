@@ -139,6 +139,21 @@ public class DesKeyMaker extends AbstractKeyMaker {
     }
 
     /**
+     * To turn a 54-bit block into a 64-bit block, see
+     *  Ref. eighth_byte in random_to_key.c in MIT krb5
+     * @param bits56
+     * @return
+     */
+    private static byte[] getEightBits(byte[] bits56){
+        byte[] bits64 = new byte[8];
+        System.arraycopy(bits56, 0, bits64, 0, 7);
+        bits64[7] = (byte) (((bits56[0] & 1) << 1) | ((bits56[1] & 1) << 2) | ((bits56[2] & 1) << 3) |
+                ((bits56[3] & 1) << 4) | ((bits56[4] & 1) << 5) | ((bits56[5] & 1) << 6) |
+                ((bits56[6] & 1) << 7));
+        return bits64;
+    }
+
+    /**
      * Note this isn't hit any test yet, and very probably problematic
      */
     @Override
@@ -146,12 +161,13 @@ public class DesKeyMaker extends AbstractKeyMaker {
         if (randomBits.length != encProvider().keyInputSize()) {
             throw new KrbException("Invalid random bits, not of correct bytes size");
         }
-
-        byte[] keyBytes = addParityBits(randomBits);
+        byte[] keyBytes = getEightBits(randomBits);
+        addParity(keyBytes);
         keyCorrection(keyBytes);
 
         return keyBytes;
     }
+
 
     // Processing an 8bytesblock
     private static byte[] removeMSBits(byte[] bits56) {
