@@ -73,36 +73,6 @@ public class PrfTest {
         ));
     }
 
-    @Test
-    public void testPrf_AES128_CTS_HMAC_SHA1() throws Exception {
-        performTest(new TestCase(
-                EncryptionType.AES128_CTS_HMAC_SHA1_96,
-                "key1",
-                "0161",
-                "77b39a37a868920f2a51f9dd150c5717"
-        ));
-    }
-
-    @Test
-    public void testPrf_AES256_CTS_HMAC_SHA1() throws Exception {
-        performTest(new TestCase(
-                EncryptionType.AES256_CTS_HMAC_SHA1_96,
-                "key1",
-                "0161",
-                "b2628c788e2e9c4a9bb4644678c29f2f"
-        ));
-    }
-
-    @Test
-    public void testPrf_DES3_CBC_SHA1() throws Exception {
-        performTest(new TestCase(
-                EncryptionType.DES3_CBC_SHA1,
-                "key1",
-                "0161",
-                "bb6f4a7caa25fce1ee9baef36f1f9ee7"
-        ));
-    }
-
     private static void performTest(TestCase testCase) throws Exception {
         byte[] keyData = EncryptionHandler.getEncHandler(testCase.encType).str2key(testCase.keyData, testCase.keyData, null);
         byte[] seed = HexUtil.hex2bytes(testCase.seed);
