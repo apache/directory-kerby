@@ -49,4 +49,11 @@ public class Rc4KeyMaker extends AbstractKeyMaker {
         }
     }
 
+    @Override
+    public byte[] random2Key(byte[] randomBits) throws KrbException {
+        if (randomBits.length != encProvider().keyInputSize()) {
+            throw new KrbException("Invalid random bits, not of correct bytes size");
+        }
+        return randomBits;
+    }
 }
