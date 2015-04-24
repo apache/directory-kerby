@@ -26,6 +26,7 @@ import java.net.Socket;
 /**
  * Krb client network support.
  */
+@SuppressWarnings("PMD")
 public class KrbNetwork {
 
     private InetSocketAddress tcpAddress;

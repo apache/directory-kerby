@@ -32,34 +32,34 @@ public interface KrbTransport {
      * Send out a Kerberos message to remote peer.
      * @param message
      */
-    public void sendMessage(ByteBuffer message) throws IOException;
+    void sendMessage(ByteBuffer message) throws IOException;
 
     /**
      * Receive a Kerberos message from remote.
      * @return
      */
-    public ByteBuffer receiveMessage() throws IOException;
+    ByteBuffer receiveMessage() throws IOException;
 
     /**
      * Get address from remote side.
      * @return address
      */
-    public InetAddress getRemoteAddress();
+    InetAddress getRemoteAddress();
 
     /**
      * Set an attachment.
      * @param attachment
      */
-    public void setAttachment(Object attachment);
+    void setAttachment(Object attachment);
 
     /**
      * Get the attachment set before.
      * @return attachment
      */
-    public Object getAttachment();
+    Object getAttachment();
 
     /**
      * Release and close related resources like connection.
      */
-    public void release();
+    void release();
 }

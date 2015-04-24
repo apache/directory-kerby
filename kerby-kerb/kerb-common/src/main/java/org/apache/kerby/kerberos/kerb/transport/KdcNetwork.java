@@ -29,6 +29,7 @@ import java.nio.channels.DatagramChannel;
 /**
  * A combined and mixed network server handling UDP and TCP.
  */
+@SuppressWarnings("PMD")
 public abstract class KdcNetwork {
     private InetSocketAddress tcpAddress;
     private InetSocketAddress udpAddress;
@@ -76,7 +77,7 @@ public abstract class KdcNetwork {
 
             try {
                 checkAndAccept();
-            } catch (SocketTimeoutException e) {
+            } catch (SocketTimeoutException e) { //NOPMD
                 //NOOP as normal
             } catch (IOException e) {
                 throw new RuntimeException("Error occured while checking tcp connections", e);
@@ -84,7 +85,7 @@ public abstract class KdcNetwork {
 
             try {
                 checkUdpMessage();
-            } catch (SocketTimeoutException e) {
+            } catch (SocketTimeoutException e) { //NOPMD
                 //NOOP as normal
             } catch (IOException e) {
                 throw new RuntimeException("Error occured while checking tcp connections", e);

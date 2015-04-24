@@ -31,25 +31,25 @@ import java.util.List;
 
 public interface KrbKeytab {
 
-    public List<PrincipalName> getPrincipals();
+    List<PrincipalName> getPrincipals();
 
-    public void addKeytabEntries(List<KeytabEntry> entries);
+    void addKeytabEntries(List<KeytabEntry> entries);
 
-    public void removeKeytabEntries(PrincipalName principal);
+    void removeKeytabEntries(PrincipalName principal);
 
-    public void removeKeytabEntry(KeytabEntry entry);
+    void removeKeytabEntry(KeytabEntry entry);
 
-    public List<KeytabEntry> getKeytabEntries(PrincipalName principal);
+    List<KeytabEntry> getKeytabEntries(PrincipalName principal);
 
-    public EncryptionKey getKey(PrincipalName principal, EncryptionType keyType);
+    EncryptionKey getKey(PrincipalName principal, EncryptionType keyType);
 
-    public void load(File keytabFile) throws IOException;
+    void load(File keytabFile) throws IOException;
 
-    public void load(InputStream inputStream) throws IOException;
+    void load(InputStream inputStream) throws IOException;
 
     void addEntry(KeytabEntry entry);
 
-    public void store(File keytabFile) throws IOException;
+    void store(File keytabFile) throws IOException;
 
-    public void store(OutputStream outputStream) throws IOException;
+    void store(OutputStream outputStream) throws IOException;
 }

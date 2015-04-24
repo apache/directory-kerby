@@ -30,7 +30,7 @@ public interface IdentityBackend extends IdentityService, Configurable {
     /**
      * Init work for the backend can be done here.
      */
-    public void initialize();
+    void initialize();
 
     /**
      * Start the backend and return soon after the backend or the connection to
@@ -38,19 +38,19 @@ public interface IdentityBackend extends IdentityService, Configurable {
      *
      * Will be called during KDC startup.
      */
-    public void start();
+    void start();
 
     /**
      * Stop the backend.
      *
      * Will be called during KDC stop.
      */
-    public void stop();
+    void stop();
 
     /**
      * Release the backend associated resources like connection.
      *
      * Will be called during KDC shutdown.
      */
-    public void release();
+    void release();
 }

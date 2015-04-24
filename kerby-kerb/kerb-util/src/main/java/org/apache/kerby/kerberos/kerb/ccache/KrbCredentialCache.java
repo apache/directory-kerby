@@ -29,29 +29,29 @@ import java.util.List;
 
 public interface KrbCredentialCache {
 
-    public PrincipalName getPrimaryPrincipal();
+    PrincipalName getPrimaryPrincipal();
 
-    public void setPrimaryPrincipal(PrincipalName principal);
+    void setPrimaryPrincipal(PrincipalName principal);
 
-    public int getVersion();
+    int getVersion();
 
-    public void setVersion(int version);
+    void setVersion(int version);
 
-    public List<Credential> getCredentials();
+    List<Credential> getCredentials();
 
-    public void addCredential(Credential credential);
+    void addCredential(Credential credential);
 
-    public void addCredentials(List<Credential> credentials);
+    void addCredentials(List<Credential> credentials);
 
-    public void removeCredentials(List<Credential> credentials);
+    void removeCredentials(List<Credential> credentials);
 
-    public void removeCredential(Credential credential);
+    void removeCredential(Credential credential);
 
-    public void load(File ccacheFile) throws IOException;
+    void load(File ccacheFile) throws IOException;
 
-    public void load(InputStream inputStream) throws IOException;
+    void load(InputStream inputStream) throws IOException;
 
-    public void store(File ccacheFile) throws IOException;
+    void store(File ccacheFile) throws IOException;
 
-    public void store(OutputStream outputStream) throws IOException;
+    void store(OutputStream outputStream) throws IOException;
 }

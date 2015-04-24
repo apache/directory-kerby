@@ -31,33 +31,33 @@ public interface IdentityService {
      * Note it's ordered by principal name.
      * @return principal names
      */
-    public List<String> getIdentities(int start, int limit);
+    List<String> getIdentities(int start, int limit);
 
     /**
      * Get the identity account specified by name.
      * @param principalName
      * @return identity
      */
-    public KrbIdentity getIdentity(String principalName);
+    KrbIdentity getIdentity(String principalName);
 
     /**
      * Add an identity, and return the newly created result.
      * @param identity
      * @return identity
      */
-    public KrbIdentity addIdentity(KrbIdentity identity);
+    KrbIdentity addIdentity(KrbIdentity identity);
 
     /**
      * Update an identity, and return the updated result.
      * @param identity
      * @return identity
      */
-    public KrbIdentity updateIdentity(KrbIdentity identity);
+    KrbIdentity updateIdentity(KrbIdentity identity);
 
     /**
      * Delete the identity specified by principal name
      * @param principalName
      *
      */
-    public void deleteIdentity(String principalName);
+    void deleteIdentity(String principalName);
 }

@@ -27,5 +27,5 @@ import org.apache.kerby.config.ConfigKey;
  */
 public interface SectionConfigKey extends ConfigKey {
 
-    public String getSectionName();
+    String getSectionName();
 }

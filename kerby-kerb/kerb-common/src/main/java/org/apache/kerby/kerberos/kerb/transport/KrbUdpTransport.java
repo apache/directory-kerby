@@ -19,9 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.transport;
 
-import org.apache.kerby.kerberos.kerb.transport.AbstractKrbTransport;
-import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -65,7 +62,7 @@ public class KrbUdpTransport
     public void release() {
         try {
             channel.close();
-        } catch (IOException e) {
+        } catch (IOException e) { //NOPMD
             //NOOP
         }
     }

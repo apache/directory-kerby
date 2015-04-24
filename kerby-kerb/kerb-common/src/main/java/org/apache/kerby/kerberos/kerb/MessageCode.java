@@ -20,5 +20,5 @@
 package org.apache.kerby.kerberos.kerb;
 
 public interface MessageCode {
-    public String getCodeName();
+    String getCodeName();
 }

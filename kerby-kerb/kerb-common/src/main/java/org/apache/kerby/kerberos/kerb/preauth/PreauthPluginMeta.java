@@ -23,10 +23,10 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 
 public interface PreauthPluginMeta {
 
-    public String getName();
+    String getName();
 
-    public int getVersion();
+    int getVersion();
 
-    public PaDataType[] getPaTypes();
+    PaDataType[] getPaTypes();
 
 }

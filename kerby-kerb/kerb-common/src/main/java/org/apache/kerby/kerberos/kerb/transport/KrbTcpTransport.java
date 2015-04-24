@@ -23,7 +23,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
@@ -69,7 +68,7 @@ public class KrbTcpTransport
     public void release() {
         try {
             socket.close();
-        } catch (IOException e) {
+        } catch (IOException e) { //NOPMD
             // NOOP
         }
     }

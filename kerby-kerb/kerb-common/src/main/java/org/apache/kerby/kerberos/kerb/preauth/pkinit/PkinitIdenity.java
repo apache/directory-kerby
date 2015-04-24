@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
+@SuppressWarnings("PMD")
 public class PkinitIdenity {
 
     public static void processIdentityOption(IdentityOpts identityOpts, String value) {
