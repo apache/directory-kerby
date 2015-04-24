@@ -176,7 +176,7 @@ public class Kinit {
                     param = args[i++];
                 }
                 if (param != null) {
-                    ToolUtil.parseSetValue(kto, param);
+                    KOptions.parseSetValue(kto, param);
                 } else {
                     error = "Option " + opt + " require a parameter";
                 }

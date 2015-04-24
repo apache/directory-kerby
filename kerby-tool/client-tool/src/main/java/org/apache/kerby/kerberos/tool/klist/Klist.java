@@ -20,10 +20,9 @@
 package org.apache.kerby.kerberos.tool.klist;
 
 import org.apache.kerby.KOptionType;
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
-import org.apache.kerby.KOptions;
-import org.apache.kerby.kerberos.tool.ToolUtil;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -141,7 +140,7 @@ public class Klist {
                     value = args[i++];
                 }
                 if (value != null) {
-                    ToolUtil.parseSetValue(klopt, value);
+                    KOptions.parseSetValue(klopt, value);
                 } else {
                     error = "Option" + klopt + "requires a following value";
                 }
