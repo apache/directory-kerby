@@ -85,6 +85,10 @@ public class KOptions {
                 strVal.equalsIgnoreCase("yes") ||
                 strVal.equals("1")) {
                 return true;
+            } else if (strVal.equalsIgnoreCase("false") ||
+                strVal.equalsIgnoreCase("no") ||
+                strVal.equals("0")) {
+                return false;
             }
         } else if (value instanceof Boolean) {
             return (Boolean) value;

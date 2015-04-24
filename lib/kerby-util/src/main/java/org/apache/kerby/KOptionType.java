@@ -30,5 +30,6 @@ public enum KOptionType {
     BOOL, // boolean value
     FILE, // file path value
     DIR, // dir path value
-    OBJ  // arbitrary object
+    OBJ,  // arbitrary object
+    DATE // date value
 }
