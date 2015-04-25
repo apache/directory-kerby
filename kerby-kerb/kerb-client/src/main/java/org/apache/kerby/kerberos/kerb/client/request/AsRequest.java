@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.spec.base.*;
 import org.apache.kerby.kerberos.kerb.spec.kdc.*;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -126,8 +127,7 @@ public class AsRequest extends KdcRequest {
     }
 
     private PrincipalName makeTgsPrincipal() {
-        return new PrincipalName(KrbConstant.TGS_PRINCIPAL + "@" +
-                getContext().getKrbSetting().getKdcRealm());
+        return KrbUtil.makeTgsPrincipal(getContext().getKrbSetting().getKdcRealm());
     }
 
     protected CredentialCache resolveCredCache(File ccacheFile) throws IOException {

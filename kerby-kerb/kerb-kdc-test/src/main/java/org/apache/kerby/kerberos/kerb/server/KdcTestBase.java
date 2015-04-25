@@ -148,12 +148,12 @@ public abstract class KdcTestBase {
     }
 
     protected void createPrincipals() {
-        kdcServer.createKrbtgtPrincipal();
+        kdcServer.createTgsPrincipal();
         kdcServer.createPrincipals(serverPrincipal);
     }
 
     protected void deletePrincipals() {
-        kdcServer.deleteKrbtgtPrincipal();
+        kdcServer.deleteTgsPrincipal();
         kdcServer.deletePrincipals(serverPrincipal);
     }
 

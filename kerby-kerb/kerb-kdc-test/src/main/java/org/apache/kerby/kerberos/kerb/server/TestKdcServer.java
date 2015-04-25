@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
@@ -56,12 +57,16 @@ public class TestKdcServer extends KdcServer {
         prepareKdcConfig();
     }
 
-    public void createKrbtgtPrincipal() {
-        createPrincipals("krbtgt");
+    private String getTgsPrincipal() {
+        return KrbUtil.makeTgsPrincipal(getKdcRealm()).getName();
     }
 
-    public void deleteKrbtgtPrincipal() {
-        deletePrincipals("krbtgt");
+    public void createTgsPrincipal() {
+        createPrincipals(getTgsPrincipal());
+    }
+
+    public void deleteTgsPrincipal() {
+        deletePrincipals(getTgsPrincipal());
     }
 
     public String getKdcRealm() {

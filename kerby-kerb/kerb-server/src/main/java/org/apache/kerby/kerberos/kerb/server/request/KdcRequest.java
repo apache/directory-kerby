@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.server.request;
 
 import org.apache.kerby.kerberos.kerb.*;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.KdcFastContext;
@@ -183,8 +184,7 @@ public abstract class KdcRequest {
     }
 
     public PrincipalName getTgsPrincipal() {
-        PrincipalName result = new PrincipalName(kdcContext.getConfig().getTgsPrincipal());
-        result.setRealm(kdcContext.getKdcRealm());
+        PrincipalName result = KrbUtil.makeTgsPrincipal(kdcContext.getKdcRealm());
         return result;
     }
 

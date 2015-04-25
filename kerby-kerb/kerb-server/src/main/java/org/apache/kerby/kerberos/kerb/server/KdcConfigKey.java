@@ -32,7 +32,6 @@ public enum KdcConfigKey implements SectionConfigKey {
     KDC_TCP_PORT(8015, "kdcdefaults"),
     KDC_DOMAIN("example.com"),
     KDC_REALM("EXAMPLE.COM", "kdcdefaults"),
-    TGS_PRINCIPAL("krbtgt@EXAMPLE.COM"),
     PREAUTH_REQUIRED(true),
     ALLOWABLE_CLOCKSKEW(5 * 60L),
     EMPTY_ADDRESSES_ALLOWED(true),

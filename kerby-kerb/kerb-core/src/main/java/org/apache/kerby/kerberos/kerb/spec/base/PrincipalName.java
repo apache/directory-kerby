@@ -55,6 +55,12 @@ public class PrincipalName extends KrbSequenceType {
         fromNameString(nameString);
     }
 
+    public PrincipalName(String nameString, NameType type) {
+        this();
+        fromNameString(nameString);
+        setNameType(type);
+    }
+
     public PrincipalName(List<String> nameStrings, NameType type) {
         this();
         setNameStrings(nameStrings);

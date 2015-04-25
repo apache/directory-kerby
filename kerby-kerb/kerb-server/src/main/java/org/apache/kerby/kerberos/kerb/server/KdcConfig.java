@@ -86,10 +86,6 @@ public class KdcConfig extends Conf {
         return getBoolean(KdcConfigKey.PREAUTH_REQUIRED);
     }
 
-    public String getTgsPrincipal() {
-        return getString(KdcConfigKey.TGS_PRINCIPAL);
-    }
-
     public long getAllowableClockSkew() {
         return getLong(KdcConfigKey.ALLOWABLE_CLOCKSKEW);
     }
