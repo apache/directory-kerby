@@ -32,13 +32,11 @@ public class PreauthContext {
     private PaData outputPaData;
     private PaData errorPaData;
     private UserResponser userResponser = new UserResponser();
-    private PaDataType selectedPaType;
     private PaDataType allowedPaType;
     private final List<PaDataType> triedPaTypes = new ArrayList<PaDataType>(1);
     private final List<PreauthHandle> handles = new ArrayList<PreauthHandle>(5);
 
     public PreauthContext() {
-        this.selectedPaType = PaDataType.NONE;
         this.allowedPaType = PaDataType.NONE;
         this.outputPaData = new PaData();
     }
@@ -56,8 +54,7 @@ public class PreauthContext {
     }
 
     public boolean isPaTypeAllowed(PaDataType paType) {
-        return (allowedPaType == PaDataType.NONE ||
-                allowedPaType == paType);
+        return allowedPaType == PaDataType.NONE || allowedPaType == paType;
     }
 
     public PaData getOutputPaData() throws KrbException {
@@ -65,7 +62,7 @@ public class PreauthContext {
     }
 
     public boolean hasInputPaData() {
-        return  (inputPaData != null && ! inputPaData.isEmpty());
+        return inputPaData != null && ! inputPaData.isEmpty();
     }
 
     public PaData getInputPaData() {

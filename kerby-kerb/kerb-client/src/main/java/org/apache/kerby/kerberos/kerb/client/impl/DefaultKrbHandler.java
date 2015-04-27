@@ -20,7 +20,6 @@
 package org.apache.kerby.kerberos.kerb.client.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbHandler;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
@@ -29,10 +28,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class DefaultKrbHandler extends KrbHandler {
-
-    public void init(KrbContext context) {
-        super.init(context);
-    }
 
     @Override
     public void handleRequest(KdcRequest kdcRequest) throws KrbException {

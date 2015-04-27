@@ -63,7 +63,6 @@ public abstract class KdcRequest {
     private KrbFastContext fastContext;
     private EncryptionKey asKey;
 
-    private KrbError errorReply;
     private boolean isRetrying;
 
     public KdcRequest(KrbContext context) {

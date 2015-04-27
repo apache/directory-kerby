@@ -40,6 +40,7 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.*;
 import org.apache.kerby.kerberos.kerb.spec.x509.SubjectPublicKeyInfo;
 
+@SuppressWarnings("PMD")
 public class PkinitPreauth extends AbstractPreauthPlugin {
 
     private PkinitContext pkinitContext;

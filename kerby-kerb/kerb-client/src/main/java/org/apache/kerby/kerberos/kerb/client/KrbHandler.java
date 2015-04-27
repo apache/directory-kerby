@@ -33,11 +33,9 @@ import java.nio.ByteBuffer;
 
 public abstract class KrbHandler {
 
-    private KrbContext context;
     private PreauthHandler preauthHandler;
 
     public void init(KrbContext context) {
-        this.context = context;
         preauthHandler = new PreauthHandler();
         preauthHandler.init(context);
     }

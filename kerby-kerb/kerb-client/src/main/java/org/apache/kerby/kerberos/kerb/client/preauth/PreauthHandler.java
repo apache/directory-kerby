@@ -26,10 +26,7 @@ import org.apache.kerby.kerberos.kerb.client.preauth.builtin.TgtPreauth;
 import org.apache.kerby.kerberos.kerb.client.preauth.pkinit.PkinitPreauth;
 import org.apache.kerby.kerberos.kerb.client.preauth.token.TokenPreauth;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
-import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo;
-import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
@@ -93,7 +90,7 @@ public class PreauthHandler {
             return;
         }
 
-        attemptETypeInfo(kdcRequest, preauthContext.getInputPaData());
+        // attemptETypeInfo(kdcRequest, preauthContext.getInputPaData());
 
         setPreauthOptions(kdcRequest, kdcRequest.getPreauthOptions());
 
@@ -192,12 +189,11 @@ public class PreauthHandler {
 
         for (PaDataEntry pae : inPadata.getElements()) {
             PreauthHandle handle = findHandle(kdcRequest, pae.getPaDataType());
-            if (handle == null) {
-                continue;
-            }
-
-            boolean gotData = handle.tryAgain(kdcRequest,
+            if (handle != null) {
+                // boolean gotData = 
+                handle.tryAgain(kdcRequest,
                     pae.getPaDataType(), preauthContext.getErrorPaData(), outPadata);
+            }
         }
     }
 
@@ -221,10 +217,9 @@ public class PreauthHandler {
         return null;
     }
 
+    /*
     private void attemptETypeInfo(KdcRequest kdcRequest,
                                   PaData inPadata) throws KrbException {
-        PreauthContext preauthContext = kdcRequest.getPreauthContext();
-
         // Find an etype-info2 or etype-info element in padata
         EtypeInfo etypeInfo = null;
         EtypeInfo2 etypeInfo2 = null;
@@ -247,4 +242,5 @@ public class PreauthHandler {
                                   PaData inPadata) throws KrbException {
 
     }
+    */
 }

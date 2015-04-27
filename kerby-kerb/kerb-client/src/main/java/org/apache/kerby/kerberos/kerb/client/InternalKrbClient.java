@@ -21,7 +21,6 @@ package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.KOptions;
-import org.apache.kerby.kerberos.kerb.client.KrbSetting;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -35,13 +34,13 @@ public interface InternalKrbClient {
      * Init with all the necessary options.
      * @param options
      */
-    public void init(KOptions options) throws KrbException;
+    void init(KOptions options) throws KrbException;
 
     /**
      * Get krb client settings.
      * @return setting
      */
-    public KrbSetting getSetting();
+    KrbSetting getSetting();
 
     /**
      * Request a Ticket Granting Ticket.
@@ -49,14 +48,14 @@ public interface InternalKrbClient {
      * @return a TGT
      * @throws KrbException
      */
-    public TgtTicket requestTgtTicket(KOptions requestOptions) throws KrbException;
+    TgtTicket requestTgtTicket(KOptions requestOptions) throws KrbException;
 
     /**
      * Request a service ticket using a TGT.
      * @return service ticket
      * @throws KrbException
      */
-    public ServiceTicket requestServiceTicketWithTgt(TgtTicket tgt,
+    ServiceTicket requestServiceTicketWithTgt(TgtTicket tgt,
                                               String serverPrincipal) throws KrbException;
 
     /**
@@ -64,6 +63,6 @@ public interface InternalKrbClient {
      * @return service ticket
      * @throws KrbException
      */
-    public ServiceTicket requestServiceTicketWithAccessToken(AuthToken token,
+    ServiceTicket requestServiceTicketWithAccessToken(AuthToken token,
                                               String serverPrincipal) throws KrbException;
 }

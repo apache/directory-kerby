@@ -22,7 +22,6 @@ package org.apache.kerby.kerberos.kerb.client.request;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.spec.base.*;
@@ -31,7 +30,6 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 public class AsRequest extends KdcRequest {

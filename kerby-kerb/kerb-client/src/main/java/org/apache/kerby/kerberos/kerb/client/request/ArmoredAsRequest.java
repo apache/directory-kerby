@@ -78,7 +78,7 @@ public abstract class ArmoredAsRequest extends AsRequest {
             throw new KrbException("Failed to load armor cache file");
         }
         EncryptionKey armorCacheKey =
-                cc.getCredentials().iterator().next().getKey();;
+                cc.getCredentials().iterator().next().getKey();
 
         return armorCacheKey;
     }
