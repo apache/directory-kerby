@@ -46,7 +46,7 @@ public class EventKdcHandler extends MessageHandler {
         Transport transport = event.getTransport();
 
         InetSocketAddress clientAddress = transport.getRemoteAddress();
-        boolean isTcp = (transport instanceof TcpTransport);
+        boolean isTcp = transport instanceof TcpTransport;
 
         try {
             ByteBuffer krbResponse = myKdcHandler.handleMessage(message, isTcp,

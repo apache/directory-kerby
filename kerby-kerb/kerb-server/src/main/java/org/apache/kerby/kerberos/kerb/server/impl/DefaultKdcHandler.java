@@ -61,7 +61,7 @@ public class DefaultKdcHandler extends KdcHandler implements Runnable {
 
     protected void handleMessage(ByteBuffer message) {
         InetAddress clientAddress = transport.getRemoteAddress();
-        boolean isTcp = (transport instanceof KrbTcpTransport);
+        boolean isTcp = transport instanceof KrbTcpTransport;
 
         try {
             ByteBuffer krbResponse = handleMessage(message, isTcp, clientAddress);

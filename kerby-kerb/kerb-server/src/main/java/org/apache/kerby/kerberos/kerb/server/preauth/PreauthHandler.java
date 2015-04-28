@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth;
 
-import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.builtin.EncTsPreauth;
 import org.apache.kerby.kerberos.kerb.server.preauth.builtin.TgtPreauth;
@@ -39,11 +38,11 @@ public class PreauthHandler {
     /**
      * Should be called only once, for global
      */
-    public void init(KdcConfig kdcConfig) {
-        loadPreauthPlugins(kdcConfig);
+    public void init() {
+        loadPreauthPlugins();
     }
 
-    private void loadPreauthPlugins(KdcConfig kdcConfig) {
+    private void loadPreauthPlugins() {
         preauths = new ArrayList<KdcPreauth>();
 
         KdcPreauth preauth = new EncTsPreauth();

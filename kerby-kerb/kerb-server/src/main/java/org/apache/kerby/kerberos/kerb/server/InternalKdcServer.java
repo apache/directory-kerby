@@ -21,8 +21,6 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
-import org.apache.kerby.kerberos.kerb.server.KdcContext;
-import org.apache.kerby.kerberos.kerb.server.KdcSetting;
 
 /**
  * An internal KDC server interface.
@@ -33,27 +31,27 @@ public interface InternalKdcServer {
      * Initialize with KDC startup options.
      * @param options
      */
-    public void init(KOptions options);
+    void init(KOptions options);
 
     /**
      * Start the KDC server.
      */
-    public void start();
+    void start();
 
     /**
      * Stop the KDC server.
      */
-    public void stop();
+    void stop();
 
     /**
      * Get KDC setting.
      * @return setting
      */
-    public KdcSetting getSetting();
+    KdcSetting getSetting();
 
     /**
      * Get identity service.
      * @return IdentityService
      */
-    public IdentityService getIdentityService();
+    IdentityService getIdentityService();
 }

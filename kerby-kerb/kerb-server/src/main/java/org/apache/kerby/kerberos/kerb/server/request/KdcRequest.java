@@ -292,7 +292,6 @@ public abstract class KdcRequest {
     }
 
     protected KrbError makePreAuthenticationError(KdcContext kdcContext) throws KrbException {
-        EncryptionType requestedType = getEncryptionType();
         List<EncryptionType> encryptionTypes = kdcContext.getConfig().getEncryptionTypes();
         boolean isNewEtype = true;
 

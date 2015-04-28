@@ -21,8 +21,6 @@ package org.apache.kerby.kerberos.kerb.server.preauth;
 
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.fast.FastOptions;
-import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmor;
-import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastResponse;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 
 /**
@@ -66,13 +64,13 @@ public class KdcFastContext {
         this.fastFlags = fastFlags;
     }
 
-    private void armorApRequest(KrbFastArmor armor) {
+    /*private void armorApRequest(KrbFastArmor armor) {
 
     }
 
     private byte[] encryptFastReply(KrbFastResponse fastResp) {
         return null;
-    }
+    }*/
 
     public byte[] findAndProcessFast(KdcReq kdcReq, byte[] checksumData,
                                    EncryptionKey tgsSubKey,
