@@ -27,23 +27,21 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.fail;
 
-/**
- * Created by yaningxu on 4/13/2015.
- */
 public class PrfTest {
-    static class TestCase {
-        EncryptionType encType;
-        String keyData;
-        String seed;
-        String answer;
-        TestCase(EncryptionType encType, String keyData,
-                 String seed, String answer) {
-            this.encType = encType;
-            this.keyData = keyData;
-            this.seed = seed;
-            this.answer = answer;
-        }
+    private static void performTest(TestCase testCase) throws Exception {
+        byte[] keyData = EncryptionHandler.getEncHandler(testCase.encType).str2key(testCase.keyData, testCase.keyData, null);
+        byte[] seed = HexUtil.hex2bytes(testCase.seed);
+        byte[] answer = HexUtil.hex2bytes(testCase.answer);
+        byte[] outkey = EncryptionHandler.getEncHandler(testCase.encType).prf(keyData, seed);
 
+        if (! Arrays.equals(answer, outkey)) {
+            System.err.println("failed with:");
+            System.err.println("outKey:" + HexUtil.bytesToHex(outkey));
+            System.err.println("answer:" + testCase.answer);
+            fail("KeyDerive test failed for " + testCase.encType.getName());
+        } else {
+            System.out.println("Prf test OK for " + testCase.encType.getName());
+        }
     }
 
     @Test
@@ -146,19 +144,18 @@ public class PrfTest {
         ));
     }
 
-    private static void performTest(TestCase testCase) throws Exception {
-        byte[] keyData = EncryptionHandler.getEncHandler(testCase.encType).str2key(testCase.keyData, testCase.keyData, null);
-        byte[] seed = HexUtil.hex2bytes(testCase.seed);
-        byte[] answer = HexUtil.hex2bytes(testCase.answer);
-        byte[] outkey = EncryptionHandler.getEncHandler(testCase.encType).prf(keyData, seed);
-
-        if (! Arrays.equals(answer, outkey)) {
-            System.err.println("failed with:");
-            System.err.println("outKey:" + HexUtil.bytesToHex(outkey));
-            System.err.println("answer:" + testCase.answer);
-            fail("KeyDerive test failed for " + testCase.encType.getName());
-        } else {
-            System.out.println("Prf test OK for " + testCase.encType.getName());
+    static class TestCase {
+        EncryptionType encType;
+        String keyData;
+        String seed;
+        String answer;
+        TestCase(EncryptionType encType, String keyData,
+                 String seed, String answer) {
+            this.encType = encType;
+            this.keyData = keyData;
+            this.seed = seed;
+            this.answer = answer;
         }
+
     }
 }
