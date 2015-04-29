@@ -78,11 +78,15 @@ public class KdcHandler {
 
         KrbMessage krbResponse = kdcRequest.getReply();
         int bodyLen = krbResponse.encodingLength();
-        ByteBuffer responseMessage = ByteBuffer.allocate(bodyLen + 4);
-        responseMessage.putInt(bodyLen);
+        ByteBuffer responseMessage;
+        if (isTcp) {
+            responseMessage = ByteBuffer.allocate(bodyLen + 4);
+            responseMessage.putInt(bodyLen);
+        } else {
+            responseMessage = ByteBuffer.allocate(bodyLen);
+        }
         krbResponse.encode(responseMessage);
         responseMessage.flip();
-
         return responseMessage;
     }
 

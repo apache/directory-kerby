@@ -41,6 +41,13 @@ public interface KrbTransport {
     ByteBuffer receiveMessage() throws IOException;
 
     /**
+     * Judge the type of transport, return true if it is tcp,
+     * reture false if it is udp.
+     */
+
+    boolean isTcp();
+
+    /**
      * Get address from remote side.
      * @return address
      */

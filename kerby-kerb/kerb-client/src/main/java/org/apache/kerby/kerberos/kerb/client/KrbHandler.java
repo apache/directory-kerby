@@ -27,6 +27,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -43,13 +44,20 @@ public abstract class KrbHandler {
     public void handleRequest(KdcRequest kdcRequest) throws KrbException {
         kdcRequest.process();
         KdcReq kdcReq = kdcRequest.getKdcReq();
-
         int bodyLen = kdcReq.encodingLength();
-        ByteBuffer requestMessage = ByteBuffer.allocate(bodyLen + 4);
-        requestMessage.putInt(bodyLen);
+        KrbTransport transport = (KrbTransport) kdcRequest.getSessionData();
+        boolean isTcp = transport.isTcp();
+        ByteBuffer requestMessage;
+
+        if (!isTcp) {
+            requestMessage = ByteBuffer.allocate(bodyLen);
+
+        } else {
+            requestMessage = ByteBuffer.allocate(bodyLen + 4);
+            requestMessage.putInt(bodyLen);
+        }
         kdcReq.encode(requestMessage);
         requestMessage.flip();
-
         try {
             sendMessage(kdcRequest, requestMessage);
         } catch (IOException e) {

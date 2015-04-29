@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.kerberos.kdc.impl;
 
+import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
@@ -42,6 +44,7 @@ public class NettyKdcNetwork {
     private InetSocketAddress udpAddress;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
+    private EventLoopGroup group;
 
     public void init(KdcContext kdcContext) {
         this.kdcContext = kdcContext;
@@ -54,11 +57,6 @@ public class NettyKdcNetwork {
                        InetSocketAddress udpAddress) throws IOException {
         this.tcpAddress = tcpAddress;
         this.udpAddress = udpAddress;
-
-
-        if (udpAddress != null) {
-
-        }
     }
 
     public void start() {
@@ -79,6 +77,18 @@ public class NettyKdcNetwork {
 
         // Start the server.
         b.bind(tcpAddress.getPort());
+        if (udpAddress != null) {
+            startUDPServer();
+        }
+    }
+
+    private void startUDPServer() {
+        this.group = new NioEventLoopGroup();
+        Bootstrap b = new Bootstrap();
+        b.group(group).channel(NioDatagramChannel.class)
+                .option(ChannelOption.SO_BROADCAST, true)
+                .handler((ChannelHandler) new NettyKdcUdpServerHandler(kdcContext));
+        b.bind(udpAddress.getPort());
     }
 
     static class KrbMessageDecoder extends LengthFieldBasedFrameDecoder {
@@ -104,5 +114,8 @@ public class NettyKdcNetwork {
         // Shut down all event loops to terminate all threads.
         bossGroup.shutdownGracefully();
         workerGroup.shutdownGracefully();
+        if (udpAddress != null) {
+            group.shutdownGracefully();
+        }
     }
 }

@@ -37,6 +37,7 @@ public class KrbUdpTransport
     public KrbUdpTransport(InetSocketAddress remoteAddress) throws IOException {
         this.remoteAddress = remoteAddress;
         this.channel = DatagramChannel.open();
+        this.channel.configureBlocking(true);
         this.recvBuffer = ByteBuffer.allocate(1024 * 1024); // TODO.
         channel.connect(remoteAddress);
     }
@@ -48,9 +49,15 @@ public class KrbUdpTransport
 
     @Override
     public ByteBuffer receiveMessage() throws IOException {
-        recvBuffer.reset();
+        recvBuffer.clear();
         channel.receive(recvBuffer);
+        recvBuffer.flip();
         return recvBuffer;
+    }
+
+    @Override
+    public boolean isTcp() {
+        return false;
     }
 
     @Override

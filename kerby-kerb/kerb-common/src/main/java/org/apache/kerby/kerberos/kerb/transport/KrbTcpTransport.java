@@ -43,6 +43,7 @@ public class KrbTcpTransport
         this.messageBuffer = new byte[1024 * 1024]; // TODO.
     }
 
+
     @Override
     public void sendMessage(ByteBuffer message) throws IOException {
         outputStream.write(message.array()); // TODO: may not be backed by array
@@ -57,6 +58,11 @@ public class KrbTcpTransport
         }
 
         return null;
+    }
+
+    @Override
+    public boolean isTcp() {
+        return true;
     }
 
     @Override
