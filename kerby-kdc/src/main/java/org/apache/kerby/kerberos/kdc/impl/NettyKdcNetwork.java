@@ -97,7 +97,7 @@ public class NettyKdcNetwork {
         }
     }
 
-    private ChannelInitializer createChannelInitializer() {
+    private ChannelInitializer<SocketChannel> createChannelInitializer() {
         return new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {

@@ -32,12 +32,12 @@ public class TokenCache {
             cacheFile = new File(tokenCacheFile);
             if (!cacheFile.exists()) {
                 throw new RuntimeException("Invalid token cache specified: " + tokenCacheFile);
-            };
+            }
         } else {
             cacheFile = getDefaultTokenCache();
             if (!cacheFile.exists()) {
                 throw new RuntimeException("No token cache available by default");
-            };
+            }
         }
 
         String token = null;
@@ -48,8 +48,8 @@ public class TokenCache {
             if (line != null) {
                 token = line;
             }
-        } catch (IOException ex) {
-            //NOP
+        } catch (IOException ex) { //NOPMD
+            //
         }
 
         return token;

@@ -65,7 +65,7 @@ public class Klist {
         System.exit(-1);
     }
 
-    private static int printInfo(String name, KOptions klOptions) {
+    private static int printInfo(KOptions klOptions) {
         CredentialCache cc = new CredentialCache();
         List<Credential> credentials;
         InputStream cis = null ;
@@ -115,7 +115,7 @@ public class Klist {
     public static void main(String[] args) throws Exception {
         KOptions klOptions = new KOptions();
         KlistOption klopt;
-        String name = null;
+        // String name = null;
 
         int i = 0;
         String opt, value, error;
@@ -130,7 +130,7 @@ public class Klist {
                     break;
                 }
             } else {
-                name = opt;
+                // name = opt;
                 break;
             }
 
@@ -153,7 +153,7 @@ public class Klist {
             klOptions.add(klopt);
         }
 
-        int errNo = Klist.printInfo(name, klOptions);
+        int errNo = Klist.printInfo(klOptions);
         System.exit(errNo);
     }
 }
