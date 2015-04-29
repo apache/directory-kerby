@@ -25,6 +25,7 @@ import org.apache.kerby.kerberos.tool.kadmin.executor.AddPrincipalExecutor;
 import org.apache.kerby.kerberos.tool.kadmin.executor.DeletePrincipalExecutor;
 import org.apache.kerby.kerberos.tool.kadmin.executor.KadminCommandExecutor;
 import org.apache.kerby.kerberos.tool.kadmin.executor.KeytabAddExecutor;
+import org.apache.kerby.kerberos.tool.kadmin.executor.ModifyPrincipalExecutor;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,6 +69,8 @@ public class Kadmin {
     private static Conf backendConfig;
 
     private static void execute(String command) {
+        //omit the leading and trailing whitespace.
+        command = command.trim();
         if (command.equals("list_requests") ||
                 command.equals("lr") ||
                 command.equals("?")) {
@@ -86,6 +89,9 @@ public class Kadmin {
         } else if (command.startsWith("delete_principal") ||
                 command.startsWith("delprinc")) {
             executor = new DeletePrincipalExecutor(backendConfig);
+        } else if (command.startsWith("modify_principal") ||
+                command.startsWith("modprinc")) {
+            executor = new ModifyPrincipalExecutor(kdcConfig, backendConfig);
         }
         if (executor == null) {
             System.out.println("Unknown request \"" + command + "\". Type \"?\" for a request list.");

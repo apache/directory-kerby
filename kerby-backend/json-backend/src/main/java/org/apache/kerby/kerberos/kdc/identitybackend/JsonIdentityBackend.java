@@ -138,9 +138,12 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
         checkAndLoad();
-        ids.put(identity.getPrincipalName(), identity);
+        if (ids.containsKey(identity.getPrincipalName())) {
+            ids.put(identity.getPrincipalName(), identity);
+        } else {
+            throw new RuntimeException("Principal does not exist.");
+        }
         idsToFile(ids);
-
         return identity;
     }
 

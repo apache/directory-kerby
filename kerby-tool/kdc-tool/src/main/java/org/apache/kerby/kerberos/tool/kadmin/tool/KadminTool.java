@@ -55,4 +55,9 @@ public class KadminTool {
         backend.initialize();
         return backend;
     }
+
+    public static void printUsage(String error, String USAGE) {
+        System.err.println(error + "\n");
+        System.err.println(USAGE);
+    }
 }

@@ -20,7 +20,11 @@
 package org.apache.kerby;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +70,17 @@ public class KOptions {
             }
         } else if (kt == KOptionType.STR) {
             kopt.setValue(strValue);
+        } else if (kt == KOptionType.DATE) {
+            DateFormat df = new SimpleDateFormat("dd/MM/yy:HH:mm:ss");
+            Date date = null;
+            try {
+                date = df.parse(strValue);
+                kopt.setValue(date);
+            } catch (ParseException e) {
+                throw new IllegalArgumentException("Fail to parse the date: " + strValue);
+            }
+        } else if (kt == KOptionType.BOOL) {
+            kopt.setValue(Boolean.valueOf(strValue));
         } else {
             throw new IllegalArgumentException("Not recognised option:" + strValue);
         }
@@ -159,6 +174,14 @@ public class KOptions {
         Object value = getOptionValue(option);
         if (value instanceof File) {
             return (File) value;
+        }
+        return null;
+    }
+
+    public Date getDateOption(KOption option) {
+        Object value = getOptionValue(option);
+        if (value instanceof Date) {
+            return (Date) value;
         }
         return null;
     }
