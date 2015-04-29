@@ -86,6 +86,10 @@ public class PrfTest {
 
     @Test
     public void testPrf_AES256_CTS_HMAC_SHA1() throws Exception {
+        if(!EncryptionHandler.isAES256Enabled()) {
+            System.out.println("AES256 is not supported in your jdk, pls update local_policy.jar,US_export_policy.jar from http://docs.oracle.com/javase/");
+            return;
+        }
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "key1",
