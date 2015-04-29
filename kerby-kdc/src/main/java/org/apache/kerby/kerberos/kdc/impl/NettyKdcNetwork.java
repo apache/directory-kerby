@@ -39,7 +39,6 @@ import java.net.InetSocketAddress;
 public class NettyKdcNetwork {
     private KdcContext kdcContext;
     private InetSocketAddress tcpAddress;
-    private InetSocketAddress udpAddress;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
@@ -53,12 +52,14 @@ public class NettyKdcNetwork {
     public void listen(InetSocketAddress tcpAddress,
                        InetSocketAddress udpAddress) throws IOException {
         this.tcpAddress = tcpAddress;
-        this.udpAddress = udpAddress;
+        
+        /*this.udpAddress = udpAddress;
 
 
         if (udpAddress != null) {
 
         }
+        */
     }
 
     public void start() {
@@ -87,7 +88,7 @@ public class NettyKdcNetwork {
         }
     }
 
-    private ChannelInitializer createChannelInitializer() {
+    private ChannelInitializer<SocketChannel> createChannelInitializer() {
         return new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
