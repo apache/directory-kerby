@@ -1,0 +1,5 @@
+
+drankye {
+    com.sun.security.auth.module.Krb5LoginModule required refreshKrb5Config=true useKeyTab=false principal="drankye";
+};
+
