@@ -66,6 +66,13 @@ public class GSSInteropTest extends KdcTest {
         serverPrincipal = "test-service/localhost@" + kdcRealm;
     }
     
+    @Override
+    protected void createPrincipals() {
+        kdcServer.createTgsPrincipal();
+        kdcServer.createPrincipal(serverPrincipal, TEST_PASSWORD);
+        kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);
+    }
+    
     @Before
     @Override
     public void setUp() throws Exception {
@@ -126,6 +133,28 @@ public class GSSInteropTest extends KdcTest {
         
         byte[] kerberosToken = (byte[]) Subject.doAs(clientSubject, action);
         Assert.assertNotNull(kerberosToken);
+        
+        loginContext.logout();
+        
+        validateServiceTicket(kerberosToken);
+        
+        kdcServer.stop();
+    }
+    
+    private void validateServiceTicket(byte[] ticket) throws Exception {
+        // Get the TGT for the service
+        LoginContext loginContext = new LoginContext("test-service", new KerberosCallbackHandler());
+        loginContext.login();
+        
+        Subject serviceSubject = loginContext.getSubject();
+        Set<Principal> servicePrincipals = serviceSubject.getPrincipals();
+        Assert.assertFalse(servicePrincipals.isEmpty());
+
+        // Handle the service ticket
+        KerberosServiceExceptionAction serviceAction = 
+            new KerberosServiceExceptionAction(ticket, "test-service@TEST.COM");
+        
+        Subject.doAs(serviceSubject, serviceAction);
     }
     
     private static class KerberosCallbackHandler implements CallbackHandler {
@@ -136,6 +165,9 @@ public class GSSInteropTest extends KdcTest {
                 if (callbacks[i] instanceof PasswordCallback) {
                     PasswordCallback pc = (PasswordCallback) callbacks[i];
                     if (pc.getPrompt().contains("drankye")) {
+                        pc.setPassword(TEST_PASSWORD.toCharArray());
+                        break;
+                    } else if (pc.getPrompt().contains("test-service")) {
                         pc.setPassword(TEST_PASSWORD.toCharArray());
                         break;
                     }
@@ -188,5 +220,42 @@ public class GSSInteropTest extends KdcTest {
                 secContext.dispose();
             }
         }
+    }
+    
+    private static class KerberosServiceExceptionAction implements PrivilegedExceptionAction<byte[]> {
+
+        private static final String JGSS_KERBEROS_TICKET_OID = "1.2.840.113554.1.2.2";
+
+        private byte[] ticket;
+        private String serviceName;
+
+        public KerberosServiceExceptionAction(byte[] ticket, String serviceName) {
+            this.ticket = ticket;
+            this.serviceName = serviceName;
+        }
+
+        public byte[] run() throws GSSException {
+
+            GSSManager gssManager = GSSManager.getInstance();
+
+            GSSContext secContext = null;
+            GSSName gssService = gssManager.createName(serviceName, GSSName.NT_HOSTBASED_SERVICE);
+              
+            Oid oid = new Oid(JGSS_KERBEROS_TICKET_OID);
+            GSSCredential credentials = 
+                gssManager.createCredential(
+                    gssService, GSSCredential.DEFAULT_LIFETIME, oid, GSSCredential.ACCEPT_ONLY
+                );
+            secContext = gssManager.createContext(credentials);
+
+            try {
+                return secContext.acceptSecContext(ticket, 0, ticket.length);
+            } finally {
+                if (null != secContext) {
+                    secContext.dispose();    
+                }
+            }               
+        }
+
     }
 }

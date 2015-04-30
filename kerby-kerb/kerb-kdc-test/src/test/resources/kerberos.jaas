@@ -3,3 +3,6 @@ drankye {
     com.sun.security.auth.module.Krb5LoginModule required refreshKrb5Config=true useKeyTab=false principal="drankye";
 };
 
+test-service {
+    com.sun.security.auth.module.Krb5LoginModule required refreshKrb5Config=true useKeyTab=false storeKey=true principal="test-service/localhost";
+};
