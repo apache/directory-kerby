@@ -24,5 +24,5 @@ public interface KadminCommandExecutor {
     /**
      * Execute the kadmin command.
      */
-    public void execute(String input);
+    void execute(String input);
 }

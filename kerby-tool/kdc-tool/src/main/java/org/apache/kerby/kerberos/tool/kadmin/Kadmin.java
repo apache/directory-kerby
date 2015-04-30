@@ -138,15 +138,16 @@ public class Kadmin {
     public static void main(String[] args) {
         initConfig(args);
         System.out.print(PROMPT + ": ");
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-
-        while (!(input.equals("quit") ||
-                input.equals("exit") ||
-                input.equals("q"))) {
-            execute(input);
-            System.out.print(PROMPT + ": ");
-            input = scanner.nextLine();
+        try (Scanner scanner = new Scanner(System.in)) {
+            String input = scanner.nextLine();
+    
+            while (!(input.equals("quit") ||
+                    input.equals("exit") ||
+                    input.equals("q"))) {
+                execute(input);
+                System.out.print(PROMPT + ": ");
+                input = scanner.nextLine();
+            }
         }
     }
 }

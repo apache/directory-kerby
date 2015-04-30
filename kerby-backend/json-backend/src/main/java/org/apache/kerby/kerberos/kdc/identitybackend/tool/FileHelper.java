@@ -24,7 +24,7 @@ import java.io.*;
 public class FileHelper {
 
     public static String readFromFile(File file) {
-        assert (file != null);
+        assert file != null;
 
         BufferedReader reader = null;
         try {
@@ -52,7 +52,7 @@ public class FileHelper {
     }
 
     public static void writeToFile(String string, File file) {
-        assert (file != null);
+        assert file != null;
 
         BufferedWriter bufferedWriter = null;
         try {

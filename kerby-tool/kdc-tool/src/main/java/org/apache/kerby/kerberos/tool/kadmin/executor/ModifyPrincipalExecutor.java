@@ -43,9 +43,11 @@ public class ModifyPrincipalExecutor implements KadminCommandExecutor {
     private Config backendConfig;
     private KOptions kOptions;
     private String principal;
+    private KdcConfig kdcConfig; //NOPMD
 
     public ModifyPrincipalExecutor(KdcConfig kdcConfig, Config backendConfig) {
         this.backendConfig = backendConfig;
+        this.kdcConfig = kdcConfig;
         kOptions = new KOptions();
     }
 
@@ -84,7 +86,7 @@ public class ModifyPrincipalExecutor implements KadminCommandExecutor {
                     param = commands[i++];
                 }
                 if (param != null) {
-                    kOptions.parseSetValue(kOption, param);
+                    KOptions.parseSetValue(kOption, param);
                 } else {
                     error = "Option " + opt + " require a parameter";
                 }

@@ -90,8 +90,9 @@ public class Kinit {
                     "maybe you're running this from within an IDE. " +
                     "Use scanner to read password.");
             System.out.println("Password for " + principal + ":");
-            Scanner scanner = new Scanner(System.in);
-            return scanner.nextLine().trim();
+            try (Scanner scanner = new Scanner(System.in)) {
+                return scanner.nextLine().trim();
+            }
         }
         console.printf("Password for " + principal + ":");
         char[] passwordChars = console.readPassword();

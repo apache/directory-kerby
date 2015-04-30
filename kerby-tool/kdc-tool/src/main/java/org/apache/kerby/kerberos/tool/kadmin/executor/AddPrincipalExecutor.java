@@ -68,7 +68,6 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
             return;
         }
 
-        parseOptions(commands);
         String principal = commands[commands.length - 1];
         String password = getPassword(principal);
 
@@ -78,10 +77,6 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
 
         addPrincipal(principal, password);
         System.out.println("Principal \"" + principal + "\" created.");
-    }
-
-    private void parseOptions(String[] commands) {
-        //TODO
     }
 
     /**

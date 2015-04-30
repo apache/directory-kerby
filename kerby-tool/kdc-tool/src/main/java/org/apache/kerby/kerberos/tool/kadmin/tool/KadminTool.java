@@ -35,7 +35,7 @@ public class KadminTool {
             throw new RuntimeException("Can not find the IdentityBackend class");
         }
 
-        Class backendClass = null;
+        Class<?> backendClass = null;
         try {
             backendClass = Class.forName(backendClassName);
         } catch (ClassNotFoundException e) {
