@@ -112,7 +112,7 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
             backendClassName = MemoryIdentityBackend.class.getCanonicalName();
         }
 
-        Class backendClass = null;
+        Class<?> backendClass = null;
         try {
             backendClass = Class.forName(backendClassName);
         } catch (ClassNotFoundException e) {
