@@ -35,9 +35,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     // the connection to the LDAP server
     // in case of ApacheDS this will be an instance of LdapCoreSessionConnection
-    private LdapConnection connection;
+    private LdapConnection connection; //NOPMD
 
-    private Dn baseDn;
+    private Dn baseDn; //NOPMD
 
     /**
      * Constructing an instance using specified config that contains anything
@@ -48,11 +48,13 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         setConfig(config);
     }
 
+    /*
     public void initialize() {
         super.initialize();
 
         // init Ldap connection and baseDn.
     }
+    */
 
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {

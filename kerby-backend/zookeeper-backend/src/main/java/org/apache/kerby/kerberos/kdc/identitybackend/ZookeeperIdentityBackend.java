@@ -48,7 +48,7 @@ import java.util.Properties;
 public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         implements Watcher {
     private static final Logger LOG = LoggerFactory.getLogger(ZookeeperIdentityBackend.class);
-    private Config config;
+    private Config config;      //NOPMD
     private String zkHost;
     private int zkPort;
     private File dataDir;
@@ -100,7 +100,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
      */
     public void load() throws IOException {
         // TODO: prepare zookeeper connection to the server.
-        ZooKeeper zooKeeper = null;
+        // ZooKeeper zooKeeper = null;
 
         // TODO: load the kdb file from zookeeper
     }

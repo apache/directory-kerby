@@ -172,6 +172,42 @@
           <artifactId>maven-clean-plugin</artifactId>
           <version>2.6.1</version>
         </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>3.4</version>
+          <dependencies>
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-core</artifactId>
+              <version>5.3.0</version>
+            </dependency>
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-java</artifactId>
+              <version>5.3.0</version>
+            </dependency>
+          </dependencies>
+
+          <configuration>
+            <linkXRef>false</linkXRef>
+            <sourceEncoding>utf-8</sourceEncoding>
+            <failOnViolation>true</failOnViolation>
+            <verbose>true</verbose>
+            <targetJdk>1.7</targetJdk>
+          </configuration>
+          <executions>
+            <execution>
+              <id>validate</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+       </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -193,6 +229,29 @@
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+      </plugin>
+
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>fastinstall</id>
+      <properties>
+        <maven.test.skip>true</maven.test.skip>
+        <pmd.skip>true</pmd.skip>
+      </properties>
+    </profile>
+    <profile>
+      <id>nochecks</id>
+      <properties>
+        <pmd.skip>true</pmd.skip>
+      </properties>
+    </profile>
+  </profiles>
+
 </project>

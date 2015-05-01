@@ -37,4 +37,17 @@
     </dependency>
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>nochecks</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <pmd.skip>true</pmd.skip>
+      </properties>
+    </profile>
+  </profiles>
+
+
 </project>
