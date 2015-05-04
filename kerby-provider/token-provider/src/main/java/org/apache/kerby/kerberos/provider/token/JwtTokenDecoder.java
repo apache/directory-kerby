@@ -48,7 +48,7 @@ public class JwtTokenDecoder implements TokenDecoder {
 
     @Override
     public AuthToken decodeFromBytes(byte[] content) throws IOException {
-        String tokenStr = String.valueOf(content);
+        String tokenStr = new String(content);
 
         return decodeFromString(tokenStr);
     }

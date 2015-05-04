@@ -94,6 +94,23 @@ public class TokenTest {
     }
 
     @Test
+    public void testDecodeFromBytes() throws Exception {
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        byte[] tokenStr = tokenEncoder.encodeAsBytes(authToken);
+        System.out.println("Auth token: " + tokenStr);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
+        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+
+        AuthToken token2 = tokenDecoder.decodeFromBytes(tokenStr);
+        System.out.println("Decoded token's subject: " + token2.getSubject());
+        Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
+        Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
+    }
+
+    @Test
     public void testTokenWithEncryptedJWT() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
