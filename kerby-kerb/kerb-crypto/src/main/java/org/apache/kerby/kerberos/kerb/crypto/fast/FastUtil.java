@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.fast;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 
 /**
@@ -27,20 +29,42 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
  */
 public class FastUtil {
 
+
     /**
      * Call the PRF function multiple times with the pepper prefixed with
      * a count byte  to get enough bits of output.
      */
+
     public static byte[] prfPlus(EncryptionKey key, String pepper,
-                                 int keyBytesLen) {
-        // TODO
-        return null;
+                                 int keyBytesLen) throws KrbException {
+        byte[] prfInbuf = new byte[pepper.length() + 1];
+        byte[] tmpbuf = new byte[keyBytesLen];
+        int prfSize = EncryptionHandler.getEncHandler(key.getKeyType()).prfSize();
+        int iterations = keyBytesLen / prfSize;
+        prfInbuf[0] = 1;
+        System.arraycopy(pepper.getBytes(), 0, prfInbuf, 1, pepper.length());
+        if (keyBytesLen % prfSize !=0) {
+            iterations++;
+        }
+        byte[] buffer = new byte[prfSize * iterations];
+        for (int i = 0; i < iterations; i++) {
+            System.arraycopy(EncryptionHandler.getEncHandler(key.getKeyType()).prf(key.getKeyData(), prfInbuf), 0, buffer, i * prfSize, prfSize);
+            prfInbuf[0]++;
+        }
+        System.arraycopy(buffer, 0, tmpbuf, 0, keyBytesLen);
+        return tmpbuf;
     }
 
     public static EncryptionKey cf2(EncryptionKey key1, String pepper1,
-                                    EncryptionKey key2, String pepper2) {
-        // TODO
-        return null;
+                                    EncryptionKey key2, String pepper2) throws KrbException {
+        int keyBites = EncryptionHandler.getEncHandler(key1.getKeyType()).encProvider().keyInputSize();
+        byte[] buf1 = prfPlus(key1, pepper1, keyBites);
+        byte[] buf2 = prfPlus(key2, pepper2, keyBites);
+        for (int i = 0; i < keyBites; i++) {
+            buf1[i] ^= buf2[i];
+        }
+        EncryptionKey outKey = EncryptionHandler.random2Key(key1.getKeyType(), buf1);
+        return outKey;
     }
 
     /**
@@ -50,7 +74,7 @@ public class FastUtil {
      * @return encryption key
      */
     public static EncryptionKey makeReplyKey(EncryptionKey strengthenKey,
-                                      EncryptionKey existingKey) {
+                                             EncryptionKey existingKey) throws KrbException {
         return cf2(strengthenKey, "strengthenkey", existingKey, "replykey");
     }
 
@@ -61,7 +85,7 @@ public class FastUtil {
      * @return encryption key
      */
     public static EncryptionKey makeArmorKey(EncryptionKey subkey,
-                                             EncryptionKey ticketKey) {
+                                             EncryptionKey ticketKey) throws KrbException {
         return cf2(subkey, "subkeyarmor", ticketKey, "ticketarmor");
     }
 }
