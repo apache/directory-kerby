@@ -27,6 +27,7 @@ public enum KadminOption implements KOption {
     EXPIRE("-expire", "expire time", KOptionType.DATE),
     DISABLED("-disabled", "disabled", KOptionType.BOOL),
     LOCKED("-locked", "locked", KOptionType.BOOL),
+    FORCE("-force", "force", KOptionType.NOV),
     ;
 
     private String name;

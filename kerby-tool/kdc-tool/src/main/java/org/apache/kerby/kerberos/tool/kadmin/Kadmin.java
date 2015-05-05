@@ -26,6 +26,7 @@ import org.apache.kerby.kerberos.tool.kadmin.executor.DeletePrincipalExecutor;
 import org.apache.kerby.kerberos.tool.kadmin.executor.KadminCommandExecutor;
 import org.apache.kerby.kerberos.tool.kadmin.executor.KeytabAddExecutor;
 import org.apache.kerby.kerberos.tool.kadmin.executor.ModifyPrincipalExecutor;
+import org.apache.kerby.kerberos.tool.kadmin.executor.RenamePrincipalExecutor;
 
 import java.io.File;
 import java.io.IOException;
@@ -92,6 +93,9 @@ public class Kadmin {
         } else if (command.startsWith("modify_principal") ||
                 command.startsWith("modprinc")) {
             executor = new ModifyPrincipalExecutor(kdcConfig, backendConfig);
+        } else if (command.startsWith("rename_principal") ||
+                command.startsWith("renprinc")) {
+            executor = new RenamePrincipalExecutor(backendConfig);
         }
         if (executor == null) {
             System.out.println("Unknown request \"" + command + "\". Type \"?\" for a request list.");

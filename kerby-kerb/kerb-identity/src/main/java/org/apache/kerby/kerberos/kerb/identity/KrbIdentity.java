@@ -50,36 +50,22 @@ public class KrbIdentity {
         return principalName;
     }
 
-    public void setPrincipal(PrincipalName principal) {
-        this.principal = principal;
-    }
+    public void setPrincipalName(String newPrincipalName) { principalName = newPrincipalName; }
 
     public PrincipalName getPrincipal() {
         return principal;
     }
 
-    public void setKeyVersion(int keyVersion) {
-        this.keyVersion = keyVersion;
-    }
-
-    public void setKdcFlags(int kdcFlags) {
-        this.kdcFlags = kdcFlags;
-    }
-
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public void setExpireTime(KerberosTime expireTime) {
-        this.expireTime = expireTime;
+    public void setPrincipal(PrincipalName principal) {
+        this.principal = principal;
     }
 
     public KerberosTime getExpireTime() {
         return expireTime;
+    }
+
+    public void setExpireTime(KerberosTime expireTime) {
+        this.expireTime = expireTime;
     }
 
     public KerberosTime getCreatedTime() {
@@ -94,8 +80,16 @@ public class KrbIdentity {
         return disabled;
     }
 
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
     public boolean isLocked() {
         return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
     public void addKey(EncryptionKey encKey) {
@@ -120,8 +114,16 @@ public class KrbIdentity {
         return kdcFlags;
     }
 
+    public void setKdcFlags(int kdcFlags) {
+        this.kdcFlags = kdcFlags;
+    }
+
     public int getKeyVersion() {
         return keyVersion;
+    }
+
+    public void setKeyVersion(int keyVersion) {
+        this.keyVersion = keyVersion;
     }
 
     @Override

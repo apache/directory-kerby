@@ -19,9 +19,13 @@
  */
 package org.apache.kerby.kerberos.tool.kadmin.tool;
 
+import org.apache.kerby.KOptionType;
+import org.apache.kerby.KOptions;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
+
+import java.util.Scanner;
 
 public class KadminTool {
 
@@ -59,5 +63,55 @@ public class KadminTool {
     public static void printUsage(String error, String USAGE) {
         System.err.println(error + "\n");
         System.err.println(USAGE);
+    }
+
+    public static KOptions parseOptions(String[] commands, int beginIndex, int endIndex) {
+        KadminOption kOption;
+        String opt, error, param;
+
+        if(beginIndex < 0) {
+            System.out.println("Invalid function parameter(s).");
+            return null;
+        }
+
+        KOptions kOptions = new KOptions();
+        int i = beginIndex;
+        while (i <= endIndex) {
+            error = null;
+            opt = commands[i++];
+            if (opt.startsWith("-")) {
+                kOption = KadminOption.fromName(opt);
+                if (kOption == KadminOption.NONE) {
+                    error = "Invalid option:" + opt;
+                }
+            } else {
+                kOption = KadminOption.NONE;
+                error = "Invalid parameter:" + opt + " , it does not belong to any option.";
+            }
+
+            if (kOption.getType() != KOptionType.NOV) { // require a parameter
+                param = null;
+                if (i <= endIndex) {
+                    param = commands[i++];
+                }
+                if (param != null) {
+                    kOptions.parseSetValue(kOption, param);
+                } else {
+                    error = "Option " + opt + " require a parameter";
+                }
+            }
+            if (error != null) {
+                System.out.println(error);
+                return null;
+            }
+            kOptions.add(kOption);
+        }
+        return kOptions;
+    }
+
+    public static String getReplay(String prompt) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(prompt);
+        return scanner.nextLine().trim();
     }
 }
