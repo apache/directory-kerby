@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
-import org.apache.kerby.kerberos.kerb.server.impl.DefaultInternalKdcServer;
+import org.apache.kerby.kerberos.kerb.server.impl.DefaultInternalKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.server.impl.event.EventBasedKdcServer;
 
 import java.io.File;
@@ -169,7 +169,7 @@ public class KdcServer {
         } else if (commonOptions.contains(KdcServerOption.USE_EVENT_MODEL)) {
             innerKdc = new EventBasedKdcServer();
         } else {
-            innerKdc = new DefaultInternalKdcServer();
+            innerKdc = new DefaultInternalKdcServerImpl();
         }
         innerKdc.init(commonOptions);
     }
