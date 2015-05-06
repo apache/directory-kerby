@@ -152,7 +152,7 @@ public class GSSInteropTest extends KdcTest {
 
         // Handle the service ticket
         KerberosServiceExceptionAction serviceAction = 
-            new KerberosServiceExceptionAction(ticket, "test-service@TEST.COM");
+            new KerberosServiceExceptionAction(ticket, "test-service/localhost@TEST.COM");
         
         Subject.doAs(serviceSubject, serviceAction);
     }
@@ -239,7 +239,7 @@ public class GSSInteropTest extends KdcTest {
             GSSManager gssManager = GSSManager.getInstance();
 
             GSSContext secContext = null;
-            GSSName gssService = gssManager.createName(serviceName, GSSName.NT_HOSTBASED_SERVICE);
+            GSSName gssService = gssManager.createName(serviceName, GSSName.NT_USER_NAME);
               
             Oid oid = new Oid(JGSS_KERBEROS_TICKET_OID);
             GSSCredential credentials = 
