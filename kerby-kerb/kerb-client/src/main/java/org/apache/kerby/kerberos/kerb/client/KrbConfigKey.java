@@ -26,6 +26,7 @@ public enum KrbConfigKey implements SectionConfigKey {
     KDC_HOST("localhost"),
     KDC_PORT(8015),
     KDC_ALLOW_UDP(true),
+    KDC_ALLOW_TCP(true),
     KDC_UDP_PORT(8016),
     KDC_TCP_PORT(8015),
     KDC_DOMAIN("example.com"),

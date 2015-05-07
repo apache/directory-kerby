@@ -46,9 +46,11 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
         this.krbHandler = new DefaultKrbHandler();
         krbHandler.init(getContext());
 
-        InetSocketAddress tcpAddress, udpAddress = null;
-        tcpAddress=  new InetSocketAddress(getSetting().getKdcHost(),
-                getSetting().getKdcTcpPort());
+        InetSocketAddress tcpAddress = null, udpAddress = null;
+        if (getSetting().allowTcp()) {
+            tcpAddress = new InetSocketAddress(getSetting().getKdcHost(),
+                    getSetting().getKdcTcpPort());
+        }
         if (getSetting().allowUdp()) {
             udpAddress = new InetSocketAddress(getSetting().getKdcHost(),
                     getSetting().getKdcUdpPort());

@@ -69,6 +69,14 @@ public class KrbSetting {
         return krbConfig.allowKdcUdp();
     }
 
+    public boolean allowTcp() {
+        Boolean allowTcp = commonOptions.getBooleanOption(KrbOption.ALLOW_TCP);
+        if (allowTcp != null) {
+            return allowTcp;
+        }
+        return krbConfig.allowKdcTcp();
+    }
+
     public int getKdcUdpPort() {
         int udpPort = commonOptions.getIntegerOption(KrbOption.KDC_UDP_PORT);
         if (udpPort > 0) {

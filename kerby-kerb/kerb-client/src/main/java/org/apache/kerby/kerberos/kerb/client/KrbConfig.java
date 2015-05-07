@@ -72,6 +72,13 @@ public class KrbConfig extends Conf {
     }
 
     /**
+     * Is to allow TCP for KDC
+     * @return true to allow TCP, false otherwise
+     */
+    public boolean allowKdcTcp() {
+        return getBoolean(KrbConfigKey.KDC_ALLOW_TCP);
+    }
+    /**
      * Get KDC UDP port
      * @return
      */

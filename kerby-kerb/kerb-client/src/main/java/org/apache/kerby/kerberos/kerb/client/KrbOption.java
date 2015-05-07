@@ -32,6 +32,7 @@ public enum KrbOption implements KOption {
     KDC_HOST("kdc host", KOptionType.STR),
     KDC_TCP_PORT("kdc tcp port", KOptionType.INT),
     ALLOW_UDP("allow udp", KOptionType.BOOL),
+    ALLOW_TCP("allow tcp", KOptionType.BOOL),
     KDC_UDP_PORT("kdc udp port", KOptionType.INT),
     CONN_TIMEOUT("connection timeout", KOptionType.INT),
     LIFE_TIME("life time", KOptionType.INT),

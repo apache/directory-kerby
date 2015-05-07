@@ -34,6 +34,7 @@ public enum KdcServerOption implements KOption {
     CONF_DIR("conf dir", KOptionType.DIR),
     KDC_REALM("kdc realm", KOptionType.STR),
     KDC_HOST("kdc host", KOptionType.STR),
+    ALLOW_TCP("allow tcp", KOptionType.BOOL),
     KDC_TCP_PORT("kdc tcp port", KOptionType.INT),
     ALLOW_UDP("allow udp", KOptionType.BOOL),
     KDC_UDP_PORT("kdc udp port", KOptionType.INT),

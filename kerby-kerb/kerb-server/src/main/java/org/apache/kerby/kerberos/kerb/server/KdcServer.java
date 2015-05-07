@@ -99,6 +99,13 @@ public class KdcServer {
     }
 
     /**
+     * Set to allow TCP or not.
+     * @param allowTcp
+     */
+    public void setAllowTcp(boolean allowTcp) {
+        commonOptions.add(KdcServerOption.ALLOW_TCP, allowTcp);
+    }
+    /**
      * Set KDC udp port. Only makes sense when allowUdp is set.
      * @param kdcUdpPort
      */

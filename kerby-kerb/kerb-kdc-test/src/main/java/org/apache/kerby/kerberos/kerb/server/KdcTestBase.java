@@ -64,9 +64,16 @@ public abstract class KdcTestBase {
         return true;
     }
 
+    protected boolean allowTcp() {
+        return true;
+    }
+
     @Before
     public void setUp() throws Exception {
-        tcpPort = getServerPort();
+
+        if (allowTcp()) {
+            tcpPort = getServerPort();
+        }
 
         if (allowUdp()) {
             udpPort = getServerPort();
@@ -94,6 +101,7 @@ public abstract class KdcTestBase {
      */
     protected void prepareKdcServer() throws Exception {
         kdcServer.setKdcHost(hostname);
+        kdcServer.setAllowTcp(allowTcp());
         if (tcpPort > 0) {
             kdcServer.setKdcTcpPort(tcpPort);
         }
@@ -135,6 +143,7 @@ public abstract class KdcTestBase {
         prepareKrbClient();
 
         krbClnt.setKdcHost(hostname);
+        krbClnt.setAllowTcp(allowTcp());
         if (tcpPort > 0) {
             krbClnt.setKdcTcpPort(tcpPort);
         }
