@@ -24,7 +24,10 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A combined and mixed network server handling UDP and TCP.
@@ -33,11 +36,13 @@ import java.nio.channels.DatagramChannel;
 public abstract class KdcNetwork {
     private InetSocketAddress tcpAddress;
     private InetSocketAddress udpAddress;
-
     private boolean isStopped;
+    protected final static int MAX_MESSAGE_SIZE = 65507;
     private ServerSocket tcpServer;
     private DatagramChannel udpServer;
-
+    private Map<InetSocketAddress, KdcUdpTransport> transports =
+            new HashMap<InetSocketAddress, KdcUdpTransport>();
+    private ByteBuffer recvBuffer;
     public void init() {
         isStopped = false;
     }
@@ -52,9 +57,10 @@ public abstract class KdcNetwork {
         tcpServer.bind(tcpAddress);
 
         if (udpAddress != null) {
-            DatagramChannel serverChannel = DatagramChannel.open();
-            serverChannel.configureBlocking(false);
-            serverChannel.bind(udpAddress);
+            udpServer = DatagramChannel.open();
+            udpServer.configureBlocking(false);
+            udpServer.bind(udpAddress);
+            recvBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
         }
     }
 
@@ -75,20 +81,24 @@ public abstract class KdcNetwork {
                 }
             }
 
-            try {
-                checkAndAccept();
-            } catch (SocketTimeoutException e) { //NOPMD
-                //NOOP as normal
-            } catch (IOException e) {
-                throw new RuntimeException("Error occured while checking tcp connections", e);
+            if (this.tcpAddress != null) {
+                try {
+                    checkAndAccept();
+                } catch (SocketTimeoutException e) { //NOPMD
+                    //NOOP as normal
+                } catch (IOException e) {
+                    throw new RuntimeException("Error occured while checking tcp connections", e);
+                }
             }
 
-            try {
-                checkUdpMessage();
-            } catch (SocketTimeoutException e) { //NOPMD
-                //NOOP as normal
-            } catch (IOException e) {
-                throw new RuntimeException("Error occured while checking tcp connections", e);
+            if (this.udpAddress != null) {
+                try {
+                    checkUdpMessage();
+                } catch (SocketTimeoutException e) { //NOPMD
+                    //NOOP as normal
+                } catch (IOException e) {
+                    throw new RuntimeException("Error occured while checking udp connections", e);
+                }
             }
         }
     }
@@ -106,8 +116,21 @@ public abstract class KdcNetwork {
         }
     }
 
+
     private void checkUdpMessage() throws IOException {
-        //TODO
+        InetSocketAddress fromAddress = (InetSocketAddress) udpServer.receive(recvBuffer);
+        if (fromAddress != null) {
+            recvBuffer.flip();
+            KdcUdpTransport transport = transports.get(fromAddress);
+            if (transport == null) {
+                transport = new KdcUdpTransport(udpServer, fromAddress);
+                transport.onRecvMessage(recvBuffer);
+                onNewTransport(transport);
+            } else {
+                transport.onRecvMessage(recvBuffer);
+            }
+            recvBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
+        }
     }
 
     protected abstract void onNewTransport(KrbTransport transport);

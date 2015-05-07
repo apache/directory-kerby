@@ -36,10 +36,17 @@ public class KrbUdpTransport
 
     public KrbUdpTransport(InetSocketAddress remoteAddress) throws IOException {
         this.remoteAddress = remoteAddress;
-        this.channel = DatagramChannel.open();
-        this.channel.configureBlocking(true);
-        this.recvBuffer = ByteBuffer.allocate(1024 * 1024); // TODO.
-        channel.connect(remoteAddress);
+
+        DatagramChannel tmpChannel = DatagramChannel.open();
+        tmpChannel.configureBlocking(true);
+        tmpChannel.connect(remoteAddress);
+        setChannel(tmpChannel);
+
+        recvBuffer = ByteBuffer.allocate(65507);
+    }
+
+    protected void setChannel(DatagramChannel channel) {
+        this.channel = channel;
     }
 
     @Override
