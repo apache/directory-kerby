@@ -28,6 +28,8 @@ public enum KadminOption implements KOption {
     DISABLED("-disabled", "disabled", KOptionType.BOOL),
     LOCKED("-locked", "locked", KOptionType.BOOL),
     FORCE("-force", "force", KOptionType.NOV),
+    KVNO("-kvno", "initial key version number", KOptionType.INT),
+    PW("-pw", "password", KOptionType.STR),
     ;
 
     private String name;
@@ -55,7 +57,7 @@ public enum KadminOption implements KOption {
     }
 
     public static KadminOption fromName(String name) {
-        if (name != null ) {
+        if (name != null) {
             for (KadminOption kopt : values()) {
                 if (kopt.getName().equals(name)) {
                     return (KadminOption) kopt;

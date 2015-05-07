@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.tool.kadmin.executor;
 
+import org.apache.kerby.KOptions;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
@@ -27,10 +28,12 @@ import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.tool.kadmin.tool.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
 
 import java.io.Console;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -48,12 +51,15 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
             "\t\trequires_hwauth needchange allow_svr password_changing_service\n" +
             "\t\tok_as_delegate ok_to_auth_as_delegate no_auth_data_required\n" +
             "\n" +
-            "where,\n" +
+            "\twhere,\n" +
             "\t[-x db_princ_args]* - any number of database specific arguments.\n" +
-            "\t\t\tLook at each database documentation for supported arguments";
+            "\t\t\tLook at each database documentation for supported arguments.\n" +
+            "\tExample:\n" +
+            "\t\tadd_principal -expire 23/04/15:01:01:01 -kvno 1 -pw mypassword test@EXAMPLE.COM";
 
     private KdcConfig kdcConfig;
     private Config backendConfig;
+    private KOptions kOptions;
 
     public AddPrincipalExecutor(KdcConfig kdcConfig, Config backendConfig) {
         this.kdcConfig = kdcConfig;
@@ -62,21 +68,30 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
 
     @Override
     public void execute(String input) {
-        String[] commands = input.split(" ");
+        String[] commands = input.split("\\s+");
         if (commands.length < 2) {
             System.err.println(USAGE);
             return;
         }
 
+        kOptions = KadminTool.parseOptions(commands, 1, commands.length - 2);
+        if(kOptions == null) {
+            System.err.println(USAGE);
+            return;
+        }
         String principal = commands[commands.length - 1];
-        String password = getPassword(principal);
+        String password;
+        if(kOptions.contains(KadminOption.PW)) {
+            password = kOptions.getStringOption(KadminOption.PW);
+        } else {
+            password = getPassword(principal);
+        }
 
         if (password == null) {
             return;
         }
 
         addPrincipal(principal, password);
-        System.out.println("Principal \"" + principal + "\" created.");
     }
 
     /**
@@ -130,6 +145,7 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
         KrbIdentity identity = createIdentity(principal, password);
         try {
             backend.addIdentity(identity);
+            System.out.println("Principal \"" + principal + "\" created.");
         } catch (Exception e) {
             System.err.println("Principal or policy already exists while creating \"" + principal + "\".");
         }
@@ -138,9 +154,18 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
     protected KrbIdentity createIdentity(String principal, String password) {
         KrbIdentity kid = new KrbIdentity(principal);
         kid.setCreatedTime(KerberosTime.now());
-        kid.setExpireTime(KerberosTime.NEVER);
+        if(kOptions.contains(KadminOption.EXPIRE)) {
+            Date date = kOptions.getDateOption(KadminOption.EXPIRE);
+            kid.setExpireTime(new KerberosTime(date.getTime()));
+        } else {
+            kid.setExpireTime(KerberosTime.NEVER);
+        }
+        if(kOptions.contains(KadminOption.KVNO)) {
+            kid.setKeyVersion(kOptions.getIntegerOption(KadminOption.KVNO));
+        } else {
+            kid.setKeyVersion(1);
+        }
         kid.setDisabled(false);
-        kid.setKeyVersion(1);
         kid.setLocked(false);
 
         kid.addKeys(generateKeys(kid.getPrincipalName(), password));
@@ -155,8 +180,4 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
             throw new RuntimeException("Failed to create keys", e);
         }
     }
-
-
-
-
 }
