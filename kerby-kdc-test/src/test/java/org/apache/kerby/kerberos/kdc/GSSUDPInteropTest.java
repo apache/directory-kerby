@@ -20,45 +20,33 @@
 package org.apache.kerby.kerberos.kdc;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 
 /**
  * This is an interop test using the Java GSS APIs against the Kerby KDC (using UDP)
  */
 public class GSSUDPInteropTest extends GSSInteropTestBase {
-    
+
     @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        
-        String basedir = System.getProperty("basedir");
-        if (basedir == null) {
-            basedir = new File(".").getCanonicalPath();
-        }
-        
+
+        File file1 = new File(this.getClass().getResource("/kerberos.jaas").getPath());
+        String content1 = getFileContent(file1.getPath());
+        String path1 = writeToTestDir(content1, file1.getName());
+
         // System.setProperty("sun.security.krb5.debug", "true");
-        System.setProperty("java.security.auth.login.config", 
-                           basedir + "/src/test/resources/kerberos.jaas");
-        
+        System.setProperty("java.security.auth.login.config", path1);
+
         // Read in krb5.conf and substitute in the correct port
-        File f = new File(basedir + "/src/test/resources/krb5-udp.conf");
+        File file2 = new File(this.getClass().getResource("/krb5-udp.conf").getPath());
+        String content2 = getFileContent(file2.getPath());
+        content2 = content2.replaceAll("port", "" + udpPort);
+        String path2 = writeToTestDir(content2, file2.getName());
 
-        FileInputStream inputStream = new FileInputStream(f);
-        String content = IOUtils.toString(inputStream, "UTF-8");
-        inputStream.close();
-        content = content.replaceAll("port", "" + udpPort);
-
-        File f2 = new File(basedir + "/target/test-classes/krb5-udp.conf");
-        FileOutputStream outputStream = new FileOutputStream(f2);
-        IOUtils.write(content, outputStream, "UTF-8");
-        outputStream.close();
-
-        System.setProperty("java.security.krb5.conf", f2.getPath());
+        System.setProperty("java.security.krb5.conf", path2);
     }
 
     @Override
