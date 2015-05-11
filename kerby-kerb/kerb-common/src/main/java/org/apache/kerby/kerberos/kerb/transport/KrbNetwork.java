@@ -29,6 +29,7 @@ import java.net.Socket;
 @SuppressWarnings("PMD")
 public class KrbNetwork {
 
+    private int socketTimeout = 10 * 1000;
     private InetSocketAddress tcpAddress;
     private InetSocketAddress udpAddress;
 
@@ -55,8 +56,12 @@ public class KrbNetwork {
 
     private KrbTcpTransport tcpConnect() throws IOException {
         Socket socket = new Socket();
-        socket.setSoTimeout(10 * 1000); // 10 seconds. TODO: from config
+        socket.setSoTimeout(socketTimeout);
         socket.connect(tcpAddress);
         return new KrbTcpTransport(socket);
+    }
+
+    public void setSocketTimeout(int milliSeconds) {
+        socketTimeout = milliSeconds;
     }
 }

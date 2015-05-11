@@ -57,6 +57,7 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
         }
 
         KrbNetwork network = new KrbNetwork();
+        network.setSocketTimeout(getSetting().getTimeout());
         try {
             transport = network.connect(tcpAddress, udpAddress);
         } catch (IOException e) {

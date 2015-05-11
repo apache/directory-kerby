@@ -68,14 +68,6 @@ public abstract class KdcTestBase {
         return serverPort;
     }
 
-    protected boolean allowUdp() {
-        return true;
-    }
-
-    protected boolean allowTcp() {
-        return true;
-    }
-
     @BeforeClass
     public static void createTestDir() throws IOException {
         String basedir = System.getProperty("basedir");
@@ -90,6 +82,14 @@ public abstract class KdcTestBase {
     @AfterClass
     public static void deleteTestDir() throws IOException {
         FileUtils.deleteDirectory(TEST_DIR);
+    }
+
+    protected boolean allowUdp() {
+        return true;
+    }
+
+    protected boolean allowTcp() {
+        return true;
     }
 
     public String getFileContent(String path) throws IOException {
@@ -194,7 +194,7 @@ public abstract class KdcTestBase {
             krbClnt.setKdcUdpPort(udpPort);
         }
 
-        krbClnt.setTimeout(5);
+        krbClnt.setTimeout(50);
         krbClnt.setKdcRealm(kdcServer.getKdcRealm());
     }
 

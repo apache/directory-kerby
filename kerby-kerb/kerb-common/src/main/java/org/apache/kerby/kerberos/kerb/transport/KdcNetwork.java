@@ -34,15 +34,18 @@ import java.util.Map;
  */
 @SuppressWarnings("PMD")
 public abstract class KdcNetwork {
+    protected final static int MAX_MESSAGE_SIZE = 65507;
+    private final static int KDC_TCP_TRANSPORT_TIMEOUT = 3 * 1000;
+    private final static int KDC_TCP_SERVER_TIMEOUT = 100;
     private InetSocketAddress tcpAddress;
     private InetSocketAddress udpAddress;
     private boolean isStopped;
-    protected final static int MAX_MESSAGE_SIZE = 65507;
     private ServerSocket tcpServer;
     private DatagramChannel udpServer;
     private Map<InetSocketAddress, KdcUdpTransport> transports =
             new HashMap<InetSocketAddress, KdcUdpTransport>();
     private ByteBuffer recvBuffer;
+
     public void init() {
         isStopped = false;
     }
@@ -53,7 +56,7 @@ public abstract class KdcNetwork {
         this.udpAddress = udpAddress;
 
         tcpServer = new ServerSocket();
-        tcpServer.setSoTimeout(100);
+        tcpServer.setSoTimeout(KDC_TCP_SERVER_TIMEOUT);
         tcpServer.bind(tcpAddress);
 
         if (udpAddress != null) {
@@ -110,7 +113,7 @@ public abstract class KdcNetwork {
     private void checkAndAccept() throws IOException {
         Socket socket;
         if ((socket = tcpServer.accept()) != null) {
-            socket.setSoTimeout(3000); //TODO: from config
+            socket.setSoTimeout(KDC_TCP_TRANSPORT_TIMEOUT);
             KrbTransport transport = new KrbTcpTransport(socket);
             onNewTransport(transport);
         }
