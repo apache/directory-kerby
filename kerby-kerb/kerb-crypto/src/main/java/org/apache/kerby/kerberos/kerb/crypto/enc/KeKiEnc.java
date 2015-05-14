@@ -38,6 +38,17 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         return 0;
     }
 
+    @Override
+    protected int paddingLength(int inputLen) {
+        int payloadLen = confounderSize() + inputLen;
+        int padding = paddingSize();
+
+        if (padding == 0 || (payloadLen % padding) == 0) {
+            return 0;
+        }
+
+        return padding - (payloadLen % padding);
+    }
 
     @Override
     protected void encryptWith(byte[] workBuffer, int[] workLens,

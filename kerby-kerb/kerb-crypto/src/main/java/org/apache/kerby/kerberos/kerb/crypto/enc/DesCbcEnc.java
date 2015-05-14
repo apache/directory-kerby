@@ -45,6 +45,18 @@ abstract class DesCbcEnc extends AbstractEncTypeHandler {
     }
 
     @Override
+    protected int paddingLength(int inputLen) {
+        int payloadLen = confounderSize() + checksumSize() + inputLen;
+        int padding = paddingSize();
+
+        if (padding == 0 || (payloadLen % padding) == 0) {
+            return 0;
+        }
+
+        return padding - (payloadLen % padding);
+    }
+
+    @Override
     protected void encryptWith(byte[] workBuffer, int[] workLens,
                                  byte[] key, byte[] iv, int usage) throws KrbException {
         int confounderLen = workLens[0];

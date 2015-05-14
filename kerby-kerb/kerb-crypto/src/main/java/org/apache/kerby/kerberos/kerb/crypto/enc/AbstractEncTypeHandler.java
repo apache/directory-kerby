@@ -60,17 +60,7 @@ public abstract class AbstractEncTypeHandler
         return eType().getDisplayName();
     }
 
-    protected int paddingLength(int inputLen) {
-        int payloadLen = confounderSize() + checksumSize() + inputLen;
-        int padding = paddingSize();
-
-        if (padding == 0 || (payloadLen % padding) == 0) {
-            return 0;
-        }
-
-        return padding - (payloadLen % padding);
-    }
-
+    protected abstract int paddingLength(int inputLen);
     @Override
     public int keyInputSize() {
         return encProvider().keyInputSize();

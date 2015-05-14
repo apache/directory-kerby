@@ -38,10 +38,6 @@ public abstract class KeKiCmacEnc extends KeKiEnc {
 
     }
 
-    @Override
-    public int paddingSize() {
-        return 0;
-    }
 
     @Override
     public int checksumSize() {

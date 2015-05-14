@@ -32,6 +32,11 @@ public class Des3CbcSha1Enc extends KeKiHmacSha1Enc {
         keyMaker(new Des3KeyMaker(this.encProvider()));
     }
 
+    @Override
+    public int paddingSize() {
+        return encProvider().blockSize();
+    }
+
     public EncryptionType eType() {
         return EncryptionType.DES3_CBC_SHA1;
     }

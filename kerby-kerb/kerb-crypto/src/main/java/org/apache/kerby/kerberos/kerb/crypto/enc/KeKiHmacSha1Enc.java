@@ -35,11 +35,6 @@ public abstract class KeKiHmacSha1Enc extends KeKiEnc {
     }
 
     @Override
-    public int paddingSize() {
-        return 0;
-    }
-
-    @Override
     public byte[] prf(byte[] key, byte[] seed) throws KrbException {
         byte[] prfConst = "prf".getBytes();
         int cksumSize = (hashProvider().hashSize() / encProvider().blockSize()) * encProvider().blockSize();
