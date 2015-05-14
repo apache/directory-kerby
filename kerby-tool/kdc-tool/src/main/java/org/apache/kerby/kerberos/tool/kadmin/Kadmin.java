@@ -30,6 +30,7 @@ import org.apache.kerby.kerberos.tool.kadmin.executor.RenamePrincipalExecutor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Kadmin {
@@ -107,7 +108,18 @@ public class Kadmin {
     private static void initConfig(String[] args) {
         File confDir;
         if (args.length == 0) {
-            confDir = new File("/etc/kerby/");// for Linux. TODO: fix for Win etc.
+            String envDir;
+            try {
+                Map<String, String> mapEnv = System.getenv();
+                envDir = mapEnv.get("KRB5_KDC_DIR");
+            } catch (SecurityException e) {
+                envDir = null;
+            }
+            if(envDir != null) {
+                confDir = new File(envDir);
+            } else {
+                confDir = new File("/etc/kerby/");// for Linux. TODO: fix for Win etc.
+            }
         } else {
             confDir = new File(args[0]);
         }

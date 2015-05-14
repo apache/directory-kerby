@@ -30,6 +30,7 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * A krb client API for applications to interact with KDC
@@ -69,15 +70,33 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         krbConfig = (KrbConfig) commonOptions.getOptionValue(KrbOption.KRB_CONFIG);
         if (krbConfig == null) {
             krbConfig = new KrbConfig();
-
             File confDir = commonOptions.getDirOption(KrbOption.CONF_DIR);
-            if (confDir == null) {
-                confDir = new File("/etc/"); // for Linux. TODO: fix for Win etc.
-            }
-            if (confDir != null && confDir.exists()) {
-                File kdcConfFile = new File(confDir, "krb5.conf");
-                if (kdcConfFile.exists()) {
+            if(confDir == null) {
+                File kdcConfFile = null;
+                String krb5Conf;
+                try {
+                    Map<String, String> mapEnv = System.getenv();
+                    krb5Conf = mapEnv.get("KRB5_CONFIG");
+                } catch (SecurityException e) {
+                    krb5Conf = null;
+                }
+                if(krb5Conf != null) {
+                    kdcConfFile = new File(krb5Conf);
+                } else {
+                    confDir = new File("/etc/"); // for Linux. TODO: fix for Win etc.
+                    if (confDir.exists()) {
+                        kdcConfFile = new File(confDir, "krb5.conf");
+                    }
+                }
+                if (kdcConfFile != null && kdcConfFile.exists()) {
                     krbConfig.addIniConfig(kdcConfFile);
+                }
+            } else {
+                if (confDir.exists()) {
+                    File kdcConfFile = new File(confDir, "krb5.conf");
+                    if (kdcConfFile.exists()) {
+                        krbConfig.addIniConfig(kdcConfFile);
+                    }
                 }
             }
         }

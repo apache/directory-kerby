@@ -29,6 +29,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -98,7 +99,18 @@ public class KerbyKdcServer extends KdcServer {
             String confDir;
             String workDir;
             if(args.length == 1) {
-                confDir = "/etc/kerby/";
+                String envDir;
+                try {
+                    Map<String, String> mapEnv = System.getenv();
+                    envDir = mapEnv.get("KRB5_KDC_DIR");
+                } catch (SecurityException e) {
+                    envDir = null;
+                }
+                if(envDir != null) {
+                    confDir = envDir;
+                } else {
+                    confDir = "/etc/kerby/";
+                }
                 workDir = "/tmp/";
             } else if (args.length == 3) {
                 confDir = args[1];
