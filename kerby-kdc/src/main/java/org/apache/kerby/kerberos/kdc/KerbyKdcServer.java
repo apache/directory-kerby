@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kdc;
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
@@ -50,7 +51,7 @@ public class KerbyKdcServer extends KdcServer {
      * If no, add it to identity backend.
      */
     private void createTgtPrincipal() {
-        String tgtPrincipal = fixPrincipal("krbtgt");
+        String tgtPrincipal = KrbUtil.makeTgsPrincipal(getSetting().getKdcRealm()).getName();
         KrbIdentity tgtIdentity = getIdentityService().getIdentity(tgtPrincipal);
         if (tgtIdentity == null) {
             createPrincipals(tgtPrincipal);
