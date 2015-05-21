@@ -21,12 +21,7 @@ package org.apache.kerby.kerberos.tool.kadmin;
 
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
-import org.apache.kerby.kerberos.tool.kadmin.executor.AddPrincipalExecutor;
-import org.apache.kerby.kerberos.tool.kadmin.executor.DeletePrincipalExecutor;
-import org.apache.kerby.kerberos.tool.kadmin.executor.KadminCommandExecutor;
-import org.apache.kerby.kerberos.tool.kadmin.executor.KeytabAddExecutor;
-import org.apache.kerby.kerberos.tool.kadmin.executor.ModifyPrincipalExecutor;
-import org.apache.kerby.kerberos.tool.kadmin.executor.RenamePrincipalExecutor;
+import org.apache.kerby.kerberos.tool.kadmin.executor.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,6 +92,9 @@ public class Kadmin {
         } else if (command.startsWith("rename_principal") ||
                 command.startsWith("renprinc")) {
             executor = new RenamePrincipalExecutor(backendConfig);
+        } else if (command.startsWith("get_principal") || command.startsWith("getprinc") ||
+                command.startsWith("Get principal")) {
+            executor = new GetPrincipalExcutor(backendConfig);
         }
         if (executor == null) {
             System.out.println("Unknown request \"" + command + "\". Type \"?\" for a request list.");
