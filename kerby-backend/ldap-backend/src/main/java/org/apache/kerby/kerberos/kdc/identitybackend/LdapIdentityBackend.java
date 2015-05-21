@@ -80,4 +80,10 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     public List<String> getIdentities(int start, int limit) {
         return null;
     }
+
+    @Override
+    public List<String> getIdentities() {
+        //TODO
+        return null;
+    }
 }

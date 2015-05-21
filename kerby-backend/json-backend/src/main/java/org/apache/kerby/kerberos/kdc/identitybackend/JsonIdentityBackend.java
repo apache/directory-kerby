@@ -177,6 +177,14 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         return principals;
     }
 
+    @Override
+    public List<String> getIdentities() {
+        List<String> principals = new ArrayList<>(ids.keySet());
+        Collections.sort(principals);
+
+        return principals;
+    }
+
     private void createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(EncryptionKey.class, new EncryptionKeyAdapter());

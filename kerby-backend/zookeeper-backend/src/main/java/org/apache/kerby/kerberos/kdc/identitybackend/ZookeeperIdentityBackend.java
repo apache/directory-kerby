@@ -219,6 +219,12 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         return newIdentities.subList(start, limit);
     }
 
+    @Override
+    public List<String> getIdentities() {
+        //TODO
+        return null;
+    }
+
     private void setIdentity(KrbIdentity identity) throws KeeperException {
         String principalName = identity.getPrincipalName();
         principalName = replaceSlash(principalName);
