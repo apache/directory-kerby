@@ -22,17 +22,27 @@ package org.apache.kerby.kerberos.kerb.server.request;
 import org.apache.kerby.kerberos.kerb.*;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
+import org.apache.kerby.kerberos.kerb.crypto.CheckSumHandler;
+import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
+import org.apache.kerby.kerberos.kerb.crypto.fast.FastUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.KdcFastContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
+import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
+import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
 import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.fast.ArmorType;
+import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmor;
+import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmoredReq;
+import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.spec.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 
 import java.net.InetAddress;
@@ -59,6 +69,7 @@ public abstract class KdcRequest {
     private PreauthContext preauthContext;
     private KdcFastContext fastContext;
     private PrincipalName serverPrincipal;
+    private byte[] innerBodyout;
 
     public KdcRequest(KdcReq kdcReq, KdcContext kdcContext) {
         this.kdcReq = kdcReq;
@@ -83,12 +94,63 @@ public abstract class KdcRequest {
 
     public void process() throws KrbException {
         checkVersion();
+        kdcFindFast();
         checkClient();
         checkServer();
         preauth();
         authenticate();
         issueTicket();
         makeReply();
+    }
+
+    private void kdcFindFast() throws KrbException {
+
+        PaData paData = getKdcReq().getPaData();
+        for (PaDataEntry paEntry : paData.getElements()) {
+            if (paEntry.getPaDataType() == PaDataType.FX_FAST) {
+                KrbFastArmoredReq fastArmoredReq = KrbCodec.decode(paEntry.getPaDataValue(),
+                    KrbFastArmoredReq.class);
+                KrbFastArmor fastArmor = fastArmoredReq.getArmor();
+                armorApRequest(fastArmor);
+
+                EncryptedData encryptedData = fastArmoredReq.getEncryptedFastReq();
+                KrbFastReq fastReq = KrbCodec.decode(
+                    EncryptionHandler.decrypt(encryptedData, getArmorKey(), KeyUsage.FAST_ENC),
+                    KrbFastReq.class);
+                innerBodyout = fastReq.getKdcReqBody().encode();
+
+                // TODO: get checksumed date in stream
+                CheckSum checkSum = fastArmoredReq.getReqChecksum();
+                CheckSumHandler.verifyWithKey(checkSum, getKdcReq().getReqBody().encode(),
+                    getArmorKey().getKeyData(), KeyUsage.FAST_REQ_CHKSUM);
+            }
+        }
+    }
+
+    private void armorApRequest(KrbFastArmor fastArmor) throws KrbException {
+        if (fastArmor.getArmorType() == ArmorType.ARMOR_AP_REQUEST) {
+            ApReq apReq = KrbCodec.decode(fastArmor.getArmorValue(), ApReq.class);
+
+            Ticket ticket = apReq.getTicket();
+            EncryptionType encType = ticket.getEncryptedEncPart().getEType();
+            EncryptionKey tgsKey = getTgsEntry().getKeys().get(encType);
+            if (ticket.getTktvno() != KrbConstant.KRB_V5) {
+                throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
+            }
+
+            EncTicketPart encPart = EncryptionUtil.unseal(ticket.getEncryptedEncPart(),
+                tgsKey, KeyUsage.KDC_REP_TICKET, EncTicketPart.class);
+            ticket.setEncPart(encPart);
+
+            EncryptionKey encKey = ticket.getEncPart().getKey();
+
+            Authenticator authenticator = EncryptionUtil.unseal(apReq.getEncryptedAuthenticator(),
+                encKey, KeyUsage.AP_REQ_AUTH, Authenticator.class);
+
+            EncryptionKey armorKey = FastUtil.cf2(authenticator.getSubKey(), "subkeyarmor",
+                encKey, "ticketarmor");
+            setArmorKey(armorKey);
+        }
     }
 
     public KrbIdentity getTgsEntry() {
@@ -359,7 +421,15 @@ public abstract class KdcRequest {
         return fastContext.getArmorKey();
     }
 
+    public void setArmorKey(EncryptionKey armorKey) {
+        fastContext.setArmorKey(armorKey);
+    }
+
     public PrincipalName getServerPrincipal() {
         return serverPrincipal;
+    }
+
+    public byte[] getInnerBodyout() {
+        return innerBodyout;
     }
 }

@@ -22,13 +22,20 @@ package org.apache.kerby.kerberos.kerb.client.request;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.preauth.KrbFastContext;
+import org.apache.kerby.kerberos.kerb.client.preauth.KrbFastRequestState;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddress;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
@@ -60,8 +67,9 @@ public abstract class KdcRequest {
     private KdcRep kdcRep;
     protected Map<String, Object> credCache;
     private PreauthContext preauthContext;
-    private KrbFastContext fastContext;
+    private KrbFastRequestState fastRequestState;
     private EncryptionKey asKey;
+    private byte[] outerRequestBody;
 
     private boolean isRetrying;
 
@@ -71,7 +79,23 @@ public abstract class KdcRequest {
         this.credCache = new HashMap<String, Object>();
         this.preauthContext = context.getPreauthHandler()
                 .preparePreauthContext(this);
-        this.fastContext = new KrbFastContext();
+        this.fastRequestState = new KrbFastRequestState();
+    }
+
+    public KrbFastRequestState getFastRequestState() {
+        return fastRequestState;
+    }
+
+    public void setFastRequestState(KrbFastRequestState state) {
+        this.fastRequestState = state;
+    }
+
+    public byte[] getOuterRequestBody() {
+        return outerRequestBody;
+    }
+
+    public void setOuterRequestBody(byte[] outerRequestBody) {
+        this.outerRequestBody = outerRequestBody;
     }
 
     public void setSessionData(Object sessionData) {
@@ -319,7 +343,7 @@ public abstract class KdcRequest {
      * Get a pointer to the FAST armor key, or NULL if the client is not using FAST.
      */
     public EncryptionKey getArmorKey() {
-        return fastContext.getArmorKey();
+        return fastRequestState.getArmorKey();
     }
 
     /**
@@ -352,5 +376,16 @@ public abstract class KdcRequest {
      */
     public void cacheValue(String key, Object value) {
         credCache.put(key, value);
+    }
+
+    protected static Authenticator makeAuthenticator(PrincipalName clientName, String clientRealm, EncryptionKey subKey)
+        throws KrbException {
+        Authenticator authenticator = new Authenticator();
+        authenticator.setCname(clientName);
+        authenticator.setCrealm(clientRealm);
+        authenticator.setCtime(KerberosTime.now());
+        authenticator.setCusec(0);
+        authenticator.setSubKey(subKey);
+        return authenticator;
     }
 }
