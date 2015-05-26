@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.fast;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 
 /**
@@ -43,21 +43,21 @@ public class KrbFastReq extends KrbSequenceType {
     private static int REQ_BODY = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(FAST_OPTIONS, KrbFastArmor.class),
+            new Asn1FieldInfo(FAST_OPTIONS, FastOptions.class),
             new Asn1FieldInfo(PADATA, PaData.class),
-            new Asn1FieldInfo(REQ_BODY, EncryptedData.class),
+            new Asn1FieldInfo(REQ_BODY, KdcReqBody.class),
     };
 
     public KrbFastReq() {
         super(fieldInfos);
     }
 
-    public KrbFastArmor getArmor() {
-        return getFieldAs(FAST_OPTIONS, KrbFastArmor.class);
+    public FastOptions getFastOptions() {
+        return getFieldAs(FAST_OPTIONS, FastOptions.class);
     }
 
-    public void setArmor(KrbFastArmor armor) {
-        setFieldAs(FAST_OPTIONS, armor);
+    public void setFastOptions(FastOptions fastOptions) {
+        setFieldAs(FAST_OPTIONS, fastOptions);
     }
 
     public PaData getPaData() {
@@ -68,11 +68,11 @@ public class KrbFastReq extends KrbSequenceType {
         setFieldAs(PADATA, paData);
     }
 
-    public EncryptedData getEncFastReq() {
-        return getFieldAs(REQ_BODY, EncryptedData.class);
+    public KdcReqBody getKdcReqBody() {
+        return getFieldAs(REQ_BODY, KdcReqBody.class);
     }
 
-    public void setEncFastReq(EncryptedData encFastReq) {
-        setFieldAs(REQ_BODY, encFastReq);
+    public void setKdcReqBody(KdcReqBody kdcReqBody) {
+        setFieldAs(REQ_BODY, kdcReqBody);
     }
 }
