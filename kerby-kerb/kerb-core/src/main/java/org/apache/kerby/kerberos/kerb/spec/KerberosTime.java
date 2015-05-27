@@ -57,12 +57,15 @@ public class KerberosTime extends Asn1GeneralizedTime {
     }
 
     /**
-     * time in milliseconds
+     * @param time set time in milliseconds
      */
     public void setTime(long time) {
         setValue(new Date(time));
     }
 
+    /**
+     * get the time in seconds
+     */
     public long getTimeInSeconds() {
         return getTime() / 1000;
     }
@@ -71,10 +74,16 @@ public class KerberosTime extends Asn1GeneralizedTime {
         return getValue().compareTo(ktime.getValue()) < 0;
     }
 
+    /**
+     * @param time in milliseconds
+     */
     public boolean lessThan(long time) {
-        return getValue().getTime() <= time * 1000;
+        return getValue().getTime() <= time;
     }
 
+    /**
+     * @param ktime compare with milliseconds
+     */
     public boolean greaterThan(KerberosTime ktime) {
         return getValue().compareTo(ktime.getValue()) > 0;
     }

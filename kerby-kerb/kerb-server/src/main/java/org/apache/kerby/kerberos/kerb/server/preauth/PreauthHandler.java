@@ -19,11 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.builtin.EncTsPreauth;
 import org.apache.kerby.kerberos.kerb.server.preauth.builtin.TgtPreauth;
+import org.apache.kerby.kerberos.kerb.server.preauth.token.TokenPreauth;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
@@ -49,6 +50,9 @@ public class PreauthHandler {
         preauths.add(preauth);
 
         preauth = new TgtPreauth();
+        preauths.add(preauth);
+
+        preauth = new TokenPreauth();
         preauths.add(preauth);
     }
 
@@ -119,5 +123,14 @@ public class PreauthHandler {
         for (KdcPreauth preauth : preauths) {
             preauth.destroy();
         }
+    }
+
+    public static boolean isToken(PaData paData) {
+        for (PaDataEntry paEntry : paData.getElements()) {
+            if (paEntry.getPaDataType() == PaDataType.TOKEN_REQUEST) {
+                return true;
+            }
+        }
+        return false;
     }
 }

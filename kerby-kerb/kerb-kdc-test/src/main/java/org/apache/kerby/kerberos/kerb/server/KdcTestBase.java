@@ -84,6 +84,10 @@ public abstract class KdcTestBase {
         FileUtils.deleteDirectory(TEST_DIR);
     }
 
+    public File getTestDir() {
+        return TEST_DIR;
+    }
+
     protected boolean allowUdp() {
         return true;
     }
@@ -194,7 +198,7 @@ public abstract class KdcTestBase {
             krbClnt.setKdcUdpPort(udpPort);
         }
 
-        krbClnt.setTimeout(50);
+        krbClnt.setTimeout(1000);
         krbClnt.setKdcRealm(kdcServer.getKdcRealm());
     }
 

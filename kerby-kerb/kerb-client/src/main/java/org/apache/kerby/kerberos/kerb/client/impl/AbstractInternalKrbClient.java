@@ -116,6 +116,8 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             asRequest = new AsRequestWithCert(context);
         } else if (requestOptions.contains(KrbOption.USE_TOKEN)) {
             asRequest = new AsRequestWithToken(context);
+        } else if (requestOptions.contains(KrbOption.TOKEN_USER_ID_TOKEN)) {
+            asRequest = new AsRequestWithToken(context);
         }
 
         if (asRequest == null) {

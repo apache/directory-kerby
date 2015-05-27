@@ -19,7 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.server.request;
 
-import org.apache.kerby.kerberos.kerb.*;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbConstant;
+import org.apache.kerby.kerberos.kerb.KrbErrorCode;
+import org.apache.kerby.kerberos.kerb.KrbErrorException;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.crypto.CheckSumHandler;
@@ -32,7 +36,20 @@ import org.apache.kerby.kerberos.kerb.server.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2Entry;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfoEntry;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
+import org.apache.kerby.kerberos.kerb.spec.base.MethodData;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.fast.ArmorType;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmor;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmoredReq;
@@ -70,6 +87,8 @@ public abstract class KdcRequest {
     private KdcFastContext fastContext;
     private PrincipalName serverPrincipal;
     private byte[] innerBodyout;
+    private AuthToken token;
+    private Boolean isToken = false;
 
     public KdcRequest(KdcReq kdcReq, KdcContext kdcContext) {
         this.kdcReq = kdcReq;
@@ -94,13 +113,26 @@ public abstract class KdcRequest {
 
     public void process() throws KrbException {
         checkVersion();
+        checkTgsEntry();
         kdcFindFast();
-        checkClient();
-        checkServer();
-        preauth();
+        if (PreauthHandler.isToken(getKdcReq().getPaData())) {
+            isToken = true;
+            preauth();
+            checkClient();
+            checkServer();
+        } else {
+            checkClient();
+            checkServer();
+            preauth();
+        }
         authenticate();
         issueTicket();
         makeReply();
+    }
+
+    private void checkTgsEntry() throws KrbException {
+        KrbIdentity tgsEntry = getEntry(getTgsPrincipal().getName());
+        setTgsEntry(tgsEntry);
     }
 
     private void kdcFindFast() throws KrbException {
@@ -264,16 +296,18 @@ public abstract class KdcRequest {
     protected void checkPolicy() throws KrbException {
         KrbIdentity entry = getClientEntry();
 
-        if (entry.isDisabled()) {
-            throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
-        }
+        // if we can not get the client entry, maybe it is token preauth, ignore it.
+        if (entry != null) {
+            if (entry.isDisabled()) {
+                throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
+            }
 
-        if (entry.isLocked()) {
-            throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
-        }
-
-        if (entry.getExpireTime().lessThan(new Date().getTime())) {
-            throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
+            if (entry.isLocked()) {
+                throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
+            }
+            if (entry.getExpireTime().lessThan(new Date().getTime())) {
+                throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
+            }
         }
     }
 
@@ -281,6 +315,10 @@ public abstract class KdcRequest {
 
     protected void preauth() throws KrbException {
         KdcReq request = getKdcReq();
+
+        if (!kdcContext.getConfig().isAllowTokenPreauth()) {
+            return;
+        }
 
         PaData preAuthData = request.getPaData();
 
@@ -330,9 +368,6 @@ public abstract class KdcRequest {
 
     private void checkServer() throws KrbException {
         KdcReq request = getKdcReq();
-
-        KrbIdentity tgsEntry = getEntry(getTgsPrincipal().getName());
-        setTgsEntry(tgsEntry);
 
         PrincipalName principal = request.getReqBody().getSname();
         String serverRealm = request.getReqBody().getRealm();
@@ -407,9 +442,9 @@ public abstract class KdcRequest {
         }
 
         if (entry == null) {
-            throw new KrbException(krbErrorCode);
+            // Maybe it is the token preauth, now we ignore check client entry.
+            return null;
         }
-
         return entry;
     }
 
@@ -431,5 +466,17 @@ public abstract class KdcRequest {
 
     public byte[] getInnerBodyout() {
         return innerBodyout;
+    }
+
+    public boolean isToken() {
+        return isToken;
+    }
+
+    public void setToken(AuthToken authToken) {
+        this.token = authToken;
+    }
+
+    public AuthToken getToken() {
+        return token;
     }
 }

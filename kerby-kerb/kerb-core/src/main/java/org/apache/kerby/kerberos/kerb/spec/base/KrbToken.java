@@ -58,14 +58,20 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
         super(fieldInfos);
     }
 
-    @Override
-    public void encode(ByteBuffer buffer) {
+    public KrbToken(AuthToken authToken, TokenFormat format) {
+        this();
+
+        this.innerToken = authToken;
+        setTokenFormat(format);
         try {
-            setTokenValue(getTokenEncoder().encodeAsBytes(this));
+            setTokenValue(getTokenEncoder().encodeAsBytes(innerToken));
         } catch (KrbException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to encode AuthToken", e);
         }
-        super.encode(buffer);
+    }
+
+    public AuthToken getAuthToken() {
+        return innerToken;
     }
 
     @Override
@@ -192,6 +198,6 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     @Override
     public void addAttribute(String name, Object value) {
-
+        innerToken.addAttribute(name, value);
     }
 }

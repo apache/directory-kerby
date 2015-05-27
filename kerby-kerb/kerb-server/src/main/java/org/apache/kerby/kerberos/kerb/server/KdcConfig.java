@@ -86,6 +86,10 @@ public class KdcConfig extends Conf {
         return getBoolean(KdcConfigKey.PREAUTH_REQUIRED);
     }
 
+    public boolean isAllowTokenPreauth() {
+        return getBoolean(KdcConfigKey.ALLOW_TOKEN_PREAUTH);
+    }
+
     public long getAllowableClockSkew() {
         return getLong(KdcConfigKey.ALLOWABLE_CLOCKSKEW);
     }

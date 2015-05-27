@@ -19,19 +19,32 @@
  */
 package org.apache.kerby.kerberos.kerb.server.request;
 
-import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbConstant;
+import org.apache.kerby.kerberos.kerb.KrbErrorCode;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
-import org.apache.kerby.kerberos.kerb.KrbConstant;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApOption;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
-import org.apache.kerby.kerberos.kerb.spec.kdc.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReq;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReqEntry;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReqType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
+import org.apache.kerby.kerberos.kerb.spec.kdc.EncTgsRepPart;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
+import org.apache.kerby.kerberos.kerb.spec.kdc.TgsRep;
+import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
@@ -156,7 +169,11 @@ public class TgsRequest extends KdcRequest {
 
         TgsRep reply = new TgsRep();
 
-        reply.setCname(getClientEntry().getPrincipal());
+        if (getClientEntry() == null) {
+            reply.setCname(ticket.getEncPart().getCname());
+        } else {
+            reply.setCname(getClientEntry().getPrincipal());
+        }
         reply.setCrealm(getKdcContext().getKdcRealm());
         reply.setTicket(ticket);
 

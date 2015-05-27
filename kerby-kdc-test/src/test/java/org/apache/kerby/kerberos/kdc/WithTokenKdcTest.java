@@ -21,14 +21,19 @@ package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.ccache.Credential;
+import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
+import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
 import org.junit.Before;
+import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,11 +41,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WithTokenKdcTest extends KdcTestBase {
+
     static final String SUBJECT = "test-sub";
     static final String AUDIENCE = "krbtgt@EXAMPLE.COM";
     static final String ISSUER = "oauth2.com";
     static final String GROUP = "sales-group";
     static final String ROLE = "ADMIN";
+    private File cCacheFile;
 
     private TokenEncoder tokenEncoder;
 
@@ -83,24 +90,61 @@ public class WithTokenKdcTest extends KdcTestBase {
     @Override
     protected void prepareKdcServer() throws Exception {
         super.prepareKdcServer();
-        kdcServer.createPrincipals(clientPrincipal);
     }
 
-    //@Test
+    @Override
+    protected void createPrincipals() {
+        super.createPrincipals();
+        kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);
+    }
+
+    @Test
     public void testKdc() throws Exception {
         kdcServer.start();
         krbClnt.init();
 
-        TgtTicket tgt;
+        createCredentialCache(clientPrincipal, TEST_PASSWORD);
+
+        TgtTicket tgt = null;
         try {
-            tgt = krbClnt.requestTgtWithToken(authToken);
-        } catch (KrbException te) {
-            assertThat(te.getMessage().contains("timeout")).isTrue();
+            tgt = krbClnt.requestTgtWithToken(authToken, cCacheFile.getPath());
+        } catch (KrbException e) {
+            assertThat(e.getMessage().contains("timeout")).isTrue();
             return;
         }
-        assertThat(tgt).isNull();
+        assertThat(tgt).isNotNull();
+        assertThat(tgt.getClientPrincipal()).isEqualTo(SUBJECT + "@" + kdcRealm);
+        assertThat(tgt.getRealm()).isEqualTo(kdcRealm);
+        assertThat(tgt.getTicket()).isNotNull();
+        assertThat(tgt.getEncKdcRepPart()).isNotNull();
+        assertThat(tgt.getSessionKey()).isNotNull();
 
         ServiceTicket tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
-        assertThat(tkt).isNull();
+        assertThat(tkt).isNotNull();
+        assertThat(tkt.getRealm()).isEqualTo(kdcRealm);
+        assertThat(tkt.getTicket()).isNotNull();
+        assertThat(tkt.getSessionKey()).isNotNull();
+        assertThat(tkt.getEncKdcRepPart()).isNotNull();
+    }
+
+    private void createCredentialCache(String principal,
+                                       String password) throws Exception {
+        TgtTicket tgt = krbClnt.requestTgtWithPassword(principal, password);
+        writeTgtToCache(tgt, principal);
+    }
+
+    /**
+     * Write tgt into credentials cache.
+     */
+    private void writeTgtToCache(
+            TgtTicket tgt, String principal) throws IOException {
+        Credential credential = new Credential(tgt);
+        CredentialCache cCache = new CredentialCache();
+        cCache.addCredential(credential);
+        cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
+
+        String fileName = "krb5_" + principal + ".cc";
+        cCacheFile = new File(getTestDir().getPath(), fileName);
+        cCache.store(cCacheFile);
     }
 }

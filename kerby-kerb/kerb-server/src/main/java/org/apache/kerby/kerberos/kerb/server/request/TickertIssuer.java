@@ -65,7 +65,7 @@ public abstract class TickertIssuer {
         EncryptionKey encryptionKey = getTicketEncryptionKey();
 
         EncryptedData encryptedData = EncryptionUtil.seal(encTicketPart,
-                encryptionKey, KeyUsage.KDC_REP_TICKET);
+            encryptionKey, KeyUsage.KDC_REP_TICKET);
         issuedTicket.setEncryptedEncPart(encryptedData);
         issuedTicket.setEncPart(encTicketPart);
 
@@ -201,7 +201,11 @@ public abstract class TickertIssuer {
     }
 
     protected PrincipalName getclientPrincipal() {
-        return getKdcReq().getReqBody().getCname();
+        if (kdcRequest.isToken()) {
+            return new PrincipalName(kdcRequest.getToken().getSubject());
+        } else {
+            return getKdcReq().getReqBody().getCname();
+        }
     }
 
     protected PrincipalName getServerPrincipal() {

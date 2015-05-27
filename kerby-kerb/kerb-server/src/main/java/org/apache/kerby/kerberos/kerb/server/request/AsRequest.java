@@ -24,8 +24,19 @@ import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
-import org.apache.kerby.kerberos.kerb.spec.kdc.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReq;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReqEntry;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReqType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.kdc.AsRep;
+import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
+import org.apache.kerby.kerberos.kerb.spec.kdc.EncAsRepPart;
+import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlag;
 
@@ -37,16 +48,26 @@ public class AsRequest extends KdcRequest {
 
     @Override
     protected void checkClient() throws KrbException {
-        KdcReq request = getKdcReq();
 
-        PrincipalName clientPrincipal = request.getReqBody().getCname();
+        KdcReq request = getKdcReq();
+        PrincipalName clientPrincipal;
+        if (isToken()) {
+            clientPrincipal = new PrincipalName(getToken().getSubject());
+        } else {
+            clientPrincipal = request.getReqBody().getCname();
+        }
         String clientRealm = request.getReqBody().getRealm();
         if (clientRealm == null || clientRealm.isEmpty()) {
             clientRealm = getKdcContext().getKdcRealm();
         }
         clientPrincipal.setRealm(clientRealm);
-
-        KrbIdentity clientEntry = getEntry(clientPrincipal.getName());
+        KrbIdentity clientEntry;
+        if (isToken()) {
+            clientEntry = new KrbIdentity(clientPrincipal.getName());
+            clientEntry.setExpireTime(new KerberosTime(getToken().getExpiredTime().getTime()));
+        } else {
+            clientEntry = getEntry(clientPrincipal.getName());
+        }
         setClientEntry(clientEntry);
 
         for (EncryptionType encType : request.getReqBody().getEtypes()) {
@@ -67,20 +88,21 @@ public class AsRequest extends KdcRequest {
 
     @Override
     protected void makeReply() throws KrbException {
+
         Ticket ticket = getTicket();
 
         AsRep reply = new AsRep();
+        reply.setTicket(ticket);
 
         reply.setCname(getClientEntry().getPrincipal());
         reply.setCrealm(getKdcContext().getKdcRealm());
-        reply.setTicket(ticket);
 
         EncKdcRepPart encKdcRepPart = makeEncKdcRepPart();
         reply.setEncPart(encKdcRepPart);
 
         EncryptionKey clientKey = getClientKey();
         EncryptedData encryptedData = EncryptionUtil.seal(encKdcRepPart,
-                clientKey, KeyUsage.AS_REP_ENCPART);
+            clientKey, KeyUsage.AS_REP_ENCPART);
         reply.setEncryptedEncPart(encryptedData);
 
         setReply(reply);

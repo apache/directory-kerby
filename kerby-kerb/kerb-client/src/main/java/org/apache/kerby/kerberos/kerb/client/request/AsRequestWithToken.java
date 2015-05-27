@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.client.request;
 
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
@@ -34,11 +33,6 @@ public class AsRequestWithToken extends ArmoredAsRequest {
         super(context);
 
         setAllowedPreauth(PaDataType.TOKEN_REQUEST);
-    }
-
-    @Override
-    public void process() throws KrbException {
-        throw new RuntimeException("To be implemented");
     }
 
     @Override

@@ -33,6 +33,7 @@ public enum KdcConfigKey implements SectionConfigKey {
     KDC_DOMAIN("example.com"),
     KDC_REALM("EXAMPLE.COM", "kdcdefaults"),
     PREAUTH_REQUIRED(true),
+    ALLOW_TOKEN_PREAUTH(true),
     ALLOWABLE_CLOCKSKEW(5 * 60L),
     EMPTY_ADDRESSES_ALLOWED(true),
     PA_ENC_TIMESTAMP_REQUIRED(true),

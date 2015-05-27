@@ -94,7 +94,7 @@ public class TgsRequest extends KdcRequest {
         EncryptedData authnData = EncryptionUtil.seal(authenticator,
                 sessionKey, KeyUsage.TGS_REQ_AUTH);
         apReq.setEncryptedAuthenticator(authnData);
-
+        apReq.setAuthenticator(authenticator);
         apReq.setTicket(tgt.getTicket());
         ApOptions apOptions = new ApOptions();
         apReq.setApOptions(apOptions);
