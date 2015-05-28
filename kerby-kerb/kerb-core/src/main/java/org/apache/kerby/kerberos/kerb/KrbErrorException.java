@@ -29,7 +29,7 @@ public class KrbErrorException extends KrbException {
     private KrbError krbError;
 
     public KrbErrorException(KrbError krbError) {
-        super(krbError.getErrorCode().getMessage());
+        super(krbError.getErrorCode(), krbError.getErrorCode().getMessage());
         this.krbError = krbError;
     }
 

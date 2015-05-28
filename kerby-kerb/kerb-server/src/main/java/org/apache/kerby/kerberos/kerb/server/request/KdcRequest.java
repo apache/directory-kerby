@@ -153,6 +153,9 @@ public abstract class KdcRequest {
 
                 // TODO: get checksumed date in stream
                 CheckSum checkSum = fastArmoredReq.getReqChecksum();
+                if(checkSum == null) {
+                    throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED);
+                }
                 CheckSumHandler.verifyWithKey(checkSum, getKdcReq().getReqBody().encode(),
                     getArmorKey().getKeyData(), KeyUsage.FAST_REQ_CHKSUM);
             }

@@ -89,7 +89,7 @@ public class KrbError extends KrbMessage {
     }
 
     public void setCusec(int cusec) {
-        setFieldAsInt(0, cusec);
+        setFieldAsInt(CUSEC, cusec);
     }
 
     public KerberosTime getStime() {
@@ -105,7 +105,7 @@ public class KrbError extends KrbMessage {
     }
 
     public void setSusec(int susec) {
-        setFieldAsInt(0, susec);
+        setFieldAsInt(SUSEC, susec);
     }
 
     public KrbErrorCode getErrorCode() {
@@ -113,7 +113,7 @@ public class KrbError extends KrbMessage {
     }
 
     public void setErrorCode(KrbErrorCode errorCode) {
-        setField(0, errorCode);
+        setField(ERROR_CODE, errorCode);
     }
 
     public String getCrealm() {

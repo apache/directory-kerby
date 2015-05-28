@@ -23,6 +23,7 @@ import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.type.AbstractAsn1Type;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.spec.kdc.AsRep;
@@ -83,6 +84,8 @@ public class KrbCodec {
             msg = new ApReq();
         } else if (msgType == KrbMessageType.AP_REP) {
             msg = new ApReq();
+        } else if (msgType == KrbMessageType.KRB_ERROR) {
+            msg = new KrbError();
         } else {
             throw new IOException("To be supported krb message type with tag: " + tag);
         }

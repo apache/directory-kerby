@@ -23,6 +23,7 @@ import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
@@ -80,6 +81,11 @@ public abstract class KrbHandler {
             kdcRequest.processResponse((KdcRep) kdcRep);
         } else if (messageType == KrbMessageType.TGS_REP) {
             kdcRequest.processResponse((KdcRep) kdcRep);
+        } else if (messageType == KrbMessageType.KRB_ERROR) {
+            KrbError error = (KrbError) kdcRep;
+            //TODO: Should use the error message, now only print it.
+            System.out.println("KDC server responsed with message: " +
+                    error.getErrorCode().getMessage());
         }
     }
 

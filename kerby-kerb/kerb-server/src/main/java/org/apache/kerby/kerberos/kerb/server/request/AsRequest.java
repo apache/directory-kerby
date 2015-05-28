@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.server.request;
 
+import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
@@ -55,6 +56,9 @@ public class AsRequest extends KdcRequest {
             clientPrincipal = new PrincipalName(getToken().getSubject());
         } else {
             clientPrincipal = request.getReqBody().getCname();
+        }
+        if(clientPrincipal == null) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
         }
         String clientRealm = request.getReqBody().getRealm();
         if (clientRealm == null || clientRealm.isEmpty()) {
