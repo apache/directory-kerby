@@ -30,6 +30,8 @@ import java.io.File;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class KerbyKdcTest extends KdcTestBase {
+    private String clientPrincipal;
+    private String serverPrincipal;
 
     @Override
     protected void prepareKdcServer() throws Exception {
@@ -40,6 +42,7 @@ public abstract class KerbyKdcTest extends KdcTestBase {
     @Override
     protected void createPrincipals() {
         super.createPrincipals();
+        clientPrincipal = getClientPrincipal();
         kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);
     }
 
@@ -58,6 +61,7 @@ public abstract class KerbyKdcTest extends KdcTestBase {
             tgt = krbClnt.requestTgtWithPassword(clientPrincipal, TEST_PASSWORD);
             assertThat(tgt).isNotNull();
 
+            serverPrincipal = getServerPrincipal();
             tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {

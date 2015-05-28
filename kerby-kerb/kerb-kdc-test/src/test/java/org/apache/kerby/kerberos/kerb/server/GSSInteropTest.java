@@ -46,6 +46,8 @@ import java.util.Set;
  * This is an interop test using the Java GSS APIs against the Kerby KDC
  */
 public class GSSInteropTest extends KdcTest {
+    private String clientPrincipal;
+    private String serverPrincipal;
 
     @Override
     protected void setUpKdcServer() throws Exception {
@@ -59,7 +61,9 @@ public class GSSInteropTest extends KdcTest {
 
         kdcRealm = kdcServer.getKdcRealm();
         clientPrincipal = "drankye@" + kdcRealm;
+        setClientPrincipal(clientPrincipal);
         serverPrincipal = "test-service/localhost@" + kdcRealm;
+        setServerPrincipal(serverPrincipal);
     }
 
     @Override

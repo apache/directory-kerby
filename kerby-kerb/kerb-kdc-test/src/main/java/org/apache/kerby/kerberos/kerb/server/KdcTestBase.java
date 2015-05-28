@@ -37,11 +37,11 @@ import java.net.ServerSocket;
 
 public abstract class KdcTestBase {
     protected static final String TEST_PASSWORD = "123456";
-    private static File TEST_DIR;
+    private static File testDir;
 
     protected String kdcRealm;
-    protected String clientPrincipal;
-    protected String serverPrincipal;
+    private String clientPrincipal;
+    private String serverPrincipal;
 
     protected String hostname = "localhost";
     protected int tcpPort = -1;
@@ -75,17 +75,33 @@ public abstract class KdcTestBase {
             basedir = new File(".").getCanonicalPath();
         }
         File targetdir= new File(basedir, "target");
-        TEST_DIR = new File(targetdir, "tmp");
-        TEST_DIR.mkdirs();
+        testDir = new File(targetdir, "tmp");
+        testDir.mkdirs();
     }
 
     @AfterClass
     public static void deleteTestDir() throws IOException {
-        FileUtils.deleteDirectory(TEST_DIR);
+        FileUtils.deleteDirectory(testDir);
     }
 
     public File getTestDir() {
-        return TEST_DIR;
+        return testDir;
+    }
+
+    protected void setClientPrincipal(String clientPrincipal) {
+        this.clientPrincipal = clientPrincipal;
+    }
+
+    protected String getClientPrincipal() {
+        return this.clientPrincipal;
+    }
+
+    protected void setServerPrincipal(String serverPrincipal) {
+        this.serverPrincipal = serverPrincipal;
+    }
+
+    protected String getServerPrincipal() {
+        return this.serverPrincipal;
     }
 
     protected boolean allowUdp() {
@@ -104,7 +120,7 @@ public abstract class KdcTestBase {
     }
 
     public String writeToTestDir(String content, String fileName) throws IOException {
-        File file = new File(TEST_DIR, fileName);
+        File file = new File(testDir, fileName);
         if (file.exists()) {
             file.delete();
         }

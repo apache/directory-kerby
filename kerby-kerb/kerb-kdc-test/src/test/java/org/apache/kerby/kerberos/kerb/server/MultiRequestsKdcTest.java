@@ -29,12 +29,14 @@ import java.io.File;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MultiRequestsKdcTest extends KdcTestBase {
-
+    private String clientPrincipal;
+    private String serverPrincipal;
     private String password = "123456";
 
     @Override
     protected void createPrincipals() {
         super.createPrincipals();
+        clientPrincipal = getClientPrincipal();
         kdcServer.createPrincipal(clientPrincipal, password);
     }
 
@@ -55,6 +57,7 @@ public class MultiRequestsKdcTest extends KdcTestBase {
             tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
             assertThat(tgt).isNotNull();
 
+            serverPrincipal = getServerPrincipal();
             tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {

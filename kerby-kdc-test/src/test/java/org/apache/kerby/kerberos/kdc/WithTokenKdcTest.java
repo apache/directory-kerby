@@ -41,7 +41,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WithTokenKdcTest extends KdcTestBase {
-
     static final String SUBJECT = "test-sub";
     static final String AUDIENCE = "krbtgt@EXAMPLE.COM";
     static final String ISSUER = "oauth2.com";
@@ -52,6 +51,9 @@ public class WithTokenKdcTest extends KdcTestBase {
     private TokenEncoder tokenEncoder;
 
     private AuthToken authToken;
+
+    private String clientPrincipal;
+    private String serverPrincipal;
 
     @Before
     public void setUp() throws Exception {
@@ -95,6 +97,7 @@ public class WithTokenKdcTest extends KdcTestBase {
     @Override
     protected void createPrincipals() {
         super.createPrincipals();
+        clientPrincipal = getClientPrincipal();
         kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);
     }
 
@@ -119,6 +122,7 @@ public class WithTokenKdcTest extends KdcTestBase {
         assertThat(tgt.getEncKdcRepPart()).isNotNull();
         assertThat(tgt.getSessionKey()).isNotNull();
 
+        serverPrincipal = getServerPrincipal();
         ServiceTicket tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
         assertThat(tkt).isNotNull();
         assertThat(tkt.getRealm()).isEqualTo(kdcRealm);

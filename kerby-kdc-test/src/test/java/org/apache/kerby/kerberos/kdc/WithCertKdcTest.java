@@ -45,7 +45,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class WithCertKdcTest extends KdcTestBase {
     private PkiLoader pkiLoader;
-
+    private String clientPrincipal;
+    private String serverPrincipal;
     private Certificate userCert;
     private PrivateKey userKey;
 
@@ -67,6 +68,7 @@ public class WithCertKdcTest extends KdcTestBase {
     @Override
     protected void prepareKdcServer() throws Exception {
         super.prepareKdcServer();
+        clientPrincipal = getClientPrincipal();
         kdcServer.createPrincipals(clientPrincipal);
     }
 
@@ -86,6 +88,7 @@ public class WithCertKdcTest extends KdcTestBase {
         }
         assertThat(tgt).isNull();
 
+        serverPrincipal = getServerPrincipal();
         ServiceTicket tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
         assertThat(tkt).isNull();
     }
