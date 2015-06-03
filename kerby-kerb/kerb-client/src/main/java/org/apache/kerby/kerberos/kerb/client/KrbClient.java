@@ -160,7 +160,6 @@ public class KrbClient {
      */
     public TgtTicket requestTgtWithPassword(String principal,
                                       String password) throws KrbException {
-
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.CLIENT_PRINCIPAL, principal);
         requestOptions.add(KrbOption.USE_PASSWD, true);
@@ -177,7 +176,6 @@ public class KrbClient {
      */
     public TgtTicket requestTgtWithKeytab(String principal,
                                       String keytabFile) throws KrbException {
-
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.CLIENT_PRINCIPAL, principal);
         requestOptions.add(KrbOption.USE_KEYTAB, true);
@@ -267,5 +265,4 @@ public class KrbClient {
         }
         return innerClient.requestServiceTicketWithAccessToken(token, serverPrincipal);
     }
-
 }
