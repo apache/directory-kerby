@@ -19,12 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.builtin;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
-import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
+import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithTgt;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.preauth.builtin.TgtPreauthMeta;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
@@ -55,7 +55,7 @@ public class TgtPreauth extends AbstractPreauthPlugin {
 
     private PaDataEntry makeEntry(KdcRequest kdcRequest) throws KrbException {
 
-        TgsRequest tgsRequest = (TgsRequest) kdcRequest;
+        TgsRequestWithTgt tgsRequest = (TgsRequestWithTgt) kdcRequest;
 
         PaDataEntry paEntry = new PaDataEntry();
         paEntry.setPaDataType(PaDataType.TGS_REQ);

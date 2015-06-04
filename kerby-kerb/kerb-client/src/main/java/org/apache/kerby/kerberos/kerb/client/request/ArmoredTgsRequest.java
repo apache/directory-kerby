@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.kerb.client.request;
 
@@ -24,13 +24,11 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 
-/**
- * This initiates an armor protected AS-REQ using FAST/Pre-auth.
- */
-public abstract class ArmoredAsRequest extends AsRequest {
+public class ArmoredTgsRequest extends TgsRequest {
+
     private final ArmoredRequest armoredRequest;
 
-    public ArmoredAsRequest(KrbContext context) {
+    public ArmoredTgsRequest(KrbContext context) {
         super(context);
         armoredRequest = new ArmoredRequest(this);
     }
@@ -55,5 +53,10 @@ public abstract class ArmoredAsRequest extends AsRequest {
     @Override
     public EncryptionKey getClientKey() throws KrbException {
         return armoredRequest.getClientKey();
+    }
+
+    @Override
+    public EncryptionKey getSessionKey() {
+        return armoredRequest.getArmorCacheKey();
     }
 }

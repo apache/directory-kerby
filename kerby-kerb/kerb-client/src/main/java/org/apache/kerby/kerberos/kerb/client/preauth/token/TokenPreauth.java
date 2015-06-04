@@ -36,7 +36,6 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbToken;
-import org.apache.kerby.kerberos.kerb.spec.base.TokenFormat;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
@@ -140,12 +139,19 @@ public class TokenPreauth extends AbstractPreauthPlugin {
     private PaDataEntry makeEntry(KdcRequest kdcRequest) throws KrbException {
         KOptions options = kdcRequest.getPreauthOptions();
 
-        KOption option = options.getOption(KrbOption.TOKEN_USER_ID_TOKEN);
-        AuthToken authToken = (AuthToken)option.getValue();
+        KOption idToken = options.getOption(KrbOption.TOKEN_USER_ID_TOKEN);
+        KOption acToken = options.getOption(KrbOption.TOKEN_USER_AC_TOKEN);
+        AuthToken authToken;
+        if (idToken != null) {
+            authToken = (AuthToken) idToken.getValue();
+        } else if(acToken != null) {
+            authToken = (AuthToken) acToken.getValue();
+        } else {
+            throw new KrbException("missing token.");
+        }
 
-        KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
         PaTokenRequest tokenPa = new PaTokenRequest();
-        tokenPa.setToken(krbToken);
+        tokenPa.setToken((KrbToken)authToken);
         TokenInfo info = new TokenInfo();
         info.setTokenVendor("vendor");
         tokenPa.setTokenInfo(info);

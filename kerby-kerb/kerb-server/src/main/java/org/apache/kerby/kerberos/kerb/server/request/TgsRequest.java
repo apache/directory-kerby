@@ -180,7 +180,12 @@ public class TgsRequest extends KdcRequest {
         EncKdcRepPart encKdcRepPart = makeEncKdcRepPart();
         reply.setEncPart(encKdcRepPart);
 
-        EncryptionKey sessionKey = getTgtSessionKey();
+        EncryptionKey sessionKey;
+        if(getToken() != null) {
+            sessionKey = getSessionKey();
+        } else {
+            sessionKey = getTgtSessionKey();
+        }
         EncryptedData encryptedData = EncryptionUtil.seal(encKdcRepPart,
                 sessionKey, KeyUsage.TGS_REP_ENCPART_SESSKEY);
         reply.setEncryptedEncPart(encryptedData);
@@ -223,10 +228,6 @@ public class TgsRequest extends KdcRequest {
     }
 
     public ByteBuffer getRequestBody() throws KrbException {
-        return null;
-    }
-
-    public EncryptionKey getArmorKey() throws KrbException {
         return null;
     }
 }

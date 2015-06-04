@@ -19,18 +19,41 @@
  */
 package org.apache.kerby.kerberos.kerb.client.request;
 
+import org.apache.kerby.KOption;
+import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 
 /**
  * Tgs request with an Access Token.
  */
-public class TgsRequestWithToken extends TgsRequest {
+public class TgsRequestWithToken extends ArmoredTgsRequest {
 
-    public TgsRequestWithToken(KrbContext context) {
+    public TgsRequestWithToken(KrbContext context) throws KrbException {
         super(context);
 
-        // TODO: Access Token specific.
-        throw new NotImplementedException();
+        setAllowedPreauth(PaDataType.TOKEN_REQUEST);
+    }
+
+    @Override
+    public KOptions getPreauthOptions() {
+        KOptions results = super.getPreauthOptions();
+        KOptions krbOptions = getKrbOptions();
+
+        results.add(krbOptions.getOption(KrbOption.USE_TOKEN));
+        results.add(krbOptions.getOption(KrbOption.TOKEN_USER_AC_TOKEN));
+
+        return results;
+    }
+
+    @Override
+    public PrincipalName getClientPrincipal() {
+        KOption acToken = getPreauthOptions().getOption(KrbOption.TOKEN_USER_AC_TOKEN);
+        AuthToken authToken = (AuthToken) acToken.getValue();
+        return new PrincipalName(authToken.getSubject());
     }
 }

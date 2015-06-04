@@ -59,6 +59,7 @@ public enum KrbOption implements KOption {
 
     KRB5_CACHE("krb5-cache", "K5 cache name", KOptionType.FILE),
     SERVICE_PRINCIPAL("service-principal", "service principal", KOptionType.STR),
+    SERVER_PRINCIPAL("server-principal", "server principal", KOptionType.STR),
     ARMOR_CACHE("armor-cache", "armor credential cache", KOptionType.STR),
 
     USE_PKINIT("use-pkinit", "using pkinit"),
@@ -73,6 +74,7 @@ public enum KrbOption implements KOption {
     USE_TOKEN("use-id-token", "Using identity token"),
     TOKEN_USER_ID_TOKEN("user-id-token", "User identity token", KOptionType.STR),
     TOKEN_USER_AC_TOKEN("user-ac-token", "User access token", KOptionType.STR),
+    USE_TGT("use tgt", "use tgt to get service ticket", KOptionType.OBJ)
 
     ;
 

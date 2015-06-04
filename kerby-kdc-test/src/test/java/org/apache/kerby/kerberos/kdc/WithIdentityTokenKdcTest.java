@@ -6,54 +6,44 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
-package org.apache.kerby.kerberos.kerb.client;
+package org.apache.kerby.kerberos.kdc;
 
-import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.junit.Test;
 
-/**
- * An internal krb client interface.
- */
-public interface InternalKrbClient {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    /**
-     * Init with all the necessary options.
-     * @param options
-     */
-    void init(KOptions options) throws KrbException;
+public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
 
-    /**
-     * Get krb client settings.
-     * @return setting
-     */
-    KrbSetting getSetting();
+    @Test
+    public void testKdc() throws Exception {
 
-    /**
-     * Request a Ticket Granting Ticket.
-     * @param requestOptions
-     * @return a TGT
-     * @throws KrbException
-     */
-    TgtTicket requestTgtTicket(KOptions requestOptions) throws KrbException;
+        prepareToken(null);
+        createCredentialCache(getClientPrincipal(), TEST_PASSWORD);
 
-    /**
-     * Request a service ticket.
-     * @param requestOptions
-     * @return service ticket
-     * @throws KrbException
-     */
-    ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException;
+        TgtTicket tgt = null;
+        try {
+            tgt = krbClnt.requestTgtWithToken(getKrbToken(), getcCacheFile().getPath());
+        } catch (KrbException e) {
+            assertThat(e.getMessage().contains("timeout")).isTrue();
+            return;
+        }
+        verifyTicket(tgt);
+
+        ServiceTicket tkt = krbClnt.requestServiceTicketWithTgt(tgt, getServerPrincipal());
+        verifyTicket(tkt);
+    }
 }

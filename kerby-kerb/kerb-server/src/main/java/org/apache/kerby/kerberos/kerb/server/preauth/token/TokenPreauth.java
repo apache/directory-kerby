@@ -29,16 +29,19 @@ import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.server.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.server.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
+import org.apache.kerby.kerberos.kerb.server.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbToken;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.spec.pa.token.PaTokenRequest;
 
 import java.io.IOException;
+import java.util.List;
 
 public class TokenPreauth extends AbstractPreauthPlugin {
 
@@ -68,8 +71,20 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                 throw new KrbException("Decoding failed", e);
             }
 
-            AsRequest asRequest = (AsRequest) kdcRequest;
-            asRequest.setToken(authToken);
+            if (kdcRequest instanceof AsRequest) {
+                AsRequest asRequest = (AsRequest) kdcRequest;
+                asRequest.setToken(authToken);
+            } else if (kdcRequest instanceof TgsRequest) {
+                TgsRequest tgsRequest = (TgsRequest) kdcRequest;
+                tgsRequest.setToken(authToken);
+                List<String> audiences = authToken.getAudiences();
+                PrincipalName serverPrincipal = kdcRequest.getKdcReq().getReqBody().getSname();
+                serverPrincipal.setRealm(kdcRequest.getKdcReq().getReqBody().getRealm());
+                kdcRequest.setServerPrincipal(serverPrincipal);
+                if (!audiences.contains(serverPrincipal.getName())) {
+                    throw new KrbException("Token audience not match with the target server principal!");
+                }
+            }
 
             return true;
         } else {

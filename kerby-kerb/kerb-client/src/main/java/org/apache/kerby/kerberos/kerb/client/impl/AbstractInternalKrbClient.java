@@ -19,11 +19,22 @@
  */
 package org.apache.kerby.kerberos.kerb.client.impl;
 
+import org.apache.kerby.KOption;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.client.*;
-import org.apache.kerby.kerberos.kerb.client.request.*;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.client.InternalKrbClient;
+import org.apache.kerby.kerberos.kerb.client.KrbConfig;
+import org.apache.kerby.kerberos.kerb.client.KrbContext;
+import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.client.KrbSetting;
+import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
+import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithCert;
+import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithKeytab;
+import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithPasswd;
+import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithToken;
+import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
+import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithTgt;
+import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithToken;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -135,18 +146,23 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     }
 
     @Override
-    public ServiceTicket requestServiceTicketWithTgt(
-            TgtTicket tgt, String serverPrincipal) throws KrbException {
+    public ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException {
+        TgsRequest tgsRequest = null;
+        if(requestOptions.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
+            tgsRequest = new TgsRequestWithToken(context);
+        } else if(requestOptions.contains(KrbOption.USE_TGT)) {
+            KOption tgt = requestOptions.getOption(KrbOption.USE_TGT);
+            tgsRequest = new TgsRequestWithTgt(context, (TgtTicket)tgt.getValue());
+        }
 
-        TgsRequest ticketReq = new TgsRequest(context, tgt);
-        ticketReq.setServerPrincipal(new PrincipalName(serverPrincipal));
-        return doRequestServiceTicket(ticketReq);
-    }
+        if (tgsRequest == null) {
+            throw new IllegalArgumentException(
+                    "No valid krb client request option found");
+        }
+        tgsRequest.setServerPrincipal(new PrincipalName(requestOptions.
+            getStringOption(KrbOption.SERVER_PRINCIPAL)));
+        tgsRequest.setKrbOptions(requestOptions);
 
-    @Override
-    public ServiceTicket requestServiceTicketWithAccessToken(
-            AuthToken token, String serverPrincipal) throws KrbException {
-        TgsRequest tgsRequest = new TgsRequestWithToken(context);
         return doRequestServiceTicket(tgsRequest);
     }
 

@@ -81,7 +81,7 @@ public class WithCertKdcTest extends KdcTestBase {
 
         TgtTicket tgt = null;
         try {
-            tgt = krbClnt.requestTgtWithCert(clientPrincipal, userCert, userKey);
+            tgt = krbClnt.requestTgtWithCert(userCert, userKey);
         } catch (KrbException te) {
             assertThat(te.getMessage().contains("timeout")).isTrue();
             return;

@@ -89,6 +89,15 @@ public abstract class KdcRequest {
     private byte[] innerBodyout;
     private AuthToken token;
     private Boolean isToken = false;
+    private EncryptionKey sessionKey;
+
+    public EncryptionKey getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionKey(EncryptionKey sessionKey) {
+        this.sessionKey = sessionKey;
+    }
 
     public KdcRequest(KdcReq kdcReq, KdcContext kdcContext) {
         this.kdcReq = kdcReq;
@@ -178,6 +187,7 @@ public abstract class KdcRequest {
             ticket.setEncPart(encPart);
 
             EncryptionKey encKey = ticket.getEncPart().getKey();
+            setSessionKey(encKey);
 
             Authenticator authenticator = EncryptionUtil.unseal(apReq.getEncryptedAuthenticator(),
                 encKey, KeyUsage.AP_REQ_AUTH, Authenticator.class);
@@ -381,7 +391,6 @@ public abstract class KdcRequest {
 
         KrbIdentity serverEntry = getEntry(principal.getName());
         setServerEntry(serverEntry);
-
         for (EncryptionType encType : request.getReqBody().getEtypes()) {
             if (serverEntry.getKeys().containsKey(encType)) {
                 EncryptionKey serverKey = serverEntry.getKeys().get(encType);
@@ -465,6 +474,10 @@ public abstract class KdcRequest {
 
     public PrincipalName getServerPrincipal() {
         return serverPrincipal;
+    }
+
+    public void setServerPrincipal(PrincipalName serverPrincipal) {
+        this.serverPrincipal = serverPrincipal;
     }
 
     public byte[] getInnerBodyout() {

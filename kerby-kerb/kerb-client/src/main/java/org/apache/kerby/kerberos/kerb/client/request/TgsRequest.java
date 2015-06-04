@@ -21,11 +21,8 @@ package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
+import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
-import org.apache.kerby.kerberos.kerb.spec.ap.ApOptions;
-import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
-import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
@@ -34,46 +31,32 @@ import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.kdc.TgsRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
 public class TgsRequest extends KdcRequest {
-    private TgtTicket tgt;
-    private ApReq apReq;
 
     public TgsRequest(KrbContext context) {
         super(context);
     }
 
-    public TgsRequest(KrbContext context, TgtTicket tgtTicket) {
-        super(context);
-        this.tgt = tgtTicket;
-
-        setAllowedPreauth(PaDataType.TGS_REQ);
-    }
-
+    @Override
     public PrincipalName getClientPrincipal() {
         return null;
     }
 
     @Override
     public EncryptionKey getClientKey() throws KrbException {
-        return getSessionKey();
+        return null;
     }
 
     public EncryptionKey getSessionKey() {
-        return tgt.getSessionKey();
-    }
-
-    @Override
-    protected void preauth() throws KrbException {
-        apReq = makeApReq();
-        super.preauth();
+        return null;
     }
 
     @Override
     public void process() throws KrbException {
+        String serverPrincipal = getKrbOptions().getStringOption(KrbOption.SERVER_PRINCIPAL);
+        setServerPrincipal(new PrincipalName(serverPrincipal));
         super.process();
 
         TgsReq tgsReq = new TgsReq();
@@ -83,23 +66,6 @@ public class TgsRequest extends KdcRequest {
         tgsReq.setPaData(getPreauthContext().getOutputPaData());
 
         setKdcReq(tgsReq);
-    }
-
-    private ApReq makeApReq() throws KrbException {
-        ApReq apReq = new ApReq();
-
-        Authenticator authenticator = makeAuthenticator(tgt.getClientPrincipal(), tgt.getRealm(),
-            tgt.getSessionKey());
-        EncryptionKey sessionKey = tgt.getSessionKey();
-        EncryptedData authnData = EncryptionUtil.seal(authenticator,
-                sessionKey, KeyUsage.TGS_REQ_AUTH);
-        apReq.setEncryptedAuthenticator(authnData);
-        apReq.setAuthenticator(authenticator);
-        apReq.setTicket(tgt.getTicket());
-        ApOptions apOptions = new ApOptions();
-        apReq.setApOptions(apOptions);
-
-        return apReq;
     }
 
     @Override
@@ -122,9 +88,5 @@ public class TgsRequest extends KdcRequest {
         ServiceTicket serviceTkt = new ServiceTicket(getKdcRep().getTicket(),
                 (EncTgsRepPart) getKdcRep().getEncPart());
         return serviceTkt;
-    }
-
-    public ApReq getApReq() {
-        return apReq;
     }
 }

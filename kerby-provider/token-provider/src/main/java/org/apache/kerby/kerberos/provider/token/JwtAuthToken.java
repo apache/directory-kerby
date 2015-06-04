@@ -37,6 +37,8 @@ import java.util.UUID;
 public class JwtAuthToken implements AuthToken {
 
     private JWTClaimsSet jwtClaims;
+    private Boolean isIdToken = true;
+    private Boolean isAcToken = false;
 
     protected JwtAuthToken() {
         this(new JWTClaimsSet());
@@ -94,12 +96,22 @@ public class JwtAuthToken implements AuthToken {
 
     @Override
     public boolean isIdToken() {
-        return true;
+        return isIdToken;
+    }
+
+    @Override
+    public void isIdToken(boolean isIdToken) {
+        this.isIdToken = isIdToken;
     }
 
     @Override
     public boolean isAcToken() {
-        return false;
+        return isAcToken;
+    }
+
+    @Override
+    public void isAcToken(boolean isAcToken) {
+        this.isAcToken = isAcToken;
     }
 
     @Override

@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.base;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
@@ -62,6 +63,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
         this();
 
         this.innerToken = authToken;
+        setTokenType();
         setTokenFormat(format);
         try {
             setTokenValue(getTokenEncoder().encodeAsBytes(innerToken));
@@ -78,6 +80,16 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     public void decode(ByteBuffer content) throws IOException {
         super.decode(content);
         this.innerToken = getTokenDecoder().decodeFromBytes(getTokenValue());
+        setTokenType();
+    }
+
+    private void setTokenType() {
+        List<String> audiences = this.innerToken.getAudiences();
+        if(audiences.size() == 1 && audiences.get(0).startsWith(KrbConstant.TGS_PRINCIPAL)) {
+            isIdToken(true);
+        } else {
+            isAcToken(true);
+        }
     }
 
     private static TokenEncoder getTokenEncoder() {
@@ -147,8 +159,18 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     }
 
     @Override
+    public void isIdToken(boolean isIdToken) {
+        innerToken.isIdToken(isIdToken);
+    }
+
+    @Override
     public boolean isAcToken() {
         return innerToken.isAcToken();
+    }
+
+    @Override
+    public void isAcToken(boolean isAcToken) {
+        innerToken.isAcToken(isAcToken);
     }
 
     @Override

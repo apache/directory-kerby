@@ -70,11 +70,15 @@ public interface AuthToken {
      */
     boolean isIdToken();
 
+    void isIdToken(boolean isIdToken);
+
     /**
      * Is an Access Token ?
      * @return true if it's an access token, false otherwise
      */
     boolean isAcToken();
+
+    void isAcToken(boolean isAcToken);
 
     /**
      * Is a Bearer Token ?

@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.server.request;
 
+import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncoding;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
@@ -28,10 +29,12 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
  */
 public class ServiceTickertIssuer extends TickertIssuer {
     private final Ticket tgtTicket;
+    private final AuthToken token;
 
     public ServiceTickertIssuer(TgsRequest kdcRequest) {
         super(kdcRequest);
         tgtTicket = kdcRequest.getTgtTicket();
+        token = kdcRequest.getToken();
     }
 
     protected KdcRequest getTgsRequest() {
@@ -40,11 +43,17 @@ public class ServiceTickertIssuer extends TickertIssuer {
 
     @Override
     protected PrincipalName getclientPrincipal() {
+        if(token != null) {
+            return new PrincipalName(token.getSubject());
+        }
         return tgtTicket.getEncPart().getCname();
     }
 
     @Override
     protected TransitedEncoding getTransitedEncoding() {
+        if(token != null) {
+            return super.getTransitedEncoding();
+        }
         return tgtTicket.getEncPart().getTransited();
     }
 }
