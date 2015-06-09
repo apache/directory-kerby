@@ -35,8 +35,8 @@ public class PaEncTsEnc extends KrbSequenceType {
     private static int PAUSEC = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PATIMESTAMP, 1, KerberosTime.class),
-            new Asn1FieldInfo(PAUSEC, 2, Asn1Integer.class)
+            new Asn1FieldInfo(PATIMESTAMP, 0, KerberosTime.class),
+            new Asn1FieldInfo(PAUSEC, 1, Asn1Integer.class)
     };
 
     public PaEncTsEnc() {
