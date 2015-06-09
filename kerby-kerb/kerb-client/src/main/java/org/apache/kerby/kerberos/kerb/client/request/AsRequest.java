@@ -96,9 +96,6 @@ public class AsRequest extends KdcRequest {
 
         byte[] decryptedData = decryptWithClientKey(getKdcRep().getEncryptedEncPart(),
                 KeyUsage.AS_REP_ENCPART);
-        if ((decryptedData[0] & 0x1f) == 26) {
-            decryptedData[0] = (byte) (decryptedData[0] - 1);
-        }
         EncKdcRepPart encKdcRepPart = new EncAsRepPart();
         try {
             encKdcRepPart.decode(decryptedData);
