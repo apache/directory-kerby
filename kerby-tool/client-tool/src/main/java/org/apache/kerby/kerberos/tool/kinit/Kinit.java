@@ -117,6 +117,11 @@ public class Kinit {
         TgtTicket tgt = krbClient.requestTgtWithOptions(
                 ToolUtil.convertOptions(ktOptions));
 
+        if(tgt == null) {
+            System.out.println("Get TGT failed ...");
+            return;
+        }
+
         writeTgtToCache(tgt, principal, ktOptions);
     }
 
@@ -143,7 +148,8 @@ public class Kinit {
         if (kinitOptions.contains(KrbOption.KRB5_CACHE)) {
             fileName = kinitOptions.getStringOption(KrbOption.KRB5_CACHE);
         } else {
-            fileName = "krb5_" + principal + ".cc";
+            String princName = principal.replaceAll("/", "_");
+            fileName = "krb5_" + princName + ".cc";
         }
         File cCacheFile = new File("/tmp/", fileName);
         cCache.store(cCacheFile);
