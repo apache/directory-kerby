@@ -22,14 +22,11 @@ package org.apache.kerby.kerberos.tool.kadmin.executor;
 import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.config.Config;
-import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminOption;
+import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
-
-import java.util.Date;
 
 public class ModifyPrincipalExecutor implements KadminCommandExecutor {
     private static final String USAGE = "Usage: modify_principal [options] principal\n" +
@@ -59,7 +56,14 @@ public class ModifyPrincipalExecutor implements KadminCommandExecutor {
             return;
         }
         parseOptions(commands);
-        modifyPrincipal(principal);
+        Kadmin kadmin = new Kadmin(kdcConfig, backendConfig);
+
+        try {
+            kadmin.modifyPrincipal(principal, kOptions);
+            System.out.println("Principal \"" + principal + "\" modified.");
+        } catch (KrbException e) {
+            System.err.println("Principal \"" + principal + "\" fail to modify." + e.getMessage());
+        }
     }
 
     private void parseOptions(String[] commands) {
@@ -99,32 +103,5 @@ public class ModifyPrincipalExecutor implements KadminCommandExecutor {
         if(principal == null) {
             KadminTool.printUsage("missing principal name!", USAGE);
         }
-    }
-
-    private void modifyPrincipal(String principal) {
-        IdentityBackend backend = KadminTool.getBackend(backendConfig);
-
-        KrbIdentity originIdentity = backend.getIdentity(principal);
-        KrbIdentity identity = createUpdatedIdentity(originIdentity);
-        try {
-            backend.updateIdentity(identity);
-            System.out.println("Principal \"" + principal + "\" modified.");
-        } catch (Exception e) {
-            System.err.println("Principal \"" + principal + "\" fail to modify." + e.getMessage());
-        }
-    }
-
-    protected KrbIdentity createUpdatedIdentity(KrbIdentity kid) {
-        if (kOptions.contains(KadminOption.EXPIRE)) {
-            Date date = kOptions.getDateOption(KadminOption.EXPIRE);
-            kid.setExpireTime(new KerberosTime(date.getTime()));
-        }
-        if (kOptions.contains(KadminOption.DISABLED)) {
-            kid.setDisabled(kOptions.getBooleanOption(KadminOption.DISABLED));
-        }
-        if (kOptions.contains(KadminOption.LOCKED)) {
-            kid.setLocked(kOptions.getBooleanOption(KadminOption.LOCKED));
-        }
-        return kid;
     }
 }

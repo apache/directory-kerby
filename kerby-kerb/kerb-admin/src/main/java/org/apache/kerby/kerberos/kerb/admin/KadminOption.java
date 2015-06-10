@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.tool;
+package org.apache.kerby.kerberos.kerb.admin;
 
 import org.apache.kerby.KOption;
 import org.apache.kerby.KOptionType;

@@ -20,11 +20,11 @@
 package org.apache.kerby.kerberos.tool.kadmin.executor;
 
 import org.apache.kerby.config.Config;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
 
 import java.util.Map;
 
@@ -47,8 +47,13 @@ public class GetPrincipalExcutor implements KadminCommandExecutor {
         }
 
         String princName = commands[commands.length - 1];
-        IdentityBackend backend = KadminTool.getBackend(backendConfig);
-        KrbIdentity identity = backend.getIdentity(princName);
+        Kadmin kadmin = new Kadmin(backendConfig);
+        KrbIdentity identity = null;
+        try {
+            identity = kadmin.getPrincipal(princName);
+        } catch (KrbException e) {
+            System.err.println("Fail to get principal:" + princName + ".");
+        }
 
         if (identity == null) {
             System.err.println(princName + "doesn't exist\n");
@@ -71,5 +76,4 @@ public class GetPrincipalExcutor implements KadminCommandExecutor {
             System.out.println("key: " + keyType);
         }
     }
-
 }

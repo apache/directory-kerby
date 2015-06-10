@@ -20,18 +20,10 @@
 package org.apache.kerby.kerberos.tool.kadmin.executor;
 
 import org.apache.kerby.config.Config;
-import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.apache.kerby.kerberos.kerb.keytab.Keytab;
-import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.io.File;
-import java.io.IOException;
 
 public class KeytabAddExecutor implements KadminCommandExecutor{
     private static final String USAGE =
@@ -75,57 +67,13 @@ public class KeytabAddExecutor implements KadminCommandExecutor{
         }
         File keytabFile = new File(keytabFileLocation);
 
-        addEntryToKeytab(keytabFile, principal);
-    }
-
-    private void addEntryToKeytab(File keytabFile, String principalName) {
-        IdentityBackend backend = KadminTool.getBackend(backendConfig);
-
-        //Get Identity
-        KrbIdentity identity = backend.getIdentity(principalName);
-        if (identity == null) {
-            System.err.println("Can not find the identity for pincipal " +
-                    principalName + ".");
-            return;
-        }
-
-        StringBuffer resultSB = new StringBuffer();
-        Keytab keytab = loadKeytab(keytabFile);
-
-        //Add principal to keytab.
-        PrincipalName principal = identity.getPrincipal();
-        KerberosTime timestamp = new KerberosTime();
-        for (EncryptionType encType : identity.getKeys().keySet()) {
-            EncryptionKey ekey = identity.getKeys().get(encType);
-            int keyVersion = ekey.getKvno();
-            keytab.addEntry(new KeytabEntry(principal, timestamp, keyVersion, ekey));
-            resultSB.append("Entry for principal " + principalName +
-                    " with kvno " + keyVersion + ", encryption type " +
-                    encType.getName() + " added to keytab " +
-                    keytabFile.getAbsolutePath() + "\n");
-        }
-
-        //Store the keytab
+        Kadmin kadmin = new Kadmin(backendConfig);
         try {
-            keytab.store(keytabFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(resultSB.toString());
-    }
-
-    private Keytab loadKeytab(File keytabFile) {
-        try {
-            if (!keytabFile.exists()) {
-                keytabFile.createNewFile();
-                return new Keytab();
-            }
-
-            return Keytab.loadKeytab(keytabFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new Keytab();
+        StringBuffer result = kadmin.addEntryToKeytab(keytabFile, principal);
+            System.out.println(result.toString());
+        } catch (KrbException e) {
+            System.err.println("Principal \"" + principal + "\" fail to add entry to keytab." +
+                e.getMessage());
         }
     }
-
 }

@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.tool.kadmin.executor;
 
 import org.apache.kerby.config.Config;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.util.List;
 
@@ -37,19 +37,19 @@ public class ListPrincipalExcutor implements KadminCommandExecutor {
         String[] commands = input.split(" ");
         List<String> principalNames = null;
 
+
         if (commands.length == 1) {
-            principalNames = listPrincipal();
+            Kadmin kadmin = new Kadmin(backenConfig);
+            try {
+                principalNames = kadmin.listPrincipal();
+            } catch (KrbException e) {
+                System.err.print("Fail to list principal!" + e.getMessage());
+            }
         }
         System.out.println("Principals are listed:");
 
         for (String principalName : principalNames) {
             System.out.println(principalName);
         }
-    }
-
-    private List<String> listPrincipal() {
-        IdentityBackend backend = KadminTool.getBackend(backenConfig);
-        List<String> principalName = backend.getIdentities();
-        return principalName;
     }
 }

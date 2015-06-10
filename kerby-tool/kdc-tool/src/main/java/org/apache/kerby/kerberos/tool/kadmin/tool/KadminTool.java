@@ -21,44 +21,11 @@ package org.apache.kerby.kerberos.tool.kadmin.tool;
 
 import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Config;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
+import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 
 import java.util.Scanner;
 
 public class KadminTool {
-
-    /**
-     * Init the identity backend from backend configuration.
-     */
-    public static IdentityBackend getBackend(Config backendConfig) {
-        String backendClassName = backendConfig.getString(
-                KdcConfigKey.KDC_IDENTITY_BACKEND);
-        if (backendClassName == null) {
-            throw new RuntimeException("Can not find the IdentityBackend class");
-        }
-
-        Class<?> backendClass = null;
-        try {
-            backendClass = Class.forName(backendClassName);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Failed to load backend class: "
-                    + backendClassName);
-        }
-
-        IdentityBackend backend;
-        try {
-            backend = (IdentityBackend) backendClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to create backend: "
-                    + backendClassName);
-        }
-
-        backend.setConfig(backendConfig);
-        backend.initialize();
-        return backend;
-    }
 
     public static void printUsage(String error, String USAGE) {
         System.err.println(error + "\n");

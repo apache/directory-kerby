@@ -22,19 +22,13 @@ package org.apache.kerby.kerberos.tool.kadmin.executor;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
-import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
 
 import java.io.Console;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 
 public class AddPrincipalExecutor implements KadminCommandExecutor{
@@ -91,7 +85,14 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
             return;
         }
 
-        addPrincipal(principal, password);
+        Kadmin kadmin = new Kadmin(kdcConfig, backendConfig);
+
+        try {
+            kadmin.addPrincipal(principal, password, kOptions);
+            System.out.println("Principal \"" + principal + "\" created.");
+        } catch (KrbException e) {
+            System.err.println("Fail to add principal \"" + principal + "\"." + e.getMessage());
+        }
     }
 
     /**
@@ -137,47 +138,5 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
         String password = new String(passwordChars).trim();
         Arrays.fill(passwordChars, ' ');
         return password;
-    }
-
-    private void addPrincipal(String principal, String password) {
-        IdentityBackend backend = KadminTool.getBackend(backendConfig);
-
-        KrbIdentity identity = createIdentity(principal, password);
-        try {
-            backend.addIdentity(identity);
-            System.out.println("Principal \"" + principal + "\" created.");
-        } catch (Exception e) {
-            System.err.println("Principal or policy already exists while creating \"" + principal + "\".");
-        }
-    }
-
-    protected KrbIdentity createIdentity(String principal, String password) {
-        KrbIdentity kid = new KrbIdentity(principal);
-        kid.setCreatedTime(KerberosTime.now());
-        if(kOptions.contains(KadminOption.EXPIRE)) {
-            Date date = kOptions.getDateOption(KadminOption.EXPIRE);
-            kid.setExpireTime(new KerberosTime(date.getTime()));
-        } else {
-            kid.setExpireTime(KerberosTime.NEVER);
-        }
-        if(kOptions.contains(KadminOption.KVNO)) {
-            kid.setKeyVersion(kOptions.getIntegerOption(KadminOption.KVNO));
-        } else {
-            kid.setKeyVersion(1);
-        }
-        kid.setDisabled(false);
-        kid.setLocked(false);
-
-        kid.addKeys(generateKeys(kid.getPrincipalName(), password));
-
-        return kid;
-    }
-
-    protected List<EncryptionKey> generateKeys(String principal, String password) {
-        try {
-            return EncryptionUtil.generateKeys(principal, password, kdcConfig.getEncryptionTypes());
-        } catch (KrbException e) {
-            throw new RuntimeException("Failed to create keys", e);
-        }
     }
 }

@@ -21,10 +21,9 @@ package org.apache.kerby.kerberos.tool.kadmin.executor;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.config.Config;
-import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminOption;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
 
 
@@ -56,13 +55,14 @@ public class RenamePrincipalExecutor implements KadminCommandExecutor{
         oldPrincipalName = commands[commands.length - 2];
         newPrincipalName = commands[commands.length - 1];
 
+        Kadmin kadmin = new Kadmin(backendConfig);
         if (kOptions.contains(KadminOption.FORCE)) {
-            renamePrincipal();
+            renamePrincipal(kadmin);
         } else {
             String prompt = "Are you sure want to rename the principal? (yes/no, YES/NO, y/n, Y/N) ";
             String reply = KadminTool.getReplay(prompt);
             if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
-                renamePrincipal();
+                renamePrincipal(kadmin);
             } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
                 System.out.println("Principal \"" + oldPrincipalName + "\"  not renamed." );
             } else {
@@ -71,30 +71,13 @@ public class RenamePrincipalExecutor implements KadminCommandExecutor{
         }
     }
 
-    private void renamePrincipal() {
-        IdentityBackend backend = KadminTool.getBackend(backendConfig);
-
-        KrbIdentity verifyIdentity = backend.getIdentity(newPrincipalName);
-        if(verifyIdentity != null) {
-            System.err.println("Principal rename failed! Principal \"" + verifyIdentity.getPrincipalName() + "\" is already exist.");
-            return;
-        }
-
+    public void renamePrincipal(Kadmin kadmin) {
         try {
-            KrbIdentity identity = backend.getIdentity(oldPrincipalName);
-            if(identity == null) {
-                System.err.println("Principal rename failed! Principal \"" + oldPrincipalName + "\" does not exist.");
-                return;
-            }
-            backend.deleteIdentity(oldPrincipalName);
-
-            identity.setPrincipalName(newPrincipalName);
-            identity.setPrincipal(new PrincipalName(newPrincipalName));
-            backend.addIdentity(identity);
-            System.out.println("Principal \"" + oldPrincipalName + "\" renamed to \"" + newPrincipalName + "\".");
-        } catch (Exception e) {
-            System.err.println("Principal rename failed! Exception happened.");
+            kadmin.renamePrincipal(oldPrincipalName, newPrincipalName);
+            System.out.println("Principal \"" + oldPrincipalName + "\" renamed to \"" +
+                newPrincipalName + "\".");
+        } catch (KrbException e) {
+            System.err.println("Principal rename failed! Exception happened." + e.getMessage());
         }
     }
-
 }

@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.tool.kadmin.executor;
 
 import org.apache.kerby.config.Config;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.io.Console;
 import java.util.Scanner;
@@ -51,8 +51,9 @@ public class DeletePrincipalExecutor implements KadminCommandExecutor{
         parseOptions(commands);
         String principal = commands[commands.length - 1];
 
+        Kadmin kadmin = new Kadmin(backendConfig);
         if (force) {
-            deletePrincipal(principal);
+            deletePrincipal(kadmin, principal);
         } else {
             String reply;
             Console console = System.console();
@@ -67,12 +68,21 @@ public class DeletePrincipalExecutor implements KadminCommandExecutor{
                 reply = getReply(console, prompt);
             }
             if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
-                deletePrincipal(principal);
+                deletePrincipal(kadmin, principal);
             } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
                 System.out.println("Pincipal \"" + principal + "\"  not deleted." );
             } else {
                 System.err.println("Unknow request, fail to delete the principal.");
             }
+        }
+    }
+
+    private void deletePrincipal(Kadmin kadmin, String principal) {
+        try {
+            kadmin.deletePrincipal(principal);
+            System.out.println("Principal \"" + principal + "\" deleted.");
+        } catch (KrbException e) {
+            System.err.println("Fail to delete principal \"" + principal + "\" ." + e.getMessage());
         }
     }
 
@@ -90,16 +100,6 @@ public class DeletePrincipalExecutor implements KadminCommandExecutor{
     private void parseOptions(String[] commands) {
         if (commands[1].equals("-force")) {
             force = true;
-        }
-    }
-
-    private void deletePrincipal(String principal) {
-        IdentityBackend backend = KadminTool.getBackend(backendConfig);
-        try {
-            backend.deleteIdentity(principal);
-            System.out.println("Principal \"" + principal + "\" deleted.");
-        } catch (Exception e) {
-            System.err.println("Principal \"" + principal + "\" fail to delete." + e.getMessage());
         }
     }
 }
