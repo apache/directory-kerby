@@ -26,7 +26,7 @@ import org.junit.Before;
 /**
  * This is an interop test using the Java GSS APIs against the Kerby KDC (using UDP)
  */
-public class GSSUDPInteropTest extends GSSInteropTestBase {
+public class GssUdpInteropTest extends GssInteropTestBase {
 
     @Before
     @Override

@@ -28,7 +28,6 @@
 
   <modules>
     <module>kerby-config</module>
-    <module>kerby-event</module>
     <module>kerby-util</module>
   </modules>
 

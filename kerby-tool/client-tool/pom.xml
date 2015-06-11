@@ -31,29 +31,20 @@
       <artifactId>kerby-config</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-client</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-server</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>token-provider</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>pki-provider</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -61,12 +52,6 @@
       <artifactId>kerb-util</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-      <dependency>
-          <groupId>org.apache.kerby</groupId>
-          <artifactId>kerb-util</artifactId>
-          <version>${project.version}</version>
-      </dependency>
   </dependencies>
   
 </project>

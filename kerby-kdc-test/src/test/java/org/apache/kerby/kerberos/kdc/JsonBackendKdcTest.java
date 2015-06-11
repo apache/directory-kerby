@@ -56,5 +56,4 @@ public class JsonBackendKdcTest extends KerbyKdcTest {
             jsonBackendFile.delete();
         }
     }
-
 }

@@ -52,6 +52,7 @@ public abstract class KerbyKdcTest extends KdcTestBase {
         File testDir = new File(System.getProperty("test.dir", "target"));
         File testConfDir = new File(testDir, "conf");
         krbClnt.setConfDir(testConfDir);
+        krbClnt.setTimeout(10 * 1000);
         krbClnt.init();
 
         TgtTicket tgt;

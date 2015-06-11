@@ -22,7 +22,6 @@ package org.apache.kerby.kerberos.kerb.server;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.server.impl.DefaultInternalKdcServerImpl;
-import org.apache.kerby.kerberos.kerb.server.impl.event.EventBasedKdcServer;
 
 import java.io.File;
 
@@ -114,13 +113,6 @@ public class KdcServer {
     }
 
     /**
-     * Use event model. By default blocking model is used.
-     */
-    public void useEventModel() {
-        commonOptions.add(KdcServerOption.USE_EVENT_MODEL);
-    }
-
-    /**
      * Set runtime folder.
      * @param workDir
      */
@@ -173,8 +165,6 @@ public class KdcServer {
         if (commonOptions.contains(KdcServerOption.INNER_KDC_IMPL)) {
             innerKdc = (InternalKdcServer) commonOptions.getOptionValue(
                     KdcServerOption.INNER_KDC_IMPL);
-        } else if (commonOptions.contains(KdcServerOption.USE_EVENT_MODEL)) {
-            innerKdc = new EventBasedKdcServer();
         } else {
             innerKdc = new DefaultInternalKdcServerImpl();
         }

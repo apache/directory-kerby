@@ -47,7 +47,7 @@ import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 /**
  * This is an interop test using the Java GSS APIs against the Kerby KDC
  */
-public abstract class GSSInteropTestBase extends KdcTest {
+public abstract class GssInteropTestBase extends KdcTest {
     private String clientPrincipal;
     private String serverPrincipal;
     
