@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.codec.test;
+package org.apache.kerby.kerberos.kerb.codec;
 
 import java.io.IOException;
 import java.io.InputStream;
