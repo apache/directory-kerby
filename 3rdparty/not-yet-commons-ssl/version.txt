@@ -1,1 +1,0 @@
-$URL: http://juliusdavies.ca/svn/not-yet-commons-ssl/tags/commons-ssl-0.3.16/version.txt $
