@@ -48,12 +48,13 @@ import java.util.Properties;
 public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         implements Watcher {
     private static final Logger LOG = LoggerFactory.getLogger(ZookeeperIdentityBackend.class);
-    private Config config;      //NOPMD
     private String zkHost;
     private int zkPort;
-    private File dataDir;
-    private File dataLogDir;
+    private File dataFile;
+    private File dataLogFile;
     private ZooKeeper zooKeeper;
+    private final ZooKeeperServerMain zooKeeperServer = new ZooKeeperServerMain();
+    private static Thread zookeeperThread;
 
     public ZookeeperIdentityBackend() {
 
@@ -77,8 +78,26 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
     private void init() {
         zkHost = getConfig().getString(ZKConfKey.ZK_HOST);
         zkPort = getConfig().getInt(ZKConfKey.ZK_PORT);
-        dataDir = new File(getConfig().getString(ZKConfKey.DATA_DIR));
-        dataLogDir = new File(getConfig().getString(ZKConfKey.DATA_LOG_DIR));
+
+        String dataDir = getConfig().getString(ZKConfKey.DATA_DIR);
+        if (dataDir == null || dataDir.isEmpty()) {
+            throw new RuntimeException("No data dir is found");
+        }
+
+        dataFile = new File(dataDir);
+        if (! dataFile.exists()) {
+            dataFile.mkdirs();
+        }
+
+        String dataLogDir = getConfig().getString(ZKConfKey.DATA_LOG_DIR);
+        if (dataLogDir == null || dataLogDir.isEmpty()) {
+            throw new RuntimeException("No data log dir is found");
+        }
+
+        dataLogFile = new File(dataLogDir);
+        if (! dataLogFile.exists()) {
+            dataLogFile.mkdirs();
+        }
 
         startEmbeddedZookeeper();
         connectZK();
@@ -89,7 +108,19 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
      */
     private void connectZK() {
         try {
-            zooKeeper = new ZooKeeper(zkHost, zkPort, null);
+            zooKeeper = new ZooKeeper(zkHost, 10000, null);
+            while (true) {
+                if (!zooKeeper.getState().isConnected()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    break;
+                }
+            }
+
         } catch (IOException e) {
             throw new RuntimeException("Failed to prepare Zookeeper connection");
         }
@@ -108,8 +139,8 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
     private void startEmbeddedZookeeper() {
 
         Properties startupProperties = new Properties();
-        startupProperties.put("dataDir", dataDir.getAbsolutePath());
-        startupProperties.put("dataLogDir", dataLogDir.getAbsolutePath());
+        startupProperties.put("dataDir", dataFile.getAbsolutePath());
+        startupProperties.put("dataLogDir", dataLogFile.getAbsolutePath());
         startupProperties.put("clientPort", zkPort);
 
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();
@@ -119,21 +150,21 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
             throw new RuntimeException(e);
         }
 
-        final ZooKeeperServerMain zooKeeperServer = new ZooKeeperServerMain();
         final ServerConfig configuration = new ServerConfig();
         configuration.readFrom(quorumConfiguration);
 
-        new Thread() {
-            public void run() {
-                try {
-                    zooKeeperServer.runFromConfig(configuration);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //log.error("ZooKeeper Failed", e);
+        if (zookeeperThread == null) {
+            zookeeperThread = new Thread() {
+                public void run() {
+                    try {
+                        zooKeeperServer.runFromConfig(configuration);
+                    } catch (IOException e) {
+                        LOG.error("ZooKeeper Failed", e);
+                    }
                 }
-            }
-        }.start();
-
+            };
+            zookeeperThread.start();
+        }
     }
 
     /**
@@ -164,26 +195,35 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
             krb.setLocked(identityZNode.getLocked());
         } catch (KeeperException e) {
             LOG.error("Fail to get identity from zookeeper", e);
+            return null;
         }
         return krb;
     }
 
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
+        if (doGetIdentity(identity.getPrincipalName()) != null) {
+            throw new RuntimeException("Principal already exists.");
+        }
         try {
             setIdentity(identity);
         } catch (KeeperException e) {
             LOG.error("Fail to add identity to zookeeper", e);
+            return null;
         }
         return identity;
     }
 
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
+        if (doGetIdentity(identity.getPrincipalName()) == null) {
+            throw new RuntimeException("Principal does not exist.");
+        }
         try {
             setIdentity(identity);
         } catch (KeeperException e) {
             LOG.error("Fail to update identity in zookeeper", e);
+            return null;
         }
         return identity;
     }
@@ -191,6 +231,9 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
     @Override
     protected void doDeleteIdentity(String principalName) {
         principalName = replaceSlash(principalName);
+        if (doGetIdentity(principalName) == null) {
+            throw new RuntimeException("Principal does not exist.");
+        }
         IdentityZNode identityZNode = new IdentityZNode(zooKeeper, principalName);
         try {
             identityZNode.deleteIdentity();
@@ -201,12 +244,21 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
 
     @Override
     public List<String> getIdentities(int start, int limit) {
+        return getIdentities().subList(start, limit);
+    }
+
+    @Override
+    public List<String> getIdentities() {
+
         List<String> identityNames = null;
         try {
             // The identities getting from zookeeper is unordered
             identityNames = IdentityZNodeHelper.getIdentityNames(zooKeeper);
         } catch (KeeperException e) {
             LOG.error("Fail to get identities from zookeeper", e);
+        }
+        if(identityNames == null || identityNames.isEmpty()) {
+            return null;
         }
         List<String> newIdentities = new ArrayList<>(identityNames.size());
         for(String name : identityNames) {
@@ -216,13 +268,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
             newIdentities.add(name);
         }
         Collections.sort(newIdentities);
-        return newIdentities.subList(start, limit);
-    }
-
-    @Override
-    public List<String> getIdentities() {
-        //TODO
-        return null;
+        return newIdentities;
     }
 
     private void setIdentity(KrbIdentity identity) throws KeeperException {
