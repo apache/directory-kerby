@@ -91,7 +91,7 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
             kadmin.addPrincipal(principal, password, kOptions);
             System.out.println("Principal \"" + principal + "\" created.");
         } catch (KrbException e) {
-            System.err.println("Fail to add principal \"" + principal + "\"." + e.getMessage());
+            System.err.println("Fail to add principal \"" + principal + "\"." + e.getCause());
         }
     }
 

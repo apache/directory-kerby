@@ -82,7 +82,7 @@ public class DeletePrincipalExecutor implements KadminCommandExecutor{
             kadmin.deletePrincipal(principal);
             System.out.println("Principal \"" + principal + "\" deleted.");
         } catch (KrbException e) {
-            System.err.println("Fail to delete principal \"" + principal + "\" ." + e.getMessage());
+            System.err.println("Fail to delete principal \"" + principal + "\" ." + e.getCause());
         }
     }
 

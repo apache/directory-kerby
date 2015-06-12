@@ -62,7 +62,7 @@ public class ModifyPrincipalExecutor implements KadminCommandExecutor {
             kadmin.modifyPrincipal(principal, kOptions);
             System.out.println("Principal \"" + principal + "\" modified.");
         } catch (KrbException e) {
-            System.err.println("Principal \"" + principal + "\" fail to modify." + e.getMessage());
+            System.err.println("Principal \"" + principal + "\" fail to modify. " + e.getCause());
         }
     }
 

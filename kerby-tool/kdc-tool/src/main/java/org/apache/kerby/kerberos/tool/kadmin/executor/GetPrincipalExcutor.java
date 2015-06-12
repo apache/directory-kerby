@@ -52,11 +52,11 @@ public class GetPrincipalExcutor implements KadminCommandExecutor {
         try {
             identity = kadmin.getPrincipal(princName);
         } catch (KrbException e) {
-            System.err.println("Fail to get principal:" + princName + ".");
+            System.err.println("Fail to get principal: " + princName + ". " + e.getCause());
         }
 
         if (identity == null) {
-            System.err.println(princName + "doesn't exist\n");
+            System.err.println(princName + " doesn't exist\n");
             System.err.println(USAGE);
             return;
         }

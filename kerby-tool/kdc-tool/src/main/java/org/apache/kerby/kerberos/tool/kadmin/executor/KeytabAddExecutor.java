@@ -73,7 +73,7 @@ public class KeytabAddExecutor implements KadminCommandExecutor{
             System.out.println(result.toString());
         } catch (KrbException e) {
             System.err.println("Principal \"" + principal + "\" fail to add entry to keytab." +
-                e.getMessage());
+                e.getCause());
         }
     }
 }
