@@ -24,6 +24,7 @@ import org.apache.kerby.KOptionType;
 
 public enum KrbOption implements KOption {
     NONE("NONE"),
+    USE_EVENT_MODEL("use event model", KOptionType.NOV),
     CLIENT_PRINCIPAL("client-principal", "Client principal", KOptionType.STR),
     KRB_CONFIG("krb config", KOptionType.OBJ),
     CONF_DIR("conf dir", KOptionType.DIR),

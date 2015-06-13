@@ -152,7 +152,9 @@ public abstract class KdcTestBase {
      * @throws Exception
      */
     protected void prepareKrbClient() throws Exception {
-
+        if (useEventModelClient()) {
+            krbClnt.useEventModel();
+        }
     }
 
     /**
@@ -170,6 +172,18 @@ public abstract class KdcTestBase {
         if (udpPort > 0) {
             kdcServer.setKdcUdpPort(udpPort);
         }
+
+        if (useEventModelKdc()) {
+            kdcServer.useEventModel();
+        }
+    }
+
+    protected boolean useEventModelKdc() {
+        return false;
+    }
+
+    protected boolean useEventModelClient() {
+        return false;
     }
 
     protected void setUpKdcServer() throws Exception {

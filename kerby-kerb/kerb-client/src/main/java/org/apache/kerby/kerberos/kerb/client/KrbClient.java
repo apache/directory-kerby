@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.client;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.impl.DefaultInternalKrbClient;
+import org.apache.kerby.kerberos.kerb.client.impl.event.EventBasedKrbClient;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -119,11 +120,22 @@ public class KrbClient {
     }
 
     /**
+     * Use event model. By default blocking model is used.
+     */
+    public void useEventModel() {
+        commonOptions.add(KrbOption.USE_EVENT_MODEL);
+    }
+
+    /**
      * Init the client.
      * @throws KrbException
      */
     public void init() throws KrbException {
-        innerClient = new DefaultInternalKrbClient();
+        if (commonOptions.contains(KrbOption.USE_EVENT_MODEL)) {
+            innerClient = new EventBasedKrbClient();
+        } else {
+            innerClient = new DefaultInternalKrbClient();
+        }
         innerClient.init(commonOptions);
     }
 
