@@ -36,6 +36,7 @@
   </prerequisites>
 
   <modules>
+    <module>3rdparty</module>
     <module>lib</module>
     <module>kerby-asn1</module>
     <module>kerby-kerb</module>
