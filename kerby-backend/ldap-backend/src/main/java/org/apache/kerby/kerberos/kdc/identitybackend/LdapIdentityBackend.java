@@ -19,12 +19,13 @@
  */
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
-import org.apache.directory.api.ldap.model.name.Dn;
-import org.apache.directory.ldap.client.api.LdapConnection;
+import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,12 +33,13 @@ import java.util.List;
  *
  */
 public class LdapIdentityBackend extends AbstractIdentityBackend {
+    private static final String BASE_DN = "ou=users,dc=example,dc=com";//NOPMD
+    private static final String ADMIN_DN = "uid=admin,ou=system";
+    private LdapNetworkConnection connection;
 
-    // the connection to the LDAP server
-    // in case of ApacheDS this will be an instance of LdapCoreSessionConnection
-    private LdapConnection connection; //NOPMD
+    public LdapIdentityBackend() {
 
-    private Dn baseDn; //NOPMD
+    }
 
     /**
      * Constructing an instance using specified config that contains anything
@@ -48,13 +50,39 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         setConfig(config);
     }
 
-    /*
+    public void startConnection() throws LdapException {
+        this.connection = new LdapNetworkConnection( "localhost",
+                getConfig().getInt("port") );
+        connection.bind( ADMIN_DN, "secret" );
+    }
+
+    @Override
     public void initialize() {
         super.initialize();
-
-        // init Ldap connection and baseDn.
+        try {
+            startConnection();
+        } catch (LdapException e) {
+            e.printStackTrace();
+        }
     }
-    */
+
+    @Override
+    public void stop() {
+        try {
+            closeConnection();
+        } catch (LdapException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeConnection() throws LdapException, IOException {
+        if (this.connection.connect()) {
+            this.connection.unBind();
+            this.connection.close();
+        }
+    }
 
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
@@ -83,7 +111,6 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     public List<String> getIdentities() {
-        //TODO
         return null;
     }
 }
