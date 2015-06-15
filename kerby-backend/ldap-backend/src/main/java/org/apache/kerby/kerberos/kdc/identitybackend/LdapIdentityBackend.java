@@ -20,10 +20,12 @@
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.api.util.GeneralizedTime;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
+import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 
 import java.io.IOException;
 import java.util.List;
@@ -82,6 +84,13 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             this.connection.unBind();
             this.connection.close();
         }
+    }
+
+
+    private String toGeneralizedTime(KerberosTime kerberosTime)//NOPMD
+    {
+        GeneralizedTime generalizedTime = new GeneralizedTime(kerberosTime.getValue());
+        return generalizedTime.toString();
     }
 
     @Override
