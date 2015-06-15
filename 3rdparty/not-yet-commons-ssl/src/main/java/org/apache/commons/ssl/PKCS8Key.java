@@ -293,7 +293,7 @@ public class PKCS8Key {
     }
 
     public byte[] getDecryptedBytes() {
-        return decryptedBytes;
+        return decryptedBytes.clone();
     }
 
     public PrivateKey getPrivateKey() {
@@ -332,7 +332,7 @@ public class PKCS8Key {
                                 byte[] decryptedBytes) {
             this.transformation = transformation;
             this.keySize = keySize;
-            this.bytes = decryptedBytes;
+            this.bytes = decryptedBytes.clone();
         }
     }
 

@@ -85,24 +85,24 @@ public final class Java14 extends JavaImpl {
         return instance;
     }
 
-    public final String getVersion() {
+    public String getVersion() {
         return "Java14";
     }
 
-    protected final String retrieveSubjectX500(X509Certificate cert) {
+    protected String retrieveSubjectX500(X509Certificate cert) {
         return cert.getSubjectX500Principal().toString();
     }
 
-    protected final String retrieveIssuerX500(X509Certificate cert) {
+    protected String retrieveIssuerX500(X509Certificate cert) {
         return cert.getIssuerX500Principal().toString();
     }
 
-    protected final Certificate[] retrievePeerCerts(SSLSession sslSession)
+    protected Certificate[] retrievePeerCerts(SSLSession sslSession)
         throws SSLPeerUnverifiedException {
         return sslSession.getPeerCertificates();
     }
 
-    protected final Object buildKeyManagerFactory(KeyStore ks, char[] password)
+    protected Object buildKeyManagerFactory(KeyStore ks, char[] password)
         throws NoSuchAlgorithmException, KeyStoreException,
         UnrecoverableKeyException {
         String alg = KeyManagerFactory.getDefaultAlgorithm();
@@ -111,7 +111,7 @@ public final class Java14 extends JavaImpl {
         return kmf;
     }
 
-    protected final Object buildTrustManagerFactory(KeyStore ks)
+    protected Object buildTrustManagerFactory(KeyStore ks)
         throws NoSuchAlgorithmException, KeyStoreException {
         String alg = TrustManagerFactory.getDefaultAlgorithm();
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(alg);
@@ -119,36 +119,36 @@ public final class Java14 extends JavaImpl {
         return tmf;
     }
 
-    protected final Object[] retrieveKeyManagers(Object keyManagerFactory) {
+    protected Object[] retrieveKeyManagers(Object keyManagerFactory) {
         KeyManagerFactory kmf = (KeyManagerFactory) keyManagerFactory;
         return kmf.getKeyManagers();
     }
 
-    protected final Object[] retrieveTrustManagers(Object trustManagerFactory) {
+    protected Object[] retrieveTrustManagers(Object trustManagerFactory) {
         TrustManagerFactory tmf = (TrustManagerFactory) trustManagerFactory;
         return tmf.getTrustManagers();
     }
 
-    protected final SSLSocketFactory buildSSLSocketFactory(Object ssl) {
+    protected SSLSocketFactory buildSSLSocketFactory(Object ssl) {
         return ((SSLContext) ssl).getSocketFactory();
     }
 
-    protected final SSLServerSocketFactory buildSSLServerSocketFactory(Object ssl) {
+    protected SSLServerSocketFactory buildSSLServerSocketFactory(Object ssl) {
         return ((SSLContext) ssl).getServerSocketFactory();
     }
 
-    protected final RuntimeException buildRuntimeException(Exception cause) {
+    protected RuntimeException buildRuntimeException(Exception cause) {
         return new RuntimeException(cause);
     }
 
-    protected final SSLSocket buildSocket(SSL ssl) throws IOException {
+    protected SSLSocket buildSocket(SSL ssl) throws IOException {
         SSLSocketFactory sf = ssl.getSSLSocketFactory();
         SSLSocket s = (SSLSocket) sf.createSocket();
         ssl.doPreConnectSocketStuff(s);
         return s;
     }
 
-    protected final SSLSocket buildSocket(SSL ssl, String remoteHost,
+    protected SSLSocket buildSocket(SSL ssl, String remoteHost,
                                           int remotePort, InetAddress localHost,
                                           int localPort, int timeout)
         throws IOException {
@@ -160,7 +160,7 @@ public final class Java14 extends JavaImpl {
     }
 
 
-    protected final Socket buildPlainSocket(
+    protected Socket buildPlainSocket(
             SSL ssl, String remoteHost, int remotePort, InetAddress localHost, int localPort, int timeout
     ) throws IOException {
         Socket s = SocketFactory.getDefault().createSocket();
@@ -172,7 +172,7 @@ public final class Java14 extends JavaImpl {
         return s;
     }
 
-    protected final Socket connectSocket(Socket s, SocketFactory sf,
+    protected Socket connectSocket(Socket s, SocketFactory sf,
                                          String host, int remotePort,
                                          InetAddress localHost, int localPort,
                                          int timeout, SSL ssl)
@@ -193,7 +193,7 @@ public final class Java14 extends JavaImpl {
         return s;
     }
 
-    protected final SSLServerSocket buildServerSocket(SSL ssl)
+    protected SSLServerSocket buildServerSocket(SSL ssl)
         throws IOException {
         ServerSocket s = ssl.getSSLServerSocketFactory().createServerSocket();
         SSLServerSocket ss = (SSLServerSocket) s;
@@ -201,7 +201,7 @@ public final class Java14 extends JavaImpl {
         return ss;
     }
 
-    protected final void wantClientAuth(Object o, boolean wantClientAuth) {
+    protected void wantClientAuth(Object o, boolean wantClientAuth) {
         SSLSocket s;
         SSLServerSocket ss;
         if (o instanceof SSLSocket) {
@@ -215,7 +215,7 @@ public final class Java14 extends JavaImpl {
         }
     }
 
-    protected final void enabledProtocols(Object o, String[] enabledProtocols) {
+    protected void enabledProtocols(Object o, String[] enabledProtocols) {
         SSLSocket s;
         SSLServerSocket ss;
         if (o instanceof SSLSocket) {
@@ -236,7 +236,7 @@ public final class Java14 extends JavaImpl {
         tm.checkServerTrusted(chain, authType);
     }
 
-    protected final Object initSSL(SSL ssl, TrustChain tc, KeyMaterial k)
+    protected Object initSSL(SSL ssl, TrustChain tc, KeyMaterial k)
         throws NoSuchAlgorithmException, KeyStoreException,
         CertificateException, KeyManagementException, IOException {
         SSLContext context = SSLContext.getInstance(ssl.getDefaultProtocol());

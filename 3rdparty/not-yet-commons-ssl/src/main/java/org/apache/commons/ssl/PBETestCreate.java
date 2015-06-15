@@ -23,8 +23,7 @@ public class PBETestCreate {
 
         String targetDir = p.getProperty("target");
         File dir = new File(targetDir);
-        dir.mkdirs();
-        if (!dir.exists()) {
+        if (!dir.exists() && !dir.mkdirs()) {
             throw new IOException(dir.getCanonicalPath() + " doesn't exist!");
         }
 
