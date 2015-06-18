@@ -83,7 +83,15 @@ public class Keytab implements KrbKeytab {
 
     @Override
     public List<KeytabEntry> getKeytabEntries(PrincipalName principal) {
-        return principalEntries.get(principal);
+        List<KeytabEntry> internal = principalEntries.get(principal);
+        if (internal == null) {
+            return null;
+        }
+        List<KeytabEntry> result = new ArrayList<KeytabEntry>();
+        for (KeytabEntry entry : internal) {
+            result.add(entry);
+        }
+        return result;
     }
 
     @Override

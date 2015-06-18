@@ -83,6 +83,9 @@ public class Kadmin {
         } else if (command.startsWith("ktadd") ||
                 command.startsWith("xst")) {
             executor = new KeytabAddExecutor(backendConfig);
+        } else if (command.startsWith("ktremove") ||
+                command.startsWith("ktrem")) {
+            executor = new KeytabRemoveExecutor(backendConfig);
         } else if (command.startsWith("delete_principal") ||
                 command.startsWith("delprinc")) {
             executor = new DeletePrincipalExecutor(backendConfig);
