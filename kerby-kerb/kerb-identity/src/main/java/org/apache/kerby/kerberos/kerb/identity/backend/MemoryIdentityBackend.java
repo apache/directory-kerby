@@ -56,12 +56,11 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     public List<String> getIdentities(int start, int limit) {
-        return new ArrayList<>(getCache().keySet());
+        return getIdentities().subList(start, limit);
     }
 
     @Override
     public List<String> getIdentities() {
-        //TODO
-        return null;
+        return new ArrayList<>(getCache().keySet());
     }
 }
