@@ -20,10 +20,20 @@
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import org.apache.directory.api.ldap.model.entry.Entry;
+import org.apache.directory.api.ldap.model.entry.Value;
+import org.apache.directory.api.ldap.model.exception.LdapInvalidAttributeValueException;
 import org.apache.directory.api.util.GeneralizedTime;
+import org.apache.directory.shared.kerberos.KerberosAttribute;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import sun.security.krb5.Asn1Exception;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class LdapIdentityGetHelper {
     private Entry entry;
@@ -31,7 +41,58 @@ public class LdapIdentityGetHelper {
         this.entry = entry;
     }
 
-    private KerberosTime createKerberosTime(String generalizedTime)//NOPMD
+    public PrincipalName getPrincipalName() throws LdapInvalidAttributeValueException {
+        String principalNameStr = entry.get(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT).getString();
+        PrincipalName principalName = new PrincipalName(principalNameStr);
+        return principalName;
+    }
+
+    public int getKeyVersion() throws LdapInvalidAttributeValueException {
+        String keyVersionStr = entry.get(KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT).getString();
+        int keyVersion = Integer.parseInt(keyVersionStr);
+        return keyVersion;
+    }
+
+    public List<EncryptionKey> getKeys() throws IOException {
+        Iterator<Value<?>> iterator1 = entry.get(KerberosAttribute.KRB5_KEY_AT).iterator();
+        List<EncryptionKey> keys= new ArrayList<>();
+        while (iterator1.hasNext()) {
+            byte[] encryKey= iterator1.next().getBytes();
+            EncryptionKey key = new EncryptionKey();
+            key.decode(encryKey);
+            keys.add(key);
+        }
+        return keys;
+    }
+
+    public KerberosTime getCreatedTime() throws LdapInvalidAttributeValueException,
+            Asn1Exception, ParseException {
+        String createTime = entry.get("createTimestamp").getString();
+        return createKerberosTime(createTime);
+    }
+
+    public KerberosTime getExpireTime() throws LdapInvalidAttributeValueException,
+            Asn1Exception, ParseException {
+        String expirationTime = entry.get(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT).getString();
+        return createKerberosTime(expirationTime);
+    }
+
+    public boolean getDisabled() throws LdapInvalidAttributeValueException {
+        String disabled = entry.get(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT).getString();
+        return Boolean.parseBoolean(disabled);
+    }
+
+    public int getKdcFlags() throws LdapInvalidAttributeValueException {
+        String krb5KDCFlags = entry.get("krb5KDCFlags").getString();
+        return Integer.parseInt(krb5KDCFlags);
+    }
+
+    public boolean getLocked() throws LdapInvalidAttributeValueException {
+        String lockedOut = entry.get(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT).getString();
+        return Boolean.parseBoolean(lockedOut);
+    }
+
+    private KerberosTime createKerberosTime(String generalizedTime)
             throws ParseException {
         long time = new GeneralizedTime(generalizedTime).getTime();
         return new KerberosTime(time);

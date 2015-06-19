@@ -34,8 +34,10 @@ import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import sun.security.krb5.Asn1Exception;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -94,7 +96,6 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             this.connection.close();
         }
     }
-
 
     private String toGeneralizedTime(KerberosTime kerberosTime) {
         GeneralizedTime generalizedTime = new GeneralizedTime(kerberosTime.getValue());
@@ -170,7 +171,34 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
-        return null;
+        String[] names = principalName.split("@");
+        String uid = names[0];
+        KrbIdentity krbIdentity = new KrbIdentity(principalName);
+        try {
+            Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+            Entry entry = connection.lookup(dn, "*", "+");
+            if (entry == null) {
+                return null;
+            }
+            LdapIdentityGetHelper getHelper = new LdapIdentityGetHelper(entry);
+            krbIdentity.setPrincipal(getHelper.getPrincipalName());
+            krbIdentity.setKeyVersion(getHelper.getKeyVersion());
+            krbIdentity.addKeys(getHelper.getKeys());
+            krbIdentity.setCreatedTime(getHelper.getCreatedTime());
+            krbIdentity.setExpireTime(getHelper.getExpireTime());
+            krbIdentity.setDisabled(getHelper.getDisabled());
+            krbIdentity.setKdcFlags(getHelper.getKdcFlags());
+            krbIdentity.setLocked(getHelper.getLocked());
+        } catch (LdapException e) {
+            e.printStackTrace();
+        } catch (Asn1Exception e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return krbIdentity;
     }
 
     @Override

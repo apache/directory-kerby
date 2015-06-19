@@ -28,6 +28,7 @@ import org.apache.directory.server.core.integ.FrameworkRunner;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -60,7 +61,7 @@ public class LdapIdentityBackendTest extends AbstractLdapIdentityBackendTest
 {
     private LdapIdentityBackend backend;
 
-    @Test
+    @Before
     public void setUp() throws Exception {
         Conf config = new Conf();
         config.setInt("port", getLdapServer().getPort());
@@ -73,5 +74,15 @@ public class LdapIdentityBackendTest extends AbstractLdapIdentityBackendTest
     public void tearDown() throws Exception {
         backend.stop();
         backend.release();
+    }
+
+    @Test
+    public void testGet() {
+        super.testGet(backend);
+    }
+
+    @Test
+    public void testStore() {
+        super.testStore(backend);
     }
 }
