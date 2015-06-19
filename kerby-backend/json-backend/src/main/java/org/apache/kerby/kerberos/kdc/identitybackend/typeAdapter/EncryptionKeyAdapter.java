@@ -19,11 +19,17 @@
  */
 package org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter;
 
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.apache.kerby.util.HexUtil;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 public class EncryptionKeyAdapter implements JsonSerializer<EncryptionKey>,
@@ -35,11 +41,13 @@ public class EncryptionKeyAdapter implements JsonSerializer<EncryptionKey>,
             throws JsonParseException {
         JsonObject jsonObject = (JsonObject) jsonElement;
         EncryptionKey encryptionKey = new EncryptionKey();
+
+        try {
+            encryptionKey.decode(HexUtil.hex2bytes(jsonObject.get("key").getAsString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         encryptionKey.setKvno(jsonObject.get("kvno").getAsInt());
-        String encryptionTypeString = jsonObject.get("keyType").getAsString();
-        EncryptionType encryptionType = EncryptionType.fromName(encryptionTypeString);
-        encryptionKey.setKeyType(encryptionType);
-        encryptionKey.setKeyData(HexUtil.hex2bytes(jsonObject.get("keyData").getAsString()));
         return encryptionKey;
     }
 
@@ -48,8 +56,7 @@ public class EncryptionKeyAdapter implements JsonSerializer<EncryptionKey>,
                                  Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("kvno", encryptionKey.getKvno());
-        jsonObject.addProperty("keyType", encryptionKey.getKeyType().getName());
-        jsonObject.addProperty("keyData", HexUtil.bytesToHex(encryptionKey.getKeyData()));
+        jsonObject.addProperty("key", HexUtil.bytesToHex(encryptionKey.encode()));
         return jsonObject;
     }
 }

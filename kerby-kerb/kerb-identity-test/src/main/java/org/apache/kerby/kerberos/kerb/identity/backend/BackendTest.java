@@ -164,4 +164,13 @@ public abstract class BackendTest {
     protected List<EncryptionType> getEncryptionTypes() {
         return Arrays.asList(encTypes);
     }
+
+    protected void cleanIdentities(IdentityBackend backend) {
+        List<String> identities = backend.getIdentities();
+        if (identities != null) {
+            for (String identity : identities) {
+                backend.deleteIdentity(identity);
+            }
+        }
+    }
 }

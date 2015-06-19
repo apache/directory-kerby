@@ -36,7 +36,7 @@ public class IdentityZNodeHelper {
     private final static String CREATED_TIME_ZNODE_NAME = "createdTime";
     private final static String KEYS_ZNODE_NAME = "keys";
     private final static String KEY_TYPE_ZNODE_NAME = "keyType";
-    private final static String KEY_DATA_ZNODE_NAME = "keyData";
+    private final static String KEY_ZNODE_NAME = "keyData";
     private final static String ENCRYPTION_KEY_NO_ZNODE_NAME = "keyNo";
     private static String baseZNode = "/kerby";
 
@@ -92,8 +92,8 @@ public class IdentityZNodeHelper {
         return ZKUtil.joinZNode(getKeyTypeZNode(principalName, type), KEY_TYPE_ZNODE_NAME);
     }
 
-    public static String getEncryptionKeyDataZNode(String principalName, String type) {
-        return ZKUtil.joinZNode(getKeyTypeZNode(principalName, type), KEY_DATA_ZNODE_NAME);
+    public static String getEncryptionKeyZNode(String principalName, String type) {
+        return ZKUtil.joinZNode(getKeyTypeZNode(principalName, type), KEY_ZNODE_NAME);
     }
 
     public static String getEncryptionKeyNoZNode(String principalName, String type) {
