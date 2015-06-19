@@ -57,8 +57,18 @@
       <version>${ldap.api.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.directory.api</groupId>
+      <artifactId>api-ldap-model</artifactId>
+      <version>${ldap.api.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.directory.server</groupId>
       <artifactId>apacheds-core-api</artifactId>
+      <version>2.0.0-M20</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.directory.server</groupId>
+      <artifactId>apacheds-kerberos-codec</artifactId>
       <version>2.0.0-M20</version>
     </dependency>
     <dependency>

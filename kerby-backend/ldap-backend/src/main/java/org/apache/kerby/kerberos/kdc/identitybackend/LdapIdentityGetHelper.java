@@ -26,14 +26,13 @@ import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import java.text.ParseException;
 
 public class LdapIdentityGetHelper {
-    private Entry entry;//NOPMD
-
+    private Entry entry;
     public LdapIdentityGetHelper(Entry entry) {
         this.entry = entry;
     }
 
-    private KerberosTime createKerberosTime(String generalizedTime) throws ParseException //NOPMD
-    {
+    private KerberosTime createKerberosTime(String generalizedTime)//NOPMD
+            throws ParseException {
         long time = new GeneralizedTime(generalizedTime).getTime();
         return new KerberosTime(time);
     }

@@ -143,7 +143,7 @@ public abstract class BackendTest {
     protected KrbIdentity createOneIdentity(String principal) {
         KrbIdentity kid = new KrbIdentity(principal);
         kid.setCreatedTime(KerberosTime.now());
-        kid.setExpireTime(KerberosTime.NEVER);
+        kid.setExpireTime(new KerberosTime(253402300799900L));
         kid.setDisabled(false);
         kid.setKeyVersion(1);
         kid.setLocked(false);

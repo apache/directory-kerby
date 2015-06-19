@@ -19,23 +19,32 @@
  */
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
+import org.apache.directory.api.ldap.model.entry.DefaultEntry;
+import org.apache.directory.api.ldap.model.entry.Entry;
 import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.api.ldap.model.exception.LdapInvalidDnException;
+import org.apache.directory.api.ldap.model.name.Dn;
+import org.apache.directory.api.ldap.model.name.Rdn;
 import org.apache.directory.api.util.GeneralizedTime;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
+import org.apache.directory.shared.kerberos.KerberosAttribute;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An LDAP based backend implementation.
  *
  */
 public class LdapIdentityBackend extends AbstractIdentityBackend {
-    private static final String BASE_DN = "ou=users,dc=example,dc=com";//NOPMD
+    private static final String BASE_DN = "ou=users,dc=example,dc=com";
     private static final String ADMIN_DN = "uid=admin,ou=system";
     private LdapNetworkConnection connection;
 
@@ -87,19 +96,80 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     }
 
 
-    private String toGeneralizedTime(KerberosTime kerberosTime)//NOPMD
-    {
+    private String toGeneralizedTime(KerberosTime kerberosTime) {
         GeneralizedTime generalizedTime = new GeneralizedTime(kerberosTime.getValue());
         return generalizedTime.toString();
     }
 
-    @Override
-    protected KrbIdentity doGetIdentity(String principalName) {
-        return null;
+    class KeysInfo{
+        private String[] etypes;
+        private byte[][] keys;
+        private String[] kvnos;
+
+        public KeysInfo(KrbIdentity identity) {
+            Map<EncryptionType, EncryptionKey> keymap = identity.getKeys();
+            this.etypes = new String[keymap.size()];
+            this.keys = new byte[keymap.size()][];
+            this.kvnos = new String[keymap.size()];
+            int i = 0;
+            for (Map.Entry<EncryptionType, EncryptionKey> entryKey : keymap.entrySet()) {
+                etypes[i] = entryKey.getKey().getValue() + "";
+                keys[i] = entryKey.getValue().encode();
+                kvnos[i] = entryKey.getValue().getKvno() + "";
+                i++;
+            }
+        }
+
+        public String[] getEtypes() {
+            return etypes;
+        }
+
+        public byte[][] getKeys() {
+            return keys;
+        }
+
+        public String[] getKvnos() {
+            return kvnos;
+        }
     }
 
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
+        String principalName = identity.getPrincipalName();
+        String[] names = principalName.split("@");
+        String uid = names[0];
+        Entry entry = new DefaultEntry();
+        KeysInfo keysInfo = new KeysInfo(identity);
+        try {
+            Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+            entry.setDn(dn);
+            entry.add("objectClass", "top", "person", "inetOrgPerson", "krb5principal", "krb5kdcentry");
+            entry.add("cn", names[0]);
+            entry.add( "sn", names[0]);
+            entry.add(KerberosAttribute.KRB5_KEY_AT, keysInfo.getKeys());
+            entry.add( "krb5EncryptionType", keysInfo.getEtypes());
+            entry.add( KerberosAttribute.KRB5_PRINCIPAL_NAME_AT, principalName);
+            entry.add( KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT, identity.getKeyVersion() + "");
+            entry.add( "krb5KDCFlags", "" + identity.getKdcFlags());
+            entry.add( KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, "" + identity.isDisabled());
+            entry.add( "createTimestamp",
+                    toGeneralizedTime(identity.getCreatedTime()));
+            entry.add(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, "" + identity.isLocked());
+            entry.add( KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT,
+                    toGeneralizedTime(identity.getExpireTime()));
+            connection.add(entry);
+        } catch (LdapInvalidDnException e) {
+            e.printStackTrace();
+        } catch (LdapException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return identity;
+    }
+
+    @Override
+    protected KrbIdentity doGetIdentity(String principalName) {
         return null;
     }
 

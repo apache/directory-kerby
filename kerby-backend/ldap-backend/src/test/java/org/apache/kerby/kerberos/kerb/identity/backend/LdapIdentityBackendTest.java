@@ -61,8 +61,7 @@ public class LdapIdentityBackendTest extends AbstractLdapIdentityBackendTest
     private LdapIdentityBackend backend;
 
     @Test
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         Conf config = new Conf();
         config.setInt("port", getLdapServer().getPort());
         this.backend = new LdapIdentityBackend(config);
@@ -71,8 +70,7 @@ public class LdapIdentityBackendTest extends AbstractLdapIdentityBackendTest
     }
 
     @After
-    public void tearDown() throws Exception
-    {
+    public void tearDown() throws Exception {
         backend.stop();
         backend.release();
     }
