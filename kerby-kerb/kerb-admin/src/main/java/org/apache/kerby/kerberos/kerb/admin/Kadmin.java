@@ -334,4 +334,34 @@ public class Kadmin {
             throw new KrbException("Failed to get identity!", e);
         }
     }
+
+    public void updatePassword(String principal, String password) throws KrbException {
+        KrbIdentity identity = backend.getIdentity(principal);
+        if (identity != null) {
+            identity.addKeys(generateKeys(identity.getPrincipalName(), password));
+        } else {
+            throw new KrbException("Principal " + principal +
+                "was not found. Please check the input and try again");
+        }
+        backend.updateIdentity(identity);
+    }
+
+    public void updateKey(String principal) throws KrbException {
+        KrbIdentity identity = backend.getIdentity(principal);
+        if (identity != null) {
+            identity.addKeys(generateKeys());
+        } else {
+            throw new KrbException("Principal " + principal +
+                "was not found. Please check the input and try again");
+        }
+        backend.updateIdentity(identity);
+    }
+
+    private List<EncryptionKey> generateKeys() throws KrbException {
+        try {
+            return EncryptionUtil.generateKeys(kdcConfig.getEncryptionTypes());
+        } catch (KrbException e) {
+            throw new KrbException("Failed to create keys", e);
+        }
+    }
 }

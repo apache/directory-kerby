@@ -95,6 +95,9 @@ public class Kadmin {
         } else if (command.startsWith("rename_principal") ||
                 command.startsWith("renprinc")) {
             executor = new RenamePrincipalExecutor(backendConfig);
+        } else if (command.startsWith("change_password") ||
+                command.startsWith("cpw")) {
+            executor = new ChangePasswordExecutor(kdcConfig, backendConfig);
         } else if (command.startsWith("get_principal") || command.startsWith("getprinc") ||
                 command.startsWith("Get principal")) {
             executor = new GetPrincipalExcutor(backendConfig);
