@@ -140,11 +140,10 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
         String principalName = identity.getPrincipalName();
         String[] names = principalName.split("@");
-        String uid = names[0];
         Entry entry = new DefaultEntry();
         KeysInfo keysInfo = new KeysInfo(identity);
         try {
-            Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+            Dn dn = toDn(principalName);
             entry.setDn(dn);
             entry.add("objectClass", "top", "person", "inetOrgPerson", "krb5principal", "krb5kdcentry");
             entry.add("cn", names[0]);
@@ -173,11 +172,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
-        String[] names = principalName.split("@");
-        String uid = names[0];
         KrbIdentity krbIdentity = new KrbIdentity(principalName);
         try {
-            Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+            Dn dn = toDn(principalName);
             Entry entry = connection.lookup(dn, "*", "+");
             if (entry == null) {
                 return null;
@@ -206,11 +203,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
         String principalName = identity.getPrincipalName();
-        String[] names = principalName.split("@");
-        String uid = names[0];
         KeysInfo keysInfo = new KeysInfo(identity);
         try {
-            Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+            Dn dn = toDn(principalName);
             ModifyRequest modifyRequest = new ModifyRequestImpl();
             modifyRequest.setName(dn);
             modifyRequest.replace(KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT, "" + identity.getKeyVersion());
@@ -230,14 +225,19 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     protected void doDeleteIdentity(String principalName) {
-        String[] names = principalName.split("@");
-        String uid = names[0];
         try {
-            Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+            Dn dn = toDn(principalName);
             connection.delete(dn);
         } catch (LdapException e) {
             e.printStackTrace();
         }
+    }
+
+    private Dn toDn(String principalName) throws LdapInvalidDnException {
+        String[] names = principalName.split("@");
+        String uid = names[0];
+        Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+        return dn;
     }
 
     @Override
