@@ -89,7 +89,6 @@ public abstract class BackendTest {
 
         // clear the identity cache.
         backend.release();
-
         assertThat(backend.getIdentity(TEST_PRINCIPAL)).isEqualTo(kid);
 
         //tearDown

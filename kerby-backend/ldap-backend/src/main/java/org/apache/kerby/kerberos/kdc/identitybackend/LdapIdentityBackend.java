@@ -23,6 +23,8 @@ import org.apache.directory.api.ldap.model.entry.DefaultEntry;
 import org.apache.directory.api.ldap.model.entry.Entry;
 import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.api.ldap.model.exception.LdapInvalidDnException;
+import org.apache.directory.api.ldap.model.message.ModifyRequest;
+import org.apache.directory.api.ldap.model.message.ModifyRequestImpl;
 import org.apache.directory.api.ldap.model.name.Dn;
 import org.apache.directory.api.ldap.model.name.Rdn;
 import org.apache.directory.api.util.GeneralizedTime;
@@ -203,7 +205,27 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
-        return null;
+        String principalName = identity.getPrincipalName();
+        String[] names = principalName.split("@");
+        String uid = names[0];
+        KeysInfo keysInfo = new KeysInfo(identity);
+        try {
+            Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+            ModifyRequest modifyRequest = new ModifyRequestImpl();
+            modifyRequest.setName(dn);
+            modifyRequest.replace(KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT, "" + identity.getKeyVersion());
+            modifyRequest.replace(KerberosAttribute.KRB5_KEY_AT, keysInfo.getKeys());
+            modifyRequest.replace("krb5EncryptionType", keysInfo.getEtypes());
+            modifyRequest.replace(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT, identity.getPrincipalName());
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT, toGeneralizedTime(identity.getExpireTime()));
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, "" + identity.isDisabled());
+            modifyRequest.replace("krb5KDCFlags", "" + identity.getKdcFlags());
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, "" + identity.isLocked());
+            connection.modify(modifyRequest);
+        } catch (LdapException e) {
+            e.printStackTrace();
+        }
+        return identity;
     }
 
     @Override
