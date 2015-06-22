@@ -230,7 +230,14 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     protected void doDeleteIdentity(String principalName) {
-
+        String[] names = principalName.split("@");
+        String uid = names[0];
+        try {
+            Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+            connection.delete(dn);
+        } catch (LdapException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
