@@ -78,7 +78,7 @@ public class ChangePasswordCommand extends KadminCommand {
                 }
             } else if( kOptions.contains(KadminOption.RANDKEY)){
                 try {
-                    getKadmin().updateKey(principal);
+                    getKadmin().updateKeys(principal);
                 } catch (KrbException e) {
                     System.err.println("Fail to update key. " + e.getCause());
                 }

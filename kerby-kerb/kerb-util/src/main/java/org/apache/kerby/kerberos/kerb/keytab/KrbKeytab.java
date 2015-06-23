@@ -37,6 +37,8 @@ public interface KrbKeytab {
 
     void removeKeytabEntries(PrincipalName principal);
 
+    void removeKeytabEntries(PrincipalName principal, int kvno);
+
     void removeKeytabEntry(KeytabEntry entry);
 
     List<KeytabEntry> getKeytabEntries(PrincipalName principal);

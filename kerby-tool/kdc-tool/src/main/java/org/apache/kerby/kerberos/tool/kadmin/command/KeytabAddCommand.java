@@ -26,7 +26,7 @@ import java.io.File;
 
 public class KeytabAddCommand extends KadminCommand {
     private static final String USAGE =
-            "Usage: ktadd [-k[eytab] keytab] [-q] [-e keysaltlist] [-norandkey] [principal | -glob princ-exp] [...]";
+        "Usage: ktadd [-k[eytab] keytab] [-q] [-e keysaltlist] [-norandkey] [principal | -glob princ-exp] [...]";
 
     private static final String DEFAULT_KEYTAB_FILE_LOCATION = "/etc/krb5.keytab";
 
@@ -70,8 +70,8 @@ public class KeytabAddCommand extends KadminCommand {
         }
 
         try {
-        StringBuffer result = getKadmin().addEntryToKeytab(keytabFile, principal);
-            System.out.println(result.toString());
+            getKadmin().exportKeytab(keytabFile, principal);
+            System.out.println("Done!");
         } catch (KrbException e) {
             System.err.println("Principal \"" + principal + "\" fail to add entry to keytab." +
                 e.getCause());

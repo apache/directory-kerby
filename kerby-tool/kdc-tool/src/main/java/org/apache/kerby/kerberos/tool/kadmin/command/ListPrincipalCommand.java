@@ -38,7 +38,7 @@ public class ListPrincipalCommand extends KadminCommand {
 
         if (commands.length == 1) {
             try {
-                principalNames = getKadmin().listPrincipal();
+                principalNames = getKadmin().getPrincipals();
             } catch (KrbException e) {
                 System.err.print("Fail to list principal!" + e.getMessage());
             }

@@ -31,7 +31,7 @@ public class KeytabRemoveCommand extends KadminCommand {
     private static final String USAGE =
             "Usage: ktremove [-k[eytab] keytab] [-q] principal [kvno | all | old]";
 
-    private static final String DEFAULT_KEYTAB_FILE_LOCATION = "/etc/krb5.keytab";
+    private static final String DEFAULT_KEYTAB_FILE = "/etc/krb5.keytab";
 
     public KeytabRemoveCommand(Kadmin kadmin) {
         super(kadmin);
@@ -45,9 +45,9 @@ public class KeytabRemoveCommand extends KadminCommand {
             return;
         }
 
-        String principal = null;
-        String keytabFileLocation = null;
-        String rangeSuffix = null;
+        String principal;
+        String keytabFileLocation;
+        String removeOption = null;
         int lastIndex ;
 
         if (commands[commands.length - 1].matches("^all|old|-?\\d+$")) {
@@ -57,7 +57,7 @@ public class KeytabRemoveCommand extends KadminCommand {
             }
             lastIndex = commands.length - 3;
             principal = commands[commands.length - 2];
-            rangeSuffix = commands[commands.length - 1];
+            removeOption = commands[commands.length - 1];
         } else {
             lastIndex = commands.length - 2;
             principal = commands[commands.length - 1];
@@ -74,14 +74,20 @@ public class KeytabRemoveCommand extends KadminCommand {
                 kOptions.getStringOption(KadminOption.K):kOptions.getStringOption(KadminOption.KEYTAB);
 
         if (keytabFileLocation == null) {
-            keytabFileLocation = DEFAULT_KEYTAB_FILE_LOCATION;
+            keytabFileLocation = DEFAULT_KEYTAB_FILE;
         }
         File keytabFile = new File(keytabFileLocation);
 
         try {
-            StringBuilder result = getKadmin().removeEntryFromKeytab(keytabFile, principal, rangeSuffix);
-            result.append("\tFile:" + keytabFileLocation);
-            System.out.println(result.toString());
+            if (removeOption.equals("all")) {
+                getKadmin().removeKeytabEntriesOf(keytabFile, principal);
+            } else if (removeOption.equals("old")) {
+                getKadmin().removeOldKeytabEntriesOf(keytabFile, principal);
+            } else {
+                int kvno = Integer.parseInt(removeOption);
+                getKadmin().removeKeytabEntriesOf(keytabFile, principal, kvno);
+            }
+            System.out.println("Done!");
         } catch (KrbException e) {
             System.err.println("Principal \"" + principal + "\" fail to remove entry from keytab." +
                 e.getMessage());

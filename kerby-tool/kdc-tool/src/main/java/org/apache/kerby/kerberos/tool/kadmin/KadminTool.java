@@ -19,13 +19,11 @@
  */
 package org.apache.kerby.kerberos.tool.kadmin;
 
-import org.apache.kerby.config.Conf;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
-import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.tool.kadmin.command.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -63,10 +61,8 @@ public class KadminTool {
             "list_requests, lr, ?     List available requests.\n" +
             "quit, exit, q            Exit program.";
 
-    private static KdcConfig kdcConfig;
-    private static Conf backendConfig;
 
-    private static void execute(String command) {
+    private static void execute(Kadmin kadmin, String command) {
         //Omit the leading and trailing whitespace.
         command = command.trim();
         if (command.equals("list_requests") ||
@@ -76,7 +72,6 @@ public class KadminTool {
             return;
         }
 
-        Kadmin kadmin = new Kadmin(kdcConfig, backendConfig);
         KadminCommand executor = null;
         if (command.startsWith("add_principal") ||
                 command.startsWith("addprinc") ||
@@ -115,7 +110,7 @@ public class KadminTool {
         executor.execute(command);
     }
 
-    private static void initConfig(String[] args) {
+    private static File getConfDir(String[] args) {
         File confDir;
         if (args.length == 0) {
             String envDir;
@@ -134,43 +129,30 @@ public class KadminTool {
             confDir = new File(args[0]);
         }
 
-        if (confDir.exists()) {
-            File kdcConfFile = new File(confDir, "kdc.conf");
-            if (kdcConfFile.exists()) {
-                kdcConfig = new KdcConfig();
-                try {
-                    kdcConfig.addIniConfig(kdcConfFile);
-                } catch (IOException e) {
-                    System.err.println("Can not load the kdc configuration file " + kdcConfFile.getAbsolutePath());
-                    e.printStackTrace();
-                }
-            }
-
-            File backendConfigFile = new File(confDir, "backend.conf");
-            if (backendConfigFile.exists()) {
-                backendConfig = new Conf();
-                try {
-                    backendConfig.addIniConfig(backendConfigFile);
-                } catch (IOException e) {
-                    System.err.println("Can not load the backend configuration file " + backendConfigFile.getAbsolutePath());
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            throw new RuntimeException("Can not find configuration directory");
+        if (!confDir.exists()) {
+            throw new RuntimeException("Can not locate KDC backend directory "
+                + confDir.getAbsolutePath());
         }
+        return confDir;
     }
 
     public static void main(String[] args) {
-        initConfig(args);
+        Kadmin kadmin;
+        try {
+            kadmin = Kadmin.getInstance(getConfDir(args));
+        } catch (KrbException e) {
+            System.err.println("Failed to init Kadmin due to " + e.getMessage());
+            return;
+        }
+
         System.out.print(PROMPT + ": ");
+
         try (Scanner scanner = new Scanner(System.in)) {
             String input = scanner.nextLine();
-    
-            while (!(input.equals("quit") ||
-                    input.equals("exit") ||
-                    input.equals("q"))) {
-                execute(input);
+
+            boolean quit = input.equals("quit") || input.equals("exit") || input.equals("q");
+            while (!quit) {
+                execute(kadmin, input);
                 System.out.print(PROMPT + ": ");
                 input = scanner.nextLine();
             }

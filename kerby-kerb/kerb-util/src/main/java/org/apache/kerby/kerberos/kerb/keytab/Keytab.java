@@ -35,7 +35,10 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
-public class Keytab implements KrbKeytab {
+/**
+ * Keytab management util.
+ */
+public final class Keytab implements KrbKeytab {
 
     public static final int V501 = 0x0501;
     public static final int V502 = 0x0502;
@@ -66,6 +69,16 @@ public class Keytab implements KrbKeytab {
     }
 
     @Override
+    public void removeKeytabEntries(PrincipalName principal, int kvno) {
+        List<KeytabEntry> entries = getKeytabEntries(principal);
+        for(KeytabEntry entry : entries) {
+            if(entry.getKvno() == kvno) {
+                removeKeytabEntry(entry);
+            }
+        }
+    }
+
+    @Override
     public void removeKeytabEntry(KeytabEntry entry) {
         PrincipalName principal = entry.getPrincipal();
         List<KeytabEntry> entries = principalEntries.get(principal);
@@ -83,15 +96,18 @@ public class Keytab implements KrbKeytab {
 
     @Override
     public List<KeytabEntry> getKeytabEntries(PrincipalName principal) {
+        List<KeytabEntry> results = new ArrayList<KeytabEntry>();
+
         List<KeytabEntry> internal = principalEntries.get(principal);
         if (internal == null) {
-            return null;
+            return results;
         }
-        List<KeytabEntry> result = new ArrayList<KeytabEntry>();
+
         for (KeytabEntry entry : internal) {
-            result.add(entry);
+            results.add(entry);
         }
-        return result;
+
+        return results;
     }
 
     @Override
