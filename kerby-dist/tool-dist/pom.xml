@@ -53,12 +53,14 @@
                 <configuration>
                   <tasks>
                     <!--client tool-->
-                    <copy file="../../kerby-kerb/kerb-client-api-all/target/kerb-client-api-all-${project.version}.jar" tofile="lib/kerb-client-all-${project.version}.jar"/>
+                    <copy file="../../kerby-asn1/target/kerby-asn1-${project.version}.jar" tofile="lib/kerby-asn1-${project.version}.jar"/>
+                    <copy file="../../kerby-kerb/kerb-server-api-all/target/kerb-server-api-all-${project.version}.jar" tofile="lib/kerb-server-api-all-${project.version}.jar"/>
+                    <copy file="../../kerby-kerb/kerb-client-api-all/target/kerb-client-api-all-${project.version}.jar" tofile="lib/kerb-client-api-all-${project.version}.jar"/>
                     <copy file="../../kerby-tool/client-tool/target/client-tool-${project.version}.jar" tofile="lib/client-tool-${project.version}.jar"/>
                     <copy file="../../kerby-provider/token-provider/target/token-provider-${project.version}-jar-with-dependencies.jar" tofile="lib/token-provider-tool-${project.version}-jar-with-dependencies.jar"/>
 
                     <!--kadmin tool-->
-                    <copy file="../../kerby-tool/kdc-tool/target/kdc-tool-${project.version}-jar-with-dependencies.jar" tofile="lib/kdc-tool-${project.version}-jar-with-dependencies.jar"/>
+                    <copy file="../../kerby-tool/kdc-tool/target/kdc-tool-${project.version}.jar" tofile="lib/kdc-tool-${project.version}.jar"/>
                     <copy file="../../kerby-backend/json-backend/target/json-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/json-backend-${project.version}-jar-with-dependencies.jar"/>
                     <copy file="../../kerby-backend/ldap-backend/target/ldap-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/ldap-backend-${project.version}-jar-with-dependencies.jar"/>
                     <copy file="../../kerby-backend/zookeeper-backend/target/zookeeper-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/zookeeper-backend-${project.version}-jar-with-dependencies.jar"/>
@@ -70,6 +72,23 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>slf4j-api</includeArtifactIds>
+                            <outputDirectory>lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
       </build>
     </profile>

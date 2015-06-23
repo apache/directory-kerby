@@ -37,7 +37,7 @@ public enum KlistOption implements KOption{
     DISPL_ADDRESS_LIST("-a", "displays the address list"),
     NO_REVERSE_RESOLVE("-n","do not reverse resolve"),
     SHOW_KTAB_ENTRY_TS("-t","shows keytab entry timestamps"),
-    SHOW_KTAB_ENTRY_KEY("-k", "show keytab entry keys"),
+    SHOW_KTAB_ENTRY_KEY("-K", "show keytab entry keys"),
     ;
 
     private String name;

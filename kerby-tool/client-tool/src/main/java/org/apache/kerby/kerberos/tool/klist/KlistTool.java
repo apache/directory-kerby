@@ -23,12 +23,18 @@ import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
+import org.apache.kerby.kerberos.kerb.keytab.Keytab;
+import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.util.HexUtil;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,7 +63,8 @@ public class KlistTool {
                     "\t\t-t shows keytab entry timestamps\n" +
                     "\t\t-K shows keytab entry keys\n";
 
-
+    // option "-k" hava a optional parameter, "/etc/krb5.keytab" if not specified
+    private static String keytabFilePath = null;
 
     private static void printUsage(String error) {
         System.err.println(error + "\n");
@@ -65,7 +72,7 @@ public class KlistTool {
         System.exit(-1);
     }
 
-    private static int printInfo(KOptions klOptions) {
+    private static int printCredentialCacheInfo(KOptions klOptions) {
         CredentialCache cc = new CredentialCache();
         List<Credential> credentials;
         InputStream cis = null ;
@@ -112,6 +119,65 @@ public class KlistTool {
         return 0;
     }
 
+    private static int printKeytabInfo(KOptions klOptions) {
+        String[] header = new String[4];
+        header[0] = "KVNO Principal\n" +
+                "---- --------------------------------------------------------------------------";
+        header[1] = header[0];
+        header[2] = "KVNO Timestamp           Principal\n" +
+                "---- ------------------- ------------------------------------------------------";
+        header[3] = header[2];
+        int outputIndex = 0;
+        if (klOptions.contains(KlistOption.SHOW_KTAB_ENTRY_TS)) {
+            outputIndex |= 2;
+        }
+        if (klOptions.contains(KlistOption.SHOW_KTAB_ENTRY_KEY)) {
+            outputIndex |= 1;
+        }
+        System.out.println("Keytab name: FILE:" + keytabFilePath);
+        try {
+            File keytabFile = new File(keytabFilePath);
+            if (!keytabFile.exists()) {
+                System.out.println("klist: Key table file '" + keytabFilePath +"' not found. ");
+                return 0;
+            }
+            System.out.println(header[outputIndex]);
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            Keytab keytab = Keytab.loadKeytab(keytabFile);
+            List<PrincipalName> principals = keytab.getPrincipals();
+            for (PrincipalName principal : principals) {
+                List<KeytabEntry> keytabEntries = keytab.getKeytabEntries(principal);
+                for (KeytabEntry entry : keytabEntries) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(String.format("%-4d ", entry.getKvno()));
+                    if ((outputIndex & 2) != 0) {
+                        Date date = new Date(entry.getTimestamp().getTime());
+                        sb.append(format.format(date));
+                        sb.append(' ');
+                    }
+                    sb.append(String.format("%s ", principal.getName()));
+                    if ((outputIndex & 1) != 0) {
+                        sb.append("(0x");
+                        sb.append(HexUtil.bytesToHex(entry.getKey().getKeyData()));
+                        sb.append(")");
+                    }
+                    System.out.println(sb);
+                }
+            }
+
+        } catch (IOException e) {
+            System.err.println("klist: Error while scan key table file '" + keytabFilePath +"'");
+        }
+        return 0;
+    }
+
+    private static int printInfo(KOptions klOptions) {
+        if (klOptions.contains(KlistOption.KEYTAB)) {
+            return printKeytabInfo(klOptions);
+        }
+        return printCredentialCacheInfo(klOptions);
+    }
+
     public static void main(String[] args) throws Exception {
         KOptions klOptions = new KOptions();
         KlistOption klopt;
@@ -127,14 +193,15 @@ public class KlistTool {
                 klopt = KlistOption.fromName(opt);
                 if (klopt == KlistOption.NONE) {
                     error = "Invalid option:" + opt;
-                    break;
                 }
             } else {
-                // name = opt;
+                if (keytabFilePath == null && klOptions.contains(KlistOption.KEYTAB)) {
+                    keytabFilePath = opt;
+                }
                 break;
             }
 
-            if (klopt.getType() != KOptionType.NOV) { //needs value for this parameter
+            if (error == null && klopt.getType() != KOptionType.NOV) { //needs value for this parameter
                 value = null;
                 if (i < args.length) {
                     value = args[i++];
@@ -151,6 +218,14 @@ public class KlistTool {
             }
 
             klOptions.add(klopt);
+            if (klOptions.contains(KlistOption.KEYTAB) && klOptions.contains(KlistOption.CREDENTIALS_CACHE)) {
+                error = "Can not use '-c' and '-k' at the same time ";
+                printUsage(error);
+            }
+        }
+
+        if (keytabFilePath == null) {
+            keytabFilePath = "/etc/krb5.keytab";
         }
 
         int errNo = KlistTool.printInfo(klOptions);
