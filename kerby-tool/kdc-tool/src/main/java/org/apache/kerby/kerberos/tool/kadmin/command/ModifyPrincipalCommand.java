@@ -17,18 +17,16 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.executor;
+package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
-import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
+import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
-public class ModifyPrincipalExecutor implements KadminCommandExecutor {
+public class ModifyPrincipalCommand extends KadminCommand {
     private static final String USAGE = "Usage: modify_principal [options] principal\n" +
         "\toptions are:\n" +
         "\t\t[-expire dd/MM/yy:HH:mm:ss]\n" +
@@ -37,29 +35,24 @@ public class ModifyPrincipalExecutor implements KadminCommandExecutor {
         "\tExample:\n" +
         "\t\tmodify_principal -expire 23/04/15:01:01:01 -disabled false -locked true test@EXAMPLE.COM";
 
-    private Config backendConfig;
     private KOptions kOptions;
     private String principal;
-    private KdcConfig kdcConfig; //NOPMD
 
-    public ModifyPrincipalExecutor(KdcConfig kdcConfig, Config backendConfig) {
-        this.backendConfig = backendConfig;
-        this.kdcConfig = kdcConfig;
-        kOptions = new KOptions();
+    public ModifyPrincipalCommand(Kadmin kadmin) {
+        super(kadmin);
     }
 
     @Override
     public void execute(String input) {
         String[] commands = input.split(" ");
         if (commands.length < 2) {
-            KadminTool.printUsage("missing operand!", USAGE);
+            ToolUtil.printUsage("missing operand!", USAGE);
             return;
         }
         parseOptions(commands);
-        Kadmin kadmin = new Kadmin(kdcConfig, backendConfig);
 
         try {
-            kadmin.modifyPrincipal(principal, kOptions);
+            getKadmin().modifyPrincipal(principal, kOptions);
             System.out.println("Principal \"" + principal + "\" modified.");
         } catch (KrbException e) {
             System.err.println("Principal \"" + principal + "\" fail to modify. " + e.getCause());
@@ -96,12 +89,12 @@ public class ModifyPrincipalExecutor implements KadminCommandExecutor {
                 }
             }
             if (error != null) {
-                KadminTool.printUsage(error, USAGE);
+                ToolUtil.printUsage(error, USAGE);
             }
             kOptions.add(kOption);
         }
         if(principal == null) {
-            KadminTool.printUsage("missing principal name!", USAGE);
+            ToolUtil.printUsage("missing principal name!", USAGE);
         }
     }
 }

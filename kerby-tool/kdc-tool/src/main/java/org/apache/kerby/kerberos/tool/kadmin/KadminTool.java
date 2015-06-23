@@ -20,16 +20,17 @@
 package org.apache.kerby.kerberos.tool.kadmin;
 
 import org.apache.kerby.config.Conf;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
-import org.apache.kerby.kerberos.tool.kadmin.executor.*;
+import org.apache.kerby.kerberos.tool.kadmin.command.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
 
-public class Kadmin {
-    private static final String PROMPT = Kadmin.class.getSimpleName() + ".local";
+public class KadminTool {
+    private static final String PROMPT = KadminTool.class.getSimpleName() + ".local";
     private static final String REQUEST_LIST = "Available " + PROMPT + " requests:\n" +
             "\n" +
             "add_principal, addprinc, ank\n" +
@@ -66,7 +67,7 @@ public class Kadmin {
     private static Conf backendConfig;
 
     private static void execute(String command) {
-        //omit the leading and trailing whitespace.
+        //Omit the leading and trailing whitespace.
         command = command.trim();
         if (command.equals("list_requests") ||
                 command.equals("lr") ||
@@ -75,36 +76,37 @@ public class Kadmin {
             return;
         }
 
-        KadminCommandExecutor executor = null;
+        Kadmin kadmin = new Kadmin(kdcConfig, backendConfig);
+        KadminCommand executor = null;
         if (command.startsWith("add_principal") ||
                 command.startsWith("addprinc") ||
                 command.startsWith("ank")) {
-            executor = new AddPrincipalExecutor(kdcConfig, backendConfig);
+            executor = new AddPrincipalCommand(kadmin);
         } else if (command.startsWith("ktadd") ||
                 command.startsWith("xst")) {
-            executor = new KeytabAddExecutor(backendConfig);
+            executor = new KeytabAddCommand(kadmin);
         } else if (command.startsWith("ktremove") ||
                 command.startsWith("ktrem")) {
-            executor = new KeytabRemoveExecutor(backendConfig);
+            executor = new KeytabRemoveCommand(kadmin);
         } else if (command.startsWith("delete_principal") ||
                 command.startsWith("delprinc")) {
-            executor = new DeletePrincipalExecutor(backendConfig);
+            executor = new DeletePrincipalCommand(kadmin);
         } else if (command.startsWith("modify_principal") ||
                 command.startsWith("modprinc")) {
-            executor = new ModifyPrincipalExecutor(kdcConfig, backendConfig);
+            executor = new ModifyPrincipalCommand(kadmin);
         } else if (command.startsWith("rename_principal") ||
                 command.startsWith("renprinc")) {
-            executor = new RenamePrincipalExecutor(backendConfig);
+            executor = new RenamePrincipalCommand(kadmin);
         } else if (command.startsWith("change_password") ||
                 command.startsWith("cpw")) {
-            executor = new ChangePasswordExecutor(kdcConfig, backendConfig);
+            executor = new ChangePasswordCommand(kadmin);
         } else if (command.startsWith("get_principal") || command.startsWith("getprinc") ||
                 command.startsWith("Get principal")) {
-            executor = new GetPrincipalExcutor(backendConfig);
+            executor = new GetPrincipalCommand(kadmin);
         } else if (command.startsWith("list_principals") ||
                 command.startsWith("listprincs") || command.startsWith("get_principals") ||
                 command.startsWith("getprincs") || command.startsWith("List principals")) {
-            executor = new ListPrincipalExcutor(backendConfig);
+            executor = new ListPrincipalCommand(kadmin);
         }
         if (executor == null) {
             System.out.println("Unknown request \"" + command + "\". Type \"?\" for a request list.");

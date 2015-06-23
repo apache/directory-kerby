@@ -17,21 +17,19 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.executor;
+package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
-import org.apache.kerby.kerberos.kerb.server.KdcConfig;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
+import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
 import java.io.Console;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class AddPrincipalExecutor implements KadminCommandExecutor{
+public class AddPrincipalCommand extends KadminCommand {
     private static final String USAGE = "Usage: add_principal [options] principal\n" +
             "\toptions are:\n" +
             "\t\t[-randkey|-nokey] [-x db_princ_args]* [-expire expdate] [-pwexpire pwexpdate] [-maxlife maxtixlife]\n" +
@@ -51,13 +49,11 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
             "\tExample:\n" +
             "\t\tadd_principal -expire 23/04/15:01:01:01 -kvno 1 -pw mypassword test@EXAMPLE.COM";
 
-    private KdcConfig kdcConfig;
-    private Config backendConfig;
+
     private KOptions kOptions;
 
-    public AddPrincipalExecutor(KdcConfig kdcConfig, Config backendConfig) {
-        this.kdcConfig = kdcConfig;
-        this.backendConfig = backendConfig;
+    public AddPrincipalCommand(Kadmin kadmin) {
+        super(kadmin);
     }
 
     @Override
@@ -68,7 +64,7 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
             return;
         }
 
-        kOptions = KadminTool.parseOptions(commands, 1, commands.length - 2);
+        kOptions = ToolUtil.parseOptions(commands, 1, commands.length - 2);
         if(kOptions == null) {
             System.err.println(USAGE);
             return;
@@ -85,10 +81,8 @@ public class AddPrincipalExecutor implements KadminCommandExecutor{
             return;
         }
 
-        Kadmin kadmin = new Kadmin(kdcConfig, backendConfig);
-
         try {
-            kadmin.addPrincipal(principal, password, kOptions);
+            getKadmin().addPrincipal(principal, password, kOptions);
             System.out.println("Principal \"" + principal + "\" created.");
         } catch (KrbException e) {
             System.err.println("Fail to add principal \"" + principal + "\"." + e.getCause());

@@ -17,12 +17,24 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.executor;
+package org.apache.kerby.kerberos.tool.kadmin.command;
 
-public interface KadminCommandExecutor {
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+
+public abstract class KadminCommand {
+
+    private Kadmin kadmin;
+
+    public KadminCommand(Kadmin kadmin) {
+        this.kadmin = kadmin;
+    }
+
+    protected Kadmin getKadmin() {
+        return kadmin;
+    }
 
     /**
      * Execute the kadmin command.
      */
-    void execute(String input);
+    public abstract void execute(String input);
 }

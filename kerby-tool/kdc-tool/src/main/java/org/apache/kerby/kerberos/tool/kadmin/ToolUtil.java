@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.tool;
+package org.apache.kerby.kerberos.tool.kadmin;
 
 import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 
 import java.util.Scanner;
 
-public class KadminTool {
+public class ToolUtil {
 
     public static void printUsage(String error, String USAGE) {
         System.err.println(error + "\n");

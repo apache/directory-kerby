@@ -17,9 +17,8 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.executor;
+package org.apache.kerby.kerberos.tool.kadmin.command;
 
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
@@ -28,13 +27,12 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 import java.util.Map;
 
-public class GetPrincipalExcutor implements KadminCommandExecutor {
+public class GetPrincipalCommand extends KadminCommand {
     private static final String USAGE = "Usage: getprinc principalName\n" +
             "such as, getprinc hello@TEST.COM";
-    private Config backendConfig;
 
-    public GetPrincipalExcutor(Config backendConfig) {
-        this.backendConfig = backendConfig;
+    public GetPrincipalCommand(Kadmin kadmin) {
+        super(kadmin);
     }
 
     @Override
@@ -47,10 +45,9 @@ public class GetPrincipalExcutor implements KadminCommandExecutor {
         }
 
         String princName = commands[commands.length - 1];
-        Kadmin kadmin = new Kadmin(backendConfig);
         KrbIdentity identity = null;
         try {
-            identity = kadmin.getPrincipal(princName);
+            identity = getKadmin().getPrincipal(princName);
         } catch (KrbException e) {
             System.err.println("Fail to get principal: " + princName + ". " + e.getCause());
         }

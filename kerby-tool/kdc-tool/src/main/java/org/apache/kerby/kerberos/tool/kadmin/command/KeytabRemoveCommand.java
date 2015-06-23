@@ -17,27 +17,24 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.executor;
+package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
+import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
 import java.io.File;
 
-public class KeytabRemoveExecutor implements KadminCommandExecutor{
+public class KeytabRemoveCommand extends KadminCommand {
     private static final String USAGE =
             "Usage: ktremove [-k[eytab] keytab] [-q] principal [kvno | all | old]";
 
     private static final String DEFAULT_KEYTAB_FILE_LOCATION = "/etc/krb5.keytab";
 
-    private Config backendConfig;
-
-    public KeytabRemoveExecutor(Config backendConfig) {
-        this.backendConfig = backendConfig;
+    public KeytabRemoveCommand(Kadmin kadmin) {
+        super(kadmin);
     }
 
     @Override
@@ -65,7 +62,7 @@ public class KeytabRemoveExecutor implements KadminCommandExecutor{
             lastIndex = commands.length - 2;
             principal = commands[commands.length - 1];
         }
-        KOptions kOptions = KadminTool.parseOptions(commands, 1, lastIndex);
+        KOptions kOptions = ToolUtil.parseOptions(commands, 1, lastIndex);
 
         if (principal == null || kOptions == null ||
                 kOptions.contains(KadminOption.K) && kOptions.contains(KadminOption.KEYTAB)) {
@@ -81,9 +78,8 @@ public class KeytabRemoveExecutor implements KadminCommandExecutor{
         }
         File keytabFile = new File(keytabFileLocation);
 
-        Kadmin kadmin = new Kadmin(backendConfig);
         try {
-            StringBuilder result = kadmin.removeEntryFromKeytab(keytabFile, principal, rangeSuffix);
+            StringBuilder result = getKadmin().removeEntryFromKeytab(keytabFile, principal, rangeSuffix);
             result.append("\tFile:" + keytabFileLocation);
             System.out.println(result.toString());
         } catch (KrbException e) {

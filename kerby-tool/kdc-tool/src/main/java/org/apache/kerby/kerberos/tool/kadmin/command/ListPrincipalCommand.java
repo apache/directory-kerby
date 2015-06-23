@@ -17,19 +17,17 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.executor;
+package org.apache.kerby.kerberos.tool.kadmin.command;
 
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.util.List;
 
-public class ListPrincipalExcutor implements KadminCommandExecutor {
-    private Config backenConfig;
+public class ListPrincipalCommand extends KadminCommand {
 
-    public ListPrincipalExcutor(Config backenConfig) {
-        this.backenConfig = backenConfig;
+    public ListPrincipalCommand(Kadmin kadmin) {
+        super(kadmin);
     }
 
     @Override
@@ -39,9 +37,8 @@ public class ListPrincipalExcutor implements KadminCommandExecutor {
 
 
         if (commands.length == 1) {
-            Kadmin kadmin = new Kadmin(backenConfig);
             try {
-                principalNames = kadmin.listPrincipal();
+                principalNames = getKadmin().listPrincipal();
             } catch (KrbException e) {
                 System.err.print("Fail to list principal!" + e.getMessage());
             }

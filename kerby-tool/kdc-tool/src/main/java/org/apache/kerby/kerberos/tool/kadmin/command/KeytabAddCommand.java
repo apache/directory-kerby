@@ -17,24 +17,21 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.executor;
+package org.apache.kerby.kerberos.tool.kadmin.command;
 
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.io.File;
 
-public class KeytabAddExecutor implements KadminCommandExecutor{
+public class KeytabAddCommand extends KadminCommand {
     private static final String USAGE =
             "Usage: ktadd [-k[eytab] keytab] [-q] [-e keysaltlist] [-norandkey] [principal | -glob princ-exp] [...]";
 
     private static final String DEFAULT_KEYTAB_FILE_LOCATION = "/etc/krb5.keytab";
 
-    private Config backendConfig;
-
-    public KeytabAddExecutor(Config backendConfig) {
-        this.backendConfig = backendConfig;
+    public KeytabAddCommand(Kadmin kadmin) {
+        super(kadmin);
     }
 
     @Override
@@ -72,9 +69,8 @@ public class KeytabAddExecutor implements KadminCommandExecutor{
             return;
         }
 
-        Kadmin kadmin = new Kadmin(backendConfig);
         try {
-        StringBuffer result = kadmin.addEntryToKeytab(keytabFile, principal);
+        StringBuffer result = getKadmin().addEntryToKeytab(keytabFile, principal);
             System.out.println(result.toString());
         } catch (KrbException e) {
             System.err.println("Principal \"" + principal + "\" fail to add entry to keytab." +

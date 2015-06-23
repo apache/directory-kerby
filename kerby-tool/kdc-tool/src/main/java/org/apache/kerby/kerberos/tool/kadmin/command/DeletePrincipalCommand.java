@@ -17,27 +17,25 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.executor;
+package org.apache.kerby.kerberos.tool.kadmin.command;
 
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.io.Console;
 import java.util.Scanner;
 
-public class DeletePrincipalExecutor implements KadminCommandExecutor{
+public class DeletePrincipalCommand extends KadminCommand {
 
     private static final String USAGE = "Usage: delete_principal [options] principal\n" +
             "This command prompts for deletion, unless the -force option is given.\n" +
             "\toptions are:\n" +
             "\t\t[-force]" + " no prompts for deletion.";
 
-    private Config backendConfig;
     private Boolean force = false;
 
-    public DeletePrincipalExecutor(Config backendConfig) {
-        this.backendConfig = backendConfig;
+    public DeletePrincipalCommand(Kadmin kadmin) {
+        super(kadmin);
     }
 
     @Override
@@ -51,9 +49,8 @@ public class DeletePrincipalExecutor implements KadminCommandExecutor{
         parseOptions(commands);
         String principal = commands[commands.length - 1];
 
-        Kadmin kadmin = new Kadmin(backendConfig);
         if (force) {
-            deletePrincipal(kadmin, principal);
+            deletePrincipal(getKadmin(), principal);
         } else {
             String reply;
             Console console = System.console();
@@ -68,7 +65,7 @@ public class DeletePrincipalExecutor implements KadminCommandExecutor{
                 reply = getReply(console, prompt);
             }
             if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
-                deletePrincipal(kadmin, principal);
+                deletePrincipal(getKadmin(), principal);
             } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
                 System.out.println("Pincipal \"" + principal + "\"  not deleted." );
             } else {

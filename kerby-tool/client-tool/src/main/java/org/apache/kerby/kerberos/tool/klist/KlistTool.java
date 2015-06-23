@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * klist like tool
  */
-public class Klist {
+public class KlistTool {
 
     private static  final String USAGE =
             "Usage: klist [-e] [-V] [[-c] [-l] [-A] [-d] [-f] [-s] " +
@@ -153,7 +153,7 @@ public class Klist {
             klOptions.add(klopt);
         }
 
-        int errNo = Klist.printInfo(klOptions);
+        int errNo = KlistTool.printInfo(klOptions);
         System.exit(errNo);
     }
 }

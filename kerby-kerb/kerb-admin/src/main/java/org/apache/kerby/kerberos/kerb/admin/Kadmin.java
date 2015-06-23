@@ -23,12 +23,10 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
-import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
-import org.apache.kerby.kerberos.kerb.server.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
@@ -47,45 +45,35 @@ import java.util.List;
 public class Kadmin {
 
     private KdcConfig kdcConfig;
+    private Config backendConfig;
     private IdentityBackend backend;
 
     public Kadmin(KdcConfig kdcConfig, Config backendConfig) {
         this.kdcConfig = kdcConfig;
-        backend = getBackend(backendConfig);
+        this.backendConfig = backendConfig;
+        this.backend = getBackend(backendConfig);
     }
 
-    public Kadmin(Config backendConfig) {
-        backend = getBackend(backendConfig);
+    public KdcConfig getKdcConfig() {
+        return kdcConfig;
     }
 
-    /**
-     * Set KDC config.
-     * @param kdcConfig
-     */
-    public void setKdcConfig(KdcConfig kdcConfig) {
-        this.kdcConfig = kdcConfig;
+    public Config getBackendConfig() {
+        return backendConfig;
     }
 
     /**
-     * Set backend config.
-     * @param backendConfig
+     * Get identity backend.
+     * @return IdentityBackend
      */
-    public void setBackendConfig(BackendConfig backendConfig) {
-        backend = getBackend(backendConfig);
-    }
-
-    /**
-     * Get identity service.
-     * @return IdentityService
-     */
-    public IdentityService getIdentityService() {
+    public IdentityBackend getIdentityBackend() {
         return backend;
     }
 
     /**
      * Init the identity backend from backend configuration.
      */
-    public IdentityBackend getBackend(Config backendConfig) {
+    private IdentityBackend getBackend(Config backendConfig) {
         String backendClassName = backendConfig.getString(
                 KdcConfigKey.KDC_IDENTITY_BACKEND);
         if (backendClassName == null) {

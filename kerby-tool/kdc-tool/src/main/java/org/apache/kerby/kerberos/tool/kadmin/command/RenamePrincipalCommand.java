@@ -17,26 +17,24 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.executor;
+package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
+import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
 
-public class RenamePrincipalExecutor implements KadminCommandExecutor{
+public class RenamePrincipalCommand extends KadminCommand {
     private static final String USAGE = "Usage: rename_principal [-force] old_principal new_principal\n";
 
     private KOptions kOptions;
-    private Config backendConfig;
     private String oldPrincipalName;
     private String newPrincipalName;
 
-    public RenamePrincipalExecutor(Config backendConfig) {
-        this.backendConfig = backendConfig;
+    public RenamePrincipalCommand(Kadmin kadmin) {
+        super(kadmin);
     }
 
     @Override
@@ -47,7 +45,7 @@ public class RenamePrincipalExecutor implements KadminCommandExecutor{
             return;
         }
 
-        kOptions = KadminTool.parseOptions(commands, 1, commands.length - 3);
+        kOptions = ToolUtil.parseOptions(commands, 1, commands.length - 3);
         if(kOptions==null) {
             System.err.println(USAGE);
             return;
@@ -55,14 +53,13 @@ public class RenamePrincipalExecutor implements KadminCommandExecutor{
         oldPrincipalName = commands[commands.length - 2];
         newPrincipalName = commands[commands.length - 1];
 
-        Kadmin kadmin = new Kadmin(backendConfig);
         if (kOptions.contains(KadminOption.FORCE)) {
-            renamePrincipal(kadmin);
+            renamePrincipal(getKadmin());
         } else {
             String prompt = "Are you sure want to rename the principal? (yes/no, YES/NO, y/n, Y/N) ";
-            String reply = KadminTool.getReplay(prompt);
+            String reply = ToolUtil.getReplay(prompt);
             if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
-                renamePrincipal(kadmin);
+                renamePrincipal(getKadmin());
             } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
                 System.out.println("Principal \"" + oldPrincipalName + "\"  not renamed." );
             } else {

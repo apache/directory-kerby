@@ -38,7 +38,7 @@ import java.util.Scanner;
 /**
  * kinit like tool
  */
-public class Kinit {
+public class KinitTool {
 
     private static final String USAGE =
             "Usage: kinit [-V] [-l lifetime] [-s start_time]\n" +
@@ -199,7 +199,7 @@ public class Kinit {
             printUsage("No principal is specified");
         }
 
-        Kinit.requestTicket(principal, ktOptions);
+        KinitTool.requestTicket(principal, ktOptions);
         System.exit(0);
     }
 

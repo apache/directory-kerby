@@ -17,33 +17,26 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.executor;
+package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
-import org.apache.kerby.kerberos.kerb.server.KdcConfig;
-import org.apache.kerby.kerberos.tool.kadmin.tool.KadminTool;
+import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
 import java.io.Console;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class ChangePasswordExecutor implements KadminCommandExecutor{
+public class ChangePasswordCommand extends KadminCommand {
     private static final String USAGE = "Usage: change_password [-randkey] " +
             "[-keepold] [-e keysaltlist] [-pw password] principal";
 
-    private KdcConfig kdcConfig;
-    private Config backendConfig;
     private KOptions kOptions;
-    private Kadmin kadmin;
 
-    public ChangePasswordExecutor(KdcConfig kdcCfg, Config backendCfg) {
-        this.kdcConfig=kdcCfg;
-        this.backendConfig = backendCfg;
-        this.kadmin = new Kadmin(kdcConfig, backendConfig);
+    public ChangePasswordCommand(Kadmin kadmin) {
+        super(kadmin);
     }
 
     @Override
@@ -64,13 +57,13 @@ public class ChangePasswordExecutor implements KadminCommandExecutor{
                 return;
             }
             try {
-                kadmin.updatePassword(principal, password);
+                getKadmin().updatePassword(principal, password);
                 System.out.println("Update password success.");
             } catch (KrbException e) {
                 System.err.println("Fail to update password. " + e.getCause());
             }
         } else if (commands.length > 2) {
-            kOptions = KadminTool.parseOptions(commands, 1, commands.length - 2);
+            kOptions = ToolUtil.parseOptions(commands, 1, commands.length - 2);
             if (kOptions == null) {
                 System.err.println(USAGE);
                 return;
@@ -78,14 +71,14 @@ public class ChangePasswordExecutor implements KadminCommandExecutor{
             if (kOptions.contains(KadminOption.PW)){
                 password = kOptions.getStringOption(KadminOption.PW);
                 try {
-                    kadmin.updatePassword(principal, password);
+                    getKadmin().updatePassword(principal, password);
                     System.out.println("Update password success.");
                 } catch (KrbException e) {
                     System.err.println("Fail to update password. " + e.getCause());
                 }
             } else if( kOptions.contains(KadminOption.RANDKEY)){
                 try {
-                    kadmin.updateKey(principal);
+                    getKadmin().updateKey(principal);
                 } catch (KrbException e) {
                     System.err.println("Fail to update key. " + e.getCause());
                 }
