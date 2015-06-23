@@ -67,6 +67,11 @@ public class KeytabAddExecutor implements KadminCommandExecutor{
         }
         File keytabFile = new File(keytabFileLocation);
 
+        if (principal == null || !keytabFile.exists()) {
+            System.err.println(USAGE);
+            return;
+        }
+
         Kadmin kadmin = new Kadmin(backendConfig);
         try {
         StringBuffer result = kadmin.addEntryToKeytab(keytabFile, principal);

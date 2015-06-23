@@ -190,6 +190,67 @@ public class Kadmin {
         return resultSB;
     }
 
+    public StringBuilder removeEntryFromKeytab(File keytabFile, String principalName, String option)
+        throws KrbException {
+        int kvno;
+        int numDeleted = 0;
+        StringBuilder resultSB = new StringBuilder();
+        Keytab keytab = loadKeytab(keytabFile);
+        List<KeytabEntry> entries = keytab.getKeytabEntries(new PrincipalName(principalName));
+        if (entries == null || entries.isEmpty()) {
+            resultSB.append("Principal " + principalName + " not found! ");
+            return resultSB;
+        }
+
+        if (option == null || option.equals("all")) {
+            numDeleted = entries.size();
+            for(KeytabEntry entry : entries) {
+                keytab.removeKeytabEntry(entry);
+            }
+        } else if (option.equals("old")) {
+            kvno = entries.get(0).getKvno();
+            for (KeytabEntry entry : entries) {
+                if (kvno > entry.getKvno()) {
+                    kvno = entry.getKvno();
+                }
+            }
+            numDeleted = deleteKeytabEntryByKvno(entries, kvno, keytab);
+        } else {
+            try {
+                kvno = Integer.parseInt(option);
+            } catch (NumberFormatException e) {
+                resultSB.append("Parameter " + option + " not recognized!");
+                return resultSB;
+            }
+            numDeleted = deleteKeytabEntryByKvno(entries, kvno, keytab);
+        }
+
+        //Store the keytab
+        if (numDeleted != 0) {
+            try {
+                keytab.store(keytabFile);
+            } catch (IOException e) {
+                throw new KrbException("Fail to store the keytab!", e);
+            }
+        }
+
+        resultSB.append( numDeleted + " entry(entries) removed for principal " +
+                principalName + " from keytab \n");
+
+        return resultSB;
+    }
+
+    private int deleteKeytabEntryByKvno(List<KeytabEntry> entries, int kvno, Keytab keytab) {
+        int numDeleted = 0;
+        for(KeytabEntry entry : entries) {
+            if(entry.getKvno() == kvno) {
+                numDeleted++;
+                keytab.removeKeytabEntry(entry);
+            }
+        }
+        return numDeleted;
+    }
+
     private Keytab loadKeytab(File keytabFile) throws KrbException {
         try {
             if (!keytabFile.exists()) {
@@ -271,6 +332,36 @@ public class Kadmin {
             return principalNames;
         } catch (RuntimeException e) {
             throw new KrbException("Failed to get identity!", e);
+        }
+    }
+
+    public void updatePassword(String principal, String password) throws KrbException {
+        KrbIdentity identity = backend.getIdentity(principal);
+        if (identity != null) {
+            identity.addKeys(generateKeys(identity.getPrincipalName(), password));
+        } else {
+            throw new KrbException("Principal " + principal +
+                "was not found. Please check the input and try again");
+        }
+        backend.updateIdentity(identity);
+    }
+
+    public void updateKey(String principal) throws KrbException {
+        KrbIdentity identity = backend.getIdentity(principal);
+        if (identity != null) {
+            identity.addKeys(generateKeys());
+        } else {
+            throw new KrbException("Principal " + principal +
+                "was not found. Please check the input and try again");
+        }
+        backend.updateIdentity(identity);
+    }
+
+    private List<EncryptionKey> generateKeys() throws KrbException {
+        try {
+            return EncryptionUtil.generateKeys(kdcConfig.getEncryptionTypes());
+        } catch (KrbException e) {
+            throw new KrbException("Failed to create keys", e);
         }
     }
 }

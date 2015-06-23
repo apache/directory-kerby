@@ -19,25 +19,42 @@
  */
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
+import org.apache.directory.api.ldap.model.entry.DefaultEntry;
+import org.apache.directory.api.ldap.model.entry.Entry;
+import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.api.ldap.model.exception.LdapInvalidDnException;
+import org.apache.directory.api.ldap.model.message.ModifyRequest;
+import org.apache.directory.api.ldap.model.message.ModifyRequestImpl;
 import org.apache.directory.api.ldap.model.name.Dn;
-import org.apache.directory.ldap.client.api.LdapConnection;
+import org.apache.directory.api.ldap.model.name.Rdn;
+import org.apache.directory.api.util.GeneralizedTime;
+import org.apache.directory.ldap.client.api.LdapNetworkConnection;
+import org.apache.directory.shared.kerberos.KerberosAttribute;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
+import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import sun.security.krb5.Asn1Exception;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An LDAP based backend implementation.
  *
  */
 public class LdapIdentityBackend extends AbstractIdentityBackend {
+    private static final String BASE_DN = "ou=users,dc=example,dc=com";
+    private static final String ADMIN_DN = "uid=admin,ou=system";
+    private LdapNetworkConnection connection;
 
-    // the connection to the LDAP server
-    // in case of ApacheDS this will be an instance of LdapCoreSessionConnection
-    private LdapConnection connection; //NOPMD
+    public LdapIdentityBackend() {
 
-    private Dn baseDn; //NOPMD
+    }
 
     /**
      * Constructing an instance using specified config that contains anything
@@ -48,32 +65,179 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         setConfig(config);
     }
 
-    /*
-    public void initialize() {
-        super.initialize();
-
-        // init Ldap connection and baseDn.
+    public void startConnection() throws LdapException {
+        this.connection = new LdapNetworkConnection( "localhost",
+                getConfig().getInt("port") );
+        connection.bind( ADMIN_DN, "secret" );
     }
-    */
 
     @Override
-    protected KrbIdentity doGetIdentity(String principalName) {
-        return null;
+    public void initialize() {
+        super.initialize();
+        try {
+            startConnection();
+        } catch (LdapException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stop() {
+        try {
+            closeConnection();
+        } catch (LdapException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeConnection() throws LdapException, IOException {
+        if (this.connection.connect()) {
+            this.connection.unBind();
+            this.connection.close();
+        }
+    }
+
+    private String toGeneralizedTime(KerberosTime kerberosTime) {
+        GeneralizedTime generalizedTime = new GeneralizedTime(kerberosTime.getValue());
+        return generalizedTime.toString();
+    }
+
+    class KeysInfo{
+        private String[] etypes;
+        private byte[][] keys;
+        private String[] kvnos;
+
+        public KeysInfo(KrbIdentity identity) {
+            Map<EncryptionType, EncryptionKey> keymap = identity.getKeys();
+            this.etypes = new String[keymap.size()];
+            this.keys = new byte[keymap.size()][];
+            this.kvnos = new String[keymap.size()];
+            int i = 0;
+            for (Map.Entry<EncryptionType, EncryptionKey> entryKey : keymap.entrySet()) {
+                etypes[i] = entryKey.getKey().getValue() + "";
+                keys[i] = entryKey.getValue().encode();
+                kvnos[i] = entryKey.getValue().getKvno() + "";
+                i++;
+            }
+        }
+
+        public String[] getEtypes() {
+            return etypes;
+        }
+
+        public byte[][] getKeys() {
+            return keys;
+        }
+
+        public String[] getKvnos() {
+            return kvnos;
+        }
     }
 
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
-        return null;
+        String principalName = identity.getPrincipalName();
+        String[] names = principalName.split("@");
+        Entry entry = new DefaultEntry();
+        KeysInfo keysInfo = new KeysInfo(identity);
+        try {
+            Dn dn = toDn(principalName);
+            entry.setDn(dn);
+            entry.add("objectClass", "top", "person", "inetOrgPerson", "krb5principal", "krb5kdcentry");
+            entry.add("cn", names[0]);
+            entry.add( "sn", names[0]);
+            entry.add(KerberosAttribute.KRB5_KEY_AT, keysInfo.getKeys());
+            entry.add( "krb5EncryptionType", keysInfo.getEtypes());
+            entry.add( KerberosAttribute.KRB5_PRINCIPAL_NAME_AT, principalName);
+            entry.add( KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT, identity.getKeyVersion() + "");
+            entry.add( "krb5KDCFlags", "" + identity.getKdcFlags());
+            entry.add( KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, "" + identity.isDisabled());
+            entry.add( "createTimestamp",
+                    toGeneralizedTime(identity.getCreatedTime()));
+            entry.add(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, "" + identity.isLocked());
+            entry.add( KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT,
+                    toGeneralizedTime(identity.getExpireTime()));
+            connection.add(entry);
+        } catch (LdapInvalidDnException e) {
+            e.printStackTrace();
+        } catch (LdapException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return identity;
+    }
+
+    @Override
+    protected KrbIdentity doGetIdentity(String principalName) {
+        KrbIdentity krbIdentity = new KrbIdentity(principalName);
+        try {
+            Dn dn = toDn(principalName);
+            Entry entry = connection.lookup(dn, "*", "+");
+            if (entry == null) {
+                return null;
+            }
+            LdapIdentityGetHelper getHelper = new LdapIdentityGetHelper(entry);
+            krbIdentity.setPrincipal(getHelper.getPrincipalName());
+            krbIdentity.setKeyVersion(getHelper.getKeyVersion());
+            krbIdentity.addKeys(getHelper.getKeys());
+            krbIdentity.setCreatedTime(getHelper.getCreatedTime());
+            krbIdentity.setExpireTime(getHelper.getExpireTime());
+            krbIdentity.setDisabled(getHelper.getDisabled());
+            krbIdentity.setKdcFlags(getHelper.getKdcFlags());
+            krbIdentity.setLocked(getHelper.getLocked());
+        } catch (LdapException e) {
+            e.printStackTrace();
+        } catch (Asn1Exception e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return krbIdentity;
     }
 
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
-        return null;
+        String principalName = identity.getPrincipalName();
+        KeysInfo keysInfo = new KeysInfo(identity);
+        try {
+            Dn dn = toDn(principalName);
+            ModifyRequest modifyRequest = new ModifyRequestImpl();
+            modifyRequest.setName(dn);
+            modifyRequest.replace(KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT, "" + identity.getKeyVersion());
+            modifyRequest.replace(KerberosAttribute.KRB5_KEY_AT, keysInfo.getKeys());
+            modifyRequest.replace("krb5EncryptionType", keysInfo.getEtypes());
+            modifyRequest.replace(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT, identity.getPrincipalName());
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT, toGeneralizedTime(identity.getExpireTime()));
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, "" + identity.isDisabled());
+            modifyRequest.replace("krb5KDCFlags", "" + identity.getKdcFlags());
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, "" + identity.isLocked());
+            connection.modify(modifyRequest);
+        } catch (LdapException e) {
+            e.printStackTrace();
+        }
+        return identity;
     }
 
     @Override
     protected void doDeleteIdentity(String principalName) {
+        try {
+            Dn dn = toDn(principalName);
+            connection.delete(dn);
+        } catch (LdapException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private Dn toDn(String principalName) throws LdapInvalidDnException {
+        String[] names = principalName.split("@");
+        String uid = names[0];
+        Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+        return dn;
     }
 
     @Override
@@ -83,7 +247,6 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     public List<String> getIdentities() {
-        //TODO
         return null;
     }
 }

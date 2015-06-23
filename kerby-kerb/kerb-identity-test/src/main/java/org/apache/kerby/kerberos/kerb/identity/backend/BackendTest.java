@@ -89,7 +89,6 @@ public abstract class BackendTest {
 
         // clear the identity cache.
         backend.release();
-
         assertThat(backend.getIdentity(TEST_PRINCIPAL)).isEqualTo(kid);
 
         //tearDown
@@ -143,7 +142,7 @@ public abstract class BackendTest {
     protected KrbIdentity createOneIdentity(String principal) {
         KrbIdentity kid = new KrbIdentity(principal);
         kid.setCreatedTime(KerberosTime.now());
-        kid.setExpireTime(KerberosTime.NEVER);
+        kid.setExpireTime(new KerberosTime(253402300799900L));
         kid.setDisabled(false);
         kid.setKeyVersion(1);
         kid.setLocked(false);
@@ -163,5 +162,14 @@ public abstract class BackendTest {
 
     protected List<EncryptionType> getEncryptionTypes() {
         return Arrays.asList(encTypes);
+    }
+
+    protected void cleanIdentities(IdentityBackend backend) {
+        List<String> identities = backend.getIdentities();
+        if (identities != null) {
+            for (String identity : identities) {
+                backend.deleteIdentity(identity);
+            }
+        }
     }
 }

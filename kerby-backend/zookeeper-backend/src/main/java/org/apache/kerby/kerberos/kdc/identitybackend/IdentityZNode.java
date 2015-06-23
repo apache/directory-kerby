@@ -30,6 +30,7 @@ import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -265,8 +266,8 @@ public class IdentityZNode {
         }
     }
 
-    public byte[] getEncryptionKeyData(String type) throws KeeperException {
-        String znode = IdentityZNodeHelper.getEncryptionKeyDataZNode(this.identityName, type);
+    public byte[] getEncryptionKey(String type) throws KeeperException {
+        String znode = IdentityZNodeHelper.getEncryptionKeyZNode(this.identityName, type);
         if (ZKUtil.checkExists(this.zk, znode) == -1) {
             throw new IllegalArgumentException("The znode " + znode + " is not found");
         }
@@ -309,10 +310,15 @@ public class IdentityZNode {
         List<String> typeNames = ZKUtil.listChildrenNoWatch(this.zk, znode);
         List<EncryptionKey> keys = new ArrayList<EncryptionKey>(typeNames.size());
         for (String typeName : typeNames) {
-            EncryptionType type = getEncryptionKeyType(typeName);
-            byte[] data = getEncryptionKeyData(typeName);
-            int no = getEncryptionKeyNo(typeName);
-            keys.add(new EncryptionKey(type, data, no));
+            byte[] key = getEncryptionKey(typeName);
+            EncryptionKey encryptionKey = new EncryptionKey();
+            try {
+                encryptionKey.decode(key);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            encryptionKey.setKvno(getEncryptionKeyNo(typeName));
+            keys.add(encryptionKey);
         }
         return keys;
     }
@@ -327,10 +333,8 @@ public class IdentityZNode {
             EncryptionType key = (EncryptionType) pair.getKey();
             ZKUtil.createWithParents(this.zk, IdentityZNodeHelper.getKeyTypeZNode(this.identityName, key.getName()));
             EncryptionKey value = (EncryptionKey) pair.getValue();
-            ZKUtil.createSetData(this.zk, IdentityZNodeHelper.getEncryptionKeyTypeZNode(this.identityName, key.getName()),
-                    UTF8.toBytes(value.getKeyType().getName()));
-            ZKUtil.createSetData(this.zk, IdentityZNodeHelper.getEncryptionKeyDataZNode(this.identityName, key.getName()),
-                    value.getKeyData());
+            ZKUtil.createSetData(this.zk, IdentityZNodeHelper.getEncryptionKeyZNode(this.identityName, key.getName()),
+                    value.encode());
             ZKUtil.createSetData(this.zk, IdentityZNodeHelper.getEncryptionKeyNoZNode(this.identityName, key.getName()),
                     BytesUtil.int2bytes(value.getKvno(), true));
         }

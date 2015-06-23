@@ -23,6 +23,7 @@ import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.ZKConfKey;
 import org.apache.kerby.kerberos.kdc.identitybackend.ZookeeperIdentityBackend;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -57,6 +58,11 @@ public class ZookeeperBackendTest extends BackendTest {
     public static void tearDown() {
         backend.stop();
         backend.release();
+    }
+
+    @Before
+    public void delete() {
+        super.cleanIdentities(backend);
     }
 
     @Test
