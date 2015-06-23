@@ -34,7 +34,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>server-tool</artifactId>
+      <artifactId>kdc-tool</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -58,7 +58,7 @@
                     <copy file="../../kerby-provider/token-provider/target/token-provider-${project.version}-jar-with-dependencies.jar" tofile="lib/token-provider-tool-${project.version}-jar-with-dependencies.jar"/>
 
                     <!--kadmin tool-->
-                    <copy file="../../kerby-tool/kdc-tool/target/server-tool-${project.version}-jar-with-dependencies.jar" tofile="lib/server-tool-${project.version}-jar-with-dependencies.jar"/>
+                    <copy file="../../kerby-tool/kdc-tool/target/kdc-tool-${project.version}-jar-with-dependencies.jar" tofile="lib/kdc-tool-${project.version}-jar-with-dependencies.jar"/>
                     <copy file="../../kerby-backend/json-backend/target/json-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/json-backend-${project.version}-jar-with-dependencies.jar"/>
                     <copy file="../../kerby-backend/ldap-backend/target/ldap-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/ldap-backend-${project.version}-jar-with-dependencies.jar"/>
                     <copy file="../../kerby-backend/zookeeper-backend/target/zookeeper-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/zookeeper-backend-${project.version}-jar-with-dependencies.jar"/>
