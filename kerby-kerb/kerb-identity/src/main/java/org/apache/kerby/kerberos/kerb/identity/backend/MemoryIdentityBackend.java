@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.identity.backend;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -61,6 +62,8 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     public List<String> getIdentities() {
-        return new ArrayList<>(getCache().keySet());
+        List<String> identities = new ArrayList<>(getCache().keySet());
+        Collections.sort(identities);
+        return identities;
     }
 }
