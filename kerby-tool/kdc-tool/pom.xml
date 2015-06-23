@@ -21,8 +21,8 @@
       <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>server-tool</artifactId>
-    <name>Server Tool</name>
+    <artifactId>kdc-tool</artifactId>
+    <name>KDC Tool</name>
     <description>Kerby KDC server tool</description>
 
     <dependencies>
