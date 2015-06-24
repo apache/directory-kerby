@@ -41,9 +41,9 @@ import java.util.List;
 /**
  * Kadmin utilities.
  */
-public final class KadminUtil {
+public final class AdminHelper {
 
-    private KadminUtil() { }
+    private AdminHelper() { }
 
     /**
      * Init the identity backend from backend configuration.

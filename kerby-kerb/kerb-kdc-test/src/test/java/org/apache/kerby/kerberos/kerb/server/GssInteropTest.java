@@ -46,7 +46,7 @@ import java.util.Set;
 /**
  * This is an interop test using the Java GSS APIs against the Kerby KDC
  */
-public class GSSInteropTest extends KdcTest {
+public class GssInteropTest extends KdcTest {
     private String clientPrincipal;
     private String serverPrincipal;
 

@@ -54,7 +54,7 @@ public class Kadmin {
     public Kadmin(KdcConfig kdcConfig, Config backendConfig) throws KrbException {
         this.kdcConfig = kdcConfig;
         this.backendConfig = backendConfig;
-        this.backend = KadminUtil.getBackend(backendConfig);
+        this.backend = AdminHelper.getBackend(backendConfig);
     }
 
     public Kadmin(File confDir) throws KrbException {
@@ -80,7 +80,7 @@ public class Kadmin {
             }
         }
 
-        backend = KadminUtil.getBackend(backendConfig);
+        backend = AdminHelper.getBackend(backendConfig);
     }
 
     public KdcConfig getKdcConfig() {
@@ -107,7 +107,7 @@ public class Kadmin {
     public void addPrincipal(String principal, KOptions kOptions)
         throws KrbException {
         principal = fixPrincipal(principal);
-        KrbIdentity identity = KadminUtil.createIdentity(principal, kOptions);
+        KrbIdentity identity = AdminHelper.createIdentity(principal, kOptions);
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(
                 kdcConfig.getEncryptionTypes());
         identity.addKeys(keys);
@@ -123,7 +123,7 @@ public class Kadmin {
     public void addPrincipal(String principal, String password, KOptions kOptions)
         throws KrbException {
         principal = fixPrincipal(principal);
-        KrbIdentity identity = KadminUtil.createIdentity(principal, kOptions);
+        KrbIdentity identity = AdminHelper.createIdentity(principal, kOptions);
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(principal, password,
             kdcConfig.getEncryptionTypes());
         identity.addKeys(keys);
@@ -147,7 +147,7 @@ public class Kadmin {
                     principal);
         }
 
-        KadminUtil.exportKeytab(keytabFile, identity);
+        AdminHelper.exportKeytab(keytabFile, identity);
     }
 
     /**
@@ -156,35 +156,35 @@ public class Kadmin {
      * @throws KrbException
      */
     public void exportKeytab(File keytabFile) throws KrbException {
-        Keytab keytab = KadminUtil.createOrLoadKeytab(keytabFile);
+        Keytab keytab = AdminHelper.createOrLoadKeytab(keytabFile);
 
         List<String> principals = backend.getIdentities();
         for (String principal : principals) {
             KrbIdentity identity = backend.getIdentity(principal);
             if (identity != null) {
-                KadminUtil.exportToKeytab(keytab, identity);
+                AdminHelper.exportToKeytab(keytab, identity);
             }
         }
 
-        KadminUtil.storeKeytab(keytab, keytabFile);
+        AdminHelper.storeKeytab(keytab, keytabFile);
     }
 
     public void removeKeytabEntriesOf(File keytabFile, String principal)
         throws KrbException {
         principal = fixPrincipal(principal);
-        KadminUtil.removeKeytabEntriesOf(keytabFile, principal);
+        AdminHelper.removeKeytabEntriesOf(keytabFile, principal);
     }
 
     public void removeKeytabEntriesOf(File keytabFile, String principal, int kvno)
         throws KrbException {
         principal = fixPrincipal(principal);
-        KadminUtil.removeKeytabEntriesOf(keytabFile, principal, kvno);
+        AdminHelper.removeKeytabEntriesOf(keytabFile, principal, kvno);
     }
 
     public void removeOldKeytabEntriesOf(File keytabFile, String principal)
         throws KrbException {
         principal = fixPrincipal(principal);
-        KadminUtil.removeOldKeytabEntriesOf(keytabFile, principal);
+        AdminHelper.removeOldKeytabEntriesOf(keytabFile, principal);
     }
 
     public void deletePrincipal(String principal) throws KrbException {
@@ -200,7 +200,7 @@ public class Kadmin {
             throw new KrbException("Principal \"" +
                 identity.getPrincipalName() + "\" does not exist.");
         }
-        KadminUtil.updateIdentity(identity, kOptions);
+        AdminHelper.updateIdentity(identity, kOptions);
         backend.updateIdentity(identity);
     }
 
