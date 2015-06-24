@@ -32,7 +32,7 @@ import java.util.List;
 public class MemoryIdentityBackend extends AbstractIdentityBackend {
 
     public MemoryIdentityBackend() {
-        setCacheSize(100000000); // Just no idea, configurable ?
+        setCacheSize(10000000); // Just no idea, configurable ?
     }
 
     @Override

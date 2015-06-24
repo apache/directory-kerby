@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.BackendConfig;
+import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -40,6 +41,8 @@ public class JsonBackendKdcTest extends KerbyKdcTest {
         BackendConfig backendConfig = new BackendConfig();
         backendConfig.setString(
                 JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE, jsonBackendFileString);
+        backendConfig.setString(KdcConfigKey.KDC_IDENTITY_BACKEND,
+            "org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend");
         kdcServer.setBackendConfig(backendConfig);
 
         kdcServer.init();
