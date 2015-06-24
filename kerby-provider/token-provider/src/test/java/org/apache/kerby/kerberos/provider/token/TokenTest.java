@@ -80,7 +80,6 @@ public class TokenTest {
     public void testToken() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
@@ -88,7 +87,6 @@ public class TokenTest {
         setAudience((JwtTokenDecoder)tokenDecoder, auds);
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
-        System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
@@ -97,7 +95,6 @@ public class TokenTest {
     public void testDecodeFromBytes() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         byte[] tokenStr = tokenEncoder.encodeAsBytes(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
@@ -105,7 +102,6 @@ public class TokenTest {
         setAudience((JwtTokenDecoder)tokenDecoder, auds);
 
         AuthToken token2 = tokenDecoder.decodeFromBytes(tokenStr);
-        System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
@@ -119,11 +115,9 @@ public class TokenTest {
         setAudience((JwtTokenDecoder)tokenDecoder, auds);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
-        System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
@@ -137,11 +131,9 @@ public class TokenTest {
         setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
-        System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
@@ -156,11 +148,9 @@ public class TokenTest {
         setAudience((JwtTokenDecoder)tokenDecoder, auds);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
-        System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
@@ -178,7 +168,6 @@ public class TokenTest {
         setAudience((JwtTokenDecoder)tokenDecoder, audiences);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
@@ -197,7 +186,6 @@ public class TokenTest {
         setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);

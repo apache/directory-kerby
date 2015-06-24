@@ -30,6 +30,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static org.assertj.core.api.Assertions.fail;
+
 public class NewEncryptionTest {
 
     @Test
@@ -111,16 +113,12 @@ public class NewEncryptionTest {
         byte[] outData1 = EncryptionHandler.decrypt(enctryData1, key, KeyUsage.AD_ITE);
         byte[] outData2 = EncryptionHandler.decrypt(enctryData2, key, KeyUsage.AD_ITE);
 
-        if (compareResult(inData1, outData1)) {
-            System.out.println(eType + ": Success, inData1 & outData1 are the same!");
-        } else {
-            System.err.println(eType + ": Failed, inData1 & outData1 are not the same!");
+        if (!compareResult(inData1, outData1)) {
+            fail(eType + ": Failed, inData1 & outData1 are not the same!");
         }
 
-        if (compareResult(inData2, outData2)) {
-            System.out.println(eType + ": Success, inData2 & outData2 are the same!");
-        } else {
-            System.err.println(eType + ": Failed, inData2 & outData2 are not the same!");
+        if (!compareResult(inData2, outData2)) {
+            fail(eType + ": Failed, inData2 & outData2 are not the same!");
         }
     }
 }

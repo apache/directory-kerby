@@ -268,8 +268,6 @@ public class KeyDeriveTest {
             System.err.println("outKey:" + HexUtil.bytesToHex(outkey));
             System.err.println("answer:" + testCase.answer);
             fail("KeyDerive test failed for " + testCase.encType.getName());
-        } else {
-            System.out.println("KeyDerive test OK for " + testCase.encType.getName());
-        }    	
+        }
     }
 }

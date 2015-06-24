@@ -39,8 +39,6 @@ public class PrfTest {
             System.err.println("outKey:" + HexUtil.bytesToHex(outkey));
             System.err.println("answer:" + testCase.answer);
             fail("KeyDerive test failed for " + testCase.encType.getName());
-        } else {
-            System.out.println("Prf test OK for " + testCase.encType.getName());
         }
     }
 
