@@ -20,16 +20,19 @@
 package org.apache.kerby.kerberos.kerb.admin;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.config.Conf;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -39,16 +42,45 @@ public class Kadmin {
 
     private KdcConfig kdcConfig;
     private Config backendConfig;
-    private IdentityBackend backend;
+    private IdentityService backend;
 
-    protected Kadmin(KdcConfig kdcConfig, Config backendConfig) {
+    public Kadmin(IdentityService backend, KdcConfig kdcConfig,
+                  Config backendConfig) throws KrbException {
+        this.backend = backend;
+        this.kdcConfig = kdcConfig;
+        this.backendConfig = backendConfig;
+    }
+
+    public Kadmin(KdcConfig kdcConfig, Config backendConfig) throws KrbException {
         this.kdcConfig = kdcConfig;
         this.backendConfig = backendConfig;
         this.backend = KadminUtil.getBackend(backendConfig);
     }
 
-    public static Kadmin getInstance(File confDir) throws KrbException {
-        return KadminUtil.createKadmin(confDir);
+    public Kadmin(File confDir) throws KrbException {
+        File kdcConfFile = new File(confDir, "kdc.conf");
+        kdcConfig = new KdcConfig();
+        if (kdcConfFile.exists()) {
+            try {
+                kdcConfig.addIniConfig(kdcConfFile);
+            } catch (IOException e) {
+                throw new KrbException("Can not load the kdc configuration file "
+                        + kdcConfFile.getAbsolutePath());
+            }
+        }
+
+        File backendConfigFile = new File(confDir, "backend.conf");
+        Conf backendConfig = new Conf();
+        if (backendConfigFile.exists()) {
+            try {
+                backendConfig.addIniConfig(backendConfigFile);
+            } catch (IOException e) {
+                throw new KrbException("Can not load the backend configuration file "
+                        + backendConfigFile.getAbsolutePath());
+            }
+        }
+
+        backend = KadminUtil.getBackend(backendConfig);
     }
 
     public KdcConfig getKdcConfig() {
@@ -63,21 +95,34 @@ public class Kadmin {
      * Get identity backend.
      * @return IdentityBackend
      */
-    public IdentityBackend getIdentityBackend() {
+    public IdentityService getIdentityBackend() {
         return backend;
+    }
+
+    public void addPrincipal(String principal) throws KrbException {
+        principal = fixPrincipal(principal);
+        addPrincipal(principal, new KOptions());
     }
 
     public void addPrincipal(String principal, KOptions kOptions)
         throws KrbException {
+        principal = fixPrincipal(principal);
         KrbIdentity identity = KadminUtil.createIdentity(principal, kOptions);
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(
-            kdcConfig.getEncryptionTypes());
+                kdcConfig.getEncryptionTypes());
         identity.addKeys(keys);
         backend.addIdentity(identity);
     }
 
+    public void addPrincipal(String principal, String password)
+            throws KrbException {
+        principal = fixPrincipal(principal);
+        addPrincipal(principal, password, new KOptions());
+    }
+
     public void addPrincipal(String principal, String password, KOptions kOptions)
         throws KrbException {
+        principal = fixPrincipal(principal);
         KrbIdentity identity = KadminUtil.createIdentity(principal, kOptions);
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(principal, password,
             kdcConfig.getEncryptionTypes());
@@ -85,41 +130,71 @@ public class Kadmin {
         backend.addIdentity(identity);
     }
 
-    public void exportKeytab(File keytabFile, String principalName)
+    /**
+     * Export all the keys of the specified principal into the specified keytab
+     * file.
+     * @param keytabFile
+     * @param principal
+     * @throws KrbException
+     */
+    public void exportKeytab(File keytabFile, String principal)
         throws KrbException {
-
+        principal = fixPrincipal(principal);
         //Get Identity
-        KrbIdentity identity = backend.getIdentity(principalName);
+        KrbIdentity identity = backend.getIdentity(principal);
         if (identity == null) {
             throw new KrbException("Can not find the identity for pincipal " +
-                    principalName);
+                    principal);
         }
 
         KadminUtil.exportKeytab(keytabFile, identity);
     }
 
-    public void removeKeytabEntriesOf(File keytabFile, String principalName)
-        throws KrbException {
-        KadminUtil.removeKeytabEntriesOf(keytabFile, principalName);
+    /**
+     * Export all identity keys to the specified keytab file.
+     * @param keytabFile
+     * @throws KrbException
+     */
+    public void exportKeytab(File keytabFile) throws KrbException {
+        Keytab keytab = KadminUtil.createOrLoadKeytab(keytabFile);
+
+        List<String> principals = backend.getIdentities();
+        for (String principal : principals) {
+            KrbIdentity identity = backend.getIdentity(principal);
+            if (identity != null) {
+                KadminUtil.exportToKeytab(keytab, identity);
+            }
+        }
+
+        KadminUtil.storeKeytab(keytab, keytabFile);
     }
 
-    public void removeKeytabEntriesOf(File keytabFile,
-                                      String principalName, int kvno)
+    public void removeKeytabEntriesOf(File keytabFile, String principal)
         throws KrbException {
-        KadminUtil.removeKeytabEntriesOf(keytabFile, principalName, kvno);
+        principal = fixPrincipal(principal);
+        KadminUtil.removeKeytabEntriesOf(keytabFile, principal);
     }
 
-    public void removeOldKeytabEntriesOf(File keytabFile, String principalName)
+    public void removeKeytabEntriesOf(File keytabFile, String principal, int kvno)
         throws KrbException {
-        KadminUtil.removeOldKeytabEntriesOf(keytabFile, principalName);
+        principal = fixPrincipal(principal);
+        KadminUtil.removeKeytabEntriesOf(keytabFile, principal, kvno);
+    }
+
+    public void removeOldKeytabEntriesOf(File keytabFile, String principal)
+        throws KrbException {
+        principal = fixPrincipal(principal);
+        KadminUtil.removeOldKeytabEntriesOf(keytabFile, principal);
     }
 
     public void deletePrincipal(String principal) throws KrbException {
+        principal = fixPrincipal(principal);
         backend.deleteIdentity(principal);
     }
 
     public void modifyPrincipal(String principal, KOptions kOptions)
         throws KrbException {
+        principal = fixPrincipal(principal);
         KrbIdentity identity = backend.getIdentity(principal);
         if (identity == null) {
             throw new KrbException("Principal \"" +
@@ -131,7 +206,8 @@ public class Kadmin {
 
     public void renamePrincipal(String oldPrincipalName, String newPrincipalName)
         throws KrbException {
-
+        oldPrincipalName = fixPrincipal(oldPrincipalName);
+        newPrincipalName = fixPrincipal(newPrincipalName);
         KrbIdentity oldIdentity = backend.getIdentity(newPrincipalName);
         if(oldIdentity != null) {
             throw new KrbException("Principal \"" +
@@ -161,6 +237,7 @@ public class Kadmin {
 
     public void updatePassword(String principal, String password)
         throws KrbException {
+        principal = fixPrincipal(principal);
         KrbIdentity identity = backend.getIdentity(principal);
         if (identity == null) {
             throw new KrbException("Principal " + principal +
@@ -174,6 +251,7 @@ public class Kadmin {
     }
 
     public void updateKeys(String principal) throws KrbException {
+        principal = fixPrincipal(principal);
         KrbIdentity identity = backend.getIdentity(principal);
         if (identity == null) {
             throw new KrbException("Principal " + principal +
@@ -183,5 +261,12 @@ public class Kadmin {
             kdcConfig.getEncryptionTypes());
         identity.addKeys(keys);
         backend.updateIdentity(identity);
+    }
+
+    private String fixPrincipal(String principal) {
+        if (! principal.contains("@")) {
+            principal += "@" + getKdcConfig().getKdcRealm();
+        }
+        return principal;
     }
 }

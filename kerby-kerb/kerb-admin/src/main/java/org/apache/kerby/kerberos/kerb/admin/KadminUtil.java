@@ -20,14 +20,13 @@
 package org.apache.kerby.kerberos.kerb.admin;
 
 import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Conf;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
-import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
@@ -46,50 +45,21 @@ public final class KadminUtil {
 
     private KadminUtil() { }
 
-    static Kadmin createKadmin(File confDir) throws KrbException {
-        KdcConfig kdcConfig;
-        Conf backendConfig;
-
-        File kdcConfFile = new File(confDir, "kdc.conf");
-        kdcConfig = new KdcConfig();
-        if (kdcConfFile.exists()) {
-            try {
-                kdcConfig.addIniConfig(kdcConfFile);
-            } catch (IOException e) {
-                throw new KrbException("Can not load the kdc configuration file "
-                    + kdcConfFile.getAbsolutePath());
-            }
-        }
-
-        File backendConfigFile = new File(confDir, "backend.conf");
-        backendConfig = new Conf();
-        if (backendConfigFile.exists()) {
-            try {
-                backendConfig.addIniConfig(backendConfigFile);
-            } catch (IOException e) {
-                throw new KrbException("Can not load the backend configuration file "
-                    + backendConfigFile.getAbsolutePath());
-            }
-        }
-
-        return new Kadmin(kdcConfig, backendConfig);
-    }
-
     /**
      * Init the identity backend from backend configuration.
      */
-    static IdentityBackend getBackend(Config backendConfig) {
+    static IdentityBackend getBackend(Config backendConfig) throws KrbException {
         String backendClassName = backendConfig.getString(
             KdcConfigKey.KDC_IDENTITY_BACKEND);
         if (backendClassName == null) {
-            throw new RuntimeException("Can not find the IdentityBackend class");
+            backendClassName = MemoryIdentityBackend.class.getCanonicalName();
         }
 
         Class<?> backendClass;
         try {
             backendClass = Class.forName(backendClassName);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Failed to load backend class: "
+            throw new KrbException("Failed to load backend class: "
                     + backendClassName);
         }
 
@@ -97,7 +67,7 @@ public final class KadminUtil {
         try {
             backend = (IdentityBackend) backendClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to create backend: "
+            throw new KrbException("Failed to create backend: "
                     + backendClassName);
         }
 
@@ -106,23 +76,50 @@ public final class KadminUtil {
         return backend;
     }
 
+
     static void exportKeytab(File keytabFile, KrbIdentity identity)
-        throws KrbException {
+            throws KrbException {
+
+        Keytab keytab = createOrLoadKeytab(keytabFile);
+
+        exportToKeytab(keytab, identity);
+
+        storeKeytab(keytab, keytabFile);
+    }
+
+    static Keytab loadKeytab(File keytabFile) throws KrbException {
+        Keytab keytab;
+        try {
+            keytab = Keytab.loadKeytab(keytabFile);
+        } catch (IOException e) {
+            throw new KrbException("Failed to load keytab", e);
+        }
+
+        return keytab;
+    }
+
+    static Keytab createOrLoadKeytab(File keytabFile) throws KrbException {
 
         Keytab keytab;
         try {
             if (!keytabFile.exists()) {
                 if (!keytabFile.createNewFile()) {
                     throw new KrbException("Failed to create keytab file "
-                        + keytabFile.getAbsolutePath());
+                            + keytabFile.getAbsolutePath());
                 }
                 keytab = new Keytab();
             } else {
                 keytab = Keytab.loadKeytab(keytabFile);
             }
         } catch (IOException e) {
-            throw new KrbException("Failed to load keytab", e);
+            throw new KrbException("Failed to load or create keytab", e);
         }
+
+        return keytab;
+    }
+
+    static void exportToKeytab(Keytab keytab, KrbIdentity identity)
+        throws KrbException {
 
         //Add principal to keytab.
         PrincipalName principal = identity.getPrincipal();
@@ -132,63 +129,40 @@ public final class KadminUtil {
             int keyVersion = ekey.getKvno();
             keytab.addEntry(new KeytabEntry(principal, timestamp, keyVersion, ekey));
         }
+    }
 
-        //Store the keytab
+    static void storeKeytab(Keytab keytab, File keytabFile) throws KrbException {
         try {
             keytab.store(keytabFile);
         } catch (IOException e) {
-            throw new KrbException("Fail to store the keytab!", e);
+            throw new KrbException("Failed to store keytab", e);
         }
     }
 
     static void removeKeytabEntriesOf(File keytabFile,
                                              String principalName) throws KrbException {
-        Keytab keytab;
-        try {
-            keytab = Keytab.loadKeytab(keytabFile);
-        } catch (IOException e) {
-            throw new KrbException("Failed to load keytab", e);
-        }
+        Keytab keytab = loadKeytab(keytabFile);
 
         keytab.removeKeytabEntries(new PrincipalName(principalName));
 
-        //Store the keytab
-        try {
-            keytab.store(keytabFile);
-        } catch (IOException e) {
-            throw new KrbException("Failed to store keytab", e);
-        }
+        storeKeytab(keytab, keytabFile);
     }
 
     static void removeKeytabEntriesOf(File keytabFile,
                                       String principalName, int kvno) throws KrbException {
-        Keytab keytab;
-        try {
-            keytab = Keytab.loadKeytab(keytabFile);
-        } catch (IOException e) {
-            throw new KrbException("Failed to load keytab", e);
-        }
+        Keytab keytab = loadKeytab(keytabFile);
 
         keytab.removeKeytabEntries(new PrincipalName(principalName), kvno);
 
-        //Store the keytab
-        try {
-            keytab.store(keytabFile);
-        } catch (IOException e) {
-            throw new KrbException("Failed to store keytab", e);
-        }
+        storeKeytab(keytab, keytabFile);
     }
 
     static void removeOldKeytabEntriesOf(File keytabFile,
                                                 String principalName) throws KrbException {
-        Keytab keytab;
-        try {
-            keytab = Keytab.loadKeytab(keytabFile);
-        } catch (IOException e) {
-            throw new KrbException("Failed to load keytab", e);
-        }
+        Keytab keytab = loadKeytab(keytabFile);
 
-        List<KeytabEntry> entries = keytab.getKeytabEntries(new PrincipalName(principalName));
+        List<KeytabEntry> entries = keytab.getKeytabEntries(
+                new PrincipalName(principalName));
 
         int maxKvno = 0;
         for (KeytabEntry entry : entries) {
@@ -203,12 +177,7 @@ public final class KadminUtil {
             }
         }
 
-        //Store the keytab
-        try {
-            keytab.store(keytabFile);
-        } catch (IOException e) {
-            throw new KrbException("Failed to store keytab", e);
-        }
+        storeKeytab(keytab, keytabFile);
     }
 
     static KrbIdentity createIdentity(String principal, KOptions kOptions)

@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbConfigKey;
@@ -204,12 +205,12 @@ public abstract class KdcTestBase {
         krbClnt.setKdcRealm(kdcServer.getKdcRealm());
     }
 
-    protected void createPrincipals() {
+    protected void createPrincipals() throws KrbException {
         kdcServer.createTgsPrincipal();
         kdcServer.createPrincipals(serverPrincipal);
     }
 
-    protected void deletePrincipals() {
+    protected void deletePrincipals() throws KrbException {
         kdcServer.deleteTgsPrincipal();
         kdcServer.deletePrincipals(serverPrincipal);
     }

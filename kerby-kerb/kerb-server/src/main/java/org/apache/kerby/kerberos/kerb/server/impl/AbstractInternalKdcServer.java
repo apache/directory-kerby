@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.server.impl;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.config.Conf;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
@@ -33,9 +34,7 @@ import java.io.IOException;
  * Abstract KDC server implementation.
  */
 public class AbstractInternalKdcServer implements InternalKdcServer {
-
     private boolean started;
-
     private KdcConfig kdcConfig;
     private Conf backendConfig;
     private KdcSetting kdcSetting;
@@ -59,14 +58,15 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
     }
 
     @Override
-    public void init(KOptions startupOptions) {
+    public void init(KOptions startupOptions) throws KrbException {
         try {
             initConfig(startupOptions);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load configurations", e);
+            throw new KrbException("Failed to load configurations", e);
         }
 
-        kdcSetting = new KdcSetting(startupOptions, kdcConfig);
+        kdcSetting = new KdcSetting(startupOptions,
+                kdcConfig, backendConfig);
 
         initBackend();
     }
@@ -105,28 +105,28 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
         }
     }
 
-    private void initBackend() {
+    private void initBackend() throws KrbException {
         String backendClassName = backendConfig.getString(
                 KdcConfigKey.KDC_IDENTITY_BACKEND);
         if (backendClassName == null) {
             backendClassName = MemoryIdentityBackend.class.getCanonicalName();
         }
 
-        Class<?> backendClass = null;
+        Class<?> backendClass;
         try {
             backendClass = Class.forName(backendClassName);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Failed to load backend class: "
+            throw new KrbException("Failed to load backend class: "
                     + backendClassName);
         }
 
         try {
             backend = (IdentityBackend) backendClass.newInstance();
         } catch (InstantiationException e) {
-            throw new RuntimeException("Failed to create backend: "
+            throw new KrbException("Failed to create backend: "
                     + backendClassName);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Failed to create backend: "
+            throw new KrbException("Failed to create backend: "
                     + backendClassName);
         }
 

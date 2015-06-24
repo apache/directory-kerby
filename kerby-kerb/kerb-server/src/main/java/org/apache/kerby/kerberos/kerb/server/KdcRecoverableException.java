@@ -19,11 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-public class TestKdcServer extends SimpleKdcServer {
+import org.apache.kerby.kerberos.kerb.KrbErrorException;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
 
-    @Override
-    protected void prepareKdcConfig() {
-        KdcConfig kdcConfig = getKdcConfig();
-        kdcConfig.setString(KdcConfigKey.KDC_REALM, "TEST.COM");
+/**
+ * KDC side recoverable exception, where retrying will be made.
+ */
+public class KdcRecoverableException extends KrbErrorException {
+
+    public KdcRecoverableException(KrbError krbError) {
+        super(krbError);
     }
 }

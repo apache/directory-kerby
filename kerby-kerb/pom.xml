@@ -38,6 +38,7 @@
     <module>kerb-server</module>
     <module>kerb-kdc-test</module>
     <module>kerb-admin</module>
+    <module>kerb-simplekdc</module>
     <module>kerb-client-api-all</module>
     <module>kerb-server-api-all</module>
   </modules>

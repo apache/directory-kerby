@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
@@ -67,7 +68,7 @@ public class GSSInteropTest extends KdcTest {
     }
 
     @Override
-    protected void createPrincipals() {
+    protected void createPrincipals() throws KrbException {
         kdcServer.createTgsPrincipal();
         kdcServer.createPrincipal(serverPrincipal, TEST_PASSWORD);
         kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);

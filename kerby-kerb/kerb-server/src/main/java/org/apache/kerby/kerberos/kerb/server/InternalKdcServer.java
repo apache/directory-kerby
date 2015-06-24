@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 
 /**
@@ -31,7 +32,7 @@ public interface InternalKdcServer {
      * Initialize with KDC startup options.
      * @param options
      */
-    void init(KOptions options);
+    void init(KOptions options) throws KrbException;
 
     /**
      * Start the KDC server.

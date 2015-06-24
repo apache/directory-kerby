@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
@@ -59,13 +60,13 @@ public class WithTokenKdcTestBase extends KdcTestBase {
     }
 
     @Override
-    protected void createPrincipals() {
+    protected void createPrincipals() throws KrbException {
         super.createPrincipals();
         kdcServer.createPrincipal(getClientPrincipal(), TEST_PASSWORD);
     }
 
     @Override
-    protected void deletePrincipals() {
+    protected void deletePrincipals() throws KrbException {
         super.deletePrincipals();
         kdcServer.deletePrincipal(getClientPrincipal());
     }

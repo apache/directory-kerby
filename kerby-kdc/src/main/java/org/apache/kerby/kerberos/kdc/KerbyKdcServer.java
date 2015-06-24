@@ -40,7 +40,7 @@ public class KerbyKdcServer extends KdcServer {
     private static KerbyKdcServer server;
 
     @Override
-    public void init() {
+    public void init() throws KrbException {
         innerKdc = new NettyKdcServerImpl();
         innerKdc.init(commonOptions);
     }
@@ -90,7 +90,7 @@ public class KerbyKdcServer extends KdcServer {
             KerbyKdcServer.class.getSimpleName() +
             " -start conf-dir working-dir|-start|-stop";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws KrbException {
         if (args.length == 0) {
             System.err.println(USAGE);
             return;

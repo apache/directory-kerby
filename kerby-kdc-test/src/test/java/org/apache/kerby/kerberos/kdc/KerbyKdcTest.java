@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -40,7 +41,7 @@ public abstract class KerbyKdcTest extends KdcTestBase {
     }
 
     @Override
-    protected void createPrincipals() {
+    protected void createPrincipals() throws KrbException {
         super.createPrincipals();
         clientPrincipal = getClientPrincipal();
         kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);
@@ -73,7 +74,7 @@ public abstract class KerbyKdcTest extends KdcTestBase {
     }
 
     @Override
-    protected void deletePrincipals() {
+    protected void deletePrincipals() throws KrbException {
         super.deletePrincipals();
         kdcServer.deletePrincipal(clientPrincipal);
     }

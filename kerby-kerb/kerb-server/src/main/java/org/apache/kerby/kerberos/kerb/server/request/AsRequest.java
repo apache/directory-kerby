@@ -25,19 +25,8 @@ import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
-import org.apache.kerby.kerberos.kerb.spec.base.LastReq;
-import org.apache.kerby.kerberos.kerb.spec.base.LastReqEntry;
-import org.apache.kerby.kerberos.kerb.spec.base.LastReqType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.kdc.AsRep;
-import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
-import org.apache.kerby.kerberos.kerb.spec.kdc.EncAsRepPart;
-import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
+import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.kdc.*;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlag;
 
@@ -49,7 +38,6 @@ public class AsRequest extends KdcRequest {
 
     @Override
     protected void checkClient() throws KrbException {
-
         KdcReq request = getKdcReq();
         PrincipalName clientPrincipal;
         if (isToken()) {
@@ -65,6 +53,7 @@ public class AsRequest extends KdcRequest {
             clientRealm = getKdcContext().getKdcRealm();
         }
         clientPrincipal.setRealm(clientRealm);
+
         KrbIdentity clientEntry;
         if (isToken()) {
             clientEntry = new KrbIdentity(clientPrincipal.getName());
@@ -72,6 +61,11 @@ public class AsRequest extends KdcRequest {
         } else {
             clientEntry = getEntry(clientPrincipal.getName());
         }
+
+        if(clientEntry == null) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
+        }
+
         setClientEntry(clientEntry);
 
         for (EncryptionType encType : request.getReqBody().getEtypes()) {

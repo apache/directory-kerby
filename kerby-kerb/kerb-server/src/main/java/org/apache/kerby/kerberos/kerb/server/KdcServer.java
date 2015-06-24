@@ -20,6 +20,8 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.config.Config;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.server.impl.DefaultInternalKdcServerImpl;
 
@@ -148,6 +150,22 @@ public class KdcServer {
     }
 
     /**
+     * Get the KDC config.
+     * @return KdcConfig
+     */
+    public KdcConfig getKdcConfig() {
+        return getSetting().getKdcConfig();
+    }
+
+    /**
+     * Get backend config.
+     * @return
+     */
+    public Config getBackendConfig() {
+        return getSetting().getBackendConfig();
+    }
+
+    /**
      * Get identity service.
      * @return IdentityService
      */
@@ -161,7 +179,7 @@ public class KdcServer {
     /**
      * Init the KDC server.
      */
-    public void init() {
+    public void init() throws KrbException {
         if (commonOptions.contains(KdcServerOption.INNER_KDC_IMPL)) {
             innerKdc = (InternalKdcServer) commonOptions.getOptionValue(
                     KdcServerOption.INNER_KDC_IMPL);

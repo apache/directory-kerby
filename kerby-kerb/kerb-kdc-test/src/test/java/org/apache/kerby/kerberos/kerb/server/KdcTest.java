@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
@@ -32,7 +33,7 @@ public abstract class KdcTest extends KdcTestBase {
     private String serverPrincipal;
 
     @Override
-    protected void createPrincipals() {
+    protected void createPrincipals() throws KrbException {
         super.createPrincipals();
         clientPrincipal = getClientPrincipal();
         kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);

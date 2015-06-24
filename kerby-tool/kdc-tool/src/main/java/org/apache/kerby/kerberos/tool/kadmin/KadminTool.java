@@ -139,7 +139,7 @@ public class KadminTool {
     public static void main(String[] args) {
         Kadmin kadmin;
         try {
-            kadmin = Kadmin.getInstance(getConfDir(args));
+            kadmin = new Kadmin(getConfDir(args));
         } catch (KrbException e) {
             System.err.println("Failed to init Kadmin due to " + e.getMessage());
             return;

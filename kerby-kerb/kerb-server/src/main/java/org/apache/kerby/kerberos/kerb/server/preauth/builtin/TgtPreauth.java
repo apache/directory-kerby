@@ -19,12 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth.builtin;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.preauth.builtin.TgtPreauthMeta;
 import org.apache.kerby.kerberos.kerb.server.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.server.request.TgsRequest;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 
 public class TgtPreauth extends AbstractPreauthPlugin {

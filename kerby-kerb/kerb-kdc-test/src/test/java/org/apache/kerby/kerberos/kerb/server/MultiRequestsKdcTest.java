@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
@@ -34,7 +35,7 @@ public class MultiRequestsKdcTest extends KdcTestBase {
     private String password = "123456";
 
     @Override
-    protected void createPrincipals() {
+    protected void createPrincipals() throws KrbException {
         super.createPrincipals();
         clientPrincipal = getClientPrincipal();
         kdcServer.createPrincipal(clientPrincipal, password);

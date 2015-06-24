@@ -32,6 +32,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.kerberos.KerberosTicket;
 import javax.security.auth.login.LoginContext;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
@@ -70,7 +71,7 @@ public abstract class GssInteropTestBase extends KdcTest {
     }
     
     @Override
-    protected void createPrincipals() {
+    protected void createPrincipals() throws KrbException {
         kdcServer.createTgsPrincipal();
         kdcServer.createPrincipal(serverPrincipal, TEST_PASSWORD);
         kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);

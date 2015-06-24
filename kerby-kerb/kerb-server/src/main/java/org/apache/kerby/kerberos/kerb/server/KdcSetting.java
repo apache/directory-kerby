@@ -20,6 +20,8 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.config.Conf;
+import org.apache.kerby.config.Config;
 
 import java.io.File;
 
@@ -29,10 +31,13 @@ import java.io.File;
 public class KdcSetting {
     private final KOptions startupOptions;
     private final KdcConfig kdcConfig;
+    private Conf backendConfig;
 
-    public KdcSetting(KOptions startupOptions, KdcConfig config) {
+    public KdcSetting(KOptions startupOptions,
+                      KdcConfig config, Conf backendConfig) {
         this.startupOptions = startupOptions;
         this.kdcConfig = config;
+        this.backendConfig = backendConfig;
     }
 
     /**
@@ -41,6 +46,14 @@ public class KdcSetting {
      */
     public KdcConfig getKdcConfig() {
         return kdcConfig;
+    }
+
+    /**
+     * Get the backend config.
+     * @return
+     */
+    public Config getBackendConfig() {
+        return backendConfig;
     }
 
     public File getConfDir() {
