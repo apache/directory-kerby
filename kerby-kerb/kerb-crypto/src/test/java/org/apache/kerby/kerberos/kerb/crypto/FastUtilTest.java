@@ -189,8 +189,6 @@ public class FastUtilTest {
             System.err.println("outKey:" + HexUtil.bytesToHex(key.getKeyData()));
             System.err.println("answer:" + testCase.answer);
             fail("CF2Test failed for " + testCase.encType.getName());
-        } else {
-            System.out.println("CF2 test OK for " + testCase.encType.getName());
         }
     }
 }

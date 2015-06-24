@@ -123,7 +123,7 @@ public final class KadminUtil {
 
         //Add principal to keytab.
         PrincipalName principal = identity.getPrincipal();
-        KerberosTime timestamp = new KerberosTime();
+        KerberosTime timestamp = KerberosTime.now();
         for (EncryptionType encType : identity.getKeys().keySet()) {
             EncryptionKey ekey = identity.getKeys().get(encType);
             int keyVersion = ekey.getKvno();

@@ -211,9 +211,7 @@ public class CheckSumsTest {
             byte[] key = HexUtil.hex2bytes(testCase.key);
             KeyUsage keyUsage = KeyUsage.fromValue(testCase.keyUsage);
             newCksum = CheckSumHandler.checksumWithKey(testCase.cksumType, plainData, key, keyUsage);
-            if (CheckSumHandler.verifyWithKey(newCksum, plainData, key, keyUsage)) {
-                System.out.println("Checksum test OK for " + testCase.cksumType.getName());
-            } else {
+            if (!CheckSumHandler.verifyWithKey(newCksum, plainData, key, keyUsage)) {
                 fail("Checksum test failed for " + testCase.cksumType.getName());
             }
         } else {
@@ -221,17 +219,13 @@ public class CheckSumsTest {
              * For un-keyed checksum types
              */
             newCksum = CheckSumHandler.checksum(testCase.cksumType, plainData);
-            if (CheckSumHandler.verify(newCksum, plainData)) {
-                System.out.println("Checksum and verifying OK for " + testCase.cksumType.getName());
-            } else {
+            if (!CheckSumHandler.verify(newCksum, plainData)) {
                 fail("Checksum and verifying failed for " + testCase.cksumType.getName());
             }
         }
 
         if (! newCksum.isEqual(answer)) {
             fail("Checksum test failed for " + testCase.cksumType.getName());
-        } else {
-            System.out.println("Checksum test OK for " + testCase.cksumType.getName());
         }
     }
 }

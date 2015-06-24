@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.identity.backend;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,11 +33,13 @@ import java.io.File;
  */
 public class JsonBackendTest extends BackendTest {
     private static IdentityBackend backend;
+    private static File jsonBackendFile;
 
     @BeforeClass
     public static void setup() {
         File testDir = new File(System.getProperty("test.dir", "target"));
-        String jsonBackendFileString = new File(testDir, "json-identity-backend-file").getAbsolutePath();
+        jsonBackendFile = new File(testDir, "json-identity-backend-file");
+        String jsonBackendFileString = jsonBackendFile.getAbsolutePath();
 
         Config backendConfig = new Conf();
         backendConfig.setString(JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE, jsonBackendFileString);
@@ -70,4 +73,10 @@ public class JsonBackendTest extends BackendTest {
         super.testGetIdentities(backend);
     }
 
+    @AfterClass
+    public static void rmJsonBackendFile() {
+        if (jsonBackendFile.exists()) {
+            jsonBackendFile.delete();
+        }
+    }
 }
