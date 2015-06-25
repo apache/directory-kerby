@@ -254,13 +254,13 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         Entry entry;
         try {
             cursor = connection.search( getConfig().getString("base_dn"), 
-                    "(objectclass=*)", SearchScope.ONELEVEL, "krb5PrincipalName");
+                    "(objectclass=*)", SearchScope.ONELEVEL, KerberosAttribute.KRB5_PRINCIPAL_NAME_AT);
             if (cursor == null) {
                 return null;
             }
             while (cursor.next()) {
                 entry = cursor.get();
-                identityNames.add(entry.get("krb5PrincipalName").getString());
+                identityNames.add(entry.get(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT).getString());
             }
             cursor.close();
             Collections.sort(identityNames);
