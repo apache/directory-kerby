@@ -11,3 +11,5 @@ log.txt
 *.ipr
 *.iws
 kerby-server
+.pmd
+.pmdruleset.xml
