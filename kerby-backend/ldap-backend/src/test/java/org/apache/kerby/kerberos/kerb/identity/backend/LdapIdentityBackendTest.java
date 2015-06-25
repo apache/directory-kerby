@@ -59,12 +59,20 @@ import org.junit.runner.RunWith;
 )
 public class LdapIdentityBackendTest extends AbstractLdapIdentityBackendTest
 {
+    private static final String BASE_DN = "ou=users,dc=example,dc=com";
+    private static final String ADMIN_DN = "uid=admin,ou=system";
+    private static final String ADMIN_PW = "secret";
+
     private LdapIdentityBackend backend;
 
     @Before
     public void setUp() throws Exception {
         Conf config = new Conf();
+        config.setString( "host", "localhost" );
         config.setInt("port", getLdapServer().getPort());
+        config.setString("admin_dn", ADMIN_DN);
+        config.setString("admin_pw", ADMIN_PW);
+        config.setString("base_dn", BASE_DN);
         this.backend = new LdapIdentityBackend(config);
         backend.initialize();
         backend.start();

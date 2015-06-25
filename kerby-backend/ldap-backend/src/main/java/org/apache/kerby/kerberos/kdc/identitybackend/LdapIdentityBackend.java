@@ -52,8 +52,6 @@ import java.util.Map;
  *
  */
 public class LdapIdentityBackend extends AbstractIdentityBackend {
-    private static final String BASE_DN = "ou=users,dc=example,dc=com";
-    private static final String ADMIN_DN = "uid=admin,ou=system";
     private LdapNetworkConnection connection;
 
     public LdapIdentityBackend() {
@@ -70,9 +68,10 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     }
 
     public void startConnection() throws LdapException {
-        this.connection = new LdapNetworkConnection( "localhost",
-                getConfig().getInt("port") );
-        connection.bind( ADMIN_DN, "secret" );
+        this.connection = new LdapNetworkConnection(getConfig().getString("host"),
+                getConfig().getInt("port"));
+        connection.bind(getConfig().getString("admin_dn"),
+                getConfig().getString("admin_pw"));
     }
 
     @Override
@@ -238,7 +237,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     private Dn toDn(String principalName) throws LdapInvalidDnException {
         String[] names = principalName.split("@");
         String uid = names[0];
-        Dn dn = new Dn(new Rdn("uid", uid), new Dn(BASE_DN));
+        Dn dn = new Dn(new Rdn("uid", uid), new Dn(getConfig().getString("base_dn")));
         return dn;
     }
 
@@ -254,8 +253,8 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         EntryCursor cursor;
         Entry entry;
         try {
-            cursor = connection.search( BASE_DN, "(objectclass=*)", SearchScope.ONELEVEL,
-                    "krb5PrincipalName");
+            cursor = connection.search( getConfig().getString("base_dn"), 
+                    "(objectclass=*)", SearchScope.ONELEVEL, "krb5PrincipalName");
             if (cursor == null) {
                 return null;
             }
