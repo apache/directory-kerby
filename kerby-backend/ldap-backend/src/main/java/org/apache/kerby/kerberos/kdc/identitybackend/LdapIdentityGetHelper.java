@@ -27,7 +27,6 @@ import org.apache.directory.shared.kerberos.KerberosAttribute;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import sun.security.krb5.Asn1Exception;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -66,13 +65,13 @@ public class LdapIdentityGetHelper {
     }
 
     public KerberosTime getCreatedTime() throws LdapInvalidAttributeValueException,
-            Asn1Exception, ParseException {
+            ParseException {
         String createTime = entry.get("createTimestamp").getString();
         return createKerberosTime(createTime);
     }
 
     public KerberosTime getExpireTime() throws LdapInvalidAttributeValueException,
-            Asn1Exception, ParseException {
+            ParseException {
         String expirationTime = entry.get(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT).getString();
         return createKerberosTime(expirationTime);
     }

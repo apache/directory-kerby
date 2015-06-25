@@ -39,7 +39,6 @@ import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import sun.security.krb5.Asn1Exception;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -194,8 +193,6 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             krbIdentity.setKdcFlags(getHelper.getKdcFlags());
             krbIdentity.setLocked(getHelper.getLocked());
         } catch (LdapException e) {
-            e.printStackTrace();
-        } catch (Asn1Exception e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
