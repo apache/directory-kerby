@@ -429,7 +429,6 @@ public abstract class KdcRequest {
 
     protected KrbIdentity getEntry(String principal) throws KrbException {
         KrbIdentity entry;
-        KrbErrorCode krbErrorCode = KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN;
         entry = kdcContext.getIdentityService().getIdentity(principal);
 
         if (entry == null) {
