@@ -27,6 +27,7 @@ import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.crypto.fast.FastUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
+import org.apache.kerby.kerberos.kerb.server.KdcRecoverableException;
 import org.apache.kerby.kerberos.kerb.server.preauth.KdcFastContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
@@ -321,7 +322,7 @@ public abstract class KdcRequest {
         if (preauthContext.isPreauthRequired()) {
             if (preAuthData == null || preAuthData.isEmpty()) {
                 KrbError krbError = makePreAuthenticationError(kdcContext);
-                throw new KrbErrorException(krbError);
+                throw new KdcRecoverableException(krbError);
             } else {
                 getPreauthHandler().verify(this, preAuthData);
             }
@@ -427,14 +428,9 @@ public abstract class KdcRequest {
     }
 
     protected KrbIdentity getEntry(String principal) throws KrbException {
-        KrbIdentity entry = null;
+        KrbIdentity entry;
         KrbErrorCode krbErrorCode = KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN;
-
-        try {
-            entry = kdcContext.getIdentityService().getIdentity(principal);
-        } catch (Exception e) {
-            throw new KrbException(krbErrorCode, e);
-        }
+        entry = kdcContext.getIdentityService().getIdentity(principal);
 
         if (entry == null) {
             // Maybe it is the token preauth, now we ignore check client entry.
@@ -443,7 +439,7 @@ public abstract class KdcRequest {
         return entry;
     }
 
-    public ByteBuffer getRequestBody() throws KrbException {
+    protected ByteBuffer getRequestBody() throws KrbException {
         return null;
     }
 
@@ -451,7 +447,7 @@ public abstract class KdcRequest {
         return fastContext.getArmorKey();
     }
 
-    public void setArmorKey(EncryptionKey armorKey) {
+    protected void setArmorKey(EncryptionKey armorKey) {
         fastContext.setArmorKey(armorKey);
     }
 
@@ -463,11 +459,11 @@ public abstract class KdcRequest {
         this.serverPrincipal = serverPrincipal;
     }
 
-    public byte[] getInnerBodyout() {
+    protected byte[] getInnerBodyout() {
         return innerBodyout;
     }
 
-    public boolean isToken() {
+    protected boolean isToken() {
         return isToken;
     }
 
@@ -475,7 +471,7 @@ public abstract class KdcRequest {
         this.token = authToken;
     }
 
-    public AuthToken getToken() {
+    protected AuthToken getToken() {
         return token;
     }
 }

@@ -58,7 +58,8 @@ public class GssInteropTest extends KdcTest {
         kdcServer.init();
 
         // Must disable pre-auth
-        kdcServer.getSetting().getKdcConfig().setBoolean(KdcConfigKey.PREAUTH_REQUIRED, false);
+        kdcServer.getKdcConfig().setBoolean(
+                KdcConfigKey.PREAUTH_REQUIRED, true);
 
         kdcRealm = kdcServer.getKdcRealm();
         clientPrincipal = "drankye@" + kdcRealm;
