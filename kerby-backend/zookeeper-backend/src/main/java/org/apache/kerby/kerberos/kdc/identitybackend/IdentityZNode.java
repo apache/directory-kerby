@@ -24,7 +24,7 @@ import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.util.UTF8;
+import org.apache.kerby.util.Utf8;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
@@ -68,7 +68,7 @@ public class IdentityZNode {
             return null;
         }
         if (data != null) {
-            return new PrincipalName(UTF8.toString(data));
+            return new PrincipalName(Utf8.toString(data));
         } else {
             LOG.warn("can't get the date from znode: " + znode);
             return null;
@@ -78,7 +78,7 @@ public class IdentityZNode {
     public void setPrincipalName(String principal) throws KeeperException {
         ZKUtil.createSetData(this.zk,
                 IdentityZNodeHelper.getPrincipalNameZnode(this.identityName),
-                UTF8.toBytes(principal));
+                Utf8.toBytes(principal));
     }
 
     public int getKeyVersion() throws KeeperException {
@@ -259,7 +259,7 @@ public class IdentityZNode {
             Thread.currentThread().interrupt();
         }
         if (data != null) {
-            return EncryptionType.fromName(UTF8.toString(data));
+            return EncryptionType.fromName(Utf8.toString(data));
         } else {
             LOG.warn("can't get the date from znode: " + znode);
             return null;

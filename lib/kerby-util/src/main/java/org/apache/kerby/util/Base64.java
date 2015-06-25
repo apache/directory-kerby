@@ -327,7 +327,7 @@ public class Base64 {
         }
         this.decodeSize = this.encodeSize - 1;
         if (containsBase64Byte(lineSeparator)) {
-            String sep = UTF8.toString(lineSeparator);
+            String sep = Utf8.toString(lineSeparator);
             throw new IllegalArgumentException("lineSeperator must not contain base64 characters: [" + sep + "]");
         }
         this.encodeTable = urlSafe ? URL_SAFE_ENCODE_TABLE : STANDARD_ENCODE_TABLE;
@@ -646,7 +646,7 @@ public class Base64 {
      * @since 1.4
      */
     public static String encodeBase64String(byte[] binaryData) {
-        return UTF8.toString(encodeBase64(binaryData, true));
+        return Utf8.toString(encodeBase64(binaryData, true));
     }
 
     /**
@@ -672,7 +672,7 @@ public class Base64 {
      * @since 1.4
      */
     public static String encodeBase64URLSafeString(byte[] binaryData) {
-        return UTF8.toString(encodeBase64(binaryData, false, true));
+        return Utf8.toString(encodeBase64(binaryData, false, true));
     }
 
     /**
@@ -713,7 +713,7 @@ public class Base64 {
      * @since 1.4
      */
     public byte[] decode(String pArray) {
-        return decode(UTF8.toBytes(pArray));
+        return decode(Utf8.toBytes(pArray));
     }
 
     /**
@@ -906,7 +906,7 @@ public class Base64 {
      * @since 1.4
      */
     public String encodeToString(byte[] pArray) {
-        return UTF8.toString(encode(pArray));
+        return Utf8.toString(encode(pArray));
     }
 
     /**

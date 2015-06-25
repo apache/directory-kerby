@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
@@ -23,7 +23,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.apache.kerby.config.Config;
-import org.apache.kerby.kerberos.kdc.identitybackend.tool.FileHelper;
 import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.EncryptionKeyAdapter;
 import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.KerberosTimeAdapter;
 import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.PrincipalNameAdapter;
@@ -32,6 +31,7 @@ import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.util.IOUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,11 +102,16 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
 
         if (kdbFileTimeStamp == 0 || nowTimeStamp != kdbFileTimeStamp) {
             //load ids
-            String existsFileJson = FileHelper.readFromFile(jsonKdbFile);
+            String existsFileJson = null;
+            try {
+                existsFileJson = IOUtil.readFile(jsonKdbFile);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read file", e);
+            }
 
             ids = gson.fromJson(existsFileJson,
-                    new TypeToken<LinkedHashMap<String, KrbIdentity>>() {
-                    }.getType());
+                new TypeToken<LinkedHashMap<String, KrbIdentity>>() {
+                }.getType());
         }
 
         if (ids == null) {
@@ -197,7 +202,11 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
 
     private void idsToFile(Map<String, KrbIdentity> ids) {
         String newFileJson = gson.toJson(ids);
-        FileHelper.writeToFile(newFileJson, jsonKdbFile);
+        try {
+            IOUtil.writeFile(newFileJson, jsonKdbFile);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write file", e);
+        }
     }
 
 

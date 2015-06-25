@@ -2,7 +2,7 @@ package org.apache.kerby.util;
 
 import java.io.UnsupportedEncodingException;
 
-public class UTF8 {
+public class Utf8 {
 
     public static String toString(byte[] bytes) {
         try {
