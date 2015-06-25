@@ -96,8 +96,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     }
 
     public void closeConnection() throws LdapException, IOException {
-        if (this.connection.connect()) {
-            this.connection.unBind();
+        if (this.connection.isConnected()) {
             this.connection.close();
         }
     }
