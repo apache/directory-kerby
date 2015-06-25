@@ -19,12 +19,15 @@
  */
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
+import org.apache.directory.api.ldap.model.cursor.CursorException;
+import org.apache.directory.api.ldap.model.cursor.EntryCursor;
 import org.apache.directory.api.ldap.model.entry.DefaultEntry;
 import org.apache.directory.api.ldap.model.entry.Entry;
 import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.api.ldap.model.exception.LdapInvalidDnException;
 import org.apache.directory.api.ldap.model.message.ModifyRequest;
 import org.apache.directory.api.ldap.model.message.ModifyRequestImpl;
+import org.apache.directory.api.ldap.model.message.SearchScope;
 import org.apache.directory.api.ldap.model.name.Dn;
 import org.apache.directory.api.ldap.model.name.Rdn;
 import org.apache.directory.api.util.GeneralizedTime;
@@ -40,6 +43,8 @@ import sun.security.krb5.Asn1Exception;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -242,11 +247,32 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
 
     @Override
     public List<String> getIdentities(int start, int limit) {
-        return null;
+        List<String> identityNames = getIdentities();
+        return identityNames.subList(start, limit);
     }
 
     @Override
     public List<String> getIdentities() {
-        return null;
+        List<String> identityNames = new ArrayList<>();
+        EntryCursor cursor;
+        Entry entry;
+        try {
+            cursor = connection.search( BASE_DN, "(objectclass=*)", SearchScope.ONELEVEL,
+                    "krb5PrincipalName");
+            if (cursor == null) {
+                return null;
+            }
+            while (cursor.next()) {
+                entry = cursor.get();
+                identityNames.add(entry.get("krb5PrincipalName").getString());
+            }
+            cursor.close();
+            Collections.sort(identityNames);
+        } catch (LdapException e) {
+            e.printStackTrace();
+        } catch (CursorException e) {
+            e.printStackTrace();
+        }
+        return identityNames;
     }
 }

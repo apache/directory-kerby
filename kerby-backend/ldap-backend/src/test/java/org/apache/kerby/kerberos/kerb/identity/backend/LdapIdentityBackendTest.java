@@ -95,4 +95,9 @@ public class LdapIdentityBackendTest extends AbstractLdapIdentityBackendTest
     public void testDelete() {
         super.testDelete(backend);
     }
+
+    @Test
+    public void testGetIdentities() {
+        super.testGetIdentities(backend);
+    }
 }
