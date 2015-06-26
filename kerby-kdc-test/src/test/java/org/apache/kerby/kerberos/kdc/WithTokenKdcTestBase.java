@@ -62,7 +62,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
     @Override
     protected void createPrincipals() throws KrbException {
         super.createPrincipals();
-        kdcServer.createPrincipal(getClientPrincipal(), TEST_PASSWORD);
+        kdcServer.createPrincipal(getClientPrincipal(), clientPassword);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
 
     protected void verifyTicket(AbstractServiceTicket ticket) {
         assertThat(ticket).isNotNull();
-        assertThat(ticket.getRealm()).isEqualTo(kdcRealm);
+        assertThat(ticket.getRealm()).isEqualTo(kdcServer.getKdcRealm());
         assertThat(ticket.getTicket()).isNotNull();
         assertThat(ticket.getSessionKey()).isNotNull();
         assertThat(ticket.getEncKdcRepPart()).isNotNull();

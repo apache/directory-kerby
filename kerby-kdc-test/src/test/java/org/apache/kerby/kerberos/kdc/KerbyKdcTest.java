@@ -20,7 +20,6 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -31,20 +30,11 @@ import java.io.File;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class KerbyKdcTest extends KdcTestBase {
-    private String clientPrincipal;
-    private String serverPrincipal;
 
     @Override
     protected void prepareKdcServer() throws Exception {
         super.prepareKdcServer();
         kdcServer.setInnerKdcImpl(new NettyKdcServerImpl());
-    }
-
-    @Override
-    protected void createPrincipals() throws KrbException {
-        super.createPrincipals();
-        clientPrincipal = getClientPrincipal();
-        kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);
     }
 
     protected void performKdcTest() throws Exception {
@@ -60,22 +50,16 @@ public abstract class KerbyKdcTest extends KdcTestBase {
         ServiceTicket tkt;
 
         try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, TEST_PASSWORD);
+            tgt = krbClnt.requestTgtWithPassword(getClientPrincipal(),
+                    getClientPassword());
             assertThat(tgt).isNotNull();
 
-            serverPrincipal = getServerPrincipal();
-            tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
+            tkt = krbClnt.requestServiceTicketWithTgt(tgt, getServerPrincipal());
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password");
             e.printStackTrace();
             Assert.fail();
         }
-    }
-
-    @Override
-    protected void deletePrincipals() throws KrbException {
-        super.deletePrincipals();
-        kdcServer.deletePrincipal(clientPrincipal);
     }
 }

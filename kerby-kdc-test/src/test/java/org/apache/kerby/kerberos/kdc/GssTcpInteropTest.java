@@ -43,7 +43,7 @@ public class GssTcpInteropTest extends GssInteropTestBase {
         // Read in krb5.conf and substitute in the correct port
         File file2 = new File(this.getClass().getResource("/krb5.conf").getPath());
         String content2 = getFileContent(file2.getPath());
-        content2 = content2.replaceAll("port", "" + tcpPort);
+        content2 = content2.replaceAll("port", "" + getTcpPort());
         String path2 = writeToTestDir(content2, file2.getName());
 
         System.setProperty("java.security.krb5.conf", path2);

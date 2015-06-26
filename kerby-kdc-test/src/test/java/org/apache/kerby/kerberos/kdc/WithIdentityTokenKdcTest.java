@@ -32,7 +32,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
     public void testKdc() throws Exception {
 
         prepareToken(null);
-        createCredentialCache(getClientPrincipal(), TEST_PASSWORD);
+        createCredentialCache(getClientPrincipal(), getClientPassword());
 
         TgtTicket tgt = null;
         try {

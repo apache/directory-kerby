@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbConfigKey;
 import org.apache.kerby.util.IOUtil;
+import org.apache.kerby.util.NetworkUtil;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -31,40 +32,24 @@ import org.junit.BeforeClass;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.ServerSocket;
 
 public abstract class KdcTestBase {
-    protected static final String TEST_PASSWORD = "123456";
     private static File testDir;
 
-    protected String kdcRealm;
-    private String clientPrincipal;
-    private String serverPrincipal;
+    private final String kdcRealm = "TEST.COM";
+    protected final String clientPassword = "123456";
+    private final String hostname = "localhost";
+    private final String clientPrincipalName = "drankye";
+    private final String clientPrincipal = clientPrincipalName + "@" + kdcRealm;
+    private final String serverPrincipalName = "test-service";
+    private final String serverPrincipal =
+            serverPrincipalName + "/" + hostname + "@" + kdcRealm;
 
-    protected String hostname = "localhost";
-    protected int tcpPort = -1;
-    protected int udpPort = -1;
+    private int tcpPort = -1;
+    private int udpPort = -1;
 
-    protected TestKdcServer kdcServer;
+    protected SimpleKdcServer kdcServer;
     protected KrbClient krbClnt;
-
-    /**
-     * Get a server socket point for testing usage, either TCP or UDP.
-     * @return server socket point
-     */
-    private static int getServerPort() {
-        int serverPort = 0;
-
-        try {
-            ServerSocket serverSocket = new ServerSocket(0);
-            serverPort = serverSocket.getLocalPort();
-            serverSocket.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to get a server socket point");
-        }
-
-        return serverPort;
-    }
 
     @BeforeClass
     public static void createTestDir() throws IOException {
@@ -86,20 +71,24 @@ public abstract class KdcTestBase {
         return testDir;
     }
 
-    protected void setClientPrincipal(String clientPrincipal) {
-        this.clientPrincipal = clientPrincipal;
+    protected String getClientPrincipalName() {
+        return clientPrincipalName;
     }
 
     protected String getClientPrincipal() {
-        return this.clientPrincipal;
+        return clientPrincipal;
     }
 
-    protected void setServerPrincipal(String serverPrincipal) {
-        this.serverPrincipal = serverPrincipal;
+    protected String getServerPrincipalName() {
+        return serverPrincipalName;
+    }
+
+    protected String getClientPassword() {
+        return clientPassword;
     }
 
     protected String getServerPrincipal() {
-        return this.serverPrincipal;
+        return serverPrincipal;
     }
 
     protected boolean allowUdp() {
@@ -110,11 +99,20 @@ public abstract class KdcTestBase {
         return true;
     }
 
+    protected int getTcpPort() {
+        return tcpPort;
+    }
+
+    protected int getUdpPort() {
+        return udpPort;
+    }
+
     protected String getFileContent(String path) throws IOException {
         return IOUtil.readFile(new File(path));
     }
 
-    protected String writeToTestDir(String content, String fileName) throws IOException {
+    protected String writeToTestDir(String content,
+                                    String fileName) throws IOException {
         File file = new File(testDir, fileName);
         if (file.exists()) {
             file.delete();
@@ -126,11 +124,11 @@ public abstract class KdcTestBase {
     @Before
     public void setUp() throws Exception {
         if (allowTcp()) {
-            tcpPort = getServerPort();
+            tcpPort = NetworkUtil.getServerPort();
         }
 
         if (allowUdp()) {
-            udpPort = getServerPort();
+            udpPort = NetworkUtil.getServerPort();
         }
 
         setUpKdcServer();
@@ -152,6 +150,7 @@ public abstract class KdcTestBase {
      * @throws Exception
      */
     protected void prepareKdcServer() throws Exception {
+        kdcServer.setKdcRealm(kdcRealm);
         kdcServer.setKdcHost(hostname);
         kdcServer.setAllowTcp(allowTcp());
         if (tcpPort > 0) {
@@ -165,13 +164,9 @@ public abstract class KdcTestBase {
     }
 
     protected void setUpKdcServer() throws Exception {
-        kdcServer = new TestKdcServer();
+        kdcServer = new SimpleKdcServer();
         prepareKdcServer();
         kdcServer.init();
-
-        kdcRealm = kdcServer.getKdcRealm();
-        clientPrincipal = "drankye@" + kdcRealm;
-        serverPrincipal = "test-service/localhost@" + kdcRealm;
     }
 
     protected void setUpClient() throws Exception {
@@ -199,11 +194,13 @@ public abstract class KdcTestBase {
     protected void createPrincipals() throws KrbException {
         kdcServer.createTgsPrincipal();
         kdcServer.createPrincipals(serverPrincipal);
+        kdcServer.createPrincipal(clientPrincipal, clientPassword);
     }
 
     protected void deletePrincipals() throws KrbException {
         kdcServer.deleteTgsPrincipal();
         kdcServer.deletePrincipals(serverPrincipal);
+        kdcServer.deletePrincipal(clientPrincipal);
     }
 
     @After
