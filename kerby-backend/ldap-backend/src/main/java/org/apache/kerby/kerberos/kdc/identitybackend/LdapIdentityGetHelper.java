@@ -59,6 +59,7 @@ public class LdapIdentityGetHelper {
             byte[] encryKey= iterator1.next().getBytes();
             EncryptionKey key = new EncryptionKey();
             key.decode(encryKey);
+            key.setKvno(1); // TODO: kvno should be correctly stored and retrieved
             keys.add(key);
         }
         return keys;
