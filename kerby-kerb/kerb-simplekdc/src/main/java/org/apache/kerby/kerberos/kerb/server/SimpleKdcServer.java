@@ -73,6 +73,10 @@ public class SimpleKdcServer extends KdcServer {
         return getSetting().getKdcRealm();
     }
 
+    public String getKdcHost() {
+        return getSetting().getKdcHost();
+    }
+
     public void createPrincipal(String principal) throws KrbException {
         kadmin.addPrincipal(principal);
     }

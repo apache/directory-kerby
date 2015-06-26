@@ -142,10 +142,6 @@ public abstract class KdcRequest {
         return preauthContext;
     }
 
-    protected void loadCredCache() {
-        // TODO
-    }
-
     public KdcReq getKdcReq() {
         return kdcReq;
     }
@@ -297,8 +293,6 @@ public abstract class KdcRequest {
     }
 
     protected void preauth() throws KrbException {
-        loadCredCache();
-
         List<EncryptionType> etypes = getEncryptionTypes();
         if (etypes.isEmpty()) {
             throw new KrbException("No encryption type is configured and available");
