@@ -91,6 +91,7 @@ public class EncryptionUtil {
                 new ArrayList<EncryptionKey>(encryptionTypes.size());
         for (EncryptionType eType : encryptionTypes) {
             EncryptionKey encKey = EncryptionHandler.random2Key(eType);
+            encKey.setKvno(1);
             results.add(encKey);
         }
 
@@ -102,7 +103,9 @@ public class EncryptionUtil {
             List<EncryptionType> encryptionTypes) throws KrbException {
         List<EncryptionKey> results = new ArrayList<EncryptionKey>(encryptionTypes.size());
         for (EncryptionType eType : encryptionTypes) {
-            EncryptionKey encKey = EncryptionHandler.string2Key(principal, passwd, eType);
+            EncryptionKey encKey = EncryptionHandler.string2Key(
+                principal, passwd, eType);
+            encKey.setKvno(1);
             results.add(encKey);
         }
 

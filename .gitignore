@@ -13,3 +13,5 @@ log.txt
 kerby-server
 .pmd
 .pmdruleset.xml
+kerby-dist/kdc-dist/lib/
+kerby-dist/tool-dist/lib/
