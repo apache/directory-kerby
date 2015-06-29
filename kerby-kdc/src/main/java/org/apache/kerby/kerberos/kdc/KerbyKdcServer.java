@@ -21,119 +21,59 @@ package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
-import org.apache.kerby.kerberos.kerb.common.KrbUtil;
-import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * The mentioned Kerby KDC server implementation.
  */
 public class KerbyKdcServer extends KdcServer {
-    private static KerbyKdcServer server;
+    private Kadmin kadmin;
+    public KerbyKdcServer(File confDir) throws KrbException {
+        super(confDir);
+        setInnerKdcImpl(new NettyKdcServerImpl(getSetting()));
+    }
 
     @Override
     public void init() throws KrbException {
-        innerKdc = new NettyKdcServerImpl();
-        innerKdc.init(commonOptions);
-    }
+        super.init();
 
-    /**
-     * TODO: THIS IS TO BE MOVED TO KDC-INIT !!
-     * Verify whether tgt identity has been added.
-     * If no, add it to identity backend.
-     */
-    private void createTgtPrincipal() {
-        String tgtPrincipal = KrbUtil.makeTgsPrincipal(getSetting().getKdcRealm()).getName();
-        KrbIdentity tgtIdentity = getIdentityService().getIdentity(tgtPrincipal);
-        if (tgtIdentity == null) {
-            createPrincipals(tgtPrincipal);
-        }
-    }
+        kadmin = new Kadmin(getSetting(), getIdentityService());
 
-    private void createPrincipal(String principal, String password) {
-        KrbIdentity identity = new KrbIdentity(fixPrincipal(principal));
-        List<EncryptionType> encTypes = getSetting().getKdcConfig().getEncryptionTypes();
-        List<EncryptionKey> encKeys = null;
-        try {
-            encKeys = EncryptionUtil.generateKeys(fixPrincipal(principal), password, encTypes);
-        } catch (KrbException e) {
-            throw new RuntimeException("Failed to generate encryption keys", e);
-        }
-        identity.addKeys(encKeys);
-        getIdentityService().addIdentity(identity);
-    }
-
-    private void createPrincipals(String ... principals) {
-        String passwd;
-        for (String principal : principals) {
-            passwd = UUID.randomUUID().toString();
-            createPrincipal(fixPrincipal(principal), passwd);
-        }
-    }
-
-    private String fixPrincipal(String principal) {
-        if (! principal.contains("@")) {
-            principal += "@" + getSetting().getKdcRealm();
-        }
-        return principal;
+        kadmin.createBuiltinPrincipals();
     }
 
     private static final String USAGE = "Usage: " +
             KerbyKdcServer.class.getSimpleName() +
-            " -start conf-dir working-dir|-start|-stop";
+            " -start <conf-dir> <working-dir>";
 
     public static void main(String[] args) throws KrbException {
-        if (args.length == 0) {
+        if (args.length != 3) {
             System.err.println(USAGE);
-            return;
+            System.exit(1);
         }
 
-        if (args[0].equals("-start")) {
-            String confDir;
-            String workDir;
-            if(args.length == 1) {
-                String envDir;
-                try {
-                    Map<String, String> mapEnv = System.getenv();
-                    envDir = mapEnv.get("KRB5_KDC_DIR");
-                } catch (SecurityException e) {
-                    envDir = null;
-                }
-                if(envDir != null) {
-                    confDir = envDir;
-                } else {
-                    confDir = "/etc/kerby/";
-                }
-                workDir = "/tmp/";
-            } else if (args.length == 3) {
-                confDir = args[1];
-                workDir = args[2];
-            } else {
-                System.err.println(USAGE);
-                return;
-            }
-            server = new KerbyKdcServer();
-            server.setWorkDir(new File(workDir));
-            server.setConfDir(new File(confDir));
-            server.init();
-
-            server.createTgtPrincipal();
-
-            server.start();
-            System.out.println("KDC started.");
-        } else if (args[0].equals("-stop")) {
-            //server.stop();//FIXME can't get the server instance here
-            System.out.println("KDC Server stopped.");
-        } else {
+        if (!args[0].equals("-start")) {
             System.err.println(USAGE);
+            System.exit(2);
         }
+
+        String confDirPath = args[1];
+        String workDirPath = args[2];
+        File confDir = new File(confDirPath);
+        File workDir = new File(workDirPath);
+        if (!confDir.exists() || !workDir.exists()) {
+            System.err.println("Invalid or not exist conf-dir or work-dir");
+            System.exit(3);
+        }
+
+        KerbyKdcServer server = new KerbyKdcServer(confDir);
+        server.setWorkDir(workDir);
+        server.init();
+
+        server.start();
+        System.out.println("KDC started.");
     }
 }

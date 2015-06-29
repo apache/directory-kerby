@@ -17,11 +17,11 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.server;
+package org.apache.kerby.kerberos.kerb.server.impl;
 
-import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.identity.IdentityService;
+import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.server.KdcSetting;
 
 /**
  * An internal KDC server interface.
@@ -29,20 +29,19 @@ import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 public interface InternalKdcServer {
 
     /**
-     * Initialize with KDC startup options.
-     * @param options
+     * Initialize.
      */
-    void init(KOptions options) throws KrbException;
+    void init() throws KrbException;
 
     /**
      * Start the KDC server.
      */
-    void start();
+    void start() throws KrbException;
 
     /**
      * Stop the KDC server.
      */
-    void stop();
+    void stop() throws KrbException;
 
     /**
      * Get KDC setting.
@@ -51,8 +50,8 @@ public interface InternalKdcServer {
     KdcSetting getSetting();
 
     /**
-     * Get identity service.
-     * @return IdentityService
+     * Get identity backend.
+     * @return IdentityBackend
      */
-    IdentityService getIdentityService();
+    IdentityBackend getIdentityBackend();
 }

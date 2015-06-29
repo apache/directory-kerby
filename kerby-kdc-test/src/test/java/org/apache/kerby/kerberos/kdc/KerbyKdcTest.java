@@ -34,7 +34,8 @@ public abstract class KerbyKdcTest extends KdcTestBase {
     @Override
     protected void prepareKdcServer() throws Exception {
         super.prepareKdcServer();
-        kdcServer.setInnerKdcImpl(new NettyKdcServerImpl());
+        kdcServer.setInnerKdcImpl(
+                new NettyKdcServerImpl(kdcServer.getSetting()));
     }
 
     protected void performKdcTest() throws Exception {

@@ -19,26 +19,28 @@
  */
 package org.apache.kerby.kerberos.kerb.server.impl;
 
-import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
-import org.apache.kerby.kerberos.kerb.server.*;
-
-import java.io.File;
-import java.io.IOException;
+import org.apache.kerby.kerberos.kerb.server.BackendConfig;
+import org.apache.kerby.kerberos.kerb.server.KdcConfig;
+import org.apache.kerby.kerberos.kerb.server.KdcSetting;
+import org.apache.kerby.kerberos.kerb.server.KdcUtil;
 
 /**
  * Abstract KDC server implementation.
  */
 public class AbstractInternalKdcServer implements InternalKdcServer {
     private boolean started;
-    private KdcConfig kdcConfig;
-    private Conf backendConfig;
-    private KdcSetting kdcSetting;
+    private final KdcConfig kdcConfig;
+    private final BackendConfig backendConfig;
+    private final KdcSetting kdcSetting;
     private IdentityBackend backend;
+
+    public AbstractInternalKdcServer(KdcSetting kdcSetting) {
+        this.kdcSetting = kdcSetting;
+        this.kdcConfig = kdcSetting.getKdcConfig();
+        this.backendConfig = kdcSetting.getBackendConfig();
+    }
 
     @Override
     public KdcSetting getSetting() {
@@ -58,88 +60,16 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
     }
 
     @Override
-    public void init(KOptions startupOptions) throws KrbException {
-        try {
-            initConfig(startupOptions);
-        } catch (IOException e) {
-            throw new KrbException("Failed to load configurations", e);
-        }
-
-        kdcSetting = new KdcSetting(startupOptions,
-                kdcConfig, backendConfig);
-
-        initBackend();
-    }
-
-    /**
-     * Prepare kdc and backend config, loading kdc.conf and backend.conf.
-     * It can be override to add more configuration resources.
-     */
-    private void initConfig(KOptions startupOptions) throws IOException {
-        if (startupOptions.contains(KdcServerOption.KDC_CONFIG)) {
-            kdcConfig = (KdcConfig) startupOptions.getOptionValue(
-                    KdcServerOption.KDC_CONFIG);
-        } else {
-            kdcConfig = new KdcConfig();
-            File confDir = startupOptions.getDirOption(KdcServerOption.CONF_DIR);
-            if (confDir != null && confDir.exists()) {
-                File kdcConfFile = new File(confDir, "kdc.conf");
-                if (kdcConfFile.exists()) {
-                    kdcConfig.addIniConfig(kdcConfFile);
-                }
-            }
-        }
-
-        if (startupOptions.contains(KdcServerOption.BACKEND_CONFIG)) {
-            backendConfig = (BackendConfig) startupOptions.getOptionValue(
-                    KdcServerOption.BACKEND_CONFIG);
-        } else {
-            backendConfig = new BackendConfig();
-            File confDir = startupOptions.getDirOption(KdcServerOption.CONF_DIR);
-            if (confDir != null && confDir.exists()) {
-                File backendConfFile = new File(confDir, "backend.conf");
-                if (backendConfFile.exists()) {
-                    backendConfig.addIniConfig(backendConfFile);
-                }
-            }
-        }
-    }
-
-    private void initBackend() throws KrbException {
-        String backendClassName = backendConfig.getString(
-                KdcConfigKey.KDC_IDENTITY_BACKEND);
-        if (backendClassName == null) {
-            backendClassName = MemoryIdentityBackend.class.getCanonicalName();
-        }
-
-        Class<?> backendClass;
-        try {
-            backendClass = Class.forName(backendClassName);
-        } catch (ClassNotFoundException e) {
-            throw new KrbException("Failed to load backend class: "
-                    + backendClassName);
-        }
-
-        try {
-            backend = (IdentityBackend) backendClass.newInstance();
-        } catch (InstantiationException e) {
-            throw new KrbException("Failed to create backend: "
-                    + backendClassName);
-        } catch (IllegalAccessException e) {
-            throw new KrbException("Failed to create backend: "
-                    + backendClassName);
-        }
-
-        backend.setConfig(backendConfig);
-        backend.initialize();
+    public void init() throws KrbException {
+        backend = KdcUtil.getBackend(backendConfig);
     }
 
     @Override
-    public void start() {
+    public void start() throws KrbException {
         try {
             doStart();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to start " + getServiceName(), e);
+            throw new KrbException("Failed to start " + getServiceName(), e);
         }
 
         started = true;
@@ -150,7 +80,7 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
     }
 
     @Override
-    public IdentityService getIdentityService() {
+    public IdentityBackend getIdentityBackend() {
         return backend;
     }
 
@@ -158,11 +88,11 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
         backend.start();
     }
 
-    public void stop() {
+    public void stop() throws KrbException {
         try {
             doStop();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to stop " + getServiceName());
+            throw new KrbException("Failed to stop " + getServiceName());
         }
 
         started = false;

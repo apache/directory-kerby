@@ -28,9 +28,6 @@ import org.apache.kerby.KOptionType;
 public enum KdcServerOption implements KOption {
     NONE("NONE"),
     INNER_KDC_IMPL("inner KDC impl", KOptionType.OBJ),
-    KDC_CONFIG("kdc config", KOptionType.OBJ),
-    BACKEND_CONFIG("backend config", KOptionType.OBJ),
-    CONF_DIR("conf dir", KOptionType.DIR),
     KDC_REALM("kdc realm", KOptionType.STR),
     KDC_HOST("kdc host", KOptionType.STR),
     ALLOW_TCP("allow tcp", KOptionType.BOOL),

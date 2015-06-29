@@ -20,10 +20,6 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Conf;
-import org.apache.kerby.config.Config;
-
-import java.io.File;
 
 /**
  * KDC setting that combines startup options and kdc config.
@@ -31,13 +27,17 @@ import java.io.File;
 public class KdcSetting {
     private final KOptions startupOptions;
     private final KdcConfig kdcConfig;
-    private Conf backendConfig;
+    private final BackendConfig backendConfig;
 
     public KdcSetting(KOptions startupOptions,
-                      KdcConfig config, Conf backendConfig) {
+                      KdcConfig config, BackendConfig backendConfig) {
         this.startupOptions = startupOptions;
         this.kdcConfig = config;
         this.backendConfig = backendConfig;
+    }
+
+    public KdcSetting(KdcConfig kdcConfig, BackendConfig backendConfig) {
+        this(new KOptions(), kdcConfig, backendConfig);
     }
 
     /**
@@ -52,12 +52,8 @@ public class KdcSetting {
      * Get the backend config.
      * @return
      */
-    public Config getBackendConfig() {
+    public BackendConfig getBackendConfig() {
         return backendConfig;
-    }
-
-    public File getConfDir() {
-        return  startupOptions.getDirOption(KdcServerOption.CONF_DIR);
     }
 
     public String getKdcHost() {

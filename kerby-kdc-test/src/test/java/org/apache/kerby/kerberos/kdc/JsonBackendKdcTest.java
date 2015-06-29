@@ -38,14 +38,11 @@ public class JsonBackendKdcTest extends KerbyKdcTest {
         jsonBackendFile = new File(testDir, "json-backend-file");
         String jsonBackendFileString = jsonBackendFile.getAbsolutePath();
 
-        BackendConfig backendConfig = new BackendConfig();
+        BackendConfig backendConfig = kdcServer.getBackendConfig();
         backendConfig.setString(
                 JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE, jsonBackendFileString);
         backendConfig.setString(KdcConfigKey.KDC_IDENTITY_BACKEND,
             "org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend");
-        kdcServer.setBackendConfig(backendConfig);
-
-        kdcServer.init();
     }
 
     @Test

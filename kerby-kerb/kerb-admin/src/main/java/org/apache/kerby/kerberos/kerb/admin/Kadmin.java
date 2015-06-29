@@ -20,75 +20,87 @@
 package org.apache.kerby.kerberos.kerb.admin;
 
 import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Conf;
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
+import org.apache.kerby.kerberos.kerb.server.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
+import org.apache.kerby.kerberos.kerb.server.KdcSetting;
+import org.apache.kerby.kerberos.kerb.server.KdcUtil;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
  * Server side admin facilities.
  */
 public class Kadmin {
+    private final KdcSetting kdcSetting;
+    private final IdentityService backend;
 
-    private KdcConfig kdcConfig;
-    private Config backendConfig;
-    private IdentityService backend;
-
-    public Kadmin(IdentityService backend, KdcConfig kdcConfig,
-                  Config backendConfig) throws KrbException {
-        this.backend = backend;
-        this.kdcConfig = kdcConfig;
-        this.backendConfig = backendConfig;
-    }
-
-    public Kadmin(KdcConfig kdcConfig, Config backendConfig) throws KrbException {
-        this.kdcConfig = kdcConfig;
-        this.backendConfig = backendConfig;
-        this.backend = AdminHelper.getBackend(backendConfig);
+    public Kadmin(KdcConfig kdcConfig,
+                  BackendConfig backendConfig) throws KrbException {
+        this.backend = KdcUtil.getBackend(backendConfig);
+        this.kdcSetting = new KdcSetting(kdcConfig, backendConfig);
     }
 
     public Kadmin(File confDir) throws KrbException {
-        File kdcConfFile = new File(confDir, "kdc.conf");
-        kdcConfig = new KdcConfig();
-        if (kdcConfFile.exists()) {
-            try {
-                kdcConfig.addIniConfig(kdcConfFile);
-            } catch (IOException e) {
-                throw new KrbException("Can not load the kdc configuration file "
-                        + kdcConfFile.getAbsolutePath());
-            }
+        KdcConfig tmpKdcConfig = KdcUtil.getKdcConfig(confDir);
+        if (tmpKdcConfig == null) {
+            tmpKdcConfig = new KdcConfig();
         }
 
-        File backendConfigFile = new File(confDir, "backend.conf");
-        Conf backendConfig = new Conf();
-        if (backendConfigFile.exists()) {
-            try {
-                backendConfig.addIniConfig(backendConfigFile);
-            } catch (IOException e) {
-                throw new KrbException("Can not load the backend configuration file "
-                        + backendConfigFile.getAbsolutePath());
-            }
+        BackendConfig tmpBackendConfig = KdcUtil.getBackendConfig(confDir);
+        if (tmpBackendConfig == null) {
+            tmpBackendConfig = new BackendConfig();
         }
 
-        backend = AdminHelper.getBackend(backendConfig);
+        this.kdcSetting = new KdcSetting(tmpKdcConfig, tmpBackendConfig);
+
+        backend = KdcUtil.getBackend(tmpBackendConfig);
+    }
+
+    public Kadmin(KdcSetting kdcSetting, IdentityService backend) {
+        this.kdcSetting = kdcSetting;
+        this.backend = backend;
+    }
+
+    private String getTgsPrincipal() {
+        return KrbUtil.makeTgsPrincipal(kdcSetting.getKdcRealm()).getName();
+    }
+
+    private String getKadminPrincipal() {
+        return KrbUtil.makeKadminPrincipal(kdcSetting.getKdcRealm()).getName();
+    }
+
+    public void createBuiltinPrincipals() throws KrbException {
+        String tgsPrincipal = getTgsPrincipal();
+        if (backend.getIdentity(tgsPrincipal) == null) {
+            addPrincipal(tgsPrincipal);
+        }
+
+        String kadminPrincipal = getKadminPrincipal();
+        if (backend.getIdentity(kadminPrincipal) == null) {
+            addPrincipal(kadminPrincipal);
+        }
+    }
+
+    public void deleteBuiltinPrincipals() throws KrbException {
+        deletePrincipal(getTgsPrincipal());
+        deletePrincipal(getKadminPrincipal());
     }
 
     public KdcConfig getKdcConfig() {
-        return kdcConfig;
+        return kdcSetting.getKdcConfig();
     }
 
-    public Config getBackendConfig() {
-        return backendConfig;
+    public BackendConfig getBackendConfig() {
+        return kdcSetting.getBackendConfig();
     }
 
     /**
@@ -109,7 +121,7 @@ public class Kadmin {
         principal = fixPrincipal(principal);
         KrbIdentity identity = AdminHelper.createIdentity(principal, kOptions);
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(
-                kdcConfig.getEncryptionTypes());
+                getKdcConfig().getEncryptionTypes());
         identity.addKeys(keys);
         backend.addIdentity(identity);
     }
@@ -125,7 +137,7 @@ public class Kadmin {
         principal = fixPrincipal(principal);
         KrbIdentity identity = AdminHelper.createIdentity(principal, kOptions);
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(principal, password,
-            kdcConfig.getEncryptionTypes());
+            getKdcConfig().getEncryptionTypes());
         identity.addKeys(keys);
         backend.addIdentity(identity);
     }
@@ -244,7 +256,7 @@ public class Kadmin {
                 "was not found. Please check the input and try again");
         }
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(principal, password,
-            kdcConfig.getEncryptionTypes());
+            getKdcConfig().getEncryptionTypes());
         identity.addKeys(keys);
 
         backend.updateIdentity(identity);
@@ -258,7 +270,7 @@ public class Kadmin {
                 "was not found. Please check the input and try again");
         }
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(
-            kdcConfig.getEncryptionTypes());
+            getKdcConfig().getEncryptionTypes());
         identity.addKeys(keys);
         backend.updateIdentity(identity);
     }

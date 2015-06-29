@@ -134,6 +134,7 @@ public abstract class KdcTestBase {
         setUpKdcServer();
 
         setUpClient();
+
         createPrincipals();
     }
 
@@ -192,13 +193,11 @@ public abstract class KdcTestBase {
     }
 
     protected void createPrincipals() throws KrbException {
-        kdcServer.createTgsPrincipal();
         kdcServer.createPrincipals(serverPrincipal);
         kdcServer.createPrincipal(clientPrincipal, clientPassword);
     }
 
     protected void deletePrincipals() throws KrbException {
-        kdcServer.deleteTgsPrincipal();
         kdcServer.deletePrincipals(serverPrincipal);
         kdcServer.deletePrincipal(clientPrincipal);
     }

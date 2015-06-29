@@ -21,7 +21,6 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
-import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.util.NetworkUtil;
 
 import java.io.File;
@@ -35,7 +34,9 @@ public class SimpleKdcServer extends KdcServer {
     /**
      * Prepare KDC configuration.
      */
-    protected void prepareKdcConfig() {
+    public SimpleKdcServer() {
+        super();
+
         KdcConfig kdcConfig = getKdcConfig();
         kdcConfig.setString(KdcConfigKey.KDC_HOST, "localhost");
         kdcConfig.setInt(KdcConfigKey.KDC_PORT, NetworkUtil.getServerPort());
@@ -45,8 +46,10 @@ public class SimpleKdcServer extends KdcServer {
     @Override
     public void init() throws KrbException {
         super.init();
-        prepareKdcConfig();
-        kadmin = new Kadmin(getIdentityService(), getKdcConfig(), getBackendConfig());
+
+        kadmin = new Kadmin(getSetting(), getIdentityService());
+
+        kadmin.createBuiltinPrincipals();
     }
 
     /**
@@ -55,18 +58,6 @@ public class SimpleKdcServer extends KdcServer {
      */
     public Kadmin getKadmin() {
         return kadmin;
-    }
-
-    private String getTgsPrincipal() {
-        return KrbUtil.makeTgsPrincipal(getKdcRealm()).getName();
-    }
-
-    public void createTgsPrincipal() throws KrbException {
-        createPrincipal(getTgsPrincipal());
-    }
-
-    public void deleteTgsPrincipal() throws KrbException {
-        deletePrincipal(getTgsPrincipal());
     }
 
     public String getKdcRealm() {

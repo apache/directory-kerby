@@ -44,7 +44,6 @@ public abstract class GssInteropTestBase extends KdcTestBase {
 
     @Override
     protected void createPrincipals() throws KrbException {
-        kdcServer.createTgsPrincipal();
         kdcServer.createPrincipal(getClientPrincipal(), getClientPassword());
         kdcServer.createPrincipal(getServerPrincipal(), getServerPassword());
     }

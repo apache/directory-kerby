@@ -20,14 +20,10 @@
 package org.apache.kerby.kerberos.kerb.admin;
 
 import org.apache.kerby.KOptions;
-import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
-import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
@@ -44,38 +40,6 @@ import java.util.List;
 public final class AdminHelper {
 
     private AdminHelper() { }
-
-    /**
-     * Init the identity backend from backend configuration.
-     */
-    static IdentityBackend getBackend(Config backendConfig) throws KrbException {
-        String backendClassName = backendConfig.getString(
-            KdcConfigKey.KDC_IDENTITY_BACKEND);
-        if (backendClassName == null) {
-            backendClassName = MemoryIdentityBackend.class.getCanonicalName();
-        }
-
-        Class<?> backendClass;
-        try {
-            backendClass = Class.forName(backendClassName);
-        } catch (ClassNotFoundException e) {
-            throw new KrbException("Failed to load backend class: "
-                    + backendClassName);
-        }
-
-        IdentityBackend backend;
-        try {
-            backend = (IdentityBackend) backendClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new KrbException("Failed to create backend: "
-                    + backendClassName);
-        }
-
-        backend.setConfig(backendConfig);
-        backend.initialize();
-        return backend;
-    }
-
 
     static void exportKeytab(File keytabFile, KrbIdentity identity)
             throws KrbException {

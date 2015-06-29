@@ -49,12 +49,10 @@ public class OnlyUdpForNettyKdcNetworkTest extends KerbyKdcTest {
         jsonBackendFile = new File(testDir, "json-backend-file");
         String jsonBackendFileString = jsonBackendFile.getAbsolutePath();
 
-        BackendConfig backendConfig = new BackendConfig();
+        BackendConfig backendConfig = kdcServer.getBackendConfig();
         backendConfig.setString(
-                JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE, jsonBackendFileString);
-        kdcServer.setBackendConfig(backendConfig);
-
-        kdcServer.init();
+                JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE,
+                jsonBackendFileString);
     }
 
     @Test

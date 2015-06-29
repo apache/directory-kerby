@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kdc.impl;
 
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
+import org.apache.kerby.kerberos.kerb.server.KdcSetting;
 import org.apache.kerby.kerberos.kerb.server.impl.AbstractInternalKdcServer;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
 
@@ -34,6 +35,10 @@ public class NettyKdcServerImpl extends AbstractInternalKdcServer {
     private ExecutorService executor;
     private KdcContext kdcContext;
     private NettyKdcNetwork network;
+
+    public NettyKdcServerImpl(KdcSetting kdcSetting) {
+        super(kdcSetting);
+    }
 
     @Override
     protected void doStart() throws Exception {
