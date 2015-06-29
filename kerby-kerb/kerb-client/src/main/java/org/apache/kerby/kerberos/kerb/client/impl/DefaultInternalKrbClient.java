@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.client.impl;
 
-import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.KrbSetting;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
@@ -39,9 +39,13 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
     private DefaultKrbHandler krbHandler;
     private KrbTransport transport;
 
+    public DefaultInternalKrbClient(KrbSetting krbSetting) {
+        super(krbSetting);
+    }
+
     @Override
-    public void init(KOptions commonOptions) throws KrbException {
-        super.init(commonOptions);
+    public void init() throws KrbException {
+        super.init();
 
         this.krbHandler = new DefaultKrbHandler();
         krbHandler.init(getContext());

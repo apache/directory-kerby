@@ -17,10 +17,11 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client;
+package org.apache.kerby.kerberos.kerb.client.impl;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.KrbSetting;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
@@ -31,9 +32,8 @@ public interface InternalKrbClient {
 
     /**
      * Init with all the necessary options.
-     * @param options
      */
-    void init(KOptions options) throws KrbException;
+    void init() throws KrbException;
 
     /**
      * Get krb client settings.

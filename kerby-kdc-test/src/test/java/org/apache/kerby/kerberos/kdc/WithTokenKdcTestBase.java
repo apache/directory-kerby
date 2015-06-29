@@ -52,11 +52,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
     @Before
     public void setUp() throws Exception {
         KrbRuntime.setTokenProvider(new JwtTokenProvider());
-
         super.setUp();
-
-        kdcServer.start();
-        krbClnt.init();
     }
 
     @Override

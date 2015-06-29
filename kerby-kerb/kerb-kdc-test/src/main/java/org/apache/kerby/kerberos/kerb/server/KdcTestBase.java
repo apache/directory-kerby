@@ -133,9 +133,9 @@ public abstract class KdcTestBase {
 
         setUpKdcServer();
 
-        setUpClient();
-
         createPrincipals();
+
+        setUpClient();
     }
 
     /**
@@ -166,8 +166,12 @@ public abstract class KdcTestBase {
 
     protected void setUpKdcServer() throws Exception {
         kdcServer = new SimpleKdcServer();
+
         prepareKdcServer();
+
         kdcServer.init();
+
+        kdcServer.start();
     }
 
     protected void setUpClient() throws Exception {
@@ -176,7 +180,6 @@ public abstract class KdcTestBase {
             "aes128-cts-hmac-sha1-96 des-cbc-crc des-cbc-md5 des3-cbc-sha1");
 
         krbClnt = new KrbClient(krbConfig);
-        prepareKrbClient();
 
         krbClnt.setKdcHost(hostname);
         krbClnt.setAllowTcp(allowTcp());
@@ -188,8 +191,12 @@ public abstract class KdcTestBase {
             krbClnt.setKdcUdpPort(udpPort);
         }
 
-        krbClnt.setTimeout(1000);
+        krbClnt.setTimeout(10 * 1000);
         krbClnt.setKdcRealm(kdcServer.getKdcRealm());
+
+        prepareKrbClient();
+
+        krbClnt.init();
     }
 
     protected void createPrincipals() throws KrbException {

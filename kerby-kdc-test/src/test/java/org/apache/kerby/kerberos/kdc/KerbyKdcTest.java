@@ -25,8 +25,6 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
 
-import java.io.File;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class KerbyKdcTest extends KdcTestBase {
@@ -39,14 +37,6 @@ public abstract class KerbyKdcTest extends KdcTestBase {
     }
 
     protected void performKdcTest() throws Exception {
-        kdcServer.start();
-
-        File testDir = new File(System.getProperty("test.dir", "target"));
-        File testConfDir = new File(testDir, "conf");
-        krbClnt.setConfDir(testConfDir);
-        krbClnt.setTimeout(10 * 1000);
-        krbClnt.init();
-
         TgtTicket tgt;
         ServiceTicket tkt;
 

@@ -22,12 +22,12 @@ package org.apache.kerby.kerberos.kerb.client;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.impl.DefaultInternalKrbClient;
+import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClient;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
 import java.io.File;
-import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
@@ -35,15 +35,19 @@ import java.security.cert.Certificate;
  * A Krb client API for applications to interact with KDC
  */
 public class KrbClient {
+    private final KrbConfig krbConfig;
+    private final KOptions commonOptions;
+    private final KrbSetting krbSetting;
 
-    private KOptions commonOptions;
     private InternalKrbClient innerClient;
 
     /**
      * Default constructor.
      */
-    public KrbClient() {
-        commonOptions = new KOptions();
+    public KrbClient() throws KrbException {
+        this.krbConfig = ClientUtil.getDefaultConfig();
+        this.commonOptions = new KOptions();
+        this.krbSetting = new KrbSetting(commonOptions, krbConfig);
     }
 
     /**
@@ -51,16 +55,19 @@ public class KrbClient {
      * @param krbConfig
      */
     public KrbClient(KrbConfig krbConfig) {
-        commonOptions = new KOptions();
-        commonOptions.add(KrbOption.KRB_CONFIG, krbConfig);
+        this.krbConfig = krbConfig;
+        this.commonOptions = new KOptions();
+        this.krbSetting = new KrbSetting(commonOptions, krbConfig);
     }
 
     /**
-     * Set the conf dir
-     * @param file
+     * Constructor with conf dir
+     * @param confDir
      */
-    public void setConfDir(File file) throws IOException {
-        commonOptions.add(KrbOption.CONF_DIR, file);
+    public KrbClient(File confDir) throws KrbException {
+        this.commonOptions = new KOptions();
+        this.krbConfig = ClientUtil.getConfig(confDir);
+        this.krbSetting = new KrbSetting(commonOptions, krbConfig);
     }
 
     /**
@@ -123,20 +130,20 @@ public class KrbClient {
      * @throws KrbException
      */
     public void init() throws KrbException {
-        innerClient = new DefaultInternalKrbClient();
-        innerClient.init(commonOptions);
+        innerClient = new DefaultInternalKrbClient(krbSetting);
+        innerClient.init();
     }
 
     /**
      * Get krb client settings from options and configs.
-     * Note it must be called after init().
      * @return setting
      */
     public KrbSetting getSetting() {
-        if (innerClient == null) {
-            throw new RuntimeException("Not init yet");
-        }
-        return innerClient.getSetting();
+        return krbSetting;
+    }
+
+    public KrbConfig getKrbConfig() {
+        return krbConfig;
     }
 
     /**

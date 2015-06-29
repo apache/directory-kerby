@@ -54,8 +54,6 @@ public abstract class GssInteropTestBase extends KdcTestBase {
 
     @Test
     public void testKdc() throws Exception {
-        kdcServer.start();
-        
         LoginContext loginContext = new LoginContext(getClientPrincipalName(),
                 new KerberosCallbackHandler());
         loginContext.login();

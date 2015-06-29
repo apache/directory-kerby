@@ -25,8 +25,6 @@ import org.apache.kerby.KOptionType;
 public enum KrbOption implements KOption {
     NONE("NONE"),
     CLIENT_PRINCIPAL("client-principal", "Client principal", KOptionType.STR),
-    KRB_CONFIG("krb config", KOptionType.OBJ),
-    CONF_DIR("conf dir", KOptionType.DIR),
     KDC_REALM("kdc realm", KOptionType.STR),
     KDC_HOST("kdc host", KOptionType.STR),
     KDC_TCP_PORT("kdc tcp port", KOptionType.INT),

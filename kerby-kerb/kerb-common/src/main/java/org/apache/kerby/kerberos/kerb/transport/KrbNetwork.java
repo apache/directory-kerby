@@ -41,16 +41,23 @@ public class KrbNetwork {
         /**
          * Try TCP first.
          */
-        KrbTransport transport;
+        KrbTransport transport = null;
         if (tcpAddress != null) {
             try {
                 transport = tcpConnect();
             } catch (IOException e) {
-                transport = new KrbUdpTransport(udpAddress);
+                if (udpAddress != null) {
+                    transport = new KrbUdpTransport(udpAddress);
+                }
             }
         } else {
             transport = new KrbUdpTransport(udpAddress);
         }
+
+        if (transport == null) {
+            throw new IOException("Failed to establish the transport");
+        }
+
         return transport;
     }
 

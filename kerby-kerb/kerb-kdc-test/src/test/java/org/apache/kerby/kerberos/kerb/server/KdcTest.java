@@ -30,13 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class KdcTest extends KdcTestBase {
 
     protected void performKdcTest() throws Exception {
-        kdcServer.start();
-
-        File testDir = new File(System.getProperty("test.dir", "target"));
-        File testConfDir = new File(testDir, "conf");
-        krbClnt.setConfDir(testConfDir);
-        krbClnt.init();
-
         TgtTicket tgt;
         ServiceTicket tkt;
 

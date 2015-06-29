@@ -76,8 +76,6 @@ public class GssInteropTest extends KdcTestBase {
 
     @Test
     public void testKdc() throws Exception {
-        kdcServer.start();
-
         LoginContext loginContext = new LoginContext(getClientPrincipalName(),
                 new KerberosCallbackHandler());
         loginContext.login();
@@ -104,8 +102,6 @@ public class GssInteropTest extends KdcTestBase {
         loginContext.logout();
 
         validateServiceTicket(kerberosToken);
-
-        kdcServer.stop();
     }
 
     private void validateServiceTicket(byte[] ticket) throws Exception {
