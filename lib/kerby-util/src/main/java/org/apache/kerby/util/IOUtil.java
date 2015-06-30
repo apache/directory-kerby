@@ -26,9 +26,21 @@ import java.nio.channels.FileChannel;
 /**
  * Some IO and file related utilities.
  */
-public class IOUtil {
+public final class IOUtil {
+    private IOUtil() {}
 
-    public static void readInputStream(InputStream in, byte buf[]) throws IOException {
+    public static byte[] readInputStream(InputStream in) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length = 0;
+        while ((length = in.read(buffer)) != -1) {
+            baos.write(buffer, 0, length);
+        }
+        return baos.toByteArray();
+    }
+
+    public static void readInputStream(InputStream in,
+                                       byte buf[]) throws IOException {
         int toRead = buf.length;
         int off = 0;
         while (toRead > 0) {
@@ -39,6 +51,17 @@ public class IOUtil {
             toRead -= ret;
             off += ret;
         }
+    }
+
+    /**
+     * Read an input stream and return the content as string assuming UTF8.
+     * @param in
+     * @return
+     * @throws IOException
+     */
+    public static String readInput(InputStream in) throws IOException {
+        byte[] content = readInputStream(in);
+        return Utf8.toString(content);
     }
 
     /**

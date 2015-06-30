@@ -19,35 +19,10 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
-import java.io.File;
-
-import org.junit.Before;
-
 /**
  * This is an interop test using the Java GSS APIs against the Kerby KDC (using TCP)
  */
 public class GssTcpInteropTest extends GssInteropTestBase {
-
-    @Before
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-
-        File file1 = new File(this.getClass().getResource("/kerberos.jaas").getPath());
-        String content1 = getFileContent(file1.getPath());
-        String path1 = writeToTestDir(content1, file1.getName());
-
-        // System.setProperty("sun.security.krb5.debug", "true");
-        System.setProperty("java.security.auth.login.config", path1);
-
-        // Read in krb5.conf and substitute in the correct port
-        File file2 = new File(this.getClass().getResource("/krb5.conf").getPath());
-        String content2 = getFileContent(file2.getPath());
-        content2 = content2.replaceAll("port", "" + getTcpPort());
-        String path2 = writeToTestDir(content2, file2.getName());
-
-        System.setProperty("java.security.krb5.conf", path2);
-    }
 
     @Override
     protected boolean allowUdp() {

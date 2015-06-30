@@ -28,6 +28,11 @@ public class OnlyUdpKdcTest extends KdcTest {
         return false;
     }
 
+    @Override
+    protected boolean allowUdp() {
+        return true;
+    }
+
     @Test
     public void testKdc() throws Exception {
         performKdcTest();

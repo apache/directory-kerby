@@ -46,7 +46,8 @@ public final class ClientUtil {
                 krbConfig.addIniConfig(confFile);
                 return krbConfig;
             } catch (IOException e) {
-                throw new KrbException("Failed to load krb config " + confFile.getAbsolutePath());
+                throw new KrbException("Failed to load krb config " +
+                        confFile.getAbsolutePath());
             }
         }
 
@@ -70,7 +71,8 @@ public final class ClientUtil {
         if (tmpEnv != null) {
             confFile = new File(tmpEnv);
             if (!confFile.exists()) {
-                throw new KrbException("krb5 conf not found. Invalid env " + krb5EnvName);
+                throw new KrbException("krb5 conf not found. Invalid env "
+                        + krb5EnvName);
             }
         } else {
             confDir = new File("/etc/"); // for Linux. TODO: fix for Win etc.
@@ -79,16 +81,16 @@ public final class ClientUtil {
             }
         }
 
+        KrbConfig krbConfig = new KrbConfig();
         if (confFile != null && confFile.exists()) {
-            KrbConfig krbConfig = new KrbConfig();
             try {
                 krbConfig.addIniConfig(confFile);
-                return krbConfig;
             } catch (IOException e) {
-                throw new KrbException("Failed to load krb config " + confFile.getAbsolutePath());
+                throw new KrbException("Failed to load krb config " +
+                        confFile.getAbsolutePath());
             }
         }
 
-        return null;
+        return krbConfig;
     }
 }

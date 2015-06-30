@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -30,10 +31,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class KerbyKdcTest extends KdcTestBase {
 
     @Override
-    protected void prepareKdcServer() throws Exception {
-        super.prepareKdcServer();
-        kdcServer.setInnerKdcImpl(
-                new NettyKdcServerImpl(kdcServer.getSetting()));
+    protected void prepareKdc() throws KrbException {
+        super.prepareKdc();
+        getKdcServer().setInnerKdcImpl(
+                new NettyKdcServerImpl(getKdcServer().getKdcSetting()));
     }
 
     protected void performKdcTest() throws Exception {
@@ -41,11 +42,11 @@ public abstract class KerbyKdcTest extends KdcTestBase {
         ServiceTicket tkt;
 
         try {
-            tgt = krbClnt.requestTgtWithPassword(getClientPrincipal(),
-                    getClientPassword());
+            tgt = getKrbClient().requestTgtWithPassword(
+                    getClientPrincipal(), getClientPassword());
             assertThat(tgt).isNotNull();
 
-            tkt = krbClnt.requestServiceTicketWithTgt(tgt, getServerPrincipal());
+            tkt = getKrbClient().requestServiceTicketWithTgt(tgt, getServerPrincipal());
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password");

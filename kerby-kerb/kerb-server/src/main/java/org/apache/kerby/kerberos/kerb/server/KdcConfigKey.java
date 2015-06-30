@@ -26,11 +26,12 @@ public enum KdcConfigKey implements SectionConfigKey {
     KRB_DEBUG(true),
     KDC_SERVICE_NAME("KDC-Server"),
     KDC_IDENTITY_BACKEND,
-    KDC_HOST("127.0.0.1", "kdcdefaults"),       // NOPMD
-    KDC_PORT(8015, "kdcdefaults"),
+    KDC_HOST("127.0.0.1", "kdcdefaults"),// NOPMD
+    KDC_PORT(null, "kdcdefaults"),
+    KDC_ALLOW_TCP(true, "kdcdefaults"),
     KDC_ALLOW_UDP(true, "kdcdefaults"),
-    KDC_UDP_PORT(8016, "kdcdefaults"),
-    KDC_TCP_PORT(8015, "kdcdefaults"),
+    KDC_UDP_PORT(null, "kdcdefaults"),
+    KDC_TCP_PORT(null, "kdcdefaults"),
     KDC_DOMAIN("example.com"),
     KDC_REALM("EXAMPLE.COM", "kdcdefaults"),
     PREAUTH_REQUIRED(true),

@@ -48,7 +48,10 @@ public class KrbConfig extends Conf {
      */
     public int getKdcPort() {
         Integer kdcPort = getInt(KrbConfigKey.KDC_PORT);
-        return kdcPort.shortValue();
+        if (kdcPort != null) {
+            return kdcPort.shortValue();
+        }
+        return -1;
     }
 
     /**
@@ -57,7 +60,7 @@ public class KrbConfig extends Conf {
      */
     public int getKdcTcpPort() {
         Integer kdcPort = getInt(KrbConfigKey.KDC_TCP_PORT);
-        if (kdcPort > 0) {
+        if (kdcPort != null && kdcPort > 0) {
             return kdcPort.shortValue();
         }
         return getKdcPort();
@@ -84,7 +87,7 @@ public class KrbConfig extends Conf {
      */
     public int getKdcUdpPort() {
         Integer kdcPort = getInt(KrbConfigKey.KDC_UDP_PORT);
-        if (kdcPort > 0) {
+        if (kdcPort != null && kdcPort > 0) {
             return kdcPort.shortValue();
         }
         return getKdcPort();

@@ -33,6 +33,11 @@ public class KrbSetting {
         this.krbConfig = config;
     }
 
+    public KrbSetting(KrbConfig config) {
+        this.commonOptions = new KOptions();
+        this.krbConfig = config;
+    }
+
     public KrbConfig getKrbConfig() {
         return krbConfig;
     }

@@ -36,14 +36,16 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
 
         TgtTicket tgt = null;
         try {
-            tgt = krbClnt.requestTgtWithToken(getKrbToken(), getcCacheFile().getPath());
+            tgt = getKrbClient().requestTgtWithToken(getKrbToken(),
+                    getcCacheFile().getPath());
         } catch (KrbException e) {
             assertThat(e.getMessage().contains("timeout")).isTrue();
             return;
         }
         verifyTicket(tgt);
 
-        ServiceTicket tkt = krbClnt.requestServiceTicketWithTgt(tgt, getServerPrincipal());
+        ServiceTicket tkt = getKrbClient().requestServiceTicketWithTgt(tgt,
+                getServerPrincipal());
         verifyTicket(tkt);
     }
 }

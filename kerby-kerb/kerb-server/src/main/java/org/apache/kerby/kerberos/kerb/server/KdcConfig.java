@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kerb.server;
 
@@ -45,30 +45,41 @@ public class KdcConfig extends Conf {
     public int getKdcPort() {
         Integer kdcPort =  KrbConfHelper.getIntUnderSection(this,
                 KdcConfigKey.KDC_PORT);
-        return kdcPort.intValue();
+        if (kdcPort != null && kdcPort > 0) {
+            return kdcPort.intValue();
+        }
+        return -1;
     }
 
     public int getKdcTcpPort() {
         Integer kdcTcpPort =  KrbConfHelper.getIntUnderSection(this,
                 KdcConfigKey.KDC_TCP_PORT);
-        if (kdcTcpPort > 0) {
+        if (kdcTcpPort != null && kdcTcpPort > 0) {
             return kdcTcpPort.intValue();
         }
         return getKdcPort();
     }
 
     /**
+     * Is to allow TCP for KDC
+     * @return true to allow TCP, false otherwise
+     */
+    public Boolean allowTcp() {
+        return getBoolean(KdcConfigKey.KDC_ALLOW_TCP);
+    }
+
+    /**
      * Is to allow UDP for KDC
      * @return true to allow UDP, false otherwise
      */
-    public boolean allowKdcUdp() {
+    public Boolean allowUdp() {
         return getBoolean(KdcConfigKey.KDC_ALLOW_UDP);
     }
 
     public int getKdcUdpPort() {
         Integer kdcUdpPort = KrbConfHelper.getIntUnderSection(this,
                 KdcConfigKey.KDC_UDP_PORT);
-        if (kdcUdpPort > 0) {
+        if (kdcUdpPort != null && kdcUdpPort > 0) {
             return kdcUdpPort.intValue();
         }
         return getKdcPort();

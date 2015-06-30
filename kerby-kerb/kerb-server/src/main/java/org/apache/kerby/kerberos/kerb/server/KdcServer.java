@@ -105,6 +105,14 @@ public class KdcServer {
     }
 
     /**
+     * Set KDC port.
+     * @param kdcPort
+     */
+    public void setKdcPort(int kdcPort) {
+        startupOptions.add(KdcServerOption.KDC_PORT, kdcPort);
+    }
+
+    /**
      * Set KDC tcp port.
      * @param kdcTcpPort
      */
@@ -162,7 +170,7 @@ public class KdcServer {
      * Get KDC setting from startup options and configs.
      * @return setting
      */
-    public KdcSetting getSetting() {
+    public KdcSetting getKdcSetting() {
         return kdcSetting;
     }
 
@@ -205,6 +213,9 @@ public class KdcServer {
     }
 
     public void start() throws KrbException {
+        if (innerKdc == null) {
+            throw new RuntimeException("Not init yet");
+        }
         innerKdc.start();
     }
 

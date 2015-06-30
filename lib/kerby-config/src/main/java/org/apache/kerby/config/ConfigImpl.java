@@ -229,7 +229,8 @@ public class ConfigImpl implements Config {
     @Override
     public Boolean getBoolean(ConfigKey name) {
         if (name.getDefaultValue() != null) {
-            return getBoolean(name.getPropertyKey(), (Boolean) name.getDefaultValue());
+            return getBoolean(name.getPropertyKey(),
+                    (Boolean) name.getDefaultValue());
         }
         return getBoolean(name.getPropertyKey());
     }

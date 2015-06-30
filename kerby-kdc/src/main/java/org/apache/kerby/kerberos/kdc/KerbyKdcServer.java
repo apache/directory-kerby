@@ -33,14 +33,14 @@ public class KerbyKdcServer extends KdcServer {
     private Kadmin kadmin;
     public KerbyKdcServer(File confDir) throws KrbException {
         super(confDir);
-        setInnerKdcImpl(new NettyKdcServerImpl(getSetting()));
+        setInnerKdcImpl(new NettyKdcServerImpl(getKdcSetting()));
     }
 
     @Override
     public void init() throws KrbException {
         super.init();
 
-        kadmin = new Kadmin(getSetting(), getIdentityService());
+        kadmin = new Kadmin(getKdcSetting(), getIdentityService());
 
         kadmin.createBuiltinPrincipals();
     }

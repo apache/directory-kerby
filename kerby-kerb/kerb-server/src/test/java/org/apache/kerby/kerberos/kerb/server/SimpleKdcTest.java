@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import org.apache.kerby.util.NetworkUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,9 +32,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 public class SimpleKdcTest {
-
     private String serverHost = "localhost";
-    private int serverPort = 0;
+    private int serverPort = -1;
 
     private KdcServer kdcServer;
 
@@ -41,7 +41,9 @@ public class SimpleKdcTest {
     public void setUp() throws Exception {
         kdcServer = new KdcServer();
         kdcServer.setKdcHost(serverHost);
-        serverPort = getServerPort();
+        kdcServer.setAllowUdp(false);
+        kdcServer.setAllowTcp(true);
+        serverPort = NetworkUtil.getServerPort();
         kdcServer.setKdcTcpPort(serverPort);
         kdcServer.init();
         kdcServer.start();
@@ -63,24 +65,6 @@ public class SimpleKdcTest {
         writeBuffer.flip();
 
         socketChannel.write(writeBuffer);
-    }
-    
-    /**
-     * Get a server socket point for testing usage, either TCP or UDP.
-     * @return server socket point
-     */
-    private static int getServerPort() {
-        int serverPort = 0;
-
-        try {
-            ServerSocket serverSocket = new ServerSocket(0);
-            serverPort = serverSocket.getLocalPort();
-            serverSocket.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to get a server socket point");
-        }
-
-        return serverPort;
     }
 
     @After

@@ -77,9 +77,7 @@ public class TestKdcConfigLoad {
 
         assertThat(kdcConfig.getKdcHost()).isEqualTo(
                 KdcConfigKey.KDC_HOST.getDefaultValue());
-        assertThat(kdcConfig.getKdcTcpPort()).isEqualTo(
-                KdcConfigKey.KDC_TCP_PORT.getDefaultValue()
-        );
+        assertThat(kdcConfig.getKdcTcpPort()).isEqualTo(-1);
         assertThat(kdcConfig.getKdcRealm()).isEqualTo(
                 KdcConfigKey.KDC_REALM.getDefaultValue()
         );

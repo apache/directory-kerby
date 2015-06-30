@@ -24,6 +24,11 @@ import org.junit.Test;
 public class OnlyTcpKdcTest extends KdcTest {
 
     @Override
+    protected boolean allowTcp() {
+        return true;
+    }
+
+    @Override
     protected boolean allowUdp() {
         return false;
     }

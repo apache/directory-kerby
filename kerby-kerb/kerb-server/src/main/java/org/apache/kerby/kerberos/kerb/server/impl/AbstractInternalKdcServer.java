@@ -92,7 +92,7 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
         try {
             doStop();
         } catch (Exception e) {
-            throw new KrbException("Failed to stop " + getServiceName());
+            throw new KrbException("Failed to stop " + getServiceName(), e);
         }
 
         started = false;

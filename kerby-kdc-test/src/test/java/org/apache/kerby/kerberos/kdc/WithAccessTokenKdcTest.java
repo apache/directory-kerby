@@ -29,7 +29,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
         prepareToken(getServerPrincipal());
         createCredentialCache(getClientPrincipal(), getClientPassword());
 
-        ServiceTicket serviceTicket = krbClnt.requestServiceTicketWithAccessToken(
+        ServiceTicket serviceTicket = getKrbClient().requestServiceTicketWithAccessToken(
             getKrbToken(), getServerPrincipal(), getcCacheFile().getPath());
         verifyTicket(serviceTicket);
 

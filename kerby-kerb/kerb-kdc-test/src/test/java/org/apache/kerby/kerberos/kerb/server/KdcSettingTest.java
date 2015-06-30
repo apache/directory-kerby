@@ -35,7 +35,7 @@ public class KdcSettingTest {
 
         kerbServer.init();
 
-        KdcSetting kdcSetting = kerbServer.getSetting();
+        KdcSetting kdcSetting = kerbServer.getKdcSetting();
         assertThat(kdcSetting.getKdcHost()).isEqualTo("localhost");
         assertThat(kdcSetting.getKdcTcpPort()).isEqualTo(12345);
         assertThat(kdcSetting.getKdcRealm()).isEqualTo("TEST2.COM");

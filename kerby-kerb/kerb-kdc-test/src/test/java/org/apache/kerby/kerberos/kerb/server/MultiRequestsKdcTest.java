@@ -38,7 +38,7 @@ public class MultiRequestsKdcTest extends KdcTestBase {
     protected void createPrincipals() throws KrbException {
         super.createPrincipals();
         clientPrincipal = getClientPrincipal();
-        kdcServer.createPrincipal(clientPrincipal, password);
+        getKdcServer().createPrincipal(clientPrincipal, password);
     }
 
     @Test
@@ -48,11 +48,11 @@ public class MultiRequestsKdcTest extends KdcTestBase {
 
         // With good password
         try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
+            tgt = getKrbClient().requestTgtWithPassword(clientPrincipal, password);
             assertThat(tgt).isNotNull();
 
             serverPrincipal = getServerPrincipal();
-            tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
+            tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password");
@@ -70,10 +70,10 @@ public class MultiRequestsKdcTest extends KdcTestBase {
 
         // With good password again
         try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
+            tgt = getKrbClient().requestTgtWithPassword(clientPrincipal, password);
             assertThat(tgt).isNotNull();
 
-            tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
+            tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password again");

@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kdc.identitybackend.ZKConfKey;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.junit.AfterClass;
@@ -47,10 +48,10 @@ public class ZookeeperBackendKdcTest extends KerbyKdcTest {
     }
 
     @Override
-    protected void prepareKdcServer() throws Exception {
-        super.prepareKdcServer();
+    protected void prepareKdc() throws KrbException {
+        super.prepareKdc();
 
-        BackendConfig backendConfig = kdcServer.getBackendConfig();
+        BackendConfig backendConfig = getKdcServer().getBackendConfig();
 
         File testDir = new File(System.getProperty("test.dir", "target"));
         instanceDir = new File(testDir, "zookeeper");

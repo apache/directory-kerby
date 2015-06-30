@@ -21,35 +21,102 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.util.NetworkUtil;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
- * A simple KDC server mainly for test usage.
+ * A simple KDC server mainly for test usage. It also integrates krb client and
+ * kadmin sides for convenience.
  */
 public class SimpleKdcServer extends KdcServer {
+    private final KrbClient krbClnt;
     private Kadmin kadmin;
 
-    /**
-     * Prepare KDC configuration.
-     */
-    public SimpleKdcServer() {
-        super();
+    private File workDir;
 
-        KdcConfig kdcConfig = getKdcConfig();
-        kdcConfig.setString(KdcConfigKey.KDC_HOST, "localhost");
-        kdcConfig.setInt(KdcConfigKey.KDC_PORT, NetworkUtil.getServerPort());
-        kdcConfig.setString(KdcConfigKey.KDC_REALM, "EXAMPLE.COM");
+    public SimpleKdcServer() throws KrbException {
+        super();
+        this.krbClnt = new KrbClient();
+
+        setKdcRealm("EXAMPLE.COM");
+        setKdcHost("localhost");
+        setKdcPort(NetworkUtil.getServerPort());
+    }
+
+    public void setWorkDir(File workDir) {
+        this.workDir = workDir;
+    }
+
+    public File getWorkDir() {
+        return workDir;
+    }
+
+    @Override
+    public void setKdcRealm(String realm) {
+        super.setKdcRealm(realm);
+        krbClnt.setKdcRealm(realm);
+    }
+
+    @Override
+    public void setKdcHost(String kdcHost) {
+        super.setKdcHost(kdcHost);
+        krbClnt.setKdcHost(kdcHost);
+    }
+
+    @Override
+    public void setKdcTcpPort(int kdcTcpPort) {
+        super.setKdcTcpPort(kdcTcpPort);
+        krbClnt.setKdcTcpPort(kdcTcpPort);
+        setAllowTcp(true);
+    }
+
+    @Override
+    public void setAllowUdp(boolean allowUdp) {
+        super.setAllowUdp(allowUdp);
+        krbClnt.setAllowUdp(allowUdp);
+    }
+
+    @Override
+    public void setAllowTcp(boolean allowTcp) {
+        super.setAllowTcp(allowTcp);
+        krbClnt.setAllowTcp(allowTcp);
+    }
+
+    @Override
+    public void setKdcUdpPort(int kdcUdpPort) {
+        super.setKdcUdpPort(kdcUdpPort);
+        krbClnt.setKdcUdpPort(kdcUdpPort);
+        setAllowUdp(true);
     }
 
     @Override
     public void init() throws KrbException {
         super.init();
 
-        kadmin = new Kadmin(getSetting(), getIdentityService());
+        kadmin = new Kadmin(getKdcSetting(), getIdentityService());
 
         kadmin.createBuiltinPrincipals();
+
+        try {
+            Krb5Conf krb5Conf = new Krb5Conf(this);
+            krb5Conf.initKrb5conf();
+        } catch (IOException e) {
+            throw new KrbException("Failed to make krb5.conf", e);
+        }
+    }
+
+    @Override
+    public void start() throws KrbException {
+        super.start();
+
+        krbClnt.init();
+    }
+
+    public KrbClient getKrbClient() {
+        return krbClnt;
     }
 
     /**
@@ -58,14 +125,6 @@ public class SimpleKdcServer extends KdcServer {
      */
     public Kadmin getKadmin() {
         return kadmin;
-    }
-
-    public String getKdcRealm() {
-        return getSetting().getKdcRealm();
-    }
-
-    public String getKdcHost() {
-        return getSetting().getKdcHost();
     }
 
     public void createPrincipal(String principal) throws KrbException {

@@ -29,11 +29,11 @@ public class KrbClientSettingTest {
     @Test
     public void testKdcServerMannualSetting() throws KrbException {
         KrbClient krbClient = new KrbClient();
+
         krbClient.setKdcHost("localhost");
         krbClient.setKdcRealm("TEST2.COM");
+        krbClient.setAllowUdp(false);
         krbClient.setKdcTcpPort(12345);
-
-        krbClient.init();
 
         KrbSetting krbSetting = krbClient.getSetting();
         assertThat(krbSetting.getKdcHost()).isEqualTo("localhost");
