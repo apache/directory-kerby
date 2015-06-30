@@ -31,6 +31,7 @@ import org.apache.directory.api.ldap.model.message.SearchScope;
 import org.apache.directory.api.ldap.model.name.Dn;
 import org.apache.directory.api.ldap.model.name.Rdn;
 import org.apache.directory.api.util.GeneralizedTime;
+import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 import org.apache.directory.shared.kerberos.KerberosAttribute;
 import org.apache.kerby.config.Config;
@@ -52,7 +53,7 @@ import java.util.Map;
  *
  */
 public class LdapIdentityBackend extends AbstractIdentityBackend {
-    private LdapNetworkConnection connection;
+    private LdapConnection connection;
 
     public LdapIdentityBackend() {
 
@@ -65,11 +66,16 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      */
     public LdapIdentityBackend(Config config) {
         setConfig(config);
+        this.connection = new LdapNetworkConnection(getConfig().getString("host"),
+                getConfig().getInt("port"));
+    }
+
+    public LdapIdentityBackend(Config config, LdapConnection connection) throws LdapException {
+        setConfig(config);
+        this.connection = connection;
     }
 
     public void startConnection() throws LdapException {
-        this.connection = new LdapNetworkConnection(getConfig().getString("host"),
-                getConfig().getInt("port"));
         connection.bind(getConfig().getString("admin_dn"),
                 getConfig().getString("admin_pw"));
     }
