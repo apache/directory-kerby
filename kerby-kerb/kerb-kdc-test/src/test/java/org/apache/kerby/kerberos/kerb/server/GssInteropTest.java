@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.JaasKrbUtil;
 import org.ietf.jgss.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,20 +48,6 @@ public class GssInteropTest extends KdcTestBase {
         return false;
     }
 
-    @Before
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-
-        File file1 = new File(this.getClass().getResource(
-                "/kerberos.jaas").getPath());
-        String content1 = getFileContent(file1.getPath());
-        String path1 = writeToTestDir(content1, file1.getName());
-
-        // System.setProperty("sun.security.krb5.debug", "true");
-        System.setProperty("java.security.auth.login.config", path1);
-    }
-
     @Override
     protected void createPrincipals() throws KrbException {
         getKdcServer().createPrincipal(getClientPrincipal(), getClientPassword());
@@ -73,11 +60,9 @@ public class GssInteropTest extends KdcTestBase {
 
     @Test
     public void testKdc() throws Exception {
-        LoginContext loginContext = new LoginContext(getClientPrincipalName(),
-                new KerberosCallbackHandler());
-        loginContext.login();
+        Subject clientSubject = JaasKrbUtil.loginUsingPassword(
+                getClientPrincipal(), getClientPassword());
 
-        Subject clientSubject = loginContext.getSubject();
         Set<Principal> clientPrincipals = clientSubject.getPrincipals();
         Assert.assertFalse(clientPrincipals.isEmpty());
 
@@ -96,18 +81,13 @@ public class GssInteropTest extends KdcTestBase {
         byte[] kerberosToken = (byte[]) Subject.doAs(clientSubject, action);
         Assert.assertNotNull(kerberosToken);
 
-        loginContext.logout();
-
         validateServiceTicket(kerberosToken);
     }
 
     private void validateServiceTicket(byte[] ticket) throws Exception {
-        // Get the TGT for the service
-        LoginContext loginContext = new LoginContext("test-service",
-                new KerberosCallbackHandler());
-        loginContext.login();
+        Subject serviceSubject = JaasKrbUtil.loginUsingPassword(
+                getServerPrincipal(), getClientPassword());
 
-        Subject serviceSubject = loginContext.getSubject();
         Set<Principal> servicePrincipals = serviceSubject.getPrincipals();
         Assert.assertFalse(servicePrincipals.isEmpty());
 

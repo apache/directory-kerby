@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.JaasKrbUtil;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.ietf.jgss.*;
 import org.junit.Assert;
@@ -68,11 +69,9 @@ public abstract class GssInteropTestBase extends KdcTestBase {
 
     @Test
     public void testKdc() throws Exception {
-        LoginContext loginContext = new LoginContext(getClientPrincipalName(),
-                new KerberosCallbackHandler());
-        loginContext.login();
-        
-        Subject clientSubject = loginContext.getSubject();
+        Subject clientSubject = JaasKrbUtil.loginUsingPassword(
+            getClientPrincipal(), getClientPassword());
+
         Set<Principal> clientPrincipals = clientSubject.getPrincipals();
         Assert.assertFalse(clientPrincipals.isEmpty());
 
@@ -91,18 +90,13 @@ public abstract class GssInteropTestBase extends KdcTestBase {
         byte[] kerberosToken = (byte[]) Subject.doAs(clientSubject, action);
         Assert.assertNotNull(kerberosToken);
         
-        loginContext.logout();
-        
         validateServiceTicket(kerberosToken);
     }
     
     private void validateServiceTicket(byte[] ticket) throws Exception {
-        // Get the TGT for the service
-        LoginContext loginContext = new LoginContext(getServerPrincipalName(),
-                new KerberosCallbackHandler());
-        loginContext.login();
-        
-        Subject serviceSubject = loginContext.getSubject();
+        Subject serviceSubject = JaasKrbUtil.loginUsingPassword(
+            getServerPrincipal(), getClientPassword());
+
         Set<Principal> servicePrincipals = serviceSubject.getPrincipals();
         Assert.assertFalse(servicePrincipals.isEmpty());
 

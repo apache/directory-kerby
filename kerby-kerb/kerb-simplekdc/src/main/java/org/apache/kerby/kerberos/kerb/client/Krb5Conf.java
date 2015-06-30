@@ -1,5 +1,7 @@
-package org.apache.kerby.kerberos.kerb.server;
+package org.apache.kerby.kerberos.kerb.client;
 
+import org.apache.kerby.kerberos.kerb.server.KdcSetting;
+import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
 import org.apache.kerby.util.IOUtil;
 
 import java.io.File;
