@@ -40,10 +40,8 @@ public class Krb5Conf {
         content = content.replaceAll("_PORT_",
                 String.valueOf(kdcPort));
 
-        if (setting.allowUdp()) {
-            int udpLimit = setting.allowUdp() ? 1 : 4096;
-            content = content.replaceAll("_UDP_LIMIT_", String.valueOf(udpLimit));
-        }
+        int udpLimit = setting.allowUdp() ? 4096 : 1;
+        content = content.replaceAll("_UDP_LIMIT_", String.valueOf(udpLimit));
 
         File confFile = new File(kdcServer.getWorkDir(), KRB5_CONF_FILE);
         IOUtil.writeFile(content, confFile);
