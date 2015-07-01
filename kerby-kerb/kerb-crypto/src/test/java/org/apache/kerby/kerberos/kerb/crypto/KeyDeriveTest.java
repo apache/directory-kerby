@@ -31,6 +31,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Key derivation test with known values.
@@ -121,9 +122,7 @@ public class KeyDeriveTest {
     
     @Test
     public void testKeyDerive_AES256_CTS_HMAC_SHA1_96_299() throws Exception {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -137,9 +136,7 @@ public class KeyDeriveTest {
     
     @Test
     public void testKeyDerive_AES256_CTS_HMAC_SHA1_96_2AA() throws Exception {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -153,9 +150,7 @@ public class KeyDeriveTest {
     
     @Test
     public void testKeyDerive_AES256_CTS_HMAC_SHA1_96_255() throws Exception {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,

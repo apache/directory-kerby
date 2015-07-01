@@ -27,6 +27,7 @@ import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * These are to test the checksums of good answers, and the checksums
@@ -111,9 +112,7 @@ public class CheckSumsTest {
 
     @Test
     public void testCheckSums_HMAC_SHA1_96_AES256() throws Exception {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new CksumTest(
             "fourteen",
