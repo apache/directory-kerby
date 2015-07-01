@@ -54,9 +54,10 @@ import java.util.Map;
  */
 public class LdapIdentityBackend extends AbstractIdentityBackend {
     private LdapConnection connection;
+    private boolean isLdapNetworkConnection;
 
     public LdapIdentityBackend() {
-
+        this.isLdapNetworkConnection = true;
     }
 
     /**
@@ -66,8 +67,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      */
     public LdapIdentityBackend(Config config) {
         setConfig(config);
-        this.connection = new LdapNetworkConnection(getConfig().getString("host"),
-                getConfig().getInt("port"));
+        this.isLdapNetworkConnection = true;
     }
 
     public LdapIdentityBackend(Config config, LdapConnection connection) throws LdapException {
@@ -76,6 +76,10 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     }
 
     public void startConnection() throws LdapException {
+        if (isLdapNetworkConnection == true) {
+            this.connection = new LdapNetworkConnection(getConfig().getString("host"),
+                    getConfig().getInt("port"));
+        }
         connection.bind(getConfig().getString("admin_dn"),
                 getConfig().getString("admin_pw"));
     }

@@ -152,7 +152,7 @@ public final class AdminHelper {
             Date date = kOptions.getDateOption(KadminOption.EXPIRE);
             kid.setExpireTime(new KerberosTime(date.getTime()));
         } else {
-            kid.setExpireTime(KerberosTime.NEVER);
+            kid.setExpireTime(new KerberosTime(253402300799900L));
         }
         if(kOptions.contains(KadminOption.KVNO)) {
             kid.setKeyVersion(kOptions.getIntegerOption(KadminOption.KVNO));

@@ -35,7 +35,7 @@ public class KrbIdentity {
     private int kdcFlags = 0;
     private boolean disabled;
     private boolean locked;
-    private KerberosTime expireTime = KerberosTime.NEVER;
+    private KerberosTime expireTime = new KerberosTime(253402300799900L);
     private KerberosTime createdTime = KerberosTime.now();
 
     private Map<EncryptionType, EncryptionKey> keys =
