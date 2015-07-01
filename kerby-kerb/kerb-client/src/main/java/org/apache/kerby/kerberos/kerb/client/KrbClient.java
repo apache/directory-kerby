@@ -93,7 +93,11 @@ public class KrbClient {
      * @param kdcTcpPort
      */
     public void setKdcTcpPort(int kdcTcpPort) {
+        if (kdcTcpPort < 1) {
+            throw new IllegalArgumentException("Invalid port");
+        }
         commonOptions.add(KrbOption.KDC_TCP_PORT, kdcTcpPort);
+        setAllowTcp(true);
     }
 
     /**
@@ -111,12 +115,17 @@ public class KrbClient {
     public void setAllowTcp(boolean allowTcp) {
         commonOptions.add(KrbOption.ALLOW_TCP, allowTcp);
     }
+
     /**
      * Set KDC udp port. Only makes sense when allowUdp is set.
      * @param kdcUdpPort
      */
     public void setKdcUdpPort(int kdcUdpPort) {
+        if (kdcUdpPort < 1) {
+            throw new IllegalArgumentException("Invalid port");
+        }
         commonOptions.add(KrbOption.KDC_UDP_PORT, kdcUdpPort);
+        setAllowUdp(true);
     }
 
     /**

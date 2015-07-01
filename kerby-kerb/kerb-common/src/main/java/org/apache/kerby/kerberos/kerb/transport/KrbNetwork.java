@@ -20,7 +20,6 @@
 package org.apache.kerby.kerberos.kerb.transport;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -30,28 +29,25 @@ import java.net.Socket;
 public class KrbNetwork {
 
     private int socketTimeout = 10 * 1000;
-    private InetSocketAddress tcpAddress;
-    private InetSocketAddress udpAddress;
+    private TransportPair tpair;
 
-    public KrbTransport connect(InetSocketAddress tcpAddress,
-                                InetSocketAddress udpAddress) throws IOException {
-        this.tcpAddress = tcpAddress;
-        this.udpAddress = udpAddress;
+    public KrbTransport connect(TransportPair tpair) throws IOException {
+        this.tpair = tpair;
 
         /**
          * Try TCP first.
          */
         KrbTransport transport = null;
-        if (tcpAddress != null) {
+        if (tpair.tcpAddress != null) {
             try {
                 transport = tcpConnect();
             } catch (IOException e) {
-                if (udpAddress != null) {
-                    transport = new KrbUdpTransport(udpAddress);
+                if (tpair.udpAddress != null) {
+                    transport = new KrbUdpTransport(tpair.udpAddress);
                 }
             }
         } else {
-            transport = new KrbUdpTransport(udpAddress);
+            transport = new KrbUdpTransport(tpair.udpAddress);
         }
 
         if (transport == null) {
@@ -64,7 +60,7 @@ public class KrbNetwork {
     private KrbTcpTransport tcpConnect() throws IOException {
         Socket socket = new Socket();
         socket.setSoTimeout(socketTimeout);
-        socket.connect(tcpAddress);
+        socket.connect(tpair.tcpAddress);
         return new KrbTcpTransport(socket);
     }
 

@@ -22,9 +22,11 @@ package org.apache.kerby.kerberos.kerb.server;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
+import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 
 /**
  * KDC side utilities.
@@ -95,5 +97,29 @@ public final class KdcUtil {
         backend.setConfig(backendConfig);
         backend.initialize();
         return backend;
+    }
+
+    /**
+     * Get KDC network transport addresses according to KDC setting.
+     * @param setting
+     * @return UDP and TCP addresses pair
+     * @throws KrbException
+     */
+    public static TransportPair getTransportPair(
+            KdcSetting setting) throws KrbException {
+        TransportPair result = new TransportPair();
+
+        int tcpPort = setting.checkGetKdcTcpPort();
+        if (tcpPort > 0) {
+            result.tcpAddress = new InetSocketAddress(
+                    setting.getKdcHost(), tcpPort);
+        }
+        int udpPort = setting.checkGetKdcUdpPort();
+        if (udpPort > 0) {
+            result.udpAddress = new InetSocketAddress(
+                    setting.getKdcHost(), udpPort);
+        }
+
+        return result;
     }
 }

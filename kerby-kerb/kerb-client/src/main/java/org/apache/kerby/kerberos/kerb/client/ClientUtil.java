@@ -20,9 +20,11 @@
 package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.Map;
 
 public final class ClientUtil {
@@ -92,5 +94,29 @@ public final class ClientUtil {
         }
 
         return krbConfig;
+    }
+
+    /**
+     * Get KDC network transport addresses according to krb client setting.
+     * @param setting
+     * @return UDP and TCP addresses pair
+     * @throws KrbException
+     */
+    public static TransportPair getTransportPair(
+            KrbSetting setting) throws KrbException {
+        TransportPair result = new TransportPair();
+
+        int tcpPort = setting.checkGetKdcTcpPort();
+        if (tcpPort > 0) {
+            result.tcpAddress = new InetSocketAddress(
+                    setting.getKdcHost(), tcpPort);
+        }
+        int udpPort = setting.checkGetKdcUdpPort();
+        if (udpPort > 0) {
+            result.udpAddress = new InetSocketAddress(
+                    setting.getKdcHost(), udpPort);
+        }
+
+        return result;
     }
 }

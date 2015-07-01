@@ -32,12 +32,14 @@ public class KrbClientSettingTest {
 
         krbClient.setKdcHost("localhost");
         krbClient.setKdcRealm("TEST2.COM");
-        krbClient.setAllowUdp(false);
         krbClient.setKdcTcpPort(12345);
 
         KrbSetting krbSetting = krbClient.getSetting();
         assertThat(krbSetting.getKdcHost()).isEqualTo("localhost");
+        assertThat(krbSetting.allowTcp()).isEqualTo(true);
         assertThat(krbSetting.getKdcTcpPort()).isEqualTo(12345);
+        assertThat(krbSetting.allowUdp()).isEqualTo(false);
+        assertThat(krbSetting.getKdcUdpPort()).isEqualTo(-1);
         assertThat(krbSetting.getKdcRealm()).isEqualTo("TEST2.COM");
     }
 

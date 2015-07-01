@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbException;
 
 /**
  * KDC setting that combines startup options and kdc config.
@@ -63,6 +64,38 @@ public class KdcSetting {
             kdcHost = kdcConfig.getKdcHost();
         }
         return kdcHost;
+    }
+
+    /**
+     * Check kdc tcp setting and see if any bad.
+     * @return valid tcp port or -1 if not allowTcp
+     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     */
+    public int checkGetKdcTcpPort() throws KrbException {
+        if (allowTcp()) {
+            int kdcPort = getKdcTcpPort();
+            if (kdcPort < 1) {
+                throw new KrbException("KDC tcp port isn't set or configured");
+            }
+            return kdcPort;
+        }
+        return -1;
+    }
+
+    /**
+     * Check kdc udp setting and see if any bad.
+     * @return valid udp port or -1 if not allowUdp
+     * @throws KrbException
+     */
+    public int checkGetKdcUdpPort() throws KrbException {
+        if (allowUdp()) {
+            int kdcPort = getKdcUdpPort();
+            if (kdcPort < 1) {
+                throw new KrbException("KDC udp port isn't set or configured");
+            }
+            return kdcPort;
+        }
+        return -1;
     }
 
     public int getKdcTcpPort() {
