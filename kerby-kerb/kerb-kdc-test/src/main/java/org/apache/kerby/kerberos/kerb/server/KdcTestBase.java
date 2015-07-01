@@ -21,7 +21,6 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
-import org.apache.kerby.util.IOUtil;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -99,21 +98,7 @@ public abstract class KdcTestBase {
     protected boolean allowTcp() {
         return true;
     }
-
-    protected String getFileContent(String path) throws IOException {
-        return IOUtil.readFile(new File(path));
-    }
-
-    protected String writeToTestDir(String content,
-                                    String fileName) throws IOException {
-        File file = new File(testDir, fileName);
-        if (file.exists()) {
-            file.delete();
-        }
-        IOUtil.writeFile(content, file);
-        return file.getPath();
-    }
-
+    
     @Before
     public void setUp() throws Exception {
         setUpKdcServer();

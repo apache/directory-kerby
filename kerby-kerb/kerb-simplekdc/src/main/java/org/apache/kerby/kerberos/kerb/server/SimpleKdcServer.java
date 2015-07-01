@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.client.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.util.NetworkUtil;
 
