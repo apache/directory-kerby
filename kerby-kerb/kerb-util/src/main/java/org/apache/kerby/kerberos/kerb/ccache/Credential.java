@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
-import org.apache.kerby.kerberos.kerb.spec.ticket.AbstractServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.KrbTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
@@ -63,11 +63,11 @@ public class Credential {
         init(tgt, clientPrincipal);
     }
 
-    public Credential(AbstractServiceTicket tkt, PrincipalName clientPrincipal) {
+    public Credential(KrbTicket tkt, PrincipalName clientPrincipal) {
         init(tkt, clientPrincipal);
     }
 
-    private void init(AbstractServiceTicket tkt, PrincipalName clientPrincipal) {
+    private void init(KrbTicket tkt, PrincipalName clientPrincipal) {
         EncKdcRepPart kdcRepPart = tkt.getEncKdcRepPart();
 
         this.serverName = kdcRepPart.getSname();

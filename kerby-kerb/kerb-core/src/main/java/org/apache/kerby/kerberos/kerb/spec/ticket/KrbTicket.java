@@ -22,11 +22,11 @@ package org.apache.kerby.kerberos.kerb.spec.ticket;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
 
-public class AbstractServiceTicket {
+public class KrbTicket {
     private Ticket ticket;
     private EncKdcRepPart encKdcRepPart;
 
-    public AbstractServiceTicket(Ticket ticket, EncKdcRepPart encKdcRepPart) {
+    public KrbTicket(Ticket ticket, EncKdcRepPart encKdcRepPart) {
         this.ticket = ticket;
         this.encKdcRepPart = encKdcRepPart;
     }

@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.impl.DefaultInternalKrbClient;
 import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClient;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
@@ -28,6 +29,7 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
 import java.io.File;
+import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
@@ -256,7 +258,8 @@ public class KrbClient {
      * @throws KrbException
      */
     public ServiceTicket requestServiceTicketWithAccessToken(
-            AuthToken token, String serverPrincipal, String armorCache) throws KrbException {
+            AuthToken token, String serverPrincipal,
+            String armorCache) throws KrbException {
         if (! token.isAcToken()) {
             throw new IllegalArgumentException("Access token is expected");
         }
@@ -265,5 +268,26 @@ public class KrbClient {
         requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
         requestOptions.add(KrbOption.SERVER_PRINCIPAL, serverPrincipal);
         return innerClient.requestServiceTicket(requestOptions);
+    }
+
+    /**
+     * Store tgt into the specified credential cache file.
+     * @param tgtTicket
+     * @param ccacheFile
+     * @throws KrbException
+     */
+    public void storeTicket(TgtTicket tgtTicket,
+                            File ccacheFile) throws KrbException {
+        if (ccacheFile.exists() && ccacheFile.canWrite()) {
+            CredentialCache cCache = new CredentialCache(tgtTicket);
+            try {
+                cCache.store(ccacheFile);
+            } catch (IOException e) {
+                throw new KrbException("Failed to store tgt", e);
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid ccache file, " +
+                    "not exist or writable: " + ccacheFile.getAbsolutePath());
+        }
     }
 }

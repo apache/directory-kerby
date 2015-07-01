@@ -22,16 +22,14 @@ package org.apache.kerby.kerberos.tool.kinit;
 import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.ccache.Credential;
-import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.tool.ToolUtil;
+import org.apache.kerby.util.SysUtil;
 
 import java.io.Console;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -118,11 +116,23 @@ public class KinitTool {
                 ToolUtil.convertOptions(ktOptions));
 
         if(tgt == null) {
-            System.out.println("Get TGT failed ...");
+            System.err.println("Requesting TGT failed");
             return;
         }
 
-        writeTgtToCache(tgt, principal, ktOptions);
+        File ccacheFile;
+        if (ktOptions.contains(KrbOption.KRB5_CACHE)) {
+            String ccacheName = ktOptions.getStringOption(KrbOption.KRB5_CACHE);
+            ccacheFile = new File(ccacheName);
+        } else {
+            String ccacheName = principal.replaceAll("/", "_");
+            ccacheName = "krb5_" + ccacheName + ".cc";
+            ccacheFile = new File(SysUtil.getTempDir(), ccacheName);
+        }
+
+        krbClient.storeTicket(tgt, ccacheFile);
+        System.out.println("Successfully requested and stored ticket in " +
+                                    ccacheFile.getAbsolutePath());
     }
 
     /**
@@ -132,27 +142,6 @@ public class KinitTool {
         KrbClient krbClient = new KrbClient();
         krbClient.init();
         return krbClient;
-    }
-
-    /**
-     * Write tgt into credentials cache.
-     */
-    private static void writeTgtToCache(
-            TgtTicket tgt, String principal, KOptions kinitOptions) throws IOException {
-        Credential credential = new Credential(tgt);
-        CredentialCache cCache = new CredentialCache();
-        cCache.addCredential(credential);
-        cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
-
-        String fileName;
-        if (kinitOptions.contains(KrbOption.KRB5_CACHE)) {
-            fileName = kinitOptions.getStringOption(KrbOption.KRB5_CACHE);
-        } else {
-            String princName = principal.replaceAll("/", "_");
-            fileName = "krb5_" + princName + ".cc";
-        }
-        File cCacheFile = new File("/tmp/", fileName);
-        cCache.store(cCacheFile);
     }
 
     public static void main(String[] args) throws Exception {
