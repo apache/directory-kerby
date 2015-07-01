@@ -19,24 +19,17 @@
  */
 package org.apache.kerby.util;
 
-import java.io.UnsupportedEncodingException;
+import java.io.File;
 
-public final class Utf8 {
-    private Utf8() {}
+/**
+ * A system related utility.
+ */
+public final class SysUtil {
+    private SysUtil() {}
 
-    public static String toString(byte[] bytes) {
-        try {
-            return new String(bytes, "UTF-8");
-        } catch (UnsupportedEncodingException uee) {
-            throw new RuntimeException("UTF8 unavailable", uee);
-        }
+    public static File getTempDir() {
+        String tmpDir = System.getProperty("java.io.tmpdir");
+        return new File(tmpDir);
     }
 
-    public static byte[] toBytes(String s) {
-        try {
-            return s.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException uee) {
-            throw new RuntimeException("UTF8 unavailable", uee);
-        }
-    }
 }

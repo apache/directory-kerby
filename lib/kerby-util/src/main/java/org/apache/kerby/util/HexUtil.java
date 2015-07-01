@@ -19,10 +19,11 @@
  */
 package org.apache.kerby.util;
 
-public class HexUtil {
+public final class HexUtil {
+    private HexUtil() {}
 
-    final static String HEX_CHARS_STR = "0123456789ABCDEF";
-    final static char[] HEX_CHARS = HEX_CHARS_STR.toCharArray();
+    private final static String HEX_CHARS_STR = "0123456789ABCDEF";
+    private final static char[] HEX_CHARS = HEX_CHARS_STR.toCharArray();
 
     /**
      * Convert bytes into format as:
