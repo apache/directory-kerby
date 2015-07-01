@@ -29,6 +29,7 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * By ref. MIT krb5 t_str2key.c and RFC3961 test vectors
@@ -269,9 +270,7 @@ public class String2keyTest {
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_0() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -285,9 +284,7 @@ public class String2keyTest {
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_1() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -301,9 +298,7 @@ public class String2keyTest {
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_2() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -317,9 +312,7 @@ public class String2keyTest {
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_3() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -333,9 +326,7 @@ public class String2keyTest {
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_4() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -351,9 +342,7 @@ public class String2keyTest {
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_5() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -367,9 +356,7 @@ public class String2keyTest {
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_6() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -384,9 +371,7 @@ public class String2keyTest {
     // Check for KRB5_ERR_BAD_S2K_PARAMS return when weak iteration counts are forbidden
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_7() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,

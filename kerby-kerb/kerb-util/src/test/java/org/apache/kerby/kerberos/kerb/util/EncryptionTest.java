@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assume.assumeTrue;
 
 /*
 The principal keys for krbtgt/SH.INTEL.COM@SH.INTEL.COM
@@ -69,9 +70,7 @@ public class EncryptionTest {
 
     @Test
     public void testAes256() throws IOException, KrbException {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         testEncWith("aes256-cts-hmac-sha1-96.cc");
     }

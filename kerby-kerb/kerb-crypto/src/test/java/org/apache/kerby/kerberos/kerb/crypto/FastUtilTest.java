@@ -28,6 +28,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assume.assumeTrue;
 
 public class FastUtilTest {
     static class TestCase {
@@ -124,6 +125,8 @@ public class FastUtilTest {
 
     @Test
     public void testFastUtil_AES256_CTS_HMAC_SHA1() throws Exception {
+        assumeTrue(EncryptionHandler.isAES256Enabled());
+
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "key1",

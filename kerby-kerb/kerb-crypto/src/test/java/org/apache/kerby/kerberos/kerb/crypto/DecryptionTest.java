@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Decryption test with known ciphertexts.
@@ -712,9 +713,7 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_0() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -734,9 +733,7 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_1() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -756,9 +753,7 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_9() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -779,9 +774,8 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_13() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
+
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "13 bytes byte", 3,
@@ -801,9 +795,7 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_30() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,

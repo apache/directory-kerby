@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assume.assumeTrue;
 
 public class NewEncryptionTest {
 
@@ -66,6 +67,8 @@ public class NewEncryptionTest {
 
     @Test
     public void testAes256CtsHmacSha1() throws IOException, KrbException {
+        assumeTrue(EncryptionHandler.isAES256Enabled());
+
         testEncWith(EncryptionType.AES256_CTS_HMAC_SHA1_96);
     }
 
