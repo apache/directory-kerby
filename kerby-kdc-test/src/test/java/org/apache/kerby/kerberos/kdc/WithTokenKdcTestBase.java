@@ -27,7 +27,7 @@ import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbToken;
 import org.apache.kerby.kerberos.kerb.spec.base.TokenFormat;
-import org.apache.kerby.kerberos.kerb.spec.ticket.AbstractServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.KrbTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
 import org.junit.Before;
@@ -130,7 +130,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         cCacheFile.delete();
     }
 
-    protected void verifyTicket(AbstractServiceTicket ticket) {
+    protected void verifyTicket(KrbTicket ticket) {
         assertThat(ticket).isNotNull();
         assertThat(ticket.getRealm()).isEqualTo(getKdcServer().getKdcSetting().getKdcRealm());
         assertThat(ticket.getTicket()).isNotNull();

@@ -20,27 +20,42 @@
 package org.apache.kerby.kerberos.kerb.ccache;
 
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CredentialCache implements KrbCredentialCache
-{
+public class CredentialCache implements KrbCredentialCache {
     public static final int FCC_FVNO_1 = 0x501;
     public static final int FCC_FVNO_2 = 0x502;
     public static final int FCC_FVNO_3 = 0x503;
     public static final int FCC_FVNO_4 = 0x504;
 
     public static final int FCC_TAG_DELTATIME = 1;
-    public static final int NT_UNKNOWN = 0;
-    public static final int MAXNAMELENGTH = 1024;
 
     private int version = FCC_FVNO_4;
     private List<Tag> tags;
     private PrincipalName primaryPrincipal;
-    private List<Credential> credentials = new ArrayList<Credential> ();
+
+    private final List<Credential> credentials;
+
+    public CredentialCache() {
+        credentials = new ArrayList<>();
+    }
+
+    public CredentialCache(TgtTicket tgt) {
+        this();
+        addCredential(new Credential(tgt));
+        setPrimaryPrincipal(tgt.getClientPrincipal());
+    }
+
+    public CredentialCache(Credential credential) {
+        this();
+        addCredential(credential);
+        setPrimaryPrincipal(credential.getClientName());
+    }
 
     @Override
     public void store(File ccacheFile) throws IOException {
@@ -149,7 +164,8 @@ public class CredentialCache implements KrbCredentialCache
     @Override
     public void load(File ccacheFile) throws IOException {
         if (! ccacheFile.exists() || ! ccacheFile.canRead()) {
-            throw new IllegalArgumentException("Invalid ccache file: " + ccacheFile.getAbsolutePath());
+            throw new IllegalArgumentException("Invalid ccache file: "
+                    + ccacheFile.getAbsolutePath());
         }
 
         InputStream inputStream = new FileInputStream(ccacheFile);
@@ -178,10 +194,11 @@ public class CredentialCache implements KrbCredentialCache
 
         this.primaryPrincipal = ccis.readPrincipal(version);
 
-        this.credentials = readCredentials(ccis);
+        this.credentials.addAll(readCredentials(ccis));
     }
 
-    private List<Credential> readCredentials(CredCacheInputStream ccis) throws IOException {
+    private List<Credential> readCredentials(CredCacheInputStream ccis)
+            throws IOException {
         List<Credential> results = new ArrayList<Credential>(2);
 
         Credential cred;
