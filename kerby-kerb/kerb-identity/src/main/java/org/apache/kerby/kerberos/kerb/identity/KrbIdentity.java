@@ -1,4 +1,4 @@
-/**
+/*
  *  Licensed to the Apache Software Foundation (ASF) under one
  *  or more contributor license agreements.  See the NOTICE file
  *  distributed with this work for additional information
@@ -28,29 +28,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 
+ * A class to represent a kerberos identity.
+ *
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ */
 public class KrbIdentity {
-    private String principalName;
+    /** the principal */
     private PrincipalName principal;
+    
+    /** the key version */
     private int keyVersion = 1;
+    
+    /** KDC flags */
     private int kdcFlags = 0;
+    
+    /** flag to indicate if this identity was disabled */
     private boolean disabled;
+    
+    /** flag to indicate if this identity was locked */
     private boolean locked;
+    
+    /** the expiration time of the identity */
     private KerberosTime expireTime = new KerberosTime(253402300799900L);
+    
+    /** the creation time of the identity */
     private KerberosTime createdTime = KerberosTime.now();
 
+    /** the keys associated with this identity */
     private Map<EncryptionType, EncryptionKey> keys =
             new HashMap<EncryptionType, EncryptionKey>();
 
     public KrbIdentity(String principalName) {
-        this.principalName = principalName;
         this.principal = new PrincipalName(principalName);
     }
 
     public String getPrincipalName() {
-        return principalName;
+        return principal.getName();
     }
 
-    public void setPrincipalName(String newPrincipalName) { principalName = newPrincipalName; }
+    public void setPrincipalName(String newPrincipalName) { 
+        principal = new PrincipalName(newPrincipalName);
+    }
 
     public PrincipalName getPrincipal() {
         return principal;
@@ -126,42 +146,38 @@ public class KrbIdentity {
         this.keyVersion = keyVersion;
     }
 
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        KrbIdentity identity = (KrbIdentity) o;
-
-        if (disabled != identity.disabled) return false;
-        if (kdcFlags != identity.kdcFlags) return false;
-        if (keyVersion != identity.keyVersion) return false;
-        if (locked != identity.locked) return false;
-        if (createdTime != null ? !createdTime.equals(identity.createdTime) :
-                identity.createdTime != null)
+    public boolean equals( Object obj )
+    {
+        if ( this == obj ) {
+            return true;
+        }
+        
+        if ( obj == null ) {
             return false;
-        if (expireTime != null ? !expireTime.equals(identity.expireTime) :
-                identity.expireTime != null)
+        }
+        
+        KrbIdentity other = ( KrbIdentity ) obj;
+        
+        if ( principal == null ) {
+            if ( other.principal != null ) {
+                return false;
+            }
+        }
+        else if ( !principal.equals( other.principal ) ) {
             return false;
-        if (keys != null ? !keys.equals(identity.keys) : identity.keys != null)
-            return false;
-        if (principalName != null ? !principalName.equals(
-                identity.principalName) : identity.principalName != null)
-            return false;
-
+        }
+        
         return true;
     }
 
     @Override
-    public int hashCode() {
-        int result = principalName != null ? principalName.hashCode() : 0;
-        result = 31 * result + keyVersion;
-        result = 31 * result + kdcFlags;
-        result = 31 * result + (disabled ? 1 : 0);
-        result = 31 * result + (locked ? 1 : 0);
-        result = 31 * result + (expireTime != null ? expireTime.hashCode() : 0);
-        result = 31 * result + (createdTime != null ? createdTime.hashCode() : 0);
-        result = 31 * result + (keys != null ? keys.hashCode() : 0);
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ( ( principal == null ) ? 0 : principal.hashCode() );
         return result;
     }
 }
