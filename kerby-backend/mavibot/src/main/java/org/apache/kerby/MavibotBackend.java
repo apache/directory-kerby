@@ -58,33 +58,33 @@ public class MavibotBackend extends AbstractIdentityBackend {
      * @throws Exception
      */
     public MavibotBackend(File location) throws Exception {
-	String dbPath = location.getAbsolutePath();
+        String dbPath = location.getAbsolutePath();
 
-	if (!location.exists()) {
-	    location.mkdirs();
-	}
+        if (!location.exists()) {
+            location.mkdirs();
+        }
 
-	if (location.isDirectory()) {
-	    dbPath += File.separator + DATABASE_NAME;
-	}
+        if (location.isDirectory()) {
+            dbPath += File.separator + DATABASE_NAME;
+        }
 
-	rm = new RecordManager(dbPath);
+        rm = new RecordManager(dbPath);
 
-	if (rm.getManagedTrees().contains(DATA_TREE)) {
-	    database = rm.getManagedTree(DATA_TREE);
-	} else {
-	    PersistedBTreeConfiguration<String, KrbIdentity> config = new PersistedBTreeConfiguration<String, KrbIdentity>();
-	    // _no_ duplicates
-	    config.setAllowDuplicates(false);
-	    config.setBtreeType(BTreeTypeEnum.PERSISTED);
-	    config.setFilePath(dbPath);
-	    config.setKeySerializer(StringSerializer.INSTANCE);
-	    config.setName(DATA_TREE);
-	    config.setValueSerializer(KrbIdentitySerializer.INSTANCE);
+        if (rm.getManagedTrees().contains(DATA_TREE)) {
+            database = rm.getManagedTree(DATA_TREE);
+        } else {
+            PersistedBTreeConfiguration<String, KrbIdentity> config = new PersistedBTreeConfiguration<String, KrbIdentity>();
+            // _no_ duplicates
+            config.setAllowDuplicates(false);
+            config.setBtreeType(BTreeTypeEnum.PERSISTED);
+            config.setFilePath(dbPath);
+            config.setKeySerializer(StringSerializer.INSTANCE);
+            config.setName(DATA_TREE);
+            config.setValueSerializer(KrbIdentitySerializer.INSTANCE);
 
-	    database = BTreeFactory.createPersistedBTree(config);
-	    rm.manage(database);
-	  }
+            database = BTreeFactory.createPersistedBTree(config);
+            rm.manage(database);
+        }
     }
 
     /**
@@ -92,7 +92,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     public List<String> getIdentities(int start, int limit) {
-	return null;
+        return null;
     }
 
     /**
@@ -100,7 +100,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     public List<String> getIdentities() {
-	return null;
+        return null;
     }
 
     /**
@@ -108,7 +108,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
-	return null;
+        return null;
     }
 
     /**
@@ -116,7 +116,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
-	return null;
+        return null;
     }
 
     /**
@@ -124,7 +124,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
-	return null;
+        return null;
     }
 
     /**

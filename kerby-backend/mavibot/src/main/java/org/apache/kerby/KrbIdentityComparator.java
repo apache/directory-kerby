@@ -37,7 +37,7 @@ public class KrbIdentityComparator implements Comparator<KrbIdentity> {
 
     @Override
     public int compare(KrbIdentity o1, KrbIdentity o2) {
-	return o1.getPrincipalName().compareTo(o2.getPrincipalName());
+        return o1.getPrincipalName().compareTo(o2.getPrincipalName());
     }
 
 }

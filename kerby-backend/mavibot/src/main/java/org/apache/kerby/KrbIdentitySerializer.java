@@ -41,43 +41,43 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
 
     @Override
     public byte[] serialize(KrbIdentity key) {
-	return null;
+        return null;
     }
 
     @Override
     public KrbIdentity deserialize(BufferHandler bufferHandler)
-	    throws IOException {
-	return null;
+            throws IOException {
+        return null;
     }
 
     @Override
     public KrbIdentity deserialize(ByteBuffer buffer) throws IOException {
-	return null;
+        return null;
     }
 
     @Override
     public KrbIdentity fromBytes(byte[] buffer) throws IOException {
-	return null;
+        return null;
     }
 
     @Override
     public KrbIdentity fromBytes(byte[] buffer, int pos) throws IOException {
-	return null;
+        return null;
     }
 
     @Override
     public int compare(KrbIdentity type1, KrbIdentity type2) {
-	return comparator.compare(type1, type2);
+        return comparator.compare(type1, type2);
     }
 
     @Override
     public Comparator<KrbIdentity> getComparator() {
-	return comparator;
+        return comparator;
     }
 
     @Override
     public Class<?> getType() {
-	return KrbIdentity.class;
+        return KrbIdentity.class;
     }
 
 }

@@ -29,6 +29,7 @@
   <modules>
     <module>ldap-backend</module>
     <module>json-backend</module>
+    <module>mavibot</module>
     <module>zookeeper-backend</module>
   </modules>
 
