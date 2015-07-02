@@ -181,7 +181,7 @@ public class KrbClient {
      * @throws KrbException
      */
     public TgtTicket requestTgtWithKeytab(String principal,
-                                      String keytabFile) throws KrbException {
+                                      File keytabFile) throws KrbException {
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.CLIENT_PRINCIPAL, principal);
         requestOptions.add(KrbOption.USE_KEYTAB, true);
@@ -287,6 +287,17 @@ public class KrbClient {
      */
     public void storeTicket(TgtTicket tgtTicket,
                             File ccacheFile) throws KrbException {
+        if (!ccacheFile.exists()) {
+            try {
+                if (!ccacheFile.createNewFile()) {
+                    throw new KrbException("Failed to create ccache file "
+                        + ccacheFile.getAbsolutePath());
+                }
+            } catch (IOException e) {
+                throw new KrbException("Failed to create ccache file "
+                    + ccacheFile.getAbsolutePath(), e);
+            }
+        }
         if (ccacheFile.exists() && ccacheFile.canWrite()) {
             CredentialCache cCache = new CredentialCache(tgtTicket);
             try {

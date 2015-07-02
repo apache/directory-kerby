@@ -44,6 +44,8 @@ public final class JaasKrbUtil {
 
     private JaasKrbUtil() {}
 
+    public static boolean enableDebug = true;
+
     public static Subject loginUsingPassword(
             String principal, String password) throws LoginException {
         Set<Principal> principals = new HashSet<Principal>();
@@ -126,10 +128,10 @@ public final class JaasKrbUtil {
             options.put("useKeyTab", "true");
             options.put("storeKey", "true");
             options.put("doNotPrompt", "true");
-            options.put("renewTGT", "true");
+            options.put("renewTGT", "false");
             options.put("refreshKrb5Config", "true");
             options.put("isInitiator", "false");
-            options.put("debug", "false");
+            options.put("debug", String.valueOf(enableDebug));
 
             return new AppConfigurationEntry[]{
                     new AppConfigurationEntry(getKrb5LoginModuleName(),
@@ -151,14 +153,14 @@ public final class JaasKrbUtil {
         public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
             Map<String, String> options = new HashMap<String, String>();
             options.put("principal", principal);
-            options.put("storeKey", "true");
-            options.put("doNotPrompt", "true");
+            options.put("storeKey", "false");
+            options.put("doNotPrompt", "false");
             options.put("useTicketCache", "true");
             options.put("renewTGT", "true");
             options.put("refreshKrb5Config", "true");
             options.put("isInitiator", "true");
             options.put("ticketCache", clientCredentialFile.getAbsolutePath());
-            options.put("debug", "false");
+            options.put("debug", String.valueOf(enableDebug));
 
             return new AppConfigurationEntry[]{
                     new AppConfigurationEntry(getKrb5LoginModuleName(),
@@ -184,7 +186,7 @@ public final class JaasKrbUtil {
             options.put("renewTGT", "true");
             options.put("refreshKrb5Config", "true");
             options.put("isInitiator", "true");
-            options.put("debug", "false");
+            options.put("debug", String.valueOf(enableDebug));
 
             return new AppConfigurationEntry[]{
                     new AppConfigurationEntry(getKrb5LoginModuleName(),
