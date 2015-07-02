@@ -53,8 +53,6 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         try {
-            //out.write(IntSerializer.serialize(0)); // placeholder for length prefix
-            
             // the principalName
             out.write(StringSerializer.INSTANCE.serialize(entry.getPrincipalName()));
             
@@ -94,13 +92,7 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
                 out.write(data);
             }
             
-            byte[] data = out.toByteArray();
-            //int length = data.length - 4; // remove the prefix bytes
-            
-            // put the actual length
-            //IntSerializer.serialize(data, 0, length);
-            
-            return data;
+            return out.toByteArray();
         }
         catch(Exception e) {
             throw new IllegalStateException("Failed to serialize the identity " + entry);
