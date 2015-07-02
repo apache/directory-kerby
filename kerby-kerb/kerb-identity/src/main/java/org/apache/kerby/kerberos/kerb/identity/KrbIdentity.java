@@ -68,8 +68,16 @@ public class KrbIdentity {
         return principal.getName();
     }
 
+    public void setPrincipalName(String newPrincipalName) { 
+        principal = new PrincipalName(newPrincipalName);
+    }
+
     public PrincipalName getPrincipal() {
         return principal;
+    }
+
+    public void setPrincipal(PrincipalName principal) {
+        this.principal = principal;
     }
 
     public KerberosTime getExpireTime() {
