@@ -19,13 +19,26 @@
  */
 package org.apache.kerby;
 
-import org.apache.directory.mavibot.btree.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.management.openmbean.KeyAlreadyExistsException;
+
+import org.apache.directory.mavibot.btree.BTree;
+import org.apache.directory.mavibot.btree.BTreeFactory;
+import org.apache.directory.mavibot.btree.BTreeTypeEnum;
+import org.apache.directory.mavibot.btree.KeyCursor;
+import org.apache.directory.mavibot.btree.PersistedBTreeConfiguration;
+import org.apache.directory.mavibot.btree.RecordManager;
+import org.apache.directory.mavibot.btree.Tuple;
+import org.apache.directory.mavibot.btree.exception.KeyNotFoundException;
 import org.apache.directory.mavibot.btree.serializer.StringSerializer;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
-
-import java.io.File;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A backend based on Apache Mavibot(an MVCC BTree library).
@@ -45,6 +58,8 @@ public class MavibotBackend extends AbstractIdentityBackend {
     /** name of the database file */
     private static final String DATABASE_NAME = "kerby-data.db";
 
+    private static final Logger LOG = LoggerFactory.getLogger(MavibotBackend.class);
+    
     /**
      * Creates a new instance of MavibotBackend.
      *
@@ -56,6 +71,8 @@ public class MavibotBackend extends AbstractIdentityBackend {
     public MavibotBackend(File location) throws Exception {
         String dbPath = location.getAbsolutePath();
 
+        LOG.info("Initializing the mavibot backend");
+        
         if (!location.exists()) {
             location.mkdirs();
         }
@@ -88,7 +105,27 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     public List<String> getIdentities(int start, int limit) {
-        return null;
+        
+        List<String> keys = new ArrayList<String>();
+        
+        KeyCursor<String> cursor = null;
+        
+        try {
+            cursor = database.browseKeys();
+            while(cursor.hasNext()) {
+                keys.add(cursor.next());
+            }
+        }
+        catch(Exception e) {
+            LOG.debug("Errors occurred while fetching the principals", e);
+        }
+        finally {
+            if(cursor != null) {
+                cursor.close();
+            }
+        }
+        
+        return keys;
     }
 
     /**
@@ -96,6 +133,18 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
+        
+        try {
+            return database.get(principalName);
+        }
+        catch(KeyNotFoundException e) {
+            LOG.debug("Identity {} doesn't exist", principalName);
+        }
+        catch(IOException e) {
+            LOG.warn("Failed to get the identity {}", principalName);
+            throw new RuntimeException(e);
+        }
+        
         return null;
     }
 
@@ -104,7 +153,20 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
-        return null;
+        
+        String p = identity.getPrincipalName();
+        try {
+            return database.insert(p, identity);
+        }
+        catch(KeyAlreadyExistsException e) {
+            LOG.debug("Identity {} already exists", p);
+            LOG.debug("", e);
+            return null;
+        }
+        catch(IOException e) {
+            LOG.warn("Failed to add the identity {}", p);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -112,7 +174,27 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
-        return null;
+        
+        String p = identity.getPrincipalName();
+        try {
+            if(!database.hasKey(p)) {
+                LOG.debug("No identity found with the principal {}", p);
+                return null;
+            }
+            
+            database.delete(p);
+            
+            return database.insert(p, identity);
+        }
+        catch(KeyAlreadyExistsException e) {
+            LOG.debug("Identity {} already exists", p);
+            LOG.debug("", e);
+            return null;
+        }
+        catch(Exception e) {
+            LOG.warn("Failed to update the identity {}", p);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -121,5 +203,26 @@ public class MavibotBackend extends AbstractIdentityBackend {
     @Override
     protected void doDeleteIdentity(String principalName) {
 
+        try {
+            Tuple<String, KrbIdentity> t = database.delete(principalName);
+            if (t == null) {
+                LOG.debug("Identity {} doesn't exist", principalName);
+            }
+        }
+        catch(IOException e) {
+            LOG.warn("Failed to delete the identity {}", principalName);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void stop() {
+        try {
+            LOG.debug("Closing the database");
+            rm.close();
+        }
+        catch(Exception e) {
+            LOG.warn("Failed to close the database", e);
+        }
     }
 }

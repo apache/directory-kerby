@@ -19,16 +19,24 @@
  */
 package org.apache.kerby;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Comparator;
+import java.util.Map;
 
 import org.apache.directory.mavibot.btree.serializer.BufferHandler;
 import org.apache.directory.mavibot.btree.serializer.ElementSerializer;
+import org.apache.directory.mavibot.btree.serializer.IntSerializer;
+import org.apache.directory.mavibot.btree.serializer.LongSerializer;
+import org.apache.directory.mavibot.btree.serializer.StringSerializer;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 /**
- * Serializer class for KrbIdentity.
+ * Serializer for KrbIdentity.
  *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
@@ -40,29 +48,128 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
     private KrbIdentityComparator comparator = KrbIdentityComparator.INSTANCE;
 
     @Override
-    public byte[] serialize(KrbIdentity key) {
-        return null;
+    public byte[] serialize(KrbIdentity entry) {
+        
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            //out.write(IntSerializer.serialize(0)); // placeholder for length prefix
+            
+            // the principalName
+            out.write(StringSerializer.INSTANCE.serialize(entry.getPrincipalName()));
+            
+            // key version
+            out.write(IntSerializer.serialize(entry.getKeyVersion()));
+            
+            out.write(IntSerializer.serialize(entry.getKdcFlags()));
+            
+            // mask for disabled and lock flags
+            byte mask = 0;
+            
+            if(entry.isDisabled()) {
+                mask |= 1 << 1;
+            }
+
+            if(entry.isLocked()) {
+                mask |= 1 << 2;
+            }
+            
+            out.write(mask);
+            
+            // creation time
+            out.write(LongSerializer.serialize(entry.getCreatedTime().getTime()));
+            
+            // expiration time
+            out.write(LongSerializer.serialize(entry.getExpireTime().getTime()));
+            
+            Map<EncryptionType, EncryptionKey> keys = entry.getKeys();
+            // num keys
+            out.write(IntSerializer.serialize(keys.size()));
+            
+            for(EncryptionKey ek : keys.values()) {
+                int type = ek.getKeyType().getValue();
+                out.write(IntSerializer.serialize(type));
+                byte[] data = ek.getKeyData();
+                out.write(IntSerializer.serialize(data.length));
+                out.write(data);
+            }
+            
+            byte[] data = out.toByteArray();
+            //int length = data.length - 4; // remove the prefix bytes
+            
+            // put the actual length
+            //IntSerializer.serialize(data, 0, length);
+            
+            return data;
+        }
+        catch(Exception e) {
+            throw new IllegalStateException("Failed to serialize the identity " + entry);
+        }
     }
 
     @Override
     public KrbIdentity deserialize(BufferHandler bufferHandler)
             throws IOException {
-        return null;
+        return fromBytes(bufferHandler.getBuffer());
     }
 
     @Override
     public KrbIdentity deserialize(ByteBuffer buffer) throws IOException {
-        return null;
+        KrbIdentity id = null;
+        
+        String principal = StringSerializer.INSTANCE.deserialize(buffer);
+        
+        id = new KrbIdentity(principal);
+        
+        int kvno = IntSerializer.INSTANCE.deserialize(buffer);
+        id.setKeyVersion(kvno);
+        
+        int flags = IntSerializer.INSTANCE.deserialize(buffer);
+        id.setKdcFlags(flags);
+        
+        byte mask = buffer.get();
+        
+        if((mask & 2) != 0) {
+            id.setDisabled(true);
+        }
+        
+        if((mask & 4) != 0) {
+            id.setLocked(true);
+        }
+        
+        long creationTime = LongSerializer.INSTANCE.deserialize(buffer);
+        id.setCreatedTime(new KerberosTime(creationTime));
+        
+        long exprTime = LongSerializer.INSTANCE.deserialize(buffer);
+        id.setExpireTime(new KerberosTime(exprTime));
+
+        int numKeys = IntSerializer.INSTANCE.deserialize(buffer);
+        
+        for(int i=0; i<numKeys; i++) {
+            int keyType = IntSerializer.INSTANCE.deserialize(buffer);
+            int keyLen = IntSerializer.INSTANCE.deserialize(buffer);
+            
+            byte[] keyData = new byte[keyLen];
+            buffer.get(keyData);
+            
+            EncryptionKey ek = new EncryptionKey(keyType, keyData);
+            
+            id.addKey(ek);
+        }
+        
+        return id;
     }
 
     @Override
     public KrbIdentity fromBytes(byte[] buffer) throws IOException {
-        return null;
+        ByteBuffer buf = ByteBuffer.wrap(buffer);
+        return deserialize(buf);
     }
 
     @Override
     public KrbIdentity fromBytes(byte[] buffer, int pos) throws IOException {
-        return null;
+        ByteBuffer buf = ByteBuffer.wrap(buffer, pos, buffer.length - pos);
+        return deserialize(buf);
     }
 
     @Override
