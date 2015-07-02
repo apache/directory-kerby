@@ -44,6 +44,18 @@ public abstract class BackendTest {
             EncryptionType.DES3_CBC_SHA1_KD
     };
 
+    /**
+     * A convenient method to run all tests on the given backend 
+     * @param backend an instance of the backend to be tested
+     */
+    public void testAll(IdentityBackend backend) {
+        testStore(backend);
+        testGet(backend);
+        testUpdate(backend);
+        testDelete(backend);
+        testGetIdentities(backend);
+    }
+    
     protected void testGet(IdentityBackend backend) {
         KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
