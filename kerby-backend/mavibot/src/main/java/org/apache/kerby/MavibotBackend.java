@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
-
 import org.apache.directory.mavibot.btree.BTree;
 import org.apache.directory.mavibot.btree.BTreeFactory;
 import org.apache.directory.mavibot.btree.BTreeTypeEnum;
@@ -156,10 +154,15 @@ public class MavibotBackend extends AbstractIdentityBackend {
         
         String p = identity.getPrincipalName();
         try {
+            if(database.hasKey(p)) {
+                LOG.debug("Identity {} already exists", p);
+                return null;
+            }
+            
             return database.insert(p, identity);
         }
-        catch(KeyAlreadyExistsException e) {
-            LOG.debug("Identity {} already exists", p);
+        catch(KeyNotFoundException e) {
+            LOG.debug("No such identity {} exists", p);
             LOG.debug("", e);
             return null;
         }
@@ -185,11 +188,6 @@ public class MavibotBackend extends AbstractIdentityBackend {
             database.delete(p);
             
             return database.insert(p, identity);
-        }
-        catch(KeyAlreadyExistsException e) {
-            LOG.debug("Identity {} already exists", p);
-            LOG.debug("", e);
-            return null;
         }
         catch(Exception e) {
             LOG.warn("Failed to update the identity {}", p);
