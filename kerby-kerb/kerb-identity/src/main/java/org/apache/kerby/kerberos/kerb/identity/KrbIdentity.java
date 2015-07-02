@@ -50,8 +50,8 @@ public class KrbIdentity {
     /** flag to indicate if this identity was locked */
     private boolean locked;
     
-    /** the expiration time of the identity */
-    private KerberosTime expireTime = new KerberosTime(253402300799900L);
+    /** the expiration time of the identity, default set to never expire */
+    private KerberosTime expireTime = KerberosTime.NEVER;
     
     /** the creation time of the identity */
     private KerberosTime createdTime = KerberosTime.now();
@@ -68,16 +68,8 @@ public class KrbIdentity {
         return principal.getName();
     }
 
-    public void setPrincipalName(String newPrincipalName) { 
-        principal = new PrincipalName(newPrincipalName);
-    }
-
     public PrincipalName getPrincipal() {
         return principal;
-    }
-
-    public void setPrincipal(PrincipalName principal) {
-        this.principal = principal;
     }
 
     public KerberosTime getExpireTime() {
