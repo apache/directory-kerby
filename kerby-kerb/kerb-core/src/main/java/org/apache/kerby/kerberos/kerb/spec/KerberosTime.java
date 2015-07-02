@@ -1,4 +1,4 @@
-/**
+/*
  *  Licensed to the Apache Software Foundation (ASF) under one
  *  or more contributor license agreements.  See the NOTICE file
  *  distributed with this work for additional information
@@ -19,24 +19,37 @@
  */
 package org.apache.kerby.kerberos.kerb.spec;
 
-import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
-
 import java.util.Date;
 
+import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
+
 /**
- KerberosTime    ::= GeneralizedTime -- with no fractional seconds
+ * A specialization of the ASN.1 GeneralTime. The Kerberos time contains date and
+ * time up to the seconds, but with no fractional seconds. It's also always
+ * expressed as UTC timeZone, thus the 'Z' at the end of its string representation.
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class KerberosTime extends Asn1GeneralizedTime {
+
+    /** Constant for the {@link KerberosTime} "infinity." */
     public static final KerberosTime NEVER = new KerberosTime(Long.MAX_VALUE);
 
+    /** The number of milliseconds in a minute. */
     public static final int MINUTE = 60000;
 
+    /** The number of milliseconds in a day. */
     public static final int DAY = MINUTE * 1440;
 
+    /** The number of milliseconds in a week. */
     public static final int WEEK = MINUTE * 10080;
 
+    /**
+     * Creates a new instance of a KerberosTime object with the current time
+     */
     public KerberosTime() {
-        super(0L);
+        // divide current time by 1000 to drop the ms then multiply by 1000 to convert to ms
+        super((System.currentTimeMillis() / 1000L) * 1000L); 
     }
 
     /**
@@ -50,10 +63,7 @@ public class KerberosTime extends Asn1GeneralizedTime {
      * Return time in milliseconds
      */
     public long getTime() {
-        if (getValue() != null) {
-            return getValue().getTime();
-        }
-        return 0L;
+        return getValue().getTime();
     }
 
     /**
@@ -78,7 +88,7 @@ public class KerberosTime extends Asn1GeneralizedTime {
      * @param time in milliseconds
      */
     public boolean lessThan(long time) {
-        return getValue().getTime() <= time;
+        return getValue().getTime() < time;
     }
 
     /**
