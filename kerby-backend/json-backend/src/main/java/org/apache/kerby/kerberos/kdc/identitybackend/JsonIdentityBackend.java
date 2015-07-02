@@ -36,7 +36,6 @@ import org.apache.kerby.util.IOUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * A Json file based backend implementation.
@@ -163,27 +162,21 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         idsToFile(ids);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getIdentities(int start, int limit) {
-        LinkedHashMap<String, KrbIdentity> linkedIds = (LinkedHashMap<String, KrbIdentity>) ids;
-        Iterator<Entry<String, KrbIdentity>> iterator = linkedIds.entrySet().iterator();
+        List<String> principals =getIdentities();
 
-        int index = 0;
-        for(; index < start; index++) {
-            iterator.next();
+        if (limit == -1) {
+            return principals;
         }
 
-        List<String> principals = new ArrayList<>();
-        for (; index < limit; index++) {
-            Entry<String, KrbIdentity> entry = iterator.next();
-            principals.add(entry.getKey());
-        }
-
-        return principals;
+        return getIdentities().subList(start, start + limit);
     }
 
-    @Override
-    public List<String> getIdentities() {
+    private List<String> getIdentities() {
         List<String> principals = new ArrayList<>(ids.keySet());
         Collections.sort(principals);
 

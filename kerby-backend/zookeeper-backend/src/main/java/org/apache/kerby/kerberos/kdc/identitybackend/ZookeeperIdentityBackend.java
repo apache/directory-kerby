@@ -242,12 +242,18 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getIdentities(int start, int limit) {
-        return getIdentities().subList(start, limit);
+        if (limit == -1) {
+            return getIdentities();
+        }
+
+        return getIdentities().subList(start, start + limit);
     }
 
-    @Override
     public List<String> getIdentities() {
 
         List<String> identityNames = null;

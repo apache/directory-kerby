@@ -60,8 +60,8 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
         return getIdentities().subList(start, limit);
     }
 
-    @Override
-    public List<String> getIdentities() {
+
+    private List<String> getIdentities() {
         List<String> identities = new ArrayList<>(getCache().keySet());
         Collections.sort(identities);
         return identities;

@@ -170,7 +170,7 @@ public class Kadmin {
     public void exportKeytab(File keytabFile) throws KrbException {
         Keytab keytab = AdminHelper.createOrLoadKeytab(keytabFile);
 
-        List<String> principals = backend.getIdentities();
+        List<String> principals = backend.getIdentities(0, -1);
         for (String principal : principals) {
             KrbIdentity identity = backend.getIdentity(principal);
             if (identity != null) {
@@ -243,7 +243,7 @@ public class Kadmin {
     }
 
     public List<String> getPrincipals() throws KrbException {
-        List<String> principalNames = backend.getIdentities();
+        List<String> principalNames = backend.getIdentities(0, -1);
         return principalNames;
     }
 

@@ -34,13 +34,6 @@ public interface IdentityService {
     List<String> getIdentities(int start, int limit);
 
     /**
-     * Get the identity principal names,
-     * Note it's ordered by principal name.
-     * @return principal names
-     */
-    List<String> getIdentities();
-
-    /**
      * Get the identity account specified by name.
      * @param principalName
      * @return identity

@@ -117,7 +117,7 @@ public abstract class BackendTest {
         // clear the identity cache.
         backend.release();
 
-        List<String> principals = backend.getIdentities(2, 5);
+        List<String> principals = backend.getIdentities(2, 3);
         assertThat(principals).hasSize(3)
                 .contains(identities[2].getPrincipalName())
                 .contains(identities[3].getPrincipalName())
@@ -165,7 +165,7 @@ public abstract class BackendTest {
     }
 
     protected void cleanIdentities(IdentityBackend backend) {
-        List<String> identities = backend.getIdentities();
+        List<String> identities = backend.getIdentities(0, -1);
         if (identities != null) {
             for (String identity : identities) {
                 backend.deleteIdentity(identity);

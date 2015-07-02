@@ -250,14 +250,22 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         return dn;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getIdentities(int start, int limit) {
-        List<String> identityNames = getIdentities();
-        return identityNames.subList(start, limit);
+        List<String> identities = getIdentities();
+
+        if (limit == -1) {
+            return identities;
+        }
+
+        return getIdentities().subList(start, start + limit);
     }
 
-    @Override
-    public List<String> getIdentities() {
+
+    private List<String> getIdentities() {
         List<String> identityNames = new ArrayList<>();
         EntryCursor cursor;
         Entry entry;

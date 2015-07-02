@@ -19,17 +19,13 @@
  */
 package org.apache.kerby;
 
-import java.io.File;
-import java.util.List;
-
-import org.apache.directory.mavibot.btree.BTree;
-import org.apache.directory.mavibot.btree.BTreeFactory;
-import org.apache.directory.mavibot.btree.BTreeTypeEnum;
-import org.apache.directory.mavibot.btree.PersistedBTreeConfiguration;
-import org.apache.directory.mavibot.btree.RecordManager;
+import org.apache.directory.mavibot.btree.*;
 import org.apache.directory.mavibot.btree.serializer.StringSerializer;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * A backend based on Apache Mavibot(an MVCC BTree library).
@@ -92,14 +88,6 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     public List<String> getIdentities(int start, int limit) {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> getIdentities() {
         return null;
     }
 
