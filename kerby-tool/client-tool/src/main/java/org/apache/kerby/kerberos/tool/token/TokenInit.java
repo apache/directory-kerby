@@ -58,14 +58,14 @@ public class TokenInit {
         authToken.setAudiences(aud);
 
         // Set expiration in 60 minutes
-        final Date NOW =  new Date(new Date().getTime() / 1000 * 1000);
-        Date exp = new Date(NOW.getTime() + 1000 * 60 * 60);
+        final Date now =  new Date(new Date().getTime() / 1000 * 1000);
+        Date exp = new Date(now.getTime() + 1000 * 60 * 60);
         authToken.setExpirationTime(exp);
 
-        Date nbf = NOW;
+        Date nbf = now;
         authToken.setNotBeforeTime(nbf);
 
-        Date iat = NOW;
+        Date iat = now;
         authToken.setIssueTime(iat);
 
         return authToken;
