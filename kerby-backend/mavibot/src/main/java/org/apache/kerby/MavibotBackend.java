@@ -150,7 +150,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected KrbIdentity doAddIdentity(KrbIdentity identity) {
+    protected synchronized KrbIdentity doAddIdentity(KrbIdentity identity) {
         
         String p = identity.getPrincipalName();
         try {
@@ -176,7 +176,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
+    protected synchronized KrbIdentity doUpdateIdentity(KrbIdentity identity) {
         
         String p = identity.getPrincipalName();
         try {
