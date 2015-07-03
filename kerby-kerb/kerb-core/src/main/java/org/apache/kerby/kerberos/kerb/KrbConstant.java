@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb;
 
-public interface KrbConstant {
-    int KRB_V5 = 5;
+public class KrbConstant {
+    public static final int KRB_V5 = 5;
 
-    String TGS_PRINCIPAL = "krbtgt";
+    public static final String TGS_PRINCIPAL = "krbtgt";
 }
