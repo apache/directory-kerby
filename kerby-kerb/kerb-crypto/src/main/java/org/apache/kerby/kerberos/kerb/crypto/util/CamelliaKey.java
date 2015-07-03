@@ -33,7 +33,7 @@ public class CamelliaKey {
     protected int[] kw = new int[4 * 2]; // for whitening
     protected int[] ke = new int[6 * 2]; // for FL and FL^(-1)
 
-    private static final int SIGMA[] = {
+    private static final int[] SIGMA = {
             0xa09e667f, 0x3bcc908b,
             0xb67ae858, 0x4caa73b2,
             0xc6ef372f, 0xe94f82be,
@@ -43,7 +43,7 @@ public class CamelliaKey {
     };
 
     // S-box data
-    protected static final byte SBOX1[] = {
+    protected static final byte[] SBOX1 = {
             (byte)112, (byte)130, (byte)44, (byte)236,
             (byte)179, (byte)39, (byte)192, (byte)229,
             (byte)228, (byte)133, (byte)87, (byte)53,

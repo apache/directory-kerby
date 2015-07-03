@@ -40,7 +40,7 @@ public final class IOUtil {
     }
 
     public static void readInputStream(InputStream in,
-                                       byte buf[]) throws IOException {
+                                       byte[] buf) throws IOException {
         int toRead = buf.length;
         int off = 0;
         while (toRead > 0) {

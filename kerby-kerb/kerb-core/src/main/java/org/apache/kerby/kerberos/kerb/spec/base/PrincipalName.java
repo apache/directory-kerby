@@ -162,7 +162,7 @@ public class PrincipalName extends KrbSequenceType {
             nameParts = nameString.substring(0, pos);
             tmpRealm = nameString.substring(pos + 1);
         }
-        String parts[] = nameParts.split("\\/");
+        String[] parts = nameParts.split("\\/");
         nameStrings = Arrays.asList(parts);
 
         setNameStrings(nameStrings);

@@ -843,7 +843,7 @@ public class Base64 {
      * @deprecated This method is no longer needed
      */
     static byte[] discardWhitespace(byte[] data) {
-        byte groomedData[] = new byte[data.length];
+        byte[] groomedData = new byte[data.length];
         int bytesCopied = 0;
         for (int i = 0; i < data.length; i++) {
             switch (data[i]) {
@@ -856,7 +856,7 @@ public class Base64 {
                     groomedData[bytesCopied++] = data[i];
             }
         }
-        byte packedData[] = new byte[bytesCopied];
+        byte[] packedData = new byte[bytesCopied];
         System.arraycopy(groomedData, 0, packedData, 0, bytesCopied);
         return packedData;
     }
