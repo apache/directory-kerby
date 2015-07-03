@@ -24,7 +24,6 @@ import org.apache.kerby.kerberos.kerb.client.JaasKrbUtil;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.ietf.jgss.*;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import javax.security.auth.Subject;
@@ -33,8 +32,6 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.kerberos.KerberosTicket;
-import javax.security.auth.login.LoginContext;
-import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.security.PrivilegedExceptionAction;

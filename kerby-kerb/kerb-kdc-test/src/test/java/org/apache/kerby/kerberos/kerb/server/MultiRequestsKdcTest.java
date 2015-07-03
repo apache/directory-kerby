@@ -25,8 +25,6 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.File;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MultiRequestsKdcTest extends KdcTestBase {
