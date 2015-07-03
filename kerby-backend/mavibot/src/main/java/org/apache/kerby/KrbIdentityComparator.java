@@ -28,7 +28,7 @@ import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
  *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
-public class KrbIdentityComparator implements Comparator<KrbIdentity> {
+public final class KrbIdentityComparator implements Comparator<KrbIdentity> {
 
     public static KrbIdentityComparator INSTANCE = new KrbIdentityComparator();
 

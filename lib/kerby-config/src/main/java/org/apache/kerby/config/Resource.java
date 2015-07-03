@@ -27,7 +27,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
 
-public class Resource {
+public final class Resource {
     public static enum Format {
         XML_FILE(XmlConfigLoader.class),
         INI_FILE(IniConfigLoader.class),

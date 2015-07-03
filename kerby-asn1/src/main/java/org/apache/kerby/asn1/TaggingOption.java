@@ -22,7 +22,7 @@ package org.apache.kerby.asn1;
 /**
  * Tagging option for tagging an ASN1 type.
  */
-public class TaggingOption {
+public final class TaggingOption {
     private int tagNo;
     private boolean isImplicit;
     private boolean isAppSpecific;
