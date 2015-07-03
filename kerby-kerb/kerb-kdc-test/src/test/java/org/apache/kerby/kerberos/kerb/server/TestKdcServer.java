@@ -26,14 +26,14 @@ import org.apache.kerby.kerberos.kerb.client.KrbConfigKey;
 import org.apache.kerby.util.NetworkUtil;
 
 public class TestKdcServer extends SimpleKdcServer {
-    public final static String kdcRealm = "TEST.COM";
-    public final static String hostname = "localhost";
+    public final static String KDC_REALM = "TEST.COM";
+    public final static String HOSTNAME = "localhost";
 
     public TestKdcServer(boolean allowTcp, boolean allowUdp) throws KrbException {
         super();
 
-        setKdcRealm(kdcRealm);
-        setKdcHost(hostname);
+        setKdcRealm(KDC_REALM);
+        setKdcHost(HOSTNAME);
         setAllowTcp(allowTcp);
         setAllowUdp(allowUdp);
 

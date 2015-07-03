@@ -39,7 +39,7 @@ public abstract class BackendTest {
 
     static final String TEST_PRINCIPAL = "test@EXAMPLE.COM";
 
-    static final EncryptionType[] encTypes = new EncryptionType[]{
+    static final EncryptionType[] ENC_TYPES = new EncryptionType[]{
             EncryptionType.AES128_CTS,
             EncryptionType.DES3_CBC_SHA1_KD
     };
@@ -173,7 +173,7 @@ public abstract class BackendTest {
     }
 
     protected List<EncryptionType> getEncryptionTypes() {
-        return Arrays.asList(encTypes);
+        return Arrays.asList(ENC_TYPES);
     }
 
     protected void cleanIdentities(IdentityBackend backend) {

@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class Conf implements Config {
-    private static final Logger logger = LoggerFactory.getLogger(Conf.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Conf.class);
 
     private List<ConfigLoader> resourceConfigs;
     private final ConfigImpl config;
@@ -80,7 +80,7 @@ public class Conf implements Config {
         try {
             loader = loaderClass.newInstance();
         } catch (Exception e) {
-            logger.error("Failed to create " + Conf.class.getPackage().getName() + " for " + loaderClass.getName(), e);
+            LOGGER.error("Failed to create " + Conf.class.getPackage().getName() + " for " + loaderClass.getName(), e);
             throw new RuntimeException("Failed to create " + Conf.class.getPackage().getName() + " for " + loaderClass.getName(), e);
         }
         loader.setResource(resource);

@@ -41,22 +41,22 @@ public class EncryptionUtil {
      * an order preserved map containing cipher names to the corresponding algorithm
      * names in the descending order of strength
      */
-    private static final Map<String, String> cipherAlgoMap = new LinkedHashMap<String, String>();
+    private static final Map<String, String> CIPHER_ALGO_MAP = new LinkedHashMap<String, String>();
 
     static {
-        cipherAlgoMap.put("rc4", "ArcFourHmac");
-        cipherAlgoMap.put("aes256", "AES256");
-        cipherAlgoMap.put("aes128", "AES128");
-        cipherAlgoMap.put("des3", "DESede");
-        cipherAlgoMap.put("des", "DES");
+        CIPHER_ALGO_MAP.put("rc4", "ArcFourHmac");
+        CIPHER_ALGO_MAP.put("aes256", "AES256");
+        CIPHER_ALGO_MAP.put("aes128", "AES128");
+        CIPHER_ALGO_MAP.put("des3", "DESede");
+        CIPHER_ALGO_MAP.put("des", "DES");
     }
 
     public static String getAlgoNameFromEncType(EncryptionType encType) {
         String cipherName = encType.getName().toLowerCase();
 
-        for (String c : cipherAlgoMap.keySet()) {
+        for (String c : CIPHER_ALGO_MAP.keySet()) {
             if (cipherName.startsWith(c)) {
-                return cipherAlgoMap.get(c);
+                return CIPHER_ALGO_MAP.get(c);
             }
         }
 
@@ -72,7 +72,7 @@ public class EncryptionUtil {
     public static List<EncryptionType> orderEtypesByStrength(List<EncryptionType> etypes) {
         List<EncryptionType> ordered = new ArrayList<>(etypes.size());
 
-        for (String algo : cipherAlgoMap.values()) {
+        for (String algo : CIPHER_ALGO_MAP.values()) {
             for (EncryptionType encType : etypes) {
                 String foundAlgo = getAlgoNameFromEncType(encType);
 

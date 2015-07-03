@@ -36,10 +36,10 @@ public abstract class KdcTestBase {
     private final String hostname = "localhost";
     private final String clientPrincipalName = "drankye";
     private final String clientPrincipal =
-            clientPrincipalName + "@" + TestKdcServer.kdcRealm;
+            clientPrincipalName + "@" + TestKdcServer.KDC_REALM;
     private final String serverPrincipalName = "test-service";
     private final String serverPrincipal =
-            serverPrincipalName + "/" + hostname + "@" + TestKdcServer.kdcRealm;
+            serverPrincipalName + "/" + hostname + "@" + TestKdcServer.KDC_REALM;
 
     private SimpleKdcServer kdcServer;
 

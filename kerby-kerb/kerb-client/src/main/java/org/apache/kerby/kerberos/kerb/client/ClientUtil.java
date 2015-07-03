@@ -30,16 +30,16 @@ import java.util.Map;
 public final class ClientUtil {
     private ClientUtil() {}
 
-    private final static String krb5FileName = "krb5.conf";
-    private final static String krb5EnvName = "KRB5_CONFIG";
+    private final static String KRB5_FILE_NAME = "krb5.conf";
+    private final static String KRB5_ENV_NAME = "KRB5_CONFIG";
 
     /**
      * Load krb5.conf from specified conf dir.
      */
     public static KrbConfig getConfig(File confDir) throws KrbException {
-        File confFile = new File(confDir, krb5FileName);
+        File confFile = new File(confDir, KRB5_FILE_NAME);
         if (!confFile.exists()) {
-            throw new KrbException(krb5FileName + " not found");
+            throw new KrbException(KRB5_FILE_NAME + " not found");
         }
 
         if (confFile != null && confFile.exists()) {
@@ -66,7 +66,7 @@ public final class ClientUtil {
 
         try {
             Map<String, String> mapEnv = System.getenv();
-            tmpEnv = mapEnv.get(krb5EnvName);
+            tmpEnv = mapEnv.get(KRB5_ENV_NAME);
         } catch (SecurityException e) {
             tmpEnv = null;
         }
@@ -74,7 +74,7 @@ public final class ClientUtil {
             confFile = new File(tmpEnv);
             if (!confFile.exists()) {
                 throw new KrbException("krb5 conf not found. Invalid env "
-                        + krb5EnvName);
+                        + KRB5_ENV_NAME);
             }
         } else {
             confDir = new File("/etc/"); // for Linux. TODO: fix for Win etc.

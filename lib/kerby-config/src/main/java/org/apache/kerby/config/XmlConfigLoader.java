@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XmlConfigLoader extends ConfigLoader {
-    private static final Logger logger = LoggerFactory.getLogger(Config.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
 
     @Override
     protected void loadConfig(ConfigImpl config, Resource resource) throws Exception {
@@ -46,7 +46,7 @@ public class XmlConfigLoader extends ConfigLoader {
         try {
             docBuilderFactory.setXIncludeAware(true);
         } catch (UnsupportedOperationException e) {
-            logger.error("Failed to set setXIncludeAware(true) for parser", e);
+            LOGGER.error("Failed to set setXIncludeAware(true) for parser", e);
         }
         DocumentBuilder builder = docBuilderFactory.newDocumentBuilder();
         InputStream is = (InputStream) resource.getResource();
@@ -69,7 +69,7 @@ public class XmlConfigLoader extends ConfigLoader {
         if ("config".equals(root.getTagName())) {
             valid = true;
         } else {
-            logger.error("bad conf element: top-level element not <configuration>");
+            LOGGER.error("bad conf element: top-level element not <configuration>");
         }
 
         return valid;
