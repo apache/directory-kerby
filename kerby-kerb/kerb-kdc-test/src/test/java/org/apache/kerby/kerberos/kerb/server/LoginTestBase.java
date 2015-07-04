@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.integration.test;
+package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.client.JaasKrbUtil;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;

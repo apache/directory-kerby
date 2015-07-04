@@ -17,15 +17,14 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.integration.test;
+package org.apache.kerby.kerberos.kerb.server;
 
 import org.junit.Test;
 
-public class PasswordLoginTest extends LoginTestBase {
+public class TicketCacheLoginTest extends LoginTestBase {
 
     @Test
     public void testLogin() throws Exception {
-        checkSubject(super.loginClientUsingPassword());
+        checkSubject(super.loginClientUsingTicketCache());
     }
-
 }
