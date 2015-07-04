@@ -91,6 +91,10 @@ public abstract class KdcTestBase {
         return serverPrincipal;
     }
 
+    protected String getHostname() {
+        return hostname;
+    }
+
     protected boolean allowUdp() {
         return true;
     }

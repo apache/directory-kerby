@@ -30,6 +30,7 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.security.Principal;
 import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -62,14 +63,12 @@ public class LoginTestBase extends KdcTestBase {
     }
 
     protected Subject loginServiceUsingKeytab() throws Exception {
-        getKdcServer().exportPrincipals(serviceKeytabFile);
-
-        return JaasKrbUtil.loginUsingKeytab(getClientPrincipal(),
+        getKdcServer().exportPrincipal(getServerPrincipal(), serviceKeytabFile);
+        return JaasKrbUtil.loginUsingKeytab(getServerPrincipal(),
             serviceKeytabFile);
     }
 
     protected void checkSubject(Subject subject) {
-
         Set<Principal> clientPrincipals = subject.getPrincipals();
         assertThat(clientPrincipals);
     }

@@ -165,4 +165,14 @@ public class SimpleKdcServer extends KdcServer {
     public void exportPrincipals(File keytabFile) throws KrbException {
         kadmin.exportKeytab(keytabFile);
     }
+
+    /**
+     * Export the keys of the specified principal into keytab file.
+     * @param principal
+     * @param keytabFile
+     * @throws KrbException
+     */
+    public void exportPrincipal(String principal, File keytabFile) throws KrbException {
+        kadmin.exportKeytab(keytabFile, principal);
+    }
 }

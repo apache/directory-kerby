@@ -19,14 +19,29 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
+import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.server.GssInteropTest;
+
 /**
  * This is an interop test using the Java GSS APIs against the Kerby KDC (using TCP)
  */
 public class GssTcpInteropTest extends GssInteropTestBase {
 
     @Override
+    protected void prepareKdc() throws KrbException {
+        getKdcServer().setInnerKdcImpl(
+                new NettyKdcServerImpl(getKdcServer().getKdcSetting()));
+        super.prepareKdc();
+    }
+
+    @Override
     protected boolean allowUdp() {
         return false;
     }
 
+    @Override
+    protected boolean allowTcp() {
+        return true;
+    }
 }
