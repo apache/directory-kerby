@@ -40,8 +40,6 @@ public abstract class AppTest extends LoginTestBase {
         serverPort = NetworkUtil.getServerPort();
 
         setupAppServer();
-
-        runAppClient();
     }
 
     protected int getServerPort() {
