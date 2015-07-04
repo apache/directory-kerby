@@ -31,8 +31,8 @@ import org.apache.kerby.kerberos.kerb.spec.base.Realm;
  }
  */
 public class Krb5PrincipalName extends KrbSequenceType {
-    private static int REALM = 0;
-    private static int PRINCIPAL_NAME = 1;
+    private static final int REALM = 0;
+    private static final int PRINCIPAL_NAME = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(REALM, Realm.class),

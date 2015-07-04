@@ -33,8 +33,8 @@ import java.util.Arrays;
  }
  */
 public class CheckSum extends KrbSequenceType {
-    private static int CKSUM_TYPE = 0;
-    private static int CHECK_SUM = 1;
+    private static final int CKSUM_TYPE = 0;
+    private static final int CHECK_SUM = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(CKSUM_TYPE, 0, Asn1Integer.class),

@@ -30,8 +30,8 @@ import org.apache.kerby.asn1.type.Asn1OctetString;
  }
  */
 public class PaPkAsRep extends Asn1Choice {
-    private static int DH_INFO = 0;
-    private static int ENCKEY_PACK = 1;
+    private static final int DH_INFO = 0;
+    private static final int ENCKEY_PACK = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(DH_INFO, DHRepInfo.class),

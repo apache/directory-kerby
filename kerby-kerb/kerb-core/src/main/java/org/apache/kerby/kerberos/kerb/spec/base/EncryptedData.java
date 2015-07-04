@@ -34,9 +34,9 @@ import java.util.Arrays;
  }
  */
 public class EncryptedData extends KrbSequenceType {
-    private static int ETYPE = 0;
-    private static int KVNO = 1;
-    private static int CIPHER = 2;
+    private static final int ETYPE = 0;
+    private static final int KVNO = 1;
+    private static final int CIPHER = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ETYPE, 0, Asn1Integer.class),

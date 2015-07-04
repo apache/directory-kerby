@@ -30,7 +30,7 @@ import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
  */
 public final class KrbIdentityComparator implements Comparator<KrbIdentity> {
 
-    public static KrbIdentityComparator INSTANCE = new KrbIdentityComparator();
+    public static final KrbIdentityComparator INSTANCE = new KrbIdentityComparator();
 
     private KrbIdentityComparator() {
     }

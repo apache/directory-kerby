@@ -32,8 +32,8 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class PaDataEntry extends KrbSequenceType {
-    private static int PADATA_TYPE = 0;
-    private static int PADATA_VALUE = 1;
+    private static final int PADATA_TYPE = 0;
+    private static final int PADATA_VALUE = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PADATA_TYPE, 1, Asn1Integer.class),

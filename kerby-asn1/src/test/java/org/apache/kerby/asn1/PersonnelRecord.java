@@ -26,12 +26,12 @@ import org.apache.kerby.asn1.type.*;
  * Annex A, A.1 ASN.1 description of the record structure
  */
 public class PersonnelRecord extends TaggingSet {
-    private static int NAME = 0;
-    private static int TITLE = 1;
-    private static int NUMBER = 2;
-    private static int DATEOFHIRE= 3;
-    private static int NAMEOFSPOUSE = 4;
-    private static int CHILDREN = 5;
+    private static final int NAME = 0;
+    private static final int TITLE = 1;
+    private static final int NUMBER = 2;
+    private static final int DATEOFHIRE= 3;
+    private static final int NAMEOFSPOUSE = 4;
+    private static final int CHILDREN = 5;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(NAME, -1, Name.class),
@@ -109,8 +109,8 @@ public class PersonnelRecord extends TaggingSet {
     }
 
     public static class ChildInformation extends Asn1SetType {
-        private static int NAME = 0;
-        private static int DATEOFBIRTH = 1;
+        private static final int NAME = 0;
+        private static final int DATEOFBIRTH = 1;
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
                 new Asn1FieldInfo(NAME, -1, Name.class),
@@ -139,9 +139,9 @@ public class PersonnelRecord extends TaggingSet {
     }
 
     public static class Name extends TaggingSequence {
-        private static int GIVENNAME = 0;
-        private static int INITIAL = 1;
-        private static int FAMILYNAME = 2;
+        private static final int GIVENNAME = 0;
+        private static final int INITIAL = 1;
+        private static final int FAMILYNAME = 2;
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
                 new Asn1FieldInfo(GIVENNAME, -1, Asn1VisibleString.class),

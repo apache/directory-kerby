@@ -37,8 +37,8 @@ import java.util.List;
 public class PrincipalName extends KrbSequenceType {
     private String realm;
 
-    private static int NAME_TYPE = 0;
-    private static int NAME_STRING = 1;
+    private static final int NAME_TYPE = 0;
+    private static final int NAME_STRING = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(NAME_TYPE, Asn1Integer.class),

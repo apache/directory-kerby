@@ -24,7 +24,7 @@ package org.apache.kerby.kerberos.kerb.crypto.util;
  */
 public class Rc4 {
 
-    private static byte[] L40 = "fortybits".getBytes();
+    private static final byte[] L40 = "fortybits".getBytes();
 
     public static byte[] getSalt(int usage, boolean exportable) {
         int newUsage = convertUsage(usage);

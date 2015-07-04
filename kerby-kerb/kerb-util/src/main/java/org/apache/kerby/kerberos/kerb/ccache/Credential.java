@@ -33,7 +33,7 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
 import java.io.IOException;
 
 public class Credential {
-    private static String CONF_REALM = "X-CACHECONF:";
+    private static final String CONF_REALM = "X-CACHECONF:";
 
     private PrincipalName clientName;
     private String clientRealm;

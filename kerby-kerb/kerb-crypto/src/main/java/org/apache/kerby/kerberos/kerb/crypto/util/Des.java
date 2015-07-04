@@ -27,7 +27,7 @@ public class Des {
     /*
      * The following are the weak DES keys:
      */
-    static byte[][] WEAK_KEYS = {
+    static final byte[][] WEAK_KEYS = {
     /* weak keys */
             {(byte) 0x01,(byte) 0x01,(byte) 0x01,(byte) 0x01,(byte) 0x01,(byte) 0x01,(byte) 0x01,(byte) 0x01},
             {(byte) 0xfe,(byte) 0xfe,(byte) 0xfe,(byte) 0xfe,(byte) 0xfe,(byte) 0xfe,(byte) 0xfe,(byte) 0xfe},

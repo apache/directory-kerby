@@ -44,17 +44,17 @@ import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
  }
  */
 public class KrbError extends KrbMessage {
-    private static int CTIME = 2;
-    private static int CUSEC = 3;
-    private static int STIME = 4;
-    private static int SUSEC = 5;
-    private static int ERROR_CODE = 6;
-    private static int CREALM = 7;
-    private static int CNAME = 8;
-    private static int REALM = 9;
-    private static int SNAME = 10;
-    private static int ETEXT = 11;
-    private static int EDATA = 12;
+    private static final int CTIME = 2;
+    private static final int CUSEC = 3;
+    private static final int STIME = 4;
+    private static final int SUSEC = 5;
+    private static final int ERROR_CODE = 6;
+    private static final int CREALM = 7;
+    private static final int CNAME = 8;
+    private static final int REALM = 9;
+    private static final int SNAME = 10;
+    private static final int ETEXT = 11;
+    private static final int EDATA = 12;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PVNO, Asn1Integer.class),

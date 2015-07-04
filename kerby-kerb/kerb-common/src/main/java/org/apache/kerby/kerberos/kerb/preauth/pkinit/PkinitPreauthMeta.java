@@ -24,9 +24,9 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 
 public class PkinitPreauthMeta implements PreauthPluginMeta {
 
-    private static String NAME = "PKINIT";
-    private static int VERSION = 1;
-    private static PaDataType[] PA_TYPES = new PaDataType[] {
+    private static final String NAME = "PKINIT";
+    private static final int VERSION = 1;
+    private static final PaDataType[] PA_TYPES = new PaDataType[] {
             PaDataType.PK_AS_REQ,
             PaDataType.PK_AS_REP,
     };

@@ -33,7 +33,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
  }
  */
 public class ApRep extends KrbMessage {
-    private static int ENC_PART = 2;
+    private static final int ENC_PART = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PVNO, 0, Asn1Integer.class),

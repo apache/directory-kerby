@@ -34,8 +34,8 @@ HostAddress     ::= SEQUENCE  {
 }
  */
 public class HostAddress extends KrbSequenceType {
-    private static int ADDR_TYPE = 0;
-    private static int ADDRESS = 1;
+    private static final int ADDR_TYPE = 0;
+    private static final int ADDRESS = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ADDR_TYPE, 0, Asn1Integer.class),

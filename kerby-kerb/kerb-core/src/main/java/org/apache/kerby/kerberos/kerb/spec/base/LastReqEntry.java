@@ -31,8 +31,8 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class LastReqEntry extends KrbSequenceType {
-    private static int LR_TYPE = 0;
-    private static int LR_VALUE = 1;
+    private static final int LR_TYPE = 0;
+    private static final int LR_VALUE = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(LR_TYPE, 0, Asn1Integer.class),

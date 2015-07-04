@@ -28,7 +28,7 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
 */
 public class PaTokenChallenge extends KrbSequenceType {
-    private static int TOKENINFOS = 0;
+    private static final int TOKENINFOS = 0;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(TOKENINFOS, TokenInfos.class)

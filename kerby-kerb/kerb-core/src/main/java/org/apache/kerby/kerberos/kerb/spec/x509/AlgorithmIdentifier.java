@@ -28,8 +28,8 @@ import org.apache.kerby.asn1.type.*;
  }
  */
 public class AlgorithmIdentifier extends Asn1SequenceType {
-    private static int ALGORITHM = 0;
-    private static int PARAMETERS = 1;
+    private static final int ALGORITHM = 0;
+    private static final int PARAMETERS = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ALGORITHM, -1, Asn1ObjectIdentifier.class),

@@ -33,8 +33,8 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class KrbFastArmor extends KrbSequenceType {
-    private static int ARMOR_TYPE = 0;
-    private static int ARMOR_VALUE = 1;
+    private static final int ARMOR_TYPE = 0;
+    private static final int ARMOR_VALUE = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ARMOR_TYPE, Asn1Integer.class),

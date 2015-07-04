@@ -35,11 +35,11 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class PaOtpChallenge extends KrbSequenceType {
-    private static int NONCE = 0;
-    private static int OTP_SERVICE = 1;
-    private static int OTP_TOKEN_INFO = 2;
-    private static int SALT = 3;
-    private static int S2KPARAMS = 4;
+    private static final int NONCE = 0;
+    private static final int OTP_SERVICE = 1;
+    private static final int OTP_TOKEN_INFO = 2;
+    private static final int SALT = 3;
+    private static final int S2KPARAMS = 4;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(NONCE, Asn1OctetString.class, true),

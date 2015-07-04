@@ -28,7 +28,7 @@ import org.apache.kerby.asn1.type.Asn1FieldInfo;
  }
  */
 public class PaFxFastReply extends Asn1Choice {
-    private static int ARMORED_DATA = 0;
+    private static final int ARMORED_DATA = 0;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ARMORED_DATA, KrbFastArmoredRep.class)

@@ -32,10 +32,10 @@ import org.apache.kerby.kerberos.kerb.spec.x509.SubjectPublicKeyInfo;
  }
  */
 public class AuthPack extends KrbSequenceType {
-    private static int PK_AUTHENTICATOR = 0;
-    private static int CLIENT_PUBLIC_VALUE = 1;
-    private static int SUPPORTED_CMS_TYPES = 2;
-    private static int CLIENT_DH_NONCE = 3;
+    private static final int PK_AUTHENTICATOR = 0;
+    private static final int CLIENT_PUBLIC_VALUE = 1;
+    private static final int SUPPORTED_CMS_TYPES = 2;
+    private static final int CLIENT_DH_NONCE = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PK_AUTHENTICATOR, PkAuthenticator.class),

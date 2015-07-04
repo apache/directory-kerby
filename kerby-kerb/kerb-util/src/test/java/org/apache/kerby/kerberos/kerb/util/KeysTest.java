@@ -49,7 +49,7 @@ KVNO Principal
    1 test@SH.INTEL.COM (camellia128-cts-cmac)
  */
 public class KeysTest {
-    private static String TEST_PASSWORD = "123456";
+    private static final String TEST_PASSWORD = "123456";
 
     private Keytab keytab;
 

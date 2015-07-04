@@ -38,9 +38,9 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
  }
  */
 public class KrbFastReq extends KrbSequenceType {
-    private static int FAST_OPTIONS = 0;
-    private static int PADATA = 1;
-    private static int REQ_BODY = 2;
+    private static final int FAST_OPTIONS = 0;
+    private static final int PADATA = 1;
+    private static final int REQ_BODY = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(FAST_OPTIONS, FastOptions.class),

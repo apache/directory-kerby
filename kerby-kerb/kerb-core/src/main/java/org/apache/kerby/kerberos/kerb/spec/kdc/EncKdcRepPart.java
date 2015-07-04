@@ -47,18 +47,18 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
  }
  */
 public abstract class EncKdcRepPart extends KrbAppSequenceType {
-    private static int KEY = 0;
-    private static int LAST_REQ = 1;
-    private static int NONCE = 2;
-    private static int KEY_EXPIRATION = 3;
-    private static int FLAGS = 4;
-    private static int AUTHTIME = 5;
-    private static int STARTTIME = 6;
-    private static int ENDTIME = 7;
-    private static int RENEW_TILL = 8;
-    private static int SREALM = 9;
-    private static int SNAME = 10;
-    private static int CADDR = 11;
+    private static final int KEY = 0;
+    private static final int LAST_REQ = 1;
+    private static final int NONCE = 2;
+    private static final int KEY_EXPIRATION = 3;
+    private static final int FLAGS = 4;
+    private static final int AUTHTIME = 5;
+    private static final int STARTTIME = 6;
+    private static final int ENDTIME = 7;
+    private static final int RENEW_TILL = 8;
+    private static final int SREALM = 9;
+    private static final int SNAME = 10;
+    private static final int CADDR = 11;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(KEY, EncryptionKey.class),

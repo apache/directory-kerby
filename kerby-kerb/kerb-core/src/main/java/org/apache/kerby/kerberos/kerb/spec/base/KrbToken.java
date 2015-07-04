@@ -45,8 +45,8 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     private static TokenEncoder tokenEncoder;
     private static TokenDecoder tokenDecoder;
 
-    private static int TOKEN_FORMAT = 0;
-    private static int TOKEN_VALUE = 1;
+    private static final int TOKEN_FORMAT = 0;
+    private static final int TOKEN_VALUE = 1;
 
     private AuthToken innerToken = null;
 

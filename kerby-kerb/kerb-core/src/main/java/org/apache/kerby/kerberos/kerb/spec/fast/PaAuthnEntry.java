@@ -33,9 +33,9 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
  }
  */
 public class PaAuthnEntry extends KrbSequenceType {
-    private static int PA_TYPE = 0;
-    private static int PA_HINT = 1;
-    private static int PA_VALUE = 2;
+    private static final int PA_TYPE = 0;
+    private static final int PA_HINT = 1;
+    private static final int PA_VALUE = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PA_TYPE, Asn1Integer.class),

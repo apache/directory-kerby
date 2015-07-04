@@ -31,8 +31,8 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class PaEncTsEnc extends KrbSequenceType {
-    private static int PATIMESTAMP = 0;
-    private static int PAUSEC = 1;
+    private static final int PATIMESTAMP = 0;
+    private static final int PAUSEC = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PATIMESTAMP, 0, KerberosTime.class),

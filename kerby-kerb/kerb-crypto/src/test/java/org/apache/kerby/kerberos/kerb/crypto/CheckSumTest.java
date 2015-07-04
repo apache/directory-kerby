@@ -55,7 +55,7 @@ public class CheckSumTest {
             )
     };
 
-    static byte[] TESTKEY = { (byte)0x45, (byte)0x01, (byte)0x49, (byte)0x61, (byte)0x58,
+    static final byte[] TESTKEY = { (byte)0x45, (byte)0x01, (byte)0x49, (byte)0x61, (byte)0x58,
             (byte)0x19, (byte)0x1a, (byte)0x3d };
 
     @Test

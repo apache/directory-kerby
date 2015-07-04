@@ -62,17 +62,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestTaggingEncoding {
     static final String TEST_STRING = "Jones";
-    static byte[] TYPE1_EXPECTED_BYTES = new byte[] {(byte) 0x1A, (byte) 0x05,
+    static final byte[] TYPE1_EXPECTED_BYTES = new byte[] {(byte) 0x1A, (byte) 0x05,
             (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
-    static byte[] TYPE2_EXPECTED_BYTES = new byte[] {(byte) 0x43, (byte) 0x05,
+    static final byte[] TYPE2_EXPECTED_BYTES = new byte[] {(byte) 0x43, (byte) 0x05,
             (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
-    static byte[] TYPE3_EXPECTED_BYTES = new byte[] {(byte) 0xA2, (byte) 0x07,
+    static final byte[] TYPE3_EXPECTED_BYTES = new byte[] {(byte) 0xA2, (byte) 0x07,
             (byte) 0x43, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E,
             (byte) 0x65, (byte) 0x73};
-    static byte[] TYPE4_EXPECTED_BYTES = new byte[] {(byte) 0x67, (byte) 0x07,
+    static final byte[] TYPE4_EXPECTED_BYTES = new byte[] {(byte) 0x67, (byte) 0x07,
             (byte) 0x43, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E,
             (byte) 0x65, (byte) 0x73};
-    static byte[] TYPE5_EXPECTED_BYTES = new byte[] {(byte) 0x82, (byte) 0x05,
+    static final byte[] TYPE5_EXPECTED_BYTES = new byte[] {(byte) 0x82, (byte) 0x05,
             (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73};
 
 

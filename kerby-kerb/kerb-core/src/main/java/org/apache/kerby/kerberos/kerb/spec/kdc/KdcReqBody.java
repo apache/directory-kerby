@@ -56,18 +56,18 @@ import java.util.List;
  }
  */
 public class KdcReqBody extends KrbSequenceType {
-    private static int KDC_OPTIONS = 0;
-    private static int CNAME = 1;
-    private static int REALM = 2;
-    private static int SNAME = 3;
-    private static int FROM = 4;
-    private static int TILL = 5;
-    private static int RTIME = 6;
-    private static int NONCE = 7;
-    private static int ETYPE = 8;
-    private static int ADDRESSES = 9;
-    private static int ENC_AUTHORIZATION_DATA = 10;
-    private static int ADDITIONAL_TICKETS = 11;
+    private static final int KDC_OPTIONS = 0;
+    private static final int CNAME = 1;
+    private static final int REALM = 2;
+    private static final int SNAME = 3;
+    private static final int FROM = 4;
+    private static final int TILL = 5;
+    private static final int RTIME = 6;
+    private static final int NONCE = 7;
+    private static final int ETYPE = 8;
+    private static final int ADDRESSES = 9;
+    private static final int ENC_AUTHORIZATION_DATA = 10;
+    private static final int ADDITIONAL_TICKETS = 11;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(KDC_OPTIONS, KdcOptions.class),

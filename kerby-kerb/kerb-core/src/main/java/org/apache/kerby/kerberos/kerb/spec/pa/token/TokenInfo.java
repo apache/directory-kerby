@@ -31,8 +31,8 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class TokenInfo extends KrbSequenceType {
-    private static int FLAGS = 0;
-    private static int TOKEN_VENDOR = 1;
+    private static final int FLAGS = 0;
+    private static final int TOKEN_VENDOR = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(FLAGS, Asn1OctetString.class, true),

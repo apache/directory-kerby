@@ -30,8 +30,8 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class DHRepInfo extends KrbSequenceType {
-    private static int DH_SIGNED_DATA = 0;
-    private static int SERVER_DH_NONCE = 1;
+    private static final int DH_SIGNED_DATA = 0;
+    private static final int SERVER_DH_NONCE = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(DH_SIGNED_DATA, Asn1OctetString.class, true),
