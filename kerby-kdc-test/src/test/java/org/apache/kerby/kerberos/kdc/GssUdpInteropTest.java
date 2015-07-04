@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
-import org.apache.kerby.kerberos.kerb.server.GssInteropTest;
 
 /**
  * This is an interop test using the Java GSS APIs against the Kerby KDC (using UDP)
