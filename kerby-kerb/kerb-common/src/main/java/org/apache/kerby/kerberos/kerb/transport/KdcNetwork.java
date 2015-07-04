@@ -34,9 +34,9 @@ import java.util.Map;
  */
 @SuppressWarnings("PMD")
 public abstract class KdcNetwork {
-    protected final static int MAX_MESSAGE_SIZE = 65507;
-    private final static int KDC_TCP_TRANSPORT_TIMEOUT = 3 * 1000;
-    private final static int KDC_TCP_SERVER_TIMEOUT = 100;
+    protected static final int MAX_MESSAGE_SIZE = 65507;
+    private static final int KDC_TCP_TRANSPORT_TIMEOUT = 3 * 1000;
+    private static final int KDC_TCP_SERVER_TIMEOUT = 100;
     private TransportPair tpair;
     private boolean isStopped;
     private ServerSocket tcpServer;

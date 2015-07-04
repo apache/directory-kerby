@@ -30,8 +30,8 @@ import java.util.Map;
 public final class ClientUtil {
     private ClientUtil() {}
 
-    private final static String KRB5_FILE_NAME = "krb5.conf";
-    private final static String KRB5_ENV_NAME = "KRB5_CONFIG";
+    private static final String KRB5_FILE_NAME = "krb5.conf";
+    private static final String KRB5_ENV_NAME = "KRB5_CONFIG";
 
     /**
      * Load krb5.conf from specified conf dir.

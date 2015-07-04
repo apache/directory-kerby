@@ -26,18 +26,18 @@ import java.util.List;
 
 public class IdentityZNodeHelper {
 
-    private final static String IDENTITIES_ZNODE_NAME = "identities";
-    private final static String PRINCIPAL_NAME_ZNODE_NAME = "principalName";
-    private final static String KEY_VERSION_ZNODE_NAME = "keyVersion";
-    private final static String KDC_FLAGS_ZNODE_NAME = "kdcFlags";
-    private final static String DISABLED_ZNODE_NAME = "disabled";
-    private final static String LOCKED_ZNODE_NAME = "locked";
-    private final static String EXPIRE_TIME_ZNODE_NAME = "expireTime";
-    private final static String CREATED_TIME_ZNODE_NAME = "createdTime";
-    private final static String KEYS_ZNODE_NAME = "keys";
-    private final static String KEY_TYPE_ZNODE_NAME = "keyType";
-    private final static String KEY_ZNODE_NAME = "keyData";
-    private final static String ENCRYPTION_KEY_NO_ZNODE_NAME = "keyNo";
+    private static final String IDENTITIES_ZNODE_NAME = "identities";
+    private static final String PRINCIPAL_NAME_ZNODE_NAME = "principalName";
+    private static final String KEY_VERSION_ZNODE_NAME = "keyVersion";
+    private static final String KDC_FLAGS_ZNODE_NAME = "kdcFlags";
+    private static final String DISABLED_ZNODE_NAME = "disabled";
+    private static final String LOCKED_ZNODE_NAME = "locked";
+    private static final String EXPIRE_TIME_ZNODE_NAME = "expireTime";
+    private static final String CREATED_TIME_ZNODE_NAME = "createdTime";
+    private static final String KEYS_ZNODE_NAME = "keys";
+    private static final String KEY_TYPE_ZNODE_NAME = "keyType";
+    private static final String KEY_ZNODE_NAME = "keyData";
+    private static final String ENCRYPTION_KEY_NO_ZNODE_NAME = "keyNo";
     private static String baseZNode = "/kerby";
 
     public static String getBaseZNode() {

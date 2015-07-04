@@ -26,8 +26,8 @@ import org.apache.kerby.kerberos.kerb.client.KrbConfigKey;
 import org.apache.kerby.util.NetworkUtil;
 
 public class TestKdcServer extends SimpleKdcServer {
-    public final static String KDC_REALM = "TEST.COM";
-    public final static String HOSTNAME = "localhost";
+    public static final String KDC_REALM = "TEST.COM";
+    public static final String HOSTNAME = "localhost";
 
     public TestKdcServer(boolean allowTcp, boolean allowUdp) throws KrbException {
         super();

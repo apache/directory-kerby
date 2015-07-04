@@ -21,8 +21,8 @@ package org.apache.kerby.asn1;
 
 public class Util {
 
-    final static String HEX_CHARS_STR = "0123456789ABCDEF";
-    final static char[] HEX_CHARS = HEX_CHARS_STR.toCharArray();
+    static final String HEX_CHARS_STR = "0123456789ABCDEF";
+    static final char[] HEX_CHARS = HEX_CHARS_STR.toCharArray();
 
     /**
      * Convert bytes into format as:
