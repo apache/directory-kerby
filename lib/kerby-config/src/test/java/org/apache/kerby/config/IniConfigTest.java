@@ -32,8 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class IniConfigTest {
 
-    private final File TEST_DIR = new File(System.getProperty("test.dir","target"));
-    private final File TEST_FILE = new File(TEST_DIR, "test-ini-config");
+    private static final File TEST_DIR = new File(System.getProperty("test.dir","target"));
+    private static final File TEST_FILE = new File(TEST_DIR, "test-ini-config");
 
     @Before
     public void setUp() throws IOException {
