@@ -21,13 +21,17 @@ package org.apache.kerby.kerberos.kerb.integration.test;
 
 import java.io.IOException;
 
-public abstract class AppServer extends AppBase {
+/**
+ * Making it runnable because the server will be launched in a separate thread
+ * in a test.
+ */
+public abstract class AppServer implements Runnable {
     protected Transport.Acceptor acceptor;
     private boolean terminated = false;
 
     protected void usage(String[] args) {
         if (args.length < 1) {
-            System.err.println("Usage: java <options> AppServer <ListenPort>");
+            System.err.println("Usage: AppServer <ListenPort>");
             System.exit(-1);
         }
     }
@@ -35,14 +39,19 @@ public abstract class AppServer extends AppBase {
     public AppServer(String[] args) throws IOException {
         usage(args);
 
-        short listenPort = (short) Integer.parseInt(args[0]);
+        int listenPort = Integer.parseInt(args[0]);
         this.acceptor = new Transport.Acceptor(listenPort);
     }
 
-    public synchronized void terminate() {
+    public synchronized void start() {
+        new Thread(this).start();
+    }
+
+    public synchronized void stop() {
         terminated = true;
     }
 
+    @Override
     public void run() {
         try {
             synchronized (this) {

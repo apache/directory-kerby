@@ -21,8 +21,9 @@ package org.apache.kerby.kerberos.kerb.integration.test;
 
 import java.io.IOException;
 
-public abstract class AppClient extends AppBase {
-    protected Transport.Connection conn;
+public abstract class AppClient {
+    private Transport.Connection conn;
+    private boolean isTestOK = false;
 
     protected void usage(String[] args) {
         if (args.length < 2) {
@@ -36,7 +37,7 @@ public abstract class AppClient extends AppBase {
         usage(args);
 
         String hostName = args[0];
-        short port = (short) Integer.parseInt(args[1]);
+        int port = Integer.parseInt(args[1]);
 
         this.conn = Transport.Connector.connect(hostName, port);
     }
@@ -58,4 +59,12 @@ public abstract class AppClient extends AppBase {
     }
 
     protected abstract void withConnection(Transport.Connection conn) throws Exception;
+
+    protected synchronized void setTestOK(boolean isOK) {
+        this.isTestOK = isOK;
+    }
+
+    public boolean isTestOK() {
+        return isTestOK;
+    }
 }

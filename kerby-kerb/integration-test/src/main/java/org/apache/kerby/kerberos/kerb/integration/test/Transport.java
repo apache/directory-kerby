@@ -30,7 +30,7 @@ public class Transport {
     public static class Acceptor {
         ServerSocket serverSocket;
 
-        public Acceptor(short listenPort) throws IOException {
+        public Acceptor(int listenPort) throws IOException {
             this.serverSocket = new ServerSocket(listenPort);
         }
 
@@ -53,7 +53,8 @@ public class Transport {
     }
 
     public static class Connector {
-        public static Connection connect(String host, short port) throws IOException {
+        public static Connection connect(String host,
+                                         int port) throws IOException {
             Socket socket = new Socket(host, port);
             return new Connection(socket);
         }

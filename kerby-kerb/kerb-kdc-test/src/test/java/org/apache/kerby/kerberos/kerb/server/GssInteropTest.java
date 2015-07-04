@@ -19,19 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.kerberos.kerb.client.JaasKrbUtil;
 import org.ietf.jgss.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import javax.security.auth.Subject;
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.kerberos.KerberosTicket;
-import java.io.File;
-import java.io.IOException;
 import java.security.Principal;
 import java.security.PrivilegedExceptionAction;
 import java.util.Set;
@@ -44,7 +37,6 @@ public class GssInteropTest extends LoginTestBase {
     @Test
     public void testGss() throws Exception {
         Subject clientSubject = loginClientUsingTicketCache();
-
         Set<Principal> clientPrincipals = clientSubject.getPrincipals();
         Assert.assertFalse(clientPrincipals.isEmpty());
 
