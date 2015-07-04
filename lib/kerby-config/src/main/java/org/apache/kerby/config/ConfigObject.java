@@ -23,14 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigObject {
-    protected static enum VALUE_TYPE { PROPERTY, LIST, CONFIG };
+    protected static enum ValueType { PROPERTY, LIST, CONFIG };
 
-    private VALUE_TYPE valueType;
+    private ValueType valueType;
     private Object value;
 
     public ConfigObject(String value) {
         this.value = value;
-        this.valueType = VALUE_TYPE.PROPERTY;
+        this.valueType = ValueType.PROPERTY;
     }
 
     public ConfigObject(String[] values) {
@@ -40,7 +40,7 @@ public class ConfigObject {
         }
 
         this.value = valuesList;
-        this.valueType = VALUE_TYPE.LIST;
+        this.valueType = ValueType.LIST;
     }
 
     public ConfigObject(List<String> values) {
@@ -49,17 +49,17 @@ public class ConfigObject {
         } else {
             this.value = new ArrayList<String>();
         }
-        this.valueType = VALUE_TYPE.LIST;
+        this.valueType = ValueType.LIST;
     }
 
     public ConfigObject(Config value) {
         this.value = value;
-        this.valueType = VALUE_TYPE.CONFIG;
+        this.valueType = ValueType.CONFIG;
     }
 
     public String getPropertyValue() {
         String result = null;
-        if (valueType == VALUE_TYPE.PROPERTY) {
+        if (valueType == ValueType.PROPERTY) {
             result = (String) value;
         }
         return result;
@@ -68,7 +68,7 @@ public class ConfigObject {
     @SuppressWarnings("unchecked")
     public List<String> getListValues() {
         List<String> results = null;
-        if (valueType == VALUE_TYPE.LIST && value instanceof List<?>) {
+        if (valueType == ValueType.LIST && value instanceof List<?>) {
             results = (List<String>) value;
         }
 
@@ -77,7 +77,7 @@ public class ConfigObject {
 
     public Config getConfigValue() {
         Config result = null;
-        if (valueType == VALUE_TYPE.CONFIG) {
+        if (valueType == ValueType.CONFIG) {
             result = (Config) value;
         }
         return result;
