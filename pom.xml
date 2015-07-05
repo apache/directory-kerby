@@ -29,6 +29,7 @@
     <junit.version>4.12</junit.version>
     <slf4j.version>1.7.10</slf4j.version>
     <assertj.version>1.7.1</assertj.version>
+    <findbugs.version>2.3.2</findbugs.version>
   </properties>
 
   <prerequisites>
@@ -227,7 +228,6 @@
           </configuration>
         </plugin>
          -->
-
       </plugins>
     </pluginManagement>
 
@@ -296,4 +296,17 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>${findbugs.version}</version>
+        <configuration>
+          <xmlOutput>true</xmlOutput>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
