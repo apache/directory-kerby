@@ -29,6 +29,8 @@
     <junit.version>4.12</junit.version>
     <slf4j.version>1.7.10</slf4j.version>
     <assertj.version>1.7.1</assertj.version>
+    <findbugs.version>2.3.2</findbugs.version>
+    <checkstyle.dir>${basedir}/docs</checkstyle.dir>
   </properties>
 
   <prerequisites>
@@ -209,24 +211,17 @@
           </executions>
        </plugin>
 
-        <!-- 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>2.15</version>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.directory.buildtools</groupId>
-              <artifactId>checkstyle-configuration</artifactId>
-              <version>0.2-SNAPSHOT</version>
-            </dependency>
-          </dependencies>
           <configuration>
-            <configLocation>kerby-checks.xml</configLocation>
+            <configLocation>${checkstyle.dir}/kerby-checkstyle.xml</configLocation>
             <includeTestSourceDirectory>true</includeTestSourceDirectory>
+            <encoding>UTF-8</encoding>
+            <failOnViolation>false</failOnViolation>
           </configuration>
         </plugin>
-         -->
 
       </plugins>
     </pluginManagement>
@@ -255,12 +250,12 @@
         <artifactId>maven-pmd-plugin</artifactId>
       </plugin>
 
-      <!-- 
+      <!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
       </plugin>
-       -->
+      -->
 
     </plugins>
   </build>
@@ -281,6 +276,28 @@
         <checkstyle.skip>true</checkstyle.skip>
       </properties>
     </profile>
+    <profile>
+      <id>activate-in-module</id>
+      <activation>
+        <file>
+          <exists>${basedir}/../docs/kerby-checkstyle.xml</exists>
+        </file>
+      </activation>
+      <properties>
+        <checkstyle.dir>${basedir}/../docs</checkstyle.dir>
+      </properties>
+    </profile>
+    <profile>
+      <id>activate-in-submodule</id>
+      <activation>
+        <file>
+          <exists>${basedir}/../../docs/kerby-checkstyle.xml</exists>
+        </file>
+      </activation>
+      <properties>
+        <checkstyle.dir>${basedir}/../../docs</checkstyle.dir>
+      </properties>
+    </profile>
   </profiles>
 
   <repositories>
@@ -296,4 +313,17 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>${findbugs.version}</version>
+        <configuration>
+          <xmlOutput>true</xmlOutput>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
