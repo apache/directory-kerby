@@ -53,7 +53,9 @@ import java.util.Map;
  *
  */
 public class LdapIdentityBackend extends AbstractIdentityBackend {
+    //The LdapConnection, may be LdapNetworkConnection or LdapCoreSessionConnection
     private LdapConnection connection;
+    //This is used as a flag to represent the connection whether is LdapNetworkConnection object or not
     private boolean isLdapNetworkConnection;
 
     public LdapIdentityBackend() {
@@ -63,18 +65,28 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     /**
      * Constructing an instance using specified config that contains anything
      * to be used to initialize an LdapConnection and necessary baseDn.
-     * @param config
+     * @param config . The config is used to config the backend.
      */
     public LdapIdentityBackend(Config config) {
         setConfig(config);
         this.isLdapNetworkConnection = true;
     }
 
+    /**
+     * Constructing an instance using a LdapConnection and a specified config that contains anything
+     * to be used to initialize a necessary baseDn.
+     * @param config,connection .The config is used to config the backend, and the connection is used to
+     *                          to handle add/delete/update/get operations, may be a LdapNetworkConnection
+     *                          or a LdapCoreSessionConnection.
+     */
     public LdapIdentityBackend(Config config, LdapConnection connection) throws LdapException {
         setConfig(config);
         this.connection = connection;
     }
 
+    /**
+     * Start the connection for the initialize()
+     */
     public void startConnection() throws LdapException {
         if (isLdapNetworkConnection == true) {
             this.connection = new LdapNetworkConnection(getConfig().getString("host"),
@@ -84,6 +96,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
                 getConfig().getString("admin_pw"));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initialize() {
         super.initialize();
@@ -94,6 +109,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stop() {
         try {
@@ -105,17 +123,27 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         }
     }
 
+    /**
+     * Close the connection for stop()
+     */
     public void closeConnection() throws LdapException, IOException {
         if (this.connection.isConnected()) {
             this.connection.close();
         }
     }
 
+    /**
+     * Convert a KerberosTime type obeject to a generalized time form of String
+     * @param kerberosTime The kerberostime to convert
+     */
     private String toGeneralizedTime(KerberosTime kerberosTime) {
         GeneralizedTime generalizedTime = new GeneralizedTime(kerberosTime.getValue());
         return generalizedTime.toString();
     }
 
+    /**
+     * An inner class, used to encapsulate key information
+     */
     class KeysInfo{
         private String[] etypes;
         private byte[][] keys;
@@ -148,6 +176,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
         String principalName = identity.getPrincipalName();
@@ -182,6 +213,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         return identity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
         KrbIdentity krbIdentity = new KrbIdentity(principalName);
@@ -210,6 +244,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         return krbIdentity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
         String principalName = identity.getPrincipalName();
@@ -233,6 +270,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         return identity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doDeleteIdentity(String principalName) {
         try {
@@ -243,6 +283,12 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         }
     }
 
+    /**
+     * Used to convert a dn of String to a Dn object
+     * @param principalName The principal name to be convert.
+     * @return
+     * @throws LdapInvalidDnException if a remote exception occurs.
+     */
     private Dn toDn(String principalName) throws LdapInvalidDnException {
         String[] names = principalName.split("@");
         String uid = names[0];
@@ -264,7 +310,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         return getIdentities().subList(start, start + limit);
     }
 
-
+    /**
+     * Get all principal names from the ldap server, invoked by getIdentities(int start, int limit)
+     */
     private List<String> getIdentities() {
         List<String> identityNames = new ArrayList<>();
         EntryCursor cursor;

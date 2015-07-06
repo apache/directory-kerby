@@ -19,18 +19,7 @@
  */
 package org.apache.kerby;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.directory.mavibot.btree.BTree;
-import org.apache.directory.mavibot.btree.BTreeFactory;
-import org.apache.directory.mavibot.btree.BTreeTypeEnum;
-import org.apache.directory.mavibot.btree.KeyCursor;
-import org.apache.directory.mavibot.btree.PersistedBTreeConfiguration;
-import org.apache.directory.mavibot.btree.RecordManager;
-import org.apache.directory.mavibot.btree.Tuple;
+import org.apache.directory.mavibot.btree.*;
 import org.apache.directory.mavibot.btree.exception.KeyNotFoundException;
 import org.apache.directory.mavibot.btree.serializer.StringSerializer;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
@@ -38,22 +27,27 @@ import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A backend based on Apache Mavibot(an MVCC BTree library).
  *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class MavibotBackend extends AbstractIdentityBackend {
-    /** the RecordManager of Mavibot */
+    //The RecordManager of Mavibot
     private RecordManager rm;
 
-    /** the BTree holding all data */
+    //The BTree holding all data
     private BTree<String, KrbIdentity> database;
 
-    /** name of the database */
+    //Name of the database
     private static final String DATA_TREE = "kerby-data";
 
-    /** name of the database file */
+    // Name of the database file
     private static final String DATABASE_NAME = "kerby-data.db";
 
     private static final Logger LOG = LoggerFactory.getLogger(MavibotBackend.class);
@@ -213,6 +207,9 @@ public class MavibotBackend extends AbstractIdentityBackend {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stop() {
         try {

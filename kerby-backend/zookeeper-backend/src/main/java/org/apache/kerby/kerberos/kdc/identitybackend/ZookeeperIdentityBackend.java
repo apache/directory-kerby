@@ -69,12 +69,18 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
          setConfig(config);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initialize() {
         super.initialize();
         init();
     }
 
+    /**
+     * Init Zookeeper Server and connection service, used to initialize the backend.
+     */
     private void init() {
         zkHost = getConfig().getString(ZKConfKey.ZK_HOST);
         zkPort = getConfig().getInt(ZKConfKey.ZK_PORT);
@@ -136,6 +142,9 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         // TODO: load the kdb file from zookeeper
     }
 
+    /**
+     * Start the Zookeeper server
+     */
     private void startEmbeddedZookeeper() {
 
         Properties startupProperties = new Properties();
@@ -169,13 +178,16 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
 
     /**
      * This will watch all the kdb update event so that it's timely synced.
-     * @param event
+     * @param event The kdb update event ot watch.
      */
     @Override
     public void process(WatchedEvent event) {
         System.out.print("I got an event: " + event);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
         principalName = replaceSlash(principalName);
@@ -200,6 +212,9 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         return krb;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
         if (doGetIdentity(identity.getPrincipalName()) != null) {
@@ -214,6 +229,9 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         return identity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
         if (doGetIdentity(identity.getPrincipalName()) == null) {
@@ -228,6 +246,9 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         return identity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doDeleteIdentity(String principalName) {
         principalName = replaceSlash(principalName);
@@ -254,6 +275,10 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         return getIdentities().subList(start, start + limit);
     }
 
+    /**
+     * Get all of the identity names
+     * @return
+     */
     public List<String> getIdentities() {
 
         List<String> identityNames = null;
@@ -277,6 +302,11 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         return newIdentities;
     }
 
+    /**
+     * Set the identity to add or update an indentity in the backend.
+     * @param identity . The identity to update
+     * @throws KeeperException
+     */
     private void setIdentity(KrbIdentity identity) throws KeeperException {
         String principalName = identity.getPrincipalName();
         principalName = replaceSlash(principalName);
@@ -291,6 +321,11 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         identityZNode.setLocked(identity.isLocked());
     }
 
+    /**
+     * Use "\\" to replace "/" in  a String object.
+     * @param name . The the name string to convert
+     * @return
+     */
     private String replaceSlash(String name) {
         if(name.contains("/")) {
             name = name.replace("/", "\\");

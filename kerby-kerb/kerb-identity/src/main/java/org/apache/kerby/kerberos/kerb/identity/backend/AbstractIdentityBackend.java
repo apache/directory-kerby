@@ -44,6 +44,9 @@ public abstract class AbstractIdentityBackend
         this.cacheSize = cacheSize;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initialize() {
         idCache = new LinkedHashMap<String, KrbIdentity>(cacheSize) {
@@ -54,25 +57,41 @@ public abstract class AbstractIdentityBackend
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void start() {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stop() {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void release() {
         idCache.clear();
     }
 
+    /**
+     * Get (principal, KrbIdentity) pairs from the cache.
+     * @return
+     */
     protected Map<String, KrbIdentity> getCache() {
         return idCache;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public KrbIdentity getIdentity(String principalName) {
         if (idCache.containsKey(principalName)) {
@@ -87,8 +106,15 @@ public abstract class AbstractIdentityBackend
         return identity;
     }
 
+    /**
+     * Add an identity, invoked by addIdentity.
+     * @param principalName
+     */
     protected abstract KrbIdentity doGetIdentity(String principalName);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public KrbIdentity addIdentity(KrbIdentity identity) {
         KrbIdentity added = doAddIdentity(identity);
@@ -99,8 +125,15 @@ public abstract class AbstractIdentityBackend
         return added;
     }
 
+    /**
+     * Add an identity, invoked by addIdentity.
+     * @param identity
+     */
     protected abstract KrbIdentity doAddIdentity(KrbIdentity identity);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public KrbIdentity updateIdentity(KrbIdentity identity) {
         KrbIdentity updated = doUpdateIdentity(identity);
@@ -111,8 +144,15 @@ public abstract class AbstractIdentityBackend
         return updated;
     }
 
+    /**
+     * Update an identity, invoked by updateIdentity.
+     * @param identity
+     */
     protected abstract KrbIdentity doUpdateIdentity(KrbIdentity identity);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteIdentity(String principalName) {
         if (idCache.containsKey(principalName)) {
@@ -122,6 +162,10 @@ public abstract class AbstractIdentityBackend
         doDeleteIdentity(principalName);
     }
 
+    /**
+     * Delete an identity, invoked by deleteIndentity.
+     * @param principalName
+     */
     protected abstract void doDeleteIdentity(String principalName);
 
 }

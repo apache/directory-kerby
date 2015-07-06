@@ -35,26 +35,41 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
         setCacheSize(10000000); // Just no idea, configurable ?
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
         return identity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
         return identity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doDeleteIdentity(String principalName) {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getIdentities(int start, int limit) {
         List<String> identities = getIdentities();
@@ -64,7 +79,10 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
         return identities.subList(start, start + limit);
     }
 
-
+    /**
+     * Get all of the identity names
+     * @return
+     */
     private List<String> getIdentities() {
         List<String> identities = new ArrayList<>(getCache().keySet());
         Collections.sort(identities);

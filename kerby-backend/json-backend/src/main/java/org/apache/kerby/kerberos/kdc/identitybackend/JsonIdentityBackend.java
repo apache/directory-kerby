@@ -46,9 +46,8 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     private File jsonKdbFile;
     private Gson gson;
 
-    /**
-     * Identities loaded from file
-     */
+
+    // Identities loaded from file
     private Map<String, KrbIdentity> ids;
     private long kdbFileTimeStamp;
 
@@ -64,6 +63,9 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         setConfig(config);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initialize() {
         super.initialize();
@@ -93,7 +95,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     }
 
     /**
-     * check kdb file timestamp to see if it's changed or not. If
+     * Check kdb file timestamp to see if it's changed or not. If
      * necessary load the kdb again.
      */
     private void checkAndLoad() {
@@ -118,12 +120,18 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
         checkAndLoad();
         return ids.get(principalName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
         checkAndLoad();
@@ -139,6 +147,9 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         return identity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
         checkAndLoad();
@@ -151,6 +162,9 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         return identity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doDeleteIdentity(String principalName) {
         checkAndLoad();
@@ -176,6 +190,9 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         return getIdentities().subList(start, start + limit);
     }
 
+    /**
+     * Get all principal names from the backend
+     */
     private List<String> getIdentities() {
         List<String> principals = new ArrayList<>(ids.keySet());
         Collections.sort(principals);
@@ -183,6 +200,9 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         return principals;
     }
 
+    /**
+     *Create a gson
+     */
     private void createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(EncryptionKey.class, new EncryptionKeyAdapter());
@@ -193,6 +213,10 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         gson = gsonBuilder.create();
     }
 
+    /**
+     * Write ids into a file
+     * @param ids the ids to write into the json file
+     */
     private void idsToFile(Map<String, KrbIdentity> ids) {
         String newFileJson = gson.toJson(ids);
         try {
@@ -201,6 +225,4 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
             throw new RuntimeException("Failed to write file", e);
         }
     }
-
-
 }
