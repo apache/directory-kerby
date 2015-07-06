@@ -298,6 +298,18 @@
         <checkstyle.dir>${basedir}/../../docs</checkstyle.dir>
       </properties>
     </profile>
+
+    <profile>
+      <id>activate-checkstyle-supression</id>
+      <activation>
+        <file>
+          <exists>${basedir}/src/checkstyle/suppressions.xml</exists>
+        </file>
+      </activation>
+      <properties>
+        <checkstyle.suppressions.location>${basedir}/src/checkstyle/suppressions.xml</checkstyle.suppressions.location>
+      </properties>
+    </profile>
   </profiles>
 
   <repositories>
