@@ -38,24 +38,12 @@ public class TestKdcConfigLoad {
         KdcConfig kdcConfig = new KdcConfig();
         kdcConfig.addIniConfig(confFile);
 
-        assertThat(kdcConfig.getDefaultLoggingLocation()).isEqualTo("FILE:/var/log/krb5libs.log");
-        assertThat(kdcConfig.getKdcLoggingLocation()).isEqualTo("FILE:/var/log/krb5kdc.log");
-        assertThat(kdcConfig.getAdminLoggingLocation()).isEqualTo("FILE:/var/log/kadmind.log");
-
         assertThat(kdcConfig.getKdcHost()).isEqualTo("localhost");
         assertThat(kdcConfig.getKdcUdpPort()).isEqualTo(88);
         assertThat(kdcConfig.getKdcTcpPort()).isEqualTo(8014);
         assertThat(kdcConfig.getKdcRealm()).isEqualTo("TEST.COM");
         assertThat(kdcConfig.isRestrictAnonymousToTgt()).isTrue();
         assertThat(kdcConfig.getKdcMaxDgramReplySize()).isEqualTo(4096);
-
-        /* will be moved to LdapLdentityBackend module
-        String[] ldapContainerDn = krbConfig.getLdapKerberosContainerDn();
-        assertThat(ldapContainerDn.length).isEqualTo(3);
-        assertThat(ldapContainerDn[0]).isEqualTo("cn=krbcontainer");
-        assertThat(ldapContainerDn[1]).isEqualTo("dc=mit");
-        assertThat(ldapContainerDn[2]).isEqualTo("dc=edu");
-        */
     }
 
     @Test

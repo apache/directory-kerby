@@ -52,13 +52,7 @@ public enum KdcConfigKey implements SectionConfigKey {
             new String[] { "aes128-cts-hmac-sha1-96", "des3-cbc-sha1-kd"}
     ),
     RESTRICT_ANONYMOUS_TO_TGT(false, "kdcdefaults"),
-    KDC_MAX_DGRAM_REPLY_SIZE(4096, "kdcdefaults"),
-
-    //logging location
-    //TODO: the default log location need to be determined.
-    DEFAULT(null, "logging"),
-    KDC(null, "logging"),
-    ADMIN_SERVER(null, "logging");
+    KDC_MAX_DGRAM_REPLY_SIZE(4096, "kdcdefaults");
 
     private Object defaultValue;
 

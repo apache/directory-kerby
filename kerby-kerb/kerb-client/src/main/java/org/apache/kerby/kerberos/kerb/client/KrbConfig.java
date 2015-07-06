@@ -184,18 +184,4 @@ public class KrbConfig extends Conf {
     public List<EncryptionType> getDefaultTktEnctypes() {
         return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TKT_ENCTYPES);
     }
-
-    public String getDefaultLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.DEFAULT);
-    }
-
-    public String getKdcLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.KDC);
-    }
-
-    public String getAdminLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.ADMIN_SERVER);
-    }
-
-
 }

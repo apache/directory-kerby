@@ -86,7 +86,8 @@ public class KdcConfig extends Conf {
     }
 
     public String getKdcRealm() {
-        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.KDC_REALM);
+        return KrbConfHelper.getStringUnderSection(this,
+                KdcConfigKey.KDC_REALM);
     }
 
     public String getKdcDomain() {
@@ -148,19 +149,6 @@ public class KdcConfig extends Conf {
 
     public boolean isBodyChecksumVerified() {
         return getBoolean(KdcConfigKey.VERIFY_BODY_CHECKSUM);
-    }
-
-    public String getDefaultLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.DEFAULT);
-    }
-
-    public String getKdcLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.KDC);
-    }
-
-    public String getAdminLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(this,
-                KdcConfigKey.ADMIN_SERVER);
     }
 
     public boolean isRestrictAnonymousToTgt() {
