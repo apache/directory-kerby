@@ -33,6 +33,6 @@ public class Asn1SequenceOf<T extends Asn1Type> extends Asn1CollectionOf<T>
     }
 
     public void add(T element) {
-        getElements().add(element);
+        addElement(element);
     }
 }
