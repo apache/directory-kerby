@@ -22,6 +22,7 @@ package org.apache.kerby;
 import org.apache.directory.mavibot.btree.*;
 import org.apache.directory.mavibot.btree.exception.KeyNotFoundException;
 import org.apache.directory.mavibot.btree.serializer.StringSerializer;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.slf4j.Logger;
@@ -78,7 +79,8 @@ public class MavibotBackend extends AbstractIdentityBackend {
         if (rm.getManagedTrees().contains(DATA_TREE)) {
             database = rm.getManagedTree(DATA_TREE);
         } else {
-            PersistedBTreeConfiguration<String, KrbIdentity> config = new PersistedBTreeConfiguration<String, KrbIdentity>();
+            PersistedBTreeConfiguration<String, KrbIdentity> config = 
+                    new PersistedBTreeConfiguration<String, KrbIdentity>();
             // _no_ duplicates
             config.setAllowDuplicates(false);
             config.setBtreeType(BTreeTypeEnum.PERSISTED);
@@ -96,27 +98,23 @@ public class MavibotBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    public List<String> getIdentities(int start, int limit) {
-        
+    protected List<String> doGetIdentities(int start, int limit) throws KrbException {
         List<String> keys = new ArrayList<String>();
-        
         KeyCursor<String> cursor = null;
-        
+
         try {
             cursor = database.browseKeys();
             while(cursor.hasNext()) {
                 keys.add(cursor.next());
             }
-        }
-        catch(Exception e) {
-            LOG.debug("Errors occurred while fetching the principals", e);
-        }
-        finally {
+        } catch(Exception e) {
+            throw new KrbException("Errors occurred while fetching the principals", e);
+        } finally {
             if(cursor != null) {
                 cursor.close();
             }
         }
-        
+
         return keys;
     }
 
@@ -124,45 +122,33 @@ public class MavibotBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected KrbIdentity doGetIdentity(String principalName) {
-        
+    protected KrbIdentity doGetIdentity(String principalName) throws KrbException {
         try {
             return database.get(principalName);
-        }
-        catch(KeyNotFoundException e) {
+        } catch(KeyNotFoundException e) {
             LOG.debug("Identity {} doesn't exist", principalName);
+            return null;
+        } catch(IOException e) {
+            throw new KrbException("Failed to get the identity " + principalName);
         }
-        catch(IOException e) {
-            LOG.warn("Failed to get the identity {}", principalName);
-            throw new RuntimeException(e);
-        }
-        
-        return null;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected synchronized KrbIdentity doAddIdentity(KrbIdentity identity) {
-        
+    protected synchronized KrbIdentity doAddIdentity(KrbIdentity identity) throws KrbException {
         String p = identity.getPrincipalName();
         try {
             if(database.hasKey(p)) {
-                LOG.debug("Identity {} already exists", p);
-                return null;
+                throw new KrbException("Identity already exists " + p);
             }
             
             return database.insert(p, identity);
-        }
-        catch(KeyNotFoundException e) {
-            LOG.debug("No such identity {} exists", p);
-            LOG.debug("", e);
-            return null;
-        }
-        catch(IOException e) {
-            LOG.warn("Failed to add the identity {}", p);
-            throw new RuntimeException(e);
+        } catch(KeyNotFoundException e) {
+            throw new KrbException("No such identity exists " + p);
+        } catch(IOException e) {
+            throw new KrbException("Failed to add the identity " + p);
         }
     }
 
@@ -170,22 +156,18 @@ public class MavibotBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected synchronized KrbIdentity doUpdateIdentity(KrbIdentity identity) {
-        
+    protected synchronized KrbIdentity doUpdateIdentity(KrbIdentity identity) throws KrbException {
         String p = identity.getPrincipalName();
         try {
             if(!database.hasKey(p)) {
-                LOG.debug("No identity found with the principal {}", p);
-                return null;
+                throw new KrbException("No identity found with the principal " + p);
             }
             
             database.delete(p);
             
             return database.insert(p, identity);
-        }
-        catch(Exception e) {
-            LOG.warn("Failed to update the identity {}", p);
-            throw new RuntimeException(e);
+        } catch(Exception e) {
+            throw new KrbException("Failed to update the identity " + p);
         }
     }
 
@@ -193,17 +175,14 @@ public class MavibotBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected void doDeleteIdentity(String principalName) {
-
+    protected void doDeleteIdentity(String principalName) throws KrbException {
         try {
             Tuple<String, KrbIdentity> t = database.delete(principalName);
             if (t == null) {
-                LOG.debug("Identity {} doesn't exist", principalName);
+                throw new KrbException("Not existing, identity = " + principalName);
             }
-        }
-        catch(IOException e) {
-            LOG.warn("Failed to delete the identity {}", principalName);
-            throw new RuntimeException(e);
+        } catch(IOException e) {
+            throw new KrbException("Failed to delete the identity " + principalName);
         }
     }
 
@@ -211,13 +190,11 @@ public class MavibotBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    public void stop() {
+    protected void doStop() throws KrbException {
         try {
-            LOG.debug("Closing the database");
             rm.close();
-        }
-        catch(Exception e) {
-            LOG.warn("Failed to close the database", e);
+        } catch(IOException e) {
+            throw new KrbException("Failed to close the database", e);
         }
     }
 }

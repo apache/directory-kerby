@@ -26,6 +26,7 @@ import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.EncryptionKeyAdapter;
 import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.KerberosTimeAdapter;
 import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.PrincipalNameAdapter;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
@@ -52,6 +53,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     private long kdbFileTimeStamp;
 
     public JsonIdentityBackend() {
+
     }
 
     /**
@@ -67,8 +69,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    public void initialize() {
-        super.initialize();
+    protected void doInitialize() throws KrbException {
         createGson();
         load();
     }
@@ -76,10 +77,10 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     /**
      * Load identities from file
      */
-    public void load() {
+    private void load() throws KrbException {
         String jsonFile = getConfig().getString(JSON_IDENTITY_BACKEND_FILE);
         if (jsonFile == null || jsonFile.isEmpty()) {
-            throw new RuntimeException("No json kdb file is found");
+            throw new KrbException("No json kdb file is found");
         }
 
         jsonKdbFile = new File(jsonFile);
@@ -180,8 +181,8 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    public List<String> getIdentities(int start, int limit) {
-        List<String> principals =getIdentities();
+    protected List<String> doGetIdentities(int start, int limit) throws KrbException {
+        List<String> principals = getIdentities();
 
         if (limit == -1) {
             return principals;

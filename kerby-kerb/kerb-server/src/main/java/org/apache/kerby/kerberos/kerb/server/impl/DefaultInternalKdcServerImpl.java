@@ -66,7 +66,7 @@ public class DefaultInternalKdcServerImpl extends AbstractInternalKdcServer {
 
     private void prepareHandler() {
         kdcContext = new KdcContext(getSetting());
-        kdcContext.setIdentityService(getBackend());
+        kdcContext.setIdentityService(getIdentityService());
         PreauthHandler preauthHandler = new PreauthHandler();
         preauthHandler.init();
         kdcContext.setPreauthHandler(preauthHandler);

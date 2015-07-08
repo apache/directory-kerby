@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.identity.backend;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,12 +32,11 @@ import java.io.File;
 /**
  * Json backend test
  */
-public class JsonBackendTest extends BackendTest {
-    private static IdentityBackend backend;
+public class JsonBackendTest extends BackendTestBase {
     private static File jsonBackendFile;
 
     @BeforeClass
-    public static void setup() {
+    public static void setup() throws KrbException {
         File testDir = new File(System.getProperty("test.dir", "target"));
         jsonBackendFile = new File(testDir, "json-identity-backend-file");
         String jsonBackendFileString = jsonBackendFile.getAbsolutePath();
@@ -48,33 +48,8 @@ public class JsonBackendTest extends BackendTest {
         backend.initialize();
     }
 
-    @Test
-    public void testGet() {
-        super.testGet(backend);
-    }
-
-    @Test
-    public void testStore() {
-        super.testStore(backend);
-    }
-
-    @Test
-    public void testUpdate() {
-        super.testUpdate(backend);
-    }
-
-    @Test
-    public void testDelete() {
-        super.testDelete(backend);
-    }
-
-    @Test
-    public void testGetIdentities() {
-        super.testGetIdentities(backend);
-    }
-
     @AfterClass
-    public static void rmJsonBackendFile() {
+    public static void cleanJsonBackendFile() {
         if (jsonBackendFile.exists()) {
             jsonBackendFile.delete();
         }

@@ -20,7 +20,10 @@
 package org.apache.kerby.kerberos.kerb.server.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.identity.CacheableIdentityService;
+import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcSetting;
@@ -35,6 +38,7 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
     private final BackendConfig backendConfig;
     private final KdcSetting kdcSetting;
     private IdentityBackend backend;
+    private IdentityService identityService;
 
     public AbstractInternalKdcServer(KdcSetting kdcSetting) {
         this.kdcSetting = kdcSetting;
@@ -55,8 +59,16 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
         return kdcConfig.getKdcServiceName();
     }
 
-    protected IdentityBackend getBackend() {
-        return backend;
+    protected IdentityService getIdentityService() {
+        if (identityService == null) {
+            if (backend instanceof MemoryIdentityBackend) { // Already in memory
+                identityService = backend;
+            } else {
+                identityService = new CacheableIdentityService(
+                        backendConfig, backend);
+            }
+        }
+        return identityService;
     }
 
     @Override

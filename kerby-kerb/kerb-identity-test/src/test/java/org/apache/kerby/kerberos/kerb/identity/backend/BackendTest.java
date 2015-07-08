@@ -25,6 +25,7 @@ import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,19 +45,7 @@ public abstract class BackendTest {
             EncryptionType.DES3_CBC_SHA1_KD
     };
 
-    /**
-     * A convenient method to run all tests on the given backend 
-     * @param backend an instance of the backend to be tested
-     */
-    public void testAll(IdentityBackend backend) {
-        testStore(backend);
-        testGet(backend);
-        testUpdate(backend);
-        testDelete(backend);
-        testGetIdentities(backend);
-    }
-    
-    protected void testGet(IdentityBackend backend) {
+    protected void testGet(IdentityBackend backend) throws KrbException {
         KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
         // clear the identity cache.
@@ -79,7 +68,7 @@ public abstract class BackendTest {
         backend.deleteIdentity(TEST_PRINCIPAL);
     }
 
-    protected void testStore(IdentityBackend backend) {
+    protected void testStore(IdentityBackend backend) throws KrbException {
         KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
         // clear the identity cache.
@@ -92,7 +81,7 @@ public abstract class BackendTest {
         backend.deleteIdentity(TEST_PRINCIPAL);
     }
 
-    protected void testUpdate(IdentityBackend backend) {
+    protected void testUpdate(IdentityBackend backend) throws KrbException {
         KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
 
@@ -107,7 +96,7 @@ public abstract class BackendTest {
         backend.deleteIdentity(TEST_PRINCIPAL);
     }
 
-    protected void testDelete(IdentityBackend backend) {
+    protected void testDelete(IdentityBackend backend) throws KrbException {
         KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
         // clear the identity cache.
@@ -119,7 +108,7 @@ public abstract class BackendTest {
         assertThat(backend.getIdentity(TEST_PRINCIPAL)).isNull();
     }
 
-    protected void testGetIdentities(IdentityBackend backend) {
+    protected void testGetIdentities(IdentityBackend backend) throws KrbException {
         KrbIdentity[] identities = createManyIdentities();
 
         for (KrbIdentity identity : identities) {
@@ -176,7 +165,7 @@ public abstract class BackendTest {
         return Arrays.asList(ENC_TYPES);
     }
 
-    protected void cleanIdentities(IdentityBackend backend) {
+    protected void cleanIdentities(IdentityBackend backend) throws KrbException {
         List<String> identities = backend.getIdentities(0, -1);
         if (identities != null) {
             for (String identity : identities) {

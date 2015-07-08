@@ -35,6 +35,7 @@ import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 import org.apache.directory.shared.kerberos.KerberosAttribute;
 import org.apache.kerby.config.Config;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
@@ -50,12 +51,12 @@ import java.util.Map;
 
 /**
  * An LDAP based backend implementation.
- *
  */
 public class LdapIdentityBackend extends AbstractIdentityBackend {
     //The LdapConnection, may be LdapNetworkConnection or LdapCoreSessionConnection
     private LdapConnection connection;
-    //This is used as a flag to represent the connection whether is LdapNetworkConnection object or not
+    //This is used as a flag to represent the connection whether is
+    // LdapNetworkConnection object or not
     private boolean isLdapNetworkConnection;
 
     public LdapIdentityBackend() {
@@ -73,13 +74,14 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     }
 
     /**
-     * Constructing an instance using a LdapConnection and a specified config that contains anything
-     * to be used to initialize a necessary baseDn.
-     * @param config,connection .The config is used to config the backend, and the connection is used to
-     *                          to handle add/delete/update/get operations, may be a LdapNetworkConnection
-     *                          or a LdapCoreSessionConnection.
+     * Constructing an instance using a LdapConnection and a specified config
+     * that contains anything to be used to initialize a necessary baseDn.
+     * @param config The config is used to config the backend
+     * @param connection The connection to be used to handle the operations,
+     *                   may be a LdapNetworkConnection or a LdapCoreSessionConnection.
      */
-    public LdapIdentityBackend(Config config, LdapConnection connection) throws LdapException {
+    public LdapIdentityBackend(Config config,
+                               LdapConnection connection) {
         setConfig(config);
         this.connection = connection;
     }
@@ -87,7 +89,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     /**
      * Start the connection for the initialize()
      */
-    public void startConnection() throws LdapException {
+    private void startConnection() throws LdapException {
         if (isLdapNetworkConnection == true) {
             this.connection = new LdapNetworkConnection(getConfig().getString("host"),
                     getConfig().getInt("port"));
@@ -100,12 +102,11 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    public void initialize() {
-        super.initialize();
+    protected void doInitialize() throws KrbException {
         try {
             startConnection();
         } catch (LdapException e) {
-            e.printStackTrace();
+            throw new KrbException("Failed to start connection with LDAP", e);
         }
     }
 
@@ -113,22 +114,20 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    public void stop() {
+    protected void doStop() throws KrbException {
         try {
             closeConnection();
-        } catch (LdapException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new KrbException("Failed to close connection with LDAP", e);
         }
     }
 
     /**
      * Close the connection for stop()
      */
-    public void closeConnection() throws LdapException, IOException {
-        if (this.connection.isConnected()) {
-            this.connection.close();
+    private void closeConnection() throws IOException {
+        if (connection.isConnected()) {
+            connection.close();
         }
     }
 
@@ -180,7 +179,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected KrbIdentity doAddIdentity(KrbIdentity identity) {
+    protected KrbIdentity doAddIdentity(KrbIdentity identity) throws KrbException {
         String principalName = identity.getPrincipalName();
         String[] names = principalName.split("@");
         Entry entry = new DefaultEntry();
@@ -188,27 +187,29 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         try {
             Dn dn = toDn(principalName);
             entry.setDn(dn);
-            entry.add("objectClass", "top", "person", "inetOrgPerson", "krb5principal", "krb5kdcentry");
+            entry.add("objectClass", "top", "person", "inetOrgPerson",
+                    "krb5principal", "krb5kdcentry");
             entry.add("cn", names[0]);
             entry.add( "sn", names[0]);
             entry.add(KerberosAttribute.KRB5_KEY_AT, keysInfo.getKeys());
             entry.add( "krb5EncryptionType", keysInfo.getEtypes());
             entry.add( KerberosAttribute.KRB5_PRINCIPAL_NAME_AT, principalName);
-            entry.add( KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT, identity.getKeyVersion() + "");
+            entry.add( KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT,
+                    identity.getKeyVersion() + "");
             entry.add( "krb5KDCFlags", "" + identity.getKdcFlags());
-            entry.add( KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, "" + identity.isDisabled());
+            entry.add( KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, "" +
+                    identity.isDisabled());
             entry.add( "createTimestamp",
                     toGeneralizedTime(identity.getCreatedTime()));
-            entry.add(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, "" + identity.isLocked());
+            entry.add(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, "" +
+                    identity.isLocked());
             entry.add( KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT,
                     toGeneralizedTime(identity.getExpireTime()));
             connection.add(entry);
         } catch (LdapInvalidDnException e) {
-            e.printStackTrace();
+            throw new KrbException("Failed to add identity", e);
         } catch (LdapException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+            throw new KrbException("Failed to add identity", e);
         }
         return identity;
     }
@@ -217,7 +218,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected KrbIdentity doGetIdentity(String principalName) {
+    protected KrbIdentity doGetIdentity(String principalName) throws KrbException {
         KrbIdentity krbIdentity = new KrbIdentity(principalName);
         try {
             Dn dn = toDn(principalName);
@@ -235,12 +236,13 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             krbIdentity.setKdcFlags(getHelper.getKdcFlags());
             krbIdentity.setLocked(getHelper.getLocked());
         } catch (LdapException e) {
-            e.printStackTrace();
+            throw new KrbException("Failed to retrieve identity", e);
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new KrbException("Failed to retrieve identity", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new KrbException("Failed to retrieve identity", e);
         }
+
         return krbIdentity;
     }
 
@@ -248,25 +250,31 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
+    protected KrbIdentity doUpdateIdentity(KrbIdentity identity) throws KrbException {
         String principalName = identity.getPrincipalName();
         KeysInfo keysInfo = new KeysInfo(identity);
         try {
             Dn dn = toDn(principalName);
             ModifyRequest modifyRequest = new ModifyRequestImpl();
             modifyRequest.setName(dn);
-            modifyRequest.replace(KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT, "" + identity.getKeyVersion());
+            modifyRequest.replace(KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT,
+                    "" + identity.getKeyVersion());
             modifyRequest.replace(KerberosAttribute.KRB5_KEY_AT, keysInfo.getKeys());
             modifyRequest.replace("krb5EncryptionType", keysInfo.getEtypes());
-            modifyRequest.replace(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT, identity.getPrincipalName());
-            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT, toGeneralizedTime(identity.getExpireTime()));
-            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, "" + identity.isDisabled());
+            modifyRequest.replace(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT,
+                    identity.getPrincipalName());
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT,
+                    toGeneralizedTime(identity.getExpireTime()));
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, "" +
+                    identity.isDisabled());
             modifyRequest.replace("krb5KDCFlags", "" + identity.getKdcFlags());
-            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, "" + identity.isLocked());
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, "" +
+                    identity.isLocked());
             connection.modify(modifyRequest);
         } catch (LdapException e) {
-            e.printStackTrace();
+            throw new KrbException("Failed to update identity", e);
         }
+
         return identity;
     }
 
@@ -274,12 +282,12 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected void doDeleteIdentity(String principalName) {
+    protected void doDeleteIdentity(String principalName) throws KrbException {
         try {
             Dn dn = toDn(principalName);
             connection.delete(dn);
         } catch (LdapException e) {
-            e.printStackTrace();
+            throw new KrbException("Failed to remove identity", e);
         }
     }
 
@@ -300,7 +308,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    public List<String> getIdentities(int start, int limit) {
+    protected List<String> doGetIdentities(int start, int limit) {
         List<String> identities = getIdentities();
 
         if (limit == -1) {

@@ -23,14 +23,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendTest;
+import org.apache.kerby.kerberos.kerb.identity.backend.BackendTestBase;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 
 /**
@@ -38,14 +39,11 @@ import org.junit.rules.TemporaryFolder;
  *
  * @author <a href="mailto:kerby@directory.apache.org">Apache Kerby Project</a>
  */
-public class MavibotBackendTest extends BackendTest {
+public class MavibotBackendTest extends BackendTestBase {
+    private static TemporaryFolder tmpFolder = new TemporaryFolder();
 
-    private MavibotBackend backend;
-    
-    private TemporaryFolder tmpFolder = new TemporaryFolder();
-    
-    @Before
-    public void setup() throws Exception {
+    @BeforeClass
+    public static void setup() throws Exception {
         tmpFolder.create();
         
         File dbFile = tmpFolder.newFile();
@@ -53,19 +51,14 @@ public class MavibotBackendTest extends BackendTest {
         backend.initialize();
     }
     
-    @After
-    public void clean() {
-        backend.stop();
+    @AfterClass
+    public static void tearDown() throws KrbException {
         tmpFolder.delete();
-    }
-    
-    @Test
-    public void testBackend() {
-        super.testAll(backend);
     }
 
     // overriding this cause MavibotBackend doesn't support range search
-    public void testGetIdentities(IdentityBackend backend) {
+    @Override
+    protected void testGetIdentities(IdentityBackend backend) throws KrbException {
         KrbIdentity[] identities = createManyIdentities();
 
         for (KrbIdentity identity : identities) {

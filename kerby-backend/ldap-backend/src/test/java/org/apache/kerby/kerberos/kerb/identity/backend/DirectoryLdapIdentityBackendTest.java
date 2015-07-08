@@ -29,9 +29,7 @@ import org.apache.directory.server.core.api.LdapCoreSessionConnection;
 import org.apache.directory.server.core.integ.FrameworkRunner;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(FrameworkRunner.class)
@@ -59,9 +57,7 @@ import org.junit.runner.RunWith;
                 "ou: users"
         }
 )
-public class DirectoryLdapIdentityBackendTest extends AbstractLdapIdentityBackendTest
-{
-    private LdapIdentityBackend backend;
+public class DirectoryLdapIdentityBackendTest extends AbstractLdapIdentityBackendTest {
     private static final String BASE_DN = "ou=users,dc=example,dc=com";
     private static final String ADMIN_DN = "uid=admin,ou=system";
     private static final String ADMIN_PW = "secret";
@@ -74,39 +70,8 @@ public class DirectoryLdapIdentityBackendTest extends AbstractLdapIdentityBacken
         config.setString("admin_pw", ADMIN_PW);
         config.setString("base_dn", BASE_DN);
         LdapConnection connection = new LdapCoreSessionConnection(getService());
-        this.backend = new LdapIdentityBackend(config, connection);
+        backend = new LdapIdentityBackend(config, connection);
         backend.initialize();
         backend.start();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        backend.stop();
-        backend.release();
-    }
-
-    @Test
-    public void testGet() {
-        super.testGet(backend);
-    }
-
-    @Test
-    public void testStore() {
-        super.testStore(backend);
-    }
-
-    @Test
-    public void testUpdate() {
-        super.testUpdate(backend);
-    }
-
-    @Test
-    public void testDelete() {
-        super.testDelete(backend);
-    }
-
-    @Test
-    public void testGetIdentities() {
-        super.testGetIdentities(backend);
     }
 }

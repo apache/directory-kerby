@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.identity;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
+
 import java.util.List;
 
 /**
@@ -31,33 +33,33 @@ public interface IdentityService {
      * Note it's ordered by principal name.
      * @return principal names
      */
-    List<String> getIdentities(int start, int limit);
+    List<String> getIdentities(int start, int limit) throws KrbException;
 
     /**
      * Get the identity account specified by name.
      * @param principalName
      * @return identity
      */
-    KrbIdentity getIdentity(String principalName);
+    KrbIdentity getIdentity(String principalName) throws KrbException;
 
     /**
      * Add an identity, and return the newly created result.
      * @param identity
      * @return identity
      */
-    KrbIdentity addIdentity(KrbIdentity identity);
+    KrbIdentity addIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Update an identity, and return the updated result.
      * @param identity
      * @return identity
      */
-    KrbIdentity updateIdentity(KrbIdentity identity);
+    KrbIdentity updateIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Delete the identity specified by principal name
      * @param principalName
      *
      */
-    void deleteIdentity(String principalName);
+    void deleteIdentity(String principalName) throws KrbException;
 }

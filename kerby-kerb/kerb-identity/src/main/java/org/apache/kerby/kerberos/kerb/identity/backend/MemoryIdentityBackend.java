@@ -19,20 +19,32 @@
  */
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * A memory map based identity backend, which is purely relying on the
- * underlying cache as the storage.
+ * A memory map based identity backend.
  */
 public class MemoryIdentityBackend extends AbstractIdentityBackend {
+    // TODO: configurable
+    private static final int DEFAULT_STORAGE_SIZE = 10000000;
 
-    public MemoryIdentityBackend() {
-        setCacheSize(10000000); // Just no idea, configurable ?
+    private Map<String, KrbIdentity> storage;
+    private int storageSize = DEFAULT_STORAGE_SIZE;
+
+    protected void doInitialize() {
+        Map<String, KrbIdentity> tmpMap =
+                new LinkedHashMap<String, KrbIdentity>(storageSize) {
+                    @Override
+                    protected boolean removeEldestEntry(Map.Entry eldest) {
+                        return size() > storageSize;
+                    }
+                };
+
+        storage = new ConcurrentHashMap<>(tmpMap);
     }
 
     /**
@@ -40,7 +52,7 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doGetIdentity(String principalName) {
-        return null;
+        return storage.get(principalName);
     }
 
     /**
@@ -48,7 +60,7 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
-        return identity;
+        return storage.put(identity.getPrincipalName(), identity);
     }
 
     /**
@@ -56,7 +68,7 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
-        return identity;
+        return storage.put(identity.getPrincipalName(), identity);
     }
 
     /**
@@ -64,14 +76,14 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected void doDeleteIdentity(String principalName) {
-
+        storage.remove(principalName);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<String> getIdentities(int start, int limit) {
+    protected List<String> doGetIdentities(int start, int limit) throws KrbException{
         List<String> identities = getIdentities();
         if (limit == -1 || start + limit > identities.size()) {
             return identities;
@@ -81,10 +93,9 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
 
     /**
      * Get all of the identity names
-     * @return
      */
     private List<String> getIdentities() {
-        List<String> identities = new ArrayList<>(getCache().keySet());
+        List<String> identities = new ArrayList<>(storage.keySet());
         Collections.sort(identities);
         return identities;
     }
