@@ -45,6 +45,9 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
                           PaDataEntry paData) throws KrbException {
         EncryptedData encData = KrbCodec.decode(paData.getPaDataValue(), EncryptedData.class);
         EncryptionKey clientKey = kdcRequest.getClientKey(encData.getEType());
+        if(clientKey == null) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP);
+        }
         PaEncTsEnc timestamp = EncryptionUtil.unseal(encData, clientKey,
                 KeyUsage.AS_REQ_PA_ENC_TS, PaEncTsEnc.class);
 
