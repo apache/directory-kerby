@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ *
  * A class to represent a kerberos identity.
  *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
@@ -37,22 +37,22 @@ import java.util.Map;
 public class KrbIdentity {
     /** the principal */
     private PrincipalName principal;
-    
+
     /** the key version */
     private int keyVersion = 1;
-    
+
     /** KDC flags */
     private int kdcFlags = 0;
-    
+
     /** flag to indicate if this identity was disabled */
     private boolean disabled;
-    
+
     /** flag to indicate if this identity was locked */
     private boolean locked;
-    
+
     /** the expiration time of the identity, default set to never expire */
     private KerberosTime expireTime = KerberosTime.NEVER;
-    
+
     /** the creation time of the identity */
     private KerberosTime createdTime = KerberosTime.now();
 
@@ -68,7 +68,7 @@ public class KrbIdentity {
         return principal.getName();
     }
 
-    public void setPrincipalName(String newPrincipalName) { 
+    public void setPrincipalName(String newPrincipalName) {
         principal = new PrincipalName(newPrincipalName);
     }
 
@@ -146,20 +146,18 @@ public class KrbIdentity {
         this.keyVersion = keyVersion;
     }
 
-
     @Override
-    public boolean equals( Object obj )
-    {
+    public boolean equals( Object obj ) {
         if ( this == obj ) {
             return true;
         }
-        
+
         if ( obj == null ) {
             return false;
         }
-        
+
         KrbIdentity other = ( KrbIdentity ) obj;
-        
+
         if ( principal == null ) {
             if ( other.principal != null ) {
                 return false;
@@ -168,16 +166,16 @@ public class KrbIdentity {
         else if ( !principal.equals( other.principal ) ) {
             return false;
         }
-        
+
         return true;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ( ( principal == null ) ? 0 : principal.hashCode() );
+        result = prime * result + ( ( principal == null ) ? 0 :
+                principal.hashCode() );
         return result;
     }
 }
