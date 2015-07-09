@@ -26,8 +26,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class KeytabEntry
-{
+public class KeytabEntry {
     private PrincipalName principal;
     private KerberosTime timestamp;
     private int kvno;

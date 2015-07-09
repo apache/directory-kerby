@@ -1,4 +1,4 @@
-/**
+package org.apache.kerby.kerberos.kdc.identitybackend; /**
  *  Licensed to the Apache Software Foundation (ASF) under one
  *  or more contributor license agreements.  See the NOTICE file
  *  distributed with this work for additional information
@@ -17,7 +17,6 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,7 +35,11 @@ import org.apache.kerby.util.IOUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A Json file based backend implementation.
@@ -84,7 +87,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         }
 
         jsonKdbFile = new File(jsonFile);
-        if (! jsonKdbFile.exists()) {
+        if (!jsonKdbFile.exists()) {
             try {
                 jsonKdbFile.createNewFile();
             } catch (IOException e) {

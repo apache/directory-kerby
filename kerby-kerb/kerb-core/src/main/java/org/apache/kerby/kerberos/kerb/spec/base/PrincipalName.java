@@ -141,7 +141,7 @@ public class PrincipalName extends KrbSequenceType {
             String otherPrincipal = (String) other;
             String thisPrincipal = getName();
             return thisPrincipal.equals(otherPrincipal);
-        } else if (! (other instanceof PrincipalName)) {
+        } else if (!(other instanceof PrincipalName)) {
             return false;
         }
 

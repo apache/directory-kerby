@@ -25,7 +25,14 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
-import org.apache.kerby.kerberos.kerb.client.request.*;
+import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
+import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithCert;
+import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithKeytab;
+import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithPasswd;
+import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithToken;
+import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
+import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithTgt;
+import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithToken;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -91,11 +98,11 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     @Override
     public ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException {
         TgsRequest tgsRequest = null;
-        if(requestOptions.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
+        if (requestOptions.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
             tgsRequest = new TgsRequestWithToken(context);
-        } else if(requestOptions.contains(KrbOption.USE_TGT)) {
+        } else if (requestOptions.contains(KrbOption.USE_TGT)) {
             KOption tgt = requestOptions.getOption(KrbOption.USE_TGT);
-            tgsRequest = new TgsRequestWithTgt(context, (TgtTicket)tgt.getValue());
+            tgsRequest = new TgsRequestWithTgt(context, (TgtTicket) tgt.getValue());
         }
 
         if (tgsRequest == null) {

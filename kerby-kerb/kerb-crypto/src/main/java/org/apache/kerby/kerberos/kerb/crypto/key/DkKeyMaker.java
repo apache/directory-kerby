@@ -46,25 +46,25 @@ public abstract class DkKeyMaker extends AbstractKeyMaker {
         int blocksize = encProvider().blockSize();
         int keyInuptSize = encProvider().keyInputSize();
         byte[] keyBytes = new byte[keyInuptSize];
-        byte[] Ki;
+        byte[] ki;
 
         if (constant.length != blocksize) {
-            Ki = Nfold.nfold(constant, blocksize);
+            ki = Nfold.nfold(constant, blocksize);
         } else {
-            Ki = new byte[constant.length];
-            System.arraycopy(constant, 0, Ki, 0, constant.length);
+            ki = new byte[constant.length];
+            System.arraycopy(constant, 0, ki, 0, constant.length);
         }
 
         int n = 0;
         while (n < keyInuptSize) {
-            encProvider().encrypt(key, Ki);
+            encProvider().encrypt(key, ki);
 
             if (n + blocksize >= keyInuptSize) {
-                System.arraycopy(Ki, 0, keyBytes, n, keyInuptSize - n);
+                System.arraycopy(ki, 0, keyBytes, n, keyInuptSize - n);
                 break;
             }
 
-            System.arraycopy(Ki, 0, keyBytes, n, blocksize);
+            System.arraycopy(ki, 0, keyBytes, n, blocksize);
             n += blocksize;
         }
 

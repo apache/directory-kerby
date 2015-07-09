@@ -216,14 +216,14 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     public void decode(int tagFlags, int tagNo,
                        LimitedByteBuffer content) throws IOException {
-        if (this.tagClass != TagClass.UNKNOWN && this.tagClass !=
-                TagClass.fromTagFlags(tagFlags)) {
-            throw new IOException("Unexpected tagFlags " + tagFlags +
-                    ", expecting " + this.tagClass);
+        if (this.tagClass != TagClass.UNKNOWN && this.tagClass
+                != TagClass.fromTagFlags(tagFlags)) {
+            throw new IOException("Unexpected tagFlags " + tagFlags
+                    + ", expecting " + this.tagClass);
         }
         if (this.tagNo != -1 && this.tagNo != tagNo) {
-            throw new IOException("Unexpected tagNo " + tagNo + ", " +
-                    "expecting " + this.tagNo);
+            throw new IOException("Unexpected tagNo " + tagNo + ", "
+                    + "expecting " + this.tagNo);
         }
 
         this.tagClass = TagClass.fromTagFlags(tagFlags);
@@ -237,10 +237,10 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     protected int taggedEncodingLength(TaggingOption taggingOption) {
         int taggingTagNo = taggingOption.getTagNo();
-        int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength() :
-                encodingLength();
-        int taggingEncodingLen = lengthOfTagLength(taggingTagNo) +
-                lengthOfBodyLength(taggingBodyLen) + taggingBodyLen;
+        int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength()
+                : encodingLength();
+        int taggingEncodingLen = lengthOfTagLength(taggingTagNo)
+                + lengthOfBodyLength(taggingBodyLen) + taggingBodyLen;
         return taggingEncodingLen;
     }
 
@@ -255,8 +255,8 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption) {
         int taggingTagFlags = taggingOption.tagFlags(isConstructed());
         encodeTag(buffer, taggingTagFlags, taggingOption.getTagNo());
-        int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength() :
-                encodingLength();
+        int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength()
+                : encodingLength();
         encodeLength(buffer, taggingBodyLen);
         if (taggingOption.isImplicit()) {
             encodeBody(buffer);
@@ -293,12 +293,12 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
                                 TaggingOption taggingOption) throws IOException {
         int expectedTaggingTagFlags = taggingOption.tagFlags(isConstructed());
         if (expectedTaggingTagFlags != taggingTagFlags) {
-            throw new IOException("Unexpected tag flags " + taggingTagFlags +
-                    ", expecting " + expectedTaggingTagFlags);
+            throw new IOException("Unexpected tag flags " + taggingTagFlags
+                    + ", expecting " + expectedTaggingTagFlags);
         }
         if (taggingOption.getTagNo() != taggingTagNo) {
-            throw new IOException("Unexpected tagNo " + taggingTagNo + ", " +
-                    "expecting " + taggingOption.getTagNo());
+            throw new IOException("Unexpected tagNo " + taggingTagNo + ", "
+                    + "expecting " + taggingOption.getTagNo());
         }
 
         if (taggingOption.isImplicit()) {
@@ -379,10 +379,10 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
                 byte[] tmpBytes = new byte[5]; // 5 * 7 > 32
                 int iPut = tmpBytes.length;
 
-                tmpBytes[--iPut] = (byte)(tagNo & 0x7f);
+                tmpBytes[--iPut] = (byte) (tagNo & 0x7f);
                 do {
                     tagNo >>= 7;
-                    tmpBytes[--iPut] = (byte)(tagNo & 0x7f | 0x80);
+                    tmpBytes[--iPut] = (byte) (tagNo & 0x7f | 0x80);
                 } while (tagNo > 127);
 
                 buffer.put(tmpBytes, iPut, tmpBytes.length - iPut);

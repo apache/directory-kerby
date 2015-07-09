@@ -36,8 +36,7 @@ public enum KdcServerOption implements KOption {
     ALLOW_UDP("allow udp", KOptionType.BOOL),
     KDC_UDP_PORT("kdc udp port", KOptionType.INT),
     WORK_DIR("work dir", KOptionType.DIR),
-    ENABLE_DEBUG("enable debug", KOptionType.BOOL),
-    ;
+    ENABLE_DEBUG("enable debug", KOptionType.BOOL);
 
     private String name;
     private KOptionType type;

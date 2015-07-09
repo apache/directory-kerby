@@ -19,7 +19,13 @@
  */
 package org.apache.kerby.kerberos.tool.token;
 
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 public class TokenCache {
     private static final String DEFAULT_TOKEN_CACHE_PATH = ".tokenauth";
@@ -28,7 +34,7 @@ public class TokenCache {
     public static String readToken(String tokenCacheFile) {
         File cacheFile = null;
 
-        if (tokenCacheFile != null && ! tokenCacheFile.isEmpty()) {
+        if (tokenCacheFile != null && !tokenCacheFile.isEmpty()) {
             cacheFile = new File(tokenCacheFile);
             if (!cacheFile.exists()) {
                 throw new RuntimeException("Invalid token cache specified: " + tokenCacheFile);
@@ -49,7 +55,7 @@ public class TokenCache {
                 token = line;
             }
         } catch (IOException ex) { //NOPMD
-            //
+            System.out.println(ex);
         }
 
         return token;
@@ -66,8 +72,7 @@ public class TokenCache {
             cacheFile.setReadable(false, false);
             cacheFile.setReadable(true, true);
             cacheFile.setWritable(true, true);
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             // if case of any error we just delete the cache, if user-only
             // write permissions are not properly set a security exception
             // is thrown and the file will be deleted.

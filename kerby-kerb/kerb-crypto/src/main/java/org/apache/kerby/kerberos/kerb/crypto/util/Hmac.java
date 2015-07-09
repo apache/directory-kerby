@@ -56,13 +56,13 @@ public class Hmac {
         byte[] outerPaddedKey = new byte[blockLen];
 
         // Create the inner padded key
-        Arrays.fill(innerPaddedKey, (byte)0x36);
+        Arrays.fill(innerPaddedKey, (byte) 0x36);
         for (int i = 0; i < key.length; i++) {
             innerPaddedKey[i] ^= key[i];
         }
 
         // Create the outer padded key
-        Arrays.fill(outerPaddedKey, (byte)0x5c);
+        Arrays.fill(outerPaddedKey, (byte) 0x5c);
         for (int i = 0; i < key.length; i++) {
             outerPaddedKey[i] ^= key[i];
         }

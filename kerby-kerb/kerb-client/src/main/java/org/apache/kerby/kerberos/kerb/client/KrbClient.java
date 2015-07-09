@@ -269,7 +269,7 @@ public class KrbClient {
     public ServiceTicket requestServiceTicketWithAccessToken(
             AuthToken token, String serverPrincipal,
             String armorCache) throws KrbException {
-        if (! token.isAcToken()) {
+        if (!token.isAcToken()) {
             throw new IllegalArgumentException("Access token is expected");
         }
         KOptions requestOptions = new KOptions();
@@ -306,8 +306,8 @@ public class KrbClient {
                 throw new KrbException("Failed to store tgt", e);
             }
         } else {
-            throw new IllegalArgumentException("Invalid ccache file, " +
-                    "not exist or writable: " + ccacheFile.getAbsolutePath());
+            throw new IllegalArgumentException("Invalid ccache file, "
+                    + "not exist or writable: " + ccacheFile.getAbsolutePath());
         }
     }
 }

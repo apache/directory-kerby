@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.key;
 
-import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import sun.security.provider.MD4;
+import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
+import org.apache.kerby.kerberos.kerb.crypto.util.Md4;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -41,7 +41,7 @@ public class Rc4KeyMaker extends AbstractKeyMaker {
 
         try {
             byte[] passwd = string.getBytes("UTF-16LE"); // to unicode
-            MessageDigest md = MD4.getInstance();
+            MessageDigest md = new Md4();
             md.update(passwd);
             return md.digest();
         } catch (UnsupportedEncodingException e) {

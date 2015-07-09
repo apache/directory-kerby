@@ -42,7 +42,7 @@ import java.util.Set;
  */
 public final class JaasKrbUtil {
 
-    private JaasKrbUtil() {}
+    private JaasKrbUtil() { }
 
     public static boolean enableDebug = true;
 

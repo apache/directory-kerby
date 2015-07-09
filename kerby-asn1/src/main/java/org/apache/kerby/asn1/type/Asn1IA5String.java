@@ -21,8 +21,7 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.UniversalTag;
 
-public class Asn1IA5String extends Asn1String
-{
+public class Asn1IA5String extends Asn1String {
     public Asn1IA5String() {
         super(UniversalTag.IA5_STRING);
     }

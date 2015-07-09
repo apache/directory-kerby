@@ -27,10 +27,10 @@ import java.util.Scanner;
 
 public class DeletePrincipalCommand extends KadminCommand {
 
-    private static final String USAGE = "Usage: delete_principal [options] principal\n" +
-            "This command prompts for deletion, unless the -force option is given.\n" +
-            "\toptions are:\n" +
-            "\t\t[-force]" + " no prompts for deletion.";
+    private static final String USAGE = "Usage: delete_principal [options] principal\n"
+            + "This command prompts for deletion, unless the -force option is given.\n"
+            + "\toptions are:\n"
+            + "\t\t[-force]" + " no prompts for deletion.";
 
     private Boolean force = false;
 
@@ -56,9 +56,9 @@ public class DeletePrincipalCommand extends KadminCommand {
             Console console = System.console();
             String prompt = "Are you sure want to delete the principal? (yes/no, YES/NO, y/n, Y/N) ";
             if (console == null) {
-                System.out.println("Couldn't get Console instance, " +
-                    "maybe you're running this from within an IDE. " +
-                    "Use scanner to read password.");
+                System.out.println("Couldn't get Console instance, "
+                        + "maybe you're running this from within an IDE. "
+                        + "Use scanner to read password.");
                 Scanner scanner = new Scanner(System.in);
                 reply = getReply(scanner, prompt);
             } else {
@@ -67,7 +67,7 @@ public class DeletePrincipalCommand extends KadminCommand {
             if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
                 deletePrincipal(getKadmin(), principal);
             } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
-                System.out.println("Pincipal \"" + principal + "\"  not deleted." );
+                System.out.println("Pincipal \"" + principal + "\"  not deleted.");
             } else {
                 System.err.println("Unknow request, fail to delete the principal.");
             }

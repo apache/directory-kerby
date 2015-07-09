@@ -54,7 +54,7 @@ public class BytesUtil {
             bytes[offset + 1] = (byte) ((val) & 0xff);
         } else {
             bytes[offset + 1] = (byte) ((val >>  8) & 0xff);
-            bytes[offset + 0] = (byte) ((val      ) & 0xff);
+            bytes[offset + 0] = (byte) ((val) & 0xff);
         }
     }
 
@@ -147,7 +147,7 @@ public class BytesUtil {
             return data;
         }
 
-        byte[] result = new byte[len + + paddingLen];
+        byte[] result = new byte[len + paddingLen];
         System.arraycopy(data, 0, result, 0, len);
         return result;
     }

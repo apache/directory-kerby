@@ -30,12 +30,13 @@ import static org.junit.Assume.assumeTrue;
 
 public class PrfTest {
     private static void performTest(TestCase testCase) throws Exception {
-        byte[] keyData = EncryptionHandler.getEncHandler(testCase.encType).str2key(testCase.keyData, testCase.keyData, null);
+        byte[] keyData = EncryptionHandler.getEncHandler(testCase.encType)
+                .str2key(testCase.keyData, testCase.keyData, null);
         byte[] seed = HexUtil.hex2bytes(testCase.seed);
         byte[] answer = HexUtil.hex2bytes(testCase.answer);
         byte[] outkey = EncryptionHandler.getEncHandler(testCase.encType).prf(keyData, seed);
 
-        if (! Arrays.equals(answer, outkey)) {
+        if (!Arrays.equals(answer, outkey)) {
             System.err.println("failed with:");
             System.err.println("outKey:" + HexUtil.bytesToHex(outkey));
             System.err.println("answer:" + testCase.answer);

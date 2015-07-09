@@ -30,8 +30,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class ChangePasswordCommand extends KadminCommand {
-    private static final String USAGE = "Usage: change_password [-randkey] " +
-            "[-keepold] [-e keysaltlist] [-pw password] principal";
+    private static final String USAGE = "Usage: change_password [-randkey] "
+            + "[-keepold] [-e keysaltlist] [-pw password] principal";
 
     private KOptions kOptions;
 
@@ -42,7 +42,7 @@ public class ChangePasswordCommand extends KadminCommand {
     @Override
     public void execute(String input) {
         String[] commands = input.split("\\s");
-        String principal = commands[commands.length -1];
+        String principal = commands[commands.length - 1];
         String password;
 
         if (commands.length <= 1) {
@@ -50,9 +50,9 @@ public class ChangePasswordCommand extends KadminCommand {
             return;
         }
 
-        if (commands.length == 2) {//only principal is given
+        if (commands.length == 2) { //only principal is given
             password = getPassword(principal);
-            if(password == null) {
+            if (password == null) {
                 System.out.println("Did not get new password successfully. Please try again");
                 return;
             }
@@ -68,7 +68,7 @@ public class ChangePasswordCommand extends KadminCommand {
                 System.err.println(USAGE);
                 return;
             }
-            if (kOptions.contains(KadminOption.PW)){
+            if (kOptions.contains(KadminOption.PW)) {
                 password = kOptions.getStringOption(KadminOption.PW);
                 try {
                     getKadmin().updatePassword(principal, password);
@@ -76,7 +76,7 @@ public class ChangePasswordCommand extends KadminCommand {
                 } catch (KrbException e) {
                     System.err.println("Fail to update password. " + e.getCause());
                 }
-            } else if( kOptions.contains(KadminOption.RANDKEY)){
+            } else if (kOptions.contains(KadminOption.RANDKEY)) {
                 try {
                     getKadmin().updateKeys(principal);
                 } catch (KrbException e) {
@@ -95,9 +95,9 @@ public class ChangePasswordCommand extends KadminCommand {
 
         Console console = System.console();
         if (console == null) {
-            System.out.println("Couldn't get Console instance, " +
-                    "maybe you're running this from within an IDE. " +
-                    "Use scanner to read password.");
+            System.out.println("Couldn't get Console instance, "
+                    + "maybe you're running this from within an IDE. "
+                    + "Use scanner to read password.");
             Scanner scanner = new Scanner(System.in);
             passwordOnce = getPassword(scanner,
                     "Please enter new password  \"" + principal + "\":");

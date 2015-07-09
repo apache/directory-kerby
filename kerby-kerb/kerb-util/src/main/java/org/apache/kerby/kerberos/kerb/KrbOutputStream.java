@@ -27,8 +27,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public abstract class KrbOutputStream extends DataOutputStream
-{
+public abstract class KrbOutputStream extends DataOutputStream {
     public KrbOutputStream(OutputStream out) {
         super(out);
     }

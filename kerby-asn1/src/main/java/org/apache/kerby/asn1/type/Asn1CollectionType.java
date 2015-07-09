@@ -90,12 +90,12 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
             foundPos = -1;
             for (int i = lastPos + 1; i < fieldInfos.length; ++i) {
                 if (item.isContextSpecific()) {
-                    if(fieldInfos[i].getTagNo() == item.tagNo()) {
+                    if (fieldInfos[i].getTagNo() == item.tagNo()) {
                         foundPos = i;
                         break;
                     }
-                } else if (fields[i].tagFlags() == item.tagFlags() &&
-                        fields[i].tagNo() == item.tagNo()) {
+                } else if (fields[i].tagFlags() == item.tagFlags()
+                        && fields[i].tagNo() == item.tagNo()) {
                     foundPos = i;
                     break;
                 }
@@ -105,7 +105,7 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
                         + item.tagFlags() + ", " + item.tagNo() + ")");
             }
 
-            if (! item.isFullyDecoded()) {
+            if (!item.isFullyDecoded()) {
                 AbstractAsn1Type<?> fieldValue = (AbstractAsn1Type<?>) fields[foundPos];
                 if (item.isContextSpecific()) {
                     item.decodeValueWith(fieldValue, fieldInfos[foundPos].getTaggingOption());

@@ -48,7 +48,7 @@ public class ConfigImplTest {
         sectionB.set("kdc", "FILE:/var/log/krb5kdc.log");
 
         assertThat(rootConfig.getString("globalConfig")).isEqualTo("true");
-        assertThat(rootConfig.getString("default_realm")).isNull();//section config should not get the global value
+        assertThat(rootConfig.getString("default_realm")).isNull(); //section config should not get the global value
 
         Config subA = rootConfig.getConfig("libdefaults");
         assertThat(subA.getString("default_realm")).isEqualTo("EXAMPLE.COM");

@@ -85,13 +85,13 @@ public class HostAddress extends KrbSequenceType {
         }
         if (other == this) {
             return true;
-        } else if (! (other instanceof HostAddress)) {
+        } else if (!(other instanceof HostAddress)) {
             return false;
         }
 
         HostAddress that = (HostAddress) other;
-        if (getAddrType() == that.getAddrType() &&
-                Arrays.equals(getAddress(), that.getAddress())) {
+        if (getAddrType() == that.getAddrType()
+                && Arrays.equals(getAddress(), that.getAddress())) {
             return true;
         }
         return false;

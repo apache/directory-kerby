@@ -95,8 +95,8 @@ public class Asn1GeneralizedTime extends Asn1Simple<Date> {
         int iPos = dateStr.indexOf('.');
         if (iPos > 0) {
             if (iPos != 14) {
-                throw new IllegalArgumentException("Bad generalized time string, " +
-                        "with improper milli seconds " + dateStr);
+                throw new IllegalArgumentException("Bad generalized time string, "
+                        + "with improper milli seconds " + dateStr);
             }
 
             char chr;
@@ -123,8 +123,8 @@ public class Asn1GeneralizedTime extends Asn1Simple<Date> {
             iPos = dateStr.indexOf('-');
         }
         if (iPos > 0 && iPos != dateStr.length() - 5) {
-            throw new IllegalArgumentException("Bad generalized time string, " +
-                    "with improper timezone part " + dateStr);
+            throw new IllegalArgumentException("Bad generalized time string, "
+                    + "with improper timezone part " + dateStr);
         }
 
         if (iPos > 0) {

@@ -22,7 +22,11 @@ package org.apache.kerby.kerberos.kerb.identity.backend;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -83,7 +87,7 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected List<String> doGetIdentities(int start, int limit) throws KrbException{
+    protected List<String> doGetIdentities(int start, int limit) throws KrbException {
         List<String> identities = getIdentities();
         if (limit == -1 || start + limit > identities.size()) {
             return identities;

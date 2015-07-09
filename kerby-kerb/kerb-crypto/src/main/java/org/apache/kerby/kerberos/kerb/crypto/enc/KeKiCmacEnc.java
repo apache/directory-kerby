@@ -48,8 +48,9 @@ public abstract class KeKiCmacEnc extends KeKiEnc {
     public byte[] prf(byte[] key, byte[] seed) throws KrbException {
         byte[] prfConst = "prf".getBytes();
         byte[] kp;
-        if (EncryptionHandler.getEncHandler(this.eType()).prfSize() != encProvider().blockSize())
+        if (EncryptionHandler.getEncHandler(this.eType()).prfSize() != encProvider().blockSize()) {
             return null;
+        }
         kp = km.dk(key, prfConst);
         return Cmac.cmac(encProvider(), kp, seed);
     }

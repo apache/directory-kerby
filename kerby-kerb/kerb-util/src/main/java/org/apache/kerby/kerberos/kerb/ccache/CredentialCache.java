@@ -23,7 +23,12 @@ import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,7 +168,7 @@ public class CredentialCache implements KrbCredentialCache {
 
     @Override
     public void load(File ccacheFile) throws IOException {
-        if (! ccacheFile.exists() || ! ccacheFile.canRead()) {
+        if (!ccacheFile.exists() || !ccacheFile.canRead()) {
             throw new IllegalArgumentException("Invalid ccache file: "
                     + ccacheFile.getAbsolutePath());
         }

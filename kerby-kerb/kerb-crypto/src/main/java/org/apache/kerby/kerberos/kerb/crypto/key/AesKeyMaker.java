@@ -51,9 +51,9 @@ public class AesKeyMaker extends DkKeyMaker {
         int keySize = encProvider().keySize();
         byte[] random;
         try {
-            random = Pbkdf.PBKDF2(string.toCharArray(), saltBytes, iterCount, keySize);
+            random = Pbkdf.pbkdf2(string.toCharArray(), saltBytes, iterCount, keySize);
         } catch (GeneralSecurityException e) {
-            throw new KrbException("PBKDF2 failed", e);
+            throw new KrbException("pbkdf2 failed", e);
         }
 
         byte[] tmpKey = random2Key(random);

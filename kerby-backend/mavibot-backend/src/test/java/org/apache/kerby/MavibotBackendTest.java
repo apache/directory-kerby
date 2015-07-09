@@ -19,20 +19,20 @@
  */
 package org.apache.kerby;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.identity.backend.BackendTest;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendTestBase;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for MavibotBackend.
@@ -71,7 +71,7 @@ public class MavibotBackendTest extends BackendTestBase {
         List<String> principals = backend.getIdentities(0, 0);
         assertThat(principals).hasSize(identities.length);
         
-        for(KrbIdentity entry : identities) {
+        for (KrbIdentity entry : identities) {
             assertTrue(principals.contains(entry.getPrincipalName()));
         }
         

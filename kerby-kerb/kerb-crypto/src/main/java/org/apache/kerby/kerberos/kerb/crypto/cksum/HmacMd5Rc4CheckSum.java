@@ -58,7 +58,7 @@ public class HmacMd5Rc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
         byte[] signKey = "signaturekey".getBytes();
         byte[] newSignKey = new byte[signKey.length + 1];
         System.arraycopy(signKey, 0, newSignKey, 0, signKey.length);
-        byte[] Ksign = Hmac.hmac(hashProvider(), key, newSignKey);
+        byte[] ksign = Hmac.hmac(hashProvider(), key, newSignKey);
 
         byte[] salt = Rc4.getSalt(usage, false);
 
@@ -66,6 +66,6 @@ public class HmacMd5Rc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
         hashProvider().hash(data, start, len);
         byte[] hashTmp = hashProvider().output();
 
-        return Hmac.hmac(hashProvider(), Ksign, hashTmp);
+        return Hmac.hmac(hashProvider(), ksign, hashTmp);
     }
 }

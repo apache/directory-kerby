@@ -112,7 +112,7 @@ public class KrbFlags extends Asn1BitString {
         }
 
         byte[] valueBytes = getValue();
-        flags = ((valueBytes[0] & 0xFF) << 24) | ((valueBytes[1] & 0xFF) << 16) |
-                ((valueBytes[2] & 0xFF) << 8) | (0xFF & valueBytes[3]);
+        flags = ((valueBytes[0] & 0xFF) << 24) | ((valueBytes[1] & 0xFF) << 16)
+                | ((valueBytes[2] & 0xFF) << 8) | (0xFF & valueBytes[3]);
     }
 }

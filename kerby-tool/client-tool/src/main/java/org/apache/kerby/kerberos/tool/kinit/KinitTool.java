@@ -39,37 +39,37 @@ import java.util.Scanner;
 public class KinitTool {
 
     private static final String USAGE =
-            "Usage: kinit [-V] [-l lifetime] [-s start_time]\n" +
-                    "\t\t[-r renewable_life] [-f | -F] [-p | -P] -n [-a | -A] [-C] [-E]\n" +
-                    "\t\t[-v] [-R] [-k [-i|-t keytab_file]] [-c cachename]\n" +
-                    "\t\t[-S service_name] [-T ticket_armor_cache]\n" +
-                    "\t\t[-X <attribute>[=<value>]] <principal>\n\n" +
-                    "\tDESCRIPTION:\n" +
-                    "\t\tkinit obtains and caches an initial ticket-granting ticket for principal.\n\n" +
-                    "\tOPTIONS:\n" +
-                    "\t\t-V verbose\n" +
-                    "\t\t-l lifetime\n" +
-                    "\t\t--s start time\n" +
-                    "\t\t-r renewable lifetime\n" +
-                    "\t\t-f forwardable\n" +
-                    "\t\t-F not forwardable\n" +
-                    "\t\t-p proxiable\n" +
-                    "\t\t-P not proxiable\n" +
-                    "\t\t-n anonymous\n" +
-                    "\t\t-a include addresses\n" +
-                    "\t\t-A do not include addresses\n" +
-                    "\t\t-v validate\n" +
-                    "\t\t-R renew\n" +
-                    "\t\t-C canonicalize\n" +
-                    "\t\t-E client is enterprise principal name\n" +
-                    "\t\t-k use keytab\n" +
-                    "\t\t-i use default client keytab (with -k)\n" +
-                    "\t\t-t filename of keytab to use\n" +
-                    "\t\t-c Kerberos 5 cache name\n" +
-                    "\t\t-S service\n" +
-                    "\t\t-T armor credential cache\n" +
-                    "\t\t-X <attribute>[=<value>]\n" +
-                    "\n";
+            "Usage: kinit [-V] [-l lifetime] [-s start_time]\n"
+                    + "\t\t[-r renewable_life] [-f | -F] [-p | -P] -n [-a | -A] [-C] [-E]\n"
+                    + "\t\t[-v] [-R] [-k [-i|-t keytab_file]] [-c cachename]\n"
+                    + "\t\t[-S service_name] [-T ticket_armor_cache]\n"
+                    + "\t\t[-X <attribute>[=<value>]] <principal>\n\n"
+                    + "\tDESCRIPTION:\n"
+                    + "\t\tkinit obtains and caches an initial ticket-granting ticket for principal.\n\n"
+                    + "\tOPTIONS:\n"
+                    + "\t\t-V verbose\n"
+                    + "\t\t-l lifetime\n"
+                    + "\t\t--s start time\n"
+                    + "\t\t-r renewable lifetime\n"
+                    + "\t\t-f forwardable\n"
+                    + "\t\t-F not forwardable\n"
+                    + "\t\t-p proxiable\n"
+                    + "\t\t-P not proxiable\n"
+                    + "\t\t-n anonymous\n"
+                    + "\t\t-a include addresses\n"
+                    + "\t\t-A do not include addresses\n"
+                    + "\t\t-v validate\n"
+                    + "\t\t-R renew\n"
+                    + "\t\t-C canonicalize\n"
+                    + "\t\t-E client is enterprise principal name\n"
+                    + "\t\t-k use keytab\n"
+                    + "\t\t-i use default client keytab (with -k)\n"
+                    + "\t\t-t filename of keytab to use\n"
+                    + "\t\t-c Kerberos 5 cache name\n"
+                    + "\t\t-S service\n"
+                    + "\t\t-T armor credential cache\n"
+                    + "\t\t-X <attribute>[=<value>]\n"
+                    + "\n";
 
 
     private static void printUsage(String error) {
@@ -84,9 +84,9 @@ public class KinitTool {
     private static String getPassword(String principal) {
         Console console = System.console();
         if (console == null) {
-            System.out.println("Couldn't get Console instance, " +
-                    "maybe you're running this from within an IDE. " +
-                    "Use scanner to read password.");
+            System.out.println("Couldn't get Console instance, "
+                    + "maybe you're running this from within an IDE. "
+                    + "Use scanner to read password.");
             System.out.println("Password for " + principal + ":");
             try (Scanner scanner = new Scanner(System.in)) {
                 return scanner.nextLine().trim();
@@ -105,7 +105,7 @@ public class KinitTool {
         ktOptions.add(KinitOption.CLIENT_PRINCIPAL, principal);
 
         //If not request tickets by keytab than by password.
-        if (! ktOptions.contains(KinitOption.USE_KEYTAB)) {
+        if (!ktOptions.contains(KinitOption.USE_KEYTAB)) {
             ktOptions.add(KinitOption.USE_PASSWD);
             String password = getPassword(principal);
             ktOptions.add(KinitOption.USER_PASSWD, password);
@@ -115,7 +115,7 @@ public class KinitTool {
         TgtTicket tgt = krbClient.requestTgtWithOptions(
                 ToolUtil.convertOptions(ktOptions));
 
-        if(tgt == null) {
+        if (tgt == null) {
             System.err.println("Requesting TGT failed");
             return;
         }
@@ -131,8 +131,8 @@ public class KinitTool {
         }
 
         krbClient.storeTicket(tgt, ccacheFile);
-        System.out.println("Successfully requested and stored ticket in " +
-                                    ccacheFile.getAbsolutePath());
+        System.out.println("Successfully requested and stored ticket in "
+                + ccacheFile.getAbsolutePath());
     }
 
     /**

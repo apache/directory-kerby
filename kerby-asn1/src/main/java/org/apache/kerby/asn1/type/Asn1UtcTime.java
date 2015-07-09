@@ -28,8 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SimpleTimeZone;
 
-public class Asn1UtcTime extends Asn1Simple<Date>
-{
+public class Asn1UtcTime extends Asn1Simple<Date> {
     public Asn1UtcTime() {
         this(null);
     }

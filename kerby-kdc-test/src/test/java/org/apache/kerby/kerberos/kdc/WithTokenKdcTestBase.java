@@ -84,7 +84,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         authToken.addAttribute("role", ROLE);
 
         List<String> aud = new ArrayList<String>();
-        if(servicePrincipal != null) {
+        if (servicePrincipal != null) {
             aud.add(servicePrincipal);
         }
         aud.add(AUDIENCE);

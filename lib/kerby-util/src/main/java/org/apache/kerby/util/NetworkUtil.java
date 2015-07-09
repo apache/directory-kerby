@@ -26,7 +26,7 @@ import java.net.ServerSocket;
  * Some network related utilities.
  */
 public final class NetworkUtil {
-    private NetworkUtil() {}
+    private NetworkUtil() { }
 
     /**
      * Get a server socket point for server, either TCP or UDP.

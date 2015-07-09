@@ -30,7 +30,7 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import java.io.File;
 import java.io.IOException;
 
-public class AsRequestWithKeytab extends AsRequest{
+public class AsRequestWithKeytab extends AsRequest {
 
     public AsRequestWithKeytab(KrbContext context) {
         super(context);

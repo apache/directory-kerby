@@ -43,25 +43,25 @@ import java.util.List;
 public class KlistTool {
 
     private static  final String USAGE =
-            "Usage: klist [-e] [-V] [[-c] [-l] [-A] [-d] [-f] [-s] " +
-                    "[-a [-n]]] [-k [-t] [-K]] [name]\n" +
-                    "\t-c specifies credentials cache\n" +
-                    "\t-k specifies keytab\n" +
-                    "\t   (Default is credentials cache)\n" +
-                    "\t-i uses default client keytab if no name given\n" +
-                    "\t-l lists credential caches in collection\n" +
-                    "\t-A shows content of all credential caches\n" +
-                    "\t-e shows the encryption type\n" +
-                    "\t-V shows the Kerberos version and exits\n" +
-                    "\toptions for credential caches:\n" +
-                    "\t\t-d shows the submitted authorization data types\n" +
-                    "\t\t-f shows credentials flags\n" +
-                    "\t\t-s sets exit status based on valid tgt existence\n" +
-                    "\t\t-a displays the address list\n" +
-                    "\t\t\t-n do not reverse-resolve\n" +
-                    "\toptions for keytabs:\n" +
-                    "\t\t-t shows keytab entry timestamps\n" +
-                    "\t\t-K shows keytab entry keys\n";
+            "Usage: klist [-e] [-V] [[-c] [-l] [-A] [-d] [-f] [-s] "
+                    + "[-a [-n]]] [-k [-t] [-K]] [name]\n"
+                    + "\t-c specifies credentials cache\n"
+                    + "\t-k specifies keytab\n"
+                    + "\t   (Default is credentials cache)\n"
+                    + "\t-i uses default client keytab if no name given\n"
+                    + "\t-l lists credential caches in collection\n"
+                    + "\t-A shows content of all credential caches\n"
+                    + "\t-e shows the encryption type\n"
+                    + "\t-V shows the Kerberos version and exits\n"
+                    + "\toptions for credential caches:\n"
+                    + "\t\t-d shows the submitted authorization data types\n"
+                    + "\t\t-f shows credentials flags\n"
+                    + "\t\t-s sets exit status based on valid tgt existence\n"
+                    + "\t\t-a displays the address list\n"
+                    + "\t\t\t-n do not reverse-resolve\n"
+                    + "\toptions for keytabs:\n"
+                    + "\t\t-t shows keytab entry timestamps\n"
+                    + "\t\t-K shows keytab entry keys\n";
 
     // option "-k" hava a optional parameter, "/etc/krb5.keytab" if not specified
     private static String keytabFilePath = null;
@@ -75,7 +75,7 @@ public class KlistTool {
     private static int printCredentialCacheInfo(KOptions klOptions) {
         CredentialCache cc = new CredentialCache();
         List<Credential> credentials;
-        InputStream cis = null ;
+        InputStream cis = null;
         String error;
         String fileName = null;
 
@@ -108,9 +108,9 @@ public class KlistTool {
                 System.out.println("Valid starting\t\tExpires\t\t\tService principal");
 
                 for (Credential crd : credentials) {
-                    System.out.println( df.format(crd.getStartTime().getTime()) + "\t" +
-                                        df.format(crd.getEndTime().getTime()) + "\t" +
-                                        crd.getServerName());
+                    System.out.println(df.format(crd.getStartTime().getTime()) + "\t"
+                            + df.format(crd.getEndTime().getTime()) + "\t"
+                            + crd.getServerName());
                 }
             }
 
@@ -121,11 +121,11 @@ public class KlistTool {
 
     private static int printKeytabInfo(KOptions klOptions) {
         String[] header = new String[4];
-        header[0] = "KVNO Principal\n" +
-                "---- --------------------------------------------------------------------------";
+        header[0] = "KVNO Principal\n"
+                + "---- --------------------------------------------------------------------------";
         header[1] = header[0];
-        header[2] = "KVNO Timestamp           Principal\n" +
-                "---- ------------------- ------------------------------------------------------";
+        header[2] = "KVNO Timestamp           Principal\n"
+                + "---- ------------------- ------------------------------------------------------";
         header[3] = header[2];
         int outputIndex = 0;
         if (klOptions.contains(KlistOption.SHOW_KTAB_ENTRY_TS)) {
@@ -138,7 +138,7 @@ public class KlistTool {
         try {
             File keytabFile = new File(keytabFilePath);
             if (!keytabFile.exists()) {
-                System.out.println("klist: Key table file '" + keytabFilePath +"' not found. ");
+                System.out.println("klist: Key table file '" + keytabFilePath + "' not found. ");
                 return 0;
             }
             System.out.println(header[outputIndex]);
@@ -166,7 +166,7 @@ public class KlistTool {
             }
 
         } catch (IOException e) {
-            System.err.println("klist: Error while scan key table file '" + keytabFilePath +"'");
+            System.err.println("klist: Error while scan key table file '" + keytabFilePath + "'");
         }
         return 0;
     }
@@ -213,7 +213,7 @@ public class KlistTool {
                 }
             }
 
-            if ( error != null ) {
+            if (error != null) {
                 printUsage(error);
             }
 

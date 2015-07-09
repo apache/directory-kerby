@@ -135,8 +135,8 @@ public final class AdminHelper {
             }
         }
 
-        for(KeytabEntry entry : entries) {
-            if(entry.getKvno() < maxKvno) {
+        for (KeytabEntry entry : entries) {
+            if (entry.getKvno() < maxKvno) {
                 keytab.removeKeytabEntry(entry);
             }
         }
@@ -148,13 +148,13 @@ public final class AdminHelper {
         throws KrbException {
         KrbIdentity kid = new KrbIdentity(principal);
         kid.setCreatedTime(KerberosTime.now());
-        if(kOptions.contains(KadminOption.EXPIRE)) {
+        if (kOptions.contains(KadminOption.EXPIRE)) {
             Date date = kOptions.getDateOption(KadminOption.EXPIRE);
             kid.setExpireTime(new KerberosTime(date.getTime()));
         } else {
             kid.setExpireTime(new KerberosTime(253402300799900L));
         }
-        if(kOptions.contains(KadminOption.KVNO)) {
+        if (kOptions.contains(KadminOption.KVNO)) {
             kid.setKeyVersion(kOptions.getIntegerOption(KadminOption.KVNO));
         } else {
             kid.setKeyVersion(1);

@@ -151,14 +151,14 @@ public class Asn1ObjectIdentifier extends Asn1Simple<String> {
         int bitLen = value.bitLength();
 
         if (bitLen < 8) {
-            return new byte[] { value.byteValue() };
+            return new byte[] {value.byteValue()};
         }
 
         int len = (bitLen + 6) / 7;
         byte[] bytes = new byte[len];
         BigInteger tmpValue = value;
         for (int i = len - 1; i >= 0; i--) {
-            bytes[i] = (byte)((tmpValue.byteValue() & 0x7f) | 0x80);
+            bytes[i] = (byte) ((tmpValue.byteValue() & 0x7f) | 0x80);
             tmpValue = tmpValue.shiftRight(7);
         }
         bytes[len - 1] &= 0x7f;

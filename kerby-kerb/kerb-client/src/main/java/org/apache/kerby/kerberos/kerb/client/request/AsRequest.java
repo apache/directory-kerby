@@ -113,7 +113,7 @@ public class AsRequest extends KdcRequest {
 
         PrincipalName tmpServerPrincipal = encKdcRepPart.getSname();
         tmpServerPrincipal.setRealm(encKdcRepPart.getSrealm());
-        if (! tmpServerPrincipal.equals(getServerPrincipal())) {
+        if (!tmpServerPrincipal.equals(getServerPrincipal())) {
             throw new KrbException(KrbErrorCode.KDC_ERR_SERVER_NOMATCH);
         }
 
@@ -132,9 +132,9 @@ public class AsRequest extends KdcRequest {
     }
 
     public TgtTicket getTicket() {
-        TgtTicket TgtTicket = new TgtTicket(getKdcRep().getTicket(),
+        TgtTicket tgtTicket = new TgtTicket(getKdcRep().getTicket(),
                 (EncAsRepPart) getKdcRep().getEncPart(), getKdcRep().getCname().getName());
-        return TgtTicket;
+        return tgtTicket;
     }
 
     private PrincipalName makeTgsPrincipal() {

@@ -801,10 +801,8 @@ public class Base64 {
 
         long len = getEncodeLength(binaryData, CHUNK_SIZE, CHUNK_SEPARATOR);
         if (len > maxResultSize) {
-            throw new IllegalArgumentException("Input array too big, the output array would be bigger (" +
-                len +
-                ") than the specified maxium size of " +
-                maxResultSize);
+            throw new IllegalArgumentException("Input array too big, the output array would be bigger ("
+                    + len + ") than the specified maxium size of " + maxResultSize);
         }
 
         Base64 b64 = isChunked ? new Base64(urlSafe) : new Base64(0, CHUNK_SEPARATOR, urlSafe);

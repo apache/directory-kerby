@@ -65,7 +65,7 @@ public class Asn1InputBuffer {
      * @throws IOException
      */
     public Asn1Type read() throws IOException {
-        if (! limitedBuffer.available()) {
+        if (!limitedBuffer.available()) {
             return null;
         }
         Asn1Item one = AbstractAsn1Type.decodeOne(limitedBuffer);

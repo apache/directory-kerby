@@ -85,7 +85,7 @@ public class KdcHandler {
             kdcRequest.process();
             krbResponse = kdcRequest.getReply();
         } catch (KrbException e) {
-            if(e instanceof KdcRecoverableException) {
+            if (e instanceof KdcRecoverableException) {
                 krbResponse = handleRecoverableException(
                         (KdcRecoverableException) e, kdcRequest);
             } else {
@@ -118,7 +118,7 @@ public class KdcHandler {
         error.setSusec(100);
         error.setErrorCode(e.getKrbError().getErrorCode());
         error.setRealm(kdcContext.getKdcRealm());
-        if(kdcRequest != null) {
+        if (kdcRequest != null) {
             error.setSname(kdcRequest.getKdcReq().getReqBody().getCname());
         } else {
             error.setSname(new PrincipalName("NONE"));

@@ -28,7 +28,7 @@ import java.net.InetSocketAddress;
 import java.util.Map;
 
 public final class ClientUtil {
-    private ClientUtil() {}
+    private ClientUtil() { }
 
     private static final String KRB5_FILE_NAME = "krb5.conf";
     private static final String KRB5_ENV_NAME = "KRB5_CONFIG";
@@ -48,8 +48,8 @@ public final class ClientUtil {
                 krbConfig.addIniConfig(confFile);
                 return krbConfig;
             } catch (IOException e) {
-                throw new KrbException("Failed to load krb config " +
-                        confFile.getAbsolutePath());
+                throw new KrbException("Failed to load krb config "
+                        + confFile.getAbsolutePath());
             }
         }
 
@@ -88,8 +88,8 @@ public final class ClientUtil {
             try {
                 krbConfig.addIniConfig(confFile);
             } catch (IOException e) {
-                throw new KrbException("Failed to load krb config " +
-                        confFile.getAbsolutePath());
+                throw new KrbException("Failed to load krb config "
+                        + confFile.getAbsolutePath());
             }
         }
 

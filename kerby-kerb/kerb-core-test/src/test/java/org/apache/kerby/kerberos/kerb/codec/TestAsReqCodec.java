@@ -19,7 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddrType;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddress;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.spec.base.NameType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;

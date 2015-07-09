@@ -51,14 +51,20 @@ public enum KrbConfigKey implements SectionConfigKey {
     ALLOW_WEAK_CRYPTO(true, "libdefaults"),
     TICKET_LIFETIME(24 * 3600L, "libdefaults"),
     RENEW_LIFETIME(48 * 3600L, "libdefaults"),
-    DEFAULT_TGS_ENCTYPES("aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 " +
-        "des3-cbc-sha1 arcfour-hmac-md5 camellia256-cts-cmac " +
-        "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4",
+    DEFAULT_TGS_ENCTYPES("aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 "
+            + "des3-cbc-sha1 arcfour-hmac-md5 camellia256-cts-cmac "
+            + "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4",
         "libdefaults"),
-    DEFAULT_TKT_ENCTYPES("aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 " +
-        "des3-cbc-sha1 arcfour-hmac-md5 camellia256-cts-cmac " +
-        "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4",
-        "libdefaults");
+    DEFAULT_TKT_ENCTYPES("aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 "
+            + "des3-cbc-sha1 arcfour-hmac-md5 camellia256-cts-cmac "
+            + "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4",
+        "libdefaults"),
+
+    //key for logging location
+    DEFAULT(null, "logging"),
+    KDC(null, "logging"),
+    ADMIN_SERVER(null, "logging");
+
 
     private Object defaultValue;
     /**

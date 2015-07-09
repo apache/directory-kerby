@@ -19,7 +19,13 @@
  */
 package org.apache.kerby.kerberos.kerb.common;
 
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2Entry;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfoEntry;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
+import org.apache.kerby.kerberos.kerb.spec.base.MethodData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 
@@ -34,11 +40,10 @@ public class KrbErrorUtil {
         MethodData methodData = new MethodData();
         methodData.decode(error.getEdata());
 
-        for( PaDataEntry pd : methodData.getElements()) {
-            if( pd.getPaDataType() == PaDataType.ETYPE_INFO2 ) {
+        for (PaDataEntry pd : methodData.getElements()) {
+            if (pd.getPaDataType() == PaDataType.ETYPE_INFO2) {
                 return getEtypes2(pd.getPaDataValue());
-            }
-            else if( pd.getPaDataType() == PaDataType.ETYPE_INFO ) {
+            } else if (pd.getPaDataType() == PaDataType.ETYPE_INFO) {
                 return getEtypes(pd.getPaDataValue());
             }
         }
@@ -49,7 +54,7 @@ public class KrbErrorUtil {
         EtypeInfo info = new EtypeInfo();
         info.decode(data);
         List<EncryptionType> results = new ArrayList<EncryptionType>();
-        for( EtypeInfoEntry entry : info.getElements() ) {
+        for (EtypeInfoEntry entry : info.getElements()) {
             results.add(entry.getEtype());
         }
         return results;
@@ -59,7 +64,7 @@ public class KrbErrorUtil {
         EtypeInfo2 info2 = new EtypeInfo2();
         info2.decode(data);
         List<EncryptionType> results = new ArrayList<EncryptionType>();
-        for( EtypeInfo2Entry entry : info2.getElements() ) {
+        for (EtypeInfo2Entry entry : info2.getElements()) {
             results.add(entry.getEtype());
         }
         return results;

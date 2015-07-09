@@ -84,8 +84,8 @@ public abstract class KrbHandler {
         } else if (messageType == KrbMessageType.KRB_ERROR) {
             KrbError error = (KrbError) kdcRep;
             //TODO: Should use the error message, now only print it.
-            System.out.println("KDC server responsed with message: " +
-                    error.getErrorCode().getMessage());
+            System.out.println("KDC server responsed with message: "
+                    + error.getErrorCode().getMessage());
         }
     }
 

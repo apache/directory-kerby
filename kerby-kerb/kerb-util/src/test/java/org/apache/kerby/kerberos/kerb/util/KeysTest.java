@@ -73,7 +73,7 @@ public class KeysTest {
             if (EncryptionHandler.isImplemented(keyType)) {
                 EncryptionKey genKey = EncryptionHandler.string2Key(principal.getName(),
                         TEST_PASSWORD, keyType);
-                if(! ke.getKey().equals(genKey)) {
+                if (!ke.getKey().equals(genKey)) {
                     fail("str2key failed for key type: " + keyType.getName());
                     //System.err.println("str2key failed for key type: " + keyType.getName());
                 }

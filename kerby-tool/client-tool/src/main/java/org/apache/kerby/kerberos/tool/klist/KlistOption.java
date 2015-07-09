@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.tool.klist;
 import org.apache.kerby.KOption;
 import org.apache.kerby.KOptionType;
 
-public enum KlistOption implements KOption{
+public enum KlistOption implements KOption {
     NONE("NONE"),
     CREDENTIALS_CACHE("-c", "specifies path of credentials cache", KOptionType.STR),
     KEYTAB("-k", "specifies keytab"),
@@ -35,10 +35,9 @@ public enum KlistOption implements KOption{
     CREDENTIALS_FLAGS("-f", "show credential flags"),
     EXIT_TGT_EXISTENCE("-s", "sets exit status based on valid tgt existence"),
     DISPL_ADDRESS_LIST("-a", "displays the address list"),
-    NO_REVERSE_RESOLVE("-n","do not reverse resolve"),
-    SHOW_KTAB_ENTRY_TS("-t","shows keytab entry timestamps"),
-    SHOW_KTAB_ENTRY_KEY("-K", "show keytab entry keys"),
-    ;
+    NO_REVERSE_RESOLVE("-n", "do not reverse resolve"),
+    SHOW_KTAB_ENTRY_TS("-t", "shows keytab entry timestamps"),
+    SHOW_KTAB_ENTRY_KEY("-K", "show keytab entry keys");
 
     private String name;
     private KOptionType type = KOptionType.NONE;
@@ -65,7 +64,7 @@ public enum KlistOption implements KOption{
     }
 
     public static KlistOption fromName(String name) {
-        if (name != null ) {
+        if (name != null) {
             for (KlistOption klopt : values()) {
                 if (klopt.getName().equals(name)) {
                     return (KlistOption) klopt;

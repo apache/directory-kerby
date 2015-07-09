@@ -49,7 +49,7 @@ public abstract class KdcTestBase {
         if (basedir == null) {
             basedir = new File(".").getCanonicalPath();
         }
-        File targetdir= new File(basedir, "target");
+        File targetdir = new File(basedir, "target");
         testDir = new File(targetdir, "tmp");
         testDir.mkdirs();
     }

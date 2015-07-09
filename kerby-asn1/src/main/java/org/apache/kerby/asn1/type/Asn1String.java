@@ -28,8 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Asn1String extends Asn1Simple<String>
-{
+public abstract class Asn1String extends Asn1Simple<String> {
     public Asn1String(UniversalTag tagNo) {
         super(tagNo, null);
     }
@@ -84,25 +83,26 @@ public abstract class Asn1String extends Asn1Simple<String>
             char ch;
 
             if ((bytes[i] & 0xf0) == 0xf0) {
-                int codePoint = ((bytes[i] & 0x03) << 18) | ((bytes[i+1] & 0x3F) << 12) | ((bytes[i+2] & 0x3F) << 6) | (bytes[i+3] & 0x3F);
-                int U = codePoint - 0x10000;
-                char W1 = (char)(0xD800 | (U >> 10));
-                char W2 = (char)(0xDC00 | (U & 0x3FF));
-                cs[length++] = W1;
-                ch = W2;
+                int codePoint = ((bytes[i] & 0x03) << 18) | ((bytes[i + 1] & 0x3F) << 12)
+                        | ((bytes[i + 2] & 0x3F) << 6) | (bytes[i + 3] & 0x3F);
+                int u = codePoint - 0x10000;
+                char w1 = (char) (0xD800 | (u >> 10));
+                char w2 = (char) (0xDC00 | (u & 0x3FF));
+                cs[length++] = w1;
+                ch = w2;
                 i += 4;
             } else if ((bytes[i] & 0xe0) == 0xe0) {
-                ch = (char)(((bytes[i] & 0x0f) << 12)
+                ch = (char) (((bytes[i] & 0x0f) << 12)
                         | ((bytes[i + 1] & 0x3f) << 6) | (bytes[i + 2] & 0x3f));
                 i += 3;
             } else if ((bytes[i] & 0xd0) == 0xd0) {
-                ch = (char)(((bytes[i] & 0x1f) << 6) | (bytes[i + 1] & 0x3f));
+                ch = (char) (((bytes[i] & 0x1f) << 6) | (bytes[i + 1] & 0x3f));
                 i += 2;
             } else if ((bytes[i] & 0xc0) == 0xc0) {
-                ch = (char)(((bytes[i] & 0x1f) << 6) | (bytes[i + 1] & 0x3f));
+                ch = (char) (((bytes[i] & 0x1f) << 6) | (bytes[i + 1] & 0x3f));
                 i += 2;
             } else {
-                ch = (char)(bytes[i] & 0xff);
+                ch = (char) (bytes[i] & 0xff);
                 i += 1;
             }
 
@@ -140,23 +140,21 @@ public abstract class Asn1String extends Asn1Simple<String>
             } else if (ch < 0x0800) {
                 sOut.write(0xc0 | (ch >> 6));
                 sOut.write(0x80 | (ch & 0x3f));
-            }
-            // surrogate pair
-            else if (ch >= 0xD800 && ch <= 0xDFFF) {
+            } else if (ch >= 0xD800 && ch <= 0xDFFF) {
                 // in error - can only happen, if the Java String class has a
                 // bug.
                 if (i + 1 >= c.length) {
                     throw new IllegalStateException("invalid UTF-16 codepoint");
                 }
-                char W1 = ch;
+                char w1 = ch;
                 ch = c[++i];
-                char W2 = ch;
+                char w2 = ch;
                 // in error - can only happen, if the Java String class has a
                 // bug.
-                if (W1 > 0xDBFF) {
+                if (w1 > 0xDBFF) {
                     throw new IllegalStateException("invalid UTF-16 codepoint");
                 }
-                int codePoint = ((W1 & 0x03FF) << 10) | (W2 & 0x03FF) + 0x10000;
+                int codePoint = ((w1 & 0x03FF) << 10) | (w2 & 0x03FF) + 0x10000;
                 sOut.write(0xf0 | (codePoint >> 18));
                 sOut.write(0x80 | ((codePoint >> 12) & 0x3F));
                 sOut.write(0x80 | ((codePoint >> 6) & 0x3F));
@@ -185,7 +183,7 @@ public abstract class Asn1String extends Asn1Simple<String>
             char ch = chars[i];
             if ('a' <= ch && 'z' >= ch) {
                 changed = true;
-                chars[i] = (char)(ch - 'a' + 'A');
+                chars[i] = (char) (ch - 'a' + 'A');
             }
         }
 
@@ -210,7 +208,7 @@ public abstract class Asn1String extends Asn1Simple<String>
             char ch = chars[i];
             if ('A' <= ch && 'Z' >= ch) {
                 changed = true;
-                chars[i] = (char)(ch - 'A' + 'a');
+                chars[i] = (char) (ch - 'A' + 'a');
             }
         }
 
@@ -225,7 +223,7 @@ public abstract class Asn1String extends Asn1Simple<String>
         byte[] bytes = new byte[chars.length];
 
         for (int i = 0; i != bytes.length; i++) {
-            bytes[i] = (byte)chars[i];
+            bytes[i] = (byte) chars[i];
         }
 
         return bytes;
@@ -237,7 +235,7 @@ public abstract class Asn1String extends Asn1Simple<String>
         for (int i = 0; i != bytes.length; i++) {
             char ch = string.charAt(i);
 
-            bytes[i] = (byte)ch;
+            bytes[i] = (byte) ch;
         }
 
         return bytes;
@@ -263,7 +261,7 @@ public abstract class Asn1String extends Asn1Simple<String>
         char[] chars = new char[bytes.length];
 
         for (int i = 0; i != chars.length; i++) {
-            chars[i] = (char)(bytes[i] & 0xff);
+            chars[i] = (char) (bytes[i] & 0xff);
         }
 
         return chars;

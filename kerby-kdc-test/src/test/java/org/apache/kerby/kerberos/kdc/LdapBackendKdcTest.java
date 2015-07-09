@@ -69,7 +69,7 @@ public class LdapBackendKdcTest extends AbstractLdapBackendKdcTest {
     @Before
     public void startUp() throws Exception {
         Conf config = new Conf();
-        config.setString( "host", "localhost" );
+        config.setString("host", "localhost");
         config.setString("admin_dn", ADMIN_DN);
         config.setString("admin_pw", ADMIN_PW);
         config.setString("base_dn", BASE_DN);

@@ -19,7 +19,13 @@
  */
 package org.apache.kerby;
 
-import org.apache.directory.mavibot.btree.*;
+import org.apache.directory.mavibot.btree.BTree;
+import org.apache.directory.mavibot.btree.BTreeFactory;
+import org.apache.directory.mavibot.btree.BTreeTypeEnum;
+import org.apache.directory.mavibot.btree.KeyCursor;
+import org.apache.directory.mavibot.btree.PersistedBTreeConfiguration;
+import org.apache.directory.mavibot.btree.RecordManager;
+import org.apache.directory.mavibot.btree.Tuple;
 import org.apache.directory.mavibot.btree.exception.KeyNotFoundException;
 import org.apache.directory.mavibot.btree.serializer.StringSerializer;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -79,7 +85,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
         if (rm.getManagedTrees().contains(DATA_TREE)) {
             database = rm.getManagedTree(DATA_TREE);
         } else {
-            PersistedBTreeConfiguration<String, KrbIdentity> config = 
+            PersistedBTreeConfiguration<String, KrbIdentity> config =
                     new PersistedBTreeConfiguration<String, KrbIdentity>();
             // _no_ duplicates
             config.setAllowDuplicates(false);
@@ -104,13 +110,13 @@ public class MavibotBackend extends AbstractIdentityBackend {
 
         try {
             cursor = database.browseKeys();
-            while(cursor.hasNext()) {
+            while (cursor.hasNext()) {
                 keys.add(cursor.next());
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new KrbException("Errors occurred while fetching the principals", e);
         } finally {
-            if(cursor != null) {
+            if (cursor != null) {
                 cursor.close();
             }
         }
@@ -125,10 +131,10 @@ public class MavibotBackend extends AbstractIdentityBackend {
     protected KrbIdentity doGetIdentity(String principalName) throws KrbException {
         try {
             return database.get(principalName);
-        } catch(KeyNotFoundException e) {
+        } catch (KeyNotFoundException e) {
             LOG.debug("Identity {} doesn't exist", principalName);
             return null;
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new KrbException("Failed to get the identity " + principalName);
         }
     }
@@ -140,14 +146,14 @@ public class MavibotBackend extends AbstractIdentityBackend {
     protected synchronized KrbIdentity doAddIdentity(KrbIdentity identity) throws KrbException {
         String p = identity.getPrincipalName();
         try {
-            if(database.hasKey(p)) {
+            if (database.hasKey(p)) {
                 throw new KrbException("Identity already exists " + p);
             }
             
             return database.insert(p, identity);
-        } catch(KeyNotFoundException e) {
+        } catch (KeyNotFoundException e) {
             throw new KrbException("No such identity exists " + p);
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new KrbException("Failed to add the identity " + p);
         }
     }
@@ -159,14 +165,14 @@ public class MavibotBackend extends AbstractIdentityBackend {
     protected synchronized KrbIdentity doUpdateIdentity(KrbIdentity identity) throws KrbException {
         String p = identity.getPrincipalName();
         try {
-            if(!database.hasKey(p)) {
+            if (!database.hasKey(p)) {
                 throw new KrbException("No identity found with the principal " + p);
             }
             
             database.delete(p);
             
             return database.insert(p, identity);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new KrbException("Failed to update the identity " + p);
         }
     }
@@ -181,7 +187,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
             if (t == null) {
                 throw new KrbException("Not existing, identity = " + principalName);
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new KrbException("Failed to delete the identity " + principalName);
         }
     }
@@ -193,7 +199,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
     protected void doStop() throws KrbException {
         try {
             rm.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new KrbException("Failed to close the database", e);
         }
     }

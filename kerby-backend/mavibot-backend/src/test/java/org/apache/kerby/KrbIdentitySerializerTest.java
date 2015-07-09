@@ -19,20 +19,20 @@
  */
 package org.apache.kerby;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Map;
-
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.junit.Test;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for KrbIdentity serializer.
@@ -52,7 +52,7 @@ public class KrbIdentitySerializerTest {
         entry.setLocked(true);
 
         byte[] junk = new byte[11];
-        Arrays.fill(junk, (byte)1);
+        Arrays.fill(junk, (byte) 1);
         EncryptionKey key1 = new EncryptionKey(EncryptionType.AES128_CTS, junk);
         entry.addKey(key1);
 
@@ -73,9 +73,9 @@ public class KrbIdentitySerializerTest {
         try {
             deserialized = serializer.fromBytes(serialized, 1);
             fail("shouldn't deserialize");
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             // expected
+            System.out.println(e);
         }
     }
     
@@ -93,7 +93,7 @@ public class KrbIdentitySerializerTest {
         
         Map<EncryptionType, EncryptionKey> exKeys = expected.getKeys();
         Map<EncryptionType, EncryptionKey> acKeys = actual.getKeys();
-        for(EncryptionType et : exKeys.keySet() ) {
+        for (EncryptionType et : exKeys.keySet()) {
             EncryptionKey exKey = exKeys.get(et);
             EncryptionKey acKey = acKeys.get(et);
             

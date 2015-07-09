@@ -19,6 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.keytab;
 
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,10 +34,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
 /**
  * Keytab management util.
@@ -71,8 +71,8 @@ public final class Keytab implements KrbKeytab {
     @Override
     public void removeKeytabEntries(PrincipalName principal, int kvno) {
         List<KeytabEntry> entries = getKeytabEntries(principal);
-        for(KeytabEntry entry : entries) {
-            if(entry.getKvno() == kvno) {
+        for (KeytabEntry entry : entries) {
+            if (entry.getKvno() == kvno) {
                 removeKeytabEntry(entry);
             }
         }
@@ -136,7 +136,7 @@ public final class Keytab implements KrbKeytab {
 
     @Override
     public void load(File keytabFile) throws IOException {
-        if (! keytabFile.exists() || ! keytabFile.canRead()) {
+        if (!keytabFile.exists() || !keytabFile.canRead()) {
             throw new IllegalArgumentException("Invalid keytab file: " + keytabFile.getAbsolutePath());
         }
 

@@ -28,8 +28,8 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import java.util.Map;
 
 public class GetPrincipalCommand extends KadminCommand {
-    private static final String USAGE = "Usage: getprinc principalName\n" +
-            "such as, getprinc hello@TEST.COM";
+    private static final String USAGE = "Usage: getprinc principalName\n"
+            + "such as, getprinc hello@TEST.COM";
 
     public GetPrincipalCommand(Kadmin kadmin) {
         super(kadmin);
@@ -61,12 +61,13 @@ public class GetPrincipalCommand extends KadminCommand {
         Map<EncryptionType, EncryptionKey> key = identity.getKeys();
 
         System.out.println(
-                "Principal: " + identity.getPrincipalName() + "\n" +
-                "Expiration data: " + identity.getExpireTime() + "\n" +
-                "Created time: " + identity.getCreatedTime() + "\n" +
-                "KDC flags: " + identity.getKdcFlags() + "\n" +
-                "Key version: " + identity.getKeyVersion() + "\n" +
-                "Number of keys: " + key.size()
+                "Principal: " + identity.getPrincipalName() + "\n"
+                        + "Expiration data: " + identity.getExpireTime() + "\n"
+                        + "Created time: "
+                        + identity.getCreatedTime() + "\n"
+                        + "KDC flags: " + identity.getKdcFlags() + "\n"
+                        + "Key version: " + identity.getKeyVersion() + "\n"
+                        + "Number of keys: " + key.size()
         );
 
         for (EncryptionType keyType : key.keySet()) {

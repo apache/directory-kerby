@@ -179,15 +179,17 @@ public class FastUtilTest {
         EncryptionKey key, key1, key2;
         byte[] keyData1, keyData2;
         String pepper1, pepper2, answer;
-        keyData1 = EncryptionHandler.getEncHandler(testCase.encType).str2key(testCase.keyData1, testCase.keyData1, null);
+        keyData1 = EncryptionHandler.getEncHandler(testCase.encType).str2key(testCase.keyData1,
+                testCase.keyData1, null);
         key1 = new EncryptionKey(testCase.encType, keyData1);
-        keyData2 = EncryptionHandler.getEncHandler(testCase.encType).str2key(testCase.keyData2, testCase.keyData2, null);
+        keyData2 = EncryptionHandler.getEncHandler(testCase.encType).str2key(testCase.keyData2,
+                testCase.keyData2, null);
         key2 = new EncryptionKey(testCase.encType, keyData2);
         pepper1 = testCase.pepper1;
         pepper2 = testCase.pepper2;
         answer = testCase.answer;
         key = FastUtil.cf2(key1, pepper1, key2, pepper2);
-        if (! Arrays.equals(key.getKeyData(), HexUtil.hex2bytes(answer))) {
+        if (!Arrays.equals(key.getKeyData(), HexUtil.hex2bytes(answer))) {
             System.err.println("Failed with:");
             System.err.println("outKey:" + HexUtil.bytesToHex(key.getKeyData()));
             System.err.println("answer:" + testCase.answer);

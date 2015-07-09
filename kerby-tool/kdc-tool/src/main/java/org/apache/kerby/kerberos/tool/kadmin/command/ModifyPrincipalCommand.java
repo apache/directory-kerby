@@ -27,13 +27,14 @@ import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
 public class ModifyPrincipalCommand extends KadminCommand {
-    private static final String USAGE = "Usage: modify_principal [options] principal\n" +
-        "\toptions are:\n" +
-        "\t\t[-expire dd/MM/yy:HH:mm:ss]\n" +
-        "\t\t[-disabled true/false]\n" +
-        "\t\t[-locked true/false]\n" +
-        "\tExample:\n" +
-        "\t\tmodify_principal -expire 23/04/15:01:01:01 -disabled false -locked true test@EXAMPLE.COM";
+    private static final String USAGE = "Usage: modify_principal [options] principal\n"
+            + "\toptions are:\n"
+            + "\t\t[-expire dd/MM/yy:HH:mm:ss]\n"
+            + "\t\t[-disabled true/false]\n"
+            + "\t\t[-locked true/false]\n"
+            + "\tExample:\n"
+            + "\t\tmodify_principal -expire 23/04/15:01:01:01 -disabled false "
+            + "-locked true test@EXAMPLE.COM";
 
     private KOptions kOptions;
     private String principal;
@@ -93,7 +94,7 @@ public class ModifyPrincipalCommand extends KadminCommand {
             }
             kOptions.add(kOption);
         }
-        if(principal == null) {
+        if (principal == null) {
             ToolUtil.printUsage("missing principal name!", USAGE);
         }
     }

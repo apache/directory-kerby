@@ -27,16 +27,16 @@ import java.util.Scanner;
 
 public class ToolUtil {
 
-    public static void printUsage(String error, String USAGE) {
+    public static void printUsage(String error, String usage) {
         System.err.println(error + "\n");
-        System.err.println(USAGE);
+        System.err.println(usage);
     }
 
     public static KOptions parseOptions(String[] commands, int beginIndex, int endIndex) {
         KadminOption kOption;
         String opt, error, param;
 
-        if(beginIndex < 0) {
+        if (beginIndex < 0) {
             System.out.println("Invalid function parameter(s).");
             return null;
         }

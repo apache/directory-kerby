@@ -43,12 +43,13 @@ public class FastUtil {
         int iterations = keyBytesLen / prfSize;
         prfInbuf[0] = 1;
         System.arraycopy(pepper.getBytes(), 0, prfInbuf, 1, pepper.length());
-        if (keyBytesLen % prfSize !=0) {
+        if (keyBytesLen % prfSize != 0) {
             iterations++;
         }
         byte[] buffer = new byte[prfSize * iterations];
         for (int i = 0; i < iterations; i++) {
-            System.arraycopy(EncryptionHandler.getEncHandler(key.getKeyType()).prf(key.getKeyData(), prfInbuf), 0, buffer, i * prfSize, prfSize);
+            System.arraycopy(EncryptionHandler.getEncHandler(key.getKeyType())
+                    .prf(key.getKeyData(), prfInbuf), 0, buffer, i * prfSize, prfSize);
             prfInbuf[0]++;
         }
         System.arraycopy(buffer, 0, tmpbuf, 0, keyBytesLen);

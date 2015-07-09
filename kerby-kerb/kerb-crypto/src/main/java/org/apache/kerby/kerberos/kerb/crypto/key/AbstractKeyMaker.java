@@ -75,7 +75,7 @@ public abstract class AbstractKeyMaker implements KeyMaker {
     protected static byte[] getSaltBytes(String salt, String pepper)
             throws UnsupportedEncodingException {
         byte[] saltBytes = salt.getBytes("UTF-8");
-        if (pepper != null && ! pepper.isEmpty()) {
+        if (pepper != null && !pepper.isEmpty()) {
             byte[] pepperBytes = pepper.getBytes("UTF-8");
             int len = saltBytes.length;
             len += 1 + pepperBytes.length;

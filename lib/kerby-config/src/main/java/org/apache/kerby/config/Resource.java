@@ -75,7 +75,7 @@ public final class Resource {
         return new Resource(jsonUrl, Format.JSON_FILE);
     }
 
-    public static Resource createMapResource(Map<String,String> mapConfig) {
+    public static Resource createMapResource(Map<String, String> mapConfig) {
         return new Resource("mapConfig", mapConfig, Format.MAP);
     }
 

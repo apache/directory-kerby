@@ -93,7 +93,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         }
 
         dataFile = new File(dataDir);
-        if (! dataFile.exists()) {
+        if (!dataFile.exists()) {
             dataFile.mkdirs();
         }
 
@@ -103,7 +103,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         }
 
         dataLogFile = new File(dataLogDir);
-        if (! dataLogFile.exists()) {
+        if (!dataLogFile.exists()) {
             dataLogFile.mkdirs();
         }
 
@@ -146,7 +146,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();
         try {
             quorumConfiguration.parseProperties(startupProperties);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new KrbException("Loading quorum configuraiton failed", e);
         }
 
@@ -274,12 +274,12 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         } catch (KeeperException e) {
             throw new KrbException("Fail to get identities from zookeeper", e);
         }
-        if(identityNames == null || identityNames.isEmpty()) {
+        if (identityNames == null || identityNames.isEmpty()) {
             return null;
         }
         List<String> newIdentities = new ArrayList<>(identityNames.size());
-        for(String name : identityNames) {
-            if(name.contains("\\")) {
+        for (String name : identityNames) {
+            if (name.contains("\\")) {
                 name = name.replace("\\", "/");
             }
             newIdentities.add(name);
@@ -291,7 +291,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     /**
      * Set the identity to add or update an indentity in the backend.
      * @param identity . The identity to update
-     * @throws KeeperException
+     * @throws org.apache.zookeeper.KeeperException
      */
     private void setIdentity(KrbIdentity identity) throws KeeperException {
         String principalName = identity.getPrincipalName();
@@ -313,7 +313,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
      * @return
      */
     private String replaceSlash(String name) {
-        if(name.contains("/")) {
+        if (name.contains("/")) {
             name = name.replace("/", "\\");
         }
         return name;

@@ -25,7 +25,6 @@ import org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import java.io.File;
 
@@ -43,7 +42,6 @@ public class JsonBackendTest extends BackendTestBase {
 
         Config backendConfig = new Conf();
         backendConfig.setString(JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE, jsonBackendFileString);
-
         backend = new JsonIdentityBackend(backendConfig);
         backend.initialize();
     }

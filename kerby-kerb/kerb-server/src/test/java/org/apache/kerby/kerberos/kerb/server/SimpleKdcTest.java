@@ -57,10 +57,10 @@ public class SimpleKdcTest {
         SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
         socketChannel.connect(sa);
 
-        String BAD_KRB_MESSAGE = "Hello World!";
-        ByteBuffer writeBuffer = ByteBuffer.allocate(4 + BAD_KRB_MESSAGE.getBytes().length);
-        writeBuffer.putInt(BAD_KRB_MESSAGE.getBytes().length);
-        writeBuffer.put(BAD_KRB_MESSAGE.getBytes());
+        String badKrbMessage = "Hello World!";
+        ByteBuffer writeBuffer = ByteBuffer.allocate(4 + badKrbMessage.getBytes().length);
+        writeBuffer.putInt(badKrbMessage.getBytes().length);
+        writeBuffer.put(badKrbMessage.getBytes());
         writeBuffer.flip();
 
         socketChannel.write(writeBuffer);

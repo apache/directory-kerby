@@ -84,7 +84,7 @@ public class TokenTest {
 
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
 
-        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
@@ -99,7 +99,7 @@ public class TokenTest {
 
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
 
-        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         AuthToken token2 = tokenDecoder.decodeFromBytes(tokenStr);
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
@@ -111,8 +111,8 @@ public class TokenTest {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
 
-        setEncryptKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
-        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+        setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
         Assertions.assertThat(tokenStr).isNotNull();
@@ -145,7 +145,7 @@ public class TokenTest {
 
         setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
-        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
         Assertions.assertThat(tokenStr).isNotNull();
@@ -165,7 +165,7 @@ public class TokenTest {
 
         setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
-        setAudience((JwtTokenDecoder)tokenDecoder, audiences);
+        setAudience((JwtTokenDecoder) tokenDecoder, audiences);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
         Assertions.assertThat(tokenStr).isNotNull();
@@ -181,7 +181,7 @@ public class TokenTest {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
 
-        setSignKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
+        setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setAudience((JwtTokenDecoder) tokenDecoder, auds);
 

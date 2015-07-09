@@ -30,8 +30,21 @@ import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApOption;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
-import org.apache.kerby.kerberos.kerb.spec.kdc.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReq;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReqEntry;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReqType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
+import org.apache.kerby.kerberos.kerb.spec.kdc.EncTgsRepPart;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
+import org.apache.kerby.kerberos.kerb.spec.kdc.TgsRep;
+import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
@@ -136,12 +149,12 @@ public class TgsRequest extends KdcRequest {
         if (startTime == null) {
             startTime = tgtTicket.getEncPart().getAuthTime();
         }
-        if (! startTime.lessThan(now)) {
+        if (!startTime.lessThan(now)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_NYV);
         }
 
         KerberosTime endTime = tgtTicket.getEncPart().getEndTime();
-        if (! endTime.greaterThan(now)) {
+        if (!endTime.greaterThan(now)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_EXPIRED);
         }
 
@@ -168,7 +181,7 @@ public class TgsRequest extends KdcRequest {
         reply.setEncPart(encKdcRepPart);
 
         EncryptionKey sessionKey;
-        if(getToken() != null) {
+        if (getToken() != null) {
             sessionKey = getSessionKey();
         } else {
             sessionKey = getTgtSessionKey();

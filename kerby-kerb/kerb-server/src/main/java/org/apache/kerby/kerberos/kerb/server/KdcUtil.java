@@ -33,7 +33,7 @@ import java.net.InetSocketAddress;
  */
 public final class KdcUtil {
 
-    private KdcUtil() {}
+    private KdcUtil() { }
 
     public static KdcConfig getKdcConfig(File confDir) throws KrbException {
         File kdcConfFile = new File(confDir, "kdc.conf");

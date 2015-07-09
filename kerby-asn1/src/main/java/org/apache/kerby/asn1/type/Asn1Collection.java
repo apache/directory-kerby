@@ -110,14 +110,14 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
     }
 
     public static Asn1Type createCollection(int tagNo) {
-        if (! isCollection(tagNo)) {
+        if (!isCollection(tagNo)) {
             throw new IllegalArgumentException("Not collection type, tag: " + tagNo);
         }
         return createCollection(UniversalTag.fromValue(tagNo));
     }
 
     public static Asn1Type createCollection(UniversalTag tagNo) {
-        if (! isCollection(tagNo)) {
+        if (!isCollection(tagNo)) {
             throw new IllegalArgumentException("Not collection type, tag: " + tagNo);
         }
 

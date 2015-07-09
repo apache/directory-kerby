@@ -74,8 +74,7 @@ public class DesProvider extends AbstractEncryptProvider {
                 output = cipher.doFinal(data, i * 8, 8);
                 cipher.init(Cipher.ENCRYPT_MODE, skSpec, new IvParameterSpec(output));
             }
-        }
-        catch (GeneralSecurityException e) {
+        } catch (GeneralSecurityException e) {
             KrbException ke = new KrbException(e.getMessage());
             ke.initCause(e);
             throw ke;

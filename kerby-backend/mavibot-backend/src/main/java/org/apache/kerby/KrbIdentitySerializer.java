@@ -19,12 +19,6 @@
  */
 package org.apache.kerby;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Comparator;
-import java.util.Map;
-
 import org.apache.directory.mavibot.btree.serializer.BufferHandler;
 import org.apache.directory.mavibot.btree.serializer.ElementSerializer;
 import org.apache.directory.mavibot.btree.serializer.IntSerializer;
@@ -34,6 +28,12 @@ import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Comparator;
+import java.util.Map;
 
 /**
  * Serializer for KrbIdentity.
@@ -64,11 +64,11 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
             // mask for disabled and lock flags
             byte mask = 0;
             
-            if(entry.isDisabled()) {
+            if (entry.isDisabled()) {
                 mask |= 1 << 1;
             }
 
-            if(entry.isLocked()) {
+            if (entry.isLocked()) {
                 mask |= 1 << 2;
             }
             
@@ -84,7 +84,7 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
             // num keys
             out.write(IntSerializer.serialize(keys.size()));
             
-            for(EncryptionKey ek : keys.values()) {
+            for (EncryptionKey ek : keys.values()) {
                 int type = ek.getKeyType().getValue();
                 out.write(IntSerializer.serialize(type));
                 byte[] data = ek.getKeyData();
@@ -93,8 +93,7 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
             }
             
             return out.toByteArray();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             throw new IllegalStateException("Failed to serialize the identity " + entry);
         }
     }
@@ -121,11 +120,11 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
         
         byte mask = buffer.get();
         
-        if((mask & 2) != 0) {
+        if ((mask & 2) != 0) {
             id.setDisabled(true);
         }
         
-        if((mask & 4) != 0) {
+        if ((mask & 4) != 0) {
             id.setLocked(true);
         }
         
@@ -137,7 +136,7 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
 
         int numKeys = IntSerializer.INSTANCE.deserialize(buffer);
         
-        for(int i=0; i<numKeys; i++) {
+        for (int i = 0; i < numKeys; i++) {
             int keyType = IntSerializer.INSTANCE.deserialize(buffer);
             int keyLen = IntSerializer.INSTANCE.deserialize(buffer);
             
@@ -178,5 +177,4 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
     public Class<?> getType() {
         return KrbIdentity.class;
     }
-
 }

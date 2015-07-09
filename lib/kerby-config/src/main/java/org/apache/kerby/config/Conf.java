@@ -24,7 +24,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class Conf implements Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(Conf.class);
@@ -80,8 +85,10 @@ public class Conf implements Config {
         try {
             loader = loaderClass.newInstance();
         } catch (Exception e) {
-            LOGGER.error("Failed to create " + Conf.class.getPackage().getName() + " for " + loaderClass.getName(), e);
-            throw new RuntimeException("Failed to create " + Conf.class.getPackage().getName() + " for " + loaderClass.getName(), e);
+            LOGGER.error("Failed to create " + Conf.class.getPackage().getName()
+                    + " for " + loaderClass.getName(), e);
+            throw new RuntimeException("Failed to create "
+                    + Conf.class.getPackage().getName() + " for " + loaderClass.getName(), e);
         }
         loader.setResource(resource);
         return loader;

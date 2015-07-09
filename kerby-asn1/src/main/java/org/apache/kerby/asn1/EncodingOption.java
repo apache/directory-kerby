@@ -88,7 +88,7 @@ public class EncodingOption {
      * @return true if it's constructed, false otherwise
      */
     public boolean isConstructed() {
-        return ! isPrimitive;
+        return !isPrimitive;
     }
 
     /**
@@ -148,7 +148,7 @@ public class EncodingOption {
      * @return true if using EXPLICIT, false otherwise
      */
     public boolean isExplicit() {
-        return ! isImplicit;
+        return !isImplicit;
     }
 
     /**

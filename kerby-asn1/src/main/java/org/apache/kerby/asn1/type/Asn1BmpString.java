@@ -25,8 +25,7 @@ import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 
-public class Asn1BmpString extends Asn1Simple<String>
-{
+public class Asn1BmpString extends Asn1Simple<String> {
     public Asn1BmpString() {
         super(null);
     }
@@ -47,8 +46,8 @@ public class Asn1BmpString extends Asn1Simple<String>
         
         for (int i = 0; i != len; i++) {
             char c = strValue.charAt(i);
-            bytes[2 * i] = (byte)(c >> 8);
-            bytes[2 * i + 1] = (byte)c;
+            bytes[2 * i] = (byte) (c >> 8);
+            bytes[2 * i + 1] = (byte) c;
         }
         setBytes(bytes);
     }
@@ -57,7 +56,7 @@ public class Asn1BmpString extends Asn1Simple<String>
         byte[] bytes = getBytes();
         char[] chars = new char[bytes.length / 2];
         for (int i = 0; i != chars.length; i++) {
-            chars[i] = (char)((bytes[2 * i] << 8) | (bytes[2 * i + 1] & 0xff));
+            chars[i] = (char) ((bytes[2 * i] << 8) | (bytes[2 * i + 1] & 0xff));
         }
         setValue(new String(chars));
     }

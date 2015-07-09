@@ -19,7 +19,15 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.*;
+
+import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1SequenceOf;
+import org.apache.kerby.asn1.type.Asn1SetType;
+import org.apache.kerby.asn1.type.Asn1Tagging;
+import org.apache.kerby.asn1.type.Asn1VisibleString;
+import org.apache.kerby.asn1.type.TaggingSequence;
+import org.apache.kerby.asn1.type.TaggingSet;
 
 /**
  * Ref. X.690-0207(http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf),
@@ -29,7 +37,7 @@ public class PersonnelRecord extends TaggingSet {
     private static final int NAME = 0;
     private static final int TITLE = 1;
     private static final int NUMBER = 2;
-    private static final int DATEOFHIRE= 3;
+    private static final int DATEOFHIRE = 3;
     private static final int NAMEOFSPOUSE = 4;
     private static final int CHILDREN = 5;
 

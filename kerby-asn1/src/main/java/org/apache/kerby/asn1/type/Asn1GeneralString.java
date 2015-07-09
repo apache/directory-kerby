@@ -21,8 +21,7 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.UniversalTag;
 
-public class Asn1GeneralString extends Asn1String
-{
+public class Asn1GeneralString extends Asn1String {
     public Asn1GeneralString() {
         super(UniversalTag.GENERAL_STRING);
     }

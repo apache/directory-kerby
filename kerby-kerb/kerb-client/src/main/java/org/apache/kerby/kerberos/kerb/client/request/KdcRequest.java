@@ -198,7 +198,7 @@ public abstract class KdcRequest {
         HostAddresses addresses = null;
         if (!hostAddresses.isEmpty()) {
             addresses = new HostAddresses();
-            for(HostAddress ha : hostAddresses) {
+            for (HostAddress ha : hostAddresses) {
                 addresses.addElement(ha);
             }
         }

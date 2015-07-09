@@ -49,8 +49,8 @@ public abstract class AesProvider extends AbstractEncryptProvider {
             SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
             IvParameterSpec param = new IvParameterSpec(cipherState);
 
-            cipher.init(encrypt ?
-                    Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, secretKey, param);
+            cipher.init(encrypt
+                    ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, secretKey, param);
             byte[] output = cipher.doFinal(data);
             System.arraycopy(output, 0, data, 0, output.length);
         } catch (GeneralSecurityException e) {

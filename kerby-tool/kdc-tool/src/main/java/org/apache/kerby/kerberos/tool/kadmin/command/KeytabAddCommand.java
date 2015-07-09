@@ -53,7 +53,7 @@ public class KeytabAddCommand extends KadminCommand {
                 }
                 keytabFileLocation = commands[index].trim();
 
-            } else if (!command.startsWith("-")){
+            } else if (!command.startsWith("-")) {
                 principal = command;
             }
             index++;
@@ -73,8 +73,8 @@ public class KeytabAddCommand extends KadminCommand {
             getKadmin().exportKeytab(keytabFile, principal);
             System.out.println("Done!");
         } catch (KrbException e) {
-            System.err.println("Principal \"" + principal + "\" fail to add entry to keytab." +
-                e.getCause());
+            System.err.println("Principal \"" + principal + "\" fail to add entry to keytab."
+                    + e.getCause());
         }
     }
 }

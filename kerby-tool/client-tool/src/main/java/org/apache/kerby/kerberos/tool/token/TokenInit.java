@@ -75,8 +75,8 @@ public class TokenInit {
         String principal, group, role = null;
 
         if (args.length != 2 && args.length != 3) {
-            System.out.println("This is a simple token issuing tool just for " +
-                    "kerb-token PoC usage\n");
+            System.out.println("This is a simple token issuing tool just for "
+                    + "kerb-token PoC usage\n");
             System.out.println("tokeninit <username> <group> [role]\n");
             System.exit(1);
         }

@@ -52,8 +52,8 @@ public class DefaultKdcHandler extends KdcHandler implements Runnable {
                 handleMessage(message);
             } catch (IOException e) {
                 transport.release();
-                logger.debug("Transport or decoding error occurred, " +
-                        "disconnecting abnormally", e);
+                logger.debug("Transport or decoding error occurred, "
+                        + "disconnecting abnormally", e);
                 break;
             }
         }

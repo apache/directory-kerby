@@ -48,7 +48,7 @@ public class KeytabRemoveCommand extends KadminCommand {
         String principal;
         String keytabFileLocation;
         String removeOption = null;
-        int lastIndex ;
+        int lastIndex;
 
         if (commands[commands.length - 1].matches("^all|old|-?\\d+$")) {
             if (commands.length < 3) {
@@ -64,14 +64,15 @@ public class KeytabRemoveCommand extends KadminCommand {
         }
         KOptions kOptions = ToolUtil.parseOptions(commands, 1, lastIndex);
 
-        if (principal == null || kOptions == null ||
-                kOptions.contains(KadminOption.K) && kOptions.contains(KadminOption.KEYTAB)) {
+        if (principal == null || kOptions == null
+                || kOptions.contains(KadminOption.K) && kOptions.contains(KadminOption.KEYTAB)) {
             System.err.println(USAGE);
             return;
         }
 
-        keytabFileLocation = kOptions.contains(KadminOption.K)?
-                kOptions.getStringOption(KadminOption.K):kOptions.getStringOption(KadminOption.KEYTAB);
+        keytabFileLocation = kOptions.contains(KadminOption.K)
+                ? kOptions.getStringOption(KadminOption.K)
+                : kOptions.getStringOption(KadminOption.KEYTAB);
 
         if (keytabFileLocation == null) {
             keytabFileLocation = DEFAULT_KEYTAB_FILE;
@@ -89,8 +90,8 @@ public class KeytabRemoveCommand extends KadminCommand {
             }
             System.out.println("Done!");
         } catch (KrbException e) {
-            System.err.println("Principal \"" + principal + "\" fail to remove entry from keytab." +
-                e.getMessage());
+            System.err.println("Principal \"" + principal + "\" fail to remove entry from keytab."
+                    + e.getMessage());
         }
     }
 }

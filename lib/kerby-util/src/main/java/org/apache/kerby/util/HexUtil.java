@@ -20,7 +20,7 @@
 package org.apache.kerby.util;
 
 public final class HexUtil {
-    private HexUtil() {}
+    private HexUtil() { }
 
     private static final String HEX_CHARS_STR = "0123456789ABCDEF";
     private static final char[] HEX_CHARS = HEX_CHARS_STR.toCharArray();
@@ -32,7 +32,7 @@ public final class HexUtil {
     public static String bytesToHex(byte[] bytes) {
         int len = bytes.length * 2;
         char[] hexChars = new char[len];
-        for ( int j = 0; j < bytes.length; j++ ) {
+        for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;
             hexChars[j * 2] = HEX_CHARS[v >>> 4];
             hexChars[j * 2 + 1] = HEX_CHARS[v & 0x0F];

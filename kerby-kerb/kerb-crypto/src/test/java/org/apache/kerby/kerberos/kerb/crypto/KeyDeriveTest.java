@@ -19,7 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto;
 
-import org.apache.kerby.kerberos.kerb.crypto.enc.provider.*;
+import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Aes128Provider;
+import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Aes256Provider;
+import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia128Provider;
+import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia256Provider;
+import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Des3Provider;
 import org.apache.kerby.kerberos.kerb.crypto.key.AesKeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.key.CamelliaKeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.key.Des3KeyMaker;
@@ -57,11 +61,11 @@ public class KeyDeriveTest {
     public void testKeyDerive_DES3_CBC_SHA1_299() throws Exception {
         performTest(new TestCase(
                 EncryptionType.DES3_CBC_SHA1,
-                "850BB51358548CD05E86768C313E3BFE" +
-                        "F7511937DCF72C3E",
+                "850BB51358548CD05E86768C313E3BFE"
+                        + "F7511937DCF72C3E",
                 "0000000299",
-                "F78C496D16E6C2DAE0E0B6C24057A84C" +
-                        "0426AEEF26FD6DCE"
+                "F78C496D16E6C2DAE0E0B6C24057A84C"
+                        + "0426AEEF26FD6DCE"
                 ));
     }
     
@@ -69,11 +73,11 @@ public class KeyDeriveTest {
     public void testKeyDerive_DES3_CBC_SHA1_2AA() throws Exception {
         performTest(new TestCase(
                 EncryptionType.DES3_CBC_SHA1,
-                "850BB51358548CD05E86768C313E3BFE" +
-                        "F7511937DCF72C3E",
+                "850BB51358548CD05E86768C313E3BFE"
+                        + "F7511937DCF72C3E",
                 "00000002AA",
-                "5B5723D0B634CB684C3EBA5264E9A70D" +
-                        "52E683231AD3C4CE"
+                "5B5723D0B634CB684C3EBA5264E9A70D"
+                        + "52E683231AD3C4CE"
                 ));
 
     }
@@ -82,11 +86,11 @@ public class KeyDeriveTest {
     public void testKeyDerive_DES3_CBC_SHA1_255() throws Exception {
         performTest(new TestCase(
                 EncryptionType.DES3_CBC_SHA1,
-                "850BB51358548CD05E86768C313E3BFE" +
-                        "F7511937DCF72C3E",
+                "850BB51358548CD05E86768C313E3BFE"
+                        + "F7511937DCF72C3E",
                 "0000000255",
-                "A77C94980E9B7345A81525C423A737CE" +
-                        "67F4CD91B6B3DA45"
+                "A77C94980E9B7345A81525C423A737CE"
+                        + "67F4CD91B6B3DA45"
                 ));
     }
     
@@ -126,11 +130,11 @@ public class KeyDeriveTest {
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
-                "FE697B52BC0D3CE14432BA036A92E65B" +
-                        "BB52280990A2FA27883998D72AF30161",
+                "FE697B52BC0D3CE14432BA036A92E65B"
+                        + "BB52280990A2FA27883998D72AF30161",
                 "0000000299",
-                "BFAB388BDCB238E9F9C98D6A878304F0" +
-                        "4D30C82556375AC507A7A852790F4674"
+                "BFAB388BDCB238E9F9C98D6A878304F0"
+                        + "4D30C82556375AC507A7A852790F4674"
                 ));
     }
     
@@ -140,11 +144,11 @@ public class KeyDeriveTest {
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
-                "FE697B52BC0D3CE14432BA036A92E65B" +
-                        "BB52280990A2FA27883998D72AF30161",
+                "FE697B52BC0D3CE14432BA036A92E65B"
+                        + "BB52280990A2FA27883998D72AF30161",
                 "00000002AA",
-                "C7CFD9CD75FE793A586A542D87E0D139" +
-                        "6F1134A104BB1A9190B8C90ADA3DDF37"
+                "C7CFD9CD75FE793A586A542D87E0D139"
+                        + "6F1134A104BB1A9190B8C90ADA3DDF37"
         ));
     }
     
@@ -154,11 +158,11 @@ public class KeyDeriveTest {
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
-                "FE697B52BC0D3CE14432BA036A92E65B" +
-                        "BB52280990A2FA27883998D72AF30161",
+                "FE697B52BC0D3CE14432BA036A92E65B"
+                        + "BB52280990A2FA27883998D72AF30161",
                 "0000000255",
-                "97151B4C76945063E2EB0529DC067D97" +
-                        "D7BBA90776D8126D91F34F3101AEA8BA"
+                "97151B4C76945063E2EB0529DC067D97"
+                        + "D7BBA90776D8126D91F34F3101AEA8BA"
                 ));
     }
     
@@ -196,11 +200,11 @@ public class KeyDeriveTest {
     public void testKeyDerive_CAMELLIA256_CTS_CMAC_299() throws Exception {
         performTest(new TestCase(
                 EncryptionType.CAMELLIA256_CTS_CMAC,
-                "B9D6828B2056B7BE656D88A123B1FAC6" +
-                        "8214AC2B727ECF5F69AFE0C4DF2A6D2C",
+                "B9D6828B2056B7BE656D88A123B1FAC6"
+                        + "8214AC2B727ECF5F69AFE0C4DF2A6D2C",
                 "0000000299",
-                "E467F9A9552BC7D3155A6220AF9C1922" +
-                        "0EEED4FF78B0D1E6A1544991461A9E50"
+                "E467F9A9552BC7D3155A6220AF9C1922"
+                        + "0EEED4FF78B0D1E6A1544991461A9E50"
                 ));
     }
     
@@ -208,11 +212,11 @@ public class KeyDeriveTest {
     public void testKeyDerive_CAMELLIA256_CTS_CMAC_2AA() throws Exception {
         performTest(new TestCase(
                 EncryptionType.CAMELLIA256_CTS_CMAC,
-                "B9D6828B2056B7BE656D88A123B1FAC6" +
-                        "8214AC2B727ECF5F69AFE0C4DF2A6D2C",
+                "B9D6828B2056B7BE656D88A123B1FAC6"
+                        + "8214AC2B727ECF5F69AFE0C4DF2A6D2C",
                 "00000002AA",
-                "412AEFC362A7285FC3966C6A5181E760" +
-                        "5AE675235B6D549FBFC9AB6630A4C604"
+                "412AEFC362A7285FC3966C6A5181E760"
+                        + "5AE675235B6D549FBFC9AB6630A4C604"
                 ));
     }
     
@@ -220,11 +224,11 @@ public class KeyDeriveTest {
     public void testKeyDerive_CAMELLIA256_CTS_CMAC_255() throws Exception {
         performTest(new TestCase(
                 EncryptionType.CAMELLIA256_CTS_CMAC,
-                "B9D6828B2056B7BE656D88A123B1FAC6" +
-                        "8214AC2B727ECF5F69AFE0C4DF2A6D2C",
+                "B9D6828B2056B7BE656D88A123B1FAC6"
+                        + "8214AC2B727ECF5F69AFE0C4DF2A6D2C",
                 "0000000255",
-                "FA624FA0E523993FA388AEFDC67E67EB" +
-                        "CD8C08E8A0246B1D73B0D1DD9FC582B0"
+                "FA624FA0E523993FA388AEFDC67E67EB"
+                        + "CD8C08E8A0246B1D73B0D1DD9FC582B0"
                 ));
     }
 
@@ -258,7 +262,7 @@ public class KeyDeriveTest {
         
         DkKeyMaker km = getKeyMaker(testCase.encType);
         outkey = km.dk(inkey, constant);
-        if (! Arrays.equals(answer, outkey)) {
+        if (!Arrays.equals(answer, outkey)) {
             System.err.println("failed with:");
             System.err.println("outKey:" + HexUtil.bytesToHex(outkey));
             System.err.println("answer:" + testCase.answer);

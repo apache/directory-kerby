@@ -36,7 +36,20 @@ import org.apache.kerby.kerberos.kerb.server.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2Entry;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfoEntry;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
+import org.apache.kerby.kerberos.kerb.spec.base.MethodData;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.fast.ArmorType;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmor;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmoredReq;
@@ -149,7 +162,7 @@ public abstract class KdcRequest {
 
                 // TODO: get checksumed date in stream
                 CheckSum checkSum = fastArmoredReq.getReqChecksum();
-                if(checkSum == null) {
+                if (checkSum == null) {
                     throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED);
                 }
                 CheckSumHandler.verifyWithKey(checkSum, getKdcReq().getReqBody().encode(),

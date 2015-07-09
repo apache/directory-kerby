@@ -23,10 +23,7 @@ import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.ZKConfKey;
 import org.apache.kerby.kerberos.kdc.identitybackend.ZookeeperIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import java.io.File;
 

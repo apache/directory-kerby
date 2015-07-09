@@ -30,7 +30,7 @@ public abstract class HmacKcCheckSum extends KcCheckSum {
         super(encProvider, new Sha1Provider(), computeSize, outputSize);
     }
 
-    protected byte[] mac(byte[] Kc, byte[] data, int start, int len) throws KrbException {
-        return Hmac.hmac(hashProvider(), Kc, data, start, len);
+    protected byte[] mac(byte[] kc, byte[] data, int start, int len) throws KrbException {
+        return Hmac.hmac(hashProvider(), kc, data, start, len);
     }
 }

@@ -19,7 +19,10 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.LimitedByteBuffer;
+import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.TaggingOption;
+import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -86,8 +89,8 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
                 }
             } else {
                 initField(i);
-                if (fields[i].tagFlags() == item.tagFlags() &&
-                        fields[i].tagNo() == item.tagNo()) {
+                if (fields[i].tagFlags() == item.tagFlags()
+                        && fields[i].tagNo() == item.tagNo()) {
                     foundPos = i;
                     break;
                 } else {
@@ -100,7 +103,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
                     + item.tagFlags() + ", " + item.tagNo() + ")");
         }
 
-        if (! item.isFullyDecoded()) {
+        if (!item.isFullyDecoded()) {
             AbstractAsn1Type<?> fieldValue = (AbstractAsn1Type<?>) fields[foundPos];
             if (item.isContextSpecific()) {
                 item.decodeValueWith(fieldValue, fieldInfos[foundPos].getTaggingOption());
@@ -125,7 +128,9 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
 
     protected <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
         Asn1Type value = fields[index];
-        if (value == null) return null;
+        if (value == null) {
+            return null;
+        }
         return (T) value;
     }
 

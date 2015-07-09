@@ -23,8 +23,7 @@ import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 
-public class Asn1BitString extends Asn1Simple<byte[]>
-{
+public class Asn1BitString extends Asn1Simple<byte[]> {
     private int padding;
 
     public Asn1BitString() {
@@ -56,7 +55,7 @@ public class Asn1BitString extends Asn1Simple<byte[]>
     @Override
     protected void toBytes() {
         byte[] bytes = new byte[encodingBodyLength()];
-        bytes[0] = (byte)padding;
+        bytes[0] = (byte) padding;
         System.arraycopy(getValue(), 0, bytes, 1, bytes.length - 1);
         setBytes(bytes);
     }

@@ -112,7 +112,7 @@ public class ZKUtil {
             createWithParents(zk, getParent(node));
             createWithParents(zk, node, data);
         } catch (InterruptedException ie) {
-
+            System.out.println(ie);
         }
     }
 
@@ -120,7 +120,7 @@ public class ZKUtil {
      * Returns the ACL list
      */
     private static ArrayList<ACL> createACL(ZooKeeper zk, String node) { //NOPMD
-        return ZooDefs.Ids.OPEN_ACL_UNSAFE;//TODO
+        return ZooDefs.Ids.OPEN_ACL_UNSAFE; //TODO
     }
 
     /**
@@ -162,7 +162,7 @@ public class ZKUtil {
         } catch (KeeperException.NoNodeException nne) {
             return null;
         } catch (InterruptedException ie) {
-
+            System.out.println(ie);
         }
         return children;
     }
@@ -177,7 +177,9 @@ public class ZKUtil {
      */
     public static void deleteNodeRecursively(ZooKeeper zk, String node) throws KeeperException {
         List<String> children = ZKUtil.listChildrenNoWatch(zk, node);
-        if (children == null) return;
+        if (children == null) {
+            return;
+        }
         if (!children.isEmpty()) {
             for (String child : children) {
                 deleteNodeRecursively(zk, joinZNode(node, child));

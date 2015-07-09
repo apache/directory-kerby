@@ -37,7 +37,7 @@ import java.util.List;
 public abstract class AbstractIdentityBackend
         extends Configured implements IdentityBackend {
 
-    private final static Logger logger =
+    private static Logger logger =
             LoggerFactory.getLogger(AbstractIdentityBackend.class);
 
     /**
@@ -52,7 +52,7 @@ public abstract class AbstractIdentityBackend
     /**
      * Perform the real initialization work for the backend.
      */
-    protected void doInitialize() throws KrbException {}
+    protected void doInitialize() throws KrbException { }
 
     /**
      * {@inheritDoc}
@@ -66,7 +66,7 @@ public abstract class AbstractIdentityBackend
     /**
      * Perform the real start work for the backend.
      */
-    protected void doStart() {}
+    protected void doStart() { }
 
     /**
      * {@inheritDoc}
@@ -80,7 +80,7 @@ public abstract class AbstractIdentityBackend
     /**
      * Perform the real stop work for the backend.
      */
-    protected void doStop() throws KrbException {}
+    protected void doStop() throws KrbException { }
 
     /**
      * {@inheritDoc}
@@ -94,7 +94,7 @@ public abstract class AbstractIdentityBackend
     /**
      * Perform the real release work for the backend.
      */
-    protected void doRelease() {}
+    protected void doRelease() { }
 
     /**
      * {@inheritDoc}

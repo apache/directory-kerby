@@ -23,7 +23,10 @@ import org.apache.kerby.kerberos.kerb.KrbOutputStream;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationData;
 import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationDataEntry;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddress;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
 
@@ -31,8 +34,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-public class CredCacheOutputStream extends KrbOutputStream
-{
+public class CredCacheOutputStream extends KrbOutputStream {
     public CredCacheOutputStream(OutputStream out) {
         super(out);
     }
@@ -47,7 +49,7 @@ public class CredCacheOutputStream extends KrbOutputStream
 
         int numComponents = nameComponents.size();
         if (version == CredentialCache.FCC_FVNO_1) {
-            numComponents ++;
+            numComponents++;
         }
         writeInt(numComponents);
 

@@ -19,17 +19,17 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
+import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
-import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlag;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlags;
+import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitIdenity;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
@@ -37,7 +37,11 @@ import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.*;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AuthPack;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.DHNonce;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsReq;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PkAuthenticator;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.TrustedCertifiers;
 import org.apache.kerby.kerberos.kerb.spec.x509.SubjectPublicKeyInfo;
 
 @SuppressWarnings("PMD")
@@ -112,7 +116,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                         PaData outPadata) throws KrbException {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
-        if (inPadata == null) return false;
+        if (inPadata == null) {
+            return false;
+        }
 
         boolean processingRequest = false;
         switch (inPadata.getPaDataType()) {
@@ -163,7 +169,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
 
         if (usingRsa) {
-            // DH case
+           System.out.println(); // DH case
         } else {
             authPack.setClientPublicValue(null);
         }
@@ -211,9 +217,10 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         boolean doAgain = false;
         for (PaDataEntry pde : errPadata.getElements()) {
-            switch (pde.getPaDataType()) {
+         //   switch (pde.getPaDataType()) {
                 // TODO
-            }
+        //    }
+            System.out.println();
         }
 
         if (doAgain) {

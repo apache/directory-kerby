@@ -173,13 +173,13 @@ public class TestTaggingEncoding {
 
         assertThat(aType1.encode()).isEqualTo(TYPE1_EXPECTED_BYTES);
         assertThat(TYPE2_EXPECTED_BYTES)
-                .isEqualTo(aType1.taggedEncode(TaggingOption.newImplicitAppSpecific(3)));// for Type2
+                .isEqualTo(aType1.taggedEncode(TaggingOption.newImplicitAppSpecific(3))); // for Type2
         assertThat(TYPE3_EXPECTED_BYTES)
-                .isEqualTo(aType2.taggedEncode(TaggingOption.newExplicitContextSpecific(2)));// for Type3
+                .isEqualTo(aType2.taggedEncode(TaggingOption.newExplicitContextSpecific(2))); // for Type3
         assertThat(TYPE4_EXPECTED_BYTES)
-                .isEqualTo(aType3.taggedEncode(TaggingOption.newImplicitAppSpecific(7)));// for Type4
+                .isEqualTo(aType3.taggedEncode(TaggingOption.newImplicitAppSpecific(7))); // for Type4
         assertThat(TYPE5_EXPECTED_BYTES)
-                .isEqualTo(aType2.taggedEncode(TaggingOption.newImplicitContextSpecific(2)));// for Type5
+                .isEqualTo(aType2.taggedEncode(TaggingOption.newImplicitContextSpecific(2))); // for Type5
     }
 
     @Test

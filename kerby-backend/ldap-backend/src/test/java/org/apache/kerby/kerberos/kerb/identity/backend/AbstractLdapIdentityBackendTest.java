@@ -39,7 +39,7 @@ public abstract class AbstractLdapIdentityBackendTest extends  BackendTest {
         return service;
     }
 
-    public static void setService( DirectoryService service ) {
+    public static void setService(DirectoryService service) {
         AbstractLdapIdentityBackendTest.service = service;
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractLdapIdentityBackendTest extends  BackendTest {
         return ldapServer;
     }
 
-    public static void setLdapServer( LdapServer ldapServer ) {
+    public static void setLdapServer(LdapServer ldapServer) {
         AbstractLdapIdentityBackendTest.ldapServer = ldapServer;
     }
 

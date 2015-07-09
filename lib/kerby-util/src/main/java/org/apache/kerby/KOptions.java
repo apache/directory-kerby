@@ -57,7 +57,7 @@ public class KOptions {
             kopt.setValue(new File(strValue));
         } else if (kt == KOptionType.DIR) {
             File dir = new File(strValue);
-            if (! dir.exists()) {
+            if (!dir.exists()) {
                 throw new IllegalArgumentException("Invalid dir:" + strValue);
             }
             kopt.setValue(dir);
@@ -109,7 +109,7 @@ public class KOptions {
     }
 
     public KOption getOption(KOption option) {
-        if (! options.containsKey(option)) {
+        if (!options.containsKey(option)) {
             return null;
         }
 
@@ -117,7 +117,7 @@ public class KOptions {
     }
 
     public Object getOptionValue(KOption option) {
-        if (! contains(option)) {
+        if (!contains(option)) {
             return null;
         }
         return options.get(option).getValue();
@@ -135,13 +135,13 @@ public class KOptions {
         Object value = getOptionValue(option);
         if (value instanceof String) {
             String strVal = (String) value;
-            if (strVal.equalsIgnoreCase("true") ||
-                strVal.equalsIgnoreCase("yes") ||
-                strVal.equals("1")) {
+            if (strVal.equalsIgnoreCase("true")
+                    || strVal.equalsIgnoreCase("yes")
+                    || strVal.equals("1")) {
                 return true;
-            } else if (strVal.equalsIgnoreCase("false") ||
-                strVal.equalsIgnoreCase("no") ||
-                strVal.equals("0")) {
+            } else if (strVal.equalsIgnoreCase("false")
+                    || strVal.equalsIgnoreCase("no")
+                    || strVal.equals("0")) {
                 return false;
             }
         } else if (value instanceof Boolean) {

@@ -85,7 +85,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     private void setTokenType() {
         List<String> audiences = this.innerToken.getAudiences();
-        if(audiences.size() == 1 && audiences.get(0).startsWith(KrbConstant.TGS_PRINCIPAL)) {
+        if (audiences.size() == 1 && audiences.get(0).startsWith(KrbConstant.TGS_PRINCIPAL)) {
             isIdToken(true);
         } else {
             isAcToken(true);

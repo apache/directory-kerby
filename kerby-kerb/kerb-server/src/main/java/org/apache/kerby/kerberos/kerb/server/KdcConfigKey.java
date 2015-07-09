@@ -25,7 +25,7 @@ public enum KdcConfigKey implements SectionConfigKey {
     KRB_DEBUG(true),
     KDC_SERVICE_NAME("KDC-Server"),
     KDC_IDENTITY_BACKEND,
-    KDC_HOST("127.0.0.1", "kdcdefaults"),// NOPMD
+    KDC_HOST("127.0.0.1", "kdcdefaults"), // NOPMD
     KDC_PORT(null, "kdcdefaults"),
     KDC_ALLOW_TCP(true, "kdcdefaults"),
     KDC_ALLOW_UDP(true, "kdcdefaults"),
@@ -47,7 +47,7 @@ public enum KdcConfigKey implements SectionConfigKey {
     RENEWABLE_ALLOWED(true),
     VERIFY_BODY_CHECKSUM(true),
     ENCRYPTION_TYPES(
-        new String[] { "aes128-cts-hmac-sha1-96", "des3-cbc-sha1-kd"}
+        new String[] {"aes128-cts-hmac-sha1-96", "des3-cbc-sha1-kd"}
     ),
     RESTRICT_ANONYMOUS_TO_TGT(false, "kdcdefaults"),
     KDC_MAX_DGRAM_REPLY_SIZE(4096, "kdcdefaults");

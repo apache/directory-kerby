@@ -21,7 +21,20 @@ package org.apache.kerby.kerberos.kerb.crypto;
 
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.crypto.cksum.*;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.CmacCamellia128CheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.CmacCamellia256CheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.Crc32CheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.DesCbcCheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.HmacMd5Rc4CheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.HmacSha1Aes128CheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.HmacSha1Aes256CheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.HmacSha1Des3CheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.Md5HmacRc4CheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.RsaMd4CheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.RsaMd4DesCheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.RsaMd5CheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.RsaMd5DesCheckSum;
+import org.apache.kerby.kerberos.kerb.crypto.cksum.Sha1CheckSum;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
@@ -117,7 +130,7 @@ public class CheckSumHandler {
                 break;
         }
 
-        if (cksumHandler == null && ! check) {
+        if (cksumHandler == null && !check) {
             String message = "Unsupported checksum type: " + cksumType.name();
             throw new KrbException(KrbErrorCode.KDC_ERR_SUMTYPE_NOSUPP, message);
         }

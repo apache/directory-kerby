@@ -35,7 +35,7 @@ public class Util {
         char[] hexChars = new char[len];
         hexChars[0] = '0';
         hexChars[1] = 'x';
-        for ( int j = 0; j < bytes.length; j++ ) {
+        for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;
             hexChars[j * 3 + 2] = HEX_CHARS[v >>> 4];
             hexChars[j * 3 + 3] = HEX_CHARS[v & 0x0F];
@@ -60,18 +60,18 @@ public class Util {
             throw new IllegalArgumentException("Invalid hex string to convert : length below 4");
         }
         
-        if (( hexStr[0] != '0') || ((hexStr[1] != 'x') && (hexStr[1] != 'X'))) {
+        if ((hexStr[0] != '0') || ((hexStr[1] != 'x') && (hexStr[1] != 'X'))) {
             throw new IllegalArgumentException("Invalid hex string to convert : not starting with '0x'");
         }
         
-        byte[] bytes = new byte[(hexStr.length - 1)/3];
+        byte[] bytes = new byte[(hexStr.length - 1) / 3];
         int pos = 0; 
         boolean high = false;
         boolean prefix = true;
         
         for (char c : hexStr) {
             if (prefix) {
-                if ((c == 'x') || (c=='X')) {
+                if ((c == 'x') || (c == 'X')) {
                     prefix = false;
                 }
                 
@@ -101,9 +101,9 @@ public class Util {
                 case '8':
                 case '9':
                     if (high) {
-                        bytes[pos] += (byte)(c - '0');
+                        bytes[pos] += (byte) (c - '0');
                     } else {
-                        bytes[pos] = (byte)((c - '0') << 4);
+                        bytes[pos] = (byte) ((c - '0') << 4);
                     }
                     
                     high = !high;
@@ -116,9 +116,9 @@ public class Util {
                 case 'e' :
                 case 'f' :
                     if (high) {
-                        bytes[pos] += (byte)(c - 'a' + 10);
+                        bytes[pos] += (byte) (c - 'a' + 10);
                     } else {
-                        bytes[pos] = (byte)((c - 'a' + 10) << 4);
+                        bytes[pos] = (byte) ((c - 'a' + 10) << 4);
                     }
 
                     high = !high;
@@ -131,9 +131,9 @@ public class Util {
                 case 'E' :
                 case 'F' :
                     if (high) {
-                        bytes[pos] += (byte)(c - 'A' + 10);
+                        bytes[pos] += (byte) (c - 'A' + 10);
                     } else {
-                        bytes[pos] = (byte)((c - 'A' + 10) << 4);
+                        bytes[pos] = (byte) ((c - 'A' + 10) << 4);
                     }
 
                     high = !high;

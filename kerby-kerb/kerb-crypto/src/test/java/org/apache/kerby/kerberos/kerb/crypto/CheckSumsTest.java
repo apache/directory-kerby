@@ -192,7 +192,7 @@ public class CheckSumsTest {
         byte[] plainData = testCase.plainText.getBytes();
         CheckSum newCksum;
 
-        if (! CheckSumHandler.isImplemented(testCase.cksumType)) {
+        if (!CheckSumHandler.isImplemented(testCase.cksumType)) {
             fail("Checksum type not supported yet: "
                 + testCase.cksumType.getName());
             return;
@@ -202,7 +202,7 @@ public class CheckSumsTest {
             /**
              * For keyed checksum types
              */
-            if (! EncryptionHandler.isImplemented(testCase.encType)) {
+            if (!EncryptionHandler.isImplemented(testCase.encType)) {
                 fail("Key type not supported yet: " + testCase.encType.getName());
                 return;
             }
@@ -223,7 +223,7 @@ public class CheckSumsTest {
             }
         }
 
-        if (! newCksum.isEqual(answer)) {
+        if (!newCksum.isEqual(answer)) {
             fail("Checksum test failed for " + testCase.cksumType.getName());
         }
     }

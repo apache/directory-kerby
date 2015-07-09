@@ -37,11 +37,11 @@ public abstract class KcCheckSum extends AbstractKeyedCheckSumTypeHandler {
         byte[] constant = new byte[5];
         BytesUtil.int2bytes(usage, constant, 0, true);
         constant[4] = (byte) 0x99;
-        byte[] Kc = ((DkKeyMaker) keyMaker()).dk(key, constant);
+        byte[] kc = ((DkKeyMaker) keyMaker()).dk(key, constant);
 
-        return mac(Kc, data, start, len);
+        return mac(kc, data, start, len);
     }
 
-    protected abstract byte[] mac(byte[] Kc, byte[] data, int start,
+    protected abstract byte[] mac(byte[] kc, byte[] data, int start,
                                   int len) throws KrbException;
 }

@@ -25,7 +25,7 @@ import java.io.File;
  * A system related utility.
  */
 public final class SysUtil {
-    private SysUtil() {}
+    private SysUtil() { }
 
     public static File getTempDir() {
         String tmpDir = System.getProperty("java.io.tmpdir");

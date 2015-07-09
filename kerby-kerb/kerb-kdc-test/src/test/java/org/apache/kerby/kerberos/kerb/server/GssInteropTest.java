@@ -19,7 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.ietf.jgss.*;
+import org.ietf.jgss.GSSContext;
+import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
+import org.ietf.jgss.GSSManager;
+import org.ietf.jgss.GSSName;
+import org.ietf.jgss.Oid;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -59,7 +59,7 @@ public class JwtTokenEncoder implements TokenEncoder {
 
     @Override
     public String encodeAsString(AuthToken token) throws KrbException {
-        if (! (token instanceof JwtAuthToken) ) {
+        if (!(token instanceof JwtAuthToken)) {
             throw new KrbException("Unexpected AuthToken, not JwtAuthToken");
         }
 

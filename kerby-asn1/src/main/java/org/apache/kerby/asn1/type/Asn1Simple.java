@@ -106,9 +106,9 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
         return false;
     }
 
-    protected void toValue() throws IOException {}
+    protected void toValue() throws IOException { }
 
-    protected void toBytes() {}
+    protected void toBytes() { }
 
     public static boolean isSimple(int tagNo) {
         return isSimple(UniversalTag.fromValue(tagNo));
@@ -146,7 +146,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
      * @return
      */
     public static Asn1Type createSimple(int tagNo) {
-        if (! isSimple(tagNo)) {
+        if (!isSimple(tagNo)) {
             throw new IllegalArgumentException("Not simple type, tag: " + tagNo);
         }
         return createSimple(UniversalTag.fromValue(tagNo));
@@ -158,7 +158,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
      * @return
      */
     public static Asn1Type createSimple(UniversalTag tagNo) {
-        if (! isSimple(tagNo)) {
+        if (!isSimple(tagNo)) {
             throw new IllegalArgumentException("Not simple type, tag: " + tagNo);
         }
 

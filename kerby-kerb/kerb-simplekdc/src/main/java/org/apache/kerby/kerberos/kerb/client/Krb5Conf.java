@@ -37,8 +37,8 @@ public class Krb5Conf {
 
         content = content.replaceAll("_REALM_", "" + setting.getKdcRealm());
 
-        int kdcPort = setting.allowUdp() ? setting.getKdcUdpPort() :
-                setting.getKdcTcpPort();
+        int kdcPort = setting.allowUdp() ? setting.getKdcUdpPort()
+                : setting.getKdcTcpPort();
         content = content.replaceAll("_PORT_",
                 String.valueOf(kdcPort));
 

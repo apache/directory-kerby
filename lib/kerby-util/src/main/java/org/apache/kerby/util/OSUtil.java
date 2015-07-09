@@ -23,7 +23,7 @@ package org.apache.kerby.util;
  * An OS related utility, mainly detecting what's the platform it's rnning on.
  */
 public final class OSUtil {
-    private OSUtil() {}
+    private OSUtil() { }
 
     private static final String OS =
             System.getProperty("os.name").toLowerCase();

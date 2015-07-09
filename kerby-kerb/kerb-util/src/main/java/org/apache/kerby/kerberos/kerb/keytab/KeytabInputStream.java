@@ -31,8 +31,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KeytabInputStream extends KrbInputStream
-{
+public class KeytabInputStream extends KrbInputStream {
     public KeytabInputStream(InputStream in) {
         super(in);
     }

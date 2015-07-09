@@ -96,15 +96,15 @@ public class Crc32Test {
             new TestCase("00000080", 0xedb88320),
             new TestCase("666F6F", 0x7332bc33),
             new TestCase("7465737430313233343536373839", 0xb83e88d6),
-            new TestCase("4D4153534143485653455454532049" +
-                    "4E53544954565445204F4620544543484E4F4C4F4759", 0xe34180f7)
+            new TestCase("4D4153534143485653455454532049"
+                    + "4E53544954565445204F4620544543484E4F4C4F4759", 0xe34180f7)
     };
 
     @Test
     public void testCrc32() {
         boolean isOk = true;
         for (TestCase tc : testCases) {
-            if (! testWith(tc)) {
+            if (!testWith(tc)) {
                 isOk = false;
                 System.err.println("Test with data " + tc.data + " failed");
             }

@@ -32,12 +32,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class IniConfigTest {
 
-    private static final File TEST_DIR = new File(System.getProperty("test.dir","target"));
+    private static final File TEST_DIR = new File(System.getProperty("test.dir", "target"));
     private static final File TEST_FILE = new File(TEST_DIR, "test-ini-config");
 
     @Before
     public void setUp() throws IOException {
-        if (TEST_FILE.exists()){
+        if (TEST_FILE.exists()) {
             TEST_FILE.delete();
         }
         buildFile();
@@ -71,7 +71,7 @@ public class IniConfigTest {
         conf.addIniConfig(TEST_FILE);
 
         assertThat(conf.getString("default")).isEqualTo("FILE:/var/log/krb5libs.log");
-        assertThat(conf.getString("#note")).isNull();//Comments should be ignored when loading.
+        assertThat(conf.getString("#note")).isNull(); //Comments should be ignored when loading.
 
         Config config = conf.getConfig("libdefaults");
         assertThat(config.getBoolean("dns_lookup_realm")).isFalse();

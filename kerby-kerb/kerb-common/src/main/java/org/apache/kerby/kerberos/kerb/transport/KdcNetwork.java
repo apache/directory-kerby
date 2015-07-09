@@ -85,7 +85,7 @@ public abstract class KdcNetwork {
                 try {
                     checkAndAccept();
                 } catch (SocketTimeoutException e) { //NOPMD
-                    //NOOP as normal
+                    System.err.println(e); //NOOP as normal
                 } catch (IOException e) {
                     throw new RuntimeException("Error occured while checking tcp connections", e);
                 }
@@ -94,8 +94,8 @@ public abstract class KdcNetwork {
             if (tpair.udpAddress != null) {
                 try {
                     checkUdpMessage();
-                } catch (SocketTimeoutException e) { //NOPMD
-                    //NOOP as normal
+                } catch (SocketTimeoutException e) {
+                    System.err.println(e); //NOOP as normal
                 } catch (IOException e) {
                     throw new RuntimeException("Error occured while checking udp connections", e);
                 }

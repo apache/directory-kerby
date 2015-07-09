@@ -28,8 +28,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public abstract class KrbInputStream extends DataInputStream
-{
+public abstract class KrbInputStream extends DataInputStream {
     public KrbInputStream(InputStream in) {
         super(in);
     }

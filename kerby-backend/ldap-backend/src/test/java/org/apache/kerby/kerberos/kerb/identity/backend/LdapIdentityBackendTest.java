@@ -63,7 +63,7 @@ public class LdapIdentityBackendTest extends AbstractLdapIdentityBackendTest {
     @Before
     public void setUp() throws Exception {
         Conf config = new Conf();
-        config.setString( "host", "localhost" );
+        config.setString("host", "localhost");
         config.setInt("port", getLdapServer().getPort());
         config.setString("admin_dn", ADMIN_DN);
         config.setString("admin_pw", ADMIN_PW);

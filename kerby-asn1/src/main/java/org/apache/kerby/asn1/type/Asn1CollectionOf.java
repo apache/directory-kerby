@@ -74,7 +74,7 @@ public abstract class Asn1CollectionOf<T extends Asn1Type> extends Asn1Collectio
         Class<T> eleType = getElementType();
         if (value instanceof Asn1Item) {
             super.addItem(value);
-        } else if (! eleType.isInstance(value)) {
+        } else if (!eleType.isInstance(value)) {
             throw new RuntimeException("Unexpected element type " + value.getClass().getCanonicalName());
         } else {
             addElement((T) value);
@@ -82,7 +82,8 @@ public abstract class Asn1CollectionOf<T extends Asn1Type> extends Asn1Collectio
     }
 
     protected Class<T> getElementType() {
-        Class<T> elementType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        Class<T> elementType = (Class<T>) ((ParameterizedType)
+                getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         return elementType;
     }
 }

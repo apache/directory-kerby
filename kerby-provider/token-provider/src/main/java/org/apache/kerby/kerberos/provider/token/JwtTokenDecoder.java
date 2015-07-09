@@ -68,7 +68,7 @@ public class JwtTokenDecoder implements TokenDecoder {
             PlainJWT plainObject = (PlainJWT) jwt;
             try {
 
-                if(verifyToken(jwt)) {
+                if (verifyToken(jwt)) {
                     return new JwtAuthToken(plainObject.getJWTClaimsSet());
                 } else {
                     return null;
@@ -93,7 +93,7 @@ public class JwtTokenDecoder implements TokenDecoder {
                 }
             } else {
                 try {
-                    if(verifyToken(encryptedJWT)) {
+                    if (verifyToken(encryptedJWT)) {
                         return new JwtAuthToken(encryptedJWT.getJWTClaimsSet());
                     } else {
                         return null;
@@ -185,11 +185,11 @@ public class JwtTokenDecoder implements TokenDecoder {
         boolean valid = false;
         try {
             List<String> tokenAudiences = jwtToken.getJWTClaimsSet().getAudience();
-            if(audiences == null) {
+            if (audiences == null) {
                 valid = true;
             } else {
-                for(String audience : tokenAudiences) {
-                    if(audiences.contains(audience)) {
+                for (String audience : tokenAudiences) {
+                    if (audiences.contains(audience)) {
                         valid = true;
                         break;
                     }
@@ -205,7 +205,7 @@ public class JwtTokenDecoder implements TokenDecoder {
         boolean valid = false;
         try {
             Date expire = jwtToken.getJWTClaimsSet().getExpirationTime();
-            if(expire != null && new Date().before(expire)) {
+            if (expire != null && new Date().before(expire)) {
                 valid = true;
             }
         } catch (ParseException e) {

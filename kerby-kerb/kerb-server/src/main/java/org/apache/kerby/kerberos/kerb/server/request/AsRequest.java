@@ -25,8 +25,19 @@ import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
-import org.apache.kerby.kerberos.kerb.spec.kdc.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReq;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReqEntry;
+import org.apache.kerby.kerberos.kerb.spec.base.LastReqType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.kdc.AsRep;
+import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
+import org.apache.kerby.kerberos.kerb.spec.kdc.EncAsRepPart;
+import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlag;
 
@@ -45,7 +56,7 @@ public class AsRequest extends KdcRequest {
         } else {
             clientPrincipal = request.getReqBody().getCname();
         }
-        if(clientPrincipal == null) {
+        if (clientPrincipal == null) {
             throw new KrbException(KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
         }
         String clientRealm = request.getReqBody().getRealm();
@@ -62,7 +73,7 @@ public class AsRequest extends KdcRequest {
             clientEntry = getEntry(clientPrincipal.getName());
         }
 
-        if(clientEntry == null) {
+        if (clientEntry == null) {
             throw new KrbException(KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
         }
 

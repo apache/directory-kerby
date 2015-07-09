@@ -30,24 +30,25 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class AddPrincipalCommand extends KadminCommand {
-    private static final String USAGE = "Usage: add_principal [options] principal\n" +
-            "\toptions are:\n" +
-            "\t\t[-randkey|-nokey] [-x db_princ_args]* [-expire expdate] [-pwexpire pwexpdate] [-maxlife maxtixlife]\n" +
-            "\t\t[-kvno kvno] [-policy policy] [-clearpolicy]\n" +
-            "\t\t[-pw password] [-maxrenewlife maxrenewlife]\n" +
-            "\t\t[-e keysaltlist]\n" +
-            "\t\t[{+|-}attribute]\n" +
-            "\tattributes are:\n" +
-            "\t\tallow_postdated allow_forwardable allow_tgs_req allow_renewable\n" +
-            "\t\tallow_proxiable allow_dup_skey allow_tix requires_preauth\n" +
-            "\t\trequires_hwauth needchange allow_svr password_changing_service\n" +
-            "\t\tok_as_delegate ok_to_auth_as_delegate no_auth_data_required\n" +
-            "\n" +
-            "\twhere,\n" +
-            "\t[-x db_princ_args]* - any number of database specific arguments.\n" +
-            "\t\t\tLook at each database documentation for supported arguments.\n" +
-            "\tExample:\n" +
-            "\t\tadd_principal -expire 23/04/15:01:01:01 -kvno 1 -pw mypassword test@EXAMPLE.COM";
+    private static final String USAGE = "Usage: add_principal [options] principal\n"
+            + "\toptions are:\n"
+            + "\t\t[-randkey|-nokey] [-x db_princ_args]* [-expire expdate] "
+            + "[-pwexpire pwexpdate] [-maxlife maxtixlife]\n"
+            + "\t\t[-kvno kvno] [-policy policy] [-clearpolicy]\n"
+            + "\t\t[-pw password] [-maxrenewlife maxrenewlife]\n"
+            + "\t\t[-e keysaltlist]\n"
+            + "\t\t[{+|-}attribute]\n"
+            + "\tattributes are:\n"
+            + "\t\tallow_postdated allow_forwardable allow_tgs_req allow_renewable\n"
+            + "\t\tallow_proxiable allow_dup_skey allow_tix requires_preauth\n"
+            + "\t\trequires_hwauth needchange allow_svr password_changing_service\n"
+            + "\t\tok_as_delegate ok_to_auth_as_delegate no_auth_data_required\n"
+            + "\n"
+            + "\twhere,\n"
+            + "\t[-x db_princ_args]* - any number of database specific arguments.\n"
+            + "\t\t\tLook at each database documentation for supported arguments.\n"
+            + "\tExample:\n"
+            + "\t\tadd_principal -expire 23/04/15:01:01:01 -kvno 1 -pw mypassword test@EXAMPLE.COM";
 
 
     private KOptions kOptions;
@@ -65,13 +66,13 @@ public class AddPrincipalCommand extends KadminCommand {
         }
 
         kOptions = ToolUtil.parseOptions(commands, 1, commands.length - 2);
-        if(kOptions == null) {
+        if (kOptions == null) {
             System.err.println(USAGE);
             return;
         }
         String principal = commands[commands.length - 1];
         String password;
-        if(kOptions.contains(KadminOption.PW)) {
+        if (kOptions.contains(KadminOption.PW)) {
             password = kOptions.getStringOption(KadminOption.PW);
         } else {
             password = getPassword(principal);
@@ -98,9 +99,9 @@ public class AddPrincipalCommand extends KadminCommand {
 
         Console console = System.console();
         if (console == null) {
-            System.out.println("Couldn't get Console instance, " +
-                    "maybe you're running this from within an IDE. " +
-                    "Use scanner to read password.");
+            System.out.println("Couldn't get Console instance, "
+                    + "maybe you're running this from within an IDE. "
+                    + "Use scanner to read password.");
             Scanner scanner = new Scanner(System.in);
             passwordOnce = getPassword(scanner,
                     "Enter password for principal \"" + principal + "\":");
@@ -115,7 +116,8 @@ public class AddPrincipalCommand extends KadminCommand {
         }
 
         if (!passwordOnce.equals(passwordTwice)) {
-            System.err.println("add_principal: Password mismatch while reading password for \"" + principal + "\".");
+            System.err.println("add_principal: Password mismatch while reading password for \""
+                    + principal + "\".");
             return null;
         }
         return passwordOnce;

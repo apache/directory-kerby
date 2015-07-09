@@ -26,7 +26,14 @@ import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncoding;
+import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncodingType;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
@@ -126,8 +133,8 @@ public abstract class TickertIssuer {
         encTicketPart.setAuthTime(now);
 
         KerberosTime krbStartTime = request.getReqBody().getFrom();
-        if (krbStartTime == null || krbStartTime.lessThan(now) ||
-                krbStartTime.isInClockSkew(config.getAllowableClockSkew())) {
+        if (krbStartTime == null || krbStartTime.lessThan(now)
+                || krbStartTime.isInClockSkew(config.getAllowableClockSkew())) {
             krbStartTime = now;
         }
         if (krbStartTime.greaterThan(now)

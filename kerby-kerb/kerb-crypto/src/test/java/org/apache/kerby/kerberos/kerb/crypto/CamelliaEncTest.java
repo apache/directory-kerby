@@ -53,7 +53,7 @@ public class CamelliaEncTest {
         String line;
         while ((line = br.readLine()) != null) {
             line = line.trim();
-            if (! line.isEmpty()) {
+            if (!line.isEmpty()) {
                 results.add(line);
             }
         }
@@ -77,8 +77,7 @@ public class CamelliaEncTest {
         this.keySize = keySize;
         outputs.add("KEYSIZE=" + (keySize * 8));
 
-        encProvider = keySize == 16 ?
-                new Camellia128Provider() : new Camellia256Provider();
+        encProvider = keySize == 16 ? new Camellia128Provider() : new Camellia256Provider();
 
         byte[] key = new byte[keySize];
         Arrays.fill(key, (byte) 0);

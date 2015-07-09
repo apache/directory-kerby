@@ -30,25 +30,21 @@ public class AbstractLdapBackendKdcTest extends KerbyKdcTest {
     /** The used LdapServer instance */
     private static LdapServer ldapServer;
 
-    public static DirectoryService getService()
-    {
+    public static DirectoryService getService() {
         return service;
     }
 
 
-    public static void setService( DirectoryService service )
-    {
+    public static void setService(DirectoryService service) {
         AbstractLdapBackendKdcTest.service = service;
     }
 
 
-    public static LdapServer getLdapServer()
-    {
+    public static LdapServer getLdapServer() {
         return ldapServer;
     }
 
-    public static void setLdapServer( LdapServer ldapServer )
-    {
+    public static void setLdapServer(LdapServer ldapServer) {
         AbstractLdapBackendKdcTest.ldapServer = ldapServer;
     }
 }

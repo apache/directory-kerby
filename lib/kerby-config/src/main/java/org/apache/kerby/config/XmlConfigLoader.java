@@ -21,7 +21,13 @@ package org.apache.kerby.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.*;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -83,7 +89,7 @@ public class XmlConfigLoader extends ConfigLoader {
                 continue;
             }
 
-            Element prop = (Element)subNode;
+            Element prop = (Element) subNode;
             String name = getElementName(prop);
             if (name == null) {
                 continue;
@@ -107,7 +113,7 @@ public class XmlConfigLoader extends ConfigLoader {
 
     private static ConfigObject loadProperty(Element ele) {
         if (ele.getFirstChild() instanceof Text) {
-            String value = ((Text)ele.getFirstChild()).getData();
+            String value = ((Text) ele.getFirstChild()).getData();
             return new ConfigObject(value);
         }
 
@@ -120,9 +126,9 @@ public class XmlConfigLoader extends ConfigLoader {
                 continue;
             }
 
-            Element valueEle = (Element)valueNode;
+            Element valueEle = (Element) valueNode;
             if ("value".equals(valueEle.getTagName()) && valueEle.hasChildNodes()) {
-                value = ((Text)valueEle.getFirstChild()).getData();
+                value = ((Text) valueEle.getFirstChild()).getData();
             }
 
             if (value != null) {

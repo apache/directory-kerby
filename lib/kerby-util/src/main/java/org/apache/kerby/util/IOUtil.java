@@ -19,7 +19,12 @@
  */
 package org.apache.kerby.util;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -27,7 +32,7 @@ import java.nio.channels.FileChannel;
  * Some IO and file related utilities.
  */
 public final class IOUtil {
-    private IOUtil() {}
+    private IOUtil() { }
 
     public static byte[] readInputStream(InputStream in) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -46,7 +51,7 @@ public final class IOUtil {
         while (toRead > 0) {
             int ret = in.read(buf, off, toRead);
             if (ret < 0) {
-                throw new IOException( "Bad inputStream, premature EOF");
+                throw new IOException("Bad inputStream, premature EOF");
             }
             toRead -= ret;
             off += ret;

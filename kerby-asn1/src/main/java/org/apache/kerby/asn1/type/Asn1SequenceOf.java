@@ -22,8 +22,7 @@ package org.apache.kerby.asn1.type;
 import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.UniversalTag;
 
-public class Asn1SequenceOf<T extends Asn1Type> extends Asn1CollectionOf<T>
-{
+public class Asn1SequenceOf<T extends Asn1Type> extends Asn1CollectionOf<T> {
     public Asn1SequenceOf() {
         super(TagClass.UNIVERSAL, UniversalTag.SEQUENCE_OF.getValue());
     }

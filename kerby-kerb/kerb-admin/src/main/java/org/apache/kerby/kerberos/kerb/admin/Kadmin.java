@@ -155,8 +155,8 @@ public class Kadmin {
         //Get Identity
         KrbIdentity identity = backend.getIdentity(principal);
         if (identity == null) {
-            throw new KrbException("Can not find the identity for pincipal " +
-                    principal);
+            throw new KrbException("Can not find the identity for pincipal "
+                    + principal);
         }
 
         AdminHelper.exportKeytab(keytabFile, identity);
@@ -209,8 +209,8 @@ public class Kadmin {
         principal = fixPrincipal(principal);
         KrbIdentity identity = backend.getIdentity(principal);
         if (identity == null) {
-            throw new KrbException("Principal \"" +
-                identity.getPrincipalName() + "\" does not exist.");
+            throw new KrbException("Principal \""
+                    + identity.getPrincipalName() + "\" does not exist.");
         }
         AdminHelper.updateIdentity(identity, kOptions);
         backend.updateIdentity(identity);
@@ -221,14 +221,14 @@ public class Kadmin {
         oldPrincipalName = fixPrincipal(oldPrincipalName);
         newPrincipalName = fixPrincipal(newPrincipalName);
         KrbIdentity oldIdentity = backend.getIdentity(newPrincipalName);
-        if(oldIdentity != null) {
-            throw new KrbException("Principal \"" +
-                oldIdentity.getPrincipalName() + "\" is already exist.");
+        if (oldIdentity != null) {
+            throw new KrbException("Principal \""
+                    + oldIdentity.getPrincipalName() + "\" is already exist.");
         }
         KrbIdentity identity = backend.getIdentity(oldPrincipalName);
         if (identity == null) {
-            throw new KrbException("Principal \"" +
-                oldPrincipalName + "\" does not exist.");
+            throw new KrbException("Principal \""
+                    + oldPrincipalName + "\" does not exist.");
         }
         backend.deleteIdentity(oldPrincipalName);
 
@@ -252,8 +252,8 @@ public class Kadmin {
         principal = fixPrincipal(principal);
         KrbIdentity identity = backend.getIdentity(principal);
         if (identity == null) {
-            throw new KrbException("Principal " + principal +
-                "was not found. Please check the input and try again");
+            throw new KrbException("Principal " + principal
+                    + "was not found. Please check the input and try again");
         }
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(principal, password,
             getKdcConfig().getEncryptionTypes());
@@ -266,8 +266,8 @@ public class Kadmin {
         principal = fixPrincipal(principal);
         KrbIdentity identity = backend.getIdentity(principal);
         if (identity == null) {
-            throw new KrbException("Principal " + principal +
-                "was not found. Please check the input and try again");
+            throw new KrbException("Principal " + principal
+                    + "was not found. Please check the input and try again");
         }
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(
             getKdcConfig().getEncryptionTypes());
@@ -276,7 +276,7 @@ public class Kadmin {
     }
 
     private String fixPrincipal(String principal) {
-        if (! principal.contains("@")) {
+        if (!principal.contains("@")) {
             principal += "@" + getKdcConfig().getKdcRealm();
         }
         return principal;

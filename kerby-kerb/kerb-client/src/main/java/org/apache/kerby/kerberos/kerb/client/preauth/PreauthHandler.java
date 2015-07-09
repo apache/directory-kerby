@@ -112,7 +112,7 @@ public class PreauthHandler {
         PreauthContext preauthContext = kdcRequest.getPreauthContext();
 
         for (PaDataEntry pae : inPadata.getElements()) {
-            if (! preauthContext.isPaTypeAllowed(pae.getPaDataType())) {
+            if (!preauthContext.isPaTypeAllowed(pae.getPaDataType())) {
                 continue;
             }
 
@@ -151,7 +151,7 @@ public class PreauthHandler {
          * Process all informational padata types, then the first real preauth type
          * we succeed on
          */
-        for (int real = 0; real <= 1; real ++) {
+        for (int real = 0; real <= 1; real++) {
             for (PaDataEntry pae : inPadata.getElements()) {
 
                 // Restrict real mechanisms to the chosen one if we have one

@@ -54,9 +54,9 @@ public class LdapIdentityGetHelper {
 
     public List<EncryptionKey> getKeys() throws IOException {
         Iterator<Value<?>> iterator1 = entry.get(KerberosAttribute.KRB5_KEY_AT).iterator();
-        List<EncryptionKey> keys= new ArrayList<>();
+        List<EncryptionKey> keys = new ArrayList<>();
         while (iterator1.hasNext()) {
-            byte[] encryKey= iterator1.next().getBytes();
+            byte[] encryKey = iterator1.next().getBytes();
             EncryptionKey key = new EncryptionKey();
             key.decode(encryKey);
             key.setKvno(1); // TODO: kvno should be correctly stored and retrieved

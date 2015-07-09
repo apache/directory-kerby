@@ -19,8 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.server.replay;
 
-public class ReplayCheckServiceImpl implements ReplayCheckService
-{
+public class ReplayCheckServiceImpl implements ReplayCheckService {
     private CacheService cacheService;
 
     public ReplayCheckServiceImpl(CacheService cacheService) {

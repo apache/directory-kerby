@@ -143,7 +143,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     /**
      * An inner class, used to encapsulate key information
      */
-    class KeysInfo{
+    class KeysInfo {
         private String[] etypes;
         private byte[][] keys;
         private String[] kvnos;
@@ -190,20 +190,20 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             entry.add("objectClass", "top", "person", "inetOrgPerson",
                     "krb5principal", "krb5kdcentry");
             entry.add("cn", names[0]);
-            entry.add( "sn", names[0]);
+            entry.add("sn", names[0]);
             entry.add(KerberosAttribute.KRB5_KEY_AT, keysInfo.getKeys());
-            entry.add( "krb5EncryptionType", keysInfo.getEtypes());
-            entry.add( KerberosAttribute.KRB5_PRINCIPAL_NAME_AT, principalName);
-            entry.add( KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT,
+            entry.add("krb5EncryptionType", keysInfo.getEtypes());
+            entry.add(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT, principalName);
+            entry.add(KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT,
                     identity.getKeyVersion() + "");
-            entry.add( "krb5KDCFlags", "" + identity.getKdcFlags());
-            entry.add( KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, "" +
-                    identity.isDisabled());
-            entry.add( "createTimestamp",
+            entry.add("krb5KDCFlags", "" + identity.getKdcFlags());
+            entry.add(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, ""
+                    + identity.isDisabled());
+            entry.add("createTimestamp",
                     toGeneralizedTime(identity.getCreatedTime()));
-            entry.add(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, "" +
-                    identity.isLocked());
-            entry.add( KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT,
+            entry.add(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, ""
+                    + identity.isLocked());
+            entry.add(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT,
                     toGeneralizedTime(identity.getExpireTime()));
             connection.add(entry);
         } catch (LdapInvalidDnException e) {
@@ -265,11 +265,11 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
                     identity.getPrincipalName());
             modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT,
                     toGeneralizedTime(identity.getExpireTime()));
-            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, "" +
-                    identity.isDisabled());
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, ""
+                    + identity.isDisabled());
             modifyRequest.replace("krb5KDCFlags", "" + identity.getKdcFlags());
-            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, "" +
-                    identity.isLocked());
+            modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, ""
+                    + identity.isLocked());
             connection.modify(modifyRequest);
         } catch (LdapException e) {
             throw new KrbException("Failed to update identity", e);
@@ -295,7 +295,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * Used to convert a dn of String to a Dn object
      * @param principalName The principal name to be convert.
      * @return
-     * @throws LdapInvalidDnException if a remote exception occurs.
+     * @throws org.apache.directory.api.ldap.model.exception.LdapInvalidDnException if a remote exception occurs.
      */
     private Dn toDn(String principalName) throws LdapInvalidDnException {
         String[] names = principalName.split("@");
@@ -326,7 +326,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         EntryCursor cursor;
         Entry entry;
         try {
-            cursor = connection.search( getConfig().getString("base_dn"), 
+            cursor = connection.search(getConfig().getString("base_dn"), 
                     "(objectclass=*)", SearchScope.ONELEVEL, KerberosAttribute.KRB5_PRINCIPAL_NAME_AT);
             if (cursor == null) {
                 return null;

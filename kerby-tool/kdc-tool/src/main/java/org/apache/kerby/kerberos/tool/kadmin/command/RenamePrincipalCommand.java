@@ -46,7 +46,7 @@ public class RenamePrincipalCommand extends KadminCommand {
         }
 
         kOptions = ToolUtil.parseOptions(commands, 1, commands.length - 3);
-        if(kOptions==null) {
+        if (kOptions == null) {
             System.err.println(USAGE);
             return;
         }
@@ -61,7 +61,7 @@ public class RenamePrincipalCommand extends KadminCommand {
             if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
                 renamePrincipal(getKadmin());
             } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
-                System.out.println("Principal \"" + oldPrincipalName + "\"  not renamed." );
+                System.out.println("Principal \"" + oldPrincipalName + "\"  not renamed.");
             } else {
                 System.err.println("Unknown response, fail to rename the principal.");
             }
@@ -71,8 +71,8 @@ public class RenamePrincipalCommand extends KadminCommand {
     public void renamePrincipal(Kadmin kadmin) {
         try {
             kadmin.renamePrincipal(oldPrincipalName, newPrincipalName);
-            System.out.println("Principal \"" + oldPrincipalName + "\" renamed to \"" +
-                newPrincipalName + "\".");
+            System.out.println("Principal \"" + oldPrincipalName + "\" renamed to \""
+                    + newPrincipalName + "\".");
         } catch (KrbException e) {
             System.err.println("Principal rename failed! Exception happened. " + e.getCause());
         }

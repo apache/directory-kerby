@@ -24,8 +24,7 @@ import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
 /**
  * From krb5.hin
  */
-public enum KeyUsage implements KrbEnum
-{
+public enum KeyUsage implements KrbEnum {
     UNKNOWN(-1),
     NONE(0),
     //AS-REQ PA-ENC-TIMESTAMP padata timestamp, encrypted with the client key

@@ -40,7 +40,8 @@ public class NettyKdcUdpServerHandler extends SimpleChannelInboundHandler<Datagr
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, DatagramPacket datagramPacket) throws Exception {
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext,
+                                DatagramPacket datagramPacket) throws Exception {
         ByteBuf byteBuf = datagramPacket.content();
         byte[] msgBytes = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(msgBytes);
@@ -51,7 +52,8 @@ public class NettyKdcUdpServerHandler extends SimpleChannelInboundHandler<Datagr
         try {
             ByteBuffer responseMessage = myKdcHandler.handleMessage(requestMessage,
                     isTcp, clientAddress.getAddress());
-            channelHandlerContext.writeAndFlush(new DatagramPacket(Unpooled.wrappedBuffer(responseMessage), clientAddress));
+            channelHandlerContext.writeAndFlush(
+                    new DatagramPacket(Unpooled.wrappedBuffer(responseMessage), clientAddress));
         } catch (Exception e) {
             System.out.println("Error occured while processing request:"
                     + e.getMessage());
