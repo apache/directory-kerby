@@ -87,7 +87,7 @@ A standalone KDC server that can integrate various identity back ends including:
 
 ### Tools
 - kadmin:
-  -Command-line interfaces to the Kerby administration system.
+  - Command-line interfaces to the Kerby administration system.
 - kinit:
   - Obtains and caches an initial ticket-granting ticket for principal.
 - klist:
