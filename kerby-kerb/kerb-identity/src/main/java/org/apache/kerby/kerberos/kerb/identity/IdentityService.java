@@ -21,19 +21,17 @@ package org.apache.kerby.kerberos.kerb.identity;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 
-import java.util.List;
-
 /**
  * Identity service for KDC backend to create, get and manage principal accounts.
  */
 public interface IdentityService {
 
     /**
-     * Get the identity principal names, from start offset, with count of limit.
+     * Get all of the identity principal names.
      * Note it's ordered by principal name.
      * @return principal names
      */
-    List<String> getIdentities(int start, int limit) throws KrbException;
+    Iterable<String> getIdentities() throws KrbException;
 
     /**
      * Get the identity account specified by name.

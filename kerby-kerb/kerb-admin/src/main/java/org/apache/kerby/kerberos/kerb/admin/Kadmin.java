@@ -34,6 +34,8 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -170,7 +172,7 @@ public class Kadmin {
     public void exportKeytab(File keytabFile) throws KrbException {
         Keytab keytab = AdminHelper.createOrLoadKeytab(keytabFile);
 
-        List<String> principals = backend.getIdentities(0, -1);
+        Iterable<String> principals = backend.getIdentities();
         for (String principal : principals) {
             KrbIdentity identity = backend.getIdentity(principal);
             if (identity != null) {
@@ -243,8 +245,13 @@ public class Kadmin {
     }
 
     public List<String> getPrincipals() throws KrbException {
-        List<String> principalNames = backend.getIdentities(0, -1);
-        return principalNames;
+        Iterable<String> principalNames = backend.getIdentities();
+        List<String> principalList = new LinkedList<>();
+        Iterator<String> iterator = principalNames.iterator();
+        while (iterator.hasNext()) {
+            principalList.add(iterator.next());
+        }
+        return principalList;
     }
 
     public void updatePassword(String principal, String password)

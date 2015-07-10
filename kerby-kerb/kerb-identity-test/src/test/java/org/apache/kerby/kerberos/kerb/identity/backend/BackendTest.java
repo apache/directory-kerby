@@ -27,6 +27,8 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,8 +119,15 @@ public abstract class BackendTest {
         // clear the identity cache.
         backend.release();
 
-        List<String> principals = backend.getIdentities(2, 3);
-        assertThat(principals).hasSize(3)
+        Iterable<String> principals = backend.getIdentities();
+        Iterator<String> iterator = principals.iterator();
+        List<String> principalList = new LinkedList<>();
+        while (iterator.hasNext()) {
+            principalList.add(iterator.next());
+        }
+        assertThat(principalList).hasSize(identities.length)
+                .contains(identities[0].getPrincipalName())
+                .contains(identities[1].getPrincipalName())
                 .contains(identities[2].getPrincipalName())
                 .contains(identities[3].getPrincipalName())
                 .contains(identities[4].getPrincipalName());
@@ -165,11 +174,10 @@ public abstract class BackendTest {
     }
 
     protected void cleanIdentities(IdentityBackend backend) throws KrbException {
-        List<String> identities = backend.getIdentities(0, -1);
-        if (identities != null) {
-            for (String identity : identities) {
-                backend.deleteIdentity(identity);
-            }
+        Iterable<String> identities = backend.getIdentities();
+        Iterator<String> iterator = identities.iterator();
+        while (iterator.hasNext()) {
+            backend.deleteIdentity(iterator.next());
         }
     }
 }

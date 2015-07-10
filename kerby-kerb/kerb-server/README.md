@@ -46,7 +46,7 @@ setInnerKdcImpl(innerKdcImpl);
 </pre>
 
 ### Stop kdc server
-* Stop kdc server.
+* Start kdc server.
 <pre>
 stop();
 </pre>
