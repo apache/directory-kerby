@@ -24,7 +24,6 @@ import org.apache.kerby.config.Configured;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -67,8 +66,8 @@ public class CacheableIdentityService
      * {@inheritDoc}
      */
     @Override
-    public List<String> getIdentities(int start, int limit) throws KrbException {
-        return underlying.getIdentities(start, limit);
+    public Iterable<String> getIdentities() throws KrbException {
+        return underlying.getIdentities();
     }
 
     /**

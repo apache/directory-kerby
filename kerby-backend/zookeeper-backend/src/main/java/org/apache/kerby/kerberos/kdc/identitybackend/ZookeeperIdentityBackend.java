@@ -44,23 +44,16 @@ import java.util.Properties;
  * cluster for replication and reliability.
  */
 public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
+    private static Thread zookeeperThread;
+    private final ZooKeeperServerMain zooKeeperServer = new ZooKeeperServerMain();
     private String zkHost;
     private int zkPort;
     private File dataFile;
     private File dataLogFile;
     private ZooKeeper zooKeeper;
-    private final ZooKeeperServerMain zooKeeperServer = new ZooKeeperServerMain();
-    private static Thread zookeeperThread;
 
     public ZookeeperIdentityBackend() {
 
-    }
-
-    class MyWatcher implements Watcher {
-        @Override
-        public void process(WatchedEvent event) {
-            ZookeeperIdentityBackend.this.process(event);
-        }
     }
 
     /**
@@ -198,7 +191,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         } catch (KeeperException e) {
             throw new KrbException("Fail to get identity from zookeeper", e);
         }
-        
+
         return krb;
     }
 
@@ -215,7 +208,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         } catch (KeeperException e) {
             throw new KrbException("Fail to add identity to zookeeper", e);
         }
-        return identity;
+        return doGetIdentity(identity.getPrincipalName());
     }
 
     /**
@@ -231,7 +224,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         } catch (KeeperException e) {
             throw new KrbException("Fail to update identity in zookeeper", e);
         }
-        return identity;
+        return doGetIdentity(identity.getPrincipalName());
     }
 
     /**
@@ -255,28 +248,20 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected List<String> doGetIdentities(int start, int limit) throws KrbException {
-        if (limit == -1) {
-            return getIdentities();
-        }
+    protected Iterable<String> doGetIdentities() throws KrbException {
+        List<String> identityNames;
 
-        return getIdentities().subList(start, start + limit);
-    }
-
-    /**
-     * Get all of the identity names
-     */
-    private List<String> getIdentities() throws KrbException {
-        List<String> identityNames = null;
         try {
             // The identities getting from zookeeper is unordered
             identityNames = IdentityZNodeHelper.getIdentityNames(zooKeeper);
         } catch (KeeperException e) {
             throw new KrbException("Fail to get identities from zookeeper", e);
         }
+
         if (identityNames == null || identityNames.isEmpty()) {
             return null;
         }
+
         List<String> newIdentities = new ArrayList<>(identityNames.size());
         for (String name : identityNames) {
             if (name.contains("\\")) {
@@ -317,5 +302,12 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
             name = name.replace("/", "\\");
         }
         return name;
+    }
+
+    class MyWatcher implements Watcher {
+        @Override
+        public void process(WatchedEvent event) {
+            ZookeeperIdentityBackend.this.process(event);
+        }
     }
 }

@@ -45,19 +45,15 @@ import java.util.List;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class MavibotBackend extends AbstractIdentityBackend {
-    //The RecordManager of Mavibot
-    private RecordManager rm;
-
-    //The BTree holding all data
-    private BTree<String, KrbIdentity> database;
-
     //Name of the database
     private static final String DATA_TREE = "kerby-data";
-
     // Name of the database file
     private static final String DATABASE_NAME = "kerby-data.db";
-
     private static final Logger LOG = LoggerFactory.getLogger(MavibotBackend.class);
+    //The RecordManager of Mavibot
+    private RecordManager rm;
+    //The BTree holding all data
+    private BTree<String, KrbIdentity> database;
     
     /**
      * Creates a new instance of MavibotBackend.
@@ -104,7 +100,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected List<String> doGetIdentities(int start, int limit) throws KrbException {
+    protected Iterable<String> doGetIdentities() throws KrbException {
         List<String> keys = new ArrayList<String>();
         KeyCursor<String> cursor = null;
 

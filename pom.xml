@@ -219,17 +219,8 @@
             <configLocation>${checkstyle.dir}/kerby-checkstyle.xml</configLocation>
             <includeTestSourceDirectory>true</includeTestSourceDirectory>
             <encoding>UTF-8</encoding>
-            <failOnViolation>true</failOnViolation>
+            <failOnViolation>false</failOnViolation>
           </configuration>
-          <executions>
-            <execution>
-              <id>validate</id>
-              <phase>validate</phase>
-              <goals>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
 
       </plugins>
@@ -284,7 +275,7 @@
       </properties>
     </profile>
     <profile>
-      <id>activate-checkstyle-in-module</id>
+      <id>activate-in-module</id>
       <activation>
         <file>
           <exists>${basedir}/../docs/kerby-checkstyle.xml</exists>
@@ -295,7 +286,7 @@
       </properties>
     </profile>
     <profile>
-      <id>activate-checkstyle-in-submodule</id>
+      <id>activate-in-submodule</id>
       <activation>
         <file>
           <exists>${basedir}/../../docs/kerby-checkstyle.xml</exists>
@@ -305,6 +296,7 @@
         <checkstyle.dir>${basedir}/../../docs</checkstyle.dir>
       </properties>
     </profile>
+
     <profile>
       <id>activate-checkstyle-supression</id>
       <activation>

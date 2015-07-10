@@ -1,4 +1,4 @@
-package org.apache.kerby.kerberos.kdc.identitybackend; /**
+/**
  *  Licensed to the Apache Software Foundation (ASF) under one
  *  or more contributor license agreements.  See the NOTICE file
  *  distributed with this work for additional information
@@ -17,6 +17,7 @@ package org.apache.kerby.kerberos.kdc.identitybackend; /**
  *  under the License. 
  *
  */
+package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -148,7 +149,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         ids.put(identity.getPrincipalName(), identity);
         idsToFile(ids);
 
-        return identity;
+        return doGetIdentity(identity.getPrincipalName());
     }
 
     /**
@@ -163,7 +164,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
             throw new RuntimeException("Principal does not exist.");
         }
         idsToFile(ids);
-        return identity;
+        return doGetIdentity(identity.getPrincipalName());
     }
 
     /**
@@ -184,20 +185,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected List<String> doGetIdentities(int start, int limit) throws KrbException {
-        List<String> principals = getIdentities();
-
-        if (limit == -1) {
-            return principals;
-        }
-
-        return getIdentities().subList(start, start + limit);
-    }
-
-    /**
-     * Get all principal names from the backend
-     */
-    private List<String> getIdentities() {
+    protected Iterable<String> doGetIdentities() throws KrbException {
         List<String> principals = new ArrayList<>(ids.keySet());
         Collections.sort(principals);
 

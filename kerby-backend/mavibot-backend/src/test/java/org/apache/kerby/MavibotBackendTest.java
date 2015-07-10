@@ -29,6 +29,8 @@ import org.junit.BeforeClass;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +70,11 @@ public class MavibotBackendTest extends BackendTestBase {
         // clear the identity cache.
         backend.release();
 
-        List<String> principals = backend.getIdentities(0, 0);
+        List<String> principals = new LinkedList<>();
+        Iterator<String> iterator = backend.getIdentities().iterator();
+        while (iterator.hasNext()) {
+            principals.add(iterator.next());
+        }
         assertThat(principals).hasSize(identities.length);
         
         for (KrbIdentity entry : identities) {

@@ -141,41 +141,6 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     }
 
     /**
-     * An inner class, used to encapsulate key information
-     */
-    class KeysInfo {
-        private String[] etypes;
-        private byte[][] keys;
-        private String[] kvnos;
-
-        public KeysInfo(KrbIdentity identity) {
-            Map<EncryptionType, EncryptionKey> keymap = identity.getKeys();
-            this.etypes = new String[keymap.size()];
-            this.keys = new byte[keymap.size()][];
-            this.kvnos = new String[keymap.size()];
-            int i = 0;
-            for (Map.Entry<EncryptionType, EncryptionKey> entryKey : keymap.entrySet()) {
-                etypes[i] = entryKey.getKey().getValue() + "";
-                keys[i] = entryKey.getValue().encode();
-                kvnos[i] = entryKey.getValue().getKvno() + "";
-                i++;
-            }
-        }
-
-        public String[] getEtypes() {
-            return etypes;
-        }
-
-        public byte[][] getKeys() {
-            return keys;
-        }
-
-        public String[] getKvnos() {
-            return kvnos;
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -211,7 +176,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         } catch (LdapException e) {
             throw new KrbException("Failed to add identity", e);
         }
-        return identity;
+        return getIdentity(principalName);
     }
 
     /**
@@ -275,7 +240,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             throw new KrbException("Failed to update identity", e);
         }
 
-        return identity;
+        return getIdentity(principalName);
     }
 
     /**
@@ -308,25 +273,12 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected List<String> doGetIdentities(int start, int limit) {
-        List<String> identities = getIdentities();
-
-        if (limit == -1) {
-            return identities;
-        }
-
-        return getIdentities().subList(start, start + limit);
-    }
-
-    /**
-     * Get all principal names from the ldap server, invoked by getIdentities(int start, int limit)
-     */
-    private List<String> getIdentities() {
+    protected Iterable<String> doGetIdentities() {
         List<String> identityNames = new ArrayList<>();
         EntryCursor cursor;
         Entry entry;
         try {
-            cursor = connection.search(getConfig().getString("base_dn"), 
+            cursor = connection.search(getConfig().getString("base_dn"),
                     "(objectclass=*)", SearchScope.ONELEVEL, KerberosAttribute.KRB5_PRINCIPAL_NAME_AT);
             if (cursor == null) {
                 return null;
@@ -343,5 +295,40 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             e.printStackTrace();
         }
         return identityNames;
+    }
+
+    /**
+     * An inner class, used to encapsulate key information
+     */
+    class KeysInfo {
+        private String[] etypes;
+        private byte[][] keys;
+        private String[] kvnos;
+
+        public KeysInfo(KrbIdentity identity) {
+            Map<EncryptionType, EncryptionKey> keymap = identity.getKeys();
+            this.etypes = new String[keymap.size()];
+            this.keys = new byte[keymap.size()][];
+            this.kvnos = new String[keymap.size()];
+            int i = 0;
+            for (Map.Entry<EncryptionType, EncryptionKey> entryKey : keymap.entrySet()) {
+                etypes[i] = entryKey.getKey().getValue() + "";
+                keys[i] = entryKey.getValue().encode();
+                kvnos[i] = entryKey.getValue().getKvno() + "";
+                i++;
+            }
+        }
+
+        public String[] getEtypes() {
+            return etypes;
+        }
+
+        public byte[][] getKeys() {
+            return keys;
+        }
+
+        public String[] getKvnos() {
+            return kvnos;
+        }
     }
 }

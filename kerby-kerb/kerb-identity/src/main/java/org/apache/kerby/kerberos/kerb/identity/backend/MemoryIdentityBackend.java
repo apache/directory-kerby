@@ -87,18 +87,7 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected List<String> doGetIdentities(int start, int limit) throws KrbException {
-        List<String> identities = getIdentities();
-        if (limit == -1 || start + limit > identities.size()) {
-            return identities;
-        }
-        return identities.subList(start, start + limit);
-    }
-
-    /**
-     * Get all of the identity names
-     */
-    private List<String> getIdentities() {
+    protected Iterable<String> doGetIdentities() throws KrbException {
         List<String> identities = new ArrayList<>(storage.keySet());
         Collections.sort(identities);
         return identities;

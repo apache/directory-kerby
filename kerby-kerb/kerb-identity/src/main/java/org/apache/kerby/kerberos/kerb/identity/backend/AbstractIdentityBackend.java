@@ -25,8 +25,6 @@ import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 /**
  * An abstract identity backend that provides default behaviors and a cache
  * with FIFO and size limit. Note only limited recently active identities are
@@ -100,15 +98,15 @@ public abstract class AbstractIdentityBackend
      * {@inheritDoc}
      */
     @Override
-    public List<String> getIdentities(int start, int limit) throws KrbException {
+    public Iterable<String> getIdentities() throws KrbException {
         logger.debug("getIdentities called");
-        return doGetIdentities(start, limit);
+        return doGetIdentities();
     }
 
     /**
      * Perform the real work to get identities.
      */
-    protected abstract List<String> doGetIdentities(int start, int limit) throws KrbException;
+    protected abstract Iterable<String> doGetIdentities() throws KrbException;
 
     /**
      * {@inheritDoc}
