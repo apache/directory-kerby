@@ -31,38 +31,6 @@
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-client</artifactId>
       <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-common</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-core</artifactId>
-      <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.kerby</groupId>
-          <artifactId>kerby-asn1</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-crypto</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-util</artifactId>
-      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
@@ -73,22 +41,43 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.2</version>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>2.4</version>
             <executions>
               <execution>
-                <id>package-all</id>
                 <phase>package</phase>
                 <goals>
-                  <goal>single</goal>
+                  <goal>shade</goal>
                 </goals>
                 <configuration>
-                  <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                  </descriptorRefs>
-                  <finalName>kerb-client-api-all-${project.version}</finalName>
-                  <appendAssemblyId>false</appendAssemblyId>
+                  <finalName>kerb-client-api-all-${project.version}.jar</finalName>
+                  <artifactSet>
+                    <excludes>
+                      <exclude>junit:junit</exclude>
+                      <exclude>org.slf4j:slf4j-api</exclude>
+                      <exclude>org.apache.kerby:kerby-asn1</exclude>
+                    </excludes>
+                  </artifactSet>
                 </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <!-- A temp work around to correct the generated jar file name -->
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.7</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <configuration>
+                  <tasks>
+                    <rename src="target/kerb-client-api-all-${project.version}.jar.pom"
+                            dest="target/kerb-client-api-all-${project.version}.jar" />
+                  </tasks>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
               </execution>
             </executions>
           </plugin>
