@@ -24,41 +24,18 @@
   <artifactId>kerb-server-api-all</artifactId>
   <name>Kerby-kerb server all</name>
   <description>Kerby-kerb server all</description>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-admin</artifactId>
       <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-identity</artifactId>
-      <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.kerby</groupId>
-          <artifactId>kerby-asn1</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
+   <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-server</artifactId>
       <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.kerby</groupId>
-          <artifactId>kerby-asn1</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
 
@@ -69,21 +46,22 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.2</version>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>2.4</version>
             <executions>
               <execution>
-                <id>package-all</id>
                 <phase>package</phase>
                 <goals>
-                  <goal>single</goal>
+                  <goal>shade</goal>
                 </goals>
                 <configuration>
-                  <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                  </descriptorRefs>
-                  <finalName>kerb-server-api-all-${project.version}</finalName>
-                  <appendAssemblyId>false</appendAssemblyId>
+                  <artifactSet>
+                    <excludes>
+                      <exclude>junit:junit</exclude>
+                      <exclude>org.slf4j:slf4j-api</exclude>
+                      <exclude>org.apache.kerby:kerby-asn1</exclude>
+                    </excludes>
+                  </artifactSet>
                 </configuration>
               </execution>
             </executions>
