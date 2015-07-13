@@ -24,7 +24,7 @@
   <artifactId>kerb-client-api-all</artifactId>
   <name>Kerby-kerb client api all</name>
   <description>Kerby-kerb client api all</description>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
@@ -50,7 +50,6 @@
                   <goal>shade</goal>
                 </goals>
                 <configuration>
-                  <finalName>kerb-client-api-all-${project.version}.jar</finalName>
                   <artifactSet>
                     <excludes>
                       <exclude>junit:junit</exclude>
@@ -59,25 +58,6 @@
                     </excludes>
                   </artifactSet>
                 </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <!-- A temp work around to correct the generated jar file name -->
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.7</version>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <configuration>
-                  <tasks>
-                    <rename src="target/kerb-client-api-all-${project.version}.jar.pom"
-                            dest="target/kerb-client-api-all-${project.version}.jar" />
-                  </tasks>
-                </configuration>
-                <goals>
-                  <goal>run</goal>
-                </goals>
               </execution>
             </executions>
           </plugin>
