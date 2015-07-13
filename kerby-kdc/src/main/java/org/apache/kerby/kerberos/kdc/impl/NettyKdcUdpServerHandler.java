@@ -26,6 +26,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.KdcHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -34,6 +36,7 @@ import java.nio.ByteBuffer;
 public class NettyKdcUdpServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
     private final KdcHandler myKdcHandler;
+     private static final Logger LOG = LoggerFactory.getLogger(NettyKdcUdpServerHandler.class);
 
     public NettyKdcUdpServerHandler(KdcContext kdcContext) {
         this.myKdcHandler = new KdcHandler(kdcContext);
@@ -55,7 +58,7 @@ public class NettyKdcUdpServerHandler extends SimpleChannelInboundHandler<Datagr
             channelHandlerContext.writeAndFlush(
                     new DatagramPacket(Unpooled.wrappedBuffer(responseMessage), clientAddress));
         } catch (Exception e) {
-            System.out.println("Error occured while processing request:"
+            LOG.error("Error occurred while processing request:"
                     + e.getMessage());
         }
     }

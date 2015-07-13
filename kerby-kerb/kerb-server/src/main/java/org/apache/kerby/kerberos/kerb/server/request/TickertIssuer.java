@@ -41,12 +41,15 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlag;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handling ticket constructing, filling, and issuing.
  */
 public abstract class TickertIssuer {
     private final KdcRequest kdcRequest;
+    private static final Logger LOG = LoggerFactory.getLogger(TickertIssuer.class);
 
     public TickertIssuer(KdcRequest kdcRequest) {
         this.kdcRequest = kdcRequest;
@@ -95,6 +98,7 @@ public abstract class TickertIssuer {
 
         if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.FORWARDABLE)) {
             if (!config.isForwardableAllowed()) {
+                LOG.warn("Forward is not allowed.");
                 throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
             }
 
@@ -103,6 +107,7 @@ public abstract class TickertIssuer {
 
         if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.PROXIABLE)) {
             if (!config.isProxiableAllowed()) {
+                LOG.warn("Proxy is not allowed.");
                 throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
             }
 
@@ -111,6 +116,7 @@ public abstract class TickertIssuer {
 
         if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.ALLOW_POSTDATE)) {
             if (!config.isPostdatedAllowed()) {
+                LOG.warn("Post date is not allowed.");
                 throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
             }
 

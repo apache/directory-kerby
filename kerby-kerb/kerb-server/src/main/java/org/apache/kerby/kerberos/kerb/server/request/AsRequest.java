@@ -40,8 +40,11 @@ import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AsRequest extends KdcRequest {
+    private static final Logger LOG = LoggerFactory.getLogger(AsRequest.class);
 
     public AsRequest(AsReq asReq, KdcContext kdcContext) {
         super(asReq, kdcContext);
@@ -52,11 +55,13 @@ public class AsRequest extends KdcRequest {
         KdcReq request = getKdcReq();
         PrincipalName clientPrincipal;
         if (isToken()) {
+            LOG.info("The request is with token.");
             clientPrincipal = new PrincipalName(getToken().getSubject());
         } else {
             clientPrincipal = request.getReqBody().getCname();
         }
         if (clientPrincipal == null) {
+            LOG.warn("Client principal name is null.");
             throw new KrbException(KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
         }
         String clientRealm = request.getReqBody().getRealm();
@@ -74,6 +79,7 @@ public class AsRequest extends KdcRequest {
         }
 
         if (clientEntry == null) {
+            LOG.warn("Can't get the client entry.");
             throw new KrbException(KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
         }
 

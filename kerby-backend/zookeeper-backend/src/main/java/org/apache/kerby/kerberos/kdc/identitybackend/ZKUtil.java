@@ -112,7 +112,7 @@ public class ZKUtil {
             createWithParents(zk, getParent(node));
             createWithParents(zk, node, data);
         } catch (InterruptedException ie) {
-            System.out.println(ie);
+            LOG.warn("Fail to create node: " + node, ie);
         }
     }
 
@@ -162,7 +162,7 @@ public class ZKUtil {
         } catch (KeeperException.NoNodeException nne) {
             return null;
         } catch (InterruptedException ie) {
-            System.out.println(ie);
+            LOG.warn("Fail to list children of node: " + node, ie);
         }
         return children;
     }

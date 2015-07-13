@@ -33,6 +33,8 @@ import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -43,6 +45,7 @@ import java.nio.ByteBuffer;
  */
 public class KdcHandler {
     private final KdcContext kdcContext;
+    private static final Logger LOG = LoggerFactory.getLogger(KdcHandler.class);
 
     public KdcHandler(KdcContext kdcContext) {
         this.kdcContext = kdcContext;
@@ -57,6 +60,7 @@ public class KdcHandler {
         try {
             krbRequest = KrbCodec.decodeMessage(receivedMessage);
         } catch (IOException e) {
+            LOG.error("Krb decoding message failed", e);
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE, "Krb decoding message failed");
         }
 
@@ -66,6 +70,7 @@ public class KdcHandler {
             KdcReq kdcReq = (KdcReq) krbRequest;
             String realm = getRequestRealm(kdcReq);
             if (realm == null || !kdcContext.getKdcRealm().equals(realm)) {
+                LOG.error("Invalid realm from kdc request: " + realm);
                 throw new KrbException("Invalid realm from kdc request: " + realm);
             }
 
@@ -74,6 +79,7 @@ public class KdcHandler {
             } else if (messageType == KrbMessageType.AS_REQ) {
                 kdcRequest = new AsRequest((AsReq) kdcReq, kdcContext);
             } else {
+                LOG.error("Invalid message type: "+ messageType);
                 throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
             }
         }
@@ -110,7 +116,7 @@ public class KdcHandler {
     private KrbMessage handleRecoverableException(KdcRecoverableException e,
                                                   KdcRequest kdcRequest)
             throws KrbException {
-        System.out.println("KRB error occured while processing request:"
+        LOG.info("KRB error occurred while processing request:"
                 + e.getMessage());
 
         KrbError error = e.getKrbError();

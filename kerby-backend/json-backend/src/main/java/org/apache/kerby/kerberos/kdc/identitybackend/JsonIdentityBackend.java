@@ -33,6 +33,8 @@ import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.util.IOUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +52,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     public static final String JSON_IDENTITY_BACKEND_FILE = "backend.json.file";
     private File jsonKdbFile;
     private Gson gson;
+    private static final Logger LOG = LoggerFactory.getLogger(JsonIdentityBackend.class);
 
 
     // Identities loaded from file
@@ -74,6 +77,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected void doInitialize() throws KrbException {
+        LOG.info("Initializing the Json identity backend.");
         createGson();
         load();
     }
@@ -82,6 +86,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * Load identities from file
      */
     private void load() throws KrbException {
+        LOG.info("Loading the identities from json file.");
         String jsonFile = getConfig().getString(JSON_IDENTITY_BACKEND_FILE);
         if (jsonFile == null || jsonFile.isEmpty()) {
             throw new KrbException("No json kdb file is found");
@@ -141,8 +146,10 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
         checkAndLoad();
 
-        String principal = identity.getPrincipalName();
-        if (ids.containsKey(principal)) {
+        String principalName = identity.getPrincipalName();
+        if (ids.containsKey(principalName)) {
+            LOG.error("Error occurred while adding identity, principal " + principalName +
+                " already exists.");
             throw new RuntimeException("Principal already exists.");
         }
 
@@ -158,9 +165,12 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
         checkAndLoad();
-        if (ids.containsKey(identity.getPrincipalName())) {
-            ids.put(identity.getPrincipalName(), identity);
+        String principalName = identity.getPrincipalName();
+        if (ids.containsKey(principalName)) {
+            ids.put(principalName, identity);
         } else {
+            LOG.error("Error occurred while updating identity, principal " + principalName +
+                " does not exists.");
             throw new RuntimeException("Principal does not exist.");
         }
         idsToFile(ids);
@@ -176,6 +186,8 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         if (ids.containsKey(principalName)) {
             ids.remove(principalName);
         } else {
+            LOG.error("Error occurred while deleting identity, principal " + principalName +
+                " does not exists.");
             throw new RuntimeException("Principal does not exist.");
         }
         idsToFile(ids);
@@ -214,6 +226,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         try {
             IOUtil.writeFile(newFileJson, jsonKdbFile);
         } catch (IOException e) {
+            LOG.error("Error occurred while writing ids to file: " + jsonKdbFile );
             throw new RuntimeException("Failed to write file", e);
         }
     }

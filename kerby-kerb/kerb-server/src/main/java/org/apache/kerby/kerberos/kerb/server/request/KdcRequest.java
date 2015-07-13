@@ -61,6 +61,8 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.spec.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -69,6 +71,7 @@ import java.util.List;
 
 public abstract class KdcRequest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(KdcRequest.class);
     private final KdcReq kdcReq;
     private final KdcContext kdcContext;
 
@@ -149,6 +152,7 @@ public abstract class KdcRequest {
         PaData paData = getKdcReq().getPaData();
         for (PaDataEntry paEntry : paData.getElements()) {
             if (paEntry.getPaDataType() == PaDataType.FX_FAST) {
+                LOG.info("Found fast padata and start to process it.");
                 KrbFastArmoredReq fastArmoredReq = KrbCodec.decode(paEntry.getPaDataValue(),
                     KrbFastArmoredReq.class);
                 KrbFastArmor fastArmor = fastArmoredReq.getArmor();
@@ -160,9 +164,10 @@ public abstract class KdcRequest {
                     KrbFastReq.class);
                 innerBodyout = fastReq.getKdcReqBody().encode();
 
-                // TODO: get checksumed date in stream
+                // TODO: get checksumed data in stream
                 CheckSum checkSum = fastArmoredReq.getReqChecksum();
                 if (checkSum == null) {
+                    LOG.warn("Checksum is empty.");
                     throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED);
                 }
                 CheckSumHandler.verifyWithKey(checkSum, getKdcReq().getReqBody().encode(),
@@ -302,6 +307,8 @@ public abstract class KdcRequest {
 
         int kerberosVersion = request.getPvno();
         if (kerberosVersion != KrbConstant.KRB_V5) {
+            LOG.warn("Kerberos version: " + kerberosVersion + " should equal to "
+                + KrbConstant.KRB_V5);
             throw new KrbException(KrbErrorCode.KDC_ERR_BAD_PVNO);
         }
     }
@@ -312,15 +319,18 @@ public abstract class KdcRequest {
         // if we can not get the client entry, maybe it is token preauth, ignore it.
         if (entry != null) {
             if (entry.isDisabled()) {
+                LOG.warn("Client entry " + entry.getPrincipalName() + " is disabled.");
                 throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
             }
-
             if (entry.isLocked()) {
+                LOG.warn("Client entry " + entry.getPrincipalName() + " is expired.");
                 throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
             }
             if (entry.getExpireTime().lessThan(new Date().getTime())) {
                 throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
             }
+        } else {
+            LOG.info("Client entry is empty.");
         }
     }
 
@@ -337,6 +347,7 @@ public abstract class KdcRequest {
 
         if (preauthContext.isPreauthRequired()) {
             if (preAuthData == null || preAuthData.isEmpty()) {
+                LOG.info("The preauth data is empty.");
                 KrbError krbError = makePreAuthenticationError(kdcContext, request,
                     KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED);
                 throw new KdcRecoverableException(krbError);
@@ -367,6 +378,7 @@ public abstract class KdcRequest {
                 kdcContext.getConfig().getEncryptionTypes());
 
         if (bestType == null) {
+            LOG.error("Can't get the best encryption type.");
             throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP);
         }
 
@@ -386,6 +398,7 @@ public abstract class KdcRequest {
         PrincipalName principal = request.getReqBody().getSname();
         String serverRealm = request.getReqBody().getRealm();
         if (serverRealm == null || serverRealm.isEmpty()) {
+            LOG.info("Can't get the server realm from request, and try to get from kdcContext.");
             serverRealm = kdcContext.getKdcRealm();
         }
         principal.setRealm(serverRealm);

@@ -23,6 +23,8 @@ import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.KdcSetting;
 import org.apache.kerby.kerberos.kerb.server.impl.AbstractInternalKdcServer;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
@@ -35,6 +37,7 @@ public class NettyKdcServerImpl extends AbstractInternalKdcServer {
     private ExecutorService executor;
     private KdcContext kdcContext;
     private NettyKdcNetwork network;
+    private static final Logger LOG = LoggerFactory.getLogger(NettyKdcServerImpl.class);
 
     public NettyKdcServerImpl(KdcSetting kdcSetting) {
         super(kdcSetting);
@@ -61,6 +64,7 @@ public class NettyKdcServerImpl extends AbstractInternalKdcServer {
         }
         network.listen(tcpAddress, udpAddress);
         network.start();
+        LOG.info("Netty kdc server started.");
     }
 
     private void prepareHandler() {
@@ -78,5 +82,6 @@ public class NettyKdcServerImpl extends AbstractInternalKdcServer {
         network.stop();
 
         executor.shutdownNow();
+        LOG.info("Netty kdc server stopped.");
     }
 }

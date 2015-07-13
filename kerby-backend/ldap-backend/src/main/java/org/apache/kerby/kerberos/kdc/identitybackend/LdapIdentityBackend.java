@@ -41,6 +41,8 @@ import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -58,6 +60,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     //This is used as a flag to represent the connection whether is
     // LdapNetworkConnection object or not
     private boolean isLdapNetworkConnection;
+    private static final Logger LOG = LoggerFactory.getLogger(LdapIdentityBackend.class);
 
     public LdapIdentityBackend() {
         this.isLdapNetworkConnection = true;
@@ -103,9 +106,11 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected void doInitialize() throws KrbException {
+        LOG.info("Initializing the Ldap identity backend.");
         try {
             startConnection();
         } catch (LdapException e) {
+            LOG.error("Failed to start connection with LDAP", e);
             throw new KrbException("Failed to start connection with LDAP", e);
         }
     }
@@ -118,6 +123,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         try {
             closeConnection();
         } catch (IOException e) {
+            LOG.error("Failed to close connection with LDAP", e);
             throw new KrbException("Failed to close connection with LDAP", e);
         }
     }
@@ -172,8 +178,10 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
                     toGeneralizedTime(identity.getExpireTime()));
             connection.add(entry);
         } catch (LdapInvalidDnException e) {
+            LOG.error("Error occurred while adding identity", e);
             throw new KrbException("Failed to add identity", e);
         } catch (LdapException e) {
+            LOG.error("Error occurred while adding identity", e);
             throw new KrbException("Failed to add identity", e);
         }
         return getIdentity(principalName);
@@ -237,6 +245,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
                     + identity.isLocked());
             connection.modify(modifyRequest);
         } catch (LdapException e) {
+            LOG.error("Error occurred while updating identity: " + principalName, e);
             throw new KrbException("Failed to update identity", e);
         }
 
@@ -252,6 +261,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             Dn dn = toDn(principalName);
             connection.delete(dn);
         } catch (LdapException e) {
+            LOG.error("Error occurred while deleting identity: " + principalName );
             throw new KrbException("Failed to remove identity", e);
         }
     }

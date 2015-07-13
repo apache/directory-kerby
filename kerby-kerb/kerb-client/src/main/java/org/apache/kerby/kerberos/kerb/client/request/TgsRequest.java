@@ -32,8 +32,11 @@ import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.kdc.TgsRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TgsRequest extends KdcRequest {
+    private static final Logger LOG = LoggerFactory.getLogger(TgsRequest.class);
 
     public TgsRequest(KrbContext context) {
         super(context);
@@ -56,6 +59,9 @@ public class TgsRequest extends KdcRequest {
     @Override
     public void process() throws KrbException {
         String serverPrincipal = getKrbOptions().getStringOption(KrbOption.SERVER_PRINCIPAL);
+        if(serverPrincipal == null) {
+            LOG.warn("Server principal is null.");
+        }
         setServerPrincipal(new PrincipalName(serverPrincipal));
         super.process();
 
@@ -80,6 +86,7 @@ public class TgsRequest extends KdcRequest {
         tgsRep.setEncPart(encTgsRepPart);
 
         if (getChosenNonce() != encTgsRepPart.getNonce()) {
+            LOG.error("Nonce " + getChosenNonce() + "didn't match " + encTgsRepPart.getNonce());
             throw new KrbException("Nonce didn't match");
         }
     }

@@ -27,6 +27,8 @@ import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClient;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +44,7 @@ public class KrbClient {
     private final KrbSetting krbSetting;
 
     private InternalKrbClient innerClient;
+    private static final Logger LOG = LoggerFactory.getLogger(KrbClient.class);
 
     /**
      * Default constructor.
@@ -287,6 +290,7 @@ public class KrbClient {
      */
     public void storeTicket(TgtTicket tgtTicket,
                             File ccacheFile) throws KrbException {
+        LOG.info("Storing the tgt to the credential cache file.");
         if (!ccacheFile.exists()) {
             try {
                 if (!ccacheFile.createNewFile()) {
