@@ -139,8 +139,7 @@ public class KdcConfig extends Conf {
     }
 
     public List<EncryptionType> getEncryptionTypes() {
-        List<String> eTypes = getList(KdcConfigKey.ENCRYPTION_TYPES);
-        return KrbConfHelper.getEncryptionTypes(eTypes);
+        return KrbConfHelper.getEncTypesUnderSection(this, KdcConfigKey.ENCRYPTION_TYPES);
     }
 
     public boolean isPaEncTimestampRequired() {

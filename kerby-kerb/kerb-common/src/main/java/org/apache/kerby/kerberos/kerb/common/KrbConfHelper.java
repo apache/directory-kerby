@@ -35,7 +35,7 @@ public class KrbConfHelper {
     /**
      * The regex to split a config value(string) to a list of config value(string list).
      */
-    private static final String LIST_SPLITTER = " ";
+    private static final String LIST_SPLITTER = " |,";
 
     public static String getStringUnderSection(Conf conf, SectionConfigKey key) {
         Config subConfig = conf.getConfig(key.getSectionName());
