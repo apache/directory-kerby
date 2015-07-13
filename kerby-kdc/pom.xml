@@ -43,9 +43,13 @@
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>
-      <artifactId>netty-all</artifactId> <!-- TODO: limited -->
-      <version>4.0.0.Final</version>
-      <scope>compile</scope>
+      <artifactId>netty-transport</artifactId>
+      <version>4.0.29.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-handler</artifactId>
+      <version>4.0.29.Final</version>
     </dependency>
   </dependencies>
 
