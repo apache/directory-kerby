@@ -171,10 +171,10 @@ public final class AdminHelper {
             identity.setExpireTime(new KerberosTime(date.getTime()));
         }
         if (kOptions.contains(KadminOption.DISABLED)) {
-            identity.setDisabled(kOptions.getBooleanOption(KadminOption.DISABLED));
+            identity.setDisabled(kOptions.getBooleanOption(KadminOption.DISABLED, false));
         }
         if (kOptions.contains(KadminOption.LOCKED)) {
-            identity.setLocked(kOptions.getBooleanOption(KadminOption.LOCKED));
+            identity.setLocked(kOptions.getBooleanOption(KadminOption.LOCKED, false));
         }
     }
 }

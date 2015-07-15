@@ -82,7 +82,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                                   PluginRequestContext requestContext,
                                   KOptions options) {
 
-        tokenContext.usingIdToken = options.getBooleanOption(KrbOption.USE_TOKEN);
+        tokenContext.usingIdToken = options.getBooleanOption(KrbOption.USE_TOKEN, false);
         if (tokenContext.usingIdToken) {
             if (options.contains(KrbOption.TOKEN_USER_ID_TOKEN)) {
                 tokenContext.token =

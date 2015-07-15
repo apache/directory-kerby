@@ -84,7 +84,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         if (options.contains(KrbOption.PKINIT_USING_RSA)) {
             pkinitContext.pluginOpts.usingRsa =
-                    options.getBooleanOption(KrbOption.PKINIT_USING_RSA);
+                    options.getBooleanOption(KrbOption.PKINIT_USING_RSA, true);
         }
 
     }

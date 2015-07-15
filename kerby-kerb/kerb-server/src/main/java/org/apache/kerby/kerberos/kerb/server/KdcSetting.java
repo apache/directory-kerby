@@ -119,20 +119,15 @@ public class KdcSetting {
     }
 
     public boolean allowTcp() {
-        Boolean allowTcp = startupOptions.getBooleanOption(KdcServerOption.ALLOW_TCP);
-        if (allowTcp == null) {
-            allowTcp = kdcConfig.allowTcp();
-        }
-
-        return allowTcp != null ? allowTcp : false;
+        Boolean allowTcp = startupOptions.getBooleanOption(
+                KdcServerOption.ALLOW_TCP, kdcConfig.allowTcp());
+        return allowTcp;
     }
 
     public boolean allowUdp() {
-        Boolean allowUdp = startupOptions.getBooleanOption(KdcServerOption.ALLOW_UDP);
-        if (allowUdp == null) {
-            allowUdp = kdcConfig.allowUdp();
-        }
-        return allowUdp != null ? allowUdp : false;
+        Boolean allowUdp = startupOptions.getBooleanOption(
+                KdcServerOption.ALLOW_UDP, kdcConfig.allowUdp());
+        return allowUdp;
     }
 
     public int getKdcUdpPort() {

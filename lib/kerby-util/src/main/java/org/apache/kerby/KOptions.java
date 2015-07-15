@@ -131,7 +131,7 @@ public class KOptions {
         return null;
     }
 
-    public Boolean getBooleanOption(KOption option) {
+    public boolean getBooleanOption(KOption option, Boolean defaultValue) {
         Object value = getOptionValue(option);
         if (value instanceof String) {
             String strVal = (String) value;
@@ -148,7 +148,7 @@ public class KOptions {
             return (Boolean) value;
         }
 
-        return null;
+        return defaultValue;
     }
 
     public int getIntegerOption(KOption option) {
