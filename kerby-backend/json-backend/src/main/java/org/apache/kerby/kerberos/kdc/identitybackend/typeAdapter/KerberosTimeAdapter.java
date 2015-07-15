@@ -38,7 +38,7 @@ public class KerberosTimeAdapter implements JsonSerializer<KerberosTime>,
                                     JsonDeserializationContext jsonDeserializationContext)
             throws JsonParseException {
         String timeString = jsonElement.getAsString();
-        long time = Long.valueOf(timeString);
+        long time = Long.parseLong(timeString);
         return new KerberosTime(time);
     }
 

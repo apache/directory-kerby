@@ -147,6 +147,41 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     }
 
     /**
+     * An inner class, used to encapsulate key information
+     */
+    static class KeysInfo {
+        private String[] etypes;
+        private byte[][] keys;
+        private String[] kvnos;
+
+        public KeysInfo(KrbIdentity identity) {
+            Map<EncryptionType, EncryptionKey> keymap = identity.getKeys();
+            this.etypes = new String[keymap.size()];
+            this.keys = new byte[keymap.size()][];
+            this.kvnos = new String[keymap.size()];
+            int i = 0;
+            for (Map.Entry<EncryptionType, EncryptionKey> entryKey : keymap.entrySet()) {
+                etypes[i] = entryKey.getKey().getValue() + "";
+                keys[i] = entryKey.getValue().encode();
+                kvnos[i] = entryKey.getValue().getKvno() + "";
+                i++;
+            }
+        }
+
+        public String[] getEtypes() {
+            return etypes;
+        }
+
+        public byte[][] getKeys() {
+            return keys;
+        }
+
+        public String[] getKvnos() {
+            return kvnos;
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -305,40 +340,5 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             e.printStackTrace();
         }
         return identityNames;
-    }
-
-    /**
-     * An inner class, used to encapsulate key information
-     */
-    class KeysInfo {
-        private String[] etypes;
-        private byte[][] keys;
-        private String[] kvnos;
-
-        public KeysInfo(KrbIdentity identity) {
-            Map<EncryptionType, EncryptionKey> keymap = identity.getKeys();
-            this.etypes = new String[keymap.size()];
-            this.keys = new byte[keymap.size()][];
-            this.kvnos = new String[keymap.size()];
-            int i = 0;
-            for (Map.Entry<EncryptionType, EncryptionKey> entryKey : keymap.entrySet()) {
-                etypes[i] = entryKey.getKey().getValue() + "";
-                keys[i] = entryKey.getValue().encode();
-                kvnos[i] = entryKey.getValue().getKvno() + "";
-                i++;
-            }
-        }
-
-        public String[] getEtypes() {
-            return etypes;
-        }
-
-        public byte[][] getKeys() {
-            return keys;
-        }
-
-        public String[] getKvnos() {
-            return kvnos;
-        }
     }
 }

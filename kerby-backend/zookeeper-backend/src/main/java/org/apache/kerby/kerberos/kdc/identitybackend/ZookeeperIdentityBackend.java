@@ -91,8 +91,8 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         }
 
         dataFile = new File(dataDir);
-        if (!dataFile.exists()) {
-            dataFile.mkdirs();
+        if (!dataFile.exists() && !dataFile.mkdirs()) {
+            throw new KrbException("Dir file not exits");
         }
 
         String dataLogDir = getConfig().getString(ZKConfKey.DATA_LOG_DIR);
@@ -103,8 +103,10 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         }
 
         dataLogFile = new File(dataLogDir);
-        if (!dataLogFile.exists()) {
-            dataLogFile.mkdirs();
+
+
+        if (!dataLogFile.exists() && !dataFile.mkdirs()) {
+            throw new KrbException("DataLogfile file not exits");
         }
 
         startEmbeddedZookeeper();

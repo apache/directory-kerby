@@ -68,8 +68,8 @@ public class MavibotBackend extends AbstractIdentityBackend {
 
         LOG.info("Initializing the mavibot backend");
         
-        if (!location.exists()) {
-            location.mkdirs();
+        if (!location.exists() && !location.mkdirs()) {
+            throw new KrbException("Can't create location file");
         }
 
         if (location.isDirectory()) {
