@@ -41,7 +41,7 @@ public class XmlConfigLoader extends ConfigLoader {
     @Override
     protected void loadConfig(ConfigImpl config, Resource resource) throws Exception {
         Element doc = loadResourceDocument(resource);
-        loadConfig((ConfigImpl) config, doc);
+        loadConfig(config, doc);
     }
 
     private Element loadResourceDocument(Resource resource) throws Exception {
@@ -104,10 +104,7 @@ public class XmlConfigLoader extends ConfigLoader {
                 loadConfig(cfg, prop);
                 value = new ConfigObject(cfg);
             }
-
-            if (name != null) {
                 config.set(name, value);
-            }
         }
     }
 

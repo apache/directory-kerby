@@ -475,6 +475,8 @@ public class Base64 {
                         buffer[pos++] = PAD;
                     }
                     break;
+                default:
+                    break;
             }
             if (lineLength > 0 && pos > 0) {
                 System.arraycopy(lineSeparator, 0, buffer, pos, lineSeparator.length);
@@ -575,6 +577,8 @@ public class Base64 {
                 case 3 :
                     buffer[pos++] = (byte) ((x >> 16) & MASK_8BITS);
                     buffer[pos++] = (byte) ((x >> 8) & MASK_8BITS);
+                    break;
+                default :
                     break;
             }
         }

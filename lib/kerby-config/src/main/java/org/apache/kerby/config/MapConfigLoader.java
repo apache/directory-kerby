@@ -26,9 +26,8 @@ public class MapConfigLoader extends ConfigLoader {
     protected void loadConfig(ConfigImpl config, Resource resource) {
         @SuppressWarnings("unchecked")
         Map<String, String> mapConfig = (Map<String, String>) resource.getResource();
-        for (String key : mapConfig.keySet()) {
-            String value = mapConfig.get(key);
-            config.set(key, value);
+        for (Map.Entry<String, String> entry : mapConfig.entrySet()) {
+            config.set(entry.getKey(), entry.getValue());
         }
     }
 }

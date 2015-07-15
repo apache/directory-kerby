@@ -155,9 +155,9 @@ public class KOptions {
         Object value = getOptionValue(option);
         if (value instanceof String) {
             String strVal = (String) value;
-            return Integer.valueOf(strVal);
+            return Integer.parseInt(strVal);
         } else if (value instanceof Integer) {
-            return (Integer) value;
+            return ((Integer) value).intValue();
         }
         return -1;
     }

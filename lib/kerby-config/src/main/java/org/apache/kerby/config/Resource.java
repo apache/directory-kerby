@@ -88,7 +88,9 @@ public final class Resource {
     }
 
     private Resource(String name, File resourceFile, Format format) throws FileNotFoundException {
-        this(name, new FileInputStream(resourceFile), format);
+        this.name = name;
+        this.resource = new FileInputStream(resourceFile);
+        this.format = format;
     }
 
     private Resource(URL resourceUrl, Format format) throws IOException {
