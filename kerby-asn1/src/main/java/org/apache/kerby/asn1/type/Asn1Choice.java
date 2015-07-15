@@ -35,7 +35,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
     public Asn1Choice(Asn1FieldInfo[] fieldInfos) {
         super(TagClass.UNIVERSAL, UniversalTag.CHOICE.getValue());
         setValue(this);
-        this.fieldInfos = fieldInfos;
+        this.fieldInfos = fieldInfos.clone();
         this.fields = new Asn1Type[fieldInfos.length];
         getEncodingOption().useConstructed();
     }

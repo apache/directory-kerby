@@ -36,7 +36,7 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
     public Asn1CollectionType(int universalTagNo, Asn1FieldInfo[] fieldInfos) {
         super(TagClass.UNIVERSAL, universalTagNo);
         setValue(this);
-        this.fieldInfos = fieldInfos;
+        this.fieldInfos = fieldInfos.clone();
         this.fields = new Asn1Type[fieldInfos.length];
         getEncodingOption().useConstructed();
     }

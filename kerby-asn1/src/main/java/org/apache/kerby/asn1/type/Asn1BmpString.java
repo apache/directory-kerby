@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class Asn1BmpString extends Asn1Simple<String> {
     public Asn1BmpString() {
-        super(null);
+        super(UniversalTag.BMP_STRING);
     }
 
     public Asn1BmpString(String value) {

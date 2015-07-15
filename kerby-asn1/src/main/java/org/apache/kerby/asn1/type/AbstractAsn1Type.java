@@ -24,7 +24,6 @@ import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.TaggingOption;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -444,9 +443,6 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     public static int readLength(LimitedByteBuffer buffer) throws IOException {
         int bodyLength = buffer.readByte() & 0xff;
-        if (bodyLength < 0) {
-            throw new EOFException("Unexpected EOF");
-        }
 
         if (bodyLength > 127) {
             int length = bodyLength & 0x7f;

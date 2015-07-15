@@ -82,11 +82,7 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
         while (content.available()) {
             Asn1Type aValue = decodeOne(content);
             if (aValue != null) {
-                if (aValue instanceof Asn1Item) {
-                    addItem((Asn1Item) aValue);
-                } else {
-                    addItem(aValue);
-                }
+                addItem(aValue);
             } else {
                 throw new RuntimeException("Unexpected running into here");
             }
