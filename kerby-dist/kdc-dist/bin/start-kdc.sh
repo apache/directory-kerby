@@ -1,7 +1,5 @@
 #!/bin/bash
-java -Xdebug -Xrunjdwp:transport=dt_socket,address=1044,server=y,suspend=n \
--cp ../lib/json-backend-1.0-SNAPSHOT-jar-with-dependencies.jar:\
-../lib/ldap-backend-1.0-SNAPSHOT-jar-with-dependencies.jar:\
-../lib/zookeeper-backend-1.0-SNAPSHOT-jar-with-dependencies.jar:\
-../lib/kerb-server-api-all-1.0-SNAPSHOT.jar:\
-../lib/kerby-kdc-1.0-SNAPSHOT.jar org.apache.kerby.kerberos.kdc.KerbyKdcServer $@
+
+java -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n -classpath \
+lib\* \
+org.apache.kerby.kerberos.kdc.KerbyKdcServer -start $@
