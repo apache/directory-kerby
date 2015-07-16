@@ -24,7 +24,7 @@ import org.apache.kerby.kerberos.kerb.identity.CacheableIdentityService;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
-import org.apache.kerby.kerberos.kerb.server.BackendConfig;
+import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcSetting;
 import org.apache.kerby.kerberos.kerb.server.KdcUtil;

@@ -28,7 +28,7 @@ import org.apache.directory.server.core.integ.FrameworkRunner;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.server.BackendConfig;
+import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.junit.After;
 import org.junit.Before;

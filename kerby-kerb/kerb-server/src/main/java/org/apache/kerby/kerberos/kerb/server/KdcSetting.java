@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 
 /**
  * KDC setting that combines startup options and kdc config.

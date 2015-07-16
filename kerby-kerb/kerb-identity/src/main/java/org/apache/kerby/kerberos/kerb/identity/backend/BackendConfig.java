@@ -17,13 +17,23 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.server;
+package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.kerby.config.Conf;
 
+import java.io.File;
+
 /**
- * Kerb KDC side backend configuration API.
+ * Backend configuration API.
  */
 public class BackendConfig extends Conf {
+    private File confDir;
 
+    public void setConfDir(File dir) {
+        this.confDir = dir;
+    }
+
+    public File getConfDir() {
+        return confDir;
+    }
 }
