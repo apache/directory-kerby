@@ -39,7 +39,7 @@ An example of kdc.conf:
 An example of json backend backend.conf:
 ```
 kdc_identity_backend = org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend
-backend.json.file = /tmp/kerby/jsonbackend
+backend.json.dir = /tmp/kerby/jsonbackend
 ```
 An example of zookeeper backend backend.conf:
 ```

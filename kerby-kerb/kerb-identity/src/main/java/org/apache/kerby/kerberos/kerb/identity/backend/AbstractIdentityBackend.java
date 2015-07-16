@@ -39,6 +39,13 @@ public abstract class AbstractIdentityBackend
             LoggerFactory.getLogger(AbstractIdentityBackend.class);
 
     /**
+     * Get the Backend Config.
+     */
+    protected BackendConfig getBackendConfig() {
+        return (BackendConfig) getConfig();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

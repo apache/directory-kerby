@@ -41,7 +41,7 @@ public class JsonBackendTest extends BackendTestBase {
         String jsonBackendFileString = jsonBackendFile.getAbsolutePath();
 
         Config backendConfig = new Conf();
-        backendConfig.setString(JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE, jsonBackendFileString);
+        backendConfig.setString(JsonIdentityBackend.JSON_IDENTITY_BACKEND_DIR, jsonBackendFileString);
         backend = new JsonIdentityBackend(backendConfig);
         backend.initialize();
     }

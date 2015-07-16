@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.server;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
+import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.impl.DefaultInternalKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.server.impl.InternalKdcServer;
 
@@ -72,6 +73,7 @@ public class KdcServer {
         if (tmpBackendConfig == null) {
             tmpBackendConfig = new BackendConfig();
         }
+        tmpBackendConfig.setConfDir(confDir);
         this.backendConfig = tmpBackendConfig;
 
         startupOptions = new KOptions();

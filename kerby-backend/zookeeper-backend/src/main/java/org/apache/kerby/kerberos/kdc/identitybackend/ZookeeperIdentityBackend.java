@@ -50,8 +50,8 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     private final ZooKeeperServerMain zooKeeperServer = new ZooKeeperServerMain();
     private String zkHost;
     private int zkPort;
-    private File dataFile;
-    private File dataLogFile;
+    private File dataDir;
+    private File dataLogDir;
     private ZooKeeper zooKeeper;
     private static final Logger LOG = LoggerFactory.getLogger(ZookeeperIdentityBackend.class);
 
@@ -84,29 +84,30 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         zkHost = getConfig().getString(ZKConfKey.ZK_HOST);
         zkPort = getConfig().getInt(ZKConfKey.ZK_PORT);
 
-        String dataDir = getConfig().getString(ZKConfKey.DATA_DIR);
-        if (dataDir == null || dataDir.isEmpty()) {
-            LOG.warn("Data dir " + dataDir + "is found while initialization the zookeeper server.");
-            throw new RuntimeException("No data dir is found");
+        String dataDirString = getConfig().getString(ZKConfKey.DATA_DIR);
+        if (dataDirString == null || dataDirString.isEmpty()) {
+            File zooKeeperDir = new File(getBackendConfig().getConfDir(), "zookeeper");
+            dataDir = new File(zooKeeperDir, "data");
+        } else {
+            dataDir = new File(dataDirString);
         }
 
-        dataFile = new File(dataDir);
-        if (!dataFile.exists() && !dataFile.mkdirs()) {
-            throw new KrbException("Dir file not exits");
+        if (!dataDir.exists() && !dataDir.mkdirs()) {
+            throw new KrbException("could not create data file dir " + dataDir);
         }
 
-        String dataLogDir = getConfig().getString(ZKConfKey.DATA_LOG_DIR);
-        if (dataLogDir == null || dataLogDir.isEmpty()) {
-            LOG.warn("Data log dir " + dataLogDir
-                + "is found while initialization the zookeeper server.");
-            throw new RuntimeException("No data log dir is found");
+        LOG.info("Data dir: " + dataDir);
+
+        String dataLogDirString = getConfig().getString(ZKConfKey.DATA_LOG_DIR);
+        if (dataLogDirString == null || dataLogDirString.isEmpty()) {
+            File zooKeeperDir = new File(getBackendConfig().getConfDir(), "zookeeper");
+            dataLogDir = new File(zooKeeperDir, "datalog");
+        } else {
+            dataLogDir = new File(dataLogDirString);
         }
 
-        dataLogFile = new File(dataLogDir);
-
-
-        if (!dataLogFile.exists() && !dataFile.mkdirs()) {
-            throw new KrbException("DataLogfile file not exits");
+        if (!dataLogDir.exists() && !dataLogDir.mkdirs()) {
+            throw new KrbException("could not create data log file dir " + dataLogDir);
         }
 
         startEmbeddedZookeeper();
@@ -143,8 +144,8 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
      */
     private void startEmbeddedZookeeper() throws KrbException {
         Properties startupProperties = new Properties();
-        startupProperties.put("dataDir", dataFile.getAbsolutePath());
-        startupProperties.put("dataLogDir", dataLogFile.getAbsolutePath());
+        startupProperties.put("dataDir", dataDir.getAbsolutePath());
+        startupProperties.put("dataLogDir", dataLogDir.getAbsolutePath());
         startupProperties.put("clientPort", zkPort);
 
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();
@@ -215,7 +216,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         if (doGetIdentity(identity.getPrincipalName()) != null) {
              LOG.error("Error occurred while adding identity, principal "
                 + identity.getPrincipalName() + " already exists.");
-            throw new RuntimeException("Principal already exists.");
+            throw new KrbException("Principal already exists.");
         }
         try {
             setIdentity(identity);
@@ -233,7 +234,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         if (doGetIdentity(identity.getPrincipalName()) == null) {
             LOG.error("Error occured while updating identity, principal "
                 + identity.getPrincipalName() + " does not exists.");
-            throw new RuntimeException("Principal does not exist.");
+            throw new KrbException("Principal does not exist.");
         }
         try {
             setIdentity(identity);

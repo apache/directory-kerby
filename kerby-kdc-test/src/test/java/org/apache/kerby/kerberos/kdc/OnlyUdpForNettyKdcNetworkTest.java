@@ -57,7 +57,7 @@ public class OnlyUdpForNettyKdcNetworkTest extends KerbyKdcTest {
 
         BackendConfig backendConfig = getKdcServer().getBackendConfig();
         backendConfig.setString(
-                JsonIdentityBackend.JSON_IDENTITY_BACKEND_FILE,
+                JsonIdentityBackend.JSON_IDENTITY_BACKEND_DIR,
                 jsonBackendFileString);
     }
 

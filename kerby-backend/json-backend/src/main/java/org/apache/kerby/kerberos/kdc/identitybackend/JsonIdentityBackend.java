@@ -49,7 +49,7 @@ import java.util.Map;
  *
  */
 public class JsonIdentityBackend extends AbstractIdentityBackend {
-    public static final String JSON_IDENTITY_BACKEND_FILE = "backend.json.file";
+    public static final String JSON_IDENTITY_BACKEND_DIR = "backend.json.dir";
     private File jsonKdbFile;
     private Gson gson;
     private static final Logger LOG = LoggerFactory.getLogger(JsonIdentityBackend.class);
@@ -87,12 +87,19 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      */
     private void load() throws KrbException {
         LOG.info("Loading the identities from json file.");
-        String jsonFile = getConfig().getString(JSON_IDENTITY_BACKEND_FILE);
+        String jsonFile = getConfig().getString(JSON_IDENTITY_BACKEND_DIR);
+        File jsonFileDir;
         if (jsonFile == null || jsonFile.isEmpty()) {
-            throw new KrbException("No json kdb file is found");
+            jsonFileDir = getBackendConfig().getConfDir();
+        } else {
+            jsonFileDir = new File(jsonFile);
+            if (!jsonFileDir.exists() && !jsonFileDir.mkdirs()) {
+                throw new KrbException("could not create json file dir " + jsonFileDir);
+            }
         }
 
-        jsonKdbFile = new File(jsonFile);
+        jsonKdbFile = new File(jsonFileDir, "json_identity_backend_file");
+
         if (!jsonKdbFile.exists()) {
             try {
                 jsonKdbFile.createNewFile();
