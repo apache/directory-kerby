@@ -47,7 +47,8 @@ public class KrbConfig extends Conf {
      * @return
      */
     public int getKdcPort() {
-        Integer kdcPort = getInt(KrbConfigKey.KDC_PORT);
+        Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
+                KrbConfigKey.KDC_PORT);
         if (kdcPort != null) {
             return kdcPort.shortValue();
         }
@@ -59,7 +60,8 @@ public class KrbConfig extends Conf {
      * @return
      */
     public int getKdcTcpPort() {
-        Integer kdcPort = getInt(KrbConfigKey.KDC_TCP_PORT);
+        Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
+                KrbConfigKey.KDC_TCP_PORT);
         if (kdcPort != null && kdcPort > 0) {
             return kdcPort.shortValue();
         }
@@ -71,7 +73,8 @@ public class KrbConfig extends Conf {
      * @return true to allow UDP, false otherwise
      */
     public boolean allowKdcUdp() {
-        return getBoolean(KrbConfigKey.KDC_ALLOW_UDP);
+        return getBoolean(KrbConfigKey.KDC_ALLOW_UDP) || KrbConfHelper.getIntUnderSection(this,
+                KrbConfigKey.KDC_UDP_PORT) != null;
     }
 
     /**
@@ -79,14 +82,16 @@ public class KrbConfig extends Conf {
      * @return true to allow TCP, false otherwise
      */
     public boolean allowKdcTcp() {
-        return getBoolean(KrbConfigKey.KDC_ALLOW_TCP);
+        return getBoolean(KrbConfigKey.KDC_ALLOW_TCP) || KrbConfHelper.getIntUnderSection(this,
+                KrbConfigKey.KDC_TCP_PORT) != null;
     }
     /**
      * Get KDC UDP port
      * @return
      */
     public int getKdcUdpPort() {
-        Integer kdcPort = getInt(KrbConfigKey.KDC_UDP_PORT);
+        Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
+                KrbConfigKey.KDC_UDP_PORT);
         if (kdcPort != null && kdcPort > 0) {
             return kdcPort.shortValue();
         }

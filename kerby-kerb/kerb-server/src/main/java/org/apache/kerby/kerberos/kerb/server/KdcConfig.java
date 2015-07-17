@@ -65,7 +65,8 @@ public class KdcConfig extends Conf {
      * @return true to allow TCP, false otherwise
      */
     public Boolean allowTcp() {
-        return getBoolean(KdcConfigKey.KDC_ALLOW_TCP);
+        return getBoolean(KdcConfigKey.KDC_ALLOW_TCP) || KrbConfHelper.getIntUnderSection(this,
+                KdcConfigKey.KDC_TCP_PORT) != null;
     }
 
     /**
@@ -73,7 +74,8 @@ public class KdcConfig extends Conf {
      * @return true to allow UDP, false otherwise
      */
     public Boolean allowUdp() {
-        return getBoolean(KdcConfigKey.KDC_ALLOW_UDP);
+        return getBoolean(KdcConfigKey.KDC_ALLOW_UDP) || KrbConfHelper.getIntUnderSection(this,
+                KdcConfigKey.KDC_UDP_PORT) != null;
     }
 
     public int getKdcUdpPort() {
