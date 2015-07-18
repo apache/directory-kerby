@@ -19,30 +19,26 @@
  */
 package org.apache.kerby.kerberos.benchmark;
 
-import org.apache.directory.api.asn1.DecoderException;
-import org.apache.directory.api.asn1.EncoderException;
 import org.apache.directory.api.asn1.ber.Asn1Decoder;
 import org.apache.directory.shared.kerberos.codec.apReq.ApReqContainer;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public class KrbCodecPerfTest {
 
-    public static void main(String[] args) throws KrbException, IOException, DecoderException, EncoderException {
+    public static void main(String[] args) throws Exception {
         InputStream is = KrbCodecPerfTest.class.getResourceAsStream("/apreq.token");
         byte[] bytes = new byte[is.available()];
         is.read(bytes);
 
         int times = 1000000;
         perfApacheDS(ByteBuffer.wrap(bytes), times);
-        perfHaox(ByteBuffer.wrap(bytes), times);
+        perfKerby(ByteBuffer.wrap(bytes), times);
     }
 
-    private static void perfHaox(ByteBuffer apreqToken, int times) throws KrbException, IOException {
+    private static void perfKerby(ByteBuffer apreqToken, int times) throws Exception {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < times; ++i) {
@@ -57,10 +53,10 @@ public class KrbCodecPerfTest {
         }
 
         long end = System.currentTimeMillis();
-        System.out.println("HaoxCodec takes:" + (end - start));
+        System.out.println("KerbyCodec takes:" + (end - start));
     }
 
-    private static void perfApacheDS(ByteBuffer apreqToken, int times) throws EncoderException, DecoderException {
+    private static void perfApacheDS(ByteBuffer apreqToken, int times) throws Exception {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < times; ++i) {
