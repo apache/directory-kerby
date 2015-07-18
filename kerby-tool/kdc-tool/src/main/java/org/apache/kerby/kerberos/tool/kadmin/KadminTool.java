@@ -156,11 +156,11 @@ public class KadminTool {
 
         System.out.print(PROMPT + ": ");
 
-        try (Scanner scanner = new Scanner(System.in)) {
+        try (Scanner scanner = new Scanner(System.in, "UTF-8")) {
             String input = scanner.nextLine();
 
-            boolean quit = input.equals("quit") || input.equals("exit") || input.equals("q");
-            while (!quit) {
+            while (!(input.equals("quit") || input.equals("exit")
+                    || input.equals("q"))) {
                 execute(kadmin, input);
                 System.out.print(PROMPT + ": ");
                 input = scanner.nextLine();

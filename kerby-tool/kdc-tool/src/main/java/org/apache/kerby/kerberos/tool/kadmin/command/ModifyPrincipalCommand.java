@@ -41,6 +41,7 @@ public class ModifyPrincipalCommand extends KadminCommand {
 
     public ModifyPrincipalCommand(Kadmin kadmin) {
         super(kadmin);
+        this.kOptions = new KOptions();
     }
 
     @Override
@@ -71,6 +72,7 @@ public class ModifyPrincipalCommand extends KadminCommand {
                 kOption = KadminOption.fromName(opt);
                 if (kOption == KadminOption.NONE) {
                     error = "Invalid option:" + opt;
+                    System.err.println(error);
                     break;
                 }
             } else {

@@ -20,19 +20,23 @@
 package org.apache.kerby.kerberos.tool.token;
 
 
+import org.apache.commons.io.output.FileWriterWithEncoding;
+import org.apache.kerby.kerberos.kerb.KrbException;
+
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 public class TokenCache {
     private static final String DEFAULT_TOKEN_CACHE_PATH = ".tokenauth";
     private static final String TOKEN_CACHE_FILE = ".tokenauth.token";
 
     public static String readToken(String tokenCacheFile) {
-        File cacheFile = null;
+        File cacheFile;
 
         if (tokenCacheFile != null && !tokenCacheFile.isEmpty()) {
             cacheFile = new File(tokenCacheFile);
@@ -48,14 +52,15 @@ public class TokenCache {
 
         String token = null;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(cacheFile));
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(new FileInputStream(cacheFile), Charset.forName("UTF-8")));
             String line = reader.readLine();
             reader.close();
             if (line != null) {
                 token = line;
             }
         } catch (IOException ex) { //NOPMD
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return token;
@@ -65,18 +70,25 @@ public class TokenCache {
         File cacheFile = getDefaultTokenCache();
 
         try {
-            Writer writer = new FileWriter(cacheFile);
-            writer.write(token.toString());
+            Writer writer = new FileWriterWithEncoding(cacheFile, Charset.forName("UTF-8"));
+            writer.write(token);
+            writer.flush();
             writer.close();
             // sets read-write permissions to owner only
             cacheFile.setReadable(false, false);
             cacheFile.setReadable(true, true);
-            cacheFile.setWritable(true, true);
+            if (!cacheFile.setWritable(true, true)) {
+                throw new KrbException("Cache file is not readable.");
+            }
         } catch (IOException ioe) {
             // if case of any error we just delete the cache, if user-only
             // write permissions are not properly set a security exception
             // is thrown and the file will be deleted.
-            cacheFile.delete();
+            if (cacheFile.delete()) {
+                System.err.println("Cache file is deleted.");
+            }
+        } catch (KrbException e) {
+            e.printStackTrace();
         }
     }
 

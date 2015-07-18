@@ -77,7 +77,7 @@ public class ToolUtil {
     }
 
     public static String getReplay(String prompt) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in, "UTF-8");
         System.out.println(prompt);
         return scanner.nextLine().trim();
     }

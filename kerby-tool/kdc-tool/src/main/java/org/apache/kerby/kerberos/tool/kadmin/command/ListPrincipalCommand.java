@@ -33,20 +33,17 @@ public class ListPrincipalCommand extends KadminCommand {
     @Override
     public void execute(String input) {
         String[] commands = input.split(" ");
-        List<String> principalNames = null;
-
 
         if (commands.length == 1) {
             try {
-                principalNames = getKadmin().getPrincipals();
+                List<String> principalNames = getKadmin().getPrincipals();
+                System.out.println("Principals are listed:");
+                for (String principalName : principalNames) {
+                    System.out.println(principalName);
+                }
             } catch (KrbException e) {
                 System.err.print("Fail to list principal!" + e.getMessage());
             }
-        }
-        System.out.println("Principals are listed:");
-
-        for (String principalName : principalNames) {
-            System.out.println(principalName);
         }
     }
 }

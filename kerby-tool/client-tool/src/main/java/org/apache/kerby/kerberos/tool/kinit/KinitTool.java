@@ -88,7 +88,7 @@ public class KinitTool {
                     + "maybe you're running this from within an IDE. "
                     + "Use scanner to read password.");
             System.out.println("Password for " + principal + ":");
-            try (Scanner scanner = new Scanner(System.in)) {
+            try (Scanner scanner = new Scanner(System.in, "UTF-8")) {
                 return scanner.nextLine().trim();
             }
         }
@@ -159,6 +159,7 @@ public class KinitTool {
                 kto = KinitOption.fromName(opt);
                 if (kto == KinitOption.NONE) {
                     error = "Invalid option:" + opt;
+                    System.err.println(error);
                     break;
                 }
             } else {

@@ -59,7 +59,7 @@ public class DeletePrincipalCommand extends KadminCommand {
                 System.out.println("Couldn't get Console instance, "
                         + "maybe you're running this from within an IDE. "
                         + "Use scanner to read password.");
-                Scanner scanner = new Scanner(System.in);
+                Scanner scanner = new Scanner(System.in, "UTF-8");
                 reply = getReply(scanner, prompt);
             } else {
                 reply = getReply(console, prompt);

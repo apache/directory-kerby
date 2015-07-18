@@ -90,6 +90,14 @@ public class KlistTool {
             } catch (IOException e) {
                 System.err.println("Failed to open CredentialCache from file: " + fileName);
                 e.printStackTrace();
+            } finally {
+                try {
+                    if (cis != null) {
+                        cis.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
