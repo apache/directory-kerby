@@ -51,6 +51,18 @@ public final class Keytab implements KrbKeytab {
         this.principalEntries = new HashMap<PrincipalName, List<KeytabEntry>>();
     }
 
+    public static Keytab loadKeytab(File keytabFile) throws IOException {
+        Keytab keytab = new Keytab();
+        keytab.load(keytabFile);
+        return keytab;
+    }
+
+    public static Keytab loadKeytab(InputStream inputStream) throws IOException {
+        Keytab keytab = new Keytab();
+        keytab.load(inputStream);
+        return keytab;
+    }
+
     @Override
     public List<PrincipalName> getPrincipals() {
         return new ArrayList<PrincipalName>(principalEntries.keySet());
@@ -122,18 +134,6 @@ public final class Keytab implements KrbKeytab {
         return null;
     }
 
-    public static Keytab loadKeytab(File keytabFile) throws IOException {
-        Keytab keytab = new Keytab();
-        keytab.load(keytabFile);
-        return keytab;
-    }
-
-    public static Keytab loadKeytab(InputStream inputStream) throws IOException {
-        Keytab keytab = new Keytab();
-        keytab.load(inputStream);
-        return keytab;
-    }
-
     @Override
     public void load(File keytabFile) throws IOException {
         if (!keytabFile.exists() || !keytabFile.canRead()) {
@@ -141,8 +141,8 @@ public final class Keytab implements KrbKeytab {
         }
 
         InputStream is = new FileInputStream(keytabFile);
-
         load(is);
+        is.close();
     }
 
     @Override
@@ -202,8 +202,8 @@ public final class Keytab implements KrbKeytab {
     @Override
     public void store(File keytabFile) throws IOException {
         OutputStream outputStream = new FileOutputStream(keytabFile);
-
         store(outputStream);
+        outputStream.close();
     }
 
     @Override
@@ -229,6 +229,11 @@ public final class Keytab implements KrbKeytab {
     private void writeEntries(KeytabOutputStream kos) throws IOException {
         for (PrincipalName principal : principalEntries.keySet()) {
             for (KeytabEntry entry : principalEntries.get(principal)) {
+                entry.store(kos);
+            }
+        }
+        for (Map.Entry<PrincipalName, List<KeytabEntry>> entryList : principalEntries.entrySet()) {
+            for (KeytabEntry entry : entryList.getValue()) {
                 entry.store(kos);
             }
         }

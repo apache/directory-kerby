@@ -112,7 +112,6 @@ public class Camellia {
     }
 
     public void encrypt(byte[] data, byte[] iv) {
-        byte[] cipher = new byte[BLOCK_SIZE];
         byte[] cipherState = new byte[BLOCK_SIZE];
 
         int blocksNum = (data.length + BLOCK_SIZE - 1) / BLOCK_SIZE;
@@ -161,7 +160,6 @@ public class Camellia {
     }
 
     public void decrypt(byte[] data, byte[] iv) {
-        byte[] cipher = new byte[BLOCK_SIZE];
         byte[] cipherState = new byte[BLOCK_SIZE];
 
         int blocksNum = (data.length + BLOCK_SIZE - 1) / BLOCK_SIZE;

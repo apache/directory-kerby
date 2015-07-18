@@ -11,6 +11,7 @@ import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslException;
 import javax.security.sasl.SaslServer;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,21 +20,26 @@ public class SaslAppServer extends AppServer {
     private String serviceProtocol;
     private String serverFqdn;
 
-    @Override
-    protected void usage(String[] args) {
-        if (args.length < 3) {
-            System.err.println("Usage: SaslAppServer "
-                    + "<ListenPort> <service-protocol> <server-fqdn>");
-            System.exit(-1);
-        }
-    }
-
     public SaslAppServer(String[] args) throws Exception {
         super(args);
 
         this.mechanism = "GSSAPI";
         this.serviceProtocol = args[1];
         this.serverFqdn = args[2];
+    }
+
+    public static void main(String[] args) throws Exception {
+        new SaslAppServer(args).run();
+    }
+
+    @Override
+    protected void usage(String[] args) {
+        if (args.length < 3) {
+            System.err.println("Usage: SaslAppServer "
+                    + "<ListenPort> <service-protocol> <server-fqdn>");
+            throw new RuntimeException("Usage: SaslAppServer "
+                    + "<ListenPort> <service-protocol> <server-fqdn>");
+        }
     }
 
     @Override
@@ -75,7 +81,7 @@ public class SaslAppServer extends AppServer {
     protected void doWith(SaslServer ss, Map<String, Object> props,
                           Transport.Connection conn) throws IOException, Exception {
         byte[] token = conn.recvToken();
-        String str = new String(token);
+        String str = new String(token, Charset.forName("UTF-8"));
         System.out.println("Received data \""
                 + str + "\" of length " + str.length());
     }
@@ -109,9 +115,5 @@ public class SaslAppServer extends AppServer {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        new SaslAppServer(args).run();
     }
 }

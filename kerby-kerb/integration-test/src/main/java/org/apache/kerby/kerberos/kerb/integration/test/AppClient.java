@@ -25,14 +25,6 @@ public abstract class AppClient {
     private Transport.Connection conn;
     private boolean isTestOK = false;
 
-    protected void usage(String[] args) {
-        if (args.length < 2) {
-            System.err.println("Usage: java <options> AppClient "
-                    + "<server-host> <server-port>");
-            System.exit(-1);
-        }
-    }
-
     public AppClient(String[] args) throws Exception {
         usage(args);
 
@@ -40,6 +32,14 @@ public abstract class AppClient {
         int port = Integer.parseInt(args[1]);
 
         this.conn = Transport.Connector.connect(hostName, port);
+    }
+
+    protected void usage(String[] args) {
+        if (args.length < 2) {
+            System.err.println("Usage: java <options> AppClient "
+                    + "<server-host> <server-port>");
+           throw new RuntimeException("Arguments are invalid.");
+        }
     }
 
     public void run() {
@@ -60,11 +60,11 @@ public abstract class AppClient {
 
     protected abstract void withConnection(Transport.Connection conn) throws Exception;
 
-    protected synchronized void setTestOK(boolean isOK) {
-        this.isTestOK = isOK;
-    }
-
     public boolean isTestOK() {
         return isTestOK;
+    }
+
+    protected synchronized void setTestOK(boolean isOK) {
+        this.isTestOK = isOK;
     }
 }

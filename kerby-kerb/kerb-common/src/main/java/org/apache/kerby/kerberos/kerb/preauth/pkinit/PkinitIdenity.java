@@ -63,6 +63,8 @@ public class PkinitIdenity {
             case DIR:
                 identityOpts.certFile = residual;
                 break;
+            default:
+                break;
         }
     }
 
@@ -101,6 +103,8 @@ public class PkinitIdenity {
                 break;
             case PKCS12:
                 loadCertsAsPkcs12(identityOpts, principal);
+                break;
+            default:
                 break;
         }
     }

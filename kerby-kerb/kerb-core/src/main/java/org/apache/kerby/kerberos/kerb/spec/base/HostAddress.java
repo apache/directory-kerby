@@ -101,7 +101,7 @@ public class HostAddress extends KrbSequenceType {
     public int hashCode() {
         int result = getAddrType().getValue();
         if (getAddress() != null) {
-            result = 31 * result + getAddress().hashCode();
+            result = 31 * result + Arrays.hashCode(getAddress());
         }
 
         return result;

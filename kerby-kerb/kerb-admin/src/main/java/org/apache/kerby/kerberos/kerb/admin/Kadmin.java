@@ -212,7 +212,7 @@ public class Kadmin {
         KrbIdentity identity = backend.getIdentity(principal);
         if (identity == null) {
             throw new KrbException("Principal \""
-                    + identity.getPrincipalName() + "\" does not exist.");
+                    + principal + "\" does not exist.");
         }
         AdminHelper.updateIdentity(identity, kOptions);
         backend.updateIdentity(identity);

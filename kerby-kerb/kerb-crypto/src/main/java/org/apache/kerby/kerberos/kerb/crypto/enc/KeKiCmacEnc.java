@@ -25,6 +25,8 @@ import org.apache.kerby.kerberos.kerb.crypto.util.Cmac;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
+import java.nio.charset.Charset;
+
 public abstract class KeKiCmacEnc extends KeKiEnc {
 
     private DkKeyMaker km;
@@ -46,7 +48,7 @@ public abstract class KeKiCmacEnc extends KeKiEnc {
 
     @Override
     public byte[] prf(byte[] key, byte[] seed) throws KrbException {
-        byte[] prfConst = "prf".getBytes();
+        byte[] prfConst = "prf".getBytes(Charset.forName("UTF-8"));
         byte[] kp;
         if (EncryptionHandler.getEncHandler(this.eType()).prfSize() != encProvider().blockSize()) {
             return null;

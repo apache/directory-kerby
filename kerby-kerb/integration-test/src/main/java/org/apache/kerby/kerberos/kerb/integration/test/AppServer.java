@@ -29,18 +29,18 @@ public abstract class AppServer implements Runnable {
     protected Transport.Acceptor acceptor;
     private boolean terminated = false;
 
-    protected void usage(String[] args) {
-        if (args.length < 1) {
-            System.err.println("Usage: AppServer <ListenPort>");
-            System.exit(-1);
-        }
-    }
-
     public AppServer(String[] args) throws IOException {
         usage(args);
 
         int listenPort = Integer.parseInt(args[0]);
         this.acceptor = new Transport.Acceptor(listenPort);
+    }
+
+    protected void usage(String[] args) {
+        if (args.length < 1) {
+            System.err.println("Usage: AppServer <ListenPort>");
+            throw new RuntimeException("Usage: AppServer <ListenPort>");
+        }
     }
 
     public synchronized void start() {

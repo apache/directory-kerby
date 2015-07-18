@@ -29,6 +29,8 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
+import java.nio.charset.Charset;
+
 public class GssAppServer extends AppServer {
     private String serverPrincipal;
     private GSSManager manager;
@@ -50,10 +52,14 @@ public class GssAppServer extends AppServer {
         this.context = manager.createContext(credentials);
     }
 
+    public static void main(String[] args) throws Exception {
+        new GssAppServer(args).run();
+    }
+
     protected void usage(String[] args) {
         if (args.length < 1) {
             System.err.println("Usage: AppServer <ListenPort> <server-principal>");
-            System.exit(-1);
+            throw new RuntimeException("Usage: AppServer <ListenPort> <server-principal>");
         }
     }
 
@@ -88,7 +94,7 @@ public class GssAppServer extends AppServer {
         MessageProp prop = new MessageProp(0, false);
         byte[] token = conn.recvToken();
         byte[] bytes = context.unwrap(token, 0, token.length, prop);
-        String str = new String(bytes);
+        String str = new String(bytes, Charset.forName("UTF-8"));
         System.out.println("Received data \""
                 + str + "\" of length " + str.length());
 
@@ -100,9 +106,5 @@ public class GssAppServer extends AppServer {
         System.out.println("Will send MIC token of size "
                 + token.length);
         conn.sendToken(token);
-    }
-
-    public static void main(String[] args) throws Exception {
-        new GssAppServer(args).run();
     }
 }

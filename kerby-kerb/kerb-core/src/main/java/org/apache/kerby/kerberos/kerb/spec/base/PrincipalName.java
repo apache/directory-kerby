@@ -35,15 +35,13 @@ import java.util.List;
  }
  */
 public class PrincipalName extends KrbSequenceType {
-    private String realm;
-
     private static final int NAME_TYPE = 0;
     private static final int NAME_STRING = 1;
-
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(NAME_TYPE, Asn1Integer.class),
             new Asn1FieldInfo(NAME_STRING, KerberosStrings.class)
     };
+    private String realm;
 
     public PrincipalName() {
         super(fieldInfos);
@@ -67,6 +65,38 @@ public class PrincipalName extends KrbSequenceType {
         setNameType(type);
     }
 
+    public static String extractRealm(String principal) {
+        int pos = principal.indexOf('@');
+
+        if (pos > 0) {
+            return principal.substring(pos + 1);
+        }
+
+        throw new IllegalArgumentException("Not a valid principal, missing realm name");
+    }
+
+    public static String extractName(String principal) {
+        int pos = principal.indexOf('@');
+
+        if (pos < 0) {
+            return principal;
+        }
+
+        return principal.substring(0, pos);
+    }
+
+    public static String makeSalt(PrincipalName principalName) {
+        StringBuilder salt = new StringBuilder();
+        if (principalName.getRealm() != null) {
+            salt.append(principalName.getRealm().toString());
+        }
+        List<String> nameStrings = principalName.getNameStrings();
+        for (String ns : nameStrings) {
+            salt.append(ns);
+        }
+        return salt.toString();
+    }
+
     public NameType getNameType() {
         Integer value = getFieldAsInteger(NAME_TYPE);
         return NameType.fromValue(value);
@@ -88,12 +118,12 @@ public class PrincipalName extends KrbSequenceType {
         setFieldAs(NAME_STRING, new KerberosStrings(nameStrings));
     }
 
-    public void setRealm(String realm) {
-        this.realm = realm;
-    }
-
     public String getRealm() {
         return this.realm;
+    }
+
+    public void setRealm(String realm) {
+        this.realm = realm;
     }
 
     public String getName() {
@@ -137,10 +167,6 @@ public class PrincipalName extends KrbSequenceType {
             return false;
         } else if (this == other) {
             return true;
-        } else if (other instanceof String) {
-            String otherPrincipal = (String) other;
-            String thisPrincipal = getName();
-            return thisPrincipal.equals(otherPrincipal);
         } else if (!(other instanceof PrincipalName)) {
             return false;
         }
@@ -167,39 +193,6 @@ public class PrincipalName extends KrbSequenceType {
 
         setNameStrings(nameStrings);
         setRealm(tmpRealm);
-    }
-
-    public static String extractRealm(String principal) {
-        int pos = principal.indexOf('@');
-
-        if (pos > 0) {
-            return principal.substring(pos + 1);
-        }
-
-        throw new IllegalArgumentException("Not a valid principal, missing realm name");
-    }
-
-
-    public static String extractName(String principal) {
-        int pos = principal.indexOf('@');
-
-        if (pos < 0) {
-            return principal;
-        }
-
-        return principal.substring(0, pos);
-    }
-
-    public static String makeSalt(PrincipalName principalName) {
-        StringBuilder salt = new StringBuilder();
-        if (principalName.getRealm() != null) {
-            salt.append(principalName.getRealm().toString());
-        }
-        List<String> nameStrings = principalName.getNameStrings();
-        for (String ns : nameStrings) {
-            salt.append(ns);
-        }
-        return salt.toString();
     }
 
 }

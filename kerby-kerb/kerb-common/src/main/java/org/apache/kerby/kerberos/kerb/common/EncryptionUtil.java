@@ -54,13 +54,14 @@ public class EncryptionUtil {
     public static String getAlgoNameFromEncType(EncryptionType encType) {
         String cipherName = encType.getName().toLowerCase();
 
-        for (String c : CIPHER_ALGO_MAP.keySet()) {
-            if (cipherName.startsWith(c)) {
-                return CIPHER_ALGO_MAP.get(c);
+        for (Map.Entry<String, String> entry : CIPHER_ALGO_MAP.entrySet()) {
+            if (cipherName.startsWith(entry.getKey())) {
+                return entry.getValue();
             }
         }
 
-        throw new IllegalArgumentException("Unknown algorithm name for the encryption type " + encType);
+        throw new IllegalArgumentException("Unknown algorithm name for the encryption type "
+                + encType);
     }
 
     /**

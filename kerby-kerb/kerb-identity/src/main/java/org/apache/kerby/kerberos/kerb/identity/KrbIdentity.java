@@ -156,17 +156,18 @@ public class KrbIdentity {
             return false;
         }
 
-        KrbIdentity other = (KrbIdentity) obj;
-
-        if (principal == null) {
-            if (other.principal != null) {
+        if (obj instanceof KrbIdentity) {
+            KrbIdentity other = (KrbIdentity) obj;
+            if (principal == null) {
+                if (other.principal != null) {
+                    return false;
+                }
+            } else if (!principal.equals(other.principal)) {
                 return false;
             }
-        } else if (!principal.equals(other.principal)) {
-            return false;
+            return true;
         }
-
-        return true;
+        return false;
     }
 
     @Override

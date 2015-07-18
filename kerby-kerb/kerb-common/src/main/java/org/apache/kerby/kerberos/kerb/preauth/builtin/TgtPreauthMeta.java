@@ -43,6 +43,6 @@ public class TgtPreauthMeta implements PreauthPluginMeta {
     }
 
     public PaDataType[] getPaTypes() {
-        return PA_TYPES;
+        return PA_TYPES.clone();
     }
 }

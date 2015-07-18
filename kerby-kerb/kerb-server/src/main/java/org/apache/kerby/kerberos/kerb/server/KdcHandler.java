@@ -44,8 +44,8 @@ import java.nio.ByteBuffer;
  * KDC handler to process client requests. Currently only one realm is supported.
  */
 public class KdcHandler {
-    private final KdcContext kdcContext;
     private static final Logger LOG = LoggerFactory.getLogger(KdcHandler.class);
+    private final KdcContext kdcContext;
 
     public KdcHandler(KdcContext kdcContext) {
         this.kdcContext = kdcContext;
@@ -55,7 +55,7 @@ public class KdcHandler {
                                     InetAddress remoteAddress) throws KrbException {
         KrbMessage krbRequest;
         KdcRequest kdcRequest = null;
-        KrbMessage krbResponse = null;
+        KrbMessage krbResponse;
 
         try {
             krbRequest = KrbCodec.decodeMessage(receivedMessage);
@@ -84,6 +84,9 @@ public class KdcHandler {
             }
         }
 
+        if (remoteAddress == null) {
+            throw new KrbException("Remote address is null, not available.");
+        }
         kdcRequest.setClientAddress(remoteAddress);
         kdcRequest.isTcp(isTcp);
 

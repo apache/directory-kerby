@@ -27,23 +27,8 @@ package org.apache.kerby.kerberos.kerb.crypto.util;
 
 @SuppressWarnings("PMD")
 public class CamelliaKey {
-    private int keySize;
-
-    protected int[] subkey = new int[24 * 4];
-    protected int[] kw = new int[4 * 2]; // for whitening
-    protected int[] ke = new int[6 * 2]; // for FL and FL^(-1)
-
-    private static final int[] SIGMA = {
-            0xa09e667f, 0x3bcc908b,
-            0xb67ae858, 0x4caa73b2,
-            0xc6ef372f, 0xe94f82be,
-            0x54ff53a5, 0xf1d36f1c,
-            0x10e527fa, 0xde682d1d,
-            0xb05688c2, 0xb3e6c1fd
-    };
-
     // S-box data
-    protected static final byte[] SBOX1 = {
+    static final byte[] SBOX1 = {
             (byte) 112, (byte) 130, (byte) 44, (byte) 236,
             (byte) 179, (byte) 39, (byte) 192, (byte) 229,
             (byte) 228, (byte) 133, (byte) 87, (byte) 53,
@@ -109,13 +94,21 @@ public class CamelliaKey {
             (byte) 21, (byte) 227, (byte) 173, (byte) 244,
             (byte) 119, (byte) 199, (byte) 128, (byte) 158
     };
+    private static final int[] SIGMA = {
+            0xa09e667f, 0x3bcc908b,
+            0xb67ae858, 0x4caa73b2,
+            0xc6ef372f, 0xe94f82be,
+            0x54ff53a5, 0xf1d36f1c,
+            0x10e527fa, 0xde682d1d,
+            0xb05688c2, 0xb3e6c1fd
+    };
+    protected int[] subkey = new int[24 * 4];
+    protected int[] kw = new int[4 * 2]; // for whitening
+    protected int[] ke = new int[6 * 2]; // for FL and FL^(-1)
+    private int keySize;
 
     public CamelliaKey(byte[] key, boolean isEncrypt) {
         init(key, isEncrypt);
-    }
-
-    protected boolean is128() {
-        return keySize == 16;
     }
 
     private static int rightRotate(int x, int s) {
@@ -172,6 +165,10 @@ public class CamelliaKey {
         ki[1 + ioff] = ko[3 + ooff];
         ki[2 + ioff] = ko[0 + ooff];
         ki[3 + ioff] = ko[1 + ooff];
+    }
+
+    protected boolean is128() {
+        return keySize == 16;
     }
 
     private byte lRot8(byte v, int rot) {

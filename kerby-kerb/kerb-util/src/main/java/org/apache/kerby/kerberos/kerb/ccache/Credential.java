@@ -88,6 +88,8 @@ public class Credential {
 
         this.ticket = tkt.getTicket();
 
+        this.clientRealm = kdcRepPart.getSrealm();
+
         this.isEncInSKey = false;
 
         this.secondTicket = null;

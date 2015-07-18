@@ -24,6 +24,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.Charset;
 
 public class Transport {
 
@@ -129,7 +130,7 @@ public class Transport {
         }
 
         public Message(String header, byte[] body) {
-            this.header = header.getBytes();
+            this.header = header.getBytes(Charset.forName("UTF-8"));
             this.body = body;
         }
     }

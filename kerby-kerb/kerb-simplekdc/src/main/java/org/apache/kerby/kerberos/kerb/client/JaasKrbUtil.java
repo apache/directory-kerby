@@ -42,9 +42,9 @@ import java.util.Set;
  */
 public final class JaasKrbUtil {
 
-    private JaasKrbUtil() { }
+    public final static boolean enableDebug = true;
 
-    public static boolean enableDebug = true;
+    private JaasKrbUtil() { }
 
     public static Subject loginUsingPassword(
             String principal, String password) throws LoginException {

@@ -45,18 +45,30 @@ public class NativeRandom implements RandomProvider {
 
     @Override
     public void setSeed(byte[] seed) {
+        OutputStream output = null;
         try {
-            OutputStream output = new FileOutputStream(randFile);
+            output = new FileOutputStream(randFile);
             output.write(seed);
+            output.flush();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     @Override
     public void nextBytes(byte[] bytes) {
         try {
-            input.read(bytes);
+            if (input.read(bytes) == -1) {
+                throw new IOException();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

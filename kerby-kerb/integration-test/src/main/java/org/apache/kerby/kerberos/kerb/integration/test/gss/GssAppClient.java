@@ -29,19 +29,12 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
+import java.nio.charset.Charset;
+
 public class GssAppClient extends AppClient {
     private String clientPrincipal;
     private String serverPrincipal;
     private GSSManager manager;
-
-    @Override
-    protected void usage(String[] args) {
-        if (args.length < 3) {
-            System.err.println("Usage: GssAppClient <server-host> <server-port> "
-                    + "<client-principal> <server-principal> ");
-            System.exit(-1);
-        }
-    }
 
     public GssAppClient(String[] args) throws Exception {
         super(args);
@@ -49,6 +42,20 @@ public class GssAppClient extends AppClient {
         clientPrincipal = args[2];
         serverPrincipal = args[3];
         this.manager = GSSManager.getInstance();
+    }
+
+    public static void main(String[] args) throws Exception  {
+        new GssAppClient(args).run();
+    }
+
+    @Override
+    protected void usage(String[] args) {
+        if (args.length < 3) {
+            System.err.println("Usage: GssAppClient <server-host> <server-port> "
+                    + "<client-principal> <server-principal> ");
+            throw new RuntimeException("Usage: GssAppClient <server-host> <server-port> \"\n"
+                    + "                    + \"<client-principal> <server-principal> ");
+        }
     }
 
     @Override
@@ -87,7 +94,7 @@ public class GssAppClient extends AppClient {
             System.out.println("Mutual authentication took place!");
         }
 
-        byte[] messageBytes = "Hello There!\0".getBytes();
+        byte[] messageBytes = "Hello There!\0".getBytes(Charset.forName("UTF-8"));
         MessageProp prop =  new MessageProp(0, true);
         token = context.wrap(messageBytes, 0, messageBytes.length, prop);
         System.out.println("Will send wrap token of size " + token.length);
@@ -100,9 +107,5 @@ public class GssAppClient extends AppClient {
 
         System.out.println("Verified received MIC for message.");
         context.dispose();
-    }
-
-    public static void main(String[] args) throws Exception  {
-        new GssAppClient(args).run();
     }
 }

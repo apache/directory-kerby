@@ -144,9 +144,6 @@ public abstract class AbstractIdentityBackend
      */
     @Override
     public KrbIdentity addIdentity(KrbIdentity identity) throws KrbException {
-        logger.debug("addIdentity called, principalName = {}",
-                identity.getPrincipalName());
-
         if (identity == null) {
             throw new IllegalArgumentException("null identity to add");
         }
@@ -169,9 +166,6 @@ public abstract class AbstractIdentityBackend
      */
     @Override
     public KrbIdentity updateIdentity(KrbIdentity identity) throws KrbException {
-        logger.debug("updateIdentity called, principalName = {}",
-                identity.getPrincipalName());
-
         if (identity == null) {
             throw new IllegalArgumentException("null identity to update");
         }

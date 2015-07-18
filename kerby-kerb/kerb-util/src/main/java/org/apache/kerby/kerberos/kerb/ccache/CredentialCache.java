@@ -39,12 +39,10 @@ public class CredentialCache implements KrbCredentialCache {
     public static final int FCC_FVNO_4 = 0x504;
 
     public static final int FCC_TAG_DELTATIME = 1;
-
+    private final List<Credential> credentials;
     private int version = FCC_FVNO_4;
     private List<Tag> tags;
     private PrincipalName primaryPrincipal;
-
-    private final List<Credential> credentials;
 
     public CredentialCache() {
         credentials = new ArrayList<>();
@@ -62,11 +60,30 @@ public class CredentialCache implements KrbCredentialCache {
         setPrimaryPrincipal(credential.getClientName());
     }
 
+    public static void main(String[] args) throws IOException {
+        if (args.length != 2) {
+            System.err.println("Dump credential cache file");
+            System.err.println("Usage: CredentialCache <ccache-file>");
+            System.exit(1);
+        }
+
+        String cacheFile = args[1];
+        CredentialCache cc = new CredentialCache();
+        cc.load(new File(cacheFile));
+
+        for (Credential cred : cc.getCredentials()) {
+            Ticket tkt = cred.getTicket();
+            System.out.println("Tkt server name: " + tkt.getSname().getName());
+            System.out.println("Tkt client name: " + cred.getClientName().getName());
+            System.out.println("Tkt encrypt type: " + tkt.getEncryptedEncPart().getEType().getName());
+        }
+    }
+
     @Override
     public void store(File ccacheFile) throws IOException {
         OutputStream outputStream = new FileOutputStream(ccacheFile);
-
         store(outputStream);
+        outputStream.close();
     }
 
     @Override
@@ -99,11 +116,6 @@ public class CredentialCache implements KrbCredentialCache {
     }
 
     @Override
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    @Override
     public PrincipalName getPrimaryPrincipal() {
         return primaryPrincipal;
     }
@@ -118,12 +130,17 @@ public class CredentialCache implements KrbCredentialCache {
         return version;
     }
 
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
+    @Override
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public List<Tag> getTags() {
         return this.tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     @Override
@@ -174,8 +191,8 @@ public class CredentialCache implements KrbCredentialCache {
         }
 
         InputStream inputStream = new FileInputStream(ccacheFile);
-
         load(inputStream);
+        inputStream.close();
     }
 
     @Override
@@ -236,8 +253,11 @@ public class CredentialCache implements KrbCredentialCache {
                     usec = ccis.readInt();
                     tags.add(new Tag(tag, time, usec));
                     break;
-                default:
-                    ccis.read(new byte[tagLen], 0, tagLen); // ignore unknown tag
+                default: {
+                    if (ccis.read(new byte[tagLen], 0, tagLen) == -1) {  // ignore unknown tag
+                        throw new IOException();
+                    }
+                }
             }
             len = len - (4 + tagLen);
         }
@@ -277,24 +297,5 @@ public class CredentialCache implements KrbCredentialCache {
         ccos.writeShort(tag.length);
         ccos.writeInt(tag.time);
         ccos.writeInt(tag.usec);
-    }
-
-    public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
-            System.err.println("Dump credential cache file");
-            System.err.println("Usage: CredentialCache <ccache-file>");
-            System.exit(1);
-        }
-
-        String cacheFile = args[1];
-        CredentialCache cc = new CredentialCache();
-        cc.load(new File(cacheFile));
-
-        for (Credential cred : cc.getCredentials()) {
-            Ticket tkt = cred.getTicket();
-            System.out.println("Tkt server name: " + tkt.getSname().getName());
-            System.out.println("Tkt client name: " + cred.getClientName().getName());
-            System.out.println("Tkt encrypt type: " + tkt.getEncryptedEncPart().getEType().getName());
-        }
     }
 }

@@ -154,7 +154,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         PkAuthenticator pkAuthen = new PkAuthenticator();
 
         boolean usingRsa = reqCtx.requestOpts.usingRsa;
-        PaDataType paType = reqCtx.paType = PaDataType.PK_AS_REQ;
+        reqCtx.paType = PaDataType.PK_AS_REQ;
 
         pkAuthen.setCtime(ctime);
         pkAuthen.setCusec(cusec);

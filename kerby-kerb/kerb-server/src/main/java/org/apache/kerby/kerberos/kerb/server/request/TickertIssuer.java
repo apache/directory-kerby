@@ -48,8 +48,8 @@ import org.slf4j.LoggerFactory;
  * Handling ticket constructing, filling, and issuing.
  */
 public abstract class TickertIssuer {
-    private final KdcRequest kdcRequest;
     private static final Logger LOG = LoggerFactory.getLogger(TickertIssuer.class);
+    private final KdcRequest kdcRequest;
 
     public TickertIssuer(KdcRequest kdcRequest) {
         this.kdcRequest = kdcRequest;
@@ -186,7 +186,7 @@ public abstract class TickertIssuer {
                 krbRtime = KerberosTime.NEVER;
             }
             KerberosTime allowedMaximumRenewableTime = krbStartTime;
-            allowedMaximumRenewableTime.extend(config.getMaximumRenewableLifetime() * 1000);
+            allowedMaximumRenewableTime = allowedMaximumRenewableTime.extend(config.getMaximumRenewableLifetime() * 1000);
             if (krbRtime.greaterThan(allowedMaximumRenewableTime)) {
                 krbRtime = allowedMaximumRenewableTime;
             }

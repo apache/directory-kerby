@@ -24,7 +24,7 @@ public class Tag {
     int tagLen = 8;
     int time = 0;
     int usec = 0;
-    int length = 2 + 2 + 8; // len(tag) + len(tagLen) + len(tagData);
+    int length = 2 + 2 + tagLen; // len(tag) + len(tagLen) + len(tagData);
 
     public Tag(int tag, int time, int usec) {
         this.tag = tag;

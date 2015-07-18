@@ -24,24 +24,16 @@ import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 public abstract class AbstractKeyMaker implements KeyMaker {
 
-    protected static final byte[] KERBEROS_CONSTANT = "kerberos".getBytes();
+    static final byte[] KERBEROS_CONSTANT = "kerberos".getBytes(Charset.forName("UTF-8"));
 
     private EncryptProvider encProvider;
 
     public AbstractKeyMaker(EncryptProvider encProvider) {
         this.encProvider = encProvider;
-    }
-
-    protected EncryptProvider encProvider() {
-        return encProvider;
-    }
-
-    @Override
-    public byte[] random2Key(byte[] randomBits) throws KrbException {
-        return new byte[0];
     }
 
     /**
@@ -89,5 +81,14 @@ public abstract class AbstractKeyMaker implements KeyMaker {
         } else {
             return saltBytes;
         }
+    }
+
+    protected EncryptProvider encProvider() {
+        return encProvider;
+    }
+
+    @Override
+    public byte[] random2Key(byte[] randomBits) throws KrbException {
+        return new byte[0];
     }
 }

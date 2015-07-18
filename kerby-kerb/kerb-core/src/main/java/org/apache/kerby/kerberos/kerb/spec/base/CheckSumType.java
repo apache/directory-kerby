@@ -78,6 +78,28 @@ public enum CheckSumType implements KrbEnum {
         this.displayName = displayName;
     }
 
+    public static CheckSumType fromValue(Integer value) {
+        if (value != null) {
+            for (KrbEnum e : values()) {
+                if (e.getValue() == value) {
+                    return (CheckSumType) e;
+                }
+            }
+        }
+        return NONE;
+    }
+
+    public static CheckSumType fromName(String name) {
+        if (name != null) {
+            for (CheckSumType cs : values()) {
+                if (cs.getName().equals(name)) {
+                    return cs;
+                }
+            }
+        }
+        return NONE;
+    }
+
     @Override
     public int getValue() {
         return value;
@@ -97,27 +119,5 @@ public enum CheckSumType implements KrbEnum {
      */
     public boolean usesAES256() {
         return name.contains("aes256");
-    }
-
-    public static CheckSumType fromValue(Integer value) {
-        if (value != null) {
-            for (KrbEnum e : values()) {
-                if (e.getValue() == value) {
-                    return (CheckSumType) e;
-                }
-            }
-        }
-        return NONE;
-    }
-
-    public static CheckSumType fromName(String name) {
-        if (name != null) {
-            for (CheckSumType cs : values()) {
-                if (cs.getName() == name) {
-                    return (CheckSumType) cs;
-                }
-            }
-        }
-        return NONE;
     }
 }
