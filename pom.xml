@@ -38,7 +38,8 @@
   </prerequisites>
 
   <modules>
-    <module>lib</module>
+    <module>kerby-config</module>
+    <module>kerby-util</module>
     <module>kerby-asn1</module>
     <module>kerby-kerb</module>
     <module>kerby-kdc</module>
