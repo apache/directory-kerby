@@ -63,9 +63,10 @@ public class KrbCodecBenchmark {
     @Benchmark
     @Fork(2)
     public void decodeWithApacheDS() throws Exception {
+        ByteBuffer content = apreqToken.duplicate();
         Asn1Decoder krbDecoder = new Asn1Decoder();
-        ApReqContainer apreqContainer = new ApReqContainer(apreqToken.duplicate());
-        krbDecoder.decode(apreqToken, apreqContainer);
+        ApReqContainer apreqContainer = new ApReqContainer(content);
+        krbDecoder.decode(content, apreqContainer);
         String serverName = apreqContainer.getApReq().getTicket().getSName().toString();
         if (serverName == null) {
             throw new RuntimeException("Decoding test failed");
