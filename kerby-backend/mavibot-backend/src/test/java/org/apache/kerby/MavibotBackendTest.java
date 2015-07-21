@@ -23,6 +23,7 @@ package org.apache.kerby;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendTestBase;
+import org.apache.kerby.kerberos.kerb.identity.backend.BackendTestUtil;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -61,7 +62,7 @@ public class MavibotBackendTest extends BackendTestBase {
     // overriding this cause MavibotBackend doesn't support range search
     @Override
     protected void testGetIdentities(IdentityBackend backend) throws KrbException {
-        KrbIdentity[] identities = createManyIdentities();
+        KrbIdentity[] identities = BackendTestUtil.createManyIdentities();
 
         for (KrbIdentity identity : identities) {
             backend.addIdentity(identity);
