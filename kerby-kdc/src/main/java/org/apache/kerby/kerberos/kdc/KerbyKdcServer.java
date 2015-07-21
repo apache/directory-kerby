@@ -42,7 +42,7 @@ public class KerbyKdcServer extends KdcServer {
 
         kadmin = new Kadmin(getKdcSetting(), getIdentityService());
 
-        kadmin.createBuiltinPrincipals();
+        kadmin.checkBuiltinPrincipals();
     }
 
     private static final String USAGE = "Usage: "
@@ -71,7 +71,12 @@ public class KerbyKdcServer extends KdcServer {
 
         KerbyKdcServer server = new KerbyKdcServer(confDir);
         server.setWorkDir(workDir);
-        server.init();
+        try {
+            server.init();
+        } catch (KrbException e) {
+            System.err.println("Errors occurred when start kdc server:  " + e.getMessage());
+            return;
+        }
 
         server.start();
         System.out.println("KDC started.");

@@ -76,19 +76,31 @@ public class Kadmin {
         return KrbUtil.makeTgsPrincipal(kdcSetting.getKdcRealm()).getName();
     }
 
-    private String getKadminPrincipal() {
+    public String getKadminPrincipal() {
         return KrbUtil.makeKadminPrincipal(kdcSetting.getKdcRealm()).getName();
+    }
+
+    public void checkBuiltinPrincipals() throws KrbException {
+        String tgsPrincipal = getTgsPrincipal();
+        String kadminPrincipal = getKadminPrincipal();
+        if (backend.getIdentity(tgsPrincipal) == null || backend.getIdentity(kadminPrincipal) == null ) {
+            throw new KrbException("The builtin principals do not exist in backend, please run the kdcinit tool.");
+        }
     }
 
     public void createBuiltinPrincipals() throws KrbException {
         String tgsPrincipal = getTgsPrincipal();
         if (backend.getIdentity(tgsPrincipal) == null) {
             addPrincipal(tgsPrincipal);
+        } else {
+            throw new KrbException("The tgs principal already exists in backend.");
         }
 
         String kadminPrincipal = getKadminPrincipal();
         if (backend.getIdentity(kadminPrincipal) == null) {
             addPrincipal(kadminPrincipal);
+        } else {
+            throw new KrbException("The kadmin principal already exists in backend.");
         }
     }
 
