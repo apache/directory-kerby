@@ -148,6 +148,10 @@ public abstract class KdcRequest {
         preauthContext.setPreauthRequired(preauthRequired);
     }
 
+    public void resetPrequthContxt() {
+        preauthContext.reset();
+    }
+
     public PreauthContext getPreauthContext() {
         return preauthContext;
     }

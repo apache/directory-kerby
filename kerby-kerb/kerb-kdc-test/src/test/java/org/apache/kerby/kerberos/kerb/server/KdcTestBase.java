@@ -116,9 +116,14 @@ public abstract class KdcTestBase {
         kdcServer.init();
     }
 
+    protected void configKdcSeverAndClient() {
+        kdcServer.setWorkDir(testDir);
+    }
+
     protected void setUpKdcServer() throws Exception {
         kdcServer = new TestKdcServer(allowTcp(), allowUdp());
-        kdcServer.setWorkDir(testDir);
+
+        configKdcSeverAndClient();
 
         prepareKdc();
 

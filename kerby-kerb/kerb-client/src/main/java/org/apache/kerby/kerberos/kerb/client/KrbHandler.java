@@ -20,21 +20,33 @@
 package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2;
+import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2Entry;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.spec.base.MethodData;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
+import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class KrbHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(KrbHandler.class);
     private PreauthHandler preauthHandler;
 
     public void init(KrbContext context) {
@@ -83,9 +95,27 @@ public abstract class KrbHandler {
             kdcRequest.processResponse((KdcRep) kdcRep);
         } else if (messageType == KrbMessageType.KRB_ERROR) {
             KrbError error = (KrbError) kdcRep;
-            //TODO: Should use the error message, now only print it.
-            System.out.println("KDC server responsed with message: "
+            LOG.info("KDC server responsed with message: "
                     + error.getErrorCode().getMessage());
+            if (error.getErrorCode() == KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED) {
+                MethodData methodData = KrbCodec.decode(error.getEdata(), MethodData.class);
+                List<PaDataEntry> paDataEntryList = methodData.getElements();
+                List<EncryptionType> encryptionTypes = new ArrayList<>();
+                for (PaDataEntry paDataEntry : paDataEntryList) {
+                    if (paDataEntry.getPaDataType() == PaDataType.ETYPE_INFO2) {
+                        EtypeInfo2 etypeInfo2 = KrbCodec.decode(paDataEntry.getPaDataValue(),
+                                EtypeInfo2.class);
+                        List<EtypeInfo2Entry> info2Entries = etypeInfo2.getElements();
+                        for (EtypeInfo2Entry info2Entry : info2Entries) {
+                            encryptionTypes.add(info2Entry.getEtype());
+                        }
+                    }
+                }
+                kdcRequest.setEncryptionTypes(encryptionTypes);
+                kdcRequest.setPreauthRequired(true);
+                kdcRequest.resetPrequthContxt();
+                handleRequest(kdcRequest);
+            }
         }
     }
 
