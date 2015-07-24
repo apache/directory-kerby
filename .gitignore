@@ -12,6 +12,8 @@ log.txt
 *.iws
 dependency-reduced-pom.xml
 .pmdruleset.xml
+.pmd
+.checkstyle
 kerby-dist/kdc-dist/lib/
 kerby-dist/tool-dist/lib/
 kerby-dist/kdc-dist/logs/
