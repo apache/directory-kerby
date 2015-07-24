@@ -53,6 +53,9 @@ public class TokenPreauth extends AbstractPreauthPlugin {
     public boolean verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
                           PaDataEntry paData) throws KrbException {
 
+        if(!kdcRequest.getKdcContext().getConfig().isAllowTokenPreauth()) {
+            throw new KrbException("Token preauth is not allowed.");
+        }
         if (paData.getPaDataType() == PaDataType.TOKEN_REQUEST) {
             EncryptedData encData = KrbCodec.decode(paData.getPaDataValue(), EncryptedData.class);
             EncryptionKey clientKey = kdcRequest.getArmorKey();

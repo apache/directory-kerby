@@ -339,13 +339,9 @@ public abstract class KdcRequest {
     protected void preauth() throws KrbException {
         KdcReq request = getKdcReq();
 
-        if (!kdcContext.getConfig().isAllowTokenPreauth()) {
-            return;
-        }
-
         PaData preAuthData = request.getPaData();
 
-        if (preauthContext.isPreauthRequired()) {
+        if (isPreauthRequired()) {
             if (preAuthData == null || preAuthData.isEmpty()) {
                 LOG.info("The preauth data is empty.");
                 KrbError krbError = makePreAuthenticationError(kdcContext, request,

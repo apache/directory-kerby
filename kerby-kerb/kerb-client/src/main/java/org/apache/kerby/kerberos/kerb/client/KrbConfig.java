@@ -50,7 +50,7 @@ public class KrbConfig extends Conf {
         Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
                 KrbConfigKey.KDC_PORT);
         if (kdcPort != null) {
-            return kdcPort.shortValue();
+            return kdcPort.intValue();
         }
         return -1;
     }
@@ -63,7 +63,7 @@ public class KrbConfig extends Conf {
         Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
                 KrbConfigKey.KDC_TCP_PORT);
         if (kdcPort != null && kdcPort > 0) {
-            return kdcPort.shortValue();
+            return kdcPort.intValue();
         }
         return getKdcPort();
     }
@@ -93,7 +93,7 @@ public class KrbConfig extends Conf {
         Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
                 KrbConfigKey.KDC_UDP_PORT);
         if (kdcPort != null && kdcPort > 0) {
-            return kdcPort.shortValue();
+            return kdcPort.intValue();
         }
         return getKdcPort();
     }
