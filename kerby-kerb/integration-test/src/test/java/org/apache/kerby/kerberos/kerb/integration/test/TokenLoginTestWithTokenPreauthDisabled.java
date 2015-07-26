@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.integration.test;
 
+import javax.security.auth.login.LoginException;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,23 +34,15 @@ public class TokenLoginTestWithTokenPreauthDisabled extends TokenLoginTestBase {
         return false;
     }
 
-    @Test
+    @Test(expected = LoginException.class)
     public void testLoginWithTokenStr() throws Exception {
-        try {
-            super.testLoginWithTokenStr();
-            Assert.fail("Exception should have been thrown");
-        } catch (Exception e) {
-          //expects exception
-        }
+        super.testLoginWithTokenStr();
+        Assert.fail("Exception should have been thrown");
     }
 
-    @Test
+    @Test(expected = LoginException.class)
     public void testLoginWithTokenCache() throws Exception {
-        try {
-            super.testLoginWithTokenCache();
-            Assert.fail("Exception should have been thrown");
-        } catch (Exception e) {
-          //expects exception
-        }
+        super.testLoginWithTokenCache();
+        Assert.fail("Exception should have been thrown");
     }
 }
