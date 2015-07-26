@@ -219,10 +219,65 @@
             <configLocation>${checkstyle.dir}/kerby-checkstyle.xml</configLocation>
             <includeTestSourceDirectory>true</includeTestSourceDirectory>
             <encoding>UTF-8</encoding>
-            <failOnViolation>false</failOnViolation>
+            <failOnViolation>true</failOnViolation>
           </configuration>
+          <executions>
+            <execution>
+              <id>validate</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
 
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.apache.maven.plugins
+                    </groupId>
+                    <artifactId>
+                      maven-pmd-plugin
+                    </artifactId>
+                    <versionRange>[3.4,)</versionRange>
+                    <goals>
+                      <goal>check</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.apache.maven.plugins
+                    </groupId>
+                    <artifactId>
+                      maven-checkstyle-plugin
+                    </artifactId>
+                    <versionRange>[2.15,)</versionRange>
+                    <goals>
+                      <goal>check</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -275,7 +330,7 @@
       </properties>
     </profile>
     <profile>
-      <id>activate-in-module</id>
+      <id>activate-checkstyle-in-module</id>
       <activation>
         <file>
           <exists>${basedir}/../docs/kerby-checkstyle.xml</exists>
@@ -286,7 +341,7 @@
       </properties>
     </profile>
     <profile>
-      <id>activate-in-submodule</id>
+      <id>activate-checkstyle-in-submodule</id>
       <activation>
         <file>
           <exists>${basedir}/../../docs/kerby-checkstyle.xml</exists>
