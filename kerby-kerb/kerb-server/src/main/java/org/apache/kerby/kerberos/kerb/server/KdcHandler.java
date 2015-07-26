@@ -79,7 +79,7 @@ public class KdcHandler {
             } else if (messageType == KrbMessageType.AS_REQ) {
                 kdcRequest = new AsRequest((AsReq) kdcReq, kdcContext);
             } else {
-                LOG.error("Invalid message type: "+ messageType);
+                LOG.error("Invalid message type: " + messageType);
                 throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
             }
         }

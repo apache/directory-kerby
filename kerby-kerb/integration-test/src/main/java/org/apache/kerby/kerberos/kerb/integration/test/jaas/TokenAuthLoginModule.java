@@ -81,7 +81,7 @@ public class TokenAuthLoginModule implements LoginModule {
 
         this.subject = subject;
         /** initialize any configured options*/
-        princName = (String)options.get(PRINCIPAL);
+        princName = (String) options.get(PRINCIPAL);
         tokenStr = (String) options.get(TOKEN);
         tokenCacheName = (String) options.get(TOKEN_CACHE);
         armorCache = new File((String) options.get(ARMOR_CACHE));

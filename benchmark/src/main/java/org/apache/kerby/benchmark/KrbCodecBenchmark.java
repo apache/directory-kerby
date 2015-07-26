@@ -22,7 +22,11 @@ package org.apache.kerby.benchmark;
 import org.apache.directory.api.asn1.ber.Asn1Decoder;
 import org.apache.directory.shared.kerberos.codec.apReq.ApReqContainer;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
 
 import java.io.IOException;
 import java.io.InputStream;

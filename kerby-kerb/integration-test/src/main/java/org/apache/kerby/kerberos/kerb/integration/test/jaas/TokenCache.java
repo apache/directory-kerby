@@ -23,7 +23,12 @@ package org.apache.kerby.kerberos.kerb.integration.test.jaas;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Writer;
 import java.nio.charset.Charset;
 
 /**

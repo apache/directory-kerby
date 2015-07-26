@@ -83,7 +83,7 @@ public class Kadmin {
     public void checkBuiltinPrincipals() throws KrbException {
         String tgsPrincipal = getTgsPrincipal();
         String kadminPrincipal = getKadminPrincipal();
-        if (backend.getIdentity(tgsPrincipal) == null || backend.getIdentity(kadminPrincipal) == null ) {
+        if (backend.getIdentity(tgsPrincipal) == null || backend.getIdentity(kadminPrincipal) == null) {
             throw new KrbException("The builtin principals do not exist in backend, please run the kdcinit tool.");
         }
     }

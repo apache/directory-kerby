@@ -28,18 +28,18 @@ public class KdcInitTool {
     private Kadmin kadmin;
     private static File keytabFile;
 
-    private static final String USAGE = "Usage: " +
-        KdcInitTool.class.getSimpleName() +
-        " conf-dir keytab";
+    private static final String USAGE = "Usage: "
+        + KdcInitTool.class.getSimpleName()
+        + " conf-dir keytab";
 
     private void init(File confDir) throws KrbException {
         kadmin = new Kadmin(confDir);
         kadmin.createBuiltinPrincipals();
         kadmin.exportKeytab(keytabFile, kadmin.getKadminPrincipal());
-        System.out.println("The kadmin principal " + kadmin.getKadminPrincipal() +
-                " has exported into keytab file " + keytabFile.getAbsolutePath() +
-                ", please make sure to keep it, because it will be used by kadmin tool" +
-                " for the authentication.");
+        System.out.println("The kadmin principal " + kadmin.getKadminPrincipal()
+                + " has exported into keytab file " + keytabFile.getAbsolutePath()
+                + ", please make sure to keep it, because it will be used by kadmin tool"
+                + " for the authentication.");
     }
 
     public static void main(String[] args) throws KrbException {
@@ -63,9 +63,9 @@ public class KdcInitTool {
         }
 
         if (keytabFile.exists()) {
-            System.err.println("There is one kadmin keytab exists in " + keyTabPath +
-                ", this tool maybe have been executed, if not," +
-                " please delete it or change the keytab-dir.");
+            System.err.println("There is one kadmin keytab exists in " + keyTabPath
+                    + ", this tool maybe have been executed, if not,"
+                    + " please delete it or change the keytab-dir.");
             return;
         }
 

@@ -42,10 +42,10 @@ public class Krb5Conf {
         content = content.replaceAll("_KDC_PORT_",
                 String.valueOf(kdcPort));
 
-        if(setting.allowTcp()) {
+        if (setting.allowTcp()) {
             content = content.replaceAll("#_KDC_TCP_PORT_", "kdc_tcp_port = " + setting.getKdcTcpPort());
         }
-        if(setting.allowUdp()) {
+        if (setting.allowUdp()) {
             content = content.replaceAll("#_KDC_UDP_PORT_", "kdc_udp_port = " + setting.getKdcUdpPort());
         }
 

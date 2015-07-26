@@ -253,11 +253,10 @@ public class CredentialCache implements KrbCredentialCache {
                     usec = ccis.readInt();
                     tags.add(new Tag(tag, time, usec));
                     break;
-                default: {
-                    if (ccis.read(new byte[tagLen], 0, tagLen) == -1) {  // ignore unknown tag
+                default:
+                    if (ccis.read(new byte[tagLen], 0, tagLen) == -1) { // ignore unknown tag
                         throw new IOException();
                     }
-                }
             }
             len = len - (4 + tagLen);
         }

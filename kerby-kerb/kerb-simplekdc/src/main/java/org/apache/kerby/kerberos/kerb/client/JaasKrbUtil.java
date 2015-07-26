@@ -42,7 +42,7 @@ import java.util.Set;
  */
 public final class JaasKrbUtil {
 
-    public final static boolean enableDebug = true;
+    public static final boolean ENABLE_DEBUG = true;
 
     private JaasKrbUtil() { }
 
@@ -131,7 +131,7 @@ public final class JaasKrbUtil {
             options.put("renewTGT", "false");
             options.put("refreshKrb5Config", "true");
             options.put("isInitiator", "false");
-            options.put("debug", String.valueOf(enableDebug));
+            options.put("debug", String.valueOf(ENABLE_DEBUG));
 
             return new AppConfigurationEntry[]{
                     new AppConfigurationEntry(getKrb5LoginModuleName(),
@@ -160,7 +160,7 @@ public final class JaasKrbUtil {
             options.put("refreshKrb5Config", "true");
             options.put("isInitiator", "true");
             options.put("ticketCache", clientCredentialFile.getAbsolutePath());
-            options.put("debug", String.valueOf(enableDebug));
+            options.put("debug", String.valueOf(ENABLE_DEBUG));
 
             return new AppConfigurationEntry[]{
                     new AppConfigurationEntry(getKrb5LoginModuleName(),
@@ -186,7 +186,7 @@ public final class JaasKrbUtil {
             options.put("renewTGT", "true");
             options.put("refreshKrb5Config", "true");
             options.put("isInitiator", "true");
-            options.put("debug", String.valueOf(enableDebug));
+            options.put("debug", String.valueOf(ENABLE_DEBUG));
 
             return new AppConfigurationEntry[]{
                     new AppConfigurationEntry(getKrb5LoginModuleName(),

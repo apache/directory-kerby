@@ -296,7 +296,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             Dn dn = toDn(principalName);
             connection.delete(dn);
         } catch (LdapException e) {
-            LOG.error("Error occurred while deleting identity: " + principalName );
+            LOG.error("Error occurred while deleting identity: " + principalName);
             throw new KrbException("Failed to remove identity", e);
         }
     }

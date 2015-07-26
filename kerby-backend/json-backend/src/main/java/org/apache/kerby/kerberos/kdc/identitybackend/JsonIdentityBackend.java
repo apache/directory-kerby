@@ -155,8 +155,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
 
         String principalName = identity.getPrincipalName();
         if (ids.containsKey(principalName)) {
-            LOG.error("Error occurred while adding identity, principal " + principalName +
-                " already exists.");
+            LOG.error("Error occurred while adding identity, principal " + principalName + " already exists.");
             throw new RuntimeException("Principal already exists.");
         }
 
@@ -176,8 +175,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         if (ids.containsKey(principalName)) {
             ids.put(principalName, identity);
         } else {
-            LOG.error("Error occurred while updating identity, principal " + principalName +
-                " does not exists.");
+            LOG.error("Error occurred while updating identity, principal " + principalName + " does not exists.");
             throw new RuntimeException("Principal does not exist.");
         }
         idsToFile(ids);
@@ -193,8 +191,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         if (ids.containsKey(principalName)) {
             ids.remove(principalName);
         } else {
-            LOG.error("Error occurred while deleting identity, principal " + principalName +
-                " does not exists.");
+            LOG.error("Error occurred while deleting identity, principal " + principalName + " does not exists.");
             throw new RuntimeException("Principal does not exist.");
         }
         idsToFile(ids);
@@ -233,7 +230,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         try {
             IOUtil.writeFile(newFileJson, jsonKdbFile);
         } catch (IOException e) {
-            LOG.error("Error occurred while writing ids to file: " + jsonKdbFile );
+            LOG.error("Error occurred while writing ids to file: " + jsonKdbFile);
             throw new RuntimeException("Failed to write file", e);
         }
     }

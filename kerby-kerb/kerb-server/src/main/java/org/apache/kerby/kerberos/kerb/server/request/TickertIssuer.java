@@ -186,7 +186,8 @@ public abstract class TickertIssuer {
                 krbRtime = KerberosTime.NEVER;
             }
             KerberosTime allowedMaximumRenewableTime = krbStartTime;
-            allowedMaximumRenewableTime = allowedMaximumRenewableTime.extend(config.getMaximumRenewableLifetime() * 1000);
+            allowedMaximumRenewableTime = allowedMaximumRenewableTime
+                    .extend(config.getMaximumRenewableLifetime() * 1000);
             if (krbRtime.greaterThan(allowedMaximumRenewableTime)) {
                 krbRtime = allowedMaximumRenewableTime;
             }
