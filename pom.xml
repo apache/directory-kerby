@@ -30,6 +30,7 @@
     <assertj.version>1.7.1</assertj.version>
     <findbugs.version>2.3.2</findbugs.version>
     <checkstyle.dir>${basedir}/docs</checkstyle.dir>
+    <skipTests>false</skipTests>
   </properties>
 
   <prerequisites>
@@ -139,6 +140,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.18.1</version>
           <configuration>
+            <skipTests>${skipTests}</skipTests>
             <reuseForks>false</reuseForks>
             <systemPropertyVariables>
             </systemPropertyVariables>
