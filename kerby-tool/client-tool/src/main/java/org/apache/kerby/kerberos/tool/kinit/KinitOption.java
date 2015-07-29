@@ -47,7 +47,8 @@ public enum KinitOption implements KOption {
     KRB5_CACHE("-c", "Kerberos 5 cache name", KOptionType.STR),
     SERVICE("-S", "service", KOptionType.STR),
     ARMOR_CACHE("-T", "armor credential cache", KOptionType.FILE),
-    XATTR("-X", "<attribute>[=<value>]", KOptionType.STR);
+    XATTR("-X", "<attribute>[=<value>]", KOptionType.STR),
+    CONF_DIR("-conf", "conf dir", KOptionType.DIR);
 
     private String name;
     private KOptionType type = KOptionType.NONE;

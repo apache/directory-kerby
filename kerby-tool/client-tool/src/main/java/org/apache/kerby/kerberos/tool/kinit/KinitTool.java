@@ -39,7 +39,7 @@ import java.util.Scanner;
 public class KinitTool {
 
     private static final String USAGE =
-            "Usage: kinit [-V] [-l lifetime] [-s start_time]\n"
+            "Usage: kinit -conf conf_dir [-V] [-l lifetime] [-s start_time]\n"
                     + "\t\t[-r renewable_life] [-f | -F] [-p | -P] -n [-a | -A] [-C] [-E]\n"
                     + "\t\t[-v] [-R] [-k [-i|-t keytab_file]] [-c cachename]\n"
                     + "\t\t[-S service_name] [-T ticket_armor_cache]\n"
@@ -111,7 +111,13 @@ public class KinitTool {
             ktOptions.add(KinitOption.USER_PASSWD, password);
         }
 
-        KrbClient krbClient = getClient();
+        File confDir = null;
+        if (ktOptions.contains(KinitOption.CONF_DIR)) {
+            confDir = ktOptions.getDirOption(KinitOption.CONF_DIR);
+        } else {
+            printUsage("Can't get the conf dir!");
+        }
+        KrbClient krbClient = getClient(confDir);
         TgtTicket tgt = krbClient.requestTgtWithOptions(
                 ToolUtil.convertOptions(ktOptions));
 
@@ -138,8 +144,8 @@ public class KinitTool {
     /**
      * Init the client.
      */
-    private static KrbClient getClient() throws KrbException {
-        KrbClient krbClient = new KrbClient();
+    private static KrbClient getClient(File confDir) throws KrbException {
+        KrbClient krbClient = new KrbClient(confDir);
         krbClient.init();
         return krbClient;
     }
