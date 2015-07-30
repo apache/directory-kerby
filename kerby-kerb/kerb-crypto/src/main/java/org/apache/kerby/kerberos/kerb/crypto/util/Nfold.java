@@ -57,23 +57,23 @@ public class Nfold {
         int lcm = (outBytesNum * inBytesNum) / a;
 
         byte[] outBytes = new byte[outBytesNum];
-        Arrays.fill(outBytes, (byte)0);
+        Arrays.fill(outBytes, (byte) 0);
 
         int tmpByte = 0;
         for (int i = lcm - 1; i >= 0; i--) {
             // first, start with the msbit inBytes the first, unrotated byte
-            int tmp = ((inBytesNum<<3)-1);
+            int tmp = ((inBytesNum << 3) - 1);
             // then, for each byte, shift to the right for each repetition
-            tmp += (((inBytesNum<<3)+13)*(i/inBytesNum));
+            tmp += (((inBytesNum << 3) + 13) * (i / inBytesNum));
             // last, pick outBytes the correct byte within that shifted repetition
-            tmp += ((inBytesNum-(i%inBytesNum)) << 3);
+            tmp += ((inBytesNum - (i % inBytesNum)) << 3);
 
             int msbit = tmp % (inBytesNum << 3);
 
             // pull outBytes the byte value itself
-            tmp =  ((((inBytes[((inBytesNum - 1)-(msbit >>> 3)) % inBytesNum] & 0xff) << 8) |
-                (inBytes[((inBytesNum) - (msbit >>> 3)) % inBytesNum] & 0xff))
-                >>>((msbit & 7)+1)) & 0xff;
+            tmp =  ((((inBytes[((inBytesNum - 1) - (msbit >>> 3)) % inBytesNum] & 0xff) << 8)
+                    | (inBytes[((inBytesNum) - (msbit >>> 3)) % inBytesNum] & 0xff))
+                >>> ((msbit & 7) + 1)) & 0xff;
 
             tmpByte += tmp;
             tmp = (outBytes[i % outBytesNum] & 0xff);
@@ -86,7 +86,7 @@ public class Nfold {
 
         // if there's a carry bit left over, add it back inBytes
         if (tmpByte != 0) {
-            for (int i = outBytesNum-1; i >= 0; i--) {
+            for (int i = outBytesNum - 1; i >= 0; i--) {
                 // do the addition
                 tmpByte += (outBytes[i] & 0xff);
                 outBytes[i] = (byte) (tmpByte & 0xff);

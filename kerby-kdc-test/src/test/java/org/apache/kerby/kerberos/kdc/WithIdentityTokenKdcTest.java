@@ -32,18 +32,20 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
     public void testKdc() throws Exception {
 
         prepareToken(null);
-        createCredentialCache(getClientPrincipal(), TEST_PASSWORD);
+        createCredentialCache(getClientPrincipal(), getClientPassword());
 
         TgtTicket tgt = null;
         try {
-            tgt = krbClnt.requestTgtWithToken(getKrbToken(), getcCacheFile().getPath());
+            tgt = getKrbClient().requestTgtWithToken(getKrbToken(),
+                    getcCacheFile().getPath());
         } catch (KrbException e) {
             assertThat(e.getMessage().contains("timeout")).isTrue();
             return;
         }
         verifyTicket(tgt);
 
-        ServiceTicket tkt = krbClnt.requestServiceTicketWithTgt(tgt, getServerPrincipal());
+        ServiceTicket tkt = getKrbClient().requestServiceTicketWithTgt(tgt,
+                getServerPrincipal());
         verifyTicket(tkt);
     }
 }

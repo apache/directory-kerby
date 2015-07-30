@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class KdcSettingTest {
 
     @Test
-    public void testKdcServerMannualSetting() {
+    public void testKdcServerMannualSetting() throws KrbException {
         KdcServer kerbServer = new KdcServer();
         kerbServer.setKdcHost("localhost");
         kerbServer.setKdcRealm("TEST2.COM");
@@ -34,7 +35,7 @@ public class KdcSettingTest {
 
         kerbServer.init();
 
-        KdcSetting kdcSetting = kerbServer.getSetting();
+        KdcSetting kdcSetting = kerbServer.getKdcSetting();
         assertThat(kdcSetting.getKdcHost()).isEqualTo("localhost");
         assertThat(kdcSetting.getKdcTcpPort()).isEqualTo(12345);
         assertThat(kdcSetting.getKdcRealm()).isEqualTo("TEST2.COM");

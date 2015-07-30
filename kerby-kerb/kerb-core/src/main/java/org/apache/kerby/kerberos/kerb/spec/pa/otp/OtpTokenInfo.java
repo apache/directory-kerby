@@ -41,15 +41,15 @@ import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AlgorithmIdentifiers;
  }
  */
 public class OtpTokenInfo extends KrbSequenceType {
-    private static int FLAGS = 0;
-    private static int OTP_VENDOR = 1;
-    private static int OTP_CHALLENGE = 2;
-    private static int OTP_LENGTH = 3;
-    private static int OTP_FORMAT = 4;
-    private static int OTP_TOKEN_ID = 5;
-    private static int OTP_ALG_ID = 6;
-    private static int SUPPORTED_HASH_ALG = 7;
-    private static int ITERATION_COUNT = 8;
+    private static final int FLAGS = 0;
+    private static final int OTP_VENDOR = 1;
+    private static final int OTP_CHALLENGE = 2;
+    private static final int OTP_LENGTH = 3;
+    private static final int OTP_FORMAT = 4;
+    private static final int OTP_TOKEN_ID = 5;
+    private static final int OTP_ALG_ID = 6;
+    private static final int SUPPORTED_HASH_ALG = 7;
+    private static final int ITERATION_COUNT = 8;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(FLAGS, Asn1OctetString.class, true),

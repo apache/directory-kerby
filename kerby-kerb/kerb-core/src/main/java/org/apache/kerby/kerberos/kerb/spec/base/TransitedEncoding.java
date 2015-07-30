@@ -31,8 +31,8 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class TransitedEncoding extends KrbSequenceType {
-    private static int TR_TYPE = 0;
-    private static int CONTENTS = 1;
+    private static final int TR_TYPE = 0;
+    private static final int CONTENTS = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(TR_TYPE, 0, Asn1Integer.class),

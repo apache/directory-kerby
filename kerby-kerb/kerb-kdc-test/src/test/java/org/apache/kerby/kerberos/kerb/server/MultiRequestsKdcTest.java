@@ -19,12 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,31 +33,24 @@ public class MultiRequestsKdcTest extends KdcTestBase {
     private String password = "123456";
 
     @Override
-    protected void createPrincipals() {
+    protected void createPrincipals() throws KrbException {
         super.createPrincipals();
         clientPrincipal = getClientPrincipal();
-        kdcServer.createPrincipal(clientPrincipal, password);
+        getKdcServer().createPrincipal(clientPrincipal, password);
     }
 
     @Test
     public void multiRequestsTest() throws Exception {
-        kdcServer.start();
-
-        File testDir = new File(System.getProperty("test.dir", "target"));
-        File testConfDir = new File(testDir, "conf");
-        krbClnt.setConfDir(testConfDir);
-        krbClnt.init();
-
         TgtTicket tgt;
         ServiceTicket tkt;
 
         // With good password
         try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
+            tgt = getKrbClient().requestTgtWithPassword(clientPrincipal, password);
             assertThat(tgt).isNotNull();
 
             serverPrincipal = getServerPrincipal();
-            tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
+            tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password");
@@ -76,10 +68,10 @@ public class MultiRequestsKdcTest extends KdcTestBase {
 
         // With good password again
         try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, password);
+            tgt = getKrbClient().requestTgtWithPassword(clientPrincipal, password);
             assertThat(tgt).isNotNull();
 
-            tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
+            tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password again");

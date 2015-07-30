@@ -24,11 +24,11 @@ import org.apache.kerby.kerberos.kerb.common.SectionConfigKey;
 public enum KrbConfigKey implements SectionConfigKey {
     KRB_DEBUG(true),
     KDC_HOST("localhost"),
-    KDC_PORT(8015),
-    KDC_ALLOW_UDP(true),
-    KDC_ALLOW_TCP(true),
-    KDC_UDP_PORT(8016),
-    KDC_TCP_PORT(8015),
+    KDC_PORT(null, "libdefaults"),
+    KDC_ALLOW_UDP(false),
+    KDC_ALLOW_TCP(false),
+    KDC_UDP_PORT(null, "libdefaults"),
+    KDC_TCP_PORT(null, "libdefaults"),
     KDC_DOMAIN("example.com"),
     KDC_REALM("EXAMPLE.COM", "libdefaults"),
     TGS_PRINCIPAL("krbtgt@EXAMPLE.COM"),
@@ -51,19 +51,20 @@ public enum KrbConfigKey implements SectionConfigKey {
     ALLOW_WEAK_CRYPTO(true, "libdefaults"),
     TICKET_LIFETIME(24 * 3600L, "libdefaults"),
     RENEW_LIFETIME(48 * 3600L, "libdefaults"),
-    DEFAULT_TGS_ENCTYPES("aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 " +
-        "des3-cbc-sha1 arcfour-hmac-md5 camellia256-cts-cmac " +
-        "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4",
+    DEFAULT_TGS_ENCTYPES("aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 "
+            + "des3-cbc-sha1 arcfour-hmac-md5 camellia256-cts-cmac "
+            + "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4",
         "libdefaults"),
-    DEFAULT_TKT_ENCTYPES("aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 " +
-        "des3-cbc-sha1 arcfour-hmac-md5 camellia256-cts-cmac " +
-        "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4",
+    DEFAULT_TKT_ENCTYPES("aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 "
+            + "des3-cbc-sha1 arcfour-hmac-md5 camellia256-cts-cmac "
+            + "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4",
         "libdefaults"),
 
     //key for logging location
     DEFAULT(null, "logging"),
     KDC(null, "logging"),
     ADMIN_SERVER(null, "logging");
+
 
     private Object defaultValue;
     /**

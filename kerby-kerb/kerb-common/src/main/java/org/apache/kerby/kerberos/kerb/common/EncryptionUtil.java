@@ -41,26 +41,27 @@ public class EncryptionUtil {
      * an order preserved map containing cipher names to the corresponding algorithm
      * names in the descending order of strength
      */
-    private static final Map<String, String> cipherAlgoMap = new LinkedHashMap<String, String>();
+    private static final Map<String, String> CIPHER_ALGO_MAP = new LinkedHashMap<String, String>();
 
     static {
-        cipherAlgoMap.put("rc4", "ArcFourHmac");
-        cipherAlgoMap.put("aes256", "AES256");
-        cipherAlgoMap.put("aes128", "AES128");
-        cipherAlgoMap.put("des3", "DESede");
-        cipherAlgoMap.put("des", "DES");
+        CIPHER_ALGO_MAP.put("rc4", "ArcFourHmac");
+        CIPHER_ALGO_MAP.put("aes256", "AES256");
+        CIPHER_ALGO_MAP.put("aes128", "AES128");
+        CIPHER_ALGO_MAP.put("des3", "DESede");
+        CIPHER_ALGO_MAP.put("des", "DES");
     }
 
     public static String getAlgoNameFromEncType(EncryptionType encType) {
         String cipherName = encType.getName().toLowerCase();
 
-        for (String c : cipherAlgoMap.keySet()) {
-            if (cipherName.startsWith(c)) {
-                return cipherAlgoMap.get(c);
+        for (Map.Entry<String, String> entry : CIPHER_ALGO_MAP.entrySet()) {
+            if (cipherName.startsWith(entry.getKey())) {
+                return entry.getValue();
             }
         }
 
-        throw new IllegalArgumentException("Unknown algorithm name for the encryption type " + encType);
+        throw new IllegalArgumentException("Unknown algorithm name for the encryption type "
+                + encType);
     }
 
     /**
@@ -72,7 +73,7 @@ public class EncryptionUtil {
     public static List<EncryptionType> orderEtypesByStrength(List<EncryptionType> etypes) {
         List<EncryptionType> ordered = new ArrayList<>(etypes.size());
 
-        for (String algo : cipherAlgoMap.values()) {
+        for (String algo : CIPHER_ALGO_MAP.values()) {
             for (EncryptionType encType : etypes) {
                 String foundAlgo = getAlgoNameFromEncType(encType);
 
@@ -91,6 +92,7 @@ public class EncryptionUtil {
                 new ArrayList<EncryptionKey>(encryptionTypes.size());
         for (EncryptionType eType : encryptionTypes) {
             EncryptionKey encKey = EncryptionHandler.random2Key(eType);
+            encKey.setKvno(1);
             results.add(encKey);
         }
 
@@ -102,7 +104,9 @@ public class EncryptionUtil {
             List<EncryptionType> encryptionTypes) throws KrbException {
         List<EncryptionKey> results = new ArrayList<EncryptionKey>(encryptionTypes.size());
         for (EncryptionType eType : encryptionTypes) {
-            EncryptionKey encKey = EncryptionHandler.string2Key(principal, passwd, eType);
+            EncryptionKey encKey = EncryptionHandler.string2Key(
+                principal, passwd, eType);
+            encKey.setKvno(1);
             results.add(encKey);
         }
 

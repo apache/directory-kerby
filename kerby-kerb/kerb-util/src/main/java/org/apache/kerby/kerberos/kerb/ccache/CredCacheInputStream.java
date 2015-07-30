@@ -24,7 +24,12 @@ import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationData;
 import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationType;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddrType;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddress;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.spec.base.NameType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
 
@@ -33,8 +38,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CredCacheInputStream extends KrbInputStream
-{
+public class CredCacheInputStream extends KrbInputStream {
     public CredCacheInputStream(InputStream in) {
         super(in);
     }

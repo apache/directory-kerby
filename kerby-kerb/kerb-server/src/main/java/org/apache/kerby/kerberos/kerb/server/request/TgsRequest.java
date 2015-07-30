@@ -149,12 +149,12 @@ public class TgsRequest extends KdcRequest {
         if (startTime == null) {
             startTime = tgtTicket.getEncPart().getAuthTime();
         }
-        if (! startTime.lessThan(now)) {
+        if (!startTime.lessThan(now)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_NYV);
         }
 
         KerberosTime endTime = tgtTicket.getEncPart().getEndTime();
-        if (! endTime.greaterThan(now)) {
+        if (!endTime.greaterThan(now)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_EXPIRED);
         }
 
@@ -181,7 +181,7 @@ public class TgsRequest extends KdcRequest {
         reply.setEncPart(encKdcRepPart);
 
         EncryptionKey sessionKey;
-        if(getToken() != null) {
+        if (getToken() != null) {
             sessionKey = getSessionKey();
         } else {
             sessionKey = getTgtSessionKey();

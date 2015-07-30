@@ -29,7 +29,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.KrbToken;
  }
 */
 public class AdToken extends KrbSequenceType {
-    private static int TOKEN = 0;
+    private static final int TOKEN = 0;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(TOKEN, KrbToken.class)

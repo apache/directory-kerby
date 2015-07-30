@@ -20,61 +20,38 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
 
-import java.io.File;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class KerbyKdcTest extends KdcTestBase {
-    private String clientPrincipal;
-    private String serverPrincipal;
 
     @Override
-    protected void prepareKdcServer() throws Exception {
-        super.prepareKdcServer();
-        kdcServer.setInnerKdcImpl(new NettyKdcServerImpl());
-    }
-
-    @Override
-    protected void createPrincipals() {
-        super.createPrincipals();
-        clientPrincipal = getClientPrincipal();
-        kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);
+    protected void prepareKdc() throws KrbException {
+        getKdcServer().setInnerKdcImpl(
+                new NettyKdcServerImpl(getKdcServer().getKdcSetting()));
+        super.prepareKdc();
     }
 
     protected void performKdcTest() throws Exception {
-        kdcServer.start();
-
-        File testDir = new File(System.getProperty("test.dir", "target"));
-        File testConfDir = new File(testDir, "conf");
-        krbClnt.setConfDir(testConfDir);
-        krbClnt.setTimeout(10 * 1000);
-        krbClnt.init();
-
         TgtTicket tgt;
         ServiceTicket tkt;
 
         try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, TEST_PASSWORD);
+            tgt = getKrbClient().requestTgtWithPassword(
+                    getClientPrincipal(), getClientPassword());
             assertThat(tgt).isNotNull();
 
-            serverPrincipal = getServerPrincipal();
-            tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
+            tkt = getKrbClient().requestServiceTicketWithTgt(tgt, getServerPrincipal());
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password");
             e.printStackTrace();
             Assert.fail();
         }
-    }
-
-    @Override
-    protected void deletePrincipals() {
-        super.deletePrincipals();
-        kdcServer.deletePrincipal(clientPrincipal);
     }
 }

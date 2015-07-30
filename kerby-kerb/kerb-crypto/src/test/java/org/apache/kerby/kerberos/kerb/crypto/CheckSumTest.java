@@ -19,9 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto;
 
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Only used to test for rsa-md4-des and rsa-md5-des
@@ -53,13 +59,12 @@ public class CheckSumTest {
             )
     };
 
-    static byte[] TESTKEY = { (byte)0x45, (byte)0x01, (byte)0x49, (byte)0x61, (byte)0x58,
-            (byte)0x19, (byte)0x1a, (byte)0x3d };
+    static final byte[] TESTKEY = {(byte) 0x45, (byte) 0x01, (byte) 0x49, (byte) 0x61, (byte) 0x58,
+            (byte) 0x19, (byte) 0x1a, (byte) 0x3d};
 
     @Test
     public void testCheckSums() {
         for (CksumTest tc : testCases) {
-            System.err.println("Checksum testing for " + tc.cksumType.getName());
             try {
                 testWith(tc);
             } catch (Exception e) {
@@ -72,20 +77,19 @@ public class CheckSumTest {
         byte[] knownChecksum = HexUtil.hex2bytes(testCase.knownChecksum);
         byte[] plainData = testCase.plainText.getBytes();
 
-        if (! CheckSumHandler.isImplemented(testCase.cksumType)) {
-            System.err.println("Checksum type not supported yet: "
+        if (!CheckSumHandler.isImplemented(testCase.cksumType)) {
+            fail("Checksum type not supported yet: "
                     + testCase.cksumType.getName());
             return;
         }
 
         EncryptionKey key = new EncryptionKey(EncryptionType.DES_CBC_CRC, TESTKEY);
 
-        CheckSum newCksum = CheckSumHandler.checksumWithKey(testCase.cksumType, plainData, key.getKeyData(), KeyUsage.NONE);
+        CheckSum newCksum = CheckSumHandler.checksumWithKey(testCase.cksumType,
+                plainData, key.getKeyData(), KeyUsage.NONE);
 
-        if (CheckSumHandler.verifyWithKey(newCksum, plainData, key.getKeyData(), KeyUsage.NONE)) {
-            System.err.println("Checksum verifying is OK for " + testCase.cksumType.getName());
-        } else {
-            System.err.println("Checksum verifying failed for " + testCase.cksumType.getName());
+        if (!CheckSumHandler.verifyWithKey(newCksum, plainData, key.getKeyData(), KeyUsage.NONE)) {
+            fail("Checksum verifying failed for " + testCase.cksumType.getName());
         }
 
         // corrupt and verify again
@@ -93,16 +97,12 @@ public class CheckSumTest {
         cont[0]++;
         newCksum.setChecksum(cont);
         if (CheckSumHandler.verifyWithKey(newCksum, plainData, key.getKeyData(), KeyUsage.NONE)) {
-            System.err.println("Checksum verifying failed with corrupt data for " + testCase.cksumType.getName());
-        } else {
-            System.err.println("Checksum verifying is OK with corrupt data for " + testCase.cksumType.getName());
+            fail("Checksum verifying failed with corrupt data for " + testCase.cksumType.getName());
         }
 
         CheckSum knwnCksum = new CheckSum(testCase.cksumType, knownChecksum);
-        if (CheckSumHandler.verifyWithKey(knwnCksum, plainData, key.getKeyData(), KeyUsage.NONE)) {
-            System.err.println("Checksum verifying is OK with known checksum for " + testCase.cksumType.getName());
-        } else {
-            System.err.println("Checksum verifying failed with known checksum for " + testCase.cksumType.getName());
+        if (!CheckSumHandler.verifyWithKey(knwnCksum, plainData, key.getKeyData(), KeyUsage.NONE)) {
+            fail("Checksum verifying failed with known checksum for " + testCase.cksumType.getName());
         }
     }
 }

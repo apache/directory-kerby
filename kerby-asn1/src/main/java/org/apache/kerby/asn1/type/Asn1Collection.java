@@ -82,11 +82,7 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
         while (content.available()) {
             Asn1Type aValue = decodeOne(content);
             if (aValue != null) {
-                if (aValue instanceof Asn1Item) {
-                    addItem((Asn1Item) aValue);
-                } else {
-                    addItem(aValue);
-                }
+                addItem(aValue);
             } else {
                 throw new RuntimeException("Unexpected running into here");
             }
@@ -110,14 +106,14 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
     }
 
     public static Asn1Type createCollection(int tagNo) {
-        if (! isCollection(tagNo)) {
+        if (!isCollection(tagNo)) {
             throw new IllegalArgumentException("Not collection type, tag: " + tagNo);
         }
         return createCollection(UniversalTag.fromValue(tagNo));
     }
 
     public static Asn1Type createCollection(UniversalTag tagNo) {
-        if (! isCollection(tagNo)) {
+        if (!isCollection(tagNo)) {
             throw new IllegalArgumentException("Not collection type, tag: " + tagNo);
         }
 

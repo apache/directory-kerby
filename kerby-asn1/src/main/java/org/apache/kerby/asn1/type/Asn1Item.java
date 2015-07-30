@@ -38,8 +38,7 @@ import java.nio.ByteBuffer;
  * to decode it fully. Or if you have already derived the value holder or the holder type, you can use decodeValueWith
  * or decodeValueAs with your holder or hodler type.
  */
-public class Asn1Item extends AbstractAsn1Type<Asn1Type>
-{
+public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
     private LimitedByteBuffer bodyContent;
 
     public Asn1Item(Asn1Type value) {
@@ -89,7 +88,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
         if (getValue() != null) {
             return;
         }
-        if (! isSimple()) {
+        if (!isSimple()) {
             throw new IllegalArgumentException("Attempting to decode non-simple value as simple");
         }
 
@@ -101,7 +100,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
         if (getValue() != null) {
             return;
         }
-        if (! isCollection()) {
+        if (!isCollection()) {
             throw new IllegalArgumentException("Attempting to decode non-collection value as collection");
         }
 
@@ -125,7 +124,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
     }
 
     public void decodeValueAsImplicitTagged(int originalTag, int originalTagNo) throws IOException {
-        if (! isTagged()) {
+        if (!isTagged()) {
             throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
         }
         Asn1Item taggedValue = new Asn1Item(originalTag, originalTagNo, getBodyContent());
@@ -133,7 +132,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
     }
 
     public void decodeValueAsExplicitTagged() throws IOException {
-        if (! isTagged()) {
+        if (!isTagged()) {
             throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
         }
         Asn1Item taggedValue = decodeOne(getBodyContent());
@@ -150,7 +149,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type>
     }
 
     public void decodeValueWith(Asn1Type value, TaggingOption taggingOption) throws IOException {
-        if (! isTagged()) {
+        if (!isTagged()) {
             throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
         }
         ((AbstractAsn1Type<?>) value).taggedDecode(tagFlags(), tagNo(), getBodyContent(), taggingOption);

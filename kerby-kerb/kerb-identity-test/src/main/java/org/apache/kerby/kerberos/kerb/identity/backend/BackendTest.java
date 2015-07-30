@@ -20,16 +20,15 @@
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
-import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
+import static org.apache.kerby.kerberos.kerb.identity.backend.BackendTestUtil.TEST_PRINCIPAL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -37,15 +36,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public abstract class BackendTest {
 
-    static final String TEST_PRINCIPAL = "test@EXAMPLE.COM";
-
-    static final EncryptionType[] encTypes = new EncryptionType[]{
-            EncryptionType.AES128_CTS,
-            EncryptionType.DES3_CBC_SHA1_KD
-    };
-
-    protected void testGet(IdentityBackend backend) {
-        KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
+    protected void testGet(IdentityBackend backend) throws KrbException {
+        KrbIdentity kid = BackendTestUtil.createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
         // clear the identity cache.
         backend.release();
@@ -67,8 +59,8 @@ public abstract class BackendTest {
         backend.deleteIdentity(TEST_PRINCIPAL);
     }
 
-    protected void testStore(IdentityBackend backend) {
-        KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
+    protected void testStore(IdentityBackend backend) throws KrbException {
+        KrbIdentity kid = BackendTestUtil.createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
         // clear the identity cache.
         backend.release();
@@ -80,8 +72,8 @@ public abstract class BackendTest {
         backend.deleteIdentity(TEST_PRINCIPAL);
     }
 
-    protected void testUpdate(IdentityBackend backend) {
-        KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
+    protected void testUpdate(IdentityBackend backend) throws KrbException {
+        KrbIdentity kid = BackendTestUtil.createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
 
         kid.setDisabled(true);
@@ -89,15 +81,14 @@ public abstract class BackendTest {
 
         // clear the identity cache.
         backend.release();
-
         assertThat(backend.getIdentity(TEST_PRINCIPAL)).isEqualTo(kid);
 
         //tearDown
         backend.deleteIdentity(TEST_PRINCIPAL);
     }
 
-    protected void testDelete(IdentityBackend backend) {
-        KrbIdentity kid = createOneIdentity(TEST_PRINCIPAL);
+    protected void testDelete(IdentityBackend backend) throws KrbException {
+        KrbIdentity kid = BackendTestUtil.createOneIdentity(TEST_PRINCIPAL);
         backend.addIdentity(kid);
         // clear the identity cache.
         backend.release();
@@ -108,8 +99,8 @@ public abstract class BackendTest {
         assertThat(backend.getIdentity(TEST_PRINCIPAL)).isNull();
     }
 
-    protected void testGetIdentities(IdentityBackend backend) {
-        KrbIdentity[] identities = createManyIdentities();
+    protected void testGetIdentities(IdentityBackend backend) throws KrbException {
+        KrbIdentity[] identities = BackendTestUtil.createManyIdentities();
 
         for (KrbIdentity identity : identities) {
             backend.addIdentity(identity);
@@ -118,8 +109,15 @@ public abstract class BackendTest {
         // clear the identity cache.
         backend.release();
 
-        List<String> principals = backend.getIdentities(2, 5);
-        assertThat(principals).hasSize(3)
+        Iterable<String> principals = backend.getIdentities();
+        Iterator<String> iterator = principals.iterator();
+        List<String> principalList = new LinkedList<>();
+        while (iterator.hasNext()) {
+            principalList.add(iterator.next());
+        }
+        assertThat(principalList).hasSize(identities.length)
+                .contains(identities[0].getPrincipalName())
+                .contains(identities[1].getPrincipalName())
                 .contains(identities[2].getPrincipalName())
                 .contains(identities[3].getPrincipalName())
                 .contains(identities[4].getPrincipalName());
@@ -130,38 +128,11 @@ public abstract class BackendTest {
         }
     }
 
-    protected KrbIdentity[] createManyIdentities() {
-        return new KrbIdentity[] {
-                createOneIdentity("test1@EXAMPLE.COM"),
-                createOneIdentity("test2@EXAMPLE.COM"),
-                createOneIdentity("test3@EXAMPLE.COM"),
-                createOneIdentity("test4@EXAMPLE.COM"),
-                createOneIdentity("test5@EXAMPLE.COM"),
-                createOneIdentity("test6@EXAMPLE.COM"),
-        };
-    }
-    protected KrbIdentity createOneIdentity(String principal) {
-        KrbIdentity kid = new KrbIdentity(principal);
-        kid.setCreatedTime(KerberosTime.now());
-        kid.setExpireTime(KerberosTime.NEVER);
-        kid.setDisabled(false);
-        kid.setKeyVersion(1);
-        kid.setLocked(false);
-        kid.addKeys(generateKeys(kid.getPrincipalName()));
-
-        return kid;
-    }
-
-    protected List<EncryptionKey> generateKeys(String principal) {
-        String passwd = UUID.randomUUID().toString();
-        try {
-            return EncryptionUtil.generateKeys(principal, passwd, getEncryptionTypes());
-        } catch (KrbException e) {
-            throw new RuntimeException("Failed to create keys", e);
+    protected void cleanIdentities(IdentityBackend backend) throws KrbException {
+        Iterable<String> identities = backend.getIdentities();
+        Iterator<String> iterator = identities.iterator();
+        while (iterator.hasNext()) {
+            backend.deleteIdentity(iterator.next());
         }
-    }
-
-    protected List<EncryptionType> getEncryptionTypes() {
-        return Arrays.asList(encTypes);
     }
 }

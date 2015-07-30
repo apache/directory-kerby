@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import org.apache.kerby.config.Config;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.apache.zookeeper.KeeperException;
@@ -43,18 +44,16 @@ import java.util.Properties;
  * A Zookeeper based backend implementation. Currently it uses an embedded
  * Zookeeper. In follow up it will be enhanced to support standalone Zookeeper
  * cluster for replication and reliability.
- *
  */
-public class ZookeeperIdentityBackend extends AbstractIdentityBackend
-        implements Watcher {
-    private static final Logger LOG = LoggerFactory.getLogger(ZookeeperIdentityBackend.class);
+public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
+    private static Thread zookeeperThread;
+    private final ZooKeeperServerMain zooKeeperServer = new ZooKeeperServerMain();
     private String zkHost;
     private int zkPort;
-    private File dataFile;
-    private File dataLogFile;
+    private File dataDir;
+    private File dataLogDir;
     private ZooKeeper zooKeeper;
-    private final ZooKeeperServerMain zooKeeperServer = new ZooKeeperServerMain();
-    private static Thread zookeeperThread;
+    private static final Logger LOG = LoggerFactory.getLogger(ZookeeperIdentityBackend.class);
 
     public ZookeeperIdentityBackend() {
 
@@ -69,34 +68,46 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
          setConfig(config);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void initialize() {
-        super.initialize();
+    protected void doInitialize() throws KrbException {
+        LOG.info("Initializing the Zookeeper identity backend.");
         init();
     }
 
-    private void init() {
+    /**
+     * Init Zookeeper Server and connection service, used to initialize the backend.
+     */
+    private void init() throws KrbException {
         zkHost = getConfig().getString(ZKConfKey.ZK_HOST);
         zkPort = getConfig().getInt(ZKConfKey.ZK_PORT);
 
-        String dataDir = getConfig().getString(ZKConfKey.DATA_DIR);
-        if (dataDir == null || dataDir.isEmpty()) {
-            throw new RuntimeException("No data dir is found");
+        String dataDirString = getConfig().getString(ZKConfKey.DATA_DIR);
+        if (dataDirString == null || dataDirString.isEmpty()) {
+            File zooKeeperDir = new File(getBackendConfig().getConfDir(), "zookeeper");
+            dataDir = new File(zooKeeperDir, "data");
+        } else {
+            dataDir = new File(dataDirString);
         }
 
-        dataFile = new File(dataDir);
-        if (! dataFile.exists()) {
-            dataFile.mkdirs();
+        if (!dataDir.exists() && !dataDir.mkdirs()) {
+            throw new KrbException("could not create data file dir " + dataDir);
         }
 
-        String dataLogDir = getConfig().getString(ZKConfKey.DATA_LOG_DIR);
-        if (dataLogDir == null || dataLogDir.isEmpty()) {
-            throw new RuntimeException("No data log dir is found");
+        LOG.info("Data dir: " + dataDir);
+
+        String dataLogDirString = getConfig().getString(ZKConfKey.DATA_LOG_DIR);
+        if (dataLogDirString == null || dataLogDirString.isEmpty()) {
+            File zooKeeperDir = new File(getBackendConfig().getConfDir(), "zookeeper");
+            dataLogDir = new File(zooKeeperDir, "datalog");
+        } else {
+            dataLogDir = new File(dataLogDirString);
         }
 
-        dataLogFile = new File(dataLogDir);
-        if (! dataLogFile.exists()) {
-            dataLogFile.mkdirs();
+        if (!dataLogDir.exists() && !dataLogDir.mkdirs()) {
+            throw new KrbException("could not create data log file dir " + dataLogDir);
         }
 
         startEmbeddedZookeeper();
@@ -106,7 +117,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
     /**
      * Prepare connection to Zookeeper server.
      */
-    private void connectZK() {
+    private void connectZK() throws KrbException {
         try {
             zooKeeper = new ZooKeeper(zkHost, 10000, null);
             while (true) {
@@ -117,37 +128,31 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
                         e.printStackTrace();
                     }
                 } else {
+                    LOG.info("Success connect to zookeeper server.");
                     break;
                 }
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to prepare Zookeeper connection");
+            LOG.error("Error occurred while connecting to zookeeper.");
+            throw new KrbException("Failed to prepare Zookeeper connection");
         }
     }
 
     /**
-     * Load identities from file
+     * Start the Zookeeper server
      */
-    public void load() throws IOException {
-        // TODO: prepare zookeeper connection to the server.
-        // ZooKeeper zooKeeper = null;
-
-        // TODO: load the kdb file from zookeeper
-    }
-
-    private void startEmbeddedZookeeper() {
-
+    private void startEmbeddedZookeeper() throws KrbException {
         Properties startupProperties = new Properties();
-        startupProperties.put("dataDir", dataFile.getAbsolutePath());
-        startupProperties.put("dataLogDir", dataLogFile.getAbsolutePath());
+        startupProperties.put("dataDir", dataDir.getAbsolutePath());
+        startupProperties.put("dataLogDir", dataLogDir.getAbsolutePath());
         startupProperties.put("clientPort", zkPort);
 
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();
         try {
             quorumConfiguration.parseProperties(startupProperties);
-        } catch(Exception e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new KrbException("Loading quorum configuraiton failed", e);
         }
 
         final ServerConfig configuration = new ServerConfig();
@@ -159,25 +164,28 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
                     try {
                         zooKeeperServer.runFromConfig(configuration);
                     } catch (IOException e) {
-                        LOG.error("ZooKeeper Failed", e);
+                        throw new RuntimeException("ZooKeeper Failed", e);
                     }
                 }
             };
             zookeeperThread.start();
         }
+        LOG.info("Embedded Zookeeper started.");
     }
 
     /**
      * This will watch all the kdb update event so that it's timely synced.
-     * @param event
+     * @param event The kdb update event ot watch.
      */
-    @Override
-    public void process(WatchedEvent event) {
+    private void process(WatchedEvent event) {
         System.out.print("I got an event: " + event);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected KrbIdentity doGetIdentity(String principalName) {
+    protected KrbIdentity doGetIdentity(String principalName) throws KrbException {
         principalName = replaceSlash(principalName);
         IdentityZNode identityZNode = new IdentityZNode(zooKeeper, principalName);
         KrbIdentity krb = new KrbIdentity(principalName);
@@ -194,75 +202,88 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
             krb.setKeyVersion(identityZNode.getKeyVersion());
             krb.setLocked(identityZNode.getLocked());
         } catch (KeeperException e) {
-            LOG.error("Fail to get identity from zookeeper", e);
-            return null;
+            throw new KrbException("Fail to get identity from zookeeper", e);
         }
+
         return krb;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected KrbIdentity doAddIdentity(KrbIdentity identity) {
+    protected KrbIdentity doAddIdentity(KrbIdentity identity) throws KrbException {
         if (doGetIdentity(identity.getPrincipalName()) != null) {
-            throw new RuntimeException("Principal already exists.");
+             LOG.error("Error occurred while adding identity, principal "
+                + identity.getPrincipalName() + " already exists.");
+            throw new KrbException("Principal already exists.");
         }
         try {
             setIdentity(identity);
         } catch (KeeperException e) {
-            LOG.error("Fail to add identity to zookeeper", e);
-            return null;
+            throw new KrbException("Fail to add identity to zookeeper", e);
         }
-        return identity;
+        return doGetIdentity(identity.getPrincipalName());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
+    protected KrbIdentity doUpdateIdentity(KrbIdentity identity) throws KrbException {
         if (doGetIdentity(identity.getPrincipalName()) == null) {
-            throw new RuntimeException("Principal does not exist.");
+            LOG.error("Error occured while updating identity, principal "
+                + identity.getPrincipalName() + " does not exists.");
+            throw new KrbException("Principal does not exist.");
         }
         try {
             setIdentity(identity);
         } catch (KeeperException e) {
-            LOG.error("Fail to update identity in zookeeper", e);
-            return null;
+            throw new KrbException("Fail to update identity in zookeeper", e);
         }
-        return identity;
+        return doGetIdentity(identity.getPrincipalName());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected void doDeleteIdentity(String principalName) {
+    protected void doDeleteIdentity(String principalName) throws KrbException {
         principalName = replaceSlash(principalName);
         if (doGetIdentity(principalName) == null) {
-            throw new RuntimeException("Principal does not exist.");
+            LOG.error("Error occurred while deleting identity, principal "
+                + principalName + " does not exists.");
+            throw new KrbException("Principal does not exist.");
         }
         IdentityZNode identityZNode = new IdentityZNode(zooKeeper, principalName);
         try {
             identityZNode.deleteIdentity();
         } catch (KeeperException e) {
-            LOG.error("Fail to delete identity in zookeeper", e);
+            throw new KrbException("Fail to delete identity in zookeeper", e);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<String> getIdentities(int start, int limit) {
-        return getIdentities().subList(start, limit);
-    }
+    protected Iterable<String> doGetIdentities() throws KrbException {
+        List<String> identityNames;
 
-    @Override
-    public List<String> getIdentities() {
-
-        List<String> identityNames = null;
         try {
             // The identities getting from zookeeper is unordered
             identityNames = IdentityZNodeHelper.getIdentityNames(zooKeeper);
         } catch (KeeperException e) {
-            LOG.error("Fail to get identities from zookeeper", e);
+            throw new KrbException("Fail to get identities from zookeeper", e);
         }
-        if(identityNames == null || identityNames.isEmpty()) {
+
+        if (identityNames == null || identityNames.isEmpty()) {
             return null;
         }
+
         List<String> newIdentities = new ArrayList<>(identityNames.size());
-        for(String name : identityNames) {
-            if(name.contains("\\")) {
+        for (String name : identityNames) {
+            if (name.contains("\\")) {
                 name = name.replace("\\", "/");
             }
             newIdentities.add(name);
@@ -271,6 +292,11 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         return newIdentities;
     }
 
+    /**
+     * Set the identity to add or update an indentity in the backend.
+     * @param identity . The identity to update
+     * @throws org.apache.zookeeper.KeeperException
+     */
     private void setIdentity(KrbIdentity identity) throws KeeperException {
         String principalName = identity.getPrincipalName();
         principalName = replaceSlash(principalName);
@@ -285,10 +311,22 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend
         identityZNode.setLocked(identity.isLocked());
     }
 
+    /**
+     * Use "\\" to replace "/" in  a String object.
+     * @param name . The the name string to convert
+     * @return
+     */
     private String replaceSlash(String name) {
-        if(name.contains("/")) {
+        if (name.contains("/")) {
             name = name.replace("/", "\\");
         }
         return name;
+    }
+
+    class MyWatcher implements Watcher {
+        @Override
+        public void process(WatchedEvent event) {
+            ZookeeperIdentityBackend.this.process(event);
+        }
     }
 }

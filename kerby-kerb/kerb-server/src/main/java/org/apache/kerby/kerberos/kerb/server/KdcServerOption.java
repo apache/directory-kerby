@@ -28,18 +28,15 @@ import org.apache.kerby.KOptionType;
 public enum KdcServerOption implements KOption {
     NONE("NONE"),
     INNER_KDC_IMPL("inner KDC impl", KOptionType.OBJ),
-    KDC_CONFIG("kdc config", KOptionType.OBJ),
-    BACKEND_CONFIG("backend config", KOptionType.OBJ),
-    CONF_DIR("conf dir", KOptionType.DIR),
     KDC_REALM("kdc realm", KOptionType.STR),
     KDC_HOST("kdc host", KOptionType.STR),
+    KDC_PORT("kdc port", KOptionType.INT),
     ALLOW_TCP("allow tcp", KOptionType.BOOL),
     KDC_TCP_PORT("kdc tcp port", KOptionType.INT),
     ALLOW_UDP("allow udp", KOptionType.BOOL),
     KDC_UDP_PORT("kdc udp port", KOptionType.INT),
     WORK_DIR("work dir", KOptionType.DIR),
-    ENABLE_DEBUG("enable debug", KOptionType.BOOL),
-    ;
+    ENABLE_DEBUG("enable debug", KOptionType.BOOL);
 
     private String name;
     private KOptionType type;

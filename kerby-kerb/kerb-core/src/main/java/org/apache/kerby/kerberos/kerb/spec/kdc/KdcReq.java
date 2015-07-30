@@ -37,8 +37,8 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
  }
  */
 public class KdcReq extends KrbMessage {
-    private static int PADATA = 2;
-    private static int REQ_BODY = 3;
+    private static final int PADATA = 2;
+    private static final int REQ_BODY = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PVNO, 1, Asn1Integer.class),

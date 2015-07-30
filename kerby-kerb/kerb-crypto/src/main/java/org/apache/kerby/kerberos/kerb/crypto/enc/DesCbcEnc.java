@@ -98,7 +98,7 @@ abstract class DesCbcEnc extends AbstractEncTypeHandler {
 
         hashProvider().hash(workBuffer);
         byte[] newChecksum = hashProvider().output();
-        if (! checksumEqual(checksum, newChecksum)) {
+        if (!checksumEqual(checksum, newChecksum)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
         }
 

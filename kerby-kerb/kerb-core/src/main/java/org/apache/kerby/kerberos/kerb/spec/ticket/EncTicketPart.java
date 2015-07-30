@@ -24,7 +24,10 @@ import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbAppSequenceType;
 import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationData;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncoding;
 
 /**
  -- Encrypted part of ticket
@@ -45,17 +48,17 @@ import org.apache.kerby.kerberos.kerb.spec.base.*;
 public class EncTicketPart extends KrbAppSequenceType {
     public static final int TAG = 3;
 
-    private static int FLAGS = 0;
-    private static int KEY = 1;
-    private static int CREALM = 2;
-    private static int CNAME = 3;
-    private static int TRANSITED = 4;
-    private static int AUTHTIME = 5;
-    private static int STARTTIME = 6;
-    private static int ENDTIME = 7;
-    private static int RENEW_TILL = 8;
-    private static int CADDR = 9;
-    private static int AUTHORIZATION_DATA = 10;
+    private static final int FLAGS = 0;
+    private static final int KEY = 1;
+    private static final int CREALM = 2;
+    private static final int CNAME = 3;
+    private static final int TRANSITED = 4;
+    private static final int AUTHTIME = 5;
+    private static final int STARTTIME = 6;
+    private static final int ENDTIME = 7;
+    private static final int RENEW_TILL = 8;
+    private static final int CADDR = 9;
+    private static final int AUTHORIZATION_DATA = 10;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(FLAGS, 0, TicketFlags.class),

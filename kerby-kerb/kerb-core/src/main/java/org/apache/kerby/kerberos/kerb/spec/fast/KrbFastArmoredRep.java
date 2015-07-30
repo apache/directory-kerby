@@ -31,7 +31,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
  }
  */
 public class KrbFastArmoredRep extends KrbSequenceType {
-    private static int ENC_FAST_REP = 0;
+    private static final int ENC_FAST_REP = 0;
 
     //private
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {

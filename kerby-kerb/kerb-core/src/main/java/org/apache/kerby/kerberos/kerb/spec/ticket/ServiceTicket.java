@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.ticket;
 
 import org.apache.kerby.kerberos.kerb.spec.kdc.EncTgsRepPart;
 
-public class ServiceTicket extends AbstractServiceTicket {
+public class ServiceTicket extends KrbTicket {
     public ServiceTicket(Ticket ticket, EncTgsRepPart encKdcRepPart) {
         super(ticket, encKdcRepPart);
     }

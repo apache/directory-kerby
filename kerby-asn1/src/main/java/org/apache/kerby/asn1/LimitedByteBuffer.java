@@ -53,8 +53,8 @@ public class LimitedByteBuffer {
     }
 
     public boolean available() {
-        return byteBuffer.hasRemaining() &&
-                byteBuffer.position() - startOffset < limit;
+        return byteBuffer.hasRemaining()
+                && byteBuffer.position() - startOffset < limit;
     }
 
     public long hasRead() {

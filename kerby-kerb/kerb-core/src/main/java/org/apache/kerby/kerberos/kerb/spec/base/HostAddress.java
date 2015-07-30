@@ -34,8 +34,8 @@ HostAddress     ::= SEQUENCE  {
 }
  */
 public class HostAddress extends KrbSequenceType {
-    private static int ADDR_TYPE = 0;
-    private static int ADDRESS = 1;
+    private static final int ADDR_TYPE = 0;
+    private static final int ADDRESS = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ADDR_TYPE, 0, Asn1Integer.class),
@@ -85,13 +85,13 @@ public class HostAddress extends KrbSequenceType {
         }
         if (other == this) {
             return true;
-        } else if (! (other instanceof HostAddress)) {
+        } else if (!(other instanceof HostAddress)) {
             return false;
         }
 
         HostAddress that = (HostAddress) other;
-        if (getAddrType() == that.getAddrType() &&
-                Arrays.equals(getAddress(), that.getAddress())) {
+        if (getAddrType() == that.getAddrType()
+                && Arrays.equals(getAddress(), that.getAddress())) {
             return true;
         }
         return false;
@@ -101,7 +101,7 @@ public class HostAddress extends KrbSequenceType {
     public int hashCode() {
         int result = getAddrType().getValue();
         if (getAddress() != null) {
-            result = 31 * result + getAddress().hashCode();
+            result = 31 * result + Arrays.hashCode(getAddress());
         }
 
         return result;

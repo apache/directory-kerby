@@ -43,7 +43,7 @@ public class ServiceTickertIssuer extends TickertIssuer {
 
     @Override
     protected PrincipalName getclientPrincipal() {
-        if(token != null) {
+        if (token != null) {
             return new PrincipalName(token.getSubject());
         }
         return tgtTicket.getEncPart().getCname();
@@ -51,7 +51,7 @@ public class ServiceTickertIssuer extends TickertIssuer {
 
     @Override
     protected TransitedEncoding getTransitedEncoding() {
-        if(token != null) {
+        if (token != null) {
             return super.getTransitedEncoding();
         }
         return tgtTicket.getEncPart().getTransited();

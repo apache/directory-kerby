@@ -24,6 +24,8 @@ import org.apache.kerby.kerberos.kerb.crypto.util.Hmac;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.HashProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
+import java.nio.charset.Charset;
+
 public abstract class KeKiHmacSha1Enc extends KeKiEnc {
 
     private DkKeyMaker km;
@@ -36,7 +38,7 @@ public abstract class KeKiHmacSha1Enc extends KeKiEnc {
 
     @Override
     public byte[] prf(byte[] key, byte[] seed) throws KrbException {
-        byte[] prfConst = "prf".getBytes();
+        byte[] prfConst = "prf".getBytes(Charset.forName("UTF-8"));
         int cksumSize = (hashProvider().hashSize() / encProvider().blockSize()) * encProvider().blockSize();
         byte[] cksum = new byte[cksumSize];
         byte[] kp;

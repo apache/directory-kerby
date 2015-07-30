@@ -23,38 +23,20 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
 
-import java.io.File;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class KdcTest extends KdcTestBase {
-    private String clientPrincipal;
-    private String serverPrincipal;
-
-    @Override
-    protected void createPrincipals() {
-        super.createPrincipals();
-        clientPrincipal = getClientPrincipal();
-        kdcServer.createPrincipal(clientPrincipal, TEST_PASSWORD);
-    }
 
     protected void performKdcTest() throws Exception {
-        kdcServer.start();
-
-        File testDir = new File(System.getProperty("test.dir", "target"));
-        File testConfDir = new File(testDir, "conf");
-        krbClnt.setConfDir(testConfDir);
-        krbClnt.init();
-
         TgtTicket tgt;
         ServiceTicket tkt;
 
         try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, TEST_PASSWORD);
+            tgt = getKrbClient().requestTgtWithPassword(getClientPrincipal(),
+                    getClientPassword());
             assertThat(tgt).isNotNull();
 
-            serverPrincipal = getServerPrincipal();
-            tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
+            tkt = getKrbClient().requestServiceTicketWithTgt(tgt, getServerPrincipal());
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password");

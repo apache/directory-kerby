@@ -35,6 +35,6 @@ public class Crc32Provider extends AbstractHashProvider {
 
     @Override
     public byte[] output() {
-        return output;
+        return output.clone();
     }
 }

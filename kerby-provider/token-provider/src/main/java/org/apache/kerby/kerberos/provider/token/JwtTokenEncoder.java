@@ -37,6 +37,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
+import java.nio.charset.Charset;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
@@ -54,12 +55,12 @@ public class JwtTokenEncoder implements TokenEncoder {
     @Override
     public byte[] encodeAsBytes(AuthToken token) throws KrbException {
         String tokenStr = encodeAsString(token);
-        return tokenStr.getBytes();
+        return tokenStr.getBytes(Charset.forName("UTF-8"));
     }
 
     @Override
     public String encodeAsString(AuthToken token) throws KrbException {
-        if (! (token instanceof JwtAuthToken) ) {
+        if (!(token instanceof JwtAuthToken)) {
             throw new KrbException("Unexpected AuthToken, not JwtAuthToken");
         }
 

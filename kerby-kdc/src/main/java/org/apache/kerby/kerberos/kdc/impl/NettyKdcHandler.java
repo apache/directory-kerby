@@ -25,12 +25,15 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.KdcHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
 public class NettyKdcHandler extends ChannelInboundHandlerAdapter {
     private final KdcHandler myKdcHandler;
+    private static final Logger LOG = LoggerFactory.getLogger(NettyKdcHandler.class);
 
     public NettyKdcHandler(KdcContext kdcContext) {
         this.myKdcHandler = new KdcHandler(kdcContext);
@@ -52,8 +55,7 @@ public class NettyKdcHandler extends ChannelInboundHandlerAdapter {
                     isTcp, clientAddress.getAddress());
             ctx.writeAndFlush(Unpooled.wrappedBuffer(responseMessage));
         } catch (Exception e) {
-            //TODO: log the error
-            System.out.println("Error occured while processing request:"
+            LOG.error("Error occurred while processing request:"
                     + e.getMessage());
         }
     }

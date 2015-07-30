@@ -55,7 +55,7 @@ public class Md5HmacRc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
     @Override
     protected byte[] doChecksumWithKey(byte[] data, int start, int len,
                                        byte[] key, int usage) throws KrbException {
-        byte[] Ksign = key;
+        byte[] ksign = key;
 
         byte[] salt = Rc4.getSalt(usage, false);
 
@@ -63,6 +63,6 @@ public class Md5HmacRc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
         hashProvider().hash(data, start, len);
         byte[] hashTmp = hashProvider().output();
 
-        return Hmac.hmac(hashProvider(), Ksign, hashTmp);
+        return Hmac.hmac(hashProvider(), ksign, hashTmp);
     }
 }

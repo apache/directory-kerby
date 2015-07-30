@@ -53,9 +53,9 @@ public class CamelliaKeyMaker extends DkKeyMaker {
         int keySize = encProvider().keySize();
         byte[] random;
         try {
-            random = Pbkdf.PBKDF2(string.toCharArray(), saltBytes, iterCount, keySize);
+            random = Pbkdf.pbkdf2(string.toCharArray(), saltBytes, iterCount, keySize);
         } catch (GeneralSecurityException e) {
-            throw new KrbException("PBKDF2 failed", e);
+            throw new KrbException("pbkdf2 failed", e);
         }
 
         byte[] tmpKey = random2Key(random);
@@ -89,24 +89,24 @@ public class CamelliaKeyMaker extends DkKeyMaker {
         // four-byte big-endian binary string giving the output length
         len += 4;
 
-        byte[] Ki = new byte[len];
-        System.arraycopy(constant, 0, Ki, blocksize + 4, constant.length);
-        BytesUtil.int2bytes(keyInuptSize * 8, Ki, len - 4, true);
+        byte[] ki = new byte[len];
+        System.arraycopy(constant, 0, ki, blocksize + 4, constant.length);
+        BytesUtil.int2bytes(keyInuptSize * 8, ki, len - 4, true);
 
         for (int i = 1, n = 0; n < keyInuptSize; i++) {
             // Update the block counter
-            BytesUtil.int2bytes(i, Ki, blocksize, true);
+            BytesUtil.int2bytes(i, ki, blocksize, true);
 
             // Compute a CMAC checksum, update Ki with the result
-            byte[] tmp = Cmac.cmac(encProvider(), key, Ki);
-            System.arraycopy(tmp, 0, Ki, 0, blocksize);
+            byte[] tmp = Cmac.cmac(encProvider(), key, ki);
+            System.arraycopy(tmp, 0, ki, 0, blocksize);
 
             if (n + blocksize >= keyInuptSize) {
-                System.arraycopy(Ki, 0, keyBytes, n, keyInuptSize - n);
+                System.arraycopy(ki, 0, keyBytes, n, keyInuptSize - n);
                 break;
             }
 
-            System.arraycopy(Ki, 0, keyBytes, n, blocksize);
+            System.arraycopy(ki, 0, keyBytes, n, blocksize);
             n += blocksize;
         }
 

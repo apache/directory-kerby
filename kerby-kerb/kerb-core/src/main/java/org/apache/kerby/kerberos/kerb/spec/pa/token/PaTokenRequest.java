@@ -30,8 +30,8 @@ import org.apache.kerby.kerberos.kerb.spec.base.KrbToken;
  }
 */
 public class PaTokenRequest extends KrbSequenceType {
-    private static int TOKEN_INFO = 0;
-    private static int TOKEN = 1;
+    private static final int TOKEN_INFO = 0;
+    private static final int TOKEN = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(TOKEN_INFO, TokenInfo.class),

@@ -33,8 +33,8 @@ import java.util.Arrays;
  }
  */
 public class EncryptionKey extends KrbSequenceType {
-    private static int KEY_TYPE = 0;
-    private static int KEY_VALUE = 1;
+    private static final int KEY_TYPE = 0;
+    private static final int KEY_VALUE = 1;
 
     private int kvno = -1;
 

@@ -53,9 +53,9 @@ import java.util.Map;
  * A wrapper for KdcReq request
  */
 public abstract class KdcRequest {
+    protected Map<String, Object> credCache;
     private KrbContext context;
     private Object sessionData;
-
     private KOptions krbOptions;
     private PrincipalName serverPrincipal;
     private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
@@ -65,7 +65,6 @@ public abstract class KdcRequest {
     private int chosenNonce;
     private KdcReq kdcReq;
     private KdcRep kdcRep;
-    protected Map<String, Object> credCache;
     private PreauthContext preauthContext;
     private KrbFastRequestState fastRequestState;
     private EncryptionKey asKey;
@@ -82,6 +81,17 @@ public abstract class KdcRequest {
         this.fastRequestState = new KrbFastRequestState();
     }
 
+    protected static Authenticator makeAuthenticator(PrincipalName clientName, String clientRealm, EncryptionKey subKey)
+        throws KrbException {
+        Authenticator authenticator = new Authenticator();
+        authenticator.setCname(clientName);
+        authenticator.setCrealm(clientRealm);
+        authenticator.setCtime(KerberosTime.now());
+        authenticator.setCusec(0);
+        authenticator.setSubKey(subKey);
+        return authenticator;
+    }
+
     public KrbFastRequestState getFastRequestState() {
         return fastRequestState;
     }
@@ -91,39 +101,39 @@ public abstract class KdcRequest {
     }
 
     public byte[] getOuterRequestBody() {
-        return outerRequestBody;
+        return outerRequestBody.clone();
     }
 
     public void setOuterRequestBody(byte[] outerRequestBody) {
-        this.outerRequestBody = outerRequestBody;
-    }
-
-    public void setSessionData(Object sessionData) {
-        this.sessionData = sessionData;
+        this.outerRequestBody = outerRequestBody.clone();
     }
 
     public Object getSessionData() {
         return this.sessionData;
     }
 
-    public void setKrbOptions(KOptions options) {
-        this.krbOptions = options;
+    public void setSessionData(Object sessionData) {
+        this.sessionData = sessionData;
     }
 
     public KOptions getKrbOptions() {
         return krbOptions;
     }
 
+    public void setKrbOptions(KOptions options) {
+        this.krbOptions = options;
+    }
+
     public boolean isRetrying() {
         return isRetrying;
     }
 
-    public void setAsKey(EncryptionKey asKey) {
-        this.asKey = asKey;
-    }
-
     public EncryptionKey getAsKey() throws KrbException {
         return asKey;
+    }
+
+    public void setAsKey(EncryptionKey asKey) {
+        this.asKey = asKey;
     }
 
     public void setAllowedPreauth(PaDataType paType) {
@@ -138,12 +148,12 @@ public abstract class KdcRequest {
         preauthContext.setPreauthRequired(preauthRequired);
     }
 
-    public PreauthContext getPreauthContext() {
-        return preauthContext;
+    public void resetPrequthContxt() {
+        preauthContext.reset();
     }
 
-    protected void loadCredCache() {
-        // TODO
+    public PreauthContext getPreauthContext() {
+        return preauthContext;
     }
 
     public KdcReq getKdcReq() {
@@ -198,35 +208,35 @@ public abstract class KdcRequest {
         return kdcOptions;
     }
 
+    public void setKdcOptions(KdcOptions kdcOptions) {
+        this.kdcOptions = kdcOptions;
+    }
+
     public HostAddresses getHostAddresses() {
         HostAddresses addresses = null;
         if (!hostAddresses.isEmpty()) {
             addresses = new HostAddresses();
-            for(HostAddress ha : hostAddresses) {
+            for (HostAddress ha : hostAddresses) {
                 addresses.addElement(ha);
             }
         }
         return addresses;
     }
 
-    public KrbContext getContext() {
-        return context;
+    public void setHostAddresses(List<HostAddress> hostAddresses) {
+        this.hostAddresses = hostAddresses;
     }
 
-    protected byte[] decryptWithClientKey(EncryptedData data, KeyUsage usage) throws KrbException {
-        return EncryptionHandler.decrypt(data, getClientKey(), usage);
+    public KrbContext getContext() {
+        return context;
     }
 
     public void setContext(KrbContext context) {
         this.context = context;
     }
 
-    public void setHostAddresses(List<HostAddress> hostAddresses) {
-        this.hostAddresses = hostAddresses;
-    }
-
-    public void setKdcOptions(KdcOptions kdcOptions) {
-        this.kdcOptions = kdcOptions;
+    protected byte[] decryptWithClientKey(EncryptedData data, KeyUsage usage) throws KrbException {
+        return EncryptionHandler.decrypt(data, getClientKey(), usage);
     }
 
     public abstract PrincipalName getClientPrincipal();
@@ -297,8 +307,6 @@ public abstract class KdcRequest {
     }
 
     protected void preauth() throws KrbException {
-        loadCredCache();
-
         List<EncryptionType> etypes = getEncryptionTypes();
         if (etypes.isEmpty()) {
             throw new KrbException("No encryption type is configured and available");
@@ -376,16 +384,5 @@ public abstract class KdcRequest {
      */
     public void cacheValue(String key, Object value) {
         credCache.put(key, value);
-    }
-
-    protected static Authenticator makeAuthenticator(PrincipalName clientName, String clientRealm, EncryptionKey subKey)
-        throws KrbException {
-        Authenticator authenticator = new Authenticator();
-        authenticator.setCname(clientName);
-        authenticator.setCrealm(clientRealm);
-        authenticator.setCtime(KerberosTime.now());
-        authenticator.setCusec(0);
-        authenticator.setSubKey(subKey);
-        return authenticator;
     }
 }

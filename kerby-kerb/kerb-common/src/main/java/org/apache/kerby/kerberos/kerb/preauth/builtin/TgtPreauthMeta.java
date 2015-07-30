@@ -27,9 +27,9 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
  */
 public class TgtPreauthMeta implements PreauthPluginMeta {
 
-    private static String NAME = "TGT_preauth";
-    private static int VERSION = 1;
-    private static PaDataType[] PA_TYPES = new PaDataType[] {
+    private static final String NAME = "TGT_preauth";
+    private static final int VERSION = 1;
+    private static final PaDataType[] PA_TYPES = new PaDataType[] {
             PaDataType.TGS_REQ
     };
 
@@ -43,6 +43,6 @@ public class TgtPreauthMeta implements PreauthPluginMeta {
     }
 
     public PaDataType[] getPaTypes() {
-        return PA_TYPES;
+        return PA_TYPES.clone();
     }
 }

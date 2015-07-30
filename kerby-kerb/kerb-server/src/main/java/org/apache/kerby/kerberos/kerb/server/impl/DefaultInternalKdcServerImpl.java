@@ -20,11 +20,13 @@
 package org.apache.kerby.kerberos.kerb.server.impl;
 
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
+import org.apache.kerby.kerberos.kerb.server.KdcSetting;
+import org.apache.kerby.kerberos.kerb.server.KdcUtil;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.transport.KdcNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
+import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 
-import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,6 +37,10 @@ public class DefaultInternalKdcServerImpl extends AbstractInternalKdcServer {
     private ExecutorService executor;
     private KdcContext kdcContext;
     private KdcNetwork network;
+
+    public DefaultInternalKdcServerImpl(KdcSetting kdcSetting) {
+        super(kdcSetting);
+    }
 
     @Override
     protected void doStart() throws Exception {
@@ -53,21 +59,14 @@ public class DefaultInternalKdcServerImpl extends AbstractInternalKdcServer {
         };
 
         network.init();
-
-        InetSocketAddress tcpAddress, udpAddress = null;
-        tcpAddress = new InetSocketAddress(getSetting().getKdcHost(),
-                getSetting().getKdcTcpPort());
-        if (getSetting().allowUdp()) {
-            udpAddress = new InetSocketAddress(getSetting().getKdcHost(),
-                    getSetting().getKdcUdpPort());
-        }
-        network.listen(tcpAddress, udpAddress);
+        TransportPair tpair = KdcUtil.getTransportPair(getSetting());
+        network.listen(tpair);
         network.start();
     }
 
     private void prepareHandler() {
         kdcContext = new KdcContext(getSetting());
-        kdcContext.setIdentityService(getBackend());
+        kdcContext.setIdentityService(getIdentityService());
         PreauthHandler preauthHandler = new PreauthHandler();
         preauthHandler.init();
         kdcContext.setPreauthHandler(preauthHandler);

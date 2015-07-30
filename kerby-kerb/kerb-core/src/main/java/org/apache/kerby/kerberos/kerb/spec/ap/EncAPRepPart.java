@@ -34,11 +34,11 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
  }
  */
 public class EncAPRepPart extends KrbAppSequenceType {
-    public static int TAG = 27;
-    private static int CTIME = 0;
-    private static int CUSEC = 1;
-    private static int SUBKEY = 2;
-    private static int SEQ_NUMBER = 3;
+    public static final int TAG = 27;
+    private static final int CTIME = 0;
+    private static final int CUSEC = 1;
+    private static final int SUBKEY = 2;
+    private static final int SEQ_NUMBER = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(CTIME, 0, KerberosTime.class),

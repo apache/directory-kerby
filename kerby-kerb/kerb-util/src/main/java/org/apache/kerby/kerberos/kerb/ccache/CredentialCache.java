@@ -20,33 +20,70 @@
 package org.apache.kerby.kerberos.kerb.ccache;
 
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CredentialCache implements KrbCredentialCache
-{
+public class CredentialCache implements KrbCredentialCache {
     public static final int FCC_FVNO_1 = 0x501;
     public static final int FCC_FVNO_2 = 0x502;
     public static final int FCC_FVNO_3 = 0x503;
     public static final int FCC_FVNO_4 = 0x504;
 
     public static final int FCC_TAG_DELTATIME = 1;
-    public static final int NT_UNKNOWN = 0;
-    public static final int MAXNAMELENGTH = 1024;
-
+    private final List<Credential> credentials;
     private int version = FCC_FVNO_4;
     private List<Tag> tags;
     private PrincipalName primaryPrincipal;
-    private List<Credential> credentials = new ArrayList<Credential> ();
+
+    public CredentialCache() {
+        credentials = new ArrayList<>();
+    }
+
+    public CredentialCache(TgtTicket tgt) {
+        this();
+        addCredential(new Credential(tgt));
+        setPrimaryPrincipal(tgt.getClientPrincipal());
+    }
+
+    public CredentialCache(Credential credential) {
+        this();
+        addCredential(credential);
+        setPrimaryPrincipal(credential.getClientName());
+    }
+
+    public static void main(String[] args) throws IOException {
+        if (args.length != 2) {
+            System.err.println("Dump credential cache file");
+            System.err.println("Usage: CredentialCache <ccache-file>");
+            System.exit(1);
+        }
+
+        String cacheFile = args[1];
+        CredentialCache cc = new CredentialCache();
+        cc.load(new File(cacheFile));
+
+        for (Credential cred : cc.getCredentials()) {
+            Ticket tkt = cred.getTicket();
+            System.out.println("Tkt server name: " + tkt.getSname().getName());
+            System.out.println("Tkt client name: " + cred.getClientName().getName());
+            System.out.println("Tkt encrypt type: " + tkt.getEncryptedEncPart().getEType().getName());
+        }
+    }
 
     @Override
     public void store(File ccacheFile) throws IOException {
         OutputStream outputStream = new FileOutputStream(ccacheFile);
-
         store(outputStream);
+        outputStream.close();
     }
 
     @Override
@@ -79,11 +116,6 @@ public class CredentialCache implements KrbCredentialCache
     }
 
     @Override
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    @Override
     public PrincipalName getPrimaryPrincipal() {
         return primaryPrincipal;
     }
@@ -98,12 +130,17 @@ public class CredentialCache implements KrbCredentialCache
         return version;
     }
 
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
+    @Override
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public List<Tag> getTags() {
         return this.tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     @Override
@@ -148,13 +185,14 @@ public class CredentialCache implements KrbCredentialCache
 
     @Override
     public void load(File ccacheFile) throws IOException {
-        if (! ccacheFile.exists() || ! ccacheFile.canRead()) {
-            throw new IllegalArgumentException("Invalid ccache file: " + ccacheFile.getAbsolutePath());
+        if (!ccacheFile.exists() || !ccacheFile.canRead()) {
+            throw new IllegalArgumentException("Invalid ccache file: "
+                    + ccacheFile.getAbsolutePath());
         }
 
         InputStream inputStream = new FileInputStream(ccacheFile);
-
         load(inputStream);
+        inputStream.close();
     }
 
     @Override
@@ -178,10 +216,11 @@ public class CredentialCache implements KrbCredentialCache
 
         this.primaryPrincipal = ccis.readPrincipal(version);
 
-        this.credentials = readCredentials(ccis);
+        this.credentials.addAll(readCredentials(ccis));
     }
 
-    private List<Credential> readCredentials(CredCacheInputStream ccis) throws IOException {
+    private List<Credential> readCredentials(CredCacheInputStream ccis)
+            throws IOException {
         List<Credential> results = new ArrayList<Credential>(2);
 
         Credential cred;
@@ -215,7 +254,9 @@ public class CredentialCache implements KrbCredentialCache
                     tags.add(new Tag(tag, time, usec));
                     break;
                 default:
-                    ccis.read(new byte[tagLen], 0, tagLen); // ignore unknown tag
+                    if (ccis.read(new byte[tagLen], 0, tagLen) == -1) { // ignore unknown tag
+                        throw new IOException();
+                    }
             }
             len = len - (4 + tagLen);
         }
@@ -255,24 +296,5 @@ public class CredentialCache implements KrbCredentialCache
         ccos.writeShort(tag.length);
         ccos.writeInt(tag.time);
         ccos.writeInt(tag.usec);
-    }
-
-    public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
-            System.err.println("Dump credential cache file");
-            System.err.println("Usage: CredentialCache <ccache-file>");
-            System.exit(1);
-        }
-
-        String cacheFile = args[1];
-        CredentialCache cc = new CredentialCache();
-        cc.load(new File(cacheFile));
-
-        for (Credential cred : cc.getCredentials()) {
-            Ticket tkt = cred.getTicket();
-            System.out.println("Tkt server name: " + tkt.getSname().getName());
-            System.out.println("Tkt client name: " + cred.getClientName().getName());
-            System.out.println("Tkt encrypt type: " + tkt.getEncryptedEncPart().getEType().getName());
-        }
     }
 }

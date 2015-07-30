@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.EncKdcRepPart;
-import org.apache.kerby.kerberos.kerb.spec.ticket.AbstractServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.KrbTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
@@ -33,7 +33,7 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
 import java.io.IOException;
 
 public class Credential {
-    private static String CONF_REALM = "X-CACHECONF:";
+    private static final String CONF_REALM = "X-CACHECONF:";
 
     private PrincipalName clientName;
     private String clientRealm;
@@ -63,11 +63,11 @@ public class Credential {
         init(tgt, clientPrincipal);
     }
 
-    public Credential(AbstractServiceTicket tkt, PrincipalName clientPrincipal) {
+    public Credential(KrbTicket tkt, PrincipalName clientPrincipal) {
         init(tkt, clientPrincipal);
     }
 
-    private void init(AbstractServiceTicket tkt, PrincipalName clientPrincipal) {
+    private void init(KrbTicket tkt, PrincipalName clientPrincipal) {
         EncKdcRepPart kdcRepPart = tkt.getEncKdcRepPart();
 
         this.serverName = kdcRepPart.getSname();
@@ -87,6 +87,8 @@ public class Credential {
         this.clientAddresses = kdcRepPart.getCaddr();
 
         this.ticket = tkt.getTicket();
+
+        this.clientRealm = kdcRepPart.getSrealm();
 
         this.isEncInSKey = false;
 

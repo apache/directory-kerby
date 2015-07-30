@@ -23,8 +23,7 @@ import org.apache.kerby.asn1.UniversalTag;
 
 import java.nio.charset.StandardCharsets;
 
-public class Asn1T61Utf8String extends Asn1String
-{
+public class Asn1T61Utf8String extends Asn1String {
     public Asn1T61Utf8String() {
         this(null);
     }

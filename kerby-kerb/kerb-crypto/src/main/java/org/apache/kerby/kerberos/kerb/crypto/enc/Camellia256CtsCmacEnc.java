@@ -27,7 +27,8 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 public class Camellia256CtsCmacEnc extends KeKiCmacEnc {
 
     public Camellia256CtsCmacEnc() {
-        super(new Camellia256Provider(), EncryptionType.CAMELLIA256_CTS_CMAC, new CamelliaKeyMaker(new Camellia256Provider()));
+        super(new Camellia256Provider(), EncryptionType.CAMELLIA256_CTS_CMAC,
+                new CamelliaKeyMaker(new Camellia256Provider()));
         keyMaker(new CamelliaKeyMaker((Camellia256Provider) encProvider()));
     }
 

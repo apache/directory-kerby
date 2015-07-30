@@ -6,22 +6,21 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
-import org.apache.kerby.kerberos.kerb.KrbErrorException;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
@@ -34,6 +33,8 @@ import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -43,6 +44,7 @@ import java.nio.ByteBuffer;
  * KDC handler to process client requests. Currently only one realm is supported.
  */
 public class KdcHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(KdcHandler.class);
     private final KdcContext kdcContext;
 
     public KdcHandler(KdcContext kdcContext) {
@@ -50,43 +52,54 @@ public class KdcHandler {
     }
 
     public ByteBuffer handleMessage(ByteBuffer receivedMessage, boolean isTcp,
-                                       InetAddress remoteAddress) throws KrbException {
-        KrbMessage krbRequest = null;
+                                    InetAddress remoteAddress) throws KrbException {
+        KrbMessage krbRequest;
         KdcRequest kdcRequest = null;
         KrbMessage krbResponse;
+
         try {
-            try {
-                krbRequest = KrbCodec.decodeMessage(receivedMessage);
-            } catch (IOException e) {
-                throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE, "Krb decoding message failed");
+            krbRequest = KrbCodec.decodeMessage(receivedMessage);
+        } catch (IOException e) {
+            LOG.error("Krb decoding message failed", e);
+            throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE, "Krb decoding message failed");
+        }
+
+        KrbMessageType messageType = krbRequest.getMsgType();
+        if (messageType == KrbMessageType.TGS_REQ || messageType
+                == KrbMessageType.AS_REQ) {
+            KdcReq kdcReq = (KdcReq) krbRequest;
+            String realm = getRequestRealm(kdcReq);
+            if (realm == null || !kdcContext.getKdcRealm().equals(realm)) {
+                LOG.error("Invalid realm from kdc request: " + realm);
+                throw new KrbException("Invalid realm from kdc request: " + realm);
             }
 
-            KrbMessageType messageType = krbRequest.getMsgType();
-            if (messageType == KrbMessageType.TGS_REQ || messageType
-                    == KrbMessageType.AS_REQ) {
-                KdcReq kdcReq = (KdcReq) krbRequest;
-                String realm = getRequestRealm(kdcReq);
-                if (realm == null || !kdcContext.getKdcRealm().equals(realm)) {
-                    throw new KrbException("Invalid realm from kdc request: " + realm);
-                }
-
-                if (messageType == KrbMessageType.TGS_REQ) {
-                    kdcRequest = new TgsRequest((TgsReq) kdcReq, kdcContext);
-                } else if (messageType == KrbMessageType.AS_REQ) {
-                    kdcRequest = new AsRequest((AsReq) kdcReq, kdcContext);
-                } else {
-                    throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
-                }
+            if (messageType == KrbMessageType.TGS_REQ) {
+                kdcRequest = new TgsRequest((TgsReq) kdcReq, kdcContext);
+            } else if (messageType == KrbMessageType.AS_REQ) {
+                kdcRequest = new AsRequest((AsReq) kdcReq, kdcContext);
+            } else {
+                LOG.error("Invalid message type: " + messageType);
+                throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
             }
+        }
 
-            kdcRequest.setClientAddress(remoteAddress);
-            kdcRequest.isTcp(isTcp);
+        if (remoteAddress == null) {
+            throw new KrbException("Remote address is null, not available.");
+        }
+        kdcRequest.setClientAddress(remoteAddress);
+        kdcRequest.isTcp(isTcp);
 
+        try {
             kdcRequest.process();
-
             krbResponse = kdcRequest.getReply();
         } catch (KrbException e) {
-            krbResponse = krbExceptionHandler(e, kdcRequest);
+            if (e instanceof KdcRecoverableException) {
+                krbResponse = handleRecoverableException(
+                        (KdcRecoverableException) e, kdcRequest);
+            } else {
+                throw e;
+            }
         }
 
         int bodyLen = krbResponse.encodingLength();
@@ -103,21 +116,18 @@ public class KdcHandler {
         return responseMessage;
     }
 
-    private KrbMessage krbExceptionHandler(KrbException e, KdcRequest kdcRequest)
-        throws KrbException {
-        System.out.println("KRB error occured while processing request:"
+    private KrbMessage handleRecoverableException(KdcRecoverableException e,
+                                                  KdcRequest kdcRequest)
+            throws KrbException {
+        LOG.info("KRB error occurred while processing request:"
                 + e.getMessage());
-        KrbError error;
-        if(e instanceof KrbErrorException) {
-            error = ((KrbErrorException) e).getKrbError();
-        } else {
-            error = new KrbError();
-        }
+
+        KrbError error = e.getKrbError();
         error.setStime(KerberosTime.now());
         error.setSusec(100);
-        error.setErrorCode(((KrbErrorException) e).getKrbError().getErrorCode());
+        error.setErrorCode(e.getKrbError().getErrorCode());
         error.setRealm(kdcContext.getKdcRealm());
-        if(kdcRequest != null) {
+        if (kdcRequest != null) {
             error.setSname(kdcRequest.getKdcReq().getReqBody().getCname());
         } else {
             error.setSname(new PrincipalName("NONE"));

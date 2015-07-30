@@ -13,7 +13,7 @@ public class DesKeyMakerTest {
     /**
      * The class used to store the test values
      */
-    private static class TestCase {
+    private static final class TestCase {
         String salt;
         String passwd;
         String passwdSaltBytes;

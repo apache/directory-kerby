@@ -24,9 +24,9 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 
 public class EncTsPreauthMeta implements PreauthPluginMeta {
 
-    private static String NAME = "encrypted_timestamp";
-    private static int VERSION = 1;
-    private static PaDataType[] PA_TYPES = new PaDataType[] {
+    private static final String NAME = "encrypted_timestamp";
+    private static final int VERSION = 1;
+    private static final PaDataType[] PA_TYPES = new PaDataType[] {
             PaDataType.ENC_TIMESTAMP
     };
 
@@ -40,6 +40,6 @@ public class EncTsPreauthMeta implements PreauthPluginMeta {
     }
 
     public PaDataType[] getPaTypes() {
-        return PA_TYPES;
+        return PA_TYPES.clone();
     }
 }

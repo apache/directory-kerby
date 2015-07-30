@@ -19,17 +19,18 @@
  */
 package org.apache.kerby.kerberos.kerb.client.impl;
 
-import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.ClientUtil;
+import org.apache.kerby.kerberos.kerb.client.KrbSetting;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
+import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 
 /**
  * A default krb client implementation.
@@ -39,27 +40,22 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
     private DefaultKrbHandler krbHandler;
     private KrbTransport transport;
 
+    public DefaultInternalKrbClient(KrbSetting krbSetting) {
+        super(krbSetting);
+    }
+
     @Override
-    public void init(KOptions commonOptions) throws KrbException {
-        super.init(commonOptions);
+    public void init() throws KrbException {
+        super.init();
 
         this.krbHandler = new DefaultKrbHandler();
         krbHandler.init(getContext());
 
-        InetSocketAddress tcpAddress = null, udpAddress = null;
-        if (getSetting().allowTcp()) {
-            tcpAddress = new InetSocketAddress(getSetting().getKdcHost(),
-                    getSetting().getKdcTcpPort());
-        }
-        if (getSetting().allowUdp()) {
-            udpAddress = new InetSocketAddress(getSetting().getKdcHost(),
-                    getSetting().getKdcUdpPort());
-        }
-
+        TransportPair tpair = ClientUtil.getTransportPair(getSetting());
         KrbNetwork network = new KrbNetwork();
         network.setSocketTimeout(getSetting().getTimeout());
         try {
-            transport = network.connect(tcpAddress, udpAddress);
+            transport = network.connect(tpair);
         } catch (IOException e) {
             throw new KrbException("Failed to create transport", e);
         }

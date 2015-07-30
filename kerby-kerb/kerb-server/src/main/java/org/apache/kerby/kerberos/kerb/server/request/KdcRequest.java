@@ -22,7 +22,6 @@ package org.apache.kerby.kerberos.kerb.server.request;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
-import org.apache.kerby.kerberos.kerb.KrbErrorException;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
@@ -31,6 +30,7 @@ import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.crypto.fast.FastUtil;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
+import org.apache.kerby.kerberos.kerb.server.KdcRecoverableException;
 import org.apache.kerby.kerberos.kerb.server.preauth.KdcFastContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
@@ -61,6 +61,8 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.spec.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -69,6 +71,7 @@ import java.util.List;
 
 public abstract class KdcRequest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(KdcRequest.class);
     private final KdcReq kdcReq;
     private final KdcContext kdcContext;
 
@@ -149,6 +152,7 @@ public abstract class KdcRequest {
         PaData paData = getKdcReq().getPaData();
         for (PaDataEntry paEntry : paData.getElements()) {
             if (paEntry.getPaDataType() == PaDataType.FX_FAST) {
+                LOG.info("Found fast padata and start to process it.");
                 KrbFastArmoredReq fastArmoredReq = KrbCodec.decode(paEntry.getPaDataValue(),
                     KrbFastArmoredReq.class);
                 KrbFastArmor fastArmor = fastArmoredReq.getArmor();
@@ -160,9 +164,10 @@ public abstract class KdcRequest {
                     KrbFastReq.class);
                 innerBodyout = fastReq.getKdcReqBody().encode();
 
-                // TODO: get checksumed date in stream
+                // TODO: get checksumed data in stream
                 CheckSum checkSum = fastArmoredReq.getReqChecksum();
-                if(checkSum == null) {
+                if (checkSum == null) {
+                    LOG.warn("Checksum is empty.");
                     throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED);
                 }
                 CheckSumHandler.verifyWithKey(checkSum, getKdcReq().getReqBody().encode(),
@@ -302,6 +307,8 @@ public abstract class KdcRequest {
 
         int kerberosVersion = request.getPvno();
         if (kerberosVersion != KrbConstant.KRB_V5) {
+            LOG.warn("Kerberos version: " + kerberosVersion + " should equal to "
+                + KrbConstant.KRB_V5);
             throw new KrbException(KrbErrorCode.KDC_ERR_BAD_PVNO);
         }
     }
@@ -312,15 +319,18 @@ public abstract class KdcRequest {
         // if we can not get the client entry, maybe it is token preauth, ignore it.
         if (entry != null) {
             if (entry.isDisabled()) {
+                LOG.warn("Client entry " + entry.getPrincipalName() + " is disabled.");
                 throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
             }
-
             if (entry.isLocked()) {
+                LOG.warn("Client entry " + entry.getPrincipalName() + " is expired.");
                 throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
             }
             if (entry.getExpireTime().lessThan(new Date().getTime())) {
                 throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
             }
+        } else {
+            LOG.info("Client entry is empty.");
         }
     }
 
@@ -329,16 +339,14 @@ public abstract class KdcRequest {
     protected void preauth() throws KrbException {
         KdcReq request = getKdcReq();
 
-        if (!kdcContext.getConfig().isAllowTokenPreauth()) {
-            return;
-        }
-
         PaData preAuthData = request.getPaData();
 
-        if (preauthContext.isPreauthRequired()) {
+        if (isPreauthRequired()) {
             if (preAuthData == null || preAuthData.isEmpty()) {
-                KrbError krbError = makePreAuthenticationError(kdcContext);
-                throw new KrbErrorException(krbError);
+                LOG.info("The preauth data is empty.");
+                KrbError krbError = makePreAuthenticationError(kdcContext, request,
+                    KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED);
+                throw new KdcRecoverableException(krbError);
             } else {
                 getPreauthHandler().verify(this, preAuthData);
             }
@@ -366,6 +374,7 @@ public abstract class KdcRequest {
                 kdcContext.getConfig().getEncryptionTypes());
 
         if (bestType == null) {
+            LOG.error("Can't get the best encryption type.");
             throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP);
         }
 
@@ -385,6 +394,7 @@ public abstract class KdcRequest {
         PrincipalName principal = request.getReqBody().getSname();
         String serverRealm = request.getReqBody().getRealm();
         if (serverRealm == null || serverRealm.isEmpty()) {
+            LOG.info("Can't get the server realm from request, and try to get from kdcContext.");
             serverRealm = kdcContext.getKdcRealm();
         }
         principal.setRealm(serverRealm);
@@ -400,8 +410,11 @@ public abstract class KdcRequest {
         }
     }
 
-    protected KrbError makePreAuthenticationError(KdcContext kdcContext) throws KrbException {
+    protected KrbError makePreAuthenticationError(KdcContext kdcContext, KdcReq request,
+                                                      KrbErrorCode errorCode)
+        throws KrbException {
         List<EncryptionType> encryptionTypes = kdcContext.getConfig().getEncryptionTypes();
+        List<EncryptionType> clientEtypes = request.getReqBody().getEtypes();
         boolean isNewEtype = true;
 
         EtypeInfo2 eTypeInfo2 = new EtypeInfo2();
@@ -409,16 +422,18 @@ public abstract class KdcRequest {
         EtypeInfo eTypeInfo = new EtypeInfo();
 
         for (EncryptionType encryptionType : encryptionTypes) {
-            if (!isNewEtype) {
-                EtypeInfoEntry etypeInfoEntry = new EtypeInfoEntry();
-                etypeInfoEntry.setEtype(encryptionType);
-                etypeInfoEntry.setSalt(null);
-                eTypeInfo.add(etypeInfoEntry);
-            }
+            if (clientEtypes.contains(encryptionType)) {
+                if (!isNewEtype) {
+                    EtypeInfoEntry etypeInfoEntry = new EtypeInfoEntry();
+                    etypeInfoEntry.setEtype(encryptionType);
+                    etypeInfoEntry.setSalt(null);
+                    eTypeInfo.add(etypeInfoEntry);
+                }
 
-            EtypeInfo2Entry etypeInfo2Entry = new EtypeInfo2Entry();
-            etypeInfo2Entry.setEtype(encryptionType);
-            eTypeInfo2.add(etypeInfo2Entry);
+                EtypeInfo2Entry etypeInfo2Entry = new EtypeInfo2Entry();
+                etypeInfo2Entry.setEtype(encryptionType);
+                eTypeInfo2.add(etypeInfo2Entry);
+            }
         }
 
         byte[] encTypeInfo = null;
@@ -429,14 +444,14 @@ public abstract class KdcRequest {
         encTypeInfo2 = KrbCodec.encode(eTypeInfo2);
 
         MethodData methodData = new MethodData();
-        methodData.add(new PaDataEntry(PaDataType.ENC_TIMESTAMP, null));
+        //methodData.add(new PaDataEntry(PaDataType.ENC_TIMESTAMP, null));
         if (!isNewEtype) {
             methodData.add(new PaDataEntry(PaDataType.ETYPE_INFO, encTypeInfo));
         }
         methodData.add(new PaDataEntry(PaDataType.ETYPE_INFO2, encTypeInfo2));
 
         KrbError krbError = new KrbError();
-        krbError.setErrorCode(KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED);
+        krbError.setErrorCode(errorCode);
         byte[] encodedData = KrbCodec.encode(methodData);
         krbError.setEdata(encodedData);
 
@@ -444,14 +459,8 @@ public abstract class KdcRequest {
     }
 
     protected KrbIdentity getEntry(String principal) throws KrbException {
-        KrbIdentity entry = null;
-        KrbErrorCode krbErrorCode = KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN;
-
-        try {
-            entry = kdcContext.getIdentityService().getIdentity(principal);
-        } catch (Exception e) {
-            throw new KrbException(krbErrorCode, e);
-        }
+        KrbIdentity entry;
+        entry = kdcContext.getIdentityService().getIdentity(principal);
 
         if (entry == null) {
             // Maybe it is the token preauth, now we ignore check client entry.
@@ -460,7 +469,7 @@ public abstract class KdcRequest {
         return entry;
     }
 
-    public ByteBuffer getRequestBody() throws KrbException {
+    protected ByteBuffer getRequestBody() throws KrbException {
         return null;
     }
 
@@ -468,7 +477,7 @@ public abstract class KdcRequest {
         return fastContext.getArmorKey();
     }
 
-    public void setArmorKey(EncryptionKey armorKey) {
+    protected void setArmorKey(EncryptionKey armorKey) {
         fastContext.setArmorKey(armorKey);
     }
 
@@ -480,11 +489,11 @@ public abstract class KdcRequest {
         this.serverPrincipal = serverPrincipal;
     }
 
-    public byte[] getInnerBodyout() {
+    protected byte[] getInnerBodyout() {
         return innerBodyout;
     }
 
-    public boolean isToken() {
+    protected boolean isToken() {
         return isToken;
     }
 
@@ -492,7 +501,7 @@ public abstract class KdcRequest {
         this.token = authToken;
     }
 
-    public AuthToken getToken() {
+    protected AuthToken getToken() {
         return token;
     }
 }

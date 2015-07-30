@@ -31,8 +31,8 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class AuthorizationDataEntry extends KrbSequenceType {
-    private static int AD_TYPE = 0;
-    private static int AD_DATA = 1;
+    private static final int AD_TYPE = 0;
+    private static final int AD_DATA = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(AD_TYPE, 0, Asn1Integer.class),

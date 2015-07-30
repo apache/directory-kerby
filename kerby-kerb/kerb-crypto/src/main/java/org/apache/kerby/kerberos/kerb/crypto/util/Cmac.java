@@ -62,14 +62,14 @@ public class Cmac {
 
         int blockSize = encProvider.blockSize();
 
-        byte[] Y = new byte[blockSize];
+        byte[] y = new byte[blockSize];
         byte[] mLast = new byte[blockSize];
         byte[] padded = new byte[blockSize];
-        byte[] K1 = new byte[blockSize];
-        byte[] K2 = new byte[blockSize];
+        byte[] k1 = new byte[blockSize];
+        byte[] k2 = new byte[blockSize];
 
         // step 1
-        makeSubkey(encProvider, key, K1, K2);
+        makeSubkey(encProvider, key, k1, k2);
 
         // step 2
         int n = (len + blockSize - 1) / blockSize;
@@ -93,7 +93,7 @@ public class Cmac {
         }
 
         // step 5
-        System.arraycopy(cipher, 0, Y, 0, blockSize);
+        System.arraycopy(cipher, 0, y, 0, blockSize);
 
         // step 4
         int lastPos = (n - 1) * blockSize;
@@ -101,10 +101,10 @@ public class Cmac {
         byte[] lastBlock = new byte[lastLen];
         System.arraycopy(data, lastPos, lastBlock, 0, lastLen);
         if (lastIsComplete) {
-            BytesUtil.xor(lastBlock, K1, mLast);
+            BytesUtil.xor(lastBlock, k1, mLast);
         } else {
             padding(lastBlock, padded);
-            BytesUtil.xor(padded, K2, mLast);
+            BytesUtil.xor(padded, k2, mLast);
         }
 
         // Step 6 (last block)
@@ -115,29 +115,29 @@ public class Cmac {
 
     // Generate subkeys K1 and K2 as described in RFC 4493 figure 2.2.
     private static void makeSubkey(EncryptProvider encProvider,
-                              byte[] key, byte[] K1, byte[] K2) throws KrbException {
+                              byte[] key, byte[] k1, byte[] k2) throws KrbException {
 
         // L := encrypt(K, const_Zero)
-        byte[] L = new byte[K1.length];
-        Arrays.fill(L, (byte) 0);
-        encryptBlock(encProvider, key, null, L);
+        byte[] l = new byte[k1.length];
+        Arrays.fill(l, (byte) 0);
+        encryptBlock(encProvider, key, null, l);
 
         // K1 := (MSB(L) == 0) ? L << 1 : (L << 1) XOR const_Rb
-        if ((L[0] & 0x80) == 0) {
-            leftShiftByOne(L, K1);
+        if ((l[0] & 0x80) == 0) {
+            leftShiftByOne(l, k1);
         } else {
-            byte[] tmp = new byte[K1.length];
-            leftShiftByOne(L, tmp);
-            BytesUtil.xor(tmp, constRb, K1);
+            byte[] tmp = new byte[k1.length];
+            leftShiftByOne(l, tmp);
+            BytesUtil.xor(tmp, constRb, k1);
         }
 
         // K2 := (MSB(K1) == 0) ? K1 << 1 : (K1 << 1) XOR const_Rb
-        if ((K1[0] & 0x80) == 0) {
-            leftShiftByOne(K1, K2);
+        if ((k1[0] & 0x80) == 0) {
+            leftShiftByOne(k1, k2);
         } else {
-            byte[] tmp = new byte[K1.length];
-            leftShiftByOne(K1, tmp);
-            BytesUtil.xor(tmp, constRb, K2);
+            byte[] tmp = new byte[k1.length];
+            leftShiftByOne(k1, tmp);
+            BytesUtil.xor(tmp, constRb, k2);
         }
     }
 

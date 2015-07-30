@@ -55,13 +55,13 @@ public class Md4 extends MessageDigest {
      * The initial values of the four registers. RFC gives the values 
      * in LE so we converted it as JAVA uses BE endianness.
      */
-    private final static int A = 0x67452301;
+    private static final int A = 0x67452301;
 
-    private final static int B = 0xefcdab89;
+    private static final int B = 0xefcdab89;
 
-    private final static int C = 0x98badcfe;
+    private static final int C = 0x98badcfe;
 
-    private final static int D = 0x10325476;
+    private static final int D = 0x10325476;
 
     /**
      * The four registers initialized with the above IVs.
@@ -147,9 +147,9 @@ public class Md4 extends MessageDigest {
     protected byte[] engineDigest() {
         byte[] p = pad();
         engineUpdate(p, 0, p.length);
-        byte[] digest = { (byte) a, (byte) (a >>> 8), (byte) (a >>> 16), (byte) (a >>> 24), (byte) b, (byte) (b >>> 8),
+        byte[] digest = {(byte) a, (byte) (a >>> 8), (byte) (a >>> 16), (byte) (a >>> 24), (byte) b, (byte) (b >>> 8),
                 (byte) (b >>> 16), (byte) (b >>> 24), (byte) c, (byte) (c >>> 8), (byte) (c >>> 16), (byte) (c >>> 24),
-                (byte) d, (byte) (d >>> 8), (byte) (d >>> 16), (byte) (d >>> 24) };
+                (byte) d, (byte) (d >>> 8), (byte) (d >>> 16), (byte) (d >>> 24)};
 
         engineReset();
 
@@ -222,112 +222,112 @@ public class Md4 extends MessageDigest {
         int dd = d;
 
         // Copy the block to process into X array
-        int[] X = new int[16];
+        int[] x = new int[16];
         for (int i = 0; i < 16; i++) {
-            X[i] = (in[offset++] & 0xff) | (in[offset++] & 0xff) << 8 | (in[offset++] & 0xff) << 16
+            x[i] = (in[offset++] & 0xff) | (in[offset++] & 0xff) << 8 | (in[offset++] & 0xff) << 16
                     | (in[offset++] & 0xff) << 24;
         }
 
         // Round 1
-        a += ((b & c) | (~b & d)) + X[0];
+        a += ((b & c) | (~b & d)) + x[0];
         a = a << 3 | a >>> (32 - 3);
-        d += ((a & b) | (~a & c)) + X[1];
+        d += ((a & b) | (~a & c)) + x[1];
         d = d << 7 | d >>> (32 - 7);
-        c += ((d & a) | (~d & b)) + X[2];
+        c += ((d & a) | (~d & b)) + x[2];
         c = c << 11 | c >>> (32 - 11);
-        b += ((c & d) | (~c & a)) + X[3];
+        b += ((c & d) | (~c & a)) + x[3];
         b = b << 19 | b >>> (32 - 19);
-        a += ((b & c) | (~b & d)) + X[4];
+        a += ((b & c) | (~b & d)) + x[4];
         a = a << 3 | a >>> (32 - 3);
-        d += ((a & b) | (~a & c)) + X[5];
+        d += ((a & b) | (~a & c)) + x[5];
         d = d << 7 | d >>> (32 - 7);
-        c += ((d & a) | (~d & b)) + X[6];
+        c += ((d & a) | (~d & b)) + x[6];
         c = c << 11 | c >>> (32 - 11);
-        b += ((c & d) | (~c & a)) + X[7];
+        b += ((c & d) | (~c & a)) + x[7];
         b = b << 19 | b >>> (32 - 19);
-        a += ((b & c) | (~b & d)) + X[8];
+        a += ((b & c) | (~b & d)) + x[8];
         a = a << 3 | a >>> (32 - 3);
-        d += ((a & b) | (~a & c)) + X[9];
+        d += ((a & b) | (~a & c)) + x[9];
         d = d << 7 | d >>> (32 - 7);
-        c += ((d & a) | (~d & b)) + X[10];
+        c += ((d & a) | (~d & b)) + x[10];
         c = c << 11 | c >>> (32 - 11);
-        b += ((c & d) | (~c & a)) + X[11];
+        b += ((c & d) | (~c & a)) + x[11];
         b = b << 19 | b >>> (32 - 19);
-        a += ((b & c) | (~b & d)) + X[12];
+        a += ((b & c) | (~b & d)) + x[12];
         a = a << 3 | a >>> (32 - 3);
-        d += ((a & b) | (~a & c)) + X[13];
+        d += ((a & b) | (~a & c)) + x[13];
         d = d << 7 | d >>> (32 - 7);
-        c += ((d & a) | (~d & b)) + X[14];
+        c += ((d & a) | (~d & b)) + x[14];
         c = c << 11 | c >>> (32 - 11);
-        b += ((c & d) | (~c & a)) + X[15];
+        b += ((c & d) | (~c & a)) + x[15];
         b = b << 19 | b >>> (32 - 19);
 
         // Round 2
-        a += ((b & (c | d)) | (c & d)) + X[0] + 0x5a827999;
+        a += ((b & (c | d)) | (c & d)) + x[0] + 0x5a827999;
         a = a << 3 | a >>> (32 - 3);
-        d += ((a & (b | c)) | (b & c)) + X[4] + 0x5a827999;
+        d += ((a & (b | c)) | (b & c)) + x[4] + 0x5a827999;
         d = d << 5 | d >>> (32 - 5);
-        c += ((d & (a | b)) | (a & b)) + X[8] + 0x5a827999;
+        c += ((d & (a | b)) | (a & b)) + x[8] + 0x5a827999;
         c = c << 9 | c >>> (32 - 9);
-        b += ((c & (d | a)) | (d & a)) + X[12] + 0x5a827999;
+        b += ((c & (d | a)) | (d & a)) + x[12] + 0x5a827999;
         b = b << 13 | b >>> (32 - 13);
-        a += ((b & (c | d)) | (c & d)) + X[1] + 0x5a827999;
+        a += ((b & (c | d)) | (c & d)) + x[1] + 0x5a827999;
         a = a << 3 | a >>> (32 - 3);
-        d += ((a & (b | c)) | (b & c)) + X[5] + 0x5a827999;
+        d += ((a & (b | c)) | (b & c)) + x[5] + 0x5a827999;
         d = d << 5 | d >>> (32 - 5);
-        c += ((d & (a | b)) | (a & b)) + X[9] + 0x5a827999;
+        c += ((d & (a | b)) | (a & b)) + x[9] + 0x5a827999;
         c = c << 9 | c >>> (32 - 9);
-        b += ((c & (d | a)) | (d & a)) + X[13] + 0x5a827999;
+        b += ((c & (d | a)) | (d & a)) + x[13] + 0x5a827999;
         b = b << 13 | b >>> (32 - 13);
-        a += ((b & (c | d)) | (c & d)) + X[2] + 0x5a827999;
+        a += ((b & (c | d)) | (c & d)) + x[2] + 0x5a827999;
         a = a << 3 | a >>> (32 - 3);
-        d += ((a & (b | c)) | (b & c)) + X[6] + 0x5a827999;
+        d += ((a & (b | c)) | (b & c)) + x[6] + 0x5a827999;
         d = d << 5 | d >>> (32 - 5);
-        c += ((d & (a | b)) | (a & b)) + X[10] + 0x5a827999;
+        c += ((d & (a | b)) | (a & b)) + x[10] + 0x5a827999;
         c = c << 9 | c >>> (32 - 9);
-        b += ((c & (d | a)) | (d & a)) + X[14] + 0x5a827999;
+        b += ((c & (d | a)) | (d & a)) + x[14] + 0x5a827999;
         b = b << 13 | b >>> (32 - 13);
-        a += ((b & (c | d)) | (c & d)) + X[3] + 0x5a827999;
+        a += ((b & (c | d)) | (c & d)) + x[3] + 0x5a827999;
         a = a << 3 | a >>> (32 - 3);
-        d += ((a & (b | c)) | (b & c)) + X[7] + 0x5a827999;
+        d += ((a & (b | c)) | (b & c)) + x[7] + 0x5a827999;
         d = d << 5 | d >>> (32 - 5);
-        c += ((d & (a | b)) | (a & b)) + X[11] + 0x5a827999;
+        c += ((d & (a | b)) | (a & b)) + x[11] + 0x5a827999;
         c = c << 9 | c >>> (32 - 9);
-        b += ((c & (d | a)) | (d & a)) + X[15] + 0x5a827999;
+        b += ((c & (d | a)) | (d & a)) + x[15] + 0x5a827999;
         b = b << 13 | b >>> (32 - 13);
 
         // Round 3
-        a += (b ^ c ^ d) + X[0] + 0x6ed9eba1;
+        a += (b ^ c ^ d) + x[0] + 0x6ed9eba1;
         a = a << 3 | a >>> (32 - 3);
-        d += (a ^ b ^ c) + X[8] + 0x6ed9eba1;
+        d += (a ^ b ^ c) + x[8] + 0x6ed9eba1;
         d = d << 9 | d >>> (32 - 9);
-        c += (d ^ a ^ b) + X[4] + 0x6ed9eba1;
+        c += (d ^ a ^ b) + x[4] + 0x6ed9eba1;
         c = c << 11 | c >>> (32 - 11);
-        b += (c ^ d ^ a) + X[12] + 0x6ed9eba1;
+        b += (c ^ d ^ a) + x[12] + 0x6ed9eba1;
         b = b << 15 | b >>> (32 - 15);
-        a += (b ^ c ^ d) + X[2] + 0x6ed9eba1;
+        a += (b ^ c ^ d) + x[2] + 0x6ed9eba1;
         a = a << 3 | a >>> (32 - 3);
-        d += (a ^ b ^ c) + X[10] + 0x6ed9eba1;
+        d += (a ^ b ^ c) + x[10] + 0x6ed9eba1;
         d = d << 9 | d >>> (32 - 9);
-        c += (d ^ a ^ b) + X[6] + 0x6ed9eba1;
+        c += (d ^ a ^ b) + x[6] + 0x6ed9eba1;
         c = c << 11 | c >>> (32 - 11);
-        b += (c ^ d ^ a) + X[14] + 0x6ed9eba1;
+        b += (c ^ d ^ a) + x[14] + 0x6ed9eba1;
         b = b << 15 | b >>> (32 - 15);
-        a += (b ^ c ^ d) + X[1] + 0x6ed9eba1;
+        a += (b ^ c ^ d) + x[1] + 0x6ed9eba1;
         a = a << 3 | a >>> (32 - 3);
-        d += (a ^ b ^ c) + X[9] + 0x6ed9eba1;
+        d += (a ^ b ^ c) + x[9] + 0x6ed9eba1;
         d = d << 9 | d >>> (32 - 9);
-        c += (d ^ a ^ b) + X[5] + 0x6ed9eba1;
+        c += (d ^ a ^ b) + x[5] + 0x6ed9eba1;
         c = c << 11 | c >>> (32 - 11);
-        b += (c ^ d ^ a) + X[13] + 0x6ed9eba1;
+        b += (c ^ d ^ a) + x[13] + 0x6ed9eba1;
         b = b << 15 | b >>> (32 - 15);
-        a += (b ^ c ^ d) + X[3] + 0x6ed9eba1;
+        a += (b ^ c ^ d) + x[3] + 0x6ed9eba1;
         a = a << 3 | a >>> (32 - 3);
-        d += (a ^ b ^ c) + X[11] + 0x6ed9eba1;
+        d += (a ^ b ^ c) + x[11] + 0x6ed9eba1;
         d = d << 9 | d >>> (32 - 9);
-        c += (d ^ a ^ b) + X[7] + 0x6ed9eba1;
+        c += (d ^ a ^ b) + x[7] + 0x6ed9eba1;
         c = c << 11 | c >>> (32 - 11);
-        b += (c ^ d ^ a) + X[15] + 0x6ed9eba1;
+        b += (c ^ d ^ a) + x[15] + 0x6ed9eba1;
         b = b << 15 | b >>> (32 - 15);
 
         //Update state.

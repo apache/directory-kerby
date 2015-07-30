@@ -41,6 +41,10 @@ public class PreauthContext {
         this.outputPaData = new PaData();
     }
 
+    public void reset() {
+        this.outputPaData = new PaData();
+    }
+
     public boolean isPreauthRequired() {
         return preauthRequired;
     }
@@ -62,7 +66,7 @@ public class PreauthContext {
     }
 
     public boolean hasInputPaData() {
-        return inputPaData != null && ! inputPaData.isEmpty();
+        return inputPaData != null && !inputPaData.isEmpty();
     }
 
     public PaData getInputPaData() {

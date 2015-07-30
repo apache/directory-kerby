@@ -25,11 +25,12 @@ public enum KdcConfigKey implements SectionConfigKey {
     KRB_DEBUG(true),
     KDC_SERVICE_NAME("KDC-Server"),
     KDC_IDENTITY_BACKEND,
-    KDC_HOST("127.0.0.1", "kdcdefaults"),       // NOPMD
-    KDC_PORT(8015, "kdcdefaults"),
+    KDC_HOST("127.0.0.1", "kdcdefaults"), // NOPMD
+    KDC_PORT(null, "kdcdefaults"),
+    KDC_ALLOW_TCP(true, "kdcdefaults"),
     KDC_ALLOW_UDP(true, "kdcdefaults"),
-    KDC_UDP_PORT(8016, "kdcdefaults"),
-    KDC_TCP_PORT(8015, "kdcdefaults"),
+    KDC_UDP_PORT(null, "kdcdefaults"),
+    KDC_TCP_PORT(null, "kdcdefaults"),
     KDC_DOMAIN("example.com"),
     KDC_REALM("EXAMPLE.COM", "kdcdefaults"),
     PREAUTH_REQUIRED(true),
@@ -45,15 +46,9 @@ public enum KdcConfigKey implements SectionConfigKey {
     PROXIABLE_ALLOWED(true),
     RENEWABLE_ALLOWED(true),
     VERIFY_BODY_CHECKSUM(true),
-    ENCRYPTION_TYPES(new String[] { "aes128-cts-hmac-sha1-96", "des3-cbc-sha1-kd" }),
+    ENCRYPTION_TYPES("aes128-cts-hmac-sha1-96 des3-cbc-sha1-kd"),
     RESTRICT_ANONYMOUS_TO_TGT(false, "kdcdefaults"),
-    KDC_MAX_DGRAM_REPLY_SIZE(4096, "kdcdefaults"),
-
-    //logging location
-    //TODO: the default log location need to be determined.
-    DEFAULT(null, "logging"),
-    KDC(null, "logging"),
-    ADMIN_SERVER(null, "logging");
+    KDC_MAX_DGRAM_REPLY_SIZE(4096, "kdcdefaults");
 
     private Object defaultValue;
 

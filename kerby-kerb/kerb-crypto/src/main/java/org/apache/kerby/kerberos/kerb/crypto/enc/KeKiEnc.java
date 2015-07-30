@@ -59,15 +59,15 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         int paddingLen = workLens[3];
 
         byte[] constant = new byte[5];
-        constant[0] = (byte) ((usage>>24)&0xff);
-        constant[1] = (byte) ((usage>>16)&0xff);
-        constant[2] = (byte) ((usage>>8)&0xff);
-        constant[3] = (byte) (usage&0xff);
+        constant[0] = (byte) ((usage >> 24) & 0xff);
+        constant[1] = (byte) ((usage >> 16) & 0xff);
+        constant[2] = (byte) ((usage >> 8) & 0xff);
+        constant[3] = (byte) (usage & 0xff);
         constant[4] = (byte) 0xaa;
         
-        byte[] Ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
+        byte[] ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
         constant[4] = (byte) 0x55;
-        byte[] Ki = ((DkKeyMaker) keyMaker()).dk(key, constant);
+        byte[] ki = ((DkKeyMaker) keyMaker()).dk(key, constant);
 
         /**
          * Instead of E(Confounder | Checksum | Plaintext | Padding),
@@ -90,8 +90,8 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         }
 
         // checksum & encrypt
-        byte[] checksum = makeChecksum(Ki, tmpEnc, checksumLen);
-        encProvider().encrypt(Ke, iv, tmpEnc);
+        byte[] checksum = makeChecksum(ki, tmpEnc, checksumLen);
+        encProvider().encrypt(ke, iv, tmpEnc);
 
         System.arraycopy(tmpEnc, 0, workBuffer, 0, tmpEnc.length);
         System.arraycopy(checksum, 0, workBuffer, tmpEnc.length, checksum.length);
@@ -107,9 +107,9 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         byte[] constant = new byte[5];
         BytesUtil.int2bytes(usage, constant, 0, true);
         constant[4] = (byte) 0xaa;
-        byte[] Ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
+        byte[] ke = ((DkKeyMaker) keyMaker()).dk(key, constant);
         constant[4] = (byte) 0x55;
-        byte[] Ki = ((DkKeyMaker) keyMaker()).dk(key, constant);
+        byte[] ki = ((DkKeyMaker) keyMaker()).dk(key, constant);
 
         // decrypt and verify checksum
 
@@ -120,10 +120,10 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         System.arraycopy(workBuffer, confounderLen + dataLen,
                 checksum, 0, checksumLen);
 
-        encProvider().decrypt(Ke, iv, tmpEnc);
-        byte[] newChecksum = makeChecksum(Ki, tmpEnc, checksumLen);
+        encProvider().decrypt(ke, iv, tmpEnc);
+        byte[] newChecksum = makeChecksum(ki, tmpEnc, checksumLen);
 
-        if (! checksumEqual(checksum, newChecksum)) {
+        if (!checksumEqual(checksum, newChecksum)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
         }
 

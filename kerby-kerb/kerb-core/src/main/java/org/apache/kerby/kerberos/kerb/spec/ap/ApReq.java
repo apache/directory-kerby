@@ -36,9 +36,9 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
  }
  */
 public class ApReq extends KrbMessage {
-    private static int AP_OPTIONS = 2;
-    private static int TICKET = 3;
-    private static int AUTHENTICATOR = 4;
+    private static final int AP_OPTIONS = 2;
+    private static final int TICKET = 3;
+    private static final int AUTHENTICATOR = 4;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PVNO, Asn1Integer.class),

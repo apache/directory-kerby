@@ -23,8 +23,6 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TestKrbConfigLoad {
 
     @Test
-    public void test() throws IOException, URISyntaxException {
+    public void test() throws Exception {
         URL confFileUrl = TestKrbConfigLoad.class.getResource("/krb5.conf");
         File confFile = new File(confFileUrl.toURI());
 
@@ -52,17 +50,13 @@ public class TestKrbConfigLoad {
         assertThat(krbConfig.getRenewLifetime()).isEqualTo(7 * 24 * 3600);
         assertThat(krbConfig.isForwardableAllowed()).isTrue();
         assertThat(krbConfig.getEncryptionTypes()).hasSize(2)
-                .contains(EncryptionType.DES_CBC_CRC, EncryptionType.AES128_CTS_HMAC_SHA1_96);
+                .contains(EncryptionType.DES_CBC_CRC,
+                        EncryptionType.AES128_CTS_HMAC_SHA1_96);
         assertThat(krbConfig.getAllowableClockSkew()).isEqualTo(300);
         assertThat(krbConfig.isProxiableAllowed()).isTrue();
         assertThat(krbConfig.getDefaultTgsEnctypes()).hasSize(1)
                 .contains(EncryptionType.DES_CBC_CRC);
         assertThat(krbConfig.getDefaultTktEnctypes()).hasSize(1)
                 .contains(EncryptionType.DES_CBC_CRC);
-
-        assertThat(krbConfig.getDefaultLoggingLocation()).isEqualTo("FILE:/var/log/krb5libs.log");
-        assertThat(krbConfig.getKdcLoggingLocation()).isEqualTo("FILE:/var/log/krb5kdc.log");
-        assertThat(krbConfig.getAdminLoggingLocation()).isEqualTo("FILE:/var/log/kadmind.log");
-
     }
 }

@@ -75,7 +75,7 @@ public class KrbTcpTransport
         try {
             socket.close();
         } catch (IOException e) { //NOPMD
-            // NOOP
+            System.err.println(e); // NOOP
         }
     }
 }

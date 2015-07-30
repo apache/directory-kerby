@@ -19,14 +19,18 @@
  */
 package org.apache.kerby.kerberos.kerb.util;
 
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
-import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,6 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assume.assumeTrue;
 
 /*
 The principal keys for krbtgt/SH.INTEL.COM@SH.INTEL.COM
@@ -69,9 +74,7 @@ public class EncryptionTest {
 
     @Test
     public void testAes256() throws IOException, KrbException {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         testEncWith("aes256-cts-hmac-sha1-96.cc");
     }
@@ -109,7 +112,7 @@ public class EncryptionTest {
         Ticket ticket = getTicket();
         EncryptionType keyType = ticket.getEncryptedEncPart().getEType();
         EncryptionKey key = getServerKey(keyType);
-        if (! EncryptionHandler.isImplemented(keyType)) {
+        if (!EncryptionHandler.isImplemented(keyType)) {
             System.err.println("Key type not supported yet: " + keyType.getName());
             return;
         }
@@ -127,7 +130,7 @@ public class EncryptionTest {
 
         byte[] decrypted2 = EncryptionHandler.decrypt(
                 encrypted, key, KeyUsage.KDC_REP_TICKET);
-        if (! Arrays.equals(decrypted, decrypted2)) {
+        if (!Arrays.equals(decrypted, decrypted2)) {
             System.err.println("Encryption checking failed after decryption for key type: "
                     + keyType.getName());
         }

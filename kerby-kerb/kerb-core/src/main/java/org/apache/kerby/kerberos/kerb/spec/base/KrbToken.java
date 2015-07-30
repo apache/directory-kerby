@@ -45,8 +45,8 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     private static TokenEncoder tokenEncoder;
     private static TokenDecoder tokenDecoder;
 
-    private static int TOKEN_FORMAT = 0;
-    private static int TOKEN_VALUE = 1;
+    private static final int TOKEN_FORMAT = 0;
+    private static final int TOKEN_VALUE = 1;
 
     private AuthToken innerToken = null;
 
@@ -85,7 +85,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     private void setTokenType() {
         List<String> audiences = this.innerToken.getAudiences();
-        if(audiences.size() == 1 && audiences.get(0).startsWith(KrbConstant.TGS_PRINCIPAL)) {
+        if (audiences.size() == 1 && audiences.get(0).startsWith(KrbConstant.TGS_PRINCIPAL)) {
             isIdToken(true);
         } else {
             isAcToken(true);

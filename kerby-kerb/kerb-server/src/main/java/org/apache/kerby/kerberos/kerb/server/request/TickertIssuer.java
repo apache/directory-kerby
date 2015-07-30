@@ -26,7 +26,14 @@ import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncoding;
+import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncodingType;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
@@ -34,11 +41,14 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlag;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handling ticket constructing, filling, and issuing.
  */
 public abstract class TickertIssuer {
+    private static final Logger LOG = LoggerFactory.getLogger(TickertIssuer.class);
     private final KdcRequest kdcRequest;
 
     public TickertIssuer(KdcRequest kdcRequest) {
@@ -88,6 +98,7 @@ public abstract class TickertIssuer {
 
         if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.FORWARDABLE)) {
             if (!config.isForwardableAllowed()) {
+                LOG.warn("Forward is not allowed.");
                 throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
             }
 
@@ -96,6 +107,7 @@ public abstract class TickertIssuer {
 
         if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.PROXIABLE)) {
             if (!config.isProxiableAllowed()) {
+                LOG.warn("Proxy is not allowed.");
                 throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
             }
 
@@ -104,6 +116,7 @@ public abstract class TickertIssuer {
 
         if (request.getReqBody().getKdcOptions().isFlagSet(KdcOption.ALLOW_POSTDATE)) {
             if (!config.isPostdatedAllowed()) {
+                LOG.warn("Post date is not allowed.");
                 throw new KrbException(KrbErrorCode.KDC_ERR_POLICY);
             }
 
@@ -126,8 +139,8 @@ public abstract class TickertIssuer {
         encTicketPart.setAuthTime(now);
 
         KerberosTime krbStartTime = request.getReqBody().getFrom();
-        if (krbStartTime == null || krbStartTime.lessThan(now) ||
-                krbStartTime.isInClockSkew(config.getAllowableClockSkew())) {
+        if (krbStartTime == null || krbStartTime.lessThan(now)
+                || krbStartTime.isInClockSkew(config.getAllowableClockSkew())) {
             krbStartTime = now;
         }
         if (krbStartTime.greaterThan(now)
@@ -173,7 +186,8 @@ public abstract class TickertIssuer {
                 krbRtime = KerberosTime.NEVER;
             }
             KerberosTime allowedMaximumRenewableTime = krbStartTime;
-            allowedMaximumRenewableTime.extend(config.getMaximumRenewableLifetime() * 1000);
+            allowedMaximumRenewableTime = allowedMaximumRenewableTime
+                    .extend(config.getMaximumRenewableLifetime() * 1000);
             if (krbRtime.greaterThan(allowedMaximumRenewableTime)) {
                 krbRtime = allowedMaximumRenewableTime;
             }

@@ -19,13 +19,26 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto;
 
-import javax.crypto.Cipher;
-
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
-import org.apache.kerby.kerberos.kerb.crypto.enc.*;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.crypto.enc.Aes128CtsHmacSha1Enc;
+import org.apache.kerby.kerberos.kerb.crypto.enc.Aes256CtsHmacSha1Enc;
+import org.apache.kerby.kerberos.kerb.crypto.enc.Camellia128CtsCmacEnc;
+import org.apache.kerby.kerberos.kerb.crypto.enc.Camellia256CtsCmacEnc;
+import org.apache.kerby.kerberos.kerb.crypto.enc.Des3CbcSha1Enc;
+import org.apache.kerby.kerberos.kerb.crypto.enc.DesCbcCrcEnc;
+import org.apache.kerby.kerberos.kerb.crypto.enc.DesCbcMd4Enc;
+import org.apache.kerby.kerberos.kerb.crypto.enc.DesCbcMd5Enc;
+import org.apache.kerby.kerberos.kerb.crypto.enc.Rc4HmacEnc;
+import org.apache.kerby.kerberos.kerb.crypto.enc.Rc4HmacExpEnc;
 import org.apache.kerby.kerberos.kerb.crypto.util.Random;
-import org.apache.kerby.kerberos.kerb.spec.base.*;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+
+import javax.crypto.Cipher;
 
 /**
  * Encryption handler as the highest level API for encryption stuffs defined in
@@ -40,9 +53,8 @@ public class EncryptionHandler {
         try {
             isAES256Enabled = Cipher.getMaxAllowedKeyLength("AES") >= 256;
         } catch (Exception e) { //NOPMD
-            // should not happen
+            System.err.println(e);
         }
-
     }
 
     public static boolean isAES256Enabled() {
@@ -129,7 +141,7 @@ public class EncryptionHandler {
                 break;
         }
 
-        if (encHandler == null && ! check) {
+        if (encHandler == null && !check) {
             String message = "Unsupported encryption type: " + eType.name();
             throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP, message);
         }

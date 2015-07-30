@@ -32,6 +32,7 @@ import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
@@ -48,7 +49,7 @@ public class JwtTokenDecoder implements TokenDecoder {
 
     @Override
     public AuthToken decodeFromBytes(byte[] content) throws IOException {
-        String tokenStr = new String(content);
+        String tokenStr = new String(content, Charset.forName("UTF-8"));
 
         return decodeFromString(tokenStr);
     }
@@ -68,7 +69,7 @@ public class JwtTokenDecoder implements TokenDecoder {
             PlainJWT plainObject = (PlainJWT) jwt;
             try {
 
-                if(verifyToken(jwt)) {
+                if (verifyToken(jwt)) {
                     return new JwtAuthToken(plainObject.getJWTClaimsSet());
                 } else {
                     return null;
@@ -93,7 +94,7 @@ public class JwtTokenDecoder implements TokenDecoder {
                 }
             } else {
                 try {
-                    if(verifyToken(encryptedJWT)) {
+                    if (verifyToken(encryptedJWT)) {
                         return new JwtAuthToken(encryptedJWT.getJWTClaimsSet());
                     } else {
                         return null;
@@ -185,11 +186,11 @@ public class JwtTokenDecoder implements TokenDecoder {
         boolean valid = false;
         try {
             List<String> tokenAudiences = jwtToken.getJWTClaimsSet().getAudience();
-            if(audiences == null) {
+            if (audiences == null) {
                 valid = true;
             } else {
-                for(String audience : tokenAudiences) {
-                    if(audiences.contains(audience)) {
+                for (String audience : tokenAudiences) {
+                    if (audiences.contains(audience)) {
                         valid = true;
                         break;
                     }
@@ -205,7 +206,7 @@ public class JwtTokenDecoder implements TokenDecoder {
         boolean valid = false;
         try {
             Date expire = jwtToken.getJWTClaimsSet().getExpirationTime();
-            if(expire != null && new Date().before(expire)) {
+            if (expire != null && new Date().before(expire)) {
                 valid = true;
             }
         } catch (ParseException e) {

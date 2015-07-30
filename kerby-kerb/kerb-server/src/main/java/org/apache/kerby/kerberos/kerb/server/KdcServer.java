@@ -20,49 +20,74 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
+import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.impl.DefaultInternalKdcServerImpl;
+import org.apache.kerby.kerberos.kerb.server.impl.InternalKdcServer;
 
 import java.io.File;
 
+/**
+ * The implemented Kerberos Server API.
+ */
 public class KdcServer {
-    protected KOptions commonOptions;
-    protected InternalKdcServer innerKdc;
+    private final KdcConfig kdcConfig;
+    private final BackendConfig backendConfig;
+    private final KdcSetting kdcSetting;
+    private final KOptions startupOptions;
+
+    private InternalKdcServer innerKdc;
+
+    /**
+     * Constructor passing both kdcConfig and backendConfig.
+     * @param kdcConfig
+     * @param backendConfig
+     * @throws KrbException
+     */
+    public KdcServer(KdcConfig kdcConfig,
+                  BackendConfig backendConfig) throws KrbException {
+        this.kdcConfig = kdcConfig;
+        this.backendConfig = backendConfig;
+        startupOptions = new KOptions();
+        kdcSetting = new KdcSetting(startupOptions, kdcConfig, backendConfig);
+    }
+
+    /**
+     * Constructor given confDir where 'kdc.conf' and 'backend.conf' should be
+     * available.
+     * kdc.conf, that contains kdc server related items.
+     * backend.conf, that contains identity backend related items.
+     *
+     * @param confDir
+     * @throws KrbException
+     */
+    public KdcServer(File confDir) throws KrbException {
+        KdcConfig tmpKdcConfig = KdcUtil.getKdcConfig(confDir);
+        if (tmpKdcConfig == null) {
+            tmpKdcConfig = new KdcConfig();
+        }
+        this.kdcConfig = tmpKdcConfig;
+
+        BackendConfig tmpBackendConfig = KdcUtil.getBackendConfig(confDir);
+        if (tmpBackendConfig == null) {
+            tmpBackendConfig = new BackendConfig();
+        }
+        tmpBackendConfig.setConfDir(confDir);
+        this.backendConfig = tmpBackendConfig;
+
+        startupOptions = new KOptions();
+        kdcSetting = new KdcSetting(startupOptions, kdcConfig, backendConfig);
+    }
 
     /**
      * Default constructor.
      */
     public KdcServer() {
-        commonOptions = new KOptions();
-    }
-
-    /**
-     * Set KDC config.
-     * @param kdcConfig
-     */
-    public void setKdcConfig(KdcConfig kdcConfig) {
-        commonOptions.add(KdcServerOption.KDC_CONFIG, kdcConfig);
-    }
-
-    /**
-     * Set backend config.
-     * @param backendConfig
-     */
-    public void setBackendConfig(BackendConfig backendConfig) {
-        commonOptions.add(KdcServerOption.BACKEND_CONFIG, backendConfig);
-    }
-
-    /**
-     * Set conf dir where configuration resources can be loaded. Mainly:
-     * kdc.conf, that contains kdc server related items.
-     * backend.conf, that contains identity backend related items.
-     *
-     * Note confDir is only used when KDC and backend config aren't set.
-     *
-     * @param confDir
-     */
-    public void setConfDir(File confDir) {
-        commonOptions.add(KdcServerOption.CONF_DIR, confDir);
+        kdcConfig = new KdcConfig();
+        backendConfig = new BackendConfig();
+        startupOptions = new KOptions();
+        kdcSetting = new KdcSetting(startupOptions, kdcConfig, backendConfig);
     }
 
     /**
@@ -70,7 +95,7 @@ public class KdcServer {
      * @param realm
      */
     public void setKdcRealm(String realm) {
-        commonOptions.add(KdcServerOption.KDC_REALM, realm);
+        startupOptions.add(KdcServerOption.KDC_REALM, realm);
     }
 
     /**
@@ -78,7 +103,15 @@ public class KdcServer {
      * @param kdcHost
      */
     public void setKdcHost(String kdcHost) {
-        commonOptions.add(KdcServerOption.KDC_HOST, kdcHost);
+        startupOptions.add(KdcServerOption.KDC_HOST, kdcHost);
+    }
+
+    /**
+     * Set KDC port.
+     * @param kdcPort
+     */
+    public void setKdcPort(int kdcPort) {
+        startupOptions.add(KdcServerOption.KDC_PORT, kdcPort);
     }
 
     /**
@@ -86,7 +119,7 @@ public class KdcServer {
      * @param kdcTcpPort
      */
     public void setKdcTcpPort(int kdcTcpPort) {
-        commonOptions.add(KdcServerOption.KDC_TCP_PORT, kdcTcpPort);
+        startupOptions.add(KdcServerOption.KDC_TCP_PORT, kdcTcpPort);
     }
 
     /**
@@ -94,7 +127,7 @@ public class KdcServer {
      * @param allowUdp
      */
     public void setAllowUdp(boolean allowUdp) {
-        commonOptions.add(KdcServerOption.ALLOW_UDP, allowUdp);
+        startupOptions.add(KdcServerOption.ALLOW_UDP, allowUdp);
     }
 
     /**
@@ -102,14 +135,14 @@ public class KdcServer {
      * @param allowTcp
      */
     public void setAllowTcp(boolean allowTcp) {
-        commonOptions.add(KdcServerOption.ALLOW_TCP, allowTcp);
+        startupOptions.add(KdcServerOption.ALLOW_TCP, allowTcp);
     }
     /**
      * Set KDC udp port. Only makes sense when allowUdp is set.
      * @param kdcUdpPort
      */
     public void setKdcUdpPort(int kdcUdpPort) {
-        commonOptions.add(KdcServerOption.KDC_UDP_PORT, kdcUdpPort);
+        startupOptions.add(KdcServerOption.KDC_UDP_PORT, kdcUdpPort);
     }
 
     /**
@@ -117,14 +150,14 @@ public class KdcServer {
      * @param workDir
      */
     public void setWorkDir(File workDir) {
-        commonOptions.add(KdcServerOption.WORK_DIR, workDir);
+        startupOptions.add(KdcServerOption.WORK_DIR, workDir);
     }
 
     /**
      * Allow to debug so have more logs.
      */
     public void enableDebug() {
-        commonOptions.add(KdcServerOption.ENABLE_DEBUG);
+        startupOptions.add(KdcServerOption.ENABLE_DEBUG);
     }
 
     /**
@@ -132,19 +165,31 @@ public class KdcServer {
      * @param innerKdcImpl
      */
     public void setInnerKdcImpl(InternalKdcServer innerKdcImpl) {
-        commonOptions.add(KdcServerOption.INNER_KDC_IMPL, innerKdcImpl);
+        startupOptions.add(KdcServerOption.INNER_KDC_IMPL, innerKdcImpl);
     }
 
     /**
      * Get KDC setting from startup options and configs.
-     * Note it must be called after init().
      * @return setting
      */
-    public KdcSetting getSetting() {
-        if (innerKdc == null) {
-            throw new RuntimeException("Not init yet");
-        }
-        return innerKdc.getSetting();
+    public KdcSetting getKdcSetting() {
+        return kdcSetting;
+    }
+
+    /**
+     * Get the KDC config.
+     * @return KdcConfig
+     */
+    public KdcConfig getKdcConfig() {
+        return kdcConfig;
+    }
+
+    /**
+     * Get backend config.
+     * @return
+     */
+    public BackendConfig getBackendConfig() {
+        return backendConfig;
     }
 
     /**
@@ -155,27 +200,28 @@ public class KdcServer {
         if (innerKdc == null) {
             throw new RuntimeException("Not init yet");
         }
-        return innerKdc.getIdentityService();
+        return innerKdc.getIdentityBackend();
     }
 
-    /**
-     * Init the KDC server.
-     */
-    public void init() {
-        if (commonOptions.contains(KdcServerOption.INNER_KDC_IMPL)) {
-            innerKdc = (InternalKdcServer) commonOptions.getOptionValue(
+    public void init() throws KrbException {
+        if (startupOptions.contains(KdcServerOption.INNER_KDC_IMPL)) {
+            innerKdc = (InternalKdcServer) startupOptions.getOptionValue(
                     KdcServerOption.INNER_KDC_IMPL);
         } else {
-            innerKdc = new DefaultInternalKdcServerImpl();
+            innerKdc = new DefaultInternalKdcServerImpl(kdcSetting);
         }
-        innerKdc.init(commonOptions);
+
+        innerKdc.init();
     }
 
-    public void start() {
+    public void start() throws KrbException {
+        if (innerKdc == null) {
+            throw new RuntimeException("Not init yet");
+        }
         innerKdc.start();
     }
 
-    public void stop() {
+    public void stop() throws KrbException {
         if (innerKdc != null) {
             innerKdc.stop();
         }

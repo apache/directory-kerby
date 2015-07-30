@@ -31,9 +31,9 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class PaPkAsReq extends KrbSequenceType {
-    private static int SIGNED_AUTH_PACK = 0;
-    private static int TRUSTED_CERTIFIERS = 1;
-    private static int KDC_PKID = 2;
+    private static final int SIGNED_AUTH_PACK = 0;
+    private static final int TRUSTED_CERTIFIERS = 1;
+    private static final int KDC_PKID = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(SIGNED_AUTH_PACK, Asn1OctetString.class, true),

@@ -30,7 +30,12 @@ public enum KadminOption implements KOption {
     FORCE("-force", "force", KOptionType.NOV),
     KVNO("-kvno", "initial key version number", KOptionType.INT),
     PW("-pw", "password", KOptionType.STR),
-    ;
+    RANDKEY("-randkey", "random key", KOptionType.NOV),
+    KEEPOLD("-keepold", "keep old passowrd", KOptionType.NOV),
+    KEYSALTLIST("-e", "key saltlist", KOptionType.STR),
+    K("-k", "keytab file path", KOptionType.STR),
+    KEYTAB("-keytab", "keytab file path", KOptionType.STR),
+    CCACHE("-c", "credentials cache", KOptionType.FILE);
 
     private String name;
     private KOptionType type = KOptionType.NONE;

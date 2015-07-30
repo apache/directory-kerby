@@ -26,8 +26,8 @@ import java.security.GeneralSecurityException;
 
 public class Pbkdf {
 
-    public static byte[] PBKDF2(char[] secret, byte[] salt,
-                                   int count, int keySize) throws GeneralSecurityException {
+    public static byte[] pbkdf2(char[] secret, byte[] salt,
+                                int count, int keySize) throws GeneralSecurityException {
 
         PBEKeySpec ks = new PBEKeySpec(secret, salt, count, keySize * 8);
         SecretKeyFactory skf =

@@ -1,4 +1,16 @@
 #!/bin/bash
-java -Xdebug -Xrunjdwp:transport=dt_socket,address=1045,server=y,suspend=n \
--cp ../lib/kerb-client-1.0-SNAPSHOT-jar-with-dependencies.jar:\
-../lib/client-tool-1.0-SNAPSHOT.jar org.apache.kerby.kerberos.tool.kinit.Kinit $@
+
+DEBUG=
+args=
+for var in $*; do
+  if [ $var == "-D" ]; then
+    DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8002,server=y,suspend=n"
+  else
+    args="$args $var"
+  fi
+done
+
+java $DEBUG \
+-classpath lib/*:. \
+-DKERBY_LOGFILE=kinit \
+org.apache.kerby.kerberos.tool.kinit.KinitTool $args

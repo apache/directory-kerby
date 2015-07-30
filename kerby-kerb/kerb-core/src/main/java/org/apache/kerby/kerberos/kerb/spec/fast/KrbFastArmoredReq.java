@@ -45,9 +45,9 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
  }
  */
 public class KrbFastArmoredReq extends KrbSequenceType {
-    private static int ARMOR = 0;
-    private static int REQ_CHECKSUM = 1;
-    private static int ENC_FAST_REQ = 2;
+    private static final int ARMOR = 0;
+    private static final int REQ_CHECKSUM = 1;
+    private static final int ENC_FAST_REQ = 2;
 
     private KrbFastReq fastReq;
 

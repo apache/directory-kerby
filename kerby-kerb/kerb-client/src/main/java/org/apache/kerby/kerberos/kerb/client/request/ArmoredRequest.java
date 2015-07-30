@@ -121,7 +121,7 @@ public class ArmoredRequest {
 
     private void fastAsArmor(KrbFastRequestState state,
                                                   EncryptionKey armorKey, EncryptionKey subKey,
-                                                  Credential credential, KdcReq kdcReq )
+                                                  Credential credential, KdcReq kdcReq)
         throws KrbException {
         state.setArmorKey(armorKey);
         state.setFastArmor(fastArmorApRequest(subKey, credential));

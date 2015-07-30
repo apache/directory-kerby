@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.identity;
 
-import java.util.List;
+import org.apache.kerby.kerberos.kerb.KrbException;
 
 /**
  * Identity service for KDC backend to create, get and manage principal accounts.
@@ -27,44 +27,37 @@ import java.util.List;
 public interface IdentityService {
 
     /**
-     * Get the identity principal names, from start offset, with count of limit.
+     * Get all of the identity principal names.
      * Note it's ordered by principal name.
      * @return principal names
      */
-    List<String> getIdentities(int start, int limit);
-
-    /**
-     * Get the identity principal names,
-     * Note it's ordered by principal name.
-     * @return principal names
-     */
-    List<String> getIdentities();
+    Iterable<String> getIdentities() throws KrbException;
 
     /**
      * Get the identity account specified by name.
      * @param principalName
      * @return identity
      */
-    KrbIdentity getIdentity(String principalName);
+    KrbIdentity getIdentity(String principalName) throws KrbException;
 
     /**
      * Add an identity, and return the newly created result.
      * @param identity
      * @return identity
      */
-    KrbIdentity addIdentity(KrbIdentity identity);
+    KrbIdentity addIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Update an identity, and return the updated result.
      * @param identity
      * @return identity
      */
-    KrbIdentity updateIdentity(KrbIdentity identity);
+    KrbIdentity updateIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Delete the identity specified by principal name
      * @param principalName
      *
      */
-    void deleteIdentity(String principalName);
+    void deleteIdentity(String principalName) throws KrbException;
 }

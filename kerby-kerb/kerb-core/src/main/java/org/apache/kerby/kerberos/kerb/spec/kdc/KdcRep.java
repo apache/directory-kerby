@@ -44,11 +44,11 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
  }
  */
 public class KdcRep extends KrbMessage {
-    private static int PADATA = 2;
-    private static int CREALM = 3;
-    private static int CNAME = 4;
-    private static int TICKET = 5;
-    private static int ENC_PART = 6;
+    private static final int PADATA = 2;
+    private static final int CREALM = 3;
+    private static final int CNAME = 4;
+    private static final int TICKET = 5;
+    private static final int ENC_PART = 6;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PVNO, Asn1Integer.class),

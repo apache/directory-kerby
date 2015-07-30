@@ -24,12 +24,13 @@ import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.util.UTF8;
+import org.apache.kerby.util.Utf8;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -67,7 +68,7 @@ public class IdentityZNode {
             return null;
         }
         if (data != null) {
-            return new PrincipalName(UTF8.toString(data));
+            return new PrincipalName(Utf8.toString(data));
         } else {
             LOG.warn("can't get the date from znode: " + znode);
             return null;
@@ -77,7 +78,7 @@ public class IdentityZNode {
     public void setPrincipalName(String principal) throws KeeperException {
         ZKUtil.createSetData(this.zk,
                 IdentityZNodeHelper.getPrincipalNameZnode(this.identityName),
-                UTF8.toBytes(principal));
+                Utf8.toBytes(principal));
     }
 
     public int getKeyVersion() throws KeeperException {
@@ -258,15 +259,15 @@ public class IdentityZNode {
             Thread.currentThread().interrupt();
         }
         if (data != null) {
-            return EncryptionType.fromName(UTF8.toString(data));
+            return EncryptionType.fromName(Utf8.toString(data));
         } else {
             LOG.warn("can't get the date from znode: " + znode);
             return null;
         }
     }
 
-    public byte[] getEncryptionKeyData(String type) throws KeeperException {
-        String znode = IdentityZNodeHelper.getEncryptionKeyDataZNode(this.identityName, type);
+    public byte[] getEncryptionKey(String type) throws KeeperException {
+        String znode = IdentityZNodeHelper.getEncryptionKeyZNode(this.identityName, type);
         if (ZKUtil.checkExists(this.zk, znode) == -1) {
             throw new IllegalArgumentException("The znode " + znode + " is not found");
         }
@@ -309,10 +310,15 @@ public class IdentityZNode {
         List<String> typeNames = ZKUtil.listChildrenNoWatch(this.zk, znode);
         List<EncryptionKey> keys = new ArrayList<EncryptionKey>(typeNames.size());
         for (String typeName : typeNames) {
-            EncryptionType type = getEncryptionKeyType(typeName);
-            byte[] data = getEncryptionKeyData(typeName);
-            int no = getEncryptionKeyNo(typeName);
-            keys.add(new EncryptionKey(type, data, no));
+            byte[] key = getEncryptionKey(typeName);
+            EncryptionKey encryptionKey = new EncryptionKey();
+            try {
+                encryptionKey.decode(key);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            encryptionKey.setKvno(getEncryptionKeyNo(typeName));
+            keys.add(encryptionKey);
         }
         return keys;
     }
@@ -327,10 +333,8 @@ public class IdentityZNode {
             EncryptionType key = (EncryptionType) pair.getKey();
             ZKUtil.createWithParents(this.zk, IdentityZNodeHelper.getKeyTypeZNode(this.identityName, key.getName()));
             EncryptionKey value = (EncryptionKey) pair.getValue();
-            ZKUtil.createSetData(this.zk, IdentityZNodeHelper.getEncryptionKeyTypeZNode(this.identityName, key.getName()),
-                    UTF8.toBytes(value.getKeyType().getName()));
-            ZKUtil.createSetData(this.zk, IdentityZNodeHelper.getEncryptionKeyDataZNode(this.identityName, key.getName()),
-                    value.getKeyData());
+            ZKUtil.createSetData(this.zk, IdentityZNodeHelper.getEncryptionKeyZNode(this.identityName, key.getName()),
+                    value.encode());
             ZKUtil.createSetData(this.zk, IdentityZNodeHelper.getEncryptionKeyNoZNode(this.identityName, key.getName()),
                     BytesUtil.int2bytes(value.getKvno(), true));
         }

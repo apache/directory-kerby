@@ -28,8 +28,8 @@ import java.io.IOException;
  * ASN1 Boolean type
  */
 public class Asn1Boolean extends Asn1Simple<Boolean> {
-    private static final byte[] TRUE_BYTE = new byte[] { (byte)0xff };
-    private static final byte[] FALSE_BYTE = new byte[] { (byte)0x00 };
+    private static final byte[] TRUE_BYTE = new byte[] {(byte) 0xff};
+    private static final byte[] FALSE_BYTE = new byte[] {(byte) 0x00};
 
     public static final Asn1Boolean TRUE = new Asn1Boolean(true);
     public static final Asn1Boolean FALSE = new Asn1Boolean(false);

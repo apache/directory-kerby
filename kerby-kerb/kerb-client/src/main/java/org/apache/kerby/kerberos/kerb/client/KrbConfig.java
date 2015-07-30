@@ -47,8 +47,12 @@ public class KrbConfig extends Conf {
      * @return
      */
     public int getKdcPort() {
-        Integer kdcPort = getInt(KrbConfigKey.KDC_PORT);
-        return kdcPort.shortValue();
+        Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
+                KrbConfigKey.KDC_PORT);
+        if (kdcPort != null) {
+            return kdcPort.intValue();
+        }
+        return -1;
     }
 
     /**
@@ -56,9 +60,10 @@ public class KrbConfig extends Conf {
      * @return
      */
     public int getKdcTcpPort() {
-        Integer kdcPort = getInt(KrbConfigKey.KDC_TCP_PORT);
-        if (kdcPort > 0) {
-            return kdcPort.shortValue();
+        Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
+                KrbConfigKey.KDC_TCP_PORT);
+        if (kdcPort != null && kdcPort > 0) {
+            return kdcPort.intValue();
         }
         return getKdcPort();
     }
@@ -68,7 +73,8 @@ public class KrbConfig extends Conf {
      * @return true to allow UDP, false otherwise
      */
     public boolean allowKdcUdp() {
-        return getBoolean(KrbConfigKey.KDC_ALLOW_UDP);
+        return getBoolean(KrbConfigKey.KDC_ALLOW_UDP) || KrbConfHelper.getIntUnderSection(this,
+                KrbConfigKey.KDC_UDP_PORT) != null;
     }
 
     /**
@@ -76,16 +82,18 @@ public class KrbConfig extends Conf {
      * @return true to allow TCP, false otherwise
      */
     public boolean allowKdcTcp() {
-        return getBoolean(KrbConfigKey.KDC_ALLOW_TCP);
+        return getBoolean(KrbConfigKey.KDC_ALLOW_TCP) || KrbConfHelper.getIntUnderSection(this,
+                KrbConfigKey.KDC_TCP_PORT) != null;
     }
     /**
      * Get KDC UDP port
      * @return
      */
     public int getKdcUdpPort() {
-        Integer kdcPort = getInt(KrbConfigKey.KDC_UDP_PORT);
-        if (kdcPort > 0) {
-            return kdcPort.shortValue();
+        Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
+                KrbConfigKey.KDC_UDP_PORT);
+        if (kdcPort != null && kdcPort > 0) {
+            return kdcPort.intValue();
         }
         return getKdcPort();
     }
@@ -181,18 +189,4 @@ public class KrbConfig extends Conf {
     public List<EncryptionType> getDefaultTktEnctypes() {
         return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TKT_ENCTYPES);
     }
-
-    public String getDefaultLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.DEFAULT);
-    }
-
-    public String getKdcLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.KDC);
-    }
-
-    public String getAdminLoggingLocation() {
-        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.ADMIN_SERVER);
-    }
-
-
 }

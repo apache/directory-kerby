@@ -26,7 +26,7 @@ public class IdentityOpts {
 
     // From MIT Krb5 _pkinit_identity_opts
     public String identity;
-    public List<String> AltIdentities = new ArrayList<String>(1);
+    public List<String> altIdentities = new ArrayList<String>(1);
     public List<String> anchors = new ArrayList<String>(4);
     public List<String> intermediates = new ArrayList<String>(2);
     public List<String> crls = new ArrayList<String>(2);

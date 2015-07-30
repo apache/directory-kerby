@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.kerby.config.Configurable;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 
 /**
@@ -30,7 +31,7 @@ public interface IdentityBackend extends IdentityService, Configurable {
     /**
      * Init work for the backend can be done here.
      */
-    void initialize();
+    void initialize() throws KrbException;
 
     /**
      * Start the backend and return soon after the backend or the connection to
@@ -45,7 +46,7 @@ public interface IdentityBackend extends IdentityService, Configurable {
      *
      * Will be called during KDC stop.
      */
-    void stop();
+    void stop() throws KrbException;
 
     /**
      * Release the backend associated resources like connection.

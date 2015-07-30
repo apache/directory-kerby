@@ -65,14 +65,14 @@ public class TokenTest {
         authToken.setAudiences(auds);
 
         // Set expiration in 60 minutes
-        final Date NOW =  new Date(new Date().getTime() / 1000 * 1000);
-        Date exp = new Date(NOW.getTime() + 1000 * 60 * 60);
+        final Date now =  new Date(new Date().getTime() / 1000 * 1000);
+        Date exp = new Date(now.getTime() + 1000 * 60 * 60);
         authToken.setExpirationTime(exp);
 
-        Date nbf = NOW;
+        Date nbf = now;
         authToken.setNotBeforeTime(nbf);
 
-        Date iat = NOW;
+        Date iat = now;
         authToken.setIssueTime(iat);
     }
 
@@ -80,15 +80,13 @@ public class TokenTest {
     public void testToken() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
 
-        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
-        System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
@@ -97,15 +95,13 @@ public class TokenTest {
     public void testDecodeFromBytes() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         byte[] tokenStr = tokenEncoder.encodeAsBytes(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
 
-        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         AuthToken token2 = tokenDecoder.decodeFromBytes(tokenStr);
-        System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
@@ -115,15 +111,13 @@ public class TokenTest {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
 
-        setEncryptKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
-        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+        setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
-        System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
@@ -137,11 +131,9 @@ public class TokenTest {
         setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
-        System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
@@ -153,14 +145,12 @@ public class TokenTest {
 
         setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
-        setAudience((JwtTokenDecoder)tokenDecoder, auds);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
-        System.out.println("Decoded token's subject: " + token2.getSubject());
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
@@ -175,10 +165,9 @@ public class TokenTest {
 
         setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
-        setAudience((JwtTokenDecoder)tokenDecoder, audiences);
+        setAudience((JwtTokenDecoder) tokenDecoder, audiences);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
@@ -192,12 +181,11 @@ public class TokenTest {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
 
-        setSignKey((JwtTokenEncoder)tokenEncoder, (JwtTokenDecoder)tokenDecoder);
+        setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
         String tokenStr = tokenEncoder.encodeAsString(authToken);
-        System.out.println("Auth token: " + tokenStr);
         Assertions.assertThat(tokenStr).isNotNull();
 
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);

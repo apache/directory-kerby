@@ -24,8 +24,7 @@ import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 
-public class Asn1OctetString extends Asn1Simple<byte[]>
-{
+public class Asn1OctetString extends Asn1Simple<byte[]> {
     public Asn1OctetString() {
         this(null);
     }

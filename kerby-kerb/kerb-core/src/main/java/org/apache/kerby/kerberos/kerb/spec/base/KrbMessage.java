@@ -24,8 +24,8 @@ import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.spec.KrbAppSequenceType;
 
 public abstract class KrbMessage extends KrbAppSequenceType {
-    protected static int PVNO = 0;
-    protected static int MSG_TYPE = 1;
+    protected static final int PVNO = 0;
+    protected static final int MSG_TYPE = 1;
 
     private final int pvno = KrbConstant.KRB_V5;
 

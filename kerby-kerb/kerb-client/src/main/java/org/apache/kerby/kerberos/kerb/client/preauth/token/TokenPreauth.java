@@ -82,7 +82,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                                   PluginRequestContext requestContext,
                                   KOptions options) {
 
-        tokenContext.usingIdToken = options.getBooleanOption(KrbOption.USE_TOKEN);
+        tokenContext.usingIdToken = options.getBooleanOption(KrbOption.USE_TOKEN, false);
         if (tokenContext.usingIdToken) {
             if (options.contains(KrbOption.TOKEN_USER_ID_TOKEN)) {
                 tokenContext.token =
@@ -144,14 +144,14 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         AuthToken authToken;
         if (idToken != null) {
             authToken = (AuthToken) idToken.getValue();
-        } else if(acToken != null) {
+        } else if (acToken != null) {
             authToken = (AuthToken) acToken.getValue();
         } else {
             throw new KrbException("missing token.");
         }
 
         PaTokenRequest tokenPa = new PaTokenRequest();
-        tokenPa.setToken((KrbToken)authToken);
+        tokenPa.setToken((KrbToken) authToken);
         TokenInfo info = new TokenInfo();
         info.setTokenVendor("vendor");
         tokenPa.setTokenInfo(info);

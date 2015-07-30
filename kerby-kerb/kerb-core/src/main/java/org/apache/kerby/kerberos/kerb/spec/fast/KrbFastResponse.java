@@ -40,10 +40,10 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
  }
  */
 public class KrbFastResponse extends KrbSequenceType {
-    private static int PADATA = 0;
-    private static int STRENGTHEN_KEY = 1;
-    private static int FINISHED = 2;
-    private static int NONCE = 3;
+    private static final int PADATA = 0;
+    private static final int STRENGTHEN_KEY = 1;
+    private static final int FINISHED = 2;
+    private static final int NONCE = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(PADATA, PaData.class),

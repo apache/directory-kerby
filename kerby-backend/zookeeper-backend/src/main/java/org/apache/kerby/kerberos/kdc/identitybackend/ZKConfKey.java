@@ -28,8 +28,7 @@ public enum ZKConfKey implements ConfigKey {
     ZK_HOST("127.0.0.1"), //NOPMD
     ZK_PORT(2181),
     DATA_DIR,
-    DATA_LOG_DIR
-    ;
+    DATA_LOG_DIR;
 
     private Object defaultValue;
 

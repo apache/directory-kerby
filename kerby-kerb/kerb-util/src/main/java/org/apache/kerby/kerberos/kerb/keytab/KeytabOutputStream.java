@@ -27,8 +27,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-public class KeytabOutputStream extends KrbOutputStream
-{
+public class KeytabOutputStream extends KrbOutputStream {
     public KeytabOutputStream(OutputStream out) {
         super(out);
     }

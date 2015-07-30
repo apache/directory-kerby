@@ -35,41 +35,41 @@ public class KrbConfHelper {
     /**
      * The regex to split a config value(string) to a list of config value(string list).
      */
-    private static final String LIST_SPLITTER = " ";
+    private static final String LIST_SPLITTER = " |,";
 
     public static String getStringUnderSection(Conf conf, SectionConfigKey key) {
         Config subConfig = conf.getConfig(key.getSectionName());
         if (subConfig != null) {
             return subConfig.getString(key);
         } else {
-            return (String) conf.getString(key);
+            return conf.getString(key);
         }
     }
 
-    public static boolean getBooleanUnderSection(Conf conf, SectionConfigKey key) {
+    public static Boolean getBooleanUnderSection(Conf conf, SectionConfigKey key) {
         Config subConfig = conf.getConfig(key.getSectionName());
         if (subConfig != null) {
             return subConfig.getBoolean(key);
         } else {
-            return (Boolean) conf.getBoolean(key);
+            return conf.getBoolean(key);
         }
     }
 
-    public static long getLongUnderSection(Conf conf, SectionConfigKey key) {
+    public static Long getLongUnderSection(Conf conf, SectionConfigKey key) {
         Config subConfig = conf.getConfig(key.getSectionName());
         if (subConfig != null) {
             return subConfig.getLong(key);
         } else {
-            return (Long) conf.getLong(key);
+            return conf.getLong(key);
         }
     }
 
-    public static int getIntUnderSection(Conf conf, SectionConfigKey key) {
+    public static Integer getIntUnderSection(Conf conf, SectionConfigKey key) {
         Config subConfig = conf.getConfig(key.getSectionName());
         if (subConfig != null) {
             return subConfig.getInt(key);
         } else {
-            return (Integer) conf.getInt(key);
+            return conf.getInt(key);
         }
     }
 
@@ -103,5 +103,4 @@ public class KrbConfHelper {
         }
         return results;
     }
-
 }

@@ -1,7 +1,16 @@
 #!/bin/bash
-java -Xdebug -Xrunjdwp:transport=dt_socket,address=1044,server=y,suspend=n \
--cp ../lib/json-backend-1.0-SNAPSHOT-jar-with-dependencies.jar:\
-../lib/ldap-backend-1.0-SNAPSHOT-jar-with-dependencies.jar:\
-../lib/zookeeper-backend-1.0-SNAPSHOT-jar-with-dependencies.jar:\
-../lib/kerb-server-1.0-SNAPSHOT-jar-with-dependencies.jar:\
-../lib/kerby-kdc-1.0-SNAPSHOT.jar org.apache.kerby.kerberos.kdc.KerbyKdcServer $@
+
+DEBUG=
+args=
+for var in $*; do
+  if [ $var == "-D" ]; then
+    DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"
+  else
+    args="$args $var"
+  fi
+done
+
+java $DEBUG \
+-classpath lib/*:. \
+-DKERBY_LOGFILE=kdc \
+org.apache.kerby.kerberos.kdc.KerbyKdcServer -start $args

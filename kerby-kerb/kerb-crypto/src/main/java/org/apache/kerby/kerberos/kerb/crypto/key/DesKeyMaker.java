@@ -145,12 +145,12 @@ public class DesKeyMaker extends AbstractKeyMaker {
      * @param bits56
      * @return
      */
-    private static byte[] getEightBits(byte[] bits56){
+    private static byte[] getEightBits(byte[] bits56) {
         byte[] bits64 = new byte[8];
         System.arraycopy(bits56, 0, bits64, 0, 7);
-        bits64[7] = (byte) (((bits56[0] & 1) << 1) | ((bits56[1] & 1) << 2) | ((bits56[2] & 1) << 3) |
-                ((bits56[3] & 1) << 4) | ((bits56[4] & 1) << 5) | ((bits56[5] & 1) << 6) |
-                ((bits56[6] & 1) << 7));
+        bits64[7] = (byte) (((bits56[0] & 1) << 1) | ((bits56[1] & 1) << 2) | ((bits56[2] & 1) << 3)
+                | ((bits56[3] & 1) << 4) | ((bits56[4] & 1) << 5) | ((bits56[5] & 1) << 6)
+                | ((bits56[6] & 1) << 7));
         return bits64;
     }
 
@@ -209,15 +209,21 @@ public class DesKeyMaker extends AbstractKeyMaker {
 
             t1 = (bt >> 6) & 1;
             t2 = (bt >> 0) & 1;
-            if (t1 != t2) bt ^= (1 << 6 | 1 << 0);
+            if (t1 != t2) {
+                bt ^= (1 << 6 | 1 << 0);
+            }
 
             t1 = (bt >> 5) & 1;
             t2 = (bt >> 1) & 1;
-            if (t1 != t2) bt ^= (1 << 5 | 1 << 1);
+            if (t1 != t2) {
+                bt ^= (1 << 5 | 1 << 1);
+            }
 
             t1 = (bt >> 4) & 1;
             t2 = (bt >> 2) & 1;
-            if (t1 != t2) bt ^= (1 << 4 | 1 << 2);
+            if (t1 != t2) {
+                bt ^= (1 << 4 | 1 << 2);
+            }
 
             bits56[i] = bt;
         }

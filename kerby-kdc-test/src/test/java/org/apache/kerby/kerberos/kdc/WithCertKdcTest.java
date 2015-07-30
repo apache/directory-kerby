@@ -65,23 +65,15 @@ public class WithCertKdcTest extends KdcTestBase {
         loadCredentials();
     }
 
-    @Override
-    protected void prepareKdcServer() throws Exception {
-        super.prepareKdcServer();
-        clientPrincipal = getClientPrincipal();
-        kdcServer.createPrincipals(clientPrincipal);
-    }
-
     //@Test
     public void testKdc() throws Exception {
         assertThat(userCert).isNotNull();
 
-        kdcServer.start();
-        krbClnt.init();
+        getKrbClient().init();
 
         TgtTicket tgt = null;
         try {
-            tgt = krbClnt.requestTgtWithCert(userCert, userKey);
+            tgt = getKrbClient().requestTgtWithCert(userCert, userKey);
         } catch (KrbException te) {
             assertThat(te.getMessage().contains("timeout")).isTrue();
             return;
@@ -89,7 +81,7 @@ public class WithCertKdcTest extends KdcTestBase {
         assertThat(tgt).isNull();
 
         serverPrincipal = getServerPrincipal();
-        ServiceTicket tkt = krbClnt.requestServiceTicketWithTgt(tgt, serverPrincipal);
+        ServiceTicket tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
         assertThat(tkt).isNull();
     }
 

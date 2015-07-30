@@ -24,8 +24,7 @@ import org.apache.kerby.asn1.UniversalTag;
 import java.io.IOException;
 import java.math.BigInteger;
 
-public class Asn1Integer extends Asn1Simple<BigInteger>
-{
+public class Asn1Integer extends Asn1Simple<BigInteger> {
     public Asn1Integer() {
         this((BigInteger) null);
     }

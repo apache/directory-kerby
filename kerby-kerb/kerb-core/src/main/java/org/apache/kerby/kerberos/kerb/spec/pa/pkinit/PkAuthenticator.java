@@ -41,10 +41,10 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class PkAuthenticator extends KrbSequenceType {
-    private static int CUSEC = 0;
-    private static int CTIME = 1;
-    private static int NONCE = 2;
-    private static int PA_CHECKSUM = 3;
+    private static final int CUSEC = 0;
+    private static final int CTIME = 1;
+    private static final int NONCE = 2;
+    private static final int PA_CHECKSUM = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(CUSEC, Asn1Integer.class),

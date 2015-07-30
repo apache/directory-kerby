@@ -58,14 +58,14 @@ public class TokenInit {
         authToken.setAudiences(aud);
 
         // Set expiration in 60 minutes
-        final Date NOW =  new Date(new Date().getTime() / 1000 * 1000);
-        Date exp = new Date(NOW.getTime() + 1000 * 60 * 60);
+        final Date now =  new Date(new Date().getTime() / 1000 * 1000);
+        Date exp = new Date(now.getTime() + 1000 * 60 * 60);
         authToken.setExpirationTime(exp);
 
-        Date nbf = NOW;
+        Date nbf = now;
         authToken.setNotBeforeTime(nbf);
 
-        Date iat = NOW;
+        Date iat = now;
         authToken.setIssueTime(iat);
 
         return authToken;
@@ -75,8 +75,8 @@ public class TokenInit {
         String principal, group, role = null;
 
         if (args.length != 2 && args.length != 3) {
-            System.out.println("This is a simple token issuing tool just for " +
-                    "kerb-token PoC usage\n");
+            System.out.println("This is a simple token issuing tool just for "
+                    + "kerb-token PoC usage\n");
             System.out.println("tokeninit <username> <group> [role]\n");
             System.exit(1);
         }

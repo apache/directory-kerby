@@ -26,9 +26,9 @@ import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
-public abstract class KrbOutputStream extends DataOutputStream
-{
+public abstract class KrbOutputStream extends DataOutputStream {
     public KrbOutputStream(OutputStream out) {
         super(out);
     }
@@ -50,7 +50,7 @@ public abstract class KrbOutputStream extends DataOutputStream
     }
 
     public void writeCountedString(String string) throws IOException {
-        byte[] data = string != null ? string.getBytes() : null; // ASCII
+        byte[] data = string != null ? string.getBytes(Charset.forName("UTF-8")) : null; // ASCII
 
         writeCountedOctets(data);
     }

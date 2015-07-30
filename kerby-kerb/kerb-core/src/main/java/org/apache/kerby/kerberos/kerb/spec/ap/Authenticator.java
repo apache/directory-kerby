@@ -43,16 +43,16 @@ import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
  }
  */
 public class Authenticator extends KrbAppSequenceType {
-    public static int TAG = 2;
-    private static int AUTHENTICATOR_VNO = 0;
-    private static int CREALM = 1;
-    private static int CNAME = 2;
-    private static int CKSUM = 3;
-    private static int CUSEC = 4;
-    private static int CTIME = 5;
-    private static int SUBKEY = 6;
-    private static int SEQ_NUMBER = 7;
-    private static int AUTHORIZATION_DATA = 8;
+    public static final int TAG = 2;
+    private static final int AUTHENTICATOR_VNO = 0;
+    private static final int CREALM = 1;
+    private static final int CNAME = 2;
+    private static final int CKSUM = 3;
+    private static final int CUSEC = 4;
+    private static final int CTIME = 5;
+    private static final int SUBKEY = 6;
+    private static final int SEQ_NUMBER = 7;
+    private static final int AUTHORIZATION_DATA = 8;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(AUTHENTICATOR_VNO, 0, Asn1Integer.class),

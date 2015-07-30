@@ -33,9 +33,9 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class KdcDHKeyInfo extends KrbSequenceType {
-    private static int SUBJECT_PUBLICK_KEY = 0;
-    private static int NONCE = 1;
-    private static int DH_KEY_EXPIRATION = 2;
+    private static final int SUBJECT_PUBLICK_KEY = 0;
+    private static final int NONCE = 1;
+    private static final int DH_KEY_EXPIRATION = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(SUBJECT_PUBLICK_KEY, Asn1BitString.class),

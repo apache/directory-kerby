@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.server.impl;
 
-import org.apache.kerby.kerberos.kerb.server.KdcHandler;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
+import org.apache.kerby.kerberos.kerb.server.KdcHandler;
 import org.apache.kerby.kerberos.kerb.transport.KrbTcpTransport;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.slf4j.Logger;
@@ -52,8 +52,8 @@ public class DefaultKdcHandler extends KdcHandler implements Runnable {
                 handleMessage(message);
             } catch (IOException e) {
                 transport.release();
-                logger.debug("Transport or decoding error occurred, " +
-                        "disconnecting abnormally", e);
+                logger.debug("Transport or decoding error occurred, "
+                        + "disconnecting abnormally", e);
                 break;
             }
         }
@@ -68,6 +68,7 @@ public class DefaultKdcHandler extends KdcHandler implements Runnable {
             transport.sendMessage(krbResponse);
         } catch (Exception e) {
             e.printStackTrace();
+            transport.release();
             logger.error("Error occured while processing request:", e);
         }
     }

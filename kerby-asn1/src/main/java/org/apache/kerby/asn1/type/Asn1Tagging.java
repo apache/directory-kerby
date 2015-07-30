@@ -51,8 +51,8 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         } else if (getEncodingOption().isImplicit()) {
             return value.encodingBodyLength();
         } else {
-            throw new RuntimeException("Invalid decoding option, " +
-                    "only allowing explicit/implicit");
+            throw new RuntimeException("Invalid decoding option, "
+                    + "only allowing explicit/implicit");
         }
     }
 
@@ -75,8 +75,8 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         } else if (getEncodingOption().isImplicit()) {
             value.encodeBody(buffer);
         } else {
-            throw new RuntimeException("Invalid decoding option, " +
-                    "only allowing explicit/implicit");
+            throw new RuntimeException("Invalid decoding option, "
+                    + "only allowing explicit/implicit");
         }
     }
 
@@ -88,13 +88,14 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         } else if (getEncodingOption().isImplicit()) {
             value.decodeBody(content);
         } else {
-            throw new RuntimeException("Invalid decoding option, " +
-                    "only allowing explicit/implicit");
+            throw new RuntimeException("Invalid decoding option, "
+                    + "only allowing explicit/implicit");
         }
     }
 
     private void initValue() {
-        Class<? extends Asn1Type> valueType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        Class<? extends Asn1Type> valueType = (Class<T>) ((ParameterizedType)
+                getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         AbstractAsn1Type<?> value = null;
         try {
             value = (AbstractAsn1Type<?>) valueType.newInstance();

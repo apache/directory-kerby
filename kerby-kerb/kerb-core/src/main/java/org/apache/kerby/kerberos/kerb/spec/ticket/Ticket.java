@@ -39,10 +39,10 @@ public class Ticket extends KrbAppSequenceType {
     public static final int TKT_KVNO = KrbConstant.KRB_V5;
     public static final int TAG = 1;
 
-    private static int TKT_VNO = 0;
-    private static int REALM = 1;
-    private static int SNAME = 2;
-    private static int ENC_PART = 3;
+    private static final int TKT_VNO = 0;
+    private static final int REALM = 1;
+    private static final int SNAME = 2;
+    private static final int ENC_PART = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(TKT_VNO, 0, Asn1Integer.class),

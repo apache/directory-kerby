@@ -33,9 +33,9 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class EtypeInfo2Entry extends KrbSequenceType {
-    private static int ETYPE = 0;
-    private static int SALT = 1;
-    private static int S2KPARAMS = 2;
+    private static final int ETYPE = 0;
+    private static final int SALT = 1;
+    private static final int S2KPARAMS = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ETYPE, 0, Asn1Integer.class),

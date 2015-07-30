@@ -24,8 +24,7 @@ import org.apache.kerby.asn1.UniversalTag;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class Asn1Utf8String extends Asn1String
-{
+public class Asn1Utf8String extends Asn1String {
     public Asn1Utf8String() {
         this(null);
     }

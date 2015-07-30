@@ -34,11 +34,10 @@ import java.util.Map;
  */
 @SuppressWarnings("PMD")
 public abstract class KdcNetwork {
-    protected final static int MAX_MESSAGE_SIZE = 65507;
-    private final static int KDC_TCP_TRANSPORT_TIMEOUT = 3 * 1000;
-    private final static int KDC_TCP_SERVER_TIMEOUT = 100;
-    private InetSocketAddress tcpAddress;
-    private InetSocketAddress udpAddress;
+    protected static final int MAX_MESSAGE_SIZE = 65507;
+    private static final int KDC_TCP_TRANSPORT_TIMEOUT = 3 * 1000;
+    private static final int KDC_TCP_SERVER_TIMEOUT = 100;
+    private TransportPair tpair;
     private boolean isStopped;
     private ServerSocket tcpServer;
     private DatagramChannel udpServer;
@@ -50,19 +49,17 @@ public abstract class KdcNetwork {
         isStopped = false;
     }
 
-    public void listen(InetSocketAddress tcpAddress,
-                          InetSocketAddress udpAddress) throws IOException {
-        this.tcpAddress = tcpAddress;
-        this.udpAddress = udpAddress;
+    public void listen(TransportPair tpair) throws IOException {
+        this.tpair = tpair;
 
         tcpServer = new ServerSocket();
         tcpServer.setSoTimeout(KDC_TCP_SERVER_TIMEOUT);
-        tcpServer.bind(tcpAddress);
+        tcpServer.bind(tpair.tcpAddress);
 
-        if (udpAddress != null) {
+        if (tpair.udpAddress != null) {
             udpServer = DatagramChannel.open();
             udpServer.configureBlocking(false);
-            udpServer.bind(udpAddress);
+            udpServer.bind(tpair.udpAddress);
             recvBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
         }
     }
@@ -84,21 +81,21 @@ public abstract class KdcNetwork {
                 }
             }
 
-            if (this.tcpAddress != null) {
+            if (tpair.tcpAddress != null) {
                 try {
                     checkAndAccept();
                 } catch (SocketTimeoutException e) { //NOPMD
-                    //NOOP as normal
+                    System.err.println(e); //NOOP as normal
                 } catch (IOException e) {
                     throw new RuntimeException("Error occured while checking tcp connections", e);
                 }
             }
 
-            if (this.udpAddress != null) {
+            if (tpair.udpAddress != null) {
                 try {
                     checkUdpMessage();
-                } catch (SocketTimeoutException e) { //NOPMD
-                    //NOOP as normal
+                } catch (SocketTimeoutException e) {
+                    System.err.println(e); //NOOP as normal
                 } catch (IOException e) {
                     throw new RuntimeException("Error occured while checking udp connections", e);
                 }

@@ -12,7 +12,7 @@
   See the License for the specific language governing permissions and
   limitations under the License. See accompanying LICENSE file.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -27,6 +27,7 @@
   <packaging>pom</packaging>
 
   <dependencies>
+    <!-- For tool itself -->
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>client-tool</artifactId>
@@ -34,8 +35,35 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>server-tool</artifactId>
+      <artifactId>kerby-asn1</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-client-api-all</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>token-provider</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- For common and misc -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.16</version>
     </dependency>
   </dependencies>
 
@@ -45,28 +73,37 @@
       <build>
         <plugins>
           <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.7</version>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
             <executions>
               <execution>
+                <id>copy</id>
                 <phase>package</phase>
-                <configuration>
-                  <tasks>
-                    <!--client tool-->
-                    <copy file="../../kerby-kerb/kerb-client/target/kerb-client-${project.version}-jar-with-dependencies.jar" tofile="lib/kerb-client-${project.version}-jar-with-dependencies.jar"/>
-                    <copy file="../../kerby-tool/client-tool/target/client-tool-${project.version}.jar" tofile="lib/client-tool-${project.version}.jar"/>
-                    <copy file="../../kerby-provider/pki-provider/target/pki-provider-${project.version}-jar-with-dependencies.jar" tofile="lib/pki-provider-tool-${project.version}-jar-with-dependencies.jar"/>
-                    <copy file="../../kerby-provider/token-provider/target/token-provider-${project.version}-jar-with-dependencies.jar" tofile="lib/token-provider-tool-${project.version}-jar-with-dependencies.jar"/>
-
-                    <!--kadmin tool-->
-                    <copy file="../../kerby-tool/kdc-tool/target/server-tool-${project.version}-jar-with-dependencies.jar" tofile="lib/server-tool-${project.version}-jar-with-dependencies.jar"/>
-                    <copy file="../../kerby-backend/json-backend/target/json-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/json-backend-${project.version}-jar-with-dependencies.jar"/>
-                    <copy file="../../kerby-backend/ldap-backend/target/ldap-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/ldap-backend-${project.version}-jar-with-dependencies.jar"/>
-                    <copy file="../../kerby-backend/zookeeper-backend/target/zookeeper-backend-${project.version}-jar-with-dependencies.jar" tofile="lib/zookeeper-backend-${project.version}-jar-with-dependencies.jar"/>
-                  </tasks>
-                </configuration>
                 <goals>
-                  <goal>run</goal>
+                  <goal>copy-dependencies</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>lib</outputDirectory>
+                  <excludeTransitive>true</excludeTransitive>
+                  <excludeGroupIds>junit, org.assertj</excludeGroupIds>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+            <executions>
+              <execution>
+                <id>make-assembly</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
                 </goals>
               </execution>
             </executions>
@@ -75,5 +112,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>

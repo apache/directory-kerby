@@ -26,21 +26,21 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assume.assumeTrue;
 
 public class PrfTest {
     private static void performTest(TestCase testCase) throws Exception {
-        byte[] keyData = EncryptionHandler.getEncHandler(testCase.encType).str2key(testCase.keyData, testCase.keyData, null);
+        byte[] keyData = EncryptionHandler.getEncHandler(testCase.encType)
+                .str2key(testCase.keyData, testCase.keyData, null);
         byte[] seed = HexUtil.hex2bytes(testCase.seed);
         byte[] answer = HexUtil.hex2bytes(testCase.answer);
         byte[] outkey = EncryptionHandler.getEncHandler(testCase.encType).prf(keyData, seed);
 
-        if (! Arrays.equals(answer, outkey)) {
+        if (!Arrays.equals(answer, outkey)) {
             System.err.println("failed with:");
             System.err.println("outKey:" + HexUtil.bytesToHex(outkey));
             System.err.println("answer:" + testCase.answer);
             fail("KeyDerive test failed for " + testCase.encType.getName());
-        } else {
-            System.out.println("Prf test OK for " + testCase.encType.getName());
         }
     }
 
@@ -86,10 +86,8 @@ public class PrfTest {
 
     @Test
     public void testPrf_AES256_CTS_HMAC_SHA1() throws Exception {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            System.out.println("AES256 is not supported in your jdk, pls update local_policy.jar,US_export_policy.jar from http://docs.oracle.com/javase/");
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
+
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "key1",

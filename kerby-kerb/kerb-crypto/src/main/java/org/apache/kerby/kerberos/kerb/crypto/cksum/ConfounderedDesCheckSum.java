@@ -87,14 +87,14 @@ public abstract class ConfounderedDesCheckSum extends AbstractKeyedCheckSumTypeH
             e.printStackTrace();
         }
         if (isWeak) {
-            key[7] = (byte)(key[7] ^ 0xF0);
+            key[7] = (byte) (key[7] ^ 0xF0);
         }
 
         return key;
     }
 
     @Override
-    public boolean verifyWithKey(byte[] data,byte[] key,
+    public boolean verifyWithKey(byte[] data, byte[] key,
                                  int usage, byte[] checksum) throws KrbException {
         // int computeSize = computeSize();
         int blockSize = encProvider().blockSize();

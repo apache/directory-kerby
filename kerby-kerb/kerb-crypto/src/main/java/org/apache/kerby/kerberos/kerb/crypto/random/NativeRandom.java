@@ -19,7 +19,13 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.random;
 
-import java.io.*;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * use "/dev/urandom", which is on linux, to implement RandomProvider, so it should be used on linux.
@@ -39,18 +45,30 @@ public class NativeRandom implements RandomProvider {
 
     @Override
     public void setSeed(byte[] seed) {
+        OutputStream output = null;
         try {
-            OutputStream output = new FileOutputStream(randFile);
+            output = new FileOutputStream(randFile);
             output.write(seed);
+            output.flush();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     @Override
     public void nextBytes(byte[] bytes) {
         try {
-            input.read(bytes);
+            if (input.read(bytes) == -1) {
+                throw new IOException();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -23,6 +23,8 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 
+import java.nio.charset.Charset;
+
 /**
  * Implementing FAST (RFC6113) armor key related algorithms.
  * Take two keys and two pepper strings as input and return a combined key.
@@ -42,13 +44,14 @@ public class FastUtil {
         int prfSize = EncryptionHandler.getEncHandler(key.getKeyType()).prfSize();
         int iterations = keyBytesLen / prfSize;
         prfInbuf[0] = 1;
-        System.arraycopy(pepper.getBytes(), 0, prfInbuf, 1, pepper.length());
-        if (keyBytesLen % prfSize !=0) {
+        System.arraycopy(pepper.getBytes(Charset.forName("UTF-8")), 0, prfInbuf, 1, pepper.length());
+        if (keyBytesLen % prfSize != 0) {
             iterations++;
         }
         byte[] buffer = new byte[prfSize * iterations];
         for (int i = 0; i < iterations; i++) {
-            System.arraycopy(EncryptionHandler.getEncHandler(key.getKeyType()).prf(key.getKeyData(), prfInbuf), 0, buffer, i * prfSize, prfSize);
+            System.arraycopy(EncryptionHandler.getEncHandler(key.getKeyType())
+                    .prf(key.getKeyData(), prfInbuf), 0, buffer, i * prfSize, prfSize);
             prfInbuf[0]++;
         }
         System.arraycopy(buffer, 0, tmpbuf, 0, keyBytesLen);

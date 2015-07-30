@@ -25,8 +25,6 @@ import org.apache.kerby.KOptionType;
 public enum KrbOption implements KOption {
     NONE("NONE"),
     CLIENT_PRINCIPAL("client-principal", "Client principal", KOptionType.STR),
-    KRB_CONFIG("krb config", KOptionType.OBJ),
-    CONF_DIR("conf dir", KOptionType.DIR),
     KDC_REALM("kdc realm", KOptionType.STR),
     KDC_HOST("kdc host", KOptionType.STR),
     KDC_TCP_PORT("kdc tcp port", KOptionType.INT),
@@ -73,9 +71,7 @@ public enum KrbOption implements KOption {
     USE_TOKEN("use-id-token", "Using identity token"),
     TOKEN_USER_ID_TOKEN("user-id-token", "User identity token", KOptionType.STR),
     TOKEN_USER_AC_TOKEN("user-ac-token", "User access token", KOptionType.STR),
-    USE_TGT("use tgt", "use tgt to get service ticket", KOptionType.OBJ)
-
-    ;
+    USE_TGT("use tgt", "use tgt to get service ticket", KOptionType.OBJ);
 
     private String name;
     private KOptionType type;

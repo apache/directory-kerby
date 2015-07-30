@@ -152,7 +152,7 @@ public class Rc4HmacEnc extends AbstractEncTypeHandler {
         encProvider().decrypt(encKey, iv, tmpEnc);
 
         byte[] newChecksum = Hmac.hmac(hashProvider(), usageKey, tmpEnc);
-        if (! checksumEqual(checksum, newChecksum)) {
+        if (!checksumEqual(checksum, newChecksum)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
         }
 

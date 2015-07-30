@@ -22,8 +22,6 @@ package org.apache.kerby.kerberos.kerb.client.impl;
 import org.apache.kerby.KOption;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.client.InternalKrbClient;
-import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
@@ -39,17 +37,16 @@ import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * A krb client API for applications to interact with KDC
  */
 public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     private KrbContext context;
-    private KrbConfig krbConfig;
-    private KrbSetting krbSetting;
+    private final KrbSetting krbSetting;
+
+    public AbstractInternalKrbClient(KrbSetting krbSetting) {
+        this.krbSetting = krbSetting;
+    }
 
     protected KrbContext getContext() {
         return context;
@@ -61,56 +58,9 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     }
 
     @Override
-    public void init(KOptions commonOptions) throws KrbException {
-
-        try {
-            initConfig(commonOptions);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load config", e);
-        }
-
-        krbSetting = new KrbSetting(commonOptions, krbConfig);
+    public void init() throws KrbException {
         context = new KrbContext();
         context.init(krbSetting);
-    }
-
-    /**
-     * Prepare krb config, loading krb5.conf if necessary.
-     */
-    private void initConfig(KOptions commonOptions) throws IOException {
-        krbConfig = (KrbConfig) commonOptions.getOptionValue(KrbOption.KRB_CONFIG);
-        if (krbConfig == null) {
-            krbConfig = new KrbConfig();
-            File confDir = commonOptions.getDirOption(KrbOption.CONF_DIR);
-            if(confDir == null) {
-                File kdcConfFile = null;
-                String krb5Conf;
-                try {
-                    Map<String, String> mapEnv = System.getenv();
-                    krb5Conf = mapEnv.get("KRB5_CONFIG");
-                } catch (SecurityException e) {
-                    krb5Conf = null;
-                }
-                if(krb5Conf != null) {
-                    kdcConfFile = new File(krb5Conf);
-                } else {
-                    confDir = new File("/etc/"); // for Linux. TODO: fix for Win etc.
-                    if (confDir.exists()) {
-                        kdcConfFile = new File(confDir, "krb5.conf");
-                    }
-                }
-                if (kdcConfFile != null && kdcConfFile.exists()) {
-                    krbConfig.addIniConfig(kdcConfFile);
-                }
-            } else {
-                if (confDir.exists()) {
-                    File kdcConfFile = new File(confDir, "krb5.conf");
-                    if (kdcConfFile.exists()) {
-                        krbConfig.addIniConfig(kdcConfFile);
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -148,11 +98,11 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     @Override
     public ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException {
         TgsRequest tgsRequest = null;
-        if(requestOptions.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
+        if (requestOptions.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
             tgsRequest = new TgsRequestWithToken(context);
-        } else if(requestOptions.contains(KrbOption.USE_TGT)) {
+        } else if (requestOptions.contains(KrbOption.USE_TGT)) {
             KOption tgt = requestOptions.getOption(KrbOption.USE_TGT);
-            tgsRequest = new TgsRequestWithTgt(context, (TgtTicket)tgt.getValue());
+            tgsRequest = new TgsRequestWithTgt(context, (TgtTicket) tgt.getValue());
         }
 
         if (tgsRequest == null) {

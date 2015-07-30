@@ -22,20 +22,17 @@ package org.apache.kerby.kerberos.kerb.identity.backend;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.ZKConfKey;
 import org.apache.kerby.kerberos.kdc.identitybackend.ZookeeperIdentityBackend;
-import org.junit.AfterClass;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import java.io.File;
 
 /**
  * Zookeeper backend test
  */
-public class ZookeeperBackendTest extends BackendTest {
-    private static IdentityBackend backend;
-
+public class ZookeeperBackendTest extends BackendTestBase {
     @BeforeClass
-    public static void setup() {
+    public static void setup() throws KrbException {
         Conf config = new Conf();
 
         File testdir = new File(System.getProperty("test.dir", "target"));
@@ -51,36 +48,5 @@ public class ZookeeperBackendTest extends BackendTest {
         backend = new ZookeeperIdentityBackend(config);
         backend.initialize();
         backend.start();
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        backend.stop();
-        backend.release();
-    }
-
-    @Test
-    public void testGet() {
-        super.testGet(backend);
-    }
-
-    @Test
-    public void testStore() {
-        super.testStore(backend);
-    }
-
-    @Test
-    public void testUpdate() {
-        super.testUpdate(backend);
-    }
-
-    @Test
-    public void testDelete() {
-        super.testDelete(backend);
-    }
-
-    @Test
-    public void testGetIdentities() {
-        super.testGetIdentities(backend);
     }
 }

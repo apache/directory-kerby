@@ -27,9 +27,9 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
     @Test
     public void testRequestServiceTicketWithAccessToken() throws Exception {
         prepareToken(getServerPrincipal());
-        createCredentialCache(getClientPrincipal(), TEST_PASSWORD);
+        createCredentialCache(getClientPrincipal(), getClientPassword());
 
-        ServiceTicket serviceTicket = krbClnt.requestServiceTicketWithAccessToken(
+        ServiceTicket serviceTicket = getKrbClient().requestServiceTicketWithAccessToken(
             getKrbToken(), getServerPrincipal(), getcCacheFile().getPath());
         verifyTicket(serviceTicket);
 

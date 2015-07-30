@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
@@ -26,7 +27,7 @@ import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbToken;
 import org.apache.kerby.kerberos.kerb.spec.base.TokenFormat;
-import org.apache.kerby.kerberos.kerb.spec.ticket.AbstractServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.KrbTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
 import org.junit.Before;
@@ -51,23 +52,19 @@ public class WithTokenKdcTestBase extends KdcTestBase {
     @Before
     public void setUp() throws Exception {
         KrbRuntime.setTokenProvider(new JwtTokenProvider());
-
         super.setUp();
-
-        kdcServer.start();
-        krbClnt.init();
     }
 
     @Override
-    protected void createPrincipals() {
+    protected void createPrincipals() throws KrbException {
         super.createPrincipals();
-        kdcServer.createPrincipal(getClientPrincipal(), TEST_PASSWORD);
+        getKdcServer().createPrincipal(getClientPrincipal(), getClientPassword());
     }
 
     @Override
-    protected void deletePrincipals() {
+    protected void deletePrincipals() throws KrbException {
         super.deletePrincipals();
-        kdcServer.deletePrincipal(getClientPrincipal());
+        getKdcServer().deletePrincipal(getClientPrincipal());
     }
 
     protected AuthToken getKrbToken() {
@@ -87,34 +84,29 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         authToken.addAttribute("role", ROLE);
 
         List<String> aud = new ArrayList<String>();
-        if(servicePrincipal != null) {
+        if (servicePrincipal != null) {
             aud.add(servicePrincipal);
         }
         aud.add(AUDIENCE);
         authToken.setAudiences(aud);
 
         // Set expiration in 60 minutes
-        final Date NOW =  new Date(new Date().getTime() / 1000 * 1000);
-        Date exp = new Date(NOW.getTime() + 1000 * 60 * 60);
+        final Date now =  new Date(new Date().getTime() / 1000 * 1000);
+        Date exp = new Date(now.getTime() + 1000 * 60 * 60);
         authToken.setExpirationTime(exp);
 
-        Date nbf = NOW;
+        Date nbf = now;
         authToken.setNotBeforeTime(nbf);
 
-        Date iat = NOW;
+        Date iat = now;
         authToken.setIssueTime(iat);
         krbToken = new KrbToken(authToken, TokenFormat.JWT);
         return krbToken;
     }
 
-    @Override
-    protected void prepareKdcServer() throws Exception {
-        super.prepareKdcServer();
-    }
-
     protected File createCredentialCache(String principal,
                                        String password) throws Exception {
-        TgtTicket tgt = krbClnt.requestTgtWithPassword(principal, password);
+        TgtTicket tgt = getKrbClient().requestTgtWithPassword(principal, password);
         writeTgtToCache(tgt, principal);
         return cCacheFile;
     }
@@ -138,9 +130,9 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         cCacheFile.delete();
     }
 
-    protected void verifyTicket(AbstractServiceTicket ticket) {
+    protected void verifyTicket(KrbTicket ticket) {
         assertThat(ticket).isNotNull();
-        assertThat(ticket.getRealm()).isEqualTo(kdcRealm);
+        assertThat(ticket.getRealm()).isEqualTo(getKdcServer().getKdcSetting().getKdcRealm());
         assertThat(ticket.getTicket()).isNotNull();
         assertThat(ticket.getSessionKey()).isNotNull();
         assertThat(ticket.getEncKdcRepPart()).isNotNull();

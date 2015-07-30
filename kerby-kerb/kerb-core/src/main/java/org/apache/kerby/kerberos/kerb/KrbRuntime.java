@@ -37,7 +37,7 @@ public class KrbRuntime {
      * Set up token provider, should be done at very initial time
      * @return token provider
      */
-    public synchronized static TokenProvider getTokenProvider() {
+    public static synchronized TokenProvider getTokenProvider() {
         if (tokenProvider == null) {
             throw new RuntimeException("No token provider is hooked into yet");
         }
@@ -47,7 +47,7 @@ public class KrbRuntime {
     /**
      * Set token provider.
      */
-    public synchronized static void setTokenProvider(TokenProvider tokenProvider) {
+    public static synchronized void setTokenProvider(TokenProvider tokenProvider) {
         KrbRuntime.tokenProvider = tokenProvider;
     }
 
@@ -55,7 +55,7 @@ public class KrbRuntime {
      * Get pki provider
      * @return pki provider
      */
-    public synchronized static PkiProvider getPkiProvider() {
+    public static synchronized PkiProvider getPkiProvider() {
         if (pkiProvider == null) {
             throw new RuntimeException("No token provider is hooked into yet");
         }
@@ -65,7 +65,7 @@ public class KrbRuntime {
     /**
      * Setup pkiProvider.
      */
-    public synchronized static void setPkiProvider(PkiProvider pkiProvider) {
+    public static synchronized void setPkiProvider(PkiProvider pkiProvider) {
         KrbRuntime.pkiProvider = pkiProvider;
     }
 }

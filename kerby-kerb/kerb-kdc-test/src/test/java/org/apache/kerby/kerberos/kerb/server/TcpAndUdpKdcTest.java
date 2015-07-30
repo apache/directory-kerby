@@ -28,6 +28,11 @@ public class TcpAndUdpKdcTest extends KdcTest {
         return true;
     }
 
+    @Override
+    protected boolean allowTcp() {
+        return true;
+    }
+
     @Test
     public void testKdc() throws Exception {
         performKdcTest();

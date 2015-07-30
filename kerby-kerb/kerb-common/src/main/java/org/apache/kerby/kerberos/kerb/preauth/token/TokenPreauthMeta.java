@@ -24,9 +24,9 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 
 public class TokenPreauthMeta implements PreauthPluginMeta {
 
-    private static String NAME = "TokenPreauth";
-    private static int VERSION = 1;
-    private static PaDataType[] PA_TYPES = new PaDataType[] {
+    private static final String NAME = "TokenPreauth";
+    private static final int VERSION = 1;
+    private static final PaDataType[] PA_TYPES = new PaDataType[] {
             PaDataType.TOKEN_CHALLENGE,
             PaDataType.TOKEN_REQUEST
     };
@@ -41,6 +41,6 @@ public class TokenPreauthMeta implements PreauthPluginMeta {
     }
 
     public PaDataType[] getPaTypes() {
-        return PA_TYPES;
+        return PA_TYPES.clone();
     }
 }

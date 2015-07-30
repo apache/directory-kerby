@@ -52,7 +52,7 @@ public class EncodingOption {
      * A mask to determinate if a Tag is CONSTRUCTED. The fifth bit should be set to 1 if
      * the type is constructed (0010-0000).
      */
-    public static int CONSTRUCTED_FLAG = 0x20;
+    public static final int CONSTRUCTED_FLAG = 0x20;
 
     public static boolean isConstructed(int tag) {
         return (tag & CONSTRUCTED_FLAG) != 0;
@@ -88,7 +88,7 @@ public class EncodingOption {
      * @return true if it's constructed, false otherwise
      */
     public boolean isConstructed() {
-        return ! isPrimitive;
+        return !isPrimitive;
     }
 
     /**
@@ -148,7 +148,7 @@ public class EncodingOption {
      * @return true if using EXPLICIT, false otherwise
      */
     public boolean isExplicit() {
-        return ! isImplicit;
+        return !isImplicit;
     }
 
     /**

@@ -29,6 +29,7 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * By ref. MIT krb5 t_str2key.c and RFC3961 test vectors
@@ -135,8 +136,8 @@ public class String2keyTest {
                 "password",
                 "ATHENA.MIT.EDUraeburn",
                 null,
-                "850BB51358548CD05E86768C" +
-                        "313E3BFEF7511937DCF72C3E",
+                "850BB51358548CD05E86768C"
+                        + "313E3BFEF7511937DCF72C3E",
                 false));
     }
 
@@ -147,8 +148,8 @@ public class String2keyTest {
                 "potatoe",
                 "WHITEHOUSE.GOVdanny",
                 null,
-                "DFCD233DD0A43204EA6DC437" +
-                        "FB15E061B02979C1F74F377A",
+                "DFCD233DD0A43204EA6DC437"
+                        + "FB15E061B02979C1F74F377A",
                 false));
     }
 
@@ -159,8 +160,8 @@ public class String2keyTest {
                 "penny",
                 "EXAMPLE.COMbuckaroo",
                 null,
-                "6D2FCDF2D6FBBC3DDCADB5DA" +
-                        "5710A23489B0D3B69D5D9D4A",
+                "6D2FCDF2D6FBBC3DDCADB5DA"
+                        + "5710A23489B0D3B69D5D9D4A",
                 false));
     }
 
@@ -171,8 +172,8 @@ public class String2keyTest {
                 toUtf8("C39F"),
                 "ATHENA.MIT.EDUJuri" + toUtf8("C5A169C487"),
                 null,
-                "16D5A40E1CE3BACB61B9DCE0" +
-                        "0470324C831973A7B952FEB0",
+                "16D5A40E1CE3BACB61B9DCE0"
+                        + "0470324C831973A7B952FEB0",
                 false));
     }
 
@@ -183,8 +184,8 @@ public class String2keyTest {
                 toUtf8("F09D849E"),
                 "EXAMPLE.COMpianist",
                 null,
-                "85763726585DBC1CCE6EC43E" +
-                        "1F751F07F1C4CBB098F40B19",
+                "85763726585DBC1CCE6EC43E"
+                        + "1F751F07F1C4CBB098F40B19",
                 false));
     }
 
@@ -269,81 +270,71 @@ public class String2keyTest {
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_0() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "password",
                 "ATHENA.MIT.EDUraeburn",
                 "00000001",
-                "FE697B52BC0D3CE14432BA036A92E65B" +
-                        "BB52280990A2FA27883998D72AF30161",
+                "FE697B52BC0D3CE14432BA036A92E65B"
+                        + "BB52280990A2FA27883998D72AF30161",
                 true));
     }
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_1() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "password",
                 "ATHENA.MIT.EDUraeburn",
                 "00000002",
-                "A2E16D16B36069C135D5E9D2E25F8961" +
-                        "02685618B95914B467C67622225824FF",
+                "A2E16D16B36069C135D5E9D2E25F8961"
+                        + "02685618B95914B467C67622225824FF",
                 true));
     }
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_2() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "password",
                 "ATHENA.MIT.EDUraeburn",
                 "000004B0", // 1200
-                "55A6AC740AD17B4846941051E1E8B0A7" +
-                        "548D93B0AB30A8BC3FF16280382B8C2A",
+                "55A6AC740AD17B4846941051E1E8B0A7"
+                        + "548D93B0AB30A8BC3FF16280382B8C2A",
                 true));
     }
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_3() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "password",
                 toUtf8("1234567878563412"),
                 "00000005",
-                "97A4E786BE20D81A382D5EBC96D5909C" +
-                        "ABCDADC87CA48F574504159F16C36E31",
+                "97A4E786BE20D81A382D5EBC96D5909C"
+                        + "ABCDADC87CA48F574504159F16C36E31",
                 true));
     }
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_4() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
                 "pass phrase equals block size",
                 "000004B0", // 1200
-                "89ADEE3608DB8BC71F1BFBFE459486B0" +
-                        "5618B70CBAE22092534E56C553BA4B34",
+                "89ADEE3608DB8BC71F1BFBFE459486B0"
+                        + "5618B70CBAE22092534E56C553BA4B34",
                 true));
     }
 
@@ -351,50 +342,44 @@ public class String2keyTest {
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_5() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
                 "pass phrase exceeds block size",
                 "000004B0", // 1200
-                "D78C5C9CB872A8C9DAD4697F0BB5B2D2" +
-                        "1496C82BEB2CAEDA2112FCEEA057401B",
+                "D78C5C9CB872A8C9DAD4697F0BB5B2D2"
+                        + "1496C82BEB2CAEDA2112FCEEA057401B",
                 true));
     }
 
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_6() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 toUtf8("F09D849E"),
                 "EXAMPLE.COMpianist",
                 "00000032", // 50
-                "4B6D9839F84406DF1F09CC166DB4B83C" +
-                        "571848B784A3D6BDC346589A3E393F9E",
+                "4B6D9839F84406DF1F09CC166DB4B83C"
+                        + "571848B784A3D6BDC346589A3E393F9E",
                 true));
     }
 
     // Check for KRB5_ERR_BAD_S2K_PARAMS return when weak iteration counts are forbidden
     @Test
     public void test_AES256_CTS_HMAC_SHA1_96_7() {
-        if(!EncryptionHandler.isAES256Enabled()) {
-            return;
-        }
+        assumeTrue(EncryptionHandler.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
                 toUtf8("F09D849E"),
                 "EXAMPLE.COMpianist",
                 "00000032", // 50
-                "4B6D9839F84406DF1F09CC166DB4B83C" +
-                        "571848B784A3D6BDC346589A3E393F9E",
+                "4B6D9839F84406DF1F09CC166DB4B83C"
+                        + "571848B784A3D6BDC346589A3E393F9E",
                 false));
     }
 
@@ -483,8 +468,8 @@ public class String2keyTest {
                 "password",
                 "ATHENA.MIT.EDUraeburn",
                 "00000001",
-                "B9D6828B2056B7BE656D88A123B1FAC6" +
-                        "8214AC2B727ECF5F69AFE0C4DF2A6D2C",
+                "B9D6828B2056B7BE656D88A123B1FAC6"
+                        + "8214AC2B727ECF5F69AFE0C4DF2A6D2C",
                 true));
     }
 
@@ -495,8 +480,8 @@ public class String2keyTest {
                 "password",
                 "ATHENA.MIT.EDUraeburn",
                 "00000002",
-                "83FC5866E5F8F4C6F38663C65C87549F" +
-                        "342BC47ED394DC9D3CD4D163ADE375E3",
+                "83FC5866E5F8F4C6F38663C65C87549F"
+                        + "342BC47ED394DC9D3CD4D163ADE375E3",
                 true));
     }
 
@@ -507,8 +492,8 @@ public class String2keyTest {
                 "password",
                 "ATHENA.MIT.EDUraeburn",
                 "000004B0", // 1200
-                "77F421A6F25E138395E837E5D85D385B" +
-                        "4C1BFD772E112CD9208CE72A530B15E6",
+                "77F421A6F25E138395E837E5D85D385B"
+                        + "4C1BFD772E112CD9208CE72A530B15E6",
                 true));
     }
 
@@ -519,8 +504,8 @@ public class String2keyTest {
                 "password",
                 toUtf8("1234567878563412"),
                 "00000005",
-                "11083A00BDFE6A41B2F19716D6202F0A" +
-                        "FA94289AFE8B27A049BD28B1D76C389A",
+                "11083A00BDFE6A41B2F19716D6202F0A"
+                        + "FA94289AFE8B27A049BD28B1D76C389A",
                 true));
     }
 
@@ -531,8 +516,8 @@ public class String2keyTest {
                 "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
                 "pass phrase equals block size",
                 "000004B0", // 1200
-                "119FE2A1CB0B1BE010B9067A73DB63ED" +
-                        "4665B4E53A98D178035DCFE843A6B9B0",
+                "119FE2A1CB0B1BE010B9067A73DB63ED"
+                        + "4665B4E53A98D178035DCFE843A6B9B0",
                 true));
     }
 
@@ -543,8 +528,8 @@ public class String2keyTest {
                 "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
                 "pass phrase exceeds block size",
                 "000004B0", // 1200
-                "614D5DFC0BA6D390B412B89AE4D5B088" +
-                        "B612B316510994679DDB4383C7126DDF",
+                "614D5DFC0BA6D390B412B89AE4D5B088"
+                        + "B612B316510994679DDB4383C7126DDF",
                 true));
     }
 
@@ -555,8 +540,8 @@ public class String2keyTest {
                 toUtf8("f09d849e"),
                 "EXAMPLE.COMpianist",
                 "00000032", // 50
-                "163B768C6DB148B4EEC7163DF5AED70E" +
-                        "206B68CEC078BC069ED68A7ED36B1ECC",
+                "163B768C6DB148B4EEC7163DF5AED70E"
+                        + "206B68CEC078BC069ED68A7ED36B1ECC",
                 true));
     }
 
@@ -568,8 +553,8 @@ public class String2keyTest {
                 toUtf8("f09d849e"),
                 "EXAMPLE.COMpianist",
                 "00000032", // 50
-                "163B768C6DB148B4EEC7163DF5AED70E" +
-                        "206B68CEC078BC069ED68A7ED36B1ECC",
+                "163B768C6DB148B4EEC7163DF5AED70E"
+                        + "206B68CEC078BC069ED68A7ED36B1ECC",
                 false));
     }
 
@@ -585,7 +570,7 @@ public class String2keyTest {
      */
     private void performTest(TestCase testCase) {
         //assertThat(EncryptionHandler.isImplemented(testCase.encType)).isTrue();
-        if (! EncryptionHandler.isImplemented(testCase.encType)) {
+        if (!EncryptionHandler.isImplemented(testCase.encType)) {
             System.err.println("Not implemented yet: " + testCase.encType.getDisplayName());
             return;
         }
@@ -604,7 +589,7 @@ public class String2keyTest {
         byte[] answer = HexUtil.hex2bytes(tc.answer);
         byte[] params = tc.param != null ? HexUtil.hex2bytes(tc.param) : null;
         EncryptionKey outkey = EncryptionHandler.string2Key(tc.password, tc.salt, params, tc.encType);
-        if (! Arrays.equals(answer, outkey.getKeyData())) {
+        if (!Arrays.equals(answer, outkey.getKeyData())) {
             System.err.println("failed with:" + tc.salt);
             System.err.println("outKey:" + HexUtil.bytesToHex(outkey.getKeyData()));
             System.err.println("answer:" + tc.answer);

@@ -34,4 +34,15 @@ public class KrbUtil {
         String nameString = KrbConstant.TGS_PRINCIPAL + "/" + realm + "@" + realm;
         return new PrincipalName(nameString, NameType.NT_PRINCIPAL);
     }
+
+    /**
+     * Construct kadmin principal name.
+     * @param realm
+     * @return principal
+     */
+    public static PrincipalName makeKadminPrincipal(String realm) {
+        String nameString = "kadmin/" + realm + "@" + realm;
+        return new PrincipalName(nameString, NameType.NT_PRINCIPAL);
+    }
+
 }
