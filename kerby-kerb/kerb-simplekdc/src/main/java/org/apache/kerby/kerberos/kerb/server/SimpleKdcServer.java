@@ -38,6 +38,9 @@ public class SimpleKdcServer extends KdcServer {
 
     private File workDir;
 
+    /**
+     * Default constructor.
+     */
     public SimpleKdcServer() throws KrbException {
         super();
         this.krbClnt = new KrbClient();
@@ -55,18 +58,27 @@ public class SimpleKdcServer extends KdcServer {
         return workDir;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setKdcRealm(String realm) {
         super.setKdcRealm(realm);
         krbClnt.setKdcRealm(realm);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setKdcHost(String kdcHost) {
         super.setKdcHost(kdcHost);
         krbClnt.setKdcHost(kdcHost);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setKdcTcpPort(int kdcTcpPort) {
         super.setKdcTcpPort(kdcTcpPort);
@@ -74,18 +86,27 @@ public class SimpleKdcServer extends KdcServer {
         setAllowTcp(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setAllowUdp(boolean allowUdp) {
         super.setAllowUdp(allowUdp);
         krbClnt.setAllowUdp(allowUdp);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setAllowTcp(boolean allowTcp) {
         super.setAllowTcp(allowTcp);
         krbClnt.setAllowTcp(allowTcp);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setKdcUdpPort(int kdcUdpPort) {
         super.setKdcUdpPort(kdcUdpPort);
@@ -93,6 +114,9 @@ public class SimpleKdcServer extends KdcServer {
         setAllowUdp(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init() throws KrbException {
         super.init();
@@ -109,6 +133,9 @@ public class SimpleKdcServer extends KdcServer {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void start() throws KrbException {
         super.start();
@@ -116,27 +143,48 @@ public class SimpleKdcServer extends KdcServer {
         krbClnt.init();
     }
 
+    /**
+     * Get krb client.
+     * @return KrbClient
+     */
     public KrbClient getKrbClient() {
         return krbClnt;
     }
 
     /**
      * Get Kadmin operation interface.
-     * @return
+     * @return Kadmin
      */
     public Kadmin getKadmin() {
         return kadmin;
     }
 
+
+    /**
+     * Create principal with principal name.
+     *
+     * @param principal The principal name
+     */
     public void createPrincipal(String principal) throws KrbException {
         kadmin.addPrincipal(principal);
     }
 
+    /**
+     * Create principal with principal name and password.
+     *
+     * @param principal The principal name
+     * @param password The password to create keys
+     */
     public void createPrincipal(String principal,
                                 String password) throws KrbException {
         kadmin.addPrincipal(principal, password);
     }
 
+    /**
+     * Create principals.
+     *
+     * @param principals The principal list
+     */
     public void createPrincipals(String ... principals) throws KrbException {
         for (String principal : principals) {
             kadmin.addPrincipal(principal);
@@ -145,6 +193,9 @@ public class SimpleKdcServer extends KdcServer {
 
     /**
      * Creates principals and export their keys to the specified keytab file.
+     *
+     * @param keytabFile The keytab file to store principal keys
+     * @param principals The principals to be create
      */
     public void createAndExportPrincipals(File keytabFile,
                                 String ... principals) throws KrbException {
@@ -152,16 +203,31 @@ public class SimpleKdcServer extends KdcServer {
         exportPrincipals(keytabFile);
     }
 
+    /**
+     * Delete principals.
+     *
+     * @param principals The principals to be delete
+     */
     public void deletePrincipals(String ... principals) throws KrbException {
         for (String principal : principals) {
             deletePrincipal(principal);
         }
     }
 
+    /**
+     * Delete principal.
+     *
+     * @param principal The principal to be delete
+     */
     public void deletePrincipal(String principal) throws KrbException {
         kadmin.deletePrincipal(principal);
     }
 
+    /**
+     * Export principals to keytab file.
+     *
+     * @param keytabFile The keytab file
+     */
     public void exportPrincipals(File keytabFile) throws KrbException {
         kadmin.exportKeytab(keytabFile);
     }

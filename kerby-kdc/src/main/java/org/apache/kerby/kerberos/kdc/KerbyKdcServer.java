@@ -36,6 +36,9 @@ public class KerbyKdcServer extends KdcServer {
         setInnerKdcImpl(new NettyKdcServerImpl(getKdcSetting()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init() throws KrbException {
         super.init();

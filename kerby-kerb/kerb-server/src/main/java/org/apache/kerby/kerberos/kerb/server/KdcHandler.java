@@ -47,10 +47,23 @@ public class KdcHandler {
     private static final Logger LOG = LoggerFactory.getLogger(KdcHandler.class);
     private final KdcContext kdcContext;
 
+    /**
+     * Constructor with kdc context.
+     *
+     * @param kdcContext
+     */
     public KdcHandler(KdcContext kdcContext) {
         this.kdcContext = kdcContext;
     }
 
+    /**
+     * Process the client request message.
+     *
+     * @param receivedMessage The client request message
+     * @param  isTcp
+     * @param remoteAddress Address from remote side
+     * @return The response message
+     */
     public ByteBuffer handleMessage(ByteBuffer receivedMessage, boolean isTcp,
                                     InetAddress remoteAddress) throws KrbException {
         KrbMessage krbRequest;
@@ -116,6 +129,13 @@ public class KdcHandler {
         return responseMessage;
     }
 
+    /**
+     * Process the recoverable exception.
+     *
+     * @param e The exception return by kdc
+     * @param kdcRequest
+     * @return The KrbError
+     */
     private KrbMessage handleRecoverableException(KdcRecoverableException e,
                                                   KdcRequest kdcRequest)
             throws KrbException {

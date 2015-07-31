@@ -30,16 +30,25 @@ import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
  */
 public class JwtTokenProvider implements TokenProvider {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TokenEncoder createTokenEncoder() {
         return new JwtTokenEncoder();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TokenDecoder createTokenDecoder() {
         return new JwtTokenDecoder();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TokenFactory createTokenFactory() {
         return new TokenFactory() {

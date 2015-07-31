@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.builtin;
 
@@ -35,6 +35,10 @@ public class TgtPreauth extends AbstractPreauthPlugin {
         super(new TgtPreauthMeta());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void tryFirst(KdcRequest kdcRequest,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
@@ -42,17 +46,26 @@ public class TgtPreauth extends AbstractPreauthPlugin {
         outPadata.addElement(makeEntry(kdcRequest));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean process(KdcRequest kdcRequest,
-                        PluginRequestContext requestContext,
-                        PaDataEntry inPadata,
-                        PaData outPadata) throws KrbException {
+                           PluginRequestContext requestContext,
+                           PaDataEntry inPadata,
+                           PaData outPadata) throws KrbException {
 
         outPadata.addElement(makeEntry(kdcRequest));
 
         return true;
     }
 
+    /**
+     * Make padata entry.
+     *
+     * @param kdcRequest The kdc request
+     * @return PaDataEntry to be made.
+     */
     private PaDataEntry makeEntry(KdcRequest kdcRequest) throws KrbException {
 
         TgsRequestWithTgt tgsRequest = (TgsRequestWithTgt) kdcRequest;

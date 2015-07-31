@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kerb.server.request;
 
@@ -63,23 +63,44 @@ public class TgsRequest extends KdcRequest {
         setPreauthRequired(true);
     }
 
+    /**
+     * Get tgt session key.
+     *
+     * @return The tgt session key
+     */
     public EncryptionKey getTgtSessionKey() {
         return tgtSessionKey;
     }
 
+    /**
+     * Set tgt session key.
+     *
+     * @param tgtSessionKey The tgt session key
+     */
     public void setTgtSessionKey(EncryptionKey tgtSessionKey) {
         this.tgtSessionKey = tgtSessionKey;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void checkClient() throws KrbException {
         // Nothing to do at this phase because client couldn't be checked out yet.
     }
 
+    /**
+     * Get tgt ticket.
+     *
+     * @return The tgt ticket.
+     */
     protected Ticket getTgtTicket() {
         return tgtTicket;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void issueTicket() throws KrbException {
         TickertIssuer issuer = new ServiceTickertIssuer(this);
@@ -87,6 +108,9 @@ public class TgsRequest extends KdcRequest {
         setTicket(newTicket);
     }
 
+    /**
+     * Verify authenticator.
+     */
     public void verifyAuthenticator(PaDataEntry paDataEntry) throws KrbException {
         ApReq apReq = KrbCodec.decode(paDataEntry.getPaDataValue(), ApReq.class);
 
@@ -106,7 +130,7 @@ public class TgsRequest extends KdcRequest {
         }
 
         EncTicketPart encPart = EncryptionUtil.unseal(tgtTicket.getEncryptedEncPart(),
-                tgsKey, KeyUsage.KDC_REP_TICKET, EncTicketPart.class);
+            tgsKey, KeyUsage.KDC_REP_TICKET, EncTicketPart.class);
         tgtTicket.setEncPart(encPart);
 
         EncryptionKey encKey = null;
@@ -117,7 +141,7 @@ public class TgsRequest extends KdcRequest {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_NOKEY);
         }
         Authenticator authenticator = EncryptionUtil.unseal(apReq.getEncryptedAuthenticator(),
-                encKey, KeyUsage.TGS_REQ_AUTH, Authenticator.class);
+            encKey, KeyUsage.TGS_REQ_AUTH, Authenticator.class);
 
         if (!authenticator.getCname().equals(tgtTicket.getEncPart().getCname())) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADMATCH);
@@ -140,7 +164,7 @@ public class TgsRequest extends KdcRequest {
         setClientEntry(clientEntry);
 
         if (!authenticator.getCtime().isInClockSkew(
-                getKdcContext().getConfig().getAllowableClockSkew() * 1000)) {
+            getKdcContext().getConfig().getAllowableClockSkew() * 1000)) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_SKEW);
         }
 
@@ -163,6 +187,9 @@ public class TgsRequest extends KdcRequest {
         setTgtSessionKey(tgtTicket.getEncPart().getKey());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void makeReply() throws KrbException {
         Ticket ticket = getTicket();
@@ -187,12 +214,15 @@ public class TgsRequest extends KdcRequest {
             sessionKey = getTgtSessionKey();
         }
         EncryptedData encryptedData = EncryptionUtil.seal(encKdcRepPart,
-                sessionKey, KeyUsage.TGS_REP_ENCPART_SESSKEY);
+            sessionKey, KeyUsage.TGS_REP_ENCPART_SESSKEY);
         reply.setEncryptedEncPart(encryptedData);
 
         setReply(reply);
     }
 
+    /**
+     * Make EncKdcRepPart.
+     */
     private EncKdcRepPart makeEncKdcRepPart() {
         KdcReq request = getKdcReq();
         Ticket ticket = getTicket();

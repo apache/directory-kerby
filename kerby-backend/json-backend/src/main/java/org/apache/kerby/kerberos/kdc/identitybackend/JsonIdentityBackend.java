@@ -54,7 +54,6 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     private Gson gson;
     private static final Logger LOG = LoggerFactory.getLogger(JsonIdentityBackend.class);
 
-
     // Identities loaded from file
     private Map<String, KrbIdentity> ids;
     private long kdbFileTimeStamp;

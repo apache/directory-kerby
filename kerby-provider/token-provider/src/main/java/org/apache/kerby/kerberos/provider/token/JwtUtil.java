@@ -8,6 +8,11 @@ import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
  */
 public class JwtUtil {
 
+    /**
+     * Get jwt claims set from read only jwt claims set
+     *
+     * @param readOnlyClaims
+     */
     public static JWTClaimsSet from(ReadOnlyJWTClaimsSet readOnlyClaims) {
         JWTClaimsSet result = new JWTClaimsSet(readOnlyClaims);
 

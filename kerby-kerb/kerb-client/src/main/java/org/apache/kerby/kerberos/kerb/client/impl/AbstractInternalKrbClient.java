@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kerb.client.impl;
 
@@ -52,17 +52,26 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         return context;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public KrbSetting getSetting() {
         return krbSetting;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init() throws KrbException {
         context = new KrbContext();
         context.init(krbSetting);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TgtTicket requestTgtTicket(KOptions requestOptions) throws KrbException {
         AsRequest asRequest = null;
@@ -95,6 +104,9 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         return doRequestTgtTicket(asRequest);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException {
         TgsRequest tgsRequest = null;
@@ -110,7 +122,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
                     "No valid krb client request option found");
         }
         tgsRequest.setServerPrincipal(new PrincipalName(requestOptions.
-            getStringOption(KrbOption.SERVER_PRINCIPAL)));
+                getStringOption(KrbOption.SERVER_PRINCIPAL)));
         tgsRequest.setKrbOptions(requestOptions);
 
         return doRequestServiceTicket(tgsRequest);

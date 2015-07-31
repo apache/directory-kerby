@@ -47,6 +47,9 @@ public class JwtTokenDecoder implements TokenDecoder {
     private RSAPublicKey verifyKey;
     private List<String> audiences = null;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AuthToken decodeFromBytes(byte[] content) throws IOException {
         String tokenStr = new String(content, Charset.forName("UTF-8"));
@@ -54,6 +57,9 @@ public class JwtTokenDecoder implements TokenDecoder {
         return decodeFromString(tokenStr);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AuthToken decodeFromString(String content) throws IOException {
        JWT jwt = null;

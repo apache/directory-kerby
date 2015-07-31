@@ -40,66 +40,117 @@ public class IdentityZNodeHelper {
     private static final String ENCRYPTION_KEY_NO_ZNODE_NAME = "keyNo";
     private static String baseZNode = "/kerby";
 
+    /**
+     * Get base znode.
+     */
     public static String getBaseZNode() {
       return baseZNode;
     }
 
+    /**
+     * Get identities znode.
+     */
     public static String getIdentitiesZNode() {
       return ZKUtil.joinZNode(getBaseZNode(), IDENTITIES_ZNODE_NAME);
     }
 
+    /**
+     * Get identity znode.
+     */
     public static String getIndentityZNode(String principalName) {
         return ZKUtil.joinZNode(getIdentitiesZNode(), principalName);
     }
 
+    /**
+     * Get principal name znode.
+     */
     public static String getPrincipalNameZnode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), PRINCIPAL_NAME_ZNODE_NAME);
     }
 
+    /**
+     * Get key version znode.
+     */
     public static String getKeyVersionZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), KEY_VERSION_ZNODE_NAME);
     }
 
+    /**
+     * Get kdc flags znode.
+     */
     public static String getKdcFlagsZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), KDC_FLAGS_ZNODE_NAME);
     }
 
+    /**
+     * Get disabled znode.
+     */
     public static String getDisabledZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), DISABLED_ZNODE_NAME);
     }
 
+    /**
+     * Get locked znode.
+     */
     public static String getLockedZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), LOCKED_ZNODE_NAME);
     }
 
+    /**
+     * Get expire time znode.
+     */
     public static String getExpireTimeZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), EXPIRE_TIME_ZNODE_NAME);
     }
 
+    /**
+     * Get created time znode.
+     */
     public static String getCreatedTimeZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), CREATED_TIME_ZNODE_NAME);
     }
 
+    /**
+     * Get keys znode.
+     */
     public static String getKeysZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), KEYS_ZNODE_NAME);
     }
 
+    /**
+     * Get key type znode.
+     */
     public static String getKeyTypeZNode(String principalName, String type) {
         return ZKUtil.joinZNode(getKeysZNode(principalName), type);
     }
 
+    /**
+     * Get encryption key type znode.
+     */
     public static String getEncryptionKeyTypeZNode(String principalName, String type) {
         return ZKUtil.joinZNode(getKeyTypeZNode(principalName, type), KEY_TYPE_ZNODE_NAME);
     }
 
+    /**
+     * Get encryption key znode.
+     */
     public static String getEncryptionKeyZNode(String principalName, String type) {
         return ZKUtil.joinZNode(getKeyTypeZNode(principalName, type), KEY_ZNODE_NAME);
     }
 
+    /**
+     * Get encryption key kvno znode.
+     */
     public static String getEncryptionKeyNoZNode(String principalName, String type) {
         return ZKUtil.joinZNode(getKeyTypeZNode(principalName, type), ENCRYPTION_KEY_NO_ZNODE_NAME);
     }
 
+    /**
+     * Get identity names.
+     *
+     * @param zk The zookeeper
+     * @return The list of principal names.
+     */
     public static List<String> getIdentityNames(ZooKeeper zk) throws KeeperException {
         List<String> identityNames = ZKUtil.listChildrenNoWatch(zk, getIdentitiesZNode());
         return identityNames;

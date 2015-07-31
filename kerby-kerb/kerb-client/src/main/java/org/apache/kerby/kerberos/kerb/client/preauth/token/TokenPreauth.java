@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.token;
 
@@ -53,11 +53,18 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         super(new TokenPreauthMeta());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void init(KrbContext context) {
         super.init(context);
         this.tokenContext = new TokenContext();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PluginRequestContext initRequestContext(KdcRequest kdcRequest) {
         TokenRequestContext reqCtx = new TokenRequestContext();
@@ -65,18 +72,27 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         return reqCtx;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void prepareQuestions(KdcRequest kdcRequest,
                                  PluginRequestContext requestContext) {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<EncryptionType> getEncTypes(KdcRequest kdcRequest,
                                             PluginRequestContext requestContext) {
         return Collections.emptyList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setPreauthOptions(KdcRequest kdcRequest,
                                   PluginRequestContext requestContext,
@@ -97,6 +113,10 @@ public class TokenPreauth extends AbstractPreauthPlugin {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void tryFirst(KdcRequest kdcRequest,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
@@ -106,6 +126,9 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         outPadata.addElement(makeEntry(kdcRequest));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean process(KdcRequest kdcRequest,
                            PluginRequestContext requestContext,
@@ -119,15 +142,21 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean tryAgain(KdcRequest kdcRequest,
-                         PluginRequestContext requestContext,
-                         PaDataType preauthType,
-                         PaData errPadata,
-                         PaData outPadata) {
+                            PluginRequestContext requestContext,
+                            PaDataType preauthType,
+                            PaData errPadata,
+                            PaData outPadata) {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PaFlags getFlags(PaDataType paType) {
         PaFlags paFlags = new PaFlags(0);
@@ -136,6 +165,12 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         return paFlags;
     }
 
+    /**
+     * Make padata entry.
+     *
+     * @param kdcRequest The kdc request
+     * @return PaDataEntry to be made.
+     */
     private PaDataEntry makeEntry(KdcRequest kdcRequest) throws KrbException {
         KOptions options = kdcRequest.getPreauthOptions();
 
@@ -157,7 +192,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         tokenPa.setTokenInfo(info);
 
         EncryptedData paDataValue = EncryptionUtil.seal(tokenPa,
-            kdcRequest.getAsKey(), KeyUsage.PA_TOKEN);
+                kdcRequest.getAsKey(), KeyUsage.PA_TOKEN);
 
         PaDataEntry paDataEntry = new PaDataEntry();
         paDataEntry.setPaDataType(PaDataType.TOKEN_REQUEST);

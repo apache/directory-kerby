@@ -203,6 +203,9 @@ public class KdcServer {
         return innerKdc.getIdentityBackend();
     }
 
+    /**
+     * Initialize.
+     */
     public void init() throws KrbException {
         if (startupOptions.contains(KdcServerOption.INNER_KDC_IMPL)) {
             innerKdc = (InternalKdcServer) startupOptions.getOptionValue(
@@ -214,6 +217,9 @@ public class KdcServer {
         innerKdc.init();
     }
 
+    /**
+     * Start the KDC server.
+     */
     public void start() throws KrbException {
         if (innerKdc == null) {
             throw new RuntimeException("Not init yet");
@@ -221,6 +227,9 @@ public class KdcServer {
         innerKdc.start();
     }
 
+    /**
+     * Stop the KDC server.
+     */
     public void stop() throws KrbException {
         if (innerKdc != null) {
             innerKdc.stop();

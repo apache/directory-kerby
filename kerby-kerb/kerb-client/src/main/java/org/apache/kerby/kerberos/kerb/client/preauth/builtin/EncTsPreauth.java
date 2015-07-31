@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.builtin;
 
@@ -40,6 +40,9 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
         super(new EncTsPreauthMeta());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void prepareQuestions(KdcRequest kdcRequest,
                                  PluginRequestContext requestContext) throws KrbException {
@@ -47,6 +50,10 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
         kdcRequest.needAsKey();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void tryFirst(KdcRequest kdcRequest,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
@@ -57,6 +64,9 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
         outPadata.addElement(makeEntry(kdcRequest));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean process(KdcRequest kdcRequest,
                            PluginRequestContext requestContext,
@@ -71,6 +81,9 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PaFlags getFlags(PaDataType paType) {
         PaFlags paFlags = new PaFlags(0);
@@ -79,6 +92,12 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
         return paFlags;
     }
 
+    /**
+     * Make padata entry.
+     *
+     * @param kdcRequest The kdc request
+     * @return PaDataEntry to be made.
+     */
     private PaDataEntry makeEntry(KdcRequest kdcRequest) throws KrbException {
         PaEncTsEnc paTs = new PaEncTsEnc();
         paTs.setPaTimestamp(kdcRequest.getPreauthTime());

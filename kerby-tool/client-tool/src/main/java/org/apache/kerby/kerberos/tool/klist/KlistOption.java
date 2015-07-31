@@ -74,21 +74,33 @@ public enum KlistOption implements KOption {
         return NONE;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getOptionName() {
         return name();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public KOptionType getType() {
         return this.type;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setType(KOptionType type) {
         this.type = type;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         if (name != null) {
@@ -97,26 +109,41 @@ public enum KlistOption implements KOption {
         return name();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return this.description;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getValue() {
         return value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setValue(Object value) {
         this.value = value;
