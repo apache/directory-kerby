@@ -86,8 +86,10 @@ A standalone KDC server that can integrate various identity back ends including:
   - With better throughput, lower latency.
 
 ### Tools
+- kdcinit:
+  - This is used to initialize and prepare all kinds of KDC side materials, like initializing concrete back end, setting up master keys, necessary principals (tgs, kadmin) and etc.
 - kadmin:
-  -Command-line interfaces to the Kerby administration system.
+  - Command-line interfaces to the Kerby administration system.
 - kinit:
   - Obtains and caches an initial ticket-granting ticket for principal.
 - klist:

@@ -3,31 +3,48 @@ Kerby-dist
 
 The distribution of Kerby.
 
-### To run with a standalone kdc server, kinit and kadmin
+### To run with a standalone kdc server, kdcinit, kadmin, kinit and klist
 
-* Generate libraries for distribution:
+* 1. Generate libraries for distribution:
 ```
 mvn package -Pdist
 ```
 
-* Run kadmin to add principals:
+* 2. Run kdcinit:
 ```
-sh kerby-dist/tool-dist/bin/kadmin.sh [server-conf-dir]
+cd kerby-dist/kdc-dist
+sh bin/kdcinit.sh [server-conf-dir] [keytab]
+```
+The admin principal will be exported into [keytab], it will be used by kadmin tool for the authentication. 
+
+* 3. Run kadmin to add principals:
+```
+cd kerby-dist/kdc-dist
+sh bin/kadmin.sh [server-conf-dir] -k [keytab]
 ```
 
   In kadmin, you can type "?" for help. For now, the kadmin only supports to add principals to json-backend. (Working in progress).
 
-* Start kerby-kdc-server:
+* 4. Start kerby-kdc-server:
 ```
-sh kerby-dist/kdc-dist/bin/start-kdc.sh –start [server-conf-dir] [work-dir]
-```
-
-* Run kinit:
-```
-sh kerby-dist/tool-dist/bin/kinit.sh [principal-name]
+cd kerby-dist/kdc-dist
+sh bin/start-kdc.sh –start [server-conf-dir] [work-dir]
 ```
 
-  If you don't specify [server-conf-dir] in step 2 or 3, it will be set as /etc/kerby. In [server-conf-dir], there should be kdc.conf, backend.conf. And in /etc/, there should be krb5.conf.
+* 5. Run kinit:
+```
+cd kerby-dist/tool-dist
+sh bin/kinit.sh -conf [client-conf-dir] [principal-name]
+```
+
+* 6. Run klist:
+```
+cd kerby-dist/tool-dist
+sh bin/klist.sh -c [credentials-cache]
+```
+
+  If you don't specify [server-conf-dir] in step 2, 3 or 4, it will be set as /etc/kerby. In [server-conf-dir], there should be kdc.conf, backend.conf. 
+  And if you don't specify [client -conf-dir] in step 5, it will be set as /etc/, there should be krb5.conf.
 
 An example of kdc.conf:
 ```
