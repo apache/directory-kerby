@@ -42,7 +42,7 @@ cd kerby-dist/kdc-dist
 sh bin/kadmin.sh [server-conf-dir] -k [keytab]
 ```
 
-  In kadmin, you can type "?" for help. For now, the kadmin only supports to add principals to json-backend. (Working in progress).
+  In kadmin, you can type "?" for help.
 
 * 4. Start kerby-kdc-server:
 ```
@@ -87,5 +87,6 @@ An example of krb5.conf:
 ```
 [libdefaults]
     kdc_realm=TEST.COM
+    kdc_tcp_port = 8015
 ```
 
