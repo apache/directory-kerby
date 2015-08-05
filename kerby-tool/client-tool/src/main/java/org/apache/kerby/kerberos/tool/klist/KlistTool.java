@@ -43,7 +43,7 @@ import java.util.List;
 public class KlistTool {
 
     private static  final String USAGE =
-            "Usage: klist [-e] [-V] [[-c] [-l] [-A] [-d] [-f] [-s] "
+            "Usage: sh bin/klist.sh [-e] [-V] [[-c] [-l] [-A] [-d] [-f] [-s] "
                     + "[-a [-n]]] [-k [-t] [-K]] [name]\n"
                     + "\t-c specifies credentials cache\n"
                     + "\t-k specifies keytab\n"

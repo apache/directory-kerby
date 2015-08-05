@@ -28,9 +28,9 @@ public class KdcInitTool {
     private Kadmin kadmin;
     private static File keytabFile;
 
-    private static final String USAGE = "Usage: "
-        + KdcInitTool.class.getSimpleName()
-        + " conf-dir keytab";
+    private static final String USAGE = "Usage: sh bin/kdcinit.sh [conf-dir] [keytab]\n"
+        + "\tExample:\n"
+        + "\t\tsh bin/kdcinit.sh conf /home/admin.keytab\n";
 
     private void init(File confDir) throws KrbException {
         kadmin = new Kadmin(confDir);

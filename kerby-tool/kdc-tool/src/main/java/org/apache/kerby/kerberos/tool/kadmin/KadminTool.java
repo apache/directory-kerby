@@ -78,7 +78,7 @@ public class KadminTool {
             + "quit, exit, q            Exit program.";
 
     private static final String USAGE =
-        "Usage: sh bin/kadmin.sh <conf-dir> [-c cache_name]|[-k keytab]\n"
+        "Usage: sh bin/kadmin.sh [conf-dir] [-c cache_name]|[-k keytab]\n"
             + "\tExample:\n"
             + "\t\tsh bin/kadmin.sh conf -k /home/admin.keytab\n";
 

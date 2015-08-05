@@ -48,9 +48,9 @@ public class KerbyKdcServer extends KdcServer {
         kadmin.checkBuiltinPrincipals();
     }
 
-    private static final String USAGE = "Usage: "
-            + KerbyKdcServer.class.getSimpleName()
-            + " -start <conf-dir> <working-dir>";
+    private static final String USAGE = "Usage: sh bin/start-kdc.sh [conf-dir] [working-dir] \n"
+        + "\tExample:\n"
+        + "\t\tsh bin/start-kdc.sh conf /tmp\n";
 
     public static void main(String[] args) throws KrbException {
         if (args.length != 3) {

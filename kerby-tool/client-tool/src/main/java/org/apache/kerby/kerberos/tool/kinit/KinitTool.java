@@ -39,7 +39,7 @@ import java.util.Scanner;
 public class KinitTool {
 
     private static final String USAGE =
-            "Usage: kinit -conf conf_dir [-V] [-l lifetime] [-s start_time]\n"
+            "Usage: sh bin/kinit.sh [-conf conf_dir] [-V] [-l lifetime] [-s start_time]\n"
                     + "\t\t[-r renewable_life] [-f | -F] [-p | -P] -n [-a | -A] [-C] [-E]\n"
                     + "\t\t[-v] [-R] [-k [-i|-t keytab_file]] [-c cachename]\n"
                     + "\t\t[-S service_name] [-T ticket_armor_cache]\n"
@@ -104,6 +104,13 @@ public class KinitTool {
                                       KOptions ktOptions) throws Exception {
         ktOptions.add(KinitOption.CLIENT_PRINCIPAL, principal);
 
+        File confDir = null;
+        if (ktOptions.contains(KinitOption.CONF_DIR)) {
+            confDir = ktOptions.getDirOption(KinitOption.CONF_DIR);
+        } else {
+            printUsage("Can't get the conf dir!");
+        }
+
         //If not request tickets by keytab than by password.
         if (!ktOptions.contains(KinitOption.USE_KEYTAB)) {
             ktOptions.add(KinitOption.USE_PASSWD);
@@ -111,18 +118,12 @@ public class KinitTool {
             ktOptions.add(KinitOption.USER_PASSWD, password);
         }
 
-        File confDir = null;
-        if (ktOptions.contains(KinitOption.CONF_DIR)) {
-            confDir = ktOptions.getDirOption(KinitOption.CONF_DIR);
-        } else {
-            printUsage("Can't get the conf dir!");
-        }
         KrbClient krbClient = getClient(confDir);
         TgtTicket tgt = krbClient.requestTgtWithOptions(
                 ToolUtil.convertOptions(ktOptions));
 
         if (tgt == null) {
-            System.err.println("Requesting TGT failed");
+            System.err.println("Requesting TGT failed.");
             return;
         }
 
