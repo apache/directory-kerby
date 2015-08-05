@@ -55,9 +55,6 @@ public class KrbCodecBenchmark {
     public void decodeWithKerby() throws Exception {
         ApReq apReq = new ApReq();
         apReq.decode(apreqToken.duplicate());
-        if (apReq == null) {
-            throw new RuntimeException("Decoding failed");
-        }
         String serverName = apReq.getTicket().getSname().toString();
         if (serverName == null) {
             throw new RuntimeException("Decoding test failed");
