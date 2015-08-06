@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
@@ -53,18 +52,6 @@ public class WithTokenKdcTestBase extends KdcTestBase {
     public void setUp() throws Exception {
         KrbRuntime.setTokenProvider(new JwtTokenProvider());
         super.setUp();
-    }
-
-    @Override
-    protected void createPrincipals() throws KrbException {
-        super.createPrincipals();
-        getKdcServer().createPrincipal(getClientPrincipal(), getClientPassword());
-    }
-
-    @Override
-    protected void deletePrincipals() throws KrbException {
-        super.deletePrincipals();
-        getKdcServer().deletePrincipal(getClientPrincipal());
     }
 
     protected AuthToken getKrbToken() {

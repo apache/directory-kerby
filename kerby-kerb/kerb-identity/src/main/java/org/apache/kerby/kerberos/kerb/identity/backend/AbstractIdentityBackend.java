@@ -147,6 +147,10 @@ public abstract class AbstractIdentityBackend
         if (identity == null) {
             throw new IllegalArgumentException("null identity to add");
         }
+        if (doGetIdentity(identity.getPrincipalName()) != null) {
+            throw new KrbException("Principal already exists: "
+                    + identity.getPrincipalName());
+        }
 
         KrbIdentity added = doAddIdentity(identity);
         logger.debug("addIdentity {}, principalName = {}",
@@ -170,8 +174,14 @@ public abstract class AbstractIdentityBackend
             throw new IllegalArgumentException("null identity to update");
         }
 
+        if (doGetIdentity(identity.getPrincipalName()) == null) {
+            logger.error("Error occurred while updating identity, principal "
+                + identity.getPrincipalName() + " does not exists.");
+            throw new KrbException("Principal does not exist.");
+        }
+
         KrbIdentity updated = doUpdateIdentity(identity);
-        logger.debug("addIdentity {}, principalName = {}",
+        logger.debug("updateIdentity {}, principalName = {}",
                 (updated != null ? "successful" : "failed"), identity.getPrincipalName());
 
         return updated;
@@ -192,6 +202,12 @@ public abstract class AbstractIdentityBackend
 
         if (principalName == null) {
             throw new IllegalArgumentException("null identity to remove");
+        }
+
+        if (doGetIdentity(principalName) == null) {
+            logger.error("Error occurred while deleting identity, principal "
+                    + principalName + " does not exists.");
+            throw new KrbException("Principal does not exist.");
         }
 
         doDeleteIdentity(principalName);

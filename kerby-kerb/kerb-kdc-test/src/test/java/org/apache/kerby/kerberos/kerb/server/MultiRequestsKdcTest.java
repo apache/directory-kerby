@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
@@ -28,16 +27,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MultiRequestsKdcTest extends KdcTestBase {
-    private String clientPrincipal;
     private String serverPrincipal;
-    private String password = "123456";
-
-    @Override
-    protected void createPrincipals() throws KrbException {
-        super.createPrincipals();
-        clientPrincipal = getClientPrincipal();
-        getKdcServer().createPrincipal(clientPrincipal, password);
-    }
 
     @Test
     public void multiRequestsTest() throws Exception {
@@ -46,7 +36,7 @@ public class MultiRequestsKdcTest extends KdcTestBase {
 
         // With good password
         try {
-            tgt = getKrbClient().requestTgtWithPassword(clientPrincipal, password);
+            tgt = getKrbClient().requestTgtWithPassword(getClientPrincipal(), getClientPassword());
             assertThat(tgt).isNotNull();
 
             serverPrincipal = getServerPrincipal();
@@ -68,7 +58,7 @@ public class MultiRequestsKdcTest extends KdcTestBase {
 
         // With good password again
         try {
-            tgt = getKrbClient().requestTgtWithPassword(clientPrincipal, password);
+            tgt = getKrbClient().requestTgtWithPassword(getClientPrincipal(), getClientPassword());
             assertThat(tgt).isNotNull();
 
             tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);

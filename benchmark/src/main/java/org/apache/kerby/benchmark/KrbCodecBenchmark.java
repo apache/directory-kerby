@@ -27,6 +27,7 @@ import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Warmup;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +35,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class KrbCodecBenchmark {
 
     private static ByteBuffer apreqToken;
@@ -51,7 +52,8 @@ public class KrbCodecBenchmark {
     }
 
     @Benchmark
-    @Fork(2)
+    @Fork(1)
+    @Warmup(iterations = 5)
     public void decodeWithKerby() throws Exception {
         ApReq apReq = new ApReq();
         apReq.decode(apreqToken.duplicate());
@@ -62,7 +64,8 @@ public class KrbCodecBenchmark {
     }
 
     @Benchmark
-    @Fork(2)
+    @Fork(1)
+    @Warmup(iterations = 5)
     public void decodeWithApacheDS() throws Exception {
         ByteBuffer content = apreqToken.duplicate();
         Asn1Decoder krbDecoder = new Asn1Decoder();
