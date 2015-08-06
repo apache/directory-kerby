@@ -36,19 +36,19 @@ sh bin/kdcinit.sh [server-conf-dir] [keytab]
 ```
 The admin principal will be exported into [keytab], it will be used by kadmin tool for the authentication. 
 
-* 3. Run kadmin to add principals:
-```
-cd kerby-dist/kdc-dist
-sh bin/kadmin.sh [server-conf-dir] -k [keytab]
-```
-
-  In kadmin, you can type "?" for help.
-
-* 4. Start kerby-kdc-server:
+* 3. Start kerby-kdc-server:
 ```
 cd kerby-dist/kdc-dist
 sh bin/start-kdc.sh –start [server-conf-dir] [work-dir]
 ```
+
+* 4. Run kadmin to add principals:
+```
+cd kerby-dist/kdc-dist
+sh bin/kadmin.sh [server-conf-dir] -k [keytab]
+```
+  The keytab file is created by the kdcinit.
+  In kadmin, you can type "?" for help.
 
 * 5. Run kinit:
 ```
@@ -63,7 +63,7 @@ sh bin/klist.sh -c [credentials-cache]
 ```
 
   If you don't specify [server-conf-dir] in step 2, 3 or 4, it will be set as /etc/kerby. In [server-conf-dir], there should be kdc.conf, backend.conf. 
-  And if you don't specify [client -conf-dir] in step 5, it will be set as /etc/, there should be krb5.conf.
+  And if you don't specify [client-conf-dir] in step 5, it will be set as /etc/, there should be krb5.conf.
 
 An example of kdc.conf:
 ```

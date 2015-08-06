@@ -164,11 +164,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
                     try {
                         zooKeeperServer.runFromConfig(configuration);
                     } catch (IOException e) {
-                        try {
-                            throw new KrbException("ZooKeeper Failed", e);
-                        } catch (KrbException e1) {
-                            e1.printStackTrace();
-                        }
+                        LOG.warn(e.getMessage());
                     }
                 }
             };
