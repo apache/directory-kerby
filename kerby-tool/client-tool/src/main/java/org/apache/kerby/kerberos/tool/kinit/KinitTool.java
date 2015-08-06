@@ -101,7 +101,7 @@ public class KinitTool {
     }
 
     private static void requestTicket(String principal,
-                                      KOptions ktOptions) throws Exception {
+                                      KOptions ktOptions) {
         ktOptions.add(KinitOption.CLIENT_PRINCIPAL, principal);
 
         File confDir = null;
@@ -118,12 +118,19 @@ public class KinitTool {
             ktOptions.add(KinitOption.USER_PASSWD, password);
         }
 
-        KrbClient krbClient = getClient(confDir);
-        TgtTicket tgt = krbClient.requestTgtWithOptions(
-                ToolUtil.convertOptions(ktOptions));
+        KrbClient krbClient = null;
+        try {
+            krbClient = getClient(confDir);
+        } catch (KrbException e) {
+            e.printStackTrace();
+        }
 
-        if (tgt == null) {
-            System.err.println("Requesting TGT failed.");
+        TgtTicket tgt;
+        try {
+            tgt = krbClient.requestTgtWithOptions(
+                    ToolUtil.convertOptions(ktOptions));
+        } catch (KrbException e) {
+            System.err.println("Authentication failed");
             return;
         }
 
@@ -137,7 +144,11 @@ public class KinitTool {
             ccacheFile = new File(SysUtil.getTempDir(), ccacheName);
         }
 
-        krbClient.storeTicket(tgt, ccacheFile);
+        try {
+            krbClient.storeTicket(tgt, ccacheFile);
+        } catch (KrbException e) {
+            e.printStackTrace();
+        }
         System.out.println("Successfully requested and stored ticket in "
                 + ccacheFile.getAbsolutePath());
     }
