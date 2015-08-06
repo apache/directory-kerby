@@ -57,7 +57,7 @@ public class ModifyPrincipalCommand extends KadminCommand {
             getKadmin().modifyPrincipal(principal, kOptions);
             System.out.println("Principal \"" + principal + "\" modified.");
         } catch (KrbException e) {
-            System.err.println("Principal \"" + principal + "\" fail to modify. " + e.getCause());
+            System.err.println("Principal \"" + principal + "\" fail to modify. " + e.getMessage());
         }
     }
 

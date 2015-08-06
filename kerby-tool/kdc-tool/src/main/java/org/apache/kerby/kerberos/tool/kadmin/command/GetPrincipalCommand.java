@@ -49,7 +49,7 @@ public class GetPrincipalCommand extends KadminCommand {
         try {
             identity = getKadmin().getPrincipal(princName);
         } catch (KrbException e) {
-            System.err.println("Fail to get principal: " + princName + ". " + e.getCause());
+            System.err.println("Fail to get principal: " + princName + ". " + e.getMessage());
         }
 
         if (identity == null) {

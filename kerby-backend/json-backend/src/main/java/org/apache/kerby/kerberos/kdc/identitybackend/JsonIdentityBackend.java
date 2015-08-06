@@ -117,7 +117,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * Check kdb file timestamp to see if it's changed or not. If
      * necessary load the kdb again.
      */
-    private synchronized void checkAndLoad() {
+    private synchronized void checkAndLoad() throws KrbException {
         long nowTimeStamp = jsonKdbFile.lastModified();
 
         if (kdbFileTimeStamp == 0 || nowTimeStamp != kdbFileTimeStamp) {
@@ -126,7 +126,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
             try {
                 existsFileJson = IOUtil.readFile(jsonKdbFile);
             } catch (IOException e) {
-                throw new RuntimeException("Failed to read file", e);
+                throw new KrbException("Failed to read file", e);
             }
 
             Map<String, KrbIdentity> loaded = gson.fromJson(existsFileJson,
@@ -143,7 +143,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected KrbIdentity doGetIdentity(String principalName) {
+    protected KrbIdentity doGetIdentity(String principalName) throws KrbException {
         checkAndLoad();
         return identities.get(principalName);
     }

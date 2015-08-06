@@ -86,7 +86,7 @@ public class AddPrincipalCommand extends KadminCommand {
             getKadmin().addPrincipal(principal, password, kOptions);
             System.out.println("Principal \"" + principal + "\" created.");
         } catch (KrbException e) {
-            System.err.println("Fail to add principal \"" + principal + "\"." + e.getCause());
+            System.err.println("Fail to add principal \"" + principal + "\"." + e.getMessage());
         }
     }
 

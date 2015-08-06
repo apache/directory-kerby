@@ -74,7 +74,7 @@ public class KeytabAddCommand extends KadminCommand {
             System.out.println("Done!");
         } catch (KrbException e) {
             System.err.println("Principal \"" + principal + "\" fail to add entry to keytab."
-                    + e.getCause());
+                    + e.getMessage());
         }
     }
 }
