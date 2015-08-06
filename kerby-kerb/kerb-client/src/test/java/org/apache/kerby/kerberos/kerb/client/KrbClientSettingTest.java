@@ -28,7 +28,7 @@ public class KrbClientSettingTest {
 
     @Test
     public void testKdcServerMannualSetting() throws KrbException {
-        KrbClient krbClient = new KrbClient();
+        KrbClient krbClient = new KrbClient(new KrbConfig());
 
         krbClient.setKdcHost("localhost");
         krbClient.setKdcRealm("TEST2.COM");

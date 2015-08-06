@@ -129,7 +129,7 @@ public class AuthUtil {
             options.put("doNotPrompt", "true");
             options.put("renewTGT", "false");
             options.put("refreshKrb5Config", "true");
-            options.put("isInitiator", "false");
+            options.put("isInitiator", "true");
             options.put("debug", String.valueOf(enableDebug));
 
             return new AppConfigurationEntry[]{
