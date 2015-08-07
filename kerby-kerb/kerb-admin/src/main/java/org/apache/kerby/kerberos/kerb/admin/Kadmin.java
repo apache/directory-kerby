@@ -34,9 +34,13 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Server side admin facilities.
@@ -238,14 +242,33 @@ public class Kadmin {
     public void exportKeytab(File keytabFile, String principal)
             throws KrbException {
         principal = fixPrincipal(principal);
+        List<String> principals = new ArrayList<>(1);
+        principals.add(principal);
+        exportKeytab(keytabFile, principals);
+    }
+
+    /**
+     * Export all the keys of the specified principals into the specified keytab
+     * file.
+     *
+     * @param keytabFile The keytab file
+     * @param principals The principal names
+     * @throws KrbException
+     */
+    public void exportKeytab(File keytabFile, List<String> principals)
+            throws KrbException {
         //Get Identity
-        KrbIdentity identity = backend.getIdentity(principal);
-        if (identity == null) {
-            throw new KrbException("Can not find the identity for pincipal "
-                    + principal);
+        List<KrbIdentity> identities = new LinkedList<>();
+        for (String principal : principals) {
+            KrbIdentity identity = backend.getIdentity(principal);
+            if (identity == null) {
+                throw new KrbException("Can not find the identity for pincipal "
+                        + principal);
+            }
+            identities.add(identity);
         }
 
-        AdminHelper.exportKeytab(keytabFile, identity);
+        AdminHelper.exportKeytab(keytabFile, identities);
     }
 
     /**
@@ -393,6 +416,60 @@ public class Kadmin {
             principalList.add(iterator.next());
         }
         return principalList;
+    }
+
+    /**
+     * Get all the Pattern for matching from glob string. The glob string can contain "." "*" and "[]"
+     *
+     * @param globString The glob string for matching
+     * @throws KrbException
+     */
+    public Pattern getPatternFromGlobPatternString(String globString) throws KrbException
+    {
+        if (globString == null || globString.equals("")) {
+            return null;
+        }
+        if (!Pattern.matches("^[0-9A-Za-z._/@*?\\[\\]\\-]+$", globString)) {
+            throw new KrbException("Glob pattern string contains invalid character!");
+        }
+        String patternString = globString;
+        patternString = patternString.replaceAll("\\.", "\\\\.");
+        patternString = patternString.replaceAll("\\?", ".");
+        patternString = patternString.replaceAll("\\*", ".*");
+        patternString = "^" + patternString + "$";
+
+        Pattern pt;
+        try {
+            pt = Pattern.compile(patternString);
+        } catch (PatternSyntaxException e) {
+            throw new KrbException("Invalid glob pattern string!");
+        }
+        return pt;
+    }
+
+    /**
+     * Get all the principal names that meets the pattern
+     *
+     * @param pt The pattern for matching
+     * @throws KrbException
+     */
+    public List<String> getPrincipalNamesByPattern(Pattern pt) throws KrbException {
+        if (pt == null) {
+            return getPrincipals();
+        }
+
+        Boolean containsAt = pt.pattern().indexOf('@') != -1;
+        List<String> result = new LinkedList<>();
+
+        List<String> principalNames = getPrincipals();
+        for (String principal: principalNames) {
+            String toMatch = containsAt ? principal : principal.split("@")[0];
+            Matcher m = pt.matcher(toMatch);
+            if (m.matches()) {
+                result.add(principal);
+            }
+        }
+        return result;
     }
 
     /**

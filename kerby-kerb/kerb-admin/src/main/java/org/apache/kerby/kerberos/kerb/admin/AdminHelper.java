@@ -60,6 +60,26 @@ public final class AdminHelper {
     }
 
     /**
+     * Export all the keys of the specified principal into the specified keytab
+     * file.
+     *
+     * @param keytabFile The keytab file
+     * @param identities  Identities to export to keytabFile
+     * @throws KrbException
+     */
+    static void exportKeytab(File keytabFile, List<KrbIdentity> identities)
+            throws KrbException {
+
+        Keytab keytab = createOrLoadKeytab(keytabFile);
+
+        for (KrbIdentity identity : identities) {
+            exportToKeytab(keytab, identity);
+        }
+
+        storeKeytab(keytab, keytabFile);
+    }
+
+    /**
      * Load keytab from keytab file.
      *
      * @param keytabFile The keytab file
