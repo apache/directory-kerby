@@ -39,7 +39,7 @@ The admin principal will be exported into [keytab], it will be used by kadmin to
 * 3. Start kerby-kdc-server:
 ```
 cd kerby-dist/kdc-dist
-sh bin/start-kdc.sh –start [server-conf-dir] [work-dir]
+sh bin/start-kdc.sh [server-conf-dir] [work-dir]
 ```
 
 * 4. Run kadmin to add principals:
