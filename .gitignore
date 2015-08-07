@@ -18,3 +18,4 @@ kerby-dist/kdc-dist/lib/
 kerby-dist/tool-dist/lib/
 kerby-dist/kdc-dist/logs/
 kerby-dist/tool-dist/logs/
+kerby-dist/kdc-dist/conf/krb5.conf

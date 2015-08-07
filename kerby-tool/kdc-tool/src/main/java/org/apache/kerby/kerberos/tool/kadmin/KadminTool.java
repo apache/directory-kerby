@@ -38,11 +38,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
 
 public class KadminTool {
     private static final Logger LOG = LoggerFactory.getLogger(KadminTool.class);
+    private static File confDir;
 
     private static final String PROMPT = KadminTool.class.getSimpleName() + ".local";
     private static final String REQUEST_LIST = "Available " + PROMPT + " requests:\n"
@@ -144,7 +146,6 @@ public class KadminTool {
     }
 
     private static File getConfDir(String[] args) {
-        File confDir;
         String envDir;
         confDir = new File(args[0]);
         if (confDir == null || !confDir.exists()) {
@@ -169,7 +170,7 @@ public class KadminTool {
         return confDir;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws KrbException {
 
         if (args.length < 2) {
             System.err.println(USAGE);
@@ -182,6 +183,13 @@ public class KadminTool {
         } catch (KrbException e) {
             System.err.println("Failed to init Kadmin due to " + e.getMessage());
             return;
+        }
+
+        try {
+            Krb5Conf krb5Conf = new Krb5Conf(confDir, kadmin.getKdcConfig());
+            krb5Conf.initKrb5conf();
+        } catch (IOException e) {
+            throw new KrbException("Failed to make krb5.conf", e);
         }
 
         KOptions kOptions = ToolUtil.parseOptions(args, 1, args.length - 1);
