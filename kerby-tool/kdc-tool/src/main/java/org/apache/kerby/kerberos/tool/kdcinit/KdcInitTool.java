@@ -40,6 +40,7 @@ public class KdcInitTool {
                 + " has exported into keytab file " + keytabFile.getAbsolutePath()
                 + ", please make sure to keep it, because it will be used by kadmin tool"
                 + " for the authentication.");
+        kadmin.getIdentityBackend().stop();
     }
 
     public static void main(String[] args) throws KrbException {

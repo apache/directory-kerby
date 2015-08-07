@@ -23,9 +23,9 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
-import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
+import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcSetting;
@@ -47,7 +47,7 @@ import java.util.regex.PatternSyntaxException;
  */
 public class Kadmin {
     private final KdcSetting kdcSetting;
-    private final IdentityService backend;
+    private final IdentityBackend backend;
 
     /**
      * Construct with prepared KdcConfig and BackendConfig.
@@ -88,7 +88,7 @@ public class Kadmin {
      * @param kdcSetting The kdc setting
      * @param backend    The identity backend
      */
-    public Kadmin(KdcSetting kdcSetting, IdentityService backend) {
+    public Kadmin(KdcSetting kdcSetting, IdentityBackend backend) {
         this.kdcSetting = kdcSetting;
         this.backend = backend;
     }
@@ -172,7 +172,7 @@ public class Kadmin {
      *
      * @return IdentityBackend
      */
-    public IdentityService getIdentityBackend() {
+    public IdentityBackend getIdentityBackend() {
         return backend;
     }
 

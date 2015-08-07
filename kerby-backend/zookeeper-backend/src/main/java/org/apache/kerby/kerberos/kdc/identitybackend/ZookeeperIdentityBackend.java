@@ -78,6 +78,19 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void doStop() throws KrbException {
+        try {
+            zooKeeper.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        LOG.info("Zookeeper stopped.");
+    }
+
+    /**
      * Init Zookeeper Server and connection service, used to initialize the backend.
      */
     private void init() throws KrbException {
@@ -168,6 +181,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
                     }
                 }
             };
+            zookeeperThread.setDaemon(true);
             zookeeperThread.start();
         }
         LOG.info("Embedded Zookeeper started.");
