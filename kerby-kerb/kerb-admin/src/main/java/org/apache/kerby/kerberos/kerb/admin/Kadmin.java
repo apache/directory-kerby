@@ -514,6 +514,15 @@ public class Kadmin {
     }
 
     /**
+     * Stop the backend and release any resources associated.
+     */
+    public void release() throws KrbException {
+        if (backend != null) {
+            backend.stop();
+        }
+    }
+
+    /**
      * Fix principal name.
      *
      * @param principal The principal name

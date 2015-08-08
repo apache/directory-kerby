@@ -24,23 +24,30 @@ import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.io.File;
 
+/**
+ * A tool to initialize KDC backend for the first time when setup the KDC.
+ */
 public class KdcInitTool {
     private Kadmin kadmin;
     private static File keytabFile;
 
-    private static final String USAGE = "Usage: sh bin/kdcinit.sh [conf-dir] [keytab]\n"
-        + "\tExample:\n"
-        + "\t\tsh bin/kdcinit.sh conf /home/admin.keytab\n";
+    private static final String USAGE = "Usage: kdcinit [conf-dir] [output-keytab]\n"
+        + "\tThis tool initializes KDC backend and should only be performed the first time,\n"
+        + "\tand the output keytab should be carefully kept to administrate/kadmin KDC later.\nExample:\n"
+        + "\t\tbin/kdcinit.sh conf /home/admin.keytab\n";
 
-    private void init(File confDir) throws KrbException {
+    void initKdc(File confDir) throws KrbException {
         kadmin = new Kadmin(confDir);
-        kadmin.createBuiltinPrincipals();
-        kadmin.exportKeytab(keytabFile, kadmin.getKadminPrincipal());
-        System.out.println("The kadmin principal " + kadmin.getKadminPrincipal()
-                + " has exported into keytab file " + keytabFile.getAbsolutePath()
-                + ", please make sure to keep it, because it will be used by kadmin tool"
-                + " for the authentication.");
-        kadmin.getIdentityBackend().stop();
+        try {
+            kadmin.createBuiltinPrincipals();
+            kadmin.exportKeytab(keytabFile, kadmin.getKadminPrincipal());
+            System.out.println("The keytab for kadmin principal " +
+                    " has been exported to the specified file " +
+                    keytabFile.getAbsolutePath() + ", please safely keep it, " +
+                    "in order to use kadmin tool later");
+        } finally {
+            kadmin.release();
+        }
     }
 
     public static void main(String[] args) throws KrbException {
@@ -64,21 +71,21 @@ public class KdcInitTool {
         }
 
         if (keytabFile.exists()) {
-            System.err.println("There is one kadmin keytab exists in " + keyTabPath
-                    + ", this tool maybe have been executed, if not,"
-                    + " please delete it or change the keytab-dir.");
+            System.err.println("The kadmin keytab already exists in " + keyTabPath
+                    + ", this tool maybe have been executed already.");
             return;
         }
 
         KdcInitTool kdcInitTool = new KdcInitTool();
 
         try {
-            kdcInitTool.init(confDir);
+            kdcInitTool.initKdc(confDir);
         } catch (KrbException e) {
           System.err.println("Errors occurred when init the kdc " + e.getMessage());
-          return;
+          System.exit(1);
         }
 
-        System.out.println("Finish kdc init.");
+        System.out.println("Finished initializing the KDC backend");
+        System.exit(0);
     }
 }
