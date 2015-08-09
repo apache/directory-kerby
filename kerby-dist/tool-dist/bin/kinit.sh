@@ -21,7 +21,7 @@ DEBUG=
 args=
 for var in $*; do
   if [ $var == "-D" ]; then
-    DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8002,server=y,suspend=n"
+    DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8002,server=y,suspend=y"
   else
     args="$args $var"
   fi

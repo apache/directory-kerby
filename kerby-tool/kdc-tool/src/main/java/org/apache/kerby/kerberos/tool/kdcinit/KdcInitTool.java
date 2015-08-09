@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.tool.kdcinit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.util.OSUtil;
 
 import java.io.File;
 
@@ -31,10 +32,12 @@ public class KdcInitTool {
     private Kadmin kadmin;
     private static File keytabFile;
 
-    private static final String USAGE = "Usage: kdcinit [conf-dir] [output-keytab]\n"
-        + "\tThis tool initializes KDC backend and should only be performed the first time,\n"
-        + "\tand the output keytab should be carefully kept to administrate/kadmin KDC later.\nExample:\n"
-        + "\t\tbin/kdcinit.sh conf /home/admin.keytab\n";
+    private static  final String USAGE = OSUtil.isWindows() ?
+            "Usage: bin/kdcinit.cmd" : "Usage: sh bin/kdcinit.sh"
+            + " [conf-dir] [output-keytab]\n"
+            + "\tThis tool initializes KDC backend and should only be performed the first time,\n"
+            + "\tand the output keytab should be carefully kept to administrate/kadmin KDC later.\nExample:\n"
+            + "\t\tbin/kdcinit.sh conf /home/admin.keytab\n";
 
     void initKdc(File confDir) throws KrbException {
         kadmin = new Kadmin(confDir);
@@ -81,8 +84,8 @@ public class KdcInitTool {
         try {
             kdcInitTool.initKdc(confDir);
         } catch (KrbException e) {
-          System.err.println("Errors occurred when init the kdc " + e.getMessage());
-          System.exit(1);
+            System.err.println("Errors occurred when init the kdc " + e.getMessage());
+            System.exit(1);
         }
 
         System.out.println("Finished initializing the KDC backend");

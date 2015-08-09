@@ -33,6 +33,7 @@ import org.apache.kerby.kerberos.tool.kadmin.command.KeytabRemoveCommand;
 import org.apache.kerby.kerberos.tool.kadmin.command.ListPrincipalCommand;
 import org.apache.kerby.kerberos.tool.kadmin.command.ModifyPrincipalCommand;
 import org.apache.kerby.kerberos.tool.kadmin.command.RenamePrincipalCommand;
+import org.apache.kerby.util.OSUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,8 +87,9 @@ public class KadminTool {
             + "list_requests, lr, ?     List available requests.\n"
             + "quit, exit, q            Exit program.";
 
-    private static final String USAGE =
-        "Usage: sh bin/kadmin.sh [conf-dir] [-c cache_name]|[-k keytab]\n"
+    private static  final String USAGE = OSUtil.isWindows() ?
+            "Usage: bin/kadmin.cmd" : "Usage: sh bin/kadmin.sh"
+            + " [conf-dir] [-c cache_name]|[-k keytab]\n"
             + "\tExample:\n"
             + "\t\tsh bin/kadmin.sh conf -k /home/admin.keytab\n";
 
@@ -209,7 +211,7 @@ public class KadminTool {
                 AuthUtil.loginUsingTicketCache(kadminPrincipal, ccFile);
             } catch (LoginException e) {
                 System.err.println("Could not login with: " + kadminPrincipal
-                    + e.getMessage());
+                        + e.getMessage());
                 return;
             }
         } else if (kOptions.contains(KadminOption.K)) {
@@ -222,7 +224,7 @@ public class KadminTool {
                 AuthUtil.loginUsingKeytab(kadminPrincipal, keyTabFile);
             } catch (LoginException e) {
                 System.err.println("Could not login with: " + kadminPrincipal
-                    + e.getMessage());
+                        + e.getMessage());
                 return;
             }
         } else {

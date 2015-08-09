@@ -23,6 +23,7 @@ import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
+import org.apache.kerby.util.OSUtil;
 
 import java.io.File;
 
@@ -48,9 +49,11 @@ public class KerbyKdcServer extends KdcServer {
         kadmin.checkBuiltinPrincipals();
     }
 
-    private static final String USAGE = "Usage: sh bin/start-kdc.sh [conf-dir] [working-dir] \n"
-        + "\tExample:\n"
-        + "\t\tsh bin/start-kdc.sh conf /tmp\n";
+    private static  final String USAGE = OSUtil.isWindows() ?
+            "Usage: bin/start-kdc.cmd" : "Usage: sh bin/start-kdc.sh"
+            + " [conf-dir] [working-dir] \n"
+            + "\tExample:\n"
+            + "\t\tsh bin/start-kdc.sh conf runtime\n";
 
     public static void main(String[] args) throws KrbException {
         if (args.length != 3) {
@@ -78,10 +81,11 @@ public class KerbyKdcServer extends KdcServer {
             server.init();
         } catch (KrbException e) {
             System.err.println("Errors occurred when start kdc server:  " + e.getMessage());
-            return;
+            System.exit(4);
         }
 
         server.start();
         System.out.println("KDC started.");
+        System.exit(0);
     }
 }
