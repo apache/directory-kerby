@@ -36,6 +36,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get KDC host name
+     *
      * @return
      */
     public String getKdcHost() {
@@ -44,6 +45,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get KDC port, as both TCP and UDP ports
+     *
      * @return
      */
     public int getKdcPort() {
@@ -57,6 +59,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get KDC TCP port
+     *
      * @return
      */
     public int getKdcTcpPort() {
@@ -70,6 +73,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Is to allow UDP for KDC
+     *
      * @return true to allow UDP, false otherwise
      */
     public boolean allowKdcUdp() {
@@ -79,14 +83,17 @@ public class KrbConfig extends Conf {
 
     /**
      * Is to allow TCP for KDC
+     *
      * @return true to allow TCP, false otherwise
      */
     public boolean allowKdcTcp() {
         return getBoolean(KrbConfigKey.KDC_ALLOW_TCP) || KrbConfHelper.getIntUnderSection(this,
                 KrbConfigKey.KDC_TCP_PORT) != null;
     }
+
     /**
      * Get KDC UDP port
+     *
      * @return
      */
     public int getKdcUdpPort() {
@@ -98,94 +105,163 @@ public class KrbConfig extends Conf {
         return getKdcPort();
     }
 
+    /**
+     * Get KDC realm.
+     */
     public String getKdcRealm() {
         return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.KDC_REALM);
     }
 
+    /**
+     * Get whether preatuh is required.
+     */
     public boolean isPreauthRequired() {
         return getBoolean(KrbConfigKey.PREAUTH_REQUIRED);
     }
 
+    /**
+     * Get tgs principal.
+     */
     public String getTgsPrincipal() {
         return getString(KrbConfigKey.TGS_PRINCIPAL);
     }
 
+    /**
+     * Get allowable clock skew.
+     */
     public long getAllowableClockSkew() {
         return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.CLOCKSKEW);
     }
 
+    /**
+     * Get whether empty addresses allowed.
+     */
     public boolean isEmptyAddressesAllowed() {
         return getBoolean(KrbConfigKey.EMPTY_ADDRESSES_ALLOWED);
     }
 
+    /**
+     * Get whether forward is allowed.
+     */
     public boolean isForwardableAllowed() {
         return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.FORWARDABLE);
     }
 
+    /**
+     * Get whether post dated is allowed.
+     */
     public boolean isPostdatedAllowed() {
         return getBoolean(KrbConfigKey.POSTDATED_ALLOWED);
     }
 
+    /**
+     * Get whether proxy is allowed.
+     */
     public boolean isProxiableAllowed() {
         return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.PROXIABLE);
     }
 
+    /**
+     * Get whether renew is allowed.
+     */
     public boolean isRenewableAllowed() {
         return getBoolean(KrbConfigKey.RENEWABLE_ALLOWED);
     }
 
+    /**
+     * Get maximum renewable life time.
+     */
     public long getMaximumRenewableLifetime() {
         return getLong(KrbConfigKey.MAXIMUM_RENEWABLE_LIFETIME);
     }
 
+    /**
+     * Get maximum ticket life time.
+     */
     public long getMaximumTicketLifetime() {
         return getLong(KrbConfigKey.MAXIMUM_TICKET_LIFETIME);
     }
 
+    /**
+     * Get minimum ticket life time.
+     */
     public long getMinimumTicketLifetime() {
         return getLong(KrbConfigKey.MINIMUM_TICKET_LIFETIME);
     }
 
+    /**
+     * Get encryption types.
+     */
     public List<EncryptionType> getEncryptionTypes() {
         return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.PERMITTED_ENCTYPES);
     }
 
+    /**
+     * Get whether pa encrypt timestamp required.
+     */
     public boolean isPaEncTimestampRequired() {
         return getBoolean(KrbConfigKey.PA_ENC_TIMESTAMP_REQUIRED);
     }
 
+    /**
+     * Get whether body checksum verified.
+     */
     public boolean isBodyChecksumVerified() {
         return getBoolean(KrbConfigKey.VERIFY_BODY_CHECKSUM);
     }
 
+    /**
+     * Get default realm.
+     */
     public String getDefaultRealm() {
         return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.DEFAULT_REALM);
     }
 
+    /**
+     * Get whether dns look up kdc.
+     */
     public boolean getDnsLookUpKdc() {
         return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.DNS_LOOKUP_KDC);
     }
 
+    /**
+     * Get whether dns look up realm.
+     */
     public boolean getDnsLookUpRealm() {
         return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.DNS_LOOKUP_REALM);
     }
 
+    /**
+     * Get whether allow weak crypto.
+     */
     public boolean getAllowWeakCrypto() {
         return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.ALLOW_WEAK_CRYPTO);
     }
 
+    /**
+     * Get ticket life time.
+     */
     public long getTicketLifetime() {
         return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.TICKET_LIFETIME);
     }
 
+    /**
+     * Get renew life time.
+     */
     public long getRenewLifetime() {
         return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.RENEW_LIFETIME);
     }
 
+    /**
+     * Get default tgs encryption types.
+     */
     public List<EncryptionType> getDefaultTgsEnctypes() {
         return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TGS_ENCTYPES);
     }
 
+    /**
+     * Get default ticket encryption types.
+     */
     public List<EncryptionType> getDefaultTktEnctypes() {
         return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TKT_ENCTYPES);
     }

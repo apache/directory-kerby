@@ -23,6 +23,8 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.io.File;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class KeytabAddCommand extends KadminCommand {
     private static final String USAGE =
@@ -40,6 +42,7 @@ public class KeytabAddCommand extends KadminCommand {
 
         String principal = null;
         String keytabFileLocation = null;
+        Boolean glob = false;
 
         //Since commands[0] is ktadd, the initial index is 1.
         int index = 1;
@@ -53,6 +56,8 @@ public class KeytabAddCommand extends KadminCommand {
                 }
                 keytabFileLocation = commands[index].trim();
 
+            } else if (command.equals("-glob")) {
+                glob = true;
             } else if (!command.startsWith("-")) {
                 principal = command;
             }
@@ -64,17 +69,26 @@ public class KeytabAddCommand extends KadminCommand {
         }
         File keytabFile = new File(keytabFileLocation);
 
-        if (principal == null || !keytabFile.exists()) {
+        if (principal == null) {
+            System.out.println((glob ? "princ-exp" : "principal") + " not specified!");
             System.err.println(USAGE);
             return;
         }
 
         try {
-            getKadmin().exportKeytab(keytabFile, principal);
+            if (glob) {
+                Pattern pt = getKadmin().getPatternFromGlobPatternString(principal);
+                List<String> principals = getKadmin().getPrincipalNamesByPattern(pt);
+                if (principals.size() != 0) {
+                    getKadmin().exportKeytab(keytabFile, principals);
+                }
+            } else {
+                getKadmin().exportKeytab(keytabFile, principal);
+            }
             System.out.println("Done!");
         } catch (KrbException e) {
             System.err.println("Principal \"" + principal + "\" fail to add entry to keytab."
-                    + e.getCause());
+                    + e.getMessage());
         }
     }
 }

@@ -130,7 +130,7 @@ public final class JaasKrbUtil {
             options.put("doNotPrompt", "true");
             options.put("renewTGT", "false");
             options.put("refreshKrb5Config", "true");
-            options.put("isInitiator", "false");
+            options.put("isInitiator", "true");
             options.put("debug", String.valueOf(ENABLE_DEBUG));
 
             return new AppConfigurationEntry[]{

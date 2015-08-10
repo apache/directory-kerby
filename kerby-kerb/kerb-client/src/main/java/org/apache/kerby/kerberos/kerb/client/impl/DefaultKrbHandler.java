@@ -29,6 +29,9 @@ import java.nio.ByteBuffer;
 
 public class DefaultKrbHandler extends KrbHandler {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handleRequest(KdcRequest kdcRequest) throws KrbException {
         KrbTransport transport = (KrbTransport) kdcRequest.getSessionData();
@@ -44,6 +47,9 @@ public class DefaultKrbHandler extends KrbHandler {
         super.onResponseMessage(kdcRequest, receivedMessage);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void sendMessage(KdcRequest kdcRequest,
                                ByteBuffer requestMessage) throws IOException {

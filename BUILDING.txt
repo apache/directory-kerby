@@ -1,0 +1,31 @@
+#Build instructions for Kerby
+-------------
+###Requirements:
+* JDK 1.7+
+* Maven 3.0 or later
+* Internet connection for first build (to fetch all Maven and Kerby dependencies)
+
+###Where to run Maven from?
+
+It should be run at the top directory of Kerby.
+
+###Maven build goals:
+
+* Clean         : mvn clean
+* Compile       : mvn compile
+* Run tests     : mvn test
+* Create JAR    : mvn package
+* Install JAR in M2 cache   : mvn install
+* Deploy JAR to Maven repo  : mvn deploy
+* Build distribution        : mvn package [-Pdist]
+* Run findbugs   : mvn compile findbugs:findbugs
+* Run benchmarks : mvn integration-test -Pbenchmark
+
+###Build options:
+
+* To run findbugs without running tests : mvn clean package -DskipTests findbugs:findbugs [site]
+* Building distributions  without running tests : mvn package -Pdist -DskipTests
+  (tar package in /kerby/kerby-dist/kdc-dist/target/ & /kerby/kerby-dist/tool-dist/target/)
+* Generate javadoc without running tests: mvn clean package -DskipTests javadoc:javadoc
+* Checkstyle & PMD checks are run by default. To build quickly and prevent them from running,
+  add option [-Pnochecks], for example, mvn package -Pnochecks

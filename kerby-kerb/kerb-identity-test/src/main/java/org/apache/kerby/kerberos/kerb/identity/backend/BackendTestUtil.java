@@ -45,6 +45,16 @@ public final class BackendTestUtil {
             EncryptionType.DES3_CBC_SHA1_KD
     };
 
+    public static void createManyIdentities(IdentityBackend backend,
+                                            int count) throws KrbException {
+        int howMany = count > 0 ? count : 20;
+        List<KrbIdentity> identities = createManyIdentities(howMany);
+
+        for (KrbIdentity identity : identities) {
+            backend.addIdentity(identity);
+        }
+    }
+
     public static KrbIdentity[] createManyIdentities() throws KrbException {
         List<KrbIdentity> results = createManyIdentities(20);
         return results.toArray(new KrbIdentity[results.size()]);
@@ -60,6 +70,19 @@ public final class BackendTestUtil {
         }
 
         return results;
+    }
+
+    public static void createTheTestIdentity(
+            IdentityBackend backend) throws KrbException {
+        backend.addIdentity(createOneIdentity(TEST_PRINCIPAL));
+    }
+
+    public static void getTheTestIdentity(
+            IdentityBackend backend) throws KrbException {
+        KrbIdentity identity = backend.getIdentity(TEST_PRINCIPAL);
+        if (identity == null) {
+            throw new KrbException("Failed to get the test principal");
+        }
     }
 
     public static KrbIdentity createOneIdentity() throws KrbException {

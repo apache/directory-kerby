@@ -74,7 +74,7 @@ public class RenamePrincipalCommand extends KadminCommand {
             System.out.println("Principal \"" + oldPrincipalName + "\" renamed to \""
                     + newPrincipalName + "\".");
         } catch (KrbException e) {
-            System.err.println("Principal rename failed! Exception happened. " + e.getCause());
+            System.err.println("Principal rename failed! Exception happened. " + e.getMessage());
         }
     }
 }

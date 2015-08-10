@@ -227,11 +227,6 @@ public final class Keytab implements KrbKeytab {
     }
 
     private void writeEntries(KeytabOutputStream kos) throws IOException {
-        for (PrincipalName principal : principalEntries.keySet()) {
-            for (KeytabEntry entry : principalEntries.get(principal)) {
-                entry.store(kos);
-            }
-        }
         for (Map.Entry<PrincipalName, List<KeytabEntry>> entryList : principalEntries.entrySet()) {
             for (KeytabEntry entry : entryList.getValue()) {
                 entry.store(kos);

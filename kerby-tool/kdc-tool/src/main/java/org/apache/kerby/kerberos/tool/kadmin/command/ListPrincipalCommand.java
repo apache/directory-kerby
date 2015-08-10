@@ -23,8 +23,11 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ListPrincipalCommand extends KadminCommand {
+    private static final String USAGE = "Usage: list_principals [expression]\n"
+            + "\t'expression' is a shell-style glob expression that can contain the wild-card characters ?, *, and [].";
 
     public ListPrincipalCommand(Kadmin kadmin) {
         super(kadmin);
@@ -32,18 +35,25 @@ public class ListPrincipalCommand extends KadminCommand {
 
     @Override
     public void execute(String input) {
-        String[] commands = input.split(" ");
+        String[] commands = input.split("\\s+");
 
-        if (commands.length == 1) {
+        if (commands.length <= 2) {
+            String expression = commands.length == 2 ? commands[1] : null;
             try {
-                List<String> principalNames = getKadmin().getPrincipals();
+                Pattern pt = getKadmin().getPatternFromGlobPatternString(expression);
+                List<String> principalNames = getKadmin().getPrincipalNamesByPattern(pt);
+                if (principalNames.size() == 0) {
+                    return;
+                }
                 System.out.println("Principals are listed:");
                 for (String principalName : principalNames) {
-                    System.out.println(principalName);
+                    System.out.println("\t" + principalName);
                 }
             } catch (KrbException e) {
-                System.err.print("Fail to list principal!" + e.getMessage());
+                System.err.print("Fail to list principal! " + e.getMessage());
             }
+        } else {
+            System.err.println(USAGE);
         }
     }
 }

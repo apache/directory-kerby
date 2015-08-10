@@ -78,6 +78,19 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void doStop() throws KrbException {
+        try {
+            zooKeeper.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        LOG.info("Zookeeper session closed.");
+    }
+
+    /**
      * Init Zookeeper Server and connection service, used to initialize the backend.
      */
     private void init() throws KrbException {
@@ -164,10 +177,11 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
                     try {
                         zooKeeperServer.runFromConfig(configuration);
                     } catch (IOException e) {
-                        throw new RuntimeException("ZooKeeper Failed", e);
+                        LOG.warn(e.getMessage());
                     }
                 }
             };
+            zookeeperThread.setDaemon(true);
             zookeeperThread.start();
         }
         LOG.info("Embedded Zookeeper started.");
@@ -213,11 +227,6 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) throws KrbException {
-        if (doGetIdentity(identity.getPrincipalName()) != null) {
-             LOG.error("Error occurred while adding identity, principal "
-                + identity.getPrincipalName() + " already exists.");
-            throw new KrbException("Principal already exists.");
-        }
         try {
             setIdentity(identity);
         } catch (KeeperException e) {
@@ -231,11 +240,6 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) throws KrbException {
-        if (doGetIdentity(identity.getPrincipalName()) == null) {
-            LOG.error("Error occured while updating identity, principal "
-                + identity.getPrincipalName() + " does not exists.");
-            throw new KrbException("Principal does not exist.");
-        }
         try {
             setIdentity(identity);
         } catch (KeeperException e) {
@@ -250,11 +254,6 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected void doDeleteIdentity(String principalName) throws KrbException {
         principalName = replaceSlash(principalName);
-        if (doGetIdentity(principalName) == null) {
-            LOG.error("Error occurred while deleting identity, principal "
-                + principalName + " does not exists.");
-            throw new KrbException("Principal does not exist.");
-        }
         IdentityZNode identityZNode = new IdentityZNode(zooKeeper, principalName);
         try {
             identityZNode.deleteIdentity();

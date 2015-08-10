@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
@@ -53,12 +53,18 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         super(new PkinitPreauthMeta());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init(KrbContext context) {
         super.init(context);
         this.pkinitContext = new PkinitContext();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PluginRequestContext initRequestContext(KdcRequest kdcRequest) {
         PkinitRequestContext reqCtx = new PkinitRequestContext();
@@ -68,6 +74,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         return reqCtx;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setPreauthOptions(KdcRequest kdcRequest,
                                   PluginRequestContext requestContext,
@@ -89,6 +98,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void prepareQuestions(KdcRequest kdcRequest,
                                  PluginRequestContext requestContext) {
@@ -103,17 +115,24 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         // Might have questions asking for password to access the private key
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void tryFirst(KdcRequest kdcRequest,
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean process(KdcRequest kdcRequest,
-                        PluginRequestContext requestContext,
-                        PaDataEntry inPadata,
-                        PaData outPadata) throws KrbException {
+                           PluginRequestContext requestContext,
+                           PaDataEntry inPadata,
+                           PaData outPadata) throws KrbException {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
         if (inPadata == null) {
@@ -169,7 +188,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
 
         if (usingRsa) {
-           System.out.println(); // DH case
+            System.out.println(); // DH case
         } else {
             authPack.setClientPublicValue(null);
         }
@@ -187,7 +206,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     }
 
     private byte[] signAuthPack(PkinitContext pkinitContext,
-                                   PkinitRequestContext reqCtx, AuthPack authPack) {
+                                PkinitRequestContext reqCtx, AuthPack authPack) {
         return null;
     }
 
@@ -203,12 +222,15 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         kdcRequest.setAsKey(asKey);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean tryAgain(KdcRequest kdcRequest,
-                         PluginRequestContext requestContext,
-                         PaDataType preauthType,
-                         PaData errPadata,
-                         PaData outPadata) {
+                            PluginRequestContext requestContext,
+                            PaDataType preauthType,
+                            PaData errPadata,
+                            PaData outPadata) {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
         if (reqCtx.paType != preauthType && errPadata == null) {
@@ -217,9 +239,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         boolean doAgain = false;
         for (PaDataEntry pde : errPadata.getElements()) {
-         //   switch (pde.getPaDataType()) {
-                // TODO
-        //    }
+            //   switch (pde.getPaDataType()) {
+            // TODO
+            //    }
             System.out.println();
         }
 
@@ -230,6 +252,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PaFlags getFlags(PaDataType paType) {
         PaFlags paFlags = new PaFlags(0);

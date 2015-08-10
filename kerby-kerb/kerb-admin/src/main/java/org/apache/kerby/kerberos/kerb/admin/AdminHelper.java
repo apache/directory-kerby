@@ -41,6 +41,14 @@ public final class AdminHelper {
 
     private AdminHelper() { }
 
+    /**
+     * Export all the keys of the specified principal into the specified keytab
+     * file.
+     *
+     * @param keytabFile The keytab file
+     * @param identity  The identity
+     * @throws KrbException
+     */
     static void exportKeytab(File keytabFile, KrbIdentity identity)
             throws KrbException {
 
@@ -51,6 +59,33 @@ public final class AdminHelper {
         storeKeytab(keytab, keytabFile);
     }
 
+    /**
+     * Export all the keys of the specified principal into the specified keytab
+     * file.
+     *
+     * @param keytabFile The keytab file
+     * @param identities  Identities to export to keytabFile
+     * @throws KrbException
+     */
+    static void exportKeytab(File keytabFile, List<KrbIdentity> identities)
+            throws KrbException {
+
+        Keytab keytab = createOrLoadKeytab(keytabFile);
+
+        for (KrbIdentity identity : identities) {
+            exportToKeytab(keytab, identity);
+        }
+
+        storeKeytab(keytab, keytabFile);
+    }
+
+    /**
+     * Load keytab from keytab file.
+     *
+     * @param keytabFile The keytab file
+     * @return The keytab load from keytab file
+     * @throws KrbException
+     */
     static Keytab loadKeytab(File keytabFile) throws KrbException {
         Keytab keytab;
         try {
@@ -62,6 +97,14 @@ public final class AdminHelper {
         return keytab;
     }
 
+    /**
+     * If keytab file does not exist, create a new keytab,
+     * otherwise load keytab from keytab file.
+     *
+     * @param keytabFile The keytab file
+     * @return The keytab load from keytab file
+     * @throws KrbException
+     */
     static Keytab createOrLoadKeytab(File keytabFile) throws KrbException {
 
         Keytab keytab;
@@ -82,6 +125,13 @@ public final class AdminHelper {
         return keytab;
     }
 
+    /**
+     * Export all the keys of the specified identity into the keytab.
+     *
+     * @param keytab The keytab
+     * @param identity  The identity
+     * @throws KrbException
+     */
     static void exportToKeytab(Keytab keytab, KrbIdentity identity)
         throws KrbException {
 
@@ -95,6 +145,13 @@ public final class AdminHelper {
         }
     }
 
+    /**
+     * Store the keytab to keytab file.
+     *
+     * @param keytab   The keytab
+     * @param keytabFile The keytab file
+     * @throws KrbException
+     */
     static void storeKeytab(Keytab keytab, File keytabFile) throws KrbException {
         try {
             keytab.store(keytabFile);
@@ -103,6 +160,14 @@ public final class AdminHelper {
         }
     }
 
+    /**
+     * Remove all the keys of the specified principal in the specified keytab
+     * file.
+     *
+     * @param keytabFile The keytab file
+     * @param principalName  The principal name
+     * @throws KrbException
+     */
     static void removeKeytabEntriesOf(File keytabFile,
                                              String principalName) throws KrbException {
         Keytab keytab = loadKeytab(keytabFile);
@@ -112,6 +177,15 @@ public final class AdminHelper {
         storeKeytab(keytab, keytabFile);
     }
 
+    /**
+     * Remove all the keys of the specified principal with specified kvno
+     * in the specified keytab file.
+     *
+     * @param keytabFile The keytab file
+     * @param principalName  The principal name
+     * @param kvno The kvno
+     * @throws KrbException
+     */
     static void removeKeytabEntriesOf(File keytabFile,
                                       String principalName, int kvno) throws KrbException {
         Keytab keytab = loadKeytab(keytabFile);
@@ -121,6 +195,14 @@ public final class AdminHelper {
         storeKeytab(keytab, keytabFile);
     }
 
+    /**
+     * Remove all the old keys of the specified principal
+     * in the specified keytab file.
+     *
+     * @param keytabFile The keytab file
+     * @param principalName  The principal name
+     * @throws KrbException
+     */
     static void removeOldKeytabEntriesOf(File keytabFile,
                                                 String principalName) throws KrbException {
         Keytab keytab = loadKeytab(keytabFile);
@@ -144,6 +226,12 @@ public final class AdminHelper {
         storeKeytab(keytab, keytabFile);
     }
 
+    /**
+     * Create principal.
+     *
+     * @param principal The principal name to be created
+     * @param kOptions  The KOptions with principal info
+     */
     static KrbIdentity createIdentity(String principal, KOptions kOptions)
         throws KrbException {
         KrbIdentity kid = new KrbIdentity(principal);
@@ -165,6 +253,13 @@ public final class AdminHelper {
         return kid;
     }
 
+    /**
+     * Modify the principal with KOptions.
+     *
+     * @param identity The identity to be modified
+     * @param kOptions  The KOptions with changed principal info
+     * @throws KrbException
+     */
     static void updateIdentity(KrbIdentity identity, KOptions kOptions) {
         if (kOptions.contains(KadminOption.EXPIRE)) {
             Date date = kOptions.getDateOption(KadminOption.EXPIRE);

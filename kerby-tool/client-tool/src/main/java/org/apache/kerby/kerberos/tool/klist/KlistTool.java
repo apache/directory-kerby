@@ -27,6 +27,7 @@ import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.util.HexUtil;
+import org.apache.kerby.util.OSUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,26 +43,27 @@ import java.util.List;
  */
 public class KlistTool {
 
-    private static  final String USAGE =
-            "Usage: klist [-e] [-V] [[-c] [-l] [-A] [-d] [-f] [-s] "
-                    + "[-a [-n]]] [-k [-t] [-K]] [name]\n"
-                    + "\t-c specifies credentials cache\n"
-                    + "\t-k specifies keytab\n"
-                    + "\t   (Default is credentials cache)\n"
-                    + "\t-i uses default client keytab if no name given\n"
-                    + "\t-l lists credential caches in collection\n"
-                    + "\t-A shows content of all credential caches\n"
-                    + "\t-e shows the encryption type\n"
-                    + "\t-V shows the Kerberos version and exits\n"
-                    + "\toptions for credential caches:\n"
-                    + "\t\t-d shows the submitted authorization data types\n"
-                    + "\t\t-f shows credentials flags\n"
-                    + "\t\t-s sets exit status based on valid tgt existence\n"
-                    + "\t\t-a displays the address list\n"
-                    + "\t\t\t-n do not reverse-resolve\n"
-                    + "\toptions for keytabs:\n"
-                    + "\t\t-t shows keytab entry timestamps\n"
-                    + "\t\t-K shows keytab entry keys\n";
+    private static  final String USAGE = OSUtil.isWindows()
+            ? "Usage: bin/klist.cmd" : "Usage: sh bin/klist.sh"
+            + " [-e] [-V] [[-c] [-l] [-A] [-d] [-f] [-s] "
+            + "[-a [-n]]] [-k [-t] [-K]] [name]\n"
+            + "\t-c specifies credentials cache\n"
+            + "\t-k specifies keytab\n"
+            + "\t   (Default is credentials cache)\n"
+            + "\t-i uses default client keytab if no name given\n"
+            + "\t-l lists credential caches in collection\n"
+            + "\t-A shows content of all credential caches\n"
+            + "\t-e shows the encryption type\n"
+            + "\t-V shows the Kerberos version and exits\n"
+            + "\toptions for credential caches:\n"
+            + "\t\t-d shows the submitted authorization data types\n"
+            + "\t\t-f shows credentials flags\n"
+            + "\t\t-s sets exit status based on valid tgt existence\n"
+            + "\t\t-a displays the address list\n"
+            + "\t\t\t-n do not reverse-resolve\n"
+            + "\toptions for keytabs:\n"
+            + "\t\t-t shows keytab entry timestamps\n"
+            + "\t\t-K shows keytab entry keys\n";
 
     // option "-k" hava a optional parameter, "/etc/krb5.keytab" if not specified
     private static String keytabFilePath = null;

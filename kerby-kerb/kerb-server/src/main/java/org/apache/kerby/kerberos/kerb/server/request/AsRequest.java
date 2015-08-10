@@ -50,6 +50,9 @@ public class AsRequest extends KdcRequest {
         super(asReq, kdcContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void checkClient() throws KrbException {
         KdcReq request = getKdcReq();
@@ -94,6 +97,9 @@ public class AsRequest extends KdcRequest {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void issueTicket() throws KrbException {
         TickertIssuer issuer = new TgtTickertIssuer(this);
@@ -101,6 +107,9 @@ public class AsRequest extends KdcRequest {
         setTicket(newTicket);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void makeReply() throws KrbException {
 
@@ -123,6 +132,9 @@ public class AsRequest extends KdcRequest {
         setReply(reply);
     }
 
+    /**
+     * Make EncKdcRepPart.
+     */
     protected EncKdcRepPart makeEncKdcRepPart() {
         KdcReq request = getKdcReq();
         Ticket ticket = getTicket();

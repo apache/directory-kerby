@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
+import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.impl.DefaultInternalKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.server.impl.InternalKdcServer;
 
@@ -196,13 +196,16 @@ public class KdcServer {
      * Get identity service.
      * @return IdentityService
      */
-    public IdentityService getIdentityService() {
+    public IdentityBackend getIdentityService() {
         if (innerKdc == null) {
             throw new RuntimeException("Not init yet");
         }
         return innerKdc.getIdentityBackend();
     }
 
+    /**
+     * Initialize.
+     */
     public void init() throws KrbException {
         if (startupOptions.contains(KdcServerOption.INNER_KDC_IMPL)) {
             innerKdc = (InternalKdcServer) startupOptions.getOptionValue(
@@ -214,6 +217,9 @@ public class KdcServer {
         innerKdc.init();
     }
 
+    /**
+     * Start the KDC server.
+     */
     public void start() throws KrbException {
         if (innerKdc == null) {
             throw new RuntimeException("Not init yet");
@@ -221,6 +227,9 @@ public class KdcServer {
         innerKdc.start();
     }
 
+    /**
+     * Stop the KDC server.
+     */
     public void stop() throws KrbException {
         if (innerKdc != null) {
             innerKdc.stop();

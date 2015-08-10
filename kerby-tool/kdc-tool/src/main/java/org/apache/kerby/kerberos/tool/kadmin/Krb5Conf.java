@@ -17,10 +17,9 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.client;
+package org.apache.kerby.kerberos.tool.kadmin;
 
-import org.apache.kerby.kerberos.kerb.server.KdcSetting;
-import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
+import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.util.IOUtil;
 
 import java.io.File;
@@ -33,10 +32,12 @@ import java.io.InputStream;
 public class Krb5Conf {
     public static final String KRB5_CONF = "java.security.krb5.conf";
     private static final String KRB5_CONF_FILE = "krb5.conf";
-    private SimpleKdcServer kdcServer;
+    private File confDir;
+    private KdcConfig kdcConfig;
 
-    public Krb5Conf(SimpleKdcServer kdcServer) {
-        this.kdcServer = kdcServer;
+    public Krb5Conf(File confDir, KdcConfig kdcConfig) {
+        this.confDir = confDir;
+        this.kdcConfig = kdcConfig;
     }
 
     public void initKrb5conf() throws IOException {
@@ -46,32 +47,35 @@ public class Krb5Conf {
 
     // Read in krb5.conf and substitute in the correct port
     private File generateConfFile() throws IOException {
-        KdcSetting setting = kdcServer.getKdcSetting();
 
-        String resourcePath = setting.allowUdp() ? "/krb5_udp.conf" : "/krb5.conf";
+        String resourcePath = kdcConfig.allowUdp() ? "/krb5_udp.conf" : "/krb5.conf";
         InputStream templateResource = getClass().getResourceAsStream(resourcePath);
+
         String templateContent = IOUtil.readInput(templateResource);
 
         String content = templateContent;
 
-        content = content.replaceAll("_REALM_", "" + setting.getKdcRealm());
+        content = content.replaceAll("_REALM_", "" + kdcConfig.getKdcRealm());
 
-        int kdcPort = setting.allowUdp() ? setting.getKdcUdpPort()
-                : setting.getKdcTcpPort();
+        int kdcPort = kdcConfig.allowUdp() ? kdcConfig.getKdcUdpPort()
+                : kdcConfig.getKdcTcpPort();
         content = content.replaceAll("_KDC_PORT_",
                 String.valueOf(kdcPort));
 
-        if (setting.allowTcp()) {
-            content = content.replaceAll("#_KDC_TCP_PORT_", "kdc_tcp_port = " + setting.getKdcTcpPort());
+        if (kdcConfig.allowTcp()) {
+            content = content.replaceAll("#_KDC_TCP_PORT_", "kdc_tcp_port = " + kdcConfig.getKdcTcpPort());
         }
-        if (setting.allowUdp()) {
-            content = content.replaceAll("#_KDC_UDP_PORT_", "kdc_udp_port = " + setting.getKdcUdpPort());
+        if (kdcConfig.allowUdp()) {
+            content = content.replaceAll("#_KDC_UDP_PORT_", "kdc_udp_port = " + kdcConfig.getKdcUdpPort());
         }
 
-        int udpLimit = setting.allowUdp() ? 4096 : 1;
+        int udpLimit = kdcConfig.allowUdp() ? 4096 : 1;
         content = content.replaceAll("_UDP_LIMIT_", String.valueOf(udpLimit));
 
-        File confFile = new File(kdcServer.getWorkDir(), KRB5_CONF_FILE);
+        File confFile = new File(confDir, KRB5_CONF_FILE);
+        if (confFile.exists()) {
+            confFile.delete();
+        }
         IOUtil.writeFile(content, confFile);
 
         return confFile;

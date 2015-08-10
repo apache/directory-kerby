@@ -40,23 +40,25 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A Json file based backend implementation.
  *
  */
 public class JsonIdentityBackend extends AbstractIdentityBackend {
+    private static final Logger LOG = LoggerFactory.getLogger(JsonIdentityBackend.class);
     public static final String JSON_IDENTITY_BACKEND_DIR = "backend.json.dir";
     private File jsonKdbFile;
     private Gson gson;
-    private static final Logger LOG = LoggerFactory.getLogger(JsonIdentityBackend.class);
-
 
     // Identities loaded from file
-    private Map<String, KrbIdentity> ids;
+    private final Map<String, KrbIdentity> identities =
+        new ConcurrentHashMap<>(new TreeMap<String, KrbIdentity>());
     private long kdbFileTimeStamp;
 
     public JsonIdentityBackend() {
@@ -98,7 +100,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
             }
         }
 
-        jsonKdbFile = new File(jsonFileDir, "json_identity_backend_file");
+        jsonKdbFile = new File(jsonFileDir, "json-backend.json");
 
         if (!jsonKdbFile.exists()) {
             try {
@@ -115,25 +117,25 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * Check kdb file timestamp to see if it's changed or not. If
      * necessary load the kdb again.
      */
-    private void checkAndLoad() {
+    private synchronized void checkAndLoad() throws KrbException {
         long nowTimeStamp = jsonKdbFile.lastModified();
 
         if (kdbFileTimeStamp == 0 || nowTimeStamp != kdbFileTimeStamp) {
-            //load ids
+            //load identities
             String existsFileJson = null;
             try {
                 existsFileJson = IOUtil.readFile(jsonKdbFile);
             } catch (IOException e) {
-                throw new RuntimeException("Failed to read file", e);
+                throw new KrbException("Failed to read file", e);
             }
 
-            ids = gson.fromJson(existsFileJson,
-                new TypeToken<LinkedHashMap<String, KrbIdentity>>() {
+            Map<String, KrbIdentity> loaded = gson.fromJson(existsFileJson,
+                new TypeToken<HashMap<String, KrbIdentity>>() {
                 }.getType());
-        }
 
-        if (ids == null) {
-            ids = new LinkedHashMap<>();
+            if (loaded != null) {
+                identities.putAll(loaded);
+            }
         }
     }
 
@@ -141,26 +143,20 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected KrbIdentity doGetIdentity(String principalName) {
+    protected KrbIdentity doGetIdentity(String principalName) throws KrbException {
         checkAndLoad();
-        return ids.get(principalName);
+        return identities.get(principalName);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected KrbIdentity doAddIdentity(KrbIdentity identity) {
+    protected KrbIdentity doAddIdentity(KrbIdentity identity) throws KrbException {
         checkAndLoad();
 
-        String principalName = identity.getPrincipalName();
-        if (ids.containsKey(principalName)) {
-            LOG.error("Error occurred while adding identity, principal " + principalName + " already exists.");
-            throw new RuntimeException("Principal already exists.");
-        }
-
-        ids.put(identity.getPrincipalName(), identity);
-        idsToFile(ids);
+        identities.put(identity.getPrincipalName(), identity);
+        idsToFile(identities);
 
         return doGetIdentity(identity.getPrincipalName());
     }
@@ -169,16 +165,11 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected KrbIdentity doUpdateIdentity(KrbIdentity identity) {
+    protected KrbIdentity doUpdateIdentity(KrbIdentity identity) throws KrbException {
         checkAndLoad();
-        String principalName = identity.getPrincipalName();
-        if (ids.containsKey(principalName)) {
-            ids.put(principalName, identity);
-        } else {
-            LOG.error("Error occurred while updating identity, principal " + principalName + " does not exists.");
-            throw new RuntimeException("Principal does not exist.");
-        }
-        idsToFile(ids);
+        identities.put(identity.getPrincipalName(), identity);
+        idsToFile(identities);
+
         return doGetIdentity(identity.getPrincipalName());
     }
 
@@ -186,15 +177,12 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected void doDeleteIdentity(String principalName) {
+    protected void doDeleteIdentity(String principalName) throws KrbException {
         checkAndLoad();
-        if (ids.containsKey(principalName)) {
-            ids.remove(principalName);
-        } else {
-            LOG.error("Error occurred while deleting identity, principal " + principalName + " does not exists.");
-            throw new RuntimeException("Principal does not exist.");
+        if (identities.containsKey(principalName)) {
+            identities.remove(principalName);
         }
-        idsToFile(ids);
+        idsToFile(identities);
     }
 
     /**
@@ -202,7 +190,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected Iterable<String> doGetIdentities() throws KrbException {
-        List<String> principals = new ArrayList<>(ids.keySet());
+        List<String> principals = new ArrayList<>(identities.keySet());
         Collections.sort(principals);
 
         return principals;
@@ -222,16 +210,16 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     }
 
     /**
-     * Write ids into a file
-     * @param ids the ids to write into the json file
+     * Write identities into a file
+     * @param ids the identities to write into the json file
      */
-    private void idsToFile(Map<String, KrbIdentity> ids) {
+    private synchronized void idsToFile(Map<String, KrbIdentity> ids) throws KrbException {
         String newFileJson = gson.toJson(ids);
         try {
             IOUtil.writeFile(newFileJson, jsonKdbFile);
         } catch (IOException e) {
-            LOG.error("Error occurred while writing ids to file: " + jsonKdbFile);
-            throw new RuntimeException("Failed to write file", e);
+            LOG.error("Error occurred while writing identities to file: " + jsonKdbFile);
+            throw new KrbException("Failed to write file", e);
         }
     }
 }
