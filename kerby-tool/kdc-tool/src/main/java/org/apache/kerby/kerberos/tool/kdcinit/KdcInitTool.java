@@ -32,8 +32,8 @@ public class KdcInitTool {
     private Kadmin kadmin;
     private static File keytabFile;
 
-    private static  final String USAGE = OSUtil.isWindows() ?
-            "Usage: bin/kdcinit.cmd" : "Usage: sh bin/kdcinit.sh"
+    private static  final String USAGE = OSUtil.isWindows()
+            ? "Usage: bin/kdcinit.cmd" : "Usage: sh bin/kdcinit.sh"
             + " [conf-dir] [output-keytab]\n"
             + "\tThis tool initializes KDC backend and should only be performed the first time,\n"
             + "\tand the output keytab should be carefully kept to administrate/kadmin KDC later.\nExample:\n"
@@ -44,10 +44,10 @@ public class KdcInitTool {
         try {
             kadmin.createBuiltinPrincipals();
             kadmin.exportKeytab(keytabFile, kadmin.getKadminPrincipal());
-            System.out.println("The keytab for kadmin principal " +
-                    " has been exported to the specified file " +
-                    keytabFile.getAbsolutePath() + ", please safely keep it, " +
-                    "in order to use kadmin tool later");
+            System.out.println("The keytab for kadmin principal "
+                    + " has been exported to the specified file "
+                    + keytabFile.getAbsolutePath() + ", please safely keep it, "
+                    + "in order to use kadmin tool later");
         } finally {
             kadmin.release();
         }

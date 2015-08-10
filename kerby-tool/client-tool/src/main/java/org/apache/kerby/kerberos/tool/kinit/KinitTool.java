@@ -39,8 +39,8 @@ import java.util.Scanner;
  */
 public class KinitTool {
 
-    private static final String USAGE = OSUtil.isWindows() ?
-            "Usage: bin/kinit.cmd" : "Usage: sh bin/kinit.sh"
+    private static final String USAGE = OSUtil.isWindows()
+            ? "Usage: bin/kinit.cmd" : "Usage: sh bin/kinit.sh"
             + " [-conf conf_dir] [-V] [-l lifetime] [-s start_time]\n"
             + "\t\t[-r renewable_life] [-f | -F] [-p | -P] -n [-a | -A] [-C] [-E]\n"
             + "\t\t[-v] [-R] [-k [-i|-t keytab_file]] [-c cachename]\n"
