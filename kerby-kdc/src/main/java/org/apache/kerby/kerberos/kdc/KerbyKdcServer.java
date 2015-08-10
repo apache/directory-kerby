@@ -86,6 +86,5 @@ public class KerbyKdcServer extends KdcServer {
 
         server.start();
         System.out.println("KDC started.");
-        System.exit(0);
     }
 }

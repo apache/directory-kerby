@@ -32,6 +32,8 @@ import org.apache.kerby.kerberos.kerb.server.KdcSetting;
 import org.apache.kerby.kerberos.kerb.server.KdcUtil;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,6 +48,8 @@ import java.util.regex.PatternSyntaxException;
  * Server side admin facilities.
  */
 public class Kadmin {
+    private static final Logger LOG = LoggerFactory.getLogger(Kadmin.class);
+
     private final KdcSetting kdcSetting;
     private final IdentityBackend backend;
 
@@ -117,8 +121,12 @@ public class Kadmin {
     public void checkBuiltinPrincipals() throws KrbException {
         String tgsPrincipal = getTgsPrincipal();
         String kadminPrincipal = getKadminPrincipal();
-        if (backend.getIdentity(tgsPrincipal) == null || backend.getIdentity(kadminPrincipal) == null) {
-            throw new KrbException("The built-in principals do not exist in backend, please run the kdcinit tool.");
+        if (backend.getIdentity(tgsPrincipal) == null
+            || backend.getIdentity(kadminPrincipal) == null) {
+            String errorMsg = "The built-in principals do not exist in backend,"
+                + " please run the kdcinit tool.";
+            LOG.error(errorMsg);
+            throw new KrbException(errorMsg);
         }
     }
 
@@ -130,14 +138,18 @@ public class Kadmin {
         if (backend.getIdentity(tgsPrincipal) == null) {
             addPrincipal(tgsPrincipal);
         } else {
-            throw new KrbException("The tgs principal already exists in backend.");
+            String errorMsg = "The tgs principal already exists in backend.";
+            LOG.error(errorMsg);
+            throw new KrbException(errorMsg);
         }
 
         String kadminPrincipal = getKadminPrincipal();
         if (backend.getIdentity(kadminPrincipal) == null) {
             addPrincipal(kadminPrincipal);
         } else {
-            throw new KrbException("The kadmin principal already exists in backend.");
+            String errorMsg = "The kadmin principal already exists in backend.";
+            LOG.error(errorMsg);
+            throw new KrbException(errorMsg);
         }
     }
 

@@ -87,7 +87,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        LOG.info("Zookeeper stopped.");
+        LOG.info("Zookeeper session closed.");
     }
 
     /**

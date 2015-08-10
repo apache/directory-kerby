@@ -126,6 +126,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             LOG.error("Failed to close connection with LDAP", e);
             throw new KrbException("Failed to close connection with LDAP", e);
         }
+         LOG.info("closed connection with LDAP.");
     }
 
     /**

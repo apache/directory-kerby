@@ -111,7 +111,7 @@ public abstract class KrbHandler {
             kdcRequest.processResponse((KdcRep) kdcRep);
         } else if (messageType == KrbMessageType.KRB_ERROR) {
             KrbError error = (KrbError) kdcRep;
-            LOG.info("KDC server responsed with message: "
+            LOG.info("KDC server response with message: "
                     + error.getErrorCode().getMessage());
             if (error.getErrorCode() == KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED) {
                 MethodData methodData = KrbCodec.decode(error.getEdata(), MethodData.class);
@@ -131,6 +131,7 @@ public abstract class KrbHandler {
                 kdcRequest.setPreauthRequired(true);
                 kdcRequest.resetPrequthContxt();
                 handleRequest(kdcRequest);
+                LOG.info("Retry with the new kdc request including pre-authentication.");
             }
         }
     }
