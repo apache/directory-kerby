@@ -54,7 +54,8 @@ import java.util.jar.JarFile;
  * @since 14-Nov-2007
  */
 public class Version {
-    public static final String HEAD_URL = "$HeadURL: http://juliusdavies.ca/svn/not-yet-commons-ssl/tags/commons-ssl-0.3.16/src/java/org/apache/commons/ssl/Version.java $";
+    public static final String HEAD_URL = "$HeadURL: http://juliusdavies.ca/svn/not-yet-commons-ssl"
+        + "/tags/commons-ssl-0.3.16/src/java/org/apache/commons/ssl/Version.java $";
     public static final String VERSION;
     public static final String COMPILE_TIME;
 
@@ -83,8 +84,8 @@ public class Version {
             v = v.replace('-', '.');
         }
 
-        String V = v.toUpperCase();
-        x = V.indexOf("COMMONS.SSL.");
+        String version = v.toUpperCase();
+        x = version.indexOf("COMMONS.SSL.");
         if (x >= 0) {
             v = v.substring(x + "commons.ssl.".length());
         }
@@ -94,8 +95,7 @@ public class Version {
         String s;
         try {
             s = CompileTime.getCompileTimeString(Version.class);
-        }
-        catch (NoClassDefFoundError e) {
+        } catch (NoClassDefFoundError e) {
             s = null;
         }
         COMPILE_TIME = s;
@@ -125,10 +125,10 @@ public class Version {
      * all the class files.
      */
     private static class CompileTime {
-        private final static String PATTERN = ".jar!";
-        private final static String PREFIX = "file:";
-        private final static String DF_FORMAT = "zzz:yyyy-MM-dd/HH:mm:ss.SSS";
-        private final static DateFormat DF = new SimpleDateFormat(DF_FORMAT);
+        private static final String PATTERN = ".jar!";
+        private static final String PREFIX = "file:";
+        private static final String DF_FORMAT = "zzz:yyyy-MM-dd/HH:mm:ss.SSS";
+        private static final DateFormat DF = new SimpleDateFormat(DF_FORMAT);
 
         public static String getCompileTimeString(Class clazz) {
             String s = clazz.getName();
@@ -142,8 +142,7 @@ public class Version {
                 synchronized (DF) {
                     return d != null ? DF.format(d) : "[unknown]";
                 }
-            }
-            catch (IOException ioe) {
+            } catch (IOException ioe) {
                 return ioe.toString();
             }
         }
@@ -177,8 +176,7 @@ public class Version {
                     File f = new File(urlString);
                     try {
                         return new Date(f.lastModified());
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         return null;
                     }
                 }

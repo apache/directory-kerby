@@ -28,7 +28,11 @@ package org.apache.commons.ssl;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.util.Hex;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Credit Union Central of British Columbia

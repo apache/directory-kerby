@@ -37,7 +37,12 @@ import org.apache.kerby.util.Hex;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -380,12 +385,12 @@ public class OpenSSL {
 
         int keySize = cipherInfo.keySize;
         int ivSize = cipherInfo.ivSize;
-        if (key.length == keySize / 4) // Looks like key is in hex
-        {
+        // Looks like key is in hex
+        if (key.length == keySize / 4) {
             key = Hex.decode(key);
         }
-        if (iv.length == ivSize / 4) // Looks like IV is in hex
-        {
+        // Looks like IV is in hex
+        if (iv.length == ivSize / 4) {
             iv = Hex.decode(iv);
         }
         DerivedKey dk = new DerivedKey(key, iv);
@@ -575,8 +580,7 @@ public class OpenSSL {
                 if (st.hasMoreTokens()) {
                     try {
                         keySize = Integer.parseInt(tok);
-                    }
-                    catch (NumberFormatException nfe) {
+                    } catch (NumberFormatException nfe) {
                         // I guess 2nd token isn't an integer
                         String upper = tok.toUpperCase();
                         if (upper.startsWith("EDE3")) {
@@ -590,8 +594,7 @@ public class OpenSSL {
                 } else {
                     try {
                         keySize = Integer.parseInt(tok);
-                    }
-                    catch (NumberFormatException nfe) {
+                    } catch (NumberFormatException nfe) {
                         // It's the last token, so must be mode (usually "CBC").
                         blockMode = tok.toUpperCase();
                         if (blockMode.startsWith("EDE3")) {
@@ -711,7 +714,7 @@ public class OpenSSL {
         // in = encrypt( args[ 1 ], pwdAsBytes, in, true );
 
         in = new BufferedInputStream(in);
-        BufferedOutputStream bufOut = new BufferedOutputStream( System.out );
+        BufferedOutputStream bufOut = new BufferedOutputStream(System.out);
         Util.pipeStream(in, bufOut, false);
         bufOut.flush();
         System.out.flush();

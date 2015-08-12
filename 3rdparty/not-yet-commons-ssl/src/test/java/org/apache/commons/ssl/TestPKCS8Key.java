@@ -1,13 +1,15 @@
 package org.apache.commons.ssl;
 
-import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.Locale;
+
+import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestPKCS8Key {
 
@@ -32,8 +34,8 @@ public class TestPKCS8Key {
         byte[] original = null;
         for (File f : files) {
             String filename = f.getName();
-            String FILENAME = filename.toUpperCase(Locale.ENGLISH);
-            if (!FILENAME.endsWith(".PEM") && !FILENAME.endsWith(".DER")) {
+            String fileName = filename.toUpperCase(Locale.ENGLISH);
+            if (!fileName.endsWith(".PEM") && !fileName.endsWith(".DER")) {
                 // not a sample file
                 continue;
             }

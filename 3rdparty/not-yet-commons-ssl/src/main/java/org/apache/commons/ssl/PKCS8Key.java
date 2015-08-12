@@ -31,16 +31,36 @@
 
 package org.apache.commons.ssl;
 
-import org.apache.kerby.asn1.type.*;
+import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1Null;
+import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.Asn1Sequence;
 
-import javax.crypto.*;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.Mac;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.RC2ParameterSpec;
 import javax.crypto.spec.RC5ParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
-import java.security.*;
+import java.security.GeneralSecurityException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.interfaces.DSAParams;
 import java.security.interfaces.DSAPrivateKey;
 import java.security.interfaces.RSAPrivateCrtKey;
@@ -73,13 +93,13 @@ import java.util.List;
  * @since 7-Nov-2006
  */
 public class PKCS8Key {
-    public final static String RSA_OID = "1.2.840.113549.1.1.1";
-    public final static String DSA_OID = "1.2.840.10040.4.1";
+    public static final String RSA_OID = "1.2.840.113549.1.1.1";
+    public static final String DSA_OID = "1.2.840.10040.4.1";
 
-    public final static String PKCS8_UNENCRYPTED = "PRIVATE KEY";
-    public final static String PKCS8_ENCRYPTED = "ENCRYPTED PRIVATE KEY";
-    public final static String OPENSSL_RSA = "RSA PRIVATE KEY";
-    public final static String OPENSSL_DSA = "DSA PRIVATE KEY";
+    public static final String PKCS8_UNENCRYPTED = "PRIVATE KEY";
+    public static final String PKCS8_ENCRYPTED = "ENCRYPTED PRIVATE KEY";
+    public static final String OPENSSL_RSA = "RSA PRIVATE KEY";
+    public static final String OPENSSL_DSA = "DSA PRIVATE KEY";
 
     private final PrivateKey privateKey;
     private final byte[] decryptedBytes;
@@ -151,7 +171,8 @@ public class PKCS8Key {
                     opensslRSA = opensslRSA || rsa;
                     opensslDSA = opensslDSA || dsa;
                     if (derBytes != null) {
-                        throw new ProbablyNotPKCS8Exception("More than one pkcs8 or OpenSSL key found in the supplied PEM Base64 stream");
+                        throw new ProbablyNotPKCS8Exception("More than one pkcs8 or OpenSSL key"
+                            + " found in the supplied PEM Base64 stream");
                     }
                     derBytes = item.getDerBytes();
                     keyItem = item;
@@ -160,7 +181,8 @@ public class PKCS8Key {
             }
             // after the loop is finished, did we find anything?
             if (derBytes == null) {
-                throw new ProbablyNotPKCS8Exception("No pkcs8 or OpenSSL key found in the supplied PEM Base64 stream");
+                throw new ProbablyNotPKCS8Exception("No pkcs8 or OpenSSL key found"
+                    + "in the supplied PEM Base64 stream");
             }
 
             if (opensslDSA || opensslRSA) {
@@ -185,8 +207,7 @@ public class PKCS8Key {
         Asn1PkcsStructure pkcs8;
         try {
             pkcs8 = Asn1PkcsUtil.analyze(derBytes);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ProbablyNotPKCS8Exception("asn1 parse failure: " + e);
         }
 
@@ -220,11 +241,12 @@ public class PKCS8Key {
                 String s = oid.substring("1.2.840.10040.4.".length());
                 // 1.2.840.10040.4.1 -- id-dsa
                 // 1.2.840.10040.4.3 -- id-dsa-with-sha1
-                isOkay = s.equals("1") || s.startsWith("1.") ||
-                         s.equals("3") || s.startsWith("3.");
+                isOkay = s.equals("1") || s.startsWith("1.")
+                         || s.equals("3") || s.startsWith("3.");
             }
             if (!isOkay) {
-                throw new ProbablyNotPKCS8Exception("Valid ASN.1, but not PKCS8 or OpenSSL format.  OID=" + oid);
+                throw new ProbablyNotPKCS8Exception("Valid ASN.1, but not PKCS8 or OpenSSL format."
+                    + " OID=" + oid);
             }
         }
 
@@ -240,9 +262,9 @@ public class PKCS8Key {
         if (encrypted) {
             try {
                 pkcs8 = Asn1PkcsUtil.analyze(decryptedPKCS8);
-            }
-            catch (Exception e) {
-                throw new ProbablyBadPasswordException("Decrypted stream not ASN.1.  Probably bad decryption password.");
+            } catch (Exception e) {
+                throw new ProbablyBadPasswordException("Decrypted stream not ASN.1."
+                    + "Probably bad decryption password.");
             }
             oid = pkcs8.oid1;
             isDSA = DSA_OID.equals(oid);
@@ -252,17 +274,17 @@ public class PKCS8Key {
         String type = "RSA";
         PrivateKey pk;
         try {
-            KeyFactory KF;
+            KeyFactory keyFactory;
             if (isDSA) {
                 type = "DSA";
-                KF = KeyFactory.getInstance("DSA");
+                keyFactory = KeyFactory.getInstance("DSA");
             } else {
-                KF = KeyFactory.getInstance("RSA");
+                keyFactory = KeyFactory.getInstance("RSA");
             }
-            pk = KF.generatePrivate(spec);
-        }
-        catch (Exception e) {
-            throw new ProbablyBadPasswordException("Cannot create " + type + " private key from decrypted stream.  Probably bad decryption password. " + e);
+            pk = keyFactory.generatePrivate(spec);
+        } catch (Exception e) {
+            throw new ProbablyBadPasswordException("Cannot create " + type
+                + " private key from decrypted stream.  Probably bad decryption password. " + e);
         }
         if (pk != null) {
             this.privateKey = pk;
@@ -272,7 +294,8 @@ public class PKCS8Key {
             this.transformation = decryptResult.transformation;
             this.keySize = decryptResult.keySize;
         } else {
-            throw new GeneralSecurityException("KeyFactory.generatePrivate() returned null and didn't throw exception!");
+            throw new GeneralSecurityException(
+                "KeyFactory.generatePrivate() returned null and didn't throw exception!");
         }
     }
 
@@ -308,14 +331,14 @@ public class PKCS8Key {
             BigInteger p = params.getP();
             BigInteger q = params.getQ();
             BigInteger x = dsa.getX();
-            BigInteger y = q.modPow( x, p );
+            BigInteger y = q.modPow(x, p);
             DSAPublicKeySpec dsaKeySpec = new DSAPublicKeySpec(y, p, q, g);
             return KeyFactory.getInstance("DSA").generatePublic(dsaKeySpec);
         } else if (privateKey instanceof RSAPrivateCrtKey) {
             RSAPrivateCrtKey rsa = (RSAPrivateCrtKey) privateKey;
             RSAPublicKeySpec rsaKeySpec = new RSAPublicKeySpec(
-                    rsa.getModulus(),
-                    rsa.getPublicExponent()
+                rsa.getModulus(),
+                rsa.getPublicExponent()
             );
             return KeyFactory.getInstance("RSA").generatePublic(rsaKeySpec);
         } else {
@@ -458,8 +481,8 @@ public class PKCS8Key {
         int ivSize = 0;
 
         String oid = pkcs8.oid1;
-        if (oid.startsWith("1.2.840.113549.1.12."))  // PKCS12 key derivation!
-        {
+        // PKCS12 key derivation!
+        if (oid.startsWith("1.2.840.113549.1.12.")) {
             usePKCS12PasswordPadding = true;
 
             // Let's trim this OID to make life a little easier.
@@ -601,22 +624,20 @@ public class PKCS8Key {
                         pkcs8.iv = null;
                     }
                 }
-            }
-
-            // AES
-            // 2.16.840.1.101.3.4.1.1  - id-aes128-ECB
-            // 2.16.840.1.101.3.4.1.2  - id-aes128-CBC
-            // 2.16.840.1.101.3.4.1.3  - id-aes128-OFB
-            // 2.16.840.1.101.3.4.1.4  - id-aes128-CFB
-            // 2.16.840.1.101.3.4.1.21 - id-aes192-ECB
-            // 2.16.840.1.101.3.4.1.22 - id-aes192-CBC
-            // 2.16.840.1.101.3.4.1.23 - id-aes192-OFB
-            // 2.16.840.1.101.3.4.1.24 - id-aes192-CFB
-            // 2.16.840.1.101.3.4.1.41 - id-aes256-ECB
-            // 2.16.840.1.101.3.4.1.42 - id-aes256-CBC
-            // 2.16.840.1.101.3.4.1.43 - id-aes256-OFB
-            // 2.16.840.1.101.3.4.1.44 - id-aes256-CFB
-            else if (oid.startsWith("2.16.840.1.101.3.4.1.")) {
+            } else if (oid.startsWith("2.16.840.1.101.3.4.1.")) {
+                // AES
+                // 2.16.840.1.101.3.4.1.1  - id-aes128-ECB
+                // 2.16.840.1.101.3.4.1.2  - id-aes128-CBC
+                // 2.16.840.1.101.3.4.1.3  - id-aes128-OFB
+                // 2.16.840.1.101.3.4.1.4  - id-aes128-CFB
+                // 2.16.840.1.101.3.4.1.21 - id-aes192-ECB
+                // 2.16.840.1.101.3.4.1.22 - id-aes192-CBC
+                // 2.16.840.1.101.3.4.1.23 - id-aes192-OFB
+                // 2.16.840.1.101.3.4.1.24 - id-aes192-CFB
+                // 2.16.840.1.101.3.4.1.41 - id-aes256-ECB
+                // 2.16.840.1.101.3.4.1.42 - id-aes256-CBC
+                // 2.16.840.1.101.3.4.1.43 - id-aes256-OFB
+                // 2.16.840.1.101.3.4.1.44 - id-aes256-CFB
                 cipher = "AES";
                 if (pkcs8.iv == null) {
                     ivSize = 128;
@@ -693,7 +714,8 @@ public class PKCS8Key {
         // a cipher or hash at this point, then we don't support the file we
         // were given.
         if (cipher == null || hash == null) {
-            throw new ProbablyNotPKCS8Exception("Unsupported PKCS8 format. oid1=[" + pkcs8.oid1 + "], oid2=[" + pkcs8.oid2 + "]");
+            throw new ProbablyNotPKCS8Exception("Unsupported PKCS8 format. oid1=["
+                + pkcs8.oid1 + "], oid2=[" + pkcs8.oid2 + "]");
         }
 
         // In PKCS8 Version 1.5 we need to derive an 8 byte IV.  In those cases
@@ -730,10 +752,8 @@ public class PKCS8Key {
             }
         }
 
-
         return decrypt(cipher, mode, dk, use2DES, pkcs8.iv, pkcs8.bigPayload);
     }
-
 
     public static DerivedKey deriveKeyV1(byte[] password, byte[] salt,
                                          int iterations, int keySizeInBits,
@@ -793,57 +813,57 @@ public class PKCS8Key {
         // sha1, md2, md5 all use 512 bits.  But future hashes might not.
         int v = 512 / 8;
         md.reset();
-        byte[] D = new byte[v];
+        byte[] dD = new byte[v];
         byte[] dKey = new byte[n];
-        for (int i = 0; i != D.length; i++) {
-            D[i] = (byte) idByte;
+        for (int i = 0; i != dD.length; i++) {
+            dD[i] = (byte) idByte;
         }
-        byte[] S;
+        byte[] sS;
         if ((salt != null) && (salt.length != 0)) {
-            S = new byte[v * ((salt.length + v - 1) / v)];
-            for (int i = 0; i != S.length; i++) {
-                S[i] = salt[i % salt.length];
+            sS = new byte[v * ((salt.length + v - 1) / v)];
+            for (int i = 0; i != sS.length; i++) {
+                sS[i] = salt[i % salt.length];
             }
         } else {
-            S = new byte[0];
+            sS = new byte[0];
         }
-        byte[] P;
+        byte[] pP;
         if ((password != null) && (password.length != 0)) {
-            P = new byte[v * ((password.length + v - 1) / v)];
-            for (int i = 0; i != P.length; i++) {
-                P[i] = password[i % password.length];
+            pP = new byte[v * ((password.length + v - 1) / v)];
+            for (int i = 0; i != pP.length; i++) {
+                pP[i] = password[i % password.length];
             }
         } else {
-            P = new byte[0];
+            pP = new byte[0];
         }
-        byte[] I = new byte[S.length + P.length];
-        System.arraycopy(S, 0, I, 0, S.length);
-        System.arraycopy(P, 0, I, S.length, P.length);
-        byte[] B = new byte[v];
+        byte[] iI = new byte[sS.length + pP.length];
+        System.arraycopy(sS, 0, iI, 0, sS.length);
+        System.arraycopy(pP, 0, iI, sS.length, pP.length);
+        byte[] bB = new byte[v];
         int c = (n + u - 1) / u;
         for (int i = 1; i <= c; i++) {
-            md.update(D);
-            byte[] result = md.digest(I);
+            md.update(dD);
+            byte[] result = md.digest(iI);
             for (int j = 1; j != iterationCount; j++) {
                 result = md.digest(result);
             }
-            for (int j = 0; j != B.length; j++) {
-                B[j] = result[j % result.length];
+            for (int j = 0; j != bB.length; j++) {
+                bB[j] = result[j % result.length];
             }
-            for (int j = 0; j < (I.length / v); j++) {
+            for (int j = 0; j < (iI.length / v); j++) {
                 /*
                      * add a + b + 1, returning the result in a. The a value is treated
                      * as a BigInteger of length (b.length * 8) bits. The result is
                      * modulo 2^b.length in case of overflow.
                      */
                 int aOff = j * v;
-                int bLast = B.length - 1;
-                int x = (B[bLast] & 0xff) + (I[aOff + bLast] & 0xff) + 1;
-                I[aOff + bLast] = (byte) x;
+                int bLast = bB.length - 1;
+                int x = (bB[bLast] & 0xff) + (iI[aOff + bLast] & 0xff) + 1;
+                iI[aOff + bLast] = (byte) x;
                 x >>>= 8;
-                for (int k = B.length - 2; k >= 0; k--) {
-                    x += (B[k] & 0xff) + (I[aOff + k] & 0xff);
-                    I[aOff + k] = (byte) x;
+                for (int k = bB.length - 2; k >= 0; k--) {
+                    x += (bB[k] & 0xff) + (iI[aOff + k] & 0xff);
+                    iI[aOff + k] = (byte) x;
                     x >>>= 8;
                 }
             }
@@ -909,8 +929,7 @@ public class PKCS8Key {
             if (pkcs8 == null) {
                 try {
                     pkcs8 = Asn1PkcsUtil.analyze(privateKey);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     throw new RuntimeException("asn1 parse failure " + e);
                 }
             }
@@ -956,9 +975,12 @@ public class PKCS8Key {
     public static void main(String[] args) throws Exception {
         String password = "changeit";
         if (args.length == 0) {
-            System.out.println("Usage1:  [password] [file:private-key]      Prints decrypted PKCS8 key (base64).");
-            System.out.println("Usage2:  [password] [file1] [file2] etc...  Checks that all private keys are equal.");
-            System.out.println("Usage2 assumes that all files can be decrypted with the same password.");
+            System.out.println(
+                "Usage1:  [password] [file:private-key]      Prints decrypted PKCS8 key (base64).");
+            System.out.println(
+                "Usage2:  [password] [file1] [file2] etc...  Checks that all private keys are equal.");
+            System.out.println(
+                "Usage2 assumes that all files can be decrypted with the same password.");
         } else if (args.length == 1 || args.length == 2) {
             FileInputStream in = new FileInputStream(args[args.length - 1]);
             if (args.length == 2) {
@@ -984,8 +1006,7 @@ public class PKCS8Key {
                 PKCS8Key key = null;
                 try {
                     key = new PKCS8Key(bytes, password.toCharArray());
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     System.out.println(" FAILED! " + args[i] + " " + e);
                 }
                 if (key != null) {
@@ -1007,13 +1028,16 @@ public class PKCS8Key {
 
                     if (original == null) {
                         original = decrypted;
-                        System.out.println("   SUCCESS    \t" + type + "\t" + transform + "\t" + keySizeStr + "\t" + args[i]);
+                        System.out.println("   SUCCESS    \t" + type + "\t" + transform + "\t"
+                            + keySizeStr + "\t" + args[i]);
                     } else {
                         boolean identical = Arrays.equals(original, decrypted);
                         if (!identical) {
-                            System.out.println("***FAILURE*** \t" + type + "\t" + transform + "\t" + keySizeStr + "\t" + args[i]);
+                            System.out.println("***FAILURE*** \t" + type + "\t" + transform + "\t"
+                                + keySizeStr + "\t" + args[i]);
                         } else {
-                            System.out.println("   SUCCESS    \t" + type + "\t" + transform + "\t" + keySizeStr + "\t" + args[i]);
+                            System.out.println("   SUCCESS    \t" + type + "\t" + transform + "\t"
+                                + keySizeStr + "\t" + args[i]);
                         }
                     }
                 }

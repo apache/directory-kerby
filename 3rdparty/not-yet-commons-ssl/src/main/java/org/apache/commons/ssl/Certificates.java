@@ -39,21 +39,47 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
-import javax.security.auth.x500.X500Principal;
-
 import javax.net.ssl.HttpsURLConnection;
-import java.io.*;
+import javax.security.auth.x500.X500Principal;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.HttpURLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.*;
+import java.security.cert.CRL;
+import java.security.cert.CRLException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509Certificate;
+import java.security.cert.X509Extension;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * @author Credit Union Central of British Columbia
@@ -63,29 +89,29 @@ import java.lang.reflect.Method;
  */
 public class Certificates {
 
-    public final static CertificateFactory CF;
-    public final static String LINE_ENDING = System.getProperty("line.separator");
+    public static final CertificateFactory CF;
+    public static final String LINE_ENDING = System.getProperty("line.separator");
 
-    private final static HashMap crl_cache = new HashMap();
+    private static final HashMap CRL_CACHE = new HashMap();
 
-    public final static String CRL_EXTENSION = "2.5.29.31";
-    public final static String OCSP_EXTENSION = "1.3.6.1.5.5.7.1.1";
-    private final static DateFormat DF = new SimpleDateFormat("yyyy/MMM/dd");
+    public static final String CRL_EXTENSION = "2.5.29.31";
+    public static final String OCSP_EXTENSION = "1.3.6.1.5.5.7.1.1";
+    private static final DateFormat DF = new SimpleDateFormat("yyyy/MMM/dd");
 
     public interface SerializableComparator extends Comparator, Serializable {
     }
 
-    public final static SerializableComparator COMPARE_BY_EXPIRY =
+    public static final SerializableComparator COMPARE_BY_EXPIRY =
         new SerializableComparator() {
             public int compare(Object o1, Object o2) {
                 X509Certificate c1 = (X509Certificate) o1;
                 X509Certificate c2 = (X509Certificate) o2;
-                if (c1 == c2) // this deals with case where both are null
-                {
+                // this deals with case where both are null
+                if (c1 == c2) {
                     return 0;
                 }
-                if (c1 == null)  // non-null is always bigger than null
-                {
+                // non-null is always bigger than null
+                if (c1 == null) {
                     return -1;
                 }
                 if (c2 == null) {
@@ -125,8 +151,7 @@ public class Certificates {
                                     if (c == 0) {
                                         c = b1.length - b2.length;
                                     }
-                                }
-                                catch (CertificateEncodingException cee) {
+                                } catch (CertificateEncodingException cee) {
                                     // I give up.  They can be equal if they
                                     // really want to be this badly.
                                     c = 0;
@@ -143,11 +168,9 @@ public class Certificates {
         CertificateFactory cf = null;
         try {
             cf = CertificateFactory.getInstance("X.509");
-        }
-        catch (CertificateException ce) {
+        } catch (CertificateException ce) {
             ce.printStackTrace(System.out);
-        }
-        finally {
+        } finally {
             CF = cf;
         }
     }
@@ -242,8 +265,7 @@ public class Certificates {
             String s;
             try {
                 s = new String(bytes, "UTF-8");
-            }
-            catch (UnsupportedEncodingException uee) {
+            } catch (UnsupportedEncodingException uee) {
                 // We're screwed if this thing has more than one CRL, because
                 // the "indeOf( (char) 65533 )" below isn't going to work.
                 s = new String(bytes);
@@ -295,15 +317,16 @@ public class Certificates {
         byte[] bytes = cert.getExtensionValue("2.5.29.31");
         if (bytes == null) {
             // log.warn( "Cert doesn't contain X509v3 CRL Distribution Points (2.5.29.31): " + name );
+            System.out.println("Cert doesn't contain X509v3 CRL Distribution Points (2.5.29.31): ");
         } else {
             List crlList = getCRLs(cert);
             Iterator it = crlList.iterator();
             while (it.hasNext()) {
                 String url = (String) it.next();
-                CRLHolder holder = (CRLHolder) crl_cache.get(url);
+                CRLHolder holder = (CRLHolder) CRL_CACHE.get(url);
                 if (holder == null) {
                     holder = new CRLHolder(url);
-                    crl_cache.put(url, holder);
+                    CRL_CACHE.put(url, holder);
                 }
                 // success == false means we couldn't actually load the CRL
                 // (probably due to an IOException), so let's try the next one in
@@ -327,8 +350,7 @@ public class Certificates {
         MessageDigest sha1;
         try {
             sha1 = MessageDigest.getInstance("SHA1");
-        }
-        catch (NoSuchAlgorithmException nsae) {
+        } catch (NoSuchAlgorithmException nsae) {
             throw JavaImpl.newRuntimeException(nsae);
         }
 
@@ -359,8 +381,9 @@ public class Certificates {
             if (now - creationTime > 24 * 60 * 60 * 1000) {
                 // Expire cache every 24 hours
                 if (tempCRLFile != null && tempCRLFile.exists()) {
-                    if(!tempCRLFile.delete()) {
-                        throw new CertificateException("CRLFile:" + tempCRLFile.getPath() + " can not be deleted" );
+                    if (!tempCRLFile.delete()) {
+                        throw new CertificateException("CRLFile:" + tempCRLFile.getPath()
+                            + " can not be deleted");
                     }
                 }
                 tempCRLFile = null;
@@ -417,6 +440,7 @@ public class Certificates {
                             setReadTimeout.invoke(httpConn, Integer.valueOf(5000));
                         } catch (NoSuchMethodException nsme) {
                             // oh well, java 1.4 users can suffer.
+                            nsme.printStackTrace();
                         } catch (Exception e) {
                             throw new RuntimeException("can't set timeout", e);
                         }
@@ -430,17 +454,16 @@ public class Certificates {
                     InputStream in = new BufferedInputStream(urlConn.getInputStream());
                     try {
                         Util.pipeStream(in, out);
-                    }
-                    catch (IOException ioe) {
+                    } catch (IOException ioe) {
                         // better luck next time
                         tempFile.delete();
                         throw ioe;
                     }
                     this.tempCRLFile = tempFile;
                     this.creationTime = System.currentTimeMillis();
-                }
-                catch (IOException ioe) {
+                } catch (IOException ioe) {
                     // log.warn( "Cannot check CRL: " + e );
+                    ioe.printStackTrace();
                 }
             }
 
@@ -460,14 +483,14 @@ public class Certificates {
                     } else {
                         passedTest.add(fingerprint);
                     }
-                }
-                catch (IOException ioe) {
+                } catch (IOException ioe) {
                     // couldn't load CRL that's supposed to be stored in Temp file.
                     // log.warn(  );
-                }
-                catch (CRLException crle) {
+                    ioe.printStackTrace();
+                } catch (CRLException crle) {
                     // something is wrong with the CRL
                     // log.warn(  );
+                    crle.printStackTrace();
                 }
             }
             return crl != null;
@@ -495,7 +518,9 @@ public class Certificates {
                             cnList.add(value.toString());
                         }
                     } catch (NoSuchElementException ignore) {
+                        ignore.printStackTrace();
                     } catch (NamingException ignore) {
+                        ignore.printStackTrace();
                     }
                 }
             }
@@ -503,6 +528,7 @@ public class Certificates {
                 return cnList.toArray(new String[cnList.size()]);
             }
         } catch (InvalidNameException ignore) {
+            ignore.printStackTrace();
         }
         return null;
     }
@@ -526,8 +552,7 @@ public class Certificates {
         Collection c = null;
         try {
             c = cert.getSubjectAlternativeNames();
-        }
-        catch (CertificateParsingException cpe) {
+        } catch (CertificateParsingException cpe) {
             // Should probably log.debug() this?
             cpe.printStackTrace();
         }

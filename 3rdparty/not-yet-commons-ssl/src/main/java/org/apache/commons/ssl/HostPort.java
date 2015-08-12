@@ -31,8 +31,6 @@
 
 package org.apache.commons.ssl;
 
-import org.apache.commons.ssl.util.IPAddressParser;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -53,5 +51,7 @@ public class HostPort {
         this.addr = Util.toInetAddress(host);
     }
 
-    public String toString() { return host + ":" + port; }
+    public String toString() {
+        return host + ":" + port;
+    }
 }

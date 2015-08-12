@@ -53,7 +53,7 @@ import java.io.IOException;
  */
 public class CRLUtil {
 
-    public static String getURLToCRL(byte[] extension2_5_29_31)
+    public static String getURLToCRL(byte[] extension)
         throws IOException {
 
         throw new UnsupportedOperationException("not yet implemented");

@@ -32,20 +32,30 @@
 package org.apache.commons.ssl;
 
 import javax.net.SocketFactory;
-import javax.net.ssl.*;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Not thread-safe.  (But who would ever share this thing across multiple
@@ -57,14 +67,14 @@ import java.util.*;
  * @since May 1, 2006
  */
 public class SSL {
-    private final static String[] KNOWN_PROTOCOLS =
+    private static final String[] KNOWN_PROTOCOLS =
             {"TLSv1.2", "TLSv1.1", "TLSv1", "SSLv3", "SSLv2", "SSLv2Hello"};
 
     // SUPPORTED_CIPHERS_ARRAY is initialized in the static constructor.
-    private final static String[] SUPPORTED_CIPHERS;
+    private static final String[] SUPPORTED_CIPHERS;
 
-    public final static SortedSet KNOWN_PROTOCOLS_SET;
-    public final static SortedSet SUPPORTED_CIPHERS_SET;
+    public static final SortedSet KNOWN_PROTOCOLS_SET;
+    public static final SortedSet SUPPORTED_CIPHERS_SET;
 
     static {
         TreeSet<String> ts = new TreeSet<String>(Collections.reverseOrder());
@@ -137,8 +147,7 @@ public class SSL {
                 TrustMaterial tm;
                 try {
                     tm = new TrustMaterial(path, pwd.toCharArray());
-                }
-                catch (GeneralSecurityException gse) {
+                } catch (GeneralSecurityException gse) {
                     // Probably a bad password.  If we're using the default password,
                     // let's try and survive this setback.
                     if (pwdWasNull) {
@@ -215,9 +224,7 @@ public class SSL {
     }
 
     public SSLContext getSSLContext()
-            throws GeneralSecurityException, IOException
-
-    {
+            throws GeneralSecurityException, IOException {
         Object obj = getSSLContextAsObject();
         return (SSLContext) obj;
     }
@@ -229,9 +236,7 @@ public class SSL {
      * @throws java.io.IOException              problem creating SSLContext
      */
     public Object getSSLContextAsObject()
-            throws GeneralSecurityException, IOException
-
-    {
+            throws GeneralSecurityException, IOException {
         if (sslContext == null) {
             init();
         }
@@ -395,11 +400,9 @@ public class SSL {
     private void initThrowRuntime() {
         try {
             init();
-        }
-        catch (GeneralSecurityException gse) {
+        } catch (GeneralSecurityException gse) {
             throw JavaImpl.newRuntimeException(gse);
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             throw JavaImpl.newRuntimeException(ioe);
         }
     }

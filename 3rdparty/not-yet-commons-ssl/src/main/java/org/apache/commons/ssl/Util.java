@@ -61,8 +61,8 @@ import java.util.TreeSet;
  * @since 28-Feb-2006
  */
 public class Util {
-    public final static int SIZE_KEY = 0;
-    public final static int LAST_READ_KEY = 1;
+    public static final int SIZE_KEY = 0;
+    public static final int LAST_READ_KEY = 1;
 
     /**
      * True if the Keystores have the same # of entries, have the same set of aliases, and all the certificate-chains
@@ -117,9 +117,9 @@ public class Util {
             return false;
         }
         String s = yesString.trim().toUpperCase();
-        return "1".equals(s) || "YES".equals(s) || "TRUE".equals(s) ||
-               "ENABLE".equals(s) || "ENABLED".equals(s) || "Y".equals(s) ||
-               "ON".equals(s);
+        return "1".equals(s) || "YES".equals(s) || "TRUE".equals(s)
+               || "ENABLE".equals(s) || "ENABLED".equals(s) || "Y".equals(s)
+               || "ON".equals(s);
     }
 
     public static String trim(final String s) {
@@ -169,13 +169,20 @@ public class Util {
                 }
                 bytesRead = in.read(buf);
             }
-        }
-        finally {
+        } finally {
             // Probably it's best to let consumer call "close", but I'm usually
             // the consumer, and I want to be lazy.  [Julius, November 20th, 2006]
-            try { in.close(); } catch (IOException e) { ioe = e; }
+            try {
+                in.close();
+            } catch (IOException e) {
+                ioe = e;
+            }
             if (autoClose) {
-                try { out.close(); } catch (IOException e) { ioe = e; }
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    ioe = e;
+                }
             }
         }
         if (ioe != null) {
@@ -230,8 +237,7 @@ public class Util {
                 System.arraycopy(buf, 0, smallerBuf, 0, size);
                 buf = smallerBuf;
             }
-        }
-        finally {
+        } finally {
             in.close();
         }
         return buf;
@@ -324,18 +330,18 @@ public class Util {
 
     public static Map parseArgs(final String[] cargs) {
         Map args = new TreeMap();
-        Map ARGS_MATCH = Ping.ARGS_MATCH;
+        Map argsMatch = Ping.argsMatch;
 
         int l = cargs.length;
-        final String[] EMPTY_VALUES = {""};
+        final String[] emptyValues = {""};
         for (int i = 0; i < l; i++) {
             String k = cargs[i];
-            Ping.Arg a = (Ping.Arg) ARGS_MATCH.get(k);
+            Ping.Arg a = (Ping.Arg) argsMatch.get(k);
             if (l > i + 1) {
                 String v = cargs[++i];
-                while (ARGS_MATCH.containsKey(v)) {
-                    args.put(a, EMPTY_VALUES);
-                    a = (Ping.Arg) ARGS_MATCH.get(v);
+                while (argsMatch.containsKey(v)) {
+                    args.put(a, emptyValues);
+                    a = (Ping.Arg) argsMatch.get(v);
                     v = "";
                     if (l > i + 1) {
                         v = cargs[++i];
@@ -344,17 +350,17 @@ public class Util {
                 String[] values = new String[1];
                 values[0] = v;
                 args.put(a, values);
-                if (l > i + 1 && !ARGS_MATCH.containsKey(cargs[i + 1])) {
+                if (l > i + 1 && !argsMatch.containsKey(cargs[i + 1])) {
                     LinkedList list = new LinkedList();
                     list.add(v);
-                    while (l > i + 1 && !ARGS_MATCH.containsKey(cargs[i + 1])) {
+                    while (l > i + 1 && !argsMatch.containsKey(cargs[i + 1])) {
                         v = cargs[++i];
                         list.add(v);
                     }
                     args.put(a, list.toArray(new String[list.size()]));
                 }
             } else {
-                args.put(a, EMPTY_VALUES);
+                args.put(a, emptyValues);
             }
         }
         return args;

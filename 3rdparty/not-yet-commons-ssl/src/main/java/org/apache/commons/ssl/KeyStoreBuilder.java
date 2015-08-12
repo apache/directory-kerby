@@ -34,9 +34,22 @@ package org.apache.commons.ssl;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1Sequence;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
-import java.security.*;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -45,7 +58,13 @@ import java.security.interfaces.DSAParams;
 import java.security.interfaces.DSAPrivateKey;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Builds Java Key Store files out of pkcs12 files, or out of pkcs8 files +
@@ -58,7 +77,7 @@ import java.util.*;
  * @since 4-Nov-2006
  */
 public class KeyStoreBuilder {
-    private final static String PKCS7_ENCRYPTED = "1.2.840.113549.1.7.6";
+    private static final String PKCS7_ENCRYPTED = "1.2.840.113549.1.7.6";
 
     public static KeyStore build(byte[] jksOrCerts, char[] password)
         throws IOException, CertificateException, KeyStoreException,
@@ -294,8 +313,8 @@ public class KeyStoreBuilder {
 
     public static BuildResult parse(byte[] stuff, char[] jksPass,
                                     char[] keyPass)
-            throws IOException, CertificateException, KeyStoreException,
-            ProbablyBadPasswordException {
+        throws IOException, CertificateException, KeyStoreException,
+        ProbablyBadPasswordException {
 
         return parse(stuff, jksPass, keyPass, false);
     }
@@ -310,12 +329,11 @@ public class KeyStoreBuilder {
         try {
             PKCS8Key pkcs8Key = new PKCS8Key(stuff, jksPass);
             key = pkcs8Key.getPrivateKey();
-        }
-        catch (ProbablyBadPasswordException pbpe) {
+        } catch (ProbablyBadPasswordException pbpe) {
             throw pbpe;
-        }
-        catch (GeneralSecurityException gse) {
+        } catch (GeneralSecurityException gse) {
             // no luck
+            gse.printStackTrace();
         }
 
         List pemItems = PEMUtil.decode(stuff);
@@ -325,9 +343,9 @@ public class KeyStoreBuilder {
             PEMItem item = (PEMItem) it.next();
             byte[] derBytes = item.getDerBytes();
             String type = item.pemType.trim().toUpperCase();
-            if (type.startsWith("CERT") ||
-                type.startsWith("X509") ||
-                type.startsWith("PKCS7")) {
+            if (type.startsWith("CERT")
+                || type.startsWith("X509")
+                || type.startsWith("PKCS7")) {
                 ByteArrayInputStream in = new ByteArrayInputStream(derBytes);
                 X509Certificate c = (X509Certificate) cf.generateCertificate(in);
                 certificates.add(c);
@@ -352,9 +370,9 @@ public class KeyStoreBuilder {
                 asn1 = Asn1PkcsUtil.analyze(asn1.bigPayload);
                 isProbablyPKCS12 = asn1.oids.contains(PKCS7_ENCRYPTED);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // isProbablyPKCS12 and isASN are set properly by now.
+            e.printStackTrace();
         }
 
         ByteArrayInputStream stuffStream = new ByteArrayInputStream(stuff);
@@ -397,9 +415,9 @@ public class KeyStoreBuilder {
                     List chains = Collections.singletonList(chain);
                     return new BuildResult(null, chains, null);
                 }
-            }
-            catch (CertificateException ce) {
+            } catch (CertificateException ce) {
                 // oh well
+                ce.printStackTrace();
             }
 
             stuffStream.reset();
@@ -414,9 +432,9 @@ public class KeyStoreBuilder {
                     List chains = Collections.singletonList(chain);
                     return new BuildResult(null, chains, null);
                 }
-            }
-            catch (CertificateException ce) {
+            } catch (CertificateException ce) {
                 // oh well
+                ce.printStackTrace();
             }
         }
 
@@ -469,6 +487,7 @@ public class KeyStoreBuilder {
                         uke = e;  // We might throw this one later. 
                     } catch (GeneralSecurityException gse) {
                         // Swallow... keep looping.
+                        gse.printStackTrace();
                     }
                 }
                 if (isPKCS12 && en.hasMoreElements()) {
@@ -490,15 +509,12 @@ public class KeyStoreBuilder {
             List keys = Collections.singletonList(key);
             List chains = Collections.singletonList(chain);
             return new BuildResult(keys, chains, jksKeyStore);
-        }
-        catch (ProbablyBadPasswordException pbpe) {
+        } catch (ProbablyBadPasswordException pbpe) {
             throw pbpe;
-        }
-        catch (GeneralSecurityException gse) {
+        } catch (GeneralSecurityException gse) {
             // swallow it, return null
             return null;
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             String msg = ioe.getMessage();
             msg = msg != null ? msg.trim().toLowerCase() : "";
             if (isPKCS12) {
@@ -583,6 +599,7 @@ public class KeyStoreBuilder {
                 }
             } catch (Exception e) {
                 // oh well, try next one.
+                e.printStackTrace();
             }
         }
 
