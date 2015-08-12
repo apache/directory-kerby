@@ -34,6 +34,7 @@ public class Krb5Conf {
     public static final String KRB5_CONF = "java.security.krb5.conf";
     private static final String KRB5_CONF_FILE = "krb5.conf";
     private SimpleKdcServer kdcServer;
+    private File confFile;
 
     public Krb5Conf(SimpleKdcServer kdcServer) {
         this.kdcServer = kdcServer;
@@ -71,9 +72,15 @@ public class Krb5Conf {
         int udpLimit = setting.allowUdp() ? 4096 : 1;
         content = content.replaceAll("_UDP_LIMIT_", String.valueOf(udpLimit));
 
-        File confFile = new File(kdcServer.getWorkDir(), KRB5_CONF_FILE);
+        this.confFile = new File(kdcServer.getWorkDir(), KRB5_CONF_FILE);
         IOUtil.writeFile(content, confFile);
 
         return confFile;
+    }
+
+    public void deleteKrb5conf() throws IOException {
+        if (!this.confFile.delete()) {
+            throw new IOException();
+        }
     }
 }
