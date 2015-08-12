@@ -542,7 +542,7 @@ public class Kadmin {
      */
     private String fixPrincipal(String principal) {
         if (!principal.contains("@")) {
-            principal += "@" + getKdcConfig().getKdcRealm();
+            principal += "@" + kdcSetting.getKdcRealm();
         }
         return principal;
     }
