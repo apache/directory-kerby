@@ -41,14 +41,14 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
 
     protected void doInitialize() {
         Map<String, KrbIdentity> tmpMap =
-                new LinkedHashMap<String, KrbIdentity>(storageSize) {
-                     private static final long serialVersionUID = 714064587685837472L;
+            new LinkedHashMap<String, KrbIdentity>(storageSize) {
+                private static final long serialVersionUID = 714064587685837472L;
 
-                    @Override
-                    protected boolean removeEldestEntry(Map.Entry eldest) {
-                        return size() > storageSize;
-                    }
-                };
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, KrbIdentity> eldest) {
+                    return size() > storageSize;
+                }
+            };
 
         storage = new ConcurrentHashMap<>(tmpMap);
     }

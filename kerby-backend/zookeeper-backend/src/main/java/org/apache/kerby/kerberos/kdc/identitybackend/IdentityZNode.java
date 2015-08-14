@@ -327,9 +327,9 @@ public class IdentityZNode {
         if (ZKUtil.checkExists(this.zk, IdentityZNodeHelper.getKeysZNode(this.identityName)) == -1) {
             ZKUtil.createWithParents(this.zk, IdentityZNodeHelper.getKeysZNode(this.identityName));
         }
-        Iterator it = keys.entrySet().iterator();
+        Iterator<Map.Entry<EncryptionType, EncryptionKey>> it = keys.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
+            Map.Entry<EncryptionType, EncryptionKey> pair = it.next();
             EncryptionType key = (EncryptionType) pair.getKey();
             ZKUtil.createWithParents(this.zk, IdentityZNodeHelper.getKeyTypeZNode(this.identityName, key.getName()));
             EncryptionKey value = (EncryptionKey) pair.getValue();
