@@ -26,6 +26,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
  * KDC side recoverable exception, where retrying will be made.
  */
 public class KdcRecoverableException extends KrbErrorException {
+    private static final long serialVersionUID = -3472169380126256193L;
 
     public KdcRecoverableException(KrbError krbError) {
         super(krbError);

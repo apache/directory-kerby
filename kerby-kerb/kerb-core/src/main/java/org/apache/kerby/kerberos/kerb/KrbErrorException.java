@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
 
 public class KrbErrorException extends KrbException {
+    private static final long serialVersionUID = -6726737724490205771L;
     private KrbError krbError;
 
     public KrbErrorException(KrbError krbError) {
