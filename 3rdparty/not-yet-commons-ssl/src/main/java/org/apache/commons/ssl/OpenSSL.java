@@ -714,7 +714,7 @@ public class OpenSSL {
         // in = encrypt( args[ 1 ], pwdAsBytes, in, true );
 
         in = new BufferedInputStream(in);
-        BufferedOutputStream bufOut = new BufferedOutputStream( System.out );
+        BufferedOutputStream bufOut = new BufferedOutputStream(System.out);
         Util.pipeStream(in, bufOut, false);
         bufOut.flush();
         System.out.flush();

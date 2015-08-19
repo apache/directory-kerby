@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.security.GeneralSecurityException;
 
-public class CRLSocket extends SSLClient {
+public final class CRLSocket extends SSLClient {
     private static final CRLSocket SECURE_INSTANCE;
     private static final CRLSocket PLAIN_INSTANCE;
 

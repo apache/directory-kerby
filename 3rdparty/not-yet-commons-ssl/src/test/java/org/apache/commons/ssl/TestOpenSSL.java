@@ -126,14 +126,17 @@ public class TestOpenSSL {
                     try {
                         byte[] result = OpenSSL.decrypt(cipher, pwd, encrypted);
                         String s = new String(result, "ISO-8859-1");
-                        assertTrue(cipherPadded + "." + filePadded + " decrypts to 'Hello World!'", "Hello World!".equals(s));
+                        assertTrue(cipherPadded + "." + filePadded
+                            + " decrypts to 'Hello World!'", "Hello World!".equals(s));
                         return 1;
                     } catch (NoSuchAlgorithmException nsae) {
-                        System.out.println("Warn: " + cipherPadded + filePadded + " NoSuchAlgorithmException");
+                        System.out.println("Warn: " + cipherPadded + filePadded
+                            + " NoSuchAlgorithmException");
                         return 0;
                     } catch (ArithmeticException ae) {
                         if (cipherPadded.contains("cfb1")) {
-                            System.out.println("Warn: " + cipherPadded + filePadded + " BouncyCastle can't handle cfb1 " + ae);
+                            System.out.println("Warn: " + cipherPadded + filePadded
+                                + " BouncyCastle can't handle cfb1 " + ae);
                             return 0;
                         } else {
                             throw ae;

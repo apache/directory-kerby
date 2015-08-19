@@ -171,7 +171,8 @@ public class PKCS8Key {
                     opensslRSA = opensslRSA || rsa;
                     opensslDSA = opensslDSA || dsa;
                     if (derBytes != null) {
-                        throw new ProbablyNotPKCS8Exception("More than one pkcs8 or OpenSSL key found in the supplied PEM Base64 stream");
+                        throw new ProbablyNotPKCS8Exception("More than one pkcs8 "
+                            + "or OpenSSL key found in the supplied PEM Base64 stream");
                     }
                     derBytes = item.getDerBytes();
                     keyItem = item;
@@ -180,7 +181,8 @@ public class PKCS8Key {
             }
             // after the loop is finished, did we find anything?
             if (derBytes == null) {
-                throw new ProbablyNotPKCS8Exception("No pkcs8 or OpenSSL key found in the supplied PEM Base64 stream");
+                throw new ProbablyNotPKCS8Exception(
+                    "No pkcs8 or OpenSSL key found in the supplied PEM Base64 stream");
             }
 
             if (opensslDSA || opensslRSA) {
@@ -243,7 +245,8 @@ public class PKCS8Key {
                          || s.equals("3") || s.startsWith("3.");
             }
             if (!isOkay) {
-                throw new ProbablyNotPKCS8Exception("Valid ASN.1, but not PKCS8 or OpenSSL format.  OID=" + oid);
+                throw new ProbablyNotPKCS8Exception("Valid ASN.1,"
+                   + " but not PKCS8 or OpenSSL format.  OID=" + oid);
             }
         }
 
@@ -260,7 +263,8 @@ public class PKCS8Key {
             try {
                 pkcs8 = Asn1PkcsUtil.analyze(decryptedPKCS8);
             } catch (Exception e) {
-                throw new ProbablyBadPasswordException("Decrypted stream not ASN.1.  Probably bad decryption password.");
+                throw new ProbablyBadPasswordException(
+                    "Decrypted stream not ASN.1.  Probably bad decryption password.");
             }
             oid = pkcs8.oid1;
             isDSA = DSA_OID.equals(oid);
@@ -279,7 +283,8 @@ public class PKCS8Key {
             }
             pk = kf.generatePrivate(spec);
         } catch (Exception e) {
-            throw new ProbablyBadPasswordException("Cannot create " + type + " private key from decrypted stream.  Probably bad decryption password. " + e);
+            throw new ProbablyBadPasswordException("Cannot create " + type
+                + " private key from decrypted stream.  Probably bad decryption password. " + e);
         }
         if (pk != null) {
             this.privateKey = pk;
@@ -289,7 +294,8 @@ public class PKCS8Key {
             this.transformation = decryptResult.transformation;
             this.keySize = decryptResult.keySize;
         } else {
-            throw new GeneralSecurityException("KeyFactory.generatePrivate() returned null and didn't throw exception!");
+            throw new GeneralSecurityException(
+                "KeyFactory.generatePrivate() returned null and didn't throw exception!");
         }
     }
 
@@ -325,7 +331,7 @@ public class PKCS8Key {
             BigInteger p = params.getP();
             BigInteger q = params.getQ();
             BigInteger x = dsa.getX();
-            BigInteger y = q.modPow( x, p );
+            BigInteger y = q.modPow(x, p);
             DSAPublicKeySpec dsaKeySpec = new DSAPublicKeySpec(y, p, q, g);
             return KeyFactory.getInstance("DSA").generatePublic(dsaKeySpec);
         } else if (privateKey instanceof RSAPrivateCrtKey) {
@@ -708,7 +714,8 @@ public class PKCS8Key {
         // a cipher or hash at this point, then we don't support the file we
         // were given.
         if (cipher == null || hash == null) {
-            throw new ProbablyNotPKCS8Exception("Unsupported PKCS8 format. oid1=[" + pkcs8.oid1 + "], oid2=[" + pkcs8.oid2 + "]");
+            throw new ProbablyNotPKCS8Exception(
+                "Unsupported PKCS8 format. oid1=[" + pkcs8.oid1 + "], oid2=[" + pkcs8.oid2 + "]");
         }
 
         // In PKCS8 Version 1.5 we need to derive an 8 byte IV.  In those cases
@@ -970,9 +977,12 @@ public class PKCS8Key {
     public static void main(String[] args) throws Exception {
         String password = "changeit";
         if (args.length == 0) {
-            System.out.println("Usage1:  [password] [file:private-key]      Prints decrypted PKCS8 key (base64).");
-            System.out.println("Usage2:  [password] [file1] [file2] etc...  Checks that all private keys are equal.");
-            System.out.println("Usage2 assumes that all files can be decrypted with the same password.");
+            System.out.println("Usage1:  [password] [file:private-key]"
+                + "      Prints decrypted PKCS8 key (base64).");
+            System.out.println("Usage2:  [password] [file1] [file2] etc..."
+                + "  Checks that all private keys are equal.");
+            System.out.println(
+                "Usage2 assumes that all files can be decrypted with the same password.");
         } else if (args.length == 1 || args.length == 2) {
             FileInputStream in = new FileInputStream(args[args.length - 1]);
             if (args.length == 2) {
@@ -1020,13 +1030,16 @@ public class PKCS8Key {
 
                     if (original == null) {
                         original = decrypted;
-                        System.out.println("   SUCCESS    \t" + type + "\t" + transform + "\t" + keySizeStr + "\t" + args[i]);
+                        System.out.println("   SUCCESS    \t" + type + "\t"
+                            + transform + "\t" + keySizeStr + "\t" + args[i]);
                     } else {
                         boolean identical = Arrays.equals(original, decrypted);
                         if (!identical) {
-                            System.out.println("***FAILURE*** \t" + type + "\t" + transform + "\t" + keySizeStr + "\t" + args[i]);
+                            System.out.println("***FAILURE*** \t" + type + "\t"
+                                + transform + "\t" + keySizeStr + "\t" + args[i]);
                         } else {
-                            System.out.println("   SUCCESS    \t" + type + "\t" + transform + "\t" + keySizeStr + "\t" + args[i]);
+                            System.out.println("   SUCCESS    \t" + type + "\t"
+                                + transform + "\t" + keySizeStr + "\t" + args[i]);
                         }
                     }
                 }

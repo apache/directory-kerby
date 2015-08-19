@@ -41,7 +41,7 @@ import java.security.GeneralSecurityException;
  * @author <a href="mailto:juliusdavies@cucbc.com">juliusdavies@cucbc.com</a>
  * @since 28-Feb-2006
  */
-public class LDAPSocket extends SSLClient {
+public final class LDAPSocket extends SSLClient {
     private static final LDAPSocket INSTANCE;
 
     static {

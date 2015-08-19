@@ -78,7 +78,7 @@ public class Asn1PkcsUtil {
 
         List<Asn1Item> items = asn1Coll.getValue();
         for (Asn1Item item : items) {
-            if (! item.isCollection()) {
+            if (!item.isCollection()) {
                 analyze(item.getValue(), pkcs8, depth);
             } else {
                 try {

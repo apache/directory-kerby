@@ -273,7 +273,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
             check(new String[]{host}, cns, subjectAlts);
         }
 
-        public void check(String host[], SSLSocket ssl)
+        public void check(String[] host, SSLSocket ssl)
             throws IOException {
             if (host == null) {
                 throw new NullPointerException("host to verify is null");
