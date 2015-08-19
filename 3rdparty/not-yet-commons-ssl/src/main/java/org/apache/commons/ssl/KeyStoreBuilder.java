@@ -86,7 +86,7 @@ public class KeyStoreBuilder {
         UnrecoverableKeyException {
 
         if (keyPassword == null || keyPassword.length <= 0) {
-            keyPassword = jksPassword.clone();
+            keyPassword = jksPassword;
         }
 
         BuildResult br1 = parse(jksOrCerts, jksPassword, keyPassword);
@@ -442,7 +442,7 @@ public class KeyStoreBuilder {
     ) throws ProbablyBadPasswordException {
         in.reset();
         if (keyPassword == null || keyPassword.length <= 0) {
-            keyPassword = jksPassword.clone();
+            keyPassword = jksPassword;
         }
 
         keystoreType = keystoreType.trim().toLowerCase();

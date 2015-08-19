@@ -277,20 +277,20 @@ public class SSL {
     }
 
     public void setEnabledCiphers(String[] ciphers) {
-        HashSet<String> desired = new HashSet<String>(Arrays.asList(ciphers.clone()));
+        HashSet<String> desired = new HashSet<String>(Arrays.asList(ciphers));
         desired.removeAll(SUPPORTED_CIPHERS_SET);
         if (!desired.isEmpty()) {
             throw new IllegalArgumentException("following ciphers not supported: " + desired);
         }
-        this.enabledCiphers = ciphers.clone();
+        this.enabledCiphers = ciphers;
     }
 
     public String[] getEnabledProtocols() {
-        return enabledProtocols.clone();
+        return enabledProtocols;
     }
 
     public void setEnabledProtocols(String[] protocols) {
-        this.enabledProtocols = protocols.clone();
+        this.enabledProtocols = protocols;
     }
 
     public String getDefaultProtocol() {
@@ -587,18 +587,18 @@ public class SSL {
     }
 
     public void setCurrentServerChain(X509Certificate[] chain) {
-        this.currentServerChain = chain.clone();
+        this.currentServerChain = chain;
     }
 
     public void setCurrentClientChain(X509Certificate[] chain) {
-        this.currentClientChain = chain.clone();
+        this.currentClientChain = chain;
     }
 
     public X509Certificate[] getCurrentServerChain() {
-        return currentServerChain.clone();
+        return currentServerChain;
     }
 
     public X509Certificate[] getCurrentClientChain() {
-        return currentClientChain.clone();
+        return currentClientChain;
     }
 }

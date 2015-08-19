@@ -180,12 +180,8 @@ public class Certificates {
 
     public static String toString(X509Certificate cert, boolean htmlStyle) {
         String cn = getCN(cert);
-        String startStart;
-        String endDate;
-        synchronized (DF) {
-            startStart = DF.format(cert.getNotBefore());
-            endDate = DF.format(cert.getNotAfter());
-        }
+        String startStart = DF.format(cert.getNotBefore());
+        String endDate = DF.format(cert.getNotAfter());
         String subject = JavaImpl.getSubjectX500(cert);
         String issuer = JavaImpl.getIssuerX500(cert);
         Iterator crls = getCRLs(cert).iterator();
@@ -359,9 +355,7 @@ public class Certificates {
             if (now - creationTime > 24 * 60 * 60 * 1000) {
                 // Expire cache every 24 hours
                 if (tempCRLFile != null && tempCRLFile.exists()) {
-                    if(!tempCRLFile.delete()) {
-                        throw new CertificateException("CRLFile:" + tempCRLFile.getPath() + " can not be deleted" );
-                    }
+                    tempCRLFile.delete();
                 }
                 tempCRLFile = null;
                 passedTest.clear();

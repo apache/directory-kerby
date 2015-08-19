@@ -87,6 +87,7 @@ public class Asn1PkcsUtil {
     }
 
     public static void analyze(Asn1Type obj, Asn1PkcsStructure pkcs8, int depth) {
+        String tag = null;
         if (depth >= 2) {
             pkcs8.derIntegers = null;
         }
@@ -94,7 +95,9 @@ public class Asn1PkcsUtil {
         String str = obj.toString();
         String name = obj.getClass().getName();
         name = name.substring(name.lastIndexOf('.') + 1);
-
+        if (tag != null) {
+            name = " [tag=" + tag + "] " + name;
+        }
         for (int i = 0; i < depth; i++) {
             name = "  " + name;
         }
@@ -133,7 +136,7 @@ public class Asn1PkcsUtil {
                 boolean probablyBinary = false;
                 for (int i = 0; i < len; i++) {
                     byte b = octets[i];
-                    boolean isBinary = !(b >=0 && b <= 127);
+                    boolean isBinary = b > 128 || b < 0;
                     if (isBinary) {
                         probablyBinary = true;
                         break;

@@ -71,13 +71,17 @@ public class KeyMaterial extends TrustMaterial {
 
     public KeyMaterial(InputStream jks, InputStream key, char[] password)
         throws GeneralSecurityException, IOException {
-        this(Util.streamToBytes(jks), Util.streamToBytes(key), password);
+        this(jks != null ? Util.streamToBytes(jks) : null,
+            key != null ? Util.streamToBytes(key) : null,
+            password);
     }
 
     public KeyMaterial(InputStream jks, InputStream key, char[] jksPass,
                        char[] keyPass)
         throws GeneralSecurityException, IOException {
-        this(Util.streamToBytes(jks), Util.streamToBytes(key), jksPass, keyPass);
+        this(jks != null ? Util.streamToBytes(jks) : null,
+            key != null ? Util.streamToBytes(key) : null,
+            jksPass, keyPass);
     }
 
     public KeyMaterial(String pathToJksFile, char[] password)

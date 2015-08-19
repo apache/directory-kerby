@@ -63,7 +63,7 @@ public class PEMItem {
     }
 
     public PEMItem(byte[] derBytes, String type, Map properties) {
-        this.derBytes = derBytes.clone();
+        this.derBytes = derBytes;
         this.pemType = type;
         if (properties == null) {
             properties = new TreeMap(); // empty map

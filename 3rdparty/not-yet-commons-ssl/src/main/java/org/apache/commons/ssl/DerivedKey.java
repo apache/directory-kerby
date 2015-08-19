@@ -42,8 +42,8 @@ public class DerivedKey {
     public final byte[] iv;
 
     DerivedKey(byte[] key, byte[] iv) {
-        this.key = key.clone();
-        this.iv = iv.clone();
+        this.key = key;
+        this.iv = iv;
     }
 
 }

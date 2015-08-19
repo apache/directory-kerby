@@ -103,7 +103,7 @@ public class PEMUtil {
             if (line != null) {
                 String upperLine = line.toUpperCase();
                 int x = upperLine.indexOf("-BEGIN") + "-BEGIN".length();
-                int y = upperLine.indexOf('-', x);
+                int y = upperLine.indexOf("-", x);
                 type = upperLine.substring(x, y).trim();
                 line = readLine.next();
             }

@@ -57,7 +57,7 @@ import java.security.cert.X509Certificate;
  * @since 30-Jun-2006
  */
 public abstract class JavaImpl {
-    private final static JavaImpl HANDLER;
+    private static JavaImpl HANDLER;
 
     static {
         JavaImpl h = null;

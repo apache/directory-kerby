@@ -51,7 +51,7 @@ public interface SSLWrapperFactory {
      * @return The new wrapped SSLSocket.
      * @throws java.io.IOException if wrapping failed
      */
-    Socket wrap(Socket s) throws IOException;
+    public Socket wrap(Socket s) throws IOException;
 
     /**
      * Wraps an SSLServerSocket.
@@ -63,7 +63,7 @@ public interface SSLWrapperFactory {
      * @return The new wrapped SSLServerSocket.
      * @throws java.io.IOException if wrapping failed
      */
-    SSLServerSocket wrap(SSLServerSocket s, SSL ssl)
+    public SSLServerSocket wrap(SSLServerSocket s, SSL ssl)
         throws IOException;
 
 
@@ -74,7 +74,7 @@ public interface SSLWrapperFactory {
      * setEnabledCiphers, setUseClientMode, and the hostname verifier (which
      * should be very rare on SSLServerSockets!).
      */
-    final static SSLWrapperFactory NO_WRAP = new SSLWrapperFactory() {
+    public final static SSLWrapperFactory NO_WRAP = new SSLWrapperFactory() {
         // Notice!  No wrapping!
         public Socket wrap(Socket s) { return s; }
 
@@ -91,7 +91,7 @@ public interface SSLWrapperFactory {
      * anything.  It doesn't actually do anything interesting in its wrapped
      * implementations.
      */
-    final static SSLWrapperFactory DUMB_WRAP = new SSLWrapperFactory() {
+    public final static SSLWrapperFactory DUMB_WRAP = new SSLWrapperFactory() {
         public Socket wrap(Socket s) { return new SSLSocketWrapper(s); }
 
         public SSLServerSocket wrap(SSLServerSocket s, SSL ssl)
