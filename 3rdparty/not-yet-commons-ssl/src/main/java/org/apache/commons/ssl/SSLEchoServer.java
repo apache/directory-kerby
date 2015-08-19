@@ -102,7 +102,8 @@ public class SSLEchoServer {
                             System.out.println(Certificates.toString(cert));
                         }
                     }
-                } catch (SSLPeerUnverifiedException sslpue) {
+                }
+                catch (SSLPeerUnverifiedException sslpue) {
                     // oh well, no client cert for us
                     System.out.println(sslpue);
                 }
@@ -121,7 +122,8 @@ public class SSLEchoServer {
                     out.flush();
                     line = readLine.next();
                 }
-            } catch (IOException ioe) {
+            }
+            catch (IOException ioe) {
                 try {
                     if (out != null) {
                         out.close();
@@ -130,8 +132,8 @@ public class SSLEchoServer {
                         in.close();
                     }
                     s.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                }
+                catch (Exception e) {
                 }
 
                 if (ioe instanceof InterruptedIOException) {

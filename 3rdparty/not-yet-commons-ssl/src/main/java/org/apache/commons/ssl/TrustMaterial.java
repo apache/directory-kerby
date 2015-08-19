@@ -54,18 +54,18 @@ import java.util.Iterator;
  * @since 27-Feb-2006
  */
 public class TrustMaterial extends TrustChain {
-    static final int SIMPLE_TRUST_TYPE_TRUST_ALL = 1;
-    static final int SIMPLE_TRUST_TYPE_TRUST_THIS_JVM = 2;
+    final static int SIMPLE_TRUST_TYPE_TRUST_ALL = 1;
+    final static int SIMPLE_TRUST_TYPE_TRUST_THIS_JVM = 2;
 
     /**
      * Might be null if "$JAVA_HOME/jre/lib/security/cacerts" doesn't exist.
      */
-    public static final TrustMaterial CACERTS;
+    public final static TrustMaterial CACERTS;
 
     /**
      * Might be null if "$JAVA_HOME/jre/lib/security/jssecacerts" doesn't exist.
      */
-    public static final TrustMaterial JSSE_CACERTS;
+    public final static TrustMaterial JSSE_CACERTS;
 
     /**
      * Should never be null (unless both CACERTS and JSSE_CACERTS are not
@@ -73,7 +73,7 @@ public class TrustMaterial extends TrustChain {
      * JSSE_CACERTS, but 99.9% of the time it's CACERTS, since JSSE_CACERTS
      * is almost never present.
      */
-    public static final TrustMaterial DEFAULT;
+    public final static TrustMaterial DEFAULT;
 
     static {
         JavaImpl.load();
@@ -87,7 +87,8 @@ public class TrustMaterial extends TrustChain {
             if (f.exists()) {
                 cacerts = new TrustMaterial(pathToCacerts);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         try {
@@ -95,7 +96,8 @@ public class TrustMaterial extends TrustChain {
             if (f.exists()) {
                 jssecacerts = new TrustMaterial(pathToJSSECacerts);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -108,10 +110,10 @@ public class TrustMaterial extends TrustChain {
         }
     }
 
-    public static final TrustMaterial TRUST_ALL =
+    public final static TrustMaterial TRUST_ALL =
         new TrustMaterial(SIMPLE_TRUST_TYPE_TRUST_ALL);
 
-    public static final TrustMaterial TRUST_THIS_JVM =
+    public final static TrustMaterial TRUST_THIS_JVM =
         new TrustMaterial(SIMPLE_TRUST_TYPE_TRUST_THIS_JVM);
 
     public final int simpleTrustType;
@@ -270,7 +272,7 @@ public class TrustMaterial extends TrustChain {
 
     protected boolean containsTrustAll() {
         boolean yes = this.simpleTrustType == SIMPLE_TRUST_TYPE_TRUST_ALL;
-        if (!yes) {
+        if ( !yes ) {
             yes = super.containsTrustAll();
         }
         return yes;

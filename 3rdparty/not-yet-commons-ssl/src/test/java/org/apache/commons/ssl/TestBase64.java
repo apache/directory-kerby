@@ -1,5 +1,7 @@
 package org.apache.commons.ssl;
 
+import static org.junit.Assert.assertTrue;
+
 import org.apache.kerby.util.Base64;
 import org.apache.kerby.util.Base64InputStream;
 import org.junit.Test;
@@ -7,8 +9,6 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Random;
-
-import static org.junit.Assert.assertTrue;
 
 
 public class TestBase64 {
@@ -36,7 +36,7 @@ public class TestBase64 {
             random.nextBytes(buf);
             byte[] enc = Base64.encodeBase64(buf);
             ByteArrayInputStream in = new ByteArrayInputStream(enc);
-            enc = Util.streamToBytes(in);
+            enc = Util.streamToBytes(in);            
             byte[] dec = Base64.decodeBase64(enc);
             boolean result = Arrays.equals(buf, dec);
             if (!result) {
@@ -54,17 +54,17 @@ public class TestBase64 {
             byte[] buf = new byte[i];
             random.nextBytes(buf);
 
-            ByteArrayInputStream in = new ByteArrayInputStream(buf);
-            Base64InputStream base64 = new Base64InputStream(in, true);
+            ByteArrayInputStream in = new ByteArrayInputStream( buf );
+            Base64InputStream base64 = new Base64InputStream(in,true);
             byte[] enc = Util.streamToBytes(base64);
-            in = new ByteArrayInputStream(enc);
+            in = new ByteArrayInputStream( enc );
             base64 = new Base64InputStream(in);
             byte[] dec = Util.streamToBytes(base64);
 
             boolean result = Arrays.equals(buf, dec);
             if (!result) {
                 System.out.println();
-                System.out.println("testBase64 Failed on : " + i);
+                System.out.println("testBase64 Failed on : " + i);                                
             }
             assertTrue(result);
         }
@@ -73,10 +73,10 @@ public class TestBase64 {
             byte[] buf = new byte[testSize];
             random.nextBytes(buf);
 
-            ByteArrayInputStream in = new ByteArrayInputStream(buf);
-            Base64InputStream base64 = new Base64InputStream(in, true);
+            ByteArrayInputStream in = new ByteArrayInputStream( buf );
+            Base64InputStream base64 = new Base64InputStream(in,true);
             byte[] enc = Util.streamToBytes(base64);
-            in = new ByteArrayInputStream(enc);
+            in = new ByteArrayInputStream( enc );
             base64 = new Base64InputStream(in);
             byte[] dec = Util.streamToBytes(base64);
 

@@ -26,12 +26,7 @@
 package org.apache.commons.ssl;
 
 import org.apache.kerby.asn1.Asn1InputBuffer;
-import org.apache.kerby.asn1.type.Asn1Collection;
-import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.asn1.type.Asn1Item;
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.asn1.type.Asn1OctetString;
-import org.apache.kerby.asn1.type.Asn1Type;
+import org.apache.kerby.asn1.type.*;
 import org.apache.kerby.util.Hex;
 
 import java.io.FileInputStream;
@@ -51,7 +46,7 @@ import java.util.List;
  */
 public class Asn1PkcsUtil {
 
-    public static final BigInteger BIGGEST =
+    public final static BigInteger BIGGEST =
             new BigInteger(Integer.toString(Integer.MAX_VALUE));
 
     public static Asn1PkcsStructure analyze(byte[] asn1)
@@ -78,7 +73,7 @@ public class Asn1PkcsUtil {
 
         List<Asn1Item> items = asn1Coll.getValue();
         for (Asn1Item item : items) {
-            if (!item.isCollection()) {
+            if (! item.isCollection()) {
                 analyze(item.getValue(), pkcs8, depth);
             } else {
                 try {
@@ -138,7 +133,7 @@ public class Asn1PkcsUtil {
                 boolean probablyBinary = false;
                 for (int i = 0; i < len; i++) {
                     byte b = octets[i];
-                    boolean isBinary = !(b >= 0 && b <= 127);
+                    boolean isBinary = !(b >=0 && b <= 127);
                     if (isBinary) {
                         probablyBinary = true;
                         break;

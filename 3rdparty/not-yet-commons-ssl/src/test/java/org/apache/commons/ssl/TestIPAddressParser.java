@@ -1,11 +1,8 @@
 package org.apache.commons.ssl;
 
+import static org.apache.commons.ssl.util.IPAddressParser.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
-
-import static org.apache.commons.ssl.util.IPAddressParser.parseIPv4Literal;
-import static org.apache.commons.ssl.util.IPAddressParser.parseIPv6Literal;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNull;
 
 public class TestIPAddressParser {
 

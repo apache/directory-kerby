@@ -38,18 +38,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.PublicKey;
-import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.security.interfaces.DSAPublicKey;
+import java.security.PublicKey;
+import java.util.*;
 
 /**
  * @author Credit Union Central of British Columbia
@@ -58,10 +51,10 @@ import java.util.Map;
  * @since 13-Aug-2006
  */
 public class PEMUtil {
-    static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    final static String LINE_SEPARATOR = System.getProperty("line.separator");
 
     public static byte[] encode(Collection items) throws IOException {
-        final byte[] lineSeparatorBytes = LINE_SEPARATOR.getBytes("UTF-8");
+        final byte[] LINE_SEPARATOR_BYTES = LINE_SEPARATOR.getBytes("UTF-8");
         ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
         Iterator it = items.iterator();
         while (it.hasNext()) {
@@ -69,7 +62,7 @@ public class PEMUtil {
             out.write("-----BEGIN ".getBytes("UTF-8"));
             out.write(item.pemType.getBytes("UTF-8"));
             out.write("-----".getBytes("UTF-8"));
-            out.write(lineSeparatorBytes);
+            out.write(LINE_SEPARATOR_BYTES);
 
             byte[] derBytes = item.getDerBytes();
             ByteArrayInputStream bin = new ByteArrayInputStream(derBytes);
@@ -77,18 +70,18 @@ public class PEMUtil {
             while (line.length == 48) {
                 byte[] base64Line = Base64.encodeBase64(line);
                 out.write(base64Line);
-                out.write(lineSeparatorBytes);
+                out.write(LINE_SEPARATOR_BYTES);
                 line = Util.streamToBytes(bin, 48);
             }
             if (line.length > 0) {
                 byte[] base64Line = Base64.encodeBase64(line);
                 out.write(base64Line);
-                out.write(lineSeparatorBytes);
+                out.write(LINE_SEPARATOR_BYTES);
             }
             out.write("-----END ".getBytes("UTF-8"));
             out.write(item.pemType.getBytes("UTF-8"));
             out.write("-----".getBytes("UTF-8"));
-            out.write(lineSeparatorBytes);
+            out.write(LINE_SEPARATOR_BYTES);
         }
         return out.toByteArray();
     }

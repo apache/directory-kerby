@@ -14,13 +14,9 @@ public class ReadLine {
     int pos = 0;
     int avail = 0;
 
-    public ReadLine(InputStream in) {
-        this.in = in;
-    }
+    public ReadLine(InputStream in) { this.in = in; }
 
-    public String next() throws IOException {
-        return next(1);
-    }
+    public String next() throws IOException { return next(1); }
 
     public String next(int lines) throws IOException {
         if (lines < 1) {
@@ -53,9 +49,7 @@ public class ReadLine {
         return buf.length() > 0 ? buf.toString() : null;
     }
 
-    public byte[] nextAsBytes() throws IOException {
-        return nextAsBytes(1);
-    }
+    public byte[] nextAsBytes() throws IOException { return nextAsBytes(1); }
 
     public byte[] nextAsBytes(int lines) throws IOException {
         if (lines < 1) {

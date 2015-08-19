@@ -59,7 +59,8 @@ public class Java14TrustManagerWrapper implements X509TrustManager {
         CertificateException ce = null;
         try {
             trustManager.checkClientTrusted(chain, authType);
-        } catch (CertificateException e) {
+        }
+        catch (CertificateException e) {
             ce = e;
         }
         testShouldWeThrow(ce, chain);
@@ -71,7 +72,8 @@ public class Java14TrustManagerWrapper implements X509TrustManager {
         CertificateException ce = null;
         try {
             trustManager.checkServerTrusted(chain, authType);
-        } catch (CertificateException e) {
+        }
+        catch (CertificateException e) {
             ce = e;
         }
         testShouldWeThrow(ce, chain);

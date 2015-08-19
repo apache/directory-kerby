@@ -1,9 +1,10 @@
 package org.apache.commons.ssl;
 
+import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
-import javax.net.ssl.SSLSocket;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,10 +16,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import javax.net.ssl.SSLSocket;
 
 public class TestKeyMaterial {
     public static final char[] PASSWORD1 = "changeit".toCharArray();
@@ -35,18 +33,18 @@ public class TestKeyMaterial {
         String[] files = dir.list();
         Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
         for (String f : files) {
-            String file = f.toUpperCase(Locale.ENGLISH);
-            if (file.endsWith(".KS") || file.contains("PKCS12")) {
+            String F = f.toUpperCase(Locale.ENGLISH);
+            if (F.endsWith(".KS") || F.contains("PKCS12")) {
                 examineKeyStore(samplesDir, f, null);
-            } else if (file.endsWith(".PEM")) {
+            } else if (F.endsWith(".PEM")) {
                 examineKeyStore(samplesDir, f, "rsa.key");
             }
         }
     }
 
     private static void examineKeyStore(String dir, String fileName, String file2) throws Exception {
-        String filename = fileName.toUpperCase(Locale.ENGLISH);
-        boolean hasMultiPassword = filename.contains(".2PASS.");
+        String FILENAME = fileName.toUpperCase(Locale.ENGLISH);
+        boolean hasMultiPassword = FILENAME.contains(".2PASS.");
 
         System.out.print("Testing KeyMaterial: " + dir + "/" + fileName);        
         char[] pass1 = PASSWORD1;

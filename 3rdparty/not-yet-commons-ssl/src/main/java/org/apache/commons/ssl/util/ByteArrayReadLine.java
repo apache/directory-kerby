@@ -5,13 +5,9 @@ import java.io.IOException;
 
 public class ByteArrayReadLine extends ReadLine {
 
-    public ByteArrayReadLine(ByteArrayInputStream in) {
-        super(in);
-    }
+    public ByteArrayReadLine(ByteArrayInputStream in) { super(in); }
 
-    public String next() {
-        return next(1);
-    }
+    public String next() { return next(1); }
 
     public String next(int lines) {
         try {
@@ -22,9 +18,7 @@ public class ByteArrayReadLine extends ReadLine {
         }
     }
 
-    public byte[] nextAsBytes() {
-        return nextAsBytes(1);
-    }
+    public byte[] nextAsBytes() { return nextAsBytes(1); }
 
     public byte[] nextAsBytes(int lines) {
         try {

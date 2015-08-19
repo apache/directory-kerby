@@ -111,7 +111,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
      * as "*.foo.com") with DEFAULT matches all subdomains, including
      * "a.b.foo.com".
      */
-     HostnameVerifier DEFAULT =
+    final static HostnameVerifier DEFAULT =
         new AbstractVerifier() {
             public final void check(final String[] hosts, final String[] cns,
                                     final String[] subjectAlts)
@@ -119,9 +119,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 check(hosts, cns, subjectAlts, false, false);
             }
 
-            public final String toString() {
-                return "DEFAULT";
-            }
+            public final String toString() { return "DEFAULT"; }
         };
 
 
@@ -131,7 +129,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
      * "localhost.localdomain", "127.0.0.1", "::1" will always pass, no matter
      * what is in the server's certificate.
      */
-    HostnameVerifier DEFAULT_AND_LOCALHOST =
+    final static HostnameVerifier DEFAULT_AND_LOCALHOST =
         new AbstractVerifier() {
             public final void check(final String[] hosts, final String[] cns,
                                     final String[] subjectAlts)
@@ -142,9 +140,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 check(hosts, cns, subjectAlts, false, false);
             }
 
-            public final String toString() {
-                return "DEFAULT_AND_LOCALHOST";
-            }
+            public final String toString() { return "DEFAULT_AND_LOCALHOST"; }
         };
 
     /**
@@ -163,7 +159,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
      * level, for example "a.foo.com".  It does not match deeper subdomains
      * such as "a.b.foo.com".
      */
-    HostnameVerifier STRICT =
+    final static HostnameVerifier STRICT =
         new AbstractVerifier() {
             public final void check(final String[] host, final String[] cns,
                                     final String[] subjectAlts)
@@ -171,9 +167,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 check(host, cns, subjectAlts, false, true);
             }
 
-            public final String toString() {
-                return "STRICT";
-            }
+            public final String toString() { return "STRICT"; }
         };
 
     /**
@@ -182,7 +176,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
      * server's certificate, not just the first one.  This behaviour is
      * identical to IE6's behaviour.
      */
-    HostnameVerifier STRICT_IE6 =
+    static HostnameVerifier STRICT_IE6 =
         new AbstractVerifier() {
             public final void check(final String[] host, final String[] cns,
                                     final String[] subjectAlts)
@@ -190,25 +184,21 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 check(host, cns, subjectAlts, true, true);
             }
 
-            public final String toString() {
-                return "STRICT_IE6";
-            }
+            public final String toString() { return "STRICT_IE6"; }
         };
 
     /**
      * The ALLOW_ALL HostnameVerifier essentially turns hostname verification
      * off.  This implementation is a no-op, and never throws the SSLException.
      */
-    HostnameVerifier ALLOW_ALL =
+    final static HostnameVerifier ALLOW_ALL =
         new AbstractVerifier() {
             public final void check(final String[] host, final String[] cns,
                                     final String[] subjectAlts) {
                 // Allow everything - so never blowup.
             }
 
-            public final String toString() {
-                return "ALLOW_ALL";
-            }
+            public final String toString() { return "ALLOW_ALL"; }
         };
 
     abstract class AbstractVerifier implements HostnameVerifier {
@@ -223,11 +213,11 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
          * Looks like we're the only implementation guarding against this.
          * Firefox, Curl, Sun Java 1.4, 5, 6 don't bother with this check.
          */
-        private static final String[] BAD_COUNTRY_2LDS =
+        private final static String[] BAD_COUNTRY_2LDS =
             {"ac", "co", "com", "ed", "edu", "go", "gouv", "gov", "info",
                 "lg", "ne", "net", "or", "org"};
 
-        private static final String[] LOCALHOSTS = {"::1", "127.0.0.1",
+        private final static String[] LOCALHOSTS = {"::1", "127.0.0.1",
             "localhost",
             "localhost.localdomain"};
 
@@ -238,8 +228,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
             Arrays.sort(LOCALHOSTS);
         }
 
-        protected AbstractVerifier() {
-        }
+        protected AbstractVerifier() {}
 
         /**
          * The javax.net.ssl.HostnameVerifier contract.
@@ -254,7 +243,8 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 X509Certificate x509 = (X509Certificate) certs[0];
                 check(new String[]{host}, x509);
                 return true;
-            } catch (SSLException e) {
+            }
+            catch (SSLException e) {
                 return false;
             }
         }
@@ -273,7 +263,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
             check(new String[]{host}, cns, subjectAlts);
         }
 
-        public void check(String[] host, SSLSocket ssl)
+        public void check(String host[], SSLSocket ssl)
             throws IOException {
             if (host == null) {
                 throw new NullPointerException("host to verify is null");
@@ -399,10 +389,10 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 // The CN better have at least two dots if it wants wildcard
                 // action.  It also can't be [*.co.uk] or [*.co.jp] or
                 // [*.org.uk], etc...
-                boolean doWildcard = cn.startsWith("*.")
-                                     && cn.lastIndexOf('.') >= 0
-                                     && !isIP4Address(cn)
-                                     && acceptableCountryWildcard(cn);
+                boolean doWildcard = cn.startsWith("*.") &&
+                                     cn.lastIndexOf('.') >= 0 &&
+                                     !isIP4Address(cn) &&
+                                     acceptableCountryWildcard(cn);
 
                 for (int i = 0; i < hosts.length; i++) {
                     final String hostName = hosts[i].trim().toLowerCase();

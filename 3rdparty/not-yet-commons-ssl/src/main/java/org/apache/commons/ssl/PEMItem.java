@@ -45,7 +45,7 @@ import java.util.TreeMap;
  * @since 13-Aug-2006
  */
 public class PEMItem {
-    public static final String DEK_INFO = "dek-info";
+    public final static String DEK_INFO = "dek-info";
 
     private final byte[] derBytes;
     public final String pemType;
