@@ -51,7 +51,7 @@ import java.util.List;
  */
 public class Asn1PkcsUtil {
 
-    public final static BigInteger BIGGEST =
+    public static final BigInteger BIGGEST =
             new BigInteger(Integer.toString(Integer.MAX_VALUE));
 
     public static Asn1PkcsStructure analyze(byte[] asn1)

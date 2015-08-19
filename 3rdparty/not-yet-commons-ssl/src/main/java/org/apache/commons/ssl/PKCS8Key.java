@@ -93,13 +93,13 @@ import java.util.List;
  * @since 7-Nov-2006
  */
 public class PKCS8Key {
-    public final static String RSA_OID = "1.2.840.113549.1.1.1";
-    public final static String DSA_OID = "1.2.840.10040.4.1";
+    public static final String RSA_OID = "1.2.840.113549.1.1.1";
+    public static final String DSA_OID = "1.2.840.10040.4.1";
 
-    public final static String PKCS8_UNENCRYPTED = "PRIVATE KEY";
-    public final static String PKCS8_ENCRYPTED = "ENCRYPTED PRIVATE KEY";
-    public final static String OPENSSL_RSA = "RSA PRIVATE KEY";
-    public final static String OPENSSL_DSA = "DSA PRIVATE KEY";
+    public static final String PKCS8_UNENCRYPTED = "PRIVATE KEY";
+    public static final String PKCS8_ENCRYPTED = "ENCRYPTED PRIVATE KEY";
+    public static final String OPENSSL_RSA = "RSA PRIVATE KEY";
+    public static final String OPENSSL_DSA = "DSA PRIVATE KEY";
 
     private final PrivateKey privateKey;
     private final byte[] decryptedBytes;

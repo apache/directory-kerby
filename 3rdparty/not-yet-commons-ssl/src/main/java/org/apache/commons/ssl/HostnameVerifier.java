@@ -111,7 +111,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
      * as "*.foo.com") with DEFAULT matches all subdomains, including
      * "a.b.foo.com".
      */
-    public final static HostnameVerifier DEFAULT =
+    public static final HostnameVerifier DEFAULT =
         new AbstractVerifier() {
             public final void check(final String[] hosts, final String[] cns,
                                     final String[] subjectAlts)
@@ -131,7 +131,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
      * "localhost.localdomain", "127.0.0.1", "::1" will always pass, no matter
      * what is in the server's certificate.
      */
-    public final static HostnameVerifier DEFAULT_AND_LOCALHOST =
+    public static final HostnameVerifier DEFAULT_AND_LOCALHOST =
         new AbstractVerifier() {
             public final void check(final String[] hosts, final String[] cns,
                                     final String[] subjectAlts)
@@ -163,7 +163,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
      * level, for example "a.foo.com".  It does not match deeper subdomains
      * such as "a.b.foo.com".
      */
-    public final static HostnameVerifier STRICT =
+    public static final HostnameVerifier STRICT =
         new AbstractVerifier() {
             public final void check(final String[] host, final String[] cns,
                                     final String[] subjectAlts)
@@ -182,7 +182,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
      * server's certificate, not just the first one.  This behaviour is
      * identical to IE6's behaviour.
      */
-    public final static HostnameVerifier STRICT_IE6 =
+    public static final HostnameVerifier STRICT_IE6 =
         new AbstractVerifier() {
             public final void check(final String[] host, final String[] cns,
                                     final String[] subjectAlts)
@@ -199,7 +199,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
      * The ALLOW_ALL HostnameVerifier essentially turns hostname verification
      * off.  This implementation is a no-op, and never throws the SSLException.
      */
-    public final static HostnameVerifier ALLOW_ALL =
+    public static final HostnameVerifier ALLOW_ALL =
         new AbstractVerifier() {
             public final void check(final String[] host, final String[] cns,
                                     final String[] subjectAlts) {
@@ -223,11 +223,11 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
          * Looks like we're the only implementation guarding against this.
          * Firefox, Curl, Sun Java 1.4, 5, 6 don't bother with this check.
          */
-        private final static String[] BAD_COUNTRY_2LDS =
+        private static final String[] BAD_COUNTRY_2LDS =
             {"ac", "co", "com", "ed", "edu", "go", "gouv", "gov", "info",
                 "lg", "ne", "net", "or", "org"};
 
-        private final static String[] LOCALHOSTS = {"::1", "127.0.0.1",
+        private static final String[] LOCALHOSTS = {"::1", "127.0.0.1",
             "localhost",
             "localhost.localdomain"};
 

@@ -67,14 +67,14 @@ import java.util.TreeSet;
  * @since May 1, 2006
  */
 public class SSL {
-    private final static String[] KNOWN_PROTOCOLS =
+    private static final String[] KNOWN_PROTOCOLS =
             {"TLSv1.2", "TLSv1.1", "TLSv1", "SSLv3", "SSLv2", "SSLv2Hello"};
 
     // SUPPORTED_CIPHERS_ARRAY is initialized in the static constructor.
-    private final static String[] SUPPORTED_CIPHERS;
+    private static final String[] SUPPORTED_CIPHERS;
 
-    public final static SortedSet KNOWN_PROTOCOLS_SET;
-    public final static SortedSet SUPPORTED_CIPHERS_SET;
+    public static final SortedSet KNOWN_PROTOCOLS_SET;
+    public static final SortedSet SUPPORTED_CIPHERS_SET;
 
     static {
         TreeSet<String> ts = new TreeSet<String>(Collections.reverseOrder());

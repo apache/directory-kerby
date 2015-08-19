@@ -56,16 +56,16 @@ import java.util.TreeSet;
 public class Ping {
     protected static SortedSet ARGS = new TreeSet();
     protected static Map ARGS_MATCH = new HashMap();
-    protected final static Arg ARG_TARGET = new Arg("-t", "--target", "[hostname[:port]]              default port=443", true);
-    protected final static Arg ARG_BIND = new Arg("-b", "--bind", "[hostname[:port]]              default port=0 \"ANY\"");
-    protected final static Arg ARG_PROXY = new Arg("-r", "--proxy", "[hostname[:port]]              default port=80");
-    protected final static Arg ARG_TRUST_CERT = new Arg("-tm", "--trust-cert", "[path to trust material]       {pem, der, crt, jks}");
-    protected final static Arg ARG_CLIENT_CERT = new Arg("-km", "--client-cert", "[path to client's private key] {jks, pkcs12, pkcs8}");
-    protected final static Arg ARG_CERT_CHAIN = new Arg("-cc", "--cert-chain", "[path to client's cert chain for pkcs8/OpenSSL key]");
-    protected final static Arg ARG_PASSWORD = new Arg("-p", "--password", "[client cert password]");
-    protected final static Arg ARG_HOST_HEADER = new Arg("-h", "--host-header", "[http-host-header]      in case -t is an IP address");
-    protected final static Arg ARG_PATH = new Arg("-u", "--path", "[path for GET/HEAD request]    default=/");
-    protected final static Arg ARG_METHOD = new Arg("-m", "--method", "[http method to use]           default=HEAD");
+    protected static final Arg ARG_TARGET = new Arg("-t", "--target", "[hostname[:port]]              default port=443", true);
+    protected static final Arg ARG_BIND = new Arg("-b", "--bind", "[hostname[:port]]              default port=0 \"ANY\"");
+    protected static final Arg ARG_PROXY = new Arg("-r", "--proxy", "[hostname[:port]]              default port=80");
+    protected static final Arg ARG_TRUST_CERT = new Arg("-tm", "--trust-cert", "[path to trust material]       {pem, der, crt, jks}");
+    protected static final Arg ARG_CLIENT_CERT = new Arg("-km", "--client-cert", "[path to client's private key] {jks, pkcs12, pkcs8}");
+    protected static final Arg ARG_CERT_CHAIN = new Arg("-cc", "--cert-chain", "[path to client's cert chain for pkcs8/OpenSSL key]");
+    protected static final Arg ARG_PASSWORD = new Arg("-p", "--password", "[client cert password]");
+    protected static final Arg ARG_HOST_HEADER = new Arg("-h", "--host-header", "[http-host-header]      in case -t is an IP address");
+    protected static final Arg ARG_PATH = new Arg("-u", "--path", "[path for GET/HEAD request]    default=/");
+    protected static final Arg ARG_METHOD = new Arg("-m", "--method", "[http method to use]           default=HEAD");
 
     private static HostPort target;
     private static HostPort local;

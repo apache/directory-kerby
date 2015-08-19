@@ -58,7 +58,7 @@ import java.util.Map;
  * @since 13-Aug-2006
  */
 public class PEMUtil {
-    final static String LINE_SEPARATOR = System.getProperty("line.separator");
+    static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     public static byte[] encode(Collection items) throws IOException {
         final byte[] LINE_SEPARATOR_BYTES = LINE_SEPARATOR.getBytes("UTF-8");

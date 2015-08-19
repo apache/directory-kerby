@@ -8,8 +8,8 @@ import java.net.Socket;
 import java.security.GeneralSecurityException;
 
 public class CRLSocket extends SSLClient {
-    private final static CRLSocket secureInstance;
-    private final static CRLSocket plainInstance;    
+    private static final CRLSocket secureInstance;
+    private static final CRLSocket plainInstance;
 
     static {
         CRLSocket sf1 = null, sf2 = null;

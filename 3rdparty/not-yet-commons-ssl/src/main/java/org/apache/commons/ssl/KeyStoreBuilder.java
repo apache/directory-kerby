@@ -77,7 +77,7 @@ import java.util.List;
  * @since 4-Nov-2006
  */
 public class KeyStoreBuilder {
-    private final static String PKCS7_ENCRYPTED = "1.2.840.113549.1.7.6";
+    private static final String PKCS7_ENCRYPTED = "1.2.840.113549.1.7.6";
 
     public static KeyStore build(byte[] jksOrCerts, char[] password)
         throws IOException, CertificateException, KeyStoreException,

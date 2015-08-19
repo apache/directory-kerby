@@ -61,8 +61,8 @@ import java.util.TreeSet;
  * @since 28-Feb-2006
  */
 public class Util {
-    public final static int SIZE_KEY = 0;
-    public final static int LAST_READ_KEY = 1;
+    public static final int SIZE_KEY = 0;
+    public static final int LAST_READ_KEY = 1;
 
     /**
      * True if the Keystores have the same # of entries, have the same set of aliases, and all the certificate-chains

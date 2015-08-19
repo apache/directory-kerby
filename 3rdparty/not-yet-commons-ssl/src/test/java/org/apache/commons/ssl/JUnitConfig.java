@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class JUnitConfig {
 
-    public final static String TEST_HOME;
+    public static final String TEST_HOME;
 
     static {
         String home = "";

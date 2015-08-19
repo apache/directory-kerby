@@ -54,18 +54,18 @@ import java.util.Iterator;
  * @since 27-Feb-2006
  */
 public class TrustMaterial extends TrustChain {
-    final static int SIMPLE_TRUST_TYPE_TRUST_ALL = 1;
-    final static int SIMPLE_TRUST_TYPE_TRUST_THIS_JVM = 2;
+    static final int SIMPLE_TRUST_TYPE_TRUST_ALL = 1;
+    static final int SIMPLE_TRUST_TYPE_TRUST_THIS_JVM = 2;
 
     /**
      * Might be null if "$JAVA_HOME/jre/lib/security/cacerts" doesn't exist.
      */
-    public final static TrustMaterial CACERTS;
+    public static final TrustMaterial CACERTS;
 
     /**
      * Might be null if "$JAVA_HOME/jre/lib/security/jssecacerts" doesn't exist.
      */
-    public final static TrustMaterial JSSE_CACERTS;
+    public static final TrustMaterial JSSE_CACERTS;
 
     /**
      * Should never be null (unless both CACERTS and JSSE_CACERTS are not
@@ -73,7 +73,7 @@ public class TrustMaterial extends TrustChain {
      * JSSE_CACERTS, but 99.9% of the time it's CACERTS, since JSSE_CACERTS
      * is almost never present.
      */
-    public final static TrustMaterial DEFAULT;
+    public static final TrustMaterial DEFAULT;
 
     static {
         JavaImpl.load();
@@ -108,10 +108,10 @@ public class TrustMaterial extends TrustChain {
         }
     }
 
-    public final static TrustMaterial TRUST_ALL =
+    public static final TrustMaterial TRUST_ALL =
         new TrustMaterial(SIMPLE_TRUST_TYPE_TRUST_ALL);
 
-    public final static TrustMaterial TRUST_THIS_JVM =
+    public static final TrustMaterial TRUST_THIS_JVM =
         new TrustMaterial(SIMPLE_TRUST_TYPE_TRUST_THIS_JVM);
 
     public final int simpleTrustType;

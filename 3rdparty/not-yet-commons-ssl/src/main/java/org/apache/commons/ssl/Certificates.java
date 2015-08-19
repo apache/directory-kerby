@@ -89,19 +89,19 @@ import java.util.Set;
  */
 public class Certificates {
 
-    public final static CertificateFactory CF;
-    public final static String LINE_ENDING = System.getProperty("line.separator");
+    public static final CertificateFactory CF;
+    public static final String LINE_ENDING = System.getProperty("line.separator");
 
-    private final static HashMap crl_cache = new HashMap();
+    private static final HashMap crl_cache = new HashMap();
 
-    public final static String CRL_EXTENSION = "2.5.29.31";
-    public final static String OCSP_EXTENSION = "1.3.6.1.5.5.7.1.1";
-    private final static DateFormat DF = new SimpleDateFormat("yyyy/MMM/dd");
+    public static final String CRL_EXTENSION = "2.5.29.31";
+    public static final String OCSP_EXTENSION = "1.3.6.1.5.5.7.1.1";
+    private static final DateFormat DF = new SimpleDateFormat("yyyy/MMM/dd");
 
     public interface SerializableComparator extends Comparator, Serializable {
     }
 
-    public final static SerializableComparator COMPARE_BY_EXPIRY =
+    public static final SerializableComparator COMPARE_BY_EXPIRY =
         new SerializableComparator() {
             public int compare(Object o1, Object o2) {
                 X509Certificate c1 = (X509Certificate) o1;

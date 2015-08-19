@@ -124,10 +124,10 @@ public class Version {
      * all the class files.
      */
     private static class CompileTime {
-        private final static String PATTERN = ".jar!";
-        private final static String PREFIX = "file:";
-        private final static String DF_FORMAT = "zzz:yyyy-MM-dd/HH:mm:ss.SSS";
-        private final static DateFormat DF = new SimpleDateFormat(DF_FORMAT);
+        private static final String PATTERN = ".jar!";
+        private static final String PREFIX = "file:";
+        private static final String DF_FORMAT = "zzz:yyyy-MM-dd/HH:mm:ss.SSS";
+        private static final DateFormat DF = new SimpleDateFormat(DF_FORMAT);
 
         public static String getCompileTimeString(Class clazz) {
             String s = clazz.getName();
