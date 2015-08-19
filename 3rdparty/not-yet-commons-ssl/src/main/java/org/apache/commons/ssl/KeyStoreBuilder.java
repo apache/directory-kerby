@@ -342,9 +342,9 @@ public class KeyStoreBuilder {
             PEMItem item = (PEMItem) it.next();
             byte[] derBytes = item.getDerBytes();
             String type = item.pemType.trim().toUpperCase();
-            if (type.startsWith("CERT") ||
-                type.startsWith("X509") ||
-                type.startsWith("PKCS7")) {
+            if (type.startsWith("CERT")
+                || type.startsWith("X509")
+                || type.startsWith("PKCS7")) {
                 ByteArrayInputStream in = new ByteArrayInputStream(derBytes);
                 X509Certificate c = (X509Certificate) cf.generateCertificate(in);
                 certificates.add(c);

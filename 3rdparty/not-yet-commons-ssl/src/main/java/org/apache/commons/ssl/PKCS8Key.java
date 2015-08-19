@@ -239,8 +239,8 @@ public class PKCS8Key {
                 String s = oid.substring("1.2.840.10040.4.".length());
                 // 1.2.840.10040.4.1 -- id-dsa
                 // 1.2.840.10040.4.3 -- id-dsa-with-sha1
-                isOkay = s.equals("1") || s.startsWith("1.") ||
-                         s.equals("3") || s.startsWith("3.");
+                isOkay = s.equals("1") || s.startsWith("1.")
+                         || s.equals("3") || s.startsWith("3.");
             }
             if (!isOkay) {
                 throw new ProbablyNotPKCS8Exception("Valid ASN.1, but not PKCS8 or OpenSSL format.  OID=" + oid);

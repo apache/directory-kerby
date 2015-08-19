@@ -399,10 +399,10 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 // The CN better have at least two dots if it wants wildcard
                 // action.  It also can't be [*.co.uk] or [*.co.jp] or
                 // [*.org.uk], etc...
-                boolean doWildcard = cn.startsWith("*.") &&
-                                     cn.lastIndexOf('.') >= 0 &&
-                                     !isIP4Address(cn) &&
-                                     acceptableCountryWildcard(cn);
+                boolean doWildcard = cn.startsWith("*.")
+                                     && cn.lastIndexOf('.') >= 0
+                                     && !isIP4Address(cn)
+                                     && acceptableCountryWildcard(cn);
 
                 for (int i = 0; i < hosts.length; i++) {
                     final String hostName = hosts[i].trim().toLowerCase();

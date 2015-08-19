@@ -117,9 +117,9 @@ public class Util {
             return false;
         }
         String s = yesString.trim().toUpperCase();
-        return "1".equals(s) || "YES".equals(s) || "TRUE".equals(s) ||
-               "ENABLE".equals(s) || "ENABLED".equals(s) || "Y".equals(s) ||
-               "ON".equals(s);
+        return "1".equals(s) || "YES".equals(s) || "TRUE".equals(s)
+               || "ENABLE".equals(s) || "ENABLED".equals(s) || "Y".equals(s)
+               || "ON".equals(s);
     }
 
     public static String trim(final String s) {
