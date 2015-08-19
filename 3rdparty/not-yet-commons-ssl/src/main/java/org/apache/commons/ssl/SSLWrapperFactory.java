@@ -32,7 +32,6 @@
 package org.apache.commons.ssl;
 
 import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.net.Socket;
 

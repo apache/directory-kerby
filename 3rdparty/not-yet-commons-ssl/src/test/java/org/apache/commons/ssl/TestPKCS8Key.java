@@ -1,13 +1,15 @@
 package org.apache.commons.ssl;
 
-import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.Locale;
+
+import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestPKCS8Key {
 

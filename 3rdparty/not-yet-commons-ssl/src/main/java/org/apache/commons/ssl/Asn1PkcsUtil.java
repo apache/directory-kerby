@@ -26,7 +26,12 @@
 package org.apache.commons.ssl;
 
 import org.apache.kerby.asn1.Asn1InputBuffer;
-import org.apache.kerby.asn1.type.*;
+import org.apache.kerby.asn1.type.Asn1Collection;
+import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1Item;
+import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.util.Hex;
 
 import java.io.FileInputStream;

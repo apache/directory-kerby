@@ -31,8 +31,6 @@
 
 package org.apache.commons.ssl;
 
-import org.apache.commons.ssl.util.IPAddressParser;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 

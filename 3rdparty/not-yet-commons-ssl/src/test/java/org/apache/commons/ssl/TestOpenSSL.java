@@ -1,7 +1,5 @@
 package org.apache.commons.ssl;
 
-import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.io.File;
@@ -9,6 +7,10 @@ import java.io.FileInputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Random;
+
+import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestOpenSSL {
 

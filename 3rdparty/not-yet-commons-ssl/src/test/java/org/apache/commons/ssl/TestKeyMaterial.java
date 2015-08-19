@@ -1,10 +1,9 @@
 package org.apache.commons.ssl;
 
-import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import javax.net.ssl.SSLSocket;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,7 +15,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import javax.net.ssl.SSLSocket;
+
+import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestKeyMaterial {
     public static final char[] PASSWORD1 = "changeit".toCharArray();
