@@ -81,23 +81,33 @@ public class SSLServerSocketWrapper extends SSLServerSocket {
         return s.getEnabledCipherSuites();
     }
 
-    public String[] getEnabledProtocols() { return s.getEnabledProtocols(); }
+    public String[] getEnabledProtocols() {
+        return s.getEnabledProtocols();
+    }
 
     public boolean getEnableSessionCreation() {
         return s.getEnableSessionCreation();
     }
 
-    public boolean getNeedClientAuth() { return s.getNeedClientAuth(); }
+    public boolean getNeedClientAuth() {
+        return s.getNeedClientAuth();
+    }
 
     public String[] getSupportedCipherSuites() {
         return s.getSupportedCipherSuites();
     }
 
-    public String[] getSupportedProtocols() { return s.getSupportedProtocols(); }
+    public String[] getSupportedProtocols() {
+        return s.getSupportedProtocols();
+    }
 
-    public boolean getUseClientMode() { return s.getUseClientMode(); }
+    public boolean getUseClientMode() {
+        return s.getUseClientMode();
+    }
 
-    public boolean getWantClientAuth() { return s.getWantClientAuth(); }
+    public boolean getWantClientAuth() {
+        return s.getWantClientAuth();
+    }
 
     public void setEnabledCipherSuites(String[] suites) {
         s.setEnabledCipherSuites(suites);
@@ -115,7 +125,9 @@ public class SSLServerSocketWrapper extends SSLServerSocket {
         s.setNeedClientAuth(need);
     }
 
-    public void setUseClientMode(boolean use) { s.setUseClientMode(use); }
+    public void setUseClientMode(boolean use) {
+        s.setUseClientMode(use);
+    }
 
     public void setWantClientAuth(boolean want) {
         s.setWantClientAuth(want);
@@ -131,13 +143,21 @@ public class SSLServerSocketWrapper extends SSLServerSocket {
         s.bind(ep, bl);
     }
 
-    public void close() throws IOException { s.close(); }
+    public void close() throws IOException {
+        s.close();
+    }
 
-    public ServerSocketChannel getChannel() { return s.getChannel(); }
+    public ServerSocketChannel getChannel() {
+        return s.getChannel();
+    }
 
-    public InetAddress getInetAddress() { return s.getInetAddress(); }
+    public InetAddress getInetAddress() {
+        return s.getInetAddress();
+    }
 
-    public int getLocalPort() { return s.getLocalPort(); }
+    public int getLocalPort() {
+        return s.getLocalPort();
+    }
 
     public SocketAddress getLocalSocketAddress() {
         return s.getLocalSocketAddress();
@@ -151,11 +171,17 @@ public class SSLServerSocketWrapper extends SSLServerSocket {
         return s.getReuseAddress();
     }
 
-    public int getSoTimeout() throws IOException { return s.getSoTimeout(); }
+    public int getSoTimeout() throws IOException {
+        return s.getSoTimeout();
+    }
 
-    public boolean isBound() { return s.isBound(); }
+    public boolean isBound() {
+        return s.isBound();
+    }
 
-    public boolean isClosed() { return s.isClosed(); }
+    public boolean isClosed() {
+        return s.isClosed();
+    }
 
     public void setReceiveBufferSize(int size) throws SocketException {
         s.setReceiveBufferSize(size);
@@ -169,7 +195,9 @@ public class SSLServerSocketWrapper extends SSLServerSocket {
         s.setSoTimeout(timeout);
     }
 
-    public String toString() { return s.toString(); }
+    public String toString() {
+        return s.toString();
+    }
 
     /*  Java 1.5
      public void setPerformancePreferences(int connectionTime, int latency, int bandwidth)

@@ -106,12 +106,12 @@ public class Certificates {
             public int compare(Object o1, Object o2) {
                 X509Certificate c1 = (X509Certificate) o1;
                 X509Certificate c2 = (X509Certificate) o2;
-                if (c1 == c2) // this deals with case where both are null
-                {
+                // this deals with case where both are null
+                if (c1 == c2) {
                     return 0;
                 }
-                if (c1 == null)  // non-null is always bigger than null
-                {
+                // non-null is always bigger than null
+                if (c1 == null) {
                     return -1;
                 }
                 if (c2 == null) {
@@ -151,8 +151,7 @@ public class Certificates {
                                     if (c == 0) {
                                         c = b1.length - b2.length;
                                     }
-                                }
-                                catch (CertificateEncodingException cee) {
+                                } catch (CertificateEncodingException cee) {
                                     // I give up.  They can be equal if they
                                     // really want to be this badly.
                                     c = 0;
@@ -169,11 +168,9 @@ public class Certificates {
         CertificateFactory cf = null;
         try {
             cf = CertificateFactory.getInstance("X.509");
-        }
-        catch (CertificateException ce) {
+        } catch (CertificateException ce) {
             ce.printStackTrace(System.out);
-        }
-        finally {
+        } finally {
             CF = cf;
         }
     }
@@ -264,8 +261,7 @@ public class Certificates {
             String s;
             try {
                 s = new String(bytes, "UTF-8");
-            }
-            catch (UnsupportedEncodingException uee) {
+            } catch (UnsupportedEncodingException uee) {
                 // We're screwed if this thing has more than one CRL, because
                 // the "indeOf( (char) 65533 )" below isn't going to work.
                 s = new String(bytes);
@@ -349,8 +345,7 @@ public class Certificates {
         MessageDigest sha1;
         try {
             sha1 = MessageDigest.getInstance("SHA1");
-        }
-        catch (NoSuchAlgorithmException nsae) {
+        } catch (NoSuchAlgorithmException nsae) {
             throw JavaImpl.newRuntimeException(nsae);
         }
 
@@ -450,16 +445,14 @@ public class Certificates {
                     InputStream in = new BufferedInputStream(urlConn.getInputStream());
                     try {
                         Util.pipeStream(in, out);
-                    }
-                    catch (IOException ioe) {
+                    } catch (IOException ioe) {
                         // better luck next time
                         tempFile.delete();
                         throw ioe;
                     }
                     this.tempCRLFile = tempFile;
                     this.creationTime = System.currentTimeMillis();
-                }
-                catch (IOException ioe) {
+                } catch (IOException ioe) {
                     // log.warn( "Cannot check CRL: " + e );
                 }
             }
@@ -480,12 +473,10 @@ public class Certificates {
                     } else {
                         passedTest.add(fingerprint);
                     }
-                }
-                catch (IOException ioe) {
+                } catch (IOException ioe) {
                     // couldn't load CRL that's supposed to be stored in Temp file.
                     // log.warn(  );
-                }
-                catch (CRLException crle) {
+                } catch (CRLException crle) {
                     // something is wrong with the CRL
                     // log.warn(  );
                 }
@@ -546,8 +537,7 @@ public class Certificates {
         Collection c = null;
         try {
             c = cert.getSubjectAlternativeNames();
-        }
-        catch (CertificateParsingException cpe) {
+        } catch (CertificateParsingException cpe) {
             // Should probably log.debug() this?
             cpe.printStackTrace();
         }

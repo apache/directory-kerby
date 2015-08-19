@@ -17,12 +17,10 @@ public class CRLSocket extends SSLClient {
             sf1 = new CRLSocket();
             sf2 = new CRLSocket();
             sf2.setIsSecure(false);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("could not create CRLSocket: " + e);
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             secureInstance = sf1;
             plainInstance = sf2;            
         }

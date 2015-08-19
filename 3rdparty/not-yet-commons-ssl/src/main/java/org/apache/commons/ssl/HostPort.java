@@ -51,5 +51,7 @@ public class HostPort {
         this.addr = Util.toInetAddress(host);
     }
 
-    public String toString() { return host + ":" + port; }
+    public String toString() {
+        return host + ":" + port;
+    }
 }

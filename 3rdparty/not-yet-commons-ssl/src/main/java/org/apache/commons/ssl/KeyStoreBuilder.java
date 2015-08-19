@@ -329,11 +329,9 @@ public class KeyStoreBuilder {
         try {
             PKCS8Key pkcs8Key = new PKCS8Key(stuff, jksPass);
             key = pkcs8Key.getPrivateKey();
-        }
-        catch (ProbablyBadPasswordException pbpe) {
+        } catch (ProbablyBadPasswordException pbpe) {
             throw pbpe;
-        }
-        catch (GeneralSecurityException gse) {
+        } catch (GeneralSecurityException gse) {
             // no luck
         }
 
@@ -371,8 +369,7 @@ public class KeyStoreBuilder {
                 asn1 = Asn1PkcsUtil.analyze(asn1.bigPayload);
                 isProbablyPKCS12 = asn1.oids.contains(PKCS7_ENCRYPTED);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // isProbablyPKCS12 and isASN are set properly by now.
         }
 
@@ -416,8 +413,7 @@ public class KeyStoreBuilder {
                     List chains = Collections.singletonList(chain);
                     return new BuildResult(null, chains, null);
                 }
-            }
-            catch (CertificateException ce) {
+            } catch (CertificateException ce) {
                 // oh well
             }
 
@@ -433,8 +429,7 @@ public class KeyStoreBuilder {
                     List chains = Collections.singletonList(chain);
                     return new BuildResult(null, chains, null);
                 }
-            }
-            catch (CertificateException ce) {
+            } catch (CertificateException ce) {
                 // oh well
             }
         }
@@ -509,15 +504,12 @@ public class KeyStoreBuilder {
             List keys = Collections.singletonList(key);
             List chains = Collections.singletonList(chain);
             return new BuildResult(keys, chains, jksKeyStore);
-        }
-        catch (ProbablyBadPasswordException pbpe) {
+        } catch (ProbablyBadPasswordException pbpe) {
             throw pbpe;
-        }
-        catch (GeneralSecurityException gse) {
+        } catch (GeneralSecurityException gse) {
             // swallow it, return null
             return null;
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             String msg = ioe.getMessage();
             msg = msg != null ? msg.trim().toLowerCase() : "";
             if (isPKCS12) {

@@ -48,12 +48,10 @@ public class LDAPSocket extends SSLClient {
         LDAPSocket sf = null;
         try {
             sf = new LDAPSocket();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("could not create LDAPSocket: " + e);
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             instance = sf;
         }
     }
@@ -78,6 +76,5 @@ public class LDAPSocket extends SSLClient {
     public static LDAPSocket getInstance() {
         return instance;
     }
-
 
 }

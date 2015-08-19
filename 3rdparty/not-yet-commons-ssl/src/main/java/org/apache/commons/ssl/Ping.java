@@ -93,8 +93,7 @@ public class Ping {
         if (!showUsage) {
             try {
                 parseArgs(args);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 parseException = e;
                 showUsage = true;
             }
@@ -255,16 +254,14 @@ public class Ping {
                         break;
                     }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 socketException = e;
             }
             trustException = testTrust(ssl, sslCipher, trustChain);
             hostnameException = testHostname(ssl);
             crlException = testCRL(ssl);
             expiryException = testExpiry(ssl);
-        }
-        finally {
+        } finally {
             if (out != null) {
                 out.close();
             }
@@ -333,8 +330,7 @@ public class Ping {
                     JavaImpl.testTrust(trustManagers[i], chain, authType);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return e;
         }
         return null;
@@ -347,8 +343,7 @@ public class Ping {
                 String hostName = target.host;
                 HostnameVerifier.DEFAULT.check(hostName, chain[0]);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return e;
         }
         return null;
@@ -362,8 +357,7 @@ public class Ping {
                     Certificates.checkCRL(chain[i]);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return e;
         }
         return null;
@@ -377,8 +371,7 @@ public class Ping {
                     chain[i].checkValidity();
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return e;
         }
         return null;

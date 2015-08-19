@@ -71,8 +71,7 @@ public class ComboInputStream extends InputStream {
     public void close() throws IOException {
         try {
             head.close();
-        }
-        finally {
+        } finally {
             if (head != tail) {
                 tail.close();
             }

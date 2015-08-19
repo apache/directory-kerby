@@ -134,8 +134,7 @@ public class SSLProxyServer {
                                 }
                                 read = rIn.read(buf);
                             }
-                        }
-                        catch (IOException ioe) {
+                        } catch (IOException ioe) {
                             e[0] = ioe;
                         }
                     }
@@ -156,8 +155,7 @@ public class SSLProxyServer {
                 }
 
 
-            }
-            catch (IOException ioe) {
+            } catch (IOException ioe) {
                 try {
                     if (out != null) {
                         out.close();
@@ -166,8 +164,7 @@ public class SSLProxyServer {
                         in.close();
                     }
                     s.close();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                 }
 
                 try {
@@ -178,8 +175,7 @@ public class SSLProxyServer {
                         newIn.close();
                     }
                     newSocket.close();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                 }
 
 

@@ -147,8 +147,7 @@ public class SSL {
                 TrustMaterial tm;
                 try {
                     tm = new TrustMaterial(path, pwd.toCharArray());
-                }
-                catch (GeneralSecurityException gse) {
+                } catch (GeneralSecurityException gse) {
                     // Probably a bad password.  If we're using the default password,
                     // let's try and survive this setback.
                     if (pwdWasNull) {
@@ -225,9 +224,7 @@ public class SSL {
     }
 
     public SSLContext getSSLContext()
-            throws GeneralSecurityException, IOException
-
-    {
+            throws GeneralSecurityException, IOException {
         Object obj = getSSLContextAsObject();
         return (SSLContext) obj;
     }
@@ -239,9 +236,7 @@ public class SSL {
      * @throws java.io.IOException              problem creating SSLContext
      */
     public Object getSSLContextAsObject()
-            throws GeneralSecurityException, IOException
-
-    {
+            throws GeneralSecurityException, IOException {
         if (sslContext == null) {
             init();
         }
@@ -405,11 +400,9 @@ public class SSL {
     private void initThrowRuntime() {
         try {
             init();
-        }
-        catch (GeneralSecurityException gse) {
+        } catch (GeneralSecurityException gse) {
             throw JavaImpl.newRuntimeException(gse);
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             throw JavaImpl.newRuntimeException(ioe);
         }
     }

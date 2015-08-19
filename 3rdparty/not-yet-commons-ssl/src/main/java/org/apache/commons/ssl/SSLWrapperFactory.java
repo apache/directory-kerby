@@ -75,7 +75,9 @@ public interface SSLWrapperFactory {
      */
     public final static SSLWrapperFactory NO_WRAP = new SSLWrapperFactory() {
         // Notice!  No wrapping!
-        public Socket wrap(Socket s) { return s; }
+        public Socket wrap(Socket s) {
+            return s;
+        }
 
         // We still wrap the ServerSocket, but we don't wrap the result of the
         // the accept() call.
@@ -91,7 +93,9 @@ public interface SSLWrapperFactory {
      * implementations.
      */
     public final static SSLWrapperFactory DUMB_WRAP = new SSLWrapperFactory() {
-        public Socket wrap(Socket s) { return new SSLSocketWrapper(s); }
+        public Socket wrap(Socket s) {
+            return new SSLSocketWrapper(s);
+        }
 
         public SSLServerSocket wrap(SSLServerSocket s, SSL ssl)
             throws IOException {

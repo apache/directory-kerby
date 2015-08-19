@@ -94,8 +94,7 @@ public class Version {
         String s;
         try {
             s = CompileTime.getCompileTimeString(Version.class);
-        }
-        catch (NoClassDefFoundError e) {
+        } catch (NoClassDefFoundError e) {
             s = null;
         }
         COMPILE_TIME = s;
@@ -140,8 +139,7 @@ public class Version {
             try {
                 Date d = getCompileTime(resource);
                 return d != null ? DF.format(d) : "[unknown]";
-            }
-            catch (IOException ioe) {
+            } catch (IOException ioe) {
                 return ioe.toString();
             }
         }
@@ -174,8 +172,7 @@ public class Version {
                     File f = new File(urlString);
                     try {
                         return new Date(f.lastModified());
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         return null;
                     }
                 }

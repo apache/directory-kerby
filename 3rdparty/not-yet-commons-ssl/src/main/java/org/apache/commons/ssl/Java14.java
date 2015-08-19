@@ -72,8 +72,7 @@ public final class Java14 extends JavaImpl {
     private Java14() {
         try {
             SSLSocketFactory.getDefault().createSocket();
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             ioe.hashCode();
         }
     }

@@ -89,8 +89,7 @@ public class SSLServer extends SSLServerSocketFactory {
             KeyMaterial km = null;
             try {
                 km = new KeyMaterial(path, pwd.toCharArray());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // Don't want to blowup just because this silly default
                 // behaviour didn't work out.
                 if (pwdSet) {
@@ -109,7 +108,9 @@ public class SSLServer extends SSLServerSocketFactory {
         return success;
     }
 
-    public void setDnsOverride(Map m) { ssl.setDnsOverride(m); }
+    public void setDnsOverride(Map m) {
+        ssl.setDnsOverride(m);
+    }
 
     public void addTrustMaterial(TrustChain trustChain)
         throws NoSuchAlgorithmException, KeyStoreException,
@@ -129,15 +130,25 @@ public class SSLServer extends SSLServerSocketFactory {
         ssl.setKeyMaterial(keyMaterial);
     }
 
-    public void setCheckCRL(boolean b) { ssl.setCheckCRL(b); }
+    public void setCheckCRL(boolean b) {
+        ssl.setCheckCRL(b);
+    }
 
-    public void setCheckExpiry(boolean b) { ssl.setCheckExpiry(b); }
+    public void setCheckExpiry(boolean b) {
+        ssl.setCheckExpiry(b);
+    }
 
-    public void setCheckHostname(boolean b) { ssl.setCheckHostname(b); }
+    public void setCheckHostname(boolean b) {
+        ssl.setCheckHostname(b);
+    }
 
-    public void setConnectTimeout(int i) { ssl.setConnectTimeout(i); }
+    public void setConnectTimeout(int i) {
+        ssl.setConnectTimeout(i);
+    }
 
-    public void setDefaultProtocol(String s) { ssl.setDefaultProtocol(s); }
+    public void setDefaultProtocol(String s) {
+        ssl.setDefaultProtocol(s);
+    }
 
     public void setEnabledCiphers(String[] ciphers) {
         ssl.setEnabledCiphers(ciphers);
@@ -151,49 +162,77 @@ public class SSLServer extends SSLServerSocketFactory {
         ssl.setHostnameVerifier(verifier);
     }
 
-    public void setSoTimeout(int soTimeout) { ssl.setSoTimeout(soTimeout); }
+    public void setSoTimeout(int soTimeout) {
+        ssl.setSoTimeout(soTimeout);
+    }
 
     public void setSSLWrapperFactory(SSLWrapperFactory wf) {
         ssl.setSSLWrapperFactory(wf);
     }
 
-    public void setNeedClientAuth(boolean b) { ssl.setNeedClientAuth(b); }
+    public void setNeedClientAuth(boolean b) {
+        ssl.setNeedClientAuth(b);
+    }
 
-    public void setWantClientAuth(boolean b) { ssl.setWantClientAuth(b); }
+    public void setWantClientAuth(boolean b) {
+        ssl.setWantClientAuth(b);
+    }
 
-    public void setUseClientMode(boolean b) { ssl.setUseClientMode(b); }
+    public void setUseClientMode(boolean b) {
+        ssl.setUseClientMode(b);
+    }
 
     public X509Certificate[] getAssociatedCertificateChain() {
         return ssl.getAssociatedCertificateChain();
     }
 
-    public boolean getCheckCRL() { return ssl.getCheckCRL(); }
+    public boolean getCheckCRL() {
+        return ssl.getCheckCRL();
+    }
 
-    public boolean getCheckExpiry() { return ssl.getCheckExpiry(); }
+    public boolean getCheckExpiry() {
+        return ssl.getCheckExpiry();
+    }
 
-    public boolean getCheckHostname() { return ssl.getCheckHostname(); }
+    public boolean getCheckHostname() {
+        return ssl.getCheckHostname();
+    }
 
-    public int getConnectTimeout() { return ssl.getConnectTimeout(); }
+    public int getConnectTimeout() {
+        return ssl.getConnectTimeout();
+    }
 
-    public String getDefaultProtocol() { return ssl.getDefaultProtocol(); }
+    public String getDefaultProtocol() {
+        return ssl.getDefaultProtocol();
+    }
 
-    public String[] getEnabledCiphers() { return ssl.getEnabledCiphers(); }
+    public String[] getEnabledCiphers() {
+        return ssl.getEnabledCiphers();
+    }
 
-    public String[] getEnabledProtocols() { return ssl.getEnabledProtocols(); }
+    public String[] getEnabledProtocols() {
+        return ssl.getEnabledProtocols();
+    }
 
     public HostnameVerifier getHostnameVerifier() {
         return ssl.getHostnameVerifier();
     }
 
-    public int getSoTimeout() { return ssl.getSoTimeout(); }
+    public int getSoTimeout() {
+        return ssl.getSoTimeout();
+    }
 
     public SSLWrapperFactory getSSLWrapperFactory() {
         return ssl.getSSLWrapperFactory();
     }
 
-    public boolean getNeedClientAuth() { return ssl.getNeedClientAuth(); }
+    public boolean getNeedClientAuth() {
+        return ssl.getNeedClientAuth();
+    }
 
-    public boolean getWantClientAuth() { return ssl.getWantClientAuth(); }
+    public boolean getWantClientAuth() {
+        return ssl.getWantClientAuth();
+    }
 
     public boolean getUseClientMode() { /* SSLServer's default is false. */
         return !ssl.getUseClientModeDefault() && ssl.getUseClientMode();
@@ -203,7 +242,9 @@ public class SSLServer extends SSLServerSocketFactory {
         return ssl.getSSLContext();
     }
 
-    public TrustChain getTrustChain() { return ssl.getTrustChain(); }
+    public TrustChain getTrustChain() {
+        return ssl.getTrustChain();
+    }
 
     public X509Certificate[] getCurrentClientChain() {
         return ssl.getCurrentClientChain();

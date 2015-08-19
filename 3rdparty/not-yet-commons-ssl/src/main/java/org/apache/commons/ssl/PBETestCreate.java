@@ -58,8 +58,7 @@ public class PBETestCreate {
                 FileOutputStream out = new FileOutputStream(d + fileNameBase64);
                 out.write(base64);
                 out.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.err.println("FAILURE \t" + cipherPadded + "\t" + fileNameBase64 + "\t" + e);
             }
 
@@ -68,8 +67,7 @@ public class PBETestCreate {
                 FileOutputStream out = new FileOutputStream(d + fileNameRaw);
                 out.write(raw);
                 out.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.err.println("FAILURE \t" + cipherPadded + "\t" + fileNameRaw + "\t" + e);
             }
 

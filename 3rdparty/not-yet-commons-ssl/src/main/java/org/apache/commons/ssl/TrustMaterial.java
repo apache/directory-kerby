@@ -87,8 +87,7 @@ public class TrustMaterial extends TrustChain {
             if (f.exists()) {
                 cacerts = new TrustMaterial(pathToCacerts);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
@@ -96,8 +95,7 @@ public class TrustMaterial extends TrustChain {
             if (f.exists()) {
                 jssecacerts = new TrustMaterial(pathToJSSECacerts);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

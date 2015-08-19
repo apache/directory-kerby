@@ -119,7 +119,9 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 check(hosts, cns, subjectAlts, false, false);
             }
 
-            public final String toString() { return "DEFAULT"; }
+            public final String toString() {
+                return "DEFAULT";
+            }
         };
 
 
@@ -140,7 +142,9 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 check(hosts, cns, subjectAlts, false, false);
             }
 
-            public final String toString() { return "DEFAULT_AND_LOCALHOST"; }
+            public final String toString() {
+                return "DEFAULT_AND_LOCALHOST";
+            }
         };
 
     /**
@@ -167,7 +171,9 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 check(host, cns, subjectAlts, false, true);
             }
 
-            public final String toString() { return "STRICT"; }
+            public final String toString() {
+                return "STRICT";
+            }
         };
 
     /**
@@ -184,7 +190,9 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 check(host, cns, subjectAlts, true, true);
             }
 
-            public final String toString() { return "STRICT_IE6"; }
+            public final String toString() {
+                return "STRICT_IE6";
+            }
         };
 
     /**
@@ -198,7 +206,9 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 // Allow everything - so never blowup.
             }
 
-            public final String toString() { return "ALLOW_ALL"; }
+            public final String toString() {
+                return "ALLOW_ALL";
+            }
         };
 
     abstract class AbstractVerifier implements HostnameVerifier {
@@ -228,7 +238,8 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
             Arrays.sort(LOCALHOSTS);
         }
 
-        protected AbstractVerifier() {}
+        protected AbstractVerifier() {
+        }
 
         /**
          * The javax.net.ssl.HostnameVerifier contract.
@@ -243,8 +254,7 @@ public interface HostnameVerifier extends javax.net.ssl.HostnameVerifier {
                 X509Certificate x509 = (X509Certificate) certs[0];
                 check(new String[]{host}, x509);
                 return true;
-            }
-            catch (SSLException e) {
+            } catch (SSLException e) {
                 return false;
             }
         }

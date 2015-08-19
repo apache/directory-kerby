@@ -169,13 +169,20 @@ public class Util {
                 }
                 bytesRead = in.read(buf);
             }
-        }
-        finally {
+        } finally {
             // Probably it's best to let consumer call "close", but I'm usually
             // the consumer, and I want to be lazy.  [Julius, November 20th, 2006]
-            try { in.close(); } catch (IOException e) { ioe = e; }
+            try {
+                in.close();
+            } catch (IOException e) {
+                ioe = e;
+            }
             if (autoClose) {
-                try { out.close(); } catch (IOException e) { ioe = e; }
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    ioe = e;
+                }
             }
         }
         if (ioe != null) {
@@ -230,8 +237,7 @@ public class Util {
                 System.arraycopy(buf, 0, smallerBuf, 0, size);
                 buf = smallerBuf;
             }
-        }
-        finally {
+        } finally {
             in.close();
         }
         return buf;

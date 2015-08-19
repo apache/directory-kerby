@@ -205,8 +205,7 @@ public class PKCS8Key {
         Asn1PkcsStructure pkcs8;
         try {
             pkcs8 = Asn1PkcsUtil.analyze(derBytes);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ProbablyNotPKCS8Exception("asn1 parse failure: " + e);
         }
 
@@ -260,8 +259,7 @@ public class PKCS8Key {
         if (encrypted) {
             try {
                 pkcs8 = Asn1PkcsUtil.analyze(decryptedPKCS8);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new ProbablyBadPasswordException("Decrypted stream not ASN.1.  Probably bad decryption password.");
             }
             oid = pkcs8.oid1;
@@ -280,8 +278,7 @@ public class PKCS8Key {
                 KF = KeyFactory.getInstance("RSA");
             }
             pk = KF.generatePrivate(spec);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ProbablyBadPasswordException("Cannot create " + type + " private key from decrypted stream.  Probably bad decryption password. " + e);
         }
         if (pk != null) {
@@ -478,8 +475,8 @@ public class PKCS8Key {
         int ivSize = 0;
 
         String oid = pkcs8.oid1;
-        if (oid.startsWith("1.2.840.113549.1.12."))  // PKCS12 key derivation!
-        {
+        // PKCS12 key derivation!
+        if (oid.startsWith("1.2.840.113549.1.12.")) {
             usePKCS12PasswordPadding = true;
 
             // Let's trim this OID to make life a little easier.
@@ -621,22 +618,20 @@ public class PKCS8Key {
                         pkcs8.iv = null;
                     }
                 }
-            }
-
-            // AES
-            // 2.16.840.1.101.3.4.1.1  - id-aes128-ECB
-            // 2.16.840.1.101.3.4.1.2  - id-aes128-CBC
-            // 2.16.840.1.101.3.4.1.3  - id-aes128-OFB
-            // 2.16.840.1.101.3.4.1.4  - id-aes128-CFB
-            // 2.16.840.1.101.3.4.1.21 - id-aes192-ECB
-            // 2.16.840.1.101.3.4.1.22 - id-aes192-CBC
-            // 2.16.840.1.101.3.4.1.23 - id-aes192-OFB
-            // 2.16.840.1.101.3.4.1.24 - id-aes192-CFB
-            // 2.16.840.1.101.3.4.1.41 - id-aes256-ECB
-            // 2.16.840.1.101.3.4.1.42 - id-aes256-CBC
-            // 2.16.840.1.101.3.4.1.43 - id-aes256-OFB
-            // 2.16.840.1.101.3.4.1.44 - id-aes256-CFB
-            else if (oid.startsWith("2.16.840.1.101.3.4.1.")) {
+            } else if (oid.startsWith("2.16.840.1.101.3.4.1.")) {
+                // AES
+                // 2.16.840.1.101.3.4.1.1  - id-aes128-ECB
+                // 2.16.840.1.101.3.4.1.2  - id-aes128-CBC
+                // 2.16.840.1.101.3.4.1.3  - id-aes128-OFB
+                // 2.16.840.1.101.3.4.1.4  - id-aes128-CFB
+                // 2.16.840.1.101.3.4.1.21 - id-aes192-ECB
+                // 2.16.840.1.101.3.4.1.22 - id-aes192-CBC
+                // 2.16.840.1.101.3.4.1.23 - id-aes192-OFB
+                // 2.16.840.1.101.3.4.1.24 - id-aes192-CFB
+                // 2.16.840.1.101.3.4.1.41 - id-aes256-ECB
+                // 2.16.840.1.101.3.4.1.42 - id-aes256-CBC
+                // 2.16.840.1.101.3.4.1.43 - id-aes256-OFB
+                // 2.16.840.1.101.3.4.1.44 - id-aes256-CFB
                 cipher = "AES";
                 if (pkcs8.iv == null) {
                     ivSize = 128;
@@ -929,8 +924,7 @@ public class PKCS8Key {
             if (pkcs8 == null) {
                 try {
                     pkcs8 = Asn1PkcsUtil.analyze(privateKey);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     throw new RuntimeException("asn1 parse failure " + e);
                 }
             }
@@ -1004,8 +998,7 @@ public class PKCS8Key {
                 PKCS8Key key = null;
                 try {
                     key = new PKCS8Key(bytes, password.toCharArray());
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     System.out.println(" FAILED! " + args[i] + " " + e);
                 }
                 if (key != null) {
