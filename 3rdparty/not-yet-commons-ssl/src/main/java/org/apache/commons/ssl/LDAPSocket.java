@@ -42,7 +42,7 @@ import java.security.GeneralSecurityException;
  * @since 28-Feb-2006
  */
 public class LDAPSocket extends SSLClient {
-    private static final LDAPSocket instance;
+    private static final LDAPSocket INSTANCE;
 
     static {
         LDAPSocket sf = null;
@@ -52,7 +52,7 @@ public class LDAPSocket extends SSLClient {
             System.out.println("could not create LDAPSocket: " + e);
             e.printStackTrace();
         } finally {
-            instance = sf;
+            INSTANCE = sf;
         }
     }
 
@@ -74,7 +74,7 @@ public class LDAPSocket extends SSLClient {
     }
 
     public static LDAPSocket getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
 }

@@ -61,7 +61,7 @@ public class PEMUtil {
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     public static byte[] encode(Collection items) throws IOException {
-        final byte[] LINE_SEPARATOR_BYTES = LINE_SEPARATOR.getBytes("UTF-8");
+        final byte[] lineSeparatorBytes = LINE_SEPARATOR.getBytes("UTF-8");
         ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
         Iterator it = items.iterator();
         while (it.hasNext()) {
@@ -69,7 +69,7 @@ public class PEMUtil {
             out.write("-----BEGIN ".getBytes("UTF-8"));
             out.write(item.pemType.getBytes("UTF-8"));
             out.write("-----".getBytes("UTF-8"));
-            out.write(LINE_SEPARATOR_BYTES);
+            out.write(lineSeparatorBytes);
 
             byte[] derBytes = item.getDerBytes();
             ByteArrayInputStream bin = new ByteArrayInputStream(derBytes);
@@ -77,18 +77,18 @@ public class PEMUtil {
             while (line.length == 48) {
                 byte[] base64Line = Base64.encodeBase64(line);
                 out.write(base64Line);
-                out.write(LINE_SEPARATOR_BYTES);
+                out.write(lineSeparatorBytes);
                 line = Util.streamToBytes(bin, 48);
             }
             if (line.length > 0) {
                 byte[] base64Line = Base64.encodeBase64(line);
                 out.write(base64Line);
-                out.write(LINE_SEPARATOR_BYTES);
+                out.write(lineSeparatorBytes);
             }
             out.write("-----END ".getBytes("UTF-8"));
             out.write(item.pemType.getBytes("UTF-8"));
             out.write("-----".getBytes("UTF-8"));
-            out.write(LINE_SEPARATOR_BYTES);
+            out.write(lineSeparatorBytes);
         }
         return out.toByteArray();
     }

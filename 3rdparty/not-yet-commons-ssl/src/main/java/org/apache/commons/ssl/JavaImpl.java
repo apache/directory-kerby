@@ -57,12 +57,12 @@ import java.security.cert.X509Certificate;
  * @since 30-Jun-2006
  */
 public abstract class JavaImpl {
-    private static JavaImpl HANDLER;
+    private static JavaImpl handler;
 
     static {
         JavaImpl h = null;
             h = Java14.getInstance();
-        HANDLER = h;
+        handler = h;
     }
 
     public abstract String getVersion();
@@ -127,58 +127,58 @@ public abstract class JavaImpl {
     public static Object init(SSL ssl, TrustChain trustChain, KeyMaterial keyMaterial)
         throws NoSuchAlgorithmException, KeyStoreException,
         CertificateException, KeyManagementException, IOException {
-        return HANDLER.initSSL(ssl, trustChain, keyMaterial);
+        return handler.initSSL(ssl, trustChain, keyMaterial);
     }
 
     public static RuntimeException newRuntimeException(Exception cause) {
-        return HANDLER.buildRuntimeException(cause);
+        return handler.buildRuntimeException(cause);
     }
 
     public static SSLSocketFactory getSSLSocketFactory(Object sslContext) {
-        return HANDLER.buildSSLSocketFactory(sslContext);
+        return handler.buildSSLSocketFactory(sslContext);
     }
 
     public static SSLServerSocketFactory getSSLServerSocketFactory(Object sslContext) {
-        return HANDLER.buildSSLServerSocketFactory(sslContext);
+        return handler.buildSSLServerSocketFactory(sslContext);
     }
 
     public static String getSubjectX500(X509Certificate cert) {
-        return HANDLER.retrieveSubjectX500(cert);
+        return handler.retrieveSubjectX500(cert);
     }
 
     public static String getIssuerX500(X509Certificate cert) {
-        return HANDLER.retrieveIssuerX500(cert);
+        return handler.retrieveIssuerX500(cert);
     }
 
     public static Object newKeyManagerFactory(KeyStore ks, char[] password)
         throws NoSuchAlgorithmException, KeyStoreException,
         UnrecoverableKeyException {
-        return HANDLER.buildKeyManagerFactory(ks, password);
+        return handler.buildKeyManagerFactory(ks, password);
     }
 
     public static Object[] getKeyManagers(Object keyManagerFactory) {
-        return HANDLER.retrieveKeyManagers(keyManagerFactory);
+        return handler.retrieveKeyManagers(keyManagerFactory);
     }
 
     public static Object newTrustManagerFactory(KeyStore ks)
         throws NoSuchAlgorithmException, KeyStoreException {
-        return HANDLER.buildTrustManagerFactory(ks);
+        return handler.buildTrustManagerFactory(ks);
     }
 
     public static Object[] getTrustManagers(Object trustManagerFactory) {
-        return HANDLER.retrieveTrustManagers(trustManagerFactory);
+        return handler.retrieveTrustManagers(trustManagerFactory);
     }
 
     public static SSLSocket createSocket(SSL ssl)
         throws IOException {
-        return HANDLER.buildSocket(ssl);
+        return handler.buildSocket(ssl);
     }
 
     public static SSLSocket createSocket(SSL ssl, String remoteHost,
                                          int remotePort, InetAddress localHost,
                                          int localPort, int connectTimeout)
         throws IOException {
-        return HANDLER.buildSocket(ssl, remoteHost, remotePort, localHost,
+        return handler.buildSocket(ssl, remoteHost, remotePort, localHost,
             localPort, connectTimeout);
     }
 
@@ -186,7 +186,7 @@ public abstract class JavaImpl {
             SSL ssl, String remoteHost, int remotePort, InetAddress localHost, int localPort,
             int connectTimeout
     ) throws IOException {
-        return HANDLER.buildPlainSocket(
+        return handler.buildPlainSocket(
                 ssl, remoteHost, remotePort, localHost, localPort, connectTimeout
         );
     }    
@@ -196,36 +196,36 @@ public abstract class JavaImpl {
                                     InetAddress localHost, int localPort,
                                     int timeout, SSL ssl)
         throws IOException {
-        return HANDLER.connectSocket(s, sf, remoteHost, remotePort, localHost,
+        return handler.connectSocket(s, sf, remoteHost, remotePort, localHost,
             localPort, timeout, ssl);
     }
 
     public static SSLServerSocket createServerSocket(SSL ssl)
         throws IOException {
-        return HANDLER.buildServerSocket(ssl);
+        return handler.buildServerSocket(ssl);
     }
 
     public static void setWantClientAuth(Object o, boolean wantClientAuth) {
-        HANDLER.wantClientAuth(o, wantClientAuth);
+        handler.wantClientAuth(o, wantClientAuth);
     }
 
     public static void setEnabledProtocols(Object o, String[] enabledProtocols) {
-        HANDLER.enabledProtocols(o, enabledProtocols);
+        handler.enabledProtocols(o, enabledProtocols);
     }
 
     public static Certificate[] getPeerCertificates(SSLSession session)
         throws SSLPeerUnverifiedException {
-        return HANDLER.retrievePeerCerts(session);
+        return handler.retrievePeerCerts(session);
     }
 
     public static void testTrust(Object trustManager, X509Certificate[] chain,
                                  String authType)
         throws CertificateException {
-        HANDLER.checkTrusted(trustManager, chain, authType);
+        handler.checkTrusted(trustManager, chain, authType);
     }
 
     public static void load() {
-        HANDLER.hashCode();
+        handler.hashCode();
     }
 
 }

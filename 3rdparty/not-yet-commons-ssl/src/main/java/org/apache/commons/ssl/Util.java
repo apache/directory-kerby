@@ -330,18 +330,18 @@ public class Util {
 
     public static Map parseArgs(final String[] cargs) {
         Map args = new TreeMap();
-        Map ARGS_MATCH = Ping.ARGS_MATCH;
+        Map argsMatch = Ping.argsMatch;
 
         int l = cargs.length;
-        final String[] EMPTY_VALUES = {""};
+        final String[] emptyValue = {""};
         for (int i = 0; i < l; i++) {
             String k = cargs[i];
-            Ping.Arg a = (Ping.Arg) ARGS_MATCH.get(k);
+            Ping.Arg a = (Ping.Arg) argsMatch.get(k);
             if (l > i + 1) {
                 String v = cargs[++i];
-                while (ARGS_MATCH.containsKey(v)) {
-                    args.put(a, EMPTY_VALUES);
-                    a = (Ping.Arg) ARGS_MATCH.get(v);
+                while (argsMatch.containsKey(v)) {
+                    args.put(a, emptyValue);
+                    a = (Ping.Arg) argsMatch.get(v);
                     v = "";
                     if (l > i + 1) {
                         v = cargs[++i];
@@ -350,17 +350,17 @@ public class Util {
                 String[] values = new String[1];
                 values[0] = v;
                 args.put(a, values);
-                if (l > i + 1 && !ARGS_MATCH.containsKey(cargs[i + 1])) {
+                if (l > i + 1 && !argsMatch.containsKey(cargs[i + 1])) {
                     LinkedList list = new LinkedList();
                     list.add(v);
-                    while (l > i + 1 && !ARGS_MATCH.containsKey(cargs[i + 1])) {
+                    while (l > i + 1 && !argsMatch.containsKey(cargs[i + 1])) {
                         v = cargs[++i];
                         list.add(v);
                     }
                     args.put(a, list.toArray(new String[list.size()]));
                 }
             } else {
-                args.put(a, EMPTY_VALUES);
+                args.put(a, emptyValue);
             }
         }
         return args;

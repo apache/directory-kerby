@@ -83,8 +83,8 @@ public class Version {
             v = v.replace('-', '.');
         }
 
-        String V = v.toUpperCase();
-        x = V.indexOf("COMMONS.SSL.");
+        String version = v.toUpperCase();
+        x = version.indexOf("COMMONS.SSL.");
         if (x >= 0) {
             v = v.substring(x + "commons.ssl.".length());
         }

@@ -92,7 +92,7 @@ public class Certificates {
     public static final CertificateFactory CF;
     public static final String LINE_ENDING = System.getProperty("line.separator");
 
-    private static final HashMap crl_cache = new HashMap();
+    private static final HashMap CRL_CACHE = new HashMap();
 
     public static final String CRL_EXTENSION = "2.5.29.31";
     public static final String OCSP_EXTENSION = "1.3.6.1.5.5.7.1.1";
@@ -318,10 +318,10 @@ public class Certificates {
             Iterator it = crlList.iterator();
             while (it.hasNext()) {
                 String url = (String) it.next();
-                CRLHolder holder = (CRLHolder) crl_cache.get(url);
+                CRLHolder holder = (CRLHolder) CRL_CACHE.get(url);
                 if (holder == null) {
                     holder = new CRLHolder(url);
-                    crl_cache.put(url, holder);
+                    CRL_CACHE.put(url, holder);
                 }
                 // success == false means we couldn't actually load the CRL
                 // (probably due to an IOException), so let's try the next one in

@@ -35,18 +35,18 @@ public class TestKeyMaterial {
         String[] files = dir.list();
         Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
         for (String f : files) {
-            String F = f.toUpperCase(Locale.ENGLISH);
-            if (F.endsWith(".KS") || F.contains("PKCS12")) {
+            String file = f.toUpperCase(Locale.ENGLISH);
+            if (file.endsWith(".KS") || file.contains("PKCS12")) {
                 examineKeyStore(samplesDir, f, null);
-            } else if (F.endsWith(".PEM")) {
+            } else if (file.endsWith(".PEM")) {
                 examineKeyStore(samplesDir, f, "rsa.key");
             }
         }
     }
 
     private static void examineKeyStore(String dir, String fileName, String file2) throws Exception {
-        String FILENAME = fileName.toUpperCase(Locale.ENGLISH);
-        boolean hasMultiPassword = FILENAME.contains(".2PASS.");
+        String filename = fileName.toUpperCase(Locale.ENGLISH);
+        boolean hasMultiPassword = filename.contains(".2PASS.");
 
         System.out.print("Testing KeyMaterial: " + dir + "/" + fileName);        
         char[] pass1 = PASSWORD1;

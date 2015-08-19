@@ -8,8 +8,8 @@ import java.net.Socket;
 import java.security.GeneralSecurityException;
 
 public class CRLSocket extends SSLClient {
-    private static final CRLSocket secureInstance;
-    private static final CRLSocket plainInstance;
+    private static final CRLSocket SECURE_INSTANCE;
+    private static final CRLSocket PLAIN_INSTANCE;
 
     static {
         CRLSocket sf1 = null, sf2 = null;
@@ -21,8 +21,8 @@ public class CRLSocket extends SSLClient {
             System.out.println("could not create CRLSocket: " + e);
             e.printStackTrace();
         } finally {
-            secureInstance = sf1;
-            plainInstance = sf2;            
+            SECURE_INSTANCE = sf1;
+            PLAIN_INSTANCE = sf2;
         }
     }
 
@@ -47,11 +47,11 @@ public class CRLSocket extends SSLClient {
     }
 
     public static CRLSocket getSecureInstance() {
-        return secureInstance;
+        return SECURE_INSTANCE;
     }
 
     public static CRLSocket getPlainInstance() {
-        return plainInstance;
+        return PLAIN_INSTANCE;
     }
 
     public static void main(String[] args) throws Exception {

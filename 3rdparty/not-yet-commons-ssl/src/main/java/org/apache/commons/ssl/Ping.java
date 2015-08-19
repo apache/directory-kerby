@@ -54,8 +54,8 @@ import java.util.TreeSet;
  * @since 30-Mar-2006
  */
 public class Ping {
-    protected static SortedSet ARGS = new TreeSet();
-    protected static Map ARGS_MATCH = new HashMap();
+    protected static SortedSet args = new TreeSet();
+    protected static Map argsMatch = new HashMap();
     protected static final Arg ARG_TARGET = new Arg("-t", "--target", "[hostname[:port]]              default port=443", true);
     protected static final Arg ARG_BIND = new Arg("-b", "--bind", "[hostname[:port]]              default port=0 \"ANY\"");
     protected static final Arg ARG_PROXY = new Arg("-r", "--proxy", "[hostname[:port]]              default port=80");
@@ -83,8 +83,8 @@ public class Ping {
     private static TrustChain trustChain = null;
 
     static {
-        ARGS = Collections.unmodifiableSortedSet(ARGS);
-        ARGS_MATCH = Collections.unmodifiableMap(ARGS_MATCH);
+        args = Collections.unmodifiableSortedSet(args);
+        argsMatch = Collections.unmodifiableMap(argsMatch);
     }
 
     public static void main(String[] args) throws Exception {
@@ -108,7 +108,7 @@ public class Ping {
             System.out.println("Usage:  java -jar not-yet-commons-ssl-" + Version.VERSION + ".jar [options]");
             System.out.println(Version.versionString());
             System.out.println("Options:   (*=required)");
-            Iterator it = ARGS.iterator();
+            Iterator it = Ping.args.iterator();
             while (it.hasNext()) {
                 Arg a = (Arg) it.next();
                 String s = Util.pad(a.shortArg, 3, false);
@@ -394,13 +394,13 @@ public class Ping {
             this.shortArg = s;
             this.longArg = l;
             this.description = d;
-            this.id = ARGS.size();
-            ARGS.add(this);
+            this.id = args.size();
+            args.add(this);
             if (s != null && s.length() >= 2) {
-                ARGS_MATCH.put(s, this);
+                argsMatch.put(s, this);
             }
             if (l != null && l.length() >= 3) {
-                ARGS_MATCH.put(l, this);
+                argsMatch.put(l, this);
             }
         }
 

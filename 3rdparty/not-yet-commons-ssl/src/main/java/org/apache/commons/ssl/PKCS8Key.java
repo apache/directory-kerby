@@ -270,14 +270,14 @@ public class PKCS8Key {
         String type = "RSA";
         PrivateKey pk;
         try {
-            KeyFactory KF;
+            KeyFactory kf;
             if (isDSA) {
                 type = "DSA";
-                KF = KeyFactory.getInstance("DSA");
+                kf = KeyFactory.getInstance("DSA");
             } else {
-                KF = KeyFactory.getInstance("RSA");
+                kf = KeyFactory.getInstance("RSA");
             }
-            pk = KF.generatePrivate(spec);
+            pk = kf.generatePrivate(spec);
         } catch (Exception e) {
             throw new ProbablyBadPasswordException("Cannot create " + type + " private key from decrypted stream.  Probably bad decryption password. " + e);
         }
@@ -808,57 +808,57 @@ public class PKCS8Key {
         // sha1, md2, md5 all use 512 bits.  But future hashes might not.
         int v = 512 / 8;
         md.reset();
-        byte[] D = new byte[v];
+        byte[] dD = new byte[v];
         byte[] dKey = new byte[n];
-        for (int i = 0; i != D.length; i++) {
-            D[i] = (byte) idByte;
+        for (int i = 0; i != dD.length; i++) {
+            dD[i] = (byte) idByte;
         }
-        byte[] S;
+        byte[] sS;
         if ((salt != null) && (salt.length != 0)) {
-            S = new byte[v * ((salt.length + v - 1) / v)];
-            for (int i = 0; i != S.length; i++) {
-                S[i] = salt[i % salt.length];
+            sS = new byte[v * ((salt.length + v - 1) / v)];
+            for (int i = 0; i != sS.length; i++) {
+                sS[i] = salt[i % salt.length];
             }
         } else {
-            S = new byte[0];
+            sS = new byte[0];
         }
-        byte[] P;
+        byte[] pP;
         if ((password != null) && (password.length != 0)) {
-            P = new byte[v * ((password.length + v - 1) / v)];
-            for (int i = 0; i != P.length; i++) {
-                P[i] = password[i % password.length];
+            pP = new byte[v * ((password.length + v - 1) / v)];
+            for (int i = 0; i != pP.length; i++) {
+                pP[i] = password[i % password.length];
             }
         } else {
-            P = new byte[0];
+            pP = new byte[0];
         }
-        byte[] I = new byte[S.length + P.length];
-        System.arraycopy(S, 0, I, 0, S.length);
-        System.arraycopy(P, 0, I, S.length, P.length);
-        byte[] B = new byte[v];
+        byte[] iI = new byte[sS.length + pP.length];
+        System.arraycopy(sS, 0, iI, 0, sS.length);
+        System.arraycopy(pP, 0, iI, sS.length, pP.length);
+        byte[] bB = new byte[v];
         int c = (n + u - 1) / u;
         for (int i = 1; i <= c; i++) {
-            md.update(D);
-            byte[] result = md.digest(I);
+            md.update(dD);
+            byte[] result = md.digest(iI);
             for (int j = 1; j != iterationCount; j++) {
                 result = md.digest(result);
             }
-            for (int j = 0; j != B.length; j++) {
-                B[j] = result[j % result.length];
+            for (int j = 0; j != bB.length; j++) {
+                bB[j] = result[j % result.length];
             }
-            for (int j = 0; j < (I.length / v); j++) {
+            for (int j = 0; j < (iI.length / v); j++) {
                 /*
                      * add a + b + 1, returning the result in a. The a value is treated
                      * as a BigInteger of length (b.length * 8) bits. The result is
                      * modulo 2^b.length in case of overflow.
                      */
                 int aOff = j * v;
-                int bLast = B.length - 1;
-                int x = (B[bLast] & 0xff) + (I[aOff + bLast] & 0xff) + 1;
-                I[aOff + bLast] = (byte) x;
+                int bLast = bB.length - 1;
+                int x = (bB[bLast] & 0xff) + (iI[aOff + bLast] & 0xff) + 1;
+                iI[aOff + bLast] = (byte) x;
                 x >>>= 8;
-                for (int k = B.length - 2; k >= 0; k--) {
-                    x += (B[k] & 0xff) + (I[aOff + k] & 0xff);
-                    I[aOff + k] = (byte) x;
+                for (int k = bB.length - 2; k >= 0; k--) {
+                    x += (bB[k] & 0xff) + (iI[aOff + k] & 0xff);
+                    iI[aOff + k] = (byte) x;
                     x >>>= 8;
                 }
             }
