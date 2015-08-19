@@ -23,11 +23,7 @@ import org.apache.commons.ssl.PKCS8Key;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -108,7 +104,8 @@ public class KerbyPkiLoader implements PkiLoader {
         PrivateKey pk = null;
         if (pkcs8.isDSA()) {
             pk = KeyFactory.getInstance("DSA").generatePrivate(spec);
-        } else if (pkcs8.isRSA()) {
+        }
+        else if (pkcs8.isRSA()) {
             pk = KeyFactory.getInstance("RSA").generatePrivate(spec);
         }
 
