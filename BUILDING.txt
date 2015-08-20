@@ -1,5 +1,5 @@
 #Build instructions for Kerby
-----------------
+-------------
 ###Requirements:
 * JDK 1.7+
 * Maven 3.0 or later
