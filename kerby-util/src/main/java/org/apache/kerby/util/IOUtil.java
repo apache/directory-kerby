@@ -102,5 +102,6 @@ public final class IOUtil {
 
         ByteBuffer buffer = ByteBuffer.wrap(Utf8.toBytes(content));
         fc.write(buffer);
+        outputStream.close();
     }
 }

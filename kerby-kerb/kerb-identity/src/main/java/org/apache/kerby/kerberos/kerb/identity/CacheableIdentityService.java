@@ -52,12 +52,14 @@ public class CacheableIdentityService
 
     private void init() {
         Map<String, KrbIdentity> tmpMap =
-                new LinkedHashMap<String, KrbIdentity>(cacheSize) {
-            @Override
-            protected boolean removeEldestEntry(Map.Entry eldest) {
-                return size() > cacheSize;
-            }
-        };
+            new LinkedHashMap<String, KrbIdentity>(cacheSize) {
+                private static final long serialVersionUID = -6911200685333503214L;
+
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, KrbIdentity> eldest) {
+                    return size() > cacheSize;
+                }
+            };
 
         idCache = new ConcurrentHashMap<>(tmpMap);
     }

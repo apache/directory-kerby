@@ -20,9 +20,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.apache.kerby</groupId>
   <artifactId>benchmark</artifactId>
-  <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Kerby benchmark</name>
@@ -70,17 +68,17 @@
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-identity-test</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>json-backend</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>zookeeper-backend</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.directory.server</groupId>

@@ -35,6 +35,7 @@ import java.io.IOException;
 public class SimpleKdcServer extends KdcServer {
     private final KrbClient krbClnt;
     private Kadmin kadmin;
+    private Krb5Conf krb5Conf;
 
     private File workDir;
 
@@ -126,7 +127,7 @@ public class SimpleKdcServer extends KdcServer {
         kadmin.createBuiltinPrincipals();
 
         try {
-            Krb5Conf krb5Conf = new Krb5Conf(this);
+            krb5Conf = new Krb5Conf(this);
             krb5Conf.initKrb5conf();
         } catch (IOException e) {
             throw new KrbException("Failed to make krb5.conf", e);
@@ -240,5 +241,15 @@ public class SimpleKdcServer extends KdcServer {
      */
     public void exportPrincipal(String principal, File keytabFile) throws KrbException {
         kadmin.exportKeytab(keytabFile, principal);
+    }
+
+    @Override
+    public void stop() throws KrbException {
+        super.stop();
+        try {
+            krb5Conf.deleteKrb5conf();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

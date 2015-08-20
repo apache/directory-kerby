@@ -23,11 +23,11 @@
 
   <artifactId>kerby-backend</artifactId>
   <name>Kerby Backend</name>
-  <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
     <module>ldap-backend</module>
+    <module>mavibot-backend</module>
     <module>json-backend</module>
     <module>zookeeper-backend</module>
   </modules>
