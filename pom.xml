@@ -32,6 +32,13 @@
     <tag>HEAD</tag>
   </scm>
 
+  <distributionManagement>
+    <site>
+      <id>apache.directory.kerby</id>
+      <url>scpexe://people.apache.org/www/directory.apache.org/kerby/gen-docs/${project.version}/</url>
+    </site>
+  </distributionManagement>
+
   <properties>
     <apacheds.version>2.0.0-M20</apacheds.version>
     <ldap.api.version>1.0.0-M31</ldap.api.version>
