@@ -14,6 +14,7 @@ dependency-reduced-pom.xml
 .pmdruleset.xml
 .pmd
 .checkstyle
+bin/
 kerby-dist/kdc-dist/lib/
 kerby-dist/tool-dist/lib/
 kerby-dist/kdc-dist/logs/
