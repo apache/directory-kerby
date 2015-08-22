@@ -129,6 +129,10 @@
               <exclude>kerby-dist/**/*</exclude>
               <!-- BMP_IMAGES_EXCLUDES -->
               <exclude>**/*.bmp</exclude>
+              <!-- PMD files -->
+              <exclude>**/.pmd</exclude>
+              <!-- PMD Ruleset files -->
+              <exclude>**/.pmdruleset.xml</exclude>
             </excludes>
           </configuration>
         </plugin>
