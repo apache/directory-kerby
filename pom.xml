@@ -133,6 +133,8 @@
               <exclude>**/.pmd</exclude>
               <!-- PMD Ruleset files -->
               <exclude>**/.pmdruleset.xml</exclude>
+              <!-- BIN files -->
+              <exclude>**/bin/**/*</exclude>
             </excludes>
           </configuration>
         </plugin>
