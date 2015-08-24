@@ -37,7 +37,10 @@ public abstract class AbstractKeyMaker implements KeyMaker {
     }
 
     /**
-     * Visible for test
+     * Visible for test.
+     * @param password The password
+     * @param salt The salt
+     * @return The password salt
      */
     public static byte[] makePasswdSalt(String password, String salt) {
         char[] chars = new char[password.length() + salt.length()];

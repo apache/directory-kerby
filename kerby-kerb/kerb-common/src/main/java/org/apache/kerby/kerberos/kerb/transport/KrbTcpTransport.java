@@ -27,7 +27,7 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 
 /**
- * Default implementation of {@Link KrbTransport} using TCP in block mode.
+ * Default implementation of {@link KrbTransport} using TCP in block mode.
  */
 public class KrbTcpTransport
         extends AbstractKrbTransport implements KrbTransport {

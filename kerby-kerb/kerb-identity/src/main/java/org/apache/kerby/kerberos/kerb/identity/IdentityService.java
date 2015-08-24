@@ -30,34 +30,38 @@ public interface IdentityService {
      * Get all of the identity principal names.
      * Note it's ordered by principal name.
      * @return principal names
+     * @throws KrbException e
      */
     Iterable<String> getIdentities() throws KrbException;
 
     /**
      * Get the identity account specified by name.
-     * @param principalName
+     * @param principalName The principal name
      * @return identity
+     * @throws KrbException e
      */
     KrbIdentity getIdentity(String principalName) throws KrbException;
 
     /**
      * Add an identity, and return the newly created result.
-     * @param identity
+     * @param identity The identity
      * @return identity
+     * @throws KrbException e
      */
     KrbIdentity addIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Update an identity, and return the updated result.
-     * @param identity
+     * @param identity The identity
      * @return identity
+     * @throws KrbException e
      */
     KrbIdentity updateIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Delete the identity specified by principal name
-     * @param principalName
-     *
+     * @param principalName The principal name
+     * @throws KrbException e
      */
     void deleteIdentity(String principalName) throws KrbException;
 }

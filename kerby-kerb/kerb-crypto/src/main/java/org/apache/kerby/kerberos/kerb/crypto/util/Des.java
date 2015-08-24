@@ -75,6 +75,9 @@ public class Des {
 
     /**
      * MIT krb5 FIXUP(k) in s2k_des.c
+     * @param key The key byte
+     * @param offset The offset
+     * @param len The length
      */
     public static void fixKey(byte[] key, int offset, int len) {
         if (isWeakKey(key, offset, len)) {

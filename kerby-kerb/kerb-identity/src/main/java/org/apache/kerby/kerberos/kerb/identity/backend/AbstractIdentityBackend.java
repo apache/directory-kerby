@@ -40,6 +40,7 @@ public abstract class AbstractIdentityBackend
 
     /**
      * Get the Backend Config.
+     * @return The backend config
      */
     protected BackendConfig getBackendConfig() {
         return (BackendConfig) getConfig();
@@ -56,6 +57,7 @@ public abstract class AbstractIdentityBackend
 
     /**
      * Perform the real initialization work for the backend.
+     * @throws KrbException e
      */
     protected void doInitialize() throws KrbException { }
 
@@ -84,6 +86,7 @@ public abstract class AbstractIdentityBackend
 
     /**
      * Perform the real stop work for the backend.
+     * @throws KrbException e
      */
     protected void doStop() throws KrbException { }
 
@@ -112,6 +115,8 @@ public abstract class AbstractIdentityBackend
 
     /**
      * Perform the real work to get identities.
+     * @return The identities
+     * @throws KrbException e
      */
     protected abstract Iterable<String> doGetIdentities() throws KrbException;
 
@@ -135,7 +140,8 @@ public abstract class AbstractIdentityBackend
 
     /**
      * Add an identity, invoked by addIdentity.
-     * @param principalName
+     * @param principalName The principal name
+     * @throws  KrbException e
      */
     protected abstract KrbIdentity doGetIdentity(String principalName) throws KrbException;
 
@@ -161,7 +167,8 @@ public abstract class AbstractIdentityBackend
 
     /**
      * Add an identity, invoked by addIdentity, and return added identity.
-     * @param identity
+     * @param identity The identity to be added
+     * @throws KrbException e
      */
     protected abstract KrbIdentity doAddIdentity(KrbIdentity identity) throws KrbException;
 
@@ -189,7 +196,9 @@ public abstract class AbstractIdentityBackend
 
     /**
      * Update an identity, invoked by updateIdentity, and return updated identity.
-     * @param identity
+     * @param identity The origin identity
+     * @return The updated identity
+     * @throws KrbException e
      */
     protected abstract KrbIdentity doUpdateIdentity(KrbIdentity identity) throws KrbException;
 
@@ -215,7 +224,8 @@ public abstract class AbstractIdentityBackend
 
     /**
      * Delete an identity, invoked by deleteIndentity.
-     * @param principalName
+     * @param principalName The principal name
+     * @throws KrbException e
      */
     protected abstract void doDeleteIdentity(String principalName) throws KrbException;
 }

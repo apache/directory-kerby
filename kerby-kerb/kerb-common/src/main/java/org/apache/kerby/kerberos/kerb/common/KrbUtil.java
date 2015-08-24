@@ -27,7 +27,7 @@ public class KrbUtil {
 
     /**
      * Construct TGS principal name.
-     * @param realm
+     * @param realm The realm
      * @return principal
      */
     public static PrincipalName makeTgsPrincipal(String realm) {
@@ -37,7 +37,7 @@ public class KrbUtil {
 
     /**
      * Construct kadmin principal name.
-     * @param realm
+     * @param realm The realm
      * @return principal
      */
     public static PrincipalName makeKadminPrincipal(String realm) {

@@ -31,13 +31,13 @@ public interface RandomProvider {
     void init();
     /**
      * Provide entropy seed for the provider.
-     * @param seed
+     * @param seed The seed
      */
     void setSeed(byte[] seed);
 
     /**
      * Generate random bytes into the specified array.
-     * @param bytes
+     * @param bytes The bytes
      */
     void nextBytes(byte[] bytes);
 

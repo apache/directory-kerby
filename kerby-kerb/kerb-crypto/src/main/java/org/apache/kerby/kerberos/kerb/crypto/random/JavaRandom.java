@@ -22,7 +22,8 @@ package org.apache.kerby.kerberos.kerb.crypto.random;
 import java.security.SecureRandom;
 
 /**
- * Use jdk SecureRandom to implement RandomProvider, so it can be used on windows & linux.
+ * Use jdk {@link SecureRandom} to implement {@link RandomProvider},
+ * so it can be used on windows and linux.
  */
 
 public class JavaRandom implements RandomProvider {
