@@ -63,6 +63,7 @@ public abstract class KrbHandler {
      * Handle the kdc request.
      *
      * @param kdcRequest The kdc request
+     * @throws KrbException e
      */
     public void handleRequest(KdcRequest kdcRequest) throws KrbException {
         kdcRequest.process();
@@ -93,6 +94,7 @@ public abstract class KrbHandler {
      *
      * @param kdcRequest The kdc request
      * @param responseMessage The message from kdc
+     * @throws KrbException e
      */
     public void onResponseMessage(
             KdcRequest kdcRequest, ByteBuffer responseMessage) throws KrbException {
@@ -141,6 +143,7 @@ public abstract class KrbHandler {
      *
      * @param kdcRequest The kdc request
      * @param requestMessage The request message to kdc
+     * @throws IOException e
      */
     protected abstract void sendMessage(KdcRequest kdcRequest,
                                         ByteBuffer requestMessage) throws IOException;
