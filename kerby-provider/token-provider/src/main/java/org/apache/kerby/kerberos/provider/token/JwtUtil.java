@@ -31,7 +31,8 @@ public class JwtUtil {
     /**
      * Get jwt claims set from read only jwt claims set
      *
-     * @param readOnlyClaims
+     * @param readOnlyClaims Read only claims
+     * @return Result
      */
     public static JWTClaimsSet from(ReadOnlyJWTClaimsSet readOnlyClaims) {
         JWTClaimsSet result = new JWTClaimsSet(readOnlyClaims);

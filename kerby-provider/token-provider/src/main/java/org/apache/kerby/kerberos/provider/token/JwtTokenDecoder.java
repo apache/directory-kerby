@@ -129,7 +129,8 @@ public class JwtTokenDecoder implements TokenDecoder {
     /**
      * Decrypt the Encrypted JWT
      *
-     * @param encryptedJWT
+     * @throws java.io.IOException
+     * @param encryptedJWT an encrypted JWT
      */
     public void decryptEncryptedJWT(EncryptedJWT encryptedJWT) throws IOException {
         RSADecrypter decrypter = new RSADecrypter(decryptionKey);
@@ -152,7 +153,8 @@ public class JwtTokenDecoder implements TokenDecoder {
     /**
      * verify the Signed JWT
      *
-     * @param signedJWT
+     * @throws java.io.IOException
+     * @param signedJWT a signed JWT
      * @return whether verify success
      */
     public boolean verifySignedJWT(SignedJWT signedJWT) throws IOException {
