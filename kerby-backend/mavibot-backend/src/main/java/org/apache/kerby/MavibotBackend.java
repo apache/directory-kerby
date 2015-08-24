@@ -61,7 +61,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
      * @param location
      *            the File handle pointing to the database file or the directory
      *            where it is present
-     * @throws Exception
+     * @throws Exception e
      */
     public MavibotBackend(File location) throws Exception {
         String dbPath = location.getAbsolutePath();

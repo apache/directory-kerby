@@ -129,7 +129,7 @@ public class JwtTokenDecoder implements TokenDecoder {
     /**
      * Decrypt the Encrypted JWT
      *
-     * @throws java.io.IOException
+     * @throws java.io.IOException e
      * @param encryptedJWT an encrypted JWT
      */
     public void decryptEncryptedJWT(EncryptedJWT encryptedJWT) throws IOException {
@@ -153,7 +153,7 @@ public class JwtTokenDecoder implements TokenDecoder {
     /**
      * verify the Signed JWT
      *
-     * @throws java.io.IOException
+     * @throws java.io.IOException e
      * @param signedJWT a signed JWT
      * @return whether verify success
      */
