@@ -30,6 +30,7 @@ public interface IdentityBackend extends IdentityService, Configurable {
 
     /**
      * Init work for the backend can be done here.
+     * @throws KrbException e
      */
     void initialize() throws KrbException;
 
@@ -45,6 +46,7 @@ public interface IdentityBackend extends IdentityService, Configurable {
      * Stop the backend.
      *
      * Will be called during KDC stop.
+     * @throws KrbException e
      */
     void stop() throws KrbException;
 
