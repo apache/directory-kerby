@@ -30,19 +30,20 @@ public interface KrbTransport {
 
     /**
      * Send out a Kerberos message to remote peer.
-     * @param message
+     * @param message The message to be sent
      */
     void sendMessage(ByteBuffer message) throws IOException;
 
     /**
      * Receive a Kerberos message from remote.
-     * @return
+     * @return The received message
+     * @throws IOException e
      */
     ByteBuffer receiveMessage() throws IOException;
 
     /**
      * Judge the type of transport, return true if it is tcp,
-     * reture false if it is udp.
+     * @return false if it is udp.
      */
 
     boolean isTcp();
@@ -55,7 +56,7 @@ public interface KrbTransport {
 
     /**
      * Set an attachment.
-     * @param attachment
+     * @param attachment The attachment
      */
     void setAttachment(Object attachment);
 
