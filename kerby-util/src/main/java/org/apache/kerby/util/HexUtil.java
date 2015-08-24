@@ -28,6 +28,8 @@ public final class HexUtil {
     /**
      * Convert bytes into format as:
      * 02020080
+     * @param bytes The bytes
+     * @return The hex string
      */
     public static String bytesToHex(byte[] bytes) {
         int len = bytes.length * 2;
@@ -44,6 +46,8 @@ public final class HexUtil {
     /**
      * Convert hex string like follows into byte array
      * 02020080
+     * @param hexString The hex string
+     * @return The bytes
      */
     public static byte[] hex2bytes(String hexString) {
         hexString = hexString.toUpperCase();

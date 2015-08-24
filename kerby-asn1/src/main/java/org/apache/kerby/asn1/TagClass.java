@@ -69,7 +69,7 @@ public enum TagClass {
 
     /**
      * Converted from an integer
-     * @param value
+     * @param value The int value of tag class
      * @return tag class
      */
     public static TagClass fromValue(int value) {
@@ -90,7 +90,7 @@ public enum TagClass {
 
     /**
      * Converted from a tag value, which contains tag class info.
-     * @param tag
+     * @param tag The int value of tag class
      * @return tag class
      */
     public static TagClass fromTagFlags(int tag) {

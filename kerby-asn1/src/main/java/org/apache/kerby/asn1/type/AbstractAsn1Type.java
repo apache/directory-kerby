@@ -44,8 +44,8 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     /**
      * Default constructor, generally for decoding as a value container
-     * @param tagClass
-     * @param tagNo
+     * @param tagClass The tag class
+     * @param tagNo The tag number
      */
     public AbstractAsn1Type(TagClass tagClass, int tagNo) {
         this(tagClass, tagNo, null);
@@ -53,8 +53,8 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     /**
      * Default constructor, generally for decoding as a value container
-     * @param tagFlags
-     * @param tagNo
+     * @param tagFlags The tag flags
+     * @param tagNo The tag number
      */
     public AbstractAsn1Type(int tagFlags, int tagNo) {
         this(tagFlags, tagNo, null);
@@ -62,9 +62,9 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     /**
      * Constructor with a value, generally for encoding of the value
-     * @param tagFlags
-     * @param tagNo
-     * @param value
+     * @param tagFlags The tag flags
+     * @param tagNo The tag number
+     * @param value The value
      */
     public AbstractAsn1Type(int tagFlags, int tagNo, T value) {
         this(TagClass.fromTagFlags(tagFlags), tagNo, value);
@@ -73,8 +73,9 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     /**
      * Constructor with a value, generally for encoding of the value
-     * @param tagNo
-     * @param value
+     * @param tagClass The tag class
+     * @param tagNo The tag number
+     * @param value The value
      */
     public AbstractAsn1Type(TagClass tagClass, int tagNo, T value) {
         this.tagClass = tagClass;
@@ -84,7 +85,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     /**
      * Set encoding option
-     * @param encodingOption
+     * @param encodingOption The encoding option
      */
     public void setEncodingOption(EncodingOption encodingOption) {
         this.encodingOption = encodingOption;

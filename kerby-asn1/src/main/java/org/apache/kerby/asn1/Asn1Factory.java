@@ -30,7 +30,7 @@ public class Asn1Factory {
 
     /**
      * Create an ASN1 type with specified tag number
-     * @param tagNo
+     * @param tagNo The tag number
      * @return ASN1 type
      */
     public static Asn1Type create(int tagNo) {
@@ -43,7 +43,7 @@ public class Asn1Factory {
 
     /**
      * Create an ASN1 type with specified tag
-     * @param tagNo
+     * @param tagNo The tag number
      * @return ASN1 type
      */
     public static Asn1Type create(UniversalTag tagNo) {

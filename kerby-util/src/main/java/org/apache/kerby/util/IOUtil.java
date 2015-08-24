@@ -60,8 +60,8 @@ public final class IOUtil {
 
     /**
      * Read an input stream and return the content as string assuming UTF8.
-     * @param in
-     * @return
+     * @param in The input stream
+     * @return The content
      * @throws IOException
      */
     public static String readInput(InputStream in) throws IOException {
@@ -71,8 +71,8 @@ public final class IOUtil {
 
     /**
      * Read a file and return the content as string assuming UTF8.
-     * @param file
-     * @return
+     * @param file The file to read
+     * @return The content
      * @throws IOException
      */
     public static String readFile(File file) throws IOException {
@@ -92,8 +92,8 @@ public final class IOUtil {
 
     /**
      * Write a file with the content assuming UTF8.
-     * @param content
-     * @param file
+     * @param content The content
+     * @param file The file to write
      * @throws IOException
      */
     public static void writeFile(String content, File file) throws IOException {
