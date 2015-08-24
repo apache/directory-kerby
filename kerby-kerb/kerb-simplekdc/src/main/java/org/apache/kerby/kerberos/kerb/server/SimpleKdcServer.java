@@ -42,7 +42,7 @@ public class SimpleKdcServer extends KdcServer {
     /**
      * Default constructor.
      *
-     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     public SimpleKdcServer() throws KrbException {
         super();
@@ -245,14 +245,14 @@ public class SimpleKdcServer extends KdcServer {
      * Export the keys of the specified principal into keytab file.
      * @param principal principal
      * @param keytabFile keytab file
-     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     public void exportPrincipal(String principal, File keytabFile) throws KrbException {
         kadmin.exportKeytab(keytabFile, principal);
     }
 
     /**
-     * @throws KrbException
+     * @throws KrbException e
      */
     @Override
     public void stop() throws KrbException {
