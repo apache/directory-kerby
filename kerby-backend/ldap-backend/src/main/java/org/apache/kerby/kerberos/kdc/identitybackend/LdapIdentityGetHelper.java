@@ -42,6 +42,8 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get principal name.
+     * @throws LdapInvalidAttributeValueException
+     * @return principal name
      */
     public PrincipalName getPrincipalName() throws LdapInvalidAttributeValueException {
         String principalNameStr = entry.get(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT).getString();
@@ -51,6 +53,8 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get key version.
+     * @throws LdapInvalidAttributeValueException
+     * @return key version
      */
     public int getKeyVersion() throws LdapInvalidAttributeValueException {
         String keyVersionStr = entry.get(KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT).getString();
@@ -60,6 +64,8 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get keys.
+     * @throws IOException
+     * @return keys
      */
     public List<EncryptionKey> getKeys() throws IOException {
         Iterator<Value<?>> iterator1 = entry.get(KerberosAttribute.KRB5_KEY_AT).iterator();
@@ -76,6 +82,9 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get created time.
+     * @throws LdapInvalidAttributeValueException
+     * @throws ParseException
+     * @return created time
      */
     public KerberosTime getCreatedTime() throws LdapInvalidAttributeValueException,
             ParseException {
@@ -85,6 +94,9 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get expire time.
+     * @throws LdapInvalidAttributeValueException
+     * @throws ParseException
+     * @return the expire time
      */
     public KerberosTime getExpireTime() throws LdapInvalidAttributeValueException,
             ParseException {
@@ -94,6 +106,8 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get whether disabled.
+     * @throws LdapInvalidAttributeValueException
+     * @return whether this krb5 account is disabled
      */
     public boolean getDisabled() throws LdapInvalidAttributeValueException {
         String disabled = entry.get(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT).getString();
@@ -102,6 +116,8 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get kdc flags.
+     * @throws LdapInvalidAttributeValueException
+     * @return kdc flags
      */
     public int getKdcFlags() throws LdapInvalidAttributeValueException {
         String krb5KDCFlags = entry.get("krb5KDCFlags").getString();
@@ -110,6 +126,8 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get whether locked.
+     * @throws LdapInvalidAttributeValueException
+     * @return whether the krb5 account is locked
      */
     public boolean getLocked() throws LdapInvalidAttributeValueException {
         String lockedOut = entry.get(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT).getString();
