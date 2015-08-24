@@ -115,6 +115,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     /**
      * Get token encoder.
+     * @return The token encoder
      */
     private static TokenEncoder getTokenEncoder() {
         if (tokenEncoder == null) {
@@ -125,6 +126,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     /**
      * Get token decoder.
+     * @return The token decoder
      */
     private static TokenDecoder getTokenDecoder() {
         if (tokenDecoder == null) {
@@ -135,6 +137,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     /**
      * Get token format.
+     * @return The token format
      */
     public TokenFormat getTokenFormat() {
         Integer value = getFieldAsInteger(TOKEN_FORMAT);
@@ -143,6 +146,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     /**
      * Set token format.
+     * @param tokenFormat The token format
      */
     public void setTokenFormat(TokenFormat tokenFormat) {
         setFieldAsInt(TOKEN_FORMAT, tokenFormat.getValue());
@@ -150,6 +154,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     /**
      * Get token value.
+     * @return The token value
      */
     public byte[] getTokenValue() {
         return getFieldAsOctets(TOKEN_VALUE);
@@ -157,6 +162,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
 
     /**
      * Set token value.
+     * @param tokenValue The token value
      */
     public void setTokenValue(byte[] tokenValue) {
         setFieldAsOctets(TOKEN_VALUE, tokenValue);

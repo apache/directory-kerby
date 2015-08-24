@@ -141,6 +141,7 @@ public abstract class AbstractIdentityBackend
     /**
      * Add an identity, invoked by addIdentity.
      * @param principalName The principal name
+     * @return The added identity
      * @throws  KrbException e
      */
     protected abstract KrbIdentity doGetIdentity(String principalName) throws KrbException;
@@ -168,6 +169,7 @@ public abstract class AbstractIdentityBackend
     /**
      * Add an identity, invoked by addIdentity, and return added identity.
      * @param identity The identity to be added
+     * @return The added identity
      * @throws KrbException e
      */
     protected abstract KrbIdentity doAddIdentity(KrbIdentity identity) throws KrbException;

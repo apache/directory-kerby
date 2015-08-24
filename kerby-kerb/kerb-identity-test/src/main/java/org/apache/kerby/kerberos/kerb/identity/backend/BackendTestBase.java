@@ -32,6 +32,7 @@ public abstract class BackendTestBase extends BackendTest {
 
     /**
      * Create and prepare an identity backend for the tests. Must override.
+     * @throws Exception e
      */
     @BeforeClass
     public static void setup() throws Exception {

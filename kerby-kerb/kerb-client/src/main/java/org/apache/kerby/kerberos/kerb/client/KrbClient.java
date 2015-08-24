@@ -48,6 +48,7 @@ public class KrbClient {
 
     /**
      * Default constructor.
+     * @throws KrbException e
      */
     public KrbClient() throws KrbException {
         this.krbConfig = ClientUtil.getDefaultConfig();
@@ -165,7 +166,7 @@ public class KrbClient {
      * Request a TGT with user plain credential
      * @param principal The principal
      * @param password The password
-     * @return
+     * @return The tgt ticket
      * @throws KrbException e
      */
     public TgtTicket requestTgtWithPassword(String principal,

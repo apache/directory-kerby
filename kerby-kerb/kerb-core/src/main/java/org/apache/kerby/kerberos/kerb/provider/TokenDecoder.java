@@ -30,15 +30,17 @@ public interface TokenDecoder {
 
     /**
      * Decode a token from a bytes array.
-     * @param content
+     * @param content The content
      * @return token
+     * @throws IOException e
      */
     AuthToken decodeFromBytes(byte[] content) throws IOException;
 
     /**
      * Decode a token from a string.
-     * @param content
+     * @param content The content
      * @return token
+     * @throws IOException e
      */
     AuthToken decodeFromString(String content) throws IOException;
 }

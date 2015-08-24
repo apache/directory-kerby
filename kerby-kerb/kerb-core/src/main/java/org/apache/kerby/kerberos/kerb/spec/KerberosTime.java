@@ -53,14 +53,14 @@ public class KerberosTime extends Asn1GeneralizedTime {
     }
 
     /**
-     * time in milliseconds
+     * @param time in milliseconds
      */
     public KerberosTime(long time) {
         super(time);
     }
 
     /**
-     * Return time in milliseconds
+     * @return time in milliseconds
      */
     public long getTime() {
         return getValue().getTime();
@@ -75,6 +75,7 @@ public class KerberosTime extends Asn1GeneralizedTime {
 
     /**
      * get the time in seconds
+     * @return The time
      */
     public long getTimeInSeconds() {
         return getTime() / 1000;
@@ -86,6 +87,7 @@ public class KerberosTime extends Asn1GeneralizedTime {
 
     /**
      * @param time in milliseconds
+     * @return true if less
      */
     public boolean lessThan(long time) {
         return getValue().getTime() < time;
@@ -93,6 +95,7 @@ public class KerberosTime extends Asn1GeneralizedTime {
 
     /**
      * @param ktime compare with milliseconds
+     * @return true if greater
      */
     public boolean greaterThan(KerberosTime ktime) {
         return getValue().compareTo(ktime.getValue()) > 0;
@@ -100,6 +103,8 @@ public class KerberosTime extends Asn1GeneralizedTime {
 
     /**
      * time in milliseconds
+     * @param clockSkew The clock skew
+     * @return true if in clock skew
      */
     public boolean isInClockSkew(long clockSkew) {
         long delta = Math.abs(getTime() - System.currentTimeMillis());
@@ -113,7 +118,9 @@ public class KerberosTime extends Asn1GeneralizedTime {
     }
 
     /**
-     * time in milliseconds
+     * time in milliseconds.
+     * @param duration The duration
+     * @return The kerberos time
      */
     public KerberosTime extend(long duration) {
         long result = getTime() + duration;
@@ -122,6 +129,8 @@ public class KerberosTime extends Asn1GeneralizedTime {
 
     /**
      * Return diff time in milliseconds
+     * @param other The kerberos time
+     * @return The diff time
      */
     public long diff(KerberosTime other) {
         return getTime() - other.getTime();

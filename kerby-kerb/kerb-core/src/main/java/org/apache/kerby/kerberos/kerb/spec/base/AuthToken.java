@@ -36,7 +36,7 @@ public interface AuthToken {
 
     /**
      * Set token subject
-     * @param sub
+     * @param sub The token subject
      */
     void setSubject(String sub);
 
@@ -48,7 +48,7 @@ public interface AuthToken {
 
     /**
      * Set token issuer
-     * @param issuer
+     * @param issuer The token issuer
      */
     void setIssuer(String issuer);
 
@@ -60,7 +60,7 @@ public interface AuthToken {
 
     /**
      * Set token audiences
-     * @param audiences
+     * @param audiences The token audiences
      */
     void setAudiences(List<String> audiences);
 
@@ -100,7 +100,7 @@ public interface AuthToken {
 
     /**
      * Set token expired time
-     * @param exp
+     * @param exp The token expired time
      */
     void setExpirationTime(Date exp);
 
@@ -112,7 +112,7 @@ public interface AuthToken {
 
     /**
      * Set token not before time.
-     * @param nbt
+     * @param nbt The time
      */
     void setNotBeforeTime(Date nbt);
 
@@ -124,7 +124,7 @@ public interface AuthToken {
 
     /**
      * Set token issued at time.
-     * @param iat
+     * @param iat Time time when token issued
      */
     void setIssueTime(Date iat);
 
@@ -136,8 +136,8 @@ public interface AuthToken {
 
     /**
      * Add a token attribute.
-     * @param name
-     * @param value
+     * @param name The attribute name
+     * @param value The attribute value
      */
     void addAttribute(String name, Object value);
 

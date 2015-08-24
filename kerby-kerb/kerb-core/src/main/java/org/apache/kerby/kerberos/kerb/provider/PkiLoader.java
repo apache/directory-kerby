@@ -33,36 +33,36 @@ public interface PkiLoader {
 
     /**
      * Load certificates from a cert file.
-     * @param certFile
-     * @return
-     * @throws KrbException
+     * @param certFile The cert file
+     * @return The certificates
+     * @throws KrbException e
      */
     List<Certificate> loadCerts(String certFile) throws KrbException;
 
     /**
      * Load certificates from an input stream.
-     * @param inputStream
-     * @return
-     * @throws KrbException
+     * @param inputStream The input stream
+     * @return The certificates
+     * @throws KrbException e
      */
     List<Certificate> loadCerts(InputStream inputStream) throws KrbException;
 
     /**
      * Load private key from a key file with a password.
-     * @param keyFile
-     * @param password
+     * @param keyFile The key file
+     * @param password The password
      * @return private key
-     * @throws KrbException
+     * @throws KrbException e
      */
     PrivateKey loadPrivateKey(String keyFile,
                                     String password) throws KrbException;
 
     /**
      * Load a private key from input stream with a password.
-     * @param inputStream
-     * @param password
+     * @param inputStream The input stream
+     * @param password The password
      * @return private key
-     * @throws KrbException
+     * @throws KrbException e
      */
     PrivateKey loadPrivateKey(InputStream inputStream,
                                     String password) throws KrbException;
