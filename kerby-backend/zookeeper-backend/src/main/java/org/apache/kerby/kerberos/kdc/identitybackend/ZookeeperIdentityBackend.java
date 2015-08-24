@@ -62,7 +62,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     /**
      * Constructing an instance using specified config that contains anything
      * to be used to init the Zookeeper backend.
-     * @param config
+     * @param config The configuration for zookeeper identity backend.
      */
     public ZookeeperIdentityBackend(Config config) {
          setConfig(config);

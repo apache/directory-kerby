@@ -44,6 +44,10 @@ public class ZKUtil {
 
     /**
      * Check if the specified node exists. Sets no watches.
+     * @throws org.apache.zookeeper.KeeperException
+     * @param zk Zookeeper.
+     * @param node Node.
+     * @return The version.
      */
     public static int checkExists(ZooKeeper zk, String node)
         throws KeeperException {
@@ -60,6 +64,11 @@ public class ZKUtil {
 
     /**
      * Sets the data of the existing znode to be the specified data.
+     * @throws org.apache.zookeeper.KeeperException
+     * @param zk Zookeeper
+     * @param node Node
+     * @param data Data
+     * @return Whether the data is set or not.
      */
     public static boolean setData(ZooKeeper zk, String node, byte[] data)
         throws KeeperException {
@@ -74,6 +83,9 @@ public class ZKUtil {
     /**
      * Set data into node creating node if it doesn't yet exist.
      * Does not set watch.
+     * @param zk Zookeeper.
+     * @param node Node.
+     * @param data Data.
      */
     public static void createSetData(final ZooKeeper zk, final String node,
                                      final byte[] data)
@@ -87,6 +99,7 @@ public class ZKUtil {
 
     /**
      * Creates the specified node and all parent nodes required for it to exist.
+     * @throws org.apache.zookeeper.KeeperException
      */
     public static void createWithParents(ZooKeeper zk, String node)
         throws KeeperException {
@@ -97,6 +110,10 @@ public class ZKUtil {
      * Creates the specified node and all parent nodes required for it to exist.  The creation of
      * parent znodes is not atomic with the leafe znode creation but the data is written atomically
      * when the leaf node is created.
+     * @throws org.apache.zookeeper.KeeperException
+     * @param zk zookeeper.
+     * @param node node
+     * @param data data
      */
     public static void createWithParents(ZooKeeper zk, String node, byte[] data)
         throws KeeperException {
@@ -118,6 +135,9 @@ public class ZKUtil {
 
     /**
      * Returns the ACL list
+     * @param zk zookeeper
+     * @param node node
+     * @return The acl created.
      */
     private static ArrayList<ACL> createACL(ZooKeeper zk, String node) { //NOPMD
         return ZooDefs.Ids.OPEN_ACL_UNSAFE; //TODO
@@ -126,6 +146,7 @@ public class ZKUtil {
     /**
      * Returns the full path of the immediate parent of the specified node.
      * null if passed the root node or an invalid node
+     * @return index
      */
     public static String getParent(String node) {
         int idx = node.lastIndexOf(ZNODE_PATH_SEPARATOR);
@@ -134,6 +155,9 @@ public class ZKUtil {
 
     /**
      * Get znode data. Does not set a watcher.
+     * @throws org.apache.zookeeper.KeeperException
+     * @throws java.lang.InterruptedException
+     * @return Data of the node
      */
     public static byte[] getData(ZooKeeper zk, String node)
         throws KeeperException, InterruptedException {
@@ -152,6 +176,8 @@ public class ZKUtil {
     /**
      * Lists the children of the specified node without setting any watches.
      * null if parent does not exist
+     * @throws org.apache.zookeeper.KeeperException
+     * @return children
      */
     public static List<String> listChildrenNoWatch(ZooKeeper zk, String node)
             throws KeeperException {
@@ -169,11 +195,12 @@ public class ZKUtil {
 
     /**
      * Delete the specified node and all of it's children.
-     * <p/>
      * If the node does not exist, just returns.
-     * <p/>
      * Sets no watches. Throws all exceptions besides dealing with deletion of
      * children.
+     * @throws KeeperException
+     * @param zk The zookeeper.
+     * @param node The node to be deleted.
      */
     public static void deleteNodeRecursively(ZooKeeper zk, String node) throws KeeperException {
         List<String> children = ZKUtil.listChildrenNoWatch(zk, node);

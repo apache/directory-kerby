@@ -42,6 +42,7 @@ public class IdentityZNodeHelper {
 
     /**
      * Get base znode.
+     * @return Base
      */
     public static String getBaseZNode() {
       return baseZNode;
@@ -49,6 +50,7 @@ public class IdentityZNodeHelper {
 
     /**
      * Get identities znode.
+     * @return Identities.
      */
     public static String getIdentitiesZNode() {
       return ZKUtil.joinZNode(getBaseZNode(), IDENTITIES_ZNODE_NAME);
@@ -56,6 +58,8 @@ public class IdentityZNodeHelper {
 
     /**
      * Get identity znode.
+     * @param principalName Principal name
+     * @return Identity
      */
     public static String getIndentityZNode(String principalName) {
         return ZKUtil.joinZNode(getIdentitiesZNode(), principalName);
@@ -63,6 +67,8 @@ public class IdentityZNodeHelper {
 
     /**
      * Get principal name znode.
+     * @param principalName Principal name.
+     * @return Principal name
      */
     public static String getPrincipalNameZnode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), PRINCIPAL_NAME_ZNODE_NAME);
@@ -70,6 +76,8 @@ public class IdentityZNodeHelper {
 
     /**
      * Get key version znode.
+     * @param principalName Principal name.
+     * @return Key version
      */
     public static String getKeyVersionZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), KEY_VERSION_ZNODE_NAME);
@@ -77,6 +85,8 @@ public class IdentityZNodeHelper {
 
     /**
      * Get kdc flags znode.
+     * @param principalName Principal name.
+     * @return Kdc flags
      */
     public static String getKdcFlagsZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), KDC_FLAGS_ZNODE_NAME);
@@ -84,6 +94,8 @@ public class IdentityZNodeHelper {
 
     /**
      * Get disabled znode.
+     * @param principalName Principal name.
+     * @return Whether this principal's account is disabled.
      */
     public static String getDisabledZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), DISABLED_ZNODE_NAME);
@@ -91,6 +103,8 @@ public class IdentityZNodeHelper {
 
     /**
      * Get locked znode.
+     * @param principalName Principal name.
+     * @return Whether principal's account is locked
      */
     public static String getLockedZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), LOCKED_ZNODE_NAME);
@@ -98,6 +112,8 @@ public class IdentityZNodeHelper {
 
     /**
      * Get expire time znode.
+     * @param principalName Principal name.
+     * @return Expired time.
      */
     public static String getExpireTimeZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), EXPIRE_TIME_ZNODE_NAME);
@@ -105,6 +121,8 @@ public class IdentityZNodeHelper {
 
     /**
      * Get created time znode.
+     * @param principalName Principal name.
+     * @return Created time.
      */
     public static String getCreatedTimeZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), CREATED_TIME_ZNODE_NAME);
@@ -112,6 +130,8 @@ public class IdentityZNodeHelper {
 
     /**
      * Get keys znode.
+     * @param principalName Principal name.
+     * @return Key
      */
     public static String getKeysZNode(String principalName) {
         return ZKUtil.joinZNode(getIndentityZNode(principalName), KEYS_ZNODE_NAME);
@@ -119,6 +139,9 @@ public class IdentityZNodeHelper {
 
     /**
      * Get key type znode.
+     * @param principalName Principal name.
+     * @param type Key type.
+     * @return Key type.
      */
     public static String getKeyTypeZNode(String principalName, String type) {
         return ZKUtil.joinZNode(getKeysZNode(principalName), type);
@@ -126,6 +149,9 @@ public class IdentityZNodeHelper {
 
     /**
      * Get encryption key type znode.
+     * @param principalName Principal name.
+     * @param type Encryption type.
+     * @return Encryption key type
      */
     public static String getEncryptionKeyTypeZNode(String principalName, String type) {
         return ZKUtil.joinZNode(getKeyTypeZNode(principalName, type), KEY_TYPE_ZNODE_NAME);
@@ -133,6 +159,9 @@ public class IdentityZNodeHelper {
 
     /**
      * Get encryption key znode.
+     * @param principalName Principal Name.
+     * @param type Encryption type.
+     * @return Encryption key
      */
     public static String getEncryptionKeyZNode(String principalName, String type) {
         return ZKUtil.joinZNode(getKeyTypeZNode(principalName, type), KEY_ZNODE_NAME);
@@ -140,6 +169,9 @@ public class IdentityZNodeHelper {
 
     /**
      * Get encryption key kvno znode.
+     * @param principalName Principal name.
+     * @param type Key type.
+     * @return Encryption key
      */
     public static String getEncryptionKeyNoZNode(String principalName, String type) {
         return ZKUtil.joinZNode(getKeyTypeZNode(principalName, type), ENCRYPTION_KEY_NO_ZNODE_NAME);
@@ -148,6 +180,7 @@ public class IdentityZNodeHelper {
     /**
      * Get identity names.
      *
+     * @throws org.apache.zookeeper.KeeperException
      * @param zk The zookeeper
      * @return The list of principal names.
      */
