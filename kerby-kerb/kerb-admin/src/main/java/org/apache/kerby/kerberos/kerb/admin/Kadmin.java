@@ -56,6 +56,7 @@ public class Kadmin {
     /**
      * Construct with prepared KdcConfig and BackendConfig.
      *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      * @param kdcConfig     The kdc config
      * @param backendConfig The backend config
      */
@@ -68,6 +69,7 @@ public class Kadmin {
     /**
      * Construct with prepared conf dir.
      *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e;
      * @param confDir The path of conf dir
      */
     public Kadmin(File confDir) throws KrbException {
@@ -117,6 +119,7 @@ public class Kadmin {
 
     /**
      * Check the built-in principals, will throw KrbException if not exist.
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void checkBuiltinPrincipals() throws KrbException {
         String tgsPrincipal = getTgsPrincipal();
@@ -132,6 +135,7 @@ public class Kadmin {
 
     /**
      * Create build-in principals.
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void createBuiltinPrincipals() throws KrbException {
         String tgsPrincipal = getTgsPrincipal();
@@ -155,6 +159,7 @@ public class Kadmin {
 
     /**
      * Delete build-in principals.
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void deleteBuiltinPrincipals() throws KrbException {
         deletePrincipal(getTgsPrincipal());
@@ -191,6 +196,7 @@ public class Kadmin {
     /**
      * Add principal to backend.
      *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      * @param principal The principal to be added into backend
      */
     public void addPrincipal(String principal) throws KrbException {
@@ -201,6 +207,7 @@ public class Kadmin {
     /**
      * Add principal to backend.
      *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      * @param principal The principal to be added into backend
      * @param kOptions The KOptions with principal info
      */
@@ -217,6 +224,7 @@ public class Kadmin {
     /**
      * Add principal to backend.
      *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      * @param principal The principal to be added into backend
      * @param password  The password to create encryption key
      */
@@ -229,6 +237,7 @@ public class Kadmin {
     /**
      * Add principal to backend.
      *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      * @param principal The principal to be added into backend
      * @param password  The password to create encryption key
      * @param kOptions  The KOptions with principal info
@@ -249,7 +258,7 @@ public class Kadmin {
      *
      * @param keytabFile The keytab file
      * @param principal The principal name
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void exportKeytab(File keytabFile, String principal)
             throws KrbException {
@@ -265,7 +274,7 @@ public class Kadmin {
      *
      * @param keytabFile The keytab file
      * @param principals The principal names
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void exportKeytab(File keytabFile, List<String> principals)
             throws KrbException {
@@ -287,7 +296,7 @@ public class Kadmin {
      * Export all identity keys to the specified keytab file.
      *
      * @param keytabFile The keytab file
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void exportKeytab(File keytabFile) throws KrbException {
         Keytab keytab = AdminHelper.createOrLoadKeytab(keytabFile);
@@ -309,7 +318,7 @@ public class Kadmin {
      *
      * @param keytabFile The keytab file
      * @param principal The principal name
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void removeKeytabEntriesOf(File keytabFile, String principal)
             throws KrbException {
@@ -324,7 +333,7 @@ public class Kadmin {
      * @param keytabFile The keytab file
      * @param principal The principal name
      * @param kvno The kvno
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void removeKeytabEntriesOf(File keytabFile, String principal, int kvno)
             throws KrbException {
@@ -338,7 +347,7 @@ public class Kadmin {
      *
      * @param keytabFile The keytab file
      * @param principal The principal name
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void removeOldKeytabEntriesOf(File keytabFile, String principal)
             throws KrbException {
@@ -350,7 +359,7 @@ public class Kadmin {
      * Delete the principal in backend.
      *
      * @param principal The principal to be deleted from backend
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void deletePrincipal(String principal) throws KrbException {
         principal = fixPrincipal(principal);
@@ -362,7 +371,7 @@ public class Kadmin {
      *
      * @param principal The principal to be modified
      * @param kOptions The KOptions with changed principal info
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void modifyPrincipal(String principal, KOptions kOptions)
             throws KrbException {
@@ -381,7 +390,7 @@ public class Kadmin {
      *
      * @param oldPrincipalName The original principal name
      * @param newPrincipalName The new principal name
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void renamePrincipal(String oldPrincipalName, String newPrincipalName)
             throws KrbException {
@@ -408,7 +417,8 @@ public class Kadmin {
      * Get the identity from backend.
      *
      * @param principalName The principal name
-     * @throws KrbException
+     * @throws KrbException e
+     * @return identity
      */
     public KrbIdentity getPrincipal(String principalName) throws KrbException {
         KrbIdentity identity = backend.getIdentity(principalName);
@@ -418,7 +428,8 @@ public class Kadmin {
     /**
      * Get all the principal names from backend.
      *
-     * @throws KrbException
+     * @throws KrbException e
+     * @return principal list
      */
     public List<String> getPrincipals() throws KrbException {
         Iterable<String> principalNames = backend.getIdentities();
@@ -434,7 +445,8 @@ public class Kadmin {
      * Get all the Pattern for matching from glob string. The glob string can contain "." "*" and "[]"
      *
      * @param globString The glob string for matching
-     * @throws KrbException
+     * @throws KrbException e
+     * @return pattern
      */
     public Pattern getPatternFromGlobPatternString(String globString) throws KrbException
     {
@@ -463,7 +475,8 @@ public class Kadmin {
      * Get all the principal names that meets the pattern
      *
      * @param pt The pattern for matching
-     * @throws KrbException
+     * @throws KrbException e
+     * @return Principal names
      */
     public List<String> getPrincipalNamesByPattern(Pattern pt) throws KrbException {
         if (pt == null) {
@@ -489,7 +502,7 @@ public class Kadmin {
      *
      * @param principal The principal to be updated password
      * @param password The new password
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void updatePassword(String principal, String password)
             throws KrbException {
@@ -510,7 +523,7 @@ public class Kadmin {
      * Update the random keys of specified principal.
      *
      * @param principal The principal to be updated keys
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void updateKeys(String principal) throws KrbException {
         principal = fixPrincipal(principal);
@@ -527,6 +540,8 @@ public class Kadmin {
 
     /**
      * Stop the backend and release any resources associated.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     public void release() throws KrbException {
         if (backend != null) {
