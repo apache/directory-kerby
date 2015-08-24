@@ -40,6 +40,7 @@ public class TokenJaasKrbUtil {
     /**
      * Login using token cache.
      *
+     * @throws javax.security.auth.login.LoginException
      * @param principal The client principal name
      * @param tokenCache the token cache for login
      * @param armorCache the armor cache for fast preauth
@@ -64,6 +65,7 @@ public class TokenJaasKrbUtil {
     /**
      * Login using token string.
      *
+     * @throws javax.security.auth.login.LoginException
      * @param principal The client principal name
      * @param tokenStr the token string for login
      * @param armorCache the armor cache for fast preauth
