@@ -211,6 +211,10 @@ public class Camellia {
 
     /**
      * CBC encrypt nblocks blocks of data in place, using and updating iv.
+     * @param data The data
+     * @param offset The offset
+     * @param blocksNum The block number
+     * @param cipherState The cipher state
      */
     public void cbcEnc(byte[] data, int offset, int blocksNum, byte[] cipherState) {
         byte[] cipher = new byte[BLOCK_SIZE];
@@ -225,6 +229,10 @@ public class Camellia {
 
     /**
      * CBC encrypt nblocks blocks of data in place, using and updating iv.
+     * @param data The data
+     * @param offset The offset
+     * @param blocksNum The block number
+     * @param cipherState The cipher state
      */
     public void cbcDec(byte[] data, int offset, int blocksNum, byte[] cipherState) {
         byte[] lastBlock = new byte[BLOCK_SIZE];
