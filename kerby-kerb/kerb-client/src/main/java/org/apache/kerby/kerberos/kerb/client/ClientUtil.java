@@ -35,6 +35,9 @@ public final class ClientUtil {
 
     /**
      * Load krb5.conf from specified conf dir.
+     * @param confDir The conf dir
+     * @return KrbConfig
+     * @throws KrbException e
      */
     public static KrbConfig getConfig(File confDir) throws KrbException {
         File confFile = new File(confDir, KRB5_FILE_NAME);
@@ -58,6 +61,8 @@ public final class ClientUtil {
 
     /**
      * Load default krb5.conf
+     * @return The KrbConfig
+     * @throws KrbException e
      */
     public static KrbConfig getDefaultConfig() throws KrbException {
         File confFile = null;
@@ -98,9 +103,9 @@ public final class ClientUtil {
 
     /**
      * Get KDC network transport addresses according to krb client setting.
-     * @param setting
+     * @param setting The krb setting
      * @return UDP and TCP addresses pair
-     * @throws KrbException
+     * @throws KrbException e
      */
     public static TransportPair getTransportPair(
             KrbSetting setting) throws KrbException {

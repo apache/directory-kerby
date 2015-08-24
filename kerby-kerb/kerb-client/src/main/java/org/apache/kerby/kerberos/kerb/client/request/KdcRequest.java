@@ -323,6 +323,7 @@ public abstract class KdcRequest {
 
     /**
      * Indicate interest in the AS key.
+     * @throws KrbException e
      */
     public void needAsKey() throws KrbException {
         EncryptionKey clientKey = getClientKey();
@@ -337,6 +338,7 @@ public abstract class KdcRequest {
      * the AS_REP packet.  When handling a PREAUTH_REQUIRED error, this
      * typically comes from etype-info2.  When handling an AS reply, it is
      * initialized from the AS reply itself.
+     * @return The encryption type
      */
     public EncryptionType getEncType() {
 
@@ -349,6 +351,7 @@ public abstract class KdcRequest {
 
     /**
      * Get a pointer to the FAST armor key, or NULL if the client is not using FAST.
+     * @return The encryption key
      */
     public EncryptionKey getArmorKey() {
         return fastRequestState.getArmorKey();
@@ -363,6 +366,7 @@ public abstract class KdcRequest {
      * will only be used if it is protected by a FAST channel.  Only set
      * allow_unauth_time if using an unauthenticated time offset would not
      * create a security issue.
+     * @return The current kerberos time
      */
     public KerberosTime getPreauthTime() {
         return KerberosTime.now();
@@ -372,6 +376,8 @@ public abstract class KdcRequest {
      * Get a state item from an input ccache, which may allow it
      * to retrace the steps it took last time.  The returned data string is an
      * alias and should not be freed.
+     * @param key The key string
+     * @return The item
      */
     public Object getCacheValue(String key) {
         return credCache.get(key);
@@ -381,6 +387,8 @@ public abstract class KdcRequest {
      * Set a state item which will be recorded to an output
      * ccache, if the calling application supplied one.  Both key and data
      * should be valid UTF-8 text.
+     * @param key The key string
+     * @param value The value
      */
     public void cacheValue(String key, Object value) {
         credCache.put(key, value);
