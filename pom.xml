@@ -155,6 +155,8 @@
               <exclude>**/.pmd</exclude>
               <!-- PMD Ruleset files -->
               <exclude>**/.pmdruleset.xml</exclude>
+              <!-- Checkstyle files -->
+              <exclude>**/.checkstyle</exclude>
               <!-- BIN files -->
               <exclude>**/bin/**/*</exclude>
             </excludes>
@@ -353,6 +355,28 @@
         <checkstyle.suppressions.location>${basedir}/src/checkstyle/suppressions.xml</checkstyle.suppressions.location>
       </properties>
     </profile>
+
+    <!-- Override of the 'apache-release' profile, used to launch the Apache RAT plugin -->
+    <profile>
+      <id>apache-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
   <repositories>
