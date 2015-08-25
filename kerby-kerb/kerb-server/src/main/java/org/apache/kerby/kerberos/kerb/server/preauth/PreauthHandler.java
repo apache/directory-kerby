@@ -58,7 +58,7 @@ public class PreauthHandler {
 
     /**
      * Should be called per realm
-     * @param context
+     * @param context The kdc context
      */
     public void initWith(KdcContext context) {
         for (KdcPreauth preauth : preauths) {

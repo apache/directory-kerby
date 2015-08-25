@@ -43,6 +43,7 @@ public interface KdcPreauth extends PreauthPluginMeta {
     /**
      * Initializing request context
      * @param kdcRequest kdc context
+     * @return request context
      */
     PluginRequestContext initRequestContext(KdcRequest kdcRequest);
 
@@ -53,6 +54,7 @@ public interface KdcPreauth extends PreauthPluginMeta {
      * @param kdcRequest kdc request
      * @param requestContext request context
      * @param outPaData out preauthentication data
+     * @throws KrbException e
      */
     void provideEdata(KdcRequest kdcRequest, PluginRequestContext requestContext,
                              PaData outPaData) throws KrbException;
@@ -64,6 +66,8 @@ public interface KdcPreauth extends PreauthPluginMeta {
      * @param kdcRequest kdc request
      * @param requestContext request context
      * @param paData preauthentication data
+     * @return true if verify success
+     * @throws KrbException e
      */
     boolean verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
                           PaDataEntry paData) throws KrbException;
@@ -84,6 +88,7 @@ public interface KdcPreauth extends PreauthPluginMeta {
      * @param kdcRequest kdc request
      * @param requestContext request context
      * @param paType preauthentication type
+     * @return PaFlags
      */
     PaFlags getFlags(KdcRequest kdcRequest, PluginRequestContext requestContext,
                             PaDataType paType);

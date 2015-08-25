@@ -105,6 +105,7 @@ public abstract class KdcRequest {
 
     /**
      * Set session key.
+     * @param sessionKey The session key
      */
     public void setSessionKey(EncryptionKey sessionKey) {
         this.sessionKey = sessionKey;
@@ -445,6 +446,7 @@ public abstract class KdcRequest {
 
     /**
      * Get server key.
+     * @return The server key
      */
     public EncryptionKey getServerKey() {
         return serverKey;
@@ -694,7 +696,7 @@ public abstract class KdcRequest {
     /**
      * Get identity entry with principal name.
      *
-     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principal Principal
      * @return krb identity entry
      */
@@ -772,6 +774,7 @@ public abstract class KdcRequest {
 
     /**
      * Set auth token.
+     * @param authToken The auth token
      */
     public void setToken(AuthToken authToken) {
         this.token = authToken;
