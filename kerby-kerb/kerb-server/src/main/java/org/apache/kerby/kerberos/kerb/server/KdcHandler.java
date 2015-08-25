@@ -50,7 +50,7 @@ public class KdcHandler {
     /**
      * Constructor with kdc context.
      *
-     * @param kdcContext
+     * @param kdcContext kdc context
      */
     public KdcHandler(KdcContext kdcContext) {
         this.kdcContext = kdcContext;
@@ -59,8 +59,9 @@ public class KdcHandler {
     /**
      * Process the client request message.
      *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param receivedMessage The client request message
-     * @param  isTcp
+     * @param  isTcp whether the protocol is tcp
      * @param remoteAddress Address from remote side
      * @return The response message
      */
@@ -133,7 +134,7 @@ public class KdcHandler {
      * Process the recoverable exception.
      *
      * @param e The exception return by kdc
-     * @param kdcRequest
+     * @param kdcRequest kdc request
      * @return The KrbError
      */
     private KrbMessage handleRecoverableException(KdcRecoverableException e,
@@ -156,6 +157,11 @@ public class KdcHandler {
         return error;
     }
 
+    /**
+     * Get request realm.
+     * @param kdcReq kdc request
+     * @return realm
+     */
     private String getRequestRealm(KdcReq kdcReq) {
         String realm = kdcReq.getReqBody().getRealm();
         if (realm == null && kdcReq.getReqBody().getCname() != null) {

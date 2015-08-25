@@ -162,6 +162,7 @@ public class KdcServer {
 
     /**
      * Allow to hook customized kdc implementation.
+     *
      * @param innerKdcImpl
      */
     public void setInnerKdcImpl(InternalKdcServer innerKdcImpl) {
@@ -186,7 +187,8 @@ public class KdcServer {
 
     /**
      * Get backend config.
-     * @return
+     *
+     * @return backend configuration
      */
     public BackendConfig getBackendConfig() {
         return backendConfig;
@@ -205,6 +207,8 @@ public class KdcServer {
 
     /**
      * Initialize.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void init() throws KrbException {
         if (startupOptions.contains(KdcServerOption.INNER_KDC_IMPL)) {
@@ -219,6 +223,8 @@ public class KdcServer {
 
     /**
      * Start the KDC server.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void start() throws KrbException {
         if (innerKdc == null) {
@@ -229,6 +235,8 @@ public class KdcServer {
 
     /**
      * Stop the KDC server.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void stop() throws KrbException {
         if (innerKdc != null) {

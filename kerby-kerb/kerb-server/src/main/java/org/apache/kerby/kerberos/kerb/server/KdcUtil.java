@@ -36,6 +36,12 @@ public final class KdcUtil {
 
     private KdcUtil() { }
 
+    /**
+     * Get kdc configuration
+     * @param confDir configuration directory
+     * @return kdc configuration
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
+     */
     public static KdcConfig getKdcConfig(File confDir) throws KrbException {
         File kdcConfFile = new File(confDir, "kdc.conf");
         if (kdcConfFile.exists()) {
@@ -52,6 +58,12 @@ public final class KdcUtil {
         return null;
     }
 
+    /**
+     * Get backend configuration
+     * @param confDir configuration directory
+     * @return backend configuration
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
+     */
     public static BackendConfig getBackendConfig(File confDir) throws KrbException {
         File backendConfigFile = new File(confDir, "backend.conf");
         if (backendConfigFile.exists()) {
@@ -70,6 +82,10 @@ public final class KdcUtil {
 
     /**
      * Init the identity backend from backend configuration.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
+     * @param backendConfig backend configuration information
+     * @return backend
      */
     public static IdentityBackend getBackend(
             BackendConfig backendConfig) throws KrbException {
@@ -102,9 +118,9 @@ public final class KdcUtil {
 
     /**
      * Get KDC network transport addresses according to KDC setting.
-     * @param setting
+     * @param setting kdc setting
      * @return UDP and TCP addresses pair
-     * @throws KrbException
+     * @throws KrbException e
      */
     public static TransportPair getTransportPair(
             KdcSetting setting) throws KrbException {

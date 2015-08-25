@@ -57,6 +57,10 @@ public class TgsRequest extends KdcRequest {
     private EncryptionKey tgtSessionKey;
     private Ticket tgtTicket;
 
+    /**
+     * @param tgsReq TGS request
+     * @param kdcContext kdc context
+     */
     public TgsRequest(TgsReq tgsReq, KdcContext kdcContext) {
         super(tgsReq, kdcContext);
 
@@ -110,6 +114,8 @@ public class TgsRequest extends KdcRequest {
 
     /**
      * Verify authenticator.
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
+     * @param paDataEntry preauthentication data entry
      */
     public void verifyAuthenticator(PaDataEntry paDataEntry) throws KrbException {
         ApReq apReq = KrbCodec.decode(paDataEntry.getPaDataValue(), ApReq.class);
@@ -222,6 +228,7 @@ public class TgsRequest extends KdcRequest {
 
     /**
      * Make EncKdcRepPart.
+     * @return encryption kdc response part
      */
     private EncKdcRepPart makeEncKdcRepPart() {
         KdcReq request = getKdcReq();
@@ -257,6 +264,10 @@ public class TgsRequest extends KdcRequest {
         return encKdcRepPart;
     }
 
+    /**
+     * @return request body
+     * @throws KrbException e
+     */
     public ByteBuffer getRequestBody() throws KrbException {
         return null;
     }
