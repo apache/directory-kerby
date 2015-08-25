@@ -42,7 +42,7 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get principal name.
-     * @throws LdapInvalidAttributeValueException
+     * @throws LdapInvalidAttributeValueException e
      * @return principal name
      */
     public PrincipalName getPrincipalName() throws LdapInvalidAttributeValueException {
@@ -53,7 +53,7 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get key version.
-     * @throws LdapInvalidAttributeValueException
+     * @throws LdapInvalidAttributeValueException e
      * @return key version
      */
     public int getKeyVersion() throws LdapInvalidAttributeValueException {
@@ -64,7 +64,7 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get keys.
-     * @throws IOException
+     * @throws IOException e
      * @return keys
      */
     public List<EncryptionKey> getKeys() throws IOException {
@@ -82,8 +82,8 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get created time.
-     * @throws LdapInvalidAttributeValueException
-     * @throws ParseException
+     * @throws LdapInvalidAttributeValueException e
+     * @throws ParseException e
      * @return created time
      */
     public KerberosTime getCreatedTime() throws LdapInvalidAttributeValueException,
@@ -94,8 +94,8 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get expire time.
-     * @throws LdapInvalidAttributeValueException
-     * @throws ParseException
+     * @throws LdapInvalidAttributeValueException e
+     * @throws ParseException e
      * @return the expire time
      */
     public KerberosTime getExpireTime() throws LdapInvalidAttributeValueException,
@@ -106,7 +106,7 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get whether disabled.
-     * @throws LdapInvalidAttributeValueException
+     * @throws LdapInvalidAttributeValueException e
      * @return whether this krb5 account is disabled
      */
     public boolean getDisabled() throws LdapInvalidAttributeValueException {
@@ -116,7 +116,7 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get kdc flags.
-     * @throws LdapInvalidAttributeValueException
+     * @throws LdapInvalidAttributeValueException e
      * @return kdc flags
      */
     public int getKdcFlags() throws LdapInvalidAttributeValueException {
@@ -126,7 +126,7 @@ public class LdapIdentityGetHelper {
 
     /**
      * Get whether locked.
-     * @throws LdapInvalidAttributeValueException
+     * @throws LdapInvalidAttributeValueException e
      * @return whether the krb5 account is locked
      */
     public boolean getLocked() throws LdapInvalidAttributeValueException {

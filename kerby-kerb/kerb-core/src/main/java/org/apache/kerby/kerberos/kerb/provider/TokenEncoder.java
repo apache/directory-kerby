@@ -29,15 +29,17 @@ public interface TokenEncoder {
 
     /**
      * Encode a token resulting in a bytes array.
-     * @param token
+     * @param token The auth token
      * @return bytes array
+     * @throws KrbException e
      */
     byte[] encodeAsBytes(AuthToken token) throws KrbException;
 
     /**
      * Encode a token resulting in a string.
-     * @param token
+     * @param token The auth token
      * @return string representation
+     * @throws KrbException e
      */
     String encodeAsString(AuthToken token) throws KrbException;
 

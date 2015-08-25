@@ -40,12 +40,12 @@ public class TokenJaasKrbUtil {
     /**
      * Login using token cache.
      *
-     * @throws javax.security.auth.login.LoginException
      * @param principal The client principal name
      * @param tokenCache the token cache for login
      * @param armorCache the armor cache for fast preauth
      * @param ccache The file to store the tgt ticket
      * @return the authenticated Subject
+     * @throws LoginException e
      */
     public static Subject loginUsingToken(
             String principal, File tokenCache, File armorCache, File ccache)
@@ -65,12 +65,12 @@ public class TokenJaasKrbUtil {
     /**
      * Login using token string.
      *
-     * @throws javax.security.auth.login.LoginException
      * @param principal The client principal name
      * @param tokenStr the token string for login
      * @param armorCache the armor cache for fast preauth
      * @param ccache The file to store the tgt ticket
      * @return the authenticated Subject
+     * @throws LoginException e
      */
     public static Subject loginUsingToken(
             String principal, String tokenStr, File armorCache, File ccache)

@@ -166,7 +166,7 @@ public class SimpleKdcServer extends KdcServer {
     /**
      * Create principal with principal name.
      *
-     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principal The principal name
      */
     public void createPrincipal(String principal) throws KrbException {
@@ -176,7 +176,7 @@ public class SimpleKdcServer extends KdcServer {
     /**
      * Create principal with principal name and password.
      *
-     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principal The principal name
      * @param password The password to create keys
      */
@@ -188,7 +188,7 @@ public class SimpleKdcServer extends KdcServer {
     /**
      * Create principals.
      *
-     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principals The principal list
      */
     public void createPrincipals(String ... principals) throws KrbException {
@@ -200,7 +200,7 @@ public class SimpleKdcServer extends KdcServer {
     /**
      * Creates principals and export their keys to the specified keytab file.
      *
-     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param keytabFile The keytab file to store principal keys
      * @param principals The principals to be create
      */
@@ -213,7 +213,7 @@ public class SimpleKdcServer extends KdcServer {
     /**
      * Delete principals.
      *
-     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principals The principals to be delete
      */
     public void deletePrincipals(String ... principals) throws KrbException {
@@ -225,7 +225,7 @@ public class SimpleKdcServer extends KdcServer {
     /**
      * Delete principal.
      *
-     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principal The principal to be delete
      */
     public void deletePrincipal(String principal) throws KrbException {
@@ -236,6 +236,7 @@ public class SimpleKdcServer extends KdcServer {
      * Export principals to keytab file.
      *
      * @param keytabFile The keytab file
+     * @throws KrbException e
      */
     public void exportPrincipals(File keytabFile) throws KrbException {
         kadmin.exportKeytab(keytabFile);

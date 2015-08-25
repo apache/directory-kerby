@@ -37,7 +37,7 @@ public class KrbConfig extends Conf {
     /**
      * Get KDC host name
      *
-     * @return
+     * @return The kdc host
      */
     public String getKdcHost() {
         return getString(KrbConfigKey.KDC_HOST);
@@ -46,7 +46,7 @@ public class KrbConfig extends Conf {
     /**
      * Get KDC port, as both TCP and UDP ports
      *
-     * @return
+     * @return The kdc host
      */
     public int getKdcPort() {
         Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
@@ -60,7 +60,7 @@ public class KrbConfig extends Conf {
     /**
      * Get KDC TCP port
      *
-     * @return
+     * @return The kdc tcp port
      */
     public int getKdcTcpPort() {
         Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
@@ -94,7 +94,7 @@ public class KrbConfig extends Conf {
     /**
      * Get KDC UDP port
      *
-     * @return
+     * @return The kdc udp port
      */
     public int getKdcUdpPort() {
         Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
@@ -107,6 +107,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get KDC realm.
+     * @return The kdc realm
      */
     public String getKdcRealm() {
         return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.KDC_REALM);
@@ -114,6 +115,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether preatuh is required.
+     * @return true if preauth required
      */
     public boolean isPreauthRequired() {
         return getBoolean(KrbConfigKey.PREAUTH_REQUIRED);
@@ -121,6 +123,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get tgs principal.
+     * @return The tgs principal
      */
     public String getTgsPrincipal() {
         return getString(KrbConfigKey.TGS_PRINCIPAL);
@@ -128,6 +131,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get allowable clock skew.
+     * @return The allowable clock skew
      */
     public long getAllowableClockSkew() {
         return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.CLOCKSKEW);
@@ -135,6 +139,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether empty addresses allowed.
+     * @return true if empty address is allowed
      */
     public boolean isEmptyAddressesAllowed() {
         return getBoolean(KrbConfigKey.EMPTY_ADDRESSES_ALLOWED);
@@ -142,6 +147,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether forward is allowed.
+     * @return true if forward is allowed
      */
     public boolean isForwardableAllowed() {
         return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.FORWARDABLE);
@@ -149,6 +155,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether post dated is allowed.
+     * @return true if post dated is allowed
      */
     public boolean isPostdatedAllowed() {
         return getBoolean(KrbConfigKey.POSTDATED_ALLOWED);
@@ -156,6 +163,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether proxy is allowed.
+     * @return true if proxy is allowed
      */
     public boolean isProxiableAllowed() {
         return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.PROXIABLE);
@@ -163,6 +171,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether renew is allowed.
+     * @return true if renew is allowed
      */
     public boolean isRenewableAllowed() {
         return getBoolean(KrbConfigKey.RENEWABLE_ALLOWED);
@@ -170,6 +179,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get maximum renewable life time.
+     * @return The maximum renewable life time
      */
     public long getMaximumRenewableLifetime() {
         return getLong(KrbConfigKey.MAXIMUM_RENEWABLE_LIFETIME);
@@ -177,6 +187,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get maximum ticket life time.
+     * @return The maximum ticket life time
      */
     public long getMaximumTicketLifetime() {
         return getLong(KrbConfigKey.MAXIMUM_TICKET_LIFETIME);
@@ -184,6 +195,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get minimum ticket life time.
+     * @return The minimum ticket life time
      */
     public long getMinimumTicketLifetime() {
         return getLong(KrbConfigKey.MINIMUM_TICKET_LIFETIME);
@@ -191,6 +203,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get encryption types.
+     * @return encryption type list
      */
     public List<EncryptionType> getEncryptionTypes() {
         return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.PERMITTED_ENCTYPES);
@@ -198,6 +211,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether pa encrypt timestamp required.
+     * @return true if pa encrypt time required
      */
     public boolean isPaEncTimestampRequired() {
         return getBoolean(KrbConfigKey.PA_ENC_TIMESTAMP_REQUIRED);
@@ -205,6 +219,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether body checksum verified.
+     * @return true if body checksum verified
      */
     public boolean isBodyChecksumVerified() {
         return getBoolean(KrbConfigKey.VERIFY_BODY_CHECKSUM);
@@ -212,6 +227,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get default realm.
+     * @return The default realm
      */
     public String getDefaultRealm() {
         return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.DEFAULT_REALM);
@@ -219,6 +235,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether dns look up kdc.
+     * @return true if dnc look up kdc
      */
     public boolean getDnsLookUpKdc() {
         return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.DNS_LOOKUP_KDC);
@@ -226,6 +243,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether dns look up realm.
+     * @return true if dns look up realm
      */
     public boolean getDnsLookUpRealm() {
         return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.DNS_LOOKUP_REALM);
@@ -233,6 +251,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get whether allow weak crypto.
+     * @return true if allow weak crypto
      */
     public boolean getAllowWeakCrypto() {
         return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.ALLOW_WEAK_CRYPTO);
@@ -240,6 +259,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get ticket life time.
+     * @return The ticket life time
      */
     public long getTicketLifetime() {
         return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.TICKET_LIFETIME);
@@ -247,6 +267,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get renew life time.
+     * @return The renew life time
      */
     public long getRenewLifetime() {
         return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.RENEW_LIFETIME);
@@ -254,6 +275,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get default tgs encryption types.
+     * @return The tgs encryption type list
      */
     public List<EncryptionType> getDefaultTgsEnctypes() {
         return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TGS_ENCTYPES);
@@ -261,6 +283,7 @@ public class KrbConfig extends Conf {
 
     /**
      * Get default ticket encryption types.
+     * @return The encryption type list
      */
     public List<EncryptionType> getDefaultTktEnctypes() {
         return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TKT_ENCTYPES);

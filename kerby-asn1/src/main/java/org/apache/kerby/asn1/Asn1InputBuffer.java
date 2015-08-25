@@ -62,7 +62,7 @@ public class Asn1InputBuffer {
      * Parse and read ASN1 object from the stream. If it's already
      * exhausted then null will be returned to indicate the end.
      * @return an ASN1 object if available otherwise null
-     * @throws IOException
+     * @throws IOException e
      */
     public Asn1Type read() throws IOException {
         if (!limitedBuffer.available()) {

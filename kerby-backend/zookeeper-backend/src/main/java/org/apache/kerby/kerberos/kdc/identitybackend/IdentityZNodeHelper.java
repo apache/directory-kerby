@@ -180,7 +180,7 @@ public class IdentityZNodeHelper {
     /**
      * Get identity names.
      *
-     * @throws org.apache.zookeeper.KeeperException
+     * @throws org.apache.zookeeper.KeeperException e
      * @param zk The zookeeper
      * @return The list of principal names.
      */

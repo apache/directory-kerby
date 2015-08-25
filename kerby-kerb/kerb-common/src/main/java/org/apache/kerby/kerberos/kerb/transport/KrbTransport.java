@@ -31,6 +31,7 @@ public interface KrbTransport {
     /**
      * Send out a Kerberos message to remote peer.
      * @param message The message to be sent
+     * @throws IOException e
      */
     void sendMessage(ByteBuffer message) throws IOException;
 

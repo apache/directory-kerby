@@ -29,6 +29,7 @@ public class KrbContext {
 
     /**
      * Init with krbsetting.
+     * @param krbSetting The krb setting
      */
     public void init(KrbSetting krbSetting) {
         this.krbSetting = krbSetting;
@@ -38,6 +39,7 @@ public class KrbContext {
 
     /**
      * Get krbsetting.
+     * @return The krb setting
      */
     public KrbSetting getKrbSetting() {
         return krbSetting;
@@ -45,6 +47,7 @@ public class KrbContext {
 
     /**
      * Get krbconfig.
+     * @return The krb config
      */
     public KrbConfig getConfig() {
         return krbSetting.getKrbConfig();
@@ -52,6 +55,7 @@ public class KrbContext {
 
     /**
      * Generate nonce.
+     * @return nonce
      */
     public int generateNonce() {
         return Nonce.value();
@@ -59,6 +63,7 @@ public class KrbContext {
 
     /**
      * Get ticket valid time.
+     * @return The ticket valid time
      */
     public long getTicketValidTime() {
         return 8 * 60 * 60 * 1000;
@@ -66,6 +71,7 @@ public class KrbContext {
 
     /**
      * Get preauth handler.
+     * @return The preauth handler
      */
     public PreauthHandler getPreauthHandler() {
         return preauthHandler;

@@ -46,6 +46,7 @@ public class KrbRuntime {
 
     /**
      * Set token provider.
+     * @param tokenProvider The token provider
      */
     public static synchronized void setTokenProvider(TokenProvider tokenProvider) {
         KrbRuntime.tokenProvider = tokenProvider;
@@ -64,6 +65,7 @@ public class KrbRuntime {
 
     /**
      * Setup pkiProvider.
+     * @param pkiProvider The pki provider
      */
     public static synchronized void setPkiProvider(PkiProvider pkiProvider) {
         KrbRuntime.pkiProvider = pkiProvider;
