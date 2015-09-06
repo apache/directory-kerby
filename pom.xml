@@ -132,6 +132,7 @@
               <!-- MAVEN_DEFAULT_EXCLUDES -->
               <exclude>**/target/**/*</exclude>
               <exclude>**/cobertura.ser</exclude>
+              <exclude>**/DEPENDENCIES</exclude>
               <!-- ECLIPSE_DEFAULT_EXCLUDES -->
               <exclude>**/.classpath</exclude>
               <exclude>**/.project</exclude>
