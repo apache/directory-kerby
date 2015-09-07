@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Kerby Codebase Intellectual Property (IP) Clearance Status</title>
+    </properties>
+    <body>
+        <section id="Codebase+IP+Clearance+TEMPLATE">
+            <title>Codebase IP Clearance</title>
+        </section>
+        <section id="FortressCodebase+Intellectual+Property+%28IP%29+Clearance+Status">
+            <title>Kerby Codebase Intellectual Property (IP) Clearance Status</title>
+        </section>
+        <section id="Description">
+            <title>Description</title>
+            <p>Apache Kerby™, or simply Kerby, is a Java Kerberos binding. 
+			It provides a rich, intuitive and interoperable implementation, 
+			library, KDC and various facilities that integrates PKI, OTP and 
+			token (OAuth2) as desired in modern environments such as cloud, Hadoop and mobile..</p>
+        </section>
+        <section id="Project+info">
+            <title>Project info</title>
+            <ul>
+                <li>Which PMC will be responsible for the code: Apache Directory PMC</li>
+            </ul>
+            <ul>
+                <li>Into which existing project/module: Kerby will go into its own project</li>
+            </ul>
+            <ul>
+                <li>Officer or member managing donation: Emmanuel Lecharny</li>
+            </ul>
+            <p>
+                <em>Completed tasks are shown by the completion date (YYYY-MM-dd).</em>
+            </p>
+            <section id="Identify+the+codebase">
+                <title>Identify the codebase</title>
+                <table>
+                    <tr>
+                        <th>date</th>
+                        <th>item</th>
+                    </tr>
+                    <tr>
+                        <td>2015-01-11</td>
+                        <td>The code has been injected in the following git repo : 
+							https://git-wip-us.apache.org/repos/asf/directory-kerby.git with all its history</td>
+                    </tr>
+                </table>
+			    <p>
+					MD5 or SHA1 sum for donated software: 23c1fd120d770c01b7513849c69badfff8eca8fd
+			    </p>
+                <section id="Copyright">
+                    <title>Copyright</title>
+                    <table>
+                        <tr>
+                            <th>date</th>
+                            <th>item</th>
+                        </tr>
+                        <tr>
+                            <td>2015-01-10</td>
+                            <td>Check and make sure that the papers that transfer rights to the ASF been received. 
+								It is only necessary to transfer rights for the package, the core code, and any 
+								new code produced by the project.</td>
+                        </tr>
+                        <tr>
+                            <td>2015-01-13 </td>
+                            <td>Check and make sure that the files that have been donated have been updated to 
+								reflect the new ASF copyright.</td>
+                        </tr>
+                    </table>
+                    <p>
+                        Identify name recorded for software grant:
+                        <em>the name of the grant as record in the grants.txt document so that the grant can be easily identified</em>
+                    </p>
+                </section>
+                <section id="Verify+distribution+rights">
+                    <title>Verify distribution rights</title>
+                    <p>
+                        Individuals holding existing distribution rights:
+                    </p>
+                    <ul>
+                        <li>
+                            o Kai Zheng (drankye)
+                        </li>
+                    </ul>
+                    <table>
+                        <tr>
+                            <th>date</th>
+                            <th>item</th>
+                        </tr>
+                        <tr>
+                          <td>2015-09-06</td>
+                          <td>
+							<p>Check that all active committers have a signed CLA on record.</p>
+                            <p>All of the committers have a CLA on file at Apache</p>
+                          </td>
+                        </tr>
+                        <tr>
+                            <td>2015-09-05</td>
+                            <td>Remind active committers that they are responsible for
+                                ensuring that a Corporate CLA is recorded if such is
+                                required to authorize their contributions under their
+                                individual CLA.</td>
+                        </tr>
+                        <tr>
+                            <td>2015-08-25</td>
+                            <td>Check and make sure that for all items included with the
+                                distribution that is not under the Apache license, we have
+                                the right to combine with Apache-licensed code and
+                                redistribute.</td>
+                        </tr>
+                        <tr>
+                            <td>2015-08-25</td>
+                            <td>Check and make sure that all items depended upon by the
+                                project is covered by one or more of the following approved
+                                licenses: Apache, BSD, Artistic, MIT/X, MIT/W3C, MPL 1.1, or
+                                something with essentially the same terms.</td>
+                        </tr>
+                    </table>
+                    <p>Generally, the result of checking off these items will be a
+                        Software Grant, CLA, and Corporate CLA for ASF licensed code,
+                        which must have no dependencies upon items whose licenses that
+                        are incompatible with the Apache License.</p>
+                </section>
+            </section>
+            <section id="Organizational+acceptance+of+responsibility+for+the+project">
+                <title>Organizational acceptance of responsibility for the project
+                </title>
+                <p>
+                    Related VOTEs:
+                </p>
+                <ul>
+                    <li>
+						o Vote on dev@directory.apache.org Message-ID : &lt;54A15B89.4060104@gmail.com&gt;
+                    </li>
+	                <li>
+						o Vote result on dev@directory.apache.org Message-ID : &lt;54A44594.1040708@gmail.com&gt;
+                    </li>
+                </ul>
+            </section>
+        </section>
+    </body>
+</document>
