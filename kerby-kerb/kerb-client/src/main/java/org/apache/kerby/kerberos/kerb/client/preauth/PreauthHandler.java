@@ -77,6 +77,8 @@ public class PreauthHandler {
 
     /**
      * Process preauth inputs and options, prepare and generate pdata to be out
+     * @param kdcRequest The kdc request
+     * @throws KrbException e
      */
     public void preauth(KdcRequest kdcRequest) throws KrbException {
         PreauthContext preauthContext = kdcRequest.getPreauthContext();

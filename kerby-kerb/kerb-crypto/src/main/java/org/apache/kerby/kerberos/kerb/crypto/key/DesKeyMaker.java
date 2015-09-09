@@ -90,6 +90,7 @@ public class DesKeyMaker extends AbstractKeyMaker {
 
     /**
      * Visible for test
+     * {@inheritDoc}
      */
     public static byte[] fanFold(String string, String salt, byte[] paddedBytes) {
         if (paddedBytes == null) {
@@ -117,6 +118,7 @@ public class DesKeyMaker extends AbstractKeyMaker {
 
     /**
      * Visible for test
+     * {@inheritDoc}
      */
     public static byte[] intermediateKey(byte[] fanFoldedKey) {
         byte[] keyBytes = addParityBits(fanFoldedKey);
@@ -140,10 +142,10 @@ public class DesKeyMaker extends AbstractKeyMaker {
     }
 
     /**
-     * To turn a 54-bit block into a 64-bit block, see
+     * To turn a 56-bit block into a 64-bit block, see
      *  Ref. eighth_byte in random_to_key.c in MIT krb5
-     * @param bits56
-     * @return
+     * @param bits56 The 56-bit block
+     * @return The 64-bit block
      */
     private static byte[] getEightBits(byte[] bits56) {
         byte[] bits64 = new byte[8];
@@ -156,6 +158,7 @@ public class DesKeyMaker extends AbstractKeyMaker {
 
     /**
      * Note this isn't hit any test yet, and very probably problematic
+     * {@inheritDoc}
      */
     @Override
     public byte[] random2Key(byte[] randomBits) throws KrbException {

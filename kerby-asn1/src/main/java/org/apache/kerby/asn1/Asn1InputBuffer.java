@@ -36,7 +36,7 @@ public class Asn1InputBuffer {
 
     /**
      * Constructor with bytes.
-     * @param bytes
+     * @param bytes The bytes
      */
     public Asn1InputBuffer(byte[] bytes) {
         this(new LimitedByteBuffer(bytes));
@@ -44,7 +44,7 @@ public class Asn1InputBuffer {
 
     /**
      * Constructor with a ByteBuffer.
-     * @param byteBuffer
+     * @param byteBuffer The byte buffer
      */
     public Asn1InputBuffer(ByteBuffer byteBuffer) {
         this(new LimitedByteBuffer(byteBuffer));
@@ -52,7 +52,7 @@ public class Asn1InputBuffer {
 
     /**
      * Constructor with LimitedByteBuffer.
-     * @param limitedByteBuffer
+     * @param limitedByteBuffer The limited byte buffer
      */
     public Asn1InputBuffer(LimitedByteBuffer limitedByteBuffer) {
         this.limitedBuffer = limitedByteBuffer;
@@ -62,7 +62,7 @@ public class Asn1InputBuffer {
      * Parse and read ASN1 object from the stream. If it's already
      * exhausted then null will be returned to indicate the end.
      * @return an ASN1 object if available otherwise null
-     * @throws IOException
+     * @throws IOException e
      */
     public Asn1Type read() throws IOException {
         if (!limitedBuffer.available()) {
@@ -81,9 +81,10 @@ public class Asn1InputBuffer {
     }
 
     /**
+     * Read from bytes.
      *
-     * @param bytes
-     * @throws IOException
+     * @param bytes The bytes
+     * @throws IOException e
      */
     public void readBytes(byte[] bytes) throws IOException {
         limitedBuffer.readBytes(bytes);

@@ -28,14 +28,13 @@ import java.nio.ByteBuffer;
 
 /**
  * ASN1 simple type, of single value other than complex type of multiple values.
- * @param <T>
  */
 public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
     private byte[] bytes;
 
     /**
      * Default constructor, generally for decoding as a value container
-     * @param tagNo
+     * @param tagNo The tag number
      */
     public Asn1Simple(UniversalTag tagNo) {
         this(tagNo, null);
@@ -43,8 +42,8 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     /**
      * Constructor with a value, generally for encoding of the value
-     * @param tagNo
-     * @param value
+     * @param tagNo The tag number
+     * @param value The value
      */
     public Asn1Simple(UniversalTag tagNo, T value) {
         super(TagClass.UNIVERSAL, tagNo.getValue(), value);
@@ -142,8 +141,8 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     /**
      * Create a simple ASN1 object given tagNo, using the default constructor with no value provided
-     * @param tagNo
-     * @return
+     * @param tagNo The tag number
+     * @return A simple ASN1 object
      */
     public static Asn1Type createSimple(int tagNo) {
         if (!isSimple(tagNo)) {
@@ -154,8 +153,8 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     /**
      * Create a simple ASN1 object given tagNo, using the default constructor with no value provided
-     * @param tagNo
-     * @return
+     * @param tagNo The tag number
+     * @return The simple ASN1 object
      */
     public static Asn1Type createSimple(UniversalTag tagNo) {
         if (!isSimple(tagNo)) {

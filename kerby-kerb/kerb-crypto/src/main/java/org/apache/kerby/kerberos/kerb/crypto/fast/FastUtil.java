@@ -34,9 +34,13 @@ public class FastUtil {
 
     /**
      * Call the PRF function multiple times with the pepper prefixed with
-     * a count byte  to get enough bits of output.
+     * a count byte to get enough bits of output.
+     * @param key The encryption key
+     * @param pepper The pepper
+     * @param keyBytesLen The key bytes length
+     * @return The output byte
+     * @throws KrbException e
      */
-
     public static byte[] prfPlus(EncryptionKey key, String pepper,
                                  int keyBytesLen) throws KrbException {
         byte[] prfInbuf = new byte[pepper.length() + 1];
@@ -72,9 +76,10 @@ public class FastUtil {
 
     /**
      * Make an encryption key for replying.
-     * @param strengthenKey
-     * @param existingKey
+     * @param strengthenKey The strengthen key
+     * @param existingKey The existing key
      * @return encryption key
+     * @throws KrbException e
      */
     public static EncryptionKey makeReplyKey(EncryptionKey strengthenKey,
                                              EncryptionKey existingKey) throws KrbException {
@@ -83,9 +88,10 @@ public class FastUtil {
 
     /**
      * Make an encryption key for armoring.
-     * @param subkey
-     * @param ticketKey
+     * @param subkey The sub key
+     * @param ticketKey The ticket key
      * @return encryption key
+     * @throws KrbException e
      */
     public static EncryptionKey makeArmorKey(EncryptionKey subkey,
                                              EncryptionKey ticketKey) throws KrbException {

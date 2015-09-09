@@ -39,8 +39,8 @@ public class KOptions {
 
     /**
      * Parse string value according to kopt type.
-     * @param kopt
-     * @param strValue
+     * @param kopt The koption
+     * @param strValue The string value
      * @return true when successful, false otherwise
      */
     public static boolean parseSetValue(KOption kopt, String strValue) {

@@ -30,7 +30,7 @@ public class ToolUtil {
 
     /**
      * Convert tool (like kinit) options to KrbOptions.
-     * @param krbOptions
+     * @param krbOptions krb options
      * @return krb options
      */
     public static KOptions convertOptions(KOptions krbOptions) {

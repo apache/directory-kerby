@@ -38,9 +38,12 @@ public class Nfold {
 
     /**
      * representation: msb first, assume n and k are multiples of 8, and
-     * that k>=16.  this is the case of all the cryptosystems which are
+     * that {@code k>=16}.  this is the case of all the cryptosystems which are
      * likely to be used.  this function can be replaced if that
      * assumption ever fails.
+     * @param inBytes The input bytes
+     * @param size The size
+     * @return The output byte
      */
     public static byte[] nfold(byte[] inBytes, int size) {
         int inBytesNum = inBytes.length; // count inBytes byte

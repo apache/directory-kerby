@@ -45,6 +45,7 @@ public class TokenJaasKrbUtil {
      * @param armorCache the armor cache for fast preauth
      * @param ccache The file to store the tgt ticket
      * @return the authenticated Subject
+     * @throws LoginException e
      */
     public static Subject loginUsingToken(
             String principal, File tokenCache, File armorCache, File ccache)
@@ -69,6 +70,7 @@ public class TokenJaasKrbUtil {
      * @param armorCache the armor cache for fast preauth
      * @param ccache The file to store the tgt ticket
      * @return the authenticated Subject
+     * @throws LoginException e
      */
     public static Subject loginUsingToken(
             String principal, String tokenStr, File armorCache, File ccache)

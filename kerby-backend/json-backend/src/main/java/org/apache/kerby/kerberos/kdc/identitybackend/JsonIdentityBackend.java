@@ -68,7 +68,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     /**
      * Constructing an instance using specified config that contains anything
      * to be used to initialize the json format database.
-     * @param config
+     * @param config The configuration for json identity backend
      */
     public JsonIdentityBackend(Config config) {
         setConfig(config);

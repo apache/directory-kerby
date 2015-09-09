@@ -29,7 +29,7 @@ public final class TaggingOption {
 
     /**
      * Create an implicit application specific tagging option with tagNo.
-     * @param tagNo
+     * @param tagNo The tag number
      * @return tagging option
      */
     public static TaggingOption newImplicitAppSpecific(int tagNo) {
@@ -38,7 +38,7 @@ public final class TaggingOption {
 
     /**
      * Create an explicit application specific tagging option with tagNo.
-     * @param tagNo
+     * @param tagNo The tag number
      * @return tagging option
      */
     public static TaggingOption newExplicitAppSpecific(int tagNo) {
@@ -47,7 +47,7 @@ public final class TaggingOption {
 
     /**
      * Create an implicit context specific tagging option with tagNo.
-     * @param tagNo
+     * @param tagNo The tag number
      * @return tagging option
      */
     public static TaggingOption newImplicitContextSpecific(int tagNo) {
@@ -56,7 +56,7 @@ public final class TaggingOption {
 
     /**
      * Create an explicit context specific tagging option with tagNo.
-     * @param tagNo
+     * @param tagNo The tag number
      * @return tagging option
      */
     public static TaggingOption newExplicitContextSpecific(int tagNo) {
@@ -65,9 +65,9 @@ public final class TaggingOption {
 
     /**
      * The private constructor.
-     * @param tagNo
-     * @param isImplicit
-     * @param isAppSpecific
+     * @param tagNo The tag number
+     * @param isImplicit Implicit or not
+     * @param isAppSpecific App specific or not
      */
     private TaggingOption(int tagNo, boolean isImplicit, boolean isAppSpecific) {
         this.tagNo = tagNo;
@@ -77,7 +77,7 @@ public final class TaggingOption {
 
     /**
      * Make tag flags giving it's tagged constructed.
-     * @param isTaggedConstructed
+     * @param isTaggedConstructed Tagged Constructed or not
      * @return tag flag
      */
     public int tagFlags(boolean isTaggedConstructed) {

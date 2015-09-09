@@ -113,7 +113,7 @@ public class EncodingOption {
 
     /**
      * Tells if it's definitive length or not.
-     * @return
+     * @return The boolean value
      */
     public boolean isDefLen() {
         return this.isDefLen;

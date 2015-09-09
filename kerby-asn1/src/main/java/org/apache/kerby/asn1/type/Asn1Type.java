@@ -31,7 +31,7 @@ import java.nio.ByteBuffer;
 public interface Asn1Type {
     /**
      *
-     * @return
+     * @return The tag flags
      */
     int tagFlags();
 
@@ -44,7 +44,7 @@ public interface Asn1Type {
     /**
      * Set encoding option.
      * See {@link org.apache.kerby.asn1.EncodingOption}.
-     * @param encodingOption
+     * @param encodingOption The encoding option
      */
     void setEncodingOption(EncodingOption encodingOption);
 
@@ -63,35 +63,35 @@ public interface Asn1Type {
 
     /**
      * Encode the type, by recursively, using the provided buffer.
-     * @param buffer
+     * @param buffer The byte buffer
      */
     void encode(ByteBuffer buffer);
 
     /**
      * Decode the content bytes into this type.
-     * @param content
-     * @throws IOException
+     * @param content The content bytes
+     * @throws IOException e
      */
     void decode(byte[] content) throws IOException;
 
     /**
      * Decode the content bytes into this type.
-     * @param content
-     * @throws IOException
+     * @param content The content bytes
+     * @throws IOException e
      */
     void decode(ByteBuffer content) throws IOException;
 
     /**
      * Tag and encode this type using the provided tagging option.
-     * @param taggingOption
+     * @param taggingOption The tagging option
      * @return encoded bytes
      */
     byte[] taggedEncode(TaggingOption taggingOption);
 
     /**
      * Tag and encode this type using the provided tagging option.
-     * @param taggingOption
-     * @return encoded bytes
+     * @param buffer The byte buffer
+     * @param taggingOption The tagging option
      */
     void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption);
 
@@ -101,9 +101,9 @@ public interface Asn1Type {
      *
      * See {@link org.apache.kerby.asn1.TaggingOption}
      *
-     * @param content
-     * @param taggingOption
-     * @throws IOException
+     * @param content The content bytes
+     * @param taggingOption The tagging option
+     * @throws IOException e
      */
     void taggedDecode(ByteBuffer content, TaggingOption taggingOption) throws IOException;
 
@@ -113,9 +113,9 @@ public interface Asn1Type {
      *
      * See {@link org.apache.kerby.asn1.TaggingOption}
      *
-     * @param content
-     * @param taggingOption
-     * @throws IOException
+     * @param content The content bytes
+     * @param taggingOption The tagging option
+     * @throws IOException e
      */
     void taggedDecode(byte[] content, TaggingOption taggingOption) throws IOException;
 }

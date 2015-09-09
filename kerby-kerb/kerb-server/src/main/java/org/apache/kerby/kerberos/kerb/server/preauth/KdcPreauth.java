@@ -36,17 +36,25 @@ public interface KdcPreauth extends PreauthPluginMeta {
 
     /**
      * Initializing plugin context for each realm
+     * @param context kdc context
      */
     void initWith(KdcContext context);
 
     /**
      * Initializing request context
+     * @param kdcRequest kdc context
+     * @return request context
      */
     PluginRequestContext initRequestContext(KdcRequest kdcRequest);
 
     /**
      * Optional: provide pa_data to send to the client as part of the "you need to
      * use preauthentication" error.
+     *
+     * @param kdcRequest kdc request
+     * @param requestContext request context
+     * @param outPaData out preauthentication data
+     * @throws KrbException e
      */
     void provideEdata(KdcRequest kdcRequest, PluginRequestContext requestContext,
                              PaData outPaData) throws KrbException;
@@ -55,6 +63,11 @@ public interface KdcPreauth extends PreauthPluginMeta {
      * Optional: verify preauthentication data sent by the client, setting the
      * TKT_FLG_PRE_AUTH or TKT_FLG_HW_AUTH flag in the enc_tkt_reply's "flags"
      * field as appropriate.
+     * @param kdcRequest kdc request
+     * @param requestContext request context
+     * @param paData preauthentication data
+     * @return true if verify success
+     * @throws KrbException e
      */
     boolean verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
                           PaDataEntry paData) throws KrbException;
@@ -62,6 +75,9 @@ public interface KdcPreauth extends PreauthPluginMeta {
     /**
      * Optional: generate preauthentication response data to send to the client as
      * part of the AS-REP.
+     * @param kdcRequest kdc request
+     * @param requestContext request context
+     * @param paData preauthentication data
      */
     void providePaData(KdcRequest kdcRequest, PluginRequestContext requestContext,
                               PaData paData);
@@ -69,6 +85,10 @@ public interface KdcPreauth extends PreauthPluginMeta {
     /**
      * Return PA_REAL if pa_type is a real preauthentication type or PA_INFO if it is
      * an informational type.
+     * @param kdcRequest kdc request
+     * @param requestContext request context
+     * @param paType preauthentication type
+     * @return PaFlags
      */
     PaFlags getFlags(KdcRequest kdcRequest, PluginRequestContext requestContext,
                             PaDataType paType);

@@ -134,6 +134,7 @@ public class AsRequest extends KdcRequest {
 
     /**
      * Make EncKdcRepPart.
+     * @return encryption kdc request part
      */
     protected EncKdcRepPart makeEncKdcRepPart() {
         KdcReq request = getKdcReq();

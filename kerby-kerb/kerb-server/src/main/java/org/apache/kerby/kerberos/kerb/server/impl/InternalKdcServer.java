@@ -30,16 +30,19 @@ public interface InternalKdcServer {
 
     /**
      * Initialize.
+     * @throws KrbException e
      */
     void init() throws KrbException;
 
     /**
      * Start the KDC server.
+     * @throws KrbException e
      */
     void start() throws KrbException;
 
     /**
      * Stop the KDC server.
+     * @throws KrbException e
      */
     void stop() throws KrbException;
 

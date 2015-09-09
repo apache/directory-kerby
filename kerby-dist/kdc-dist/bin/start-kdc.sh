@@ -1,4 +1,5 @@
-#
+#!/usr/bin/env bash
+
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -14,13 +15,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-#!/bin/bash
 
 DEBUG=
 args=
 for var in $*; do
-  if [ $var == "-D" ]; then
+  if [ X"$var" == X"-D" ]; then
     DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"
   else
     args="$args $var"

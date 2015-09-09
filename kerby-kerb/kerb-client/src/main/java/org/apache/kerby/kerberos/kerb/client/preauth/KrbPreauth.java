@@ -40,28 +40,40 @@ public interface KrbPreauth extends PreauthPluginMeta {
 
     /**
      * Initializing preauth plugin context
+     * @param krbContext The krb context
      */
     void init(KrbContext krbContext);
 
     /**
      * Initializing request context
+     * @param kdcRequest The kdc request
+     * @return PluginRequestContext
      */
     PluginRequestContext initRequestContext(KdcRequest kdcRequest);
 
     /**
      * Prepare questions to prompt to you asking for credential
+     * @param kdcRequest The kdc request
+     * @param requestContext The request context
+     * @throws KrbException e
      */
     void prepareQuestions(KdcRequest kdcRequest,
                                  PluginRequestContext requestContext) throws KrbException;
 
     /**
      * Get supported encryption types
+     * @param kdcRequest The kdc request
+     * @param requestContext The request context
+     * @return The encryption type list
      */
     List<EncryptionType> getEncTypes(KdcRequest kdcRequest,
                                             PluginRequestContext requestContext);
 
     /**
      * Set krb options passed from user
+     * @param kdcRequest The kdc request
+     * @param requestContext The request context
+     * @param preauthOptions The preauth options
      */
     void setPreauthOptions(KdcRequest kdcRequest,
                                   PluginRequestContext requestContext,
@@ -69,6 +81,10 @@ public interface KrbPreauth extends PreauthPluginMeta {
 
     /**
      * Attempt to try any initial padata derived from user options
+     * @param kdcRequest The kdc request
+     * @param requestContext The request context
+     * @param outPadata The outPadata
+     * @throws KrbException e
      */
     void tryFirst(KdcRequest kdcRequest,
                          PluginRequestContext requestContext,
@@ -76,7 +92,12 @@ public interface KrbPreauth extends PreauthPluginMeta {
 
     /**
      * Process server returned paData and return back any result paData
-     * Return true indicating padata is added
+     * @param kdcRequest The kdc request
+     * @param requestContext The request context
+     * @param inPadata The inPadata
+     * @param outPadata The outPadata
+     * @return true indicating padata is added
+     * @throws KrbException e
      */
     boolean process(KdcRequest kdcRequest,
                            PluginRequestContext requestContext,
@@ -85,7 +106,12 @@ public interface KrbPreauth extends PreauthPluginMeta {
 
     /**
      * When another request to server in the 4 pass, any paData to provide?
-     * Return true indicating padata is added
+     * @param kdcRequest The kdc request
+     * @param requestContext The request context
+     * @param preauthType The preauth type
+     * @param errPadata The error padata
+     * @param outPadata The outPadata
+     * @return true indicating padata is added
      */
     boolean tryAgain(KdcRequest kdcRequest,
                             PluginRequestContext requestContext,
@@ -96,6 +122,8 @@ public interface KrbPreauth extends PreauthPluginMeta {
     /**
      * Return PA_REAL if pa_type is a real preauthentication type or PA_INFO if it is
      * an informational type.
+     * @param paType The pa_type
+     * @return PaFlags
      */
     PaFlags getFlags(PaDataType paType);
 

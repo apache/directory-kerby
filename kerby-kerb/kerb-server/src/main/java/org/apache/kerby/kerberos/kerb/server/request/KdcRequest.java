@@ -96,6 +96,8 @@ public abstract class KdcRequest {
 
     /**
      * Get session key.
+     *
+     * @return session key
      */
     public EncryptionKey getSessionKey() {
         return sessionKey;
@@ -103,11 +105,17 @@ public abstract class KdcRequest {
 
     /**
      * Set session key.
+     * @param sessionKey The session key
      */
     public void setSessionKey(EncryptionKey sessionKey) {
         this.sessionKey = sessionKey;
     }
 
+    /**
+     * kdc request constructor
+     * @param kdcReq kdc request
+     * @param kdcContext kdc context
+     */
     public KdcRequest(KdcReq kdcReq, KdcContext kdcContext) {
         this.kdcReq = kdcReq;
         this.kdcContext = kdcContext;
@@ -119,6 +127,8 @@ public abstract class KdcRequest {
 
     /**
      * Get kdc context.
+     *
+     * @return kdc context
      */
     public KdcContext getKdcContext() {
         return kdcContext;
@@ -126,6 +136,8 @@ public abstract class KdcRequest {
 
     /**
      * Get KdcReq.
+     *
+     * @return kdc request
      */
     public KdcReq getKdcReq() {
         return kdcReq;
@@ -133,6 +145,8 @@ public abstract class KdcRequest {
 
     /**
      * Get preauth context.
+     *
+     * @return preauthentication context.
      */
     public PreauthContext getPreauthContext() {
         return preauthContext;
@@ -140,6 +154,8 @@ public abstract class KdcRequest {
 
     /**
      * Process the kdcrequest from client and issue the ticket.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void process() throws KrbException {
         checkVersion();
@@ -162,6 +178,8 @@ public abstract class KdcRequest {
 
     /**
      * Check the tgs entry.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     private void checkTgsEntry() throws KrbException {
         KrbIdentity tgsEntry = getEntry(getTgsPrincipal().getName());
@@ -170,6 +188,8 @@ public abstract class KdcRequest {
 
     /**
      * Find the fast from padata.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     private void kdcFindFast() throws KrbException {
 
@@ -202,6 +222,9 @@ public abstract class KdcRequest {
 
     /**
      * Get the armor key.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
+     * @param fastArmor krb fast armor
      */
     private void armorApRequest(KrbFastArmor fastArmor) throws KrbException {
         if (fastArmor.getArmorType() == ArmorType.ARMOR_AP_REQUEST) {
@@ -232,6 +255,8 @@ public abstract class KdcRequest {
 
     /**
      * Get tgs entry.
+     *
+     * @return TGS entry
      */
     public KrbIdentity getTgsEntry() {
         return tgsEntry;
@@ -239,6 +264,8 @@ public abstract class KdcRequest {
 
     /**
      * Set tgs entry .
+     *
+     * @param tgsEntry TGS entry
      */
     public void setTgsEntry(KrbIdentity tgsEntry) {
         this.tgsEntry = tgsEntry;
@@ -246,6 +273,8 @@ public abstract class KdcRequest {
 
     /**
      * Get whether is tcp.
+     *
+     * @return whether is tcp
      */
     public boolean isTcp() {
         return isTcp;
@@ -253,6 +282,8 @@ public abstract class KdcRequest {
 
     /**
      * Set use tcp.
+     *
+     * @param isTcp set kdc request though TCP protocol or not
      */
     public void isTcp(boolean isTcp) {
         this.isTcp = isTcp;
@@ -260,6 +291,8 @@ public abstract class KdcRequest {
 
     /**
      * Get the reply message.
+     *
+     * @return reply
      */
     public KrbMessage getReply() {
         return reply;
@@ -267,6 +300,8 @@ public abstract class KdcRequest {
 
     /**
      * Set kdc reply.
+     *
+     * @param reply reply
      */
     public void setReply(KdcRep reply) {
         this.reply = reply;
@@ -274,6 +309,8 @@ public abstract class KdcRequest {
 
     /**
      * Get client address.
+     *
+     * @return client address
      */
     public InetAddress getClientAddress() {
         return clientAddress;
@@ -281,6 +318,8 @@ public abstract class KdcRequest {
 
     /**
      * Set client address.
+     *
+     * @param clientAddress client address
      */
     public void setClientAddress(InetAddress clientAddress) {
         this.clientAddress = clientAddress;
@@ -288,6 +327,8 @@ public abstract class KdcRequest {
 
     /**
      * Get encryption type.
+     *
+     * @return encryption type
      */
     public EncryptionType getEncryptionType() {
         return encryptionType;
@@ -295,6 +336,8 @@ public abstract class KdcRequest {
 
     /**
      * Set encryption type.
+     *
+     * @param encryptionType encryption type
      */
     public void setEncryptionType(EncryptionType encryptionType) {
         this.encryptionType = encryptionType;
@@ -302,6 +345,8 @@ public abstract class KdcRequest {
 
     /**
      * Get ticket.
+     *
+     * @return ticket
      */
     public Ticket getTicket() {
         return ticket;
@@ -309,6 +354,8 @@ public abstract class KdcRequest {
 
     /**
      * Set ticket.
+     *
+     * @param ticket ticket
      */
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
@@ -316,6 +363,8 @@ public abstract class KdcRequest {
 
     /**
      * Get whether pre-authenticated.
+     *
+     * @return whether preauthenticated
      */
     public boolean isPreAuthenticated() {
         return isPreAuthenticated;
@@ -323,6 +372,8 @@ public abstract class KdcRequest {
 
     /**
      * Set whether pre-authenticated.
+     *
+     * @param isPreAuthenticated whether is preauthenticated
      */
     public void setPreAuthenticated(boolean isPreAuthenticated) {
         this.isPreAuthenticated = isPreAuthenticated;
@@ -330,6 +381,8 @@ public abstract class KdcRequest {
 
     /**
      * Get server entry.
+     *
+     * @return server entry
      */
     public KrbIdentity getServerEntry() {
         return serverEntry;
@@ -337,6 +390,8 @@ public abstract class KdcRequest {
 
     /**
      * Set server entry.
+     *
+     * @param serverEntry server entry
      */
     public void setServerEntry(KrbIdentity serverEntry) {
         this.serverEntry = serverEntry;
@@ -344,6 +399,8 @@ public abstract class KdcRequest {
 
     /**
      * Get client entry.
+     *
+     * @return client entry
      */
     public KrbIdentity getClientEntry() {
         return clientEntry;
@@ -351,6 +408,8 @@ public abstract class KdcRequest {
 
     /**
      * Set client entry.
+     *
+     * @param clientEntry client entry
      */
     public void setClientEntry(KrbIdentity clientEntry) {
         this.clientEntry = clientEntry;
@@ -358,6 +417,10 @@ public abstract class KdcRequest {
 
     /**
      * Get client key with entryption type.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
+     * @param encType encryption type
+     * @return encryption key
      */
     public EncryptionKey getClientKey(EncryptionType encType) throws KrbException {
         return getClientEntry().getKey(encType);
@@ -365,6 +428,8 @@ public abstract class KdcRequest {
 
     /**
      * Get client key.
+     *
+     * @return client key
      */
     public EncryptionKey getClientKey() {
         return clientKey;
@@ -372,6 +437,8 @@ public abstract class KdcRequest {
 
     /**
      * Set client key.
+     *
+     * @param clientKey client key
      */
     public void setClientKey(EncryptionKey clientKey) {
         this.clientKey = clientKey;
@@ -379,6 +446,7 @@ public abstract class KdcRequest {
 
     /**
      * Get server key.
+     * @return The server key
      */
     public EncryptionKey getServerKey() {
         return serverKey;
@@ -386,6 +454,8 @@ public abstract class KdcRequest {
 
     /**
      * Set server key.
+     *
+     * @param serverKey server key
      */
     public void setServerKey(EncryptionKey serverKey) {
         this.serverKey = serverKey;
@@ -393,6 +463,8 @@ public abstract class KdcRequest {
 
     /**
      * Get tgs principal name.
+     *
+     * @return principal name
      */
     public PrincipalName getTgsPrincipal() {
         PrincipalName result = KrbUtil.makeTgsPrincipal(kdcContext.getKdcRealm());
@@ -401,11 +473,15 @@ public abstract class KdcRequest {
 
     /**
      * Make reply.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     protected abstract void makeReply() throws KrbException;
 
     /**
      * Check Version.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     protected void checkVersion() throws KrbException {
         KdcReq request = getKdcReq();
@@ -420,6 +496,8 @@ public abstract class KdcRequest {
 
     /**
      * Check policy.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     protected void checkPolicy() throws KrbException {
         KrbIdentity entry = getClientEntry();
@@ -444,11 +522,14 @@ public abstract class KdcRequest {
 
     /**
      * Check client.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     protected abstract void checkClient() throws KrbException;
 
     /**
      * Do the preatuh.
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     protected void preauth() throws KrbException {
         KdcReq request = getKdcReq();
@@ -471,6 +552,7 @@ public abstract class KdcRequest {
 
     /**
      * Set whether preauth required.
+     * @param preauthRequired whether preauthentication required
      */
     protected void setPreauthRequired(boolean preauthRequired) {
         preauthContext.setPreauthRequired(preauthRequired);
@@ -478,6 +560,7 @@ public abstract class KdcRequest {
 
     /**
      * Get whether preauth required.
+     * @return whether preauthentication is required
      */
     protected boolean isPreauthRequired() {
         return preauthContext.isPreauthRequired();
@@ -485,6 +568,7 @@ public abstract class KdcRequest {
 
     /**
      * Get preauth handler.
+     * @return preauthencation handler
      */
     protected PreauthHandler getPreauthHandler() {
         return kdcContext.getPreauthHandler();
@@ -492,6 +576,8 @@ public abstract class KdcRequest {
 
     /**
      * Check encryption type.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     protected void checkEncryptionType() throws KrbException {
         List<EncryptionType> requestedTypes = getKdcReq().getReqBody().getEtypes();
@@ -509,6 +595,8 @@ public abstract class KdcRequest {
 
     /**
      * Do some authenticate.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     protected void authenticate() throws KrbException {
         checkEncryptionType();
@@ -517,11 +605,14 @@ public abstract class KdcRequest {
 
     /**
      * Issue ticket.
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     protected abstract void issueTicket() throws KrbException;
 
     /**
      * Check server.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     private void checkServer() throws KrbException {
         KdcReq request = getKdcReq();
@@ -548,9 +639,10 @@ public abstract class KdcRequest {
     /**
      * Make preauthentication error.
      *
-     * @param kdcContext
-     * @param request
-     * @param errorCode
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
+     * @param kdcContext kdc context
+     * @param request kdc request
+     * @param errorCode krb error code
      * @return The krb error reply to client
      */
     protected KrbError makePreAuthenticationError(KdcContext kdcContext, KdcReq request,
@@ -603,6 +695,10 @@ public abstract class KdcRequest {
 
     /**
      * Get identity entry with principal name.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
+     * @param principal Principal
+     * @return krb identity entry
      */
     protected KrbIdentity getEntry(String principal) throws KrbException {
         KrbIdentity entry;
@@ -617,6 +713,9 @@ public abstract class KdcRequest {
 
     /**
      * Get request body.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
+     * @return request body
      */
     protected ByteBuffer getRequestBody() throws KrbException {
         return null;
@@ -624,6 +723,9 @@ public abstract class KdcRequest {
 
     /**
      * Get armor key.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
+     * @return armor key
      */
     public EncryptionKey getArmorKey() throws KrbException {
         return fastContext.getArmorKey();
@@ -631,6 +733,8 @@ public abstract class KdcRequest {
 
     /**
      * Set armor key.
+     *
+     * @param armorKey armor key
      */
     protected void setArmorKey(EncryptionKey armorKey) {
         fastContext.setArmorKey(armorKey);
@@ -638,6 +742,7 @@ public abstract class KdcRequest {
 
     /**
      * Get server principal.
+     * @return server principal
      */
     public PrincipalName getServerPrincipal() {
         return serverPrincipal;
@@ -645,6 +750,7 @@ public abstract class KdcRequest {
 
     /**
      * Set server principal.
+     * @param serverPrincipal server principal
      */
     public void setServerPrincipal(PrincipalName serverPrincipal) {
         this.serverPrincipal = serverPrincipal;
@@ -652,6 +758,7 @@ public abstract class KdcRequest {
 
     /**
      * Get innerbodyout.
+     * @return inner body out
      */
     protected byte[] getInnerBodyout() {
         return innerBodyout;
@@ -659,6 +766,7 @@ public abstract class KdcRequest {
 
     /**
      * Get whether kdc request with token.
+     * @return whether isToken
      */
     protected boolean isToken() {
         return isToken;
@@ -666,6 +774,7 @@ public abstract class KdcRequest {
 
     /**
      * Set auth token.
+     * @param authToken The auth token
      */
     public void setToken(AuthToken authToken) {
         this.token = authToken;
@@ -673,6 +782,7 @@ public abstract class KdcRequest {
 
     /**
      * Get auth token.
+     * @return token
      */
     protected AuthToken getToken() {
         return token;

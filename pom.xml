@@ -11,18 +11,40 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License. See accompanying LICENSE file.
---><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>17</version>
+    <relativePath />
+  </parent>
 
   <groupId>org.apache.kerby</groupId>
   <artifactId>kerby-all</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-RC2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Apache Kerby Project</name>
   <description>Apache Kerby project</description>
-  <url>http://www.kerby.org</url>
+  <url>http://directory.apache.org/kerby</url>
   <inceptionYear>2014</inceptionYear>
+
+  <scm>
+    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/directory-kerby.git</connection>
+    <url>https://github.com/apache/directory-kerby</url>
+    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/directory-kerby.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <site>
+      <id>apache.directory.kerby</id>
+      <url>scpexe://people.apache.org/www/directory.apache.org/kerby/gen-docs/${project.version}/</url>
+    </site>
+  </distributionManagement>
 
   <properties>
     <apacheds.version>2.0.0-M20</apacheds.version>
@@ -111,6 +133,7 @@
               <!-- MAVEN_DEFAULT_EXCLUDES -->
               <exclude>**/target/**/*</exclude>
               <exclude>**/cobertura.ser</exclude>
+              <exclude>**/DEPENDENCIES</exclude>
               <!-- ECLIPSE_DEFAULT_EXCLUDES -->
               <exclude>**/.classpath</exclude>
               <exclude>**/.project</exclude>
@@ -130,13 +153,16 @@
               <exclude>kerby-dist/**/*</exclude>
               <!-- BMP_IMAGES_EXCLUDES -->
               <exclude>**/*.bmp</exclude>
+              <!-- PMD files -->
+              <exclude>**/.pmd</exclude>
+              <!-- PMD Ruleset files -->
+              <exclude>**/.pmdruleset.xml</exclude>
+              <!-- Checkstyle files -->
+              <exclude>**/.checkstyle</exclude>
+              <!-- BIN files -->
+              <exclude>**/bin/**/*</exclude>
             </excludes>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>2.5</version>
         </plugin>
 
         <plugin>
@@ -158,37 +184,6 @@
               </goals>
             </execution>
           </executions>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>2.7</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.4</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8.2</version>
-          <inherited>true</inherited>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>2.6.1</version>
         </plugin>
 
         <plugin>
@@ -269,7 +264,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore>
+                    <ignore />
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -286,34 +281,18 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore>
+                    <ignore />
                   </action>
                 </pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>
           </configuration>
         </plugin>
+
       </plugins>
     </pluginManagement>
 
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -378,6 +357,28 @@
         <checkstyle.suppressions.location>${basedir}/src/checkstyle/suppressions.xml</checkstyle.suppressions.location>
       </properties>
     </profile>
+
+    <!-- Override of the 'apache-release' profile, used to launch the Apache RAT plugin -->
+    <profile>
+      <id>apache-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
   <repositories>

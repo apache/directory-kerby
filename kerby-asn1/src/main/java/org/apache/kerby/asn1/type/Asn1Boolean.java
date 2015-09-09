@@ -43,7 +43,7 @@ public class Asn1Boolean extends Asn1Simple<Boolean> {
 
     /**
      * Constructor with a value, generally for encoding of the value
-     * @param value
+     * @param value The boolean value
      */
     public Asn1Boolean(Boolean value) {
         super(UniversalTag.BOOLEAN, value);

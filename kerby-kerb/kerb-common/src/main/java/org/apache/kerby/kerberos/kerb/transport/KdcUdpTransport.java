@@ -28,7 +28,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Default implementation of {@Link KrbTransport} using UDP.
+ * Default implementation of {@link KrbTransport} using UDP.
  */
 public class KdcUdpTransport extends KrbUdpTransport {
     private BlockingQueue<ByteBuffer> bufferQueue = new ArrayBlockingQueue<ByteBuffer>(2);

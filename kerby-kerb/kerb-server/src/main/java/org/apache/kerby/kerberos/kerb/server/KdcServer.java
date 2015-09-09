@@ -41,9 +41,9 @@ public class KdcServer {
 
     /**
      * Constructor passing both kdcConfig and backendConfig.
-     * @param kdcConfig
-     * @param backendConfig
-     * @throws KrbException
+     * @param kdcConfig The kdc config
+     * @param backendConfig The backend config
+     * @throws KrbException e
      */
     public KdcServer(KdcConfig kdcConfig,
                   BackendConfig backendConfig) throws KrbException {
@@ -59,8 +59,8 @@ public class KdcServer {
      * kdc.conf, that contains kdc server related items.
      * backend.conf, that contains identity backend related items.
      *
-     * @param confDir
-     * @throws KrbException
+     * @param confDir The conf dir
+     * @throws KrbException e
      */
     public KdcServer(File confDir) throws KrbException {
         KdcConfig tmpKdcConfig = KdcUtil.getKdcConfig(confDir);
@@ -92,7 +92,7 @@ public class KdcServer {
 
     /**
      * Set KDC realm for ticket request
-     * @param realm
+     * @param realm The kdc realm
      */
     public void setKdcRealm(String realm) {
         startupOptions.add(KdcServerOption.KDC_REALM, realm);
@@ -100,7 +100,7 @@ public class KdcServer {
 
     /**
      * Set KDC host.
-     * @param kdcHost
+     * @param kdcHost The kdc host
      */
     public void setKdcHost(String kdcHost) {
         startupOptions.add(KdcServerOption.KDC_HOST, kdcHost);
@@ -108,7 +108,7 @@ public class KdcServer {
 
     /**
      * Set KDC port.
-     * @param kdcPort
+     * @param kdcPort The kdc port
      */
     public void setKdcPort(int kdcPort) {
         startupOptions.add(KdcServerOption.KDC_PORT, kdcPort);
@@ -116,7 +116,7 @@ public class KdcServer {
 
     /**
      * Set KDC tcp port.
-     * @param kdcTcpPort
+     * @param kdcTcpPort The kdc tcp port
      */
     public void setKdcTcpPort(int kdcTcpPort) {
         startupOptions.add(KdcServerOption.KDC_TCP_PORT, kdcTcpPort);
@@ -124,7 +124,7 @@ public class KdcServer {
 
     /**
      * Set to allow UDP or not.
-     * @param allowUdp
+     * @param allowUdp true if allow udp
      */
     public void setAllowUdp(boolean allowUdp) {
         startupOptions.add(KdcServerOption.ALLOW_UDP, allowUdp);
@@ -132,14 +132,14 @@ public class KdcServer {
 
     /**
      * Set to allow TCP or not.
-     * @param allowTcp
+     * @param allowTcp true if allow tcp
      */
     public void setAllowTcp(boolean allowTcp) {
         startupOptions.add(KdcServerOption.ALLOW_TCP, allowTcp);
     }
     /**
      * Set KDC udp port. Only makes sense when allowUdp is set.
-     * @param kdcUdpPort
+     * @param kdcUdpPort The kdc udp port
      */
     public void setKdcUdpPort(int kdcUdpPort) {
         startupOptions.add(KdcServerOption.KDC_UDP_PORT, kdcUdpPort);
@@ -147,7 +147,7 @@ public class KdcServer {
 
     /**
      * Set runtime folder.
-     * @param workDir
+     * @param workDir The work dir
      */
     public void setWorkDir(File workDir) {
         startupOptions.add(KdcServerOption.WORK_DIR, workDir);
@@ -162,7 +162,8 @@ public class KdcServer {
 
     /**
      * Allow to hook customized kdc implementation.
-     * @param innerKdcImpl
+     *
+     * @param innerKdcImpl The inner kdc implementation
      */
     public void setInnerKdcImpl(InternalKdcServer innerKdcImpl) {
         startupOptions.add(KdcServerOption.INNER_KDC_IMPL, innerKdcImpl);
@@ -186,7 +187,8 @@ public class KdcServer {
 
     /**
      * Get backend config.
-     * @return
+     *
+     * @return backend configuration
      */
     public BackendConfig getBackendConfig() {
         return backendConfig;
@@ -205,6 +207,8 @@ public class KdcServer {
 
     /**
      * Initialize.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void init() throws KrbException {
         if (startupOptions.contains(KdcServerOption.INNER_KDC_IMPL)) {
@@ -219,6 +223,8 @@ public class KdcServer {
 
     /**
      * Start the KDC server.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void start() throws KrbException {
         if (innerKdc == null) {
@@ -229,6 +235,8 @@ public class KdcServer {
 
     /**
      * Stop the KDC server.
+     *
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void stop() throws KrbException {
         if (innerKdc != null) {

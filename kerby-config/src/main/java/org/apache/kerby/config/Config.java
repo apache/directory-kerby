@@ -37,15 +37,15 @@ public interface Config {
 
     /**
      * Set a string value for the specified property
-     * @param name
-     * @param value
+     * @param name The property name
+     * @param value The string value
      */
     void setString(String name, String value);
 
     /**
      * Set a string value for the specified property
-     * @param name
-     * @param value
+     * @param name The config key name
+     * @param value The string value
      */
     void setString(ConfigKey name, String value);
 
@@ -57,15 +57,15 @@ public interface Config {
 
     /**
      * Set a boolean value for the specified property
-     * @param name
-     * @param value
+     * @param name The property name
+     * @param value The boolean value
      */
     void setBoolean(String name, boolean value);
 
     /**
      * Set a boolean value for the specified property
-     * @param name
-     * @param value
+     * @param name The config key name
+     * @param value The boolean value
      */
     void setBoolean(ConfigKey name, boolean value);
 
@@ -75,15 +75,15 @@ public interface Config {
 
     /**
      * Set an int value for the specified property
-     * @param name
-     * @param value
+     * @param name The property name
+     * @param value The string value
      */
     void setInt(String name, int value);
 
     /**
      * Set an int value for the specified property
-     * @param name
-     * @param value
+     * @param name The config key name
+     * @param value The int value
      */
     void setInt(ConfigKey name, int value);
 
@@ -94,15 +94,15 @@ public interface Config {
 
     /**
      * Set a long value for the specified property
-     * @param name
-     * @param value
+     * @param name The property name
+     * @param value The long value
      */
     void setLong(String name, long value);
 
     /**
      * Set a long value for the specified property
-     * @param name
-     * @param value
+     * @param name The config key name
+     * @param value The long value
      */
     void setLong(ConfigKey name, long value);
 
@@ -112,15 +112,15 @@ public interface Config {
 
     /**
      * Set a float value for the specified property
-     * @param name
-     * @param value
+     * @param name The property name
+     * @param value The float value
      */
     void setFloat(String name, float value);
 
     /**
      * Set a float value for the specified property
-     * @param name
-     * @param value
+     * @param name The config key name
+     * @param value The float value
      */
     void setFloat(ConfigKey name, float value);
 

@@ -36,6 +36,7 @@ public class Asn1GeneralizedTime extends Asn1Simple<Date> {
 
     /**
      * time in milliseconds
+     * @param time The long time
      */
     public Asn1GeneralizedTime(long time) {
         super(UniversalTag.GENERALIZED_TIME, new Date(time));

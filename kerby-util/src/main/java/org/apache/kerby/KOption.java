@@ -24,7 +24,7 @@ public interface KOption {
     /**
      * Set koption type.
      *
-     * @param type
+     * @param type The type
      */
     void setType(KOptionType type);
 
@@ -88,3 +88,4 @@ public interface KOption {
      */
     Object getValue();
 }
+

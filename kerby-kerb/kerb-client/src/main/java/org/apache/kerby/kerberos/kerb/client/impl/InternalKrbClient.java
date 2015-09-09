@@ -32,6 +32,7 @@ public interface InternalKrbClient {
 
     /**
      * Init with all the necessary options.
+     * @throws KrbException e
      */
     void init() throws KrbException;
 
@@ -43,17 +44,17 @@ public interface InternalKrbClient {
 
     /**
      * Request a Ticket Granting Ticket.
-     * @param requestOptions
+     * @param requestOptions The request options
      * @return a TGT
-     * @throws KrbException
+     * @throws KrbException e
      */
     TgtTicket requestTgtTicket(KOptions requestOptions) throws KrbException;
 
     /**
      * Request a service ticket.
-     * @param requestOptions
+     * @param requestOptions The request options
      * @return service ticket
-     * @throws KrbException
+     * @throws KrbException e
      */
     ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException;
 }

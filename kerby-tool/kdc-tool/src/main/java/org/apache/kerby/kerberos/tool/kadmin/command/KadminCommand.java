@@ -35,6 +35,7 @@ public abstract class KadminCommand {
 
     /**
      * Execute the kadmin command.
+     * @param input Input command to excute
      */
     public abstract void execute(String input);
 }

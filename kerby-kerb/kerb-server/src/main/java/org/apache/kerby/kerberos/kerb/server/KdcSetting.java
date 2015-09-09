@@ -31,6 +31,12 @@ public class KdcSetting {
     private final KdcConfig kdcConfig;
     private final BackendConfig backendConfig;
 
+    /**
+     * KdcSetting constructor
+     * @param startupOptions startup options
+     * @param config kdc configuration
+     * @param backendConfig backend configuration
+     */
     public KdcSetting(KOptions startupOptions,
                       KdcConfig config, BackendConfig backendConfig) {
         this.startupOptions = startupOptions;
@@ -44,7 +50,7 @@ public class KdcSetting {
 
     /**
      * Get the KDC config.
-     * @return
+     * @return kdc configuration
      */
     public KdcConfig getKdcConfig() {
         return kdcConfig;
@@ -52,7 +58,7 @@ public class KdcSetting {
 
     /**
      * Get the backend config.
-     * @return
+     * @return backend configuration
      */
     public BackendConfig getBackendConfig() {
         return backendConfig;
@@ -70,7 +76,7 @@ public class KdcSetting {
     /**
      * Check kdc tcp setting and see if any bad.
      * @return valid tcp port or -1 if not allowTcp
-     * @throws org.apache.kerby.kerberos.kerb.KrbException
+     * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     public int checkGetKdcTcpPort() throws KrbException {
         if (allowTcp()) {
@@ -86,7 +92,7 @@ public class KdcSetting {
     /**
      * Check kdc udp setting and see if any bad.
      * @return valid udp port or -1 if not allowUdp
-     * @throws KrbException
+     * @throws KrbException e
      */
     public int checkGetKdcUdpPort() throws KrbException {
         if (allowUdp()) {
@@ -99,6 +105,11 @@ public class KdcSetting {
         return -1;
     }
 
+    /**
+     * Get kdc tcp port
+     *
+     * @return kdc tcp port
+     */
     public int getKdcTcpPort() {
         int tcpPort = startupOptions.getIntegerOption(KdcServerOption.KDC_TCP_PORT);
         if (tcpPort < 1) {
@@ -111,6 +122,11 @@ public class KdcSetting {
         return tcpPort;
     }
 
+    /**
+     * Get kdc port
+     *
+     * @return kdc port
+     */
     public int getKdcPort() {
         int kdcPort = startupOptions.getIntegerOption(KdcServerOption.KDC_PORT);
         if (kdcPort < 1) {
@@ -119,18 +135,31 @@ public class KdcSetting {
         return kdcPort;
     }
 
+    /**
+     * Get whether tcp protocol is allowed
+     * @return tcp protocol is allowed or not
+     */
     public boolean allowTcp() {
         Boolean allowTcp = startupOptions.getBooleanOption(
                 KdcServerOption.ALLOW_TCP, kdcConfig.allowTcp());
         return allowTcp;
     }
 
+    /**
+     * Get whether udp protocol is allowed
+     * @return udp protocol is allowed or not
+     */
     public boolean allowUdp() {
         Boolean allowUdp = startupOptions.getBooleanOption(
                 KdcServerOption.ALLOW_UDP, kdcConfig.allowUdp());
         return allowUdp;
     }
 
+    /**
+     * Get kdc udp port
+     *
+     * @return udp port
+     */
     public int getKdcUdpPort() {
         int udpPort = startupOptions.getIntegerOption(KdcServerOption.KDC_UDP_PORT);
         if (udpPort < 1) {

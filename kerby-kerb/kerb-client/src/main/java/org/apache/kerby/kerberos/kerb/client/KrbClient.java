@@ -48,6 +48,7 @@ public class KrbClient {
 
     /**
      * Default constructor.
+     * @throws KrbException e
      */
     public KrbClient() throws KrbException {
         this.krbConfig = ClientUtil.getDefaultConfig();
@@ -57,7 +58,7 @@ public class KrbClient {
 
     /**
      * Construct with prepared KrbConfig.
-     * @param krbConfig
+     * @param krbConfig The krb config
      */
     public KrbClient(KrbConfig krbConfig) {
         this.krbConfig = krbConfig;
@@ -67,7 +68,8 @@ public class KrbClient {
 
     /**
      * Constructor with conf dir
-     * @param confDir
+     * @param confDir The conf dir
+     * @throws KrbException e
      */
     public KrbClient(File confDir) throws KrbException {
         this.commonOptions = new KOptions();
@@ -77,7 +79,7 @@ public class KrbClient {
 
     /**
      * Set KDC realm for ticket request
-     * @param realm
+     * @param realm The realm
      */
     public void setKdcRealm(String realm) {
         commonOptions.add(KrbOption.KDC_REALM, realm);
@@ -85,7 +87,7 @@ public class KrbClient {
 
     /**
      * Set KDC host.
-     * @param kdcHost
+     * @param kdcHost The kdc host
      */
     public void setKdcHost(String kdcHost) {
         commonOptions.add(KrbOption.KDC_HOST, kdcHost);
@@ -93,7 +95,7 @@ public class KrbClient {
 
     /**
      * Set KDC tcp port.
-     * @param kdcTcpPort
+     * @param kdcTcpPort The kdc tcp port
      */
     public void setKdcTcpPort(int kdcTcpPort) {
         if (kdcTcpPort < 1) {
@@ -105,7 +107,7 @@ public class KrbClient {
 
     /**
      * Set to allow UDP or not.
-     * @param allowUdp
+     * @param allowUdp true if allow udp
      */
     public void setAllowUdp(boolean allowUdp) {
         commonOptions.add(KrbOption.ALLOW_UDP, allowUdp);
@@ -113,7 +115,7 @@ public class KrbClient {
 
     /**
      * Set to allow TCP or not.
-     * @param allowTcp
+     * @param allowTcp true if allow tcp
      */
     public void setAllowTcp(boolean allowTcp) {
         commonOptions.add(KrbOption.ALLOW_TCP, allowTcp);
@@ -121,7 +123,7 @@ public class KrbClient {
 
     /**
      * Set KDC udp port. Only makes sense when allowUdp is set.
-     * @param kdcUdpPort
+     * @param kdcUdpPort The kdc udp port
      */
     public void setKdcUdpPort(int kdcUdpPort) {
         if (kdcUdpPort < 1) {
@@ -141,7 +143,7 @@ public class KrbClient {
 
     /**
      * Init the client.
-     * @throws KrbException
+     * @throws KrbException e
      */
     public void init() throws KrbException {
         innerClient = new DefaultInternalKrbClient(krbSetting);
@@ -162,10 +164,10 @@ public class KrbClient {
 
     /**
      * Request a TGT with user plain credential
-     * @param principal
-     * @param password
-     * @return
-     * @throws KrbException
+     * @param principal The principal
+     * @param password The password
+     * @return The tgt ticket
+     * @throws KrbException e
      */
     public TgtTicket requestTgtWithPassword(String principal,
                                       String password) throws KrbException {
@@ -178,10 +180,10 @@ public class KrbClient {
 
     /**
      * Request a TGT with user plain credential
-     * @param principal
-     * @param keytabFile
+     * @param principal The principal
+     * @param keytabFile The keytab file
      * @return TGT
-     * @throws KrbException
+     * @throws KrbException e
      */
     public TgtTicket requestTgtWithKeytab(String principal,
                                       File keytabFile) throws KrbException {
@@ -194,10 +196,10 @@ public class KrbClient {
 
     /**
      * Request a TGT with user x509 certificate credential
-     * @param certificate
-     * @param privateKey
+     * @param certificate The certificate
+     * @param privateKey The private key
      * @return TGT
-     * @throws KrbException
+     * @throws KrbException e
      */
     public TgtTicket requestTgtWithCert(Certificate certificate,
                                         PrivateKey privateKey) throws KrbException {
@@ -210,7 +212,7 @@ public class KrbClient {
     /**
      * Request a TGT with using Anonymous PKINIT
      * @return TGT
-     * @throws KrbException
+     * @throws KrbException e
      */
     public TgtTicket requestTgtWithPkintAnonymous() throws KrbException {
         KOptions requestOptions = new KOptions();
@@ -220,9 +222,10 @@ public class KrbClient {
 
     /**
      * Request a TGT with user token credential
-     * @param token
+     * @param token The auth token
+     * @param armorCache The armor cache
      * @return TGT
-     * @throws KrbException
+     * @throws KrbException e
      */
     public TgtTicket requestTgtWithToken(AuthToken token, String armorCache) throws KrbException {
         if (!token.isIdToken()) {
@@ -237,9 +240,9 @@ public class KrbClient {
 
     /**
      * Request a TGT with using well prepared requestOptions.
-     * @param requestOptions
+     * @param requestOptions The request options
      * @return TGT
-     * @throws KrbException
+     * @throws KrbException e
      */
     public TgtTicket requestTgtWithOptions(KOptions requestOptions) throws KrbException {
         if (requestOptions == null) {
@@ -251,10 +254,10 @@ public class KrbClient {
 
     /**
      * Request a service ticket with a TGT targeting for a server
-     * @param tgt
-     * @param serverPrincipal
-     * @return
-     * @throws KrbException
+     * @param tgt The tgt ticket
+     * @param serverPrincipal The server principal
+     * @return Service ticket
+     * @throws KrbException e
      */
     public ServiceTicket requestServiceTicketWithTgt(
             TgtTicket tgt, String serverPrincipal) throws KrbException {
@@ -266,8 +269,11 @@ public class KrbClient {
 
     /**
      * Request a service ticket using an Access Token.
+     * @param token The auth token
+     * @param serverPrincipal The server principal
+     * @param armorCache The armor cache
      * @return service ticket
-     * @throws KrbException
+     * @throws KrbException e
      */
     public ServiceTicket requestServiceTicketWithAccessToken(
             AuthToken token, String serverPrincipal,
@@ -284,9 +290,9 @@ public class KrbClient {
 
     /**
      * Store tgt into the specified credential cache file.
-     * @param tgtTicket
-     * @param ccacheFile
-     * @throws KrbException
+     * @param tgtTicket The tgt ticket
+     * @param ccacheFile The credential cache file
+     * @throws KrbException e
      */
     public void storeTicket(TgtTicket tgtTicket,
                             File ccacheFile) throws KrbException {

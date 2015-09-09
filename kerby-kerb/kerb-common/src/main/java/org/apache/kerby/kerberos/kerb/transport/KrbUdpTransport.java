@@ -26,7 +26,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
 /**
- * Default implementation of {@Link KrbTransport} using UDP.
+ * Default implementation of {@link KrbTransport} using UDP.
  */
 public class KrbUdpTransport
         extends AbstractKrbTransport implements KrbTransport {

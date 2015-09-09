@@ -62,7 +62,7 @@ public class KrbSetting {
     /**
      * Check kdc tcp setting and see if any bad.
      * @return valid tcp port or -1 if not allowTcp
-     * @throws KrbException
+     * @throws KrbException e
      */
     public int checkGetKdcTcpPort() throws KrbException {
         if (allowTcp()) {
@@ -78,7 +78,7 @@ public class KrbSetting {
     /**
      * Check kdc udp setting and see if any bad.
      * @return valid udp port or -1 if not allowUdp
-     * @throws KrbException
+     * @throws KrbException e
      */
     public int checkGetKdcUdpPort() throws KrbException {
         if (allowUdp()) {
