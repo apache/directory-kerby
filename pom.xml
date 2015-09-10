@@ -24,7 +24,7 @@
 
   <groupId>org.apache.kerby</groupId>
   <artifactId>kerby-all</artifactId>
-  <version>1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Apache Kerby Project</name>
