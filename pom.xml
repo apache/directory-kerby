@@ -160,6 +160,8 @@
               <exclude>**/.checkstyle</exclude>
               <!-- BIN files -->
               <exclude>**/bin/**/*</exclude>
+              <!-- The IP clearance XML doc -->
+              <exclude>docs/kerby-ip-clearance.xml</exclude>
             </excludes>
           </configuration>
         </plugin>
