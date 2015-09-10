@@ -113,8 +113,10 @@ public class KinitTool {
             printUsage("Can't get the conf dir!");
         }
 
-        //If not request tickets by keytab than by password.
-        if (!ktOptions.contains(KinitOption.USE_KEYTAB)) {
+        if (ktOptions.contains(KinitOption.ANONYMOUS)) {
+            ktOptions.add(KrbOption.USE_PKINIT_ANONYMOUS);
+        } else if (!ktOptions.contains(KinitOption.USE_KEYTAB)) {
+            //If not request tickets by keytab than by password.
             ktOptions.add(KinitOption.USE_PASSWD);
             String password = getPassword(principal);
             ktOptions.add(KinitOption.USER_PASSWD, password);
@@ -166,6 +168,10 @@ public class KinitTool {
         return krbClient;
     }
 
+    private static String getAnonymousPrincipal() {
+        return "WELLKNOWN/ANONYMOUS";
+    }
+
     public static void main(String[] args) throws Exception {
         KOptions ktOptions = new KOptions();
         KinitOption kto;
@@ -207,7 +213,9 @@ public class KinitTool {
             ktOptions.add(kto);
         }
 
-        if (principal == null) {
+        if (principal == null && ktOptions.contains(KinitOption.ANONYMOUS)) {
+            principal = getAnonymousPrincipal();
+        } else {
             printUsage("No principal is specified");
         }
 
