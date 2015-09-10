@@ -213,10 +213,12 @@ public class KinitTool {
             ktOptions.add(kto);
         }
 
-        if (principal == null && ktOptions.contains(KinitOption.ANONYMOUS)) {
-            principal = getAnonymousPrincipal();
-        } else {
-            printUsage("No principal is specified");
+        if (principal == null) {
+            if (ktOptions.contains(KinitOption.ANONYMOUS)) {
+                principal = getAnonymousPrincipal();
+            } else {
+                printUsage("No principal is specified");
+            }
         }
 
         requestTicket(principal, ktOptions);
