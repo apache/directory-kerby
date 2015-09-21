@@ -17,27 +17,36 @@
 
   <parent>
     <groupId>org.apache.kerby</groupId>
-    <artifactId>kerby-all</artifactId>
+    <artifactId>kerby-backend</artifactId>
     <version>1.0.0-RC2-SNAPSHOT</version>
   </parent>
 
-  <artifactId>kerby-backend</artifactId>
-  <name>Kerby Backend</name>
-  <packaging>pom</packaging>
+  <artifactId>flatbuffers-backend</artifactId>
 
-  <modules>
-    <module>ldap-backend</module>
-    <module>mavibot-backend</module>
-    <module>json-backend</module>
-    <module>zookeeper-backend</module>
-    <module>flatbuffers-backend</module>
-  </modules>
+  <name>Flatbuffers identity backend</name>
+  <description>Flatbuffers identity backend</description>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kerby-util</artifactId>
+      <artifactId>kerby-config</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-identity</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-identity-test</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.3.1</version>
     </dependency>
   </dependencies>
 </project>

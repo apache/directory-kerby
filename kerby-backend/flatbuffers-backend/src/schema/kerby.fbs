@@ -1,0 +1,28 @@
+// Kerby KDC backend schema file
+
+namespace org.apache.kerby.kerberos.kdc.identitybackend;
+
+table FbsPrincipalName {
+  nameType:int;
+  nameString:string;
+}
+
+table FbsEncryptionKey {
+  keyType:int;
+  keyValue:[byte];
+}
+
+table FbsKrbIdentity {
+  principal:FbsPrincipalName;
+  keyVersion:int;
+  kdcFlags:int;
+  disabled:bool;
+  keys:[FbsEncryptionKey];
+}
+
+table FbsKerby {
+  name:string;
+  identities:[FbsKrbIdentity];
+}
+
+root_type FbsKerby;
