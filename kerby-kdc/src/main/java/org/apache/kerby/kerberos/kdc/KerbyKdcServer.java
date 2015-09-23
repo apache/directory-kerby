@@ -49,11 +49,14 @@ public class KerbyKdcServer extends KdcServer {
         kadmin.checkBuiltinPrincipals();
     }
 
-    private static final String USAGE = OSUtil.isWindows()
-            ? "Usage: bin/start-kdc.cmd" : "Usage: sh bin/start-kdc.sh"
+    private static final String USAGE = (OSUtil.isWindows()
+            ? "Usage: bin\\start-kdc.cmd" : "Usage: sh bin/start-kdc.sh")
             + " [conf-dir] [working-dir] \n"
             + "\tExample:\n"
-            + "\t\tsh bin/start-kdc.sh conf runtime\n";
+            + "\t\t"
+            + (OSUtil.isWindows()
+            ? "bin\\start-kdc.cmd" : "sh bin/start-kdc.sh")
+            + " conf runtime\n";
 
     public static void main(String[] args) throws KrbException {
         if (args.length != 3) {
