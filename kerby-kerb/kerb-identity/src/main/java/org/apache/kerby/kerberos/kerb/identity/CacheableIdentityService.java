@@ -50,6 +50,22 @@ public class CacheableIdentityService
         init();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean supportTransaction() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public IdentityTransaction startTransaction() throws KrbException {
+        throw new KrbException("Transaction isn't supported");
+    }
+
     private void init() {
         Map<String, KrbIdentity> tmpMap =
             new LinkedHashMap<String, KrbIdentity>(cacheSize) {
