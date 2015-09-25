@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
  * Batch operations support to create/update/delete principal accounts
  * in a transaction.
  */
-public interface XTrans {
+public interface BatchTrans {
 
     /**
      * Commit this transaction, releasing any associated resources.
@@ -42,24 +42,24 @@ public interface XTrans {
     /**
      * Add an identity, and return the newly created result.
      * @param identity The identity
-     * @return XTrans
+     * @return BatchTrans
      * @throws KrbException e
      */
-    XTrans addIdentity(KrbIdentity identity) throws KrbException;
+    BatchTrans addIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Update an identity, and return the updated result.
      * @param identity The identity
-     * @return XTrans
+     * @return BatchTrans
      * @throws KrbException e
      */
-    XTrans updateIdentity(KrbIdentity identity) throws KrbException;
+    BatchTrans updateIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Delete the identity specified by principal name
      * @param principalName The principal name
-     * @return XTrans
+     * @return BatchTrans
      * @throws KrbException e
      */
-    XTrans deleteIdentity(String principalName) throws KrbException;
+    BatchTrans deleteIdentity(String principalName) throws KrbException;
 }

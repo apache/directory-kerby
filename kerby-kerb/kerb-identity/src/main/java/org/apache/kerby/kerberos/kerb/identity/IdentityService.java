@@ -30,13 +30,13 @@ public interface IdentityService {
      * Query to know if xtrans is supported or not.
      * @return true if supported, false otherwise
      */
-    boolean supportXtrans();
+    boolean supportBatchTrans();
 
     /**
      * Start a transaction.
      * @return xtrans
      */
-    XTrans startXtrans() throws KrbException;
+    BatchTrans startBatchTrans() throws KrbException;
 
     /**
      * Get all of the identity principal names.

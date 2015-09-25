@@ -54,7 +54,7 @@ public class CacheableIdentityService
      * {@inheritDoc}
      */
     @Override
-    public boolean supportXtrans() {
+    public boolean supportBatchTrans() {
         return false;
     }
 
@@ -62,7 +62,7 @@ public class CacheableIdentityService
      * {@inheritDoc}
      */
     @Override
-    public XTrans startXtrans() throws KrbException {
+    public BatchTrans startBatchTrans() throws KrbException {
         throw new KrbException("Transaction isn't supported");
     }
 
