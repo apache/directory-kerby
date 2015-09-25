@@ -27,16 +27,16 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 public interface IdentityService {
 
     /**
-     * Query to know if transaction is supported or not.
+     * Query to know if xtrans is supported or not.
      * @return true if supported, false otherwise
      */
-    boolean supportTransaction();
+    boolean supportXtrans();
 
     /**
      * Start a transaction.
-     * @return transaction
+     * @return xtrans
      */
-    IdentityTransaction startTransaction() throws KrbException;
+    XTrans startXtrans() throws KrbException;
 
     /**
      * Get all of the identity principal names.

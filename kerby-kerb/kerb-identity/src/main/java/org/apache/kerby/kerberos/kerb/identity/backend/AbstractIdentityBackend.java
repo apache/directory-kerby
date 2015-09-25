@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.kerby.config.Configured;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.identity.IdentityTransaction;
+import org.apache.kerby.kerberos.kerb.identity.XTrans;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,7 @@ public abstract class AbstractIdentityBackend
      * {@inheritDoc}
      */
     @Override
-    public boolean supportTransaction() {
+    public boolean supportXtrans() {
         return false;
     }
 
@@ -68,7 +68,7 @@ public abstract class AbstractIdentityBackend
      * {@inheritDoc}
      */
     @Override
-    public IdentityTransaction startTransaction() throws KrbException {
+    public XTrans startXtrans() throws KrbException {
         throw new KrbException("Transaction isn't supported");
     }
 

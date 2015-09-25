@@ -22,9 +22,10 @@ package org.apache.kerby.kerberos.kerb.identity;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 /**
- * Identity transaction for KDC backend to create/update/delete principal accounts.
+ * Batch operations support to create/update/delete principal accounts
+ * in a transaction.
  */
-public interface IdentityTransaction {
+public interface XTrans {
 
     /**
      * Commit this transaction, releasing any associated resources.
@@ -41,24 +42,24 @@ public interface IdentityTransaction {
     /**
      * Add an identity, and return the newly created result.
      * @param identity The identity
-     * @return IdentityTransaction
+     * @return XTrans
      * @throws KrbException e
      */
-    IdentityTransaction addIdentity(KrbIdentity identity) throws KrbException;
+    XTrans addIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Update an identity, and return the updated result.
      * @param identity The identity
-     * @return IdentityTransaction
+     * @return XTrans
      * @throws KrbException e
      */
-    IdentityTransaction updateIdentity(KrbIdentity identity) throws KrbException;
+    XTrans updateIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Delete the identity specified by principal name
      * @param principalName The principal name
-     * @return IdentityTransaction
+     * @return XTrans
      * @throws KrbException e
      */
-    IdentityTransaction deleteIdentity(String principalName) throws KrbException;
+    XTrans deleteIdentity(String principalName) throws KrbException;
 }
