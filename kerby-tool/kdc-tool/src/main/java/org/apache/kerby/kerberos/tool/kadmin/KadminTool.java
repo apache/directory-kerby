@@ -87,11 +87,14 @@ public class KadminTool {
             + "list_requests, lr, ?     List available requests.\n"
             + "quit, exit, q            Exit program.";
 
-    private static  final String USAGE = OSUtil.isWindows()
-            ? "Usage: bin/kadmin.cmd" : "Usage: sh bin/kadmin.sh"
+    private static  final String USAGE = (OSUtil.isWindows()
+            ? "Usage: bin\\kadmin.cmd" : "Usage: sh bin/kadmin.sh")
             + " [conf-dir] [-c cache_name]|[-k keytab]\n"
             + "\tExample:\n"
-            + "\t\tsh bin/kadmin.sh conf -k /home/admin.keytab\n";
+            + "\t\t"
+            + (OSUtil.isWindows()
+            ? "bin\\kadmin.cmd" : "sh bin/kadmin.sh")
+            + " conf -k admin.keytab\n";
 
     private static void printUsage(String error) {
         System.err.println(error + "\n");
