@@ -27,6 +27,7 @@ import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.EncryptionKeyAd
 import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.KerberosTimeAdapter;
 import org.apache.kerby.kerberos.kdc.identitybackend.typeAdapter.PrincipalNameAdapter;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.identity.BatchTrans;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
@@ -45,13 +46,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A Json file based backend implementation.
- *
  */
 public class JsonIdentityBackend extends AbstractIdentityBackend {
-    private static final Logger LOG = LoggerFactory.getLogger(JsonIdentityBackend.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(JsonIdentityBackend.class);
+
     public static final String JSON_IDENTITY_BACKEND_DIR = "backend.json.dir";
     private File jsonKdbFile;
     private Gson gson;
@@ -60,6 +64,8 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     private final Map<String, KrbIdentity> identities =
         new ConcurrentHashMap<>(new TreeMap<String, KrbIdentity>());
     private long kdbFileUpdateTime = -1;
+
+    private Lock lock = new ReentrantLock();
 
     public JsonIdentityBackend() {
 
@@ -78,69 +84,90 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      * {@inheritDoc}
      */
     @Override
-    protected void doInitialize() throws KrbException {
-        LOG.info("Initializing the Json identity backend.");
-        createGson();
-        load();
+    public boolean supportBatchTrans() {
+        return true;
     }
 
     /**
-     * Load identities from file
+     * {@inheritDoc}
      */
-    private void load() throws KrbException {
-        LOG.info("Loading the identities from json file.");
-        String jsonFile = getConfig().getString(JSON_IDENTITY_BACKEND_DIR);
+    @Override
+    public BatchTrans startBatchTrans() throws KrbException {
+        if (lock.tryLock()) {
+            checkAndReload();
+            return new JsonBatchTrans();
+        }
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void doInitialize() throws KrbException {
+        LOG.info("Initializing the Json identity backend.");
+
+        initGsonBuilder();
+
+        String dirPath = getConfig().getString(JSON_IDENTITY_BACKEND_DIR);
         File jsonFileDir;
-        if (jsonFile == null || jsonFile.isEmpty()) {
+        if (dirPath == null || dirPath.isEmpty()) {
             jsonFileDir = getBackendConfig().getConfDir();
         } else {
-            jsonFileDir = new File(jsonFile);
+            jsonFileDir = new File(dirPath);
             if (!jsonFileDir.exists() && !jsonFileDir.mkdirs()) {
-                throw new KrbException("could not create json file dir " + jsonFileDir);
+                throw new KrbException("Failed to create json file dir " + jsonFileDir);
             }
         }
 
         jsonKdbFile = new File(jsonFileDir, "json-backend.json");
-
         if (!jsonKdbFile.exists()) {
             try {
                 jsonKdbFile.createNewFile();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new KrbException("Failed to create " + jsonKdbFile.getAbsolutePath());
             }
         }
+    }
 
-        checkAndReload();
+    private void load() throws KrbException {
+        LOG.info("Loading the identities from json file.");
+
+        long nowTimeStamp = jsonKdbFile.lastModified();
+        String reloadedJsonContent;
+        if (lock.tryLock()) {
+            try {
+                try {
+                    reloadedJsonContent = IOUtil.readFile(jsonKdbFile);
+                } catch (IOException e) {
+                    throw new KrbException("Failed to read file", e);
+                }
+
+                Map<String, KrbIdentity> reloadedEntries =
+                        gson.fromJson(reloadedJsonContent,
+                                new TypeToken<HashMap<String, KrbIdentity>>() {
+                                }.getType());
+
+                if (reloadedEntries != null) {
+                    identities.clear();
+                    identities.putAll(reloadedEntries);
+                }
+
+                kdbFileUpdateTime = nowTimeStamp;
+            } finally {
+                lock.unlock();
+            }
+        }
     }
 
     /**
      * Check kdb file timestamp to see if it's changed or not. If
      * necessary load the kdb again.
      */
-    private synchronized void checkAndReload() throws KrbException {
+    private void checkAndReload() throws KrbException {
         long nowTimeStamp = jsonKdbFile.lastModified();
-
-        if (kdbFileUpdateTime < 0 ||
-                nowTimeStamp != kdbFileUpdateTime) {
-            //load identities
-            String reloadedJsonContent;
-            try {
-                reloadedJsonContent = IOUtil.readFile(jsonKdbFile);
-            } catch (IOException e) {
-                throw new KrbException("Failed to read file", e);
-            }
-
-            Map<String, KrbIdentity> reloadedEntries =
-                    gson.fromJson(reloadedJsonContent,
-                            new TypeToken<HashMap<String, KrbIdentity>>() {
-                            }.getType());
-
-            if (reloadedEntries != null) {
-                identities.clear();
-                identities.putAll(reloadedEntries);
-            }
-
-            kdbFileUpdateTime = nowTimeStamp;
+        if (nowTimeStamp != kdbFileUpdateTime) {
+            load();
         }
     }
 
@@ -160,8 +187,14 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     protected KrbIdentity doAddIdentity(KrbIdentity identity) throws KrbException {
         checkAndReload();
 
-        identities.put(identity.getPrincipalName(), identity);
-        persistToFile();
+        if (lock.tryLock()) {
+            try {
+                identities.put(identity.getPrincipalName(), identity);
+                persistToFile();
+            } finally {
+                lock.unlock();
+            }
+        }
 
         return doGetIdentity(identity.getPrincipalName());
     }
@@ -172,8 +205,15 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) throws KrbException {
         checkAndReload();
-        identities.put(identity.getPrincipalName(), identity);
-        persistToFile();
+
+        if (lock.tryLock()) {
+            try {
+                identities.put(identity.getPrincipalName(), identity);
+                persistToFile();
+            } finally {
+                lock.unlock();
+            }
+        }
 
         return doGetIdentity(identity.getPrincipalName());
     }
@@ -184,10 +224,19 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected void doDeleteIdentity(String principalName) throws KrbException {
         checkAndReload();
-        if (identities.containsKey(principalName)) {
-            identities.remove(principalName);
+
+        if (!identities.containsKey(principalName)) {
+            return;
         }
-        persistToFile();
+
+        if (lock.tryLock()) {
+            try {
+                identities.remove(principalName);
+                persistToFile();
+            } finally {
+                lock.unlock();
+            }
+        }
     }
 
     /**
@@ -201,10 +250,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         return principals;
     }
 
-    /**
-     *Create a gson
-     */
-    private void createGson() {
+    private void initGsonBuilder() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(EncryptionKey.class, new EncryptionKeyAdapter());
         gsonBuilder.registerTypeAdapter(PrincipalName.class, new PrincipalNameAdapter());
@@ -214,14 +260,66 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         gson = gsonBuilder.create();
     }
 
-    private synchronized void persistToFile() throws KrbException {
+    private void persistToFile() throws KrbException {
         String newJsonContent = gson.toJson(identities);
         try {
-            IOUtil.writeFile(newJsonContent, jsonKdbFile);
+            File newJsonKdbFile = File.createTempFile("kerby-kdb",
+                    ".json", jsonKdbFile.getParentFile());
+            IOUtil.writeFile(newJsonContent, newJsonKdbFile);
+            newJsonKdbFile.renameTo(jsonKdbFile);
             kdbFileUpdateTime = jsonKdbFile.lastModified();
         } catch (IOException e) {
             LOG.error("Error occurred while writing identities to file: " + jsonKdbFile);
             throw new KrbException("Failed to write file", e);
+        }
+    }
+
+    class JsonBatchTrans implements BatchTrans {
+
+        @Override
+        public void commit() throws KrbException {
+            try {
+                // Force to persist memory states to disk file.
+                persistToFile();
+            } finally {
+                lock.unlock();
+            }
+        }
+
+        @Override
+        public void rollback() throws KrbException {
+            // Force to reload from disk file and disgard the memory states.
+            try {
+                load();
+            } finally {
+                lock.unlock();
+            }
+        }
+
+        @Override
+        public BatchTrans addIdentity(KrbIdentity identity) throws KrbException {
+            if (identity != null &&
+                    identities.containsKey(identity.getPrincipalName())) {
+                identities.put(identity.getPrincipalName(), identity);
+            }
+            return this;
+        }
+
+        @Override
+        public BatchTrans updateIdentity(KrbIdentity identity) throws KrbException {
+            if (identity != null &&
+                    identities.containsKey(identity.getPrincipalName())) {
+                identities.put(identity.getPrincipalName(), identity);
+            }
+            return this;
+        }
+
+        @Override
+        public BatchTrans deleteIdentity(String principalName) throws KrbException {
+            if (principalName != null && identities.containsKey(principalName)) {
+                identities.remove(principalName);
+            }
+            return this;
         }
     }
 }
