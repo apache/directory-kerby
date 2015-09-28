@@ -298,8 +298,8 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
 
         @Override
         public BatchTrans addIdentity(KrbIdentity identity) throws KrbException {
-            if (identity != null &&
-                    identities.containsKey(identity.getPrincipalName())) {
+            if (identity != null
+                    && identities.containsKey(identity.getPrincipalName())) {
                 identities.put(identity.getPrincipalName(), identity);
             }
             return this;
@@ -307,8 +307,8 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
 
         @Override
         public BatchTrans updateIdentity(KrbIdentity identity) throws KrbException {
-            if (identity != null &&
-                    identities.containsKey(identity.getPrincipalName())) {
+            if (identity != null
+                    && identities.containsKey(identity.getPrincipalName())) {
                 identities.put(identity.getPrincipalName(), identity);
             }
             return this;
