@@ -73,6 +73,7 @@ public abstract class KdcNetwork {
         }).start();
     }
 
+    //CHECKSTYLE:OFF
     private void run() {
         while (true) {
             synchronized (this) {
@@ -85,7 +86,7 @@ public abstract class KdcNetwork {
                 try {
                     checkAndAccept();
                 } catch (SocketTimeoutException e) { //NOPMD
-                    System.err.println(e); //NOOP as normal
+                    //NOOP as normal
                 } catch (IOException e) {
                     throw new RuntimeException("Error occured while checking tcp connections", e);
                 }
@@ -94,14 +95,15 @@ public abstract class KdcNetwork {
             if (tpair.udpAddress != null) {
                 try {
                     checkUdpMessage();
-                } catch (SocketTimeoutException e) {
-                    System.err.println(e); //NOOP as normal
+                } catch (SocketTimeoutException e) { //NOPMD
+                    //NOOP as normal
                 } catch (IOException e) {
                     throw new RuntimeException("Error occured while checking udp connections", e);
                 }
             }
         }
     }
+    //CHECKSTYLE:ON
 
     public synchronized void stop() {
         isStopped = true;

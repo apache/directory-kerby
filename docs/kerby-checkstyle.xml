@@ -133,6 +133,7 @@
         <module name="ArrayTypeStyle"/>
         <module name="UpperEll"/>
 
+        <module name="FileContentsHolder"/>
 
     </module>
 
@@ -143,5 +144,7 @@
     <!-- Checks properties file for a duplicated properties. -->
     <!-- See http://checkstyle.sourceforge.net/config_misc.html#UniqueProperties -->
     <module name="UniqueProperties"/>
+
+    <module name="SuppressionCommentFilter"/>
 
 </module>
