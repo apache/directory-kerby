@@ -25,9 +25,9 @@ import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncodingType;
 /**
  * Issuing TGT ticket.
  */
-public class TgtTickertIssuer extends TickertIssuer {
+public class TgtTicketIssuer extends TicketIssuer {
 
-    public TgtTickertIssuer(AsRequest kdcRequest) {
+    public TgtTicketIssuer(AsRequest kdcRequest) {
         super(kdcRequest);
     }
 

@@ -27,11 +27,11 @@ import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 /**
  * Issuing service ticket.
  */
-public class ServiceTickertIssuer extends TickertIssuer {
+public class ServiceTicketIssuer extends TicketIssuer {
     private final Ticket tgtTicket;
     private final AuthToken token;
 
-    public ServiceTickertIssuer(TgsRequest kdcRequest) {
+    public ServiceTicketIssuer(TgsRequest kdcRequest) {
         super(kdcRequest);
         tgtTicket = kdcRequest.getTgtTicket();
         token = kdcRequest.getToken();

@@ -102,7 +102,7 @@ public class AsRequest extends KdcRequest {
      */
     @Override
     protected void issueTicket() throws KrbException {
-        TickertIssuer issuer = new TgtTickertIssuer(this);
+        TicketIssuer issuer = new TgtTicketIssuer(this);
         Ticket newTicket = issuer.issueTicket();
         setTicket(newTicket);
     }
