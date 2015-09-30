@@ -78,7 +78,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         authToken.setAudiences(aud);
 
         // Set expiration in 60 minutes
-        final Date now =  new Date(new Date().getTime() / 1000 * 1000);
+        final Date now = new Date();
         Date exp = new Date(now.getTime() + 1000 * 60 * 60);
         authToken.setExpirationTime(exp);
 
