@@ -20,7 +20,11 @@
 package org.apache.kerby.kerberos.provider.token;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.DirectDecrypter;
+import com.nimbusds.jose.crypto.ECDSAVerifier;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.EncryptedJWT;
@@ -28,11 +32,16 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
+
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
@@ -43,8 +52,8 @@ import java.util.List;
  * JWT token decoder, implemented using Nimbus JWT library.
  */
 public class JwtTokenDecoder implements TokenDecoder {
-    private RSAPrivateKey decryptionKey;
-    private RSAPublicKey verifyKey;
+    private Object decryptionKey;
+    private Object verifyKey;
     private List<String> audiences = null;
 
     /**
@@ -133,12 +142,22 @@ public class JwtTokenDecoder implements TokenDecoder {
      * @param encryptedJWT an encrypted JWT
      */
     public void decryptEncryptedJWT(EncryptedJWT encryptedJWT) throws IOException {
-        RSADecrypter decrypter = new RSADecrypter(decryptionKey);
         try {
+            JWEDecrypter decrypter = getDecrypter();
             encryptedJWT.decrypt(decrypter);
-        } catch (JOSEException e) {
+        } catch (JOSEException | KrbException e) {
             throw new IOException("Failed to decrypt the encrypted JWT", e);
         }
+    }
+    
+    private JWEDecrypter getDecrypter() throws JOSEException, KrbException {
+        if (decryptionKey instanceof RSAPrivateKey) {
+            return new RSADecrypter((RSAPrivateKey) decryptionKey);
+        } else if (decryptionKey instanceof byte[]) {
+            return new DirectDecrypter((byte[]) decryptionKey);
+        }
+        
+        throw new KrbException("An unknown decryption key was specified");
     }
 
     /**
@@ -146,7 +165,16 @@ public class JwtTokenDecoder implements TokenDecoder {
      *
      * @param key a private key
      */
-    public void setDecryptionKey(RSAPrivateKey key) {
+    public void setDecryptionKey(PrivateKey key) {
+        decryptionKey = key;
+    }
+    
+    /**
+     * Set the decryption key
+     *
+     * @param key a secret key
+     */
+    public void setDecryptionKey(byte[] key) {
         decryptionKey = key;
     }
 
@@ -158,12 +186,26 @@ public class JwtTokenDecoder implements TokenDecoder {
      * @return whether verify success
      */
     public boolean verifySignedJWT(SignedJWT signedJWT) throws IOException {
-        JWSVerifier verifier = new RSASSAVerifier(verifyKey);
         try {
+            JWSVerifier verifier = getVerifier();
             return signedJWT.verify(verifier);
-        } catch (JOSEException e) {
+        } catch (JOSEException | KrbException e) {
             throw new IOException("Failed to verify the signed JWT", e);
         }
+    }
+    
+    private JWSVerifier getVerifier() throws JOSEException, KrbException {
+        if (verifyKey instanceof RSAPublicKey) {
+            return new RSASSAVerifier((RSAPublicKey) verifyKey);
+        } else if (verifyKey instanceof ECPublicKey) {
+            ECPublicKey ecPublicKey = (ECPublicKey) verifyKey;
+            return new ECDSAVerifier(ecPublicKey.getW().getAffineX(),
+                                     ecPublicKey.getW().getAffineY());
+        } else if (verifyKey instanceof byte[]) {
+            return new MACVerifier((byte[]) verifyKey);
+        }
+        
+        throw new KrbException("An unknown verify key was specified");
     }
 
     /**
@@ -171,7 +213,16 @@ public class JwtTokenDecoder implements TokenDecoder {
      *
      * @param key a public key
      */
-    public void setVerifyKey(RSAPublicKey key) {
+    public void setVerifyKey(PublicKey key) {
+        verifyKey = key;
+    }
+    
+    /**
+     * set the verify key
+     *
+     * @param key a byte[] key
+     */
+    public void setVerifyKey(byte[] key) {
         verifyKey = key;
     }
 
@@ -187,7 +238,7 @@ public class JwtTokenDecoder implements TokenDecoder {
     private boolean verifyToken(JWT jwtToken) throws IOException {
         boolean audValid = verifyAudiences(jwtToken);
         boolean expValid = verifyExpiration(jwtToken);
-        return  audValid && expValid;
+        return audValid && expValid;
     }
 
     private boolean verifyAudiences(JWT jwtToken) throws IOException {
