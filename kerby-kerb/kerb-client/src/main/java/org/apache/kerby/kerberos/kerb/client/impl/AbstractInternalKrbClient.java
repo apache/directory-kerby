@@ -97,6 +97,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         if (requestOptions.contains(KrbOption.CLIENT_PRINCIPAL)) {
             String principal = requestOptions.getStringOption(
                     KrbOption.CLIENT_PRINCIPAL);
+            principal = fixPrincipal(principal);
             asRequest.setClientPrincipal(new PrincipalName(principal));
         }
         asRequest.setKrbOptions(requestOptions);
@@ -121,8 +122,10 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             throw new IllegalArgumentException(
                     "No valid krb client request option found");
         }
-        tgsRequest.setServerPrincipal(new PrincipalName(requestOptions.
-                getStringOption(KrbOption.SERVER_PRINCIPAL)));
+
+        String serverPrincipal = fixPrincipal(requestOptions.
+                getStringOption(KrbOption.SERVER_PRINCIPAL));
+        tgsRequest.setServerPrincipal(new PrincipalName(serverPrincipal));
         tgsRequest.setKrbOptions(requestOptions);
 
         return doRequestServiceTicket(tgsRequest);
@@ -133,4 +136,16 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
 
     protected abstract ServiceTicket doRequestServiceTicket(
             TgsRequest tgsRequest) throws KrbException;
+
+    /**
+     * Fix principal name.
+     *
+     * @param principal The principal name
+     */
+    protected String fixPrincipal(String principal) {
+        if (!principal.contains("@")) {
+            principal += "@" + krbSetting.getKdcRealm();
+        }
+        return principal;
+    }
 }
