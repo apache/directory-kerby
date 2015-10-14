@@ -23,6 +23,7 @@ import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.common.PublicKeyReader;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.preauth.token.TokenPreauthMeta;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
@@ -39,8 +40,14 @@ import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.spec.pa.token.PaTokenRequest;
+import org.apache.kerby.kerberos.kerb.spec.pa.token.TokenInfo;
+import org.apache.kerby.kerberos.provider.token.JwtTokenDecoder;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.List;
 
 public class TokenPreauth extends AbstractPreauthPlugin {
@@ -67,6 +74,27 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             KrbToken token = paTokenRequest.getToken();
 
             TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+            if (tokenDecoder instanceof JwtTokenDecoder) {
+                TokenInfo tokenInfo = paTokenRequest.getTokenInfo();
+                String issuer = tokenInfo.getTokenVendor();
+                String verifyKeyPath = kdcRequest.getKdcContext().getConfig().getVerifyKeyConfig();
+                if (verifyKeyPath != null) {
+                    File verifyKeyFile = getVerifyKeyFile(verifyKeyPath, issuer);
+                    if (verifyKeyFile != null) {
+                        PublicKey verifyKey = null;
+                        try {
+                            FileInputStream fis = new FileInputStream(verifyKeyFile);
+                            verifyKey = PublicKeyReader.loadPublicKey(fis);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ((JwtTokenDecoder) tokenDecoder).setVerifyKey(verifyKey);
+                    }
+                }
+            }
+
             AuthToken authToken = null;
             try {
                 authToken = tokenDecoder.decodeFromBytes(token.getTokenValue());
@@ -88,10 +116,23 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                     throw new KrbException("Token audience not match with the target server principal!");
                 }
             }
-
             return true;
         } else {
             return false;
         }
+    }
+
+    private File getVerifyKeyFile(String path, String issuer) {
+        File folder = new File(path);
+        File[] listOfFiles = folder.listFiles();
+        File verifyKeyFile = null;
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile() && listOfFiles[i].getName().contains(issuer)) {
+                verifyKeyFile = listOfFiles[i];
+                break;
+            }
+        }
+        return verifyKeyFile;
     }
 }

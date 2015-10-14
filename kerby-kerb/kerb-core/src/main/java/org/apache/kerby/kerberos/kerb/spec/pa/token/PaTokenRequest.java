@@ -50,8 +50,8 @@ public class PaTokenRequest extends KrbSequenceType {
         setFieldAs(TOKEN, token);
     }
 
-    public String getTokenInfo() {
-        return getFieldAsString(TOKEN_INFO);
+    public TokenInfo getTokenInfo() {
+        return getFieldAs(TOKEN_INFO, TokenInfo.class);
     }
 
     public void setTokenInfo(TokenInfo tokenInfo) {

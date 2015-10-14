@@ -161,4 +161,8 @@ public class KdcConfig extends Conf {
         return KrbConfHelper.getIntUnderSection(this,
                 KdcConfigKey.KDC_MAX_DGRAM_REPLY_SIZE);
     }
+
+    public String getVerifyKeyConfig() {
+        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.VERIFY_KEY);
+    }
 }
