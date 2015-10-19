@@ -66,6 +66,7 @@ public class TokenLoginTestBase extends LoginTestBase {
             isTokenPreauthAllowed());
         String verifyKeyFile = this.getClass().getResource("/").getPath();
         getKdcServer().getKdcConfig().setString(KdcConfigKey.VERIFY_KEY, verifyKeyFile);
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.ISSUERS, "token-service");
     }
 
     protected Boolean isTokenPreauthAllowed() {

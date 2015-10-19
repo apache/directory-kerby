@@ -72,11 +72,14 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                 KeyUsage.PA_TOKEN, PaTokenRequest.class);
 
             KrbToken token = paTokenRequest.getToken();
-
+            List<String> issuers = kdcRequest.getKdcContext().getConfig().getIssuers();
+            TokenInfo tokenInfo = paTokenRequest.getTokenInfo();
+            String issuer = tokenInfo.getTokenVendor();
+            if (!(issuers.contains(issuer))) {
+                throw new KrbException("Unconfigured issuer:" + issuer);
+            }
             TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
             if (tokenDecoder instanceof JwtTokenDecoder) {
-                TokenInfo tokenInfo = paTokenRequest.getTokenInfo();
-                String issuer = tokenInfo.getTokenVendor();
                 String verifyKeyPath = kdcRequest.getKdcContext().getConfig().getVerifyKeyConfig();
                 if (verifyKeyPath != null) {
                     File verifyKeyFile = getVerifyKeyFile(verifyKeyPath, issuer);
@@ -94,7 +97,6 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                     }
                 }
             }
-
             AuthToken authToken = null;
             try {
                 authToken = tokenDecoder.decodeFromBytes(token.getTokenValue());

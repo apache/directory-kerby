@@ -67,6 +67,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         super.configKdcSeverAndClient();
         String verifyKeyPath = this.getClass().getResource("/").getPath();
         getKdcServer().getKdcConfig().setString(KdcConfigKey.VERIFY_KEY, verifyKeyPath);
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.ISSUERS, ISSUER);
     }
 
     protected AuthToken getKrbToken() {
