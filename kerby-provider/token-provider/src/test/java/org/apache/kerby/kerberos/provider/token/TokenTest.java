@@ -283,6 +283,24 @@ public class TokenTest {
         Assertions.assertThat(token2).isNull();
     }
 
+    @Test
+    public void testNotBeforeTime() throws Exception {
+        authToken.setNotBeforeTime(new Date(new Date().getTime() + 1000 * 60));
+
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
+        setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
+
+        String tokenStr = tokenEncoder.encodeAsString(authToken);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
+        Assertions.assertThat(token2).isNull();
+    }
+
     private void setEncryptKey(JwtTokenEncoder encoder, JwtTokenDecoder decoder) {
         KeyPair encryptionKeyPair = getKeyPair();
         encoder.setEncryptionKey((RSAPublicKey) encryptionKeyPair.getPublic());

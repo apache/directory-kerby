@@ -265,7 +265,8 @@ public class JwtTokenDecoder implements TokenDecoder {
         boolean valid = false;
         try {
             Date expire = jwtToken.getJWTClaimsSet().getExpirationTime();
-            if (expire != null && new Date().before(expire)) {
+            Date notBefore = jwtToken.getJWTClaimsSet().getNotBeforeTime();
+            if (expire != null && new Date().before(expire) && new Date().after(notBefore)) {
                 valid = true;
             }
         } catch (ParseException e) {
