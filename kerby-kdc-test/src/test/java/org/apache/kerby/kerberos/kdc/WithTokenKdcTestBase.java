@@ -40,7 +40,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.PrivateKey;
-import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -77,10 +76,23 @@ public class WithTokenKdcTestBase extends KdcTestBase {
     protected File getcCacheFile() {
         return cCacheFile;
     }
-
+    
     protected AuthToken prepareToken(String servicePrincipal) {
+        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        PrivateKey privateKey = null;
+        try {
+            privateKey = PrivateKeyReader.loadPrivateKey(is);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return prepareToken(servicePrincipal, ISSUER, AUDIENCE, privateKey);
+    }
+    
+    protected AuthToken prepareToken(String servicePrincipal, String issuer, String audience, 
+                                     PrivateKey signingKey) {
         AuthToken authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();
-        authToken.setIssuer(ISSUER);
+        authToken.setIssuer(issuer);
         authToken.setSubject(SUBJECT);
 
         authToken.addAttribute("group", GROUP);
@@ -90,7 +102,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         if (servicePrincipal != null) {
             aud.add(servicePrincipal);
         }
-        aud.add(AUDIENCE);
+        aud.add(audience);
         authToken.setAudiences(aud);
 
         // Set expiration in 60 minutes
@@ -106,16 +118,8 @@ public class WithTokenKdcTestBase extends KdcTestBase {
 
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
 
-        if (tokenEncoder instanceof JwtTokenEncoder) {
-            InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
-            PrivateKey privateKey = null;
-            try {
-                privateKey = PrivateKeyReader.loadPrivateKey(is);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            ((JwtTokenEncoder) tokenEncoder).setSignKey((RSAPrivateKey) privateKey);
+        if (tokenEncoder instanceof JwtTokenEncoder && signingKey != null) {
+            ((JwtTokenEncoder) tokenEncoder).setSignKey(signingKey);
         }
 
         krbToken = new KrbToken();

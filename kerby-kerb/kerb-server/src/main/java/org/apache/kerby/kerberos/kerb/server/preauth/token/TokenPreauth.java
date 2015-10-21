@@ -76,7 +76,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             TokenInfo tokenInfo = paTokenRequest.getTokenInfo();
             String issuer = tokenInfo.getTokenVendor();
             if (!(issuers.contains(issuer))) {
-                throw new KrbException("Unconfigured issuer:" + issuer);
+                throw new KrbException("Unconfigured issuer: " + issuer);
             }
             TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
             if (tokenDecoder instanceof JwtTokenDecoder) {

@@ -20,11 +20,14 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.junit.Assert;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.io.InputStream;
+import java.security.PrivateKey;
 
 public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
 
@@ -32,6 +35,58 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
     public void testKdc() throws Exception {
 
         prepareToken(null);
+        performTest();
+    }
+    
+    @Test
+    public void testBadIssuer() throws Exception {
+        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
+        prepareToken(null, "oauth1.com", AUDIENCE, privateKey);
+        
+        try {
+            performTest();
+            Assert.fail("Failure expected on a bad issuer value");
+        } catch (Exception ex) {
+            // expected
+            Assert.assertTrue(ex instanceof KrbException);
+        }
+    }
+    
+    // TODO - not failing yet.
+    @Test
+    @org.junit.Ignore
+    public void testBadAudienceRestriction() throws Exception {
+        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
+        prepareToken(null, ISSUER, "krbtgt2@EXAMPLE.COM", privateKey);
+        
+        try {
+            performTest();
+            Assert.fail("Failure expected on a bad audience restriction value");
+        } catch (Exception ex) {
+            // expected
+            Assert.assertTrue(ex instanceof KrbException);
+        }
+    }
+    
+    // TODO - not failing yet.
+    @Test
+    @org.junit.Ignore
+    public void testUnsignedToken() throws Exception {
+        prepareToken(null, ISSUER, "krbtgt2@EXAMPLE.COM", null);
+        
+        try {
+            performTest();
+            Assert.fail("Failure expected on an unsigned token");
+        } catch (Exception ex) {
+            // expected
+            Assert.assertTrue(ex instanceof KrbException);
+        }
+    }
+    
+    private void performTest() throws Exception {
+
         createCredentialCache(getClientPrincipal(), getClientPassword());
 
         TgtTicket tgt = null;
@@ -39,8 +94,10 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
             tgt = getKrbClient().requestTgtWithToken(getKrbToken(),
                     getcCacheFile().getPath());
         } catch (KrbException e) {
-            assertThat(e.getMessage().contains("timeout")).isTrue();
-            return;
+            if (e.getMessage().contains("timeout")) {
+                return;
+            }
+            throw e;
         }
         verifyTicket(tgt);
 
