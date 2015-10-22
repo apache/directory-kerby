@@ -117,6 +117,25 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
         performTest();
     }
     
+    @Test
+    public void testSignedEncryptedTokenBadSigningKey() throws Exception {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        KeyPair keyPair = keyGen.generateKeyPair();
+        
+        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
+        PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
+        
+        prepareToken(null, ISSUER, AUDIENCE, keyPair.getPrivate(), publicKey);
+        
+        try {
+            performTest();
+            Assert.fail("Failure expected on a bad key");
+        } catch (Exception ex) {
+            // expected
+            Assert.assertTrue(ex instanceof KrbException);
+        }
+    }
+    
     private void performTest() throws Exception {
 
         createCredentialCache(getClientPrincipal(), getClientPassword());
