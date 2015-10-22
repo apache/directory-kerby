@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
+import org.apache.kerby.kerberos.kerb.common.PublicKeyReader;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
@@ -30,6 +31,7 @@ import java.io.InputStream;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 
 public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
 
@@ -44,7 +46,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
     public void testBadIssuer() throws Exception {
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
-        prepareToken(null, "oauth1.com", AUDIENCE, privateKey);
+        prepareToken(null, "oauth1.com", AUDIENCE, privateKey, null);
         
         try {
             performTest();
@@ -61,7 +63,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
     public void testBadAudienceRestriction() throws Exception {
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
-        prepareToken(null, ISSUER, "krbtgt2@EXAMPLE.COM", privateKey);
+        prepareToken(null, ISSUER, "krbtgt2@EXAMPLE.COM", privateKey, null);
         
         try {
             performTest();
@@ -76,7 +78,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
     @Test
     @org.junit.Ignore
     public void testUnsignedToken() throws Exception {
-        prepareToken(null, ISSUER, "krbtgt2@EXAMPLE.COM", null);
+        prepareToken(null, ISSUER, "krbtgt2@EXAMPLE.COM", null, null);
         
         try {
             performTest();
@@ -91,7 +93,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
     public void testSignedTokenWithABadKey() throws Exception {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         KeyPair keyPair = keyGen.generateKeyPair();
-        prepareToken(null, ISSUER, AUDIENCE, keyPair.getPrivate());
+        prepareToken(null, ISSUER, AUDIENCE, keyPair.getPrivate(), null);
         
         try {
             performTest();
@@ -100,6 +102,19 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
             // expected
             Assert.assertTrue(ex instanceof KrbException);
         }
+    }
+    
+    @Test
+    public void testSignedEncryptedToken() throws Exception {
+        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
+        
+        is = WithTokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
+        PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
+        
+        prepareToken(null, ISSUER, AUDIENCE, privateKey, publicKey);
+        
+        performTest();
     }
     
     private void performTest() throws Exception {

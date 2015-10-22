@@ -39,7 +39,9 @@ import org.junit.Before;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -66,6 +68,9 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         super.configKdcSeverAndClient();
         String verifyKeyPath = this.getClass().getResource("/").getPath();
         getKdcServer().getKdcConfig().setString(KdcConfigKey.VERIFY_KEY, verifyKeyPath);
+        
+        URL privateKeyPath = WithTokenKdcTestBase.class.getResource("/private_key.pem");
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.DECRYPTION_KEY, privateKeyPath.getPath());
         getKdcServer().getKdcConfig().setString(KdcConfigKey.ISSUERS, ISSUER);
     }
 
@@ -86,11 +91,11 @@ public class WithTokenKdcTestBase extends KdcTestBase {
             e.printStackTrace();
         }
 
-        return prepareToken(servicePrincipal, ISSUER, AUDIENCE, privateKey);
+        return prepareToken(servicePrincipal, ISSUER, AUDIENCE, privateKey, null);
     }
     
     protected AuthToken prepareToken(String servicePrincipal, String issuer, String audience, 
-                                     PrivateKey signingKey) {
+                                     PrivateKey signingKey, PublicKey encryptionKey) {
         AuthToken authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();
         authToken.setIssuer(issuer);
         authToken.setSubject(SUBJECT);
@@ -120,6 +125,9 @@ public class WithTokenKdcTestBase extends KdcTestBase {
 
         if (tokenEncoder instanceof JwtTokenEncoder && signingKey != null) {
             ((JwtTokenEncoder) tokenEncoder).setSignKey(signingKey);
+        }
+        if (tokenEncoder instanceof JwtTokenEncoder && encryptionKey != null) {
+            ((JwtTokenEncoder) tokenEncoder).setEncryptionKey(encryptionKey);
         }
 
         krbToken = new KrbToken();

@@ -167,6 +167,10 @@ public class KdcConfig extends Conf {
         return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.VERIFY_KEY);
     }
 
+    public String getDecryptionKeyConfig() {
+        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.DECRYPTION_KEY);
+    }
+    
     public List<String> getIssuers() {
         return Arrays.asList(KrbConfHelper.getStringArrayUnderSection(this, KdcConfigKey.ISSUERS));
     }

@@ -50,6 +50,7 @@ public enum KdcConfigKey implements SectionConfigKey {
     RESTRICT_ANONYMOUS_TO_TGT(false, "kdcdefaults"),
     KDC_MAX_DGRAM_REPLY_SIZE(4096, "kdcdefaults"),
     VERIFY_KEY(null, "kdcdefaults"),
+    DECRYPTION_KEY(null, "kdcdefaults"),
     ISSUERS(null, "kdcdefaults");
 
     private Object defaultValue;
