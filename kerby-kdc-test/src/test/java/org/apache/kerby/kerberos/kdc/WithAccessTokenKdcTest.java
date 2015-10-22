@@ -24,6 +24,7 @@ import java.security.PrivateKey;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
+import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,14 +51,13 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
             Assert.assertTrue(ex instanceof KrbException);
         }
     }
-    
-    // TODO - not failing yet.
+
     @Test
-    @org.junit.Ignore
     public void testBadAudienceRestriction() throws Exception {
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
-        prepareToken(getServerPrincipal(), ISSUER, "krbtgt2@EXAMPLE.COM", privateKey);
+        prepareToken("bad-service" + "/" + getHostname() + "@" + TestKdcServer.KDC_REALM,
+                ISSUER, AUDIENCE, privateKey);
         
         try {
             performTest();
