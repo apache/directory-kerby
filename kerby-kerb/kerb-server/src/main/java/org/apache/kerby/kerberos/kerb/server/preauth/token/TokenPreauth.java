@@ -103,6 +103,10 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             } catch (IOException e) {
                 throw new KrbException("Decoding failed", e);
             }
+            
+            if (authToken == null) {
+                throw new KrbException("Token Decoding failed");
+            }
 
             if (kdcRequest instanceof AsRequest) {
                 AsRequest asRequest = (AsRequest) kdcRequest;

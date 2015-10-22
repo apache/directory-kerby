@@ -27,6 +27,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 
 public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
@@ -79,6 +81,21 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
         try {
             performTest();
             Assert.fail("Failure expected on an unsigned token");
+        } catch (Exception ex) {
+            // expected
+            Assert.assertTrue(ex instanceof KrbException);
+        }
+    }
+    
+    @Test
+    public void testSignedTokenWithABadKey() throws Exception {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        KeyPair keyPair = keyGen.generateKeyPair();
+        prepareToken(null, ISSUER, AUDIENCE, keyPair.getPrivate());
+        
+        try {
+            performTest();
+            Assert.fail("Failure expected on a bad key");
         } catch (Exception ex) {
             // expected
             Assert.assertTrue(ex instanceof KrbException);
