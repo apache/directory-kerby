@@ -71,10 +71,8 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
             Assert.assertTrue(ex instanceof KrbException);
         }
     }
-    
-    // TODO - not failing yet.
+
     @Test
-    @org.junit.Ignore
     public void testUnsignedToken() throws Exception {
         prepareToken(getServerPrincipal(), ISSUER, AUDIENCE, null, null);
         

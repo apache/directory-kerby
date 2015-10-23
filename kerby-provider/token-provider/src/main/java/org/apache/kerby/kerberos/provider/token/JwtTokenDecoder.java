@@ -55,6 +55,7 @@ public class JwtTokenDecoder implements TokenDecoder {
     private Object decryptionKey;
     private Object verifyKey;
     private List<String> audiences = null;
+    private boolean signed = false;
 
     /**
      * {@inheritDoc}
@@ -100,6 +101,7 @@ public class JwtTokenDecoder implements TokenDecoder {
                 boolean success = verifySignedJWT(signedJWT) && verifyToken(signedJWT);
                 if (success) {
                     try {
+                        signed = true;
                         return new JwtAuthToken(signedJWT.getJWTClaimsSet());
                     } catch (ParseException e) {
                         throw new IOException("Failed to get JWT claims set", e);
@@ -123,6 +125,7 @@ public class JwtTokenDecoder implements TokenDecoder {
             boolean success = verifySignedJWT(signedJWT) && verifyToken(signedJWT);
             if (success) {
                 try {
+                    signed = true;
                     return new JwtAuthToken(signedJWT.getJWTClaimsSet());
                 } catch (ParseException e) {
                     throw new IOException("Failed to get JWT claims set", e);
@@ -273,5 +276,9 @@ public class JwtTokenDecoder implements TokenDecoder {
             throw new IOException("Failed to get JWT claims set", e);
         }
         return valid;
+    }
+
+    public boolean isSigned() {
+        return signed;
     }
 }

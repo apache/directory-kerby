@@ -88,6 +88,9 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             AuthToken authToken = null;
             try {
                 authToken = tokenDecoder.decodeFromBytes(token.getTokenValue());
+                if (!((JwtTokenDecoder) tokenDecoder).isSigned()) {
+                    throw new KrbException("Token should be signed.");
+                }
             } catch (IOException e) {
                 throw new KrbException("Decoding failed", e);
             }
