@@ -31,11 +31,11 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jmh.version>1.10.3</jmh.version>
+    <jmh.version>1.11.1</jmh.version>
     <javac.target>1.6</javac.target>
     <uberjar.name>benchmarks</uberjar.name>
     <apache.ds.version>2.0.0-M20</apache.ds.version>
-    <apache.ds.api.version>1.0.0-M28</apache.ds.api.version>
+    <apache.ds.api.version>1.0.0-M32</apache.ds.api.version>
   </properties>
 
   <dependencies>
@@ -186,7 +186,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
-            <version>2.2</version>
+            <version>2.4</version>
             <executions>
               <execution>
                 <phase>package</phase>
