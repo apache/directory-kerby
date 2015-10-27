@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kdc;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
 import org.apache.kerby.kerberos.kerb.common.PublicKeyReader;
+import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
@@ -37,17 +38,16 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
 
     @Test
     public void testKdc() throws Exception {
-
-        prepareToken(null);
+        prepareToken(getAudience("krbtgt"));
         performTest();
     }
-    
+
     @Test
     public void testBadIssuer() throws Exception {
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
-        prepareToken(null, "oauth1.com", AUDIENCE, privateKey, null);
-        
+        prepareToken(getAudience("krbtgt"), "oauth1.com", privateKey, null);
+
         try {
             performTest();
             Assert.fail("Failure expected on a bad issuer value");
@@ -56,15 +56,13 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
             Assert.assertTrue(ex instanceof KrbException);
         }
     }
-    
-    // TODO - not failing yet.
+
     @Test
-    @org.junit.Ignore
     public void testBadAudienceRestriction() throws Exception {
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
-        prepareToken(null, ISSUER, "krbtgt2@EXAMPLE.COM", privateKey, null);
-        
+        prepareToken("krbtgt2@EXAMPLE.COM", ISSUER, privateKey, null);
+
         try {
             performTest();
             Assert.fail("Failure expected on a bad audience restriction value");
@@ -76,8 +74,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
 
     @Test
     public void testUnsignedToken() throws Exception {
-        prepareToken(null, ISSUER, "krbtgt2@EXAMPLE.COM", null, null);
-        
+        prepareToken(getAudience("krbtgt2"), ISSUER, null, null);
         try {
             performTest();
             Assert.fail("Failure expected on an unsigned token");
@@ -86,13 +83,13 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
             Assert.assertTrue(ex instanceof KrbException);
         }
     }
-    
+
     @Test
     public void testSignedTokenWithABadKey() throws Exception {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         KeyPair keyPair = keyGen.generateKeyPair();
-        prepareToken(null, ISSUER, AUDIENCE, keyPair.getPrivate(), null);
-        
+        prepareToken(getAudience("krbtgt"), ISSUER, keyPair.getPrivate(), null);
+
         try {
             performTest();
             Assert.fail("Failure expected on a bad key");
@@ -101,30 +98,30 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
             Assert.assertTrue(ex instanceof KrbException);
         }
     }
-    
+
     @Test
     public void testSignedEncryptedToken() throws Exception {
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
-        
+
         is = WithTokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
         PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
-        
-        prepareToken(null, ISSUER, AUDIENCE, privateKey, publicKey);
-        
+
+        prepareToken(getAudience("krbtgt"), ISSUER, privateKey, publicKey);
+
         performTest();
     }
-    
+
     @Test
     public void testSignedEncryptedTokenBadSigningKey() throws Exception {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         KeyPair keyPair = keyGen.generateKeyPair();
-        
+
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
         PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
-        
-        prepareToken(null, ISSUER, AUDIENCE, keyPair.getPrivate(), publicKey);
-        
+
+        prepareToken(getAudience("krbtgt"), ISSUER, keyPair.getPrivate(), publicKey);
+
         try {
             performTest();
             Assert.fail("Failure expected on a bad key");
@@ -133,7 +130,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
             Assert.assertTrue(ex instanceof KrbException);
         }
     }
-    
+
     private void performTest() throws Exception {
 
         createCredentialCache(getClientPrincipal(), getClientPassword());
@@ -153,5 +150,9 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
         ServiceTicket tkt = getKrbClient().requestServiceTicketWithTgt(tgt,
                 getServerPrincipal());
         verifyTicket(tkt);
+    }
+
+    private String getAudience(String name) {
+        return name + "/" + TestKdcServer.KDC_REALM + "@" + TestKdcServer.KDC_REALM;
     }
 }

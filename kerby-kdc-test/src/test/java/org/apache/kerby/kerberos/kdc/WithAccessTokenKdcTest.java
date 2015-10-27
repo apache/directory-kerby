@@ -40,12 +40,12 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
         prepareToken(getServerPrincipal());
         performTest();
     }
-    
+
     @Test
     public void testBadIssuer() throws Exception {
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
-        prepareToken(getServerPrincipal(), "oauth1.com", AUDIENCE, privateKey, null);
+        prepareToken(getServerPrincipal(), "oauth1.com", privateKey, null);
         
         try {
             performTest();
@@ -61,7 +61,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
         prepareToken("bad-service" + "/" + getHostname() + "@" + TestKdcServer.KDC_REALM,
-                ISSUER, AUDIENCE, privateKey, null);
+                ISSUER, privateKey, null);
         
         try {
             performTest();
@@ -74,7 +74,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
 
     @Test
     public void testUnsignedToken() throws Exception {
-        prepareToken(getServerPrincipal(), ISSUER, AUDIENCE, null, null);
+        prepareToken(getServerPrincipal(), ISSUER, null, null);
         
         try {
             performTest();
@@ -89,7 +89,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
     public void testSignedTokenWithABadKey() throws Exception {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         KeyPair keyPair = keyGen.generateKeyPair();
-        prepareToken(getServerPrincipal(), ISSUER, AUDIENCE, keyPair.getPrivate(), null);
+        prepareToken(getServerPrincipal(), ISSUER, keyPair.getPrivate(), null);
         
         try {
             performTest();
@@ -108,7 +108,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
         is = WithTokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
         PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
         
-        prepareToken(getServerPrincipal(), ISSUER, AUDIENCE, privateKey, publicKey);
+        prepareToken(getServerPrincipal(), ISSUER, privateKey, publicKey);
         
         performTest();
     }
@@ -121,7 +121,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
         PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
         
-        prepareToken(getServerPrincipal(), ISSUER, AUDIENCE, keyPair.getPrivate(), publicKey);
+        prepareToken(getServerPrincipal(), ISSUER, keyPair.getPrivate(), publicKey);
         
         try {
             performTest();

@@ -20,11 +20,13 @@
 package org.apache.kerby.kerberos.kerb.integration.test;
 
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.integration.test.jaas.TokenCache;
 import org.apache.kerby.kerberos.kerb.integration.test.jaas.TokenJaasKrbUtil;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.LoginTestBase;
+import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
@@ -108,7 +110,7 @@ public class TokenLoginTestBase extends LoginTestBase {
         authToken.addAttribute("role", ROLE);
 
         List<String> aud = new ArrayList<String>();
-        aud.add("krb5kdc-with-token-extension");
+        aud.add(KrbUtil.makeTgsPrincipal(TestKdcServer.KDC_REALM).getName());
         authToken.setAudiences(aud);
 
         // Set expiration in 60 minutes

@@ -99,19 +99,19 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                 throw new KrbException("Token Decoding failed");
             }
 
+            List<String> audiences = authToken.getAudiences();
+            PrincipalName serverPrincipal = kdcRequest.getKdcReq().getReqBody().getSname();
+            serverPrincipal.setRealm(kdcRequest.getKdcReq().getReqBody().getRealm());
+            kdcRequest.setServerPrincipal(serverPrincipal);
+            if (!audiences.contains(serverPrincipal.getName())) {
+                throw new KrbException("Token audience not match with the target server principal!");
+            }
             if (kdcRequest instanceof AsRequest) {
                 AsRequest asRequest = (AsRequest) kdcRequest;
                 asRequest.setToken(authToken);
             } else if (kdcRequest instanceof TgsRequest) {
                 TgsRequest tgsRequest = (TgsRequest) kdcRequest;
                 tgsRequest.setToken(authToken);
-                List<String> audiences = authToken.getAudiences();
-                PrincipalName serverPrincipal = kdcRequest.getKdcReq().getReqBody().getSname();
-                serverPrincipal.setRealm(kdcRequest.getKdcReq().getReqBody().getRealm());
-                kdcRequest.setServerPrincipal(serverPrincipal);
-                if (!audiences.contains(serverPrincipal.getName())) {
-                    throw new KrbException("Token audience not match with the target server principal!");
-                }
             }
             return true;
         } else {

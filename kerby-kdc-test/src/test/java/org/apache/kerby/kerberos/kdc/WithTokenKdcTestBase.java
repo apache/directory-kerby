@@ -50,7 +50,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WithTokenKdcTestBase extends KdcTestBase {
     static final String SUBJECT = "test-sub";
-    static final String AUDIENCE = "krbtgt@EXAMPLE.COM";
     static final String ISSUER = "oauth2.com";
     static final String GROUP = "sales-group";
     static final String ROLE = "ADMIN";
@@ -82,7 +81,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         return cCacheFile;
     }
     
-    protected AuthToken prepareToken(String servicePrincipal) {
+    protected AuthToken prepareToken(String audience) {
         InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = null;
         try {
@@ -91,10 +90,10 @@ public class WithTokenKdcTestBase extends KdcTestBase {
             e.printStackTrace();
         }
 
-        return prepareToken(servicePrincipal, ISSUER, AUDIENCE, privateKey, null);
+        return prepareToken(audience, ISSUER, privateKey, null);
     }
     
-    protected AuthToken prepareToken(String servicePrincipal, String issuer, String audience, 
+    protected AuthToken prepareToken(String audience, String issuer,
                                      PrivateKey signingKey, PublicKey encryptionKey) {
         AuthToken authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();
         authToken.setIssuer(issuer);
@@ -104,9 +103,6 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         authToken.addAttribute("role", ROLE);
 
         List<String> aud = new ArrayList<String>();
-        if (servicePrincipal != null) {
-            aud.add(servicePrincipal);
-        }
         aud.add(audience);
         authToken.setAudiences(aud);
 
