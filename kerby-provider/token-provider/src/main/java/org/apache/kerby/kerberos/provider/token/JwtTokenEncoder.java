@@ -19,18 +19,6 @@
  */
 package org.apache.kerby.kerberos.provider.token;
 
-import java.nio.charset.Charset;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.interfaces.ECPrivateKey;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.text.ParseException;
-
-import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
-
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -49,6 +37,17 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.SignedJWT;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
+import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+
+import java.nio.charset.Charset;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.text.ParseException;
 
 /**
  * JWT token encoder, implemented using Nimbus JWT library.
@@ -172,37 +171,33 @@ public class JwtTokenEncoder implements TokenEncoder {
     }
 
     /**
-     * set the encryption key
-     *
-     * @param key a public key
+     * {@inheritDoc}
      */
+    @Override
     public void setEncryptionKey(PublicKey key) {
         encryptionKey = key;
     }
-    
+
     /**
-     * set the encryption key
-     *
-     * @param key a secret key
+     * {@inheritDoc}
      */
+    @Override
     public void setEncryptionKey(byte[] key) {
         encryptionKey = key;
     }
 
     /**
-     * set the sign key
-     *
-     * @param key a private key
+     * {@inheritDoc}
      */
+    @Override
     public void setSignKey(PrivateKey key) {
         signKey = key;
     }
-    
+
     /**
-     * set the sign key
-     *
-     * @param key a secret key
+     * {@inheritDoc}
      */
+    @Override
     public void setSignKey(byte[] key) {
         signKey = key;
     }

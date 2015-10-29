@@ -164,19 +164,17 @@ public class JwtTokenDecoder implements TokenDecoder {
     }
 
     /**
-     * Set the decryption key
-     *
-     * @param key a private key
+     * {@inheritDoc}
      */
+    @Override
     public void setDecryptionKey(PrivateKey key) {
         decryptionKey = key;
     }
-    
+
     /**
-     * Set the decryption key
-     *
-     * @param key a secret key
+     * {@inheritDoc}
      */
+    @Override
     public void setDecryptionKey(byte[] key) {
         decryptionKey = key;
     }
@@ -212,19 +210,17 @@ public class JwtTokenDecoder implements TokenDecoder {
     }
 
     /**
-     * set the verify key
-     *
-     * @param key a public key
+     * {@inheritDoc}
      */
+    @Override
     public void setVerifyKey(PublicKey key) {
         verifyKey = key;
     }
-    
+
     /**
-     * set the verify key
-     *
-     * @param key a byte[] key
+     * {@inheritDoc}
      */
+    @Override
     public void setVerifyKey(byte[] key) {
         verifyKey = key;
     }
@@ -278,6 +274,10 @@ public class JwtTokenDecoder implements TokenDecoder {
         return valid;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean isSigned() {
         return signed;
     }
