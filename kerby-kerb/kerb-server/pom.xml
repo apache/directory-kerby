@@ -47,10 +47,5 @@
       <artifactId>kerb-identity</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>token-provider</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
 </project>

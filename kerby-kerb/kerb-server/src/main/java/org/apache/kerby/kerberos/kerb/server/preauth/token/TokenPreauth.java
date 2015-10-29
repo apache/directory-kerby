@@ -42,7 +42,6 @@ import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.spec.pa.token.PaTokenRequest;
 import org.apache.kerby.kerberos.kerb.spec.pa.token.TokenInfo;
-import org.apache.kerby.kerberos.provider.token.JwtTokenDecoder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -88,7 +87,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             AuthToken authToken = null;
             try {
                 authToken = tokenDecoder.decodeFromBytes(token.getTokenValue());
-                if (!((JwtTokenDecoder) tokenDecoder).isSigned()) {
+                if (!tokenDecoder.isSigned()) {
                     throw new KrbException("Token should be signed.");
                 }
             } catch (IOException e) {
@@ -118,40 +117,38 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             return false;
         }
     }
-    
+
     private void configureKeys(TokenDecoder tokenDecoder, KdcRequest kdcRequest, String issuer) {
-        if (tokenDecoder instanceof JwtTokenDecoder) {
-            String verifyKeyPath = kdcRequest.getKdcContext().getConfig().getVerifyKeyConfig();
-            if (verifyKeyPath != null) {
-                File verifyKeyFile = getKeyFile(verifyKeyPath, issuer);
-                if (verifyKeyFile != null) {
-                    PublicKey verifyKey = null;
-                    try {
-                        FileInputStream fis = new FileInputStream(verifyKeyFile);
-                        verifyKey = PublicKeyReader.loadPublicKey(fis);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    ((JwtTokenDecoder) tokenDecoder).setVerifyKey(verifyKey);
+        String verifyKeyPath = kdcRequest.getKdcContext().getConfig().getVerifyKeyConfig();
+        if (verifyKeyPath != null) {
+            File verifyKeyFile = getKeyFile(verifyKeyPath, issuer);
+            if (verifyKeyFile != null) {
+                PublicKey verifyKey = null;
+                try {
+                    FileInputStream fis = new FileInputStream(verifyKeyFile);
+                    verifyKey = PublicKeyReader.loadPublicKey(fis);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                tokenDecoder.setVerifyKey(verifyKey);
             }
-            String decryptionKeyPath = kdcRequest.getKdcContext().getConfig().getDecryptionKeyConfig();
-            if (decryptionKeyPath != null) {
-                File decryptionKeyFile = getKeyFile(decryptionKeyPath, issuer);
-                if (decryptionKeyFile != null) {
-                    PrivateKey decryptionKey = null;
-                    try {
-                        FileInputStream fis = new FileInputStream(decryptionKeyFile);
-                        decryptionKey = PrivateKeyReader.loadPrivateKey(fis);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    ((JwtTokenDecoder) tokenDecoder).setDecryptionKey(decryptionKey);
+        }
+        String decryptionKeyPath = kdcRequest.getKdcContext().getConfig().getDecryptionKeyConfig();
+        if (decryptionKeyPath != null) {
+            File decryptionKeyFile = getKeyFile(decryptionKeyPath, issuer);
+            if (decryptionKeyFile != null) {
+                PrivateKey decryptionKey = null;
+                try {
+                    FileInputStream fis = new FileInputStream(decryptionKeyFile);
+                    decryptionKey = PrivateKeyReader.loadPrivateKey(fis);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                tokenDecoder.setDecryptionKey(decryptionKey);
             }
         }
     }
