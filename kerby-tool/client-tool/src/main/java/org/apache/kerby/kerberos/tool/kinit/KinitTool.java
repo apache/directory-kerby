@@ -155,14 +155,15 @@ public class KinitTool {
             System.exit(1);
         }
 
+        System.out.println("Successfully requested and stored ticket in "
+                + ccacheFile.getAbsolutePath());
         if (ktOptions.contains(KinitOption.SERVICE)) {
             String servicePrincipal = ktOptions.getStringOption(KinitOption.SERVICE);
             ServiceTicket serviceTicket =
                     krbClient.requestServiceTicketWithTgt(tgt, servicePrincipal);
-            System.out.println(serviceTicket.toString());
+            System.out.println("Successfully requested the service ticket for " + servicePrincipal
+            + "\nKey version: " + serviceTicket.getTicket().getTktvno());
         }
-        System.out.println("Successfully requested and stored ticket in "
-                + ccacheFile.getAbsolutePath());
     }
 
     /**
