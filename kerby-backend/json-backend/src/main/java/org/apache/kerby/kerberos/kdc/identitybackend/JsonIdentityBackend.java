@@ -263,10 +263,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     private void persistToFile() throws KrbException {
         String newJsonContent = gson.toJson(identities);
         try {
-            File newJsonKdbFile = File.createTempFile("kerby-kdb",
-                    ".json", jsonKdbFile.getParentFile());
-            IOUtil.writeFile(newJsonContent, newJsonKdbFile);
-            newJsonKdbFile.renameTo(jsonKdbFile);
+            IOUtil.writeFile(newJsonContent, jsonKdbFile);
             kdbFileUpdateTime = jsonKdbFile.lastModified();
         } catch (IOException e) {
             LOG.error("Error occurred while writing identities to file: " + jsonKdbFile);
