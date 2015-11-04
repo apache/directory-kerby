@@ -27,6 +27,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWSAlgorithm;
+
+import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -35,6 +39,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.crypto.KeyGenerator;
 
 public class TokenTest {
 
@@ -65,7 +71,7 @@ public class TokenTest {
         authToken.setAudiences(auds);
 
         // Set expiration in 60 minutes
-        final Date now =  new Date(new Date().getTime() / 1000 * 1000);
+        final Date now = new Date();
         Date exp = new Date(now.getTime() + 1000 * 60 * 60);
         authToken.setExpirationTime(exp);
 
@@ -121,6 +127,41 @@ public class TokenTest {
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
+    
+    @Test
+    public void testTokenWithDirectEncryptedJWT() throws Exception {
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+        keyGenerator.init(128);
+        byte[] secretKey = keyGenerator.generateKey().getEncoded();
+        
+        ((JwtTokenEncoder) tokenEncoder).setEncryptionKey(secretKey);
+        ((JwtTokenEncoder) tokenEncoder).setJweAlgorithm(JWEAlgorithm.DIR);
+        ((JwtTokenDecoder) tokenDecoder).setDecryptionKey(secretKey);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
+
+        String tokenStr = tokenEncoder.encodeAsString(authToken);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
+        Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
+        Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
+        
+        // Now try with a different secret key
+        secretKey = keyGenerator.generateKey().getEncoded();
+        ((JwtTokenDecoder) tokenDecoder).setDecryptionKey(secretKey);
+        
+        try {
+            tokenDecoder.decodeFromString(tokenStr);
+            Assertions.fail("Failure expected on a bad secret key");
+        } catch (IOException ex) {
+            String expectedError = "Failed to decrypt the encrypted JWT";
+            Assertions.assertThat(ex.getMessage().contains(expectedError));
+            // expected
+        }
+    }
 
     @Test
     public void testTokenWithSignedJWT() throws Exception {
@@ -137,9 +178,59 @@ public class TokenTest {
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
+    
+    @Test
+    public void testTokenWithHMACSignedJWT() throws Exception {
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+        keyGenerator.init(256);
+        byte[] secretKey = keyGenerator.generateKey().getEncoded();
+        
+        ((JwtTokenEncoder) tokenEncoder).setSignKey(secretKey);
+        ((JwtTokenEncoder) tokenEncoder).setJwsAlgorithm(JWSAlgorithm.HS256);
+        ((JwtTokenDecoder) tokenDecoder).setVerifyKey(secretKey);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
+
+        String tokenStr = tokenEncoder.encodeAsString(authToken);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
+        Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
+        Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
+        
+        // Now try with a different secret key
+        secretKey = keyGenerator.generateKey().getEncoded();
+        ((JwtTokenDecoder) tokenDecoder).setVerifyKey(secretKey);
+        
+       token2 = tokenDecoder.decodeFromString(tokenStr);
+       Assertions.assertThat(token2).isNull();
+    }
 
     @Test
-    public void testTokenWithSingedAndEncryptedJWT() throws Exception {
+    public void testTokenWithECDSASignedJWT() throws Exception {
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC");
+        KeyPair keyPair = kpg.generateKeyPair();
+        
+        ((JwtTokenEncoder) tokenEncoder).setSignKey(keyPair.getPrivate());
+        ((JwtTokenEncoder) tokenEncoder).setJwsAlgorithm(JWSAlgorithm.ES256);
+        ((JwtTokenDecoder) tokenDecoder).setVerifyKey(keyPair.getPublic());
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
+
+        String tokenStr = tokenEncoder.encodeAsString(authToken);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
+        Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
+        Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
+    }
+    
+    @Test
+    public void testTokenWithSignedAndEncryptedJWT() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
 
@@ -177,6 +268,24 @@ public class TokenTest {
     @Test
     public void testExpiredJWT() throws Exception {
         authToken.setExpirationTime(new Date(new Date().getTime() - 100));
+
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+
+        setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
+        setAudience((JwtTokenDecoder) tokenDecoder, auds);
+
+        String tokenStr = tokenEncoder.encodeAsString(authToken);
+        Assertions.assertThat(tokenStr).isNotNull();
+
+        AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
+        Assertions.assertThat(token2).isNull();
+    }
+
+    @Test
+    public void testNotBeforeTime() throws Exception {
+        authToken.setNotBeforeTime(new Date(new Date().getTime() + 1000 * 60));
 
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();

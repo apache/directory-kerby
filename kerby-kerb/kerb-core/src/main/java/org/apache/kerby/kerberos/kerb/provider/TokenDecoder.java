@@ -22,6 +22,8 @@ package org.apache.kerby.kerberos.kerb.provider;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
 import java.io.IOException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * An AuthToken decoder.
@@ -43,4 +45,39 @@ public interface TokenDecoder {
      * @throws IOException e
      */
     AuthToken decodeFromString(String content) throws IOException;
+
+    /**
+     * set the verify key
+     *
+     * @param key a public key
+     */
+    void setVerifyKey(PublicKey key);
+
+    /**
+     * set the verify key
+     *
+     * @param key a byte[] key
+     */
+    void setVerifyKey(byte[] key);
+
+    /**
+     * Set the decryption key
+     *
+     * @param key a private key
+     */
+    void setDecryptionKey(PrivateKey key);
+
+    /**
+     * Set the decryption key
+     *
+     * @param key a secret key
+     */
+    void setDecryptionKey(byte[] key);
+
+    /**
+     * The token signed or not
+     *
+     * @return signed or not signed
+     */
+    boolean isSigned();
 }

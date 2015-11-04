@@ -19,20 +19,29 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
+import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
+import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
+import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbToken;
 import org.apache.kerby.kerberos.kerb.spec.base.TokenFormat;
 import org.apache.kerby.kerberos.kerb.spec.ticket.KrbTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.provider.token.JwtTokenEncoder;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
 import org.junit.Before;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,17 +50,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WithTokenKdcTestBase extends KdcTestBase {
     static final String SUBJECT = "test-sub";
-    static final String AUDIENCE = "krbtgt@EXAMPLE.COM";
     static final String ISSUER = "oauth2.com";
     static final String GROUP = "sales-group";
     static final String ROLE = "ADMIN";
     private File cCacheFile;
-    private AuthToken krbToken;
+    private KrbToken krbToken;
 
     @Before
     public void setUp() throws Exception {
         KrbRuntime.setTokenProvider(new JwtTokenProvider());
         super.setUp();
+    }
+
+    @Override
+    protected void configKdcSeverAndClient() {
+        super.configKdcSeverAndClient();
+        String verifyKeyPath = this.getClass().getResource("/").getPath();
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.VERIFY_KEY, verifyKeyPath);
+        
+        URL privateKeyPath = WithTokenKdcTestBase.class.getResource("/private_key.pem");
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.DECRYPTION_KEY, privateKeyPath.getPath());
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.ISSUERS, ISSUER);
     }
 
     protected AuthToken getKrbToken() {
@@ -61,24 +80,34 @@ public class WithTokenKdcTestBase extends KdcTestBase {
     protected File getcCacheFile() {
         return cCacheFile;
     }
+    
+    protected AuthToken prepareToken(String audience) {
+        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        PrivateKey privateKey = null;
+        try {
+            privateKey = PrivateKeyReader.loadPrivateKey(is);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    protected AuthToken prepareToken(String servicePrincipal) {
+        return prepareToken(audience, ISSUER, privateKey, null);
+    }
+    
+    protected AuthToken prepareToken(String audience, String issuer,
+                                     PrivateKey signingKey, PublicKey encryptionKey) {
         AuthToken authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();
-        authToken.setIssuer(ISSUER);
+        authToken.setIssuer(issuer);
         authToken.setSubject(SUBJECT);
 
         authToken.addAttribute("group", GROUP);
         authToken.addAttribute("role", ROLE);
 
         List<String> aud = new ArrayList<String>();
-        if (servicePrincipal != null) {
-            aud.add(servicePrincipal);
-        }
-        aud.add(AUDIENCE);
+        aud.add(audience);
         authToken.setAudiences(aud);
 
         // Set expiration in 60 minutes
-        final Date now =  new Date(new Date().getTime() / 1000 * 1000);
+        final Date now = new Date();
         Date exp = new Date(now.getTime() + 1000 * 60 * 60);
         authToken.setExpirationTime(exp);
 
@@ -87,9 +116,29 @@ public class WithTokenKdcTestBase extends KdcTestBase {
 
         Date iat = now;
         authToken.setIssueTime(iat);
-        krbToken = new KrbToken(authToken, TokenFormat.JWT);
+
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+
+        if (tokenEncoder instanceof JwtTokenEncoder && signingKey != null) {
+            ((JwtTokenEncoder) tokenEncoder).setSignKey(signingKey);
+        }
+        if (tokenEncoder instanceof JwtTokenEncoder && encryptionKey != null) {
+            ((JwtTokenEncoder) tokenEncoder).setEncryptionKey(encryptionKey);
+        }
+
+        krbToken = new KrbToken();
+        krbToken.setInnerToken(authToken);
+        krbToken.setTokenType();
+        krbToken.setTokenFormat(TokenFormat.JWT);
+        try {
+            krbToken.setTokenValue(tokenEncoder.encodeAsBytes(authToken));
+        } catch (KrbException e) {
+            throw new RuntimeException("Failed to encode AuthToken", e);
+        }
+
         return krbToken;
     }
+
 
     protected File createCredentialCache(String principal,
                                        String password) throws Exception {

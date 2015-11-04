@@ -22,6 +22,9 @@ package org.apache.kerby.kerberos.kerb.provider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
 /**
  * An AuthToken encoder.
  */
@@ -43,5 +46,32 @@ public interface TokenEncoder {
      */
     String encodeAsString(AuthToken token) throws KrbException;
 
+    /**
+     * set the encryption key
+     *
+     * @param key a public key
+     */
+    void setEncryptionKey(PublicKey key);
+
+    /**
+     * set the encryption key
+     *
+     * @param key a secret key
+     */
+    void setEncryptionKey(byte[] key);
+
+    /**
+     * set the sign key
+     *
+     * @param key a private key
+     */
+    void setSignKey(PrivateKey key);
+
+    /**
+     * set the sign key
+     *
+     * @param key a secret key
+     */
+    void setSignKey(byte[] key);
 
 }

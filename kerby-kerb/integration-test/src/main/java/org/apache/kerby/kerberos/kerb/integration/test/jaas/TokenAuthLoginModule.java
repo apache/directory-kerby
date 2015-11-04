@@ -24,11 +24,14 @@ import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.client.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbConfig;
+import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
+import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbToken;
 import org.apache.kerby.kerberos.kerb.spec.base.TokenFormat;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.provider.token.JwtTokenEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +40,11 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.PrivateKey;
+import java.security.interfaces.RSAPrivateKey;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -66,11 +73,13 @@ public class TokenAuthLoginModule implements LoginModule {
     KrbToken krbToken = null;
     private File armorCache;
     private File cCache;
+    private File signKeyFile;
     public static final String PRINCIPAL = "principal";
     public static final String TOKEN = "token";
     public static final String TOKEN_CACHE = "tokenCache";
     public static final String ARMOR_CACHE = "armorCache";
     public static final String CREDENTIAL_CACHE = "credentialCache";
+    public static final String SIGN_KEY_FILE = "signKeyFile";
 
     /**
      * {@inheritDoc}
@@ -86,6 +95,7 @@ public class TokenAuthLoginModule implements LoginModule {
         tokenCacheName = (String) options.get(TOKEN_CACHE);
         armorCache = new File((String) options.get(ARMOR_CACHE));
         cCache = new File((String) options.get(CREDENTIAL_CACHE));
+        signKeyFile = new File((String) options.get(SIGN_KEY_FILE));
     }
 
     /**
@@ -191,6 +201,32 @@ public class TokenAuthLoginModule implements LoginModule {
             e.printStackTrace();
         }
         krbToken = new KrbToken(authToken, TokenFormat.JWT);
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+
+        if (tokenEncoder instanceof JwtTokenEncoder) {
+            PrivateKey signKey = null;
+            try {
+                FileInputStream fis = new FileInputStream(signKeyFile);
+                signKey = PrivateKeyReader.loadPrivateKey(fis);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ((JwtTokenEncoder) tokenEncoder).setSignKey((RSAPrivateKey) signKey);
+        }
+
+        krbToken = new KrbToken();
+        krbToken.setInnerToken(authToken);
+        krbToken.setTokenType();
+        krbToken.setTokenFormat(TokenFormat.JWT);
+        try {
+            krbToken.setTokenValue(tokenEncoder.encodeAsBytes(authToken));
+        } catch (KrbException e) {
+            throw new RuntimeException("Failed to encode AuthToken", e);
+        }
+
         KrbClient krbClient = null;
         try {
             File confFile = new File(System.getProperty(Krb5Conf.KRB5_CONF));

@@ -104,7 +104,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     /**
      * Set token type.
      */
-    private void setTokenType() {
+    public void setTokenType() {
         List<String> audiences = this.innerToken.getAudiences();
         if (audiences.size() == 1 && audiences.get(0).startsWith(KrbConstant.TGS_PRINCIPAL)) {
             isIdToken(true);
@@ -326,5 +326,9 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     @Override
     public void addAttribute(String name, Object value) {
         innerToken.addAttribute(name, value);
+    }
+
+    public void setInnerToken(AuthToken authToken) {
+        this.innerToken = authToken;
     }
 }

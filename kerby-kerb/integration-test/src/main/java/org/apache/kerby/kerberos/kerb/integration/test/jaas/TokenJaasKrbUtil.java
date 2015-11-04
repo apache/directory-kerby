@@ -48,14 +48,14 @@ public class TokenJaasKrbUtil {
      * @throws LoginException e
      */
     public static Subject loginUsingToken(
-            String principal, File tokenCache, File armorCache, File ccache)
+            String principal, File tokenCache, File armorCache, File ccache, File signKeyFile)
             throws LoginException {
         Set<Principal> principals = new HashSet<Principal>();
         principals.add(new KerberosPrincipal(principal));
 
         Subject subject = new Subject(false, principals,
                 new HashSet<Object>(), new HashSet<Object>());
-        Configuration conf = useTokenCache(principal, tokenCache, armorCache, ccache);
+        Configuration conf = useTokenCache(principal, tokenCache, armorCache, ccache, signKeyFile);
         String confName = "TokenCacheConf";
         LoginContext loginContext = new LoginContext(confName, subject, null, conf);
         loginContext.login();
@@ -73,14 +73,14 @@ public class TokenJaasKrbUtil {
      * @throws LoginException e
      */
     public static Subject loginUsingToken(
-            String principal, String tokenStr, File armorCache, File ccache)
+            String principal, String tokenStr, File armorCache, File ccache, File signKeyFile)
             throws LoginException {
         Set<Principal> principals = new HashSet<Principal>();
         principals.add(new KerberosPrincipal(principal));
 
         Subject subject = new Subject(false, principals,
                 new HashSet<Object>(), new HashSet<Object>());
-        Configuration conf = useTokenStr(principal, tokenStr, armorCache, ccache);
+        Configuration conf = useTokenStr(principal, tokenStr, armorCache, ccache, signKeyFile);
         String confName = "TokenStrConf";
         LoginContext loginContext = new LoginContext(confName, subject, null, conf);
         loginContext.login();
@@ -88,13 +88,13 @@ public class TokenJaasKrbUtil {
     }
 
     private static Configuration useTokenCache(String principal, File tokenCache,
-                                              File armorCache, File tgtCache) {
-        return new TokenJaasConf(principal, tokenCache, armorCache, tgtCache);
+                                              File armorCache, File tgtCache, File signKeyFile) {
+        return new TokenJaasConf(principal, tokenCache, armorCache, tgtCache, signKeyFile);
     }
 
     private static Configuration useTokenStr(String principal, String tokenStr,
-                                            File armorCache, File tgtCache) {
-        return new TokenJaasConf(principal, tokenStr, armorCache, tgtCache);
+                                            File armorCache, File tgtCache, File signKeyFile) {
+        return new TokenJaasConf(principal, tokenStr, armorCache, tgtCache, signKeyFile);
     }
 
     /**
@@ -106,19 +106,24 @@ public class TokenJaasKrbUtil {
         private String tokenStr;
         private File armorCache;
         private File ccache;
+        private File signKeyFile;
 
-        public TokenJaasConf(String principal, File tokenCache, File armorCache, File ccache) {
+        public TokenJaasConf(String principal, File tokenCache, File armorCache, File ccache,
+            File signKeyFile) {
             this.principal = principal;
             this.tokenCache = tokenCache;
             this.armorCache = armorCache;
             this.ccache = ccache;
+            this.signKeyFile = signKeyFile;
         }
 
-        public TokenJaasConf(String principal, String tokenStr, File armorCache, File ccache) {
+        public TokenJaasConf(String principal, String tokenStr, File armorCache, File ccache,
+            File signKeyFile) {
             this.principal = principal;
             this.tokenStr = tokenStr;
             this.armorCache = armorCache;
             this.ccache = ccache;
+            this.signKeyFile = signKeyFile;
         }
 
         @Override
@@ -132,6 +137,7 @@ public class TokenJaasKrbUtil {
             }
             options.put(TokenAuthLoginModule.ARMOR_CACHE, armorCache.getAbsolutePath());
             options.put(TokenAuthLoginModule.CREDENTIAL_CACHE, ccache.getAbsolutePath());
+            options.put(TokenAuthLoginModule.SIGN_KEY_FILE, signKeyFile.getAbsolutePath());
 
             return new AppConfigurationEntry[]{
                     new AppConfigurationEntry(

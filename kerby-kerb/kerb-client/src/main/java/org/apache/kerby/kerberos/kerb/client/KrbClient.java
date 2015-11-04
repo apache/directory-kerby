@@ -246,7 +246,7 @@ public class KrbClient {
      */
     public TgtTicket requestTgtWithOptions(KOptions requestOptions) throws KrbException {
         if (requestOptions == null) {
-            throw new IllegalArgumentException("Null KrbOptions specified");
+            throw new IllegalArgumentException("Null requestOptions specified");
         }
 
         return innerClient.requestTgtTicket(requestOptions);

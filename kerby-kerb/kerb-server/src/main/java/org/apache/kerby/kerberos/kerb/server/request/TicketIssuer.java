@@ -47,11 +47,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Handling ticket constructing, filling, and issuing.
  */
-public abstract class TickertIssuer {
-    private static final Logger LOG = LoggerFactory.getLogger(TickertIssuer.class);
+public abstract class TicketIssuer {
+    private static final Logger LOG = LoggerFactory.getLogger(TicketIssuer.class);
     private final KdcRequest kdcRequest;
 
-    public TickertIssuer(KdcRequest kdcRequest) {
+    public TicketIssuer(KdcRequest kdcRequest) {
         this.kdcRequest = kdcRequest;
     }
 

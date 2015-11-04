@@ -66,7 +66,10 @@ public class MemoryIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doAddIdentity(KrbIdentity identity) {
-        return storage.put(identity.getPrincipalName(), identity);
+        storage.put(identity.getPrincipalName(), identity);
+        // return the same identity, cause Map.put() will return null 
+        // when a new element was added 
+        return identity;
     }
 
     /**

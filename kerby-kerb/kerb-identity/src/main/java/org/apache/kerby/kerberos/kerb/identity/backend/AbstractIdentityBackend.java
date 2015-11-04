@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.kerby.config.Configured;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.identity.BatchTrans;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,22 @@ public abstract class AbstractIdentityBackend
     public void initialize() throws KrbException {
         logger.debug("initialize called");
         doInitialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean supportBatchTrans() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public BatchTrans startBatchTrans() throws KrbException {
+        throw new KrbException("Transaction isn't supported");
     }
 
     /**

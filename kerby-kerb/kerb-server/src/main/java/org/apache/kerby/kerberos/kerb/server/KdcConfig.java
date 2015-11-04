@@ -23,6 +23,7 @@ import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.common.KrbConfHelper;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -160,5 +161,17 @@ public class KdcConfig extends Conf {
     public int getKdcMaxDgramReplySize() {
         return KrbConfHelper.getIntUnderSection(this,
                 KdcConfigKey.KDC_MAX_DGRAM_REPLY_SIZE);
+    }
+
+    public String getVerifyKeyConfig() {
+        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.VERIFY_KEY);
+    }
+
+    public String getDecryptionKeyConfig() {
+        return KrbConfHelper.getStringUnderSection(this, KdcConfigKey.DECRYPTION_KEY);
+    }
+    
+    public List<String> getIssuers() {
+        return Arrays.asList(KrbConfHelper.getStringArrayUnderSection(this, KdcConfigKey.ISSUERS));
     }
 }

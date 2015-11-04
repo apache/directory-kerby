@@ -703,11 +703,6 @@ public abstract class KdcRequest {
     protected KrbIdentity getEntry(String principal) throws KrbException {
         KrbIdentity entry;
         entry = kdcContext.getIdentityService().getIdentity(principal);
-
-        if (entry == null) {
-            // Maybe it is the token preauth, now we ignore check client entry.
-            return null;
-        }
         return entry;
     }
 

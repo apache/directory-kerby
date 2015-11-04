@@ -22,58 +22,44 @@ package org.apache.kerby.kerberos.kerb.identity;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 /**
- * Identity service for KDC backend to create, get and manage principal accounts.
+ * Batch operations support to create/update/delete principal accounts
+ * in a transaction.
  */
-public interface IdentityService {
+public interface BatchTrans {
 
     /**
-     * Query to know if xtrans is supported or not.
-     * @return true if supported, false otherwise
+     * Commit this transaction, releasing any associated resources.
+     * @throws KrbException
      */
-    boolean supportBatchTrans();
+    void commit() throws KrbException;
 
     /**
-     * Start a transaction.
-     * @return xtrans
+     * Give up this transaction, releasing any associated resources.
+     * @throws KrbException
      */
-    BatchTrans startBatchTrans() throws KrbException;
-
-    /**
-     * Get all of the identity principal names.
-     * Note it's ordered by principal name.
-     * @return principal names
-     * @throws KrbException e
-     */
-    Iterable<String> getIdentities() throws KrbException;
-
-    /**
-     * Get the identity account specified by name.
-     * @param principalName The principal name
-     * @return identity
-     * @throws KrbException e
-     */
-    KrbIdentity getIdentity(String principalName) throws KrbException;
+    void rollback() throws KrbException;
 
     /**
      * Add an identity, and return the newly created result.
      * @param identity The identity
-     * @return identity
+     * @return BatchTrans
      * @throws KrbException e
      */
-    KrbIdentity addIdentity(KrbIdentity identity) throws KrbException;
+    BatchTrans addIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Update an identity, and return the updated result.
      * @param identity The identity
-     * @return identity
+     * @return BatchTrans
      * @throws KrbException e
      */
-    KrbIdentity updateIdentity(KrbIdentity identity) throws KrbException;
+    BatchTrans updateIdentity(KrbIdentity identity) throws KrbException;
 
     /**
      * Delete the identity specified by principal name
      * @param principalName The principal name
+     * @return BatchTrans
      * @throws KrbException e
      */
-    void deleteIdentity(String principalName) throws KrbException;
+    BatchTrans deleteIdentity(String principalName) throws KrbException;
 }

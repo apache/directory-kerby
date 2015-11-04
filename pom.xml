@@ -48,11 +48,13 @@
 
   <properties>
     <apacheds.version>2.0.0-M20</apacheds.version>
+    <gson.version>2.4</gson.version>
     <ldap.api.version>1.0.0-M31</ldap.api.version>
     <log4j.version>1.2.17</log4j.version>
     <junit.version>4.12</junit.version>
+    <nimbus.jose.version>3.10</nimbus.jose.version>
     <slf4j.version>1.7.12</slf4j.version>
-    <assertj.version>1.7.1</assertj.version>
+    <assertj.version>2.2.0</assertj.version>
     <findbugs.version>3.0.1</findbugs.version>
     <checkstyle.dir>${basedir}/docs</checkstyle.dir>
     <skipTests>false</skipTests>
@@ -109,7 +111,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.3</version>
+          <version>3.1</version>
           <configuration>
             <source>1.7</source>
             <target>1.7</target>
@@ -161,6 +163,8 @@
               <exclude>**/.checkstyle</exclude>
               <!-- BIN files -->
               <exclude>**/bin/**/*</exclude>
+              <!-- The IP clearance XML doc -->
+              <exclude>docs/kerby-ip-clearance.xml</exclude>
             </excludes>
           </configuration>
         </plugin>
@@ -289,6 +293,20 @@
           </configuration>
         </plugin>
 
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -302,6 +320,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
       </plugin>
 
     </plugins>

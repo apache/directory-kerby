@@ -541,7 +541,7 @@ public class Kadmin {
     /**
      * Stop the backend and release any resources associated.
      *
-     * @throws org.apache.kerby.kerberos.kerb.KrbException e
+     * @throws KrbException e
      */
     public void release() throws KrbException {
         if (backend != null) {
@@ -550,10 +550,9 @@ public class Kadmin {
     }
 
     /**
-     * Fix principal name.
+     * Fix principal name, making it complete.
      *
      * @param principal The principal name
-     * @throws KrbException
      */
     private String fixPrincipal(String principal) {
         if (!principal.contains("@")) {
