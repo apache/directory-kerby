@@ -75,7 +75,6 @@
     <module>kerby-dist</module>
     <module>benchmark</module>
     <module>kerby-provider</module>
-    <module>kerby-cms</module>
   </modules>
 
   <dependencies>
