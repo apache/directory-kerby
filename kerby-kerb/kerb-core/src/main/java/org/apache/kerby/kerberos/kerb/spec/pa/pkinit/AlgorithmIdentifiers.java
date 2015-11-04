@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceOfType;
-import org.apache.kerby.kerberos.kerb.spec.x509.AlgorithmIdentifier;
+import org.apache.kerby.kerberos.kerb.spec.cms.AlgorithmIdentifier;
 
 /**
  trustedCertifiers       SEQUENCE OF AlgorithmIdentifier OPTIONAL,

@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
-import org.apache.kerby.kerberos.kerb.spec.x509.SubjectPublicKeyInfo;
+import org.apache.kerby.kerberos.kerb.spec.cms.SubjectPublicKeyInfo;
 
 /**
  AuthPack ::= SEQUENCE {
