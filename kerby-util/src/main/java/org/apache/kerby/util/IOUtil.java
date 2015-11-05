@@ -41,6 +41,7 @@ public final class IOUtil {
         while ((length = in.read(buffer)) != -1) {
             baos.write(buffer, 0, length);
         }
+        in.close();
         return baos.toByteArray();
     }
 
@@ -56,6 +57,7 @@ public final class IOUtil {
             toRead -= ret;
             off += ret;
         }
+        in.close();
     }
 
     /**
