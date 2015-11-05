@@ -51,14 +51,13 @@ import java.util.Date;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class IntermediateCaGenerator
-{
+public class IntermediateCaGenerator {
     /**
      * Create certificate.
-     * 
-     * @param issuerCert 
-     * @param issuerPrivateKey 
-     * @param publicKey 
+     *
+     * @param issuerCert
+     * @param issuerPrivateKey
+     * @param publicKey
      * @param dn
      * @param validityDays
      * @param friendlyName
@@ -70,46 +69,48 @@ public class IntermediateCaGenerator
      * @throws DataLengthException
      * @throws CertificateException
      */
-    public static X509Certificate generate( X509Certificate issuerCert, PrivateKey issuerPrivateKey,
-        PublicKey publicKey, String dn, int validityDays, String friendlyName ) throws InvalidKeyException,
-        SecurityException, SignatureException, NoSuchAlgorithmException, DataLengthException, CertificateException
-    {
+    public static X509Certificate generate(X509Certificate issuerCert, PrivateKey issuerPrivateKey,
+                                           PublicKey publicKey, String dn, int validityDays,
+                                           String friendlyName)
+            throws InvalidKeyException, SecurityException, SignatureException,
+            NoSuchAlgorithmException, DataLengthException, CertificateException {
         X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
 
         // Set certificate attributes.
-        certGen.setSerialNumber( BigInteger.valueOf( System.currentTimeMillis() ) );
+        certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
 
-        certGen.setIssuerDN( PrincipalUtil.getSubjectX509Principal( issuerCert ) );
-        certGen.setSubjectDN( new X509Principal( dn ) );
+        certGen.setIssuerDN(PrincipalUtil.getSubjectX509Principal(issuerCert));
+        certGen.setSubjectDN(new X509Principal(dn));
 
-        certGen.setNotBefore( new Date() );
+        certGen.setNotBefore(new Date());
 
         Calendar expiry = Calendar.getInstance();
-        expiry.add( Calendar.DAY_OF_YEAR, validityDays );
+        expiry.add(Calendar.DAY_OF_YEAR, validityDays);
 
-        certGen.setNotAfter( expiry.getTime() );
+        certGen.setNotAfter(expiry.getTime());
 
-        certGen.setPublicKey( publicKey );
-        certGen.setSignatureAlgorithm( "SHA1WithRSAEncryption" );
+        certGen.setPublicKey(publicKey);
+        certGen.setSignatureAlgorithm("SHA1WithRSAEncryption");
 
         certGen
-            .addExtension( X509Extensions.SubjectKeyIdentifier, false, new SubjectKeyIdentifierStructure( publicKey ) );
+                .addExtension(X509Extensions.SubjectKeyIdentifier, false,
+                        new SubjectKeyIdentifierStructure(publicKey));
 
-        certGen.addExtension( X509Extensions.BasicConstraints, true, new BasicConstraints( 0 ) );
+        certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(0));
 
-        certGen.addExtension( X509Extensions.AuthorityKeyIdentifier, false, new AuthorityKeyIdentifierStructure(
-            issuerCert ) );
+        certGen.addExtension(X509Extensions.AuthorityKeyIdentifier, false,
+                new AuthorityKeyIdentifierStructure(issuerCert));
 
-        certGen.addExtension( X509Extensions.KeyUsage, true, new KeyUsage( KeyUsage.digitalSignature
-            | KeyUsage.keyCertSign | KeyUsage.cRLSign ) );
+        certGen.addExtension(X509Extensions.KeyUsage, true, new KeyUsage(KeyUsage.digitalSignature
+                | KeyUsage.keyCertSign | KeyUsage.cRLSign));
 
-        X509Certificate cert = certGen.generate( issuerPrivateKey );
+        X509Certificate cert = certGen.generate(issuerPrivateKey);
 
-        PKCS12BagAttributeCarrier bagAttr = ( PKCS12BagAttributeCarrier ) cert;
+        PKCS12BagAttributeCarrier bagAttr = (PKCS12BagAttributeCarrier) cert;
 
-        bagAttr.setBagAttribute( PKCSObjectIdentifiers.pkcs_9_at_friendlyName, new DERBMPString( friendlyName ) );
-        bagAttr.setBagAttribute( PKCSObjectIdentifiers.pkcs_9_at_localKeyId, new SubjectKeyIdentifierStructure(
-            publicKey ) );
+        bagAttr.setBagAttribute(PKCSObjectIdentifiers.pkcs_9_at_friendlyName, new DERBMPString(friendlyName));
+        bagAttr.setBagAttribute(PKCSObjectIdentifiers.pkcs_9_at_localKeyId, new SubjectKeyIdentifierStructure(
+                publicKey));
 
         return cert;
     }

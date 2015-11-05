@@ -44,48 +44,43 @@ import java.util.List;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class CertificateChainFactoryTest extends TestCase
-{
-    public void setUp()
-    {
-        if ( Security.getProvider( BouncyCastleProvider.PROVIDER_NAME ) == null )
-        {
-            Security.addProvider( new BouncyCastleProvider() );
+public class CertificateChainFactoryTest extends TestCase {
+    public void setUp() {
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
         }
     }
 
 
     /**
      * Tests construction of the client chain.
-     * 
+     * <p/>
      * The created certificates can be displayed with a command like:
-     * 
+     * <p/>
      * openssl pkcs12 -nodes -info -in /tmp/test.p12 > /tmp/test.cert && openssl x509 -noout -text -in /tmp/test.cert
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
-    public void testClientChain() throws Exception
-    {
+    public void testClientChain() throws Exception {
         X509Certificate[] clientChain = CertificateChainFactory.getClientChain();
 
-        validateChain( clientChain );
+        validateChain(clientChain);
     }
 
 
     /**
      * Tests construction of the KDC chain.
-     * 
+     * <p/>
      * The created certificates can be displayed with a command like:
-     * 
+     * <p/>
      * openssl pkcs12 -nodes -info -in /tmp/test.p12 > /tmp/test.cert && openssl x509 -noout -text -in /tmp/test.cert
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
-    public void testKdcChain() throws Exception
-    {
+    public void testKdcChain() throws Exception {
         X509Certificate[] kdcChain = CertificateChainFactory.getKdcChain();
 
-        validateChain( kdcChain );
+        validateChain(kdcChain);
     }
 
 
@@ -96,21 +91,20 @@ public class CertificateChainFactoryTest extends TestCase
      * @throws CertificateException
      * @throws InvalidAlgorithmParameterException
      */
-    private void validateChain( X509Certificate[] chain ) throws CertificateException,
-        InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException,
-        InvalidAlgorithmParameterException, CertPathValidatorException
-    {
-        List<X509Certificate> certificateList = Arrays.asList( chain );
-        CertificateFactory certificateFactory = CertificateFactory.getInstance( "X.509" );
-        CertPath certPath = certificateFactory.generateCertPath( certificateList );
+    private void validateChain(X509Certificate[] chain) throws CertificateException,
+            InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException,
+            InvalidAlgorithmParameterException, CertPathValidatorException {
+        List<X509Certificate> certificateList = Arrays.asList(chain);
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        CertPath certPath = certificateFactory.generateCertPath(certificateList);
 
-        CertPathValidator cpv = CertPathValidator.getInstance( "PKIX", "BC" );
+        CertPathValidator cpv = CertPathValidator.getInstance("PKIX", "BC");
 
-        TrustAnchor trustAnchor = new TrustAnchor( chain[chain.length - 1], null );
+        TrustAnchor trustAnchor = new TrustAnchor(chain[chain.length - 1], null);
 
-        PKIXParameters parameters = new PKIXParameters( Collections.singleton( trustAnchor ) );
-        parameters.setRevocationEnabled( false );
+        PKIXParameters parameters = new PKIXParameters(Collections.singleton(trustAnchor));
+        parameters.setRevocationEnabled(false);
 
-        cpv.validate( certPath, parameters );
+        cpv.validate(certPath, parameters);
     }
 }

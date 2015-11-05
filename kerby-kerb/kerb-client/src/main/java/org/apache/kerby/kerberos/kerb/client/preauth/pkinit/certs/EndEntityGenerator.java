@@ -19,8 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs;
 
-
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.Krb5PrincipalName;
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.DERBMPString;
 import org.bouncycastle.asn1.DERObjectIdentifier;
@@ -52,50 +50,49 @@ import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
 
-
 /**
  * Generates an X.509 "end entity" certificate programmatically.
  *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class EndEntityGenerator
-{
+@SuppressWarnings({"PMD.UnusedPrivateField"})
+public class EndEntityGenerator {
     /**
      * id-pkinit-san OBJECT IDENTIFIER ::=
-     *     { iso(1) org(3) dod(6) internet(1) security(5) kerberosv5(2) x509SanAN (2) }
+     * { iso(1) org(3) dod(6) internet(1) security(5) kerberosv5(2) x509SanAN (2) }
      */
-    private static final DERObjectIdentifier ID_PKINIT_SAN = new DERObjectIdentifier( "1.3.6.1.5.2.2" );
+    private static final DERObjectIdentifier ID_PKINIT_SAN = new DERObjectIdentifier("1.3.6.1.5.2.2");
 
     /**
      * id-pkinit-KPClientAuth OBJECT IDENTIFIER ::=
      * { iso(1) org(3) dod(6) internet(1) security(5) kerberosv5(2) pkinit(3) keyPurposeClientAuth(4) }
-     *     -- PKINIT client authentication.
-     *     -- Key usage bits that MUST be consistent:
-     *     -- digitalSignature.
+     * -- PKINIT client authentication.
+     * -- Key usage bits that MUST be consistent:
+     * -- digitalSignature.
      */
-    private static final DERObjectIdentifier ID_PKINIT_KPCLIENTAUTH = new DERObjectIdentifier( "1.3.6.1.5.2.3.4" );
+    private static final DERObjectIdentifier ID_PKINIT_KPCLIENTAUTH = new DERObjectIdentifier("1.3.6.1.5.2.3.4");
 
     /**
      * id-pkinit-KPKdc OBJECT IDENTIFIER ::=
-     *     { iso(1) org(3) dod(6) internet(1) security(5) kerberosv5(2) pkinit(3) keyPurposeKdc(5) }
-     *     -- Signing KDC responses.
-     *     -- Key usage bits that MUST be consistent:
-     *     -- digitalSignature.
+     * { iso(1) org(3) dod(6) internet(1) security(5) kerberosv5(2) pkinit(3) keyPurposeKdc(5) }
+     * -- Signing KDC responses.
+     * -- Key usage bits that MUST be consistent:
+     * -- digitalSignature.
      */
-    private static final DERObjectIdentifier ID_PKINIT_KPKDC = new DERObjectIdentifier( "1.3.6.1.5.2.3.5" );
+    private static final DERObjectIdentifier ID_PKINIT_KPKDC = new DERObjectIdentifier("1.3.6.1.5.2.3.5");
 
-    private static final DERObjectIdentifier ID_MS_KP_SC_LOGON = new DERObjectIdentifier( "1.3.6.1.4.1.311.20.2.2" );
+    private static final DERObjectIdentifier ID_MS_KP_SC_LOGON = new DERObjectIdentifier("1.3.6.1.4.1.311.20.2.2");
 
-    private static final DERObjectIdentifier ID_MS_SAN_SC_LOGON_UPN = new DERObjectIdentifier( "1.3.6.1.4.1.311.20.2.3" );
+    private static final DERObjectIdentifier ID_MS_SAN_SC_LOGON_UPN = new DERObjectIdentifier("1.3.6.1.4.1.311.20.2.3");
 
 
     /**
      * Generate certificate.
-     * 
-     * @param issuerCert 
-     * @param issuerPrivateKey 
-     * @param publicKey 
+     *
+     * @param issuerCert
+     * @param issuerPrivateKey
+     * @param publicKey
      * @param dn
      * @param validityDays
      * @param friendlyName
@@ -107,64 +104,65 @@ public class EndEntityGenerator
      * @throws DataLengthException
      * @throws CertificateException
      */
-    public static X509Certificate generate( X509Certificate issuerCert, PrivateKey issuerPrivateKey,
-        PublicKey publicKey, String dn, int validityDays, String friendlyName ) throws InvalidKeyException,
-        SecurityException, SignatureException, NoSuchAlgorithmException, DataLengthException, CertificateException
-    {
+    public static X509Certificate generate(X509Certificate issuerCert, PrivateKey issuerPrivateKey,
+                                           PublicKey publicKey, String dn, int validityDays,
+                                           String friendlyName)
+            throws InvalidKeyException, SecurityException, SignatureException,
+            NoSuchAlgorithmException, DataLengthException, CertificateException {
         X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
 
         // Set certificate attributes.
-        certGen.setSerialNumber( BigInteger.valueOf( System.currentTimeMillis() ) );
+        certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
 
-        certGen.setIssuerDN( PrincipalUtil.getSubjectX509Principal( issuerCert ) );
-        certGen.setSubjectDN( new X509Principal( dn ) );
+        certGen.setIssuerDN(PrincipalUtil.getSubjectX509Principal(issuerCert));
+        certGen.setSubjectDN(new X509Principal(dn));
 
-        certGen.setNotBefore( new Date() );
+        certGen.setNotBefore(new Date());
 
         Calendar expiry = Calendar.getInstance();
-        expiry.add( Calendar.DAY_OF_YEAR, validityDays );
+        expiry.add(Calendar.DAY_OF_YEAR, validityDays);
 
-        certGen.setNotAfter( expiry.getTime() );
+        certGen.setNotAfter(expiry.getTime());
 
-        certGen.setPublicKey( publicKey );
-        certGen.setSignatureAlgorithm( "SHA1WithRSAEncryption" );
+        certGen.setPublicKey(publicKey);
+        certGen.setSignatureAlgorithm("SHA1WithRSAEncryption");
 
         certGen
-            .addExtension( X509Extensions.SubjectKeyIdentifier, false, new SubjectKeyIdentifierStructure( publicKey ) );
+                .addExtension(X509Extensions.SubjectKeyIdentifier, false,
+                        new SubjectKeyIdentifierStructure(publicKey));
 
         // MAY set BasicConstraints=false or not at all.
-        certGen.addExtension( X509Extensions.BasicConstraints, true, new BasicConstraints( false ) );
+        certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(false));
 
-        certGen.addExtension( X509Extensions.AuthorityKeyIdentifier, false, new AuthorityKeyIdentifierStructure(
-            issuerCert ) );
+        certGen.addExtension(X509Extensions.AuthorityKeyIdentifier, false,
+                new AuthorityKeyIdentifierStructure(issuerCert));
 
-        certGen.addExtension( X509Extensions.KeyUsage, true, new KeyUsage( KeyUsage.digitalSignature
-            | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment ) );
+        certGen.addExtension(X509Extensions.KeyUsage, true, new KeyUsage(KeyUsage.digitalSignature
+                | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment));
 
         ASN1EncodableVector keyPurposeVector = new ASN1EncodableVector();
-        keyPurposeVector.add( KeyPurposeId.id_kp_smartcardlogon );
+        keyPurposeVector.add(KeyPurposeId.id_kp_smartcardlogon);
         //keyPurposeVector.add( KeyPurposeId.id_kp_serverAuth );
-        DERSequence keyPurposeOids = new DERSequence( keyPurposeVector );
+        DERSequence keyPurposeOids = new DERSequence(keyPurposeVector);
 
         // If critical, will throw unsupported EKU.
-        certGen.addExtension( X509Extensions.ExtendedKeyUsage, false, keyPurposeOids );
+        certGen.addExtension(X509Extensions.ExtendedKeyUsage, false, keyPurposeOids);
 
-        Krb5PrincipalName principalName = new Krb5PrincipalName();
         ASN1EncodableVector pkinitSanVector = new ASN1EncodableVector();
-        pkinitSanVector.add( ID_PKINIT_SAN );
-        pkinitSanVector.add( new DERTaggedObject( 0, new DERSequence()));
-        DERSequence pkinitSan = new DERSequence( pkinitSanVector );
+        pkinitSanVector.add(ID_PKINIT_SAN);
+        pkinitSanVector.add(new DERTaggedObject(0, new DERSequence()));
+        DERSequence pkinitSan = new DERSequence(pkinitSanVector);
 
         String dnsName = "localhost";
 
         ASN1EncodableVector sanVector = new ASN1EncodableVector();
-        sanVector.add( new GeneralName( GeneralName.otherName, pkinitSan ) );
-        sanVector.add( new GeneralName( GeneralName.dNSName, dnsName ) );
-        DERSequence san = new DERSequence( sanVector );
+        sanVector.add(new GeneralName(GeneralName.otherName, pkinitSan));
+        sanVector.add(new GeneralName(GeneralName.dNSName, dnsName));
+        DERSequence san = new DERSequence(sanVector);
 
-        GeneralNames sanGeneralNames = new GeneralNames( san );
+        GeneralNames sanGeneralNames = new GeneralNames(san);
 
-        certGen.addExtension( X509Extensions.SubjectAlternativeName, true, sanGeneralNames );
+        certGen.addExtension(X509Extensions.SubjectAlternativeName, true, sanGeneralNames);
 
         /*
          * The KDC MAY require the presence of an Extended Key Usage (EKU) KeyPurposeId
@@ -244,13 +242,13 @@ public class EndEntityGenerator
          * the account that has this UserPrincipalName value).
          */
 
-        X509Certificate cert = certGen.generate( issuerPrivateKey );
+        X509Certificate cert = certGen.generate(issuerPrivateKey);
 
-        PKCS12BagAttributeCarrier bagAttr = ( PKCS12BagAttributeCarrier ) cert;
+        PKCS12BagAttributeCarrier bagAttr = (PKCS12BagAttributeCarrier) cert;
 
-        bagAttr.setBagAttribute( PKCSObjectIdentifiers.pkcs_9_at_friendlyName, new DERBMPString( friendlyName ) );
-        bagAttr.setBagAttribute( PKCSObjectIdentifiers.pkcs_9_at_localKeyId, new SubjectKeyIdentifierStructure(
-            publicKey ) );
+        bagAttr.setBagAttribute(PKCSObjectIdentifiers.pkcs_9_at_friendlyName, new DERBMPString(friendlyName));
+        bagAttr.setBagAttribute(PKCSObjectIdentifiers.pkcs_9_at_localKeyId, new SubjectKeyIdentifierStructure(
+                publicKey));
 
         return cert;
     }

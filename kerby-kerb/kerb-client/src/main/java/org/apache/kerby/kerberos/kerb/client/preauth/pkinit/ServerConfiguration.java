@@ -25,16 +25,15 @@ import javax.crypto.spec.DHParameterSpec;
 
 /**
  * Server configuration settings.
- * 
+ * <p/>
  * TODO - Whether to use user cert vs. SAN binding.
  * TODO - What trusted roots to use.
  * TODO - The minimum allowed enc_types.
- * 
+ *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class ServerConfiguration
-{
+public class ServerConfiguration {
     /**
      * Whether or not to use Diffie-Hellman.  The alternative is the "public key"
      * method.
@@ -65,8 +64,7 @@ public class ServerConfiguration
     /**
      * @return the isDhUsed
      */
-    public boolean isDhUsed()
-    {
+    public boolean isDhUsed() {
         return isDhUsed;
     }
 
@@ -74,8 +72,7 @@ public class ServerConfiguration
     /**
      * @param isDhUsed the isDhUsed to set
      */
-    public void setDhUsed( boolean isDhUsed )
-    {
+    public void setDhUsed(boolean isDhUsed) {
         this.isDhUsed = isDhUsed;
     }
 
@@ -83,8 +80,7 @@ public class ServerConfiguration
     /**
      * @return the dhGroup
      */
-    public DHParameterSpec getDhGroup()
-    {
+    public DHParameterSpec getDhGroup() {
         return dhGroup;
     }
 
@@ -92,8 +88,7 @@ public class ServerConfiguration
     /**
      * @param dhGroup the dhGroup to set
      */
-    public void setDhGroup( DHParameterSpec dhGroup )
-    {
+    public void setDhGroup(DHParameterSpec dhGroup) {
         this.dhGroup = dhGroup;
     }
 
@@ -101,8 +96,7 @@ public class ServerConfiguration
     /**
      * @return the isDhKeysReused
      */
-    public boolean isDhKeysReused()
-    {
+    public boolean isDhKeysReused() {
         return isDhKeysReused;
     }
 
@@ -110,8 +104,7 @@ public class ServerConfiguration
     /**
      * @param isDhKeysReused the isDhKeysReused to set
      */
-    public void setDhKeysReused( boolean isDhKeysReused )
-    {
+    public void setDhKeysReused(boolean isDhKeysReused) {
         this.isDhKeysReused = isDhKeysReused;
     }
 
@@ -119,8 +112,7 @@ public class ServerConfiguration
     /**
      * @return the dhKeyExpiration
      */
-    public long getDhKeyExpiration()
-    {
+    public long getDhKeyExpiration() {
         return dhKeyExpiration;
     }
 
@@ -128,8 +120,7 @@ public class ServerConfiguration
     /**
      * @param dhKeyExpiration the dhKeyExpiration to set
      */
-    public void setDhKeyExpiration( long dhKeyExpiration )
-    {
+    public void setDhKeyExpiration(long dhKeyExpiration) {
         this.dhKeyExpiration = dhKeyExpiration;
     }
 
@@ -137,8 +128,7 @@ public class ServerConfiguration
     /**
      * @return the dhNonceLength
      */
-    public int getDhNonceLength()
-    {
+    public int getDhNonceLength() {
         return dhNonceLength;
     }
 
@@ -146,8 +136,7 @@ public class ServerConfiguration
     /**
      * @param dhNonceLength the dhNonceLength to set
      */
-    public void setDhNonceLength( int dhNonceLength )
-    {
+    public void setDhNonceLength(int dhNonceLength) {
         this.dhNonceLength = dhNonceLength;
     }
 }

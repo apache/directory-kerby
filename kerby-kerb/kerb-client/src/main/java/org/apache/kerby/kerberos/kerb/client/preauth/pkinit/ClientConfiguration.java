@@ -29,8 +29,7 @@ import javax.crypto.spec.DHParameterSpec;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class ClientConfiguration
-{
+public class ClientConfiguration {
     /**
      * The location of the user certificate.
      */
@@ -61,8 +60,7 @@ public class ClientConfiguration
     /**
      * @return the certificatePath
      */
-    public String getCertificatePath()
-    {
+    public String getCertificatePath() {
         return certificatePath;
     }
 
@@ -70,8 +68,7 @@ public class ClientConfiguration
     /**
      * @param certificatePath the certificatePath to set
      */
-    public void setCertificatePath( String certificatePath )
-    {
+    public void setCertificatePath(String certificatePath) {
         this.certificatePath = certificatePath;
     }
 
@@ -79,8 +76,7 @@ public class ClientConfiguration
     /**
      * @return the cmsType
      */
-    public String getCmsType()
-    {
+    public String getCmsType() {
         return cmsType;
     }
 
@@ -88,8 +84,7 @@ public class ClientConfiguration
     /**
      * @param cmsType the cmsType to set
      */
-    public void setCmsType( String cmsType )
-    {
+    public void setCmsType(String cmsType) {
         this.cmsType = cmsType;
     }
 
@@ -97,8 +92,7 @@ public class ClientConfiguration
     /**
      * @return the isDhUsed
      */
-    public boolean isDhUsed()
-    {
+    public boolean isDhUsed() {
         return isDhUsed;
     }
 
@@ -106,8 +100,7 @@ public class ClientConfiguration
     /**
      * @param isDhUsed the isDhUsed to set
      */
-    public void setDhUsed( boolean isDhUsed )
-    {
+    public void setDhUsed(boolean isDhUsed) {
         this.isDhUsed = isDhUsed;
     }
 
@@ -115,8 +108,7 @@ public class ClientConfiguration
     /**
      * @return the dhGroup
      */
-    public DHParameterSpec getDhGroup()
-    {
+    public DHParameterSpec getDhGroup() {
         return dhGroup;
     }
 
@@ -124,8 +116,7 @@ public class ClientConfiguration
     /**
      * @param dhGroup the dhGroup to set
      */
-    public void setDhGroup( DHParameterSpec dhGroup )
-    {
+    public void setDhGroup(DHParameterSpec dhGroup) {
         this.dhGroup = dhGroup;
     }
 
@@ -133,8 +124,7 @@ public class ClientConfiguration
     /**
      * @return the isDhKeysReused
      */
-    public boolean isDhKeysReused()
-    {
+    public boolean isDhKeysReused() {
         return isDhKeysReused;
     }
 
@@ -142,8 +132,7 @@ public class ClientConfiguration
     /**
      * @param isDhKeysReused the isDhKeysReused to set
      */
-    public void setDhKeysReused( boolean isDhKeysReused )
-    {
+    public void setDhKeysReused(boolean isDhKeysReused) {
         this.isDhKeysReused = isDhKeysReused;
     }
 }

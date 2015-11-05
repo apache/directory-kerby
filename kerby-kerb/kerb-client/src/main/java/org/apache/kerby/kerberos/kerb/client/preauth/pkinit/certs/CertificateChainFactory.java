@@ -41,19 +41,20 @@ import java.security.spec.InvalidKeySpecException;
  */
 public class CertificateChainFactory {
     /**
-     * The logger for this class.
+     * The log for this class.
      */
-    private static final Logger logger = LoggerFactory.getLogger(CertificateChainFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CertificateChainFactory.class);
 
-    private static int TRUST_ANCHOR_LEVEL = 2;
+    private static int trustAnchorLevel = 2;
 
-    private static int INTERMEDIATE_LEVEL = 1;
+    private static int intermediateLevel = 1;
 
-    private static int END_ENTITY_LEVEL = 0;
+    private static int endEntityLevel = 0;
 
     private static SecureRandom secureRandom = new SecureRandom();
 
-    private static String container = "C=US, ST=Maryland, L=Forest Hill, O=Apache Software Foundation, OU=Apache Directory, CN=";
+    private static String container =
+            "C=US, ST=Maryland, L=Forest Hill, O=Apache Software Foundation, OU=Apache Directory, CN=";
 
     private static boolean isGenerated = false;
 
@@ -111,51 +112,51 @@ public class CertificateChainFactory {
         String dn = container + friendlyName;
         int validityDays = 730;
 
-        KeyPair keyPair = getKeyPair(TRUST_ANCHOR_LEVEL);
+        KeyPair keyPair = getKeyPair(trustAnchorLevel);
         PrivateKey trustAnchorPrivateKey = keyPair.getPrivate();
         PublicKey trustAnchorPublicKey = keyPair.getPublic();
 
         X509Certificate trustAnchorCert = TrustAnchorGenerator.generate(trustAnchorPublicKey, trustAnchorPrivateKey,
-            dn, validityDays, friendlyName);
+                dn, validityDays, friendlyName);
 
         trustAnchorCert.checkValidity();
         trustAnchorCert.verify(trustAnchorPublicKey);
 
-        logger.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
+        LOG.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
 
         // Make intermediate client CA.
         friendlyName = "Client Test CA 1";
         dn = container + friendlyName;
         validityDays = 365;
 
-        keyPair = getKeyPair(INTERMEDIATE_LEVEL);
+        keyPair = getKeyPair(intermediateLevel);
         PrivateKey clientCaPrivateKey = keyPair.getPrivate();
         PublicKey clientCaPublicKey = keyPair.getPublic();
 
         X509Certificate clientCaCert = IntermediateCaGenerator.generate(trustAnchorCert, trustAnchorPrivateKey,
-            clientCaPublicKey, dn, validityDays, friendlyName);
+                clientCaPublicKey, dn, validityDays, friendlyName);
 
         clientCaCert.checkValidity();
         clientCaCert.verify(trustAnchorPublicKey);
 
-        logger.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
+        LOG.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
 
         // Make client certificate.
         friendlyName = "hnelson@EXAMPLE.COM UPN";
         dn = container + friendlyName;
         validityDays = 30;
 
-        keyPair = getKeyPair(END_ENTITY_LEVEL);
+        keyPair = getKeyPair(endEntityLevel);
         clientPrivateKey = keyPair.getPrivate();
         PublicKey clientPublicKey = keyPair.getPublic();
 
         X509Certificate clientCert = EndEntityGenerator.generate(clientCaCert, clientCaPrivateKey, clientPublicKey,
-            dn, validityDays, friendlyName);
+                dn, validityDays, friendlyName);
 
         clientCert.checkValidity();
         clientCert.verify(clientCaPublicKey);
 
-        logger.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
+        LOG.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
 
         // Build client chain.
         clientChain = new X509Certificate[3];
@@ -172,51 +173,51 @@ public class CertificateChainFactory {
         String dn = container + friendlyName;
         int validityDays = 730;
 
-        KeyPair keyPair = getKeyPair(TRUST_ANCHOR_LEVEL);
+        KeyPair keyPair = getKeyPair(trustAnchorLevel);
         PrivateKey trustAnchorPrivateKey = keyPair.getPrivate();
         PublicKey trustAnchorPublicKey = keyPair.getPublic();
 
         X509Certificate trustAnchorCert = TrustAnchorGenerator.generate(trustAnchorPublicKey, trustAnchorPrivateKey,
-            dn, validityDays, friendlyName);
+                dn, validityDays, friendlyName);
 
         trustAnchorCert.checkValidity();
         trustAnchorCert.verify(trustAnchorPublicKey);
 
-        logger.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
+        LOG.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
 
         // Make intermediate KDC CA.
         friendlyName = "KDC Test CA 1";
         dn = container + friendlyName;
         validityDays = 365;
 
-        keyPair = getKeyPair(INTERMEDIATE_LEVEL);
+        keyPair = getKeyPair(intermediateLevel);
         PrivateKey kdcCaPrivateKey = keyPair.getPrivate();
         PublicKey kdcCaPublicKey = keyPair.getPublic();
 
         X509Certificate kdcCaCert = IntermediateCaGenerator.generate(trustAnchorCert, trustAnchorPrivateKey,
-            kdcCaPublicKey, dn, validityDays, friendlyName);
+                kdcCaPublicKey, dn, validityDays, friendlyName);
 
         kdcCaCert.checkValidity();
         kdcCaCert.verify(trustAnchorPublicKey);
 
-        logger.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
+        LOG.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
 
         // Make KDC certificate.
         friendlyName = "krbtgt/EXAMPLE.COM@EXAMPLE.COM KDC";
         dn = container + friendlyName;
         validityDays = 30;
 
-        keyPair = getKeyPair(END_ENTITY_LEVEL);
+        keyPair = getKeyPair(endEntityLevel);
         kdcPrivateKey = keyPair.getPrivate();
         PublicKey kdcPublicKey = keyPair.getPublic();
 
         X509Certificate kdcCert = EndEntityGenerator.generate(kdcCaCert, kdcCaPrivateKey, kdcPublicKey, dn,
-            validityDays, friendlyName);
+                validityDays, friendlyName);
 
         kdcCert.checkValidity();
         kdcCert.verify(kdcCaPublicKey);
 
-        logger.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
+        LOG.debug("Generated cert for friendly name '{}', valid for {} days.", friendlyName, validityDays);
 
         // Build KDC chain.
         kdcChain = new X509Certificate[3];
@@ -239,7 +240,7 @@ public class CertificateChainFactory {
      * @throws InvalidKeySpecException
      */
     private static KeyPair getKeyPair(int level) throws NoSuchAlgorithmException, NoSuchProviderException,
-        InvalidKeySpecException {
+            InvalidKeySpecException {
         if (isGenerated) {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
             keyGen.initialize(1024, secureRandom);
@@ -261,7 +262,7 @@ public class CertificateChainFactory {
      * @throws InvalidKeySpecException
      */
     private static KeyPair getStaticKeyPair(int level) throws NoSuchAlgorithmException, NoSuchProviderException,
-        InvalidKeySpecException {
+            InvalidKeySpecException {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
 
         switch (level) {

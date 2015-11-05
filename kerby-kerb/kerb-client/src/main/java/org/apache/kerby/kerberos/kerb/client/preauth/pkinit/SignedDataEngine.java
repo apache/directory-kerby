@@ -57,7 +57,6 @@ public class SignedDataEngine {
     private static final String ID_PKINIT_DHKEYDATA = "1.3.6.1.5.2.3.2";
     private static final String ID_PKINIT_RKEYDATA = "1.3.6.1.5.2.3.3";
 
-
     /**
      * Uses a private key to sign data in a CMS SignedData structure and returns
      * the encoded CMS SignedData as bytes.
@@ -81,8 +80,8 @@ public class SignedDataEngine {
      * @throws IOException
      */
     public static byte[] getSignedAuthPack(PrivateKey privateKey, X509Certificate certificate, AuthPack authPack)
-        throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException,
-        CertStoreException, CMSException, IOException {
+            throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException,
+            CertStoreException, CMSException, IOException {
         return getSignedData(privateKey, certificate, authPack.encode(), ID_PKINIT_AUTHDATA);
     }
 
@@ -110,8 +109,9 @@ public class SignedDataEngine {
      * @throws IOException
      */
     public static byte[] getSignedKdcDhKeyInfo(PrivateKey privateKey, X509Certificate certificate,
-                                               KdcDHKeyInfo kdcDhKeyInfo) throws NoSuchAlgorithmException, NoSuchProviderException,
-        InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException {
+                                               KdcDHKeyInfo kdcDhKeyInfo)
+            throws NoSuchAlgorithmException, NoSuchProviderException,
+            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException {
         return getSignedData(privateKey, certificate, kdcDhKeyInfo.encode(), ID_PKINIT_DHKEYDATA);
     }
 
@@ -138,15 +138,16 @@ public class SignedDataEngine {
      * @throws IOException
      */
     public static byte[] getSignedReplyKeyPack(PrivateKey privateKey, X509Certificate certificate,
-                                               ReplyKeyPack replyKeyPack) throws NoSuchAlgorithmException, NoSuchProviderException,
-        InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException {
+                                               ReplyKeyPack replyKeyPack)
+            throws NoSuchAlgorithmException, NoSuchProviderException,
+            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException {
         return getSignedData(privateKey, certificate, replyKeyPack.encode(), ID_PKINIT_RKEYDATA);
     }
 
 
     static byte[] getSignedData(PrivateKey privateKey, X509Certificate certificate, byte[] dataToSign,
                                 String eContentType) throws NoSuchAlgorithmException, NoSuchProviderException,
-        InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException {
+            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException {
         CMSSignedDataGenerator signedGenerator = new CMSSignedDataGenerator();
         signedGenerator.addSigner(privateKey, certificate, CMSSignedGenerator.DIGEST_SHA1);
 
@@ -181,7 +182,7 @@ public class SignedDataEngine {
         while (it.hasNext()) {
             final SignerInformation signer = it.next();
 
-            Collection<? extends Certificate> certCollection = certs.getCertificates( signer.getSID() );
+            Collection<? extends Certificate> certCollection = certs.getCertificates(signer.getSID());
             /*Collection<? extends Certificate> certCollection = certs
                 .getCertificates(new CertSelector() {
                     @Override
@@ -192,10 +193,9 @@ public class SignedDataEngine {
             */
             Iterator<? extends Certificate> certIt = certCollection.iterator();
 
-            X509Certificate cert = ( X509Certificate ) certIt.next();
+            X509Certificate cert = (X509Certificate) certIt.next();
 
-            if ( signer.verify( cert.getPublicKey(), "BC" ) )
-            {
+            if (signer.verify(cert.getPublicKey(), "BC")) {
                 return true;
             }
         }

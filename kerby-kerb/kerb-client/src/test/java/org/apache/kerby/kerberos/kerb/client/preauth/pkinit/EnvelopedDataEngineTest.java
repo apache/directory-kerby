@@ -21,7 +21,6 @@ package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
 import junit.framework.TestCase;
 import org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs.CertificateChainFactory;
-import org.bouncycastle.cms.CMSEnvelopedData;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,30 +43,26 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.util.Arrays;
 
+public class EnvelopedDataEngineTest extends TestCase {
+    /**
+     * The log for this class.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(EnvelopedDataEngineTest.class);
 
-/**
- * Tests the use of {@link CMSEnvelopedData}.
- *
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
- * @version $Rev$, $Date$
- */
-public class EnvelopedDataEngineTest extends TestCase
-{
-    /** The log for this class. */
-    private static final Logger log = LoggerFactory.getLogger( EnvelopedDataEngineTest.class );
-
-    /** Certificate used to encrypt the data. */
+    /**
+     * Certificate used to encrypt the data.
+     */
     private X509Certificate certificate;
 
-    /** Private key used to decrypt the data. */
+    /**
+     * Private key used to decrypt the data.
+     */
     private PrivateKey privateKey;
 
 
-    public void setUp() throws Exception
-    {
-        if ( Security.getProvider( BouncyCastleProvider.PROVIDER_NAME ) == null )
-        {
-            Security.addProvider( new BouncyCastleProvider() );
+    public void setUp() throws Exception {
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
         }
 
         //getCaFromFile( "/tmp/testCa.p12", "password", "Test CA" );
@@ -80,19 +75,17 @@ public class EnvelopedDataEngineTest extends TestCase
      *
      * @throws Exception
      */
-    public void testEnvelopedData() throws Exception
-    {
+    public void testEnvelopedData() throws Exception {
         byte[] dataToEnvelope = "Hello".getBytes();
 
-        byte[] envelopedDataBytes = EnvelopedDataEngine.getEnvelopedReplyKeyPack( dataToEnvelope, certificate );
-        byte[] unenvelopedData = EnvelopedDataEngine.getUnenvelopedData( envelopedDataBytes, certificate, privateKey );
+        byte[] envelopedDataBytes = EnvelopedDataEngine.getEnvelopedReplyKeyPack(dataToEnvelope, certificate);
+        byte[] unenvelopedData = EnvelopedDataEngine.getUnenvelopedData(envelopedDataBytes, certificate, privateKey);
 
-        assertTrue( Arrays.equals( dataToEnvelope, unenvelopedData ) );
+        assertTrue(Arrays.equals(dataToEnvelope, unenvelopedData));
     }
 
 
-    void getCaFromFactory() throws Exception
-    {
+    void getCaFromFactory() throws Exception {
         X509Certificate[] clientChain = CertificateChainFactory.getClientChain();
         certificate = clientChain[0];
 
@@ -100,34 +93,31 @@ public class EnvelopedDataEngineTest extends TestCase
     }
 
 
-    void getCaFromFile( String caFile, String caPassword, String caAlias ) throws KeyStoreException,
-        NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException, UnrecoverableKeyException,
-        InvalidKeyException, SignatureException, NoSuchProviderException
-    {
+    void getCaFromFile(String caFile, String caPassword, String caAlias) throws KeyStoreException,
+            NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException,
+            UnrecoverableKeyException, InvalidKeyException, SignatureException, NoSuchProviderException {
         // Open the keystore.
-        KeyStore caKs = KeyStore.getInstance( "PKCS12" );
-        caKs.load( new FileInputStream( new File( caFile ) ), caPassword.toCharArray() );
+        KeyStore caKs = KeyStore.getInstance("PKCS12");
+        caKs.load(new FileInputStream(new File(caFile)), caPassword.toCharArray());
 
         // Load the private key from the keystore.
-        privateKey = ( RSAPrivateCrtKey ) caKs.getKey( caAlias, caPassword.toCharArray() );
+        privateKey = (RSAPrivateCrtKey) caKs.getKey(caAlias, caPassword.toCharArray());
 
-        if ( privateKey == null )
-        {
-            throw new IllegalStateException( "Got null key from keystore!" );
+        if (privateKey == null) {
+            throw new IllegalStateException("Got null key from keystore!");
         }
 
         // Load the certificate from the keystore.
-        certificate = ( X509Certificate ) caKs.getCertificate( caAlias );
+        certificate = (X509Certificate) caKs.getCertificate(caAlias);
 
-        if ( certificate == null )
-        {
-            throw new IllegalStateException( "Got null cert from keystore!" );
+        if (certificate == null) {
+            throw new IllegalStateException("Got null cert from keystore!");
         }
 
-        log.debug( "Successfully loaded key and certificate having DN '{}'.", certificate.getSubjectDN().getName() );
+        LOG.debug("Successfully loaded key and certificate having DN '{}'.", certificate.getSubjectDN().getName());
 
         // Verify.
-        certificate.verify( certificate.getPublicKey() );
-        log.debug( "Successfully verified CA certificate with its own public key." );
+        certificate.verify(certificate.getPublicKey());
+        LOG.debug("Successfully verified CA certificate with its own public key.");
     }
 }

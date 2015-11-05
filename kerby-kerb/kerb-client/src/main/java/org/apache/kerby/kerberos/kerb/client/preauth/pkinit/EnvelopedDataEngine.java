@@ -45,21 +45,20 @@ import java.util.Iterator;
 
 /**
  * Encapsulates working with PKINIT enveloped data structures.
- * 
+ *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class EnvelopedDataEngine
-{
+public class EnvelopedDataEngine {
     /**
      * Uses a certificate to encrypt data in a CMS EnvelopedData structure and
      * returns the encoded EnvelopedData as bytes.
-     * 
+     * <p/>
      * 'encKeyPack' contains a CMS type ContentInfo encoded according to [RFC3852].
      * The contentType field of the type ContentInfo is id-envelopedData (1.2.840.113549.1.7.3).
      * The content field is an EnvelopedData. The contentType field for the type
      * EnvelopedData is id-signedData (1.2.840.113549.1.7.2).
-     * 
+     *
      * @param dataToEnvelope
      * @param certificate
      * @return The EnvelopedData bytes.
@@ -68,15 +67,14 @@ public class EnvelopedDataEngine
      * @throws CMSException
      * @throws NoSuchProviderException
      */
-    public static byte[] getEnvelopedReplyKeyPack( byte[] dataToEnvelope, X509Certificate certificate )
-        throws NoSuchAlgorithmException, IOException, CMSException, NoSuchProviderException
-    {
-        CMSProcessableByteArray content = new CMSProcessableByteArray( dataToEnvelope );
+    public static byte[] getEnvelopedReplyKeyPack(byte[] dataToEnvelope, X509Certificate certificate)
+            throws NoSuchAlgorithmException, IOException, CMSException, NoSuchProviderException {
+        CMSProcessableByteArray content = new CMSProcessableByteArray(dataToEnvelope);
         String algorithm = CMSEnvelopedDataGenerator.DES_EDE3_CBC;
 
         CMSEnvelopedDataGenerator envelopeGenerator = new CMSEnvelopedDataGenerator();
-        envelopeGenerator.addKeyTransRecipient( certificate );
-        CMSEnvelopedData envdata = envelopeGenerator.generate( content, algorithm, "BC" );
+        envelopeGenerator.addKeyTransRecipient(certificate);
+        CMSEnvelopedData envdata = envelopeGenerator.generate(content, algorithm, "BC");
 
         return envdata.getEncoded();
     }
@@ -97,30 +95,27 @@ public class EnvelopedDataEngine
      * @throws CertStoreException
      */
     @SuppressWarnings("unchecked")
-    public static byte[] getUnenvelopedData( byte[] envelopedDataBytes, X509Certificate certificate,
-        PrivateKey privateKey ) throws NoSuchProviderException, InvalidAlgorithmParameterException, CMSException,
-        NoSuchAlgorithmException, CertStoreException
-    {
-        CMSEnvelopedData envelopedData = new CMSEnvelopedData( envelopedDataBytes );
+    public static byte[] getUnenvelopedData(byte[] envelopedDataBytes, X509Certificate certificate,
+                                            PrivateKey privateKey)
+            throws NoSuchProviderException, InvalidAlgorithmParameterException, CMSException,
+            NoSuchAlgorithmException, CertStoreException {
+        CMSEnvelopedData envelopedData = new CMSEnvelopedData(envelopedDataBytes);
 
         // Set up to iterate through the recipients.
         RecipientInformationStore recipients = envelopedData.getRecipientInfos();
-        CertStore certStore = CertStore.getInstance( "Collection", new CollectionCertStoreParameters( Collections
-            .singleton( certificate ) ), "BC" );
+        CertStore certStore = CertStore.getInstance("Collection", new CollectionCertStoreParameters(Collections
+                .singleton(certificate)), "BC");
         Iterator<RecipientInformation> it = recipients.getRecipients().iterator();
 
-        while ( it.hasNext() )
-        {
+        while (it.hasNext()) {
             RecipientInformation recipient = it.next();
-            if ( recipient instanceof KeyTransRecipientInformation )
-            {
+            if (recipient instanceof KeyTransRecipientInformation) {
                 // Match the recipient ID.
-                Collection<? extends Certificate> matches = certStore.getCertificates( recipient.getRID() );
+                Collection<? extends Certificate> matches = certStore.getCertificates(recipient.getRID());
 
-                if ( !matches.isEmpty() )
-                {
+                if (!matches.isEmpty()) {
                     // Decrypt the data.
-                    return recipient.getContent( privateKey, "BC" );
+                    return recipient.getContent(privateKey, "BC");
                 }
             }
         }

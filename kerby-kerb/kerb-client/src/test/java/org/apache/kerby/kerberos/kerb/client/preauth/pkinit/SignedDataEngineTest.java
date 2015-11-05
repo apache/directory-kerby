@@ -50,25 +50,28 @@ import java.security.interfaces.RSAPrivateCrtKey;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class SignedDataEngineTest extends TestCase
-{
-    /** The log for this class. */
-    private static final Logger log = LoggerFactory.getLogger( SignedDataEngineTest.class );
+public class SignedDataEngineTest extends TestCase {
+    /**
+     * The log for this class.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(SignedDataEngineTest.class);
 
     private static final String ID_DATA = "1.2.840.113549.1.7.1";
 
-    /** Certificate used to verify the signature. */
+    /**
+     * Certificate used to verify the signature.
+     */
     private X509Certificate certificate;
 
-    /** Private key used to sign the data. */
+    /**
+     * Private key used to sign the data.
+     */
     private PrivateKey privateKey;
 
 
-    public void setUp() throws Exception
-    {
-        if ( Security.getProvider( "BC" ) == null )
-        {
-            Security.addProvider( new BouncyCastleProvider() );
+    public void setUp() throws Exception {
+        if (Security.getProvider("BC") == null) {
+            Security.addProvider(new BouncyCastleProvider());
         }
 
         //getCaFromFile( "/tmp/testCa.p12", "password", "Test CA" );
@@ -81,20 +84,18 @@ public class SignedDataEngineTest extends TestCase
      *
      * @throws Exception
      */
-    public void testSignedData() throws Exception
-    {
+    public void testSignedData() throws Exception {
         byte[] data = "Hello".getBytes();
 
-        byte[] signedDataBytes = SignedDataEngine.getSignedData( privateKey, certificate, data, ID_DATA );
+        byte[] signedDataBytes = SignedDataEngine.getSignedData(privateKey, certificate, data, ID_DATA);
 
-        CMSSignedData signedData = new CMSSignedData( signedDataBytes );
+        CMSSignedData signedData = new CMSSignedData(signedDataBytes);
 
-        assertTrue(SignedDataEngine.validateSignedData( signedData ));
+        assertTrue(SignedDataEngine.validateSignedData(signedData));
     }
 
 
-    void getCaFromFactory() throws Exception
-    {
+    void getCaFromFactory() throws Exception {
         X509Certificate[] clientChain = CertificateChainFactory.getClientChain();
         certificate = clientChain[0];
 
@@ -102,34 +103,31 @@ public class SignedDataEngineTest extends TestCase
     }
 
 
-    void getCaFromFile( String caFile, String caPassword, String caAlias ) throws KeyStoreException,
-        NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException, UnrecoverableKeyException,
-        InvalidKeyException, SignatureException, NoSuchProviderException
-    {
+    void getCaFromFile(String caFile, String caPassword, String caAlias) throws KeyStoreException,
+            NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException,
+            UnrecoverableKeyException, InvalidKeyException, SignatureException, NoSuchProviderException {
         // Open the keystore.
-        KeyStore caKs = KeyStore.getInstance( "PKCS12" );
-        caKs.load( new FileInputStream( new File( caFile ) ), caPassword.toCharArray() );
+        KeyStore caKs = KeyStore.getInstance("PKCS12");
+        caKs.load(new FileInputStream(new File(caFile)), caPassword.toCharArray());
 
         // Load the private key from the keystore.
-        privateKey = ( RSAPrivateCrtKey ) caKs.getKey( caAlias, caPassword.toCharArray() );
+        privateKey = (RSAPrivateCrtKey) caKs.getKey(caAlias, caPassword.toCharArray());
 
-        if ( privateKey == null )
-        {
-            throw new IllegalStateException( "Got null key from keystore!" );
+        if (privateKey == null) {
+            throw new IllegalStateException("Got null key from keystore!");
         }
 
         // Load the certificate from the keystore.
-        certificate = ( X509Certificate ) caKs.getCertificate( caAlias );
+        certificate = (X509Certificate) caKs.getCertificate(caAlias);
 
-        if ( certificate == null )
-        {
-            throw new IllegalStateException( "Got null cert from keystore!" );
+        if (certificate == null) {
+            throw new IllegalStateException("Got null cert from keystore!");
         }
 
-        log.debug( "Successfully loaded CA key and certificate. CA DN is '{}'.", certificate.getSubjectDN().getName() );
+        LOG.debug("Successfully loaded CA key and certificate. CA DN is '{}'.", certificate.getSubjectDN().getName());
 
         // Verify.
-        certificate.verify( certificate.getPublicKey() );
-        log.debug( "Successfully verified CA certificate with its own public key." );
+        certificate.verify(certificate.getPublicKey());
+        LOG.debug("Successfully verified CA certificate with its own public key.");
     }
 }

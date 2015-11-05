@@ -42,65 +42,61 @@ import javax.crypto.spec.SecretKeySpec;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-class DhServer
-{
-    private static AlgorithmParameterSpec AES_IV = new IvParameterSpec( new byte[16] );
+class DhServer {
+    private static AlgorithmParameterSpec aesIv = new IvParameterSpec(new byte[16]);
 
     private KeyAgreement serverKeyAgree;
     private SecretKey serverAesKey;
 
 
-    byte[] initAndDoPhase( byte[] clientPubKeyEnc ) throws Exception
-    {
+    byte[] initAndDoPhase(byte[] clientPubKeyEnc) throws Exception {
         /*
          * The server has received the client's public key in encoded format.  The
          * server instantiates a DH public key from the encoded key material.
          */
-        KeyFactory serverKeyFac = KeyFactory.getInstance( "DH" );
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec( clientPubKeyEnc );
-        PublicKey clientPubKey = serverKeyFac.generatePublic( x509KeySpec );
+        KeyFactory serverKeyFac = KeyFactory.getInstance("DH");
+        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(clientPubKeyEnc);
+        PublicKey clientPubKey = serverKeyFac.generatePublic(x509KeySpec);
 
         /*
          * The server gets the DH parameters associated with the client's public
          * key.  The server must use the same parameters when it generates its own key pair.
          */
-        DHParameterSpec dhParamSpec = ( ( DHPublicKey ) clientPubKey ).getParams();
+        DHParameterSpec dhParamSpec = ((DHPublicKey) clientPubKey).getParams();
 
         // The server creates its own DH key pair.
-        KeyPairGenerator serverKpairGen = KeyPairGenerator.getInstance( "DH" );
-        serverKpairGen.initialize( dhParamSpec );
+        KeyPairGenerator serverKpairGen = KeyPairGenerator.getInstance("DH");
+        serverKpairGen.initialize(dhParamSpec);
         KeyPair serverKpair = serverKpairGen.generateKeyPair();
 
         // The server creates and initializes its DH KeyAgreement object.
-        serverKeyAgree = KeyAgreement.getInstance( "DH" );
-        serverKeyAgree.init( serverKpair.getPrivate() );
+        serverKeyAgree = KeyAgreement.getInstance("DH");
+        serverKeyAgree.init(serverKpair.getPrivate());
 
         /*
          * The server uses the client's public key for the only phase of its
          * side of the DH protocol.
          */
-        serverKeyAgree.doPhase( clientPubKey, true );
+        serverKeyAgree.doPhase(clientPubKey, true);
 
         // The server encodes its public key, and sends it over to the client.
         return serverKpair.getPublic().getEncoded();
     }
 
 
-    byte[] generateKey( byte[] clientDhNonce, byte[] serverDhNonce )
-    {
+    byte[] generateKey(byte[] clientDhNonce, byte[] serverDhNonce) {
         // ZZ length will be same as public key.
         byte[] dhSharedSecret = serverKeyAgree.generateSecret();
         byte[] x = dhSharedSecret;
 
-        if ( ( clientDhNonce != null && clientDhNonce.length > 0 )
-            && ( serverDhNonce != null && serverDhNonce.length > 0 ) )
-        {
-            x = concatenateBytes( dhSharedSecret, clientDhNonce );
-            x = concatenateBytes( x, serverDhNonce );
+        if (clientDhNonce != null && clientDhNonce.length > 0
+                && serverDhNonce != null && serverDhNonce.length > 0) {
+            x = concatenateBytes(dhSharedSecret, clientDhNonce);
+            x = concatenateBytes(x, serverDhNonce);
         }
 
-        byte[] secret = OctetString2Key.kTruncate( dhSharedSecret.length, x );
-        serverAesKey = new SecretKeySpec( secret, 0, 16, "AES" );
+        byte[] secret = OctetString2Key.kTruncate(dhSharedSecret.length, x);
+        serverAesKey = new SecretKeySpec(secret, 0, 16, "AES");
 
         return serverAesKey.getEncoded();
     }
@@ -109,31 +105,27 @@ class DhServer
     /**
      * Encrypt using AES in CTS mode.
      *
-     * @param cleartext
+     * @param clearText
      * @return The cipher text.
      * @throws Exception
      */
-    byte[] encryptAes( byte[] clearText ) throws Exception
-    {
+    byte[] encryptAes(byte[] clearText) throws Exception {
         // Use the secret key to encrypt/decrypt data.
-        Cipher serverCipher = Cipher.getInstance( "AES/CTS/NoPadding" );
-        serverCipher.init( Cipher.ENCRYPT_MODE, serverAesKey, AES_IV );
+        Cipher serverCipher = Cipher.getInstance("AES/CTS/NoPadding");
+        serverCipher.init(Cipher.ENCRYPT_MODE, serverAesKey, aesIv);
 
-        return serverCipher.doFinal( clearText );
+        return serverCipher.doFinal(clearText);
     }
 
 
-    byte[] concatenateBytes( byte[] array1, byte[] array2 )
-    {
-        byte concatenatedBytes[] = new byte[array1.length + array2.length];
+    byte[] concatenateBytes(byte[] array1, byte[] array2) {
+        byte[] concatenatedBytes = new byte[array1.length + array2.length];
 
-        for ( int i = 0; i < array1.length; i++ )
-        {
+        for (int i = 0; i < array1.length; i++) {
             concatenatedBytes[i] = array1[i];
         }
 
-        for ( int j = array1.length; j < concatenatedBytes.length; j++ )
-        {
+        for (int j = array1.length; j < concatenatedBytes.length; j++) {
             concatenatedBytes[j] = array2[j - array1.length];
         }
 
