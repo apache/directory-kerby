@@ -461,6 +461,7 @@ public class PKCS8Key {
         return new DecryptResult(transformation, keySize, decryptedBytes);
     }
 
+    @SuppressWarnings("checkstyle:methodlength")
     private static DecryptResult decryptPKCS8(Asn1PkcsStructure pkcs8,
                                               char[] password)
         throws GeneralSecurityException {

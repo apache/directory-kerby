@@ -97,6 +97,7 @@ public class Ping {
         argsMatch = Collections.unmodifiableMap(argsMatch);
     }
 
+    @SuppressWarnings("checkstyle:methodlength")
     public static void main(String[] args) throws Exception {
         boolean showUsage = args.length == 0;
         Exception parseException = null;
