@@ -313,6 +313,7 @@ public class Certificates {
         byte[] bytes = cert.getExtensionValue("2.5.29.31");
         if (bytes == null) {
             // log.warn( "Cert doesn't contain X509v3 CRL Distribution Points (2.5.29.31): " + name );
+            System.err.println("Cert doesn't contain X509v3 CRL Distribution Points (2.5.29.31)");
         } else {
             List crlList = getCRLs(cert);
             Iterator it = crlList.iterator();
@@ -432,6 +433,7 @@ public class Certificates {
                             setReadTimeout.invoke(httpConn, Integer.valueOf(5000));
                         } catch (NoSuchMethodException nsme) {
                             // oh well, java 1.4 users can suffer.
+                            System.err.println(nsme);
                         } catch (Exception e) {
                             throw new RuntimeException("can't set timeout", e);
                         }
@@ -454,6 +456,7 @@ public class Certificates {
                     this.creationTime = System.currentTimeMillis();
                 } catch (IOException ioe) {
                     // log.warn( "Cannot check CRL: " + e );
+                    System.err.println(ioe);
                 }
             }
 
@@ -476,9 +479,11 @@ public class Certificates {
                 } catch (IOException ioe) {
                     // couldn't load CRL that's supposed to be stored in Temp file.
                     // log.warn(  );
+                    System.err.println(ioe);
                 } catch (CRLException crle) {
                     // something is wrong with the CRL
                     // log.warn(  );
+                    System.err.println(crle);
                 }
             }
             return crl != null;
@@ -506,7 +511,9 @@ public class Certificates {
                             cnList.add(value.toString());
                         }
                     } catch (NoSuchElementException ignore) {
+                        System.err.println(ignore);
                     } catch (NamingException ignore) {
+                        System.err.println(ignore);
                     }
                 }
             }
@@ -514,6 +521,7 @@ public class Certificates {
                 return cnList.toArray(new String[cnList.size()]);
             }
         } catch (InvalidNameException ignore) {
+            System.err.println(ignore);
         }
         return null;
     }

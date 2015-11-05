@@ -205,6 +205,7 @@ public class KeyMaterial extends TrustMaterial {
 
                 } catch (GeneralSecurityException gse) {
                     // oh well, we can't use that KeyStore alias.
+                    System.err.println(gse);
                 }
             }
         }

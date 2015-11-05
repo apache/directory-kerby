@@ -165,6 +165,7 @@ public class SSLProxyServer {
                     }
                     s.close();
                 } catch (Exception e) {
+                    System.err.println(e);
                 }
 
                 try {
@@ -176,6 +177,7 @@ public class SSLProxyServer {
                     }
                     newSocket.close();
                 } catch (Exception e) {
+                    System.err.println(e);
                 }
 
 

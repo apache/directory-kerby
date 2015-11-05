@@ -333,6 +333,7 @@ public class KeyStoreBuilder {
             throw pbpe;
         } catch (GeneralSecurityException gse) {
             // no luck
+            System.err.println(gse);
         }
 
         List pemItems = PEMUtil.decode(stuff);
@@ -371,6 +372,7 @@ public class KeyStoreBuilder {
             }
         } catch (Exception e) {
             // isProbablyPKCS12 and isASN are set properly by now.
+            System.err.println(e);
         }
 
         ByteArrayInputStream stuffStream = new ByteArrayInputStream(stuff);
@@ -415,6 +417,7 @@ public class KeyStoreBuilder {
                 }
             } catch (CertificateException ce) {
                 // oh well
+                System.err.println(ce);
             }
 
             stuffStream.reset();
@@ -431,6 +434,7 @@ public class KeyStoreBuilder {
                 }
             } catch (CertificateException ce) {
                 // oh well
+                System.err.println(ce);
             }
         }
 
@@ -483,6 +487,7 @@ public class KeyStoreBuilder {
                         uke = e;  // We might throw this one later. 
                     } catch (GeneralSecurityException gse) {
                         // Swallow... keep looping.
+                        System.err.println(gse);
                     }
                 }
                 if (isPKCS12 && en.hasMoreElements()) {
@@ -594,6 +599,7 @@ public class KeyStoreBuilder {
                 }
             } catch (Exception e) {
                 // oh well, try next one.
+                System.err.println(e);
             }
         }
 
