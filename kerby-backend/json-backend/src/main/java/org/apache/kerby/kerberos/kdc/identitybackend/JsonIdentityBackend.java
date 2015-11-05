@@ -266,6 +266,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
             File newJsonKdbFile = File.createTempFile("kerby-kdb",
                     ".json", jsonKdbFile.getParentFile());
             IOUtil.writeFile(newJsonContent, newJsonKdbFile);
+            jsonKdbFile.delete();
             newJsonKdbFile.renameTo(jsonKdbFile);
             kdbFileUpdateTime = jsonKdbFile.lastModified();
         } catch (IOException e) {
