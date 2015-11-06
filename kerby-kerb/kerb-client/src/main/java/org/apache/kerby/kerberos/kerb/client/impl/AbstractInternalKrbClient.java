@@ -33,6 +33,7 @@ import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithToken;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithTgt;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithToken;
+import org.apache.kerby.kerberos.kerb.spec.base.NameType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -94,12 +95,22 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             throw new IllegalArgumentException(
                     "No valid krb client request option found");
         }
+        
         if (requestOptions.contains(KrbOption.CLIENT_PRINCIPAL)) {
             String principal = requestOptions.getStringOption(
                     KrbOption.CLIENT_PRINCIPAL);
             principal = fixPrincipal(principal);
             asRequest.setClientPrincipal(new PrincipalName(principal));
         }
+        
+        if (requestOptions.contains(KrbOption.SERVER_PRINCIPAL)) {
+            String serverPrincipalName = requestOptions.getStringOption(KrbOption.SERVER_PRINCIPAL);
+            serverPrincipalName = fixPrincipal(serverPrincipalName);
+            //PrincipalName serverPrincipal = new PrincipalName(serverPrincipalName, NameType.NT_SRV_INST);
+            PrincipalName serverPrincipal = new PrincipalName(serverPrincipalName, NameType.NT_PRINCIPAL);
+            asRequest.setServerPrincipal(serverPrincipal);
+        }
+
         asRequest.setKrbOptions(requestOptions);
 
         return doRequestTgtTicket(asRequest);
