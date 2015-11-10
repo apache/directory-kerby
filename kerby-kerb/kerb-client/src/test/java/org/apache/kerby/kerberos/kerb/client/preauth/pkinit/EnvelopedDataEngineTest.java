@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
@@ -78,8 +77,10 @@ public class EnvelopedDataEngineTest extends TestCase {
     public void testEnvelopedData() throws Exception {
         byte[] dataToEnvelope = "Hello".getBytes();
 
-        byte[] envelopedDataBytes = EnvelopedDataEngine.getEnvelopedReplyKeyPack(dataToEnvelope, certificate);
-        byte[] unenvelopedData = EnvelopedDataEngine.getUnenvelopedData(envelopedDataBytes, certificate, privateKey);
+        byte[] envelopedDataBytes = EnvelopedDataEngine.getEnvelopedReplyKeyPack(
+                dataToEnvelope, certificate);
+        byte[] unenvelopedData = EnvelopedDataEngine.getUnenvelopedData(
+                envelopedDataBytes, privateKey);
 
         assertTrue(Arrays.equals(dataToEnvelope, unenvelopedData));
     }
@@ -94,8 +95,8 @@ public class EnvelopedDataEngineTest extends TestCase {
 
 
     void getCaFromFile(String caFile, String caPassword, String caAlias) throws KeyStoreException,
-            NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException,
-            UnrecoverableKeyException, InvalidKeyException, SignatureException, NoSuchProviderException {
+            UnrecoverableKeyException, NoSuchAlgorithmException, IOException, CertificateException,
+            NoSuchProviderException, InvalidKeyException, SignatureException {
         // Open the keystore.
         KeyStore caKs = KeyStore.getInstance("PKCS12");
         caKs.load(new FileInputStream(new File(caFile)), caPassword.toCharArray());

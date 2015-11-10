@@ -28,16 +28,20 @@ import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
+import org.bouncycastle.asn1.x509.GeneralNamesBuilder;
 import org.bouncycastle.asn1.x509.KeyPurposeId;
 import org.bouncycastle.asn1.x509.KeyUsage;
+import org.bouncycastle.asn1.x509.SubjectKeyIdentifier;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.crypto.DataLengthException;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.jce.PrincipalUtil;
 import org.bouncycastle.jce.X509Principal;
 import org.bouncycastle.jce.interfaces.PKCS12BagAttributeCarrier;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.bouncycastle.x509.extension.AuthorityKeyIdentifierStructure;
-import org.bouncycastle.x509.extension.SubjectKeyIdentifierStructure;
 
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
@@ -129,7 +133,7 @@ public class EndEntityGenerator {
 
         certGen
                 .addExtension(X509Extensions.SubjectKeyIdentifier, false,
-                        new SubjectKeyIdentifierStructure(publicKey));
+                        new SubjectKeyIdentifier(getDigest(SubjectPublicKeyInfo.getInstance(publicKey.getEncoded()))));
 
         // MAY set BasicConstraints=false or not at all.
         certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(false));
@@ -155,12 +159,15 @@ public class EndEntityGenerator {
 
         String dnsName = "localhost";
 
-        ASN1EncodableVector sanVector = new ASN1EncodableVector();
-        sanVector.add(new GeneralName(GeneralName.otherName, pkinitSan));
-        sanVector.add(new GeneralName(GeneralName.dNSName, dnsName));
-        DERSequence san = new DERSequence(sanVector);
+        GeneralName name1 = new GeneralName(GeneralName.otherName, pkinitSan);
+        GeneralName name2 = new GeneralName(GeneralName.dNSName, dnsName);
 
-        GeneralNames sanGeneralNames = new GeneralNames(san);
+        GeneralNamesBuilder genNamesBuilder = new GeneralNamesBuilder();
+
+        genNamesBuilder.addName(name1);
+        genNamesBuilder.addName(name2);
+
+        GeneralNames sanGeneralNames = genNamesBuilder.build();
 
         certGen.addExtension(X509Extensions.SubjectAlternativeName, true, sanGeneralNames);
 
@@ -247,9 +254,19 @@ public class EndEntityGenerator {
         PKCS12BagAttributeCarrier bagAttr = (PKCS12BagAttributeCarrier) cert;
 
         bagAttr.setBagAttribute(PKCSObjectIdentifiers.pkcs_9_at_friendlyName, new DERBMPString(friendlyName));
-        bagAttr.setBagAttribute(PKCSObjectIdentifiers.pkcs_9_at_localKeyId, new SubjectKeyIdentifierStructure(
-                publicKey));
+        bagAttr.setBagAttribute(PKCSObjectIdentifiers.pkcs_9_at_localKeyId,
+                new SubjectKeyIdentifier(getDigest(SubjectPublicKeyInfo.getInstance(publicKey.getEncoded()))));
 
         return cert;
+    }
+
+    private static byte[] getDigest(SubjectPublicKeyInfo spki) {
+        Digest digest = new SHA1Digest();
+        byte[] resBuf = new byte[digest.getDigestSize()];
+
+        byte[] bytes = spki.getPublicKeyData().getBytes();
+        digest.update(bytes, 0, bytes.length);
+        digest.doFinal(resBuf, 0);
+        return resBuf;
     }
 }

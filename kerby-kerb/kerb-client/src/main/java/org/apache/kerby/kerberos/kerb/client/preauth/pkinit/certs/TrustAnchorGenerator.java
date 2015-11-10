@@ -23,12 +23,15 @@ import org.bouncycastle.asn1.DERBMPString;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.KeyUsage;
+import org.bouncycastle.asn1.x509.SubjectKeyIdentifier;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.crypto.DataLengthException;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.jce.X509Principal;
 import org.bouncycastle.jce.interfaces.PKCS12BagAttributeCarrier;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
-import org.bouncycastle.x509.extension.SubjectKeyIdentifierStructure;
 
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
@@ -89,7 +92,8 @@ public class TrustAnchorGenerator {
         certGen.setSignatureAlgorithm("SHA1WithRSAEncryption");
 
         certGen
-                .addExtension(X509Extensions.SubjectKeyIdentifier, false, new SubjectKeyIdentifierStructure(publicKey));
+                .addExtension(X509Extensions.SubjectKeyIdentifier, false,
+                        new SubjectKeyIdentifier(getDigest(SubjectPublicKeyInfo.getInstance(publicKey.getEncoded()))));
 
         certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(1));
 
@@ -101,9 +105,19 @@ public class TrustAnchorGenerator {
         PKCS12BagAttributeCarrier bagAttr = (PKCS12BagAttributeCarrier) cert;
 
         bagAttr.setBagAttribute(PKCSObjectIdentifiers.pkcs_9_at_friendlyName, new DERBMPString(friendlyName));
-        bagAttr.setBagAttribute(PKCSObjectIdentifiers.pkcs_9_at_localKeyId, new SubjectKeyIdentifierStructure(
-                publicKey));
+        bagAttr.setBagAttribute(PKCSObjectIdentifiers.pkcs_9_at_localKeyId,
+                new SubjectKeyIdentifier(getDigest(SubjectPublicKeyInfo.getInstance(publicKey.getEncoded()))));
 
         return cert;
+    }
+
+    private static byte[] getDigest(SubjectPublicKeyInfo spki) {
+        Digest digest = new SHA1Digest();
+        byte[] resBuf = new byte[digest.getDigestSize()];
+
+        byte[] bytes = spki.getPublicKeyData().getBytes();
+        digest.update(bytes, 0, bytes.length);
+        digest.doFinal(resBuf, 0);
+        return resBuf;
     }
 }

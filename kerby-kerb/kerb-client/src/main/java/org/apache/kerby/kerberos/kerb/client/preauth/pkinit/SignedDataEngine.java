@@ -19,31 +19,39 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
-
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AuthPack;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.KdcDHKeyInfo;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.ReplyKeyPack;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
-import org.bouncycastle.cms.CMSSignedGenerator;
+import org.bouncycastle.cms.CMSTypedData;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
+import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
+import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
+import org.bouncycastle.util.Store;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
-import java.security.cert.CertStore;
 import java.security.cert.CertStoreException;
-import java.security.cert.Certificate;
-import java.security.cert.CollectionCertStoreParameters;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -81,7 +89,7 @@ public class SignedDataEngine {
      */
     public static byte[] getSignedAuthPack(PrivateKey privateKey, X509Certificate certificate, AuthPack authPack)
             throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException,
-            CertStoreException, CMSException, IOException {
+            CertStoreException, CMSException, IOException, OperatorCreationException, CertificateEncodingException {
         return getSignedData(privateKey, certificate, authPack.encode(), ID_PKINIT_AUTHDATA);
     }
 
@@ -111,7 +119,8 @@ public class SignedDataEngine {
     public static byte[] getSignedKdcDhKeyInfo(PrivateKey privateKey, X509Certificate certificate,
                                                KdcDHKeyInfo kdcDhKeyInfo)
             throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException {
+            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException,
+            OperatorCreationException, CertificateEncodingException {
         return getSignedData(privateKey, certificate, kdcDhKeyInfo.encode(), ID_PKINIT_DHKEYDATA);
     }
 
@@ -140,66 +149,72 @@ public class SignedDataEngine {
     public static byte[] getSignedReplyKeyPack(PrivateKey privateKey, X509Certificate certificate,
                                                ReplyKeyPack replyKeyPack)
             throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException {
+            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException,
+            OperatorCreationException, CertificateEncodingException {
         return getSignedData(privateKey, certificate, replyKeyPack.encode(), ID_PKINIT_RKEYDATA);
     }
 
 
     static byte[] getSignedData(PrivateKey privateKey, X509Certificate certificate, byte[] dataToSign,
                                 String eContentType) throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException {
-        CMSSignedDataGenerator signedGenerator = new CMSSignedDataGenerator();
-        signedGenerator.addSigner(privateKey, certificate, CMSSignedGenerator.DIGEST_SHA1);
+            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException,
+            CertificateEncodingException, OperatorCreationException {
 
-        Collection<X509Certificate> certList = Collections.singletonList(certificate);
+        List certList = new ArrayList();
+        certList.add(certificate);
+        Store certs = new JcaCertStore(certList);
 
-        CertStore certStore = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
-        signedGenerator.addCertificatesAndCRLs(certStore);
+        CMSSignedDataGenerator gen = new CMSSignedDataGenerator();
+        ContentSigner contentSigner = new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC")
+                .build(privateKey);
+        gen.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(
+                new JcaDigestCalculatorProviderBuilder().setProvider("BC").build())
+                .build(contentSigner, certificate));
+        gen.addCertificates(certs);
 
-        CMSProcessableByteArray cmsByteArray = new CMSProcessableByteArray(dataToSign);
-        CMSSignedData signedData = signedGenerator.generate(eContentType, cmsByteArray, true, "BC");
+        ASN1ObjectIdentifier asn1ObjectIdentifier = new ASN1ObjectIdentifier(eContentType);
+        CMSTypedData msg = new CMSProcessableByteArray(asn1ObjectIdentifier, dataToSign);
+        CMSSignedData s = gen.generate(msg, true);
 
-        return signedData.getEncoded();
+        return s.getEncoded();
     }
-
 
     /**
      * Validates a CMS SignedData using the public key corresponding to the private
      * key used to sign the structure.
      *
-     * @param signedData
+     * @param s
      * @return true if the signature is valid.
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public static boolean validateSignedData(CMSSignedData signedData) throws Exception {
-        CertStore certs = signedData.getCertificatesAndCRLs("Collection", "BC");
+    public static boolean validateSignedData(CMSSignedData s) throws Exception {
 
-        SignerInformationStore signers = signedData.getSignerInfos();
-        Collection<SignerInformation> c = signers.getSigners();
-        Iterator<SignerInformation> it = c.iterator();
+        Store certStore = s.getCertificates();
+        Store crlStore = s.getCRLs();
+        SignerInformationStore signers = s.getSignerInfos();
+
+        Collection c = signers.getSigners();
+        Iterator it = c.iterator();
 
         while (it.hasNext()) {
-            final SignerInformation signer = it.next();
+            SignerInformation signer = (SignerInformation) it.next();
+            Collection certCollection = certStore.getMatches(signer.getSID());
 
-            Collection<? extends Certificate> certCollection = certs.getCertificates(signer.getSID());
-            /*Collection<? extends Certificate> certCollection = certs
-                .getCertificates(new CertSelector() {
-                    @Override
-                    public boolean match(Certificate cert) {
-                        return false; // check cert and signer
-                    }
-                });
-            */
-            Iterator<? extends Certificate> certIt = certCollection.iterator();
+            Iterator certIt = certCollection.iterator();
+            X509CertificateHolder cert = (X509CertificateHolder) certIt.next();
 
-            X509Certificate cert = (X509Certificate) certIt.next();
-
-            if (signer.verify(cert.getPublicKey(), "BC")) {
-                return true;
+            if (!signer.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert))) {
+                return false;
             }
         }
 
-        return false;
+        Collection certColl = certStore.getMatches(null);
+        Collection crlColl = crlStore.getMatches(null);
+
+        if (certColl.size() != s.getCertificates().getMatches(null).size()
+                || crlColl.size() != s.getCRLs().getMatches(null).size()) {
+            return false;
+        }
+        return true;
     }
 }

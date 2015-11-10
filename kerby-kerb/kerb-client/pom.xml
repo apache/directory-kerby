@@ -48,13 +48,8 @@
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcprov-jdk15</artifactId>
-      <version>1.45</version>
-    </dependency>
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcmail-jdk15</artifactId>
-      <version>1.38</version>
+      <artifactId>bcpkix-jdk15on</artifactId>
+      <version>1.52</version>
     </dependency>
   </dependencies>
 </project>

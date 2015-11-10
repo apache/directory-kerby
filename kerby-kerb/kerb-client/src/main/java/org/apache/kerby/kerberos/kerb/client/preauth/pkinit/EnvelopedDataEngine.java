@@ -19,29 +19,26 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
-
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
+import org.bouncycastle.cms.CMSAlgorithm;
 import org.bouncycastle.cms.CMSEnvelopedData;
 import org.bouncycastle.cms.CMSEnvelopedDataGenerator;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
-import org.bouncycastle.cms.KeyTransRecipientInformation;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
+import org.bouncycastle.cms.bc.BcCMSContentEncryptorBuilder;
+import org.bouncycastle.cms.bc.BcRSAKeyTransEnvelopedRecipient;
+import org.bouncycastle.cms.bc.BcRSAKeyTransRecipientInfoGenerator;
+import org.bouncycastle.crypto.util.PrivateKeyFactory;
 
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
-import java.security.cert.CertStore;
-import java.security.cert.CertStoreException;
-import java.security.cert.Certificate;
-import java.security.cert.CollectionCertStoreParameters;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-
 
 /**
  * Encapsulates working with PKINIT enveloped data structures.
@@ -62,19 +59,19 @@ public class EnvelopedDataEngine {
      * @param dataToEnvelope
      * @param certificate
      * @return The EnvelopedData bytes.
-     * @throws NoSuchAlgorithmException
      * @throws IOException
      * @throws CMSException
-     * @throws NoSuchProviderException
+     * @throws CertificateEncodingException
      */
     public static byte[] getEnvelopedReplyKeyPack(byte[] dataToEnvelope, X509Certificate certificate)
-            throws NoSuchAlgorithmException, IOException, CMSException, NoSuchProviderException {
+            throws IOException, CMSException, CertificateEncodingException {
         CMSProcessableByteArray content = new CMSProcessableByteArray(dataToEnvelope);
-        String algorithm = CMSEnvelopedDataGenerator.DES_EDE3_CBC;
 
         CMSEnvelopedDataGenerator envelopeGenerator = new CMSEnvelopedDataGenerator();
-        envelopeGenerator.addKeyTransRecipient(certificate);
-        CMSEnvelopedData envdata = envelopeGenerator.generate(content, algorithm, "BC");
+        envelopeGenerator.addRecipientInfoGenerator(new BcRSAKeyTransRecipientInfoGenerator(
+                new JcaX509CertificateHolder(certificate)));
+        CMSEnvelopedData envdata = envelopeGenerator.generate(content,
+                new BcCMSContentEncryptorBuilder(CMSAlgorithm.DES_EDE3_CBC).build());
 
         return envdata.getEncoded();
     }
@@ -85,41 +82,28 @@ public class EnvelopedDataEngine {
      * returns the recovered (decrypted) data bytes.
      *
      * @param envelopedDataBytes
-     * @param certificate
      * @param privateKey
      * @return The recovered (decrypted) data bytes.
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
+     * @throws IOException
      * @throws CMSException
-     * @throws NoSuchAlgorithmException
-     * @throws CertStoreException
      */
     @SuppressWarnings("unchecked")
-    public static byte[] getUnenvelopedData(byte[] envelopedDataBytes, X509Certificate certificate,
-                                            PrivateKey privateKey)
-            throws NoSuchProviderException, InvalidAlgorithmParameterException, CMSException,
-            NoSuchAlgorithmException, CertStoreException {
+    public static byte[] getUnenvelopedData(byte[] envelopedDataBytes,
+                                            PrivateKey privateKey) throws CMSException, IOException {
         CMSEnvelopedData envelopedData = new CMSEnvelopedData(envelopedDataBytes);
 
         // Set up to iterate through the recipients.
         RecipientInformationStore recipients = envelopedData.getRecipientInfos();
-        CertStore certStore = CertStore.getInstance("Collection", new CollectionCertStoreParameters(Collections
-                .singleton(certificate)), "BC");
-        Iterator<RecipientInformation> it = recipients.getRecipients().iterator();
+        Collection c = recipients.getRecipients();
+        Iterator it = c.iterator();
 
+        byte[] recData = new byte[0];
         while (it.hasNext()) {
-            RecipientInformation recipient = it.next();
-            if (recipient instanceof KeyTransRecipientInformation) {
-                // Match the recipient ID.
-                Collection<? extends Certificate> matches = certStore.getCertificates(recipient.getRID());
+            RecipientInformation recipient = (RecipientInformation) it.next();
 
-                if (!matches.isEmpty()) {
-                    // Decrypt the data.
-                    return recipient.getContent(privateKey, "BC");
-                }
-            }
+            recData = recipient.getContent(new BcRSAKeyTransEnvelopedRecipient(
+                    PrivateKeyFactory.createKey(PrivateKeyInfo.getInstance(privateKey.getEncoded()))));
         }
-
-        return new byte[0];
+        return recData;
     }
 }
