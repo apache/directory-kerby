@@ -63,7 +63,9 @@ public enum KrbConfigKey implements SectionConfigKey {
     //key for logging location
     DEFAULT(null, "logging"),
     KDC(null, "logging"),
-    ADMIN_SERVER(null, "logging");
+    ADMIN_SERVER(null, "logging"),
+    PKINIT_ANCHORS(null, "libdefaults"),
+    PKINIT_IDENTITIES(null, "libdefaults");
 
 
     private Object defaultValue;

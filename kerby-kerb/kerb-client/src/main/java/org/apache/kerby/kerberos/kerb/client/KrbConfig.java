@@ -23,6 +23,7 @@ import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kerb.common.KrbConfHelper;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -287,5 +288,15 @@ public class KrbConfig extends Conf {
      */
     public List<EncryptionType> getDefaultTktEnctypes() {
         return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TKT_ENCTYPES);
+    }
+
+    public List<String> getPkinitAnchors() {
+        return Arrays.asList(KrbConfHelper.getStringArrayUnderSection(this,
+                KrbConfigKey.PKINIT_ANCHORS));
+    }
+
+    public List<String> getPkinitIdentities() {
+        return Arrays.asList(KrbConfHelper.getStringArrayUnderSection(this,
+                KrbConfigKey.PKINIT_IDENTITIES));
     }
 }
