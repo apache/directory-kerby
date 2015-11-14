@@ -30,16 +30,18 @@ public class ToolUtil {
 
     /**
      * Convert tool (like kinit) options to KrbOptions.
-     * @param krbOptions krb options
+     * @param toolOptions krb options
      * @return krb options
      */
-    public static KOptions convertOptions(KOptions krbOptions) {
+    public static KOptions convertOptions(KOptions toolOptions) {
         KOptions results = new KOptions();
 
-        for (KOption toolOpt : krbOptions.getOptions()) {
+        for (KOption toolOpt : toolOptions.getOptions()) {
             KrbOption krbOpt = KrbOption.fromOptionName(toolOpt.getOptionName());
-            krbOpt.setValue(toolOpt.getValue());
-            results.add(krbOpt);
+            if (krbOpt != KrbOption.NONE) {
+                krbOpt.setValue(toolOpt.getValue());
+                results.add(krbOpt);
+            }
         }
 
         return results;

@@ -43,7 +43,7 @@ public enum KinitOption implements KOption {
     USER_PASSWD("user-passwd", "User plain password"),
     USE_KEYTAB("-k", "use keytab"),
     USE_DFT_KEYTAB("-i", "use default client keytab (with -k)"),
-    USER_KEYTAB_FILE("-t", "filename of keytab to use", KOptionType.STR),
+    KEYTAB_FILE("-t", "filename of keytab to use", KOptionType.FILE),
     KRB5_CACHE("-c", "Kerberos 5 cache name", KOptionType.STR),
     SERVICE("-S", "service", KOptionType.STR),
     ARMOR_CACHE("-T", "armor credential cache", KOptionType.FILE),
