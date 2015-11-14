@@ -17,27 +17,27 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.server.request;
+package org.apache.kerby.kerberos.kerb.integration.test;
 
-import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncoding;
-import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncodingType;
+import org.junit.Test;
 
 /**
- * Issuing TGT ticket.
+ * Test login with token when token preauth is allowed by kdc.
  */
-public class TgtTickertIssuer extends TickertIssuer {
-
-    public TgtTickertIssuer(AsRequest kdcRequest) {
-        super(kdcRequest);
-    }
+public class TokenLoginWithTokenPreauthEnabledTest extends TokenLoginTestBase {
 
     @Override
-    protected TransitedEncoding getTransitedEncoding() {
-        TransitedEncoding transEnc = new TransitedEncoding();
-        transEnc.setTrType(TransitedEncodingType.DOMAIN_X500_COMPRESS);
-        byte[] empty = new byte[0];
-        transEnc.setContents(empty);
+    protected Boolean isTokenPreauthAllowed() {
+        return true;
+    }
 
-        return transEnc;
+    @Test
+    public void testLoginWithTokenStr() throws Exception {
+        super.testLoginWithTokenStr();
+    }
+
+    @Test
+    public void testLoginWithTokenCache() throws Exception {
+        super.testLoginWithTokenCache();
     }
 }

@@ -188,7 +188,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         PaTokenRequest tokenPa = new PaTokenRequest();
         tokenPa.setToken((KrbToken) authToken);
         TokenInfo info = new TokenInfo();
-        info.setTokenVendor("vendor");
+        info.setTokenVendor(authToken.getIssuer());
         tokenPa.setTokenInfo(info);
 
         EncryptedData paDataValue = EncryptionUtil.seal(tokenPa,

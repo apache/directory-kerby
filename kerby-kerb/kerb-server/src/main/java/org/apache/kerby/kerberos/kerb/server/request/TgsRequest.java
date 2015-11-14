@@ -107,7 +107,7 @@ public class TgsRequest extends KdcRequest {
      */
     @Override
     protected void issueTicket() throws KrbException {
-        TickertIssuer issuer = new ServiceTickertIssuer(this);
+        TicketIssuer issuer = new ServiceTicketIssuer(this);
         Ticket newTicket = issuer.issueTicket();
         setTicket(newTicket);
     }

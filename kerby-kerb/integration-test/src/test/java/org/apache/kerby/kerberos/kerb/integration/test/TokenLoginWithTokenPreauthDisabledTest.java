@@ -27,7 +27,7 @@ import org.junit.Test;
 /**
  * Test login with token when token preauth is not allowed by kdc.
  */
-public class TokenLoginTestWithTokenPreauthDisabled extends TokenLoginTestBase {
+public class TokenLoginWithTokenPreauthDisabledTest extends TokenLoginTestBase {
 
     @Override
     protected Boolean isTokenPreauthAllowed() {

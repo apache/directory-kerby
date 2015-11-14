@@ -19,41 +19,25 @@
  */
 package org.apache.kerby.kerberos.kerb.server.request;
 
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncoding;
-import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
+import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncodingType;
 
 /**
- * Issuing service ticket.
+ * Issuing TGT ticket.
  */
-public class ServiceTickertIssuer extends TickertIssuer {
-    private final Ticket tgtTicket;
-    private final AuthToken token;
+public class TgtTicketIssuer extends TicketIssuer {
 
-    public ServiceTickertIssuer(TgsRequest kdcRequest) {
+    public TgtTicketIssuer(AsRequest kdcRequest) {
         super(kdcRequest);
-        tgtTicket = kdcRequest.getTgtTicket();
-        token = kdcRequest.getToken();
-    }
-
-    protected KdcRequest getTgsRequest() {
-        return getKdcRequest();
-    }
-
-    @Override
-    protected PrincipalName getclientPrincipal() {
-        if (token != null) {
-            return new PrincipalName(token.getSubject());
-        }
-        return tgtTicket.getEncPart().getCname();
     }
 
     @Override
     protected TransitedEncoding getTransitedEncoding() {
-        if (token != null) {
-            return super.getTransitedEncoding();
-        }
-        return tgtTicket.getEncPart().getTransited();
+        TransitedEncoding transEnc = new TransitedEncoding();
+        transEnc.setTrType(TransitedEncodingType.DOMAIN_X500_COMPRESS);
+        byte[] empty = new byte[0];
+        transEnc.setContents(empty);
+
+        return transEnc;
     }
 }

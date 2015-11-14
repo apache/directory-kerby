@@ -24,6 +24,7 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.tool.ToolUtil;
 import org.apache.kerby.util.OSUtil;
@@ -103,7 +104,7 @@ public class KinitTool {
     }
 
     private static void requestTicket(String principal,
-                                      KOptions ktOptions) {
+                                      KOptions ktOptions) throws KrbException {
         ktOptions.add(KinitOption.CLIENT_PRINCIPAL, principal);
 
         File confDir = null;
@@ -153,8 +154,16 @@ public class KinitTool {
             System.err.println("Store ticket failed: " + e.getMessage());
             System.exit(1);
         }
+
         System.out.println("Successfully requested and stored ticket in "
                 + ccacheFile.getAbsolutePath());
+        if (ktOptions.contains(KinitOption.SERVICE)) {
+            String servicePrincipal = ktOptions.getStringOption(KinitOption.SERVICE);
+            ServiceTicket serviceTicket =
+                    krbClient.requestServiceTicketWithTgt(tgt, servicePrincipal);
+            System.out.println("Successfully requested the service ticket for " + servicePrincipal
+            + "\nKey version: " + serviceTicket.getTicket().getTktvno());
+        }
     }
 
     /**

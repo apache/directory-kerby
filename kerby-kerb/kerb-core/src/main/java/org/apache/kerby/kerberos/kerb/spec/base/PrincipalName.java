@@ -180,6 +180,9 @@ public class PrincipalName extends KrbSequenceType {
     }
 
     private void fromNameString(String nameString) {
+        if (nameString == null) {
+            return;
+        }
         String tmpRealm = null;
         List<String> nameStrings;
         int pos = nameString.indexOf('@');

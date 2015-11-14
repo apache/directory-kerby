@@ -20,11 +20,13 @@
 package org.apache.kerby.kerberos.kerb.integration.test;
 
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.integration.test.jaas.TokenCache;
 import org.apache.kerby.kerberos.kerb.integration.test.jaas.TokenJaasKrbUtil;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.LoginTestBase;
+import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
@@ -41,6 +43,7 @@ public class TokenLoginTestBase extends LoginTestBase {
     private File tokenCache;
     private File armorCache;
     private File tgtCache;
+    private File signKeyFile;
 
     static final String GROUP = "sales-group";
     static final String ROLE = "ADMIN";
@@ -55,13 +58,17 @@ public class TokenLoginTestBase extends LoginTestBase {
         super.setUp();
         armorCache = new File(getTestDir(), "armorcache.cc");
         tgtCache = new File(getTestDir(), "tgtcache.cc");
+        signKeyFile = new File(this.getClass().getResource("/private_key.pem").getPath());
     }
 
     @Override
     protected void configKdcSeverAndClient() {
         super.configKdcSeverAndClient();
         getKdcServer().getKdcConfig().setBoolean(KdcConfigKey.ALLOW_TOKEN_PREAUTH,
-                isTokenPreauthAllowed());
+            isTokenPreauthAllowed());
+        String verifyKeyFile = this.getClass().getResource("/").getPath();
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.VERIFY_KEY, verifyKeyFile);
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.ISSUERS, "token-service");
     }
 
     protected Boolean isTokenPreauthAllowed() {
@@ -103,11 +110,11 @@ public class TokenLoginTestBase extends LoginTestBase {
         authToken.addAttribute("role", ROLE);
 
         List<String> aud = new ArrayList<String>();
-        aud.add("krb5kdc-with-token-extension");
+        aud.add(KrbUtil.makeTgsPrincipal(TestKdcServer.KDC_REALM).getName());
         authToken.setAudiences(aud);
 
         // Set expiration in 60 minutes
-        final Date now = new Date(new Date().getTime() / 1000 * 1000);
+        final Date now = new Date();
         Date exp = new Date(now.getTime() + 1000 * 60 * 60);
         authToken.setExpirationTime(exp);
 
@@ -120,21 +127,25 @@ public class TokenLoginTestBase extends LoginTestBase {
         return authToken;
     }
 
-    private Subject loginClientUsingTokenStr(String tokenStr, File armorCache, File tgtCache) throws Exception {
-        return TokenJaasKrbUtil.loginUsingToken(getClientPrincipal(), tokenStr, armorCache, tgtCache);
+    private Subject loginClientUsingTokenStr(String tokenStr, File armorCache, File tgtCache,
+                                             File signKeyFile) throws Exception {
+        return TokenJaasKrbUtil.loginUsingToken(getClientPrincipal(), tokenStr, armorCache,
+            tgtCache, signKeyFile);
     }
 
-    private Subject loginClientUsingTokenCache(File tokenCache, File armorCache, File tgtCache) throws Exception {
-        return TokenJaasKrbUtil.loginUsingToken(getClientPrincipal(), tokenCache, armorCache, tgtCache);
+    private Subject loginClientUsingTokenCache(File tokenCache, File armorCache, File tgtCache,
+                                               File signKeyFile) throws Exception {
+        return TokenJaasKrbUtil.loginUsingToken(getClientPrincipal(), tokenCache, armorCache,
+            tgtCache, signKeyFile);
     }
 
     protected void testLoginWithTokenStr() throws Exception {
         String tokenStr = createTokenAndArmorCache();
-        checkSubject(loginClientUsingTokenStr(tokenStr, armorCache, tgtCache));
+        checkSubject(loginClientUsingTokenStr(tokenStr, armorCache, tgtCache, signKeyFile));
     }
 
     protected void testLoginWithTokenCache() throws Exception {
         createTokenAndArmorCache();
-        checkSubject(loginClientUsingTokenCache(tokenCache, armorCache, tgtCache));
+        checkSubject(loginClientUsingTokenCache(tokenCache, armorCache, tgtCache, signKeyFile));
     }
 }
