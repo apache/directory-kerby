@@ -40,7 +40,7 @@ public class KrbConfig extends Conf {
      * @return The kdc host
      */
     public String getKdcHost() {
-        return getString(KrbConfigKey.KDC_HOST);
+        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.KDC_HOST);
     }
 
     /**

@@ -23,7 +23,7 @@ import org.apache.kerby.kerberos.kerb.common.SectionConfigKey;
 
 public enum KrbConfigKey implements SectionConfigKey {
     KRB_DEBUG(true),
-    KDC_HOST("localhost"),
+    KDC_HOST("localhost", "libdefaults"),
     KDC_PORT(null, "libdefaults"),
     KDC_ALLOW_UDP(false),
     KDC_ALLOW_TCP(false),
