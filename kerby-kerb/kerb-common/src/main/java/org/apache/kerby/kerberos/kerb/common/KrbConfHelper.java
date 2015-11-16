@@ -37,21 +37,22 @@ public class KrbConfHelper {
      */
     private static final String LIST_SPLITTER = " |,";
 
-    public static String getStringUnderSection(Conf conf, SectionConfigKey key) {
+    public static String getStringUnderSection(
+            Conf conf, SectionConfigKey key, boolean useDefault) {
         Config subConfig = conf.getConfig(key.getSectionName());
         if (subConfig != null) {
-            return subConfig.getString(key);
+            return subConfig.getString(key, useDefault);
         } else {
-            return conf.getString(key);
+            return conf.getString(key, useDefault);
         }
     }
 
     public static Boolean getBooleanUnderSection(Conf conf, SectionConfigKey key) {
         Config subConfig = conf.getConfig(key.getSectionName());
         if (subConfig != null) {
-            return subConfig.getBoolean(key);
+            return subConfig.getBoolean(key, true);
         } else {
-            return conf.getBoolean(key);
+            return conf.getBoolean(key, true);
         }
     }
 
@@ -67,15 +68,15 @@ public class KrbConfHelper {
     public static Integer getIntUnderSection(Conf conf, SectionConfigKey key) {
         Config subConfig = conf.getConfig(key.getSectionName());
         if (subConfig != null) {
-            return subConfig.getInt(key);
+            return subConfig.getInt(key, true);
         } else {
-            return conf.getInt(key);
+            return conf.getInt(key, true);
         }
     }
 
     public static String[] getStringArrayUnderSection(Conf conf,
                                                       SectionConfigKey key) {
-        String value = getStringUnderSection(conf, key);
+        String value = getStringUnderSection(conf, key, true);
         String[] values = value.split(LIST_SPLITTER);
         return values;
     }

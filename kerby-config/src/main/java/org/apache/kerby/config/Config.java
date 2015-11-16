@@ -32,7 +32,7 @@ public interface Config {
     Set<String> getNames();
 
     String getString(String name);
-    String getString(ConfigKey name);
+    String getString(ConfigKey name, boolean useDefault);
     String getString(String name, String defaultValue);
 
     /**
@@ -52,77 +52,76 @@ public interface Config {
     String getTrimmed(String name);
     String getTrimmed(ConfigKey name);
     Boolean getBoolean(String name);
-    Boolean getBoolean(ConfigKey name);
-    Boolean getBoolean(String name, boolean defaultValue);
+    Boolean getBoolean(ConfigKey name, boolean useDefault);
+    Boolean getBoolean(String name, Boolean defaultValue);
 
     /**
      * Set a boolean value for the specified property
      * @param name The property name
      * @param value The boolean value
      */
-    void setBoolean(String name, boolean value);
+    void setBoolean(String name, Boolean value);
 
     /**
      * Set a boolean value for the specified property
      * @param name The config key name
      * @param value The boolean value
      */
-    void setBoolean(ConfigKey name, boolean value);
+    void setBoolean(ConfigKey name, Boolean value);
 
     Integer getInt(String name);
-    Integer getInt(ConfigKey name);
-    Integer getInt(String name, int defaultValue);
+    Integer getInt(ConfigKey name, boolean useDefault);
+    Integer getInt(String name, Integer defaultValue);
 
     /**
      * Set an int value for the specified property
      * @param name The property name
      * @param value The string value
      */
-    void setInt(String name, int value);
+    void setInt(String name, Integer value);
 
     /**
      * Set an int value for the specified property
      * @param name The config key name
      * @param value The int value
      */
-    void setInt(ConfigKey name, int value);
-
+    void setInt(ConfigKey name, Integer value);
 
     Long getLong(String name);
     Long getLong(ConfigKey name);
-    Long getLong(String name, long defaultValue);
+    Long getLong(String name, Long defaultValue);
 
     /**
      * Set a long value for the specified property
      * @param name The property name
      * @param value The long value
      */
-    void setLong(String name, long value);
+    void setLong(String name, Long value);
 
     /**
      * Set a long value for the specified property
      * @param name The config key name
      * @param value The long value
      */
-    void setLong(ConfigKey name, long value);
+    void setLong(ConfigKey name, Long value);
 
     Float getFloat(String name);
-    Float getFloat(ConfigKey name);
-    Float getFloat(String name, float defaultValue);
+    Float getFloat(ConfigKey name, boolean useDefault);
+    Float getFloat(String name, Float defaultValue);
 
     /**
      * Set a float value for the specified property
      * @param name The property name
      * @param value The float value
      */
-    void setFloat(String name, float value);
+    void setFloat(String name, Float value);
 
     /**
      * Set a float value for the specified property
      * @param name The config key name
      * @param value The float value
      */
-    void setFloat(ConfigKey name, float value);
+    void setFloat(ConfigKey name, Float value);
 
     List<String> getList(String name);
     List<String> getList(String name, String[] defaultValue);
@@ -132,7 +131,7 @@ public interface Config {
 
     Class<?> getClass(String name) throws ClassNotFoundException;
     Class<?> getClass(String name, Class<?> defaultValue) throws ClassNotFoundException;
-    Class<?> getClass(ConfigKey name) throws ClassNotFoundException;
+    Class<?> getClass(ConfigKey name, boolean useDefault) throws ClassNotFoundException;
     <T> T getInstance(String name) throws ClassNotFoundException;
     <T> T getInstance(ConfigKey name) throws ClassNotFoundException;
     <T> T getInstance(String name, Class<T> xface) throws ClassNotFoundException;

@@ -90,7 +90,7 @@ public final class KdcUtil {
     public static IdentityBackend getBackend(
             BackendConfig backendConfig) throws KrbException {
         String backendClassName = backendConfig.getString(
-                KdcConfigKey.KDC_IDENTITY_BACKEND);
+                KdcConfigKey.KDC_IDENTITY_BACKEND, true);
         if (backendClassName == null) {
             backendClassName = MemoryIdentityBackend.class.getCanonicalName();
         }

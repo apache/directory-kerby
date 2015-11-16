@@ -31,7 +31,7 @@ import java.util.List;
 public class KrbConfig extends Conf {
 
     public boolean enableDebug() {
-        return getBoolean(KrbConfigKey.KRB_DEBUG);
+        return getBoolean(KrbConfigKey.KRB_DEBUG, true);
     }
 
     /**
@@ -40,7 +40,8 @@ public class KrbConfig extends Conf {
      * @return The kdc host
      */
     public String getKdcHost() {
-        return getString(KrbConfigKey.KDC_HOST);
+        return KrbConfHelper.getStringUnderSection(this,
+                KrbConfigKey.KDC_HOST, true);
     }
 
     /**
@@ -77,8 +78,9 @@ public class KrbConfig extends Conf {
      * @return true to allow UDP, false otherwise
      */
     public boolean allowKdcUdp() {
-        return getBoolean(KrbConfigKey.KDC_ALLOW_UDP) || KrbConfHelper.getIntUnderSection(this,
-                KrbConfigKey.KDC_UDP_PORT) != null;
+        return getBoolean(KrbConfigKey.KDC_ALLOW_UDP, true)
+                || KrbConfHelper.getIntUnderSection(this,
+                        KrbConfigKey.KDC_UDP_PORT) != null;
     }
 
     /**
@@ -87,7 +89,8 @@ public class KrbConfig extends Conf {
      * @return true to allow TCP, false otherwise
      */
     public boolean allowKdcTcp() {
-        return getBoolean(KrbConfigKey.KDC_ALLOW_TCP) || KrbConfHelper.getIntUnderSection(this,
+        return getBoolean(KrbConfigKey.KDC_ALLOW_TCP, true)
+                || KrbConfHelper.getIntUnderSection(this,
                 KrbConfigKey.KDC_TCP_PORT) != null;
     }
 
@@ -110,7 +113,18 @@ public class KrbConfig extends Conf {
      * @return The kdc realm
      */
     public String getKdcRealm() {
-        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.KDC_REALM);
+        String realm = KrbConfHelper.getStringUnderSection(this,
+                KrbConfigKey.KDC_REALM, false);
+        if (realm == null) {
+            realm = KrbConfHelper.getStringUnderSection(this,
+                    KrbConfigKey.DEFAULT_REALM, false);
+            if (realm == null) {
+                realm = KrbConfHelper.getStringUnderSection(this,
+                        KrbConfigKey.KDC_REALM, true);
+            }
+        }
+
+        return realm;
     }
 
     /**
@@ -118,7 +132,7 @@ public class KrbConfig extends Conf {
      * @return true if preauth required
      */
     public boolean isPreauthRequired() {
-        return getBoolean(KrbConfigKey.PREAUTH_REQUIRED);
+        return getBoolean(KrbConfigKey.PREAUTH_REQUIRED, true);
     }
 
     /**
@@ -126,7 +140,7 @@ public class KrbConfig extends Conf {
      * @return The tgs principal
      */
     public String getTgsPrincipal() {
-        return getString(KrbConfigKey.TGS_PRINCIPAL);
+        return getString(KrbConfigKey.TGS_PRINCIPAL, true);
     }
 
     /**
@@ -142,7 +156,7 @@ public class KrbConfig extends Conf {
      * @return true if empty address is allowed
      */
     public boolean isEmptyAddressesAllowed() {
-        return getBoolean(KrbConfigKey.EMPTY_ADDRESSES_ALLOWED);
+        return getBoolean(KrbConfigKey.EMPTY_ADDRESSES_ALLOWED, true);
     }
 
     /**
@@ -158,7 +172,7 @@ public class KrbConfig extends Conf {
      * @return true if post dated is allowed
      */
     public boolean isPostdatedAllowed() {
-        return getBoolean(KrbConfigKey.POSTDATED_ALLOWED);
+        return getBoolean(KrbConfigKey.POSTDATED_ALLOWED, true);
     }
 
     /**
@@ -174,7 +188,7 @@ public class KrbConfig extends Conf {
      * @return true if renew is allowed
      */
     public boolean isRenewableAllowed() {
-        return getBoolean(KrbConfigKey.RENEWABLE_ALLOWED);
+        return getBoolean(KrbConfigKey.RENEWABLE_ALLOWED, true);
     }
 
     /**
@@ -214,7 +228,7 @@ public class KrbConfig extends Conf {
      * @return true if pa encrypt time required
      */
     public boolean isPaEncTimestampRequired() {
-        return getBoolean(KrbConfigKey.PA_ENC_TIMESTAMP_REQUIRED);
+        return getBoolean(KrbConfigKey.PA_ENC_TIMESTAMP_REQUIRED, true);
     }
 
     /**
@@ -222,7 +236,7 @@ public class KrbConfig extends Conf {
      * @return true if body checksum verified
      */
     public boolean isBodyChecksumVerified() {
-        return getBoolean(KrbConfigKey.VERIFY_BODY_CHECKSUM);
+        return getBoolean(KrbConfigKey.VERIFY_BODY_CHECKSUM, true);
     }
 
     /**
@@ -230,7 +244,8 @@ public class KrbConfig extends Conf {
      * @return The default realm
      */
     public String getDefaultRealm() {
-        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.DEFAULT_REALM);
+        return KrbConfHelper.getStringUnderSection(this,
+                KrbConfigKey.DEFAULT_REALM, true);
     }
 
     /**

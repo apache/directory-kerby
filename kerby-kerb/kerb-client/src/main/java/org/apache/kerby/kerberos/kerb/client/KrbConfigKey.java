@@ -23,7 +23,7 @@ import org.apache.kerby.kerberos.kerb.common.SectionConfigKey;
 
 public enum KrbConfigKey implements SectionConfigKey {
     KRB_DEBUG(true),
-    KDC_HOST("localhost"),
+    KDC_HOST("localhost", "libdefaults"),
     KDC_PORT(null, "libdefaults"),
     KDC_ALLOW_UDP(false),
     KDC_ALLOW_TCP(false),
@@ -45,7 +45,7 @@ public enum KrbConfigKey implements SectionConfigKey {
     RENEWABLE_ALLOWED(true),
     VERIFY_BODY_CHECKSUM(true),
     PERMITTED_ENCTYPES("aes128-cts-hmac-sha1-96", "libdefaults"),
-    DEFAULT_REALM("EXAMPLE.COM", "libdefaults"),
+    DEFAULT_REALM(null, "libdefaults"),
     DNS_LOOKUP_KDC(false, "libdefaults"),
     DNS_LOOKUP_REALM(false, "libdefaults"),
     ALLOW_WEAK_CRYPTO(true, "libdefaults"),

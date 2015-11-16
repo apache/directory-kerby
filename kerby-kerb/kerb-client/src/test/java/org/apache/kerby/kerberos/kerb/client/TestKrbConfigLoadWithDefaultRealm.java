@@ -17,33 +17,29 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool;
+package org.apache.kerby.kerberos.kerb.client;
 
-import org.apache.kerby.KOption;
-import org.apache.kerby.KOptions;
-import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.junit.Test;
+
+import java.io.File;
+import java.net.URL;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tool utilities.
+ * Test for loading configurations form krb5.conf with default kdc realm.
+ * krb5.conf is the configuration file in MIT Kerberos.
  */
-public class ToolUtil {
+public class TestKrbConfigLoadWithDefaultRealm {
 
-    /**
-     * Convert tool (like kinit) options to KrbOptions.
-     * @param toolOptions krb options
-     * @return krb options
-     */
-    public static KOptions convertOptions(KOptions toolOptions) {
-        KOptions results = new KOptions();
+    @Test
+    public void test() throws Exception {
+        URL confFileUrl = TestKrbConfigLoadWithDefaultRealm.class.getResource(
+                        "/krb5-kdcrealm.conf");
+        File confFile = new File(confFileUrl.toURI());
 
-        for (KOption toolOpt : toolOptions.getOptions()) {
-            KrbOption krbOpt = KrbOption.fromOptionName(toolOpt.getOptionName());
-            if (krbOpt != KrbOption.NONE) {
-                krbOpt.setValue(toolOpt.getValue());
-                results.add(krbOpt);
-            }
-        }
-
-        return results;
+        KrbConfig krbConfig = new KrbConfig();
+        krbConfig.addIniConfig(confFile);
+        assertThat(krbConfig.getKdcRealm()).isEqualTo("KRB.COM");
     }
 }
