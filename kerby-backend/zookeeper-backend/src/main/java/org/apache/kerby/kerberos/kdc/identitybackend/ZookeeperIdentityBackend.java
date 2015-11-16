@@ -94,10 +94,10 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
      * Init Zookeeper Server and connection service, used to initialize the backend.
      */
     private void init() throws KrbException {
-        zkHost = getConfig().getString(ZKConfKey.ZK_HOST);
-        zkPort = getConfig().getInt(ZKConfKey.ZK_PORT);
+        zkHost = getConfig().getString(ZKConfKey.ZK_HOST, true);
+        zkPort = getConfig().getInt(ZKConfKey.ZK_PORT, true);
 
-        String dataDirString = getConfig().getString(ZKConfKey.DATA_DIR);
+        String dataDirString = getConfig().getString(ZKConfKey.DATA_DIR, true);
         if (dataDirString == null || dataDirString.isEmpty()) {
             File zooKeeperDir = new File(getBackendConfig().getConfDir(), "zookeeper");
             dataDir = new File(zooKeeperDir, "data");
@@ -111,7 +111,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
 
         LOG.info("Data dir: " + dataDir);
 
-        String dataLogDirString = getConfig().getString(ZKConfKey.DATA_LOG_DIR);
+        String dataLogDirString = getConfig().getString(ZKConfKey.DATA_LOG_DIR, true);
         if (dataLogDirString == null || dataLogDirString.isEmpty()) {
             File zooKeeperDir = new File(getBackendConfig().getConfDir(), "zookeeper");
             dataLogDir = new File(zooKeeperDir, "datalog");

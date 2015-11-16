@@ -82,9 +82,10 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public String getString(ConfigKey name) {
-        if (name.getDefaultValue() != null) {
-            return getString(name.getPropertyKey(), (String) name.getDefaultValue());
+    public String getString(ConfigKey name, boolean useDefault) {
+        if (useDefault) {
+            return getString(name.getPropertyKey(),
+                    (String) name.getDefaultValue());
         }
         return getString(name.getPropertyKey());
     }
@@ -123,15 +124,24 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public Integer getInt(ConfigKey name) {
-        if (name.getDefaultValue() != null) {
-            return getInt(name.getPropertyKey(), (Integer) name.getDefaultValue());
+    public Integer getInt(ConfigKey name, boolean useDefault) {
+        if (useDefault) {
+            return getInt(name.getPropertyKey(),
+                    getDefaultValueAs(name, Integer.class));
         }
         return getInt(name.getPropertyKey());
     }
 
+    private <T> T getDefaultValueAs(ConfigKey confKey, Class<T> cls) {
+        Object defValue = confKey.getDefaultValue();
+        if (defValue != null && cls != null) {
+            return (T) defValue;
+        }
+        return null;
+    }
+
     @Override
-    public Integer getInt(String name, int defaultValue) {
+    public Integer getInt(String name, Integer defaultValue) {
         Integer result = getInt(name);
         if (result == null) {
             result = defaultValue;
@@ -140,12 +150,12 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public void setInt(String name, int value) {
+    public void setInt(String name, Integer value) {
         set(name, String.valueOf(value));
     }
 
     @Override
-    public void setInt(ConfigKey name, int value) {
+    public void setInt(ConfigKey name, Integer value) {
         set(name.getPropertyKey(), String.valueOf(value));
     }
 
@@ -162,13 +172,14 @@ public class ConfigImpl implements Config {
     @Override
     public Long getLong(ConfigKey name) {
         if (name.getDefaultValue() != null) {
-            return getLong(name.getPropertyKey(), (Long) name.getDefaultValue());
+            return getLong(name.getPropertyKey(),
+                    getDefaultValueAs(name, Long.class));
         }
         return getLong(name.getPropertyKey());
     }
 
     @Override
-    public Long getLong(String name, long defaultValue) {
+    public Long getLong(String name, Long defaultValue) {
         Long result = getLong(name);
         if (result == null) {
             result = defaultValue;
@@ -177,12 +188,12 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public void setLong(String name, long value) {
+    public void setLong(String name, Long value) {
         set(name, String.valueOf(value));
     }
 
     @Override
-    public void setLong(ConfigKey name, long value) {
+    public void setLong(ConfigKey name, Long value) {
         set(name.getPropertyKey(), String.valueOf(value));
     }
 
@@ -197,15 +208,16 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public Float getFloat(ConfigKey name) {
-        if (name.getDefaultValue() != null) {
-            return getFloat(name.getPropertyKey(), (Float) name.getDefaultValue());
+    public Float getFloat(ConfigKey name, boolean useDefault) {
+        if (useDefault) {
+            return getFloat(name.getPropertyKey(),
+                    getDefaultValueAs(name, Float.class));
         }
         return getFloat(name.getPropertyKey());
     }
 
     @Override
-    public Float getFloat(String name, float defaultValue) {
+    public Float getFloat(String name, Float defaultValue) {
         Float result = getFloat(name);
         if (result == null) {
             result = defaultValue;
@@ -214,12 +226,12 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public void setFloat(String name, float value) {
+    public void setFloat(String name, Float value) {
         set(name, String.valueOf(value));
     }
 
     @Override
-    public void setFloat(ConfigKey name, float value) {
+    public void setFloat(ConfigKey name, Float value) {
         set(name.getPropertyKey(), String.valueOf(value));
     }
 
@@ -234,8 +246,8 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public Boolean getBoolean(ConfigKey name) {
-        if (name.getDefaultValue() != null) {
+    public Boolean getBoolean(ConfigKey name, boolean useDefault) {
+        if (useDefault) {
             return getBoolean(name.getPropertyKey(),
                     (Boolean) name.getDefaultValue());
         }
@@ -243,7 +255,7 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public Boolean getBoolean(String name, boolean defaultValue) {
+    public Boolean getBoolean(String name, Boolean defaultValue) {
         Boolean result = getBoolean(name);
         if (result == null) {
             result = defaultValue;
@@ -252,12 +264,12 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public void setBoolean(String name, boolean value) {
+    public void setBoolean(String name, Boolean value) {
         set(name, String.valueOf(value));
     }
 
     @Override
-    public void setBoolean(ConfigKey name, boolean value) {
+    public void setBoolean(ConfigKey name, Boolean value) {
         set(name.getPropertyKey(), String.valueOf(value));
     }
 
@@ -332,7 +344,8 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public Class<?> getClass(String name, Class<?> defaultValue) throws ClassNotFoundException {
+    public Class<?> getClass(String name, Class<?> defaultValue)
+            throws ClassNotFoundException {
         Class<?> result = getClass(name);
         if (result == null) {
             result = defaultValue;
@@ -341,9 +354,11 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public Class<?> getClass(ConfigKey name) throws ClassNotFoundException {
-        if (name.getDefaultValue() != null) {
-            return getClass(name.getPropertyKey(), (Class<?>) name.getDefaultValue());
+    public Class<?> getClass(ConfigKey name, boolean useDefault)
+            throws ClassNotFoundException {
+        if (useDefault) {
+            return getClass(name.getPropertyKey(),
+                    (Class<?>) name.getDefaultValue());
         }
         return getClass(name.getPropertyKey());
     }
