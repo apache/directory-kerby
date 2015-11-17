@@ -15,7 +15,9 @@
  -->
   <id>package</id>
   <formats>
+    <format>zip</format>
     <format>tar</format>
+    <format>tar.gz</format>
   </formats>
   <fileSets>
     <fileSet>
