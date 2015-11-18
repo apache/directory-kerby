@@ -104,7 +104,7 @@ public class KrbFlags extends Asn1BitString {
         bytes[1] = (byte) ((flags >> 16) & 0xFF);
         bytes[2] = (byte) ((flags >> 8) & 0xFF);
         bytes[3] = (byte) (flags & 0xFF);
-
+        
         setValue(bytes);
     }
 

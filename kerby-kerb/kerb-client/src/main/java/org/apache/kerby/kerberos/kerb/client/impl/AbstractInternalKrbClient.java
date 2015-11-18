@@ -35,6 +35,8 @@ import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithTgt;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithToken;
 import org.apache.kerby.kerberos.kerb.spec.base.NameType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
@@ -95,6 +97,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             throw new IllegalArgumentException(
                     "No valid krb client request option found");
         }
+        
         if (requestOptions.contains(KrbOption.CLIENT_PRINCIPAL)) {
             String principal = requestOptions.getStringOption(
                     KrbOption.CLIENT_PRINCIPAL);
@@ -108,6 +111,20 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             asRequest.setServerPrincipal(serverPrincipal);
         }
 
+        KdcOptions kdcOptions = new KdcOptions();
+        for (KOption koption: requestOptions.getOptions()) {
+            try {
+              KdcOption kdcOption = KdcOption.valueOf(koption.getOptionName());
+              kdcOptions.setFlag(kdcOption, requestOptions.getBooleanOption(koption, false));
+            } catch (IllegalArgumentException | NullPointerException e) {
+              // It's completely acceptable that a request option is NOT a KdcOption
+              // but PMD doesn't like empty finally or catch blocks - here's a message
+              // just for you!
+              e.getMessage();
+            }
+        }
+        
+        asRequest.setKdcOptions(kdcOptions);
         asRequest.setKrbOptions(requestOptions);
 
         return doRequestTgtTicket(asRequest);
