@@ -32,7 +32,7 @@ import java.io.IOException;
 public class KrbFlags extends Asn1BitString {
     private static final int MAX_SIZE = 32;
     private static final int MASK;
-    
+
     static {
         int maskBuilder = 0;
         for (int i = 0; i < MAX_SIZE; i++) {
@@ -41,7 +41,7 @@ public class KrbFlags extends Asn1BitString {
         }
         MASK = maskBuilder;
     }
-    
+
     private int flags;
 
     public KrbFlags() {
@@ -110,7 +110,6 @@ public class KrbFlags extends Asn1BitString {
 
     @Override
     protected void toValue() throws IOException {
-        super.toValue();
 
         if (getPadding() != 0 || getValue().length != 4) {
             throw new IOException("Bad bitstring decoded as invalid krb flags");

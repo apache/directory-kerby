@@ -102,11 +102,9 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             principal = fixPrincipal(principal);
             asRequest.setClientPrincipal(new PrincipalName(principal));
         }
-        
         if (requestOptions.contains(KrbOption.SERVER_PRINCIPAL)) {
             String serverPrincipalName = requestOptions.getStringOption(KrbOption.SERVER_PRINCIPAL);
             serverPrincipalName = fixPrincipal(serverPrincipalName);
-            //PrincipalName serverPrincipal = new PrincipalName(serverPrincipalName, NameType.NT_SRV_INST);
             PrincipalName serverPrincipal = new PrincipalName(serverPrincipalName, NameType.NT_PRINCIPAL);
             asRequest.setServerPrincipal(serverPrincipal);
         }
