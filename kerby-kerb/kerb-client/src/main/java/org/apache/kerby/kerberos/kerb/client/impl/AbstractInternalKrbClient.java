@@ -123,7 +123,6 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
               e.getMessage();
             }
         }
-        
         asRequest.setKdcOptions(kdcOptions);
         asRequest.setKrbOptions(requestOptions);
 
