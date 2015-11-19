@@ -43,6 +43,7 @@ public enum KrbOption implements KOption {
     INCLUDE_ADDRESSES("include addresses"),
     NOT_INCLUDE_ADDRESSES("do not include addresses"),
     VALIDATE("validate"),
+    RENEWABLE_OK("Renewable tickets are acceptable"),
     RENEW("renew"),
     CANONICALIZE("canonicalize"),
     AS_ENTERPRISE_PN("as-enterprise-pn", "client is enterprise principal name"),

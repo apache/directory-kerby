@@ -97,6 +97,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             throw new IllegalArgumentException(
                     "No valid krb client request option found");
         }
+        
         if (requestOptions.contains(KrbOption.CLIENT_PRINCIPAL)) {
             String principal = requestOptions.getStringOption(
                     KrbOption.CLIENT_PRINCIPAL);
