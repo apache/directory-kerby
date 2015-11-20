@@ -170,10 +170,10 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public Long getLong(ConfigKey name) {
-        if (name.getDefaultValue() != null) {
+    public Long getLong(ConfigKey name, boolean useDefault) {
+        if (useDefault) {
             return getLong(name.getPropertyKey(),
-                    getDefaultValueAs(name, Long.class));
+                getDefaultValueAs(name, Long.class));
         }
         return getLong(name.getPropertyKey());
     }
