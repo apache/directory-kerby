@@ -130,3 +130,10 @@ Apache License V2.0
 ### How to contribute
 - Git repo in Apache: https://git-wip-us.apache.org/repos/asf/directory-kerby.git
 - Umbrella JIRA: it's tracked in the master JIRA [DIRKRB-102](https://issues.apache.org/jira/browse/DIRKRB-102), and find tasks there.
+
+### Mailing lists
+- The Directory Developers List: dev-subscribe@directory.apache.org
+- The Kerby List: kerby-subscribe@directory.apache.org
+
+### Downloads
+- [Version 1.0.0-RC1](https://directory.apache.org/kerby/download/download-sources.html)
