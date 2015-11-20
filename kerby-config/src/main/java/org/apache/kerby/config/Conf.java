@@ -225,9 +225,9 @@ public class Conf implements Config {
     }
 
     @Override
-    public Long getLong(ConfigKey name) {
+    public Long getLong(ConfigKey name, boolean useDefault) {
         checkAndLoad();
-        return config.getLong(name);
+        return config.getLong(name, useDefault);
     }
 
     @Override

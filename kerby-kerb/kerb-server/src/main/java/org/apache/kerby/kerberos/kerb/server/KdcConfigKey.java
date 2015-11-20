@@ -19,20 +19,20 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.kerberos.kerb.common.SectionConfigKey;
+import org.apache.kerby.config.ConfigKey;
 
-public enum KdcConfigKey implements SectionConfigKey {
+public enum KdcConfigKey implements ConfigKey {
     KRB_DEBUG(true),
     KDC_SERVICE_NAME("KDC-Server"),
     KDC_IDENTITY_BACKEND,
-    KDC_HOST("127.0.0.1", "kdcdefaults"), // NOPMD
-    KDC_PORT(null, "kdcdefaults"),
-    KDC_ALLOW_TCP(true, "kdcdefaults"),
-    KDC_ALLOW_UDP(true, "kdcdefaults"),
-    KDC_UDP_PORT(null, "kdcdefaults"),
-    KDC_TCP_PORT(null, "kdcdefaults"),
+    KDC_HOST("127.0.0.1"), // NOPMD
+    KDC_PORT,
+    KDC_ALLOW_TCP(true),
+    KDC_ALLOW_UDP(true),
+    KDC_UDP_PORT,
+    KDC_TCP_PORT,
     KDC_DOMAIN("example.com"),
-    KDC_REALM("EXAMPLE.COM", "kdcdefaults"),
+    KDC_REALM("EXAMPLE.COM"),
     PREAUTH_REQUIRED(true),
     ALLOW_TOKEN_PREAUTH(true),
     ALLOWABLE_CLOCKSKEW(5 * 60L),
@@ -47,19 +47,13 @@ public enum KdcConfigKey implements SectionConfigKey {
     RENEWABLE_ALLOWED(true),
     VERIFY_BODY_CHECKSUM(true),
     ENCRYPTION_TYPES("aes128-cts-hmac-sha1-96 des3-cbc-sha1-kd"),
-    RESTRICT_ANONYMOUS_TO_TGT(false, "kdcdefaults"),
-    KDC_MAX_DGRAM_REPLY_SIZE(4096, "kdcdefaults"),
-    VERIFY_KEY(null, "kdcdefaults"),
-    DECRYPTION_KEY(null, "kdcdefaults"),
-    ISSUERS(null, "kdcdefaults");
+    RESTRICT_ANONYMOUS_TO_TGT(false),
+    KDC_MAX_DGRAM_REPLY_SIZE(4096),
+    VERIFY_KEY(),
+    DECRYPTION_KEY(),
+    ISSUERS();
 
     private Object defaultValue;
-
-    /**
-     * The name of a section where a config key is contained
-     * in section-able config file.
-     */
-    private String sectionName;
 
     private KdcConfigKey() {
         this.defaultValue = null;
@@ -67,11 +61,6 @@ public enum KdcConfigKey implements SectionConfigKey {
 
     private KdcConfigKey(Object defaultValue) {
         this.defaultValue = defaultValue;
-    }
-
-    private KdcConfigKey(Object defaultValue, String sectionName) {
-        this(defaultValue);
-        this.sectionName = sectionName;
     }
 
     @Override
@@ -82,10 +71,5 @@ public enum KdcConfigKey implements SectionConfigKey {
     @Override
     public Object getDefaultValue() {
         return this.defaultValue;
-    }
-
-    @Override
-    public String getSectionName() {
-        return sectionName;
     }
 }

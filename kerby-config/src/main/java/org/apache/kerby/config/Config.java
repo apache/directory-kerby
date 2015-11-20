@@ -88,7 +88,7 @@ public interface Config {
     void setInt(ConfigKey name, Integer value);
 
     Long getLong(String name);
-    Long getLong(ConfigKey name);
+    Long getLong(ConfigKey name, boolean useDefault);
     Long getLong(String name, Long defaultValue);
 
     /**
