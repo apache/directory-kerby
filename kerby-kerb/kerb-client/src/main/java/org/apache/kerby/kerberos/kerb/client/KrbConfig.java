@@ -112,7 +112,7 @@ public class KrbConfig extends Krb5Conf {
         if (realm == null) {
             realm = getString(KrbConfigKey.DEFAULT_REALM, false, LIBDEFAULT);
             if (realm == null) {
-                realm = getString(KrbConfigKey.KDC_REALM, true, LIBDEFAULT);
+                realm = (String) KrbConfigKey.KDC_REALM.getDefaultValue();
             }
         }
 
