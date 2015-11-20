@@ -19,9 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.client.request;
 
+import org.apache.kerby.KOption;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
+import org.apache.kerby.kerberos.kerb.client.KrbOptionGroup;
 import org.apache.kerby.kerberos.kerb.client.preauth.KrbFastRequestState;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
@@ -37,6 +39,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOptions;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
@@ -297,6 +300,7 @@ public abstract class KdcRequest {
     }
 
     public void process() throws KrbException {
+        processKdcOptions();
         preauth();
     }
 
@@ -392,5 +396,20 @@ public abstract class KdcRequest {
      */
     public void cacheValue(String key, Object value) {
         credCache.put(key, value);
+    }
+
+    protected void processKdcOptions() {
+        // By default enforce these flags
+        kdcOptions.setFlag(KdcOption.FORWARDABLE);
+        kdcOptions.setFlag(KdcOption.PROXIABLE);
+        kdcOptions.setFlag(KdcOption.RENEWABLE_OK);
+
+        for (KOption kOpt: krbOptions.getOptions()) {
+            if (kOpt.getGroup() == KrbOptionGroup.KDC_FLAGS) {
+                KdcOption kdcOption = KdcOption.valueOf(kOpt.getOptionName());
+                boolean flagValue = krbOptions.getBooleanOption(kOpt, false);
+                kdcOptions.setFlag(kdcOption, flagValue);
+            }
+        }
     }
 }

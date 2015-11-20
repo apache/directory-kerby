@@ -20,38 +20,44 @@
 package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOption;
+import org.apache.kerby.KOptionGroup;
 import org.apache.kerby.KOptionType;
 
+/**
+ * This defines all the options that come across the client side.
+ */
 public enum KrbOption implements KOption {
-    NONE("NONE"),
+    NONE("NONE", null),
     CLIENT_PRINCIPAL("client-principal", "Client principal", KOptionType.STR),
-    KDC_REALM("kdc realm", KOptionType.STR),
-    KDC_HOST("kdc host", KOptionType.STR),
-    KDC_TCP_PORT("kdc tcp port", KOptionType.INT),
-    ALLOW_UDP("allow udp", KOptionType.BOOL),
-    ALLOW_TCP("allow tcp", KOptionType.BOOL),
-    KDC_UDP_PORT("kdc udp port", KOptionType.INT),
-    CONN_TIMEOUT("connection timeout", KOptionType.INT),
-    LIFE_TIME("life time", KOptionType.INT),
-    START_TIME("start time", KOptionType.INT),
-    RENEWABLE_TIME("renewable lifetime", KOptionType.INT),
-    FORWARDABLE("forwardable"),
-    NOT_FORWARDABLE("not forwardable"),
-    PROXIABLE("proxiable"),
-    NOT_PROXIABLE("not proxiable"),
-    ANONYMOUS("anonymous"),
-    INCLUDE_ADDRESSES("include addresses"),
-    NOT_INCLUDE_ADDRESSES("do not include addresses"),
-    VALIDATE("validate"),
-    RENEW("renew"),
-    CANONICALIZE("canonicalize"),
+    KDC_REALM("kdc-realm", "kdc realm", KOptionType.STR),
+    KDC_HOST("kdc-host", "kdc host", KOptionType.STR),
+    KDC_TCP_PORT("kdc-tcp-port", "kdc tcp port", KOptionType.INT),
+    ALLOW_UDP("allow-udp", "allow udp", KOptionType.BOOL),
+    ALLOW_TCP("allow-tcp", "allow tcp", KOptionType.BOOL),
+    KDC_UDP_PORT("kdc-udp-port", "kdc udp port", KOptionType.INT),
+    CONN_TIMEOUT("conn-timeout", "connection timeout", KOptionType.INT),
+    LIFE_TIME("life-time", "life time", KOptionType.INT),
+    START_TIME("start-time", "start time", KOptionType.INT),
+    RENEWABLE_TIME("renewable_lifetime", "renewable lifetime", KOptionType.INT),
+
+    /* KDC flags */
+    FORWARDABLE("forwardable", "forwardable", KrbOptionGroup.KDC_FLAGS),
+    PROXIABLE("proxiable", "proxiable", KrbOptionGroup.KDC_FLAGS),
+    ANONYMOUS("anonymous", "anonymous", KrbOptionGroup.KDC_FLAGS),
+    VALIDATE("validate", "validate", KrbOptionGroup.KDC_FLAGS),
+    RENEW("renew", "renew", KrbOptionGroup.KDC_FLAGS),
+    RENEWABLE("renewable", "renewable", KrbOptionGroup.KDC_FLAGS),
+    RENEWABLE_OK("renewable-ok", "renewable ok", KrbOptionGroup.KDC_FLAGS),
+    CANONICALIZE("canonicalize", "canonicalize", KrbOptionGroup.KDC_FLAGS),
+
+    INCLUDE_ADDRESSES("include_addresses", "include addresses"),
     AS_ENTERPRISE_PN("as-enterprise-pn", "client is enterprise principal name"),
 
-    USE_PASSWD("using password", "using password"),
+    USE_PASSWD("using-password", "using password"),
     USER_PASSWD("user-passwd", "User plain password"),
 
     USE_KEYTAB("use-keytab", "use keytab"),
-    USE_DFT_KEYTAB("-i", "use default client keytab (with -k)"),
+    USE_DFT_KEYTAB("use-dft-keytab", "use default client keytab (with -k)"),
     KEYTAB_FILE("keytab-file", "filename of keytab to use", KOptionType.FILE),
 
     KRB5_CACHE("krb5-cache", "K5 cache name", KOptionType.FILE),
@@ -60,40 +66,50 @@ public enum KrbOption implements KOption {
     ARMOR_CACHE("armor-cache", "armor credential cache", KOptionType.STR),
 
     USE_PKINIT("use-pkinit", "using pkinit"),
-    PKINIT_X509_IDENTITY("x509-identities", "X509 user private key and cert", KOptionType.STR),
-    PKINIT_X509_PRIVATE_KEY("x509-privatekey", "X509 user private key", KOptionType.STR),
-    PKINIT_X509_CERTIFICATE("x509-cert", "X509 user certificate", KOptionType.STR),
-    PKINIT_X509_ANCHORS("x509-anchors", "X509 anchors", KOptionType.STR),
-    PKINIT_USING_RSA("using-rsa-or-dh", "Using RSA or DH"),
+    PKINIT_X509_IDENTITY("x509-identities", "X509 user private key and cert",
+        KrbOptionGroup.PKINIT, KOptionType.STR),
+    PKINIT_X509_PRIVATE_KEY("x509-privatekey", "X509 user private key",
+        KrbOptionGroup.PKINIT, KOptionType.STR),
+    PKINIT_X509_CERTIFICATE("x509-cert", "X509 user certificate",
+        KrbOptionGroup.PKINIT, KOptionType.STR),
+    PKINIT_X509_ANCHORS("x509-anchors", "X509 anchors",
+        KrbOptionGroup.PKINIT,
+        KOptionType.STR),
+    PKINIT_USING_RSA("using-rsa-or-dh", "Using RSA or DH",
+        KrbOptionGroup.PKINIT),
+    USE_PKINIT_ANONYMOUS("use-pkinit-anonymous", "X509 anonymous",
+        KrbOptionGroup.PKINIT),
 
-    USE_PKINIT_ANONYMOUS("use-pkinit-anonymous", "X509 anonymous"),
-
-    USE_TOKEN("use-id-token", "Using identity token"),
-    TOKEN_USER_ID_TOKEN("user-id-token", "User identity token", KOptionType.STR),
-    TOKEN_USER_AC_TOKEN("user-ac-token", "User access token", KOptionType.STR),
-    USE_TGT("use tgt", "use tgt to get service ticket", KOptionType.OBJ);
+    USE_TOKEN("use-id-token", "Using identity token", KrbOptionGroup.TOKEN),
+    TOKEN_USER_ID_TOKEN("user-id-token", "User identity token",
+        KrbOptionGroup.TOKEN, KOptionType.STR),
+    TOKEN_USER_AC_TOKEN("user-ac-token", "User access token",
+        KrbOptionGroup.TOKEN, KOptionType.STR),
+    USE_TGT("use-tgt", "use tgt to get service ticket", KOptionType.OBJ);
 
     private String name;
+    private KOptionGroup group;
     private KOptionType type;
     private String description;
     private Object value;
 
-    KrbOption(String description) {
-        this(description, KOptionType.NOV); // As a flag by default
-    }
-
-    KrbOption(String description, KOptionType type) {
-        this.description = description;
-        this.type = type;
-    }
-
     KrbOption(String name, String description) {
-        this(name, description, KOptionType.NOV); // As a flag by default
+        this(name, description, KOptionType.NOV);
     }
 
     KrbOption(String name, String description, KOptionType type) {
+        this(name, description, null, type);
+    }
+
+    KrbOption(String name, String description, KrbOptionGroup group) {
+        this(name, description, group, KOptionType.NOV);
+    }
+
+    KrbOption(String name, String description,
+              KrbOptionGroup group, KOptionType type) {
         this.name = name;
         this.description = description;
+        this.group = group;
         this.type = type;
     }
 
@@ -170,6 +186,22 @@ public enum KrbOption implements KOption {
     @Override
     public Object getValue() {
         return value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setGroup(KOptionGroup group) {
+        this.group = group;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public KOptionGroup getGroup() {
+        return group;
     }
 
     /**

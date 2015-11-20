@@ -87,5 +87,20 @@ public interface KOption {
      * @return The value
      */
     Object getValue();
+
+    /**
+     * Set group.
+     *
+     * @param value The group
+     */
+    void setGroup(KOptionGroup value);
+
+
+    /**
+     * Get group.
+     *
+     * @return The group
+     */
+    KOptionGroup getGroup();
 }
 

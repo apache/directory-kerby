@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.admin;
 
 import org.apache.kerby.KOption;
+import org.apache.kerby.KOptionGroup;
 import org.apache.kerby.KOptionType;
 
 public enum KadminOption implements KOption {
@@ -38,6 +39,7 @@ public enum KadminOption implements KOption {
     CCACHE("-c", "credentials cache", KOptionType.FILE);
 
     private String name;
+    private KOptionGroup group;
     private KOptionType type = KOptionType.NONE;
     private String description;
     private Object value;
@@ -145,5 +147,21 @@ public enum KadminOption implements KOption {
     @Override
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setGroup(KOptionGroup group) {
+        this.group = group;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public KOptionGroup getGroup() {
+        return group;
     }
 }
