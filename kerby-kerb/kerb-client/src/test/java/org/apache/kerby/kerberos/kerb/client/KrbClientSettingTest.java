@@ -19,27 +19,41 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.junit.Test;
+
+import java.io.File;
+import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class KrbClientSettingTest {
 
     @Test
-    public void testKdcServerMannualSetting() throws KrbException {
-        KrbClient krbClient = new KrbClient(new KrbConfig());
+    public void testKdcServerMannualSetting() throws Exception {
+        URL confFileUrl = TestKrbConfigLoadForSpecials.class.getResource(
+            "/krb5-specials.conf");
+        File confFile = new File(confFileUrl.toURI());
 
+        KrbConfig conf = new KrbConfig();
+        conf.addIniConfig(confFile);
+        KrbClient krbClient = new KrbClient(conf);
+
+        KrbSetting krbSetting = krbClient.getSetting();
+
+        assertThat(krbSetting.getKdcRealm()).isEqualTo("KRB.COM");
+
+        assertThat(krbSetting.allowUdp()).isEqualTo(true);
+        assertThat(krbSetting.allowTcp()).isEqualTo(true);
+        assertThat(krbSetting.getKdcTcpPort()).isEqualTo(88);
+        assertThat(krbSetting.getKdcUdpPort()).isEqualTo(88);
+        
         krbClient.setKdcHost("localhost");
         krbClient.setKdcRealm("TEST2.COM");
         krbClient.setKdcTcpPort(12345);
 
-        KrbSetting krbSetting = krbClient.getSetting();
+
         assertThat(krbSetting.getKdcHost()).isEqualTo("localhost");
-        assertThat(krbSetting.allowTcp()).isEqualTo(true);
         assertThat(krbSetting.getKdcTcpPort()).isEqualTo(12345);
-        assertThat(krbSetting.allowUdp()).isEqualTo(false);
-        assertThat(krbSetting.getKdcUdpPort()).isEqualTo(-1);
         assertThat(krbSetting.getKdcRealm()).isEqualTo("TEST2.COM");
     }
 

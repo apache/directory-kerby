@@ -65,7 +65,8 @@ public class KdcConfig extends Krb5Conf {
      */
     public Boolean allowTcp() {
         return getBoolean(KdcConfigKey.KDC_ALLOW_TCP, true, KDCDEFAULT)
-                || getInt(KdcConfigKey.KDC_TCP_PORT, true, KDCDEFAULT) != null;
+                || getInt(KdcConfigKey.KDC_TCP_PORT, true, KDCDEFAULT) != null
+            || getInt(KdcConfigKey.KDC_PORT, false, KDCDEFAULT) != null;
     }
 
     /**
@@ -74,7 +75,8 @@ public class KdcConfig extends Krb5Conf {
      */
     public Boolean allowUdp() {
         return getBoolean(KdcConfigKey.KDC_ALLOW_UDP, true, KDCDEFAULT)
-                || getInt(KdcConfigKey.KDC_UDP_PORT, true, KDCDEFAULT) != null;
+                || getInt(KdcConfigKey.KDC_UDP_PORT, true, KDCDEFAULT) != null
+            || getInt(KdcConfigKey.KDC_PORT, false, KDCDEFAULT) != null;
     }
 
     public int getKdcUdpPort() {
