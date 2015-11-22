@@ -110,8 +110,6 @@ public class KinitTool {
         File confDir = null;
         if (ktOptions.contains(KinitOption.CONF_DIR)) {
             confDir = ktOptions.getDirOption(KinitOption.CONF_DIR);
-        } else {
-            printUsage("Can't get the conf dir!");
         }
 
         //If not request tickets by keytab than by password.
@@ -170,7 +168,14 @@ public class KinitTool {
      * Init the client.
      */
     private static KrbClient getClient(File confDir) throws KrbException {
-        KrbClient krbClient = new KrbClient(confDir);
+        KrbClient krbClient;
+
+        if (confDir != null) {
+            krbClient = new KrbClient(confDir);
+        } else {
+            krbClient = new KrbClient();
+        }
+
         krbClient.init();
         return krbClient;
     }
