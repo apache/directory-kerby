@@ -22,7 +22,14 @@ package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
 import junit.framework.TestCase;
 
+import javax.crypto.interfaces.DHPublicKey;
+import javax.crypto.spec.DHParameterSpec;
+import javax.crypto.spec.DHPublicKeySpec;
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
 
@@ -42,7 +49,6 @@ import java.util.Arrays;
 public class DhKeyAgreementTest extends TestCase {
     private static SecureRandom secureRandom = new SecureRandom();
 
-
     /**
      * Tests Diffie-Hellman using Oakley 1024-bit Modular Exponential (MODP)
      * well-known group 2 [RFC2412].
@@ -53,8 +59,8 @@ public class DhKeyAgreementTest extends TestCase {
         DhClient client = new DhClient();
         DhServer server = new DhServer();
 
-        byte[] clientPubKeyEnc = client.init(DhGroup.MODP_GROUP2);
-        byte[] serverPubKeyEnc = server.initAndDoPhase(clientPubKeyEnc);
+        byte[] clientPubKeyEnc = client.init(DhGroup.MODP_GROUP2).getEncoded();
+        byte[] serverPubKeyEnc = server.initAndDoPhase(clientPubKeyEnc).getEncoded();
 
         server.generateKey(null, null);
 
@@ -90,14 +96,66 @@ public class DhKeyAgreementTest extends TestCase {
         DhClient client = new DhClient();
         DhServer server = new DhServer();
 
-        byte[] clientPubKeyEnc = client.init(DhGroup.MODP_GROUP2);
-        byte[] serverPubKeyEnc = server.initAndDoPhase(clientPubKeyEnc);
+        byte[] clientPubKeyEnc = client.init(DhGroup.MODP_GROUP2).getEncoded();
+        byte[] serverPubKeyEnc = server.initAndDoPhase(clientPubKeyEnc).getEncoded();
 
         server.generateKey(clientDhNonce, serverDhNonce);
 
         client.doPhase(serverPubKeyEnc);
 
         client.generateKey(clientDhNonce, serverDhNonce);
+
+        byte[] clearText = "This is just an example".getBytes();
+
+        byte[] cipherText = server.encryptAes(clearText);
+        byte[] recovered = client.decryptAes(cipherText);
+
+        assertTrue(Arrays.equals(clearText, recovered));
+    }
+
+
+    /**
+     * Tests Diffie-Hellman using Oakley 1024-bit Modular Exponential (MODP)
+     * well-known group 2 [RFC2412].
+     *
+     * @throws Exception
+     */
+    public void testGeneratedDhParams() throws Exception {
+        DhClient client = new DhClient();
+        DhServer server = new DhServer();
+
+        DHPublicKey clientPubKey = client.init(DhGroup.MODP_GROUP14);
+        DHParameterSpec spec = clientPubKey.getParams();
+
+        BigInteger y = clientPubKey.getY();
+        BigInteger p = spec.getP();
+        BigInteger g = spec.getG();
+        DHPublicKeySpec dhPublicKeySpec = new DHPublicKeySpec(y, p, g);
+
+        KeyFactory keyFactory = null;
+        try {
+            keyFactory = KeyFactory.getInstance("DH");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        DHPublicKey dhPublicKey = null;
+        try {
+            dhPublicKey = (DHPublicKey) keyFactory.generatePublic(dhPublicKeySpec);
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+
+        byte[] serverPubKeyEnc = null;
+        try {
+            serverPubKeyEnc = server.initAndDoPhase(dhPublicKey.getEncoded()).getEncoded();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        server.generateKey(null, null);
+
+        client.doPhase(serverPubKeyEnc);
+
+        client.generateKey(null, null);
 
         byte[] clearText = "This is just an example".getBytes();
 

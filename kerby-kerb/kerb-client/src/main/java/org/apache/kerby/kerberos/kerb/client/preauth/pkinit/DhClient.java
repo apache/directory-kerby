@@ -23,6 +23,7 @@ package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
 import javax.crypto.SecretKey;
+import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -47,7 +48,7 @@ class DhClient {
     private SecretKey clientAesKey;
 
 
-    byte[] init(DHParameterSpec dhParamSpec) throws Exception {
+    DHPublicKey init(DHParameterSpec dhParamSpec) throws Exception {
         // The client creates its own DH key pair, using the DH parameters from above.
         KeyPairGenerator clientKpairGen = KeyPairGenerator.getInstance("DH");
         clientKpairGen.initialize(dhParamSpec);
@@ -58,7 +59,8 @@ class DhClient {
         clientKeyAgree.init(clientKpair.getPrivate());
 
         // The client encodes its public key, and sends it over to the server.
-        return clientKpair.getPublic().getEncoded();
+//        return clientKpair.getPublic().getEncoded();
+        return (DHPublicKey) clientKpair.getPublic();
     }
 
 

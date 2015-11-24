@@ -62,4 +62,12 @@ public class KdcDHKeyInfo extends KrbSequenceType {
     public void setNonce(int nonce) {
         setFieldAsInt(NONCE, nonce);
     }
+
+    public KerberosTime getDHKeyExpiration() {
+        return getFieldAsTime(DH_KEY_EXPIRATION);
+    }
+
+    public void setDHKeyExpiration(KerberosTime time) {
+        setFieldAs(DH_KEY_EXPIRATION, time);
+    }
 }

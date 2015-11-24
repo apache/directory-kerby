@@ -129,6 +129,10 @@ public class AsRequest extends KdcRequest {
             clientKey, KeyUsage.AS_REP_ENCPART);
         reply.setEncryptedEncPart(encryptedData);
 
+        if (isPkinit()) {
+            reply.setPaData(getPreauthContext().getOutputPaData());
+        }
+
         setReply(reply);
     }
 

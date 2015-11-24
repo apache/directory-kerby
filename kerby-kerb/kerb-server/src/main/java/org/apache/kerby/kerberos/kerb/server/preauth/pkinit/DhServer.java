@@ -17,15 +17,8 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
+package org.apache.kerby.kerberos.kerb.server.preauth.pkinit;
 
-
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PublicKey;
-import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
@@ -34,6 +27,12 @@ import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PublicKey;
+import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.X509EncodedKeySpec;
 
 
 /**

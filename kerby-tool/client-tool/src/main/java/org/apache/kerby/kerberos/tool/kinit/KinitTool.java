@@ -116,6 +116,7 @@ public class KinitTool {
 
         if (ktOptions.contains(KinitOption.ANONYMOUS)) {
             ktOptions.add(KrbOption.USE_PKINIT_ANONYMOUS);
+            ktOptions.add(KrbOption.PKINIT_X509_ANCHORS);
         } else if (!ktOptions.contains(KinitOption.USE_KEYTAB)) {
             //If not request tickets by keytab than by password.
             ktOptions.add(KinitOption.USE_PASSWD);

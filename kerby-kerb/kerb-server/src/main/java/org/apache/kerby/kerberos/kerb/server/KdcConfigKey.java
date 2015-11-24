@@ -51,7 +51,9 @@ public enum KdcConfigKey implements SectionConfigKey {
     KDC_MAX_DGRAM_REPLY_SIZE(4096, "kdcdefaults"),
     VERIFY_KEY(null, "kdcdefaults"),
     DECRYPTION_KEY(null, "kdcdefaults"),
-    ISSUERS(null, "kdcdefaults");
+    ISSUERS(null, "kdcdefaults"),
+    PKINIT_IDENTITY(null, "libdefaults"),
+    PKINIT_ANCHORS(null, "libdefaults");
 
     private Object defaultValue;
 

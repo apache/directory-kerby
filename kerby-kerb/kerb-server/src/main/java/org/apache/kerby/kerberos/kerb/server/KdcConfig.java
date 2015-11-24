@@ -174,4 +174,14 @@ public class KdcConfig extends Conf {
     public List<String> getIssuers() {
         return Arrays.asList(KrbConfHelper.getStringArrayUnderSection(this, KdcConfigKey.ISSUERS));
     }
+
+    public List<String> getPkinitAnchors() {
+        return Arrays.asList(KrbConfHelper.getStringArrayUnderSection(this,
+                KdcConfigKey.PKINIT_ANCHORS));
+    }
+
+    public String getPkinitIdentity() {
+        return KrbConfHelper.getStringUnderSection(this,
+                KdcConfigKey.PKINIT_IDENTITY);
+    }
 }

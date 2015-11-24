@@ -19,11 +19,19 @@
  */
 package org.apache.kerby.kerberos.kerb.client.request;
 
+import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.KOptions;
-import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
+import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
+import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsRep;
 
 public class AsRequestWithCert extends AsRequest {
 
@@ -33,11 +41,20 @@ public class AsRequestWithCert extends AsRequest {
         super(context);
 
         setAllowedPreauth(PaDataType.PK_AS_REQ);
+        getKdcOptions().setFlag(KdcOption.REQUEST_ANONYMOUS);
     }
 
     @Override
     public void process() throws KrbException {
-        throw new RuntimeException("To be implemented");
+        KdcReqBody body = makeReqBody();
+        AsReq asReq = new AsReq();
+        asReq.setReqBody(body);
+        setKdcReq(asReq);
+
+        preauth();
+
+        asReq.setPaData(getPreauthContext().getOutputPaData());
+        setKdcReq(asReq);
     }
 
     @Override
@@ -54,4 +71,30 @@ public class AsRequestWithCert extends AsRequest {
         return results;
     }
 
+    @Override
+    public void processResponse(KdcRep kdcRep) throws KrbException  {
+
+        PaData paData = kdcRep.getPaData();
+        for (PaDataEntry paEntry : paData.getElements()) {
+            if (paEntry.getPaDataType() == PaDataType.PK_AS_REP) {
+
+                PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
+
+                byte[] a = paPkAsRep.getEncKeyPack();
+//                DHRepInfo dhRepInfo =paPkAsRep.getDHRepInfo();
+//                DHNonce nonce = dhRepInfo.getServerDhNonce();
+//                byte[] dhSignedData = dhRepInfo.getDHSignedData();
+//                PKCS7 pkcs7 = null;
+//                try {
+//                   pkcs7 = new PKCS7(dhSignedData);
+//                } catch (ParsingException e) {
+//                    e.printStackTrace();
+//                }
+//                pkcs7.getContentInfo();
+
+            }
+        }
+
+        super.processResponse(kdcRep);
+    }
 }

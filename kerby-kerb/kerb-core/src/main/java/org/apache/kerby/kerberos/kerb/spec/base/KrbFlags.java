@@ -30,7 +30,6 @@ import java.io.IOException;
  -- but no fewer than 32
  */
 public class KrbFlags extends Asn1BitString {
-    private static final int MAX_SIZE = 32;
     private int flags;
 
     public KrbFlags() {
@@ -90,7 +89,8 @@ public class KrbFlags extends Asn1BitString {
     }
 
     private int flagPos(int flag)  {
-        return MAX_SIZE - 1 - flag;
+//        return MAX_SIZE - 1 - flag;
+        return Integer.numberOfTrailingZeros(flag);
     }
 
     private void flags2Value() {

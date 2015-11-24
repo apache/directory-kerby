@@ -16,25 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
+package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import sun.security.util.ObjectIdentifier;
 
 import javax.crypto.spec.DHParameterSpec;
+import java.io.IOException;
 import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 
-public class PkinitCrypto {
+public class PkinitPlgCryptoContext {
+    private static final String ID_PKINIT_AUTHDATA = "1.3.6.1.5.2.3.1";
+    private static final String ID_PKINIT_DHKEYDATA = "1.3.6.1.5.2.3.2";
+    private static final String ID_PKINIT_RKEYDATA = "1.3.6.1.5.2.3.3";
+
 
     /*
      * http://www.ietf.org/rfc/rfc2409.txt
      * This group is assigned id 2.
      * The prime is 2^1024 - 2^960 - 1 + 2^64 * { [2^894 pi] + 129093 }.
      */
-    public static BigInteger getPkinit1024Prime() {
+    public BigInteger getPkinit1024Prime() {
         StringBuffer sb = new StringBuffer();
         sb.append("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1");
         sb.append("29024E088A67CC74020BBEA63B139B22514A08798E3404DD");
@@ -52,7 +54,7 @@ public class PkinitCrypto {
      * This group is assigned id 14.
      * This prime is: 2^2048 - 2^1984 - 1 + 2^64 * { [2^1918 pi] + 124476 }
      */
-    public static BigInteger getPkinit2048Prime() {
+    public BigInteger getPkinit2048Prime() {
         StringBuffer sb = new StringBuffer();
         sb.append("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1");
         sb.append("29024E088A67CC74020BBEA63B139B22514A08798E3404DD");
@@ -75,7 +77,7 @@ public class PkinitCrypto {
      * This group is assigned id 16.
      * This prime is: 2^4096 - 2^4032 - 1 + 2^64 * { [2^3966 pi] + 240904 }
      */
-    public static BigInteger getPkinit4096Prime() {
+    public BigInteger getPkinit4096Prime() {
         StringBuffer sb = new StringBuffer();
         sb.append("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1");
         sb.append("29024E088A67CC74020BBEA63B139B22514A08798E3404DD");
@@ -103,7 +105,7 @@ public class PkinitCrypto {
         return new BigInteger(sb.toString(), 16);
     }
 
-    public static DHParameterSpec createDHParameterSpec(int dhSize) throws KrbException {
+    public DHParameterSpec createDHParameterSpec(int dhSize) throws KrbException {
         BigInteger g = BigInteger.valueOf(2);
         BigInteger p = null;
 
@@ -124,21 +126,16 @@ public class PkinitCrypto {
         return new DHParameterSpec(p, g);
     }
 
-    public static KeyPair getKeyPair(DHParameterSpec dhParameterSpec) {
-        String algo = "DH";
-        KeyPairGenerator keyPairGenerator = null;
-        try {
-            keyPairGenerator = KeyPairGenerator.getInstance(algo);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        if (keyPairGenerator != null) {
-            try {
-                keyPairGenerator.initialize(dhParameterSpec);
-            } catch (InvalidAlgorithmParameterException e) {
-                e.printStackTrace();
-            }
-        }
-        return keyPairGenerator.generateKeyPair();
+
+    public ObjectIdentifier getIdPkinitAuthDataOID() throws IOException {
+        return new ObjectIdentifier(ID_PKINIT_AUTHDATA);
+    }
+
+    public ObjectIdentifier getIdPkinitDHKeyDataOID() throws IOException {
+        return new ObjectIdentifier(ID_PKINIT_DHKEYDATA);
+    }
+
+    public ObjectIdentifier getIdPkinitRkeyDataOID() throws IOException {
+        return new ObjectIdentifier(ID_PKINIT_RKEYDATA);
     }
 }

@@ -20,32 +20,51 @@
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
+import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlag;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlags;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitIdenity;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.cms.AlgorithmIdentifier;
+import org.apache.kerby.kerberos.kerb.spec.cms.DHParameter;
+import org.apache.kerby.kerberos.kerb.spec.cms.SubjectPublicKeyInfo;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AuthPack;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.DHNonce;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PkAuthenticator;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.TrustedCertifiers;
-import org.apache.kerby.kerberos.kerb.spec.cms.SubjectPublicKeyInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("PMD")
+import javax.crypto.interfaces.DHPublicKey;
+import javax.crypto.spec.DHParameterSpec;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.List;
+
 public class PkinitPreauth extends AbstractPreauthPlugin {
+    private static final Logger LOG = LoggerFactory.getLogger(PkinitPreauth.class);
 
     private PkinitContext pkinitContext;
 
@@ -87,8 +106,15 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         }
 
         if (options.contains(KrbOption.PKINIT_X509_ANCHORS)) {
-            pkinitContext.identityOpts.anchors.add(
-                    options.getStringOption(KrbOption.PKINIT_X509_ANCHORS));
+            String anchorsString = options.getStringOption(KrbOption.PKINIT_X509_ANCHORS);
+
+            List<String> anchors;
+            if (anchorsString == null) {
+                anchors = kdcRequest.getContext().getConfig().getPkinitAnchors();
+            } else {
+                anchors = Arrays.asList(anchorsString);
+            }
+            pkinitContext.identityOpts.anchors.addAll(anchors);
         }
 
         if (options.contains(KrbOption.PKINIT_USING_RSA)) {
@@ -123,6 +149,11 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
+        long now = System.currentTimeMillis();
+        PaPkAsReq paPkAsReq = makePaPkAsReq(kdcRequest,
+                (PkinitRequestContext) requestContext,
+                1, new KerberosTime(now), 1, null);
+        outPadata.addElement(makeEntry(paPkAsReq));
     }
 
     /**
@@ -163,51 +194,127 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     }
 
-    private PaPkAsReq makePaPkAsReq(PkinitContext pkinitContext, PkinitRequestContext reqCtx,
-                                    KerberosTime ctime, int cusec, int nonce, byte[] checksum,
-                                    PrincipalName client, PrincipalName server) {
+    private PaPkAsReq makePaPkAsReq(KdcRequest kdcRequest,
+                                    PkinitRequestContext reqCtx,
+                                    int cusec, KerberosTime ctime, int nonce, byte[] checksum) {
 
         PaPkAsReq paPkAsReq = new PaPkAsReq();
         AuthPack authPack = new AuthPack();
-        SubjectPublicKeyInfo pubInfo = new SubjectPublicKeyInfo();
         PkAuthenticator pkAuthen = new PkAuthenticator();
 
         boolean usingRsa = reqCtx.requestOpts.usingRsa;
         reqCtx.paType = PaDataType.PK_AS_REQ;
 
-        pkAuthen.setCtime(ctime);
         pkAuthen.setCusec(cusec);
+        pkAuthen.setCtime(ctime);
         pkAuthen.setNonce(nonce);
-        pkAuthen.setPaChecksum(checksum);
+
+        CheckSum checkSum = null;
+        try {
+            checkSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
+                    kdcRequest.getKdcReq().getReqBody().encode());
+        } catch (KrbException e) {
+            e.printStackTrace();
+        }
+//        pkAuthen.setPaChecksum(checkSum.getChecksum());
+        pkAuthen.setPaChecksum(checkSum.encode());
 
         authPack.setPkAuthenticator(pkAuthen);
-        DHNonce dhNonce = new DHNonce();
-        authPack.setClientDhNonce(dhNonce);
-        authPack.setClientPublicValue(pubInfo);
 
-        authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
+//        authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
 
-        if (usingRsa) {
+        if (!usingRsa) {
             System.out.println(); // DH case
+
+            AlgorithmIdentifier dhAlg = new AlgorithmIdentifier();
+
+//            byte[] dh_oid = new byte[]{0, 7, (byte) 0x2A, (byte) 0x86, (byte) 0x48, (byte) 0xce,
+//                    (byte) 0x3e, (byte) 0x02, (byte) 0x01};
+//            String dhOidStr = Utf8.toString(dh_oid);
+//            String dhOidStr = "0.7.42.840.10046.2.1";
+
+            String content = "0x06 07 2A 86 48 ce 3e 02 01";
+            Asn1ObjectIdentifier decoded = new Asn1ObjectIdentifier();
+            decoded.getEncodingOption().useDer();
+            try {
+                decoded.decode(Util.hex2bytes(content));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            dhAlg.setAlgorithm(decoded);
+
+            DhClient client = new DhClient();
+
+            DHPublicKey clientPubKey = null;
+            try {
+                clientPubKey = client.init(DhGroup.MODP_GROUP14);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            DHParameterSpec spec = clientPubKey.getParams();
+            BigInteger q = spec.getP().shiftRight(1);
+            DHParameter dhParameter = new DHParameter();
+            dhParameter.setP(spec.getP());
+            dhParameter.setG(spec.getG());
+            dhParameter.setQ(q);
+            dhAlg.setParameters(dhParameter);
+
+            SubjectPublicKeyInfo pubInfo = new SubjectPublicKeyInfo();
+            pubInfo.setAlgorithm(dhAlg);
+
+            Asn1Integer publickey = new Asn1Integer(clientPubKey.getY());
+            pubInfo.setSubjectPubKey(publickey.encode());
+
+            authPack.setClientPublicValue(pubInfo);
+
+//            DHNonce dhNonce = new DHNonce();
+//            authPack.setClientDhNonce(dhNonce);
+
         } else {
             authPack.setClientPublicValue(null);
         }
 
-        byte[] signedAuthPack = signAuthPack(pkinitContext, reqCtx, authPack);
+        byte[] signedAuthPack = signAuthPack(kdcRequest, reqCtx, authPack);
+
         paPkAsReq.setSignedAuthPack(signedAuthPack);
 
         TrustedCertifiers trustedCertifiers = pkinitContext.pluginOpts.createTrustedCertifiers();
         paPkAsReq.setTrustedCertifiers(trustedCertifiers);
 
-        byte[] kdcPkId = pkinitContext.pluginOpts.createIssuerAndSerial();
-        paPkAsReq.setKdcPkId(kdcPkId);
+//        byte[] kdcPkId = pkinitContext.pluginOpts.createIssuerAndSerial();
+//        paPkAsReq.setKdcPkId(kdcPkId);
 
         return paPkAsReq;
     }
 
-    private byte[] signAuthPack(PkinitContext pkinitContext,
+    private byte[] signAuthPack(KdcRequest kdcRequest,
                                 PkinitRequestContext reqCtx, AuthPack authPack) {
-        return null;
+
+        List<String> anchors = pkinitContext.identityOpts.anchors;
+
+        InputStream res = null;
+        try {
+            res = new FileInputStream(anchors.get(0));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        X509Certificate certificate = null;
+        try {
+            certificate = (X509Certificate) CertificateHelper.loadCerts(res).iterator().next();
+        } catch (KrbException e) {
+            e.printStackTrace();
+        }
+
+        byte[] signedDataBytes = new byte[0];
+        try {
+            signedDataBytes = SignedDataEngine.cmsSignedDataCreate(authPack, certificate).toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return signedDataBytes;
     }
 
     private void processReply(KdcRequest kdcRequest,
@@ -263,4 +370,17 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         return paFlags;
     }
 
+    /**
+     * Make padata entry.
+     *
+     * @param paPkAsReq The PaPkAsReq
+     * @return PaDataEntry to be made.
+     */
+    private PaDataEntry makeEntry(PaPkAsReq paPkAsReq) throws KrbException {
+
+        PaDataEntry paDataEntry = new PaDataEntry();
+        paDataEntry.setPaDataType(PaDataType.PK_AS_REQ);
+        paDataEntry.setPaDataValue(paPkAsReq.encode());
+        return paDataEntry;
+    }
 }

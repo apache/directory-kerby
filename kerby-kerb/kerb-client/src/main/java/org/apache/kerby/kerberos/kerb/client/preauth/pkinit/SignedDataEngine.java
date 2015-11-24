@@ -32,20 +32,22 @@ import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.cms.CMSTypedData;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
-import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
+import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
-import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
-import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
-import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.Store;
+import sun.security.pkcs.ContentInfo;
+import sun.security.pkcs.PKCS7;
+import sun.security.pkcs.SignerInfo;
+import sun.security.util.DerValue;
+import sun.security.util.ObjectIdentifier;
+import sun.security.x509.AlgorithmId;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
-import java.security.cert.CertStoreException;
+import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -80,16 +82,14 @@ public class SignedDataEngine {
      * @param certificate
      * @param authPack
      * @return The CMS SignedData bytes.
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     * @throws CertStoreException
+     * @throws OperatorCreationException
+     * @throws CertificateEncodingException
      * @throws CMSException
      * @throws IOException
      */
-    public static byte[] getSignedAuthPack(PrivateKey privateKey, X509Certificate certificate, AuthPack authPack)
-            throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException,
-            CertStoreException, CMSException, IOException, OperatorCreationException, CertificateEncodingException {
+    public static byte[] getSignedAuthPack(PrivateKey privateKey, X509Certificate certificate,
+                                           AuthPack authPack)
+            throws OperatorCreationException, CertificateEncodingException, CMSException, IOException {
         return getSignedData(privateKey, certificate, authPack.encode(), ID_PKINIT_AUTHDATA);
     }
 
@@ -109,18 +109,14 @@ public class SignedDataEngine {
      * @param certificate
      * @param kdcDhKeyInfo
      * @return The CMS SignedData bytes.
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     * @throws CertStoreException
+     * @throws OperatorCreationException
+     * @throws CertificateEncodingException
      * @throws CMSException
      * @throws IOException
      */
     public static byte[] getSignedKdcDhKeyInfo(PrivateKey privateKey, X509Certificate certificate,
                                                KdcDHKeyInfo kdcDhKeyInfo)
-            throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException,
-            OperatorCreationException, CertificateEncodingException {
+            throws OperatorCreationException, CertificateEncodingException, CMSException, IOException {
         return getSignedData(privateKey, certificate, kdcDhKeyInfo.encode(), ID_PKINIT_DHKEYDATA);
     }
 
@@ -139,37 +135,38 @@ public class SignedDataEngine {
      * @param certificate
      * @param replyKeyPack
      * @return The CMS SignedData bytes.
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     * @throws CertStoreException
+     * @throws OperatorCreationException
+     * @throws CertificateEncodingException
      * @throws CMSException
      * @throws IOException
      */
     public static byte[] getSignedReplyKeyPack(PrivateKey privateKey, X509Certificate certificate,
                                                ReplyKeyPack replyKeyPack)
-            throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException,
-            OperatorCreationException, CertificateEncodingException {
+            throws OperatorCreationException, CertificateEncodingException, CMSException, IOException {
         return getSignedData(privateKey, certificate, replyKeyPack.encode(), ID_PKINIT_RKEYDATA);
     }
 
 
     static byte[] getSignedData(PrivateKey privateKey, X509Certificate certificate, byte[] dataToSign,
-                                String eContentType) throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CertStoreException, CMSException, IOException,
-            CertificateEncodingException, OperatorCreationException {
+                                String eContentType) throws IOException, OperatorCreationException,
+            CertificateEncodingException, CMSException {
+
+        if (Security.getProvider("BC") == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
+
 
         List certList = new ArrayList();
         certList.add(certificate);
         Store certs = new JcaCertStore(certList);
 
         CMSSignedDataGenerator gen = new CMSSignedDataGenerator();
-        ContentSigner contentSigner = new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC")
-                .build(privateKey);
-        gen.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(
-                new JcaDigestCalculatorProviderBuilder().setProvider("BC").build())
-                .build(contentSigner, certificate));
+
+        gen.addSignerInfoGenerator(
+                new JcaSimpleSignerInfoGeneratorBuilder()
+                        .setProvider("BC")
+                        .build("SHA1withRSA", privateKey, certificate));
+
         gen.addCertificates(certs);
 
         ASN1ObjectIdentifier asn1ObjectIdentifier = new ASN1ObjectIdentifier(eContentType);
@@ -217,4 +214,26 @@ public class SignedDataEngine {
         }
         return true;
     }
+
+    public static ContentInfo createContentInfo(byte[] data, ObjectIdentifier oid) {
+
+        ContentInfo contentInfo = new ContentInfo(
+                oid,
+                new DerValue(DerValue.tag_OctetString, data));
+        return contentInfo;
+    }
+
+    public static ByteArrayOutputStream cmsSignedDataCreate(AuthPack authPack,
+                                                            X509Certificate certificate) throws IOException {
+
+        ObjectIdentifier oid = new ObjectIdentifier(ID_PKINIT_AUTHDATA);
+        ContentInfo contentInfo = createContentInfo(authPack.encode(), oid);
+
+        X509Certificate[] certificates = {certificate};
+        PKCS7 p7 = new PKCS7(new AlgorithmId[0], contentInfo, certificates, new SignerInfo[0]);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        p7.encodeSignedData(bytes);
+        return bytes;
+    }
+
 }

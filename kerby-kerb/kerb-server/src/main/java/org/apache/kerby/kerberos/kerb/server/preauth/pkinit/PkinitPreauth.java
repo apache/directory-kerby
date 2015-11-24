@@ -1,42 +1,86 @@
 /**
- *  Licensed to the Apache Software Foundation (ASF) under one
- *  or more contributor license agreements.  See the NOTICE file
- *  distributed with this work for additional information
- *  regarding copyright ownership.  The ASF licenses this file
- *  to you under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
- *  with the License.  You may obtain a copy of the License at
- *  
- *    http://www.apache.org/licenses/LICENSE-2.0
- *  
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.kerby.kerberos.kerb.server.preauth.pkinit;
 
+import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.CMSMessageType;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
+import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.cms.DHParameter;
+import org.apache.kerby.kerberos.kerb.spec.cms.SubjectPublicKeyInfo;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AuthPack;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.DHRepInfo;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.KdcDHKeyInfo;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsReq;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PkAuthenticator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.security.pkcs.ContentInfo;
+import sun.security.pkcs.PKCS7;
+import sun.security.pkcs.SignerInfo;
+import sun.security.util.DerValue;
+import sun.security.util.ObjectIdentifier;
+import sun.security.x509.AlgorithmId;
 
+import javax.crypto.interfaces.DHPublicKey;
+import javax.crypto.spec.DHPublicKeySpec;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class PkinitPreauth extends AbstractPreauthPlugin {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PkinitPreauth.class);
     private final Map<String, PkinitKdcContext> pkinitContexts;
+    private static final String ID_PKINIT_DHKEYDATA = "1.3.6.1.5.2.3.2";
 
     public PkinitPreauth() {
         super(new PkinitPreauthMeta());
@@ -50,6 +94,10 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         PkinitKdcContext tmp = new PkinitKdcContext();
         tmp.realm = kdcContext.getKdcRealm();
+
+        String pkinitIdentity = kdcContext.getConfig().getPkinitIdentity();
+        tmp.identityOpts.identity = pkinitIdentity;
+
         pkinitContexts.put(kdcContext.getKdcRealm(), tmp);
     }
 
@@ -66,18 +114,129 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     public boolean verify(KdcRequest kdcRequest, PluginRequestContext requestContext,
                           PaDataEntry paData) throws KrbException {
 
+        LOG.info("pkinit verify padata: entered!");
+
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
-        PkinitKdcContext pkinitContext = findContext(kdcRequest.getServerPrincipal());
+        PrincipalName serverPrincipal = kdcRequest.getServerEntry().getPrincipal();
+        kdcRequest.setServerPrincipal(serverPrincipal);
+        PkinitKdcContext pkinitContext = findContext(serverPrincipal);
         if (pkinitContext == null) {
             return false;
         }
 
         reqCtx.paType = paData.getPaDataType();
         if (paData.getPaDataType() == PaDataType.PK_AS_REQ) {
+
+            LOG.info("processing PK_AS_REQ");
             PaPkAsReq paPkAsReq = KrbCodec.decode(paData.getPaDataValue(), PaPkAsReq.class);
-            if (paPkAsReq == null) {
-                return false;
+
+            byte[] signedAuthPack = paPkAsReq.getSignedAuthPack();
+            PKCS7 pkcs7 = null;
+            try {
+                pkcs7 = PkinitCrypto.verifyCMSSignedData(pkinitContext.cryptoctx,
+                        CMSMessageType.CMS_SIGN_CLIENT, signedAuthPack);
+            } catch (IOException e) {
+                e.getMessage();
             }
+
+            Boolean isSigned = PkinitCrypto.isSigned(pkcs7);
+            if (isSigned) {
+                //TODO
+                LOG.info("Signed data.");
+            } else {
+                PrincipalName clientPrincial = kdcRequest.getClientEntry().getPrincipal();
+                PrincipalName anonymousPrincipal = KrbUtil.makeAnonymousPrincipal();
+
+                /* If anonymous requests are being used, adjust the realm of the client principal. */
+                if (kdcRequest.getKdcOptions().isFlagSet(KdcOption.REQUEST_ANONYMOUS)
+                        && !KrbUtil.pricipalCompareIgnoreRealm(clientPrincial, anonymousPrincipal)) {
+                    String errMsg = "Pkinit request not signed, but client not anonymous.";
+                    LOG.error(errMsg);
+                    throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED, errMsg);
+                }
+            }
+
+            ContentInfo contentInfo = pkcs7.getContentInfo();
+            AuthPack authPack = null;
+            try {
+                authPack = KrbCodec.decode(contentInfo.getContentBytes(), AuthPack.class);
+            } catch (IOException e) {
+                LOG.error("failed to decode AuthPack " + e.getMessage());
+            }
+
+            PkAuthenticator pkAuthenticator = authPack.getPkAuthenticator();
+
+            checkClockskew(kdcRequest, pkAuthenticator.getCtime());
+            DHParameter dhParameter = null;
+            if (authPack.getClientPublicValue() != null) {
+                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParameters();
+                PkinitCrypto.serverCheckDH(pkinitContext.pluginOpts, pkinitContext.cryptoctx, dhParameter);
+            } else if (!isSigned) {
+                /*Anonymous pkinit requires DH*/
+                String errMessage = "Anonymous pkinit without DH public value not supported.";
+                LOG.error(errMessage);
+                throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED, errMessage);
+            }
+
+            CheckSum expectedCheckSum = null;
+            try {
+                expectedCheckSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
+                        kdcRequest.getKdcReq().getReqBody().encode());
+            } catch (KrbException e) {
+                LOG.error("Unable to calculate AS REQ checksum.", e.getMessage());
+            }
+
+            CheckSum receivedCheckSum = KrbCodec.decode(pkAuthenticator.getPaChecksum(), CheckSum.class);
+
+            if (expectedCheckSum.encodingLength() != receivedCheckSum.encodingLength()
+                    || !Arrays.equals(expectedCheckSum.getChecksum(), receivedCheckSum.getChecksum())) {
+                LOG.debug("Received checksum type: " + receivedCheckSum.getCksumtype()
+                        + ", received checksum length: " + receivedCheckSum.encodingLength()
+                        + ", expected checksum type: " + expectedCheckSum.getCksumtype()
+                        + ", expected checksum length: " + expectedCheckSum.encodingLength());
+                String errorMessage = "Failed to match the checksum.";
+                LOG.error(errorMessage);
+                throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED, errorMessage);
+            }
+
+            BigInteger p = dhParameter.getP();
+            BigInteger g = dhParameter.getG();
+
+            SubjectPublicKeyInfo publicKeyInfo = authPack.getClientPublicValue();
+            byte[] clientSubjectPubKey = publicKeyInfo.getSubjectPubKey().getValue();
+            Asn1Integer clientPubKey = KrbCodec.decode(clientSubjectPubKey, Asn1Integer.class);
+            BigInteger y = clientPubKey.getValue();
+
+            DHPublicKeySpec dhPublicKeySpec = new DHPublicKeySpec(y, p, g);
+
+            KeyFactory keyFactory = null;
+            try {
+                keyFactory = KeyFactory.getInstance("DH");
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            DHPublicKey dhPublicKey = null;
+            try {
+                dhPublicKey = (DHPublicKey) keyFactory.generatePublic(dhPublicKeySpec);
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+            }
+
+            DhServer server = new DhServer();
+            DHPublicKey serverPubKey = null;
+            try {
+                serverPubKey = (DHPublicKey) server.initAndDoPhase(dhPublicKey.getEncoded());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            server.generateKey(null, null);
+
+            String identity = pkinitContext.identityOpts.identity;
+
+            PaPkAsRep paPkAsRep = makePaPkAsRep(serverPubKey, identity);
+            PaDataEntry paDataEntry = makeEntry(paPkAsRep);
+
+            kdcRequest.getPreauthContext().getOutputPaData().add(paDataEntry);
         }
 
         return true;
@@ -89,5 +248,110 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             return pkinitContexts.get(realm);
         }
         return null;
+    }
+
+    /**
+     * Make padata entry.
+     *
+     * @param paPkAsRep The PaPkAsRep
+     * @return PaDataEntry to be made.
+     */
+    private PaDataEntry makeEntry(PaPkAsRep paPkAsRep) throws KrbException {
+
+        PaDataEntry paDataEntry = new PaDataEntry();
+        paDataEntry.setPaDataType(PaDataType.PK_AS_REP);
+        paDataEntry.setPaDataValue(paPkAsRep.encode());
+        return paDataEntry;
+    }
+
+    private PaPkAsRep makePaPkAsRep(DHPublicKey severPubKey, String identityString) {
+
+        List<String> identityList = Arrays.asList(identityString.split(","));
+
+        List<X509Certificate> certificates = new ArrayList<>();
+        for (String identity : identityList) {
+            File file = new File(identity);
+
+            try {
+                Scanner scanner = new Scanner(file);
+                String found = scanner.findInLine("CERTIFICATE");
+
+                if (found != null) {
+                    InputStream res = null;
+                    try {
+                        res = new FileInputStream(identity);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    X509Certificate certificate = null;
+                    try {
+                        certificate = (X509Certificate) CertificateHelper.loadCerts(res).iterator().next();
+                    } catch (KrbException e) {
+                        e.printStackTrace();
+                    }
+                    certificates.add(certificate);
+                }
+            } catch (FileNotFoundException e) {
+                e.getMessage();
+            }
+        }
+
+        PaPkAsRep paPkAsRep = new PaPkAsRep();
+
+        DHRepInfo dhRepInfo = new DHRepInfo();
+
+        KdcDHKeyInfo kdcDhKeyInfo = new KdcDHKeyInfo();
+
+        Asn1Integer publickey = new Asn1Integer(severPubKey.getY());
+        kdcDhKeyInfo.setSubjectPublicKey(publickey.encode());
+        kdcDhKeyInfo.setNonce(1);
+        kdcDhKeyInfo.setDHKeyExpiration(
+                new KerberosTime(System.currentTimeMillis() + KerberosTime.DAY));
+
+        ByteArrayOutputStream signedData = null;
+        try {
+            signedData = cmsSignedDataCreate(kdcDhKeyInfo, certificates);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        dhRepInfo.setDHSignedData(signedData.toByteArray());
+
+        paPkAsRep.setDHRepInfo(dhRepInfo);
+//        paPkAsRep.setEncKeyPack("enckey".getBytes());
+
+        return paPkAsRep;
+    }
+
+
+    public static ContentInfo createContentInfo(byte[] data, ObjectIdentifier oid) {
+
+        ContentInfo contentInfo = new ContentInfo(
+                oid,
+                new DerValue(DerValue.tag_OctetString, data));
+        return contentInfo;
+    }
+
+    public static ByteArrayOutputStream cmsSignedDataCreate(KdcDHKeyInfo kdcDHKeyInfo,
+                                                            List<X509Certificate> certificates) throws IOException {
+
+        ObjectIdentifier oid = new ObjectIdentifier(ID_PKINIT_DHKEYDATA);
+        ContentInfo contentInfo = createContentInfo(kdcDHKeyInfo.encode(), oid);
+
+        PKCS7 p7 = new PKCS7(new AlgorithmId[0], contentInfo,
+                certificates.toArray(new X509Certificate[certificates.size()]), new SignerInfo[0]);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        p7.encodeSignedData(bytes);
+        return bytes;
+    }
+
+    public boolean checkClockskew(KdcRequest kdcRequest, KerberosTime time) throws KrbException {
+        long clockSkew = kdcRequest.getKdcContext().getConfig().getAllowableClockSkew() * 1000;
+
+        if (!time.isInClockSkew(clockSkew)) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED);
+        } else {
+            return true;
+        }
     }
 }

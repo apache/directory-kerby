@@ -54,6 +54,8 @@ import org.apache.kerby.kerberos.kerb.spec.fast.ArmorType;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmor;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmoredReq;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastReq;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
@@ -92,6 +94,7 @@ public abstract class KdcRequest {
     private byte[] innerBodyout;
     private AuthToken token;
     private Boolean isToken = false;
+    private Boolean isPkinit = false;
     private EncryptionKey sessionKey;
 
     /**
@@ -167,6 +170,9 @@ public abstract class KdcRequest {
             checkClient();
             checkServer();
         } else {
+            if (PreauthHandler.isPkinit(getKdcReq().getPaData())) {
+                isPkinit = true;
+            }
             checkClient();
             checkServer();
             preauth();
@@ -537,10 +543,17 @@ public abstract class KdcRequest {
         PaData preAuthData = request.getPaData();
 
         if (isPreauthRequired()) {
+            if (getKdcOptions().isFlagSet(KdcOption.REQUEST_ANONYMOUS) && !isPkinit) {
+                LOG.info("Need PKINIT.");
+                KrbError krbError = makePreAuthenticationError(kdcContext, request,
+                        KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, true);
+                throw new KdcRecoverableException(krbError);
+            }
+
             if (preAuthData == null || preAuthData.isEmpty()) {
                 LOG.info("The preauth data is empty.");
                 KrbError krbError = makePreAuthenticationError(kdcContext, request,
-                        KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED);
+                        KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, false);
                 throw new KdcRecoverableException(krbError);
             } else {
                 getPreauthHandler().verify(this, preAuthData);
@@ -646,7 +659,7 @@ public abstract class KdcRequest {
      * @return The krb error reply to client
      */
     protected KrbError makePreAuthenticationError(KdcContext kdcContext, KdcReq request,
-                                                  KrbErrorCode errorCode)
+                                                  KrbErrorCode errorCode, boolean pkinit)
             throws KrbException {
         List<EncryptionType> encryptionTypes = kdcContext.getConfig().getEncryptionTypes();
         List<EncryptionType> clientEtypes = request.getReqBody().getEtypes();
@@ -684,6 +697,11 @@ public abstract class KdcRequest {
             methodData.add(new PaDataEntry(PaDataType.ETYPE_INFO, encTypeInfo));
         }
         methodData.add(new PaDataEntry(PaDataType.ETYPE_INFO2, encTypeInfo2));
+
+        if(pkinit) {
+            methodData.add(new PaDataEntry(PaDataType.PK_AS_REQ, "empty".getBytes()));
+            methodData.add(new PaDataEntry(PaDataType.PK_AS_REP, "empty".getBytes()));
+        }
 
         KrbError krbError = new KrbError();
         krbError.setErrorCode(errorCode);
@@ -781,5 +799,13 @@ public abstract class KdcRequest {
      */
     protected AuthToken getToken() {
         return token;
+    }
+
+    protected boolean isPkinit() {
+        return isPkinit;
+    }
+
+    public KdcOptions getKdcOptions() {
+        return kdcReq.getReqBody().getKdcOptions();
     }
 }

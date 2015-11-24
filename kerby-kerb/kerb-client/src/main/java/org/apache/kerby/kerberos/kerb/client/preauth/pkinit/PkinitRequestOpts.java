@@ -30,7 +30,7 @@ public class PkinitRequestOpts {
     // allow UPN-SAN instead of pkinit-SAN
     public boolean allowUpn = true;
     // selects DH or RSA based pkinit
-    public boolean usingRsa = true;
+    public boolean usingRsa = false;
     // require CRL for a CA (default is false)
     public boolean requireCrlChecking = false;
     // initial request DH modulus size (default=1024)

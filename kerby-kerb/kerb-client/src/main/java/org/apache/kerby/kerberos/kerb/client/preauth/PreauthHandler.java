@@ -87,14 +87,13 @@ public class PreauthHandler {
             return;
         }
 
+        setPreauthOptions(kdcRequest, kdcRequest.getPreauthOptions());
         if (!preauthContext.hasInputPaData()) {
             tryFirst(kdcRequest, preauthContext.getOutputPaData());
             return;
         }
 
         // attemptETypeInfo(kdcRequest, preauthContext.getInputPaData());
-
-        setPreauthOptions(kdcRequest, kdcRequest.getPreauthOptions());
 
         prepareUserResponses(kdcRequest, preauthContext.getInputPaData());
 

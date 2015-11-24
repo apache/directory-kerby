@@ -33,6 +33,7 @@ import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithToken;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithTgt;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithToken;
+import org.apache.kerby.kerberos.kerb.spec.base.NameType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
@@ -98,7 +99,11 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             String principal = requestOptions.getStringOption(
                     KrbOption.CLIENT_PRINCIPAL);
             principal = fixPrincipal(principal);
-            asRequest.setClientPrincipal(new PrincipalName(principal));
+            PrincipalName principalName = new PrincipalName(principal);
+            if (requestOptions.contains(KrbOption.USE_PKINIT_ANONYMOUS)) {
+                principalName.setNameType(NameType.KRB5_NT_WELLKNOWN);
+            }
+            asRequest.setClientPrincipal(principalName);
         }
         asRequest.setKrbOptions(requestOptions);
 

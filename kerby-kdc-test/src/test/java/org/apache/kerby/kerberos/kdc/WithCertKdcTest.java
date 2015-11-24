@@ -22,13 +22,16 @@ package org.apache.kerby.kerberos.kdc;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
+import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.pki.KerbyPkiProvider;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
@@ -49,6 +52,7 @@ public class WithCertKdcTest extends KdcTestBase {
     private String serverPrincipal;
     private Certificate userCert;
     private PrivateKey userKey;
+    private Certificate caCert;
 
     @Before
     public void setUp() throws Exception {
@@ -59,10 +63,47 @@ public class WithCertKdcTest extends KdcTestBase {
     }
 
     @Override
+    protected void configKdcSeverAndClient() {
+        super.configKdcSeverAndClient();
+
+        String pkinitIdentity = getClass().getResource("/kdccert.pem").getPath() + ","
+                + getClass().getResource("/kdckey.pem").getPath();
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.PKINIT_IDENTITY, pkinitIdentity);
+    }
+
+    @Override
     protected void setUpClient() throws Exception {
         super.setUpClient();
 
         loadCredentials();
+    }
+
+    @Override
+    protected void createPrincipals() throws KrbException {
+        super.createPrincipals();
+        //Anonymity support is not enabled by default.
+        //To enable it, you must create the principal WELLKNOWN/ANONYMOUS
+        getKdcServer().createPrincipal("WELLKNOWN/ANONYMOUS");
+    }
+
+    @Test
+    public void testAnonymity() throws Exception {
+
+        getKrbClient().init();
+
+        URL url = getClass().getResource("/cacert.pem");
+        TgtTicket tgt = null;
+        try {
+            tgt = getKrbClient().requestTgtWithPkintAnonymous(url.getPath());
+        } catch (KrbException te) {
+            assertThat(te.getMessage().contains("timeout")).isTrue();
+            return;
+        }
+        assertThat(tgt).isNull();
+
+        serverPrincipal = getServerPrincipal();
+        ServiceTicket tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
+        assertThat(tkt).isNull();
     }
 
     //@Test

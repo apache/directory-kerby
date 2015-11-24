@@ -214,9 +214,11 @@ public class KrbClient {
      * @return TGT
      * @throws KrbException e
      */
-    public TgtTicket requestTgtWithPkintAnonymous() throws KrbException {
+    public TgtTicket requestTgtWithPkintAnonymous(String certificatePath) throws KrbException {
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.USE_PKINIT_ANONYMOUS);
+        requestOptions.add(KrbOption.CLIENT_PRINCIPAL, "WELLKNOWN/ANONYMOUS");
+        requestOptions.add(KrbOption.PKINIT_X509_ANCHORS, certificatePath);
         return requestTgtWithOptions(requestOptions);
     }
 

@@ -20,11 +20,9 @@
 package org.apache.kerby.kerberos.kerb.spec.cms;
 
 
-import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
-import org.apache.kerby.asn1.type.Asn1Type;
 
 /**
  AlgorithmIdentifier  ::=  SEQUENCE  {
@@ -38,7 +36,7 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ALGORITHM, -1, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(PARAMETERS, -1, Asn1Any.class)
+            new Asn1FieldInfo(PARAMETERS, -1, DHParameter.class)
     };
 
     public AlgorithmIdentifier() {
@@ -53,11 +51,11 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
         setFieldAs(ALGORITHM, algorithm);
     }
 
-    public Asn1Type getParameters() {
-        return getFieldAsAny(PARAMETERS);
+    public DHParameter getParameters() {
+        return getFieldAs(PARAMETERS, DHParameter.class);
     }
 
-    public void setParameters(Asn1Type parameters) {
+    public void setParameters(DHParameter parameters) {
         setFieldAsAny(PARAMETERS, parameters);
     }
 }

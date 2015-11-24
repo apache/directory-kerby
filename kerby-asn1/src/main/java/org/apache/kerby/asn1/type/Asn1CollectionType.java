@@ -24,6 +24,7 @@ import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.TaggingOption;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 /**
@@ -177,6 +178,10 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
     }
 
     protected void setFieldAsInt(int index, int value) {
+        setFieldAs(index, new Asn1Integer(value));
+    }
+
+    protected void setFieldAsBigInteger(int index, BigInteger value) {
         setFieldAs(index, new Asn1Integer(value));
     }
 
