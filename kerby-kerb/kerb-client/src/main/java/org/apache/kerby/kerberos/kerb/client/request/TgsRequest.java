@@ -67,7 +67,7 @@ public class TgsRequest extends KdcRequest {
 
         TgsReq tgsReq = new TgsReq();
 
-        KdcReqBody tgsReqBody = makeReqBody();
+        KdcReqBody tgsReqBody = getReqBody();
         tgsReq.setReqBody(tgsReqBody);
         tgsReq.setPaData(getPreauthContext().getOutputPaData());
 

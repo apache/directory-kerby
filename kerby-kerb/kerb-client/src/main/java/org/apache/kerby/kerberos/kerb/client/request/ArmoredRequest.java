@@ -29,6 +29,7 @@ import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.crypto.fast.FastUtil;
+import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApOptions;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
@@ -38,12 +39,14 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.fast.ArmorType;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmor;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastArmoredReq;
 import org.apache.kerby.kerberos.kerb.spec.fast.KrbFastReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
@@ -143,8 +146,7 @@ public class ArmoredRequest {
         CheckSum reqCheckSum = CheckSumUtil.makeCheckSumWithKey(CheckSumType.NONE,
             outerRequestBody, state.getArmorKey(), KeyUsage.FAST_REQ_CHKSUM);
         armoredReq.setReqChecksum(reqCheckSum);
-        armoredReq.setEncryptedFastReq(EncryptionUtil.seal(fastReq, state.getArmorKey(),
-            KeyUsage.FAST_ENC));
+        armoredReq.setEncryptedFastReq(EncryptionUtil.seal(fastReq, state.getArmorKey(), KeyUsage.FAST_ENC));
 
         PaDataEntry paDataEntry = new PaDataEntry();
         paDataEntry.setPaDataType(PaDataType.FX_FAST);
@@ -169,8 +171,7 @@ public class ArmoredRequest {
         apReq.setApOptions(apOptions);
         Ticket ticket = credential.getTicket();
         apReq.setTicket(ticket);
-        Authenticator authenticator = KdcRequest.makeAuthenticator(credential.getClientName(),
-            credential.getClientRealm(), subKey);
+        Authenticator authenticator = makeAuthenticator(credential, subKey);
         apReq.setAuthenticator(authenticator);
         EncryptedData authnData = EncryptionUtil.seal(authenticator,
             credential.getKey(), KeyUsage.AP_REQ_AUTH);
@@ -185,8 +186,7 @@ public class ArmoredRequest {
      */
     private EncryptionKey makeArmorKey(EncryptionKey subKey, EncryptionKey armorCacheKey)
         throws KrbException {
-        EncryptionKey armorKey = FastUtil.cf2(subKey, "subkeyarmor",
-            armorCacheKey, "ticketarmor");
+        EncryptionKey armorKey = FastUtil.cf2(subKey, "subkeyarmor", armorCacheKey, "ticketarmor");
         return armorKey;
     }
 
@@ -203,5 +203,23 @@ public class ArmoredRequest {
         EncryptionKey armorCacheKey = credential.getKey();
 
         return armorCacheKey;
+    }
+
+    protected Authenticator makeAuthenticator(Credential credential,
+                                              EncryptionKey subKey) throws KrbException {
+        Authenticator authenticator = new Authenticator();
+        authenticator.setAuthenticatorVno(5);
+        authenticator.setCname(credential.getClientName());
+        authenticator.setCrealm(credential.getClientRealm());
+        authenticator.setCtime(KerberosTime.now());
+        authenticator.setCusec(0);
+        authenticator.setSubKey(subKey);
+
+        KdcReqBody reqBody = kdcRequest.getReqBody();
+        CheckSum checksum = CheckSumUtil.seal(reqBody, null,
+            subKey, KeyUsage.TGS_REQ_AUTH_CKSUM);
+        authenticator.setCksum(checksum);
+
+        return authenticator;
     }
 }

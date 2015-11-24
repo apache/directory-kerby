@@ -44,5 +44,4 @@ public class KrbUtil {
         String nameString = "kadmin/" + realm + "@" + realm;
         return new PrincipalName(nameString, NameType.NT_PRINCIPAL);
     }
-
 }

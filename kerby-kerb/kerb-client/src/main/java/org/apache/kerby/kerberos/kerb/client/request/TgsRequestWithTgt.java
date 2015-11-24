@@ -21,14 +21,18 @@ package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
+import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApOptions;
 import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
+import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
@@ -57,17 +61,10 @@ public class TgsRequestWithTgt extends TgsRequest {
         return tgt.getSessionKey();
     }
 
-    @Override
-    protected void preauth() throws KrbException {
-        apReq = makeApReq();
-        super.preauth();
-    }
-
     private ApReq makeApReq() throws KrbException {
         ApReq apReq = new ApReq();
 
-        Authenticator authenticator = makeAuthenticator(tgt.getClientPrincipal(), tgt.getRealm(),
-            tgt.getSessionKey());
+        Authenticator authenticator = makeAuthenticator();
         EncryptionKey sessionKey = tgt.getSessionKey();
         EncryptedData authnData = EncryptionUtil.seal(authenticator,
             sessionKey, KeyUsage.TGS_REQ_AUTH);
@@ -80,7 +77,27 @@ public class TgsRequestWithTgt extends TgsRequest {
         return apReq;
     }
 
-    public ApReq getApReq() {
+    public ApReq getApReq() throws KrbException {
+        if (apReq == null) {
+            apReq = makeApReq();
+        }
         return apReq;
+    }
+
+    private Authenticator makeAuthenticator() throws KrbException {
+        Authenticator authenticator = new Authenticator();
+        authenticator.setAuthenticatorVno(5);
+        authenticator.setCname(tgt.getClientPrincipal());
+        authenticator.setCrealm(tgt.getRealm());
+        authenticator.setCtime(KerberosTime.now());
+        authenticator.setCusec(0);
+        authenticator.setSubKey(tgt.getSessionKey());
+
+        KdcReqBody reqBody = getReqBody();
+        CheckSum checksum = CheckSumUtil.seal(reqBody, null,
+            tgt.getSessionKey(), KeyUsage.TGS_REQ_AUTH_CKSUM);
+        authenticator.setCksum(checksum);
+
+        return authenticator;
     }
 }
