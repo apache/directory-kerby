@@ -299,12 +299,12 @@ public class KrbConfig extends Krb5Conf {
     }
 
     public List<String> getPkinitAnchors() {
-        return Arrays.asList(KrbConfHelper.getStringArrayUnderSection(this,
-                KrbConfigKey.PKINIT_ANCHORS));
+        return Arrays.asList(getString(
+                KrbConfigKey.PKINIT_ANCHORS, true, LIBDEFAULT));
     }
 
     public List<String> getPkinitIdentities() {
-        return Arrays.asList(KrbConfHelper.getStringArrayUnderSection(this,
-                KrbConfigKey.PKINIT_IDENTITIES));
+        return Arrays.asList(getString(
+                KrbConfigKey.PKINIT_IDENTITIES, true, LIBDEFAULT));
     }
 }

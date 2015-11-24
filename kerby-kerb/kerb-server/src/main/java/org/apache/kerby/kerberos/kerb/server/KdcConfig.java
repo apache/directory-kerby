@@ -172,12 +172,12 @@ public class KdcConfig extends Krb5Conf {
     }
 
     public List<String> getPkinitAnchors() {
-        return Arrays.asList(KrbConfHelper.getStringArrayUnderSection(this,
-                KdcConfigKey.PKINIT_ANCHORS));
+        return Arrays.asList(getString(
+                KdcConfigKey.PKINIT_ANCHORS, true, KDCDEFAULT));
     }
 
     public String getPkinitIdentity() {
-        return KrbConfHelper.getStringUnderSection(this,
-                KdcConfigKey.PKINIT_IDENTITY);
+        return getString(
+                KdcConfigKey.PKINIT_IDENTITY, true, KDCDEFAULT);
     }
 }
