@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.tool.kinit;
 
 import org.apache.kerby.KOption;
+import org.apache.kerby.KOptionGroup;
 import org.apache.kerby.KOptionType;
 
 public enum KinitOption implements KOption {
@@ -43,7 +44,7 @@ public enum KinitOption implements KOption {
     USER_PASSWD("user-passwd", "User plain password"),
     USE_KEYTAB("-k", "use keytab"),
     USE_DFT_KEYTAB("-i", "use default client keytab (with -k)"),
-    USER_KEYTAB_FILE("-t", "filename of keytab to use", KOptionType.STR),
+    KEYTAB_FILE("-t", "filename of keytab to use", KOptionType.FILE),
     KRB5_CACHE("-c", "Kerberos 5 cache name", KOptionType.STR),
     SERVICE("-S", "service", KOptionType.STR),
     ARMOR_CACHE("-T", "armor credential cache", KOptionType.FILE),
@@ -51,6 +52,7 @@ public enum KinitOption implements KOption {
     CONF_DIR("-conf", "conf dir", KOptionType.DIR);
 
     private String name;
+    private KOptionGroup group;
     private KOptionType type = KOptionType.NONE;
     private String description;
     private Object value;
@@ -147,6 +149,22 @@ public enum KinitOption implements KOption {
     @Override
     public Object getValue() {
         return value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setGroup(KOptionGroup group) {
+        this.group = group;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public KOptionGroup getGroup() {
+        return group;
     }
 
     /**

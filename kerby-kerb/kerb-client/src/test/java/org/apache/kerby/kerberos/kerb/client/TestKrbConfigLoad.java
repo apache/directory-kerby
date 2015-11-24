@@ -40,9 +40,9 @@ public class TestKrbConfigLoad {
 
         KrbConfig krbConfig = new KrbConfig();
         krbConfig.addIniConfig(confFile);
-
         assertThat(krbConfig.getDefaultRealm()).isEqualTo("KRB.COM");
         assertThat(krbConfig.getKdcRealm()).isEqualTo("TEST.COM");
+        assertThat(krbConfig.getKdcHost()).isEqualTo("kdc-server.example.com");
         assertThat(krbConfig.getDnsLookUpKdc()).isFalse();
         assertThat(krbConfig.getDnsLookUpRealm()).isFalse();
         assertThat(krbConfig.getAllowWeakCrypto()).isTrue();

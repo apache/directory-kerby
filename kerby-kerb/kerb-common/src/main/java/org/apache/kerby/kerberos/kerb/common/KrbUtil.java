@@ -38,7 +38,7 @@ public class KrbUtil {
      */
     public static PrincipalName makeTgsPrincipal(String realm) {
         String nameString = KrbConstant.TGS_PRINCIPAL + "/" + realm + "@" + realm;
-        return new PrincipalName(nameString, NameType.NT_PRINCIPAL);
+        return new PrincipalName(nameString, NameType.NT_SRV_INST);
     }
 
     /**
@@ -73,5 +73,4 @@ public class KrbUtil {
         principalName.setNameType(NameType.NT_PRINCIPAL);
         return principalName;
     }
-
 }

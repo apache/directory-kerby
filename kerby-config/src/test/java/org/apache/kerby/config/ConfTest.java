@@ -119,13 +119,16 @@ public class ConfTest {
     @Test
     public void testConfKey() {
         Conf conf = new Conf();
-        assertThat(conf.getString(TestConfKey.ADDRESS)).isEqualTo(TestConfKey.ADDRESS.getDefaultValue());
+        assertThat(conf.getString(TestConfKey.ADDRESS, true)).isEqualTo(
+                TestConfKey.ADDRESS.getDefaultValue());
         Map<String, String> mapConfig = new HashMap<String, String>();
         String myAddress = "www.google.com";
         mapConfig.put(TestConfKey.ADDRESS.getPropertyKey(), myAddress);
         conf.addMapConfig(mapConfig);
-        assertThat(conf.getString(TestConfKey.ADDRESS)).isEqualTo(myAddress);
-        assertThat(conf.getInt(TestConfKey.PORT)).isEqualTo(TestConfKey.PORT.getDefaultValue());
-        assertThat(conf.getBoolean(TestConfKey.ENABLE)).isEqualTo(TestConfKey.ENABLE.getDefaultValue());
+        assertThat(conf.getString(TestConfKey.ADDRESS, true)).isEqualTo(myAddress);
+        assertThat(conf.getInt(TestConfKey.PORT, true)).isEqualTo(
+                TestConfKey.PORT.getDefaultValue());
+        assertThat(conf.getBoolean(TestConfKey.ENABLE, true)).isEqualTo(
+                TestConfKey.ENABLE.getDefaultValue());
     }
 }

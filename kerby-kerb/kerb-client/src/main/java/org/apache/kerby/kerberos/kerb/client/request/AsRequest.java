@@ -73,7 +73,7 @@ public class AsRequest extends KdcRequest {
     public void process() throws KrbException {
         super.process();
 
-        KdcReqBody body = makeReqBody();
+        KdcReqBody body = getReqBody();
 
         AsReq asReq = new AsReq();
         asReq.setReqBody(body);
@@ -114,9 +114,13 @@ public class AsRequest extends KdcRequest {
             throw new KrbException("Nonce didn't match");
         }
 
-        PrincipalName tmpServerPrincipal = encKdcRepPart.getSname();
-        tmpServerPrincipal.setRealm(encKdcRepPart.getSrealm());
-        if (!tmpServerPrincipal.equals(getServerPrincipal())) {
+        PrincipalName returnedServerPrincipal = encKdcRepPart.getSname();
+        returnedServerPrincipal.setRealm(encKdcRepPart.getSrealm());
+        PrincipalName requestedServerPrincipal = getServerPrincipal();
+        if (requestedServerPrincipal.getRealm() == null) {
+            requestedServerPrincipal.setRealm(getContext().getKrbSetting().getKdcRealm());
+        }
+        if (!returnedServerPrincipal.equals(requestedServerPrincipal)) {
             throw new KrbException(KrbErrorCode.KDC_ERR_SERVER_NOMATCH);
         }
 

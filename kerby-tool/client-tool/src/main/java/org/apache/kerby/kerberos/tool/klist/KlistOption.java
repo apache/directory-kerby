@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.tool.klist;
 
 import org.apache.kerby.KOption;
+import org.apache.kerby.KOptionGroup;
 import org.apache.kerby.KOptionType;
 
 public enum KlistOption implements KOption {
@@ -40,6 +41,7 @@ public enum KlistOption implements KOption {
     SHOW_KTAB_ENTRY_KEY("-K", "show keytab entry keys");
 
     private String name;
+    private KOptionGroup group;
     private KOptionType type = KOptionType.NONE;
     private String description;
     private Object value;
@@ -149,4 +151,19 @@ public enum KlistOption implements KOption {
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setGroup(KOptionGroup group) {
+        this.group = group;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public KOptionGroup getGroup() {
+        return group;
+    }
 }

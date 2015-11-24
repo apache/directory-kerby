@@ -17,15 +17,22 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.common;
+package org.apache.kerby.kerberos.kerb.client;
 
-import org.apache.kerby.config.ConfigKey;
+import org.apache.kerby.KOptionGroup;
 
 /**
- * Config Keys with section name, to support formats like
- * MIT Kerberos configuration.
+ * This defines option groups to categorize the options defined in KrbOption.
  */
-public interface SectionConfigKey extends ConfigKey {
+public enum KrbOptionGroup implements KOptionGroup {
+    NONE,
+    KDC_FLAGS,
+    PKINIT,
+    TOKEN,
+    KINIT;
 
-    String getSectionName();
+    @Override
+    public String getGroupName() {
+        return name().toLowerCase();
+    }
 }

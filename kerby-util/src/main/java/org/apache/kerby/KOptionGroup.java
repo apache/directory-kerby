@@ -6,44 +6,28 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *
+ *  
  *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License.
- *
+ *  under the License. 
+ *  
  */
-package org.apache.kerby.kerberos.tool;
-
-import org.apache.kerby.KOption;
-import org.apache.kerby.KOptions;
-import org.apache.kerby.kerberos.kerb.client.KrbOption;
+package org.apache.kerby;
 
 /**
- * Tool utilities.
+ * Option group.
  */
-public class ToolUtil {
+public interface KOptionGroup {
 
     /**
-     * Convert tool (like kinit) options to KrbOptions.
-     * @param toolOptions krb options
-     * @return krb options
+     * Get group name.
+     *
+     * @return The group name
      */
-    public static KOptions convertOptions(KOptions toolOptions) {
-        KOptions results = new KOptions();
-
-        for (KOption toolOpt : toolOptions.getOptions()) {
-            KrbOption krbOpt = KrbOption.fromOptionName(toolOpt.getOptionName());
-            if (krbOpt != KrbOption.NONE) {
-                krbOpt.setValue(toolOpt.getValue());
-                results.add(krbOpt);
-            }
-        }
-
-        return results;
-    }
+    String getGroupName();
 }

@@ -129,9 +129,9 @@ public class Conf implements Config {
     }
 
     @Override
-    public String getString(ConfigKey name) {
+    public String getString(ConfigKey name, boolean useDefault) {
         checkAndLoad();
-        return config.getString(name);
+        return config.getString(name, useDefault);
     }
 
     @Override
@@ -169,24 +169,24 @@ public class Conf implements Config {
     }
 
     @Override
-    public Boolean getBoolean(ConfigKey name) {
+    public Boolean getBoolean(ConfigKey name, boolean useDefault) {
         checkAndLoad();
-        return config.getBoolean(name);
+        return config.getBoolean(name, useDefault);
     }
 
     @Override
-    public Boolean getBoolean(String name, boolean defaultValue) {
+    public Boolean getBoolean(String name, Boolean defaultValue) {
         checkAndLoad();
         return config.getBoolean(name, defaultValue);
     }
 
     @Override
-    public void setBoolean(String name, boolean value) {
+    public void setBoolean(String name, Boolean value) {
         setString(name, String.valueOf(value));
     }
 
     @Override
-    public void setBoolean(ConfigKey name, boolean value) {
+    public void setBoolean(ConfigKey name, Boolean value) {
         setString(name.getPropertyKey(), String.valueOf(value));
     }
 
@@ -197,24 +197,24 @@ public class Conf implements Config {
     }
 
     @Override
-    public Integer getInt(ConfigKey name) {
+    public Integer getInt(ConfigKey name, boolean useDefault) {
         checkAndLoad();
-        return config.getInt(name);
+        return config.getInt(name, useDefault);
     }
 
     @Override
-    public Integer getInt(String name, int defaultValue) {
+    public Integer getInt(String name, Integer defaultValue) {
         checkAndLoad();
         return config.getInt(name, defaultValue);
     }
 
     @Override
-    public void setInt(String name, int value) {
+    public void setInt(String name, Integer value) {
         setString(name, String.valueOf(value));
     }
 
     @Override
-    public void setInt(ConfigKey name, int value) {
+    public void setInt(ConfigKey name, Integer value) {
         setString(name.getPropertyKey(), String.valueOf(value));
     }
 
@@ -225,24 +225,24 @@ public class Conf implements Config {
     }
 
     @Override
-    public Long getLong(ConfigKey name) {
+    public Long getLong(ConfigKey name, boolean useDefault) {
         checkAndLoad();
-        return config.getLong(name);
+        return config.getLong(name, useDefault);
     }
 
     @Override
-    public Long getLong(String name, long defaultValue) {
+    public Long getLong(String name, Long defaultValue) {
         checkAndLoad();
         return config.getLong(name, defaultValue);
     }
 
     @Override
-    public void setLong(String name, long value) {
+    public void setLong(String name, Long value) {
         setString(name, String.valueOf(value));
     }
 
     @Override
-    public void setLong(ConfigKey name, long value) {
+    public void setLong(ConfigKey name, Long value) {
         setString(name.getPropertyKey(), String.valueOf(value));
     }
 
@@ -253,24 +253,24 @@ public class Conf implements Config {
     }
 
     @Override
-    public Float getFloat(ConfigKey name) {
+    public Float getFloat(ConfigKey name, boolean useDefault) {
         checkAndLoad();
-        return config.getFloat(name);
+        return config.getFloat(name, useDefault);
     }
 
     @Override
-    public Float getFloat(String name, float defaultValue) {
+    public Float getFloat(String name, Float defaultValue) {
         checkAndLoad();
         return config.getFloat(name, defaultValue);
     }
 
     @Override
-    public void setFloat(String name, float value) {
+    public void setFloat(String name, Float value) {
         setString(name, String.valueOf(value));
     }
 
     @Override
-    public void setFloat(ConfigKey name, float value) {
+    public void setFloat(ConfigKey name, Float value) {
         setString(name.getPropertyKey(), String.valueOf(value));
     }
 
@@ -311,15 +311,17 @@ public class Conf implements Config {
     }
 
     @Override
-    public Class<?> getClass(String name, Class<?> defaultValue) throws ClassNotFoundException {
+    public Class<?> getClass(String name, Class<?> defaultValue)
+            throws ClassNotFoundException {
         checkAndLoad();
         return config.getClass(name, defaultValue);
     }
 
     @Override
-    public Class<?> getClass(ConfigKey name) throws ClassNotFoundException {
+    public Class<?> getClass(ConfigKey name, boolean useDefault)
+            throws ClassNotFoundException {
         checkAndLoad();
-        return config.getClass(name);
+        return config.getClass(name, useDefault);
     }
 
     @Override

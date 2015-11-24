@@ -71,22 +71,32 @@ public class AddPrincipalCommand extends KadminCommand {
             return;
         }
         String principal = commands[commands.length - 1];
-        String password;
-        if (kOptions.contains(KadminOption.PW)) {
-            password = kOptions.getStringOption(KadminOption.PW);
+
+        if (kOptions.contains(KadminOption.RANDKEY)) {
+            try {
+                getKadmin().addPrincipal(principal, kOptions);
+            } catch (KrbException e) {
+                System.err.println("Fail to add principal \"" + principal + "\"." + e.getMessage());
+            }
         } else {
-            password = getPassword(principal);
-        }
 
-        if (password == null) {
-            return;
-        }
+            String password;
+            if (kOptions.contains(KadminOption.PW)) {
+                password = kOptions.getStringOption(KadminOption.PW);
+            } else {
+                password = getPassword(principal);
+            }
 
-        try {
-            getKadmin().addPrincipal(principal, password, kOptions);
-            System.out.println("Principal \"" + principal + "\" created.");
-        } catch (KrbException e) {
-            System.err.println("Fail to add principal \"" + principal + "\"." + e.getMessage());
+            if (password == null) {
+                return;
+            }
+
+            try {
+                getKadmin().addPrincipal(principal, password, kOptions);
+                System.out.println("Principal \"" + principal + "\" created.");
+            } catch (KrbException e) {
+                System.err.println("Fail to add principal \"" + principal + "\"." + e.getMessage());
+            }
         }
     }
 

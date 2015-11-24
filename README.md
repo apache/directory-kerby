@@ -124,9 +124,53 @@ A standalone KDC server that can integrate various identity back ends including:
 - [Netty](http://netty.io/), needed by netty based KDC server.
 - [Zookeeper](https://zookeeper.apache.org/), needed by zookeeper identity backend.
 
+
+### How to use library
+The Apache Kerby is also available as a Maven dependency:
+- Kerby Client API:
+```
+<dependency>
+    <groupId>org.apache.kerby</groupId>
+    <artifactId>kerb-client-api-all</artifactId>
+    <version>1.0.0-RC1</version>
+</dependency>
+```
+
+- Kerby Server API:
+```
+<dependency>
+    <groupId>org.apache.kerby</groupId>
+    <artifactId>kerb-server-api-all</artifactId>
+    <version>1.0.0-RC1</version>
+</dependency>
+```
+
+- Kerby ASN1:
+```
+<dependency>
+    <groupId>org.apache.kerby</groupId>
+    <artifactId>kerby-asn1</artifactId>
+    <version>1.0.0-RC1</version>
+</dependency>
+```
+
+- Kerby Simple KDC:
+```
+<dependency>
+    <groupId>org.apache.kerby</groupId>
+    <artifactId>kerb-simplekdc</artifactId>
+    <version>1.0.0-RC1</version>
+</dependency>
+```
+
 ### License
 Apache License V2.0
 
 ### How to contribute
 - Git repo in Apache: https://git-wip-us.apache.org/repos/asf/directory-kerby.git
 - Umbrella JIRA: it's tracked in the master JIRA [DIRKRB-102](https://issues.apache.org/jira/browse/DIRKRB-102), and find tasks there.
+- The Directory Developers List: dev@directory.apache.org [Subscribe](dev-subscribe@directory.apache.org)
+- The Kerby Developers List: kerby@directory.apache.org [Subscribe](kerby-subscribe@directory.apache.org)
+
+### Downloads
+- [Version 1.0.0-RC1](https://directory.apache.org/kerby/download/download-sources.html)

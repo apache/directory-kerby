@@ -204,7 +204,9 @@ public class EncryptionHandler {
         EncryptedData ed = new EncryptedData();
         ed.setCipher(cipher);
         ed.setEType(key.getKeyType());
-        ed.setKvno(key.getKvno());
+        if (key.getKvno() > 0) {
+            ed.setKvno(key.getKvno());
+        }
 
         return ed;
     }

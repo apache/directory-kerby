@@ -30,6 +30,19 @@ import java.io.IOException;
  -- but no fewer than 32
  */
 public class KrbFlags extends Asn1BitString {
+
+    private static final int MAX_SIZE = 32;
+    private static final int MASK;
+
+    static {
+        int maskBuilder = 0;
+        for (int i = 0; i < MAX_SIZE; i++) {
+          maskBuilder = maskBuilder << 1;
+          maskBuilder |= 0x00000001;
+        }
+        MASK = maskBuilder;
+    }
+
     private int flags;
 
     public KrbFlags() {
@@ -51,17 +64,15 @@ public class KrbFlags extends Asn1BitString {
     }
 
     public boolean isFlagSet(int flag) {
-        return (flags & (1 << flagPos(flag))) != 0;
+        return (flags & flag) != 0;
     }
 
     public void setFlag(int flag)  {
-        int newFlags = flags | 1 << flagPos(flag);
-        setFlags(newFlags);
+        setFlags(flags | flag);
     }
 
     public void clearFlag(int flag) {
-        int newFlags = flags & ~(1 << flagPos(flag));
-        setFlags(newFlags);
+        setFlags(flags & (MASK ^ flag));
     }
 
     public void clear() {
@@ -72,7 +83,7 @@ public class KrbFlags extends Asn1BitString {
         return isFlagSet(flag.getValue());
     }
 
-    public void setFlag(KrbEnum flag)  {
+    public void setFlag(KrbEnum flag) {
         setFlag(flag.getValue());
     }
 
@@ -80,17 +91,12 @@ public class KrbFlags extends Asn1BitString {
         if (isSet) {
             setFlag(flag.getValue());
         } else {
-            clearFlag(flag);
+            clearFlag(flag.getValue());
         }
     }
 
     public void clearFlag(KrbEnum flag) {
         clearFlag(flag.getValue());
-    }
-
-    private int flagPos(int flag)  {
-//        return MAX_SIZE - 1 - flag;
-        return Integer.numberOfTrailingZeros(flag);
     }
 
     private void flags2Value() {
@@ -105,7 +111,6 @@ public class KrbFlags extends Asn1BitString {
 
     @Override
     protected void toValue() throws IOException {
-        super.toValue();
 
         if (getPadding() != 0 || getValue().length != 4) {
             throw new IOException("Bad bitstring decoded as invalid krb flags");

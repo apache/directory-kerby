@@ -19,61 +19,49 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
-import org.apache.kerby.kerberos.kerb.common.SectionConfigKey;
+import org.apache.kerby.config.ConfigKey;
 
-public enum KrbConfigKey implements SectionConfigKey {
+public enum KrbConfigKey implements ConfigKey {
     KRB_DEBUG(true),
     KDC_HOST("localhost"),
-    KDC_PORT(null, "libdefaults"),
+    KDC_PORT(null),
     KDC_ALLOW_UDP(false),
     KDC_ALLOW_TCP(false),
-    KDC_UDP_PORT(null, "libdefaults"),
-    KDC_TCP_PORT(null, "libdefaults"),
+    KDC_UDP_PORT(null),
+    KDC_TCP_PORT(null),
     KDC_DOMAIN("example.com"),
-    KDC_REALM("EXAMPLE.COM", "libdefaults"),
+    KDC_REALM("EXAMPLE.COM"),
     TGS_PRINCIPAL("krbtgt@EXAMPLE.COM"),
     PREAUTH_REQUIRED(true),
-    CLOCKSKEW(5 * 60L, "libdefaults"),
+    CLOCKSKEW(5 * 60L),
     EMPTY_ADDRESSES_ALLOWED(true),
     PA_ENC_TIMESTAMP_REQUIRED(true),
     MAXIMUM_TICKET_LIFETIME(24 * 3600L),
     MINIMUM_TICKET_LIFETIME(1 * 3600L),
     MAXIMUM_RENEWABLE_LIFETIME(48 * 3600L),
-    FORWARDABLE(true, "libdefaults"),
+    FORWARDABLE(true),
     POSTDATED_ALLOWED(true),
-    PROXIABLE(true, "libdefaults"),
+    PROXIABLE(true),
     RENEWABLE_ALLOWED(true),
     VERIFY_BODY_CHECKSUM(true),
-    PERMITTED_ENCTYPES("aes128-cts-hmac-sha1-96", "libdefaults"),
-    DEFAULT_REALM("EXAMPLE.COM", "libdefaults"),
-    DNS_LOOKUP_KDC(false, "libdefaults"),
-    DNS_LOOKUP_REALM(false, "libdefaults"),
-    ALLOW_WEAK_CRYPTO(true, "libdefaults"),
-    TICKET_LIFETIME(24 * 3600L, "libdefaults"),
-    RENEW_LIFETIME(48 * 3600L, "libdefaults"),
+    PERMITTED_ENCTYPES("aes128-cts-hmac-sha1-96"),
+    DEFAULT_REALM(null),
+    DNS_LOOKUP_KDC(false),
+    DNS_LOOKUP_REALM(false),
+    ALLOW_WEAK_CRYPTO(true),
+    TICKET_LIFETIME(24 * 3600L),
+    RENEW_LIFETIME(48 * 3600L),
     DEFAULT_TGS_ENCTYPES("aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 "
             + "des3-cbc-sha1 arcfour-hmac-md5 camellia256-cts-cmac "
-            + "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4",
-        "libdefaults"),
+            + "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4"),
     DEFAULT_TKT_ENCTYPES("aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 "
             + "des3-cbc-sha1 arcfour-hmac-md5 camellia256-cts-cmac "
-            + "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4",
-        "libdefaults"),
+            + "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4"),
 
-    //key for logging location
-    DEFAULT(null, "logging"),
-    KDC(null, "logging"),
-    ADMIN_SERVER(null, "logging"),
-    PKINIT_ANCHORS(null, "libdefaults"),
-    PKINIT_IDENTITIES(null, "libdefaults");
-
+    PKINIT_ANCHORS(null),
+    PKINIT_IDENTITIES(null);
 
     private Object defaultValue;
-    /**
-     * The name of a section where a config key is contained in
-     * section-able config file.
-     */
-    private String sectionName;
 
     private KrbConfigKey() {
         this.defaultValue = null;
@@ -81,11 +69,6 @@ public enum KrbConfigKey implements SectionConfigKey {
 
     private KrbConfigKey(Object defaultValue) {
         this.defaultValue = defaultValue;
-    }
-
-    private KrbConfigKey(Object defaultValue, String sectionName) {
-        this(defaultValue);
-        this.sectionName = sectionName;
     }
 
     @Override
@@ -96,10 +79,5 @@ public enum KrbConfigKey implements SectionConfigKey {
     @Override
     public Object getDefaultValue() {
         return this.defaultValue;
-    }
-
-    @Override
-    public String getSectionName() {
-        return sectionName;
     }
 }

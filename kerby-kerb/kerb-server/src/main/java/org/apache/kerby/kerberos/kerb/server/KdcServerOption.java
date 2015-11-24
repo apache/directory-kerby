@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.KOption;
+import org.apache.kerby.KOptionGroup;
 import org.apache.kerby.KOptionType;
 
 /**
@@ -39,6 +40,7 @@ public enum KdcServerOption implements KOption {
     ENABLE_DEBUG("enable debug", KOptionType.BOOL);
 
     private String name;
+    private KOptionGroup group;
     private KOptionType type;
     private String description;
     private Object value;
@@ -135,6 +137,22 @@ public enum KdcServerOption implements KOption {
     @Override
     public Object getValue() {
         return value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setGroup(KOptionGroup group) {
+        this.group = group;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public KOptionGroup getGroup() {
+        return group;
     }
 
     public static KdcServerOption fromName(String name) {

@@ -19,8 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
-import org.apache.kerby.config.Conf;
-import org.apache.kerby.kerberos.kerb.common.KrbConfHelper;
+import org.apache.kerby.kerberos.kerb.common.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 
 import java.util.Arrays;
@@ -29,10 +28,11 @@ import java.util.List;
 /**
  * Kerb client side configuration API.
  */
-public class KrbConfig extends Conf {
+public class KrbConfig extends Krb5Conf {
+    private static final String LIBDEFAULT = "libdefaults";
 
     public boolean enableDebug() {
-        return getBoolean(KrbConfigKey.KRB_DEBUG);
+        return getBoolean(KrbConfigKey.KRB_DEBUG, true, LIBDEFAULT);
     }
 
     /**
@@ -41,7 +41,8 @@ public class KrbConfig extends Conf {
      * @return The kdc host
      */
     public String getKdcHost() {
-        return getString(KrbConfigKey.KDC_HOST);
+        return getString(
+            KrbConfigKey.KDC_HOST, true, LIBDEFAULT);
     }
 
     /**
@@ -50,8 +51,7 @@ public class KrbConfig extends Conf {
      * @return The kdc host
      */
     public int getKdcPort() {
-        Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
-                KrbConfigKey.KDC_PORT);
+        Integer kdcPort = getInt(KrbConfigKey.KDC_PORT, true, LIBDEFAULT);
         if (kdcPort != null) {
             return kdcPort.intValue();
         }
@@ -64,8 +64,7 @@ public class KrbConfig extends Conf {
      * @return The kdc tcp port
      */
     public int getKdcTcpPort() {
-        Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
-                KrbConfigKey.KDC_TCP_PORT);
+        Integer kdcPort = getInt(KrbConfigKey.KDC_TCP_PORT, true, LIBDEFAULT);
         if (kdcPort != null && kdcPort > 0) {
             return kdcPort.intValue();
         }
@@ -77,9 +76,10 @@ public class KrbConfig extends Conf {
      *
      * @return true to allow UDP, false otherwise
      */
-    public boolean allowKdcUdp() {
-        return getBoolean(KrbConfigKey.KDC_ALLOW_UDP) || KrbConfHelper.getIntUnderSection(this,
-                KrbConfigKey.KDC_UDP_PORT) != null;
+    public boolean allowUdp() {
+        return getBoolean(KrbConfigKey.KDC_ALLOW_UDP, true, LIBDEFAULT)
+                || getInt(KrbConfigKey.KDC_UDP_PORT, true, LIBDEFAULT) != null
+            || getInt(KrbConfigKey.KDC_PORT, false, LIBDEFAULT) != null;
     }
 
     /**
@@ -87,9 +87,10 @@ public class KrbConfig extends Conf {
      *
      * @return true to allow TCP, false otherwise
      */
-    public boolean allowKdcTcp() {
-        return getBoolean(KrbConfigKey.KDC_ALLOW_TCP) || KrbConfHelper.getIntUnderSection(this,
-                KrbConfigKey.KDC_TCP_PORT) != null;
+    public boolean allowTcp() {
+        return getBoolean(KrbConfigKey.KDC_ALLOW_TCP, true, LIBDEFAULT)
+                || getInt(KrbConfigKey.KDC_TCP_PORT, true, LIBDEFAULT) != null
+            || getInt(KrbConfigKey.KDC_PORT, false, LIBDEFAULT) != null;
     }
 
     /**
@@ -98,8 +99,7 @@ public class KrbConfig extends Conf {
      * @return The kdc udp port
      */
     public int getKdcUdpPort() {
-        Integer kdcPort = KrbConfHelper.getIntUnderSection(this,
-                KrbConfigKey.KDC_UDP_PORT);
+        Integer kdcPort = getInt(KrbConfigKey.KDC_UDP_PORT, true, LIBDEFAULT);
         if (kdcPort != null && kdcPort > 0) {
             return kdcPort.intValue();
         }
@@ -111,7 +111,15 @@ public class KrbConfig extends Conf {
      * @return The kdc realm
      */
     public String getKdcRealm() {
-        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.KDC_REALM);
+        String realm = getString(KrbConfigKey.KDC_REALM, false, LIBDEFAULT);
+        if (realm == null) {
+            realm = getString(KrbConfigKey.DEFAULT_REALM, false, LIBDEFAULT);
+            if (realm == null) {
+                realm = (String) KrbConfigKey.KDC_REALM.getDefaultValue();
+            }
+        }
+
+        return realm;
     }
 
     /**
@@ -119,7 +127,7 @@ public class KrbConfig extends Conf {
      * @return true if preauth required
      */
     public boolean isPreauthRequired() {
-        return getBoolean(KrbConfigKey.PREAUTH_REQUIRED);
+        return getBoolean(KrbConfigKey.PREAUTH_REQUIRED, true, LIBDEFAULT);
     }
 
     /**
@@ -127,7 +135,7 @@ public class KrbConfig extends Conf {
      * @return The tgs principal
      */
     public String getTgsPrincipal() {
-        return getString(KrbConfigKey.TGS_PRINCIPAL);
+        return getString(KrbConfigKey.TGS_PRINCIPAL, true, LIBDEFAULT);
     }
 
     /**
@@ -135,7 +143,7 @@ public class KrbConfig extends Conf {
      * @return The allowable clock skew
      */
     public long getAllowableClockSkew() {
-        return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.CLOCKSKEW);
+        return getLong(KrbConfigKey.CLOCKSKEW, true, LIBDEFAULT);
     }
 
     /**
@@ -143,7 +151,7 @@ public class KrbConfig extends Conf {
      * @return true if empty address is allowed
      */
     public boolean isEmptyAddressesAllowed() {
-        return getBoolean(KrbConfigKey.EMPTY_ADDRESSES_ALLOWED);
+        return getBoolean(KrbConfigKey.EMPTY_ADDRESSES_ALLOWED, true, LIBDEFAULT);
     }
 
     /**
@@ -151,7 +159,7 @@ public class KrbConfig extends Conf {
      * @return true if forward is allowed
      */
     public boolean isForwardableAllowed() {
-        return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.FORWARDABLE);
+        return getBoolean(KrbConfigKey.FORWARDABLE, true, LIBDEFAULT);
     }
 
     /**
@@ -159,7 +167,7 @@ public class KrbConfig extends Conf {
      * @return true if post dated is allowed
      */
     public boolean isPostdatedAllowed() {
-        return getBoolean(KrbConfigKey.POSTDATED_ALLOWED);
+        return getBoolean(KrbConfigKey.POSTDATED_ALLOWED, true, LIBDEFAULT);
     }
 
     /**
@@ -167,7 +175,7 @@ public class KrbConfig extends Conf {
      * @return true if proxy is allowed
      */
     public boolean isProxiableAllowed() {
-        return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.PROXIABLE);
+        return getBoolean(KrbConfigKey.PROXIABLE, true, LIBDEFAULT);
     }
 
     /**
@@ -175,7 +183,7 @@ public class KrbConfig extends Conf {
      * @return true if renew is allowed
      */
     public boolean isRenewableAllowed() {
-        return getBoolean(KrbConfigKey.RENEWABLE_ALLOWED);
+        return getBoolean(KrbConfigKey.RENEWABLE_ALLOWED, true, LIBDEFAULT);
     }
 
     /**
@@ -183,7 +191,7 @@ public class KrbConfig extends Conf {
      * @return The maximum renewable life time
      */
     public long getMaximumRenewableLifetime() {
-        return getLong(KrbConfigKey.MAXIMUM_RENEWABLE_LIFETIME);
+        return getLong(KrbConfigKey.MAXIMUM_RENEWABLE_LIFETIME, true, LIBDEFAULT);
     }
 
     /**
@@ -191,7 +199,7 @@ public class KrbConfig extends Conf {
      * @return The maximum ticket life time
      */
     public long getMaximumTicketLifetime() {
-        return getLong(KrbConfigKey.MAXIMUM_TICKET_LIFETIME);
+        return getLong(KrbConfigKey.MAXIMUM_TICKET_LIFETIME, true, LIBDEFAULT);
     }
 
     /**
@@ -199,7 +207,7 @@ public class KrbConfig extends Conf {
      * @return The minimum ticket life time
      */
     public long getMinimumTicketLifetime() {
-        return getLong(KrbConfigKey.MINIMUM_TICKET_LIFETIME);
+        return getLong(KrbConfigKey.MINIMUM_TICKET_LIFETIME, true, LIBDEFAULT);
     }
 
     /**
@@ -207,7 +215,7 @@ public class KrbConfig extends Conf {
      * @return encryption type list
      */
     public List<EncryptionType> getEncryptionTypes() {
-        return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.PERMITTED_ENCTYPES);
+        return getEncTypes(KrbConfigKey.PERMITTED_ENCTYPES, true, LIBDEFAULT);
     }
 
     /**
@@ -215,7 +223,7 @@ public class KrbConfig extends Conf {
      * @return true if pa encrypt time required
      */
     public boolean isPaEncTimestampRequired() {
-        return getBoolean(KrbConfigKey.PA_ENC_TIMESTAMP_REQUIRED);
+        return getBoolean(KrbConfigKey.PA_ENC_TIMESTAMP_REQUIRED, true, LIBDEFAULT);
     }
 
     /**
@@ -223,7 +231,7 @@ public class KrbConfig extends Conf {
      * @return true if body checksum verified
      */
     public boolean isBodyChecksumVerified() {
-        return getBoolean(KrbConfigKey.VERIFY_BODY_CHECKSUM);
+        return getBoolean(KrbConfigKey.VERIFY_BODY_CHECKSUM, true, LIBDEFAULT);
     }
 
     /**
@@ -231,7 +239,7 @@ public class KrbConfig extends Conf {
      * @return The default realm
      */
     public String getDefaultRealm() {
-        return KrbConfHelper.getStringUnderSection(this, KrbConfigKey.DEFAULT_REALM);
+        return getString(KrbConfigKey.DEFAULT_REALM, true, LIBDEFAULT);
     }
 
     /**
@@ -239,7 +247,7 @@ public class KrbConfig extends Conf {
      * @return true if dnc look up kdc
      */
     public boolean getDnsLookUpKdc() {
-        return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.DNS_LOOKUP_KDC);
+        return getBoolean(KrbConfigKey.DNS_LOOKUP_KDC, true, LIBDEFAULT);
     }
 
     /**
@@ -247,7 +255,7 @@ public class KrbConfig extends Conf {
      * @return true if dns look up realm
      */
     public boolean getDnsLookUpRealm() {
-        return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.DNS_LOOKUP_REALM);
+        return getBoolean(KrbConfigKey.DNS_LOOKUP_REALM, true, LIBDEFAULT);
     }
 
     /**
@@ -255,7 +263,7 @@ public class KrbConfig extends Conf {
      * @return true if allow weak crypto
      */
     public boolean getAllowWeakCrypto() {
-        return KrbConfHelper.getBooleanUnderSection(this, KrbConfigKey.ALLOW_WEAK_CRYPTO);
+        return getBoolean(KrbConfigKey.ALLOW_WEAK_CRYPTO, true, LIBDEFAULT);
     }
 
     /**
@@ -263,7 +271,7 @@ public class KrbConfig extends Conf {
      * @return The ticket life time
      */
     public long getTicketLifetime() {
-        return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.TICKET_LIFETIME);
+        return getLong(KrbConfigKey.TICKET_LIFETIME, true, LIBDEFAULT);
     }
 
     /**
@@ -271,7 +279,7 @@ public class KrbConfig extends Conf {
      * @return The renew life time
      */
     public long getRenewLifetime() {
-        return KrbConfHelper.getLongUnderSection(this, KrbConfigKey.RENEW_LIFETIME);
+        return getLong(KrbConfigKey.RENEW_LIFETIME, true, LIBDEFAULT);
     }
 
     /**
@@ -279,7 +287,7 @@ public class KrbConfig extends Conf {
      * @return The tgs encryption type list
      */
     public List<EncryptionType> getDefaultTgsEnctypes() {
-        return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TGS_ENCTYPES);
+        return getEncTypes(KrbConfigKey.DEFAULT_TGS_ENCTYPES, true, LIBDEFAULT);
     }
 
     /**
@@ -287,7 +295,7 @@ public class KrbConfig extends Conf {
      * @return The encryption type list
      */
     public List<EncryptionType> getDefaultTktEnctypes() {
-        return KrbConfHelper.getEncTypesUnderSection(this, KrbConfigKey.DEFAULT_TKT_ENCTYPES);
+        return getEncTypes(KrbConfigKey.DEFAULT_TKT_ENCTYPES, true, LIBDEFAULT);
     }
 
     public List<String> getPkinitAnchors() {
