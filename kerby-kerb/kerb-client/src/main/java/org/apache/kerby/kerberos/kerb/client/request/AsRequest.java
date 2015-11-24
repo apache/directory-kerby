@@ -73,7 +73,7 @@ public class AsRequest extends KdcRequest {
     public void process() throws KrbException {
         super.process();
 
-        KdcReqBody body = makeReqBody();
+        KdcReqBody body = getReqBody();
 
         AsReq asReq = new AsReq();
         asReq.setReqBody(body);

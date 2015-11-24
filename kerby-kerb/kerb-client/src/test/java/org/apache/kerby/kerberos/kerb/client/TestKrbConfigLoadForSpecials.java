@@ -30,16 +30,22 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Test for loading configurations form krb5.conf with default kdc realm.
  * krb5.conf is the configuration file in MIT Kerberos.
  */
-public class TestKrbConfigLoadWithDefaultRealm {
+public class TestKrbConfigLoadForSpecials {
 
     @Test
     public void test() throws Exception {
-        URL confFileUrl = TestKrbConfigLoadWithDefaultRealm.class.getResource(
-                        "/krb5-kdcrealm.conf");
+        URL confFileUrl = TestKrbConfigLoadForSpecials.class.getResource(
+                        "/krb5-specials.conf");
         File confFile = new File(confFileUrl.toURI());
 
         KrbConfig krbConfig = new KrbConfig();
         krbConfig.addIniConfig(confFile);
         assertThat(krbConfig.getKdcRealm()).isEqualTo("KRB.COM");
+        assertThat(krbConfig.getKdcPort()).isEqualTo(88);
+
+        assertThat(krbConfig.allowUdp()).isEqualTo(true);
+        assertThat(krbConfig.allowTcp()).isEqualTo(true);
+        assertThat(krbConfig.getKdcTcpPort()).isEqualTo(88);
+        assertThat(krbConfig.getKdcUdpPort()).isEqualTo(88);
     }
 }

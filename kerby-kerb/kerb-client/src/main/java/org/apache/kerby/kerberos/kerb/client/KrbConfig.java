@@ -75,9 +75,10 @@ public class KrbConfig extends Krb5Conf {
      *
      * @return true to allow UDP, false otherwise
      */
-    public boolean allowKdcUdp() {
+    public boolean allowUdp() {
         return getBoolean(KrbConfigKey.KDC_ALLOW_UDP, true, LIBDEFAULT)
-                || getInt(KrbConfigKey.KDC_UDP_PORT, true, LIBDEFAULT) != null;
+                || getInt(KrbConfigKey.KDC_UDP_PORT, true, LIBDEFAULT) != null
+            || getInt(KrbConfigKey.KDC_PORT, false, LIBDEFAULT) != null;
     }
 
     /**
@@ -85,9 +86,10 @@ public class KrbConfig extends Krb5Conf {
      *
      * @return true to allow TCP, false otherwise
      */
-    public boolean allowKdcTcp() {
+    public boolean allowTcp() {
         return getBoolean(KrbConfigKey.KDC_ALLOW_TCP, true, LIBDEFAULT)
-                || getInt(KrbConfigKey.KDC_TCP_PORT, true, LIBDEFAULT) != null;
+                || getInt(KrbConfigKey.KDC_TCP_PORT, true, LIBDEFAULT) != null
+            || getInt(KrbConfigKey.KDC_PORT, false, LIBDEFAULT) != null;
     }
 
     /**

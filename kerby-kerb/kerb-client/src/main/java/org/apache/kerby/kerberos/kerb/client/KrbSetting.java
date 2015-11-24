@@ -101,13 +101,13 @@ public class KrbSetting {
 
     public boolean allowUdp() {
         Boolean allowUdp = commonOptions.getBooleanOption(
-                KrbOption.ALLOW_UDP, krbConfig.allowKdcUdp());
+                KrbOption.ALLOW_UDP, krbConfig.allowUdp());
         return allowUdp;
     }
 
     public boolean allowTcp() {
         Boolean allowTcp = commonOptions.getBooleanOption(
-                KrbOption.ALLOW_TCP, krbConfig.allowKdcTcp());
+                KrbOption.ALLOW_TCP, krbConfig.allowTcp());
         return allowTcp;
     }
 

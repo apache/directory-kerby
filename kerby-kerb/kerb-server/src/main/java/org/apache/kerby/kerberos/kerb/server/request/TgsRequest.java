@@ -146,6 +146,7 @@ public class TgsRequest extends KdcRequest {
         if (encKey == null) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_NOKEY);
         }
+
         Authenticator authenticator = EncryptionUtil.unseal(apReq.getEncryptedAuthenticator(),
             encKey, KeyUsage.TGS_REQ_AUTH, Authenticator.class);
 
