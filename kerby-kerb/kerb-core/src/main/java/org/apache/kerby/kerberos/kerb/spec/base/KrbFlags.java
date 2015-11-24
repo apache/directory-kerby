@@ -111,6 +111,8 @@ public class KrbFlags extends Asn1BitString {
     @Override
     protected void toValue() throws IOException {
 
+        super.toValue();
+
         if (getPadding() != 0 || getValue().length != 4) {
             throw new IOException("Bad bitstring decoded as invalid krb flags");
         }
