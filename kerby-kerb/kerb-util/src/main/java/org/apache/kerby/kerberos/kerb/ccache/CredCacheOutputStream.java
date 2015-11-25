@@ -44,7 +44,7 @@ public class CredCacheOutputStream extends KrbOutputStream {
         List<String> nameComponents = principal.getNameStrings();
 
         if (version != CredentialCache.FCC_FVNO_1) {
-            writeInt(principal.getNameType().getValue());
+            writeInt(principal.getNameType().getIntValue());
         }
 
         int numComponents = nameComponents.size();
@@ -62,9 +62,9 @@ public class CredCacheOutputStream extends KrbOutputStream {
 
     @Override
     public void writeKey(EncryptionKey key, int version) throws IOException {
-        writeShort(key.getKeyType().getValue());
+        writeShort(key.getKeyType().getIntValue());
         if (version == CredentialCache.FCC_FVNO_3) {
-            writeShort(key.getKeyType().getValue());
+            writeShort(key.getKeyType().getIntValue());
         }
 
         writeCountedOctets(key.getKeyData());
@@ -89,7 +89,7 @@ public class CredCacheOutputStream extends KrbOutputStream {
     }
 
     public void writeAddress(HostAddress address) throws IOException {
-        write(address.getAddrType().getValue());
+        write(address.getAddrType().getIntValue());
         write(address.getAddress().length);
         write(address.getAddress(), 0,
               address.getAddress().length);
@@ -100,7 +100,7 @@ public class CredCacheOutputStream extends KrbOutputStream {
             writeInt(0);
         } else {
             for (AuthorizationDataEntry entry : authData.getElements()) {
-                write(entry.getAuthzType().getValue());
+                write(entry.getAuthzType().getIntValue());
                 write(entry.getAuthzData().length);
                 write(entry.getAuthzData());
             }

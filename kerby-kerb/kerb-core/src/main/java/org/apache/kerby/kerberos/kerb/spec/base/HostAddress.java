@@ -99,7 +99,7 @@ public class HostAddress extends KrbSequenceType {
 
     @Override
     public int hashCode() {
-        int result = getAddrType().getValue();
+        int result = getAddrType().getIntValue();
         if (getAddress() != null) {
             result = 31 * result + Arrays.hashCode(getAddress());
         }

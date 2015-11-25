@@ -30,7 +30,7 @@ public abstract class KrbMessage extends KrbAppSequenceType {
     private final int pvno = KrbConstant.KRB_V5;
 
     public KrbMessage(KrbMessageType msgType, Asn1FieldInfo[] fieldInfos) {
-        super(msgType.getValue(), fieldInfos);
+        super(msgType.getIntValue(), fieldInfos);
         setPvno(pvno);
         setMsgType(msgType);
     }
@@ -49,6 +49,6 @@ public abstract class KrbMessage extends KrbAppSequenceType {
     }
 
     public void setMsgType(KrbMessageType msgType) {
-        setFieldAsInt(MSG_TYPE, msgType.getValue());
+        setFieldAsInt(MSG_TYPE, msgType.getIntValue());
     }
 }

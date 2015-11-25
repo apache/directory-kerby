@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.base;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
-public enum TransitedEncodingType implements KrbEnum {
+public enum TransitedEncodingType implements Asn1EnumType {
     UNKNOWN(-1),
     NULL(0),
     DOMAIN_X500_COMPRESS(1);
@@ -33,14 +33,14 @@ public enum TransitedEncodingType implements KrbEnum {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
         return value;
     }
 
     public static TransitedEncodingType fromValue(Integer value) {
         if (value != null) {
-            for (KrbEnum e : values()) {
-                if (e.getValue() == value.intValue()) {
+            for (Asn1EnumType e : values()) {
+                if (e.getIntValue() == value.intValue()) {
                     return (TransitedEncodingType) e;
                 }
             }

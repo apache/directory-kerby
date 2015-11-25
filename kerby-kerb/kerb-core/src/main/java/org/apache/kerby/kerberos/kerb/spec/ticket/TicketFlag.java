@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.ticket;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
-public enum TicketFlag implements KrbEnum {
+public enum TicketFlag implements Asn1EnumType {
     NONE(-1),
     FORWARDABLE(0x40000000),
     FORWARDED(0x20000000),
@@ -46,13 +46,13 @@ public enum TicketFlag implements KrbEnum {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
         return value;
     }
 
     public static TicketFlag fromValue(int value) {
-        for (KrbEnum e : values()) {
-            if (e.getValue() == value) {
+        for (Asn1EnumType e : values()) {
+            if (e.getIntValue() == value) {
                 return (TicketFlag) e;
             }
         }

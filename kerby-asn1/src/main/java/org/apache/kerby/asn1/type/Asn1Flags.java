@@ -17,10 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.spec.base;
-
-import org.apache.kerby.asn1.type.Asn1BitString;
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+package org.apache.kerby.asn1.type;
 
 import java.io.IOException;
 
@@ -29,8 +26,7 @@ import java.io.IOException;
  -- minimum number of bits shall be sent,
  -- but no fewer than 32
  */
-public class KrbFlags extends Asn1BitString {
-
+public class Asn1Flags extends Asn1BitString {
     private static final int MAX_SIZE = 32;
     private static final int MASK;
 
@@ -45,11 +41,11 @@ public class KrbFlags extends Asn1BitString {
 
     private int flags;
 
-    public KrbFlags() {
+    public Asn1Flags() {
         this(0);
     }
 
-    public KrbFlags(int value) {
+    public Asn1Flags(int value) {
         super();
         setFlags(value);
     }
@@ -57,6 +53,12 @@ public class KrbFlags extends Asn1BitString {
     public void setFlags(int flags) {
         this.flags = flags;
         flags2Value();
+    }
+
+    @Override
+    public void setValue(byte[] value) {
+        super.setValue(value);
+        value2Flags();
     }
 
     public int getFlags() {
@@ -79,24 +81,24 @@ public class KrbFlags extends Asn1BitString {
         setFlags(0);
     }
 
-    public boolean isFlagSet(KrbEnum flag) {
-        return isFlagSet(flag.getValue());
+    public boolean isFlagSet(Asn1EnumType flag) {
+        return isFlagSet(flag.getIntValue());
     }
 
-    public void setFlag(KrbEnum flag) {
-        setFlag(flag.getValue());
+    public void setFlag(Asn1EnumType flag) {
+        setFlag(flag.getIntValue());
     }
 
-    public void setFlag(KrbEnum flag, boolean isSet)  {
+    public void setFlag(Asn1EnumType flag, boolean isSet)  {
         if (isSet) {
-            setFlag(flag.getValue());
+            setFlag(flag.getIntValue());
         } else {
-            clearFlag(flag.getValue());
+            clearFlag(flag.getIntValue());
         }
     }
 
-    public void clearFlag(KrbEnum flag) {
-        clearFlag(flag.getValue());
+    public void clearFlag(Asn1EnumType flag) {
+        clearFlag(flag.getIntValue());
     }
 
     private void flags2Value() {
@@ -109,17 +111,20 @@ public class KrbFlags extends Asn1BitString {
         setValue(bytes);
     }
 
+    private void value2Flags() {
+        byte[] valueBytes = getValue();
+        flags = ((valueBytes[0] & 0xFF) << 24) | ((valueBytes[1] & 0xFF) << 16)
+            | ((valueBytes[2] & 0xFF) << 8) | (0xFF & valueBytes[3]);
+    }
+
     @Override
     protected void toValue() throws IOException {
-
         super.toValue();
 
         if (getPadding() != 0 || getValue().length != 4) {
             throw new IOException("Bad bitstring decoded as invalid krb flags");
         }
 
-        byte[] valueBytes = getValue();
-        flags = ((valueBytes[0] & 0xFF) << 24) | ((valueBytes[1] & 0xFF) << 16)
-                | ((valueBytes[2] & 0xFF) << 8) | (0xFF & valueBytes[3]);
+        value2Flags();
     }
 }

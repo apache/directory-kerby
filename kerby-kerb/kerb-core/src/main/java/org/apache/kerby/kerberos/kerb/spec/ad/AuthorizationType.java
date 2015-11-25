@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.ad;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
-public enum AuthorizationType implements KrbEnum {
+public enum AuthorizationType implements Asn1EnumType {
     /**
      * Constant for the "null" authorization type.
      */
@@ -125,14 +125,14 @@ public enum AuthorizationType implements KrbEnum {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
         return value;
     }
 
     public static AuthorizationType fromValue(Integer value) {
         if (value != null) {
-            for (KrbEnum e : values()) {
-                if (e.getValue() == value.intValue()) {
+            for (Asn1EnumType e : values()) {
+                if (e.getIntValue() == value.intValue()) {
                     return (AuthorizationType) e;
                 }
             }

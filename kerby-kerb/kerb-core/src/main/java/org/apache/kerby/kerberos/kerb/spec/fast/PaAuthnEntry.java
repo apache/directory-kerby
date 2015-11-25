@@ -59,7 +59,7 @@ public class PaAuthnEntry extends KrbSequenceType {
     }
 
     public void setPaType(PaDataType paDataType) {
-        setFieldAsInt(PA_TYPE, paDataType.getValue());
+        setFieldAsInt(PA_TYPE, paDataType.getIntValue());
     }
 
     public byte[] getPaHint() {

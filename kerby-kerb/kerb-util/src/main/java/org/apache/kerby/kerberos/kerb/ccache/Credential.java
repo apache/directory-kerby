@@ -108,7 +108,7 @@ public class Credential {
     }
 
     public int getEType() {
-        return key.getKeyType().getValue();
+        return key.getKeyType().getIntValue();
     }
 
     public PrincipalName getClientName() {

@@ -19,12 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.pa;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
 /**
  * From krb5.h
  */
-public enum PaDataType implements KrbEnum {
+public enum PaDataType implements Asn1EnumType {
     NONE                (0),
     TGS_REQ              (1),
     AP_REQ              (1),
@@ -74,14 +74,14 @@ public enum PaDataType implements KrbEnum {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
         return value;
     }
 
     public static PaDataType fromValue(Integer value) {
         if (value != null) {
-            for (KrbEnum e : values()) {
-                if (e.getValue() == value.intValue()) {
+            for (Asn1EnumType e : values()) {
+                if (e.getIntValue() == value.intValue()) {
                     return (PaDataType) e;
                 }
             }

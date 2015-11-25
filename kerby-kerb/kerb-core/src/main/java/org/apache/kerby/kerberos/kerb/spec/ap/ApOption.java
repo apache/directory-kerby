@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.ap;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
 /**
  APOptions       ::= KrbFlags
@@ -27,7 +27,7 @@ import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
  -- use-session-key(1),
  -- mutual-required(2)
  */
-public enum ApOption implements KrbEnum {
+public enum ApOption implements Asn1EnumType {
     NONE(-1),
     RESERVED(0x80000000),
     USE_SESSION_KEY(0x40000000),
@@ -42,13 +42,13 @@ public enum ApOption implements KrbEnum {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
         return value;
     }
 
     public static ApOption fromValue(int value) {
-        for (KrbEnum e : values()) {
-            if (e.getValue() == value) {
+        for (Asn1EnumType e : values()) {
+            if (e.getIntValue() == value) {
                 return (ApOption) e;
             }
         }

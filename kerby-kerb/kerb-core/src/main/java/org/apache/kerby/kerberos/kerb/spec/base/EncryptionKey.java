@@ -72,7 +72,7 @@ public class EncryptionKey extends KrbSequenceType {
     }
 
     public void setKeyType(EncryptionType keyType) {
-        setFieldAsInt(KEY_TYPE, keyType.getValue());
+        setFieldAsInt(KEY_TYPE, keyType.getIntValue());
     }
 
     public byte[] getKeyData() {

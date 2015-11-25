@@ -141,7 +141,7 @@ public class KdcReqBody extends KrbSequenceType {
     public void setEtypes(List<EncryptionType> etypes) {
         List<Integer> values = new ArrayList<Integer>();
         for (EncryptionType etype: etypes) {
-            values.add(etype.getValue());
+            values.add(etype.getIntValue());
         }
         KrbIntegers value = new KrbIntegers(values);
         setFieldAs(ETYPE, value);

@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
-public enum PaFlag implements KrbEnum {
+public enum PaFlag implements Asn1EnumType {
     NONE(-1),
     PA_REAL(0x01),
     PA_INFO(0x02);
@@ -33,13 +33,13 @@ public enum PaFlag implements KrbEnum {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
         return value;
     }
 
     public static PaFlag fromValue(int value) {
-        for (KrbEnum e : values()) {
-            if (e.getValue() == value) {
+        for (Asn1EnumType e : values()) {
+            if (e.getIntValue() == value) {
                 return (PaFlag) e;
             }
         }

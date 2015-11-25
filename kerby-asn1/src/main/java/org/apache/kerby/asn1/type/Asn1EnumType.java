@@ -17,8 +17,8 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.spec;
+package org.apache.kerby.asn1.type;
 
-public interface KrbEnum {
-    int getValue();
+public interface Asn1EnumType {
+    int getIntValue();
 }

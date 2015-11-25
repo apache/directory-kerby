@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.fast;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
-public enum ArmorType implements KrbEnum {
+public enum ArmorType implements Asn1EnumType {
     NONE                (0),
     ARMOR_AP_REQUEST              (1);
 
@@ -32,14 +32,14 @@ public enum ArmorType implements KrbEnum {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
         return value;
     }
 
     public static ArmorType fromValue(Integer value) {
         if (value != null) {
-            for (KrbEnum e : values()) {
-                if (e.getValue() == value.intValue()) {
+            for (Asn1EnumType e : values()) {
+                if (e.getIntValue() == value.intValue()) {
                     return (ArmorType) e;
                 }
             }

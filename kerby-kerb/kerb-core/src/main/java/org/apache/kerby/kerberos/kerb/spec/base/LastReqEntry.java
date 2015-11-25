@@ -49,7 +49,7 @@ public class LastReqEntry extends KrbSequenceType {
     }
 
     public void setLrType(LastReqType lrType) {
-        setFieldAsInt(LR_TYPE, lrType.getValue());
+        setFieldAsInt(LR_TYPE, lrType.getIntValue());
     }
 
     public KerberosTime getLrValue() {
