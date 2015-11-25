@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth;
 
-import org.apache.kerby.kerberos.kerb.spec.base.KrbFlags;
+import org.apache.kerby.asn1.type.Asn1Flags;
 
-public class PaFlags extends KrbFlags {
+public class PaFlags extends Asn1Flags {
 
     public PaFlags() {
         this(0);

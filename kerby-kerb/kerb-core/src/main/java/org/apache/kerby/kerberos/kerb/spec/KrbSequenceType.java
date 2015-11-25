@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
 public abstract class KrbSequenceType extends Asn1SequenceType {
 
@@ -48,7 +49,7 @@ public abstract class KrbSequenceType extends Asn1SequenceType {
         setFieldAs(index, new KerberosTime(value));
     }
 
-    protected void setField(int index, KrbEnum value) {
-        setFieldAsInt(index, value.getValue());
+    protected void setField(int index, Asn1EnumType value) {
+        setFieldAsInt(index, value.getIntValue());
     }
 }

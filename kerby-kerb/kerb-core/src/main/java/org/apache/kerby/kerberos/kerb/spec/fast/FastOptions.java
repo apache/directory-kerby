@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.fast;
 
-import org.apache.kerby.kerberos.kerb.spec.base.KrbFlags;
+import org.apache.kerby.asn1.type.Asn1Flags;
 
-public class FastOptions extends KrbFlags {
+public class FastOptions extends Asn1Flags {
 
     public FastOptions() {
         this(0);

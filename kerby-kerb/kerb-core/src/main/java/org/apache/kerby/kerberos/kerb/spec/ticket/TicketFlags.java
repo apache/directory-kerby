@@ -19,11 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.ticket;
 
-import org.apache.kerby.kerberos.kerb.spec.base.KrbFlags;
+import org.apache.kerby.asn1.type.Asn1Flags;
 
 import static org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlag.INVALID;
 
-public class TicketFlags extends KrbFlags {
+public class TicketFlags extends Asn1Flags {
 
     public TicketFlags() {
         this(0);
@@ -34,6 +34,6 @@ public class TicketFlags extends KrbFlags {
     }
 
     public boolean isInvalid() {
-        return isFlagSet(INVALID.getValue());
+        return isFlagSet(INVALID.getIntValue());
     }
 }

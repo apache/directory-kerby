@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.pa.token;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
-public enum TokenFlag implements KrbEnum {
+public enum TokenFlag implements Asn1EnumType {
     NONE(-1),
     ID_TOKEN_REQUIRED(0x40000000),
     AC_TOKEN_REQUIRED(0x20000000),
@@ -35,13 +35,13 @@ public enum TokenFlag implements KrbEnum {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
         return value;
     }
 
     public static TokenFlag fromValue(int value) {
-        for (KrbEnum e : values()) {
-            if (e.getValue() == value) {
+        for (Asn1EnumType e : values()) {
+            if (e.getIntValue() == value) {
                 return (TokenFlag) e;
             }
         }

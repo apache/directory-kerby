@@ -17,9 +17,10 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.spec.base;
+package org.apache.kerby.asn1;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.type.Asn1Flags;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,10 +29,10 @@ import org.junit.rules.ExpectedException;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
-public class KrbFlagsTest {
+public class TestAsn1Flags {
   
   public static final int FLAG_0 = 0b00000000000000000000000000000001;
   public static final int FLAG_1 = 0b00000000000000000000000000000010;
@@ -40,7 +41,7 @@ public class KrbFlagsTest {
   public static final int FLAG_4 = 16;
   public static final int FLAG_5 = 32;
   
-  public enum TestEnum implements KrbEnum {
+  public enum TestEnum implements Asn1EnumType {
     FLAG_0(0x00000001),
     FLAG_1(0x00000002),
     FLAG_2(0x00000004),
@@ -55,101 +56,98 @@ public class KrbFlagsTest {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
       return value;
     }
-    
   }
   
   @Rule
   public ExpectedException thrown = ExpectedException.none();
   
-  private KrbFlags krbFlags;
+  private Asn1Flags flags;
   
   @Before
   public void setUp() {
-    krbFlags = new KrbFlags(FLAG_5 | FLAG_3 | FLAG_1);
+    flags = new Asn1Flags(FLAG_5 | FLAG_3 | FLAG_1);
   }
 
   @Test
   public void testToValue() throws IOException {
     byte[] value = {(byte) 0xDE, (byte) 0xAD, (byte) 0xBE, (byte) 0xEF};
-    krbFlags.setValue(value);
-    krbFlags.toValue();
-    assertEquals(0b11011110101011011011111011101111, krbFlags.getFlags());
+    flags.setValue(value);
+    assertEquals(0b11011110101011011011111011101111, flags.getFlags());
   }
 
   @Test
-  public void testKrbFlags() {
-    krbFlags = new KrbFlags();
-    assertEquals(0b00000000000000000000000000000000, krbFlags.getFlags());
+  public void testFlags() {
+    flags = new Asn1Flags();
+    assertEquals(0b00000000000000000000000000000000, flags.getFlags());
   }
 
   @Test
-  public void testKrbFlagsInt() {
-    krbFlags = new KrbFlags(FLAG_4 | FLAG_2 | FLAG_0);
-    assertEquals(0b00000000000000000000000000010101, krbFlags.getFlags());
+  public void testFlagsInt() {
+    flags = new Asn1Flags(FLAG_4 | FLAG_2 | FLAG_0);
+    assertEquals(0b00000000000000000000000000010101, flags.getFlags());
   }
 
   @Test
   public void testSetFlags() {
-    krbFlags.setFlags(FLAG_4 | FLAG_2 | FLAG_0);
-    assertEquals(0b00000000000000000000000000010101, krbFlags.getFlags());
+    flags.setFlags(FLAG_4 | FLAG_2 | FLAG_0);
+    assertEquals(0b00000000000000000000000000010101, flags.getFlags());
   }
 
   @Test
   public void testGetFlags() {
-    assertEquals(0b00000000000000000000000000101010, krbFlags.getFlags());
+    assertEquals(0b00000000000000000000000000101010, flags.getFlags());
   }
 
   @Test
   public void testIsFlagSetInt() {
-    assertTrue(krbFlags.isFlagSet(FLAG_5));
-    assertFalse(krbFlags.isFlagSet(FLAG_4));
+    assertTrue(flags.isFlagSet(FLAG_5));
+    assertFalse(flags.isFlagSet(FLAG_4));
   }
 
   @Test
   public void testSetFlagInt() {
-    krbFlags.setFlag(FLAG_4);
-    assertEquals(0b00000000000000000000000000111010, krbFlags.getFlags());
+    flags.setFlag(FLAG_4);
+    assertEquals(0b00000000000000000000000000111010, flags.getFlags());
   }
 
   @Test
   public void testClearFlagInt() {
-    krbFlags.clearFlag(FLAG_3);
-    assertEquals(0b00000000000000000000000000100010, krbFlags.getFlags());
+    flags.clearFlag(FLAG_3);
+    assertEquals(0b00000000000000000000000000100010, flags.getFlags());
   }
 
   @Test
   public void testClear() {
-    krbFlags.clear();
-    assertEquals(0b00000000000000000000000000000000, krbFlags.getFlags());
+    flags.clear();
+    assertEquals(0b00000000000000000000000000000000, flags.getFlags());
   }
 
   @Test
-  public void testIsFlagSetKrbEnum() {
-    assertTrue(krbFlags.isFlagSet(TestEnum.FLAG_5));
-    assertFalse(krbFlags.isFlagSet(TestEnum.FLAG_4));
+  public void testIsFlagSetEnum() {
+    assertTrue(flags.isFlagSet(TestEnum.FLAG_5));
+    assertFalse(flags.isFlagSet(TestEnum.FLAG_4));
   }
 
   @Test
-  public void testSetFlagKrbEnum() {
-    krbFlags.setFlag(TestEnum.FLAG_4);
-    assertEquals(0b00000000000000000000000000111010, krbFlags.getFlags());
+  public void testSetFlagEnum() {
+    flags.setFlag(TestEnum.FLAG_4);
+    assertEquals(0b00000000000000000000000000111010, flags.getFlags());
   }
 
   @Test
-  public void testSetFlagKrbEnumBoolean() {
-    krbFlags.setFlag(TestEnum.FLAG_4, true);
-    assertEquals(0b00000000000000000000000000111010, krbFlags.getFlags());
-    krbFlags.setFlag(TestEnum.FLAG_4, false);
-    assertEquals(0b00000000000000000000000000101010, krbFlags.getFlags());
+  public void testSetFlagEnumBoolean() {
+    flags.setFlag(TestEnum.FLAG_4, true);
+    assertEquals(0b00000000000000000000000000111010, flags.getFlags());
+    flags.setFlag(TestEnum.FLAG_4, false);
+    assertEquals(0b00000000000000000000000000101010, flags.getFlags());
   }
 
   @Test
-  public void testClearFlagKrbEnum() {
-    krbFlags.clearFlag(TestEnum.FLAG_3);
-    assertEquals(0b00000000000000000000000000100010, krbFlags.getFlags());
+  public void testClearFlagEnum() {
+    flags.clearFlag(TestEnum.FLAG_3);
+    assertEquals(0b00000000000000000000000000100010, flags.getFlags());
   }
-
 }

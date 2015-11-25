@@ -19,11 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.auth;
 
+import org.apache.kerby.asn1.type.Asn1Flags;
 import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.base.HostAddress;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbFlags;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ import java.util.List;
  * Auth context shared by KDC and client for relevant information during auth.
  */
 public class AuthContext {
-    private KrbFlags flags;
+    private Asn1Flags flags;
     private HostAddress remoteAddress;
     private int remotePort;
     private HostAddress localAddress;
@@ -45,11 +45,11 @@ public class AuthContext {
     private EncryptionType negotiatedEncType;
     private Authenticator authenticator;
 
-    public KrbFlags getFlags() {
+    public Asn1Flags getFlags() {
         return flags;
     }
 
-    public void setFlags(KrbFlags flags) {
+    public void setFlags(Asn1Flags flags) {
         this.flags = flags;
     }
 

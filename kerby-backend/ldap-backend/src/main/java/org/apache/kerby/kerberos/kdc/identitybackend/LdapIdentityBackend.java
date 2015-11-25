@@ -162,7 +162,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             this.kvnos = new String[keymap.size()];
             int i = 0;
             for (Map.Entry<EncryptionType, EncryptionKey> entryKey : keymap.entrySet()) {
-                etypes[i] = entryKey.getKey().getValue() + "";
+                etypes[i] = entryKey.getKey().getIntValue() + "";
                 keys[i] = entryKey.getValue().encode();
                 kvnos[i] = entryKey.getValue().getKvno() + "";
                 i++;

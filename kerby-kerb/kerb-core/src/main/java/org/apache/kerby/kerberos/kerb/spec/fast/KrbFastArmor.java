@@ -51,7 +51,7 @@ public class KrbFastArmor extends KrbSequenceType {
     }
 
     public void setArmorType(ArmorType armorType) {
-        setFieldAsInt(ARMOR_TYPE, armorType.getValue());
+        setFieldAsInt(ARMOR_TYPE, armorType.getIntValue());
     }
 
     public byte[] getArmorValue() {

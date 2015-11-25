@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.base;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
-public enum SamType implements KrbEnum {
+public enum SamType implements Asn1EnumType {
     SAM_NONE(0),
     /** safe SAM type enum for Enigma Logic */
     SAM_TYPE_ENIGMA(1), // Enigma Logic"
@@ -48,14 +48,14 @@ public enum SamType implements KrbEnum {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
         return value;
     }
 
     public static SamType fromValue(Integer value) {
         if (value != null) {
             for (SamType st : SamType.values()) {
-                if (value == st.getValue()) {
+                if (value == st.getIntValue()) {
                     return st;
                 }
             }

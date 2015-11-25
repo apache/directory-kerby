@@ -62,7 +62,7 @@ public class CheckSum extends KrbSequenceType {
     }
 
     public void setCksumtype(CheckSumType cksumtype) {
-        setFieldAsInt(CKSUM_TYPE, cksumtype.getValue());
+        setFieldAsInt(CKSUM_TYPE, cksumtype.getIntValue());
     }
 
     public byte[] getChecksum() {

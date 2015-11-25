@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.kdc;
 
-import org.apache.kerby.kerberos.kerb.spec.base.KrbFlags;
+import org.apache.kerby.asn1.type.Asn1Flags;
 
-public class KdcOptions extends KrbFlags {
+public class KdcOptions extends Asn1Flags {
 
     public KdcOptions() {
         this(0);

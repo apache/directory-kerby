@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.base;
 
-import org.apache.kerby.kerberos.kerb.spec.KrbEnum;
+import org.apache.kerby.asn1.type.Asn1EnumType;
 
-public enum HostAddrType implements KrbEnum {
+public enum HostAddrType implements Asn1EnumType {
     /**
      * Constant for the "null" host address type.
      */
@@ -82,14 +82,14 @@ public enum HostAddrType implements KrbEnum {
     }
 
     @Override
-    public int getValue() {
+    public int getIntValue() {
         return value;
     }
 
     public static HostAddrType fromValue(Integer value) {
         if (value != null) {
-            for (KrbEnum e : values()) {
-                if (e.getValue() == value.intValue()) {
+            for (Asn1EnumType e : values()) {
+                if (e.getIntValue() == value.intValue()) {
                     return (HostAddrType) e;
                 }
             }
