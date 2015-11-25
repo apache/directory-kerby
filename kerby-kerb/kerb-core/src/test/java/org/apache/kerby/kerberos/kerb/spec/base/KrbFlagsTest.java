@@ -32,14 +32,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class KrbFlagsTest {
-  
+
   public static final int FLAG_0 = 0b00000000000000000000000000000001;
   public static final int FLAG_1 = 0b00000000000000000000000000000010;
   public static final int FLAG_2 = 0x00000004;
   public static final int FLAG_3 = 0x00000008;
   public static final int FLAG_4 = 16;
   public static final int FLAG_5 = 32;
-  
+
   public enum TestEnum implements KrbEnum {
     FLAG_0(0x00000001),
     FLAG_1(0x00000002),
@@ -47,9 +47,9 @@ public class KrbFlagsTest {
     FLAG_3(0x00000008),
     FLAG_4(0x00000010),
     FLAG_5(0x00000020);
-    
+
     private int value;
-    
+
     private TestEnum(int value) {
       this.value = value;
     }
@@ -58,14 +58,14 @@ public class KrbFlagsTest {
     public int getValue() {
       return value;
     }
-    
+
   }
-  
+
   @Rule
   public ExpectedException thrown = ExpectedException.none();
-  
+
   private KrbFlags krbFlags;
-  
+
   @Before
   public void setUp() {
     krbFlags = new KrbFlags(FLAG_5 | FLAG_3 | FLAG_1);
@@ -75,6 +75,7 @@ public class KrbFlagsTest {
   public void testToValue() throws IOException {
     byte[] value = {(byte) 0xDE, (byte) 0xAD, (byte) 0xBE, (byte) 0xEF};
     krbFlags.setValue(value);
+    krbFlags.encode();
     krbFlags.toValue();
     assertEquals(0b11011110101011011011111011101111, krbFlags.getFlags());
   }
