@@ -48,7 +48,7 @@ public class TestAsn1UtcTime {
     private void testEncodingWith(Date value, String expectedEncoding) {
         byte[] expected = Util.hex2bytes(expectedEncoding);
         Asn1UtcTime aValue = new Asn1UtcTime(value);
-        aValue.getEncodingOption().useDer();
+        aValue.useDER();
         byte[] encodingBytes = aValue.encode();
         assertThat(encodingBytes).isEqualTo(expected);
     }
@@ -64,7 +64,7 @@ public class TestAsn1UtcTime {
 
     private void testDecodingWith(Date expectedValue, String content) throws IOException {
         Asn1UtcTime decoded = new Asn1UtcTime();
-        decoded.getEncodingOption().useDer();
+        decoded.useDER();
         decoded.decode(Util.hex2bytes(content));
         assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }

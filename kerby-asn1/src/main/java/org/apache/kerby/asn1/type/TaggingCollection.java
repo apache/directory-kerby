@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.EncodingOption;
 import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.TagClass;
 
@@ -27,36 +26,95 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * For tagging a collection type with tagNo, either application specific or context specific class
+ * For tagging a collection type with tagNo, either application specific or
+ * context specific class
  */
 public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionType> {
     private Asn1Tagging<Asn1CollectionType> tagging;
     private Asn1CollectionType tagged;
 
-    public TaggingCollection(int taggingTagNo, Asn1FieldInfo[] tags, boolean isAppSpecific) {
-        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC, taggingTagNo);
+    public TaggingCollection(int taggingTagNo, Asn1FieldInfo[] tags,
+                             boolean isAppSpecific, boolean isImplicit) {
+        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC,
+            taggingTagNo);
         this.tagged = createTaggedCollection(tags);
         setValue(tagged);
-        this.tagging = new Asn1Tagging<Asn1CollectionType>(taggingTagNo, tagged, isAppSpecific);
-        getEncodingOption().useExplicit();
+        this.tagging = new Asn1Tagging<Asn1CollectionType>(taggingTagNo,
+            tagged, isAppSpecific, isImplicit);
     }
 
     protected abstract Asn1CollectionType createTaggedCollection(Asn1FieldInfo[] tags);
 
     @Override
-    public void setEncodingOption(EncodingOption encodingOption) {
-        tagging.setEncodingOption(encodingOption);
+    public int tagFlags() {
+        return tagging.tagFlags();
     }
 
     @Override
-    public EncodingOption getEncodingOption() {
-        return tagging.getEncodingOption();
+    public int tagNo() {
+        return tagging.tagNo();
     }
 
     @Override
-    public boolean isConstructed() {
-        return tagging.isConstructed();
+    public void usePrimitive(boolean isPrimitive) {
+        tagging.usePrimitive(isPrimitive);
     }
+
+    @Override
+    public boolean isPrimitive() {
+        return tagging.isPrimitive();
+    }
+
+    @Override
+    public void useDefinitiveLength(boolean isDefinitiveLength) {
+        tagging.useDefinitiveLength(isDefinitiveLength);
+    }
+
+    @Override
+    public boolean isDefinitiveLength() {
+        return tagging.isDefinitiveLength();
+    }
+
+    @Override
+    public void useImplicit(boolean isImplicit) {
+        tagging.useImplicit(isImplicit);
+    }
+
+    @Override
+    public boolean isImplicit() {
+        return tagging.isImplicit();
+    }
+
+    @Override
+    public void useDER() {
+        tagging.useDER();
+    }
+
+    @Override
+    public boolean isDER() {
+        return tagging.isDER();
+    }
+
+    @Override
+    public void useBER() {
+        tagging.useBER();
+    }
+
+    @Override
+    public boolean isBER() {
+        return tagging.isBER();
+    }
+
+    @Override
+    public void useCER() {
+        tagging.useCER();
+    }
+
+    @Override
+    public boolean isCER() {
+        return tagging.isCER();
+    }
+
 
     @Override
     protected int encodingBodyLength() {

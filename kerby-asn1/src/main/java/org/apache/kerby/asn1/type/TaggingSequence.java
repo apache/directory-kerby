@@ -24,8 +24,9 @@ package org.apache.kerby.asn1.type;
  */
 public class TaggingSequence extends TaggingCollection {
 
-    public TaggingSequence(int taggingTagNo, Asn1FieldInfo[] tags, boolean isAppSpecific) {
-        super(taggingTagNo, tags, isAppSpecific);
+    public TaggingSequence(int taggingTagNo, Asn1FieldInfo[] tags,
+                           boolean isAppSpecific, boolean isImplicit) {
+        super(taggingTagNo, tags, isAppSpecific, isImplicit);
     }
 
     @Override

@@ -28,7 +28,7 @@ import org.apache.kerby.asn1.type.TaggingSequence;
  */
 public abstract class KrbAppSequenceType extends TaggingSequence {
     public KrbAppSequenceType(int tagNo, Asn1FieldInfo[] fieldInfos) {
-        super(tagNo, fieldInfos, true);
+        super(tagNo, fieldInfos, true, false); // Kerberos favors explicit
     }
 
     protected int getFieldAsInt(int index) {

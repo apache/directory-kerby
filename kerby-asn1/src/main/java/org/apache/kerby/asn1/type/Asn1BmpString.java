@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.EncodingOption;
 import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.UniversalTag;
 
@@ -39,7 +38,7 @@ public class Asn1BmpString extends Asn1Simple<String> {
         return getValue().length() * 2;
     }
 
-    protected void toBytes(EncodingOption encodingOption) {
+    protected void toBytes() {
         String strValue = getValue();
         int len = strValue.length();
         byte[] bytes = new byte[len * 2];
