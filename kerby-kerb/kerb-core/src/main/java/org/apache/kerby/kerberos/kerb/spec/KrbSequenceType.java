@@ -50,6 +50,6 @@ public abstract class KrbSequenceType extends Asn1SequenceType {
     }
 
     protected void setField(int index, Asn1EnumType value) {
-        setFieldAsInt(index, value.getIntValue());
+        setFieldAsInt(index, value.getValue());
     }
 }

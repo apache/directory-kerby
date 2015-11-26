@@ -199,7 +199,7 @@ public class EncryptionHandler {
     public static EncryptedData encrypt(byte[] plainText, EncryptionKey key,
                                         KeyUsage usage) throws KrbException {
         EncTypeHandler handler = getEncHandler(key.getKeyType());
-        byte[] cipher = handler.encrypt(plainText, key.getKeyData(), usage.getIntValue());
+        byte[] cipher = handler.encrypt(plainText, key.getKeyData(), usage.getValue());
 
         EncryptedData ed = new EncryptedData();
         ed.setCipher(cipher);
@@ -224,7 +224,7 @@ public class EncryptionHandler {
                                  KeyUsage usage) throws KrbException {
         EncTypeHandler handler = getEncHandler(key.getKeyType());
 
-        byte[] plainData = handler.decrypt(data, key.getKeyData(), usage.getIntValue());
+        byte[] plainData = handler.decrypt(data, key.getKeyData(), usage.getValue());
         return plainData;
     }
 
@@ -242,7 +242,7 @@ public class EncryptionHandler {
         EncTypeHandler handler = getEncHandler(key.getKeyType());
 
         byte[] plainData = handler.decrypt(data.getCipher(),
-                key.getKeyData(), usage.getIntValue());
+                key.getKeyData(), usage.getValue());
         return plainData;
     }
 

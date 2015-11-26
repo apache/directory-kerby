@@ -149,7 +149,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
      * @param tokenFormat The token format
      */
     public void setTokenFormat(TokenFormat tokenFormat) {
-        setFieldAsInt(TOKEN_FORMAT, tokenFormat.getIntValue());
+        setFieldAsInt(TOKEN_FORMAT, tokenFormat.getValue());
     }
 
     /**

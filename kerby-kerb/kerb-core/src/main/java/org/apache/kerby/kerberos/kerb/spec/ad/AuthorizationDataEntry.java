@@ -49,7 +49,7 @@ public class AuthorizationDataEntry extends KrbSequenceType {
     }
 
     public void setAuthzType(AuthorizationType authzType) {
-        setFieldAsInt(AD_TYPE, authzType.getIntValue());
+        setFieldAsInt(AD_TYPE, authzType.getValue());
     }
 
     public byte[] getAuthzData() {

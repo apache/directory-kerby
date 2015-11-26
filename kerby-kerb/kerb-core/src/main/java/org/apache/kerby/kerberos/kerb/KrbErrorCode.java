@@ -109,7 +109,7 @@ public enum KrbErrorCode implements Asn1EnumType {
     public static KrbErrorCode fromValue(Integer value) {
         if (value != null) {
             for (Asn1EnumType e : values()) {
-                if (e.getIntValue() == value.intValue()) {
+                if (e.getValue() == value.intValue()) {
                     return (KrbErrorCode) e;
                 }
             }
@@ -118,7 +118,7 @@ public enum KrbErrorCode implements Asn1EnumType {
         return KRB_ERR_GENERIC;
     }
 
-    public int getIntValue() {
+    public int getValue() {
         return value;
     }
 

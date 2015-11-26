@@ -35,13 +35,13 @@ public enum TokenFlag implements Asn1EnumType {
     }
 
     @Override
-    public int getIntValue() {
+    public int getValue() {
         return value;
     }
 
     public static TokenFlag fromValue(int value) {
         for (Asn1EnumType e : values()) {
-            if (e.getIntValue() == value) {
+            if (e.getValue() == value) {
                 return (TokenFlag) e;
             }
         }

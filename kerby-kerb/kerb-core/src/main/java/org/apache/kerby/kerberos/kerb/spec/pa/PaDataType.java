@@ -74,14 +74,14 @@ public enum PaDataType implements Asn1EnumType {
     }
 
     @Override
-    public int getIntValue() {
+    public int getValue() {
         return value;
     }
 
     public static PaDataType fromValue(Integer value) {
         if (value != null) {
             for (Asn1EnumType e : values()) {
-                if (e.getIntValue() == value.intValue()) {
+                if (e.getValue() == value.intValue()) {
                     return (PaDataType) e;
                 }
             }

@@ -90,12 +90,12 @@ public class TestAsReqCodec {
 
         List<EncryptionType> types = body.getEtypes();
         assertThat(types).hasSize(7);
-        assertThat(types.get(0).getIntValue()).isEqualTo(0x0017);
+        assertThat(types.get(0).getValue()).isEqualTo(0x0017);
         //assertThat(types.get(1).getValue()).isEqualTo(0xff7b);//FIXME
         //assertThat(types.get(2).getValue()).isEqualTo(0x0080);//FIXME
-        assertThat(types.get(3).getIntValue()).isEqualTo(0x0003);
-        assertThat(types.get(4).getIntValue()).isEqualTo(0x0001);
-        assertThat(types.get(5).getIntValue()).isEqualTo(0x0018);
+        assertThat(types.get(3).getValue()).isEqualTo(0x0003);
+        assertThat(types.get(4).getValue()).isEqualTo(0x0001);
+        assertThat(types.get(5).getValue()).isEqualTo(0x0018);
         //assertThat(types.get(6).getValue()).isEqualTo(0xff79);//FIXME
 
         List<HostAddress> hostAddress = body.getAddresses().getElements();

@@ -85,7 +85,7 @@ public class KrbIdentitySerializer implements ElementSerializer<KrbIdentity> {
             out.write(IntSerializer.serialize(keys.size()));
             
             for (EncryptionKey ek : keys.values()) {
-                int type = ek.getKeyType().getIntValue();
+                int type = ek.getKeyType().getValue();
                 out.write(IntSerializer.serialize(type));
                 byte[] data = ek.getKeyData();
                 out.write(IntSerializer.serialize(data.length));

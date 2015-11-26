@@ -23,5 +23,5 @@ package org.apache.kerby.asn1.type;
  * A helper interface used by Asn1Enumerated.
  */
 public interface Asn1EnumType {
-    int getIntValue();
+    int getValue();
 }

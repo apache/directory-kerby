@@ -81,12 +81,12 @@ public class TestTgsReqCodec {
 
         List<EncryptionType> eTypes = body.getEtypes();
         assertThat(eTypes).hasSize(7);
-        assertThat(eTypes.get(0).getIntValue()).isEqualTo(0x0017);
+        assertThat(eTypes.get(0).getValue()).isEqualTo(0x0017);
         //assertThat(eTypes.get(1).getValue()).isEqualTo(-133);//FIXME
         //assertThat(eTypes.get(2).getValue()).isEqualTo(-128);//FIXME
-        assertThat(eTypes.get(3).getIntValue()).isEqualTo(0x0003);
-        assertThat(eTypes.get(4).getIntValue()).isEqualTo(0x0001);
-        assertThat(eTypes.get(5).getIntValue()).isEqualTo(0x0018);
+        assertThat(eTypes.get(3).getValue()).isEqualTo(0x0003);
+        assertThat(eTypes.get(4).getValue()).isEqualTo(0x0001);
+        assertThat(eTypes.get(5).getValue()).isEqualTo(0x0018);
         //assertThat(eTypes.get(6).getValue()).isEqualTo(-135);//FIXME
     }
 }

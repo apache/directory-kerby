@@ -103,7 +103,7 @@ public class PrincipalName extends KrbSequenceType {
     }
 
     public void setNameType(NameType nameType) {
-        setFieldAsInt(NAME_TYPE, nameType.getIntValue());
+        setFieldAsInt(NAME_TYPE, nameType.getValue());
     }
 
     public List<String> getNameStrings() {

@@ -52,6 +52,6 @@ public abstract class KrbAppSequenceType extends TaggingSequence {
     }
 
     protected void setField(int index, Asn1EnumType krbEnum) {
-        setFieldAsInt(index, krbEnum.getIntValue());
+        setFieldAsInt(index, krbEnum.getValue());
     }
 }

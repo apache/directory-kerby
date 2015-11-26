@@ -54,7 +54,7 @@ public class EncryptedData extends KrbSequenceType {
     }
 
     public void setEType(EncryptionType eType) {
-        setFieldAsInt(ETYPE, eType.getIntValue());
+        setFieldAsInt(ETYPE, eType.getValue());
     }
 
     public int getKvno() {
