@@ -29,7 +29,7 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class GssAppClient extends AppClient {
     private String clientPrincipal;
@@ -94,7 +94,7 @@ public class GssAppClient extends AppClient {
             System.out.println("Mutual authentication took place!");
         }
 
-        byte[] messageBytes = "Hello There!\0".getBytes(Charset.forName("UTF-8"));
+        byte[] messageBytes = "Hello There!\0".getBytes(StandardCharsets.UTF_8);
         MessageProp prop =  new MessageProp(0, true);
         token = context.wrap(messageBytes, 0, messageBytes.length, prop);
         System.out.println("Will send wrap token of size " + token.length);

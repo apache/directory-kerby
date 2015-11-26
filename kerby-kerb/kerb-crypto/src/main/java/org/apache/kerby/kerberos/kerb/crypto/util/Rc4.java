@@ -19,14 +19,14 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.util;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Ref. MIT krb5 enc_rc4.c
  */
 public class Rc4 {
 
-    private static final byte[] L40 = "fortybits".getBytes(Charset.forName("UTF-8"));
+    private static final byte[] L40 = "fortybits".getBytes(StandardCharsets.UTF_8);
 
     public static byte[] getSalt(int usage, boolean exportable) {
         int newUsage = convertUsage(usage);

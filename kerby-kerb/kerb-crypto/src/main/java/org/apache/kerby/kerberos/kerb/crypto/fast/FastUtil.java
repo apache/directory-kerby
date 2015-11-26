@@ -23,7 +23,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Implementing FAST (RFC6113) armor key related algorithms.
@@ -48,7 +48,7 @@ public class FastUtil {
         int prfSize = EncryptionHandler.getEncHandler(key.getKeyType()).prfSize();
         int iterations = keyBytesLen / prfSize;
         prfInbuf[0] = 1;
-        System.arraycopy(pepper.getBytes(Charset.forName("UTF-8")), 0, prfInbuf, 1, pepper.length());
+        System.arraycopy(pepper.getBytes(StandardCharsets.UTF_8), 0, prfInbuf, 1, pepper.length());
         if (keyBytesLen % prfSize != 0) {
             iterations++;
         }

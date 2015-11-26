@@ -23,12 +23,11 @@ import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
 import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public abstract class AbstractKeyMaker implements KeyMaker {
 
-    static final byte[] KERBEROS_CONSTANT = "kerberos".getBytes(Charset.forName("UTF-8"));
+    static final byte[] KERBEROS_CONSTANT = "kerberos".getBytes(StandardCharsets.UTF_8);
 
     private EncryptProvider encProvider;
 
@@ -47,11 +46,7 @@ public abstract class AbstractKeyMaker implements KeyMaker {
         System.arraycopy(password.toCharArray(), 0, chars, 0, password.length());
         System.arraycopy(salt.toCharArray(), 0, chars, password.length(), salt.length());
 
-        try {
-            return new String(chars).getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Character decoding failed", e);
-        }
+        return new String(chars).getBytes(StandardCharsets.UTF_8);
     }
 
     protected static int getIterCount(byte[] param, int defCount) {
@@ -67,11 +62,10 @@ public abstract class AbstractKeyMaker implements KeyMaker {
         return iterCount;
     }
 
-    protected static byte[] getSaltBytes(String salt, String pepper)
-            throws UnsupportedEncodingException {
-        byte[] saltBytes = salt.getBytes("UTF-8");
+    protected static byte[] getSaltBytes(String salt, String pepper) {
+        byte[] saltBytes = salt.getBytes(StandardCharsets.UTF_8);
         if (pepper != null && !pepper.isEmpty()) {
-            byte[] pepperBytes = pepper.getBytes("UTF-8");
+            byte[] pepperBytes = pepper.getBytes(StandardCharsets.UTF_8);
             int len = saltBytes.length;
             len += 1 + pepperBytes.length;
             byte[] results = new byte[len];

@@ -23,7 +23,6 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.util.Pbkdf;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.AesProvider;
 
-import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 public class AesKeyMaker extends DkKeyMaker {
@@ -41,12 +40,7 @@ public class AesKeyMaker extends DkKeyMaker {
     public byte[] str2key(String string, String salt, byte[] param) throws KrbException {
         int iterCount = getIterCount(param, 4096);
 
-        byte[] saltBytes = null;
-        try {
-            saltBytes = getSaltBytes(salt, null);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        byte[] saltBytes = getSaltBytes(salt, null);
 
         int keySize = encProvider().keySize();
         byte[] random;

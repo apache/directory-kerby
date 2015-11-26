@@ -41,7 +41,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.ECPrivateKey;
@@ -66,7 +66,7 @@ public class JwtTokenEncoder implements TokenEncoder {
     @Override
     public byte[] encodeAsBytes(AuthToken token) throws KrbException {
         String tokenStr = encodeAsString(token);
-        return tokenStr.getBytes(Charset.forName("UTF-8"));
+        return tokenStr.getBytes(StandardCharsets.UTF_8);
     }
 
     /**

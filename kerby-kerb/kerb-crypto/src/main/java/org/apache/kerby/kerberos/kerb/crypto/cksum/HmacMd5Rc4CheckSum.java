@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Md5Provider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class HmacMd5Rc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
 
@@ -57,7 +57,7 @@ public class HmacMd5Rc4CheckSum extends AbstractKeyedCheckSumTypeHandler {
     protected byte[] doChecksumWithKey(byte[] data, int start, int len,
                                        byte[] key, int usage) throws KrbException {
 
-        byte[] signKey = "signaturekey".getBytes(Charset.forName("UTF-8"));
+        byte[] signKey = "signaturekey".getBytes(StandardCharsets.UTF_8);
         byte[] newSignKey = new byte[signKey.length + 1];
         System.arraycopy(signKey, 0, newSignKey, 0, signKey.length);
         byte[] ksign = Hmac.hmac(hashProvider(), key, newSignKey);
