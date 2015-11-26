@@ -67,7 +67,6 @@ public class KrbCodec {
         LimitedByteBuffer limitedBuffer = new LimitedByteBuffer(byteBuffer);
         int tag = AbstractAsn1Type.readTag(limitedBuffer);
         int tagNo = AbstractAsn1Type.readTagNo(limitedBuffer, tag);
-        int tagFlags = tag & 0xe0;
         int length = AbstractAsn1Type.readLength(limitedBuffer);
         LimitedByteBuffer valueBuffer = new LimitedByteBuffer(limitedBuffer, length);
 
@@ -90,7 +89,7 @@ public class KrbCodec {
         } else {
             throw new IOException("To be supported krb message type with tag: " + tag);
         }
-        msg.decode(tagFlags, tagNo, valueBuffer);
+        msg.decode(tag, tagNo, valueBuffer);
 
         return msg;
     }

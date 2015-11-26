@@ -209,10 +209,9 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     protected void decode(LimitedByteBuffer content) throws IOException {
         int tag = readTag(content);
         int tagNo = readTagNo(content, tag);
-        int tagFlags = tag & 0xe0;
         int length = readLength(content);
 
-        decode(tagNo, tagNo, new LimitedByteBuffer(content, length));
+        decode(tag, tagNo, new LimitedByteBuffer(content, length));
     }
 
     public void decode(int tagFlags, int tagNo,

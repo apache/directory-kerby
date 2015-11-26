@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
-import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 import org.junit.Test;
@@ -41,7 +41,5 @@ public class CodecTest {
         assertThat(restored).isNotNull();
         assertThat(restored.getCksumtype()).isEqualTo(mcs.getCksumtype());
         assertThat(mcs.getChecksum()).isEqualTo(restored.getChecksum());
-        assertThat(restored.tagNo()).isEqualTo(mcs.tagNo());
-        assertThat(restored.tagFlags()).isEqualTo(mcs.tagFlags());
     }
 }
