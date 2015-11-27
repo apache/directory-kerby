@@ -20,14 +20,39 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.LimitedByteBuffer;
+import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/**
+ * Can be any valid ASN-1 ojbect, limited or not limited.
+ *
+ * WARNING!!!!
+ * Note, this is far from complete, as most of parent methods are to override.
+ */
 public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
+    private Asn1Type field;
 
+    public Asn1Any() {
+        super(TagClass.UNIVERSAL, UniversalTag.ANY.getValue());
+    }
+
+    // For encoding phase.
     public Asn1Any(Asn1Type anyValue) {
-        super(anyValue.tagFlags(), anyValue.tagNo(), anyValue);
+        this();
+        setValue(anyValue);
+    }
+
+    // For decoding phase, value may be an Asn1Item, not fully decoded.
+    public void setItem(Asn1Type value) {
+        this.field = value;
+    }
+
+    // For decoding phase.
+    public Asn1Type getItem() {
+        return field;
     }
 
     @Override
@@ -40,8 +65,16 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
         ((AbstractAsn1Type<?>) getValue()).encodeBody(buffer);
     }
 
-    @Override
     protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        ((AbstractAsn1Type<?>) getValue()).decodeBody(content);
+        // Not used
+    }
+
+    // Available for encoding phase.
+    protected <T extends Asn1Type> T getValueAs(Class<T> t) {
+        Asn1Type value = getValue();
+        if (value == null) {
+            return null;
+        }
+        return (T) value;
     }
 }

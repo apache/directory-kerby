@@ -27,6 +27,7 @@ package org.apache.kerby.asn1;
 public enum UniversalTag {
     UNKNOWN             (-1),
     CHOICE              (-2),   // Only for internal using
+    ANY                 (-3),   // Only for internal using
     BER_UNDEFINED_LENGTH(0),    // Used to encode undefined length with BER
     BOOLEAN             (0x01),
     INTEGER             (0x02),
