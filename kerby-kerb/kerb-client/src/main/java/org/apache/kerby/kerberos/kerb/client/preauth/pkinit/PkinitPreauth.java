@@ -42,7 +42,7 @@ import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.DHNonce;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PkAuthenticator;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.TrustedCertifiers;
-import org.apache.kerby.kerberos.kerb.spec.x509.SubjectPublicKeyInfo;
+import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 
 @SuppressWarnings("PMD")
 public class PkinitPreauth extends AbstractPreauthPlugin {
