@@ -26,6 +26,7 @@ import org.apache.kerby.asn1.type.Asn1GeneralString;
  */
 public class KerberosString extends Asn1GeneralString {
     public KerberosString() {
+        super();
     }
 
     public KerberosString(String value) {

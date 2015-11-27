@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
@@ -35,8 +36,8 @@ public class ReplyKeyPack extends KrbSequenceType {
     private static final int AS_CHECKSUM = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(REPLY_KEY, EncryptionKey.class),
-            new Asn1FieldInfo(AS_CHECKSUM, CheckSum.class)
+            new ExplicitField(REPLY_KEY, EncryptionKey.class),
+            new ExplicitField(AS_CHECKSUM, CheckSum.class)
     };
 
     public ReplyKeyPack() {

@@ -27,19 +27,13 @@ public class Asn1FieldInfo {
     private boolean isImplicit;
     private Class<? extends Asn1Type> type;
 
-    public Asn1FieldInfo(int index, int tagNo, Class<? extends Asn1Type> type) {
-        this(index, tagNo, type, false);
-    }
-
-    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type) {
-        this(index, index, type, false);
-    }
-
-    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type, boolean isImplicit) {
+    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type,
+                         boolean isImplicit) {
         this(index, index, type, isImplicit);
     }
 
-    public Asn1FieldInfo(int index, int tagNo, Class<? extends Asn1Type> type, boolean isImplicit) {
+    public Asn1FieldInfo(int index, int tagNo, Class<? extends Asn1Type> type,
+                         boolean isImplicit) {
         this.index = index;
         this.tagNo = tagNo;
         this.type = type;

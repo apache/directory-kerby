@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
@@ -47,10 +48,10 @@ public class PkAuthenticator extends KrbSequenceType {
     private static final int PA_CHECKSUM = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(CUSEC, Asn1Integer.class),
-            new Asn1FieldInfo(CTIME, KerberosTime.class),
-            new Asn1FieldInfo(NONCE, Asn1Integer.class),
-            new Asn1FieldInfo(PA_CHECKSUM, Asn1OctetString.class)
+            new ExplicitField(CUSEC, Asn1Integer.class),
+            new ExplicitField(CTIME, KerberosTime.class),
+            new ExplicitField(NONCE, Asn1Integer.class),
+            new ExplicitField(PA_CHECKSUM, Asn1OctetString.class)
     };
 
     public PkAuthenticator() {

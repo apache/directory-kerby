@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.pa;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
 /**
@@ -36,8 +37,8 @@ public class PaDataEntry extends KrbSequenceType {
     private static final int PADATA_VALUE = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PADATA_TYPE, 1, Asn1Integer.class),
-            new Asn1FieldInfo(PADATA_VALUE, 2, Asn1OctetString.class)
+            new ExplicitField(PADATA_TYPE, 1, Asn1Integer.class),
+            new ExplicitField(PADATA_VALUE, 2, Asn1OctetString.class)
     };
 
     public PaDataEntry() {

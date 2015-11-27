@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.kdc;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
@@ -41,10 +42,10 @@ public class KdcReq extends KrbMessage {
     private static final int REQ_BODY = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PVNO, 1, Asn1Integer.class),
-            new Asn1FieldInfo(MSG_TYPE, 2, Asn1Integer.class),
-            new Asn1FieldInfo(PADATA, 3, PaData.class),
-            new Asn1FieldInfo(REQ_BODY, 4, KdcReqBody.class)
+            new ExplicitField(PVNO, 1, Asn1Integer.class),
+            new ExplicitField(MSG_TYPE, 2, Asn1Integer.class),
+            new ExplicitField(PADATA, 3, PaData.class),
+            new ExplicitField(REQ_BODY, 4, KdcReqBody.class)
     };
 
     public KdcReq(KrbMessageType msgType) {

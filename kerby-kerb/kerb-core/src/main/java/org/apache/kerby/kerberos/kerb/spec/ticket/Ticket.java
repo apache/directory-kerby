@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.ticket;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KrbAppSequenceType;
@@ -45,10 +46,10 @@ public class Ticket extends KrbAppSequenceType {
     private static final int ENC_PART = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(TKT_VNO, 0, Asn1Integer.class),
-            new Asn1FieldInfo(REALM, 1, KerberosString.class),
-            new Asn1FieldInfo(SNAME, 2, PrincipalName.class),
-            new Asn1FieldInfo(ENC_PART, 3, EncryptedData.class)
+            new ExplicitField(TKT_VNO, 0, Asn1Integer.class),
+            new ExplicitField(REALM, 1, KerberosString.class),
+            new ExplicitField(SNAME, 2, PrincipalName.class),
+            new ExplicitField(ENC_PART, 3, EncryptedData.class)
     };
 
     public Ticket() {

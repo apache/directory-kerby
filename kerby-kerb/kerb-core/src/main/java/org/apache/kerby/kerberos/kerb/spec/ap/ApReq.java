@@ -21,8 +21,9 @@ package org.apache.kerby.kerberos.kerb.spec.ap;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
 
@@ -41,11 +42,11 @@ public class ApReq extends KrbMessage {
     private static final int AUTHENTICATOR = 4;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PVNO, Asn1Integer.class),
-            new Asn1FieldInfo(MSG_TYPE, Asn1Integer.class),
-            new Asn1FieldInfo(AP_OPTIONS, ApOptions.class),
-            new Asn1FieldInfo(TICKET, Ticket.class),
-            new Asn1FieldInfo(AUTHENTICATOR, EncryptedData.class)
+            new ExplicitField(PVNO, Asn1Integer.class),
+            new ExplicitField(MSG_TYPE, Asn1Integer.class),
+            new ExplicitField(AP_OPTIONS, ApOptions.class),
+            new ExplicitField(TICKET, Ticket.class),
+            new ExplicitField(AUTHENTICATOR, EncryptedData.class)
     };
 
     private Authenticator authenticator;

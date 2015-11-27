@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.spec.ad;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbToken;
 
@@ -32,7 +33,7 @@ public class AdToken extends KrbSequenceType {
     private static final int TOKEN = 0;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(TOKEN, KrbToken.class)
+            new ExplicitField(TOKEN, KrbToken.class)
     };
 
     public AdToken() {

@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.pa.otp;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
@@ -42,11 +43,11 @@ public class PaOtpChallenge extends KrbSequenceType {
     private static final int S2KPARAMS = 4;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(NONCE, Asn1OctetString.class, true),
-            new Asn1FieldInfo(OTP_SERVICE, Asn1Utf8String.class),
-            new Asn1FieldInfo(OTP_TOKEN_INFO, Asn1OctetString.class, true),
-            new Asn1FieldInfo(SALT, KerberosString.class),
-            new Asn1FieldInfo(S2KPARAMS, Asn1OctetString.class, true)
+            new ExplicitField(NONCE, Asn1OctetString.class),
+            new ExplicitField(OTP_SERVICE, Asn1Utf8String.class),
+            new ExplicitField(OTP_TOKEN_INFO, Asn1OctetString.class),
+            new ExplicitField(SALT, KerberosString.class),
+            new ExplicitField(S2KPARAMS, Asn1OctetString.class)
     };
 
     public PaOtpChallenge() {

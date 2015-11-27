@@ -17,33 +17,15 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.spec.fast;
+package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.type.Asn1Choice;
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
-import org.apache.kerby.asn1.type.ExplicitField;
+public class ImplicitField extends Asn1FieldInfo {
 
-/**
- PA-FX-FAST-REPLY ::= CHOICE {
-    armored-data [0] KrbFastArmoredRep,
- }
- */
-public class PaFxFastReply extends Asn1Choice {
-    private static final int ARMORED_DATA = 0;
-
-    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(ARMORED_DATA, KrbFastArmoredRep.class)
-    };
-
-    public PaFxFastReply() {
-        super(fieldInfos);
+    public ImplicitField(int index, int tagNo, Class<? extends Asn1Type> type) {
+        super(index, tagNo, type, true);
     }
 
-    public KrbFastArmoredRep getFastArmoredRep() {
-        return getFieldAs(ARMORED_DATA, KrbFastArmoredRep.class);
-    }
-
-    public void setFastArmoredRep(KrbFastArmoredRep fastArmoredRep) {
-        setFieldAs(ARMORED_DATA, fastArmoredRep);
+    public ImplicitField(int index, Class<? extends Asn1Type> type) {
+        super(index, index, type, true);
     }
 }

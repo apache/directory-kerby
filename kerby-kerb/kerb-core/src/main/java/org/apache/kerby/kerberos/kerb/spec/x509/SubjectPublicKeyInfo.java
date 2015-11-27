@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.x509;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import org.apache.kerby.asn1.type.ExplicitField;
 
 /**
  SubjectPublicKeyInfo  ::=  SEQUENCE  {
@@ -34,8 +35,8 @@ public class SubjectPublicKeyInfo extends Asn1SequenceType {
     private static final int SUBJECT_PUBLIC_KEY = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ALGORITHM, -1, AlgorithmIdentifier.class),
-            new Asn1FieldInfo(SUBJECT_PUBLIC_KEY, -1, Asn1BitString.class)
+            new ExplicitField(ALGORITHM, -1, AlgorithmIdentifier.class),
+            new ExplicitField(SUBJECT_PUBLIC_KEY, -1, Asn1BitString.class)
     };
 
     public SubjectPublicKeyInfo() {

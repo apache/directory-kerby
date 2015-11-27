@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.kdc;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbIntegers;
@@ -73,18 +74,18 @@ public class KdcReqBody extends KrbSequenceType {
     private static final int ADDITIONAL_TICKETS = 11;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(KDC_OPTIONS, KdcOptions.class),
-            new Asn1FieldInfo(CNAME, PrincipalName.class),
-            new Asn1FieldInfo(REALM, KerberosString.class),
-            new Asn1FieldInfo(SNAME, PrincipalName.class),
-            new Asn1FieldInfo(FROM, KerberosTime.class),
-            new Asn1FieldInfo(TILL, KerberosTime.class),
-            new Asn1FieldInfo(RTIME, KerberosTime.class),
-            new Asn1FieldInfo(NONCE, Asn1Integer.class),
-            new Asn1FieldInfo(ETYPE, KrbIntegers.class),
-            new Asn1FieldInfo(ADDRESSES, HostAddresses.class),
-            new Asn1FieldInfo(ENC_AUTHORIZATION_DATA, AuthorizationData.class),
-            new Asn1FieldInfo(ADDITIONAL_TICKETS, Tickets.class)
+            new ExplicitField(KDC_OPTIONS, KdcOptions.class),
+            new ExplicitField(CNAME, PrincipalName.class),
+            new ExplicitField(REALM, KerberosString.class),
+            new ExplicitField(SNAME, PrincipalName.class),
+            new ExplicitField(FROM, KerberosTime.class),
+            new ExplicitField(TILL, KerberosTime.class),
+            new ExplicitField(RTIME, KerberosTime.class),
+            new ExplicitField(NONCE, Asn1Integer.class),
+            new ExplicitField(ETYPE, KrbIntegers.class),
+            new ExplicitField(ADDRESSES, HostAddresses.class),
+            new ExplicitField(ENC_AUTHORIZATION_DATA, AuthorizationData.class),
+            new ExplicitField(ADDITIONAL_TICKETS, Tickets.class)
     };
 
     public KdcReqBody() {

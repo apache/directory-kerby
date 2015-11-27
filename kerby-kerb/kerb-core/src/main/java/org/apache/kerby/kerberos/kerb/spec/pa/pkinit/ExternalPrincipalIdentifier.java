@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ImplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
 /**
@@ -36,9 +37,9 @@ public class ExternalPrincipalIdentifier extends KrbSequenceType {
     private static final int SUBJECT_KEY_IDENTIFIER = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(SUBJECT_NAME, Asn1OctetString.class, true),
-            new Asn1FieldInfo(ISSUER_AND_SERIAL_NUMBER, Asn1OctetString.class, true),
-            new Asn1FieldInfo(SUBJECT_KEY_IDENTIFIER, Asn1OctetString.class, true)
+            new ImplicitField(SUBJECT_NAME, Asn1OctetString.class),
+            new ImplicitField(ISSUER_AND_SERIAL_NUMBER, Asn1OctetString.class),
+            new ImplicitField(SUBJECT_KEY_IDENTIFIER, Asn1OctetString.class)
     };
 
     public ExternalPrincipalIdentifier() {

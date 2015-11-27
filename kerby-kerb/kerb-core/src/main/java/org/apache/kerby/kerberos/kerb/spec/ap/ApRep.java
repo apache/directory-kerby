@@ -21,8 +21,9 @@ package org.apache.kerby.kerberos.kerb.spec.ap;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
 
 /**
@@ -36,9 +37,9 @@ public class ApRep extends KrbMessage {
     private static final int ENC_PART = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PVNO, 0, Asn1Integer.class),
-            new Asn1FieldInfo(MSG_TYPE, 1, Asn1Integer.class),
-            new Asn1FieldInfo(ENC_PART, 2, EncryptedData.class)
+            new ExplicitField(PVNO, 0, Asn1Integer.class),
+            new ExplicitField(MSG_TYPE, 1, Asn1Integer.class),
+            new ExplicitField(ENC_PART, 2, EncryptedData.class)
     };
 
     public ApRep() {

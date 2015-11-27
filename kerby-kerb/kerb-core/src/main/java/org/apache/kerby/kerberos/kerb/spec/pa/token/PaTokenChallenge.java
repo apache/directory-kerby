@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.spec.pa.token;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
 /**
@@ -31,7 +32,7 @@ public class PaTokenChallenge extends KrbSequenceType {
     private static final int TOKENINFOS = 0;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(TOKENINFOS, TokenInfos.class)
+            new ExplicitField(TOKENINFOS, TokenInfos.class)
     };
 
     public PaTokenChallenge() {

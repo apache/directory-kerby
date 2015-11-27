@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.base;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosStrings;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
@@ -38,8 +39,8 @@ public class PrincipalName extends KrbSequenceType {
     private static final int NAME_TYPE = 0;
     private static final int NAME_STRING = 1;
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(NAME_TYPE, Asn1Integer.class),
-            new Asn1FieldInfo(NAME_STRING, KerberosStrings.class)
+            new ExplicitField(NAME_TYPE, Asn1Integer.class),
+            new ExplicitField(NAME_STRING, KerberosStrings.class)
     };
     private String realm;
 

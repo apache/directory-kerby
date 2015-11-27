@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.kdc;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
@@ -51,13 +52,13 @@ public class KdcRep extends KrbMessage {
     private static final int ENC_PART = 6;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PVNO, Asn1Integer.class),
-            new Asn1FieldInfo(MSG_TYPE, Asn1Integer.class),
-            new Asn1FieldInfo(PADATA, PaData.class),
-            new Asn1FieldInfo(CREALM, KerberosString.class),
-            new Asn1FieldInfo(CNAME, PrincipalName.class),
-            new Asn1FieldInfo(TICKET, Ticket.class),
-            new Asn1FieldInfo(ENC_PART, EncryptedData.class)
+            new ExplicitField(PVNO, Asn1Integer.class),
+            new ExplicitField(MSG_TYPE, Asn1Integer.class),
+            new ExplicitField(PADATA, PaData.class),
+            new ExplicitField(CREALM, KerberosString.class),
+            new ExplicitField(CNAME, PrincipalName.class),
+            new ExplicitField(TICKET, Ticket.class),
+            new ExplicitField(ENC_PART, EncryptedData.class)
     };
 
     private EncKdcRepPart encPart;

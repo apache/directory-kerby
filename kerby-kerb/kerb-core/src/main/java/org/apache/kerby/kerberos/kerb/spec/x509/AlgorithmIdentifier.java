@@ -25,6 +25,7 @@ import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
+import org.apache.kerby.asn1.type.ExplicitField;
 
 /**
  AlgorithmIdentifier  ::=  SEQUENCE  {
@@ -37,8 +38,8 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
     private static final int PARAMETERS = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ALGORITHM, -1, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(PARAMETERS, -1, Asn1Any.class)
+            new ExplicitField(ALGORITHM, -1, Asn1ObjectIdentifier.class),
+            new ExplicitField(PARAMETERS, -1, Asn1Any.class)
     };
 
     public AlgorithmIdentifier() {

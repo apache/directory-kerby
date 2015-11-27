@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.spec.fast;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
@@ -52,9 +53,9 @@ public class KrbFastArmoredReq extends KrbSequenceType {
     private KrbFastReq fastReq;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ARMOR, KrbFastArmor.class),
-            new Asn1FieldInfo(REQ_CHECKSUM, CheckSum.class),
-            new Asn1FieldInfo(ENC_FAST_REQ, EncryptedData.class),
+            new ExplicitField(ARMOR, KrbFastArmor.class),
+            new ExplicitField(REQ_CHECKSUM, CheckSum.class),
+            new ExplicitField(ENC_FAST_REQ, EncryptedData.class),
     };
 
     public KrbFastArmoredReq() {

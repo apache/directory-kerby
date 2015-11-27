@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.ap;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbAppSequenceType;
@@ -55,15 +56,15 @@ public class Authenticator extends KrbAppSequenceType {
     private static final int AUTHORIZATION_DATA = 8;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(AUTHENTICATOR_VNO, 0, Asn1Integer.class),
-            new Asn1FieldInfo(CREALM, 1, KerberosString.class),
-            new Asn1FieldInfo(CNAME, 2, PrincipalName.class),
-            new Asn1FieldInfo(CKSUM, 3, CheckSum.class),
-            new Asn1FieldInfo(CUSEC, 4, Asn1Integer.class),
-            new Asn1FieldInfo(CTIME, 5, KerberosTime.class),
-            new Asn1FieldInfo(SUBKEY, 6, EncryptionKey.class),
-            new Asn1FieldInfo(SEQ_NUMBER, 7, Asn1Integer.class),
-            new Asn1FieldInfo(AUTHORIZATION_DATA, 8, AuthorizationData.class)
+            new ExplicitField(AUTHENTICATOR_VNO, 0, Asn1Integer.class),
+            new ExplicitField(CREALM, 1, KerberosString.class),
+            new ExplicitField(CNAME, 2, PrincipalName.class),
+            new ExplicitField(CKSUM, 3, CheckSum.class),
+            new ExplicitField(CUSEC, 4, Asn1Integer.class),
+            new ExplicitField(CTIME, 5, KerberosTime.class),
+            new ExplicitField(SUBKEY, 6, EncryptionKey.class),
+            new ExplicitField(SEQ_NUMBER, 7, Asn1Integer.class),
+            new ExplicitField(AUTHORIZATION_DATA, 8, AuthorizationData.class)
     };
 
     public Authenticator() {

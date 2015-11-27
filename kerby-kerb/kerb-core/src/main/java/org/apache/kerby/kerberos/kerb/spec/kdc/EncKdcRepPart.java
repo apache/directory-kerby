@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.kdc;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbAppSequenceType;
@@ -61,18 +62,18 @@ public abstract class EncKdcRepPart extends KrbAppSequenceType {
     private static final int CADDR = 11;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(KEY, EncryptionKey.class),
-            new Asn1FieldInfo(LAST_REQ, LastReq.class),
-            new Asn1FieldInfo(NONCE, Asn1Integer.class),
-            new Asn1FieldInfo(KEY_EXPIRATION, KerberosTime.class),
-            new Asn1FieldInfo(FLAGS, TicketFlags.class),
-            new Asn1FieldInfo(AUTHTIME, KerberosTime.class),
-            new Asn1FieldInfo(STARTTIME, KerberosTime.class),
-            new Asn1FieldInfo(ENDTIME, KerberosTime.class),
-            new Asn1FieldInfo(RENEW_TILL, KerberosTime.class),
-            new Asn1FieldInfo(SREALM, KerberosString.class),
-            new Asn1FieldInfo(SNAME, PrincipalName.class),
-            new Asn1FieldInfo(CADDR, HostAddresses.class)
+            new ExplicitField(KEY, EncryptionKey.class),
+            new ExplicitField(LAST_REQ, LastReq.class),
+            new ExplicitField(NONCE, Asn1Integer.class),
+            new ExplicitField(KEY_EXPIRATION, KerberosTime.class),
+            new ExplicitField(FLAGS, TicketFlags.class),
+            new ExplicitField(AUTHTIME, KerberosTime.class),
+            new ExplicitField(STARTTIME, KerberosTime.class),
+            new ExplicitField(ENDTIME, KerberosTime.class),
+            new ExplicitField(RENEW_TILL, KerberosTime.class),
+            new ExplicitField(SREALM, KerberosString.class),
+            new ExplicitField(SNAME, PrincipalName.class),
+            new ExplicitField(CADDR, HostAddresses.class)
     };
 
     public EncKdcRepPart(int tagNo) {
