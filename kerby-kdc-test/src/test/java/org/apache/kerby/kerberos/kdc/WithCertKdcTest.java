@@ -99,11 +99,11 @@ public class WithCertKdcTest extends KdcTestBase {
             assertThat(te.getMessage().contains("timeout")).isTrue();
             return;
         }
-        assertThat(tgt).isNull();
+        assertThat(tgt).isNotNull();
 
         serverPrincipal = getServerPrincipal();
         ServiceTicket tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
-        assertThat(tkt).isNull();
+        assertThat(tkt).isNotNull();
     }
 
     //@Test

@@ -18,21 +18,36 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
+import org.apache.commons.ssl.Certificates;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.cms.DHParameter;
+import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.KdcDHKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.security.pkcs.ContentInfo;
 import sun.security.pkcs.PKCS7;
 import sun.security.pkcs.ParsingException;
+import sun.security.pkcs.SignerInfo;
+import sun.security.util.DerValue;
 import sun.security.util.ObjectIdentifier;
+import sun.security.x509.AlgorithmId;
 
+import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
+import javax.crypto.spec.DHPublicKeySpec;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
+import java.util.List;
 
 public class PkinitCrypto {
 
@@ -56,11 +71,11 @@ public class PkinitCrypto {
         return keyPairGenerator.generateKeyPair();
     }
 
-    public static PKCS7 verifyCMSSignedData(PkinitPlgCryptoContext cryptoctx, CMSMessageType cmsMsgType,
+    public static PKCS7 verifyCMSSignedData(CMSMessageType cmsMsgType,
                                             byte[] signedData)
             throws IOException, KrbException {
 
-        ObjectIdentifier oid = pkinitPKCS7Type2OID(cryptoctx, cmsMsgType);
+        ObjectIdentifier oid = pkinitPKCS7Type2OID(cmsMsgType);
         if (oid == null) {
             throw new KrbException("Can't get the right oid ");
         }
@@ -98,18 +113,16 @@ public class PkinitCrypto {
         }
     }
 
-
-    public static ObjectIdentifier pkinitPKCS7Type2OID(PkinitPlgCryptoContext cryptoctx,
-                                                       CMSMessageType cmsMsgType) throws IOException {
+    public static ObjectIdentifier pkinitPKCS7Type2OID(CMSMessageType cmsMsgType) throws IOException {
         switch (cmsMsgType) {
             case UNKNOWN:
                 return null;
             case CMS_SIGN_CLIENT:
-                return cryptoctx.getIdPkinitAuthDataOID();
+                return PkinitPlgCryptoContext.getIdPkinitAuthDataOID();
             case CMS_SIGN_SERVER:
-                return cryptoctx.getIdPkinitDHKeyDataOID();
+                return PkinitPlgCryptoContext.getIdPkinitDHKeyDataOID();
             case CMS_ENVEL_SERVER:
-                return cryptoctx.getIdPkinitRkeyDataOID();
+                return PkinitPlgCryptoContext.getIdPkinitRkeyDataOID();
             default:
                 return null;
         }
@@ -167,4 +180,66 @@ public class PkinitCrypto {
         return true;
     }
 
+    public static DHPublicKey createDHPublicKey(BigInteger p, BigInteger g, BigInteger y) {
+        DHPublicKeySpec dhPublicKeySpec = new DHPublicKeySpec(y, p, g);
+
+        KeyFactory keyFactory = null;
+        try {
+            keyFactory = KeyFactory.getInstance("DH");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        DHPublicKey dhPublicKey = null;
+        try {
+            dhPublicKey = (DHPublicKey) keyFactory.generatePublic(dhPublicKeySpec);
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return dhPublicKey;
+    }
+
+    public static ByteArrayOutputStream cmsSignedDataCreate(byte[] data, ObjectIdentifier oid,
+                                                            X509Certificate[] certificates) throws IOException {
+
+        ContentInfo contentInfo = createContentInfo(data, oid);
+
+        PKCS7 p7 = new PKCS7(new AlgorithmId[0], contentInfo, certificates, new SignerInfo[0]);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        p7.encodeSignedData(bytes);
+        return bytes;
+    }
+
+    public static ContentInfo createContentInfo(byte[] data, ObjectIdentifier oid) {
+
+        ContentInfo contentInfo = new ContentInfo(
+                oid,
+                new DerValue(DerValue.tag_OctetString, data));
+        return contentInfo;
+    }
+
+    public static boolean verifyKdcSan(String hostname, X509Certificate[] cert) {
+
+        if(hostname == null) {
+            LOG.info("No pkinit_kdc_hostname values found in config file");
+        } else {
+            LOG.info("pkinit_kdc_hostname values found in config file");
+        }
+
+        cryptoRetrieveCertSans(cert);
+        return true;
+    }
+
+    public static void cryptoRetrieveCertSans(X509Certificate[] cert) {
+        cryptoRetrieveX509Sans(cert);
+    }
+
+    public static void cryptoRetrieveX509Sans(X509Certificate[] cert) {
+
+        if(cert == null) {
+            LOG.info("no certificate!");
+        }
+
+        LOG.info("Looking for SANs in cert");
+        String[] subjectAlts = Certificates.getDNSSubjectAlts(cert[0]);
+    }
 }

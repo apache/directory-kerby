@@ -28,10 +28,13 @@ import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
+import org.apache.kerby.kerberos.kerb.crypto.dh.DhClient;
+import org.apache.kerby.kerberos.kerb.crypto.dh.DhGroup;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlag;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlags;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitIdenity;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
@@ -61,6 +64,8 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class PkinitPreauth extends AbstractPreauthPlugin {
@@ -149,10 +154,33 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
+
+
+        /* XXX PKINIT RFC says that nonce in PKAuthenticator doesn't have be the
+         * same as in the AS_REQ. However, if we pick a different nonce, then we
+         * need to remember that info when AS_REP is returned. Here choose to
+         * reuse the AS_REQ nonce.
+         */
+        int nonce = kdcRequest.getChosenNonce();
+
+        // Get the current time
         long now = System.currentTimeMillis();
-        PaPkAsReq paPkAsReq = makePaPkAsReq(kdcRequest,
-                (PkinitRequestContext) requestContext,
-                1, new KerberosTime(now), 1, null);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(now));
+        int cusec = calendar.get(Calendar.SECOND);
+        KerberosTime ctime = new KerberosTime(now);
+        CheckSum checkSum = null;
+
+        try {
+            checkSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
+                    kdcRequest.getKdcReq().getReqBody().encode());
+        } catch (KrbException e) {
+            e.printStackTrace();
+        }
+
+
+        PaPkAsReq paPkAsReq = makePaPkAsReq(kdcRequest, (PkinitRequestContext) requestContext,
+                cusec, ctime, nonce, checkSum);
         outPadata.addElement(makeEntry(paPkAsReq));
     }
 
@@ -196,8 +224,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     private PaPkAsReq makePaPkAsReq(KdcRequest kdcRequest,
                                     PkinitRequestContext reqCtx,
-                                    int cusec, KerberosTime ctime, int nonce, byte[] checksum) {
+                                    int cusec, KerberosTime ctime, int nonce, CheckSum checkSum) {
 
+        LOG.info("Making the PK_AS_REQ.");
         PaPkAsReq paPkAsReq = new PaPkAsReq();
         AuthPack authPack = new AuthPack();
         PkAuthenticator pkAuthen = new PkAuthenticator();
@@ -208,15 +237,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         pkAuthen.setCusec(cusec);
         pkAuthen.setCtime(ctime);
         pkAuthen.setNonce(nonce);
-
-        CheckSum checkSum = null;
-        try {
-            checkSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
-                    kdcRequest.getKdcReq().getReqBody().encode());
-        } catch (KrbException e) {
-            e.printStackTrace();
-        }
 //        pkAuthen.setPaChecksum(checkSum.getChecksum());
+
         pkAuthen.setPaChecksum(checkSum.encode());
 
         authPack.setPkAuthenticator(pkAuthen);
@@ -224,7 +246,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 //        authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
 
         if (!usingRsa) {
-            System.out.println(); // DH case
+            // DH case
+            LOG.info("DH key transport algorithm.");
 
             AlgorithmIdentifier dhAlg = new AlgorithmIdentifier();
 
@@ -252,6 +275,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            kdcRequest.setDhClient(client);
 
             DHParameterSpec spec = clientPubKey.getParams();
             BigInteger q = spec.getP().shiftRight(1);
@@ -307,9 +332,11 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             e.printStackTrace();
         }
 
+        X509Certificate[] certificates = {certificate};
         byte[] signedDataBytes = new byte[0];
         try {
-            signedDataBytes = SignedDataEngine.cmsSignedDataCreate(authPack, certificate).toByteArray();
+            signedDataBytes = PkinitCrypto.cmsSignedDataCreate(authPack.encode(),
+                    pkinitContext.cryptoctx.getIdPkinitAuthDataOID(), certificates).toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
         }

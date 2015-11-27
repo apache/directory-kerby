@@ -299,12 +299,17 @@ public class KrbConfig extends Krb5Conf {
     }
 
     public List<String> getPkinitAnchors() {
-        return Arrays.asList(getString(
+        return Arrays.asList(getStringArray(
                 KrbConfigKey.PKINIT_ANCHORS, true, LIBDEFAULT));
     }
 
     public List<String> getPkinitIdentities() {
-        return Arrays.asList(getString(
+        return Arrays.asList(getStringArray(
                 KrbConfigKey.PKINIT_IDENTITIES, true, LIBDEFAULT));
+    }
+
+    public String getPkinitKdcHostName() {
+        return getString(
+                KrbConfigKey.PKINIT_KDC_HOSTNAME, true, LIBDEFAULT);
     }
 }

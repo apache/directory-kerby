@@ -59,7 +59,8 @@ public enum KrbConfigKey implements ConfigKey {
             + "camellia128-cts-cmac des-cbc-crc des-cbc-md5 des-cbc-md4"),
 
     PKINIT_ANCHORS(null),
-    PKINIT_IDENTITIES(null);
+    PKINIT_IDENTITIES(null),
+    PKINIT_KDC_HOSTNAME();
 
     private Object defaultValue;
 

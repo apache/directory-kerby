@@ -32,6 +32,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.spec.base.LastReq;
 import org.apache.kerby.kerberos.kerb.spec.base.LastReqEntry;
 import org.apache.kerby.kerberos.kerb.spec.base.LastReqType;
+import org.apache.kerby.kerberos.kerb.spec.base.NameType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.AsRep;
 import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
@@ -79,6 +80,9 @@ public class AsRequest extends KdcRequest {
             clientEntry.setExpireTime(new KerberosTime(getToken().getExpiredTime().getTime()));
         } else {
             clientEntry = getEntry(clientPrincipal.getName());
+        }
+        if(isAnonymous()) {
+            clientEntry.setPrincipal(new PrincipalName(clientPrincipal.getName(), NameType.NT_WELLKNOWN));
         }
 
         if (clientEntry == null) {

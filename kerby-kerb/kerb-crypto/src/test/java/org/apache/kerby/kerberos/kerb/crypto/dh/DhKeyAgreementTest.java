@@ -17,10 +17,15 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
+package org.apache.kerby.kerberos.kerb.crypto.dh;
 
 
 import junit.framework.TestCase;
+import org.apache.kerby.kerberos.kerb.crypto.dh.DhClient;
+import org.apache.kerby.kerberos.kerb.crypto.dh.DhGroup;
+import org.apache.kerby.kerberos.kerb.crypto.dh.DhServer;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
@@ -62,16 +67,16 @@ public class DhKeyAgreementTest extends TestCase {
         byte[] clientPubKeyEnc = client.init(DhGroup.MODP_GROUP2).getEncoded();
         byte[] serverPubKeyEnc = server.initAndDoPhase(clientPubKeyEnc).getEncoded();
 
-        server.generateKey(null, null);
+        server.generateKey(null, null, EncryptionType.AES128_CTS_HMAC_SHA1_96);
 
         client.doPhase(serverPubKeyEnc);
 
-        client.generateKey(null, null);
+        client.generateKey(null, null, EncryptionType.AES128_CTS_HMAC_SHA1_96);
 
         byte[] clearText = "This is just an example".getBytes();
 
-        byte[] cipherText = server.encryptAes(clearText);
-        byte[] recovered = client.decryptAes(cipherText);
+        byte[] cipherText = server.encrypt(clearText, KeyUsage.UNKNOWN);
+        byte[] recovered = client.decrypt(cipherText, KeyUsage.UNKNOWN);
 
         assertTrue(Arrays.equals(clearText, recovered));
     }
@@ -99,16 +104,16 @@ public class DhKeyAgreementTest extends TestCase {
         byte[] clientPubKeyEnc = client.init(DhGroup.MODP_GROUP2).getEncoded();
         byte[] serverPubKeyEnc = server.initAndDoPhase(clientPubKeyEnc).getEncoded();
 
-        server.generateKey(clientDhNonce, serverDhNonce);
+        server.generateKey(clientDhNonce, serverDhNonce, EncryptionType.AES128_CTS_HMAC_SHA1_96);
 
         client.doPhase(serverPubKeyEnc);
 
-        client.generateKey(clientDhNonce, serverDhNonce);
+        client.generateKey(clientDhNonce, serverDhNonce, EncryptionType.AES128_CTS_HMAC_SHA1_96);
 
         byte[] clearText = "This is just an example".getBytes();
 
-        byte[] cipherText = server.encryptAes(clearText);
-        byte[] recovered = client.decryptAes(cipherText);
+        byte[] cipherText = server.encrypt(clearText, KeyUsage.UNKNOWN);
+        byte[] recovered = client.decrypt(cipherText, KeyUsage.UNKNOWN);
 
         assertTrue(Arrays.equals(clearText, recovered));
     }
@@ -151,16 +156,16 @@ public class DhKeyAgreementTest extends TestCase {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        server.generateKey(null, null);
+        server.generateKey(null, null, EncryptionType.AES128_CTS_HMAC_SHA1_96);
 
         client.doPhase(serverPubKeyEnc);
 
-        client.generateKey(null, null);
+        client.generateKey(null, null, EncryptionType.AES128_CTS_HMAC_SHA1_96);
 
         byte[] clearText = "This is just an example".getBytes();
 
-        byte[] cipherText = server.encryptAes(clearText);
-        byte[] recovered = client.decryptAes(cipherText);
+        byte[] cipherText = server.encrypt(clearText, KeyUsage.UNKNOWN);
+        byte[] recovered = client.decrypt(cipherText, KeyUsage.UNKNOWN);
 
         assertTrue(Arrays.equals(clearText, recovered));
     }

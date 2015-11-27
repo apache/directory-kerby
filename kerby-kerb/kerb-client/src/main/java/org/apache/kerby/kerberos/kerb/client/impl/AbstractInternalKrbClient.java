@@ -101,7 +101,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             principal = fixPrincipal(principal);
             PrincipalName principalName = new PrincipalName(principal);
             if (requestOptions.contains(KrbOption.USE_PKINIT_ANONYMOUS)) {
-                principalName.setNameType(NameType.KRB5_NT_WELLKNOWN);
+                principalName.setNameType(NameType.NT_WELLKNOWN);
             }
             asRequest.setClientPrincipal(principalName);
         }

@@ -31,6 +31,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.spec.base.NameType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncoding;
 import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncodingType;
@@ -218,7 +219,11 @@ public abstract class TicketIssuer {
         if (kdcRequest.isToken()) {
             return new PrincipalName(kdcRequest.getToken().getSubject());
         } else {
-            return getKdcReq().getReqBody().getCname();
+            PrincipalName principalName = getKdcReq().getReqBody().getCname();
+            if(getKdcRequest().isAnonymous()) {
+                principalName.setNameType(NameType.NT_WELLKNOWN);
+            }
+            return principalName;
         }
     }
 

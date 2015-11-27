@@ -93,9 +93,11 @@ public abstract class KdcRequest {
     private PrincipalName serverPrincipal;
     private byte[] innerBodyout;
     private AuthToken token;
-    private Boolean isToken = false;
-    private Boolean isPkinit = false;
+    private boolean isToken = false;
+    private boolean isPkinit = false;
+    private boolean isAnonymous = false;
     private EncryptionKey sessionKey;
+    private byte[] bodybytes;
 
     /**
      * Get session key.
@@ -164,6 +166,7 @@ public abstract class KdcRequest {
         checkVersion();
         checkTgsEntry();
         kdcFindFast();
+        authenticate();
         if (PreauthHandler.isToken(getKdcReq().getPaData())) {
             isToken = true;
             preauth();
@@ -177,7 +180,6 @@ public abstract class KdcRequest {
             checkServer();
             preauth();
         }
-        authenticate();
         issueTicket();
         makeReply();
     }
@@ -543,7 +545,7 @@ public abstract class KdcRequest {
         PaData preAuthData = request.getPaData();
 
         if (isPreauthRequired()) {
-            if (getKdcOptions().isFlagSet(KdcOption.REQUEST_ANONYMOUS) && !isPkinit) {
+            if (isAnonymous && !isPkinit) {
                 LOG.info("Need PKINIT.");
                 KrbError krbError = makePreAuthenticationError(kdcContext, request,
                         KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, true);
@@ -805,7 +807,19 @@ public abstract class KdcRequest {
         return isPkinit;
     }
 
+    protected boolean isAnonymous() {
+        return getKdcOptions().isFlagSet(KdcOption.REQUEST_ANONYMOUS);
+    }
+
     public KdcOptions getKdcOptions() {
         return kdcReq.getReqBody().getKdcOptions();
+    }
+
+    public void setReqBodyBytes(byte[] bodyBytes) {
+        this.bodybytes = bodyBytes;
+    }
+
+    public byte[] getReqBodyBytes() {
+        return this.bodybytes;
     }
 }

@@ -19,18 +19,34 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
+import org.apache.kerby.asn1.Asn1Dump;
+import org.apache.kerby.asn1.Asn1InputBuffer;
+import org.apache.kerby.asn1.LimitedByteBuffer;
+import org.apache.kerby.asn1.type.Asn1Item;
+import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
+import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
+import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 import org.junit.Test;
+import sun.security.krb5.internal.KDCReq;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodecTest {
 
     @Test
-    public void testCodec() throws KrbException {
+    public void testCodec() throws KrbException, IOException {
         CheckSum mcs = new CheckSum();
         mcs.setCksumtype(CheckSumType.CRC32);
         mcs.setChecksum(new byte[] {0x10});
@@ -41,5 +57,26 @@ public class CodecTest {
         assertThat(restored).isNotNull();
         assertThat(restored.getCksumtype()).isEqualTo(mcs.getCksumtype());
         assertThat(mcs.getChecksum()).isEqualTo(restored.getChecksum());
+    }
+
+    @Test
+    public void testDecode() throws IOException {
+        AsReq expected = new AsReq();
+
+        KdcReqBody body = new KdcReqBody();
+
+        expected.setReqBody(body);
+
+        Asn1InputBuffer ib = new Asn1InputBuffer(expected.encode());
+        Asn1Type fd1 = ib.read();
+        Asn1Type fd2 = ib.read();
+        Asn1Type fd3 = ib.read();
+        Asn1Type fd4 = ib.read();
+        Asn1Type fd5 = ib.read();
+        Asn1Type fd6 = ib.read();
+        Asn1Type fd7 = ib.read();
+        Asn1Type fd8 = ib.read();
+        Asn1Type fd9 = ib.read();
+
     }
 }

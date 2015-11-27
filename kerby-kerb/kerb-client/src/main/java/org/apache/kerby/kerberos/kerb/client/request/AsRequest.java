@@ -140,7 +140,7 @@ public class AsRequest extends KdcRequest {
 
     public TgtTicket getTicket() {
         TgtTicket tgtTicket = new TgtTicket(getKdcRep().getTicket(),
-                (EncAsRepPart) getKdcRep().getEncPart(), getKdcRep().getCname().getName());
+                (EncAsRepPart) getKdcRep().getEncPart(), getKdcRep().getCname());
         return tgtTicket;
     }
 

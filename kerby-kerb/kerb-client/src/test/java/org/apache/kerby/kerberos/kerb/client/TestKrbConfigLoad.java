@@ -60,5 +60,6 @@ public class TestKrbConfigLoad {
                 .contains(EncryptionType.DES_CBC_CRC);
         assertThat(krbConfig.getPkinitAnchors()).hasSize(1);
         assertThat(krbConfig.getPkinitIdentities()).hasSize(2);
+        assertThat(krbConfig.getPkinitKdcHostName()).isEqualTo("kdc-server.example.com");
     }
 }

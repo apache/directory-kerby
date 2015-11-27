@@ -28,7 +28,7 @@ public enum NameType implements Asn1EnumType {
     NT_SRV_HST(3),
     NT_SRV_XHST(4),
     NT_UID(5),
-    KRB5_NT_WELLKNOWN(11);
+    NT_WELLKNOWN(11);
     
     private int value;
 

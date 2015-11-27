@@ -33,12 +33,12 @@ import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
  }
  */
 public class KdcDHKeyInfo extends KrbSequenceType {
-    private static final int SUBJECT_PUBLICK_KEY = 0;
+    private static final int SUBJECT_PUBLIC_KEY = 0;
     private static final int NONCE = 1;
     private static final int DH_KEY_EXPIRATION = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(SUBJECT_PUBLICK_KEY, Asn1BitString.class),
+            new Asn1FieldInfo(SUBJECT_PUBLIC_KEY, Asn1BitString.class),
             new Asn1FieldInfo(NONCE, Asn1Integer.class),
             new Asn1FieldInfo(DH_KEY_EXPIRATION, KerberosTime.class)
     };
@@ -47,12 +47,12 @@ public class KdcDHKeyInfo extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public byte[] getSubjectPublicKey() {
-        return getFieldAsOctets(SUBJECT_PUBLICK_KEY);
+    public Asn1BitString getSubjectPublicKey() {
+        return getFieldAs(SUBJECT_PUBLIC_KEY, Asn1BitString.class);
     }
 
-    public void setSubjectPublicKey(byte[] subjectPublicKey) {
-        setFieldAsOctets(SUBJECT_PUBLICK_KEY, subjectPublicKey);
+    public void setSubjectPublicKey(byte[] subjectPubKey) {
+        setFieldAs(SUBJECT_PUBLIC_KEY, new Asn1BitString(subjectPubKey));
     }
 
     public int getNonce() {

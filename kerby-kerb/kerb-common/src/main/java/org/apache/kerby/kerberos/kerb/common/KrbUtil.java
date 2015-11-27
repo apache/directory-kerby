@@ -70,7 +70,7 @@ public class KrbUtil {
     public static PrincipalName makeAnonymousPrincipal() {
         PrincipalName principalName = new PrincipalName(KRB5_WELLKNOWN_NAMESTR + "/" + KRB5_ANONYMOUS_PRINCSTR);
         principalName.setRealm(KRB5_ANONYMOUS_REALMSTR);
-        principalName.setNameType(NameType.NT_PRINCIPAL);
+        principalName.setNameType(NameType.NT_WELLKNOWN);
         return principalName;
     }
 }

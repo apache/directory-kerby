@@ -25,9 +25,9 @@ import org.apache.kerby.kerberos.kerb.spec.kdc.EncAsRepPart;
 public class TgtTicket extends KrbTicket {
     private PrincipalName clientPrincipal;
 
-    public TgtTicket(Ticket ticket, EncAsRepPart encKdcRepPart, String clientPrincipal) {
+    public TgtTicket(Ticket ticket, EncAsRepPart encKdcRepPart, PrincipalName clientPrincipal) {
         super(ticket, encKdcRepPart);
-        this.clientPrincipal = new PrincipalName(clientPrincipal);
+        this.clientPrincipal = clientPrincipal;
     }
 
     public PrincipalName getClientPrincipal() {

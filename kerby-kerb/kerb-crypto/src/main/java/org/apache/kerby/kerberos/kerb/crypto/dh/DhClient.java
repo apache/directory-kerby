@@ -6,32 +6,32 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
+package org.apache.kerby.kerberos.kerb.crypto.dh;
 
+import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
+import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 
-import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
-import javax.crypto.SecretKey;
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PublicKey;
-import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
 
 
@@ -41,14 +41,19 @@ import java.security.spec.X509EncodedKeySpec;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-class DhClient {
-    private static AlgorithmParameterSpec aesIv = new IvParameterSpec(new byte[16]);
+public class DhClient {
 
     private KeyAgreement clientKeyAgree;
-    private SecretKey clientAesKey;
+    private EncryptionKey clientKey;
+    private DHParameterSpec dhParameterSpec;
 
 
-    DHPublicKey init(DHParameterSpec dhParamSpec) throws Exception {
+    public DHParameterSpec getDhParam() {
+        return dhParameterSpec;
+    }
+
+    public DHPublicKey init(DHParameterSpec dhParamSpec) throws Exception {
+        dhParameterSpec = dhParamSpec;
         // The client creates its own DH key pair, using the DH parameters from above.
         KeyPairGenerator clientKpairGen = KeyPairGenerator.getInstance("DH");
         clientKpairGen.initialize(dhParamSpec);
@@ -59,12 +64,11 @@ class DhClient {
         clientKeyAgree.init(clientKpair.getPrivate());
 
         // The client encodes its public key, and sends it over to the server.
-//        return clientKpair.getPublic().getEncoded();
         return (DHPublicKey) clientKpair.getPublic();
     }
 
 
-    void doPhase(byte[] serverPubKeyEnc) throws Exception {
+    public void doPhase(byte[] serverPubKeyEnc) throws Exception {
         /*
          * The client uses the server's public key for the first (and only) phase
          * of its version of the DH protocol.  Before it can do so, it has to
@@ -77,8 +81,7 @@ class DhClient {
         clientKeyAgree.doPhase(serverPubKey, true);
     }
 
-
-    byte[] generateKey(byte[] clientDhNonce, byte[] serverDhNonce) {
+    public EncryptionKey generateKey(byte[] clientDhNonce, byte[] serverDhNonce, EncryptionType type) {
         // ZZ length will be same as public key.
         byte[] dhSharedSecret = clientKeyAgree.generateSecret();
         byte[] x = dhSharedSecret;
@@ -90,29 +93,26 @@ class DhClient {
         }
 
         byte[] secret = OctetString2Key.kTruncate(dhSharedSecret.length, x);
-        clientAesKey = new SecretKeySpec(secret, 0, 16, "AES");
 
-        return clientAesKey.getEncoded();
+        clientKey = new EncryptionKey(type, secret);
+
+        return clientKey;
     }
 
-
     /**
-     * Decrypt using AES in CTS mode.
+     * Decrypt
      *
      * @param cipherText
      * @return
      * @throws Exception
      */
-    byte[] decryptAes(byte[] cipherText) throws Exception {
+    public byte[] decrypt(byte[] cipherText, KeyUsage usage) throws Exception {
         // Use the secret key to encrypt/decrypt data.
-        Cipher serverCipher = Cipher.getInstance("AES/CTS/NoPadding");
-        serverCipher.init(Cipher.DECRYPT_MODE, clientAesKey, aesIv);
-
-        return serverCipher.doFinal(cipherText);
+        EncTypeHandler encType = EncryptionHandler.getEncHandler(clientKey.getKeyType());
+        return encType.decrypt(cipherText, clientKey.getKeyData(), usage.getIntValue());
     }
 
-
-    byte[] concatenateBytes(byte[] array1, byte[] array2) {
+    private byte[] concatenateBytes(byte[] array1, byte[] array2) {
         byte[] concatenatedBytes = new byte[array1.length + array2.length];
 
         for (int i = 0; i < array1.length; i++) {

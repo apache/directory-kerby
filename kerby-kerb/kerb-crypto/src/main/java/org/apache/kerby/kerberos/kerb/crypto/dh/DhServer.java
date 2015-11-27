@@ -6,34 +6,33 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
+package org.apache.kerby.kerberos.kerb.crypto.dh;
 
+import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
+import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
 
+import javax.crypto.KeyAgreement;
+import javax.crypto.interfaces.DHPublicKey;
+import javax.crypto.spec.DHParameterSpec;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PublicKey;
-import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyAgreement;
-import javax.crypto.SecretKey;
-import javax.crypto.interfaces.DHPublicKey;
-import javax.crypto.spec.DHParameterSpec;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 
 /**
@@ -42,14 +41,12 @@ import javax.crypto.spec.SecretKeySpec;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-class DhServer {
-    private static AlgorithmParameterSpec aesIv = new IvParameterSpec(new byte[16]);
+public class DhServer {
 
     private KeyAgreement serverKeyAgree;
-    private SecretKey serverAesKey;
+    private EncryptionKey serverKey;
 
-
-    PublicKey initAndDoPhase(byte[] clientPubKeyEnc) throws Exception {
+    public PublicKey initAndDoPhase(byte[] clientPubKeyEnc) throws Exception {
         /*
          * The server has received the client's public key in encoded format.  The
          * server instantiates a DH public key from the encoded key material.
@@ -83,8 +80,7 @@ class DhServer {
         return serverKpair.getPublic();
     }
 
-
-    byte[] generateKey(byte[] clientDhNonce, byte[] serverDhNonce) {
+    public EncryptionKey generateKey(byte[] clientDhNonce, byte[] serverDhNonce, EncryptionType type) {
         // ZZ length will be same as public key.
         byte[] dhSharedSecret = serverKeyAgree.generateSecret();
         byte[] x = dhSharedSecret;
@@ -96,29 +92,25 @@ class DhServer {
         }
 
         byte[] secret = OctetString2Key.kTruncate(dhSharedSecret.length, x);
-        serverAesKey = new SecretKeySpec(secret, 0, 16, "AES");
+        serverKey = new EncryptionKey(type, secret);
 
-        return serverAesKey.getEncoded();
+        return serverKey;
     }
 
-
     /**
-     * Encrypt using AES in CTS mode.
+     * Encrypt
      *
      * @param clearText
      * @return The cipher text.
      * @throws Exception
      */
-    byte[] encryptAes(byte[] clearText) throws Exception {
+    public byte[] encrypt(byte[] clearText, KeyUsage usage) throws Exception {
         // Use the secret key to encrypt/decrypt data.
-        Cipher serverCipher = Cipher.getInstance("AES/CTS/NoPadding");
-        serverCipher.init(Cipher.ENCRYPT_MODE, serverAesKey, aesIv);
-
-        return serverCipher.doFinal(clearText);
+        EncTypeHandler encType = EncryptionHandler.getEncHandler(serverKey.getKeyType());
+        return encType.decrypt(clearText, serverKey.getKeyData(), usage.getIntValue());
     }
 
-
-    byte[] concatenateBytes(byte[] array1, byte[] array2) {
+    private byte[] concatenateBytes(byte[] array1, byte[] array2) {
         byte[] concatenatedBytes = new byte[array1.length + array2.length];
 
         for (int i = 0; i < array1.length; i++) {

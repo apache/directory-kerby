@@ -17,9 +17,10 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
+package org.apache.kerby.kerberos.kerb.crypto.dh;
 
 import junit.framework.TestCase;
+import org.apache.kerby.kerberos.kerb.crypto.dh.DhGroup;
 
 /**
  * "When using the Diffie-Hellman key agreement method, implementations MUST
@@ -36,17 +37,17 @@ public class DhGroupTest extends TestCase {
      * resulted in the expected bit length.
      */
     public void testPrimeBitLengths() {
-        assertEquals(1024, DhGroup.MODP_GROUP2.getP().bitLength());
-        assertEquals(2048, DhGroup.MODP_GROUP14.getP().bitLength());
-        assertEquals(4096, DhGroup.MODP_GROUP16.getP().bitLength());
+        TestCase.assertEquals(1024, DhGroup.MODP_GROUP2.getP().bitLength());
+        TestCase.assertEquals(2048, DhGroup.MODP_GROUP14.getP().bitLength());
+        TestCase.assertEquals(4096, DhGroup.MODP_GROUP16.getP().bitLength());
     }
 
     /**
      * Tests the generator values.
      */
     public void testGeneratorValues() {
-        assertEquals(2, DhGroup.MODP_GROUP2.getG().intValue());
-        assertEquals(2, DhGroup.MODP_GROUP14.getG().intValue());
-        assertEquals(2, DhGroup.MODP_GROUP16.getG().intValue());
+        TestCase.assertEquals(2, DhGroup.MODP_GROUP2.getG().intValue());
+        TestCase.assertEquals(2, DhGroup.MODP_GROUP14.getG().intValue());
+        TestCase.assertEquals(2, DhGroup.MODP_GROUP16.getG().intValue());
     }
 }

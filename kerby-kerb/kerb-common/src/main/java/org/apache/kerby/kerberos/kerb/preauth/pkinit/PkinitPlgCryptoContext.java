@@ -127,15 +127,15 @@ public class PkinitPlgCryptoContext {
     }
 
 
-    public ObjectIdentifier getIdPkinitAuthDataOID() throws IOException {
+    public static ObjectIdentifier getIdPkinitAuthDataOID() throws IOException {
         return new ObjectIdentifier(ID_PKINIT_AUTHDATA);
     }
 
-    public ObjectIdentifier getIdPkinitDHKeyDataOID() throws IOException {
+    public static ObjectIdentifier getIdPkinitDHKeyDataOID() throws IOException {
         return new ObjectIdentifier(ID_PKINIT_DHKEYDATA);
     }
 
-    public ObjectIdentifier getIdPkinitRkeyDataOID() throws IOException {
+    public static ObjectIdentifier getIdPkinitRkeyDataOID() throws IOException {
         return new ObjectIdentifier(ID_PKINIT_RKEYDATA);
     }
 }

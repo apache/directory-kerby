@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import org.apache.kerby.asn1.type.Asn1Item;
+import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -71,6 +73,31 @@ public class KdcHandler {
         KdcRequest kdcRequest = null;
         KrbMessage krbResponse;
 
+        ByteBuffer message = receivedMessage.duplicate();
+        Asn1InputBuffer ib = new Asn1InputBuffer(message);
+        Asn1Type body = null;
+        Asn1Type fd = null;
+        try {
+            fd = ib.read();
+            body = fd;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        while (fd != null) {
+            body = fd;
+            try {
+                fd = ib.read();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        byte[] reqBodyBytes = null;
+        try {
+            reqBodyBytes = ((Asn1Item)body).getBodyContent().readAllLeftBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         try {
             krbRequest = KrbCodec.decodeMessage(receivedMessage);
         } catch (IOException e) {
@@ -97,6 +124,9 @@ public class KdcHandler {
                 throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
             }
         }
+
+        // For checksum
+        kdcRequest.setReqBodyBytes(reqBodyBytes);
 
         if (remoteAddress == null) {
             throw new KrbException("Remote address is null, not available.");
