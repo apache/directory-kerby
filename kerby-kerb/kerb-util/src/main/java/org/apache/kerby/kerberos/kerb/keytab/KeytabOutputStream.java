@@ -45,12 +45,12 @@ public class KeytabOutputStream extends KrbOutputStream {
             writeCountedString(nameCom);
         }
 
-        writeInt(principal.getNameType().getIntValue()); // todo: consider the version
+        writeInt(principal.getNameType().getValue()); // todo: consider the version
     }
 
     @Override
     public void writeKey(EncryptionKey key, int version) throws IOException {
-        writeShort(key.getKeyType().getIntValue());
+        writeShort(key.getKeyType().getValue());
         writeCountedOctets(key.getKeyData());
     }
 

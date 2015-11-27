@@ -38,7 +38,7 @@ import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.ECPublicKey;
@@ -62,7 +62,7 @@ public class JwtTokenDecoder implements TokenDecoder {
      */
     @Override
     public AuthToken decodeFromBytes(byte[] content) throws IOException {
-        String tokenStr = new String(content, Charset.forName("UTF-8"));
+        String tokenStr = new String(content, StandardCharsets.UTF_8);
 
         return decodeFromString(tokenStr);
     }

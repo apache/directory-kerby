@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.base;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
@@ -35,8 +36,8 @@ public class LastReqEntry extends KrbSequenceType {
     private static final int LR_VALUE = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(LR_TYPE, 0, Asn1Integer.class),
-            new Asn1FieldInfo(LR_VALUE, 1, KerberosTime.class)
+            new ExplicitField(LR_TYPE, 0, Asn1Integer.class),
+            new ExplicitField(LR_VALUE, 1, KerberosTime.class)
     };
 
     public LastReqEntry() {
@@ -49,7 +50,7 @@ public class LastReqEntry extends KrbSequenceType {
     }
 
     public void setLrType(LastReqType lrType) {
-        setFieldAsInt(LR_TYPE, lrType.getIntValue());
+        setFieldAsInt(LR_TYPE, lrType.getValue());
     }
 
     public KerberosTime getLrValue() {

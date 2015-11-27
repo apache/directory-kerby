@@ -19,13 +19,14 @@
  */
 package org.apache.kerby.asn1;
 
-
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceOf;
 import org.apache.kerby.asn1.type.Asn1SetType;
 import org.apache.kerby.asn1.type.Asn1Tagging;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
+import org.apache.kerby.asn1.type.ExplicitField;
+import org.apache.kerby.asn1.type.ImplicitField;
 import org.apache.kerby.asn1.type.TaggingSequence;
 import org.apache.kerby.asn1.type.TaggingSet;
 
@@ -42,17 +43,16 @@ public class PersonnelRecord extends TaggingSet {
     private static final int CHILDREN = 5;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(NAME, -1, Name.class),
-            new Asn1FieldInfo(TITLE, 0, Asn1VisibleString.class),
-            new Asn1FieldInfo(NUMBER, -1, EmployeeNumber.class),
-            new Asn1FieldInfo(DATEOFHIRE, 1, Date.class),
-            new Asn1FieldInfo(NAMEOFSPOUSE, 2, Name.class),
-            new Asn1FieldInfo(CHILDREN, 3, Children.class, true)
+            new ExplicitField(NAME, -1, Name.class),
+            new ExplicitField(TITLE, 0, Asn1VisibleString.class),
+            new ExplicitField(NUMBER, -1, EmployeeNumber.class),
+            new ExplicitField(DATEOFHIRE, 1, Date.class),
+            new ExplicitField(NAMEOFSPOUSE, 2, Name.class),
+            new ImplicitField(CHILDREN, 3, Children.class)
     };
 
     public PersonnelRecord() {
-        super(0, fieldInfos, true);
-        getEncodingOption().useImplicit();
+        super(0, fieldInfos, true, true);
     }
 
     public void setName(Name name) {
@@ -121,8 +121,8 @@ public class PersonnelRecord extends TaggingSet {
         private static final int DATEOFBIRTH = 1;
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
-                new Asn1FieldInfo(NAME, -1, Name.class),
-                new Asn1FieldInfo(DATEOFBIRTH, 0, Date.class)
+                new ExplicitField(NAME, -1, Name.class),
+                new ExplicitField(DATEOFBIRTH, 0, Date.class)
         };
 
         public ChildInformation() {
@@ -152,14 +152,13 @@ public class PersonnelRecord extends TaggingSet {
         private static final int FAMILYNAME = 2;
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
-                new Asn1FieldInfo(GIVENNAME, -1, Asn1VisibleString.class),
-                new Asn1FieldInfo(INITIAL, -1, Asn1VisibleString.class),
-                new Asn1FieldInfo(FAMILYNAME, -1, Asn1VisibleString.class)
+                new ExplicitField(GIVENNAME, -1, Asn1VisibleString.class),
+                new ExplicitField(INITIAL, -1, Asn1VisibleString.class),
+                new ExplicitField(FAMILYNAME, -1, Asn1VisibleString.class)
         };
 
         public Name() {
-            super(1, tags, true);
-            getEncodingOption().useImplicit();
+            super(1, tags, true, true);
         }
 
         public Name(String givenName, String initial, String familyName) {
@@ -196,20 +195,17 @@ public class PersonnelRecord extends TaggingSet {
 
     public static class EmployeeNumber extends Asn1Tagging<Asn1Integer> {
         public EmployeeNumber(Integer value) {
-            super(2, new Asn1Integer(value), true);
-            getEncodingOption().useImplicit();
+            super(2, new Asn1Integer(value), true, true);
         }
 
         public EmployeeNumber() {
-            super(2, new Asn1Integer(), true);
-            getEncodingOption().useImplicit();
+            super(2, new Asn1Integer(), true, true);
         }
     }
 
     public static class Date extends Asn1Tagging<Asn1VisibleString> {
         public Date(String value) {
-            super(3, new Asn1VisibleString(value), true);
-            getEncodingOption().useImplicit();
+            super(3, new Asn1VisibleString(value), true, true);
         }
         public Date() {
             this(null);

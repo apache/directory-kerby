@@ -41,7 +41,6 @@ import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.cms.DHParameter;
-import org.apache.kerby.kerberos.kerb.spec.cms.SubjectPublicKeyInfo;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;

@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.base;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
 import java.util.Arrays;
@@ -39,9 +40,9 @@ public class EncryptedData extends KrbSequenceType {
     private static final int CIPHER = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ETYPE, 0, Asn1Integer.class),
-            new Asn1FieldInfo(KVNO, 1, Asn1Integer.class),
-            new Asn1FieldInfo(CIPHER, 2, Asn1OctetString.class)
+            new ExplicitField(ETYPE, 0, Asn1Integer.class),
+            new ExplicitField(KVNO, 1, Asn1Integer.class),
+            new ExplicitField(CIPHER, 2, Asn1OctetString.class)
     };
 
     public EncryptedData() {
@@ -54,7 +55,7 @@ public class EncryptedData extends KrbSequenceType {
     }
 
     public void setEType(EncryptionType eType) {
-        setFieldAsInt(ETYPE, eType.getIntValue());
+        setFieldAsInt(ETYPE, eType.getValue());
     }
 
     public int getKvno() {

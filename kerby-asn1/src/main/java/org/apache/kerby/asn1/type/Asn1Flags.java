@@ -82,23 +82,23 @@ public class Asn1Flags extends Asn1BitString {
     }
 
     public boolean isFlagSet(Asn1EnumType flag) {
-        return isFlagSet(flag.getIntValue());
+        return isFlagSet(flag.getValue());
     }
 
     public void setFlag(Asn1EnumType flag) {
-        setFlag(flag.getIntValue());
+        setFlag(flag.getValue());
     }
 
     public void setFlag(Asn1EnumType flag, boolean isSet)  {
         if (isSet) {
-            setFlag(flag.getIntValue());
+            setFlag(flag.getValue());
         } else {
-            clearFlag(flag.getIntValue());
+            clearFlag(flag.getValue());
         }
     }
 
     public void clearFlag(Asn1EnumType flag) {
-        clearFlag(flag.getIntValue());
+        clearFlag(flag.getValue());
     }
 
     private void flags2Value() {

@@ -29,7 +29,7 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class GssAppServer extends AppServer {
     private String serverPrincipal;
@@ -94,7 +94,7 @@ public class GssAppServer extends AppServer {
         MessageProp prop = new MessageProp(0, false);
         byte[] token = conn.recvToken();
         byte[] bytes = context.unwrap(token, 0, token.length, prop);
-        String str = new String(bytes, Charset.forName("UTF-8"));
+        String str = new String(bytes, StandardCharsets.UTF_8);
         System.out.println("Received data \""
                 + str + "\" of length " + str.length());
 

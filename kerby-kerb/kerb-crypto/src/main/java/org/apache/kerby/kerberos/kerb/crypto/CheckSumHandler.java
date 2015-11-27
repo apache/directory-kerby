@@ -157,7 +157,7 @@ public class CheckSumHandler {
     public static CheckSum checksumWithKey(CheckSumType checkSumType,
                            byte[] bytes, byte[] key, KeyUsage usage) throws KrbException {
         CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
-        byte[] checksumBytes = handler.checksumWithKey(bytes, key, usage.getIntValue());
+        byte[] checksumBytes = handler.checksumWithKey(bytes, key, usage.getValue());
         CheckSum checkSum = new CheckSum();
         checkSum.setCksumtype(checkSumType);
         checkSum.setChecksum(checksumBytes);
@@ -169,6 +169,6 @@ public class CheckSumHandler {
         CheckSumType checkSumType = checkSum.getCksumtype();
         CheckSumTypeHandler handler = getCheckSumHandler(checkSumType);
         return handler.verifyWithKey(bytes, key,
-                usage.getIntValue(), checkSum.getChecksum());
+                usage.getValue(), checkSum.getChecksum());
     }
 }

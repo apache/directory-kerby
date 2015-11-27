@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.fast;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
 
@@ -38,9 +39,9 @@ public class PaAuthnEntry extends KrbSequenceType {
     private static final int PA_VALUE = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PA_TYPE, Asn1Integer.class),
-            new Asn1FieldInfo(PA_HINT, Asn1OctetString.class),
-            new Asn1FieldInfo(PA_VALUE, Asn1OctetString.class)
+            new ExplicitField(PA_TYPE, Asn1Integer.class),
+            new ExplicitField(PA_HINT, Asn1OctetString.class),
+            new ExplicitField(PA_VALUE, Asn1OctetString.class)
     };
 
     public PaAuthnEntry() {
@@ -59,7 +60,7 @@ public class PaAuthnEntry extends KrbSequenceType {
     }
 
     public void setPaType(PaDataType paDataType) {
-        setFieldAsInt(PA_TYPE, paDataType.getIntValue());
+        setFieldAsInt(PA_TYPE, paDataType.getValue());
     }
 
     public byte[] getPaHint() {

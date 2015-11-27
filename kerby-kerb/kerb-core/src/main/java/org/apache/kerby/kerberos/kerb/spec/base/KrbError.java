@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.base;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
@@ -57,19 +58,19 @@ public class KrbError extends KrbMessage {
     private static final int EDATA = 12;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PVNO, Asn1Integer.class),
-            new Asn1FieldInfo(MSG_TYPE, Asn1Integer.class),
-            new Asn1FieldInfo(CTIME, KerberosTime.class),
-            new Asn1FieldInfo(CUSEC, Asn1Integer.class),
-            new Asn1FieldInfo(STIME, KerberosTime.class),
-            new Asn1FieldInfo(SUSEC, Asn1Integer.class),
-            new Asn1FieldInfo(ERROR_CODE, Asn1Integer.class),
-            new Asn1FieldInfo(CREALM, KerberosString.class),
-            new Asn1FieldInfo(CNAME, PrincipalName.class),
-            new Asn1FieldInfo(REALM, KerberosString.class),
-            new Asn1FieldInfo(SNAME, PrincipalName.class),
-            new Asn1FieldInfo(ETEXT, KerberosString.class),
-            new Asn1FieldInfo(EDATA, Asn1OctetString.class)
+            new ExplicitField(PVNO, Asn1Integer.class),
+            new ExplicitField(MSG_TYPE, Asn1Integer.class),
+            new ExplicitField(CTIME, KerberosTime.class),
+            new ExplicitField(CUSEC, Asn1Integer.class),
+            new ExplicitField(STIME, KerberosTime.class),
+            new ExplicitField(SUSEC, Asn1Integer.class),
+            new ExplicitField(ERROR_CODE, Asn1Integer.class),
+            new ExplicitField(CREALM, KerberosString.class),
+            new ExplicitField(CNAME, PrincipalName.class),
+            new ExplicitField(REALM, KerberosString.class),
+            new ExplicitField(SNAME, PrincipalName.class),
+            new ExplicitField(ETEXT, KerberosString.class),
+            new ExplicitField(EDATA, Asn1OctetString.class)
     };
 
     public KrbError() {

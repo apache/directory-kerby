@@ -21,6 +21,8 @@ package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
+import org.apache.kerby.asn1.type.ImplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
 /**
@@ -34,8 +36,8 @@ public class DHRepInfo extends KrbSequenceType {
     private static final int SERVER_DH_NONCE = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(DH_SIGNED_DATA, Asn1OctetString.class, true),
-            new Asn1FieldInfo(SERVER_DH_NONCE, DHNonce.class)
+            new ImplicitField(DH_SIGNED_DATA, Asn1OctetString.class),
+            new ExplicitField(SERVER_DH_NONCE, DHNonce.class)
     };
 
     public DHRepInfo() {

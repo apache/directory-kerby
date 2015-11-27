@@ -48,14 +48,14 @@ public enum SamType implements Asn1EnumType {
     }
 
     @Override
-    public int getIntValue() {
+    public int getValue() {
         return value;
     }
 
     public static SamType fromValue(Integer value) {
         if (value != null) {
             for (SamType st : SamType.values()) {
-                if (value == st.getIntValue()) {
+                if (value == st.getValue()) {
                     return st;
                 }
             }

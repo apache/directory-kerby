@@ -27,7 +27,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public abstract class KrbInputStream extends DataInputStream {
     public KrbInputStream(InputStream in) {
@@ -55,7 +55,7 @@ public abstract class KrbInputStream extends DataInputStream {
     public String readCountedString() throws IOException {
         byte[] countedOctets = readCountedOctets();
         // ASCII
-        return new String(countedOctets, Charset.forName("UTF-8"));
+        return new String(countedOctets, StandardCharsets.UTF_8);
     }
 
     public byte[] readCountedOctets() throws IOException {

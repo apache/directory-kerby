@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.fast;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
 /**
@@ -37,8 +38,8 @@ public class KrbFastArmor extends KrbSequenceType {
     private static final int ARMOR_VALUE = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ARMOR_TYPE, Asn1Integer.class),
-            new Asn1FieldInfo(ARMOR_VALUE, Asn1OctetString.class)
+            new ExplicitField(ARMOR_TYPE, Asn1Integer.class),
+            new ExplicitField(ARMOR_VALUE, Asn1OctetString.class)
     };
 
     public KrbFastArmor() {
@@ -51,7 +52,7 @@ public class KrbFastArmor extends KrbSequenceType {
     }
 
     public void setArmorType(ArmorType armorType) {
-        setFieldAsInt(ARMOR_TYPE, armorType.getIntValue());
+        setFieldAsInt(ARMOR_TYPE, armorType.getValue());
     }
 
     public byte[] getArmorValue() {

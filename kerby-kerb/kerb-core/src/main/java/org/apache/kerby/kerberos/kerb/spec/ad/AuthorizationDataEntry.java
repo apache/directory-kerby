@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.ad;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
 /**
@@ -35,8 +36,8 @@ public class AuthorizationDataEntry extends KrbSequenceType {
     private static final int AD_DATA = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(AD_TYPE, 0, Asn1Integer.class),
-            new Asn1FieldInfo(AD_DATA, 1, Asn1OctetString.class)
+            new ExplicitField(AD_TYPE, 0, Asn1Integer.class),
+            new ExplicitField(AD_DATA, 1, Asn1OctetString.class)
     };
 
     public AuthorizationDataEntry() {
@@ -49,7 +50,7 @@ public class AuthorizationDataEntry extends KrbSequenceType {
     }
 
     public void setAuthzType(AuthorizationType authzType) {
-        setFieldAsInt(AD_TYPE, authzType.getIntValue());
+        setFieldAsInt(AD_TYPE, authzType.getValue());
     }
 
     public byte[] getAuthzData() {

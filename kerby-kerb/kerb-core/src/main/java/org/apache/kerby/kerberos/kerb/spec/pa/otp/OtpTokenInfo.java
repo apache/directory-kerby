@@ -23,6 +23,7 @@ import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AlgorithmIdentifiers;
@@ -52,15 +53,15 @@ public class OtpTokenInfo extends KrbSequenceType {
     private static final int ITERATION_COUNT = 8;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(FLAGS, Asn1OctetString.class, true),
-            new Asn1FieldInfo(OTP_VENDOR, Asn1Utf8String.class),
-            new Asn1FieldInfo(OTP_CHALLENGE, Asn1OctetString.class, true),
-            new Asn1FieldInfo(OTP_LENGTH, KerberosString.class),
-            new Asn1FieldInfo(OTP_FORMAT, Asn1OctetString.class, true),
-            new Asn1FieldInfo(OTP_TOKEN_ID, Asn1Utf8String.class),
-            new Asn1FieldInfo(OTP_ALG_ID, Asn1OctetString.class, true),
-            new Asn1FieldInfo(SUPPORTED_HASH_ALG, AlgorithmIdentifiers.class),
-            new Asn1FieldInfo(ITERATION_COUNT, Asn1Integer.class, true)
+            new ExplicitField(FLAGS, Asn1OctetString.class),
+            new ExplicitField(OTP_VENDOR, Asn1Utf8String.class),
+            new ExplicitField(OTP_CHALLENGE, Asn1OctetString.class),
+            new ExplicitField(OTP_LENGTH, KerberosString.class),
+            new ExplicitField(OTP_FORMAT, Asn1OctetString.class),
+            new ExplicitField(OTP_TOKEN_ID, Asn1Utf8String.class),
+            new ExplicitField(OTP_ALG_ID, Asn1OctetString.class),
+            new ExplicitField(SUPPORTED_HASH_ALG, AlgorithmIdentifiers.class),
+            new ExplicitField(ITERATION_COUNT, Asn1Integer.class)
     };
 
     public OtpTokenInfo() {

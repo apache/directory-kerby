@@ -57,6 +57,8 @@ public class CodecTest {
         assertThat(restored).isNotNull();
         assertThat(restored.getCksumtype()).isEqualTo(mcs.getCksumtype());
         assertThat(mcs.getChecksum()).isEqualTo(restored.getChecksum());
+        assertThat(restored.tagNo()).isEqualTo(mcs.tagNo());
+        assertThat(restored.tagFlags()).isEqualTo(mcs.tagFlags());
     }
 
     @Test

@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.spec.ticket;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbAppSequenceType;
@@ -61,17 +62,17 @@ public class EncTicketPart extends KrbAppSequenceType {
     private static final int AUTHORIZATION_DATA = 10;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(FLAGS, 0, TicketFlags.class),
-            new Asn1FieldInfo(KEY, 1, EncryptionKey.class),
-            new Asn1FieldInfo(CREALM, 2, KerberosString.class),
-            new Asn1FieldInfo(CNAME, 3, PrincipalName.class),
-            new Asn1FieldInfo(TRANSITED, 4, TransitedEncoding.class),
-            new Asn1FieldInfo(AUTHTIME, 5, KerberosTime.class),
-            new Asn1FieldInfo(STARTTIME, 6, KerberosTime.class),
-            new Asn1FieldInfo(ENDTIME, 7, KerberosTime.class),
-            new Asn1FieldInfo(ENDTIME, 8, KerberosTime.class),
-            new Asn1FieldInfo(CADDR, 9, HostAddresses.class),
-            new Asn1FieldInfo(AUTHORIZATION_DATA, 10, AuthorizationData.class)
+            new ExplicitField(FLAGS, 0, TicketFlags.class),
+            new ExplicitField(KEY, 1, EncryptionKey.class),
+            new ExplicitField(CREALM, 2, KerberosString.class),
+            new ExplicitField(CNAME, 3, PrincipalName.class),
+            new ExplicitField(TRANSITED, 4, TransitedEncoding.class),
+            new ExplicitField(AUTHTIME, 5, KerberosTime.class),
+            new ExplicitField(STARTTIME, 6, KerberosTime.class),
+            new ExplicitField(ENDTIME, 7, KerberosTime.class),
+            new ExplicitField(ENDTIME, 8, KerberosTime.class),
+            new ExplicitField(CADDR, 9, HostAddresses.class),
+            new ExplicitField(AUTHORIZATION_DATA, 10, AuthorizationData.class)
     };
 
     public EncTicketPart() {

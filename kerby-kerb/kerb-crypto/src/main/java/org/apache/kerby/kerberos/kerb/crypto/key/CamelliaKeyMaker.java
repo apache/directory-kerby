@@ -25,7 +25,6 @@ import org.apache.kerby.kerberos.kerb.crypto.util.Pbkdf;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.CamelliaProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
-import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 public class CamelliaKeyMaker extends DkKeyMaker {
@@ -43,12 +42,7 @@ public class CamelliaKeyMaker extends DkKeyMaker {
     public byte[] str2key(String string, String salt, byte[] param) throws KrbException {
         int iterCount = getIterCount(param, 32768);
 
-        byte[] saltBytes = null;
-        try {
-            saltBytes = getSaltBytes(salt, getPepper());
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        byte[] saltBytes = getSaltBytes(salt, getPepper());
 
         int keySize = encProvider().keySize();
         byte[] random;

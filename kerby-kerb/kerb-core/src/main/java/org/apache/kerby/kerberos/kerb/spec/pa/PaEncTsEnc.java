@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.pa;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
@@ -35,8 +36,8 @@ public class PaEncTsEnc extends KrbSequenceType {
     private static final int PAUSEC = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PATIMESTAMP, 0, KerberosTime.class),
-            new Asn1FieldInfo(PAUSEC, 1, Asn1Integer.class)
+            new ExplicitField(PATIMESTAMP, 0, KerberosTime.class),
+            new ExplicitField(PAUSEC, 1, Asn1Integer.class)
     };
 
     public PaEncTsEnc() {

@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.base;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
 import java.util.Arrays;
@@ -37,8 +38,8 @@ public class CheckSum extends KrbSequenceType {
     private static final int CHECK_SUM = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(CKSUM_TYPE, 0, Asn1Integer.class),
-        new Asn1FieldInfo(CHECK_SUM, 1, Asn1OctetString.class)
+        new ExplicitField(CKSUM_TYPE, 0, Asn1Integer.class),
+        new ExplicitField(CHECK_SUM, 1, Asn1OctetString.class)
     };
 
     public CheckSum() {
@@ -62,7 +63,7 @@ public class CheckSum extends KrbSequenceType {
     }
 
     public void setCksumtype(CheckSumType cksumtype) {
-        setFieldAsInt(CKSUM_TYPE, cksumtype.getIntValue());
+        setFieldAsInt(CKSUM_TYPE, cksumtype.getValue());
     }
 
     public byte[] getChecksum() {

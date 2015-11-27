@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.EncodingOption;
 import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.TaggingOption;
@@ -34,13 +33,18 @@ import java.nio.ByteBuffer;
  * @param <T> the type of the value encoded/decoded or wrapped by this
  */
 public abstract class AbstractAsn1Type<T> implements Asn1Type {
+
     private TagClass tagClass = TagClass.UNKNOWN;
     private int tagNo = -1;
-    private int tagFlags = -1;
-    private EncodingOption encodingOption = new EncodingOption();
+    private int tagFlags = 0;
     private int encodingLen = -1;
     // The wrapped real value.
     private T value;
+
+    // encoding options
+    private EncodingType encodingType = EncodingType.BER;
+    private boolean isImplicit = true;
+    private boolean isDefinitiveLength = false;
 
     /**
      * Default constructor, generally for decoding as a value container
@@ -81,22 +85,8 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         this.tagClass = tagClass;
         this.tagNo = tagNo;
         this.value = value;
-    }
 
-    /**
-     * Set encoding option
-     * @param encodingOption The encoding option
-     */
-    public void setEncodingOption(EncodingOption encodingOption) {
-        this.encodingOption = encodingOption;
-    }
-
-    /**
-     * Get encoding option
-     * @return encoding option
-     */
-    public EncodingOption getEncodingOption() {
-        return this.encodingOption;
+        this.tagFlags |= tagClass.getValue();
     }
 
     public T getValue() {
@@ -107,8 +97,18 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         this.value = value;
     }
 
-    protected TagClass tagClass() {
+    @Override
+    public TagClass tagClass() {
         return tagClass;
+    }
+
+    protected void setTagClass(TagClass tagClass) {
+        this.tagClass = tagClass;
+    }
+
+    @Override
+    public int tagFlags() {
+        return tagFlags;
     }
 
     @Override
@@ -122,6 +122,70 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     protected void setTagNo(int tagNo) {
         this.tagNo = tagNo;
+    }
+
+    @Override
+    public void usePrimitive(boolean isPrimitive) {
+        if (isPrimitive) {
+            tagFlags &= ~CONSTRUCTED_FLAG;
+        } else {
+            tagFlags |= CONSTRUCTED_FLAG;
+        }
+    }
+
+    @Override
+    public boolean isPrimitive() {
+        return (tagFlags & CONSTRUCTED_FLAG) == 0;
+    }
+
+    @Override
+    public void useDefinitiveLength(boolean isDefinitiveLength) {
+        this.isDefinitiveLength = isDefinitiveLength;
+    }
+
+    @Override
+    public boolean isDefinitiveLength() {
+        return isDefinitiveLength;
+    }
+
+    @Override
+    public void useImplicit(boolean isImplicit) {
+        this.isImplicit = isImplicit;
+    }
+
+    @Override
+    public boolean isImplicit() {
+        return isImplicit;
+    }
+
+    @Override
+    public void useDER() {
+        this.encodingType = EncodingType.DER;
+    }
+
+    @Override
+    public boolean isDER() {
+        return encodingType == EncodingType.DER;
+    }
+
+    @Override
+    public void useBER() {
+        this.encodingType = EncodingType.BER;
+    }
+
+    @Override
+    public boolean isBER() {
+        return encodingType == EncodingType.BER;
+    }
+
+    @Override
+    public void useCER() {
+        this.encodingType = EncodingType.CER;
+    }
+
+    @Override
+    public boolean isCER() {
+        return encodingType == EncodingType.CER;
     }
 
     @Override
@@ -152,32 +216,12 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     }
 
     @Override
-    public int tagFlags() {
-        if (tagFlags == -1) {
-            int flags = tagClass.getValue();
-            if (isConstructed()) {
-                flags |= EncodingOption.CONSTRUCTED_FLAG;
-            }
-            return flags;
-        }
-        return tagFlags;
-    }
-
-    @Override
     public int encodingLength() {
         if (encodingLen == -1) {
             int bodyLen = encodingBodyLength();
             encodingLen = lengthOfTagLength(tagNo()) + lengthOfBodyLength(bodyLen) + bodyLen;
         }
         return encodingLen;
-    }
-
-    public boolean isConstructed() {
-        if (tagFlags != -1) {
-            return (tagFlags & EncodingOption.CONSTRUCTED_FLAG) != 0;
-        } else {
-            return false;
-        }
     }
 
     public boolean isUniversal() {
@@ -209,26 +253,27 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
     protected void decode(LimitedByteBuffer content) throws IOException {
         int tag = readTag(content);
         int tagNo = readTagNo(content, tag);
+        int tmpTagFlags = tag & 0xe0;
         int length = readLength(content);
 
-        decode(tag, tagNo, new LimitedByteBuffer(content, length));
+        decode(tmpTagFlags, tagNo, new LimitedByteBuffer(content, length));
     }
 
     public void decode(int tagFlags, int tagNo,
                        LimitedByteBuffer content) throws IOException {
-        if (this.tagClass != TagClass.UNKNOWN && this.tagClass
+        if (tagClass() != TagClass.UNKNOWN && tagClass()
                 != TagClass.fromTagFlags(tagFlags)) {
             throw new IOException("Unexpected tagFlags " + tagFlags
-                    + ", expecting " + this.tagClass);
+                    + ", expecting " + tagClass());
         }
-        if (this.tagNo != -1 && this.tagNo != tagNo) {
+        if (tagNo() != -1 && tagNo() != tagNo) {
             throw new IOException("Unexpected tagNo " + tagNo + ", "
-                    + "expecting " + this.tagNo);
+                    + "expecting " + tagNo());
         }
 
-        this.tagClass = TagClass.fromTagFlags(tagFlags);
-        this.tagFlags = tagFlags;
-        this.tagNo = tagNo;
+        setTagClass(TagClass.fromTagFlags(tagFlags));
+        setTagFlags(tagFlags);
+        setTagNo(tagNo);
 
         decodeBody(content);
     }
@@ -253,7 +298,7 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
 
     @Override
     public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption) {
-        int taggingTagFlags = taggingOption.tagFlags(isConstructed());
+        int taggingTagFlags = taggingOption.tagFlags(!isPrimitive());
         encodeTag(buffer, taggingTagFlags, taggingOption.getTagNo());
         int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength()
                 : encodingLength();
@@ -284,14 +329,14 @@ public abstract class AbstractAsn1Type<T> implements Asn1Type {
         int taggingLength = readLength(content);
         LimitedByteBuffer newContent = new LimitedByteBuffer(content, taggingLength);
 
-        int tagFlags = taggingTag & 0xe0;
-        taggedDecode(tagFlags, taggingTagNo, newContent, taggingOption);
+        int tmpTagFlags = taggingTag & 0xe0;
+        taggedDecode(tmpTagFlags, taggingTagNo, newContent, taggingOption);
     }
 
     protected void taggedDecode(int taggingTagFlags, int taggingTagNo,
                                 LimitedByteBuffer content,
                                 TaggingOption taggingOption) throws IOException {
-        int expectedTaggingTagFlags = taggingOption.tagFlags(isConstructed());
+        int expectedTaggingTagFlags = taggingOption.tagFlags(!isPrimitive());
         if (expectedTaggingTagFlags != taggingTagFlags) {
             throw new IOException("Unexpected tag flags " + taggingTagFlags
                     + ", expecting " + expectedTaggingTagFlags);

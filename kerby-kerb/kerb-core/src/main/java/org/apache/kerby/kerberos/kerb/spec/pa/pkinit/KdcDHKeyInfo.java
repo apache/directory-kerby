@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
@@ -38,9 +39,9 @@ public class KdcDHKeyInfo extends KrbSequenceType {
     private static final int DH_KEY_EXPIRATION = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(SUBJECT_PUBLIC_KEY, Asn1BitString.class),
-            new Asn1FieldInfo(NONCE, Asn1Integer.class),
-            new Asn1FieldInfo(DH_KEY_EXPIRATION, KerberosTime.class)
+            new ExplicitField(SUBJECT_PUBLIC_KEY, Asn1BitString.class),
+            new ExplicitField(NONCE, Asn1Integer.class),
+            new ExplicitField(DH_KEY_EXPIRATION, KerberosTime.class)
     };
 
     public KdcDHKeyInfo() {

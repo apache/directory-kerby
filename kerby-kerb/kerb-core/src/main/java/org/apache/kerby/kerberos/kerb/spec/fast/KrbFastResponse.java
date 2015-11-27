@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.fast;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
@@ -46,10 +47,10 @@ public class KrbFastResponse extends KrbSequenceType {
     private static final int NONCE = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PADATA, PaData.class),
-            new Asn1FieldInfo(STRENGTHEN_KEY, EncryptionKey.class),
-            new Asn1FieldInfo(FINISHED, KrbFastFinished.class),
-            new Asn1FieldInfo(NONCE, Asn1Integer.class)
+            new ExplicitField(PADATA, PaData.class),
+            new ExplicitField(STRENGTHEN_KEY, EncryptionKey.class),
+            new ExplicitField(FINISHED, KrbFastFinished.class),
+            new ExplicitField(NONCE, Asn1Integer.class)
     };
 
     public KrbFastResponse() {

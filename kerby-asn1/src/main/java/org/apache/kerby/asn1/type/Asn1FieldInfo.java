@@ -21,29 +21,50 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.TaggingOption;
 
+/**
+ * Representing a field in a ASN1 collection or choice.
+ */
 public class Asn1FieldInfo {
     private int index;
-    private int tagNo;
+    private int tagNo = -1; // Indicate a non-tagged field
     private boolean isImplicit;
     private Class<? extends Asn1Type> type;
 
-    public Asn1FieldInfo(int index, int tagNo, Class<? extends Asn1Type> type) {
-        this(index, tagNo, type, false);
-    }
-
-    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type) {
-        this(index, index, type, false);
-    }
-
-    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type, boolean isImplicit) {
+    /**
+     * Constructor for a tagged field, the tagNo being the same of index.
+     * @param index
+     * @param type
+     * @param isImplicit
+     */
+    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type,
+                         boolean isImplicit) {
         this(index, index, type, isImplicit);
     }
 
-    public Asn1FieldInfo(int index, int tagNo, Class<? extends Asn1Type> type, boolean isImplicit) {
+    /**
+     * Constructor for a tagged field.
+     * @param index
+     * @param tagNo
+     * @param type
+     * @param isImplicit
+     */
+    public Asn1FieldInfo(int index, int tagNo, Class<? extends Asn1Type> type,
+                         boolean isImplicit) {
         this.index = index;
         this.tagNo = tagNo;
         this.type = type;
         this.isImplicit = isImplicit;
+    }
+
+    /**
+     * Constructor for a non-tagged field.
+     * @param index
+     * @param type
+     */
+    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type) {
+        this.index = index;
+        this.type = type;
+        this.tagNo = -1; // Indicate a non-tagged field
     }
 
     public boolean isTagged() {

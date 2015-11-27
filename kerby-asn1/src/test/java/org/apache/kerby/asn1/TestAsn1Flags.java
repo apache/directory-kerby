@@ -56,7 +56,7 @@ public class TestAsn1Flags {
     }
 
     @Override
-    public int getIntValue() {
+    public int getValue() {
       return value;
     }
   }

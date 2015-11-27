@@ -22,6 +22,8 @@ package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
+import org.apache.kerby.asn1.type.ImplicitField;
 
 /**
  PA-PK-AS-REP ::= CHOICE {
@@ -34,8 +36,8 @@ public class PaPkAsRep extends Asn1Choice {
     private static final int ENCKEY_PACK = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(DH_INFO, DHRepInfo.class),
-            new Asn1FieldInfo(ENCKEY_PACK, Asn1OctetString.class, true)
+            new ExplicitField(DH_INFO, DHRepInfo.class),
+            new ImplicitField(ENCKEY_PACK, Asn1OctetString.class)
     };
 
     public PaPkAsRep() {

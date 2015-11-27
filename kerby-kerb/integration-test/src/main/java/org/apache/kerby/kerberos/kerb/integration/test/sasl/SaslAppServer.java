@@ -30,7 +30,7 @@ import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslException;
 import javax.security.sasl.SaslServer;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,7 +100,7 @@ public class SaslAppServer extends AppServer {
     protected void doWith(SaslServer ss, Map<String, Object> props,
                           Transport.Connection conn) throws IOException, Exception {
         byte[] token = conn.recvToken();
-        String str = new String(token, Charset.forName("UTF-8"));
+        String str = new String(token, StandardCharsets.UTF_8);
         System.out.println("Received data \""
                 + str + "\" of length " + str.length());
     }

@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.base;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
@@ -38,9 +39,9 @@ public class EtypeInfo2Entry extends KrbSequenceType {
     private static final int S2KPARAMS = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ETYPE, 0, Asn1Integer.class),
-            new Asn1FieldInfo(SALT, 1, KerberosString.class),
-            new Asn1FieldInfo(S2KPARAMS, 2, Asn1OctetString.class)
+            new ExplicitField(ETYPE, 0, Asn1Integer.class),
+            new ExplicitField(SALT, 1, KerberosString.class),
+            new ExplicitField(S2KPARAMS, 2, Asn1OctetString.class)
     };
 
     public EtypeInfo2Entry() {

@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.spec.base;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 
 import java.net.InetAddress;
@@ -38,8 +39,8 @@ public class HostAddress extends KrbSequenceType {
     private static final int ADDRESS = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ADDR_TYPE, 0, Asn1Integer.class),
-            new Asn1FieldInfo(ADDRESS, 1, Asn1OctetString.class)
+            new ExplicitField(ADDR_TYPE, 0, Asn1Integer.class),
+            new ExplicitField(ADDRESS, 1, Asn1OctetString.class)
     };
 
     public HostAddress() {
@@ -99,7 +100,7 @@ public class HostAddress extends KrbSequenceType {
 
     @Override
     public int hashCode() {
-        int result = getAddrType().getIntValue();
+        int result = getAddrType().getValue();
         if (getAddress() != null) {
             result = 31 * result + Arrays.hashCode(getAddress());
         }

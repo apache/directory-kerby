@@ -31,65 +31,56 @@ import java.nio.ByteBuffer;
  */
 public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
-    public Asn1Tagging(boolean isAppSpecific) {
-        this(-1, null, isAppSpecific);
-    }
-
-    public Asn1Tagging(int tagNo, T value, boolean isAppSpecific) {
-        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC, tagNo, value);
-        getEncodingOption().useExplicit();
+    public Asn1Tagging(int tagNo, T value,
+                       boolean isAppSpecific, boolean isImplicit) {
+        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC,
+            tagNo, value);
         if (value == null) {
             initValue();
+        }
+        useImplicit(isImplicit);
+    }
+
+    @Override
+    public void useImplicit(boolean isImplicit) {
+        super.useImplicit(isImplicit);
+
+        if (!isImplicit) {
+            //In effect, explicitly tagged types are structured types consisting
+            // of one component, the underlying type.
+            super.usePrimitive(false);
+        } else {
+            super.usePrimitive(getValue().isPrimitive());
         }
     }
 
     @Override
     protected int encodingBodyLength() {
         AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
-        if (getEncodingOption().isExplicit()) {
-            return value.encodingLength();
-        } else if (getEncodingOption().isImplicit()) {
+        if (isImplicit()) {
             return value.encodingBodyLength();
         } else {
-            throw new RuntimeException("Invalid decoding option, "
-                    + "only allowing explicit/implicit");
+            return value.encodingLength();
         }
-    }
-
-    @Override
-    public boolean isConstructed() {
-        if (getEncodingOption().isExplicit()) {
-            return true;
-        } else if (getEncodingOption().isImplicit()) {
-            AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
-            return value.isConstructed();
-        }
-        return false;
     }
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
         AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
-        if (getEncodingOption().isExplicit()) {
-            value.encode(buffer);
-        } else if (getEncodingOption().isImplicit()) {
+        if (isImplicit()) {
             value.encodeBody(buffer);
         } else {
-            throw new RuntimeException("Invalid decoding option, "
-                    + "only allowing explicit/implicit");
+            value.encode(buffer);
         }
     }
 
     @Override
     protected void decodeBody(LimitedByteBuffer content) throws IOException {
         AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
-        if (getEncodingOption().isExplicit()) {
-            value.decode(content);
-        } else if (getEncodingOption().isImplicit()) {
+        if (isImplicit()) {
             value.decodeBody(content);
         } else {
-            throw new RuntimeException("Invalid decoding option, "
-                    + "only allowing explicit/implicit");
+            value.decode(content);
         }
     }
 

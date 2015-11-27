@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.asn1;
 
+import org.apache.kerby.asn1.type.Asn1Type;
+
 /**
  * Tagging option for tagging an ASN1 type.
  */
@@ -83,7 +85,7 @@ public final class TaggingOption {
     public int tagFlags(boolean isTaggedConstructed) {
         boolean isConstructed = isImplicit ? isTaggedConstructed : true;
         TagClass tagClass = isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC;
-        int flags = tagClass.getValue() | (isConstructed ? EncodingOption.CONSTRUCTED_FLAG : 0x00);
+        int flags = tagClass.getValue() | (isConstructed ? Asn1Type.CONSTRUCTED_FLAG : 0x00);
 
         return flags;
     }

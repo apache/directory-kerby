@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.spec;
 
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.TaggingSequence;
 
 /**
@@ -28,7 +28,7 @@ import org.apache.kerby.asn1.type.TaggingSequence;
  */
 public abstract class KrbAppSequenceType extends TaggingSequence {
     public KrbAppSequenceType(int tagNo, Asn1FieldInfo[] fieldInfos) {
-        super(tagNo, fieldInfos, true);
+        super(tagNo, fieldInfos, true, false); // Kerberos favors explicit
     }
 
     protected int getFieldAsInt(int index) {
@@ -52,6 +52,6 @@ public abstract class KrbAppSequenceType extends TaggingSequence {
     }
 
     protected void setField(int index, Asn1EnumType krbEnum) {
-        setFieldAsInt(index, krbEnum.getIntValue());
+        setFieldAsInt(index, krbEnum.getValue());
     }
 }

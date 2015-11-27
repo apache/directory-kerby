@@ -47,7 +47,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
      */
     public Asn1Simple(UniversalTag tagNo, T value) {
         super(TagClass.UNIVERSAL, tagNo.getValue(), value);
-        getEncodingOption().usePrimitive();
+        usePrimitive(true);
     }
 
     protected byte[] getBytes() {
@@ -98,11 +98,6 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
             setBytes(leftBytes);
             toValue();
         }
-    }
-
-    @Override
-    public boolean isConstructed() {
-        return false;
     }
 
     protected void toValue() throws IOException { }

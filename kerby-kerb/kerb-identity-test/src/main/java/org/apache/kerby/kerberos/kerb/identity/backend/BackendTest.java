@@ -48,9 +48,9 @@ public abstract class BackendTest {
         assertThat(identity.isDisabled()).isEqualTo(kid.isDisabled());
         assertThat(identity.getKeyVersion()).isEqualTo(kid.getKeyVersion());
         for (EncryptionKey expectedKey : kid.getKeys().values()) {
-            EncryptionType actualType = EncryptionType.fromValue(expectedKey.getKeyType().getIntValue());
+            EncryptionType actualType = EncryptionType.fromValue(expectedKey.getKeyType().getValue());
             EncryptionKey actualKey = identity.getKey(actualType);
-            assertThat(actualKey.getKeyType().getIntValue()).isEqualTo(expectedKey.getKeyType().getIntValue());
+            assertThat(actualKey.getKeyType().getValue()).isEqualTo(expectedKey.getKeyType().getValue());
             assertThat(actualKey.getKeyData()).isEqualTo(expectedKey.getKeyData());
             assertThat(actualKey.getKvno()).isEqualTo(expectedKey.getKvno());
         }

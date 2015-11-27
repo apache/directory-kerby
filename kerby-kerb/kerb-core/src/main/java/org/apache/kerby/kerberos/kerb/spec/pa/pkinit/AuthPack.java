@@ -20,8 +20,9 @@
 package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
-import org.apache.kerby.kerberos.kerb.spec.cms.SubjectPublicKeyInfo;
+import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 
 /**
  AuthPack ::= SEQUENCE {
@@ -38,10 +39,10 @@ public class AuthPack extends KrbSequenceType {
     private static final int CLIENT_DH_NONCE = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(PK_AUTHENTICATOR, PkAuthenticator.class),
-            new Asn1FieldInfo(CLIENT_PUBLIC_VALUE, SubjectPublicKeyInfo.class),
-            new Asn1FieldInfo(SUPPORTED_CMS_TYPES, AlgorithmIdentifiers.class),
-            new Asn1FieldInfo(CLIENT_DH_NONCE, DHNonce.class)
+            new ExplicitField(PK_AUTHENTICATOR, PkAuthenticator.class),
+            new ExplicitField(CLIENT_PUBLIC_VALUE, SubjectPublicKeyInfo.class),
+            new ExplicitField(SUPPORTED_CMS_TYPES, AlgorithmIdentifiers.class),
+            new ExplicitField(CLIENT_DH_NONCE, DHNonce.class)
     };
 
     public AuthPack() {

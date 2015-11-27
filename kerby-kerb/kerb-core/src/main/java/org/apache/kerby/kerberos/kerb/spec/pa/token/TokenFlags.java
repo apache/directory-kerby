@@ -34,6 +34,6 @@ public class TokenFlags extends Asn1Flags {
     }
 
     public boolean isInvalid() {
-        return isFlagSet(INVALID.getIntValue());
+        return isFlagSet(INVALID.getValue());
     }
 }

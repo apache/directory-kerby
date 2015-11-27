@@ -96,7 +96,7 @@ public enum EncryptionType implements Asn1EnumType {
     }
 
     @Override
-    public int getIntValue() {
+    public int getValue() {
         return value;
     }
 
@@ -119,7 +119,7 @@ public enum EncryptionType implements Asn1EnumType {
     public static EncryptionType fromValue(Integer value) {
         if (value != null) {
             for (Asn1EnumType e : values()) {
-                if (e.getIntValue() == value) {
+                if (e.getValue() == value) {
                     return (EncryptionType) e;
                 }
             }

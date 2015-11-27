@@ -35,13 +35,13 @@ public enum FastOption implements Asn1EnumType {
     }
 
     @Override
-    public int getIntValue() {
+    public int getValue() {
         return value;
     }
 
     public static FastOption fromValue(int value) {
         for (Asn1EnumType e : values()) {
-            if (e.getIntValue() == value) {
+            if (e.getValue() == value) {
                 return (FastOption) e;
             }
         }

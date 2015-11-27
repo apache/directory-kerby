@@ -17,45 +17,46 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.spec.cms;
-
+package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
 /**
- AlgorithmIdentifier  ::=  SEQUENCE  {
-     algorithm               OBJECT IDENTIFIER,
-     parameters              ANY DEFINED BY algorithm OPTIONAL
- }
+ * <pre>
+ * DigestInfo::=SEQUENCE{
+ *          digestAlgorithm  AlgorithmIdentifier,
+ *          digest OCTET STRING
+ * }
+ * </pre>
  */
-public class AlgorithmIdentifier extends Asn1SequenceType {
-    private static final int ALGORITHM = 0;
-    private static final int PARAMETERS = 1;
+public class DigestInfo extends Asn1SequenceType {
+    private static final int DIGEST_ALGORITHM = 0;
+    private static final int DIGEST = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ALGORITHM, -1, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(PARAMETERS, -1, DHParameter.class)
+        new Asn1FieldInfo(DIGEST_ALGORITHM, AlgorithmIdentifier.class),
+        new Asn1FieldInfo(DIGEST, Asn1OctetString.class)
     };
 
-    public AlgorithmIdentifier() {
+    public DigestInfo() {
         super(fieldInfos);
     }
 
-    public Asn1ObjectIdentifier getAlgorithm() {
-        return getFieldAs(ALGORITHM, Asn1ObjectIdentifier.class);
+    public AlgorithmIdentifier getAlgorithmId() {
+        return getFieldAs(DIGEST_ALGORITHM, AlgorithmIdentifier.class);
     }
 
-    public void setAlgorithm(Asn1ObjectIdentifier algorithm) {
-        setFieldAs(ALGORITHM, algorithm);
+    public void setDigestAlgorithm(AlgorithmIdentifier digestAlgorithm) {
+        setFieldAs(DIGEST_ALGORITHM, digestAlgorithm);
     }
 
-    public DHParameter getParameters() {
-        return getFieldAs(PARAMETERS, DHParameter.class);
+    public byte[] getDigest() {
+        return getFieldAsOctets(DIGEST);
     }
 
-    public void setParameters(DHParameter parameters) {
-        setFieldAsAny(PARAMETERS, parameters);
+    public void setDigest(byte[] digest) {
+        setFieldAsOctets(DIGEST, digest);
     }
 }

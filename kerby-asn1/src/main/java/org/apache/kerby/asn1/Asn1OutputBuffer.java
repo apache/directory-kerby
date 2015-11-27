@@ -40,11 +40,6 @@ public class Asn1OutputBuffer {
         objects.add(value);
     }
 
-    public void write(Asn1Type value, EncodingOption option) {
-        value.setEncodingOption(option);
-        objects.add(value);
-    }
-
     public ByteBuffer getOutput() {
         int len = encodingLength();
         ByteBuffer byteBuffer = ByteBuffer.allocate(len);

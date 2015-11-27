@@ -75,7 +75,7 @@ public class Asn1Boolean extends Asn1Simple<Boolean> {
         } else if ((bytes[0] & 0xff) == 0xff) {
             // DER only accepts 0xFF as true
             setValue(true);
-        } else if (getEncodingOption().isBer()) {
+        } else if (isBER()) {
             // BER accepts any non-zero as true
             setValue(true);
         } else {

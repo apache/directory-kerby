@@ -32,6 +32,11 @@
       <artifactId>kerby-asn1</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerby-pkix</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
   </dependencies>
 </project>

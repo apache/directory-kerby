@@ -29,7 +29,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This class provides APIs for converting token cache file with token string.
@@ -62,7 +62,7 @@ public class TokenCache {
         String token = null;
         try {
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(new FileInputStream(cacheFile), Charset.forName("UTF-8")));
+                    new InputStreamReader(new FileInputStream(cacheFile), StandardCharsets.UTF_8));
             String line = reader.readLine();
             reader.close();
             if (line != null) {
@@ -84,7 +84,7 @@ public class TokenCache {
         File cacheFile = getDefaultTokenCache();
 
         try {
-            Writer writer = new FileWriterWithEncoding(cacheFile, Charset.forName("UTF-8"));
+            Writer writer = new FileWriterWithEncoding(cacheFile, StandardCharsets.UTF_8);
             writer.write(token);
             writer.flush();
             writer.close();

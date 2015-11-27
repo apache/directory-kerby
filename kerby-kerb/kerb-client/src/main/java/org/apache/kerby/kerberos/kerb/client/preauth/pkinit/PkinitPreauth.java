@@ -42,9 +42,7 @@ import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.cms.AlgorithmIdentifier;
 import org.apache.kerby.kerberos.kerb.spec.cms.DHParameter;
-import org.apache.kerby.kerberos.kerb.spec.cms.SubjectPublicKeyInfo;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
@@ -52,6 +50,9 @@ import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AuthPack;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PkAuthenticator;
 import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.TrustedCertifiers;
+
+import org.apache.kerby.x509.type.AlgorithmIdentifier;
+import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +68,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+
 
 public class PkinitPreauth extends AbstractPreauthPlugin {
     private static final Logger LOG = LoggerFactory.getLogger(PkinitPreauth.class);
@@ -258,7 +261,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             String content = "0x06 07 2A 86 48 ce 3e 02 01";
             Asn1ObjectIdentifier decoded = new Asn1ObjectIdentifier();
-            decoded.getEncodingOption().useDer();
+            decoded.useDER();
             try {
                 decoded.decode(Util.hex2bytes(content));
             } catch (IOException e) {

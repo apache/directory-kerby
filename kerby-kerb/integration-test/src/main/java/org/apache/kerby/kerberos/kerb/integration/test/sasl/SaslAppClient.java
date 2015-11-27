@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.integration.test.Transport;
 import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslClient;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,7 +81,7 @@ public class SaslAppClient extends AppClient {
 
         System.out.println("Context Established! ");
 
-        token = "Hello There!\0".getBytes(Charset.forName("UTF-8"));
+        token = "Hello There!\0".getBytes(StandardCharsets.UTF_8);
         System.out.println("Will send wrap token of size " + token.length);
 
         conn.sendToken(token);
@@ -92,14 +92,14 @@ public class SaslAppClient extends AppClient {
 
     private boolean isOK(Transport.Message msg) {
         if (msg.header != null) {
-            return new String(msg.header, Charset.forName("UTF-8")).equals("OK");
+            return new String(msg.header, StandardCharsets.UTF_8).equals("OK");
         }
         return false;
     }
 
     private boolean isContinue(Transport.Message msg) {
         if (msg.header != null) {
-            return new String(msg.header, Charset.forName("UTF-8")).equals("CONT");
+            return new String(msg.header, StandardCharsets.UTF_8).equals("CONT");
         }
         return false;
     }

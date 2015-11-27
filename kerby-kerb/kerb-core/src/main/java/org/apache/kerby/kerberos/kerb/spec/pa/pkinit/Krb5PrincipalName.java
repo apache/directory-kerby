@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.base.Realm;
@@ -35,8 +36,8 @@ public class Krb5PrincipalName extends KrbSequenceType {
     private static final int PRINCIPAL_NAME = 1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(REALM, Realm.class),
-            new Asn1FieldInfo(PRINCIPAL_NAME, PrincipalName.class)
+            new ExplicitField(REALM, Realm.class),
+            new ExplicitField(PRINCIPAL_NAME, PrincipalName.class)
     };
 
     public Krb5PrincipalName() {

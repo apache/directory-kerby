@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.ap;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbAppSequenceType;
 import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
@@ -41,10 +42,10 @@ public class EncAPRepPart extends KrbAppSequenceType {
     private static final int SEQ_NUMBER = 3;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(CTIME, 0, KerberosTime.class),
-            new Asn1FieldInfo(CUSEC, 1, Asn1Integer.class),
-            new Asn1FieldInfo(SUBKEY, 2, EncryptionKey.class),
-            new Asn1FieldInfo(SEQ_NUMBER, 3, Asn1Integer.class)
+            new ExplicitField(CTIME, 0, KerberosTime.class),
+            new ExplicitField(CUSEC, 1, Asn1Integer.class),
+            new ExplicitField(SUBKEY, 2, EncryptionKey.class),
+            new ExplicitField(SEQ_NUMBER, 3, Asn1Integer.class)
     };
 
     public EncAPRepPart() {

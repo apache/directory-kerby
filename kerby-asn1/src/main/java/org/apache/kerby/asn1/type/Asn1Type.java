@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.EncodingOption;
+import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.TaggingOption;
 
 import java.io.IOException;
@@ -29,6 +29,27 @@ import java.nio.ByteBuffer;
  * The ASN1 type interface for all ASN1 types.
  */
 public interface Asn1Type {
+    /**
+     * A mask to determinate if a Tag is CONSTRUCTED. The fifth bit should be
+     * set to 1 if the type is constructed (0010-0000).
+     */
+    int CONSTRUCTED_FLAG = 0x20;
+
+    /**
+     * Encoding type
+     */
+    enum EncodingType {
+        BER,
+        DER,
+        CER;
+    }
+
+    /**
+     *
+     * @return The tag class
+     */
+    TagClass tagClass();
+
     /**
      *
      * @return The tag flags
@@ -42,11 +63,76 @@ public interface Asn1Type {
     int tagNo();
 
     /**
-     * Set encoding option.
-     * See {@link org.apache.kerby.asn1.EncodingOption}.
-     * @param encodingOption The encoding option
+     * Use primitive or constructed.
      */
-    void setEncodingOption(EncodingOption encodingOption);
+    void usePrimitive(boolean isPrimitive);
+
+    /**
+     * Tells if it is PRIMITIVE or not.
+     *
+     * @return true if using PRIMITIVE, false otherwise
+     */
+    boolean isPrimitive();
+
+    /**
+     * Use definitive length or not.
+     * Note definitive length only makes sense when it's constructed.
+     */
+    void useDefinitiveLength(boolean isDefinitiveLength);
+
+    /**
+     * Tells if it's definitive length or not.
+     * @return The boolean value
+     */
+    boolean isDefinitiveLength();
+
+    /**
+     * Use implicit or not.
+     */
+    void useImplicit(boolean isImplicit);
+
+    /**
+     * Tells if it's is IMPLICIT or not.
+     *
+     * @return true if using IMPLICIT, false otherwise
+     */
+    boolean isImplicit();
+
+    /**
+     * Set encoding type as DER.
+     */
+    void useDER();
+
+    /**
+     * Tells if it's is DER
+     *
+     * @return true if using DER, false otherwise
+     */
+    boolean isDER();
+
+    /**
+     * Set encoding type as BER.
+     */
+    void useBER();
+
+    /**
+     * Tells if it's is BER
+     *
+     * @return true if using BER, false otherwise
+     */
+    boolean isBER();
+
+    /**
+     * Set encoding type as CER.
+     */
+    void useCER();
+
+    /**
+     * Tells if it's is CER
+     *
+     * @return true if using CER, false otherwise
+     */
+    boolean isCER();
 
     /**
      * Get length of encoding bytes by just calculating without real encoding.

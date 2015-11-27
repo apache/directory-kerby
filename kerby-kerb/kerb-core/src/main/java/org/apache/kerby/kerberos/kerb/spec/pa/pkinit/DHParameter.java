@@ -1,4 +1,4 @@
-package org.apache.kerby.kerberos.kerb.spec.cms;
+package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
@@ -13,9 +13,9 @@ public class DHParameter extends Asn1SequenceType {
     private static final int Q = 2;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(P, -1, Asn1Integer.class),
-            new Asn1FieldInfo(G, -1, Asn1Integer.class),
-            new Asn1FieldInfo(Q, -1, Asn1Integer.class),
+            new Asn1FieldInfo(P, Asn1Integer.class),
+            new Asn1FieldInfo(G, Asn1Integer.class),
+            new Asn1FieldInfo(Q, Asn1Integer.class),
     };
 
     public DHParameter() {

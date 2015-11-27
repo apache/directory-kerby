@@ -87,8 +87,7 @@ public class TestTaggingEncoding {
 
     public static class Type2 extends Asn1Tagging<Type1> {
         public Type2(Type1 value) {
-            super(3, value, true);
-            getEncodingOption().useImplicit();
+            super(3, value, true, true);
         }
         public Type2() {
             this(null);
@@ -97,8 +96,7 @@ public class TestTaggingEncoding {
 
     public static class Type3 extends Asn1Tagging<Type2> {
         public Type3(Type2 value) {
-            super(2, value, false);
-            getEncodingOption().useExplicit();
+            super(2, value, false, false);
         }
         public Type3() {
             this(null);
@@ -107,8 +105,7 @@ public class TestTaggingEncoding {
 
     public static class Type4 extends Asn1Tagging<Type3> {
         public Type4(Type3 value) {
-            super(7, value, true);
-            getEncodingOption().useImplicit();
+            super(7, value, true, true);
         }
         public Type4() {
             this(null);
@@ -117,8 +114,7 @@ public class TestTaggingEncoding {
 
     public static class Type5 extends Asn1Tagging<Type2> {
         public Type5(Type2 value) {
-            super(2, value, false);
-            getEncodingOption().useImplicit();
+            super(2, value, false, true);
         }
         public Type5() {
             this(null);

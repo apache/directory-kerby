@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.spec.fast;
 
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.type.ExplicitField;
 
 /**
  PA-FX-FAST-REPLY ::= CHOICE {
@@ -31,7 +32,7 @@ public class PaFxFastReply extends Asn1Choice {
     private static final int ARMORED_DATA = 0;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ARMORED_DATA, KrbFastArmoredRep.class)
+            new ExplicitField(ARMORED_DATA, KrbFastArmoredRep.class)
     };
 
     public PaFxFastReply() {

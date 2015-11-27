@@ -108,14 +108,14 @@ public enum KeyUsage implements Asn1EnumType {
         this.value = value;
     }
 
-    public int getIntValue() {
+    public int getValue() {
         return value;
     }
 
     public static KeyUsage fromValue(Integer value) {
         if (value != null) {
             for (Asn1EnumType e : values()) {
-                if (e.getIntValue() == value) {
+                if (e.getValue() == value) {
                     return (KeyUsage) e;
                 }
             }
