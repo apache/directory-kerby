@@ -21,5 +21,5 @@ package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.type.Asn1SequenceOf;
 
-public class GeneralSubtrees extends Asn1SequenceOf<GeneralSubtree>{
+public class GeneralSubtrees extends Asn1SequenceOf<GeneralSubtree> {
 }

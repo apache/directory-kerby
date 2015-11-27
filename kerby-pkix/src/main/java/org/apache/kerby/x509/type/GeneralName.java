@@ -106,7 +106,7 @@ public class GeneralName extends Asn1Choice {
     }
 
     public Name getDirectoryName() {
-        return getFieldAs(DIRECTORY_NAME,Name.class);
+        return getFieldAs(DIRECTORY_NAME, Name.class);
     }
 
     public void setDirectoryName(Name directoryName) {

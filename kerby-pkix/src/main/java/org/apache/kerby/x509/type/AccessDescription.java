@@ -33,9 +33,6 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * </pre>
  */
 public class AccessDescription extends Asn1SequenceType {
-    public final static String id_ad_caIssuers = "1.3.6.1.5.5.7.48.2";
-    public final static String id_ad_ocsp = "1.3.6.1.5.5.7.48.1";
-
     private static final int ACCESS_METHOD = 0;
     private static final int ACCESS_LOCATION = 1;
 

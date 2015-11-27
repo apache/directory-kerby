@@ -29,7 +29,7 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  *   certDigestInfo       ObjectDigestInfo OPTIONAL
  * }
  */
-public class TargetCert extends Asn1SequenceType{
+public class TargetCert extends Asn1SequenceType {
     private static final int TARGET_CERTIFICATE = 0;
     private static final int TARGET_NAME = 1;
     private static final int CERT_DIGEST_INFO = 2;

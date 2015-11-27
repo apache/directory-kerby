@@ -38,7 +38,7 @@ import org.apache.kerby.asn1.type.Asn1Utf8String;
  * }
  * </pre>
  */
-public class DirectoryString extends Asn1Choice{
+public class DirectoryString extends Asn1Choice {
 
     private static final int TELETEX_STRING = 0;
     private static final int PRINTABLE_STRING = 1;
