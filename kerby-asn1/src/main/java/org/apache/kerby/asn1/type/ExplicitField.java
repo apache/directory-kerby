@@ -19,12 +19,25 @@
  */
 package org.apache.kerby.asn1.type;
 
+/**
+ * Representing an explicitly tagged field in a ASN1 collection or choice.
+ */
 public class ExplicitField extends Asn1FieldInfo {
 
+    /**
+     * Constructor for an explicitly tagged field.
+     * @param index
+     * @param type
+     */
     public ExplicitField(int index, int tagNo, Class<? extends Asn1Type> type) {
         super(index, tagNo, type, false);
     }
 
+    /**
+     * Constructor for an explicitly tagged field, the tagNo being the same of index.
+     * @param index
+     * @param type
+     */
     public ExplicitField(int index, Class<? extends Asn1Type> type) {
         super(index, index, type, false);
     }

@@ -19,12 +19,25 @@
  */
 package org.apache.kerby.asn1.type;
 
+/**
+ * Representing an implicitly tagged field in a ASN1 collection or choice.
+ */
 public class ImplicitField extends Asn1FieldInfo {
 
+    /**
+     * Constructor for an implicitly tagged field.
+     * @param index
+     * @param type
+     */
     public ImplicitField(int index, int tagNo, Class<? extends Asn1Type> type) {
         super(index, tagNo, type, true);
     }
 
+    /**
+     * Constructor for an implicitly tagged field, the tagNo being the same of index.
+     * @param index
+     * @param type
+     */
     public ImplicitField(int index, Class<? extends Asn1Type> type) {
         super(index, index, type, true);
     }
