@@ -35,7 +35,7 @@ import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithTgt;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithToken;
 import org.apache.kerby.kerberos.kerb.spec.base.NameType;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
 /**
@@ -74,7 +74,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
      * {@inheritDoc}
      */
     @Override
-    public TgtTicket requestTgtTicket(KOptions requestOptions) throws KrbException {
+    public TgtTicket requestTgt(KOptions requestOptions) throws KrbException {
         AsRequest asRequest = null;
 
         if (requestOptions.contains(KrbOption.USE_PASSWD)) {
@@ -117,7 +117,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
      * {@inheritDoc}
      */
     @Override
-    public ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException {
+    public SgtTicket requestSgt(KOptions requestOptions) throws KrbException {
         TgsRequest tgsRequest = null;
         if (requestOptions.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
             tgsRequest = new TgsRequestWithToken(context);
@@ -142,7 +142,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     protected abstract TgtTicket doRequestTgtTicket(
             AsRequest tgtTktReq) throws KrbException;
 
-    protected abstract ServiceTicket doRequestServiceTicket(
+    protected abstract SgtTicket doRequestServiceTicket(
             TgsRequest tgsRequest) throws KrbException;
 
     /**

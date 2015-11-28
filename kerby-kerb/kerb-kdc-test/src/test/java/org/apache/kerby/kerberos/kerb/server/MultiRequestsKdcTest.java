@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,15 +32,15 @@ public class MultiRequestsKdcTest extends KdcTestBase {
     @Test
     public void multiRequestsTest() throws Exception {
         TgtTicket tgt;
-        ServiceTicket tkt;
+        SgtTicket tkt;
 
         // With good password
         try {
-            tgt = getKrbClient().requestTgtWithPassword(getClientPrincipal(), getClientPassword());
+            tgt = getKrbClient().requestTgt(getClientPrincipal(), getClientPassword());
             assertThat(tgt).isNotNull();
 
             serverPrincipal = getServerPrincipal();
-            tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
+            tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password");
@@ -51,17 +51,17 @@ public class MultiRequestsKdcTest extends KdcTestBase {
         // With bad password
         /*
         try {
-            tgt = krbClnt.requestTgtWithPassword(clientPrincipal, "badpassword");
+            tgt = krbClnt.requestTgt(clientPrincipal, "badpassword");
         } catch (Exception e) {
             System.out.println("Exception occurred with bad password");
         }*/
 
         // With good password again
         try {
-            tgt = getKrbClient().requestTgtWithPassword(getClientPrincipal(), getClientPassword());
+            tgt = getKrbClient().requestTgt(getClientPrincipal(), getClientPassword());
             assertThat(tgt).isNotNull();
 
-            tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
+            tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password again");

@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.kerb.client.impl;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
 /**
@@ -48,7 +48,7 @@ public interface InternalKrbClient {
      * @return a TGT
      * @throws KrbException e
      */
-    TgtTicket requestTgtTicket(KOptions requestOptions) throws KrbException;
+    TgtTicket requestTgt(KOptions requestOptions) throws KrbException;
 
     /**
      * Request a service ticket provided request options
@@ -56,5 +56,5 @@ public interface InternalKrbClient {
      * @return service ticket
      * @throws KrbException e
      */
-    ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException;
+    SgtTicket requestSgt(KOptions requestOptions) throws KrbException;
 }

@@ -53,7 +53,7 @@ public class LoginTestBase extends KdcTestBase {
     }
 
     protected Subject loginClientUsingTicketCache() throws Exception {
-        TgtTicket tgt = getKrbClient().requestTgtWithPassword(getClientPrincipal(),
+        TgtTicket tgt = getKrbClient().requestTgt(getClientPrincipal(),
             getClientPassword());
         getKrbClient().storeTicket(tgt, ticketCacheFile);
 

@@ -142,7 +142,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
 
     protected File createCredentialCache(String principal,
                                        String password) throws Exception {
-        TgtTicket tgt = getKrbClient().requestTgtWithPassword(principal, password);
+        TgtTicket tgt = getKrbClient().requestTgt(principal, password);
         writeTgtToCache(tgt, principal);
         return cCacheFile;
     }

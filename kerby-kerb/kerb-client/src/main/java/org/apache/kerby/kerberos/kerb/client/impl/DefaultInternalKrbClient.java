@@ -24,7 +24,7 @@ import org.apache.kerby.kerberos.kerb.client.ClientUtil;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
@@ -80,7 +80,7 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
      * {@inheritDoc}
      */
     @Override
-    protected ServiceTicket doRequestServiceTicket(TgsRequest ticketReq) throws KrbException {
+    protected SgtTicket doRequestServiceTicket(TgsRequest ticketReq) throws KrbException {
         ticketReq.setSessionData(transport);
 
         krbHandler.handleRequest(ticketReq);

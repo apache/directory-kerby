@@ -89,8 +89,8 @@ public class TokenLoginTestBase extends LoginTestBase {
         System.out.println("Issued token: " + tokenStr);
         tokenCache = TokenCache.getDefaultTokenCache();
 
-        TgtTicket tgt = getKrbClient().requestTgtWithPassword(getClientPrincipal(),
-                getClientPassword());
+        TgtTicket tgt = getKrbClient().requestTgt(getClientPrincipal(),
+            getClientPassword());
         getKrbClient().storeTicket(tgt, armorCache);
 
         return tokenStr;

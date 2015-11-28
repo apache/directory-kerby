@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.kdc;
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.junit.Assert;
 
@@ -39,14 +39,14 @@ public abstract class KerbyKdcTest extends KdcTestBase {
 
     protected void performKdcTest() throws Exception {
         TgtTicket tgt;
-        ServiceTicket tkt;
+        SgtTicket tkt;
 
         try {
-            tgt = getKrbClient().requestTgtWithPassword(
-                    getClientPrincipal(), getClientPassword());
+            tgt = getKrbClient().requestTgt(
+                getClientPrincipal(), getClientPassword());
             assertThat(tgt).isNotNull();
 
-            tkt = getKrbClient().requestServiceTicketWithTgt(tgt, getServerPrincipal());
+            tkt = getKrbClient().requestSgt(tgt, getServerPrincipal());
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
             System.out.println("Exception occurred with good password");

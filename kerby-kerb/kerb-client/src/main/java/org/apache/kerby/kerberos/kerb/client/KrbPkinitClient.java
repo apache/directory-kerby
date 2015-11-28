@@ -60,7 +60,7 @@ public class KrbPkinitClient {
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.PKINIT_X509_CERTIFICATE, certificate);
         requestOptions.add(KrbOption.PKINIT_X509_PRIVATE_KEY, privateKey);
-        return krbClient.requestTgtWithOptions(requestOptions);
+        return krbClient.requestTgt(requestOptions);
     }
 
     /**
@@ -71,6 +71,6 @@ public class KrbPkinitClient {
     public TgtTicket requestTgt() throws KrbException {
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.USE_PKINIT_ANONYMOUS);
-        return krbClient.requestTgtWithOptions(requestOptions);
+        return krbClient.requestTgt(requestOptions);
     }
 }

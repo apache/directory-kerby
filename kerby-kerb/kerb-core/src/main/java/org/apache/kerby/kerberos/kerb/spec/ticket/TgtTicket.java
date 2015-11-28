@@ -22,6 +22,9 @@ package org.apache.kerby.kerberos.kerb.spec.ticket;
 import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.spec.kdc.EncAsRepPart;
 
+/**
+ * Ticket granting ticket.
+ */
 public class TgtTicket extends KrbTicket {
     private PrincipalName clientPrincipal;
 

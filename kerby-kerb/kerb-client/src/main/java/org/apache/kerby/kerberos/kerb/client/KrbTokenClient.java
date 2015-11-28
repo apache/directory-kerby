@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.kerb.client;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 
 /**
@@ -62,7 +62,7 @@ public class KrbTokenClient {
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
         requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
-        return krbClient.requestTgtWithOptions(requestOptions);
+        return krbClient.requestTgt(requestOptions);
     }
 
     /**
@@ -73,7 +73,7 @@ public class KrbTokenClient {
      * @return service ticket
      * @throws KrbException e
      */
-    public ServiceTicket requestServiceTicket(
+    public SgtTicket requestSgt(
         AuthToken token, String serverPrincipal, String armorCache) throws KrbException {
         if (!token.isAcToken()) {
             throw new IllegalArgumentException("Access token is expected");
@@ -84,6 +84,6 @@ public class KrbTokenClient {
         requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
         requestOptions.add(KrbOption.SERVER_PRINCIPAL, serverPrincipal);
 
-        return krbClient.requestServiceTicket(requestOptions);
+        return krbClient.requestSgt(requestOptions);
     }
 }

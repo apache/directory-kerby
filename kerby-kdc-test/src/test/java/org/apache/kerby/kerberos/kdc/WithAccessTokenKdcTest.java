@@ -30,7 +30,7 @@ import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
 import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
 import org.apache.kerby.kerberos.kerb.common.PublicKeyReader;
 import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
+import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -138,9 +138,9 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
 
         KrbTokenClient tokenClient = new KrbTokenClient(getKrbClient());
         try {
-            ServiceTicket serviceTicket = tokenClient.requestServiceTicket(
+            SgtTicket sgtTicket = tokenClient.requestSgt(
                 getKrbToken(), getServerPrincipal(), getcCacheFile().getPath());
-            verifyTicket(serviceTicket);
+            verifyTicket(sgtTicket);
         } finally {
             deleteCcacheFile();
         }
