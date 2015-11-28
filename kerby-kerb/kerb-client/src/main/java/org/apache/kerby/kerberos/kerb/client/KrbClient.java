@@ -194,32 +194,6 @@ public class KrbClient {
     }
 
     /**
-     * Request a TGT with user x509 certificate credential
-     * @param certificate The certificate
-     * @param privateKey The private key
-     * @return TGT
-     * @throws KrbException e
-     */
-    public TgtTicket requestTgtWithCert(Certificate certificate,
-                                        PrivateKey privateKey) throws KrbException {
-        KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.PKINIT_X509_CERTIFICATE, certificate);
-        requestOptions.add(KrbOption.PKINIT_X509_PRIVATE_KEY, privateKey);
-        return requestTgtWithOptions(requestOptions);
-    }
-
-    /**
-     * Request a TGT with using Anonymous PKINIT
-     * @return TGT
-     * @throws KrbException e
-     */
-    public TgtTicket requestTgtWithPkintAnonymous() throws KrbException {
-        KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.USE_PKINIT_ANONYMOUS);
-        return requestTgtWithOptions(requestOptions);
-    }
-
-    /**
      * Request a TGT with using well prepared requestOptions.
      * @param requestOptions The request options
      * @return TGT
