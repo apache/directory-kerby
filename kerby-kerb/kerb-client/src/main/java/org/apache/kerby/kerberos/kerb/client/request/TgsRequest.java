@@ -91,7 +91,7 @@ public class TgsRequest extends KdcRequest {
         }
     }
 
-    public SgtTicket getServiceTicket() {
+    public SgtTicket getSgt() {
         SgtTicket serviceTkt = new SgtTicket(getKdcRep().getTicket(),
                 (EncTgsRepPart) getKdcRep().getEncPart());
         return serviceTkt;

@@ -68,7 +68,7 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
      * {@inheritDoc}
      */
     @Override
-    protected TgtTicket doRequestTgtTicket(AsRequest tgtTktReq) throws KrbException {
+    protected TgtTicket doRequestTgt(AsRequest tgtTktReq) throws KrbException {
         tgtTktReq.setSessionData(transport);
 
         krbHandler.handleRequest(tgtTktReq);
@@ -80,12 +80,12 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
      * {@inheritDoc}
      */
     @Override
-    protected SgtTicket doRequestServiceTicket(TgsRequest ticketReq) throws KrbException {
+    protected SgtTicket doRequestSgt(TgsRequest ticketReq) throws KrbException {
         ticketReq.setSessionData(transport);
 
         krbHandler.handleRequest(ticketReq);
 
-        return ticketReq.getServiceTicket();
+        return ticketReq.getSgt();
     }
 
 }

@@ -110,7 +110,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
 
         asRequest.setKrbOptions(requestOptions);
 
-        return doRequestTgtTicket(asRequest);
+        return doRequestTgt(asRequest);
     }
 
     /**
@@ -136,14 +136,14 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         tgsRequest.setServerPrincipal(new PrincipalName(serverPrincipal));
         tgsRequest.setKrbOptions(requestOptions);
 
-        return doRequestServiceTicket(tgsRequest);
+        return doRequestSgt(tgsRequest);
     }
 
-    protected abstract TgtTicket doRequestTgtTicket(
-            AsRequest tgtTktReq) throws KrbException;
+    protected abstract TgtTicket doRequestTgt(
+        AsRequest tgtTktReq) throws KrbException;
 
-    protected abstract SgtTicket doRequestServiceTicket(
-            TgsRequest tgsRequest) throws KrbException;
+    protected abstract SgtTicket doRequestSgt(
+        TgsRequest tgsRequest) throws KrbException;
 
     /**
      * Fix principal name.
