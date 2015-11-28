@@ -20,9 +20,9 @@
 package org.apache.kerby.kerberos.kerb.spec.pa.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1BitString;
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.asn1.type.ExplicitField;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 

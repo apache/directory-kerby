@@ -20,11 +20,11 @@
 package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.type.Asn1Any;
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
-import org.apache.kerby.asn1.type.ExplicitField;
+import org.apache.kerby.asn1.ExplicitField;
 
 /**
  * Ref. RFC 5652

@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.base;
 
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.spec.KrbAppSequenceType;
 

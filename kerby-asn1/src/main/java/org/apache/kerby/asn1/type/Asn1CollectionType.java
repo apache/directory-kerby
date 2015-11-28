@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.TaggingOption;

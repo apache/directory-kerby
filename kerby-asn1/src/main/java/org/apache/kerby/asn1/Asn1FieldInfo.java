@@ -17,9 +17,9 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1.type;
+package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.TaggingOption;
+import org.apache.kerby.asn1.type.Asn1Type;
 
 /**
  * Representing a field in a ASN1 collection or choice.

@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.fast;
 
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
-import org.apache.kerby.asn1.type.ExplicitField;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.spec.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.spec.pa.PaData;

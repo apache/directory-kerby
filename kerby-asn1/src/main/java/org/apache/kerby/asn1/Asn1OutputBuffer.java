@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.AbstractAsn1Type;
 import org.apache.kerby.asn1.type.Asn1Object;
 import org.apache.kerby.asn1.type.Asn1Type;
 

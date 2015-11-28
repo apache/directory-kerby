@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.spec.base;
 
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
-import org.apache.kerby.asn1.type.ExplicitField;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.spec.KerberosString;
 import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
