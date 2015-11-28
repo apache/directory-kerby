@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.client.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbConfig;
+import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
 import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
@@ -239,9 +240,11 @@ public class TokenAuthLoginModule implements LoginModule {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        TgtTicket tgtTicket = null;
+        TgtTicket tgtTicket;
+        KrbTokenClient tokenClient = new KrbTokenClient(krbClient);
         try {
-            tgtTicket = krbClient.requestTgtWithToken(krbToken, armorCache.getAbsolutePath());
+            tgtTicket = tokenClient.requestTgt(krbToken,
+                armorCache.getAbsolutePath());
         } catch (KrbException e) {
             throwWith("Failed to do login with token: " + tokenStr, e);
             return false;

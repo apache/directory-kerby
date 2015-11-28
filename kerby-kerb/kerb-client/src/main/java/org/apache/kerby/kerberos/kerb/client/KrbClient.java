@@ -24,7 +24,6 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.impl.DefaultInternalKrbClient;
 import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClient;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
 import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
 import org.slf4j.Logger;
@@ -221,24 +220,6 @@ public class KrbClient {
     }
 
     /**
-     * Request a TGT with user token credential
-     * @param token The auth token
-     * @param armorCache The armor cache
-     * @return TGT
-     * @throws KrbException e
-     */
-    public TgtTicket requestTgtWithToken(AuthToken token, String armorCache) throws KrbException {
-        if (!token.isIdToken()) {
-            throw new IllegalArgumentException("Identity token is expected");
-        }
-
-        KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
-        requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
-        return requestTgtWithOptions(requestOptions);
-    }
-
-    /**
      * Request a TGT with using well prepared requestOptions.
      * @param requestOptions The request options
      * @return TGT
@@ -268,23 +249,12 @@ public class KrbClient {
     }
 
     /**
-     * Request a service ticket using an Access Token.
-     * @param token The auth token
-     * @param serverPrincipal The server principal
-     * @param armorCache The armor cache
+     * Request a service ticket provided request options
+     * @param requestOptions The request options
      * @return service ticket
      * @throws KrbException e
      */
-    public ServiceTicket requestServiceTicketWithAccessToken(
-            AuthToken token, String serverPrincipal,
-            String armorCache) throws KrbException {
-        if (!token.isAcToken()) {
-            throw new IllegalArgumentException("Access token is expected");
-        }
-        KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.TOKEN_USER_AC_TOKEN, token);
-        requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
-        requestOptions.add(KrbOption.SERVER_PRINCIPAL, serverPrincipal);
+    public ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException {
         return innerClient.requestServiceTicket(requestOptions);
     }
 

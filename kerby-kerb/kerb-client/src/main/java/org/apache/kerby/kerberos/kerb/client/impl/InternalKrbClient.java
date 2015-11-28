@@ -51,7 +51,7 @@ public interface InternalKrbClient {
     TgtTicket requestTgtTicket(KOptions requestOptions) throws KrbException;
 
     /**
-     * Request a service ticket.
+     * Request a service ticket provided request options
      * @param requestOptions The request options
      * @return service ticket
      * @throws KrbException e
