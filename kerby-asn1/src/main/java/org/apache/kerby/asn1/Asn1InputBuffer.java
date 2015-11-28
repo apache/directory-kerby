@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.AbstractAsn1Type;
 import org.apache.kerby.asn1.type.Asn1Item;
+import org.apache.kerby.asn1.type.Asn1Object;
 import org.apache.kerby.asn1.type.Asn1Type;
 
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class Asn1InputBuffer {
         if (!limitedBuffer.available()) {
             return null;
         }
-        Asn1Item one = AbstractAsn1Type.decodeOne(limitedBuffer);
+        Asn1Item one = Asn1Object.decodeOne(limitedBuffer);
         if (one.isSimple()) {
             one.decodeValueAsSimple();
         } else if (one.isCollection()) {
@@ -96,7 +96,7 @@ public class Asn1InputBuffer {
 
     public void skipNext() throws IOException {
         if (limitedBuffer.available()) {
-            AbstractAsn1Type.skipOne(limitedBuffer);
+            Asn1Object.skipOne(limitedBuffer);
         }
     }
 
