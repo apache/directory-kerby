@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.common;
 
 import org.apache.kerby.kerberos.kerb.KrbConstant;
-import org.apache.kerby.kerberos.kerb.spec.base.NameType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.NameType;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
 public class KrbUtil {
 

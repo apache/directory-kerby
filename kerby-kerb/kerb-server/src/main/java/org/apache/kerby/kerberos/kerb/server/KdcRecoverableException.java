@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbErrorException;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
+import org.apache.kerby.kerberos.kerb.type.base.KrbError;
 
 /**
  * KDC side recoverable exception, where retrying will be made.

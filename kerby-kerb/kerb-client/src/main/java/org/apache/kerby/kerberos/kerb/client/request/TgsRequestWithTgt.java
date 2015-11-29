@@ -23,18 +23,18 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.ap.ApOptions;
-import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
-import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.KerberosTime;
+import org.apache.kerby.kerberos.kerb.type.ap.ApOptions;
+import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
+import org.apache.kerby.kerberos.kerb.type.ap.Authenticator;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
 public class TgsRequestWithTgt extends TgsRequest {
 

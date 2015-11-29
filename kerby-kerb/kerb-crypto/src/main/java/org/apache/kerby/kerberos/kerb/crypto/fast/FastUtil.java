@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.crypto.fast;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 
 import java.nio.charset.StandardCharsets;
 

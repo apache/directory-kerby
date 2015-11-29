@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;

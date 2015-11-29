@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.crypto.cksum;
 
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Aes128Provider;
 import org.apache.kerby.kerberos.kerb.crypto.key.AesKeyMaker;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
 
 public class HmacSha1Aes128CheckSum extends HmacKcCheckSum {
 

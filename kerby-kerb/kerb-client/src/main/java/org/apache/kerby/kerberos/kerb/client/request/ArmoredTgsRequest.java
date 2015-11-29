@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.kerb.client.request;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 
 public class ArmoredTgsRequest extends TgsRequest {
 

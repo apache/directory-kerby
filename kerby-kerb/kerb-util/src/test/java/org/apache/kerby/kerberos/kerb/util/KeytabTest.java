@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.util;
 
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.junit.Before;
 import org.junit.Test;
 

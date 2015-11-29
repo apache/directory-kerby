@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.crypto;
 
 import org.apache.kerby.kerberos.kerb.crypto.fast.FastUtil;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 

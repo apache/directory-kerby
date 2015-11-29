@@ -30,8 +30,8 @@ import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcSetting;
 import org.apache.kerby.kerberos.kerb.server.KdcUtil;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -23,7 +23,7 @@ import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenFactory;
 import org.apache.kerby.kerberos.kerb.provider.TokenProvider;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 
 /**
  * JWT Token provider.

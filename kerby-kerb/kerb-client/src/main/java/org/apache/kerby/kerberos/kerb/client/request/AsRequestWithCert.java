@@ -23,7 +23,7 @@ import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 
 public class AsRequestWithCert extends AsRequest {
 

@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.crypto.enc;
 
 import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Md4Provider;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
 public class DesCbcMd4Enc extends DesCbcEnc {
 

@@ -35,9 +35,9 @@ import org.apache.kerby.kerberos.kerb.crypto.cksum.RsaMd4DesCheckSum;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.RsaMd5CheckSum;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.RsaMd5DesCheckSum;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.Sha1CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 
 /**
  * Checksum handler as the highest level API for checksum stuffs defined in

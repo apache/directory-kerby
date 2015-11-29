@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.provider.token;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;

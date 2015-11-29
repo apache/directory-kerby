@@ -23,7 +23,7 @@ import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.crypto.key.DkKeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.util.Cmac;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
 import java.nio.charset.StandardCharsets;
 

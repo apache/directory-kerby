@@ -19,11 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto;
 
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 

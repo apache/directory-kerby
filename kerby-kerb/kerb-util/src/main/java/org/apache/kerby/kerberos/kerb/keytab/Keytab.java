@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.keytab;
 
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
 import java.io.File;
 import java.io.FileInputStream;

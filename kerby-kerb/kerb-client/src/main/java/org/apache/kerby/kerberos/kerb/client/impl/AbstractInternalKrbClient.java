@@ -33,10 +33,10 @@ import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithToken;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithTgt;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithToken;
-import org.apache.kerby.kerberos.kerb.spec.base.NameType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.base.NameType;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
 /**
  * A krb client API for applications to interact with KDC

@@ -21,10 +21,10 @@ package org.apache.kerby.kerberos.kerb.util;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.junit.Test;
 
 import java.io.IOException;

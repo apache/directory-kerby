@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.server.preauth.pkinit;
 
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AuthPack;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
 
 public class PkinitRequestContext implements PluginRequestContext {
 

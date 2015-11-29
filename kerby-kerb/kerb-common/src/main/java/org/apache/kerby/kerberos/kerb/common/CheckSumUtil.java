@@ -24,10 +24,10 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.CheckSumHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 
 public class CheckSumUtil {
 

@@ -26,10 +26,10 @@ import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsReq;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
 
 import java.util.HashMap;
 import java.util.Map;

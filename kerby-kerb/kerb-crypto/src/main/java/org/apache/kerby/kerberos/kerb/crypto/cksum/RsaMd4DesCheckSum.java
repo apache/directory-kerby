@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.crypto.cksum;
 
 import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Md4Provider;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
 
 public class RsaMd4DesCheckSum extends ConfounderedDesCheckSum {
 

@@ -24,9 +24,9 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 
 /**
  * Tgs request with an Access Token.

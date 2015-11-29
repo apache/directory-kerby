@@ -22,8 +22,8 @@ package org.apache.kerby.kerberos.kdc;
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
-import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.junit.Assert;
 
 import static org.assertj.core.api.Assertions.assertThat;

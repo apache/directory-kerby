@@ -27,9 +27,9 @@ import org.apache.kerby.kerberos.kerb.client.preauth.pkinit.PkinitPreauth;
 import org.apache.kerby.kerberos.kerb.client.preauth.token.TokenPreauth;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.PaData;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 
 import java.util.ArrayList;
 import java.util.List;

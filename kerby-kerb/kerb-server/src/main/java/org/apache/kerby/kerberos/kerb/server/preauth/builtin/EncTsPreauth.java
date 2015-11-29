@@ -28,11 +28,11 @@ import org.apache.kerby.kerberos.kerb.preauth.builtin.EncTsPreauthMeta;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaEncTsEnc;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.type.pa.PaEncTsEnc;
 
 public class EncTsPreauth extends AbstractPreauthPlugin {
 

@@ -19,15 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
-import org.apache.kerby.kerberos.kerb.spec.base.NameType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
-import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.type.base.NameType;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
+import org.apache.kerby.kerberos.kerb.type.kdc.TgsReq;
+import org.apache.kerby.kerberos.kerb.type.pa.PaData;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -22,8 +22,8 @@ package org.apache.kerby.kerberos.kerb.client.impl;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
-import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
 /**
  * An internal krb client interface.

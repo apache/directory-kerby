@@ -24,7 +24,7 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 
 import java.util.Date;
 import java.util.List;

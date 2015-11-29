@@ -19,11 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
-import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
-import org.apache.kerby.kerberos.kerb.spec.base.NameType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.kdc.AsRep;
-import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
+import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.type.base.NameType;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.kdc.AsRep;
+import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -22,8 +22,8 @@ package org.apache.kerby.kerberos.tool.kadmin.command;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
 import java.util.Map;
 

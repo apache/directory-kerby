@@ -24,8 +24,8 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.impl.DefaultInternalKrbClient;
 import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClient;
-import org.apache.kerby.kerberos.kerb.spec.ticket.SgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

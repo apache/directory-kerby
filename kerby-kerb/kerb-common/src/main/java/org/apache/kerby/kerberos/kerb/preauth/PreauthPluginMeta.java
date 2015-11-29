@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth;
 
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 
 public interface PreauthPluginMeta {
 

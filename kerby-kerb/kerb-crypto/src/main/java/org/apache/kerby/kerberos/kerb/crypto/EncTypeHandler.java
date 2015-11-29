@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.crypto;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
 public interface EncTypeHandler extends CryptoTypeHandler {
 
