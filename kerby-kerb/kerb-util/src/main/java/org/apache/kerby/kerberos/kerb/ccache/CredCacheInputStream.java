@@ -20,18 +20,18 @@
 package org.apache.kerby.kerberos.kerb.ccache;
 
 import org.apache.kerby.kerberos.kerb.KrbInputStream;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationData;
-import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationDataEntry;
-import org.apache.kerby.kerberos.kerb.spec.ad.AuthorizationType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.HostAddrType;
-import org.apache.kerby.kerberos.kerb.spec.base.HostAddress;
-import org.apache.kerby.kerberos.kerb.spec.base.HostAddresses;
-import org.apache.kerby.kerberos.kerb.spec.base.NameType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TicketFlags;
+import org.apache.kerby.kerberos.kerb.type.KerberosTime;
+import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
+import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry;
+import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.HostAddrType;
+import org.apache.kerby.kerberos.kerb.type.base.HostAddress;
+import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.type.base.NameType;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TicketFlags;
 
 import java.io.IOException;
 import java.io.InputStream;

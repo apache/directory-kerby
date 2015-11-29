@@ -20,7 +20,7 @@
 package org.apache.kerby.x500.type;
 
 import org.apache.kerby.asn1.type.Asn1Choice;
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.Asn1FieldInfo;
 
 /**
  *

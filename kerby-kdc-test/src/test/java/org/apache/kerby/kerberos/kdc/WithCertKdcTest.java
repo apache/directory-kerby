@@ -21,11 +21,12 @@ package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
 import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.pki.KerbyPkiProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,9 +93,10 @@ public class WithCertKdcTest extends KdcTestBase {
         getKrbClient().init();
 
         URL url = getClass().getResource("/cacert.pem");
-        TgtTicket tgt = null;
+        TgtTicket tgt;
+        KrbPkinitClient pkinitClient = new KrbPkinitClient(getKrbClient());
         try {
-            tgt = getKrbClient().requestTgtWithPkintAnonymous(url.getPath());
+            tgt = pkinitClient.requestTgt(url.getPath());
         } catch (KrbException te) {
             assertThat(te.getMessage().contains("timeout")).isTrue();
             return;
@@ -102,7 +104,7 @@ public class WithCertKdcTest extends KdcTestBase {
         assertThat(tgt).isNotNull();
 
         serverPrincipal = getServerPrincipal();
-        ServiceTicket tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
+        SgtTicket tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
         assertThat(tkt).isNotNull();
     }
 
@@ -112,9 +114,10 @@ public class WithCertKdcTest extends KdcTestBase {
 
         getKrbClient().init();
 
-        TgtTicket tgt = null;
+        TgtTicket tgt;
+        KrbPkinitClient pkinitClient = new KrbPkinitClient(getKrbClient());
         try {
-            tgt = getKrbClient().requestTgtWithCert(userCert, userKey);
+            tgt = pkinitClient.requestTgt(userCert, userKey);
         } catch (KrbException te) {
             assertThat(te.getMessage().contains("timeout")).isTrue();
             return;
@@ -122,7 +125,7 @@ public class WithCertKdcTest extends KdcTestBase {
         assertThat(tgt).isNull();
 
         serverPrincipal = getServerPrincipal();
-        ServiceTicket tkt = getKrbClient().requestServiceTicketWithTgt(tgt, serverPrincipal);
+        SgtTicket tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
         assertThat(tkt).isNull();
     }
 

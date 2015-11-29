@@ -20,7 +20,7 @@
 package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.type.Asn1BitString;
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 import org.apache.kerby.x509.type.TBSCertList;

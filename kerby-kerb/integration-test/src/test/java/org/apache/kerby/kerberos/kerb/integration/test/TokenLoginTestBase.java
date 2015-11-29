@@ -27,8 +27,8 @@ import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.LoginTestBase;
 import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
 import org.junit.Before;
 
@@ -89,8 +89,8 @@ public class TokenLoginTestBase extends LoginTestBase {
         System.out.println("Issued token: " + tokenStr);
         tokenCache = TokenCache.getDefaultTokenCache();
 
-        TgtTicket tgt = getKrbClient().requestTgtWithPassword(getClientPrincipal(),
-                getClientPassword());
+        TgtTicket tgt = getKrbClient().requestTgt(getClientPrincipal(),
+            getClientPassword());
         getKrbClient().storeTicket(tgt, armorCache);
 
         return tokenStr;

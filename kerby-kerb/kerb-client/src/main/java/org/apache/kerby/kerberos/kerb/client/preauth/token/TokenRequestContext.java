@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client.preauth.token;
 
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 
 public class TokenRequestContext implements PluginRequestContext {
 

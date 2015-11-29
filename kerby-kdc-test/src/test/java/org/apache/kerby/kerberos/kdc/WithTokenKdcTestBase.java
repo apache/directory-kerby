@@ -27,11 +27,11 @@ import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbToken;
-import org.apache.kerby.kerberos.kerb.spec.base.TokenFormat;
-import org.apache.kerby.kerberos.kerb.spec.ticket.KrbTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
+import org.apache.kerby.kerberos.kerb.type.base.TokenFormat;
+import org.apache.kerby.kerberos.kerb.type.ticket.KrbTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenEncoder;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
 import org.junit.Before;
@@ -142,7 +142,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
 
     protected File createCredentialCache(String principal,
                                        String password) throws Exception {
-        TgtTicket tgt = getKrbClient().requestTgtWithPassword(principal, password);
+        TgtTicket tgt = getKrbClient().requestTgt(principal, password);
         writeTgtToCache(tgt, principal);
         return cCacheFile;
     }

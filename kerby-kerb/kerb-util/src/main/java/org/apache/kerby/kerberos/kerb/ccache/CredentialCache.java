@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.ccache;
 
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
 import java.io.File;
 import java.io.FileInputStream;

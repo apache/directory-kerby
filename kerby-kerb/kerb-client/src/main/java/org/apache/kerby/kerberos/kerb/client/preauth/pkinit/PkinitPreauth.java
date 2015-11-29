@@ -37,19 +37,19 @@ import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitIdenity;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.cms.DHParameter;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AuthPack;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsReq;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PkAuthenticator;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.TrustedCertifiers;
+import org.apache.kerby.kerberos.kerb.type.KerberosTime;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.pa.PaData;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHParameter;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.TrustedCertifiers;
 
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
@@ -281,11 +281,11 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             kdcRequest.setDhClient(client);
 
-            DHParameterSpec spec = clientPubKey.getParams();
-            BigInteger q = spec.getP().shiftRight(1);
+            DHParameterSpec type = clientPubKey.getParams();
+            BigInteger q = type.getP().shiftRight(1);
             DHParameter dhParameter = new DHParameter();
-            dhParameter.setP(spec.getP());
-            dhParameter.setG(spec.getG());
+            dhParameter.setP(type.getP());
+            dhParameter.setG(type.getG());
             dhParameter.setQ(q);
             dhAlg.setParameters(dhParameter);
 

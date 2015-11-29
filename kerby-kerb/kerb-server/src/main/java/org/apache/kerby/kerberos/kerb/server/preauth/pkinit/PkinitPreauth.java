@@ -35,21 +35,22 @@ import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.cms.DHParameter;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcOption;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AuthPack;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.DHRepInfo;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.KdcDHKeyInfo;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsRep;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PaPkAsReq;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.PkAuthenticator;
+import org.apache.kerby.kerberos.kerb.type.KerberosTime;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHParameter;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator;
+import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.security.pkcs.ContentInfo;
@@ -163,7 +164,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             checkClockskew(kdcRequest, pkAuthenticator.getCtime());
             DHParameter dhParameter = null;
             if (authPack.getClientPublicValue() != null) {
-                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParameters();
+                //TODO
+                dhParameter = (DHParameter) authPack.getClientPublicValue().getAlgorithm().getParameters();
                 PkinitCrypto.serverCheckDH(pkinitContext.pluginOpts, pkinitContext.cryptoctx, dhParameter);
             } else if (!isSigned) {
                 /*Anonymous pkinit requires DH*/
@@ -196,7 +198,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             }
 
             SubjectPublicKeyInfo publicKeyInfo = authPack.getClientPublicValue();
-            byte[] clientSubjectPubKey = publicKeyInfo.getSubjectPubKey().getValue();
+            byte[] clientSubjectPubKey = publicKeyInfo.getSubjectPubKey();
             Asn1Integer clientPubKey = KrbCodec.decode(clientSubjectPubKey, Asn1Integer.class);
             BigInteger y = clientPubKey.getValue();
 

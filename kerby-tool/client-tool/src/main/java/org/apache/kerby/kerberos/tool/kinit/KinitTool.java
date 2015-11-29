@@ -24,8 +24,8 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.tool.ToolUtil;
 import org.apache.kerby.util.OSUtil;
 import org.apache.kerby.util.SysUtil;
@@ -132,8 +132,8 @@ public class KinitTool {
 
         TgtTicket tgt = null;
         try {
-            tgt = krbClient.requestTgtWithOptions(
-                    ToolUtil.convertOptions(ktOptions));
+            tgt = krbClient.requestTgt(
+                ToolUtil.convertOptions(ktOptions));
         } catch (KrbException e) {
             System.err.println("Authentication failed: " + e.getMessage());
             System.exit(1);
@@ -160,10 +160,10 @@ public class KinitTool {
                 + ccacheFile.getAbsolutePath());
         if (ktOptions.contains(KinitOption.SERVICE)) {
             String servicePrincipal = ktOptions.getStringOption(KinitOption.SERVICE);
-            ServiceTicket serviceTicket =
-                    krbClient.requestServiceTicketWithTgt(tgt, servicePrincipal);
+            SgtTicket sgtTicket =
+                    krbClient.requestSgt(tgt, servicePrincipal);
             System.out.println("Successfully requested the service ticket for " + servicePrincipal
-            + "\nKey version: " + serviceTicket.getTicket().getTktvno());
+            + "\nKey version: " + sgtTicket.getTicket().getTktvno());
         }
     }
 

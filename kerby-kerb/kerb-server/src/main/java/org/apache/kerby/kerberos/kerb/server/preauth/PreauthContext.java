@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.server.preauth;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaData;
+import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 
 import java.util.ArrayList;
 import java.util.List;

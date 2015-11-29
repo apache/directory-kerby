@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.AbstractAsn1Type;
+import org.apache.kerby.asn1.type.Asn1Object;
 import org.apache.kerby.asn1.type.Asn1Type;
 
 import java.nio.ByteBuffer;
@@ -51,7 +51,7 @@ public class Asn1OutputBuffer {
         int allLen = 0;
         for (Asn1Type item : objects) {
             if (item != null) {
-                allLen += ((AbstractAsn1Type<?>) item).encodingLength();
+                allLen += ((Asn1Object) item).encodingLength();
             }
         }
         return allLen;

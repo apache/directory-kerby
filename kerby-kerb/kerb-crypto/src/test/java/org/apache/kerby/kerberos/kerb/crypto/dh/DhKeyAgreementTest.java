@@ -21,11 +21,8 @@ package org.apache.kerby.kerberos.kerb.crypto.dh;
 
 
 import junit.framework.TestCase;
-import org.apache.kerby.kerberos.kerb.crypto.dh.DhClient;
-import org.apache.kerby.kerberos.kerb.crypto.dh.DhGroup;
-import org.apache.kerby.kerberos.kerb.crypto.dh.DhServer;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;

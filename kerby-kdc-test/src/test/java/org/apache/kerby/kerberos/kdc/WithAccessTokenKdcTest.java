@@ -26,10 +26,11 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
 import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
 import org.apache.kerby.kerberos.kerb.common.PublicKeyReader;
 import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -135,10 +136,11 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
     private void performTest() throws Exception {
         createCredentialCache(getClientPrincipal(), getClientPassword());
 
+        KrbTokenClient tokenClient = new KrbTokenClient(getKrbClient());
         try {
-            ServiceTicket serviceTicket = getKrbClient().requestServiceTicketWithAccessToken(
+            SgtTicket sgtTicket = tokenClient.requestSgt(
                 getKrbToken(), getServerPrincipal(), getcCacheFile().getPath());
-            verifyTicket(serviceTicket);
+            verifyTicket(sgtTicket);
         } finally {
             deleteCcacheFile();
         }

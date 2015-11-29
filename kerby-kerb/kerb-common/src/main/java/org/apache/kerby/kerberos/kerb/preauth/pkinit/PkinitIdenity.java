@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
 @SuppressWarnings("PMD")
 public class PkinitIdenity {

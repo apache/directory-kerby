@@ -19,15 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.common;
 
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo;
-import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2;
-import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfo2Entry;
-import org.apache.kerby.kerberos.kerb.spec.base.EtypeInfoEntry;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
-import org.apache.kerby.kerberos.kerb.spec.base.MethodData;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.EtypeInfo;
+import org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2;
+import org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry;
+import org.apache.kerby.kerberos.kerb.type.base.EtypeInfoEntry;
+import org.apache.kerby.kerberos.kerb.type.base.KrbError;
+import org.apache.kerby.kerberos.kerb.type.base.MethodData;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 
 import java.io.IOException;
 import java.util.ArrayList;

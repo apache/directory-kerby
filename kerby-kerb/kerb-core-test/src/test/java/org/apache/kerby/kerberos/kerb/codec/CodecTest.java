@@ -19,25 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
-import org.apache.kerby.asn1.Asn1Dump;
 import org.apache.kerby.asn1.Asn1InputBuffer;
-import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.type.Asn1Item;
 import org.apache.kerby.asn1.type.Asn1Type;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSum;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.kdc.AsReq;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
 import org.junit.Test;
-import sun.security.krb5.internal.KDCReq;
 
 import java.io.IOException;
 

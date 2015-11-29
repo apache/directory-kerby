@@ -24,16 +24,13 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.impl.DefaultInternalKrbClient;
 import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClient;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
 
 /**
  * A Krb client API for applications to interact with KDC
@@ -169,13 +166,13 @@ public class KrbClient {
      * @return The tgt ticket
      * @throws KrbException e
      */
-    public TgtTicket requestTgtWithPassword(String principal,
-                                      String password) throws KrbException {
+    public TgtTicket requestTgt(String principal,
+                                String password) throws KrbException {
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.CLIENT_PRINCIPAL, principal);
         requestOptions.add(KrbOption.USE_PASSWD, true);
         requestOptions.add(KrbOption.USER_PASSWD, password);
-        return requestTgtWithOptions(requestOptions);
+        return requestTgt(requestOptions);
     }
 
     /**
@@ -185,59 +182,13 @@ public class KrbClient {
      * @return TGT
      * @throws KrbException e
      */
-    public TgtTicket requestTgtWithKeytab(String principal,
-                                      File keytabFile) throws KrbException {
+    public TgtTicket requestTgt(String principal,
+                                File keytabFile) throws KrbException {
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.CLIENT_PRINCIPAL, principal);
         requestOptions.add(KrbOption.USE_KEYTAB, true);
         requestOptions.add(KrbOption.KEYTAB_FILE, keytabFile);
-        return requestTgtWithOptions(requestOptions);
-    }
-
-    /**
-     * Request a TGT with user x509 certificate credential
-     * @param certificate The certificate
-     * @param privateKey The private key
-     * @return TGT
-     * @throws KrbException e
-     */
-    public TgtTicket requestTgtWithCert(Certificate certificate,
-                                        PrivateKey privateKey) throws KrbException {
-        KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.PKINIT_X509_CERTIFICATE, certificate);
-        requestOptions.add(KrbOption.PKINIT_X509_PRIVATE_KEY, privateKey);
-        return requestTgtWithOptions(requestOptions);
-    }
-
-    /**
-     * Request a TGT with using Anonymous PKINIT
-     * @return TGT
-     * @throws KrbException e
-     */
-    public TgtTicket requestTgtWithPkintAnonymous(String certificatePath) throws KrbException {
-        KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.USE_PKINIT_ANONYMOUS);
-        requestOptions.add(KrbOption.CLIENT_PRINCIPAL, "WELLKNOWN/ANONYMOUS");
-        requestOptions.add(KrbOption.PKINIT_X509_ANCHORS, certificatePath);
-        return requestTgtWithOptions(requestOptions);
-    }
-
-    /**
-     * Request a TGT with user token credential
-     * @param token The auth token
-     * @param armorCache The armor cache
-     * @return TGT
-     * @throws KrbException e
-     */
-    public TgtTicket requestTgtWithToken(AuthToken token, String armorCache) throws KrbException {
-        if (!token.isIdToken()) {
-            throw new IllegalArgumentException("Identity token is expected");
-        }
-
-        KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
-        requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
-        return requestTgtWithOptions(requestOptions);
+        return requestTgt(requestOptions);
     }
 
     /**
@@ -246,12 +197,12 @@ public class KrbClient {
      * @return TGT
      * @throws KrbException e
      */
-    public TgtTicket requestTgtWithOptions(KOptions requestOptions) throws KrbException {
+    public TgtTicket requestTgt(KOptions requestOptions) throws KrbException {
         if (requestOptions == null) {
             throw new IllegalArgumentException("Null requestOptions specified");
         }
 
-        return innerClient.requestTgtTicket(requestOptions);
+        return innerClient.requestTgt(requestOptions);
     }
 
     /**
@@ -261,33 +212,22 @@ public class KrbClient {
      * @return Service ticket
      * @throws KrbException e
      */
-    public ServiceTicket requestServiceTicketWithTgt(
-            TgtTicket tgt, String serverPrincipal) throws KrbException {
+    public SgtTicket requestSgt(TgtTicket tgt,
+                                String serverPrincipal) throws KrbException {
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.USE_TGT, tgt);
         requestOptions.add(KrbOption.SERVER_PRINCIPAL, serverPrincipal);
-        return innerClient.requestServiceTicket(requestOptions);
+        return innerClient.requestSgt(requestOptions);
     }
 
     /**
-     * Request a service ticket using an Access Token.
-     * @param token The auth token
-     * @param serverPrincipal The server principal
-     * @param armorCache The armor cache
+     * Request a service ticket provided request options
+     * @param requestOptions The request options
      * @return service ticket
      * @throws KrbException e
      */
-    public ServiceTicket requestServiceTicketWithAccessToken(
-            AuthToken token, String serverPrincipal,
-            String armorCache) throws KrbException {
-        if (!token.isAcToken()) {
-            throw new IllegalArgumentException("Access token is expected");
-        }
-        KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.TOKEN_USER_AC_TOKEN, token);
-        requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
-        requestOptions.add(KrbOption.SERVER_PRINCIPAL, serverPrincipal);
-        return innerClient.requestServiceTicket(requestOptions);
+    public SgtTicket requestSgt(KOptions requestOptions) throws KrbException {
+        return innerClient.requestSgt(requestOptions);
     }
 
     /**

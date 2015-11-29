@@ -18,11 +18,9 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
-import org.apache.commons.ssl.Certificates;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.cms.DHParameter;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.KdcDHKeyInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.security.pkcs.ContentInfo;
@@ -44,10 +42,8 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
-import java.util.List;
 
 public class PkinitCrypto {
 
@@ -219,7 +215,7 @@ public class PkinitCrypto {
 
     public static boolean verifyKdcSan(String hostname, X509Certificate[] cert) {
 
-        if(hostname == null) {
+        if (hostname == null) {
             LOG.info("No pkinit_kdc_hostname values found in config file");
         } else {
             LOG.info("pkinit_kdc_hostname values found in config file");
@@ -235,11 +231,11 @@ public class PkinitCrypto {
 
     public static void cryptoRetrieveX509Sans(X509Certificate[] cert) {
 
-        if(cert == null) {
+        if (cert == null) {
             LOG.info("no certificate!");
         }
 
         LOG.info("Looking for SANs in cert");
-        String[] subjectAlts = Certificates.getDNSSubjectAlts(cert[0]);
+        //String[] subjectAlts = Certificates.getDNSSubjectAlts(cert[0]); //TODO
     }
 }

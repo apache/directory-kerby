@@ -20,11 +20,12 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
 import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
 import org.apache.kerby.kerberos.kerb.common.PublicKeyReader;
 import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -135,10 +136,11 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
 
         createCredentialCache(getClientPrincipal(), getClientPassword());
 
-        TgtTicket tgt = null;
+        TgtTicket tgt;
+        KrbTokenClient tokenClient = new KrbTokenClient(getKrbClient());
         try {
-            tgt = getKrbClient().requestTgtWithToken(getKrbToken(),
-                    getcCacheFile().getPath());
+            tgt = tokenClient.requestTgt(getKrbToken(),
+                getcCacheFile().getPath());
         } catch (KrbException e) {
             if (e.getMessage().contains("timeout")) {
                 return;
@@ -147,8 +149,8 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
         }
         verifyTicket(tgt);
 
-        ServiceTicket tkt = getKrbClient().requestServiceTicketWithTgt(tgt,
-                getServerPrincipal());
+        SgtTicket tkt = getKrbClient().requestSgt(tgt,
+            getServerPrincipal());
         verifyTicket(tkt);
     }
 

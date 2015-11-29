@@ -21,9 +21,9 @@ package org.apache.kerby.kerberos.kerb.crypto.dh;
 
 import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 
 import javax.crypto.KeyAgreement;
 import javax.crypto.interfaces.DHPublicKey;
@@ -107,7 +107,7 @@ public class DhServer {
     public byte[] encrypt(byte[] clearText, KeyUsage usage) throws Exception {
         // Use the secret key to encrypt/decrypt data.
         EncTypeHandler encType = EncryptionHandler.getEncHandler(serverKey.getKeyType());
-        return encType.decrypt(clearText, serverKey.getKeyData(), usage.getIntValue());
+        return encType.decrypt(clearText, serverKey.getKeyData(), usage.getValue());
     }
 
     private byte[] concatenateBytes(byte[] array1, byte[] array2) {

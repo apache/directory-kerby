@@ -22,8 +22,8 @@ package org.apache.kerby.kerberos.kerb.client.impl;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
 /**
  * An internal krb client interface.
@@ -48,13 +48,13 @@ public interface InternalKrbClient {
      * @return a TGT
      * @throws KrbException e
      */
-    TgtTicket requestTgtTicket(KOptions requestOptions) throws KrbException;
+    TgtTicket requestTgt(KOptions requestOptions) throws KrbException;
 
     /**
-     * Request a service ticket.
+     * Request a service ticket provided request options
      * @param requestOptions The request options
      * @return service ticket
      * @throws KrbException e
      */
-    ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException;
+    SgtTicket requestSgt(KOptions requestOptions) throws KrbException;
 }

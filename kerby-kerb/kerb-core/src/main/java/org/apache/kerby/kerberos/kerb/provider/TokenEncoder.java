@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.provider;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;

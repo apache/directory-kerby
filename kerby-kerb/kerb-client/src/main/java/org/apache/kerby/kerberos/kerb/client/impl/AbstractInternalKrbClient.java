@@ -33,10 +33,10 @@ import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithToken;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithTgt;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithToken;
-import org.apache.kerby.kerberos.kerb.spec.base.NameType;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.base.NameType;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
 /**
  * A krb client API for applications to interact with KDC
@@ -74,7 +74,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
      * {@inheritDoc}
      */
     @Override
-    public TgtTicket requestTgtTicket(KOptions requestOptions) throws KrbException {
+    public TgtTicket requestTgt(KOptions requestOptions) throws KrbException {
         AsRequest asRequest = null;
 
         if (requestOptions.contains(KrbOption.USE_PASSWD)) {
@@ -114,14 +114,14 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
 
         asRequest.setKrbOptions(requestOptions);
 
-        return doRequestTgtTicket(asRequest);
+        return doRequestTgt(asRequest);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ServiceTicket requestServiceTicket(KOptions requestOptions) throws KrbException {
+    public SgtTicket requestSgt(KOptions requestOptions) throws KrbException {
         TgsRequest tgsRequest = null;
         if (requestOptions.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
             tgsRequest = new TgsRequestWithToken(context);
@@ -140,14 +140,14 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         tgsRequest.setServerPrincipal(new PrincipalName(serverPrincipal));
         tgsRequest.setKrbOptions(requestOptions);
 
-        return doRequestServiceTicket(tgsRequest);
+        return doRequestSgt(tgsRequest);
     }
 
-    protected abstract TgtTicket doRequestTgtTicket(
-            AsRequest tgtTktReq) throws KrbException;
+    protected abstract TgtTicket doRequestTgt(
+        AsRequest tgtTktReq) throws KrbException;
 
-    protected abstract ServiceTicket doRequestServiceTicket(
-            TgsRequest tgsRequest) throws KrbException;
+    protected abstract SgtTicket doRequestSgt(
+        TgsRequest tgsRequest) throws KrbException;
 
     /**
      * Fix principal name.

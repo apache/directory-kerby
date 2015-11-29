@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.server.request;
 
-import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncoding;
-import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncodingType;
+import org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding;
+import org.apache.kerby.kerberos.kerb.type.base.TransitedEncodingType;
 
 /**
  * Issuing TGT ticket.

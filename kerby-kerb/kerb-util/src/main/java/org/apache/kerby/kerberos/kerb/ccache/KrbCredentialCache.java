@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.ccache;
 
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
 import java.io.File;
 import java.io.IOException;

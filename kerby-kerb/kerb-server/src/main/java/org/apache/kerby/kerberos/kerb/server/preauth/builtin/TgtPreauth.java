@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.preauth.builtin.TgtPreauthMeta;
 import org.apache.kerby.kerberos.kerb.server.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.server.request.TgsRequest;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 
 public class TgtPreauth extends AbstractPreauthPlugin {
 

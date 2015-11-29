@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AuthPack;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.KdcDHKeyInfo;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.ReplyKeyPack;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;

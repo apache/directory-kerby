@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
 import org.apache.kerby.kerberos.kerb.crypto.dh.DhGroup;
-import org.apache.kerby.kerberos.kerb.spec.KerberosTime;
+import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 
 import javax.crypto.spec.DHParameterSpec;
 

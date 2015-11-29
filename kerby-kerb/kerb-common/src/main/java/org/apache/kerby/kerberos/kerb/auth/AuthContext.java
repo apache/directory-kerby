@@ -20,10 +20,10 @@
 package org.apache.kerby.kerberos.kerb.auth;
 
 import org.apache.kerby.asn1.type.Asn1Flags;
-import org.apache.kerby.kerberos.kerb.spec.ap.Authenticator;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.HostAddress;
+import org.apache.kerby.kerberos.kerb.type.ap.Authenticator;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.HostAddress;
 
 import java.util.List;
 

@@ -19,16 +19,16 @@
  */
 package org.apache.kerby.kerberos.kerb.common;
 
-import org.apache.kerby.asn1.type.AbstractAsn1Type;
+import org.apache.kerby.asn1.type.Asn1Object;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -124,7 +124,7 @@ public class EncryptionUtil {
         return null;
     }
 
-    public static EncryptedData seal(AbstractAsn1Type<?> asn1Type,
+    public static EncryptedData seal(Asn1Object asn1Type,
                                      EncryptionKey key, KeyUsage usage) throws KrbException {
         byte[] encoded = asn1Type.encode();
         EncryptedData encrypted = EncryptionHandler.encrypt(encoded, key, usage);
@@ -140,14 +140,14 @@ public class EncryptionUtil {
     public static byte[] encrypt(EncryptionKey key,
           byte[] plaintext, KeyUsage usage) throws KrbException {
         EncTypeHandler encType = EncryptionHandler.getEncHandler(key.getKeyType());
-        byte[] cipherData = encType.encrypt(plaintext, key.getKeyData(), usage.getIntValue());
+        byte[] cipherData = encType.encrypt(plaintext, key.getKeyData(), usage.getValue());
         return cipherData;
     }
 
     public static byte[] decrypt(EncryptionKey key,
            byte[] cipherData, KeyUsage usage) throws KrbException {
         EncTypeHandler encType = EncryptionHandler.getEncHandler(key.getKeyType());
-        byte[] plainData = encType.decrypt(cipherData, key.getKeyData(), usage.getIntValue());
+        byte[] plainData = encType.decrypt(cipherData, key.getKeyData(), usage.getValue());
         return plainData;
     }
 }

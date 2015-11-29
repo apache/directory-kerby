@@ -21,7 +21,7 @@ package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.type.Asn1BmpString;
 import org.apache.kerby.asn1.type.Asn1Choice;
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1PrintableString;
 import org.apache.kerby.asn1.type.Asn1T61String;
 import org.apache.kerby.asn1.type.Asn1UniversalString;

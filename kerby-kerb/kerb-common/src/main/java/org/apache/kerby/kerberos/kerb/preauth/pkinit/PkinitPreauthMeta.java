@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.kerberos.kerb.preauth.PreauthPluginMeta;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 
 public class PkinitPreauthMeta implements PreauthPluginMeta {
 

@@ -20,7 +20,6 @@
 package org.apache.kerby.kerberos.kerb.crypto.dh;
 
 import junit.framework.TestCase;
-import org.apache.kerby.kerberos.kerb.crypto.dh.DhGroup;
 
 /**
  * "When using the Diffie-Hellman key agreement method, implementations MUST

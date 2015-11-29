@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.crypto;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
 
 public interface CheckSumTypeHandler extends CryptoTypeHandler {
 

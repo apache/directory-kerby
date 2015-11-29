@@ -23,15 +23,15 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.kdc.EncTgsRepPart;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcRep;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReqBody;
-import org.apache.kerby.kerberos.kerb.spec.kdc.TgsRep;
-import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.kdc.EncTgsRepPart;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcRep;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
+import org.apache.kerby.kerberos.kerb.type.kdc.TgsRep;
+import org.apache.kerby.kerberos.kerb.type.kdc.TgsReq;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,8 +91,8 @@ public class TgsRequest extends KdcRequest {
         }
     }
 
-    public ServiceTicket getServiceTicket() {
-        ServiceTicket serviceTkt = new ServiceTicket(getKdcRep().getTicket(),
+    public SgtTicket getSgt() {
+        SgtTicket serviceTkt = new SgtTicket(getKdcRep().getTicket(),
                 (EncTgsRepPart) getKdcRep().getEncPart());
         return serviceTkt;
     }

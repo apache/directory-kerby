@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.client.JaasKrbUtil;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.junit.After;
 import org.junit.Before;
 
@@ -53,7 +53,7 @@ public class LoginTestBase extends KdcTestBase {
     }
 
     protected Subject loginClientUsingTicketCache() throws Exception {
-        TgtTicket tgt = getKrbClient().requestTgtWithPassword(getClientPrincipal(),
+        TgtTicket tgt = getKrbClient().requestTgt(getClientPrincipal(),
             getClientPassword());
         getKrbClient().storeTicket(tgt, ticketCacheFile);
 

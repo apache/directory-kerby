@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.preauth.builtin;
 
 import org.apache.kerby.kerberos.kerb.preauth.PreauthPluginMeta;
-import org.apache.kerby.kerberos.kerb.spec.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 
 /**
  * A faked preauth module for TGS request handling

@@ -32,11 +32,11 @@ import org.apache.kerby.kerberos.kerb.crypto.enc.DesCbcMd5Enc;
 import org.apache.kerby.kerberos.kerb.crypto.enc.Rc4HmacEnc;
 import org.apache.kerby.kerberos.kerb.crypto.enc.Rc4HmacExpEnc;
 import org.apache.kerby.kerberos.kerb.crypto.util.Random;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptedData;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
-import org.apache.kerby.kerberos.kerb.spec.base.KeyUsage;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
 import javax.crypto.Cipher;
 

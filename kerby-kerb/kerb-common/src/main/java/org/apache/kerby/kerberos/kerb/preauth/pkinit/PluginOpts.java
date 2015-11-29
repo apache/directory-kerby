@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.AlgorithmIdentifiers;
-import org.apache.kerby.kerberos.kerb.spec.pa.pkinit.TrustedCertifiers;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AlgorithmIdentifiers;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.TrustedCertifiers;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 
 public class PluginOpts {

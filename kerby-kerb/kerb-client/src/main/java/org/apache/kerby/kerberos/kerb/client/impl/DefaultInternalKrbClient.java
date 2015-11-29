@@ -24,8 +24,8 @@ import org.apache.kerby.kerberos.kerb.client.ClientUtil;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
-import org.apache.kerby.kerberos.kerb.spec.ticket.ServiceTicket;
-import org.apache.kerby.kerberos.kerb.spec.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
@@ -68,7 +68,7 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
      * {@inheritDoc}
      */
     @Override
-    protected TgtTicket doRequestTgtTicket(AsRequest tgtTktReq) throws KrbException {
+    protected TgtTicket doRequestTgt(AsRequest tgtTktReq) throws KrbException {
         tgtTktReq.setSessionData(transport);
 
         krbHandler.handleRequest(tgtTktReq);
@@ -80,12 +80,12 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
      * {@inheritDoc}
      */
     @Override
-    protected ServiceTicket doRequestServiceTicket(TgsRequest ticketReq) throws KrbException {
+    protected SgtTicket doRequestSgt(TgsRequest ticketReq) throws KrbException {
         ticketReq.setSessionData(transport);
 
         krbHandler.handleRequest(ticketReq);
 
-        return ticketReq.getServiceTicket();
+        return ticketReq.getSgt();
     }
 
 }

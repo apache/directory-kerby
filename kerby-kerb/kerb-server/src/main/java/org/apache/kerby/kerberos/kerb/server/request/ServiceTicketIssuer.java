@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.server.request;
 
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
-import org.apache.kerby.kerberos.kerb.spec.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.spec.base.TransitedEncoding;
-import org.apache.kerby.kerberos.kerb.spec.ticket.Ticket;
+import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding;
+import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
 /**
  * Issuing service ticket.

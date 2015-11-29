@@ -20,16 +20,16 @@
 package org.apache.kerby.kerberos.kerb;
 
 import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.type.AbstractAsn1Type;
+import org.apache.kerby.asn1.type.Asn1Object;
 import org.apache.kerby.asn1.type.Asn1Type;
-import org.apache.kerby.kerberos.kerb.spec.ap.ApReq;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbError;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbMessage;
-import org.apache.kerby.kerberos.kerb.spec.base.KrbMessageType;
-import org.apache.kerby.kerberos.kerb.spec.kdc.AsRep;
-import org.apache.kerby.kerberos.kerb.spec.kdc.AsReq;
-import org.apache.kerby.kerberos.kerb.spec.kdc.TgsRep;
-import org.apache.kerby.kerberos.kerb.spec.kdc.TgsReq;
+import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
+import org.apache.kerby.kerberos.kerb.type.base.KrbError;
+import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
+import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.type.kdc.AsRep;
+import org.apache.kerby.kerberos.kerb.type.kdc.AsReq;
+import org.apache.kerby.kerberos.kerb.type.kdc.TgsRep;
+import org.apache.kerby.kerberos.kerb.type.kdc.TgsReq;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -65,10 +65,10 @@ public class KrbCodec {
 
     public static KrbMessage decodeMessage(ByteBuffer byteBuffer) throws IOException {
         LimitedByteBuffer limitedBuffer = new LimitedByteBuffer(byteBuffer);
-        int tag = AbstractAsn1Type.readTag(limitedBuffer);
-        int tagNo = AbstractAsn1Type.readTagNo(limitedBuffer, tag);
+        int tag = Asn1Object.readTag(limitedBuffer);
+        int tagNo = Asn1Object.readTagNo(limitedBuffer, tag);
         int tagFlags = tag & 0xe0;
-        int length = AbstractAsn1Type.readLength(limitedBuffer);
+        int length = Asn1Object.readLength(limitedBuffer);
         LimitedByteBuffer valueBuffer = new LimitedByteBuffer(limitedBuffer, length);
 
         KrbMessage msg;

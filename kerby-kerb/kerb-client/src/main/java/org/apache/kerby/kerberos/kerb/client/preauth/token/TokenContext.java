@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.token;
 
-import org.apache.kerby.kerberos.kerb.spec.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 
 public class TokenContext {
 

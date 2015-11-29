@@ -19,14 +19,11 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceOf;
 import org.apache.kerby.asn1.type.Asn1SetType;
 import org.apache.kerby.asn1.type.Asn1Tagging;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
-import org.apache.kerby.asn1.type.ExplicitField;
-import org.apache.kerby.asn1.type.ImplicitField;
 import org.apache.kerby.asn1.type.TaggingSequence;
 import org.apache.kerby.asn1.type.TaggingSet;
 

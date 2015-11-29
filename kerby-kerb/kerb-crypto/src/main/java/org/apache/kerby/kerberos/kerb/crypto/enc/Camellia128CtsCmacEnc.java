@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.crypto.enc;
 
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia128Provider;
 import org.apache.kerby.kerberos.kerb.crypto.key.CamelliaKeyMaker;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
 public class Camellia128CtsCmacEnc extends KeKiCmacEnc {
 

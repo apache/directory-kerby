@@ -22,8 +22,8 @@ package org.apache.kerby.kerberos.kerb.crypto.enc;
 import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Sha1Provider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Des3Provider;
 import org.apache.kerby.kerberos.kerb.crypto.key.Des3KeyMaker;
-import org.apache.kerby.kerberos.kerb.spec.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
 public class Des3CbcSha1Enc extends KeKiHmacSha1Enc {
 

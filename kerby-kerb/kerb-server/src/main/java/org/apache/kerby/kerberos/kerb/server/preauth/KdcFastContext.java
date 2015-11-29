@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth;
 
-import org.apache.kerby.kerberos.kerb.spec.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.spec.fast.FastOptions;
-import org.apache.kerby.kerberos.kerb.spec.kdc.KdcReq;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.fast.FastOptions;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcReq;
 
 /**
  * Maintaining FAST processing state in KDC side per request.
