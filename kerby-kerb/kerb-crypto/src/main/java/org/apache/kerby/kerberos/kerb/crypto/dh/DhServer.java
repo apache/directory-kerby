@@ -107,7 +107,7 @@ public class DhServer {
     public byte[] encrypt(byte[] clearText, KeyUsage usage) throws Exception {
         // Use the secret key to encrypt/decrypt data.
         EncTypeHandler encType = EncryptionHandler.getEncHandler(serverKey.getKeyType());
-        return encType.decrypt(clearText, serverKey.getKeyData(), usage.getValue());
+        return encType.encrypt(clearText, serverKey.getKeyData(), usage.getValue());
     }
 
     private byte[] concatenateBytes(byte[] array1, byte[] array2) {
