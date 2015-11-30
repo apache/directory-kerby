@@ -66,11 +66,11 @@ public class WithTokenKdcTestBase extends KdcTestBase {
     protected void configKdcSeverAndClient() {
         super.configKdcSeverAndClient();
         String verifyKeyPath = this.getClass().getResource("/").getPath();
-        getKdcServer().getKdcConfig().setString(KdcConfigKey.VERIFY_KEY, verifyKeyPath);
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.TOKEN_VERIFY_KEYS, verifyKeyPath);
         
         URL privateKeyPath = WithTokenKdcTestBase.class.getResource("/private_key.pem");
-        getKdcServer().getKdcConfig().setString(KdcConfigKey.DECRYPTION_KEY, privateKeyPath.getPath());
-        getKdcServer().getKdcConfig().setString(KdcConfigKey.ISSUERS, ISSUER);
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.TOKEN_DECRYPTION_KEYS, privateKeyPath.getPath());
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.TOKEN_ISSUERS, ISSUER);
     }
 
     protected AuthToken getKrbToken() {
