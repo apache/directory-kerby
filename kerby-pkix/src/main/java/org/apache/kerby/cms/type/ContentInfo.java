@@ -59,8 +59,8 @@ public class ContentInfo extends Asn1SequenceType {
         setFieldAs(CONTENT_TYPE, contentType);
     }
 
-    public Asn1Type getContent() {
-        return getFieldAsAny(CONTENT);
+    public <T extends Asn1Type> T getContentAs(Class<T> t) {
+        return getFieldAsAny(CONTENT, t);
     }
 
     public void setContent(Asn1Type content) {

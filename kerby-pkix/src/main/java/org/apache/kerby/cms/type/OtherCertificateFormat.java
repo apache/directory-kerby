@@ -53,8 +53,8 @@ public class OtherCertificateFormat extends Asn1SequenceType {
         setFieldAs(OTHER_CERT_FORMAT, otherCertFormat);
     }
 
-    public Asn1Type getOtherCert() {
-        return getFieldAsAny(OTHER_CERT);
+    public <T extends Asn1Type> T getOtherCertAs(Class<T> t) {
+        return getFieldAsAny(OTHER_CERT, t);
     }
 
     public void setOtherCert(Asn1Type otherCert) {

@@ -56,8 +56,8 @@ public class PolicyQualifierInfo extends Asn1SequenceType {
         setFieldAs(POLICY_QUALIFIER_ID, policyQualifierId);
     }
 
-    public Asn1Type getQualifier() {
-        return getFieldAsAny(QUALIFIER);
+    public <T extends Asn1Type> T getQualifierAs(Class<T> t) {
+        return getFieldAsAny(QUALIFIER, t);
     }
 
     public void setQualifier(Asn1Type qualifier) {

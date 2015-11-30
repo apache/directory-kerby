@@ -50,7 +50,6 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHParameter;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.TrustedCertifiers;
-
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;

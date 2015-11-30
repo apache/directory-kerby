@@ -52,8 +52,8 @@ public class OtherRevocationInfoFormat extends Asn1SequenceType {
         setFieldAs(OTHER_REV_INFO_FORMAT, otherRevInfoFormat);
     }
 
-    public Asn1Type getOtherRevInfo() {
-        return getFieldAsAny(OTHER_REV_INFO);
+    public <T extends Asn1Type> T getOtherRevInfoAs(Class<T> t) {
+        return getFieldAsAny(OTHER_REV_INFO, t);
     }
 
     public void setOtherRevInfo(Asn1Type otherRevInfo) {

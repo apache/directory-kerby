@@ -181,10 +181,11 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
         setFieldAs(index, new Asn1Integer(value));
     }
 
-    protected Asn1Type getFieldAsAny(int index) {
-        Asn1Any any = getFieldAs(index, Asn1Any.class);
-        if (any != null) {
-            return any.getValue();
+    protected <T extends Asn1Type> T getFieldAsAny(int index, Class<T> t) {
+        Asn1Type value = fields[index];
+        if (value != null && value instanceof Asn1Any) {
+            Asn1Any any = (Asn1Any) value;
+            return any.getValueAs(t);
         }
         return null;
     }

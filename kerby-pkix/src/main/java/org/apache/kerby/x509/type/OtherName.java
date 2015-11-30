@@ -56,8 +56,8 @@ public class OtherName extends Asn1SequenceType {
         setFieldAs(TYPE_ID, algorithm);
     }
 
-    public Asn1Type getOtherNameValue() {
-        return getFieldAsAny(VALUE);
+    public <T extends Asn1Type> T getOtherNameValueAs(Class<T> t) {
+        return getFieldAsAny(VALUE, t);
     }
 
     public void setOtherNameValue(Asn1Type value) {
