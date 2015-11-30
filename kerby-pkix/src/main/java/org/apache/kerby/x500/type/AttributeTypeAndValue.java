@@ -53,8 +53,8 @@ public class AttributeTypeAndValue extends Asn1SequenceType {
         setFieldAs(TYPE, type);
     }
 
-    public Asn1Type getAttributeValue() {
-        return getFieldAsAny(VALUE);
+    public <T extends Asn1Type> T getAttributeValueAs(Class<T> t) {
+        return getFieldAsAny(VALUE, t);
     }
 
     public void setAttributeValue(Asn1Type value) {

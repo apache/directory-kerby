@@ -69,7 +69,6 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
         // Not used
     }
 
-    // Available for encoding phase.
     protected <T extends Asn1Type> T getValueAs(Class<T> t) {
         Asn1Type value = getValue();
         if (value == null) {

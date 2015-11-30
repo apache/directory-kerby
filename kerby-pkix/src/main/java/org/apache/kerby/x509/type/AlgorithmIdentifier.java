@@ -52,8 +52,8 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
         setFieldAs(ALGORITHM, algorithm);
     }
 
-    public Asn1Type getParameters() {
-        return getFieldAsAny(PARAMETERS);
+    public <T extends Asn1Type> T getParametersAs(Class<T> t) {
+        return getFieldAsAny(PARAMETERS, t);
     }
 
     public void setParameters(Asn1Type parameters) {
