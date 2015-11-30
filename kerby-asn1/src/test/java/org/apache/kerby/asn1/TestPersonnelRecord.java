@@ -39,30 +39,30 @@ public class TestPersonnelRecord {
 
         if (verbose) {
             System.out.println("Name:");
-            System.out.println(Util.bytesToHex(pr.getName().encode()));
+            System.out.println(HexUtil.bytesToHexFriendly(pr.getName().encode()));
 
         /*
         System.out.println("Title:");
-        System.out.println(Util.bytesToHex(pr.getFieldAs(1, Asn1VisibleString.class).encode()));
+        System.out.println(HexUtil.bytesToHexFriendly(pr.getFieldAs(1, Asn1VisibleString.class).encode()));
 
         System.out.println("EmployeeNumber:");
-        System.out.println(Util.bytesToHex(pr.getFieldAs(2, EmployeeNumber.class).encode()));
+        System.out.println(HexUtil.bytesToHexFriendly(pr.getFieldAs(2, EmployeeNumber.class).encode()));
         */
 
             System.out.println("DateOfHire:");
-            System.out.println(Util.bytesToHex(pr.getDateOfHire().encode()));
+            System.out.println(HexUtil.bytesToHexFriendly(pr.getDateOfHire().encode()));
 
             System.out.println("SpouseName:");
-            System.out.println(Util.bytesToHex(pr.getNameOfSpouse().encode()));
+            System.out.println(HexUtil.bytesToHexFriendly(pr.getNameOfSpouse().encode()));
 
             System.out.println("Child1:");
-            System.out.println(Util.bytesToHex(pr.getChildren().getElements().get(0).encode()));
+            System.out.println(HexUtil.bytesToHexFriendly(pr.getChildren().getElements().get(0).encode()));
 
             System.out.println("Child2:");
-            System.out.println(Util.bytesToHex(pr.getChildren().getElements().get(1).encode()));
+            System.out.println(HexUtil.bytesToHexFriendly(pr.getChildren().getElements().get(1).encode()));
 
             System.out.println("Children:");
-            System.out.println(Util.bytesToHex(pr.getChildren().encode()));
+            System.out.println(HexUtil.bytesToHexFriendly(pr.getChildren().encode()));
         }
 
         byte[] data = TestData.createSammplePersonnelEncodingData();
@@ -70,10 +70,10 @@ public class TestPersonnelRecord {
 
         if (verbose) {
             System.out.println("ExpectedData:");
-            System.out.println(Util.bytesToHex(data));
+            System.out.println(HexUtil.bytesToHexFriendly(data));
 
             System.out.println("Encoded:");
-            System.out.println(Util.bytesToHex(encoded));
+            System.out.println(HexUtil.bytesToHexFriendly(encoded));
         }
 
         assertThat(encoded).isEqualTo(data);

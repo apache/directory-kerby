@@ -42,7 +42,7 @@ public class TestAsn1Integer {
     }
 
     private void testEncodingWith(int value, String expectedEncoding) {
-        byte[] expected = Util.hex2bytes(expectedEncoding);
+        byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
         Asn1Integer aValue = new Asn1Integer(value);
         aValue.useDER();
         byte[] encodingBytes = aValue.encode();
@@ -65,7 +65,7 @@ public class TestAsn1Integer {
     private void testDecodingWith(int expectedValue, String content) throws IOException {
         Asn1Integer decoded = new Asn1Integer();
         decoded.useDER();
-        decoded.decode(Util.hex2bytes(content));
+        decoded.decode(HexUtil.hex2bytesFriendly(content));
         assertThat(decoded.getValue().intValue()).isEqualTo(expectedValue);
     }
 }

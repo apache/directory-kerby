@@ -33,8 +33,8 @@ public class TestAsn1Collection {
     static final String TEST_STR = "Jones";
     static final Boolean TEST_BOOL = true;
     static final byte[] EXPECTED_BYTES = new byte[] {(byte) 0x30, (byte) 0x0A,
-            (byte) 0x16, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73,
-            (byte) 0x01, (byte) 0x01, (byte) 0xFF
+            (byte) 0x16, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E,
+            (byte) 0x65, (byte) 0x73, (byte) 0x01, (byte) 0x01, (byte) 0xFF
     };
 
     @Test

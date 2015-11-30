@@ -43,7 +43,7 @@ public class TestAsn1ObjectIdentifier {
     }
 
     private void testEncodingWith(String oid, String expectedEncoding) {
-        byte[] expected = Util.hex2bytes(expectedEncoding);
+        byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
         Asn1ObjectIdentifier aValue = new Asn1ObjectIdentifier(oid);
         aValue.useDER();
         byte[] encodingBytes = aValue.encode();
@@ -59,7 +59,7 @@ public class TestAsn1ObjectIdentifier {
     private void testDecodingWith(String expectedValue, String content) throws IOException {
         Asn1ObjectIdentifier decoded = new Asn1ObjectIdentifier();
         decoded.useDER();
-        decoded.decode(Util.hex2bytes(content));
+        decoded.decode(HexUtil.hex2bytesFriendly(content));
         assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }
 }
