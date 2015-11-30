@@ -67,8 +67,8 @@ public class HexUtil {
             if (hexPart.length != 2) {
                 throw new IllegalArgumentException("Invalid hex string to convert");
             }
-            bytes[i] = (byte) ((HEX_CHARS_STR.indexOf(hexPart[0]) << 4) +
-                HEX_CHARS_STR.indexOf(hexPart[1]));
+            bytes[i] = (byte) ((HEX_CHARS_STR.indexOf(hexPart[0]) << 4)
+                + HEX_CHARS_STR.indexOf(hexPart[1]));
         }
 
         return bytes;
@@ -104,8 +104,8 @@ public class HexUtil {
         byte[] bytes = new byte[len];
         char[] hexChars = hexString.toCharArray();
         for (int i = 0, j = 0; i < len; ++i) {
-            bytes[i] = (byte) ((HEX_CHARS_STR.indexOf(hexChars[j++]) << 4) +
-                HEX_CHARS_STR.indexOf(hexChars[j++]));
+            bytes[i] = (byte) ((HEX_CHARS_STR.indexOf(hexChars[j++]) << 4)
+                + HEX_CHARS_STR.indexOf(hexChars[j++]));
         }
 
         return bytes;
