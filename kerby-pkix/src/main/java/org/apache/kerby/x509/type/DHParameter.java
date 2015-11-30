@@ -1,4 +1,4 @@
-package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
+package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;

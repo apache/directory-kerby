@@ -44,12 +44,12 @@ import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHParameter;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator;
+import org.apache.kerby.x509.type.DHParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,7 +165,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             DHParameter dhParameter = null;
             if (authPack.getClientPublicValue() != null) {
                 //TODO
-                dhParameter = (DHParameter) authPack.getClientPublicValue().getAlgorithm().getParameters();
+                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParameters();
                 PkinitCrypto.serverCheckDH(pkinitContext.pluginOpts, pkinitContext.cryptoctx, dhParameter);
             } else if (!isSigned) {
                 /*Anonymous pkinit requires DH*/
@@ -183,8 +183,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             } catch (KrbException e) {
                 LOG.error("Unable to calculate AS REQ checksum.", e.getMessage());
             }
-
-
             CheckSum receivedCheckSum = KrbCodec.decode(pkAuthenticator.getPaChecksum(), CheckSum.class);
 
             if(!CheckSumHandler.verify(receivedCheckSum, kdcRequest.getReqBodyBytes())) {

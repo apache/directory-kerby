@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
@@ -37,7 +36,7 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ALGORITHM, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(PARAMETERS, Asn1Any.class)
+            new Asn1FieldInfo(PARAMETERS, DHParameter.class)
     };
 
     public AlgorithmIdentifier() {
@@ -56,7 +55,11 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
         return getFieldAsAny(PARAMETERS, t);
     }
 
-    public void setParameters(Asn1Type parameters) {
-        setFieldAsAny(PARAMETERS, parameters);
+    public DHParameter getParameters() {
+        return getFieldAs(PARAMETERS, DHParameter.class);
+    }
+
+    public void setParameters(DHParameter parameters) {
+        setFieldAs(PARAMETERS, parameters);
     }
 }

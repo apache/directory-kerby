@@ -20,7 +20,7 @@ package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHParameter;
+import org.apache.kerby.x509.type.DHParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.security.pkcs.ContentInfo;
