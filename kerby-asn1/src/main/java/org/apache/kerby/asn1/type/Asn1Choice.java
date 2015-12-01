@@ -21,7 +21,6 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
 
@@ -34,7 +33,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
     private Asn1Type[] fields;
 
     public Asn1Choice(Asn1FieldInfo[] fieldInfos) {
-        super(TagClass.UNIVERSAL, UniversalTag.CHOICE.getValue());
+        super(UniversalTag.CHOICE);
         setValue(this);
         this.fieldInfos = fieldInfos.clone();
         this.fields = new Asn1Type[fieldInfos.length];
@@ -84,8 +83,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
                 }
             } else {
                 initField(i);
-                if (fields[i].tagFlags() == item.tagFlags()
-                        && fields[i].tagNo() == item.tagNo()) {
+                if (fields[i].tag().equals(item.tag())) {
                     foundPos = i;
                     break;
                 } else {
@@ -95,7 +93,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
         }
         if (foundPos == -1) {
             throw new RuntimeException("Unexpected item with (tagFlags, tagNo): ("
-                    + item.tagFlags() + ", " + item.tagNo() + ")");
+                    + item.tag() + ", " + item.tagNo() + ")");
         }
 
         if (!item.isFullyDecoded()) {

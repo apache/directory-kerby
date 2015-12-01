@@ -20,7 +20,7 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
@@ -32,8 +32,9 @@ import java.util.List;
  * ASN1 complex type, may be better named.
  */
 public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
-    public Asn1Collection(TagClass tagClass, int tagNo) {
-        super(tagClass, tagNo);
+
+    public Asn1Collection(UniversalTag universalTag) {
+        super(universalTag);
         setValue(new ArrayList<Asn1Item>());
         usePrimitive(false);
     }
@@ -84,8 +85,12 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
         }
     }
 
-    public static boolean isCollection(int tagNo) {
-        return isCollection(UniversalTag.fromValue(tagNo));
+    public static boolean isCollection(Tag tag) {
+        return isCollection(tag.universalTag());
+    }
+
+    public static boolean isCollection(int tag) {
+        return isCollection(new Tag(tag));
     }
 
     public static boolean isCollection(UniversalTag tagNo) {

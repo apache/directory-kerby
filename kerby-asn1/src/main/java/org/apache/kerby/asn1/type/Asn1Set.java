@@ -19,11 +19,10 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.UniversalTag;
 
 public class Asn1Set extends Asn1Collection {
     public Asn1Set() {
-        super(TagClass.UNIVERSAL, UniversalTag.SET.getValue());
+        super(UniversalTag.SET);
     }
 }

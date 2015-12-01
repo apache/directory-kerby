@@ -21,6 +21,7 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Factory;
 import org.apache.kerby.asn1.LimitedByteBuffer;
+import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
 
 import java.io.IOException;
@@ -42,11 +43,11 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
     private LimitedByteBuffer bodyContent;
 
     public Asn1Item(Asn1Type value) {
-        super(value.tagFlags(), value.tagNo(), value);
+        super(value.tag(), value);
     }
 
-    public Asn1Item(int tag, int tagNo, LimitedByteBuffer bodyContent) {
-        super(tag, tagNo);
+    public Asn1Item(Tag tag, LimitedByteBuffer bodyContent) {
+        super(tag);
         this.bodyContent = bodyContent;
     }
 
@@ -120,23 +121,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
 
     public void decodeValueWith(Asn1Type value) throws IOException {
         setValue(value);
-        ((AbstractAsn1Type<?>) value).decode(tagFlags(), tagNo(), bodyContent);
-    }
-
-    public void decodeValueAsImplicitTagged(int originalTag, int originalTagNo) throws IOException {
-        if (!isTagged()) {
-            throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
-        }
-        Asn1Item taggedValue = new Asn1Item(originalTag, originalTagNo, getBodyContent());
-        decodeValueWith(taggedValue);
-    }
-
-    public void decodeValueAsExplicitTagged() throws IOException {
-        if (!isTagged()) {
-            throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
-        }
-        Asn1Item taggedValue = decodeOne(getBodyContent());
-        decodeValueWith(taggedValue);
+        ((AbstractAsn1Type<?>) value).decode(tag(), bodyContent);
     }
 
     private void decodeValueWith(Asn1Item taggedValue) throws IOException {
@@ -152,7 +137,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
         if (!isTagged()) {
             throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
         }
-        ((AbstractAsn1Type<?>) value).taggedDecode(tagFlags(), tagNo(), getBodyContent(), taggingOption);
+        ((AbstractAsn1Type<?>) value).taggedDecode(tag(), getBodyContent(), taggingOption);
         setValue(value);
     }
 }

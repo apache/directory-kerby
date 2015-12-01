@@ -20,7 +20,6 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     private Asn1Type field;
 
     public Asn1Any() {
-        super(TagClass.UNIVERSAL, UniversalTag.ANY.getValue());
+        super(UniversalTag.ANY);
     }
 
     // For encoding phase.

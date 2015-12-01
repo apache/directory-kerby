@@ -28,7 +28,7 @@ import org.apache.kerby.asn1.UniversalTag;
 public class Asn1SetType extends Asn1CollectionType {
 
     public Asn1SetType(Asn1FieldInfo[] tags) {
-        super(UniversalTag.SET.getValue(), tags);
+        super(UniversalTag.SET, tags);
     }
 
     @Override

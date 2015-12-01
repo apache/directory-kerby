@@ -21,7 +21,7 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.Tag;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -36,19 +36,22 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
 
     public TaggingCollection(int taggingTagNo, Asn1FieldInfo[] tags,
                              boolean isAppSpecific, boolean isImplicit) {
-        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC,
-            taggingTagNo);
+        super(makeTag(isAppSpecific, taggingTagNo));
         this.tagged = createTaggedCollection(tags);
         setValue(tagged);
         this.tagging = new Asn1Tagging<Asn1CollectionType>(taggingTagNo,
             tagged, isAppSpecific, isImplicit);
     }
 
+    private static Tag makeTag(boolean isAppSpecific, int tagNo) {
+        return isAppSpecific ? Tag.newAppTag(tagNo) : Tag.newCtxTag(tagNo);
+    }
+
     protected abstract Asn1CollectionType createTaggedCollection(Asn1FieldInfo[] tags);
 
     @Override
-    public int tagFlags() {
-        return tagging.tagFlags();
+    public Tag tag() {
+        return tagging.tag();
     }
 
     @Override

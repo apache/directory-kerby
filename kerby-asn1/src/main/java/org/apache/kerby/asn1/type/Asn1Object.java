@@ -20,8 +20,9 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
+import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -31,10 +32,8 @@ import java.nio.ByteBuffer;
  * encoding and decoding utilities.
  */
 public abstract class Asn1Object implements Asn1Type {
+    private final Tag tag;
 
-    private TagClass tagClass = TagClass.UNKNOWN;
-    private int tagNo = -1;
-    private int tagFlags = 0;
     private int encodingLen = -1;
 
     // encoding options
@@ -43,66 +42,50 @@ public abstract class Asn1Object implements Asn1Type {
     private boolean isDefinitiveLength = false;
 
     /**
-     * Constructor with a value, generally for encoding of the value
-     * @param tagFlags The tag flags
-     * @param tagNo The tag number
+     * Constructor with a tag
+     * @param tag The tag
      */
-    public Asn1Object(int tagFlags, int tagNo) {
-        this(TagClass.fromTagFlags(tagFlags), tagNo);
-        setTagFlags(tagFlags);
+    public Asn1Object(Tag tag) {
+        this.tag = new Tag(tag);
     }
 
     /**
-     * Constructor with a value, generally for encoding of the value
-     * @param tagClass The tag class
-     * @param tagNo The tag number
+     * Default constructor with an universal tag.
+     * @param tag the tag
      */
-    public Asn1Object(TagClass tagClass, int tagNo) {
-        this.tagClass = tagClass;
-        this.tagNo = tagNo;
+    public Asn1Object(UniversalTag tag) {
+        this.tag = new Tag(tag);
+    }
 
-        this.tagFlags |= tagClass.getValue();
+    /**
+     * Constructor with a tag
+     * @param tag The tag
+     */
+    public Asn1Object(int tag) {
+        this.tag = new Tag(tag);
     }
 
     @Override
-    public TagClass tagClass() {
-        return tagClass;
+    public Tag tag() {
+        return tag;
     }
 
-    protected void setTagClass(TagClass tagClass) {
-        this.tagClass = tagClass;
+    protected int tagFlags() {
+        return tag().tagFlags();
     }
 
-    @Override
-    public int tagFlags() {
-        return tagFlags;
-    }
-
-    @Override
-    public int tagNo() {
-        return tagNo;
-    }
-
-    protected void setTagFlags(int tagFlags) {
-        this.tagFlags = tagFlags & 0xe0;
-    }
-
-    protected void setTagNo(int tagNo) {
-        this.tagNo = tagNo;
+    protected int tagNo() {
+        return tag().tagNo();
     }
 
     @Override
     public void usePrimitive(boolean isPrimitive) {
-        if (isPrimitive) {
-            tagFlags &= ~CONSTRUCTED_FLAG;
-        } else {
-            tagFlags |= CONSTRUCTED_FLAG;
-        }
+        tag.usePrimitive(isPrimitive);
     }
 
     @Override
     public boolean isPrimitive() {
-        return (tagFlags & CONSTRUCTED_FLAG) == 0;
+        return tag.isPrimitive();
     }
 
     @Override
@@ -165,7 +148,7 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void encode(ByteBuffer buffer) {
-        encodeTag(buffer, tagFlags(), tagNo());
+        encodeTag(buffer, tag());
         encodeLength(buffer, encodingBodyLength());
         encodeBody(buffer);
     }
@@ -186,61 +169,50 @@ public abstract class Asn1Object implements Asn1Type {
     public int encodingLength() {
         if (encodingLen == -1) {
             int bodyLen = encodingBodyLength();
-            encodingLen = lengthOfTagLength(tagNo()) + lengthOfBodyLength(bodyLen) + bodyLen;
+            encodingLen = lengthOfTagLength(tagNo())
+                + lengthOfBodyLength(bodyLen) + bodyLen;
         }
         return encodingLen;
     }
 
-    public boolean isUniversal() {
-        return tagClass.isUniversal();
+    protected boolean isUniversal() {
+        return tag.isUniversal();
     }
 
-    public boolean isAppSpecific() {
-        return tagClass.isAppSpecific();
+    protected boolean isAppSpecific() {
+        return tag.isAppSpecific();
     }
 
-    public boolean isContextSpecific() {
-        return tagClass.isContextSpecific();
+    protected boolean isContextSpecific() {
+        return tag.isContextSpecific();
     }
 
-    public boolean isTagged() {
-        return tagClass.isTagged();
+    protected boolean isTagged() {
+        return tag.isTagged();
     }
 
     public boolean isSimple() {
-        return isUniversal() && Asn1Simple.isSimple(tagNo);
+        return Asn1Simple.isSimple(tag());
     }
 
     public boolean isCollection() {
-        return isUniversal() && Asn1Collection.isCollection(tagNo);
+        return Asn1Collection.isCollection(tag());
     }
 
     protected abstract int encodingBodyLength();
 
     protected void decode(LimitedByteBuffer content) throws IOException {
-        int tag = readTag(content);
-        int tagNo = readTagNo(content, tag);
-        int tmpTagFlags = tag & 0xe0;
+        Tag tmpTag = readTag(content);
         int length = readLength(content);
 
-        decode(tmpTagFlags, tagNo, new LimitedByteBuffer(content, length));
+        decode(tmpTag, new LimitedByteBuffer(content, length));
     }
 
-    public void decode(int tagFlags, int tagNo,
-                       LimitedByteBuffer content) throws IOException {
-        if (tagClass() != TagClass.UNKNOWN && tagClass()
-                != TagClass.fromTagFlags(tagFlags)) {
-            throw new IOException("Unexpected tagFlags " + tagFlags
-                    + ", expecting " + tagClass());
+    public void decode(Tag tag, LimitedByteBuffer content) throws IOException {
+        if (!tag().equals(tag)) {
+            throw new IOException("Unexpected tag " + tag
+                    + ", expecting " + tag());
         }
-        if (tagNo() != -1 && tagNo() != tagNo) {
-            throw new IOException("Unexpected tagNo " + tagNo + ", "
-                    + "expecting " + tagNo());
-        }
-
-        setTagClass(TagClass.fromTagFlags(tagFlags));
-        setTagFlags(tagFlags);
-        setTagNo(tagNo);
 
         decodeBody(content);
     }
@@ -265,8 +237,8 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption) {
-        int taggingTagFlags = taggingOption.tagFlags(!isPrimitive());
-        encodeTag(buffer, taggingTagFlags, taggingOption.getTagNo());
+        Tag taggingTag = taggingOption.getTag(!isPrimitive());
+        encodeTag(buffer, taggingTag);
         int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength()
                 : encodingLength();
         encodeLength(buffer, taggingBodyLen);
@@ -291,26 +263,19 @@ public abstract class Asn1Object implements Asn1Type {
 
     protected void taggedDecode(LimitedByteBuffer content,
                                 TaggingOption taggingOption) throws IOException {
-        int taggingTag = readTag(content);
-        int taggingTagNo = readTagNo(content, taggingTag);
+        Tag taggingTag = readTag(content);
         int taggingLength = readLength(content);
         LimitedByteBuffer newContent = new LimitedByteBuffer(content, taggingLength);
 
-        int tmpTagFlags = taggingTag & 0xe0;
-        taggedDecode(tmpTagFlags, taggingTagNo, newContent, taggingOption);
+        taggedDecode(taggingTag, newContent, taggingOption);
     }
 
-    protected void taggedDecode(int taggingTagFlags, int taggingTagNo,
-                                LimitedByteBuffer content,
+    protected void taggedDecode(Tag taggingTag, LimitedByteBuffer content,
                                 TaggingOption taggingOption) throws IOException {
-        int expectedTaggingTagFlags = taggingOption.tagFlags(!isPrimitive());
-        if (expectedTaggingTagFlags != taggingTagFlags) {
-            throw new IOException("Unexpected tag flags " + taggingTagFlags
+        Tag expectedTaggingTagFlags = taggingOption.getTag(!isPrimitive());
+        if (!expectedTaggingTagFlags.equals(taggingTag)) {
+            throw new IOException("Unexpected tag " + taggingTag
                     + ", expecting " + expectedTaggingTagFlags);
-        }
-        if (taggingOption.getTagNo() != taggingTagNo) {
-            throw new IOException("Unexpected tagNo " + taggingTagNo + ", "
-                    + "expecting " + taggingOption.getTagNo());
         }
 
         if (taggingOption.isImplicit()) {
@@ -321,8 +286,7 @@ public abstract class Asn1Object implements Asn1Type {
     }
 
     public static Asn1Item decodeOne(LimitedByteBuffer content) throws IOException {
-        int tag = readTag(content);
-        int tagNo = readTagNo(content, tag);
+        Tag tmpTag = readTag(content);
         int length = readLength(content);
         if (length < 0) {
             throw new IOException("Unexpected length");
@@ -330,7 +294,7 @@ public abstract class Asn1Object implements Asn1Type {
         LimitedByteBuffer valueContent = new LimitedByteBuffer(content, length);
         content.skip(length);
 
-        Asn1Item result = new Asn1Item(tag, tagNo, valueContent);
+        Asn1Item result = new Asn1Item(tmpTag, valueContent);
         if (result.isSimple()) {
             result.decodeValueAsSimple();
         }
@@ -338,8 +302,7 @@ public abstract class Asn1Object implements Asn1Type {
     }
 
     public static void skipOne(LimitedByteBuffer content) throws IOException {
-        int tag = readTag(content);
-        readTagNo(content, tag);
+        readTag(content);
         int length = readLength(content);
         if (length < 0) {
             throw new IOException("Unexpected length");
@@ -380,7 +343,10 @@ public abstract class Asn1Object implements Asn1Type {
         return length;
     }
 
-    public static void encodeTag(ByteBuffer buffer, int flags, int tagNo) {
+    public static void encodeTag(ByteBuffer buffer, Tag tag) {
+        int flags = tag.tagFlags();
+        int tagNo = tag.tagNo();
+
         if (tagNo < 31) {
             buffer.put((byte) (flags | tagNo));
         } else {
@@ -423,16 +389,22 @@ public abstract class Asn1Object implements Asn1Type {
         }
     }
 
-    public static int readTag(LimitedByteBuffer buffer) throws IOException {
-        int tag = buffer.readByte() & 0xff;
-        if (tag == 0) {
-            throw new IOException("Bad tag 0 found");
-        }
-        return tag;
+    public static Tag readTag(LimitedByteBuffer buffer) throws IOException {
+        int tagFlags = readTagFlags(buffer);
+        int tagNo = readTagNo(buffer, tagFlags);
+        return new Tag(tagFlags, tagNo);
     }
 
-    public static int readTagNo(LimitedByteBuffer buffer, int tag) throws IOException {
-        int tagNo = tag & 0x1f;
+    private static int readTagFlags(LimitedByteBuffer buffer) throws IOException {
+        int tagFlags = buffer.readByte() & 0xff;
+        if (tagFlags == 0) {
+            throw new IOException("Bad tag 0 found");
+        }
+        return tagFlags;
+    }
+
+    private static int readTagNo(LimitedByteBuffer buffer, int tagFlags) throws IOException {
+        int tagNo = tagFlags & 0x1f;
 
         if (tagNo == 0x1f) {
             tagNo = 0;

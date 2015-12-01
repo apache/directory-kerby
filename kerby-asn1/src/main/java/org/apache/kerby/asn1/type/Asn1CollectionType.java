@@ -21,8 +21,8 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.TagClass;
 import org.apache.kerby.asn1.TaggingOption;
+import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -34,8 +34,9 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
     private Asn1FieldInfo[] fieldInfos;
     private Asn1Type[] fields;
 
-    public Asn1CollectionType(int universalTagNo, Asn1FieldInfo[] fieldInfos) {
-        super(TagClass.UNIVERSAL, universalTagNo);
+    public Asn1CollectionType(UniversalTag universalTag, Asn1FieldInfo[] fieldInfos) {
+        super(universalTag);
+
         setValue(this);
         this.fieldInfos = fieldInfos.clone();
         this.fields = new Asn1Type[fieldInfos.length];
@@ -79,7 +80,7 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
         initFields();
 
         Asn1Collection coll = createCollection();
-        coll.decode(tagFlags(), tagNo(), content);
+        coll.decode(tag(), content);
 
         int lastPos = -1, foundPos = -1;
         for (Asn1Item item : coll.getValue()) {
@@ -90,15 +91,13 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
                         foundPos = i;
                         break;
                     }
-                } else if (fields[i].tagFlags() == item.tagFlags()
-                        && fields[i].tagNo() == item.tagNo()) {
+                } else if (fields[i].tag().equals(item.tag())) {
                     foundPos = i;
                     break;
                 }
             }
             if (foundPos == -1) {
-                throw new RuntimeException("Unexpected item with (tagFlags, tagNo): ("
-                        + item.tagFlags() + ", " + item.tagNo() + ")");
+                throw new RuntimeException("Unexpected item with tag: " + item.tag());
             }
 
             if (!item.isFullyDecoded()) {

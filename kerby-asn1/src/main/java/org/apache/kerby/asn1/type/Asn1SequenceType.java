@@ -28,7 +28,7 @@ import org.apache.kerby.asn1.UniversalTag;
 public class Asn1SequenceType extends Asn1CollectionType {
 
     public Asn1SequenceType(Asn1FieldInfo[] tags) {
-        super(UniversalTag.SEQUENCE.getValue(), tags);
+        super(UniversalTag.SEQUENCE, tags);
     }
 
     @Override

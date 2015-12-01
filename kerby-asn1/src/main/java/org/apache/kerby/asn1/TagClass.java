@@ -93,7 +93,7 @@ public enum TagClass {
      * @param tag The int value of tag class
      * @return tag class
      */
-    public static TagClass fromTagFlags(int tag) {
+    public static TagClass fromTag(int tag) {
         return fromValue(tag & 0xC0);
     }
 }

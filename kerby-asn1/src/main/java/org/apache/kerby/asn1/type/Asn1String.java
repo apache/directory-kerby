@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Asn1String extends Asn1Simple<String> {
-    public Asn1String(UniversalTag tagNo) {
-        super(tagNo, null);
+    public Asn1String(UniversalTag universalTag) {
+        super(universalTag, null);
     }
 
     public Asn1String(UniversalTag tagNo, String value) {

@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -28,8 +28,8 @@ import java.util.List;
 
 public abstract class Asn1CollectionOf<T extends Asn1Type> extends Asn1Collection
 {
-    public Asn1CollectionOf(TagClass tagClass, int tagNo) {
-        super(tagClass, tagNo);
+    public Asn1CollectionOf(UniversalTag universalTag) {
+        super(universalTag);
     }
 
     public List<T> getElements() {

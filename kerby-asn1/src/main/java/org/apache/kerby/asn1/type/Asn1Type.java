@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
 
 import java.io.IOException;
@@ -29,12 +29,6 @@ import java.nio.ByteBuffer;
  * The ASN1 type interface for all ASN1 types.
  */
 public interface Asn1Type {
-    /**
-     * A mask to determinate if a Tag is CONSTRUCTED. The fifth bit should be
-     * set to 1 if the type is constructed (0010-0000).
-     */
-    int CONSTRUCTED_FLAG = 0x20;
-
     /**
      * Encoding type
      */
@@ -46,21 +40,9 @@ public interface Asn1Type {
 
     /**
      *
-     * @return The tag class
+     * @return The tag
      */
-    TagClass tagClass();
-
-    /**
-     *
-     * @return The tag flags
-     */
-    int tagFlags();
-
-    /**
-     * Get tag number for the type
-     * @return tag number
-     */
-    int tagNo();
+    Tag tag();
 
     /**
      * Use primitive or constructed.

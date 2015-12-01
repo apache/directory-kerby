@@ -20,7 +20,7 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.Tag;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -33,12 +33,15 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     public Asn1Tagging(int tagNo, T value,
                        boolean isAppSpecific, boolean isImplicit) {
-        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC,
-            tagNo, value);
+        super(makeTag(isAppSpecific, tagNo), value);
         if (value == null) {
             initValue();
         }
         useImplicit(isImplicit);
+    }
+
+    private static Tag makeTag(boolean isAppSpecific, int tagNo) {
+        return isAppSpecific ? Tag.newAppTag(tagNo) : Tag.newCtxTag(tagNo);
     }
 
     @Override
@@ -48,9 +51,9 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         if (!isImplicit) {
             //In effect, explicitly tagged types are structured types consisting
             // of one component, the underlying type.
-            super.usePrimitive(false);
+            usePrimitive(false);
         } else {
-            super.usePrimitive(getValue().isPrimitive());
+            usePrimitive(getValue().isPrimitive());
         }
     }
 
