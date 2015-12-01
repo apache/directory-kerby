@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1Util;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.UniversalTag;
 
@@ -59,9 +60,9 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     @Override
     public void encode(ByteBuffer buffer) {
-        encodeTag(buffer, tag());
+        Asn1Util.encodeTag(buffer, tag());
         int bodyLen = encodingBodyLength();
-        encodeLength(buffer, bodyLen);
+        Asn1Util.encodeLength(buffer, bodyLen);
         if (bodyLen > 0) {
             buffer.put(encodeBody());
         }
@@ -92,7 +93,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     @Override
     protected void decodeBody(ByteBuffer content) throws IOException {
-        byte[] leftBytes = readAllLeftBytes(content);
+        byte[] leftBytes = Asn1Util.readAllLeftBytes(content);
         if (leftBytes.length > 0) {
             setBytes(leftBytes);
             toValue();

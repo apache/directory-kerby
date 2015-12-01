@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb;
 
+import org.apache.kerby.asn1.Asn1Util;
 import org.apache.kerby.asn1.Tag;
-import org.apache.kerby.asn1.type.Asn1Object;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.type.base.KrbError;
@@ -64,9 +64,9 @@ public class KrbCodec {
     }
 
     public static KrbMessage decodeMessage(ByteBuffer byteBuffer) throws IOException {
-        Tag tag = Asn1Object.readTag(byteBuffer);
-        int length = Asn1Object.readLength(byteBuffer);
-        ByteBuffer valueBuffer = Asn1Object.dupWithLength(byteBuffer, length);
+        Tag tag = Asn1Util.readTag(byteBuffer);
+        int length = Asn1Util.readLength(byteBuffer);
+        ByteBuffer valueBuffer = Asn1Util.dupWithLength(byteBuffer, length);
 
         KrbMessage msg;
         KrbMessageType msgType = KrbMessageType.fromValue(tag.tagNo());
