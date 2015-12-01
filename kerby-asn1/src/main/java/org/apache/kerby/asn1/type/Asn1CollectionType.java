@@ -83,8 +83,9 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
         coll.decode(tag(), content);
 
         int lastPos = -1, foundPos = -1;
-        for (Asn1Item item : coll.getValue()) {
+        for (Asn1Type itemObj : coll.getValue()) {
             foundPos = -1;
+            Asn1Item item = (Asn1Item) itemObj;
             for (int i = lastPos + 1; i < fieldInfos.length; ++i) {
                 if (item.isContextSpecific()) {
                     if (fieldInfos[i].getTagNo() == item.tagNo()) {

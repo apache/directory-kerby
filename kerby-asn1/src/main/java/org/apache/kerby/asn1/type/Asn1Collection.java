@@ -30,12 +30,12 @@ import java.util.List;
 /**
  * ASN1 complex type, may be better named.
  */
-public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
+public class Asn1Collection extends AbstractAsn1Type<List<Asn1Type>> {
     private boolean lazy = false;
 
     public Asn1Collection(UniversalTag universalTag) {
         super(universalTag);
-        setValue(new ArrayList<Asn1Item>());
+        setValue(new ArrayList<Asn1Type>());
         usePrimitive(false);
     }
 
@@ -48,11 +48,7 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
     }
 
     public void addItem(Asn1Type value) {
-        if (value instanceof Asn1Item) {
-            getValue().add((Asn1Item) value);
-        } else {
-            getValue().add(new Asn1Item(value));
-        }
+        getValue().add(value);
     }
 
     public void clear() {
@@ -61,9 +57,9 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
 
     @Override
     protected int encodingBodyLength() {
-        List<Asn1Item> valueItems = getValue();
+        List<Asn1Type> valueItems = getValue();
         int allLen = 0;
-        for (Asn1Item item : valueItems) {
+        for (Asn1Type item : valueItems) {
             if (item != null) {
                 allLen += item.encodingLength();
             }
@@ -73,8 +69,8 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        List<Asn1Item> valueItems = getValue();
-        for (Asn1Item item : valueItems) {
+        List<Asn1Type> valueItems = getValue();
+        for (Asn1Type item : valueItems) {
             if (item != null) {
                 item.encode(buffer);
             }
@@ -88,8 +84,10 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
             if (item != null) {
                 if (item.isSimple() && !isLazy()) {
                     item.decodeValueAsSimple();
+                    addItem(item.getValue());
+                } else {
+                    addItem(item);
                 }
-                addItem(item);
             }
         }
     }

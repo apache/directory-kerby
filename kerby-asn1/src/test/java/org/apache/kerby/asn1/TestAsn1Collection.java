@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.AbstractAsn1Type;
 import org.apache.kerby.asn1.type.Asn1Boolean;
 import org.apache.kerby.asn1.type.Asn1IA5String;
 import org.apache.kerby.asn1.type.Asn1Sequence;
+import org.apache.kerby.asn1.type.Asn1String;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -50,11 +50,11 @@ public class TestAsn1Collection {
     public void testSequenceDecoding() throws IOException {
         Asn1Sequence seq = new Asn1Sequence();
         seq.decode(EXPECTED_BYTES);
-        AbstractAsn1Type<?> field =
-            (AbstractAsn1Type<?>) seq.getValue().get(0).getValue();
+        Asn1String field =
+            (Asn1String) seq.getValue().get(0);
         assertThat(field.getValue()).isEqualTo(TEST_STR);
 
-        field = (AbstractAsn1Type<?>) seq.getValue().get(1).getValue();
-        assertThat(field.getValue()).isEqualTo(TEST_BOOL);
+        Asn1Boolean field2 = (Asn1Boolean) seq.getValue().get(1);
+        assertThat(field2.getValue()).isEqualTo(TEST_BOOL);
     }
 }
