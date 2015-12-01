@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.Tag;
 
 import java.io.IOException;
@@ -78,7 +77,7 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
     }
 
     @Override
-    protected void decodeBody(LimitedByteBuffer content) throws IOException {
+    protected void decodeBody(ByteBuffer content) throws IOException {
         AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
         if (isImplicit()) {
             value.decodeBody(content);

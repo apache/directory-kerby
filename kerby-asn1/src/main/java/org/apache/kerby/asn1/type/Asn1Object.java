@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
@@ -157,12 +156,7 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void decode(byte[] content) throws IOException {
-        decode(new LimitedByteBuffer(content));
-    }
-
-    @Override
-    public void decode(ByteBuffer content) throws IOException {
-        decode(new LimitedByteBuffer(content));
+        decode(ByteBuffer.wrap(content));
     }
 
     @Override
@@ -201,14 +195,24 @@ public abstract class Asn1Object implements Asn1Type {
 
     protected abstract int encodingBodyLength();
 
-    protected void decode(LimitedByteBuffer content) throws IOException {
+    @Override
+    public void decode(ByteBuffer content) throws IOException {
         Tag tmpTag = readTag(content);
         int length = readLength(content);
 
-        decode(tmpTag, new LimitedByteBuffer(content, length));
+        ByteBuffer valueBuffer;
+        if (length == -1) {
+            valueBuffer = content;
+            useDefinitiveLength(false);
+        } else {
+            valueBuffer = dupWithLength(content, length);
+            useDefinitiveLength(true);
+        }
+
+        decode(tmpTag, valueBuffer);
     }
 
-    public void decode(Tag tag, LimitedByteBuffer content) throws IOException {
+    public void decode(Tag tag, ByteBuffer content) throws IOException {
         if (!tag().equals(tag)) {
             throw new IOException("Unexpected tag " + tag
                     + ", expecting " + tag());
@@ -217,7 +221,7 @@ public abstract class Asn1Object implements Asn1Type {
         decodeBody(content);
     }
 
-    protected abstract void decodeBody(LimitedByteBuffer content) throws IOException;
+    protected abstract void decodeBody(ByteBuffer content) throws IOException;
 
     protected int taggedEncodingLength(TaggingOption taggingOption) {
         int taggingTagNo = taggingOption.getTagNo();
@@ -257,20 +261,22 @@ public abstract class Asn1Object implements Asn1Type {
     @Override
     public void taggedDecode(ByteBuffer content,
                              TaggingOption taggingOption) throws IOException {
-        LimitedByteBuffer limitedBuffer = new LimitedByteBuffer(content);
-        taggedDecode(limitedBuffer, taggingOption);
-    }
-
-    protected void taggedDecode(LimitedByteBuffer content,
-                                TaggingOption taggingOption) throws IOException {
         Tag taggingTag = readTag(content);
         int taggingLength = readLength(content);
-        LimitedByteBuffer newContent = new LimitedByteBuffer(content, taggingLength);
 
-        taggedDecode(taggingTag, newContent, taggingOption);
+        ByteBuffer valueBuffer;
+        if (taggingLength == -1) {
+            valueBuffer = content;
+            useDefinitiveLength(false);
+        } else {
+            valueBuffer = dupWithLength(content, taggingLength);
+            useDefinitiveLength(true);
+        }
+
+        taggedDecode(taggingTag, valueBuffer, taggingOption);
     }
 
-    protected void taggedDecode(Tag taggingTag, LimitedByteBuffer content,
+    protected void taggedDecode(Tag taggingTag, ByteBuffer content,
                                 TaggingOption taggingOption) throws IOException {
         Tag expectedTaggingTagFlags = taggingOption.getTag(!isPrimitive());
         if (!expectedTaggingTagFlags.equals(taggingTag)) {
@@ -285,29 +291,23 @@ public abstract class Asn1Object implements Asn1Type {
         }
     }
 
-    public static Asn1Item decodeOne(LimitedByteBuffer content) throws IOException {
+    public static Asn1Item decodeOne(ByteBuffer content) throws IOException {
         Tag tmpTag = readTag(content);
         int length = readLength(content);
-        if (length < 0) {
-            throw new IOException("Unexpected length");
-        }
-        LimitedByteBuffer valueContent = new LimitedByteBuffer(content, length);
-        content.skip(length);
 
-        Asn1Item result = new Asn1Item(tmpTag, valueContent);
-        if (result.isSimple()) {
-            result.decodeValueAsSimple();
+        Asn1Item result;
+        ByteBuffer valueBuffer;
+        if (length == -1) {
+            result = new Asn1Item(tmpTag);
+            result.useDefinitiveLength(false);
+            result.setBodyContent(content);
+        } else {
+            valueBuffer = dupWithLength(content, length);
+            result = new Asn1Item(tmpTag, valueBuffer);
+            result.useDefinitiveLength(true);
         }
+
         return result;
-    }
-
-    public static void skipOne(LimitedByteBuffer content) throws IOException {
-        readTag(content);
-        int length = readLength(content);
-        if (length < 0) {
-            throw new IOException("Unexpected length");
-        }
-        content.skip(length);
     }
 
     public static int lengthOfBodyLength(int bodyLength) {
@@ -389,27 +389,27 @@ public abstract class Asn1Object implements Asn1Type {
         }
     }
 
-    public static Tag readTag(LimitedByteBuffer buffer) throws IOException {
+    public static Tag readTag(ByteBuffer buffer) throws IOException {
         int tagFlags = readTagFlags(buffer);
         int tagNo = readTagNo(buffer, tagFlags);
         return new Tag(tagFlags, tagNo);
     }
 
-    private static int readTagFlags(LimitedByteBuffer buffer) throws IOException {
-        int tagFlags = buffer.readByte() & 0xff;
+    private static int readTagFlags(ByteBuffer buffer) throws IOException {
+        int tagFlags = buffer.get() & 0xff;
         if (tagFlags == 0) {
             throw new IOException("Bad tag 0 found");
         }
         return tagFlags;
     }
 
-    private static int readTagNo(LimitedByteBuffer buffer, int tagFlags) throws IOException {
+    private static int readTagNo(ByteBuffer buffer, int tagFlags) throws IOException {
         int tagNo = tagFlags & 0x1f;
 
         if (tagNo == 0x1f) {
             tagNo = 0;
 
-            int b = buffer.readByte() & 0xff;
+            int b = buffer.get() & 0xff;
             if ((b & 0x7f) == 0) {
                 throw new IOException("Invalid high tag number found");
             }
@@ -417,7 +417,7 @@ public abstract class Asn1Object implements Asn1Type {
             while (b >= 0 && (b & 0x80) != 0) {
                 tagNo |= b & 0x7f;
                 tagNo <<= 7;
-                b = buffer.readByte();
+                b = buffer.get();
             }
 
             tagNo |= b & 0x7f;
@@ -426,31 +426,52 @@ public abstract class Asn1Object implements Asn1Type {
         return tagNo;
     }
 
-    public static int readLength(LimitedByteBuffer buffer) throws IOException {
-        int bodyLength = buffer.readByte() & 0xff;
+    public static int readLength(ByteBuffer buffer) throws IOException {
+        int result = buffer.get() & 0xff;
+        if (result == 0x80) {
+            return -1; // non-definitive length
+        }
 
-        if (bodyLength > 127) {
-            int length = bodyLength & 0x7f;
+        if (result > 127) {
+            int length = result & 0x7f;
             if (length > 4) {
-                throw new IOException("Bad bodyLength of more than 4 bytes: " + length);
+                throw new IOException("Bad length of more than 4 bytes: " + length);
             }
 
-            bodyLength = 0;
+            result = 0;
             int tmp;
             for (int i = 0; i < length; i++) {
-                tmp = buffer.readByte() & 0xff;
-                bodyLength = (bodyLength << 8) + tmp;
-            }
-
-            if (bodyLength < 0) {
-                throw new IOException("Invalid bodyLength " + bodyLength);
-            }
-            if (bodyLength > buffer.hasLeft()) {
-                throw new IOException("Corrupt stream - less data "
-                        + buffer.hasLeft() + " than expected " + bodyLength);
+                tmp = buffer.get() & 0xff;
+                result = (result << 8) + tmp;
             }
         }
 
-        return bodyLength;
+        if (result < 0) {
+            throw new IOException("Invalid length " + result);
+        }
+
+        if (result > buffer.remaining()) {
+            throw new IOException("Corrupt stream - less data "
+                + buffer.remaining() + " than expected " + result);
+        }
+
+        return result;
+    }
+
+    public static ByteBuffer dupWithLength(ByteBuffer buffer, int length) {
+        try {
+            ByteBuffer result = buffer.duplicate();
+            result.limit(buffer.position() + length);
+            buffer.position(buffer.position() + length);
+            return result;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    protected static byte[] readAllLeftBytes(ByteBuffer buffer) {
+        byte[] result = new byte[buffer.remaining()];
+        buffer.get(result);
+        return result;
     }
 }

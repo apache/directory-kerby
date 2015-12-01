@@ -50,7 +50,8 @@ public class TestAsn1Collection {
     public void testSequenceDecoding() throws IOException {
         Asn1Sequence seq = new Asn1Sequence();
         seq.decode(EXPECTED_BYTES);
-        AbstractAsn1Type<?> field = (AbstractAsn1Type<?>) seq.getValue().get(0).getValue();
+        AbstractAsn1Type<?> field =
+            (AbstractAsn1Type<?>) seq.getValue().get(0).getValue();
         assertThat(field.getValue()).isEqualTo(TEST_STR);
 
         field = (AbstractAsn1Type<?>) seq.getValue().get(1).getValue();

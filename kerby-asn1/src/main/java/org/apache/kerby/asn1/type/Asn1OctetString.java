@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class Asn1OctetString extends Asn1Simple<byte[]> {
     public Asn1OctetString() {
@@ -44,7 +44,7 @@ public class Asn1OctetString extends Asn1Simple<byte[]> {
     }
 
     @Override
-    protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        setValue(content.readAllLeftBytes());
+    protected void decodeBody(ByteBuffer content) throws IOException {
+        setValue(readAllLeftBytes(content));
     }
 }

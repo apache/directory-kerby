@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.LimitedByteBuffer;
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
@@ -32,7 +32,8 @@ import java.nio.ByteBuffer;
  * Note, this is far from complete, as most of parent methods are to override.
  */
 public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
-    private Asn1Type field;
+    private Asn1FieldInfo fieldInfo;
+    private Asn1Item field;
 
     public Asn1Any() {
         super(UniversalTag.ANY);
@@ -44,9 +45,14 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
         setValue(anyValue);
     }
 
-    // For decoding phase, value may be an Asn1Item, not fully decoded.
-    public void setItem(Asn1Type value) {
-        this.field = value;
+    // For decoding phase, value be an Asn1Item, not fully decoded.
+    public void setField(Asn1Item field) {
+        this.field = field;
+    }
+
+    // For decoding phase.
+    public void setFieldInfo(Asn1FieldInfo fieldInfo) {
+        this.fieldInfo = fieldInfo;
     }
 
     // For decoding phase.
@@ -64,15 +70,35 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
         ((AbstractAsn1Type<?>) getValue()).encodeBody(buffer);
     }
 
-    protected void decodeBody(LimitedByteBuffer content) throws IOException {
+    protected void decodeBody(ByteBuffer content) throws IOException {
         // Not used
     }
 
     protected <T extends Asn1Type> T getValueAs(Class<T> t) {
         Asn1Type value = getValue();
-        if (value == null) {
-            return null;
+        if (value != null) {
+            return (T) value;
         }
-        return (T) value;
+
+        T result;
+        try {
+            result = t.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("No default constructor?", e);
+        }
+
+        try {
+            if (field.isContextSpecific()) {
+                field.decodeValueWith(result,
+                    fieldInfo.getTaggingOption());
+            } else {
+                field.decodeValueWith(result);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Fully decoding failed", e);
+        }
+
+        return result;
     }
 }
+

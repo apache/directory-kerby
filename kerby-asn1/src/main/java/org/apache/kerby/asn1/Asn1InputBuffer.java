@@ -32,14 +32,14 @@ import java.nio.ByteBuffer;
  * and read until exhausted.
  */
 public class Asn1InputBuffer {
-    private final LimitedByteBuffer limitedBuffer;
+    private final ByteBuffer decodeBuffer;
 
     /**
      * Constructor with bytes.
      * @param bytes The bytes
      */
     public Asn1InputBuffer(byte[] bytes) {
-        this(new LimitedByteBuffer(bytes));
+        this(ByteBuffer.wrap(bytes));
     }
 
     /**
@@ -47,15 +47,7 @@ public class Asn1InputBuffer {
      * @param byteBuffer The byte buffer
      */
     public Asn1InputBuffer(ByteBuffer byteBuffer) {
-        this(new LimitedByteBuffer(byteBuffer));
-    }
-
-    /**
-     * Constructor with LimitedByteBuffer.
-     * @param limitedByteBuffer The limited byte buffer
-     */
-    public Asn1InputBuffer(LimitedByteBuffer limitedByteBuffer) {
-        this.limitedBuffer = limitedByteBuffer;
+        this.decodeBuffer = byteBuffer;
     }
 
     /**
@@ -65,10 +57,10 @@ public class Asn1InputBuffer {
      * @throws IOException e
      */
     public Asn1Type read() throws IOException {
-        if (!limitedBuffer.available()) {
+        if (decodeBuffer.remaining() < 1) {
             return null;
         }
-        Asn1Item one = Asn1Object.decodeOne(limitedBuffer);
+        Asn1Item one = Asn1Object.decodeOne(decodeBuffer);
         if (one.isSimple()) {
             one.decodeValueAsSimple();
         } else if (one.isCollection()) {
@@ -78,31 +70,5 @@ public class Asn1InputBuffer {
             return one.getValue();
         }
         return one;
-    }
-
-    /**
-     * Read from bytes.
-     *
-     * @param bytes The bytes
-     * @throws IOException e
-     */
-    public void readBytes(byte[] bytes) throws IOException {
-        limitedBuffer.readBytes(bytes);
-    }
-
-    public byte[] readAllLeftBytes() throws IOException {
-        return limitedBuffer.readAllLeftBytes();
-    }
-
-    public void skipNext() throws IOException {
-        if (limitedBuffer.available()) {
-            Asn1Object.skipOne(limitedBuffer);
-        }
-    }
-
-    public void skipBytes(int len) throws IOException {
-        if (limitedBuffer.available()) {
-            limitedBuffer.skip(len);
-        }
     }
 }

@@ -20,7 +20,6 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.Tag;
 
 import java.io.IOException;
@@ -131,7 +130,7 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
     }
 
     @Override
-    protected void decodeBody(LimitedByteBuffer content) throws IOException {
+    protected void decodeBody(ByteBuffer content) throws IOException {
         tagging.decodeBody(content);
     }
 

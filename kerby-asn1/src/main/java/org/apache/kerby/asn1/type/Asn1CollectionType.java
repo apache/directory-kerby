@@ -20,7 +20,6 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
 
@@ -76,10 +75,11 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
     }
 
     @Override
-    protected void decodeBody(LimitedByteBuffer content) throws IOException {
+    protected void decodeBody(ByteBuffer content) throws IOException {
         initFields();
 
         Asn1Collection coll = createCollection();
+        coll.setLazy(true);
         coll.decode(tag(), content);
 
         int lastPos = -1, foundPos = -1;
@@ -99,17 +99,21 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
             if (foundPos == -1) {
                 throw new RuntimeException("Unexpected item with tag: " + item.tag());
             }
+            lastPos = foundPos;
 
-            if (!item.isFullyDecoded()) {
-                AbstractAsn1Type<?> fieldValue = (AbstractAsn1Type<?>) fields[foundPos];
+            AbstractAsn1Type<?> fieldValue = (AbstractAsn1Type<?>) fields[foundPos];
+            if (fieldValue instanceof Asn1Any) {
+                Asn1Any any = (Asn1Any) fieldValue;
+                any.setField(item);
+                any.setFieldInfo(fieldInfos[foundPos]);
+            } else {
                 if (item.isContextSpecific()) {
-                    item.decodeValueWith(fieldValue, fieldInfos[foundPos].getTaggingOption());
+                    item.decodeValueWith(fieldValue,
+                        fieldInfos[foundPos].getTaggingOption());
                 } else {
                     item.decodeValueWith(fieldValue);
                 }
             }
-            fields[foundPos] = item.getValue();
-            lastPos = foundPos;
         }
     }
 

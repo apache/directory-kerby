@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.UniversalTag;
 
@@ -32,11 +31,20 @@ import java.util.List;
  * ASN1 complex type, may be better named.
  */
 public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
+    private boolean lazy = false;
 
     public Asn1Collection(UniversalTag universalTag) {
         super(universalTag);
         setValue(new ArrayList<Asn1Item>());
         usePrimitive(false);
+    }
+
+    public void setLazy(boolean lazy) {
+        this.lazy = lazy;
+    }
+
+    public boolean isLazy() {
+        return lazy;
     }
 
     public void addItem(Asn1Type value) {
@@ -74,13 +82,14 @@ public class Asn1Collection extends AbstractAsn1Type<List<Asn1Item>> {
     }
 
     @Override
-    protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        while (content.available()) {
-            Asn1Type aValue = decodeOne(content);
-            if (aValue != null) {
-                addItem(aValue);
-            } else {
-                throw new RuntimeException("Unexpected running into here");
+    protected void decodeBody(ByteBuffer content) throws IOException {
+        while (content.remaining() > 0) {
+            Asn1Item item = decodeOne(content);
+            if (item != null) {
+                if (item.isSimple() && !isLazy()) {
+                    item.decodeValueAsSimple();
+                }
+                addItem(item);
             }
         }
     }
