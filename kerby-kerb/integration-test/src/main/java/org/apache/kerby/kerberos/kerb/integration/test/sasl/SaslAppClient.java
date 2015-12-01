@@ -79,10 +79,10 @@ public class SaslAppClient extends AppClient {
             }
         }
 
-        System.out.println("Context Established! ");
+        //System.out.println("Context Established! ");
 
         token = "Hello There!\0".getBytes(StandardCharsets.UTF_8);
-        System.out.println("Will send wrap token of size " + token.length);
+        //System.out.println("Will send wrap token of size " + token.length);
 
         conn.sendToken(token);
         setTestOK(true);

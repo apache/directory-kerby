@@ -177,6 +177,7 @@
             <skipTests>${skipTests}</skipTests>
             <reuseForks>false</reuseForks>
             <systemPropertyVariables>
+              <log4j.configuration>log4j.properties</log4j.configuration>
             </systemPropertyVariables>
             <failIfNoTests>false</failIfNoTests>
           </configuration>

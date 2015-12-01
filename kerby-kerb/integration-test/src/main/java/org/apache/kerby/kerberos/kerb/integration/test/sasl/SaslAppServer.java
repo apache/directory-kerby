@@ -30,7 +30,6 @@ import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslException;
 import javax.security.sasl.SaslServer;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +62,7 @@ public class SaslAppServer extends AppServer {
 
     @Override
     protected void onConnection(Transport.Connection conn) throws Exception {
-        System.out.print("Starting negotiating security context");
+        // System.out.print("Starting negotiating security context");
 
         //mechanism, protocol, serverId, saslProperties, callback
         CallbackHandler callbackHandler = new SaslGssCallbackHandler();
@@ -90,7 +89,7 @@ public class SaslAppServer extends AppServer {
             }
         }
 
-        System.out.print("Context Established! ");
+        // System.out.print("Context Established! ");
 
         doWith(ss, props, conn);
 
@@ -99,10 +98,11 @@ public class SaslAppServer extends AppServer {
 
     protected void doWith(SaslServer ss, Map<String, Object> props,
                           Transport.Connection conn) throws IOException, Exception {
-        byte[] token = conn.recvToken();
-        String str = new String(token, StandardCharsets.UTF_8);
-        System.out.println("Received data \""
-                + str + "\" of length " + str.length());
+        conn.recvToken();
+        //byte[] token = conn.recvToken();
+        //String str = new String(token, StandardCharsets.UTF_8);
+        // System.out.println("Received data \""
+        //        + str + "\" of length " + str.length());
     }
 
     public static class SaslGssCallbackHandler implements CallbackHandler {
@@ -128,8 +128,8 @@ public class SaslAppServer extends AppServer {
                     ac.setAuthorized(false);
                 }
                 if (ac.isAuthorized()) {
-                    System.out.println("SASL server GSSAPI callback: setting "
-                            + "canonicalized client ID: " + authzid);
+                    // System.out.println("SASL server GSSAPI callback: setting "
+                            //+ "canonicalized client ID: " + authzid);
                     ac.setAuthorizedID(authzid);
                 }
             }

@@ -86,18 +86,18 @@ public class GssAppClient extends AppClient {
             }
         }
 
-        System.out.println("Context Established! ");
-        System.out.println("Client is " + context.getSrcName());
-        System.out.println("Server is " + context.getTargName());
+        //System.out.println("Context Established! ");
+        //System.out.println("Client is " + context.getSrcName());
+        //System.out.println("Server is " + context.getTargName());
 
-        if (context.getMutualAuthState()) {
-            System.out.println("Mutual authentication took place!");
-        }
+        //if (context.getMutualAuthState()) {
+            //System.out.println("Mutual authentication took place!");
+        //}
 
         byte[] messageBytes = "Hello There!\0".getBytes(StandardCharsets.UTF_8);
         MessageProp prop =  new MessageProp(0, true);
         token = context.wrap(messageBytes, 0, messageBytes.length, prop);
-        System.out.println("Will send wrap token of size " + token.length);
+        //System.out.println("Will send wrap token of size " + token.length);
         conn.sendToken(token);
 
         token = conn.recvToken();
@@ -105,7 +105,7 @@ public class GssAppClient extends AppClient {
                 messageBytes, 0, messageBytes.length, prop);
         setTestOK(true);
 
-        System.out.println("Verified received MIC for message.");
+        //System.out.println("Verified received MIC for message.");
         context.dispose();
     }
 }

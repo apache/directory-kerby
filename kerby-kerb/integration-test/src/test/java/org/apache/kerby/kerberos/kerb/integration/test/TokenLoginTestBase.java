@@ -86,7 +86,7 @@ public class TokenLoginTestBase extends LoginTestBase {
         AuthToken token = issueToken(getClientPrincipal());
         String tokenStr = tokenEncoder.encodeAsString(token);
         TokenCache.writeToken(tokenStr);
-        System.out.println("Issued token: " + tokenStr);
+        // System.out.println("Issued token: " + tokenStr);
         tokenCache = TokenCache.getDefaultTokenCache();
 
         TgtTicket tgt = getKrbClient().requestTgt(getClientPrincipal(),
