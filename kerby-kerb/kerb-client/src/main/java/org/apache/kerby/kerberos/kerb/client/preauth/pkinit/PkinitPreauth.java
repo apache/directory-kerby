@@ -68,8 +68,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
-
 public class PkinitPreauth extends AbstractPreauthPlugin {
     private static final Logger LOG = LoggerFactory.getLogger(PkinitPreauth.class);
 
@@ -239,9 +237,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         pkAuthen.setCusec(cusec);
         pkAuthen.setCtime(ctime);
         pkAuthen.setNonce(nonce);
-//        pkAuthen.setPaChecksum(checkSum.getChecksum());
+        pkAuthen.setPaChecksum(checkSum.getChecksum());
 
-        pkAuthen.setPaChecksum(checkSum.encode());
+//        pkAuthen.setPaChecksum(checkSum.encode());
 
         authPack.setPkAuthenticator(pkAuthen);
 
@@ -342,6 +340,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+//        signedDataBytes = PkinitCrypto.cmsSignedDataCreate(authPack.encode());
 
         return signedDataBytes;
     }

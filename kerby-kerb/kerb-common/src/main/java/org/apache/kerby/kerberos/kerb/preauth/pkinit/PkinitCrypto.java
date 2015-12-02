@@ -18,9 +18,14 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
+import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.cms.type.EncapsulatedContentInfo;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.x509.type.DHParameter;
+import org.apache.kerby.x509.type.GeneralNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.security.pkcs.ContentInfo;
@@ -42,8 +47,12 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 public class PkinitCrypto {
 
@@ -205,6 +214,28 @@ public class PkinitCrypto {
         return bytes;
     }
 
+    /*
+     *
+     *   -- The contentType field of the type ContentInfo
+     *   -- is id-signedData (1.2.840.113549.1.7.2),
+     *   -- and the content field is a SignedData.
+     *   -- The eContentType field for the type SignedData is
+     *   -- id-pkinit-authData (1.3.6.1.5.2.3.1), and the
+     *   -- eContent field contains the DER encoding of the
+     *   -- type AuthPack.
+     */
+    public static byte[] cmsSignedDataCreate(byte[] data) {
+//        org.apache.kerby.cms.type.ContentInfo contentInfo = new org.apache.kerby.cms.type.ContentInfo();
+//        contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
+//        SignedData signedData = new SignedData();
+//        signedData.setEncapContentInfo(eContentInfo);
+//        contentInfo.setContent(signedData);
+        EncapsulatedContentInfo eContentInfo = new EncapsulatedContentInfo();
+        eContentInfo.setContentType(new Asn1ObjectIdentifier("1.3.6.1.5.2.3.1"));
+        eContentInfo.setContent(data);
+        return eContentInfo.encode();
+    }
+
     public static ContentInfo createContentInfo(byte[] data, ObjectIdentifier oid) {
 
         ContentInfo contentInfo = new ContentInfo(
@@ -213,7 +244,7 @@ public class PkinitCrypto {
         return contentInfo;
     }
 
-    public static boolean verifyKdcSan(String hostname, X509Certificate[] cert) {
+    public static boolean verifyKdcSan(String hostname, PrincipalName kdcPrincipal, X509Certificate[] cert) throws KrbException {
 
         if (hostname == null) {
             LOG.info("No pkinit_kdc_hostname values found in config file");
@@ -221,21 +252,63 @@ public class PkinitCrypto {
             LOG.info("pkinit_kdc_hostname values found in config file");
         }
 
-        cryptoRetrieveCertSans(cert);
-        return true;
+        try {
+            List<PrincipalName> princs = cryptoRetrieveCertSans(cert[0]);
+            if(princs != null) {
+                for (PrincipalName princ : princs) {
+                    LOG.info("PKINIT client found id-pkinit-san in KDC cert: " + princ.getName());
+                }
+                LOG.info("Checking pkinit sans.");
+
+                if (princs.contains(kdcPrincipal)) {
+                    LOG.info("pkinit san match found");
+                    return true;
+                } else {
+                    LOG.info("no pkinit san match found");
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (KrbException e) {
+            String errMessage = "PKINIT client failed to decode SANs in KDC cert." + e;
+            LOG.error(errMessage);
+            throw new KrbException(KrbErrorCode.KDC_NAME_MISMATCH, errMessage);
+        }
     }
 
-    public static void cryptoRetrieveCertSans(X509Certificate[] cert) {
-        cryptoRetrieveX509Sans(cert);
-    }
-
-    public static void cryptoRetrieveX509Sans(X509Certificate[] cert) {
-
+    public static List<PrincipalName> cryptoRetrieveCertSans(X509Certificate cert) throws KrbException {
         if (cert == null) {
             LOG.info("no certificate!");
+            return null;
+        }
+        return cryptoRetrieveX509Sans(cert);
+    }
+
+    public static List<PrincipalName> cryptoRetrieveX509Sans(X509Certificate cert) throws KrbException {
+
+        LOG.info("Looking for SANs in cert: " + cert.getSubjectDN());
+
+        Collection c = null;
+        try {
+            c = cert.getSubjectAlternativeNames();
+        } catch (CertificateParsingException cpe) {
+            cpe.printStackTrace();
         }
 
-        LOG.info("Looking for SANs in cert");
-        //String[] subjectAlts = Certificates.getDNSSubjectAlts(cert[0]); //TODO
+        if (c != null) {
+            Iterator it = c.iterator();
+            while (it.hasNext()) {
+                List extensionEntry = (List) it.next();
+                int type = ((Integer) extensionEntry.get(0)).intValue();
+
+                Object name = extensionEntry.get(1);
+                byte[] nameAsBytes = (byte[]) name;
+                GeneralNames generalNames = null;
+                generalNames = KrbCodec.decode(nameAsBytes, GeneralNames.class);
+//                OtherName otherName = generalNames.getElements().get(1).getOtherName();
+            }
+        }
+        return null;
     }
 }

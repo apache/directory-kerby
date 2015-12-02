@@ -25,10 +25,12 @@ import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.crypto.dh.DhClient;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CMSMessageType;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.kdc.AsReq;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcRep;
@@ -99,7 +101,7 @@ public class AsRequestWithCert extends AsRequest {
 
                 PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
 
-                DHRepInfo dhRepInfo =paPkAsRep.getDHRepInfo();
+                DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
 
                 DHNonce nonce = dhRepInfo.getServerDhNonce();
                 byte[] dhSignedData = dhRepInfo.getDHSignedData();
@@ -111,11 +113,16 @@ public class AsRequestWithCert extends AsRequest {
                     LOG.error("failed to verify pkcs7 signed data\n");
                 }
 
-                if (!PkinitCrypto.verifyKdcSan(getContext().getConfig().getPkinitKdcHostName(),
-                pkcs7.getCertificates())) {
+                PrincipalName kdcPrincipal = KrbUtil.makeTgsPrincipal(
+                        getContext().getConfig().getKdcRealm());
+                boolean validSan= PkinitCrypto.verifyKdcSan(
+                        getContext().getConfig().getPkinitKdcHostName(), kdcPrincipal,
+                        pkcs7.getCertificates());
+                if (!validSan) {
                     LOG.error("Did not find an acceptable SAN in KDC certificate");
                 }
 
+                LOG.info("skipping EKU check");
 
                 ContentInfo contentInfo = pkcs7.getContentInfo();
 

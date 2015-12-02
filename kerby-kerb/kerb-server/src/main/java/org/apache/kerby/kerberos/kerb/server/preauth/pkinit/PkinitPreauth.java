@@ -39,6 +39,7 @@ import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
@@ -176,18 +177,16 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             CheckSum expectedCheckSum = null;
             try {
-//                expectedCheckSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
-//                        kdcRequest.getKdcReq().getReqBody().encode());
                 expectedCheckSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
                         kdcRequest.getReqBodyBytes());
             } catch (KrbException e) {
                 LOG.error("Unable to calculate AS REQ checksum.", e.getMessage());
             }
-            CheckSum receivedCheckSum = KrbCodec.decode(pkAuthenticator.getPaChecksum(), CheckSum.class);
+            byte[] receivedCheckSumByte = pkAuthenticator.getPaChecksum();
 
-            if(!CheckSumHandler.verify(receivedCheckSum, kdcRequest.getReqBodyBytes())) {
-                LOG.debug("Received checksum type: " + receivedCheckSum.getCksumtype()
-                        + ", received checksum length: " + receivedCheckSum.encodingLength()
+            if (expectedCheckSum.getChecksum().length != receivedCheckSumByte.length
+                    || !Arrays.equals(expectedCheckSum.getChecksum(), receivedCheckSumByte)) {
+                LOG.debug("received checksum length: " + receivedCheckSumByte.length
                         + ", expected checksum type: " + expectedCheckSum.getCksumtype()
                         + ", expected checksum length: " + expectedCheckSum.encodingLength());
                 String errorMessage = "Failed to match the checksum.";
@@ -210,7 +209,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             try {
                 serverPubKey = (DHPublicKey) server.initAndDoPhase(dhPublicKey.getEncoded());
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Fail to create server public key.", e);
             }
             EncryptionKey secretKey = server.generateKey(null, null, kdcRequest.getEncryptionType());
 
@@ -290,7 +289,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         Asn1Integer publickey = new Asn1Integer(severPubKey.getY());
         kdcDhKeyInfo.setSubjectPublicKey(publickey.encode());
-        kdcDhKeyInfo.setNonce(1);
+        kdcDhKeyInfo.setNonce(0);
         kdcDhKeyInfo.setDHKeyExpiration(
                 new KerberosTime(System.currentTimeMillis() + KerberosTime.DAY));
 
