@@ -67,7 +67,7 @@ public class WithCertKdcTest extends KdcTestBase {
     protected void configKdcSeverAndClient() {
         super.configKdcSeverAndClient();
 
-        String pkinitIdentity = getClass().getResource("/kdccert.pem").getPath() + ","
+        String pkinitIdentity = getClass().getResource("/kdccerttest.pem").getPath() + ","
                 + getClass().getResource("/kdckey.pem").getPath();
         getKdcServer().getKdcConfig().setString(KdcConfigKey.PKINIT_IDENTITY, pkinitIdentity);
     }
@@ -92,7 +92,7 @@ public class WithCertKdcTest extends KdcTestBase {
 
         getKrbClient().init();
 
-        URL url = getClass().getResource("/cacert.pem");
+        URL url = getClass().getResource("/cacerttest.pem");
         TgtTicket tgt;
         KrbPkinitClient pkinitClient = new KrbPkinitClient(getKrbClient());
         try {

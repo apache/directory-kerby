@@ -47,10 +47,20 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateParsingException;
+import java.security.cert.PKIXParameters;
+import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -310,5 +320,31 @@ public class PkinitCrypto {
             }
         }
         return null;
+    }
+
+    /**
+     * Validates a chain of {@link X509Certificate}s.
+     *
+     * @param chain
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidAlgorithmParameterException
+     * @throws CertPathValidatorException
+     */
+    public static void validateChain(X509Certificate[] chain, X509Certificate anchor)
+            throws CertificateException, NoSuchAlgorithmException, NoSuchProviderException,
+            InvalidAlgorithmParameterException, CertPathValidatorException {
+        List<X509Certificate> certificateList = Arrays.asList(chain);
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        CertPath certPath = certificateFactory.generateCertPath(certificateList);
+
+        CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
+
+        TrustAnchor trustAnchor = new TrustAnchor(anchor, null);
+
+        PKIXParameters parameters = new PKIXParameters(Collections.singleton(trustAnchor));
+        parameters.setRevocationEnabled(false);
+
+        cpv.validate(certPath, parameters);
     }
 }

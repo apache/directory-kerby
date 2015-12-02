@@ -22,12 +22,14 @@ package org.apache.kerby.kerberos.kerb.client.request;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.crypto.dh.DhClient;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CMSMessageType;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
@@ -50,6 +52,12 @@ import sun.security.pkcs.PKCS7;
 import javax.crypto.interfaces.DHPublicKey;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 public class AsRequestWithCert extends AsRequest {
 
@@ -111,6 +119,30 @@ public class AsRequestWithCert extends AsRequest {
                             CMSMessageType.CMS_SIGN_SERVER, dhSignedData);
                 } catch (IOException e) {
                     LOG.error("failed to verify pkcs7 signed data\n");
+                }
+
+                String anchorFileName = getPreauthOptions().getStringOption(KrbOption.PKINIT_X509_ANCHORS);
+
+                X509Certificate certificate = null;
+                try {
+                    certificate = (X509Certificate) CertificateHelper.loadCerts(
+                            anchorFileName).iterator().next();
+                } catch (KrbException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    PkinitCrypto.validateChain(pkcs7.getCertificates(), certificate);
+                } catch (CertificateException e) {
+                    e.printStackTrace();
+                } catch (InvalidAlgorithmParameterException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (NoSuchProviderException e) {
+                    e.printStackTrace();
+                } catch (CertPathValidatorException e) {
+                    throw new KrbException(KrbErrorCode.KDC_ERR_INVALID_CERTIFICATE, e);
                 }
 
                 PrincipalName kdcPrincipal = KrbUtil.makeTgsPrincipal(

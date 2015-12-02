@@ -319,15 +319,10 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         List<String> anchors = pkinitContext.identityOpts.anchors;
 
-        InputStream res = null;
-        try {
-            res = new FileInputStream(anchors.get(0));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         X509Certificate certificate = null;
         try {
-            certificate = (X509Certificate) CertificateHelper.loadCerts(res).iterator().next();
+            certificate = (X509Certificate) CertificateHelper.loadCerts(
+                    anchors.get(0)).iterator().next();
         } catch (KrbException e) {
             e.printStackTrace();
         }
