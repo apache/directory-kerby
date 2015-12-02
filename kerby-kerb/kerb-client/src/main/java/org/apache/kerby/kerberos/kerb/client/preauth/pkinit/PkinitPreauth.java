@@ -57,10 +57,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
@@ -169,13 +166,14 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         calendar.setTime(new Date(now));
         int cusec = calendar.get(Calendar.SECOND);
         KerberosTime ctime = new KerberosTime(now);
-        CheckSum checkSum = null;
 
+        /* checksum of the encoded KDC-REQ-BODY */
+        CheckSum checkSum = null;
         try {
             checkSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
                     kdcRequest.getKdcReq().getReqBody().encode());
         } catch (KrbException e) {
-            e.printStackTrace();
+            throw new KrbException("Fail to encode checksum.", e);
         }
 
 
@@ -242,8 +240,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 //        pkAuthen.setPaChecksum(checkSum.encode());
 
         authPack.setPkAuthenticator(pkAuthen);
-
-//        authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
+        authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
 
         if (!usingRsa) {
             // DH case
@@ -257,15 +254,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 //            String dhOidStr = "0.7.42.840.10046.2.1";
 
             String content = "0x06 07 2A 86 48 ce 3e 02 01";
-            Asn1ObjectIdentifier decoded = new Asn1ObjectIdentifier();
-            decoded.useDER();
-            try {
-                decoded.decode(Util.hex2bytes(content));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            dhAlg.setAlgorithm(decoded);
+            Asn1ObjectIdentifier dhOid = PkinitCrypto.createOid(content);
+            dhAlg.setAlgorithm(dhOid);
 
             DhClient client = new DhClient();
 
@@ -298,6 +288,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 //            authPack.setClientDhNonce(dhNonce);
 
         } else {
+            LOG.info("RSA key transport algorithm");
             authPack.setClientPublicValue(null);
         }
 

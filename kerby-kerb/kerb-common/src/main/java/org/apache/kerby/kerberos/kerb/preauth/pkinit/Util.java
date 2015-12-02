@@ -17,7 +17,7 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
+package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 public class Util {
 

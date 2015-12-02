@@ -347,4 +347,15 @@ public class PkinitCrypto {
 
         cpv.validate(certPath, parameters);
     }
+
+    public static Asn1ObjectIdentifier createOid(String content) {
+        Asn1ObjectIdentifier oid = new Asn1ObjectIdentifier();
+        oid.useDER();
+        try {
+            oid.decode(Util.hex2bytes(content));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return oid;
+    }
 }

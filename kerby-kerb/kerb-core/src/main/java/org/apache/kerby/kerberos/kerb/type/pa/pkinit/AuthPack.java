@@ -66,11 +66,11 @@ public class AuthPack extends KrbSequenceType {
     }
 
     public AlgorithmIdentifiers getsupportedCmsTypes() {
-        return getFieldAs(CLIENT_DH_NONCE, AlgorithmIdentifiers.class);
+        return getFieldAs(SUPPORTED_CMS_TYPES, AlgorithmIdentifiers.class);
     }
 
     public void setsupportedCmsTypes(AlgorithmIdentifiers supportedCMSTypes) {
-        setFieldAs(CLIENT_DH_NONCE, supportedCMSTypes);
+        setFieldAs(SUPPORTED_CMS_TYPES, supportedCMSTypes);
     }
 
     public DHNonce getClientDhNonce() {
