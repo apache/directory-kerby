@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1Header;
+import org.apache.kerby.asn1.Asn1Reader1;
 import org.apache.kerby.asn1.Asn1Util;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
@@ -198,19 +200,11 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
-        Tag tmpTag = Asn1Util.readTag(content);
-        int length = Asn1Util.readLength(content);
+        Asn1Reader1 reader = new Asn1Reader1(content);
+        Asn1Header header = reader.readHeader();
 
-        ByteBuffer valueBuffer;
-        if (length == -1) {
-            valueBuffer = content;
-            useDefinitiveLength(false);
-        } else {
-            valueBuffer = Asn1Util.dupWithLength(content, length);
-            useDefinitiveLength(true);
-        }
-
-        decode(tmpTag, valueBuffer);
+        useDefinitiveLength(header.isDefinitiveLength());
+        decode(header.getTag(), header.getValueBuffer());
     }
 
     public void decode(Tag tag, ByteBuffer content) throws IOException {
@@ -262,19 +256,11 @@ public abstract class Asn1Object implements Asn1Type {
     @Override
     public void taggedDecode(ByteBuffer content,
                              TaggingOption taggingOption) throws IOException {
-        Tag taggingTag = Asn1Util.readTag(content);
-        int taggingLength = Asn1Util.readLength(content);
+        Asn1Reader1 reader = new Asn1Reader1(content);
+        Asn1Header header = reader.readHeader();
 
-        ByteBuffer valueBuffer;
-        if (taggingLength == -1) {
-            valueBuffer = content;
-            useDefinitiveLength(false);
-        } else {
-            valueBuffer = Asn1Util.dupWithLength(content, taggingLength);
-            useDefinitiveLength(true);
-        }
-
-        taggedDecode(taggingTag, valueBuffer, taggingOption);
+        useDefinitiveLength(header.isDefinitiveLength());
+        taggedDecode(header.getTag(), header.getValueBuffer(), taggingOption);
     }
 
     protected void taggedDecode(Tag taggingTag, ByteBuffer content,
@@ -292,21 +278,17 @@ public abstract class Asn1Object implements Asn1Type {
         }
     }
 
-    public static Asn1Item decodeOne(ByteBuffer content) throws IOException {
-        Tag tmpTag = Asn1Util.readTag(content);
-        int length = Asn1Util.readLength(content);
+    public static Asn1Header readHeader(ByteBuffer content) throws IOException {
+        Asn1Reader1 reader = new Asn1Reader1(content);
+        return reader.readHeader();
+    }
 
-        Asn1Item result;
-        ByteBuffer valueBuffer;
-        if (length == -1) {
-            result = new Asn1Item(tmpTag);
-            result.useDefinitiveLength(false);
-            result.setBodyContent(content);
-        } else {
-            valueBuffer = Asn1Util.dupWithLength(content, length);
-            result = new Asn1Item(tmpTag, valueBuffer);
-            result.useDefinitiveLength(true);
-        }
+    public static Asn1Item decodeOne(ByteBuffer content) throws IOException {
+        Asn1Reader1 reader = new Asn1Reader1(content);
+        Asn1Header header = reader.readHeader();
+
+        Asn1Item result = new Asn1Item(header.getTag(), header.getValueBuffer());
+        result.useDefinitiveLength(header.isDefinitiveLength());
 
         return result;
     }

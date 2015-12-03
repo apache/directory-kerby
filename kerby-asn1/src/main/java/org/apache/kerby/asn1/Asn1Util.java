@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.asn1;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
@@ -107,86 +106,6 @@ public final class Asn1Util {
             for (int i = length - 1; i >= 0; i--) {
                 buffer.put((byte) (payload >> (i * 8)));
             }
-        }
-    }
-
-    public static Tag readTag(ByteBuffer buffer) throws IOException {
-        int tagFlags = readTagFlags(buffer);
-        int tagNo = readTagNo(buffer, tagFlags);
-        return new Tag(tagFlags, tagNo);
-    }
-
-    private static int readTagFlags(ByteBuffer buffer) throws IOException {
-        int tagFlags = buffer.get() & 0xff;
-        if (tagFlags == 0) {
-            throw new IOException("Bad tag 0 found");
-        }
-        return tagFlags;
-    }
-
-    private static int readTagNo(ByteBuffer buffer, int tagFlags) throws IOException {
-        int tagNo = tagFlags & 0x1f;
-
-        if (tagNo == 0x1f) {
-            tagNo = 0;
-
-            int b = buffer.get() & 0xff;
-            if ((b & 0x7f) == 0) {
-                throw new IOException("Invalid high tag number found");
-            }
-
-            while (b >= 0 && (b & 0x80) != 0) {
-                tagNo |= b & 0x7f;
-                tagNo <<= 7;
-                b = buffer.get();
-            }
-
-            tagNo |= b & 0x7f;
-        }
-
-        return tagNo;
-    }
-
-    public static int readLength(ByteBuffer buffer) throws IOException {
-        int result = buffer.get() & 0xff;
-        if (result == 0x80) {
-            return -1; // non-definitive length
-        }
-
-        if (result > 127) {
-            int length = result & 0x7f;
-            if (length > 4) {
-                throw new IOException("Bad length of more than 4 bytes: " + length);
-            }
-
-            result = 0;
-            int tmp;
-            for (int i = 0; i < length; i++) {
-                tmp = buffer.get() & 0xff;
-                result = (result << 8) + tmp;
-            }
-        }
-
-        if (result < 0) {
-            throw new IOException("Invalid length " + result);
-        }
-
-        if (result > buffer.remaining()) {
-            throw new IOException("Corrupt stream - less data "
-                + buffer.remaining() + " than expected " + result);
-        }
-
-        return result;
-    }
-
-    public static ByteBuffer dupWithLength(ByteBuffer buffer, int length) {
-        try {
-            ByteBuffer result = buffer.duplicate();
-            result.limit(buffer.position() + length);
-            buffer.position(buffer.position() + length);
-            return result;
-        } catch (Exception e) {
-            throw e;
         }
     }
 
