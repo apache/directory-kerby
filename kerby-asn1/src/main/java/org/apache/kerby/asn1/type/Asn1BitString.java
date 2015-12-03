@@ -82,4 +82,11 @@ public class Asn1BitString extends Asn1Simple<byte[]> {
             throw new IOException("Bad padding number: " + paddingBits + ", should be in [0, 7]");
         }
     }
+
+    @Override
+    public String toStr() {
+        String valueStr =
+            (getValue() != null ? (getValue().length + " bytes") : "null");
+        return valueStr;
+    }
 }

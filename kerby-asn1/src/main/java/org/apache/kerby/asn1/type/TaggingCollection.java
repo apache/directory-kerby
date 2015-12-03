@@ -169,4 +169,9 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
     protected void setFieldAsOctetBytes(int index, byte[] value) {
         tagged.setFieldAsOctets(index, value);
     }
+
+    @Override
+    public String toStr() {
+        return "[tagging-collection]";
+    }
 }

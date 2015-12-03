@@ -97,4 +97,9 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
         }
         setValue((T) value);
     }
+
+    @Override
+    public String toStr() {
+        return "tagging";
+    }
 }

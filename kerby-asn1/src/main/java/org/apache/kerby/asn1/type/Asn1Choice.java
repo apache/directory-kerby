@@ -167,4 +167,9 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
     protected void setFieldAsInt(int index, int value) {
         setFieldAs(index, new Asn1Integer(value));
     }
+
+    @Override
+    public String toStr() {
+        return "choice";
+    }
 }

@@ -143,4 +143,9 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
         ((Asn1Object) value).taggedDecode(tag(), getBodyContent(), taggingOption);
         setValue(value);
     }
+
+    @Override
+    public String toStr() {
+        return "item";
+    }
 }

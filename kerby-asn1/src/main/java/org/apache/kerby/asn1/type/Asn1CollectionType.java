@@ -195,4 +195,9 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
             setFieldAs(index, new Asn1Any(value));
         }
     }
+
+    @Override
+    public String toStr() {
+        return "[collection-type]";
+    }
 }

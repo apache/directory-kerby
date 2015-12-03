@@ -201,4 +201,11 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
                 throw new IllegalArgumentException("Unexpected tag " + tagNo.getValue());
         }
     }
+
+    @Override
+    public String toStr() {
+        String valueStr =
+            (getValue() != null ? String.valueOf(getValue()) : "null");
+        return valueStr;
+    }
 }

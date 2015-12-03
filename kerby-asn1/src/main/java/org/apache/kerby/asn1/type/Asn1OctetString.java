@@ -48,4 +48,11 @@ public class Asn1OctetString extends Asn1Simple<byte[]> {
     protected void decodeBody(ByteBuffer content) throws IOException {
         setValue(Asn1Util.readAllLeftBytes(content));
     }
+
+    @Override
+    public String toStr() {
+        String valueStr =
+            (getValue() != null ? (getValue().length + " octets") : "null");
+        return valueStr;
+    }
 }

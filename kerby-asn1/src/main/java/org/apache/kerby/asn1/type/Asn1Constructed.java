@@ -90,4 +90,9 @@ public class Asn1Constructed extends AbstractAsn1Type<List<Asn1Type>> {
             }
         }
     }
+
+    @Override
+    public String toStr() {
+        return "[constructed]";
+    }
 }
