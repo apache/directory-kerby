@@ -20,6 +20,7 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.Tag;
 
 import java.io.IOException;
@@ -134,44 +135,44 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
         tagging.decodeBody(content);
     }
 
-    protected <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
+    protected <T extends Asn1Type> T getFieldAs(EnumType index, Class<T> t) {
         return tagged.getFieldAs(index, t);
     }
 
-    protected void setFieldAs(int index, Asn1Type value) {
+    protected void setFieldAs(EnumType index, Asn1Type value) {
         tagged.setFieldAs(index, value);
     }
 
-    protected String getFieldAsString(int index) {
+    protected String getFieldAsString(EnumType index) {
         return tagged.getFieldAsString(index);
     }
 
-    protected byte[] getFieldAsOctets(int index) {
+    protected byte[] getFieldAsOctets(EnumType index) {
         return tagged.getFieldAsOctets(index);
     }
 
-    protected void setFieldAsOctets(int index, byte[] bytes) {
+    protected void setFieldAsOctets(EnumType index, byte[] bytes) {
         tagged.setFieldAsOctets(index, bytes);
     }
 
-    protected Integer getFieldAsInteger(int index) {
+    protected Integer getFieldAsInteger(EnumType index) {
         return tagged.getFieldAsInteger(index);
     }
 
-    protected void setFieldAsInt(int index, int value) {
+    protected void setFieldAsInt(EnumType index, int value) {
         tagged.setFieldAsInt(index, value);
     }
 
-    protected byte[] getFieldAsOctetBytes(int index) {
+    protected byte[] getFieldAsOctetBytes(EnumType index) {
         return tagged.getFieldAsOctets(index);
     }
 
-    protected void setFieldAsOctetBytes(int index, byte[] value) {
+    protected void setFieldAsOctetBytes(EnumType index, byte[] value) {
         tagged.setFieldAsOctets(index, value);
     }
 
     @Override
     public String toStr() {
-        return "[tagging-collection]";
+        return tagging.toStr();
     }
 }

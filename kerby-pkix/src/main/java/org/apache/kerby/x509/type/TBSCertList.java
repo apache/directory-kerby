@@ -20,10 +20,12 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.x500.type.Name;
+import static org.apache.kerby.x509.type.TBSCertList.MyEnum.*;
 
 /**
  * Ref. RFC-2459
@@ -47,14 +49,25 @@ import org.apache.kerby.x500.type.Name;
  * </pre>
  */
 public class TBSCertList extends Asn1SequenceType {
+    protected static enum MyEnum implements EnumType {
+        VERSION,
+        SIGNATURE,
+        ISSUER,
+        THIS_UPDATA,
+        NEXT_UPDATE,
+        REVOKED_CERTIFICATES,
+        CRL_EXTENSIONS;
 
-    private static final int VERSION = 0;
-    private static final int SIGNATURE = 1;
-    private static final int ISSUER = 2;
-    private static final int THIS_UPDATA = 3;
-    private static final int NEXT_UPDATE = 4;
-    private static final int REVOKED_CERTIFICATES = 5;
-    private static final int CRL_EXTENSIONS = 6;
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(VERSION, Asn1Integer.class),

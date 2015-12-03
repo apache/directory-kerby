@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BmpString;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
@@ -26,6 +27,7 @@ import org.apache.kerby.asn1.type.Asn1PrintableString;
 import org.apache.kerby.asn1.type.Asn1T61String;
 import org.apache.kerby.asn1.type.Asn1UniversalString;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
+import static org.apache.kerby.x509.type.DirectoryString.MyEnum.*;
 
 /**
  * <pre>
@@ -39,12 +41,23 @@ import org.apache.kerby.asn1.type.Asn1Utf8String;
  * </pre>
  */
 public class DirectoryString extends Asn1Choice {
+    protected static enum MyEnum implements EnumType {
+        TELETEX_STRING,
+        PRINTABLE_STRING,
+        UNIVERSAL_STRING,
+        UTF8_STRING,
+        BMP_STRING;
 
-    private static final int TELETEX_STRING = 0;
-    private static final int PRINTABLE_STRING = 1;
-    private static final int UNIVERSAL_STRING = 2;
-    private static final int UTF8_STRING = 3;
-    private static final int BMP_STRING = 4;
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
             new Asn1FieldInfo(TELETEX_STRING, Asn1T61String.class),

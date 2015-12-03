@@ -55,6 +55,11 @@ enum KeyUsageEnum implements EnumType {
     public int getValue() {
         return ordinal();
     }
+
+    @Override
+    public String getName() {
+        return name();
+    }
 }
 
 public class KeyUsage extends Asn1Flags {

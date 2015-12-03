@@ -146,6 +146,6 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
 
     @Override
     public String toStr() {
-        return "item";
+        return getValue().toStr();
     }
 }

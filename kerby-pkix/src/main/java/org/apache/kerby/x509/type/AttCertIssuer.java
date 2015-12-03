@@ -19,9 +19,11 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.x509.type.AttCertIssuer.MyEnum.*;
 
 /**
  *
@@ -33,8 +35,20 @@ import org.apache.kerby.asn1.ExplicitField;
  * </pre>
  */
 public class AttCertIssuer extends Asn1Choice {
-    private static final int V1_FORM = 0;
-    private static final int V2_FORM = 1;
+    protected static enum MyEnum implements EnumType {
+        V1_FORM,
+        V2_FORM;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(V1_FORM, GeneralNames.class),

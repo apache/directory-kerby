@@ -26,18 +26,33 @@ import org.apache.kerby.asn1.type.Asn1Tagging;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
 import org.apache.kerby.asn1.type.TaggingSequence;
 import org.apache.kerby.asn1.type.TaggingSet;
+import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.*;
+import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.*;
+import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.*;
 
 /**
  * Ref. X.690-0207(http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf),
  * Annex A, A.1 ASN.1 description of the record structure
  */
 public class PersonnelRecord extends TaggingSet {
-    private static final int NAME = 0;
-    private static final int TITLE = 1;
-    private static final int NUMBER = 2;
-    private static final int DATEOFHIRE = 3;
-    private static final int NAMEOFSPOUSE = 4;
-    private static final int CHILDREN = 5;
+    protected static enum MyEnum implements EnumType {
+        NAME,
+        TITLE,
+        NUMBER,
+        DATEOFHIRE,
+        NAMEOFSPOUSE,
+        CHILDREN;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(NAME, -1, Name.class),
@@ -114,11 +129,23 @@ public class PersonnelRecord extends TaggingSet {
     }
 
     public static class ChildInformation extends Asn1SetType {
-        private static final int NAME = 0;
-        private static final int DATEOFBIRTH = 1;
+        protected static enum MyEnum implements EnumType {
+            CHILD_NAME,
+            DATEOFBIRTH;
+
+            @Override
+            public int getValue() {
+                return ordinal();
+            }
+
+            @Override
+            public String getName() {
+                return name();
+            }
+        }
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
-                new ExplicitField(NAME, -1, Name.class),
+                new ExplicitField(CHILD_NAME, -1, Name.class),
                 new ExplicitField(DATEOFBIRTH, 0, Date.class)
         };
 
@@ -127,11 +154,11 @@ public class PersonnelRecord extends TaggingSet {
         }
 
         public void setName(Name name) {
-            setFieldAs(NAME, name);
+            setFieldAs(CHILD_NAME, name);
         }
 
         public Name getName() {
-            return getFieldAs(NAME, Name.class);
+            return getFieldAs(CHILD_NAME, Name.class);
         }
 
         public void setDateOfBirth(Date date) {
@@ -144,9 +171,22 @@ public class PersonnelRecord extends TaggingSet {
     }
 
     public static class Name extends TaggingSequence {
-        private static final int GIVENNAME = 0;
-        private static final int INITIAL = 1;
-        private static final int FAMILYNAME = 2;
+
+        protected static enum MyEnum implements EnumType {
+            GIVENNAME,
+            INITIAL,
+            FAMILYNAME;
+
+            @Override
+            public int getValue() {
+                return ordinal();
+            }
+
+            @Override
+            public String getName() {
+                return name();
+            }
+        }
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
                 new ExplicitField(GIVENNAME, -1, Asn1VisibleString.class),

@@ -112,6 +112,11 @@ public enum KeyUsage implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static KeyUsage fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

@@ -58,6 +58,12 @@ public class TestAsn1Flags {
     public int getValue() {
       return value;
     }
+
+
+    @Override
+    public String getName() {
+      return name();
+    }
   }
   
   @Rule

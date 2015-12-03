@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import static org.apache.kerby.x509.type.IetfAttrSyntaxChoice.MyEnum.*;
 
 /**
  * Ref. RFC3281
@@ -38,9 +40,21 @@ import org.apache.kerby.asn1.type.Asn1OctetString;
  * </pre>
  */
 public class IetfAttrSyntaxChoice extends Asn1Choice {
-    public static final int OCTETS    = 1;
-    public static final int OID       = 2;
-    public static final int UTF8      = 3;
+    protected static enum MyEnum implements EnumType {
+        OCTETS,
+        OID,
+        UTF8;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(OCTETS, Asn1OctetString.class),

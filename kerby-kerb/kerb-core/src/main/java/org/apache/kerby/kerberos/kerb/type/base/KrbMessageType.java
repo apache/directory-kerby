@@ -45,6 +45,11 @@ public enum KrbMessageType implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static KrbMessageType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

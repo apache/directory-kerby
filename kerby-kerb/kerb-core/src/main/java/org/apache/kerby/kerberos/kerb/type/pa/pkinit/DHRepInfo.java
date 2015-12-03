@@ -20,10 +20,12 @@
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo.MyEnum.*;
 
 /**
  DHRepInfo ::= SEQUENCE {
@@ -32,8 +34,20 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  }
  */
 public class DHRepInfo extends KrbSequenceType {
-    private static final int DH_SIGNED_DATA = 0;
-    private static final int SERVER_DH_NONCE = 1;
+    protected static enum MyEnum implements EnumType {
+        DH_SIGNED_DATA,
+        SERVER_DH_NONCE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ImplicitField(DH_SIGNED_DATA, Asn1OctetString.class),

@@ -78,6 +78,11 @@ public enum PaDataType implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static PaDataType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

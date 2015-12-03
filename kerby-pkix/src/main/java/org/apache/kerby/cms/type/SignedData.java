@@ -20,8 +20,10 @@
 package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ImplicitField;
+import static org.apache.kerby.cms.type.SignedData.MyEnum.*;
 
 /**
  * Ref. RFC 5652
@@ -38,12 +40,24 @@ import org.apache.kerby.asn1.ImplicitField;
  *
  */
 public class SignedData extends Asn1SequenceType {
-    private static final int CMS_VERSION = 0;
-    private static final int DIGEST_ALGORITHMS = 1;
-    private static final int ENCAP_CONTENT_INFO = 2;
-    private static final int CERTIFICATES = 3;
-    private static final int CRLS = 4;
-    private static final int SIGNER_INFOS = 5;
+    protected static enum MyEnum implements EnumType {
+        CMS_VERSION,
+        DIGEST_ALGORITHMS,
+        ENCAP_CONTENT_INFO,
+        CERTIFICATES,
+        CRLS,
+        SIGNER_INFOS;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
         new Asn1FieldInfo(CMS_VERSION, CmsVersion.class),

@@ -43,6 +43,11 @@ enum DigestedObjectEnum implements EnumType {
     public int getValue() {
         return ordinal();
     }
+
+    @Override
+    public String getName() {
+        return name();
+    }
 }
 
 public class DigestedObjectType extends Asn1Enumerated<DigestedObjectEnum> {

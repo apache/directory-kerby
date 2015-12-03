@@ -19,12 +19,14 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.cms.type.ContentInfo.MyEnum.*;
 
 /**
  * Ref. RFC 5652
@@ -39,8 +41,20 @@ import org.apache.kerby.asn1.ExplicitField;
  * </pre>
  */
 public class ContentInfo extends Asn1SequenceType {
-    private static final int CONTENT_TYPE = 0;
-    private static final int CONTENT = 1;
+    protected static enum MyEnum implements EnumType {
+        CONTENT_TYPE,
+        CONTENT;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
         new Asn1FieldInfo(CONTENT_TYPE, Asn1ObjectIdentifier.class),

@@ -46,6 +46,11 @@ public enum ApOption implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static ApOption fromValue(int value) {
         for (EnumType e : values()) {
             if (e.getValue() == value) {

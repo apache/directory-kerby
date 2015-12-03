@@ -39,6 +39,11 @@ public enum TokenFlag implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static TokenFlag fromValue(int value) {
         for (EnumType e : values()) {
             if (e.getValue() == value) {

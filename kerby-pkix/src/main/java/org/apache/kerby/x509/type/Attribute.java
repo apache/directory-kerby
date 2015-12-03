@@ -20,8 +20,10 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.Attribute.MyEnum.*;
 
 /**
  * <pre>
@@ -32,8 +34,20 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * </pre>
  */
 public class Attribute extends Asn1SequenceType {
-    private static final int ATTR_TYPE = 0;
-    private static final int ATTR_VALUES = 1;
+    protected static enum MyEnum implements EnumType {
+        ATTR_TYPE,
+        ATTR_VALUES;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(ATTR_TYPE, Asn1ObjectIdentifier.class),

@@ -105,6 +105,7 @@ public enum CheckSumType implements EnumType {
         return value;
     }
 
+    @Override
     public String getName() {
         return name;
     }

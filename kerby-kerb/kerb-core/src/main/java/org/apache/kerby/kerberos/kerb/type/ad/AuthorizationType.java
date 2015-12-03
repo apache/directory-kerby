@@ -129,6 +129,11 @@ public enum AuthorizationType implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static AuthorizationType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

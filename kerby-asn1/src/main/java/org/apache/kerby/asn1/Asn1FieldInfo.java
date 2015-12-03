@@ -25,7 +25,7 @@ import org.apache.kerby.asn1.type.Asn1Type;
  * Representing a field in a ASN1 collection or choice.
  */
 public class Asn1FieldInfo {
-    private int index;
+    private EnumType index;
     private int tagNo = -1; // Indicate a non-tagged field
     private boolean isImplicit;
     private Class<? extends Asn1Type> type;
@@ -36,9 +36,9 @@ public class Asn1FieldInfo {
      * @param type
      * @param isImplicit
      */
-    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type,
+    public Asn1FieldInfo(EnumType index, Class<? extends Asn1Type> type,
                          boolean isImplicit) {
-        this(index, index, type, isImplicit);
+        this(index, index.getValue(), type, isImplicit);
     }
 
     /**
@@ -48,7 +48,7 @@ public class Asn1FieldInfo {
      * @param type
      * @param isImplicit
      */
-    public Asn1FieldInfo(int index, int tagNo, Class<? extends Asn1Type> type,
+    public Asn1FieldInfo(EnumType index, int tagNo, Class<? extends Asn1Type> type,
                          boolean isImplicit) {
         this.index = index;
         this.tagNo = tagNo;
@@ -61,7 +61,7 @@ public class Asn1FieldInfo {
      * @param index
      * @param type
      */
-    public Asn1FieldInfo(int index, Class<? extends Asn1Type> type) {
+    public Asn1FieldInfo(EnumType index, Class<? extends Asn1Type> type) {
         this.index = index;
         this.type = type;
         this.tagNo = -1; // Indicate a non-tagged field
@@ -83,7 +83,7 @@ public class Asn1FieldInfo {
         return tagNo;
     }
 
-    public int getIndex() {
+    public EnumType getIndex() {
         return index;
     }
 

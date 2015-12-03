@@ -39,6 +39,11 @@ public enum FastOption implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static FastOption fromValue(int value) {
         for (EnumType e : values()) {
             if (e.getValue() == value) {

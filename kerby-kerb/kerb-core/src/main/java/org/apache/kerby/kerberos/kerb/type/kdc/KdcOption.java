@@ -67,6 +67,11 @@ public enum KdcOption implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static KdcOption fromValue(int value) {
         for (EnumType e : values()) {
             if (e.getValue() == value) {

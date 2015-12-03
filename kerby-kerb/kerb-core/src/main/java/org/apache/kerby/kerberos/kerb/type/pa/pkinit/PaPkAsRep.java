@@ -19,11 +19,13 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.ImplicitField;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep.MyEnum.*;
 
 /**
  PA-PK-AS-REP ::= CHOICE {
@@ -32,8 +34,20 @@ import org.apache.kerby.asn1.ImplicitField;
  }
  */
 public class PaPkAsRep extends Asn1Choice {
-    private static final int DH_INFO = 0;
-    private static final int ENCKEY_PACK = 1;
+    protected static enum MyEnum implements EnumType {
+        DH_INFO,
+        ENCKEY_PACK;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(DH_INFO, DHRepInfo.class),

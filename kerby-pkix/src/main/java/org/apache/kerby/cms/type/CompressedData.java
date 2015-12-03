@@ -20,8 +20,10 @@
 package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
+import static org.apache.kerby.cms.type.CompressedData.MyEnum.*;
 
 /** 
  * Ref. RFC 3274
@@ -35,10 +37,21 @@ import org.apache.kerby.x509.type.AlgorithmIdentifier;
  * </pre>
  */
 public class CompressedData extends Asn1SequenceType {
+    protected static enum MyEnum implements EnumType {
+        VERSION,
+        COMPRESSION_ALGORITHM,
+        ENCAP_CONTENT_INFO;
 
-    private static final int VERSION = 0;
-    private static final int COMPRESSION_ALGORITHM = 1;
-    private static final int ENCAP_CONTENT_INFO = 2;
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(VERSION, CmsVersion.class),

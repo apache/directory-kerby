@@ -29,7 +29,7 @@ public abstract class KrbSequenceType extends Asn1SequenceType {
         super(fieldInfos);
     }
 
-    protected int getFieldAsInt(int index) {
+    protected int getFieldAsInt(EnumType index) {
         Integer value = getFieldAsInteger(index);
         if (value != null) {
             return value.intValue();
@@ -37,19 +37,19 @@ public abstract class KrbSequenceType extends Asn1SequenceType {
         return -1;
     }
 
-    protected void setFieldAsString(int index, String value) {
+    protected void setFieldAsString(EnumType index, String value) {
         setFieldAs(index, new KerberosString(value));
     }
 
-    protected KerberosTime getFieldAsTime(int index) {
+    protected KerberosTime getFieldAsTime(EnumType index) {
         return getFieldAs(index, KerberosTime.class);
     }
 
-    protected void setFieldAsTime(int index, long value) {
+    protected void setFieldAsTime(EnumType index, long value) {
         setFieldAs(index, new KerberosTime(value));
     }
 
-    protected void setField(int index, EnumType value) {
+    protected void setField(EnumType index, EnumType value) {
         setFieldAsInt(index, value.getValue());
     }
 }

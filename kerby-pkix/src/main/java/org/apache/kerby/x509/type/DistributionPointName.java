@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.x500.type.RelativeDistinguishedName;
+import static org.apache.kerby.x509.type.DistributionPointName.MyEnum.*;
 
 /**
  *
@@ -34,8 +36,20 @@ import org.apache.kerby.x500.type.RelativeDistinguishedName;
  * </pre>
  */
 public class DistributionPointName extends Asn1Choice {
-    private static final int FULL_NAME = 0;
-    private static final int NAME_RELATIVE_TO_CRL_ISSUER = 1;
+    protected static enum MyEnum implements EnumType {
+        FULL_NAME,
+        NAME_RELATIVE_TO_CRL_ISSUER;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new ExplicitField(FULL_NAME, GeneralNames.class),

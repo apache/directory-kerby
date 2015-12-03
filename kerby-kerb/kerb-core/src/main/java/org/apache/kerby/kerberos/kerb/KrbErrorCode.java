@@ -122,6 +122,11 @@ public enum KrbErrorCode implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public String getMessage() {
         return message;
     }

@@ -36,6 +36,11 @@ public enum ArmorType implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static ArmorType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

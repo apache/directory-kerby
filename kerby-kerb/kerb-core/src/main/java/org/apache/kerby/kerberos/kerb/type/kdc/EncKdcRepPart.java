@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.type.kdc;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
@@ -30,6 +31,7 @@ import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.LastReq;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.TicketFlags;
+import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.*;
 
 /**
  EncKDCRepPart   ::= SEQUENCE {
@@ -48,18 +50,30 @@ import org.apache.kerby.kerberos.kerb.type.ticket.TicketFlags;
  }
  */
 public abstract class EncKdcRepPart extends KrbAppSequenceType {
-    private static final int KEY = 0;
-    private static final int LAST_REQ = 1;
-    private static final int NONCE = 2;
-    private static final int KEY_EXPIRATION = 3;
-    private static final int FLAGS = 4;
-    private static final int AUTHTIME = 5;
-    private static final int STARTTIME = 6;
-    private static final int ENDTIME = 7;
-    private static final int RENEW_TILL = 8;
-    private static final int SREALM = 9;
-    private static final int SNAME = 10;
-    private static final int CADDR = 11;
+    protected static enum MyEnum implements EnumType {
+        KEY,
+        LAST_REQ,
+        NONCE,
+        KEY_EXPIRATION,
+        FLAGS,
+        AUTHTIME,
+        STARTTIME,
+        ENDTIME,
+        RENEW_TILL,
+        SREALM,
+        SNAME,
+        CADDR;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(KEY, EncryptionKey.class),

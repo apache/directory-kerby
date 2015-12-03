@@ -36,6 +36,11 @@ public enum TokenFormat implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static TokenFormat fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

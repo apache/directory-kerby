@@ -54,6 +54,11 @@ enum ReasonFlagsEnum implements EnumType {
     public int getValue() {
         return ordinal();
     }
+
+    @Override
+    public String getName() {
+        return name();
+    }
 }
 
 public class ReasonFlags extends Asn1Flags {

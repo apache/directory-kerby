@@ -19,9 +19,11 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.IssuerSerial.MyEnum.*;
 
 /**
  * <pre>
@@ -33,9 +35,21 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * </pre>
  */
 public class IssuerSerial extends Asn1SequenceType {
-    private static final int ISSUER = 0;
-    private static final int SERIAL = 1;
-    private static final int ISSUER_UID = 2;
+    protected static enum MyEnum implements EnumType {
+        ISSUER,
+        SERIAL,
+        ISSUER_UID;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(ISSUER, GeneralNames.class),

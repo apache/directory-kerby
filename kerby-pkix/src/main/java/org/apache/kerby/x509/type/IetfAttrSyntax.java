@@ -20,8 +20,10 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.x509.type.IetfAttrSyntax.MyEnum.*;
 
 /**
  * Ref. RFC3281
@@ -39,8 +41,20 @@ import org.apache.kerby.asn1.ExplicitField;
  * </pre>
  */
 public class IetfAttrSyntax extends Asn1SequenceType {
-    public static final int POLICY_AUTHORITY = 0;
-    public static final int VALUES = 1;
+    protected static enum MyEnum implements EnumType {
+        POLICY_AUTHORITY,
+        VALUES;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new ExplicitField(POLICY_AUTHORITY, GeneralNames.class),

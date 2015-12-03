@@ -31,7 +31,7 @@ public class ExplicitField extends Asn1FieldInfo {
      * @param index
      * @param type
      */
-    public ExplicitField(int index, int tagNo, Class<? extends Asn1Type> type) {
+    public ExplicitField(EnumType index, int tagNo, Class<? extends Asn1Type> type) {
         super(index, tagNo, type, false);
     }
 
@@ -40,7 +40,7 @@ public class ExplicitField extends Asn1FieldInfo {
      * @param index
      * @param type
      */
-    public ExplicitField(int index, Class<? extends Asn1Type> type) {
-        super(index, index, type, false);
+    public ExplicitField(EnumType index, Class<? extends Asn1Type> type) {
+        super(index, index.getValue(), type, false);
     }
 }

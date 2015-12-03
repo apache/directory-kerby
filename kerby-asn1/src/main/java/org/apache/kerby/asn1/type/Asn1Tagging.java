@@ -100,6 +100,6 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
 
     @Override
     public String toStr() {
-        return "tagging";
+        return getValue().toStr();
     }
 }

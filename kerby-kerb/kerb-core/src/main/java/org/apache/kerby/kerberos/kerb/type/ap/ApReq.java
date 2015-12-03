@@ -20,12 +20,14 @@
 package org.apache.kerby.kerberos.kerb.type.ap;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
+import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.*;
 
 /**
  AP-REQ          ::= [APPLICATION 14] SEQUENCE {
@@ -37,9 +39,23 @@ import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
  }
  */
 public class ApReq extends KrbMessage {
-    private static final int AP_OPTIONS = 2;
-    private static final int TICKET = 3;
-    private static final int AUTHENTICATOR = 4;
+    protected static enum MyEnum implements EnumType {
+        PVNO,
+        MSG_TYPE,
+        AP_OPTIONS,
+        TICKET,
+        AUTHENTICATOR;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(PVNO, Asn1Integer.class),

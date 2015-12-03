@@ -20,9 +20,11 @@
 package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x500.type.Name;
+import static org.apache.kerby.cms.type.IssuerAndSerialNumber.MyEnum.*;
 
 /**
  * Ref. RFC5652
@@ -36,8 +38,20 @@ import org.apache.kerby.x500.type.Name;
  * </pre>
  */
 public class IssuerAndSerialNumber extends Asn1SequenceType {
-    private static final int ISSUER = 0;
-    private static final int SERIAL_NUMBER = 1;
+    protected static enum MyEnum implements EnumType {
+        ISSUER,
+        SERIAL_NUMBER;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
         new Asn1FieldInfo(ISSUER, Name.class),

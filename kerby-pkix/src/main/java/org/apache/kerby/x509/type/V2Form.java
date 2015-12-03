@@ -20,8 +20,10 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.x509.type.V2Form.MyEnum.*;
 
 /**
  * Produce an object suitable for an ASN1OutputStream.
@@ -37,9 +39,21 @@ import org.apache.kerby.asn1.ExplicitField;
  * </pre>
  */
 public class V2Form extends Asn1SequenceType {
-    private static final int ISSUER_NAME = 0;
-    private static final int BASE_CERTIFICATE_ID = 1;
-    private static final int OBJECT_DIGEST_INFO = 2;
+    protected static enum MyEnum implements EnumType {
+        ISSUER_NAME,
+        BASE_CERTIFICATE_ID,
+        OBJECT_DIGEST_INFO;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(ISSUER_NAME, GeneralNames.class),

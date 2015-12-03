@@ -56,6 +56,11 @@ enum CRLReasonEnum implements EnumType {
     public int getValue() {
         return ordinal();
     }
+
+    @Override
+    public String getName() {
+        return name();
+    }
 }
 
 public class CRLReason extends Asn1Enumerated<CRLReasonEnum> {

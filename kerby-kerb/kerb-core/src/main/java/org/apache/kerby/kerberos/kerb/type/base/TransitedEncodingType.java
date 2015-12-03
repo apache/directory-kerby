@@ -37,6 +37,11 @@ public enum TransitedEncodingType implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static TransitedEncodingType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

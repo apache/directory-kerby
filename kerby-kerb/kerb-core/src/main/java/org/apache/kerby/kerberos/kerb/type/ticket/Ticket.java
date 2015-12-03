@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.type.ticket;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
@@ -27,6 +28,7 @@ import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.*;
 
 /**
  Ticket          ::= [APPLICATION 1] SEQUENCE {
@@ -40,10 +42,22 @@ public class Ticket extends KrbAppSequenceType {
     public static final int TKT_KVNO = KrbConstant.KRB_V5;
     public static final int TAG = 1;
 
-    private static final int TKT_VNO = 0;
-    private static final int REALM = 1;
-    private static final int SNAME = 2;
-    private static final int ENC_PART = 3;
+    protected static enum MyEnum implements EnumType {
+        TKT_VNO,
+        REALM,
+        SNAME,
+        ENC_PART;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(TKT_VNO, 0, Asn1Integer.class),

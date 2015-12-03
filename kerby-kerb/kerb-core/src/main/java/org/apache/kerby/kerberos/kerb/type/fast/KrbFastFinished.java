@@ -20,11 +20,13 @@
 package org.apache.kerby.kerberos.kerb.type.fast;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastFinished.MyEnum.*;
 
 /**
  KrbFastFinished ::= SEQUENCE {
@@ -43,9 +45,21 @@ import org.apache.kerby.kerberos.kerb.type.pa.PaData;
  }
  */
 public class KrbFastFinished extends KrbSequenceType {
-    private static final int FAST_OPTIONS = 0;
-    private static final int PADATA = 1;
-    private static final int REQ_BODY = 2;
+    protected static enum MyEnum implements EnumType {
+        FAST_OPTIONS,
+        PADATA,
+        REQ_BODY;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(FAST_OPTIONS, KrbFastArmor.class),

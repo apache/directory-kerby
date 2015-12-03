@@ -24,4 +24,5 @@ package org.apache.kerby.asn1;
  */
 public interface EnumType {
     int getValue();
+    String getName();
 }

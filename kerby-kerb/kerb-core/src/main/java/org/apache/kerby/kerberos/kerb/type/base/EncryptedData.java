@@ -20,10 +20,12 @@
 package org.apache.kerby.kerberos.kerb.type.base;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.base.EncryptedData.MyEnum.*;
 
 import java.util.Arrays;
 
@@ -35,9 +37,21 @@ import java.util.Arrays;
  }
  */
 public class EncryptedData extends KrbSequenceType {
-    private static final int ETYPE = 0;
-    private static final int KVNO = 1;
-    private static final int CIPHER = 2;
+    protected static enum MyEnum implements EnumType {
+        ETYPE,
+        KVNO,
+        CIPHER;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(ETYPE, 0, Asn1Integer.class),

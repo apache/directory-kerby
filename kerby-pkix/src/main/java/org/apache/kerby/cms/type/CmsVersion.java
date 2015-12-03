@@ -39,6 +39,11 @@ enum CmsVersionEnum implements EnumType {
     public int getValue() {
         return ordinal();
     }
+
+    @Override
+    public String getName() {
+        return name();
+    }
 }
 
 public class CmsVersion extends Asn1Integer {

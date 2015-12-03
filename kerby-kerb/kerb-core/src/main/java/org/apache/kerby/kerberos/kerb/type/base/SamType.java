@@ -52,6 +52,11 @@ public enum SamType implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static SamType fromValue(Integer value) {
         if (value != null) {
             for (SamType st : SamType.values()) {

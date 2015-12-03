@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.type.ap;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
@@ -29,6 +30,7 @@ import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.*;
 
 /**
  Authenticator   ::= [APPLICATION 2] SEQUENCE  {
@@ -45,15 +47,28 @@ import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
  */
 public class Authenticator extends KrbAppSequenceType {
     public static final int TAG = 2;
-    private static final int AUTHENTICATOR_VNO = 0;
-    private static final int CREALM = 1;
-    private static final int CNAME = 2;
-    private static final int CKSUM = 3;
-    private static final int CUSEC = 4;
-    private static final int CTIME = 5;
-    private static final int SUBKEY = 6;
-    private static final int SEQ_NUMBER = 7;
-    private static final int AUTHORIZATION_DATA = 8;
+
+    protected static enum MyEnum implements EnumType {
+        AUTHENTICATOR_VNO,
+        CREALM,
+        CNAME,
+        CKSUM,
+        CUSEC,
+        CTIME,
+        SUBKEY,
+        SEQ_NUMBER,
+        AUTHORIZATION_DATA;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(AUTHENTICATOR_VNO, 0, Asn1Integer.class),

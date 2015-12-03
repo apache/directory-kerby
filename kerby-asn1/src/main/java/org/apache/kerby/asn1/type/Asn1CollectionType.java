@@ -20,6 +20,7 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
 
@@ -130,20 +131,20 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
 
     protected abstract Asn1Collection createCollection();
 
-    protected <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
-        Asn1Type value = fields[index];
+    protected <T extends Asn1Type> T getFieldAs(EnumType index, Class<T> t) {
+        Asn1Type value = fields[index.getValue()];
         if (value == null) {
             return null;
         }
         return (T) value;
     }
 
-    protected void setFieldAs(int index, Asn1Type value) {
-        fields[index] = value;
+    protected void setFieldAs(EnumType index, Asn1Type value) {
+        fields[index.getValue()] = value;
     }
 
-    protected String getFieldAsString(int index) {
-        Asn1Type value = fields[index];
+    protected String getFieldAsString(EnumType index) {
+        Asn1Type value = fields[index.getValue()];
         if (value == null) {
             return null;
         }
@@ -155,7 +156,7 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
         throw new RuntimeException("The targeted field type isn't of string");
     }
 
-    protected byte[] getFieldAsOctets(int index) {
+    protected byte[] getFieldAsOctets(EnumType index) {
         Asn1OctetString value = getFieldAs(index, Asn1OctetString.class);
         if (value != null) {
             return value.getValue();
@@ -163,12 +164,12 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
         return null;
     }
 
-    protected void setFieldAsOctets(int index, byte[] bytes) {
+    protected void setFieldAsOctets(EnumType index, byte[] bytes) {
         Asn1OctetString value = new Asn1OctetString(bytes);
         setFieldAs(index, value);
     }
 
-    protected Integer getFieldAsInteger(int index) {
+    protected Integer getFieldAsInteger(EnumType index) {
         Asn1Integer value = getFieldAs(index, Asn1Integer.class);
         if (value != null && value.getValue() != null) {
             return value.getValue().intValue();
@@ -176,12 +177,12 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
         return null;
     }
 
-    protected void setFieldAsInt(int index, int value) {
+    protected void setFieldAsInt(EnumType index, int value) {
         setFieldAs(index, new Asn1Integer(value));
     }
 
-    protected <T extends Asn1Type> T getFieldAsAny(int index, Class<T> t) {
-        Asn1Type value = fields[index];
+    protected <T extends Asn1Type> T getFieldAsAny(EnumType index, Class<T> t) {
+        Asn1Type value = fields[index.getValue()];
         if (value != null && value instanceof Asn1Any) {
             Asn1Any any = (Asn1Any) value;
             return any.getValueAs(t);
@@ -190,7 +191,7 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
         return null;
     }
 
-    protected void setFieldAsAny(int index, Asn1Type value) {
+    protected void setFieldAsAny(EnumType index, Asn1Type value) {
         if (value != null) {
             setFieldAs(index, new Asn1Any(value));
         }
@@ -198,6 +199,15 @@ public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1Collection
 
     @Override
     public String toStr() {
-        return "[collection-type]";
+        StringBuffer str = new StringBuffer();
+        str.append(this.getClass().getSimpleName() + "\n");
+        for (int i = 0; i < fieldInfos.length; i++) {
+            str.append("Field name: ");
+            str.append(fieldInfos[i].getIndex().getName().replace("_", "-").toLowerCase() + "  ");
+            str.append("Field value: ");
+            str.append(fields[i].toStr() + "\n");
+        }
+
+        return str.toString();
     }
 }

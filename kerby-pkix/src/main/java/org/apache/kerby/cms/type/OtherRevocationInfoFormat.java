@@ -19,11 +19,13 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
+import static org.apache.kerby.cms.type.OtherRevocationInfoFormat.MyEnum.*;
 
 /**
  * OtherRevocationInfoFormat ::= SEQUENCE {
@@ -32,8 +34,20 @@ import org.apache.kerby.asn1.type.Asn1Type;
  * }
  */
 public class OtherRevocationInfoFormat extends Asn1SequenceType {
-    private static final int OTHER_REV_INFO_FORMAT = 0;
-    private static final int OTHER_REV_INFO = 1;
+    protected static enum MyEnum implements EnumType {
+        OTHER_REV_INFO_FORMAT,
+        OTHER_REV_INFO;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(OTHER_REV_INFO_FORMAT, Asn1ObjectIdentifier.class),

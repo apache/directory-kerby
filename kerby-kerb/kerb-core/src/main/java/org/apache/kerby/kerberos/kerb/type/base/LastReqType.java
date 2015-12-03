@@ -49,6 +49,11 @@ public enum LastReqType implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static LastReqType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

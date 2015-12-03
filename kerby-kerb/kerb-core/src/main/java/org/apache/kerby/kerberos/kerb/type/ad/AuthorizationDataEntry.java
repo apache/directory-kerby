@@ -20,10 +20,12 @@
 package org.apache.kerby.kerberos.kerb.type.ad;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry.MyEnum.*;
 
 /**
  AuthorizationData       ::= SEQUENCE OF SEQUENCE {
@@ -32,8 +34,20 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  }
  */
 public class AuthorizationDataEntry extends KrbSequenceType {
-    private static final int AD_TYPE = 0;
-    private static final int AD_DATA = 1;
+    protected static enum MyEnum implements EnumType {
+        AD_TYPE,
+        AD_DATA;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(AD_TYPE, 0, Asn1Integer.class),

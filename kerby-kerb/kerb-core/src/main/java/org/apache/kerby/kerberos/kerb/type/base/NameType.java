@@ -40,6 +40,11 @@ public enum NameType implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static NameType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

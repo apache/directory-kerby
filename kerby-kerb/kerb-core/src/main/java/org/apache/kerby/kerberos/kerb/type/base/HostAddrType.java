@@ -86,6 +86,11 @@ public enum HostAddrType implements EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static HostAddrType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {
