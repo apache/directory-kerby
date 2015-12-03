@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.fast;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum FastOption implements Asn1EnumType {
+public enum FastOption implements EnumType {
     NONE(-1),
     RESERVED(0),
     HIDE_CLIENT_NAMES(1),
@@ -40,7 +40,7 @@ public enum FastOption implements Asn1EnumType {
     }
 
     public static FastOption fromValue(int value) {
-        for (Asn1EnumType e : values()) {
+        for (EnumType e : values()) {
             if (e.getValue() == value) {
                 return (FastOption) e;
             }

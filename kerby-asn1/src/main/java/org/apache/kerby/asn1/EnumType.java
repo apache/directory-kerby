@@ -17,11 +17,11 @@
  *  under the License.
  *
  */
-package org.apache.kerby.asn1.type;
+package org.apache.kerby.asn1;
 
 /**
  * A helper interface used by Asn1Enumerated.
  */
-public interface Asn1EnumType {
+public interface EnumType {
     int getValue();
 }

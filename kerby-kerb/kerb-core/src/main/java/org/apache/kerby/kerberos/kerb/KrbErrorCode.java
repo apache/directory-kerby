@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum KrbErrorCode implements Asn1EnumType {
+public enum KrbErrorCode implements EnumType {
     KDC_ERR_NONE(0, "No error"),
     KDC_ERR_NAME_EXP(1, "Client's entry in database has expired"),
     KDC_ERR_SERVICE_EXP(2, "Server's entry in database has expired"),
@@ -108,7 +108,7 @@ public enum KrbErrorCode implements Asn1EnumType {
 
     public static KrbErrorCode fromValue(Integer value) {
         if (value != null) {
-            for (Asn1EnumType e : values()) {
+            for (EnumType e : values()) {
                 if (e.getValue() == value.intValue()) {
                     return (KrbErrorCode) e;
                 }

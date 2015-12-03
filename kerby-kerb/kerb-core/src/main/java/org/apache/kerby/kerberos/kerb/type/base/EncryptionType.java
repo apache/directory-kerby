@@ -19,12 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
 /**
  * According to krb5.hin
  */
-public enum EncryptionType implements Asn1EnumType {
+public enum EncryptionType implements EnumType {
 
     NONE(0, "none", "None encryption type"),
 
@@ -118,7 +118,7 @@ public enum EncryptionType implements Asn1EnumType {
 
     public static EncryptionType fromValue(Integer value) {
         if (value != null) {
-            for (Asn1EnumType e : values()) {
+            for (EnumType e : values()) {
                 if (e.getValue() == value) {
                     return (EncryptionType) e;
                 }

@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.ad;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum AuthorizationType implements Asn1EnumType {
+public enum AuthorizationType implements EnumType {
     /**
      * Constant for the "null" authorization type.
      */
@@ -131,7 +131,7 @@ public enum AuthorizationType implements Asn1EnumType {
 
     public static AuthorizationType fromValue(Integer value) {
         if (value != null) {
-            for (Asn1EnumType e : values()) {
+            for (EnumType e : values()) {
                 if (e.getValue() == value.intValue()) {
                     return (AuthorizationType) e;
                 }

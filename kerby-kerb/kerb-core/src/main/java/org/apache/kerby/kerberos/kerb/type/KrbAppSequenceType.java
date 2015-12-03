@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.type;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.TaggingSequence;
 
@@ -51,7 +51,7 @@ public abstract class KrbAppSequenceType extends TaggingSequence {
         setFieldAs(index, new KerberosTime(value));
     }
 
-    protected void setField(int index, Asn1EnumType krbEnum) {
+    protected void setField(int index, EnumType krbEnum) {
         setFieldAsInt(index, krbEnum.getValue());
     }
 }

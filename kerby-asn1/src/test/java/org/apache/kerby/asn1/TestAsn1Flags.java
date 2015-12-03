@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
 import org.apache.kerby.asn1.type.Asn1Flags;
 import org.junit.Before;
 import org.junit.Rule;
@@ -41,7 +40,7 @@ public class TestAsn1Flags {
   public static final int FLAG_4 = 16;
   public static final int FLAG_5 = 32;
   
-  public enum TestEnum implements Asn1EnumType {
+  public enum TestEnum implements EnumType {
     FLAG_0(0x00000001),
     FLAG_1(0x00000002),
     FLAG_2(0x00000004),

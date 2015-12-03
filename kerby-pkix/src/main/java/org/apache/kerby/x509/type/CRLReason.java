@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Enumerated;
 
 /**
@@ -40,7 +40,7 @@ import org.apache.kerby.asn1.type.Asn1Enumerated;
  * </pre>
  */
 
-enum CRLReasonEnum implements Asn1EnumType {
+enum CRLReasonEnum implements EnumType {
     UNSPECIFIED,
     KEY_COMPROMISE,
     CA_COMPROMISE,
@@ -60,7 +60,7 @@ enum CRLReasonEnum implements Asn1EnumType {
 
 public class CRLReason extends Asn1Enumerated<CRLReasonEnum> {
     @Override
-    public Asn1EnumType[] getAllEnumValues() {
+    public EnumType[] getAllEnumValues() {
         return CRLReasonEnum.values();
     }
 }

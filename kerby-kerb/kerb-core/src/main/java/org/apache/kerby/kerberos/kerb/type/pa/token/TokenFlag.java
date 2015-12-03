@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa.token;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum TokenFlag implements Asn1EnumType {
+public enum TokenFlag implements EnumType {
     NONE(-1),
     ID_TOKEN_REQUIRED(0x40000000),
     AC_TOKEN_REQUIRED(0x20000000),
@@ -40,7 +40,7 @@ public enum TokenFlag implements Asn1EnumType {
     }
 
     public static TokenFlag fromValue(int value) {
-        for (Asn1EnumType e : values()) {
+        for (EnumType e : values()) {
             if (e.getValue() == value) {
                 return (TokenFlag) e;
             }

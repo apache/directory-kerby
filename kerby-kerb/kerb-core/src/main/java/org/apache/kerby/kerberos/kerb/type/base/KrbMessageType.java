@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum KrbMessageType implements Asn1EnumType {
+public enum KrbMessageType implements EnumType {
     NONE(-1),
     AS_REQ(10),
     AS_REP(11),
@@ -47,7 +47,7 @@ public enum KrbMessageType implements Asn1EnumType {
 
     public static KrbMessageType fromValue(Integer value) {
         if (value != null) {
-            for (Asn1EnumType e : values()) {
+            for (EnumType e : values()) {
                 if (e.getValue() == value.intValue()) {
                     return (KrbMessageType) e;
                 }

@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.cms.type;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 
 /**
@@ -27,7 +27,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
  * { v0(0), v1(1), v2(2), v3(3), v4(4), v5(5) }
  */
 
-enum CmsVersionEnum implements Asn1EnumType {
+enum CmsVersionEnum implements EnumType {
     V0,
     V1,
     V2,
