@@ -30,15 +30,17 @@ import java.nio.ByteBuffer;
 /**
  * For collection type that may consist of tagged fields
  */
-public abstract class Asn1CollectionType extends AbstractAsn1Type<Asn1CollectionType> {
-    private Asn1FieldInfo[] fieldInfos;
-    private Asn1Type[] fields;
+public abstract class Asn1CollectionType
+    extends AbstractAsn1Type<Asn1CollectionType> {
+    private final Asn1FieldInfo[] fieldInfos;
+    private final Asn1Type[] fields;
 
-    public Asn1CollectionType(UniversalTag universalTag, Asn1FieldInfo[] fieldInfos) {
+    public Asn1CollectionType(UniversalTag universalTag,
+                              final Asn1FieldInfo[] fieldInfos) {
         super(universalTag);
 
         setValue(this);
-        this.fieldInfos = fieldInfos.clone();
+        this.fieldInfos = fieldInfos;
         this.fields = new Asn1Type[fieldInfos.length];
         usePrimitive(false);
     }
