@@ -287,19 +287,4 @@ public abstract class Asn1Object implements Asn1Type {
             decode(content);
         }
     }
-
-    public static Asn1Header readHeader(ByteBuffer content) throws IOException {
-        Asn1Reader1 reader = new Asn1Reader1(content);
-        return reader.readHeader();
-    }
-
-    public static Asn1Item readOne(ByteBuffer content) throws IOException {
-        Asn1Reader1 reader = new Asn1Reader1(content);
-        Asn1Header header = reader.readHeader();
-
-        Asn1Item result = new Asn1Item(header.getTag(), header.getValueBuffer());
-        result.useDefinitiveLength(header.isDefinitiveLength());
-
-        return result;
-    }
 }

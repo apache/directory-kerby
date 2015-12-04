@@ -19,17 +19,23 @@
  */
 package org.apache.kerby.asn1;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 
-public class TestAsn1Input {
+public class TestAsn1Dump {
 
     @Test
     public void testDecoding() throws IOException {
-        //PersonnelRecord expected = TestData.createSamplePersonnel();
-        byte[] data = TestData.createSammplePersonnelEncodingData();
-        //Asn1InputBuffer ib = new Asn1InputBuffer(data);
-        Asn1Dump.dump(data);
+        try {
+            PersonnelRecord pr = TestData.createSamplePersonnel();
+            Asn1.dump(pr);
+
+            byte[] data = TestData.createSammplePersonnelEncodingData();
+            Asn1.dump(data);
+        } catch (Exception e) {
+            Assert.fail();
+        }
     }
 }

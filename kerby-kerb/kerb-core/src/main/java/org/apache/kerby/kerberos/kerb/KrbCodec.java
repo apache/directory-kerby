@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb;
 
+import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.Tag;
-import org.apache.kerby.asn1.type.Asn1Object;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.type.base.KrbError;
@@ -65,7 +65,7 @@ public class KrbCodec {
     }
 
     public static KrbMessage decodeMessage(ByteBuffer buffer) throws IOException {
-        Asn1Header header = Asn1Object.readHeader(buffer);
+        Asn1Header header = Asn1.decodeHeader(buffer);
         Tag tag = header.getTag();
 
         KrbMessage msg;
@@ -87,6 +87,7 @@ public class KrbCodec {
         } else {
             throw new IOException("To be supported krb message type with tag: " + tag);
         }
+
         msg.decode(tag, header.getValueBuffer());
         return msg;
     }

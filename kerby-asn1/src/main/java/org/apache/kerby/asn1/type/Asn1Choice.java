@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.TaggingOption;
@@ -74,7 +75,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
     @Override
     public void decode(ByteBuffer content) throws IOException {
         int foundPos = -1;
-        Asn1Item item = readOne(content);
+        Asn1Item item = (Asn1Item) Asn1.decode(content);
         for (int i = 0; i < fieldInfos.length; ++i) {
             if (item.isContextSpecific()) {
                 if (fieldInfos[i].getTagNo() == item.tagNo()) {

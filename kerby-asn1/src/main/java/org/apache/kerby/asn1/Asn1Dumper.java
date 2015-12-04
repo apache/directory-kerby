@@ -25,7 +25,7 @@ import org.apache.kerby.asn1.type.Asn1Type;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class Asn1Dumper {
+public final class Asn1Dumper {
 
     private StringBuilder builder = new StringBuilder();
 
@@ -38,8 +38,7 @@ public class Asn1Dumper {
     }
 
     public void dump(ByteBuffer content) throws IOException {
-        Asn1InputBuffer buffer = new Asn1InputBuffer(content);
-        Asn1Type value = buffer.read();
+        Asn1Type value = Asn1.decode(content);
         if (value == null) {
             return;
         }

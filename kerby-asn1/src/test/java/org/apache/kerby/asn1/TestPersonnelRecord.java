@@ -36,7 +36,6 @@ public class TestPersonnelRecord {
     @Test
     public void testEncoding() {
         PersonnelRecord pr = TestData.createSamplePersonnel();
-        Asn1Dump.dump(pr);
 
         if (verbose) {
             System.out.println("Name:");
