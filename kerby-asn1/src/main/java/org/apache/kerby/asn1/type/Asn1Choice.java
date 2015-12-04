@@ -74,7 +74,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
     @Override
     public void decode(ByteBuffer content) throws IOException {
         int foundPos = -1;
-        Asn1Item item = decodeOne(content);
+        Asn1Item item = readOne(content);
         for (int i = 0; i < fieldInfos.length; ++i) {
             if (item.isContextSpecific()) {
                 if (fieldInfos[i].getTagNo() == item.tagNo()) {
@@ -167,10 +167,5 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
 
     protected void setFieldAsInt(EnumType index, int value) {
         setFieldAs(index, new Asn1Integer(value));
-    }
-
-    @Override
-    public String toStr() {
-        return "choice";
     }
 }

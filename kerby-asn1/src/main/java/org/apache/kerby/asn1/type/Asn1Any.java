@@ -100,10 +100,5 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
 
         return result;
     }
-
-    @Override
-    public String toStr() {
-        return "any";
-    }
 }
 

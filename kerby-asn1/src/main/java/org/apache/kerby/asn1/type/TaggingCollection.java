@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1Dumpable;
+import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.Tag;
@@ -30,7 +32,9 @@ import java.nio.ByteBuffer;
  * For tagging a collection type with tagNo, either application specific or
  * context specific class
  */
-public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionType> {
+public abstract class TaggingCollection
+    extends AbstractAsn1Type<Asn1CollectionType> implements Asn1Dumpable {
+
     private Asn1Tagging<Asn1CollectionType> tagging;
     private Asn1CollectionType tagged;
 
@@ -172,7 +176,8 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
     }
 
     @Override
-    public String toStr() {
-        return tagging.toStr();
+    public void dumpWith(Asn1Dumper dumper, int indents) {
+        Asn1Type taggedValue = getValue();
+        dumper.dumpType(indents, taggedValue);
     }
 }

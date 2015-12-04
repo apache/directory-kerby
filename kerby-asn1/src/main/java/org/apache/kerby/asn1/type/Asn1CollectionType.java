@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1Dumpable;
+import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.TaggingOption;
@@ -31,7 +33,7 @@ import java.nio.ByteBuffer;
  * For collection type that may consist of tagged fields
  */
 public abstract class Asn1CollectionType
-    extends AbstractAsn1Type<Asn1CollectionType> {
+    extends AbstractAsn1Type<Asn1CollectionType> implements Asn1Dumpable {
     private final Asn1FieldInfo[] fieldInfos;
     private final Asn1Type[] fields;
 
@@ -200,16 +202,25 @@ public abstract class Asn1CollectionType
     }
 
     @Override
-    public String toStr() {
-        StringBuffer str = new StringBuffer();
-        str.append(this.getClass().getSimpleName() + "\n");
-        for (int i = 0; i < fieldInfos.length; i++) {
-            str.append("Field name: ");
-            str.append(fieldInfos[i].getIndex().getName().replace("_", "-").toLowerCase() + "  ");
-            str.append("Field value: ");
-            str.append(fields[i].toStr() + "\n");
-        }
+    public void dumpWith(Asn1Dumper dumper, int indents) {
+        String type = getClass().getSimpleName();
 
-        return str.toString();
+        dumper.indent(indents).append(type).newLine();
+
+        String fdName;
+        for (int i = 0; i < fieldInfos.length; i++) {
+            fdName = fieldInfos[i].getIndex().getName();
+            fdName = fdName.replace("_", "-").toLowerCase();
+
+            dumper.indent(indents + 4).append(fdName).append(" = ");
+
+            Asn1Type fdValue = fields[i];
+            if (fdValue == null || fdValue instanceof Asn1Simple) {
+                dumper.append((Asn1Simple<?>) fdValue).newLine();
+            } else {
+                dumper.newLine().dumpType(indents + 8, fdValue);
+                dumper.newLine();
+            }
+        }
     }
 }

@@ -36,12 +36,12 @@ import java.nio.ByteBuffer;
 public abstract class Asn1Object implements Asn1Type {
     private final Tag tag;
 
-    private int encodingLen = -1;
+    private int bodyLength = -1;
 
     // encoding options
     private EncodingType encodingType = EncodingType.BER;
     private boolean isImplicit = true;
-    private boolean isDefinitiveLength = false;
+    private boolean isDefinitiveLength = true; // by default!!
 
     /**
      * Constructor with a tag
@@ -164,12 +164,22 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public int encodingLength() {
-        if (encodingLen == -1) {
-            int bodyLen = encodingBodyLength();
-            encodingLen = Asn1Util.lengthOfTagLength(tagNo())
-                + Asn1Util.lengthOfBodyLength(bodyLen) + bodyLen;
+        return encodingHeaderLength() + getBodyLength();
+    }
+
+    private int getBodyLength() {
+        if (bodyLength == -1) {
+            bodyLength = encodingBodyLength();
         }
-        return encodingLen;
+        return bodyLength;
+    }
+
+    protected int encodingHeaderLength() {
+        int bodyLen = getBodyLength();
+        int headerLen = Asn1Util.lengthOfTagLength(tagNo());
+        headerLen += (isDefinitiveLength()
+            ? Asn1Util.lengthOfBodyLength(bodyLen) : 1);
+        return headerLen;
     }
 
     protected boolean isUniversal() {
@@ -283,7 +293,7 @@ public abstract class Asn1Object implements Asn1Type {
         return reader.readHeader();
     }
 
-    public static Asn1Item decodeOne(ByteBuffer content) throws IOException {
+    public static Asn1Item readOne(ByteBuffer content) throws IOException {
         Asn1Reader1 reader = new Asn1Reader1(content);
         Asn1Header header = reader.readHeader();
 

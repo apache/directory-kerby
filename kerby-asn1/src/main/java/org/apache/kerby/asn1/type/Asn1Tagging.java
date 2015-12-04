@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1Dumpable;
+import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Tag;
 
 import java.io.IOException;
@@ -28,7 +30,8 @@ import java.nio.ByteBuffer;
 /**
  * For tagging any Asn1Type with a tagNo
  */
-public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
+public class Asn1Tagging<T extends Asn1Type>
+    extends AbstractAsn1Type<T> implements Asn1Dumpable {
 
     public Asn1Tagging(int tagNo, T value,
                        boolean isAppSpecific, boolean isImplicit) {
@@ -99,7 +102,8 @@ public class Asn1Tagging<T extends Asn1Type> extends AbstractAsn1Type<T> {
     }
 
     @Override
-    public String toStr() {
-        return getValue().toStr();
+    public void dumpWith(Asn1Dumper dumper, int indents) {
+        Asn1Type taggedValue = getValue();
+        dumper.dumpType(indents, taggedValue);
     }
 }

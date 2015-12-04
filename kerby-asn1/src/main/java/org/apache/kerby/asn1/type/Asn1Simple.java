@@ -203,7 +203,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
     }
 
     @Override
-    public String toStr() {
+    public String toString() {
         String valueStr =
             (getValue() != null ? String.valueOf(getValue()) : "null");
         return valueStr;

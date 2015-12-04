@@ -186,11 +186,4 @@ public interface Asn1Type {
      * @throws IOException e
      */
     void taggedDecode(byte[] content, TaggingOption taggingOption) throws IOException;
-
-    /**
-     * Return a friendly string representation for this object. In primitive
-     * cases, it may be the same with toString().
-     * @return a friendly string representation
-     */
-    String toStr();
 }

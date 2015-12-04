@@ -27,11 +27,11 @@ import java.nio.ByteBuffer;
 /**
  * The Asn1 Null type
  */
-public class Asn1Null extends Asn1Simple<Object> {
+public final class Asn1Null extends Asn1Simple<Object> {
     public static final Asn1Null INSTANCE = new Asn1Null();
     private static final byte[]  EMPTY_BYTES = new byte[0];
 
-    public Asn1Null() {
+    private Asn1Null() {
         super(UniversalTag.NULL, null);
     }
 

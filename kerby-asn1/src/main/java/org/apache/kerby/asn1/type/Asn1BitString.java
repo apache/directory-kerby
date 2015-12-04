@@ -84,7 +84,7 @@ public class Asn1BitString extends Asn1Simple<byte[]> {
     }
 
     @Override
-    public String toStr() {
+    public String toString() {
         String valueStr =
             (getValue() != null ? (getValue().length + " bytes") : "null");
         return valueStr;

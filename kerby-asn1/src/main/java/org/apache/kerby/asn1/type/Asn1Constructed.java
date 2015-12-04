@@ -79,7 +79,7 @@ public class Asn1Constructed extends AbstractAsn1Type<List<Asn1Type>> {
     @Override
     protected void decodeBody(ByteBuffer content) throws IOException {
         while (content.remaining() > 0) {
-            Asn1Item item = decodeOne(content);
+            Asn1Item item = readOne(content);
             if (item != null) {
                 if (item.isSimple() && !isLazy()) {
                     item.decodeValueAsSimple();
@@ -92,7 +92,15 @@ public class Asn1Constructed extends AbstractAsn1Type<List<Asn1Type>> {
     }
 
     @Override
-    public String toStr() {
-        return "[constructed]";
+    public String toString() {
+        String typeStr;
+        if (tag().isUniversal()) {
+            typeStr = tag().universalTag().toStr();
+        } else if (tag().isAppSpecific()) {
+            typeStr = "application " + tagNo();
+        } else {
+            typeStr = "[" + tagNo() + "]";
+        }
+        return typeStr;
     }
 }

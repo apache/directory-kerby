@@ -122,4 +122,10 @@ public enum UniversalTag {
             default : return UNKNOWN;
         }
     }
+
+    public String toStr() {
+        String typeStr = toString();
+        typeStr = typeStr.replace('_', ' ');
+        return typeStr.toLowerCase();
+    }
 }
