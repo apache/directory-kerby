@@ -21,12 +21,12 @@ package org.apache.kerby.kerberos.kerb.type;
 
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.type.TaggingSequence;
+import org.apache.kerby.asn1.type.Asn1TaggingSequence;
 
 /**
  * This is for application specific sequence tagged with a number.
  */
-public abstract class KrbAppSequenceType extends TaggingSequence {
+public abstract class KrbAppSequenceType extends Asn1TaggingSequence {
     public KrbAppSequenceType(int tagNo, Asn1FieldInfo[] fieldInfos) {
         super(tagNo, fieldInfos, true, false); // Kerberos favors explicit
     }

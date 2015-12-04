@@ -24,8 +24,8 @@ import org.apache.kerby.asn1.type.Asn1SequenceOf;
 import org.apache.kerby.asn1.type.Asn1SetType;
 import org.apache.kerby.asn1.type.Asn1Tagging;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
-import org.apache.kerby.asn1.type.TaggingSequence;
-import org.apache.kerby.asn1.type.TaggingSet;
+import org.apache.kerby.asn1.type.Asn1TaggingSequence;
+import org.apache.kerby.asn1.type.Asn1TaggingSet;
 import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.*;
 import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.*;
 import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.*;
@@ -34,7 +34,7 @@ import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.*;
  * Ref. X.690-0207(http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf),
  * Annex A, A.1 ASN.1 description of the record structure
  */
-public class PersonnelRecord extends TaggingSet {
+public class PersonnelRecord extends Asn1TaggingSet {
     protected static enum MyEnum implements EnumType {
         NAME,
         TITLE,
@@ -170,7 +170,7 @@ public class PersonnelRecord extends TaggingSet {
         }
     }
 
-    public static class Name extends TaggingSequence {
+    public static class Name extends Asn1TaggingSequence {
 
         protected static enum MyEnum implements EnumType {
             GIVENNAME,

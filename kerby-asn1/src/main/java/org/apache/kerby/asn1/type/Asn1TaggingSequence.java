@@ -24,10 +24,10 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 /**
  * For tagging a sequence type with tagNo, either application specific or context specific class
  */
-public class TaggingSequence extends TaggingCollection {
+public class Asn1TaggingSequence extends Asn1TaggingCollection {
 
-    public TaggingSequence(int taggingTagNo, Asn1FieldInfo[] tags,
-                           boolean isAppSpecific, boolean isImplicit) {
+    public Asn1TaggingSequence(int taggingTagNo, Asn1FieldInfo[] tags,
+                               boolean isAppSpecific, boolean isImplicit) {
         super(taggingTagNo, tags, isAppSpecific, isImplicit);
     }
 

@@ -32,14 +32,14 @@ import java.nio.ByteBuffer;
  * For tagging a collection type with tagNo, either application specific or
  * context specific class
  */
-public abstract class TaggingCollection
+public abstract class Asn1TaggingCollection
     extends AbstractAsn1Type<Asn1CollectionType> implements Asn1Dumpable {
 
     private Asn1Tagging<Asn1CollectionType> tagging;
     private Asn1CollectionType tagged;
 
-    public TaggingCollection(int taggingTagNo, Asn1FieldInfo[] tags,
-                             boolean isAppSpecific, boolean isImplicit) {
+    public Asn1TaggingCollection(int taggingTagNo, Asn1FieldInfo[] tags,
+                                 boolean isAppSpecific, boolean isImplicit) {
         super(makeTag(isAppSpecific, taggingTagNo));
         this.tagged = createTaggedCollection(tags);
         setValue(tagged);
