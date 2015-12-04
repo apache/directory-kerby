@@ -19,54 +19,78 @@
  */
 package org.apache.kerby.asn1;
 
+import org.apache.kerby.asn1.type.Asn1Constructed;
 import org.apache.kerby.asn1.type.Asn1Item;
-import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class Asn1Dump {
 
+    public static void dump(String hexStr) throws IOException {
+        System.out.println("Dumping data:");
+        System.out.println(hexStr);
+        Asn1Dump dumper = new Asn1Dump();
+        byte[] data = HexUtil.hex2bytes(hexStr);
+        dumper.doDump(data);
+    }
+
     public static void dump(byte[] content) throws IOException {
-        String dumped = dumpAsString(content);
-        System.out.println(dumped);
+        String hexStr = HexUtil.bytesToHex(content);
+        System.out.println("Dumping data:");
+        System.out.println(hexStr);
+        Asn1Dump dumper = new Asn1Dump();
+        dumper.doDump(content);
     }
 
-    public static String dumpAsString(byte[] content) throws IOException {
-        StringBuilder sb = new StringBuilder();
+    public static void dump(ByteBuffer content) throws IOException {
+        byte[] bytes = new byte[content.remaining()];
+        content.get(bytes);
+        dump(bytes);
+    }
 
+    private StringBuilder builder = new StringBuilder();
+
+    private void doDump(byte[] content) throws IOException {
+        doDump(ByteBuffer.wrap(content));
+    }
+
+    private void doDump(ByteBuffer content) throws IOException {
         Asn1InputBuffer buffer = new Asn1InputBuffer(content);
-        Asn1Type value;
-        while (true) {
-            value = buffer.read();
-            if (value == null) {
-                break;
-            }
-            dump(value, sb);
+        Asn1Type value = buffer.read();
+        if (value == null) {
+            return;
         }
 
-        return sb.toString();
+        dumpType(0, value);
+
+        System.out.println(builder.toString());
     }
 
-    public static String dumpAsString(Asn1Type value) {
-        StringBuilder sb = new StringBuilder();
-        dump(value, sb);
-        return sb.toString();
-    }
-
-    private static void dump(Asn1Type value, StringBuilder buffer) {
-        if (value instanceof Asn1Simple) {
-            buffer.append(((Asn1Simple<?>) value).getValue().toString());
-        } else if (value instanceof Asn1Item) {
-            dump((Asn1Item) value, buffer);
+    private void dumpType(int numSpaces, Asn1Type value) {
+        if (value instanceof Asn1Item) {
+            dumpItem(numSpaces, (Asn1Item) value);
+        } else if (value instanceof Asn1Constructed) {
+            dumpCollection(numSpaces, (Asn1Constructed) value);
         }
     }
 
-    private static void dump(Asn1Item value, StringBuilder buffer) {
-        if (value.isFullyDecoded()) {
-            dump(value.getValue(), buffer);
-        } else {
-            buffer.append("Asn1Item");
+    private void dumpCollection(int numSpaces, Asn1Constructed coll) {
+        prefixSpaces(numSpaces).append(coll).append("\n");
+        for (Asn1Type aObj : coll.getValue()) {
+            dumpType(numSpaces + 4, aObj);
         }
+    }
+
+    private void dumpItem(int numSpaces, Asn1Item value) {
+        prefixSpaces(numSpaces).append(value).append("\n");
+    }
+
+    private StringBuilder prefixSpaces(int numSpaces) {
+        for (int i = 0; i < numSpaces; i++) {
+            builder.append(' ');
+        }
+        return builder;
     }
 }
