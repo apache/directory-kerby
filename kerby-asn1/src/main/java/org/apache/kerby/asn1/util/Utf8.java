@@ -14,34 +14,21 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
-package org.apache.kerby.asn1;
+package org.apache.kerby.asn1.util;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
-/**
- * ASN1 reader for stateful reading.
- */
-public final class Asn1Reader1 extends Asn1Reader {
+public final class Utf8 {
+    private Utf8() { }
 
-    public Asn1Reader1(ByteBuffer buffer) {
-        super(buffer);
+    public static String toString(byte[] bytes) {
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
-    @Override
-    protected byte readByte() throws IOException {
-        return buffer.get();
-    }
-
-    @Override
-    protected ByteBuffer getValueBuffer(int valueLength) {
-        ByteBuffer result = buffer.duplicate();
-        result.limit(buffer.position() + valueLength);
-        buffer.position(buffer.position() + valueLength);
-
-        return result;
+    public static byte[] toBytes(String s) {
+        return s.getBytes(StandardCharsets.UTF_8);
     }
 }

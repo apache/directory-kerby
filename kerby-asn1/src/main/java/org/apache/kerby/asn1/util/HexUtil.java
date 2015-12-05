@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1;
+package org.apache.kerby.asn1.util;
 
 /**
  * This is only for test, be careful when use in production codes.

@@ -17,7 +17,9 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1;
+package org.apache.kerby.asn1.util;
+
+import org.apache.kerby.asn1.Tag;
 
 import java.nio.ByteBuffer;
 

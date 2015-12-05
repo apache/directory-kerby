@@ -6,53 +6,42 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *  
+ *
  */
-package org.apache.kerby.asn1.type;
-
-import org.apache.kerby.asn1.UniversalTag;
-import org.apache.kerby.asn1.util.Asn1Util;
+package org.apache.kerby.asn1.util;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class Asn1OctetString extends Asn1Simple<byte[]> {
-    public Asn1OctetString() {
-        this(null);
-    }
+/**
+ * ASN1 reader for stateful reading.
+ */
+public final class Asn1Reader1 extends Asn1Reader {
 
-    public Asn1OctetString(byte[] value) {
-        super(UniversalTag.OCTET_STRING, value);
-    }
-
-    @Override
-    protected byte[] encodeBody() {
-        return getValue();
+    public Asn1Reader1(ByteBuffer buffer) {
+        super(buffer);
     }
 
     @Override
-    protected int encodingBodyLength() {
-        return getValue().length;
+    protected byte readByte() throws IOException {
+        return buffer.get();
     }
 
     @Override
-    protected void decodeBody(ByteBuffer content) throws IOException {
-        setValue(Asn1Util.readAllLeftBytes(content));
-    }
+    protected ByteBuffer getValueBuffer(int valueLength) {
+        ByteBuffer result = buffer.duplicate();
+        result.limit(buffer.position() + valueLength);
+        buffer.position(buffer.position() + valueLength);
 
-    @Override
-    public String toString() {
-        String valueStr =
-            (getValue() != null ? (getValue().length + " octets") : "null");
-        return valueStr;
+        return result;
     }
 }

@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1;
+package org.apache.kerby.asn1.util;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.asn1;
 
+import org.apache.kerby.asn1.util.HexUtil;
 import org.junit.Test;
 
 import java.io.IOException;

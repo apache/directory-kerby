@@ -23,12 +23,21 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceOf;
 import org.apache.kerby.asn1.type.Asn1SetType;
 import org.apache.kerby.asn1.type.Asn1Tagging;
-import org.apache.kerby.asn1.type.Asn1VisibleString;
 import org.apache.kerby.asn1.type.Asn1TaggingSequence;
 import org.apache.kerby.asn1.type.Asn1TaggingSet;
-import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.*;
-import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.*;
-import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.*;
+import org.apache.kerby.asn1.type.Asn1VisibleString;
+
+import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.CHILD_NAME;
+import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.DATEOFBIRTH;
+import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.CHILDREN;
+import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.DATEOFHIRE;
+import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.NAME;
+import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.NAMEOFSPOUSE;
+import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.NUMBER;
+import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.TITLE;
+import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.FAMILYNAME;
+import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.GIVENNAME;
+import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.INITIAL;
 
 /**
  * Ref. X.690-0207(http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf),
