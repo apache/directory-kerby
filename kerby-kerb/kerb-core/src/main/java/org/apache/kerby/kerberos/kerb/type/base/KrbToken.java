@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.type.base;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
@@ -29,6 +30,7 @@ import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.*;
 
 import java.util.Date;
 import java.util.List;
@@ -44,8 +46,20 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     private static TokenEncoder tokenEncoder;
     private static TokenDecoder tokenDecoder;
 
-    private static final int TOKEN_FORMAT = 0;
-    private static final int TOKEN_VALUE = 1;
+    protected static enum MyEnum implements EnumType {
+        TOKEN_FORMAT,
+        TOKEN_VALUE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     private AuthToken innerToken = null;
 

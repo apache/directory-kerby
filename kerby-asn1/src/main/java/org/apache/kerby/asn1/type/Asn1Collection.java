@@ -39,8 +39,8 @@ public class Asn1Collection extends Asn1Constructed {
         return isCollection(new Tag(tag));
     }
 
-    public static boolean isCollection(UniversalTag tagNo) {
-        switch (tagNo) {
+    public static boolean isCollection(UniversalTag universalTag) {
+        switch (universalTag) {
             case SEQUENCE:
             case SEQUENCE_OF:
             case SET:
@@ -51,19 +51,19 @@ public class Asn1Collection extends Asn1Constructed {
         }
     }
 
-    public static Asn1Type createCollection(int tagNo) {
-        if (!isCollection(tagNo)) {
-            throw new IllegalArgumentException("Not collection type, tag: " + tagNo);
+    public static Asn1Collection createCollection(Tag tag) {
+        if (!isCollection(tag)) {
+            throw new IllegalArgumentException("Not collection type, tag: " + tag);
         }
-        return createCollection(UniversalTag.fromValue(tagNo));
+        return createCollection(tag.universalTag());
     }
 
-    public static Asn1Type createCollection(UniversalTag tagNo) {
-        if (!isCollection(tagNo)) {
-            throw new IllegalArgumentException("Not collection type, tag: " + tagNo);
+    public static Asn1Collection createCollection(UniversalTag universalTag) {
+        if (!isCollection(universalTag)) {
+            throw new IllegalArgumentException("Not collection type, tag: " + universalTag);
         }
 
-        switch (tagNo) {
+        switch (universalTag) {
             case SEQUENCE:
                 return new Asn1Sequence();
             case SEQUENCE_OF:
@@ -73,7 +73,7 @@ public class Asn1Collection extends Asn1Constructed {
             case SET_OF:
                 return new Asn1Set();
             default:
-                throw new IllegalArgumentException("Unexpected tag " + tagNo.getValue());
+                throw new IllegalArgumentException("Unexpected tag " + universalTag.getValue());
         }
     }
 }

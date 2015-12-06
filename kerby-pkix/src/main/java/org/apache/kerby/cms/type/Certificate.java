@@ -19,11 +19,13 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 import org.apache.kerby.x509.type.TBSCertificate;
+import static org.apache.kerby.cms.type.Certificate.MyEnum.*;
 
 /**
  * <pre>
@@ -35,10 +37,21 @@ import org.apache.kerby.x509.type.TBSCertificate;
  * </pre>
  */
 public class Certificate extends Asn1SequenceType {
+    protected static enum MyEnum implements EnumType {
+        TBS_CERTIFICATE,
+        SIGNATURE_ALGORITHM,
+        SIGNATURE;
 
-    private static final int TBS_CERTIFICATE = 0;
-    private static final int SIGNATURE_ALGORITHM = 1;
-    private static final int SIGNATURE = 2;
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(TBS_CERTIFICATE, TBSCertificate.class),

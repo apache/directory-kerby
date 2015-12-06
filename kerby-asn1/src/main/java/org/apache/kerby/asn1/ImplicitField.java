@@ -31,7 +31,7 @@ public class ImplicitField extends Asn1FieldInfo {
      * @param index
      * @param type
      */
-    public ImplicitField(int index, int tagNo, Class<? extends Asn1Type> type) {
+    public ImplicitField(EnumType index, int tagNo, Class<? extends Asn1Type> type) {
         super(index, tagNo, type, true);
     }
 
@@ -40,7 +40,7 @@ public class ImplicitField extends Asn1FieldInfo {
      * @param index
      * @param type
      */
-    public ImplicitField(int index, Class<? extends Asn1Type> type) {
-        super(index, index, type, true);
+    public ImplicitField(EnumType index, Class<? extends Asn1Type> type) {
+        super(index, index.getValue(), type, true);
     }
 }

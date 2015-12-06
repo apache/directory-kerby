@@ -17,19 +17,22 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1;
+package org.apache.kerby.asn1.type;
 
-import org.junit.Test;
+import org.apache.kerby.asn1.Asn1FieldInfo;
 
-import java.io.IOException;
+/**
+ * For tagging a sequence type with tagNo, either application specific or context specific class
+ */
+public class Asn1TaggingSequence extends Asn1TaggingCollection {
 
-public class TestAsn1Input {
+    public Asn1TaggingSequence(int taggingTagNo, Asn1FieldInfo[] tags,
+                               boolean isAppSpecific, boolean isImplicit) {
+        super(taggingTagNo, tags, isAppSpecific, isImplicit);
+    }
 
-    @Test
-    public void testDecoding() throws IOException {
-        //PersonnelRecord expected = TestData.createSamplePersonnel();
-        byte[] data = TestData.createSammplePersonnelEncodingData();
-        //Asn1InputBuffer ib = new Asn1InputBuffer(data);
-        Asn1Dump.dump(data);
+    @Override
+    protected Asn1CollectionType createTaggedCollection(Asn1FieldInfo[] tags) {
+        return new Asn1SequenceType(tags);
     }
 }

@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Enumerated;
 
 /**
@@ -34,7 +34,7 @@ import org.apache.kerby.asn1.type.Asn1Enumerated;
  * </pre>
  * 
  */
-enum DigestedObjectEnum implements Asn1EnumType {
+enum DigestedObjectEnum implements EnumType {
     PUBLIC_KEY,
     PUBLIC_KEY_CERT,
     OTHER_OBJECT_TYPES;
@@ -43,11 +43,16 @@ enum DigestedObjectEnum implements Asn1EnumType {
     public int getValue() {
         return ordinal();
     }
+
+    @Override
+    public String getName() {
+        return name();
+    }
 }
 
 public class DigestedObjectType extends Asn1Enumerated<DigestedObjectEnum> {
     @Override
-    public Asn1EnumType[] getAllEnumValues() {
+    public EnumType[] getAllEnumValues() {
         return DigestedObjectEnum.values();
     }
 }

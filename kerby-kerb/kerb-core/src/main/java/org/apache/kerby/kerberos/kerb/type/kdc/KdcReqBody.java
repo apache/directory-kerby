@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.type.kdc;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
@@ -32,6 +33,7 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.Tickets;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,18 +62,30 @@ import java.util.List;
  }
  */
 public class KdcReqBody extends KrbSequenceType {
-    private static final int KDC_OPTIONS = 0;
-    private static final int CNAME = 1;
-    private static final int REALM = 2;
-    private static final int SNAME = 3;
-    private static final int FROM = 4;
-    private static final int TILL = 5;
-    private static final int RTIME = 6;
-    private static final int NONCE = 7;
-    private static final int ETYPE = 8;
-    private static final int ADDRESSES = 9;
-    private static final int ENC_AUTHORIZATION_DATA = 10;
-    private static final int ADDITIONAL_TICKETS = 11;
+    protected static enum MyEnum implements EnumType {
+        KDC_OPTIONS,
+        CNAME,
+        REALM,
+        SNAME,
+        FROM,
+        TILL,
+        RTIME,
+        NONCE,
+        ETYPE,
+        ADDRESSES,
+        ENC_AUTHORIZATION_DATA,
+        ADDITIONAL_TICKETS;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(KDC_OPTIONS, KdcOptions.class),

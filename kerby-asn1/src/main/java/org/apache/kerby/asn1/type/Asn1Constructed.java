@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.Tag;
 
 import java.io.IOException;
@@ -79,7 +80,7 @@ public class Asn1Constructed extends AbstractAsn1Type<List<Asn1Type>> {
     @Override
     protected void decodeBody(ByteBuffer content) throws IOException {
         while (content.remaining() > 0) {
-            Asn1Item item = decodeOne(content);
+            Asn1Item item = (Asn1Item) Asn1.decode(content);
             if (item != null) {
                 if (item.isSimple() && !isLazy()) {
                     item.decodeValueAsSimple();
@@ -89,5 +90,18 @@ public class Asn1Constructed extends AbstractAsn1Type<List<Asn1Type>> {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        String typeStr;
+        if (tag().isUniversal()) {
+            typeStr = tag().universalTag().toStr();
+        } else if (tag().isAppSpecific()) {
+            typeStr = "application " + tagNo();
+        } else {
+            typeStr = "[" + tagNo() + "]";
+        }
+        return typeStr;
     }
 }

@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum LastReqType implements Asn1EnumType {
+public enum LastReqType implements EnumType {
     NONE(0),
     ALL_LAST_TGT(1),
     THE_LAST_TGT(-1),
@@ -49,9 +49,14 @@ public enum LastReqType implements Asn1EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static LastReqType fromValue(Integer value) {
         if (value != null) {
-            for (Asn1EnumType e : values()) {
+            for (EnumType e : values()) {
                 if (e.getValue() == value) {
                     return (LastReqType) e;
                 }

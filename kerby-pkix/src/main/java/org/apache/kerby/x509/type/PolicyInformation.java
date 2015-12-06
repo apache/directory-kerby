@@ -20,7 +20,9 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.PolicyInformation.MyEnum.*;
 
 /*
  * <pre>
@@ -31,8 +33,20 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * </pre>
  */
 public class PolicyInformation extends Asn1SequenceType {
-    private static final int POLICY_IDENTIFIER = 0;
-    private static final int POLICY_QUALIFIERS = 1;
+    protected static enum MyEnum implements EnumType {
+        POLICY_IDENTIFIER,
+        POLICY_QUALIFIERS;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(POLICY_IDENTIFIER, CertPolicyId.class),

@@ -19,11 +19,13 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 import org.apache.kerby.x509.type.AttributeCertificateInfo;
+import static org.apache.kerby.cms.type.AttributeCertificateV1.MyEnum.*;
 
 /**
  * AttributeCertificateV1 ::= SEQUENCE {
@@ -33,9 +35,21 @@ import org.apache.kerby.x509.type.AttributeCertificateInfo;
  * }
  */
 public class AttributeCertificateV1 extends Asn1SequenceType {
-    private static final int ACI_INFO = 0;
-    private static final int SIGNATURE_ALGORITHM = 1;
-    private static final int SIGNATURE = 2;
+    protected static enum MyEnum implements EnumType {
+        ACI_INFO,
+        SIGNATURE_ALGORITHM,
+        SIGNATURE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ACI_INFO, AttributeCertificateInfoV1.class),

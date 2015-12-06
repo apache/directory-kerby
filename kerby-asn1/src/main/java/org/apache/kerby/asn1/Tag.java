@@ -81,6 +81,10 @@ public class Tag {
         return UniversalTag.UNKNOWN;
     }
 
+    public boolean isEOC() {
+        return universalTag() == UniversalTag.EOC;
+    }
+
     public boolean isUniversal() {
         return tagClass().isUniversal();
     }
@@ -124,10 +128,7 @@ public class Tag {
 
     @Override
     public String toString() {
-        return "Tag["
-            + "tagFlags=" + tagFlags
-            + ", tagNo=" + tagNo
-            + ']';
+        return tagNo >= 0x1F ? "N/A" : "" + (tagFlags | tagNo);
     }
 
     public static Tag newAppTag(int tagNo) {

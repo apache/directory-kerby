@@ -19,11 +19,13 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.x509.type.GeneralNames;
 import org.apache.kerby.x509.type.IssuerSerial;
+import static org.apache.kerby.cms.type.Subject.MyEnum.*;
 
 /**
  * subject CHOICE {
@@ -35,8 +37,20 @@ import org.apache.kerby.x509.type.IssuerSerial;
  *
  */
 public class Subject extends Asn1Choice {
-    private static final int BASE_CERTIFICATE_ID = 0;
-    private static final int SUBJECT_NAME = 1;
+    protected static enum MyEnum implements EnumType {
+        BASE_CERTIFICATE_ID,
+        SUBJECT_NAME;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
             new ExplicitField(BASE_CERTIFICATE_ID, IssuerSerial.class),

@@ -19,19 +19,19 @@
  */
 package org.apache.kerby.kerberos.kerb.type;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.type.TaggingSequence;
+import org.apache.kerby.asn1.type.Asn1TaggingSequence;
 
 /**
  * This is for application specific sequence tagged with a number.
  */
-public abstract class KrbAppSequenceType extends TaggingSequence {
+public abstract class KrbAppSequenceType extends Asn1TaggingSequence {
     public KrbAppSequenceType(int tagNo, Asn1FieldInfo[] fieldInfos) {
         super(tagNo, fieldInfos, true, false); // Kerberos favors explicit
     }
 
-    protected int getFieldAsInt(int index) {
+    protected int getFieldAsInt(EnumType index) {
         Integer value = getFieldAsInteger(index);
         if (value != null) {
             return value.intValue();
@@ -39,19 +39,19 @@ public abstract class KrbAppSequenceType extends TaggingSequence {
         return -1;
     }
 
-    protected void setFieldAsString(int index, String value) {
+    protected void setFieldAsString(EnumType index, String value) {
         setFieldAs(index, new KerberosString(value));
     }
 
-    protected KerberosTime getFieldAsTime(int index) {
+    protected KerberosTime getFieldAsTime(EnumType index) {
         return getFieldAs(index, KerberosTime.class);
     }
 
-    protected void setFieldAsTime(int index, long value) {
+    protected void setFieldAsTime(EnumType index, long value) {
         setFieldAs(index, new KerberosTime(value));
     }
 
-    protected void setField(int index, Asn1EnumType krbEnum) {
+    protected void setField(EnumType index, EnumType krbEnum) {
         setFieldAsInt(index, krbEnum.getValue());
     }
 }

@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 import org.apache.kerby.asn1.type.Asn1UtcTime;
+import static org.apache.kerby.x509.type.Time.MyEnum.*;
 
 import java.util.Date;
 
@@ -36,8 +38,20 @@ import java.util.Date;
  * </pre>
  */
 public class Time extends Asn1Choice {
-    private static final int UTC_TIME = 0;
-    private static final int GENERAL_TIME = 1;
+    protected static enum MyEnum implements EnumType {
+        UTC_TIME,
+        GENERAL_TIME;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(UTC_TIME, Asn1UtcTime.class),

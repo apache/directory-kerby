@@ -20,12 +20,26 @@
 package org.apache.kerby.kerberos.kerb.type.base;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.base.KrbMessage.MyEnum.*;
 
 public abstract class KrbMessage extends KrbAppSequenceType {
-    protected static final int PVNO = 0;
-    protected static final int MSG_TYPE = 1;
+    protected static enum MyEnum implements EnumType {
+        PVNO,
+        MSG_TYPE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     private final int pvno = KrbConstant.KRB_V5;
 
@@ -40,7 +54,7 @@ public abstract class KrbMessage extends KrbAppSequenceType {
     }
 
     protected void setPvno(int pvno) {
-        setFieldAsInt(0, pvno);
+        setFieldAsInt(PVNO, pvno);
     }
 
     public KrbMessageType getMsgType() {

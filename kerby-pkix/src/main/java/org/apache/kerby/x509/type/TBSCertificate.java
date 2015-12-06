@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
@@ -26,6 +27,8 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.x500.type.Name;
+import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.*;
+
 
 /**
  * <pre>
@@ -44,17 +47,28 @@ import org.apache.kerby.x500.type.Name;
  * </pre>
  */
 public class TBSCertificate extends Asn1SequenceType {
+    protected static enum MyEnum implements EnumType {
+        VERSION,
+        SERIAL_NUMBER,
+        SIGNATURE,
+        ISSUER,
+        VALIDITY,
+        SUBJECT,
+        SUBJECT_PUBLIC_KEY_INFO,
+        ISSUER_UNIQUE_ID,
+        SUBJECT_UNIQUE_ID,
+        EXTENSIONS;
 
-    private static final int VERSION = 0;
-    private static final int SERIAL_NUMBER = 1;
-    private static final int SIGNATURE = 2;
-    private static final int ISSUER = 3;
-    private static final int VALIDITY = 4;
-    private static final int SUBJECT = 5;
-    private static final int SUBJECT_PUBLIC_KEY_INFO = 6;
-    private static final int ISSUER_UNIQUE_ID = 7;
-    private static final int SUBJECT_UNIQUE_ID = 8;
-    private static final int EXTENSIONS = 9;
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(VERSION, 0, Asn1Integer.class),

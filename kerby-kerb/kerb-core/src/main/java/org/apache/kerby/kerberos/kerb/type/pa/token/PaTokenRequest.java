@@ -20,9 +20,11 @@
 package org.apache.kerby.kerberos.kerb.type.pa.token;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
+import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest.MyEnum.*;
 
 /**
  PA-TOKEN-REQUEST ::= SEQUENCE {
@@ -31,8 +33,20 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
  }
 */
 public class PaTokenRequest extends KrbSequenceType {
-    private static final int TOKEN_INFO = 0;
-    private static final int TOKEN = 1;
+    protected static enum MyEnum implements EnumType {
+        TOKEN_INFO,
+        TOKEN;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(TOKEN_INFO, TokenInfo.class),

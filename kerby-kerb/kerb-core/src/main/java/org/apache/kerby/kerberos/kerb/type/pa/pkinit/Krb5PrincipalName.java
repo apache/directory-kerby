@@ -20,10 +20,12 @@
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.base.Realm;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.*;
 
 /**
  KRB5PrincipalName ::= SEQUENCE {
@@ -32,8 +34,20 @@ import org.apache.kerby.kerberos.kerb.type.base.Realm;
  }
  */
 public class Krb5PrincipalName extends KrbSequenceType {
-    private static final int REALM = 0;
-    private static final int PRINCIPAL_NAME = 1;
+    protected static enum MyEnum implements EnumType {
+        REALM,
+        PRINCIPAL_NAME;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(REALM, Realm.class),

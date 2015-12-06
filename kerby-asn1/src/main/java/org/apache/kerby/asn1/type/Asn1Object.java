@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.Asn1Util;
+import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
+import org.apache.kerby.asn1.util.Asn1Reader1;
+import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -34,12 +36,12 @@ import java.nio.ByteBuffer;
 public abstract class Asn1Object implements Asn1Type {
     private final Tag tag;
 
-    private int encodingLen = -1;
+    private int bodyLength = -1;
 
     // encoding options
     private EncodingType encodingType = EncodingType.BER;
     private boolean isImplicit = true;
-    private boolean isDefinitiveLength = false;
+    private boolean isDefinitiveLength = true; // by default!!
 
     /**
      * Constructor with a tag
@@ -162,12 +164,22 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public int encodingLength() {
-        if (encodingLen == -1) {
-            int bodyLen = encodingBodyLength();
-            encodingLen = Asn1Util.lengthOfTagLength(tagNo())
-                + Asn1Util.lengthOfBodyLength(bodyLen) + bodyLen;
+        return encodingHeaderLength() + getBodyLength();
+    }
+
+    private int getBodyLength() {
+        if (bodyLength == -1) {
+            bodyLength = encodingBodyLength();
         }
-        return encodingLen;
+        return bodyLength;
+    }
+
+    protected int encodingHeaderLength() {
+        int bodyLen = getBodyLength();
+        int headerLen = Asn1Util.lengthOfTagLength(tagNo());
+        headerLen += (isDefinitiveLength()
+            ? Asn1Util.lengthOfBodyLength(bodyLen) : 1);
+        return headerLen;
     }
 
     protected boolean isUniversal() {
@@ -198,19 +210,11 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
-        Tag tmpTag = Asn1Util.readTag(content);
-        int length = Asn1Util.readLength(content);
+        Asn1Reader1 reader = new Asn1Reader1(content);
+        Asn1Header header = reader.readHeader();
 
-        ByteBuffer valueBuffer;
-        if (length == -1) {
-            valueBuffer = content;
-            useDefinitiveLength(false);
-        } else {
-            valueBuffer = Asn1Util.dupWithLength(content, length);
-            useDefinitiveLength(true);
-        }
-
-        decode(tmpTag, valueBuffer);
+        useDefinitiveLength(header.isDefinitiveLength());
+        decode(header.getTag(), header.getValueBuffer());
     }
 
     public void decode(Tag tag, ByteBuffer content) throws IOException {
@@ -262,19 +266,11 @@ public abstract class Asn1Object implements Asn1Type {
     @Override
     public void taggedDecode(ByteBuffer content,
                              TaggingOption taggingOption) throws IOException {
-        Tag taggingTag = Asn1Util.readTag(content);
-        int taggingLength = Asn1Util.readLength(content);
+        Asn1Reader1 reader = new Asn1Reader1(content);
+        Asn1Header header = reader.readHeader();
 
-        ByteBuffer valueBuffer;
-        if (taggingLength == -1) {
-            valueBuffer = content;
-            useDefinitiveLength(false);
-        } else {
-            valueBuffer = Asn1Util.dupWithLength(content, taggingLength);
-            useDefinitiveLength(true);
-        }
-
-        taggedDecode(taggingTag, valueBuffer, taggingOption);
+        useDefinitiveLength(header.isDefinitiveLength());
+        taggedDecode(header.getTag(), header.getValueBuffer(), taggingOption);
     }
 
     protected void taggedDecode(Tag taggingTag, ByteBuffer content,
@@ -290,24 +286,5 @@ public abstract class Asn1Object implements Asn1Type {
         } else {
             decode(content);
         }
-    }
-
-    public static Asn1Item decodeOne(ByteBuffer content) throws IOException {
-        Tag tmpTag = Asn1Util.readTag(content);
-        int length = Asn1Util.readLength(content);
-
-        Asn1Item result;
-        ByteBuffer valueBuffer;
-        if (length == -1) {
-            result = new Asn1Item(tmpTag);
-            result.useDefinitiveLength(false);
-            result.setBodyContent(content);
-        } else {
-            valueBuffer = Asn1Util.dupWithLength(content, length);
-            result = new Asn1Item(tmpTag, valueBuffer);
-            result.useDefinitiveLength(true);
-        }
-
-        return result;
     }
 }

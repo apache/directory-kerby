@@ -20,10 +20,12 @@
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.*;
 
 /**
  ReplyKeyPack ::= SEQUENCE {
@@ -32,8 +34,20 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
  }
  */
 public class ReplyKeyPack extends KrbSequenceType {
-    private static final int REPLY_KEY = 0;
-    private static final int AS_CHECKSUM = 1;
+    protected static enum MyEnum implements EnumType {
+        REPLY_KEY,
+        AS_CHECKSUM;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(REPLY_KEY, EncryptionKey.class),

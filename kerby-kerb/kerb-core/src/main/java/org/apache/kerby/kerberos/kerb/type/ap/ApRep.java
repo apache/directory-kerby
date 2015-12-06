@@ -20,11 +20,13 @@
 package org.apache.kerby.kerberos.kerb.type.ap;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
+import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.*;
 
 /**
  AP-REP          ::= [APPLICATION 15] SEQUENCE {
@@ -34,7 +36,21 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
  }
  */
 public class ApRep extends KrbMessage {
-    private static final int ENC_PART = 2;
+    protected static enum MyEnum implements EnumType {
+        PVNO,
+        MSG_TYPE,
+        ENC_PART;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(PVNO, 0, Asn1Integer.class),

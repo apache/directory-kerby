@@ -20,10 +20,12 @@
 package org.apache.kerby.kerberos.kerb.type.pa;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry.MyEnum.*;
 
 /**
  PA-DATA         ::= SEQUENCE {
@@ -33,8 +35,20 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  }
  */
 public class PaDataEntry extends KrbSequenceType {
-    private static final int PADATA_TYPE = 0;
-    private static final int PADATA_VALUE = 1;
+    protected static enum MyEnum implements EnumType {
+        PADATA_TYPE,
+        PADATA_VALUE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(PADATA_TYPE, 1, Asn1Integer.class),

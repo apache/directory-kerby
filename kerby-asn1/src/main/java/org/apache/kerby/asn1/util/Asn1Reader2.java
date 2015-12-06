@@ -17,23 +17,46 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1.type;
+package org.apache.kerby.asn1.util;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
- * For tagging a sequence type with tagNo, either application specific or
- * context specific class
+ * ASN1 reader for positional reading.
  */
-public class TaggingSet extends TaggingCollection {
+public final class Asn1Reader2 extends Asn1Reader {
+    private int position;
 
-    public TaggingSet(int taggingTagNo, Asn1FieldInfo[] tags,
-                      boolean isAppSpecific, boolean isImplicit) {
-        super(taggingTagNo, tags, isAppSpecific, isImplicit);
+    public Asn1Reader2(ByteBuffer buffer, int position) {
+        super(buffer);
+        this.position = position;
+    }
+
+    public Asn1Reader2(ByteBuffer buffer) {
+        super(buffer);
+        this.position = buffer.position();
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public boolean available() {
+        return position < buffer.limit();
     }
 
     @Override
-    protected Asn1CollectionType createTaggedCollection(Asn1FieldInfo[] tags) {
-        return new Asn1SetType(tags);
+    protected ByteBuffer getValueBuffer(int valueLength) {
+        return buffer;
+    }
+
+    @Override
+    protected byte readByte() throws IOException {
+        return buffer.get(position++);
     }
 }

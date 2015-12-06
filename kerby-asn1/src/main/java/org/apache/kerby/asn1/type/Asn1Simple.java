@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.Asn1Util;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.UniversalTag;
+import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -200,5 +200,12 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
             default:
                 throw new IllegalArgumentException("Unexpected tag " + tagNo.getValue());
         }
+    }
+
+    @Override
+    public String toString() {
+        String valueStr =
+            (getValue() != null ? String.valueOf(getValue()) : "null");
+        return valueStr;
     }
 }

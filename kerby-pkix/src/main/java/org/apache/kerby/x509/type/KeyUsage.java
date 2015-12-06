@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Flags;
 
 /**
@@ -40,7 +40,7 @@ import org.apache.kerby.asn1.type.Asn1Flags;
  * </pre>
  */
 
-enum KeyUsageEnum implements Asn1EnumType {
+enum KeyUsageEnum implements EnumType {
     DIGITAL_SIGNATURE,
     NON_REPUDIATION,
     KEY_ENCIPHERMENT,
@@ -54,6 +54,11 @@ enum KeyUsageEnum implements Asn1EnumType {
     @Override
     public int getValue() {
         return ordinal();
+    }
+
+    @Override
+    public String getName() {
+        return name();
     }
 }
 

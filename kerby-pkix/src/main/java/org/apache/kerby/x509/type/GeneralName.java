@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1IA5String;
@@ -27,6 +28,7 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.x500.type.Name;
+import static org.apache.kerby.x509.type.GeneralName.MyEnum.*;
 
 /**
  *
@@ -45,16 +47,27 @@ import org.apache.kerby.x500.type.Name;
  * </pre>
  */
 public class GeneralName extends Asn1Choice {
+    protected static enum MyEnum implements EnumType {
+        OTHER_NAME,
+        RFC822_NAME,
+        DNS_NAME,
+        X400_ADDRESS,
+        DIRECTORY_NAME,
+        EDI_PARTY_NAME,
+        UNIFORM_RESOURCE_IDENTIFIER,
+        IP_ADDRESS,
+        REGISTERED_ID;
 
-    private static final int OTHER_NAME = 0;
-    private static final int RFC822_NAME = 1;
-    private static final int DNS_NAME = 2;
-    private static final int X400_ADDRESS = 3;
-    private static final int DIRECTORY_NAME = 4;
-    private static final int EDI_PARTY_NAME = 5;
-    private static final int UNIFORM_RESOURCE_IDENTIFIER = 6;
-    private static final int IP_ADDRESS = 7;
-    private static final int REGISTERED_ID = 8;
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new ExplicitField(OTHER_NAME, OtherName.class),

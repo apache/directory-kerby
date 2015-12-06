@@ -20,9 +20,11 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.x509.type.PolicyConstraints.MyEnum.*;
 
 /**
  * Ref. RFC 5280
@@ -37,8 +39,20 @@ import org.apache.kerby.asn1.ExplicitField;
  * </pre>
  */
 public class PolicyConstraints extends Asn1SequenceType {
-    private static final int REQUIRE_EXPLICIT_POLICY = 0;
-    private static final int INHIBIT_POLICY_MAPPING = 1;
+    protected static enum MyEnum implements EnumType {
+        REQUIRE_EXPLICIT_POLICY,
+        INHIBIT_POLICY_MAPPING;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new ExplicitField(REQUIRE_EXPLICIT_POLICY, Asn1Integer.class),

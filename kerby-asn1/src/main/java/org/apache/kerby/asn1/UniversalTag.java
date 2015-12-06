@@ -28,7 +28,7 @@ public enum UniversalTag {
     UNKNOWN             (-1),
     CHOICE              (-2),   // Only for internal using
     ANY                 (-3),   // Only for internal using
-    BER_UNDEFINED_LENGTH(0),    // Used to encode undefined length with BER
+    EOC                 (0),    // End of content, use by BER
     BOOLEAN             (0x01),
     INTEGER             (0x02),
     BIT_STRING          (0x03),
@@ -87,7 +87,7 @@ public enum UniversalTag {
      */
     public static UniversalTag fromValue(int value) {
         switch (value) {
-            case 0x00 : return BER_UNDEFINED_LENGTH;
+            case 0x00 : return EOC;
             case 0x01 : return BOOLEAN;
             case 0x02 : return INTEGER;
             case 0x03 : return BIT_STRING;
@@ -121,5 +121,11 @@ public enum UniversalTag {
             case 0x1F : return RESERVED_31;
             default : return UNKNOWN;
         }
+    }
+
+    public String toStr() {
+        String typeStr = toString();
+        typeStr = typeStr.replace('_', ' ');
+        return typeStr.toLowerCase();
     }
 }

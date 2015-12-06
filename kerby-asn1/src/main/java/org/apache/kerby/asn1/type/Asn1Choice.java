@@ -19,7 +19,9 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
 
@@ -73,7 +75,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
     @Override
     public void decode(ByteBuffer content) throws IOException {
         int foundPos = -1;
-        Asn1Item item = decodeOne(content);
+        Asn1Item item = (Asn1Item) Asn1.decode(content);
         for (int i = 0; i < fieldInfos.length; ++i) {
             if (item.isContextSpecific()) {
                 if (fieldInfos[i].getTagNo() == item.tagNo()) {
@@ -118,16 +120,16 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
         }
     }
 
-    protected <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
-        Asn1Type value = fields[index];
+    protected <T extends Asn1Type> T getFieldAs(EnumType index, Class<T> t) {
+        Asn1Type value = fields[index.getValue()];
         if (value == null) {
             return null;
         }
         return (T) value;
     }
 
-    protected void setFieldAs(int index, Asn1Type value) {
-        fields[index] = value;
+    protected void setFieldAs(EnumType index, Asn1Type value) {
+        fields[index.getValue()] = value;
     }
 
     protected String getFieldAsString(int index) {
@@ -143,7 +145,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
         throw new RuntimeException("The targeted field type isn't of string");
     }
 
-    protected byte[] getFieldAsOctets(int index) {
+    protected byte[] getFieldAsOctets(EnumType index) {
         Asn1OctetString value = getFieldAs(index, Asn1OctetString.class);
         if (value != null) {
             return value.getValue();
@@ -151,12 +153,12 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
         return null;
     }
 
-    protected void setFieldAsOctets(int index, byte[] bytes) {
+    protected void setFieldAsOctets(EnumType index, byte[] bytes) {
         Asn1OctetString value = new Asn1OctetString(bytes);
         setFieldAs(index, value);
     }
 
-    protected Integer getFieldAsInteger(int index) {
+    protected Integer getFieldAsInteger(EnumType index) {
         Asn1Integer value = getFieldAs(index, Asn1Integer.class);
         if (value != null) {
             return value.getValue().intValue();
@@ -164,7 +166,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
         return null;
     }
 
-    protected void setFieldAsInt(int index, int value) {
+    protected void setFieldAsInt(EnumType index, int value) {
         setFieldAs(index, new Asn1Integer(value));
     }
 }

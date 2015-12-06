@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Boolean;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.*;
 
 /**
  * <pre>
@@ -37,12 +39,23 @@ import org.apache.kerby.asn1.ExplicitField;
  * </pre>
  */
 public class IssuingDistributionPoint extends Asn1SequenceType {
-    private static final int DISTRIBUTION_POINT = 0;
-    private static final int ONLY_CONTAINS_USER_CERTS = 1;
-    private static final int ONLY_CONTAINS_CA_CERTS = 2;
-    private static final int ONLY_SOME_REASONS = 3;
-    private static final int INDIRECT_CRL = 4;
-    private static final int ONLY_CONTAINS_ATTRIBUTE_CERTS = 5;
+    protected static enum MyEnum implements EnumType {
+        DISTRIBUTION_POINT,
+        ONLY_CONTAINS_USER_CERTS,
+        ONLY_CONTAINS_CA_CERTS,
+        ONLY_SOME_REASONS,
+        INDIRECT_CRL,
+        ONLY_CONTAINS_ATTRIBUTE_CERTS;
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new ExplicitField(DISTRIBUTION_POINT, DistributionPointName.class),

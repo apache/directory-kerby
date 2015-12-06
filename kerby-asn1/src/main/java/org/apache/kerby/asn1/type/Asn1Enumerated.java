@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ import java.math.BigInteger;
 /**
  * The ASN1 enumerated type
  */
-public abstract class Asn1Enumerated<T extends Asn1EnumType> extends Asn1Simple<T> {
+public abstract class Asn1Enumerated<T extends EnumType> extends Asn1Simple<T> {
 
     /**
      * Default constructor, generally for decoding as a container
@@ -52,13 +53,13 @@ public abstract class Asn1Enumerated<T extends Asn1EnumType> extends Asn1Simple<
     protected void toValue() throws IOException {
         BigInteger biVal = new BigInteger(getBytes());
         int iVal = biVal.intValue();
-        Asn1EnumType[] allValues = getAllEnumValues();
-        for (Asn1EnumType val : allValues) {
+        EnumType[] allValues = getAllEnumValues();
+        for (EnumType val : allValues) {
             if (val.getValue() == iVal) {
                 setValue((T) val);
             }
         }
     }
 
-    protected abstract Asn1EnumType[] getAllEnumValues();
+    protected abstract EnumType[] getAllEnumValues();
 }

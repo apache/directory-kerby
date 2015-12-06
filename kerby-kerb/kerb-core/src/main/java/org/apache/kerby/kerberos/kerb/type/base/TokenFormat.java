@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum TokenFormat implements Asn1EnumType {
+public enum TokenFormat implements EnumType {
     NONE                (0),
     JWT                 (1);
 
@@ -36,9 +36,14 @@ public enum TokenFormat implements Asn1EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static TokenFormat fromValue(Integer value) {
         if (value != null) {
-            for (Asn1EnumType e : values()) {
+            for (EnumType e : values()) {
                 if (e.getValue() == value.intValue()) {
                     return (TokenFormat) e;
                 }

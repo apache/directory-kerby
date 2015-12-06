@@ -20,11 +20,13 @@
 package org.apache.kerby.kerberos.kerb.type.pa.otp;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.*;
 
 /**
  PA-OTP-CHALLENGE ::= SEQUENCE {
@@ -36,11 +38,23 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  }
  */
 public class PaOtpChallenge extends KrbSequenceType {
-    private static final int NONCE = 0;
-    private static final int OTP_SERVICE = 1;
-    private static final int OTP_TOKEN_INFO = 2;
-    private static final int SALT = 3;
-    private static final int S2KPARAMS = 4;
+    protected static enum MyEnum implements EnumType {
+        NONCE,
+        OTP_SERVICE,
+        OTP_TOKEN_INFO,
+        SALT,
+        S2KPARAMS;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(NONCE, Asn1OctetString.class),

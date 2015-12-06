@@ -20,10 +20,12 @@
 package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.cms.type.EncapsulatedContentInfo.MyEnum.*;
 
 /**
  * EncapsulatedContentInfo ::= SEQUENCE {
@@ -34,8 +36,20 @@ import org.apache.kerby.asn1.ExplicitField;
  * ContentType ::= OBJECT IDENTIFIER
  */
 public class EncapsulatedContentInfo extends Asn1SequenceType {
-    private static final int CONTENT_TYPE = 0;
-    private static final int CONTENT = 1;
+    protected static enum MyEnum implements EnumType {
+        CONTENT_TYPE,
+        CONTENT;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
             new Asn1FieldInfo(CONTENT_TYPE, Asn1ObjectIdentifier.class),

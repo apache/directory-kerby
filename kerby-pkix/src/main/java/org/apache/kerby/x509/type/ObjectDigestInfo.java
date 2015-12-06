@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.ObjectDigestInfo.MyEnum.*;
 
 /**
  *
@@ -43,10 +45,22 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * 
  */
 public class ObjectDigestInfo extends Asn1SequenceType {
-    private static final int DIGESTED_OBJECT_TYPE = 0;
-    private static final int OTHER_OBJECT_TYPE_ID = 1;
-    private static final int DIGEST_ALGORITHM = 2;
-    private static final int OBJECT_DIGEST = 3;
+    protected static enum MyEnum implements EnumType {
+        DIGESTED_OBJECT_TYPE,
+        OTHER_OBJECT_TYPE_ID,
+        DIGEST_ALGORITHM,
+        OBJECT_DIGEST;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(DIGESTED_OBJECT_TYPE, DigestedObjectType.class),

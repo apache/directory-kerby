@@ -19,9 +19,11 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.x509.type.EDIPartyName.MyEnum.*;
 
 /**
  * <pre>
@@ -32,8 +34,20 @@ import org.apache.kerby.asn1.ExplicitField;
  * </pre>
  */
 public class EDIPartyName extends Asn1Choice {
-    private static final int NAME_ASSIGNER = 0;
-    private static final int PARTY_NAME = 1;
+    protected static enum MyEnum implements EnumType {
+        NAME_ASSIGNER,
+        PARTY_NAME;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
             new ExplicitField(NAME_ASSIGNER, DirectoryString.class),

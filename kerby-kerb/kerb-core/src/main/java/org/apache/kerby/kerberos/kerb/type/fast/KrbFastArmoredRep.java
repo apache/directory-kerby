@@ -20,9 +20,11 @@
 package org.apache.kerby.kerberos.kerb.type.fast;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredRep.MyEnum.*;
 
 /**
  KrbFastArmoredRep ::= SEQUENCE {
@@ -32,7 +34,19 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
  }
  */
 public class KrbFastArmoredRep extends KrbSequenceType {
-    private static final int ENC_FAST_REP = 0;
+    protected static enum MyEnum implements EnumType {
+        ENC_FAST_REP;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     //private
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {

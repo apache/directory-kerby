@@ -19,9 +19,11 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.ImplicitField;
+import static org.apache.kerby.cms.type.RevocationInfoChoice.MyEnum.*;
 
 /**
  * RevocationInfoChoice ::= CHOICE {
@@ -30,8 +32,20 @@ import org.apache.kerby.asn1.ImplicitField;
  * }
  */
 public class RevocationInfoChoice extends Asn1Choice {
-    private static final int CRL = 0;
-    private static final int OTHER = 1;
+    protected static enum MyEnum implements EnumType {
+        CRL,
+        OTHER;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(CRL, CertificateList.class),

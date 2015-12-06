@@ -19,12 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
 /**
  * From krb5.hin
  */
-public enum KeyUsage implements Asn1EnumType {
+public enum KeyUsage implements EnumType {
     UNKNOWN(-1),
     NONE(0),
     //AS-REQ PA-ENC-TIMESTAMP padata timestamp, encrypted with the client key
@@ -112,9 +112,14 @@ public enum KeyUsage implements Asn1EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static KeyUsage fromValue(Integer value) {
         if (value != null) {
-            for (Asn1EnumType e : values()) {
+            for (EnumType e : values()) {
                 if (e.getValue() == value) {
                     return (KeyUsage) e;
                 }

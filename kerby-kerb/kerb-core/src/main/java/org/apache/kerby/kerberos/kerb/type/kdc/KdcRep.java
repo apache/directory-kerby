@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.type.kdc;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
@@ -29,6 +30,7 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.*;
 
 /**
  KDC-REP         ::= SEQUENCE {
@@ -45,11 +47,25 @@ import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
  }
  */
 public class KdcRep extends KrbMessage {
-    private static final int PADATA = 2;
-    private static final int CREALM = 3;
-    private static final int CNAME = 4;
-    private static final int TICKET = 5;
-    private static final int ENC_PART = 6;
+    protected static enum MyEnum implements EnumType {
+        PVNO,
+        MSG_TYPE,
+        PADATA,
+        CREALM,
+        CNAME,
+        TICKET,
+        ENC_PART;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(PVNO, Asn1Integer.class),

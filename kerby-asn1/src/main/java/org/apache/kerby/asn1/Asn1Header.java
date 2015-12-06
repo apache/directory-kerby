@@ -17,22 +17,38 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1.type;
+package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
+import java.nio.ByteBuffer;
 
-/**
- * For tagging a sequence type with tagNo, either application specific or context specific class
- */
-public class TaggingSequence extends TaggingCollection {
+public class Asn1Header {
+    private Tag tag;
+    private int length;
+    private ByteBuffer valueBuffer;
 
-    public TaggingSequence(int taggingTagNo, Asn1FieldInfo[] tags,
-                           boolean isAppSpecific, boolean isImplicit) {
-        super(taggingTagNo, tags, isAppSpecific, isImplicit);
+    public Asn1Header(Tag tag, int length, ByteBuffer valueBuffer) {
+        this.tag = tag;
+        this.length = length;
+        this.valueBuffer = valueBuffer;
     }
 
-    @Override
-    protected Asn1CollectionType createTaggedCollection(Asn1FieldInfo[] tags) {
-        return new Asn1SequenceType(tags);
+    public Tag getTag() {
+        return tag;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public ByteBuffer getValueBuffer() {
+        return valueBuffer;
+    }
+
+    public boolean isEOC() {
+        return length == 0 && tag.isEOC();
+    }
+
+    public boolean isDefinitiveLength() {
+        return length != -1;
     }
 }

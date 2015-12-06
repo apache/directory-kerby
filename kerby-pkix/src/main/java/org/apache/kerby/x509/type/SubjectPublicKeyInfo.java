@@ -19,9 +19,11 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.SubjectPublicKeyInfo.MyEnum.*;
 
 /**
  * SubjectPublicKeyInfo  ::=  SEQUENCE  {
@@ -30,8 +32,20 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * }
  */
 public class SubjectPublicKeyInfo extends Asn1SequenceType {
-    private static final int ALGORITHM = 0;
-    private static final int SUBJECT_PUBLIC_KEY = 1;
+    protected static enum MyEnum implements EnumType {
+        ALGORITHM,
+        SUBJECT_PUBLIC_KEY;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ALGORITHM, AlgorithmIdentifier.class),
