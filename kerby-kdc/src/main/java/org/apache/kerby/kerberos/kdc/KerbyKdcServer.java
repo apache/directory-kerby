@@ -20,10 +20,16 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
+import org.apache.kerby.kerberos.kdc.jetty.services.HelloJetty;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.util.OSUtil;
+
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.servlet.ServletContainer;
 
 import java.io.File;
 
@@ -89,5 +95,28 @@ public class KerbyKdcServer extends KdcServer {
 
         server.start();
         System.out.println("KDC started.");
+
+        initJettyServer();
+    }
+
+    private static void initJettyServer() {
+        ServletHolder servletHolder = new ServletHolder(ServletContainer.class);
+        servletHolder.setInitParameter("jersey.config.server.provider.classnames",
+                HelloJetty.class.getCanonicalName());
+
+        Server jettyServer = new Server(8080);
+        ServletContextHandler context = new ServletContextHandler(jettyServer, "/", ServletContextHandler.SESSIONS);
+        context.addServlet(servletHolder, "/*");
+
+        try {
+            jettyServer.start();
+            jettyServer.join();
+            System.out.println("Jetty server started.");
+        } catch (Exception e) {
+            System.out.println("Errors occurred when start jetty server:  " + e.getMessage());
+            System.exit(5);
+        } finally {
+            jettyServer.destroy();
+        }
     }
 }
