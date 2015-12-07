@@ -96,7 +96,14 @@ public final class Asn1 {
     public static void dump(byte[] content) throws IOException {
         String hexStr = HexUtil.bytesToHex(content);
         System.out.println("Dumping data:");
-        System.out.println(hexStr);
+        int range = 100;
+        int pos = range;
+        while (pos < hexStr.length()) {
+            System.out.println(hexStr.substring(pos - range, pos));
+            pos = pos + range;
+        }
+        System.out.println(hexStr.substring(pos - range, hexStr.length()));
+
         Asn1Dumper dumper = new Asn1Dumper();
         dumper.dump(content);
         String output = dumper.output();

@@ -77,7 +77,7 @@ public class TestPersonnelRecord {
         PersonnelRecord expected = TestData.createSamplePersonnel();
         byte[] data = TestData.createSammplePersonnelEncodingData();
         PersonnelRecord decoded = new PersonnelRecord();
-        //Asn1.dump(data);
+        Asn1.dump(data);
         decoded.decode(data);
         Asn1.dump(decoded);
 
