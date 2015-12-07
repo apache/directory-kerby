@@ -20,16 +20,11 @@
 package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
-import org.apache.kerby.asn1.util.HexUtil;
-import org.apache.kerby.asn1.util.IOUtil;
-import org.apache.kerby.cms.type.CompressedData;
 import org.apache.kerby.cms.type.ContentInfo;
-import org.apache.kerby.cms.type.SignedData;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public class TestSignedData extends CmsTestBase {
 
