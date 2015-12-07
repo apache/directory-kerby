@@ -106,7 +106,7 @@ public abstract class Asn1CollectionType
                 }
             }
             if (foundPos == -1) {
-                throw new RuntimeException("Unexpected item with tag: " + item.tag());
+                throw new IOException("Unexpected item with tag: " + item.tag());
             }
             lastPos = foundPos;
 

@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.asn1;
 
+import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.type.Asn1ParsingItem;
 import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;
@@ -65,7 +66,7 @@ public final class Asn1Dumper {
 
     public Asn1Dumper dumpType(int indents, Asn1Type value) {
         if (value == null) {
-            indent(indents).append("null");
+            indent(indents).append("Null");
         } else if (value instanceof Asn1Simple) {
             indent(indents).append(value.toString());
         }  else if (value instanceof Asn1ParsingItem) {
@@ -73,8 +74,10 @@ public final class Asn1Dumper {
         } else if (value instanceof Asn1Dumpable) {
             Asn1Dumpable dumpable = (Asn1Dumpable) value;
             dumpable.dumpWith(this, indents);
+        } else if (value instanceof Asn1Any) {
+            indent(indents).append("<Any>");
         } else {
-            append("<UNKNOWN>");
+            indent(indents).append("<Unknown>");
         }
 
         return this;

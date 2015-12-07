@@ -28,7 +28,7 @@ import java.io.InputStream;
 
 public class TestAsn1Dump {
 
-    //@Test
+    @Test
     public void testDump1WithPersonnelRecord() throws IOException {
         try {
             PersonnelRecord pr = TestData.createSamplePersonnel();

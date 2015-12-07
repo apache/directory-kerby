@@ -87,12 +87,14 @@ public class Asn1Constructed
         container.decode(header);
 
         for (Asn1ParsingResult result : container.getParsingResults()) {
-            Asn1Item item = new Asn1Item(result);
-            if (item.isSimple() && !isLazy()) {
-                item.decodeValueAsSimple();
-                addItem(item.getValue());
-            } else {
-                addItem(item);
+            if (!result.isEOC()) {
+                Asn1Item item = new Asn1Item(result);
+                if (item.isSimple() && !isLazy()) {
+                    item.decodeValueAsSimple();
+                    addItem(item.getValue());
+                } else {
+                    addItem(item);
+                }
             }
         }
     }

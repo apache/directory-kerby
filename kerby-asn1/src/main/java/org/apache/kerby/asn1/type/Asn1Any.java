@@ -28,9 +28,6 @@ import java.nio.ByteBuffer;
 
 /**
  * Can be any valid ASN-1 ojbect, limited or not limited.
- *
- * WARNING!!!!
- * Note, this is far from complete, as most of parent methods are to override.
  */
 public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     private Asn1FieldInfo fieldInfo;
@@ -40,44 +37,36 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
         super(UniversalTag.ANY);
     }
 
-    // For encoding phase.
     public Asn1Any(Asn1Type anyValue) {
         this();
         setValue(anyValue);
     }
 
-    // For decoding phase, value be an Asn1Item, not fully decoded.
     public void setField(Asn1Item field) {
         this.field = field;
     }
 
-    // For decoding phase.
     public void setFieldInfo(Asn1FieldInfo fieldInfo) {
         this.fieldInfo = fieldInfo;
     }
 
-    // For decoding phase.
-    public Asn1Type getItem() {
+    public Asn1Type getField() {
         return field;
     }
 
     @Override
     protected int encodingBodyLength() {
-        return ((AbstractAsn1Type<?>) getValue()).encodingBodyLength();
+        return ((Asn1Object) getValue()).encodingBodyLength();
     }
 
     @Override
     protected void decodeBody(Asn1Header header) throws IOException {
-
+        ((Asn1Object) getValue()).decodeBody(header);
     }
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        ((AbstractAsn1Type<?>) getValue()).encodeBody(buffer);
-    }
-
-    protected void decodeBody(ByteBuffer content) throws IOException {
-        // Not used
+        ((Asn1Object) getValue()).encodeBody(buffer);
     }
 
     protected <T extends Asn1Type> T getValueAs(Class<T> t) {
