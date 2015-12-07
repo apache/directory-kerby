@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredRep.MyEnum.
  }
  */
 public class KrbFastArmoredRep extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ENC_FAST_REP;
 
         @Override

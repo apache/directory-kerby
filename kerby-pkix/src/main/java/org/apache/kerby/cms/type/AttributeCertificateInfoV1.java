@@ -48,7 +48,7 @@ import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.*;
  * AttCertVersionV1 ::= INTEGER { v1(0) }
  */
 public class AttributeCertificateInfoV1 extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         VERSION,
         SUBJECT,
         ISSUER,

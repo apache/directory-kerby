@@ -37,7 +37,7 @@ import static org.apache.kerby.cms.type.CompressedData.MyEnum.*;
  * </pre>
  */
 public class CompressedData extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         VERSION,
         COMPRESSION_ALGORITHM,
         ENCAP_CONTENT_INFO;

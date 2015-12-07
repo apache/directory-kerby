@@ -34,7 +34,7 @@ import static org.apache.kerby.x509.type.Attribute.MyEnum.*;
  * </pre>
  */
 public class Attribute extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ATTR_TYPE,
         ATTR_VALUES;
 

@@ -37,7 +37,7 @@ HostAddress     ::= SEQUENCE  {
 }
  */
 public class HostAddress extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ADDR_TYPE,
         ADDRESS;
 

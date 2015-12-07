@@ -34,7 +34,7 @@ import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.*;
  *   other [3] IMPLICIT OtherCertificateFormat }
  */
 public class CertificateChoices extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         CERTIFICATE,
         EXTENDED_CERTIFICATE,
         V1_ATTR_CERT,

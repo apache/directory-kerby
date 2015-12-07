@@ -35,7 +35,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq.MyEnum.*;
  }
  */
 public class PaPkAsReq extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         SIGNED_AUTH_PACK,
         TRUSTED_CERTIFIERS,
         KDC_PKID;

@@ -35,7 +35,7 @@ import static org.apache.kerby.x509.type.PrivateKeyUsagePeriod.MyEnum.*;
  * </pre>
  */
 public class PrivateKeyUsagePeriod extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         NOT_BEFORE,
         NOT_AFTER;
 

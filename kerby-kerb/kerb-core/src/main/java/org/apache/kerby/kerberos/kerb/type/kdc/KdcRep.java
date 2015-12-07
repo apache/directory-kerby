@@ -47,7 +47,7 @@ import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.*;
  }
  */
 public class KdcRep extends KrbMessage {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         PVNO,
         MSG_TYPE,
         PADATA,

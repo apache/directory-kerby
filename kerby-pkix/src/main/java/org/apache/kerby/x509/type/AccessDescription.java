@@ -35,7 +35,7 @@ import static org.apache.kerby.x509.type.AccessDescription.MyEnum.*;
  * </pre>
  */
 public class AccessDescription extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ACCESS_METHOD,
         ACCESS_LOCATION;
 

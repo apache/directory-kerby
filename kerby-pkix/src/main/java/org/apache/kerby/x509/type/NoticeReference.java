@@ -35,7 +35,7 @@ import static org.apache.kerby.x509.type.NoticeReference.MyEnum.*;
  *
  */
 public class NoticeReference extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ORGANIZATION,
         NOTICE_NUMBERS;
 

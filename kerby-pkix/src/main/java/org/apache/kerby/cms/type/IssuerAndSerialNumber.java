@@ -38,7 +38,7 @@ import static org.apache.kerby.cms.type.IssuerAndSerialNumber.MyEnum.*;
  * </pre>
  */
 public class IssuerAndSerialNumber extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ISSUER,
         SERIAL_NUMBER;
 

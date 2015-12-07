@@ -48,7 +48,7 @@ import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.*;
 public class Authenticator extends KrbAppSequenceType {
     public static final int TAG = 2;
 
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         AUTHENTICATOR_VNO,
         CREALM,
         CNAME,

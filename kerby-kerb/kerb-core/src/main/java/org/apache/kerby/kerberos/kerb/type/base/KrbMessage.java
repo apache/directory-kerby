@@ -26,7 +26,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
 import static org.apache.kerby.kerberos.kerb.type.base.KrbMessage.MyEnum.*;
 
 public abstract class KrbMessage extends KrbAppSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         PVNO,
         MSG_TYPE;
 

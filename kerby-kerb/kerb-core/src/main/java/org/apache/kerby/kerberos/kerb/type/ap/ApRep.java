@@ -36,7 +36,7 @@ import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.*;
  }
  */
 public class ApRep extends KrbMessage {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         PVNO,
         MSG_TYPE,
         ENC_PART;

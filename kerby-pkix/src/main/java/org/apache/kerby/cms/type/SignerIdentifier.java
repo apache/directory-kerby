@@ -38,7 +38,7 @@ import static org.apache.kerby.cms.type.SignerIdentifier.MyEnum.*;
  * </pre>
  */
 public class SignerIdentifier extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ISSUER_AND_SERIAL_NUMBER,
         SUBJECT_KEY_IDENTIFIER;
 

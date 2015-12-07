@@ -47,7 +47,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.*;
  }
  */
 public class KrbError extends KrbMessage {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         PVNO,
         MSG_TYPE,
         CTIME,

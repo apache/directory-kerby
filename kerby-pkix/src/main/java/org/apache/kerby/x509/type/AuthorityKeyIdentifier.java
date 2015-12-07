@@ -41,7 +41,7 @@ import static org.apache.kerby.x509.type.AuthorityKeyIdentifier.MyEnum.*;
  *
  */
 public class AuthorityKeyIdentifier extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         KEY_IDENTIFIER,
         AUTHORITY_CERT_ISSUER,
         AUTHORITY_CERT_SERIAL_NUMBER;

@@ -36,7 +36,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.
  }
  */
 public class KdcDHKeyInfo extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         SUBJECT_PUBLICK_KEY,
         NONCE,
         DH_KEY_EXPIRATION;

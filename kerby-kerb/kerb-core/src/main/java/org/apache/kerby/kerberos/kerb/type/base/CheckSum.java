@@ -36,7 +36,7 @@ import java.util.Arrays;
  }
  */
 public class CheckSum extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         CKSUM_TYPE,
         CHECK_SUM;
 

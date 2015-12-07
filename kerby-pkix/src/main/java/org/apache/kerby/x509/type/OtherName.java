@@ -38,7 +38,7 @@ import static org.apache.kerby.x509.type.OtherName.MyEnum.*;
  * </pre>
  */
 public class OtherName extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TYPE_ID,
         VALUE;
 

@@ -32,7 +32,7 @@ import static org.apache.kerby.cms.type.ExtendedCertificateInfo.MyEnum.*;
  * }
  */
 public class ExtendedCertificateInfo extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         CMS_VERSION,
         CERTIFICATE,
         ATTRIBUTES;

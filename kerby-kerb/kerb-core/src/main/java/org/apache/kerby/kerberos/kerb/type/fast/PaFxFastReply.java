@@ -31,7 +31,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.PaFxFastReply.MyEnum.*;
  }
  */
 public class PaFxFastReply extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ARMORED_DATA;
 
         @Override

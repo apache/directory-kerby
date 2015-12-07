@@ -31,7 +31,7 @@ import static org.apache.kerby.x500.type.Name.MyEnum.*;
  * </pre>
  */
 public class Name extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         RDN_SEQUENCE;
 
         @Override

@@ -40,7 +40,7 @@ import static org.apache.kerby.x509.type.IetfAttrSyntaxChoice.MyEnum.*;
  * </pre>
  */
 public class IetfAttrSyntaxChoice extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         OCTETS,
         OID,
         UTF8;

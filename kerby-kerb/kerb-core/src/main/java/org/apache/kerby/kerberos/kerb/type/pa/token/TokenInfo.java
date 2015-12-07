@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.token.TokenInfo.MyEnum.*;
  }
  */
 public class TokenInfo extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         FLAGS,
         TOKEN_VENDOR;
 

@@ -49,7 +49,7 @@ import static org.apache.kerby.x509.type.TBSCertList.MyEnum.*;
  * </pre>
  */
 public class TBSCertList extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         VERSION,
         SIGNATURE,
         ISSUER,

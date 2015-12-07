@@ -47,7 +47,7 @@ import static org.apache.kerby.x509.type.GeneralName.MyEnum.*;
  * </pre>
  */
 public class GeneralName extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         OTHER_NAME,
         RFC822_NAME,
         DNS_NAME,

@@ -34,7 +34,7 @@ import static org.apache.kerby.cms.type.OtherRevocationInfoFormat.MyEnum.*;
  * }
  */
 public class OtherRevocationInfoFormat extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         OTHER_REV_INFO_FORMAT,
         OTHER_REV_INFO;
 

@@ -31,7 +31,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenChallenge.MyEn
  }
 */
 public class PaTokenChallenge extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TOKENINFOS;
 
         @Override

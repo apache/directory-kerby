@@ -35,7 +35,7 @@ import static org.apache.kerby.x509.type.AttributeCertificate.MyEnum.*;
  * </pre>
  */
 public class AttributeCertificate extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ACI_INFO,
         SIGNATURE_ALGORITHM,
         SIGNATURE_VALUE;

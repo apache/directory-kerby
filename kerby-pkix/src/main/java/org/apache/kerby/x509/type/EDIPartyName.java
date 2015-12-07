@@ -34,7 +34,7 @@ import static org.apache.kerby.x509.type.EDIPartyName.MyEnum.*;
  * </pre>
  */
 public class EDIPartyName extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         NAME_ASSIGNER,
         PARTY_NAME;
 

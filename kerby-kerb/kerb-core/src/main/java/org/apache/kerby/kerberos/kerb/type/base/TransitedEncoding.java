@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding.MyEnum.
  }
  */
 public class TransitedEncoding extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TR_TYPE,
         CONTENTS;
 

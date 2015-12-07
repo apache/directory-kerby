@@ -42,7 +42,7 @@ public class Ticket extends KrbAppSequenceType {
     public static final int TKT_KVNO = KrbConstant.KRB_V5;
     public static final int TAG = 1;
 
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TKT_VNO,
         REALM,
         SNAME,

@@ -35,7 +35,7 @@ import static org.apache.kerby.x509.type.AttCertIssuer.MyEnum.*;
  * </pre>
  */
 public class AttCertIssuer extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         V1_FORM,
         V2_FORM;
 

@@ -39,7 +39,7 @@ import static org.apache.kerby.cms.type.CertificateList.MyEnum.*;
  * </pre>
  */
 public class CertificateList extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TBS_CERT_LIST,
         SIGNATURE_ALGORITHMS,
         SIGNATURE_VALUE;

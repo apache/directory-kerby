@@ -36,7 +36,7 @@ import static org.apache.kerby.x509.type.DistributionPointName.MyEnum.*;
  * </pre>
  */
 public class DistributionPointName extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         FULL_NAME,
         NAME_RELATIVE_TO_CRL_ISSUER;
 

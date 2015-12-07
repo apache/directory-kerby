@@ -36,7 +36,7 @@ import static org.apache.kerby.x509.type.Target.MyEnum.*;
  * </pre>
  */
 public class Target extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TARGET_NAME,
         TARGET_GROUP,
         TARGET_CERT;

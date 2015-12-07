@@ -28,7 +28,7 @@ import static org.apache.kerby.x509.type.DSAParameter.MyEnum.*;
 import java.math.BigInteger;
 
 public class DSAParameter extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         P,
         Q,
         G;

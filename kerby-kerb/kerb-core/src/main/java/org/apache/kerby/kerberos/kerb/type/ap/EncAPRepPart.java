@@ -39,7 +39,7 @@ import static org.apache.kerby.kerberos.kerb.type.ap.EncAPRepPart.MyEnum.*;
 public class EncAPRepPart extends KrbAppSequenceType {
     public static final int TAG = 27;
 
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         CTIME,
         CUSEC,
         SUBKEY,

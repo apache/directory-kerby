@@ -38,7 +38,7 @@ import static org.apache.kerby.x509.type.PolicyQualifierInfo.MyEnum.*;
  * </pre>
  */
 public class PolicyQualifierInfo extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         POLICY_QUALIFIER_ID,
         QUALIFIER;
 

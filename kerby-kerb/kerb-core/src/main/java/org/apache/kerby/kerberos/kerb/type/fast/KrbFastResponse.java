@@ -43,7 +43,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.*;
  }
  */
 public class KrbFastResponse extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         PADATA,
         STRENGTHEN_KEY,
         FINISHED,

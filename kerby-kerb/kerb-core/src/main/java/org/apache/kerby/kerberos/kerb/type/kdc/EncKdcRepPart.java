@@ -50,7 +50,7 @@ import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.*;
  }
  */
 public abstract class EncKdcRepPart extends KrbAppSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         KEY,
         LAST_REQ,
         NONCE,

@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep.MyEnum.*;
  }
  */
 public class PaPkAsRep extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         DH_INFO,
         ENCKEY_PACK;
 

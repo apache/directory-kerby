@@ -44,7 +44,7 @@ import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.INITIAL;
  * Annex A, A.1 ASN.1 description of the record structure
  */
 public class PersonnelRecord extends Asn1TaggingSet {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         NAME,
         TITLE,
         NUMBER,
@@ -138,7 +138,7 @@ public class PersonnelRecord extends Asn1TaggingSet {
     }
 
     public static class ChildInformation extends Asn1SetType {
-        protected static enum MyEnum implements EnumType {
+        protected enum MyEnum implements EnumType {
             CHILD_NAME,
             DATEOFBIRTH;
 
@@ -181,7 +181,7 @@ public class PersonnelRecord extends Asn1TaggingSet {
 
     public static class Name extends Asn1TaggingSequence {
 
-        protected static enum MyEnum implements EnumType {
+        protected enum MyEnum implements EnumType {
             GIVENNAME,
             INITIAL,
             FAMILYNAME;

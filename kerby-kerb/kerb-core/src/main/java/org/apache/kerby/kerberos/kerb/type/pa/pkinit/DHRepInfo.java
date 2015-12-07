@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo.MyEnum.*;
  }
  */
 public class DHRepInfo extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         DH_SIGNED_DATA,
         SERVER_DH_NONCE;
 

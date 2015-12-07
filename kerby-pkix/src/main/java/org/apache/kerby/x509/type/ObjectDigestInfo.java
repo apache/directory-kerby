@@ -45,7 +45,7 @@ import static org.apache.kerby.x509.type.ObjectDigestInfo.MyEnum.*;
  * 
  */
 public class ObjectDigestInfo extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         DIGESTED_OBJECT_TYPE,
         OTHER_OBJECT_TYPE_ID,
         DIGEST_ALGORITHM,
