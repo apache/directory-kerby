@@ -54,17 +54,6 @@ public final class Asn1 {
         return decode(ByteBuffer.wrap(content));
     }
 
-    /*
-    public static Asn1Type decode(ByteBuffer content) throws IOException {
-        Asn1Reader1 reader = new Asn1Reader1(content);
-        Asn1Header header = reader.readHeader();
-
-        Asn1Item result = new Asn1Item(header.getTag(), header.getBuffer());
-        result.useDefinitiveLength(header.isDefinitiveLength());
-
-        return result;
-    }*/
-
     public static Asn1Type decode(ByteBuffer content) throws IOException {
         return Asn1ParsingContainer.decodeOne(content);
     }
