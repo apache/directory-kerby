@@ -43,7 +43,7 @@ public abstract class AppClient {
     }
 
     public void run() {
-        System.out.println("Connected to server");
+        // System.out.println("Connected to server");
 
         try {
             withConnection(conn);

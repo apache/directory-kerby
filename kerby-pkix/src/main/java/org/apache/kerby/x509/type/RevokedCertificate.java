@@ -20,7 +20,9 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.RevokedCertificate.MyEnum.*;
 
 /**
  * Ref. RFC 2459
@@ -35,9 +37,21 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * </pre>
  */
 public class RevokedCertificate extends Asn1SequenceType {
-    private static final int USER_CERTIFICATE = 0;
-    private static final int REVOCATION_DATA = 1;
-    private static final int CRL_ENTRY_EXTENSIONS = 2;
+    protected static enum MyEnum implements EnumType {
+        USER_CERTIFICATE,
+        REVOCATION_DATA,
+        CRL_ENTRY_EXTENSIONS;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(USER_CERTIFICATE, CertificateSerialNumber.class),

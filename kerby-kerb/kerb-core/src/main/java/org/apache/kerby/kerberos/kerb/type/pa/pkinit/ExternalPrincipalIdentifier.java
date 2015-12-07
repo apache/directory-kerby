@@ -20,9 +20,11 @@
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ExternalPrincipalIdentifier.MyEnum.*;
 
 /**
  ExternalPrincipalIdentifier ::= SEQUENCE {
@@ -32,9 +34,21 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  }
  */
 public class ExternalPrincipalIdentifier extends KrbSequenceType {
-    private static final int SUBJECT_NAME = 0;
-    private static final int ISSUER_AND_SERIAL_NUMBER = 1;
-    private static final int SUBJECT_KEY_IDENTIFIER = 2;
+    protected static enum MyEnum implements EnumType {
+        SUBJECT_NAME,
+        ISSUER_AND_SERIAL_NUMBER,
+        SUBJECT_KEY_IDENTIFIER;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ImplicitField(SUBJECT_NAME, Asn1OctetString.class),

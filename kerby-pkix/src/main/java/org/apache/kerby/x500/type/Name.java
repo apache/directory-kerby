@@ -19,8 +19,10 @@
  */
 package org.apache.kerby.x500.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import static org.apache.kerby.x500.type.Name.MyEnum.*;
 
 /**
  *
@@ -29,7 +31,19 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
  * </pre>
  */
 public class Name extends Asn1Choice {
-    private static final int RDN_SEQUENCE = 0;
+    protected static enum MyEnum implements EnumType {
+        RDN_SEQUENCE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
         new Asn1FieldInfo(RDN_SEQUENCE, RDNSequence.class),

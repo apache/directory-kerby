@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum NameType implements Asn1EnumType {
+public enum NameType implements EnumType {
     NT_UNKNOWN(0),
     NT_PRINCIPAL(1),
     NT_SRV_INST(2),
@@ -41,9 +41,14 @@ public enum NameType implements Asn1EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static NameType fromValue(Integer value) {
         if (value != null) {
-            for (Asn1EnumType e : values()) {
+            for (EnumType e : values()) {
                 if (e.getValue() == value.intValue()) {
                     return (NameType) e;
                 }

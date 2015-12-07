@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.kdc;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum KdcOption implements Asn1EnumType {
+public enum KdcOption implements EnumType {
     NONE(-1),
     //RESERVED(0x80000000),
     FORWARDABLE(0x40000000),
@@ -67,8 +67,13 @@ public enum KdcOption implements Asn1EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static KdcOption fromValue(int value) {
-        for (Asn1EnumType e : values()) {
+        for (EnumType e : values()) {
             if (e.getValue() == value) {
                 return (KdcOption) e;
             }

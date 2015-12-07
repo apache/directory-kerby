@@ -20,7 +20,9 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.NoticeReference.MyEnum.*;
 
 /**
  * <pre>
@@ -33,8 +35,20 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  *
  */
 public class NoticeReference extends Asn1SequenceType {
-    private static final int ORGANIZATION = 0;
-    private static final int NOTICE_NUMBERS = 1;
+    protected static enum MyEnum implements EnumType {
+        ORGANIZATION,
+        NOTICE_NUMBERS;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(ORGANIZATION, DisplayText.class),

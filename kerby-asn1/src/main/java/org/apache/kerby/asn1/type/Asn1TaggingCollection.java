@@ -19,9 +19,11 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1Dumpable;
+import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.Tag;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -30,25 +32,30 @@ import java.nio.ByteBuffer;
  * For tagging a collection type with tagNo, either application specific or
  * context specific class
  */
-public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionType> {
+public abstract class Asn1TaggingCollection
+    extends AbstractAsn1Type<Asn1CollectionType> implements Asn1Dumpable {
+
     private Asn1Tagging<Asn1CollectionType> tagging;
     private Asn1CollectionType tagged;
 
-    public TaggingCollection(int taggingTagNo, Asn1FieldInfo[] tags,
-                             boolean isAppSpecific, boolean isImplicit) {
-        super(isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC,
-            taggingTagNo);
+    public Asn1TaggingCollection(int taggingTagNo, Asn1FieldInfo[] tags,
+                                 boolean isAppSpecific, boolean isImplicit) {
+        super(makeTag(isAppSpecific, taggingTagNo));
         this.tagged = createTaggedCollection(tags);
         setValue(tagged);
         this.tagging = new Asn1Tagging<Asn1CollectionType>(taggingTagNo,
             tagged, isAppSpecific, isImplicit);
     }
 
+    private static Tag makeTag(boolean isAppSpecific, int tagNo) {
+        return isAppSpecific ? Tag.newAppTag(tagNo) : Tag.newCtxTag(tagNo);
+    }
+
     protected abstract Asn1CollectionType createTaggedCollection(Asn1FieldInfo[] tags);
 
     @Override
-    public int tagFlags() {
-        return tagging.tagFlags();
+    public Tag tag() {
+        return tagging.tag();
     }
 
     @Override
@@ -128,43 +135,49 @@ public abstract class TaggingCollection extends AbstractAsn1Type<Asn1CollectionT
     }
 
     @Override
-    protected void decodeBody(LimitedByteBuffer content) throws IOException {
+    protected void decodeBody(ByteBuffer content) throws IOException {
         tagging.decodeBody(content);
     }
 
-    protected <T extends Asn1Type> T getFieldAs(int index, Class<T> t) {
+    protected <T extends Asn1Type> T getFieldAs(EnumType index, Class<T> t) {
         return tagged.getFieldAs(index, t);
     }
 
-    protected void setFieldAs(int index, Asn1Type value) {
+    protected void setFieldAs(EnumType index, Asn1Type value) {
         tagged.setFieldAs(index, value);
     }
 
-    protected String getFieldAsString(int index) {
+    protected String getFieldAsString(EnumType index) {
         return tagged.getFieldAsString(index);
     }
 
-    protected byte[] getFieldAsOctets(int index) {
+    protected byte[] getFieldAsOctets(EnumType index) {
         return tagged.getFieldAsOctets(index);
     }
 
-    protected void setFieldAsOctets(int index, byte[] bytes) {
+    protected void setFieldAsOctets(EnumType index, byte[] bytes) {
         tagged.setFieldAsOctets(index, bytes);
     }
 
-    protected Integer getFieldAsInteger(int index) {
+    protected Integer getFieldAsInteger(EnumType index) {
         return tagged.getFieldAsInteger(index);
     }
 
-    protected void setFieldAsInt(int index, int value) {
+    protected void setFieldAsInt(EnumType index, int value) {
         tagged.setFieldAsInt(index, value);
     }
 
-    protected byte[] getFieldAsOctetBytes(int index) {
+    protected byte[] getFieldAsOctetBytes(EnumType index) {
         return tagged.getFieldAsOctets(index);
     }
 
-    protected void setFieldAsOctetBytes(int index, byte[] value) {
+    protected void setFieldAsOctetBytes(EnumType index, byte[] value) {
         tagged.setFieldAsOctets(index, value);
+    }
+
+    @Override
+    public void dumpWith(Asn1Dumper dumper, int indents) {
+        Asn1Type taggedValue = getValue();
+        dumper.dumpType(indents, taggedValue);
     }
 }

@@ -20,12 +20,14 @@
 package org.apache.kerby.kerberos.kerb.type.kdc;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.*;
 
 /**
  KDC-REQ         ::= SEQUENCE {
@@ -38,8 +40,22 @@ import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
  }
  */
 public class KdcReq extends KrbMessage {
-    private static final int PADATA = 2;
-    private static final int REQ_BODY = 3;
+    protected static enum MyEnum implements EnumType {
+        PVNO,
+        MSG_TYPE,
+        PADATA,
+        REQ_BODY;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(PVNO, 1, Asn1Integer.class),

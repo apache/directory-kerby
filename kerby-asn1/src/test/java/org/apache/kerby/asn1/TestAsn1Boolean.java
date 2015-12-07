@@ -20,6 +20,7 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.type.Asn1Boolean;
+import org.apache.kerby.asn1.util.HexUtil;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class TestAsn1Boolean {
 
     private void testEncodingWith(Boolean value, String expectedEncoding,
                                   boolean isDer) {
-        byte[] expected = Util.hex2bytes(expectedEncoding);
+        byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
         Asn1Boolean aValue = new Asn1Boolean(value);
         if (isDer) {
             aValue.useDER();
@@ -63,7 +64,7 @@ public class TestAsn1Boolean {
         } else {
             decoded.useBER();
         }
-        decoded.decode(Util.hex2bytes(content));
+        decoded.decode(HexUtil.hex2bytesFriendly(content));
         assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }
 }

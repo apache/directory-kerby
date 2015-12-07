@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.type.pa.otp;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
@@ -27,6 +28,7 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AlgorithmIdentifiers;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.*;
 
 /**
  OTP-TOKENINFO ::= SEQUENCE {
@@ -42,15 +44,27 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AlgorithmIdentifiers;
  }
  */
 public class OtpTokenInfo extends KrbSequenceType {
-    private static final int FLAGS = 0;
-    private static final int OTP_VENDOR = 1;
-    private static final int OTP_CHALLENGE = 2;
-    private static final int OTP_LENGTH = 3;
-    private static final int OTP_FORMAT = 4;
-    private static final int OTP_TOKEN_ID = 5;
-    private static final int OTP_ALG_ID = 6;
-    private static final int SUPPORTED_HASH_ALG = 7;
-    private static final int ITERATION_COUNT = 8;
+    protected static enum MyEnum implements EnumType {
+        FLAGS,
+        OTP_VENDOR,
+        OTP_CHALLENGE,
+        OTP_LENGTH,
+        OTP_FORMAT,
+        OTP_TOKEN_ID,
+        OTP_ALG_ID,
+        SUPPORTED_HASH_ALG,
+        ITERATION_COUNT;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(FLAGS, Asn1OctetString.class),

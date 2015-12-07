@@ -20,10 +20,12 @@
 package org.apache.kerby.kerberos.kerb.type.fast;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq.MyEnum.*;
 
 /**
  KrbFastArmoredReq ::= SEQUENCE {
@@ -46,9 +48,21 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
  }
  */
 public class KrbFastArmoredReq extends KrbSequenceType {
-    private static final int ARMOR = 0;
-    private static final int REQ_CHECKSUM = 1;
-    private static final int ENC_FAST_REQ = 2;
+    protected static enum MyEnum implements EnumType {
+        ARMOR,
+        REQ_CHECKSUM,
+        ENC_FAST_REQ;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     private KrbFastReq fastReq;
 

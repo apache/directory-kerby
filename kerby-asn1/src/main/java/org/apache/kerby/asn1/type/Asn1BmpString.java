@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.LimitedByteBuffer;
 import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class Asn1BmpString extends Asn1Simple<String> {
     public Asn1BmpString() {
@@ -61,8 +61,8 @@ public class Asn1BmpString extends Asn1Simple<String> {
     }
 
     @Override
-    protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        if (content.hasLeft() % 2 != 0) {
+    protected void decodeBody(ByteBuffer content) throws IOException {
+        if (content.remaining() % 2 != 0) {
             throw new IOException("Bad stream, BMP string expecting multiple of 2 bytes");
         }
         super.decodeBody(content);

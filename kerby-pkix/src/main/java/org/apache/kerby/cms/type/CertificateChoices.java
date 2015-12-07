@@ -19,9 +19,11 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.ImplicitField;
+import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.*;
 
 /**
  * CertificateChoices ::= CHOICE {
@@ -32,12 +34,23 @@ import org.apache.kerby.asn1.ImplicitField;
  *   other [3] IMPLICIT OtherCertificateFormat }
  */
 public class CertificateChoices extends Asn1Choice {
+    protected static enum MyEnum implements EnumType {
+        CERTIFICATE,
+        EXTENDED_CERTIFICATE,
+        V1_ATTR_CERT,
+        V2_ATTR_CERT,
+        OTHER;
 
-    private static final int CERTIFICATE = 0;
-    private static final int EXTENDED_CERTIFICATE = 1;
-    private static final int V1_ATTR_CERT = 2;
-    private static final int V2_ATTR_CERT = 3;
-    private static final int OTHER = 4;
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(CERTIFICATE, Certificate.class),

@@ -20,10 +20,12 @@
 package org.apache.kerby.kerberos.kerb.type.base;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosStrings;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.base.PrincipalName.MyEnum.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,8 +38,21 @@ import java.util.List;
  }
  */
 public class PrincipalName extends KrbSequenceType {
-    private static final int NAME_TYPE = 0;
-    private static final int NAME_STRING = 1;
+    protected static enum MyEnum implements EnumType {
+        NAME_TYPE,
+        NAME_STRING;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
+
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(NAME_TYPE, Asn1Integer.class),
             new ExplicitField(NAME_STRING, KerberosStrings.class)

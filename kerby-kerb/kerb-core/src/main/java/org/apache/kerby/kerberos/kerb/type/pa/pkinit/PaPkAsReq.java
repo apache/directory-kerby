@@ -20,10 +20,12 @@
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq.MyEnum.*;
 
 /**
  PA-PK-AS-REQ ::= SEQUENCE {
@@ -33,9 +35,21 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  }
  */
 public class PaPkAsReq extends KrbSequenceType {
-    private static final int SIGNED_AUTH_PACK = 0;
-    private static final int TRUSTED_CERTIFIERS = 1;
-    private static final int KDC_PKID = 2;
+    protected static enum MyEnum implements EnumType {
+        SIGNED_AUTH_PACK,
+        TRUSTED_CERTIFIERS,
+        KDC_PKID;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ImplicitField(SIGNED_AUTH_PACK, Asn1OctetString.class),

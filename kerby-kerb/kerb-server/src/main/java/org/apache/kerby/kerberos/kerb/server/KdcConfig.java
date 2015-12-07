@@ -160,15 +160,15 @@ public class KdcConfig extends Krb5Conf {
     }
 
     public String getVerifyKeyConfig() {
-        return getString(KdcConfigKey.VERIFY_KEY, true, KDCDEFAULT);
+        return getString(KdcConfigKey.TOKEN_VERIFY_KEYS, true, KDCDEFAULT);
     }
 
     public String getDecryptionKeyConfig() {
-        return getString(KdcConfigKey.DECRYPTION_KEY, true, KDCDEFAULT);
+        return getString(KdcConfigKey.TOKEN_DECRYPTION_KEYS, true, KDCDEFAULT);
     }
     
     public List<String> getIssuers() {
-        return Arrays.asList(getStringArray(KdcConfigKey.ISSUERS, true, KDCDEFAULT));
+        return Arrays.asList(getStringArray(KdcConfigKey.TOKEN_ISSUERS, true, KDCDEFAULT));
     }
 
     public List<String> getPkinitAnchors() {

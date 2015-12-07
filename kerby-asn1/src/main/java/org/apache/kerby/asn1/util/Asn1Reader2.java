@@ -17,19 +17,46 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1;
-
-import org.junit.Test;
+package org.apache.kerby.asn1.util;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
-public class TestAsn1Input {
+/**
+ * ASN1 reader for positional reading.
+ */
+public final class Asn1Reader2 extends Asn1Reader {
+    private int position;
 
-    @Test
-    public void testDecoding() throws IOException {
-        //PersonnelRecord expected = TestData.createSamplePersonnel();
-        byte[] data = TestData.createSammplePersonnelEncodingData();
-        //Asn1InputBuffer ib = new Asn1InputBuffer(data);
-        Asn1Dump.dump(data);
+    public Asn1Reader2(ByteBuffer buffer, int position) {
+        super(buffer);
+        this.position = position;
+    }
+
+    public Asn1Reader2(ByteBuffer buffer) {
+        super(buffer);
+        this.position = buffer.position();
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public boolean available() {
+        return position < buffer.limit();
+    }
+
+    @Override
+    protected ByteBuffer getValueBuffer(int valueLength) {
+        return buffer;
+    }
+
+    @Override
+    protected byte readByte() throws IOException {
+        return buffer.get(position++);
     }
 }

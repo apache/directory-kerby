@@ -20,9 +20,11 @@
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.*;
 
 /**
  AuthPack ::= SEQUENCE {
@@ -33,10 +35,22 @@ import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
  }
  */
 public class AuthPack extends KrbSequenceType {
-    private static final int PK_AUTHENTICATOR = 0;
-    private static final int CLIENT_PUBLIC_VALUE = 1;
-    private static final int SUPPORTED_CMS_TYPES = 2;
-    private static final int CLIENT_DH_NONCE = 3;
+    protected static enum MyEnum implements EnumType {
+        PK_AUTHENTICATOR,
+        CLIENT_PUBLIC_VALUE,
+        SUPPORTED_CMS_TYPES,
+        CLIENT_DH_NONCE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(PK_AUTHENTICATOR, PkAuthenticator.class),

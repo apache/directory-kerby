@@ -20,6 +20,7 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.type.Asn1UtcTime;
+import org.apache.kerby.asn1.util.HexUtil;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class TestAsn1UtcTime {
     }
 
     private void testEncodingWith(Date value, String expectedEncoding) {
-        byte[] expected = Util.hex2bytes(expectedEncoding);
+        byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
         Asn1UtcTime aValue = new Asn1UtcTime(value);
         aValue.useDER();
         byte[] encodingBytes = aValue.encode();
@@ -65,7 +66,7 @@ public class TestAsn1UtcTime {
     private void testDecodingWith(Date expectedValue, String content) throws IOException {
         Asn1UtcTime decoded = new Asn1UtcTime();
         decoded.useDER();
-        decoded.decode(Util.hex2bytes(content));
+        decoded.decode(HexUtil.hex2bytesFriendly(content));
         assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }
 }

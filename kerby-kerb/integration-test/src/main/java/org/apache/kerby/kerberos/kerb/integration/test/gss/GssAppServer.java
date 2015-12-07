@@ -29,8 +29,6 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
-import java.nio.charset.StandardCharsets;
-
 public class GssAppServer extends AppServer {
     private String serverPrincipal;
     private GSSManager manager;
@@ -67,7 +65,7 @@ public class GssAppServer extends AppServer {
     protected void onConnection(Transport.Connection conn) throws Exception {
         byte[] token;
 
-        System.out.print("Starting negotiating security context");
+        // System.out.print("Starting negotiating security context");
         while (!context.isEstablished()) {
             token = conn.recvToken();
             token = context.acceptSecContext(token, 0, token.length);
@@ -76,9 +74,9 @@ public class GssAppServer extends AppServer {
             }
         }
 
-        System.out.print("Context Established! ");
-        System.out.println("Client is " + context.getSrcName());
-        System.out.println("Server is " + context.getTargName());
+        // System.out.print("Context Established! ");
+        // System.out.println("Client is " + context.getSrcName());
+        // System.out.println("Server is " + context.getTargName());
 
         doWith(context, conn);
 
@@ -87,24 +85,24 @@ public class GssAppServer extends AppServer {
 
     protected void doWith(GSSContext context,
                           Transport.Connection conn) throws Exception {
-        if (context.getMutualAuthState()) {
-            System.out.println("Mutual authentication took place!");
-        }
+        //if (context.getMutualAuthState()) {
+            // System.out.println("Mutual authentication took place!");
+        //}
 
         MessageProp prop = new MessageProp(0, false);
         byte[] token = conn.recvToken();
         byte[] bytes = context.unwrap(token, 0, token.length, prop);
-        String str = new String(bytes, StandardCharsets.UTF_8);
-        System.out.println("Received data \""
-                + str + "\" of length " + str.length());
+        //String str = new String(bytes, StandardCharsets.UTF_8);
+        // System.out.println("Received data \""
+        //        + str + "\" of length " + str.length());
 
-        System.out.println("Confidentiality applied: "
-                + prop.getPrivacy());
+        //System.out.println("Confidentiality applied: "
+        //       + prop.getPrivacy());
 
         prop.setQOP(0);
         token = context.getMIC(bytes, 0, bytes.length, prop);
-        System.out.println("Will send MIC token of size "
-                + token.length);
+        //System.out.println("Will send MIC token of size "
+                //+ token.length);
         conn.sendToken(token);
     }
 }

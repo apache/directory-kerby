@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum CheckSumType implements Asn1EnumType {
+public enum CheckSumType implements EnumType {
     NONE(0, "none", "None checksum type"),
 
     CRC32(0x0001, "crc32", "CRC-32"),
@@ -80,7 +80,7 @@ public enum CheckSumType implements Asn1EnumType {
 
     public static CheckSumType fromValue(Integer value) {
         if (value != null) {
-            for (Asn1EnumType e : values()) {
+            for (EnumType e : values()) {
                 if (e.getValue() == value) {
                     return (CheckSumType) e;
                 }
@@ -105,6 +105,7 @@ public enum CheckSumType implements Asn1EnumType {
         return value;
     }
 
+    @Override
     public String getName() {
         return name;
     }

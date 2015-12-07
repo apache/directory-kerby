@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Flags;
 
 /**
@@ -39,7 +39,7 @@ import org.apache.kerby.asn1.type.Asn1Flags;
  * </pre>
  */
 
-enum ReasonFlagsEnum implements Asn1EnumType {
+enum ReasonFlagsEnum implements EnumType {
     UNUSED,
     KEY_COMPROMISE,
     CA_COMPROMISE,
@@ -53,6 +53,11 @@ enum ReasonFlagsEnum implements Asn1EnumType {
     @Override
     public int getValue() {
         return ordinal();
+    }
+
+    @Override
+    public String getName() {
+        return name();
     }
 }
 

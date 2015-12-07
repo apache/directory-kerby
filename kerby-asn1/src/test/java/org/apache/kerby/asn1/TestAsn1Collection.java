@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.AbstractAsn1Type;
 import org.apache.kerby.asn1.type.Asn1Boolean;
 import org.apache.kerby.asn1.type.Asn1IA5String;
 import org.apache.kerby.asn1.type.Asn1Sequence;
+import org.apache.kerby.asn1.type.Asn1String;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -33,8 +33,8 @@ public class TestAsn1Collection {
     static final String TEST_STR = "Jones";
     static final Boolean TEST_BOOL = true;
     static final byte[] EXPECTED_BYTES = new byte[] {(byte) 0x30, (byte) 0x0A,
-            (byte) 0x16, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E, (byte) 0x65, (byte) 0x73,
-            (byte) 0x01, (byte) 0x01, (byte) 0xFF
+            (byte) 0x16, (byte) 0x05, (byte) 0x4A, (byte) 0x6F, (byte) 0x6E,
+            (byte) 0x65, (byte) 0x73, (byte) 0x01, (byte) 0x01, (byte) 0xFF
     };
 
     @Test
@@ -50,10 +50,11 @@ public class TestAsn1Collection {
     public void testSequenceDecoding() throws IOException {
         Asn1Sequence seq = new Asn1Sequence();
         seq.decode(EXPECTED_BYTES);
-        AbstractAsn1Type<?> field = (AbstractAsn1Type<?>) seq.getValue().get(0).getValue();
+        Asn1String field =
+            (Asn1String) seq.getValue().get(0);
         assertThat(field.getValue()).isEqualTo(TEST_STR);
 
-        field = (AbstractAsn1Type<?>) seq.getValue().get(1).getValue();
-        assertThat(field.getValue()).isEqualTo(TEST_BOOL);
+        Asn1Boolean field2 = (Asn1Boolean) seq.getValue().get(1);
+        assertThat(field2.getValue()).isEqualTo(TEST_BOOL);
     }
 }

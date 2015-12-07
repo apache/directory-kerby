@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
@@ -29,6 +30,7 @@ import org.apache.kerby.x509.type.AttCertValidityPeriod;
 import org.apache.kerby.x509.type.Attributes;
 import org.apache.kerby.x509.type.CertificateSerialNumber;
 import org.apache.kerby.x509.type.Extensions;
+import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.*;
 
 /**
  * AttributeCertificateInfoV1 ::= SEQUENCE {
@@ -46,16 +48,27 @@ import org.apache.kerby.x509.type.Extensions;
  * AttCertVersionV1 ::= INTEGER { v1(0) }
  */
 public class AttributeCertificateInfoV1 extends Asn1SequenceType {
+    protected static enum MyEnum implements EnumType {
+        VERSION,
+        SUBJECT,
+        ISSUER,
+        SIGNATURE,
+        SERIAL_NUMBER,
+        ATTR_CERT_VALIDITY_PERIOD,
+        ATTRIBUTES,
+        ISSUER_UNIQUE_ID,
+        EXTENSIONS;
 
-    private static final int VERSION = 0;
-    private static final int SUBJECT = 1;
-    private static final int ISSUER = 2;
-    private static final int SIGNATURE = 3;
-    private static final int SERIAL_NUMBER = 4;
-    private static final int ATTR_CERT_VALIDITY_PERIOD = 5;
-    private static final int ATTRIBUTES = 6;
-    private static final int ISSUER_UNIQUE_ID = 7;
-    private static final int EXTENSIONS = 8;
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(VERSION, Asn1Integer.class),

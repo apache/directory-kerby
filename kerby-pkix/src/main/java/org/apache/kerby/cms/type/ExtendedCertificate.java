@@ -20,7 +20,9 @@
 package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.cms.type.ExtendedCertificate.MyEnum.*;
 
 /**
  * ExtendedCertificate ::= SEQUENCE {
@@ -30,9 +32,21 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * }
  */
 public class ExtendedCertificate extends Asn1SequenceType {
-    private static final int EXTENDED_CERTIFICATE_INFO = 0;
-    private static final int SIGNATURE_ALGORITHMS = 1;
-    private static final int SIGNATURE = 2;
+    protected static enum MyEnum implements EnumType {
+        EXTENDED_CERTIFICATE_INFO,
+        SIGNATURE_ALGORITHMS,
+        SIGNATURE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(EXTENDED_CERTIFICATE_INFO, ExtendedCertificateInfo.class),

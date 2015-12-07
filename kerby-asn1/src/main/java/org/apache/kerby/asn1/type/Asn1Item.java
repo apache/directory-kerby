@@ -20,7 +20,7 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Factory;
-import org.apache.kerby.asn1.LimitedByteBuffer;
+import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
 
 import java.io.IOException;
@@ -29,28 +29,40 @@ import java.nio.ByteBuffer;
 /**
  * Asn1Item serves two purposes:
  * 1. Wrapping an existing Asn1Type value for Asn1Collection;
- * 2. Wrapping a half decoded value whose body content is left to be decoded later when appropriate.
- * Why not fully decoded at once? Lazy and decode on demand for collection, or impossible due to lacking
- * key parameters, like implicit encoded value for tagged value.
+ * 2. Wrapping a half decoded value whose body content is left to be decoded
+ * later when appropriate.
+ * Why not fully decoded at once? Lazy and decode on demand for collection, or
+ * impossible due to lacking key parameters, like implicit encoded value for
+ * tagged value.
  *
- * For not fully decoded value, you tell your case using isSimple/isCollection/isTagged/isContextSpecific etc.,
- * then call decodeValueAsSimple/decodeValueAsCollection/decodeValueAsImplicitTagged/decodeValueAsExplicitTagged etc.
- * to decode it fully. Or if you have already derived the value holder or the holder type, you can use decodeValueWith
- * or decodeValueAs with your holder or hodler type.
+ * For not fully decoded value, you tell your case using isSimple/isCollection/
+ * isTagged/isContextSpecific etc., then call decodeValueAsSimple/
+ * decodeValueAsCollection/decodeValueAsImplicitTagged/decodeValueAsExplicitTagged etc.
+ * to decode it fully. Or if you have already derived the value holder or
+ * the holder type, you can use decodeValueWith or decodeValueAs with your
+ * holder or hodler type.
  */
 public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
-    private LimitedByteBuffer bodyContent;
+    private ByteBuffer bodyContent;
 
     public Asn1Item(Asn1Type value) {
-        super(value.tagFlags(), value.tagNo(), value);
+        super(value.tag(), value);
     }
 
-    public Asn1Item(int tag, int tagNo, LimitedByteBuffer bodyContent) {
-        super(tag, tagNo);
+    public Asn1Item(Tag tag) {
+        super(tag);
+    }
+
+    public Asn1Item(Tag tag, ByteBuffer bodyContent) {
+        super(tag);
         this.bodyContent = bodyContent;
     }
 
-    public LimitedByteBuffer getBodyContent() {
+    public void setBodyContent(ByteBuffer bodyContent) {
+        this.bodyContent = bodyContent;
+    }
+
+    public ByteBuffer getBodyContent() {
         return bodyContent;
     }
 
@@ -59,24 +71,18 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
         if (getValue() != null) {
             return ((AbstractAsn1Type<?>) getValue()).encodingBodyLength();
         }
-        return (int) bodyContent.hasLeft();
+        return (int) bodyContent.remaining();
     }
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
         if (getValue() != null) {
-            ((AbstractAsn1Type<?>) getValue()).encodeBody(buffer);
-        } else {
-            try {
-                buffer.put(bodyContent.readAllLeftBytes());
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to read all left bytes from body content", e);
-            }
+            ((Asn1Object) getValue()).encodeBody(buffer);
         }
     }
 
     @Override
-    protected void decodeBody(LimitedByteBuffer bodyContent) throws IOException {
+    protected void decodeBody(ByteBuffer bodyContent) throws IOException {
         this.bodyContent = bodyContent;
     }
 
@@ -89,10 +95,12 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
             return;
         }
         if (!isSimple()) {
-            throw new IllegalArgumentException("Attempting to decode non-simple value as simple");
+            throw new IllegalArgumentException(
+                "Attempting to decode non-simple value as simple");
         }
 
-        Asn1Type value = Asn1Factory.create(tagNo());
+        Asn1Object value = (Asn1Object) Asn1Factory.create(tagNo());
+        value.useDefinitiveLength(isDefinitiveLength());
         decodeValueWith(value);
     }
 
@@ -101,10 +109,12 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
             return;
         }
         if (!isCollection()) {
-            throw new IllegalArgumentException("Attempting to decode non-collection value as collection");
+            throw new IllegalArgumentException(
+                "Attempting to decode non-collection value as collection");
         }
 
         Asn1Type value = Asn1Factory.create(tagNo());
+        value.useDefinitiveLength(isDefinitiveLength());
         decodeValueWith(value);
     }
 
@@ -113,46 +123,24 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
         try {
             value = type.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("Invalid type: " + type.getCanonicalName(), e);
+            throw new RuntimeException("Invalid type: "
+                + type.getCanonicalName(), e);
         }
         decodeValueWith(value);
     }
 
     public void decodeValueWith(Asn1Type value) throws IOException {
         setValue(value);
-        ((AbstractAsn1Type<?>) value).decode(tagFlags(), tagNo(), bodyContent);
-    }
-
-    public void decodeValueAsImplicitTagged(int originalTag, int originalTagNo) throws IOException {
-        if (!isTagged()) {
-            throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
-        }
-        Asn1Item taggedValue = new Asn1Item(originalTag, originalTagNo, getBodyContent());
-        decodeValueWith(taggedValue);
-    }
-
-    public void decodeValueAsExplicitTagged() throws IOException {
-        if (!isTagged()) {
-            throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
-        }
-        Asn1Item taggedValue = decodeOne(getBodyContent());
-        decodeValueWith(taggedValue);
-    }
-
-    private void decodeValueWith(Asn1Item taggedValue) throws IOException {
-        taggedValue.decodeValueAsSimple();
-        if (taggedValue.isFullyDecoded()) {
-            setValue(taggedValue.getValue());
-        } else {
-            setValue(taggedValue);
-        }
+        value.useDefinitiveLength(isDefinitiveLength());
+        ((AbstractAsn1Type<?>) value).decode(tag(), bodyContent);
     }
 
     public void decodeValueWith(Asn1Type value, TaggingOption taggingOption) throws IOException {
         if (!isTagged()) {
-            throw new IllegalArgumentException("Attempting to decode non-tagged value using tagging way");
+            throw new IllegalArgumentException(
+                "Attempting to decode non-tagged value using tagging way");
         }
-        ((AbstractAsn1Type<?>) value).taggedDecode(tagFlags(), tagNo(), getBodyContent(), taggingOption);
+        ((Asn1Object) value).taggedDecode(tag(), getBodyContent(), taggingOption);
         setValue(value);
     }
 }

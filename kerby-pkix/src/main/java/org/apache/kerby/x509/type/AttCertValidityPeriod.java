@@ -20,8 +20,10 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.AttCertValidityPeriod.MyEnum.*;
 
 /**
  * <pre>
@@ -32,8 +34,20 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * </pre>
  */
 public class AttCertValidityPeriod extends Asn1SequenceType {
-    private static final int NOT_BEFORE = 0;
-    private static final int NOT_AFTER = 1;
+    protected static enum MyEnum implements EnumType {
+        NOT_BEFORE,
+        NOT_AFTER;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(NOT_BEFORE, Asn1GeneralizedTime.class),

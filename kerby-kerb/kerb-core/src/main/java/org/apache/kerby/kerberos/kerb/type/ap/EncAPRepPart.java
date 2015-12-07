@@ -20,11 +20,13 @@
 package org.apache.kerby.kerberos.kerb.type.ap;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import static org.apache.kerby.kerberos.kerb.type.ap.EncAPRepPart.MyEnum.*;
 
 /**
  EncAPRepPart    ::= [APPLICATION 27] SEQUENCE {
@@ -36,10 +38,23 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
  */
 public class EncAPRepPart extends KrbAppSequenceType {
     public static final int TAG = 27;
-    private static final int CTIME = 0;
-    private static final int CUSEC = 1;
-    private static final int SUBKEY = 2;
-    private static final int SEQ_NUMBER = 3;
+
+    protected static enum MyEnum implements EnumType {
+        CTIME,
+        CUSEC,
+        SUBKEY,
+        SEQ_NUMBER;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(CTIME, 0, KerberosTime.class),

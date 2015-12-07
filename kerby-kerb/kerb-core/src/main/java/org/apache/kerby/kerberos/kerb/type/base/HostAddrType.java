@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum HostAddrType implements Asn1EnumType {
+public enum HostAddrType implements EnumType {
     /**
      * Constant for the "null" host address type.
      */
@@ -86,9 +86,14 @@ public enum HostAddrType implements Asn1EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static HostAddrType fromValue(Integer value) {
         if (value != null) {
-            for (Asn1EnumType e : values()) {
+            for (EnumType e : values()) {
                 if (e.getValue() == value.intValue()) {
                     return (HostAddrType) e;
                 }

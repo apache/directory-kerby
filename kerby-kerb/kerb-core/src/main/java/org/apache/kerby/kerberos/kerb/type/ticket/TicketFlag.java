@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.ticket;
 
-import org.apache.kerby.asn1.type.Asn1EnumType;
+import org.apache.kerby.asn1.EnumType;
 
-public enum TicketFlag implements Asn1EnumType {
+public enum TicketFlag implements EnumType {
     NONE(-1),
     FORWARDABLE(0x40000000),
     FORWARDED(0x20000000),
@@ -50,8 +50,13 @@ public enum TicketFlag implements Asn1EnumType {
         return value;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
     public static TicketFlag fromValue(int value) {
-        for (Asn1EnumType e : values()) {
+        for (EnumType e : values()) {
             if (e.getValue() == value) {
                 return (TicketFlag) e;
             }

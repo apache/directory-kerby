@@ -20,7 +20,9 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.PolicyMapping.MyEnum.*;
 
 /**
  * Ref. RFC3280
@@ -32,8 +34,20 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  *
  */
 public class PolicyMapping extends Asn1SequenceType {
-    private static final int ISSUER_DOMAIN_POLICY = 0;
-    private static final int SUBJECT_DOMAIN_POLICY = 1;
+    protected static enum MyEnum implements EnumType {
+        ISSUER_DOMAIN_POLICY,
+        SUBJECT_DOMAIN_POLICY;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(ISSUER_DOMAIN_POLICY, CertPolicyId.class),

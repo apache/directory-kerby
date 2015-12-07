@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.x509.type.SubjectKeyIdentifier;
+import static org.apache.kerby.cms.type.SignerIdentifier.MyEnum.*;
 
 /**
  * Ref. RFC 5652
@@ -36,8 +38,20 @@ import org.apache.kerby.x509.type.SubjectKeyIdentifier;
  * </pre>
  */
 public class SignerIdentifier extends Asn1Choice {
-    private static final int ISSUER_AND_SERIAL_NUMBER = 0;
-    private static final int SUBJECT_KEY_IDENTIFIER = 1;
+    protected static enum MyEnum implements EnumType {
+        ISSUER_AND_SERIAL_NUMBER,
+        SUBJECT_KEY_IDENTIFIER;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
         new Asn1FieldInfo(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class),

@@ -20,18 +20,18 @@
 package org.apache.kerby.kerberos.kerb.type.base;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
-import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.*;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +46,20 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     private static TokenEncoder tokenEncoder;
     private static TokenDecoder tokenDecoder;
 
-    private static final int TOKEN_FORMAT = 0;
-    private static final int TOKEN_VALUE = 1;
+    protected static enum MyEnum implements EnumType {
+        TOKEN_FORMAT,
+        TOKEN_VALUE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     private AuthToken innerToken = null;
 
@@ -95,12 +107,13 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     /**
      * {@inheritDoc}
      */
+    /*
     @Override
     public void decode(ByteBuffer content) throws IOException {
         super.decode(content);
         this.innerToken = getTokenDecoder().decodeFromBytes(getTokenValue());
         setTokenType();
-    }
+    }*/
 
     /**
      * Set token type.
@@ -118,7 +131,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
      * Get token encoder.
      * @return The token encoder
      */
-    private static TokenEncoder getTokenEncoder() {
+    protected static TokenEncoder getTokenEncoder() {
         if (tokenEncoder == null) {
             tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         }
@@ -129,7 +142,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
      * Get token decoder.
      * @return The token decoder
      */
-    private static TokenDecoder getTokenDecoder() {
+    protected static TokenDecoder getTokenDecoder() {
         if (tokenDecoder == null) {
             tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
         }

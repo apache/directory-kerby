@@ -19,12 +19,14 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.x509.type.OtherName.MyEnum.*;
 
 /**
  * <pre>
@@ -36,8 +38,20 @@ import org.apache.kerby.asn1.ExplicitField;
  * </pre>
  */
 public class OtherName extends Asn1SequenceType {
-    private static final int TYPE_ID = 0;
-    private static final int VALUE = 1;
+    protected static enum MyEnum implements EnumType {
+        TYPE_ID,
+        VALUE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(TYPE_ID, Asn1ObjectIdentifier.class),

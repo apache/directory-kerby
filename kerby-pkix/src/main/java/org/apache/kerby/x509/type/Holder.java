@@ -20,8 +20,10 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.x509.type.Holder.MyEnum.*;
 
 /**
  * <pre>
@@ -38,9 +40,21 @@ import org.apache.kerby.asn1.ExplicitField;
  * </pre>
  */
 public class Holder extends Asn1SequenceType {
-    private static final int BASE_CERTIFICATE_ID = 0;
-    private static final int ENTITY_NAME = 1;
-    private static final int OBJECT_DIGEST_INFO = 2;
+    protected static enum MyEnum implements EnumType {
+        BASE_CERTIFICATE_ID,
+        ENTITY_NAME,
+        OBJECT_DIGEST_INFO;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new ExplicitField(BASE_CERTIFICATE_ID, IssuerSerial.class),

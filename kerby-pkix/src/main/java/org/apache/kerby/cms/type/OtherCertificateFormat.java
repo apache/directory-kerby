@@ -19,11 +19,13 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
+import static org.apache.kerby.cms.type.OtherCertificateFormat.MyEnum.*;
 
 /**
  * OtherCertificateFormat ::= SEQUENCE {
@@ -32,9 +34,20 @@ import org.apache.kerby.asn1.type.Asn1Type;
  * }
  */
 public class OtherCertificateFormat extends Asn1SequenceType {
+    protected static enum MyEnum implements EnumType {
+        OTHER_CERT_FORMAT,
+        OTHER_CERT;
 
-    private static final int OTHER_CERT_FORMAT = 0;
-    private static final int OTHER_CERT = 1;
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(OTHER_CERT_FORMAT, Asn1ObjectIdentifier.class),

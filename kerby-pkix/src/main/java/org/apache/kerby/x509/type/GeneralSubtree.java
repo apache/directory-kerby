@@ -20,9 +20,11 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.x509.type.GeneralSubtree.MyEnum.*;
 
 /**
  *
@@ -37,9 +39,21 @@ import org.apache.kerby.asn1.ExplicitField;
  * 
  */
 public class GeneralSubtree extends Asn1SequenceType {
-    private static final int BASE = 0;
-    private static final int MINIMUM = 1;
-    private static final int MAXMUM = 2;
+    protected static enum MyEnum implements EnumType {
+        BASE,
+        MINIMUM,
+        MAXMUM;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(BASE, GeneralName.class),

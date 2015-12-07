@@ -19,9 +19,12 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.Asn1Header;
+import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
+import org.apache.kerby.asn1.UniversalTag;
+import org.apache.kerby.asn1.util.Asn1Reader1;
+import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -31,78 +34,60 @@ import java.nio.ByteBuffer;
  * encoding and decoding utilities.
  */
 public abstract class Asn1Object implements Asn1Type {
+    private final Tag tag;
 
-    private TagClass tagClass = TagClass.UNKNOWN;
-    private int tagNo = -1;
-    private int tagFlags = 0;
-    private int encodingLen = -1;
+    private int bodyLength = -1;
 
     // encoding options
     private EncodingType encodingType = EncodingType.BER;
     private boolean isImplicit = true;
-    private boolean isDefinitiveLength = false;
+    private boolean isDefinitiveLength = true; // by default!!
 
     /**
-     * Constructor with a value, generally for encoding of the value
-     * @param tagFlags The tag flags
-     * @param tagNo The tag number
+     * Constructor with a tag
+     * @param tag The tag
      */
-    public Asn1Object(int tagFlags, int tagNo) {
-        this(TagClass.fromTagFlags(tagFlags), tagNo);
-        setTagFlags(tagFlags);
+    public Asn1Object(Tag tag) {
+        this.tag = new Tag(tag);
     }
 
     /**
-     * Constructor with a value, generally for encoding of the value
-     * @param tagClass The tag class
-     * @param tagNo The tag number
+     * Default constructor with an universal tag.
+     * @param tag the tag
      */
-    public Asn1Object(TagClass tagClass, int tagNo) {
-        this.tagClass = tagClass;
-        this.tagNo = tagNo;
+    public Asn1Object(UniversalTag tag) {
+        this.tag = new Tag(tag);
+    }
 
-        this.tagFlags |= tagClass.getValue();
+    /**
+     * Constructor with a tag
+     * @param tag The tag
+     */
+    public Asn1Object(int tag) {
+        this.tag = new Tag(tag);
     }
 
     @Override
-    public TagClass tagClass() {
-        return tagClass;
+    public Tag tag() {
+        return tag;
     }
 
-    protected void setTagClass(TagClass tagClass) {
-        this.tagClass = tagClass;
+    protected int tagFlags() {
+        return tag().tagFlags();
     }
 
-    @Override
-    public int tagFlags() {
-        return tagFlags;
-    }
-
-    @Override
-    public int tagNo() {
-        return tagNo;
-    }
-
-    protected void setTagFlags(int tagFlags) {
-        this.tagFlags = tagFlags & 0xe0;
-    }
-
-    protected void setTagNo(int tagNo) {
-        this.tagNo = tagNo;
+    protected int tagNo() {
+        return tag().tagNo();
     }
 
     @Override
     public void usePrimitive(boolean isPrimitive) {
-        if (isPrimitive) {
-            tagFlags &= ~CONSTRUCTED_FLAG;
-        } else {
-            tagFlags |= CONSTRUCTED_FLAG;
-        }
+        tag.usePrimitive(isPrimitive);
     }
 
     @Override
     public boolean isPrimitive() {
-        return (tagFlags & CONSTRUCTED_FLAG) == 0;
+        return tag.isPrimitive();
     }
 
     @Override
@@ -165,8 +150,8 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void encode(ByteBuffer buffer) {
-        encodeTag(buffer, tagFlags(), tagNo());
-        encodeLength(buffer, encodingBodyLength());
+        Asn1Util.encodeTag(buffer, tag());
+        Asn1Util.encodeLength(buffer, encodingBodyLength());
         encodeBody(buffer);
     }
 
@@ -174,85 +159,81 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void decode(byte[] content) throws IOException {
-        decode(new LimitedByteBuffer(content));
-    }
-
-    @Override
-    public void decode(ByteBuffer content) throws IOException {
-        decode(new LimitedByteBuffer(content));
+        decode(ByteBuffer.wrap(content));
     }
 
     @Override
     public int encodingLength() {
-        if (encodingLen == -1) {
-            int bodyLen = encodingBodyLength();
-            encodingLen = lengthOfTagLength(tagNo()) + lengthOfBodyLength(bodyLen) + bodyLen;
+        return encodingHeaderLength() + getBodyLength();
+    }
+
+    private int getBodyLength() {
+        if (bodyLength == -1) {
+            bodyLength = encodingBodyLength();
         }
-        return encodingLen;
+        return bodyLength;
     }
 
-    public boolean isUniversal() {
-        return tagClass.isUniversal();
+    protected int encodingHeaderLength() {
+        int bodyLen = getBodyLength();
+        int headerLen = Asn1Util.lengthOfTagLength(tagNo());
+        headerLen += (isDefinitiveLength()
+            ? Asn1Util.lengthOfBodyLength(bodyLen) : 1);
+        return headerLen;
     }
 
-    public boolean isAppSpecific() {
-        return tagClass.isAppSpecific();
+    protected boolean isUniversal() {
+        return tag.isUniversal();
     }
 
-    public boolean isContextSpecific() {
-        return tagClass.isContextSpecific();
+    protected boolean isAppSpecific() {
+        return tag.isAppSpecific();
     }
 
-    public boolean isTagged() {
-        return tagClass.isTagged();
+    protected boolean isContextSpecific() {
+        return tag.isContextSpecific();
+    }
+
+    protected boolean isTagged() {
+        return tag.isTagged();
     }
 
     public boolean isSimple() {
-        return isUniversal() && Asn1Simple.isSimple(tagNo);
+        return Asn1Simple.isSimple(tag());
     }
 
     public boolean isCollection() {
-        return isUniversal() && Asn1Collection.isCollection(tagNo);
+        return Asn1Collection.isCollection(tag());
     }
 
     protected abstract int encodingBodyLength();
 
-    protected void decode(LimitedByteBuffer content) throws IOException {
-        int tag = readTag(content);
-        int tagNo = readTagNo(content, tag);
-        int tmpTagFlags = tag & 0xe0;
-        int length = readLength(content);
+    @Override
+    public void decode(ByteBuffer content) throws IOException {
+        Asn1Reader1 reader = new Asn1Reader1(content);
+        Asn1Header header = reader.readHeader();
 
-        decode(tmpTagFlags, tagNo, new LimitedByteBuffer(content, length));
+        useDefinitiveLength(header.isDefinitiveLength());
+        decode(header.getTag(), header.getValueBuffer());
     }
 
-    public void decode(int tagFlags, int tagNo,
-                       LimitedByteBuffer content) throws IOException {
-        if (tagClass() != TagClass.UNKNOWN && tagClass()
-                != TagClass.fromTagFlags(tagFlags)) {
-            throw new IOException("Unexpected tagFlags " + tagFlags
-                    + ", expecting " + tagClass());
+    public void decode(Tag tag, ByteBuffer content) throws IOException {
+        if (!tag().equals(tag)) {
+            throw new IOException("Unexpected tag " + tag
+                    + ", expecting " + tag());
         }
-        if (tagNo() != -1 && tagNo() != tagNo) {
-            throw new IOException("Unexpected tagNo " + tagNo + ", "
-                    + "expecting " + tagNo());
-        }
-
-        setTagClass(TagClass.fromTagFlags(tagFlags));
-        setTagFlags(tagFlags);
-        setTagNo(tagNo);
 
         decodeBody(content);
     }
 
-    protected abstract void decodeBody(LimitedByteBuffer content) throws IOException;
+    protected abstract void decodeBody(ByteBuffer content) throws IOException;
 
     protected int taggedEncodingLength(TaggingOption taggingOption) {
         int taggingTagNo = taggingOption.getTagNo();
         int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength()
                 : encodingLength();
-        int taggingEncodingLen = lengthOfTagLength(taggingTagNo)
-                + lengthOfBodyLength(taggingBodyLen) + taggingBodyLen;
+        int taggingEncodingLen = Asn1Util.lengthOfTagLength(taggingTagNo)
+                + Asn1Util.lengthOfBodyLength(taggingBodyLen) + taggingBodyLen;
         return taggingEncodingLen;
     }
 
@@ -265,11 +246,11 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption) {
-        int taggingTagFlags = taggingOption.tagFlags(!isPrimitive());
-        encodeTag(buffer, taggingTagFlags, taggingOption.getTagNo());
+        Tag taggingTag = taggingOption.getTag(!isPrimitive());
+        Asn1Util.encodeTag(buffer, taggingTag);
         int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength()
                 : encodingLength();
-        encodeLength(buffer, taggingBodyLen);
+        Asn1Util.encodeLength(buffer, taggingBodyLen);
         if (taggingOption.isImplicit()) {
             encodeBody(buffer);
         } else {
@@ -285,32 +266,19 @@ public abstract class Asn1Object implements Asn1Type {
     @Override
     public void taggedDecode(ByteBuffer content,
                              TaggingOption taggingOption) throws IOException {
-        LimitedByteBuffer limitedBuffer = new LimitedByteBuffer(content);
-        taggedDecode(limitedBuffer, taggingOption);
+        Asn1Reader1 reader = new Asn1Reader1(content);
+        Asn1Header header = reader.readHeader();
+
+        useDefinitiveLength(header.isDefinitiveLength());
+        taggedDecode(header.getTag(), header.getValueBuffer(), taggingOption);
     }
 
-    protected void taggedDecode(LimitedByteBuffer content,
+    protected void taggedDecode(Tag taggingTag, ByteBuffer content,
                                 TaggingOption taggingOption) throws IOException {
-        int taggingTag = readTag(content);
-        int taggingTagNo = readTagNo(content, taggingTag);
-        int taggingLength = readLength(content);
-        LimitedByteBuffer newContent = new LimitedByteBuffer(content, taggingLength);
-
-        int tmpTagFlags = taggingTag & 0xe0;
-        taggedDecode(tmpTagFlags, taggingTagNo, newContent, taggingOption);
-    }
-
-    protected void taggedDecode(int taggingTagFlags, int taggingTagNo,
-                                LimitedByteBuffer content,
-                                TaggingOption taggingOption) throws IOException {
-        int expectedTaggingTagFlags = taggingOption.tagFlags(!isPrimitive());
-        if (expectedTaggingTagFlags != taggingTagFlags) {
-            throw new IOException("Unexpected tag flags " + taggingTagFlags
+        Tag expectedTaggingTagFlags = taggingOption.getTag(!isPrimitive());
+        if (!expectedTaggingTagFlags.equals(taggingTag)) {
+            throw new IOException("Unexpected tag " + taggingTag
                     + ", expecting " + expectedTaggingTagFlags);
-        }
-        if (taggingOption.getTagNo() != taggingTagNo) {
-            throw new IOException("Unexpected tagNo " + taggingTagNo + ", "
-                    + "expecting " + taggingOption.getTagNo());
         }
 
         if (taggingOption.isImplicit()) {
@@ -318,167 +286,5 @@ public abstract class Asn1Object implements Asn1Type {
         } else {
             decode(content);
         }
-    }
-
-    public static Asn1Item decodeOne(LimitedByteBuffer content) throws IOException {
-        int tag = readTag(content);
-        int tagNo = readTagNo(content, tag);
-        int length = readLength(content);
-        if (length < 0) {
-            throw new IOException("Unexpected length");
-        }
-        LimitedByteBuffer valueContent = new LimitedByteBuffer(content, length);
-        content.skip(length);
-
-        Asn1Item result = new Asn1Item(tag, tagNo, valueContent);
-        if (result.isSimple()) {
-            result.decodeValueAsSimple();
-        }
-        return result;
-    }
-
-    public static void skipOne(LimitedByteBuffer content) throws IOException {
-        int tag = readTag(content);
-        readTagNo(content, tag);
-        int length = readLength(content);
-        if (length < 0) {
-            throw new IOException("Unexpected length");
-        }
-        content.skip(length);
-    }
-
-    public static int lengthOfBodyLength(int bodyLength) {
-        int length = 1;
-
-        if (bodyLength > 127) {
-            int payload = bodyLength;
-            while (payload != 0) {
-                payload >>= 8;
-                length++;
-            }
-        }
-
-        return length;
-    }
-
-    public static int lengthOfTagLength(int tagNo) {
-        int length = 1;
-
-        if (tagNo >= 31) {
-            if (tagNo < 128) {
-                length++;
-            } else {
-                length++;
-
-                do {
-                    tagNo >>= 7;
-                    length++;
-                } while (tagNo > 127);
-            }
-        }
-
-        return length;
-    }
-
-    public static void encodeTag(ByteBuffer buffer, int flags, int tagNo) {
-        if (tagNo < 31) {
-            buffer.put((byte) (flags | tagNo));
-        } else {
-            buffer.put((byte) (flags | 0x1f));
-            if (tagNo < 128) {
-                buffer.put((byte) tagNo);
-            } else {
-                byte[] tmpBytes = new byte[5]; // 5 * 7 > 32
-                int iPut = tmpBytes.length;
-
-                tmpBytes[--iPut] = (byte) (tagNo & 0x7f);
-                do {
-                    tagNo >>= 7;
-                    tmpBytes[--iPut] = (byte) (tagNo & 0x7f | 0x80);
-                } while (tagNo > 127);
-
-                buffer.put(tmpBytes, iPut, tmpBytes.length - iPut);
-            }
-        }
-    }
-
-    public static void encodeLength(ByteBuffer buffer, int bodyLength) {
-        if (bodyLength < 128) {
-            buffer.put((byte) bodyLength);
-        } else {
-            int length = 0;
-            int payload = bodyLength;
-
-            while (payload != 0) {
-                payload >>= 8;
-                length++;
-            }
-
-            buffer.put((byte) (length | 0x80));
-
-            payload = bodyLength;
-            for (int i = length - 1; i >= 0; i--) {
-                buffer.put((byte) (payload >> (i * 8)));
-            }
-        }
-    }
-
-    public static int readTag(LimitedByteBuffer buffer) throws IOException {
-        int tag = buffer.readByte() & 0xff;
-        if (tag == 0) {
-            throw new IOException("Bad tag 0 found");
-        }
-        return tag;
-    }
-
-    public static int readTagNo(LimitedByteBuffer buffer, int tag) throws IOException {
-        int tagNo = tag & 0x1f;
-
-        if (tagNo == 0x1f) {
-            tagNo = 0;
-
-            int b = buffer.readByte() & 0xff;
-            if ((b & 0x7f) == 0) {
-                throw new IOException("Invalid high tag number found");
-            }
-
-            while (b >= 0 && (b & 0x80) != 0) {
-                tagNo |= b & 0x7f;
-                tagNo <<= 7;
-                b = buffer.readByte();
-            }
-
-            tagNo |= b & 0x7f;
-        }
-
-        return tagNo;
-    }
-
-    public static int readLength(LimitedByteBuffer buffer) throws IOException {
-        int bodyLength = buffer.readByte() & 0xff;
-
-        if (bodyLength > 127) {
-            int length = bodyLength & 0x7f;
-            if (length > 4) {
-                throw new IOException("Bad bodyLength of more than 4 bytes: " + length);
-            }
-
-            bodyLength = 0;
-            int tmp;
-            for (int i = 0; i < length; i++) {
-                tmp = buffer.readByte() & 0xff;
-                bodyLength = (bodyLength << 8) + tmp;
-            }
-
-            if (bodyLength < 0) {
-                throw new IOException("Invalid bodyLength " + bodyLength);
-            }
-            if (bodyLength > buffer.hasLeft()) {
-                throw new IOException("Corrupt stream - less data "
-                        + buffer.hasLeft() + " than expected " + bodyLength);
-            }
-        }
-
-        return bodyLength;
     }
 }

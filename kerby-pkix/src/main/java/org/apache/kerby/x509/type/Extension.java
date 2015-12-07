@@ -19,11 +19,13 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Boolean;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.Extension.MyEnum.*;
 
 /**
  * Ref. X.509 V3 extension
@@ -37,9 +39,21 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * </pre>
  */
 public class Extension extends Asn1SequenceType {
-    private static final int EXTN_ID = 0;
-    private static final int CRITICAL = 1;
-    private static final int EXTN_VALUE = 2;
+    protected static enum MyEnum implements EnumType {
+        EXTN_ID,
+        CRITICAL,
+        EXTN_VALUE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(EXTN_ID, Asn1ObjectIdentifier.class),

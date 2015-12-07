@@ -65,10 +65,10 @@ public abstract class AppServer implements Runnable {
     }
 
     private void runOnce() {
-        System.out.println("Waiting for incoming connection...");
+        // System.out.println("Waiting for incoming connection...");
 
         Transport.Connection conn = acceptor.accept();
-        System.out.println("Got connection from client");
+        // System.out.println("Got connection from client");
 
         try {
             onConnection(conn);

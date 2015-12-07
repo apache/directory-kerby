@@ -20,12 +20,14 @@
 package org.apache.kerby.kerberos.kerb.type.base;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
+import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.*;
 
 /**
  KRB-ERROR       ::= [APPLICATION 30] SEQUENCE {
@@ -45,17 +47,31 @@ import org.apache.kerby.kerberos.kerb.type.KerberosTime;
  }
  */
 public class KrbError extends KrbMessage {
-    private static final int CTIME = 2;
-    private static final int CUSEC = 3;
-    private static final int STIME = 4;
-    private static final int SUSEC = 5;
-    private static final int ERROR_CODE = 6;
-    private static final int CREALM = 7;
-    private static final int CNAME = 8;
-    private static final int REALM = 9;
-    private static final int SNAME = 10;
-    private static final int ETEXT = 11;
-    private static final int EDATA = 12;
+    protected static enum MyEnum implements EnumType {
+        PVNO,
+        MSG_TYPE,
+        CTIME,
+        CUSEC,
+        STIME,
+        SUSEC,
+        ERROR_CODE,
+        CREALM,
+        CNAME,
+        REALM,
+        SNAME,
+        ETEXT,
+        EDATA;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(PVNO, Asn1Integer.class),

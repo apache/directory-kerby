@@ -20,9 +20,11 @@
 package org.apache.kerby.kerberos.kerb.type.ad;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
+import static org.apache.kerby.kerberos.kerb.type.ad.AdToken.MyEnum.*;
 
 /**
  AD-TOKEN ::= SEQUENCE {
@@ -30,7 +32,19 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
  }
 */
 public class AdToken extends KrbSequenceType {
-    private static final int TOKEN = 0;
+    protected static enum MyEnum implements EnumType {
+        TOKEN;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(TOKEN, KrbToken.class)

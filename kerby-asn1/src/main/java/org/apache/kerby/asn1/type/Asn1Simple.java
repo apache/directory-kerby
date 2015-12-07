@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.UniversalTag;
+import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -42,11 +42,11 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     /**
      * Constructor with a value, generally for encoding of the value
-     * @param tagNo The tag number
+     * @param universalTag The tag number
      * @param value The value
      */
-    public Asn1Simple(UniversalTag tagNo, T value) {
-        super(TagClass.UNIVERSAL, tagNo.getValue(), value);
+    public Asn1Simple(UniversalTag universalTag, T value) {
+        super(universalTag, value);
         usePrimitive(true);
     }
 
@@ -60,9 +60,9 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     @Override
     public void encode(ByteBuffer buffer) {
-        encodeTag(buffer, tagFlags(), tagNo());
+        Asn1Util.encodeTag(buffer, tag());
         int bodyLen = encodingBodyLength();
-        encodeLength(buffer, bodyLen);
+        Asn1Util.encodeLength(buffer, bodyLen);
         if (bodyLen > 0) {
             buffer.put(encodeBody());
         }
@@ -92,8 +92,8 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
     }
 
     @Override
-    protected void decodeBody(LimitedByteBuffer content) throws IOException {
-        byte[] leftBytes = content.readAllLeftBytes();
+    protected void decodeBody(ByteBuffer content) throws IOException {
+        byte[] leftBytes = Asn1Util.readAllLeftBytes(content);
         if (leftBytes.length > 0) {
             setBytes(leftBytes);
             toValue();
@@ -104,8 +104,12 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     protected void toBytes() { }
 
-    public static boolean isSimple(int tagNo) {
-        return isSimple(UniversalTag.fromValue(tagNo));
+    public static boolean isSimple(Tag tag) {
+        return isSimple(tag.universalTag());
+    }
+
+    public static boolean isSimple(int tag) {
+        return isSimple(new Tag(tag));
     }
 
     public static boolean isSimple(UniversalTag tagNo) {
@@ -196,5 +200,12 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
             default:
                 throw new IllegalArgumentException("Unexpected tag " + tagNo.getValue());
         }
+    }
+
+    @Override
+    public String toString() {
+        String valueStr =
+            (getValue() != null ? String.valueOf(getValue()) : "null");
+        return valueStr;
     }
 }

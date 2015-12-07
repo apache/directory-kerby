@@ -20,11 +20,13 @@
 package org.apache.kerby.kerberos.kerb.type.base;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.*;
 
 /**
  ETYPE-INFO2-ENTRY       ::= SEQUENCE {
@@ -34,9 +36,21 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  }
  */
 public class EtypeInfo2Entry extends KrbSequenceType {
-    private static final int ETYPE = 0;
-    private static final int SALT = 1;
-    private static final int S2KPARAMS = 2;
+    protected static enum MyEnum implements EnumType {
+        ETYPE,
+        SALT,
+        S2KPARAMS;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(ETYPE, 0, Asn1Integer.class),

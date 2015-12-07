@@ -19,8 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb;
 
-import org.apache.kerby.asn1.LimitedByteBuffer;
-import org.apache.kerby.asn1.type.Asn1Object;
+import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.asn1.Asn1Header;
+import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.type.base.KrbError;
@@ -63,16 +64,12 @@ public class KrbCodec {
         return (T) implObj;
     }
 
-    public static KrbMessage decodeMessage(ByteBuffer byteBuffer) throws IOException {
-        LimitedByteBuffer limitedBuffer = new LimitedByteBuffer(byteBuffer);
-        int tag = Asn1Object.readTag(limitedBuffer);
-        int tagNo = Asn1Object.readTagNo(limitedBuffer, tag);
-        int tagFlags = tag & 0xe0;
-        int length = Asn1Object.readLength(limitedBuffer);
-        LimitedByteBuffer valueBuffer = new LimitedByteBuffer(limitedBuffer, length);
+    public static KrbMessage decodeMessage(ByteBuffer buffer) throws IOException {
+        Asn1Header header = Asn1.decodeHeader(buffer);
+        Tag tag = header.getTag();
 
         KrbMessage msg;
-        KrbMessageType msgType = KrbMessageType.fromValue(tagNo);
+        KrbMessageType msgType = KrbMessageType.fromValue(tag.tagNo());
         if (msgType == KrbMessageType.TGS_REQ) {
             msg = new TgsReq();
         } else if (msgType == KrbMessageType.AS_REP) {
@@ -90,8 +87,8 @@ public class KrbCodec {
         } else {
             throw new IOException("To be supported krb message type with tag: " + tag);
         }
-        msg.decode(tagFlags, tagNo, valueBuffer);
 
+        msg.decode(tag, header.getValueBuffer());
         return msg;
     }
 

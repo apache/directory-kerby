@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.EnumType;
+
 import java.io.IOException;
 
 /**
@@ -81,15 +83,15 @@ public class Asn1Flags extends Asn1BitString {
         setFlags(0);
     }
 
-    public boolean isFlagSet(Asn1EnumType flag) {
+    public boolean isFlagSet(EnumType flag) {
         return isFlagSet(flag.getValue());
     }
 
-    public void setFlag(Asn1EnumType flag) {
+    public void setFlag(EnumType flag) {
         setFlag(flag.getValue());
     }
 
-    public void setFlag(Asn1EnumType flag, boolean isSet)  {
+    public void setFlag(EnumType flag, boolean isSet)  {
         if (isSet) {
             setFlag(flag.getValue());
         } else {
@@ -97,7 +99,7 @@ public class Asn1Flags extends Asn1BitString {
         }
     }
 
-    public void clearFlag(Asn1EnumType flag) {
+    public void clearFlag(EnumType flag) {
         clearFlag(flag.getValue());
     }
 

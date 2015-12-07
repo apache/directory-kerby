@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -28,24 +28,28 @@ import java.util.List;
 
 public abstract class Asn1CollectionOf<T extends Asn1Type> extends Asn1Collection
 {
-    public Asn1CollectionOf(TagClass tagClass, int tagNo) {
-        super(tagClass, tagNo);
+    public Asn1CollectionOf(UniversalTag universalTag) {
+        super(universalTag);
     }
 
     public List<T> getElements() {
-        List<Asn1Item> items = getValue();
+        List<Asn1Type> items = getValue();
         int nElements = items != null ? items.size() : 0;
         List<T> results = new ArrayList<T>(nElements);
         if (nElements > 0) {
-            for (Asn1Item item : items) {
-                if (!item.isFullyDecoded()) {
-                    try {
-                        item.decodeValueAs(getElementType());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+            for (Asn1Type itemObj : items) {
+                if (itemObj instanceof Asn1Item) {
+                    Asn1Item item = (Asn1Item) itemObj;
+                    if (!item.isFullyDecoded()) {
+                        try {
+                            item.decodeValueAs(getElementType());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+                    itemObj = item.getValue();
                 }
-                results.add((T) item.getValue());
+                results.add((T) itemObj);
             }
         }
         return results;
@@ -67,18 +71,6 @@ public abstract class Asn1CollectionOf<T extends Asn1Type> extends Asn1Collectio
 
     public void addElement(T element) {
         super.addItem(element);
-    }
-
-    @Override
-    public void addItem(Asn1Type value) {
-        Class<T> eleType = getElementType();
-        if (value instanceof Asn1Item) {
-            super.addItem(value);
-        } else if (!eleType.isInstance(value)) {
-            throw new RuntimeException("Unexpected element type " + value.getClass().getCanonicalName());
-        } else {
-            addElement((T) value);
-        }
     }
 
     protected Class<T> getElementType() {

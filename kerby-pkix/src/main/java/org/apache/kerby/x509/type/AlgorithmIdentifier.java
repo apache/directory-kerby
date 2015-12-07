@@ -19,10 +19,13 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
+import static org.apache.kerby.x509.type.AlgorithmIdentifier.MyEnum.*;
 
 /**
  * AlgorithmIdentifier  ::=  SEQUENCE  {
@@ -31,8 +34,20 @@ import org.apache.kerby.asn1.type.Asn1Type;
  * }
  */
 public class AlgorithmIdentifier extends Asn1SequenceType {
-    private static final int ALGORITHM = 0;
-    private static final int PARAMETERS = 1;
+    protected static enum MyEnum implements EnumType {
+        ALGORITHM,
+        PARAMETERS;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(ALGORITHM, Asn1ObjectIdentifier.class),

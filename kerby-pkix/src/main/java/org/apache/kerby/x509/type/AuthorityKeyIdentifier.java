@@ -20,8 +20,10 @@
 package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ImplicitField;
+import static org.apache.kerby.x509.type.AuthorityKeyIdentifier.MyEnum.*;
 
 /**
  *
@@ -39,10 +41,21 @@ import org.apache.kerby.asn1.ImplicitField;
  *
  */
 public class AuthorityKeyIdentifier extends Asn1SequenceType {
-    private static final int KEY_IDENTIFIER = 0;
-    private static final int AUTHORITY_CERT_ISSUER = 1;
-    private static final int AUTHORITY_CERT_SERIAL_NUMBER = 2;
+    protected static enum MyEnum implements EnumType {
+        KEY_IDENTIFIER,
+        AUTHORITY_CERT_ISSUER,
+        AUTHORITY_CERT_SERIAL_NUMBER;
 
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new ImplicitField(KEY_IDENTIFIER, KeyIdentifier.class),

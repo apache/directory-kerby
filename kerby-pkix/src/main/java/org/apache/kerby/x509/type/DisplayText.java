@@ -19,12 +19,14 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BmpString;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1IA5String;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
+import static org.apache.kerby.x509.type.DisplayText.MyEnum.*;
 
 /**
  * <pre>
@@ -37,10 +39,22 @@ import org.apache.kerby.asn1.type.Asn1VisibleString;
  * </pre>
  */
 public class DisplayText extends Asn1Choice {
-   private static final int IA5_STRING = 0;
-   private static final int VISIBLE_STRING = 1;
-   private static final int BMP_STRING = 2;
-   private static final int UTF8_STRING = 3;
+   protected static enum MyEnum implements EnumType {
+      IA5_STRING,
+      VISIBLE_STRING,
+      BMP_STRING,
+      UTF8_STRING;
+
+      @Override
+      public int getValue() {
+         return ordinal();
+      }
+
+      @Override
+      public String getName() {
+         return name();
+      }
+   }
 
    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
            new Asn1FieldInfo(IA5_STRING, Asn1IA5String.class),

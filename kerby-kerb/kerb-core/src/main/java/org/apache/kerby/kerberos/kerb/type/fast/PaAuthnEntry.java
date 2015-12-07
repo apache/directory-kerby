@@ -20,11 +20,13 @@
 package org.apache.kerby.kerberos.kerb.type.fast;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
+import static org.apache.kerby.kerberos.kerb.type.fast.PaAuthnEntry.MyEnum.*;
 
 /**
  PA-AUTHENTICATION-SET-ELEM ::= SEQUENCE {
@@ -34,9 +36,21 @@ import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
  }
  */
 public class PaAuthnEntry extends KrbSequenceType {
-    private static final int PA_TYPE = 0;
-    private static final int PA_HINT = 1;
-    private static final int PA_VALUE = 2;
+    protected static enum MyEnum implements EnumType {
+        PA_TYPE,
+        PA_HINT,
+        PA_VALUE;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(PA_TYPE, Asn1Integer.class),

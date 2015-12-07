@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.type.ticket;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
@@ -29,6 +30,7 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding;
+import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.*;
 
 /**
  -- Encrypted part of ticket
@@ -49,17 +51,29 @@ import org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding;
 public class EncTicketPart extends KrbAppSequenceType {
     public static final int TAG = 3;
 
-    private static final int FLAGS = 0;
-    private static final int KEY = 1;
-    private static final int CREALM = 2;
-    private static final int CNAME = 3;
-    private static final int TRANSITED = 4;
-    private static final int AUTHTIME = 5;
-    private static final int STARTTIME = 6;
-    private static final int ENDTIME = 7;
-    private static final int RENEW_TILL = 8;
-    private static final int CADDR = 9;
-    private static final int AUTHORIZATION_DATA = 10;
+    protected static enum MyEnum implements EnumType {
+        FLAGS,
+        KEY,
+        CREALM,
+        CNAME,
+        TRANSITED,
+        AUTHTIME,
+        STARTTIME,
+        ENDTIME,
+        RENEW_TILL,
+        CADDR,
+        AUTHORIZATION_DATA;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(FLAGS, 0, TicketFlags.class),

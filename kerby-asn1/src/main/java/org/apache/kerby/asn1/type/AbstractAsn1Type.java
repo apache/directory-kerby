@@ -19,7 +19,8 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.TagClass;
+import org.apache.kerby.asn1.Tag;
+import org.apache.kerby.asn1.UniversalTag;
 
 /**
  * The abstract ASN1 type for all the ASN1 types. It provides basic
@@ -32,43 +33,39 @@ public abstract class AbstractAsn1Type<T> extends Asn1Object {
     private T value;
 
     /**
-     * Default constructor, generally for decoding as a value container
-     * @param tagClass The tag class
-     * @param tagNo The tag number
+     * Default constructor.
+     * @param tag the tag
+     * @param value the value
      */
-    public AbstractAsn1Type(TagClass tagClass, int tagNo) {
-        this(tagClass, tagNo, null);
-    }
-
-    /**
-     * Default constructor, generally for decoding as a value container
-     * @param tagFlags The tag flags
-     * @param tagNo The tag number
-     */
-    public AbstractAsn1Type(int tagFlags, int tagNo) {
-        this(tagFlags, tagNo, null);
-    }
-
-    /**
-     * Constructor with a value, generally for encoding of the value
-     * @param tagFlags The tag flags
-     * @param tagNo The tag number
-     * @param value The value
-     */
-    public AbstractAsn1Type(int tagFlags, int tagNo, T value) {
-        this(TagClass.fromTagFlags(tagFlags), tagNo, value);
-        setTagFlags(tagFlags);
-    }
-
-    /**
-     * Constructor with a value, generally for encoding of the value
-     * @param tagClass The tag class
-     * @param tagNo The tag number
-     * @param value The value
-     */
-    public AbstractAsn1Type(TagClass tagClass, int tagNo, T value) {
-        super(tagClass, tagNo);
+    public AbstractAsn1Type(Tag tag, T value) {
+        super(tag);
         this.value = value;
+    }
+
+    /**
+     * Default constructor.
+     * @param tag the tag
+     */
+    public AbstractAsn1Type(Tag tag) {
+        super(tag);
+    }
+
+    /**
+     * Default constructor with an universal tag.
+     * @param tag the tag
+     * @param value the value
+     */
+    public AbstractAsn1Type(UniversalTag tag, T value) {
+        super(tag);
+        this.value = value;
+    }
+
+    /**
+     * Default constructor with an universal tag.
+     * @param tag the tag
+     */
+    public AbstractAsn1Type(UniversalTag tag) {
+        super(tag);
     }
 
     public T getValue() {

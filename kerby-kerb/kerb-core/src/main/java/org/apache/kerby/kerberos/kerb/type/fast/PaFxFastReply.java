@@ -19,9 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.type.fast;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.ExplicitField;
+import static org.apache.kerby.kerberos.kerb.type.fast.PaFxFastReply.MyEnum.*;
 
 /**
  PA-FX-FAST-REPLY ::= CHOICE {
@@ -29,7 +31,19 @@ import org.apache.kerby.asn1.ExplicitField;
  }
  */
 public class PaFxFastReply extends Asn1Choice {
-    private static final int ARMORED_DATA = 0;
+    protected static enum MyEnum implements EnumType {
+        ARMORED_DATA;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(ARMORED_DATA, KrbFastArmoredRep.class)

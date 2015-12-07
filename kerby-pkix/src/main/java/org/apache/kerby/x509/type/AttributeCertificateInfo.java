@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.*;
 
 /**
  *
@@ -45,15 +47,27 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
  * </pre>
  */
 public class AttributeCertificateInfo extends Asn1SequenceType {
-    private static final int VERSION = 0;
-    private static final int HOLDER = 1;
-    private static final int ISSUER = 2;
-    private static final int SIGNATURE = 3;
-    private static final int SERIAL_NUMBER = 4;
-    private static final int ATTR_CERT_VALIDITY_PERIOD = 5;
-    private static final int ATTRIBUTES = 6;
-    private static final int ISSUER_UNIQUE_ID = 7;
-    private static final int EXTENSIONS = 8;
+    protected static enum MyEnum implements EnumType {
+        VERSION,
+        HOLDER,
+        ISSUER,
+        SIGNATURE,
+        SERIAL_NUMBER,
+        ATTR_CERT_VALIDITY_PERIOD,
+        ATTRIBUTES,
+        ISSUER_UNIQUE_ID,
+        EXTENSIONS;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(VERSION, Asn1Integer.class),
