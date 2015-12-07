@@ -81,41 +81,41 @@ public class TestPersonnelRecord {
         decoded.decode(data);
         Asn1.dump(decoded);
 
-        assertThat(expected.getName().getGivenName())
-                .isEqualTo(decoded.getName().getGivenName());
-        assertThat(expected.getName().getInitial())
-                .isEqualTo(decoded.getName().getInitial());
-        assertThat(expected.getName().getFamilyName())
-                .isEqualTo(decoded.getName().getFamilyName());
-        assertThat(expected.getDateOfHire().getValue().getValue())
-                .isEqualTo(decoded.getDateOfHire().getValue().getValue());
+        assertThat(decoded.getName().getGivenName())
+                .isEqualTo(expected.getName().getGivenName());
+        assertThat(decoded.getName().getInitial())
+                .isEqualTo(expected.getName().getInitial());
+        assertThat(decoded.getName().getFamilyName())
+                .isEqualTo(expected.getName().getFamilyName());
+        assertThat(decoded.getDateOfHire().getValue().getValue())
+                .isEqualTo(expected.getDateOfHire().getValue().getValue());
         assertThat(decoded.getTitle())
                 .isEqualTo(expected.getTitle());
-        assertThat(expected.getEmployeeNumber().getValue().getValue())
-                .isEqualTo(decoded.getEmployeeNumber().getValue().getValue());
-        assertThat(expected.getNameOfSpouse().getGivenName())
-                .isEqualTo(decoded.getNameOfSpouse().getGivenName());
-        assertThat(expected.getNameOfSpouse().getInitial())
-                .isEqualTo(decoded.getNameOfSpouse().getInitial());
-        assertThat(expected.getNameOfSpouse().getFamilyName())
-                .isEqualTo(decoded.getNameOfSpouse().getFamilyName());
+        assertThat(decoded.getEmployeeNumber().getValue().getValue())
+                .isEqualTo(expected.getEmployeeNumber().getValue().getValue());
+        assertThat(decoded.getNameOfSpouse().getGivenName())
+                .isEqualTo(expected.getNameOfSpouse().getGivenName());
+        assertThat(decoded.getNameOfSpouse().getInitial())
+                .isEqualTo(expected.getNameOfSpouse().getInitial());
+        assertThat(decoded.getNameOfSpouse().getFamilyName())
+                .isEqualTo(expected.getNameOfSpouse().getFamilyName());
         assertThat(decoded.getChildren().getElements().size())
             .isEqualTo(expected.getChildren().getElements().size());
-        assertThat(expected.getChildren().getElements().get(0).getName().getGivenName())
-                .isEqualTo(decoded.getChildren().getElements().get(0).getName().getGivenName());
-        assertThat(expected.getChildren().getElements().get(0).getName().getInitial())
-                .isEqualTo(decoded.getChildren().getElements().get(0).getName().getInitial());
-        assertThat(expected.getChildren().getElements().get(0).getName().getFamilyName())
-                .isEqualTo(decoded.getChildren().getElements().get(0).getName().getFamilyName());
-        assertThat(expected.getChildren().getElements().get(0).getDateOfBirth().getValue().getValue())
-                .isEqualTo(decoded.getChildren().getElements().get(0).getDateOfBirth().getValue().getValue());
-        assertThat(expected.getChildren().getElements().get(1).getName().getGivenName())
-                .isEqualTo(decoded.getChildren().getElements().get(1).getName().getGivenName());
-        assertThat(expected.getChildren().getElements().get(1).getName().getInitial())
-                .isEqualTo(decoded.getChildren().getElements().get(1).getName().getInitial());
-        assertThat(expected.getChildren().getElements().get(1).getName().getFamilyName())
-                .isEqualTo(decoded.getChildren().getElements().get(1).getName().getFamilyName());
-        assertThat(expected.getChildren().getElements().get(1).getDateOfBirth().getValue().getValue())
-                .isEqualTo(decoded.getChildren().getElements().get(1).getDateOfBirth().getValue().getValue());
+        assertThat(decoded.getChildren().getElements().get(0).getName().getGivenName())
+                .isEqualTo(expected.getChildren().getElements().get(0).getName().getGivenName());
+        assertThat(decoded.getChildren().getElements().get(0).getName().getInitial())
+                .isEqualTo(expected.getChildren().getElements().get(0).getName().getInitial());
+        assertThat(decoded.getChildren().getElements().get(0).getName().getFamilyName())
+                .isEqualTo(expected.getChildren().getElements().get(0).getName().getFamilyName());
+        assertThat(decoded.getChildren().getElements().get(0).getDateOfBirth().getValue().getValue())
+                .isEqualTo(expected.getChildren().getElements().get(0).getDateOfBirth().getValue().getValue());
+        assertThat(decoded.getChildren().getElements().get(1).getName().getGivenName())
+                .isEqualTo(expected.getChildren().getElements().get(1).getName().getGivenName());
+        assertThat(decoded.getChildren().getElements().get(1).getName().getInitial())
+                .isEqualTo(expected.getChildren().getElements().get(1).getName().getInitial());
+        assertThat(decoded.getChildren().getElements().get(1).getName().getFamilyName())
+                .isEqualTo(expected.getChildren().getElements().get(1).getName().getFamilyName());
+        assertThat(decoded.getChildren().getElements().get(1).getDateOfBirth().getValue().getValue())
+                .isEqualTo(expected.getChildren().getElements().get(1).getDateOfBirth().getValue().getValue());
     }
 }
