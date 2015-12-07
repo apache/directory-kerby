@@ -19,11 +19,10 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.UniversalTag;
-import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 public class Asn1OctetString extends Asn1Simple<byte[]> {
     public Asn1OctetString() {
@@ -45,8 +44,8 @@ public class Asn1OctetString extends Asn1Simple<byte[]> {
     }
 
     @Override
-    protected void decodeBody(ByteBuffer content) throws IOException {
-        setValue(Asn1Util.readAllLeftBytes(content));
+    protected void decodeBody(Asn1Header header) throws IOException {
+        setValue(header.readBodyBytes());
     }
 
     @Override

@@ -63,7 +63,7 @@ public enum TagClass {
         return this == CONTEXT_SPECIFIC;
     }
 
-    public boolean isTagged() {
+    public boolean isSpecific() {
         return this == APPLICATION || this == CONTEXT_SPECIFIC;
     }
 

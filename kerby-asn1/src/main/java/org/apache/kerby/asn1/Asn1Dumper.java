@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.asn1;
 
+import org.apache.kerby.asn1.type.Asn1ParsingItem;
 import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;
 
@@ -26,8 +27,20 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public final class Asn1Dumper {
-
+    private boolean withType;
     private StringBuilder builder = new StringBuilder();
+
+    public Asn1Dumper() {
+        this.withType = true;
+    }
+
+    public Asn1Dumper(boolean withType) {
+        this.withType = withType;
+    }
+
+    public boolean withType() {
+        return withType;
+    }
 
     public String output() {
         return builder.toString();
@@ -50,10 +63,12 @@ public final class Asn1Dumper {
         dumpType(0, value);
     }
 
-    public void dumpType(int indents, Asn1Type value) {
+    public Asn1Dumper dumpType(int indents, Asn1Type value) {
         if (value == null) {
             indent(indents).append("null");
         } else if (value instanceof Asn1Simple) {
+            indent(indents).append(value.toString());
+        }  else if (value instanceof Asn1ParsingItem) {
             indent(indents).append(value.toString());
         } else if (value instanceof Asn1Dumpable) {
             Asn1Dumpable dumpable = (Asn1Dumpable) value;
@@ -61,6 +76,8 @@ public final class Asn1Dumper {
         } else {
             append("<UNKNOWN>");
         }
+
+        return this;
     }
 
     public Asn1Dumper indent(int numSpaces) {
@@ -81,6 +98,23 @@ public final class Asn1Dumper {
 
     public Asn1Dumper append(String string) {
         builder.append(string);
+        return this;
+    }
+
+    public Asn1Dumper dumpTypeInfo(Class<?> cls) {
+        appendType(cls).newLine();
+        return this;
+    }
+
+    public Asn1Dumper dumpTypeInfo(int indents, Class<?> cls) {
+        if (withType()) {
+            indent(indents).appendType(cls).newLine();
+        }
+        return this;
+    }
+
+    private Asn1Dumper appendType(Class<?> cls) {
+        builder.append("<").append(cls.getSimpleName()).append(">");
         return this;
     }
 

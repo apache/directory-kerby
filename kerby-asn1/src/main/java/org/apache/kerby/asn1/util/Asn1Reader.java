@@ -42,12 +42,19 @@ public abstract class Asn1Reader {
     public Asn1Header readHeader() throws IOException {
         Tag tag = readTag();
         int valueLength = readLength();
+        int bodyStart = getPosition();
         Asn1Header header = new Asn1Header(tag, valueLength,
-            getValueBuffer(valueLength));
+            bodyStart, getValueBuffer(valueLength));
         return header;
     }
 
-    protected abstract ByteBuffer getValueBuffer(int valueLength);
+    public abstract void setPosition(int position);
+
+    public abstract int getPosition();
+
+    public abstract boolean available();
+
+    public abstract ByteBuffer getValueBuffer(int valueLength);
 
     protected abstract byte readByte() throws IOException;
 

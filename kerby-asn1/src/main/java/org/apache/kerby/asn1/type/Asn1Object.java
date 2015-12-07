@@ -23,7 +23,8 @@ import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
-import org.apache.kerby.asn1.util.Asn1Reader1;
+import org.apache.kerby.asn1.util.Asn1Reader;
+import org.apache.kerby.asn1.util.Asn1Reader2;
 import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.io.IOException;
@@ -194,8 +195,12 @@ public abstract class Asn1Object implements Asn1Type {
         return tag.isContextSpecific();
     }
 
-    protected boolean isTagged() {
-        return tag.isTagged();
+    protected boolean isTagSpecific() {
+        return tag.isSpecific();
+    }
+
+    protected boolean isEOC() {
+        return tag().isEOC();
     }
 
     public boolean isSimple() {
@@ -210,23 +215,23 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
-        Asn1Reader1 reader = new Asn1Reader1(content);
+        Asn1Reader reader = new Asn1Reader2(content);
         Asn1Header header = reader.readHeader();
 
         useDefinitiveLength(header.isDefinitiveLength());
-        decode(header.getTag(), header.getValueBuffer());
+        decode(header);
     }
 
-    public void decode(Tag tag, ByteBuffer content) throws IOException {
-        if (!tag().equals(tag)) {
-            throw new IOException("Unexpected tag " + tag
-                    + ", expecting " + tag());
+    public void decode(Asn1Header header) throws IOException {
+        if (!tag().equals(header.getTag())) {
+            throw new IOException("Unexpected tag " + header.getTag()
+                + ", expecting " + tag());
         }
 
-        decodeBody(content);
+        decodeBody(header);
     }
 
-    protected abstract void decodeBody(ByteBuffer content) throws IOException;
+    protected abstract void decodeBody(Asn1Header header) throws IOException;
 
     protected int taggedEncodingLength(TaggingOption taggingOption) {
         int taggingTagNo = taggingOption.getTagNo();
@@ -266,25 +271,25 @@ public abstract class Asn1Object implements Asn1Type {
     @Override
     public void taggedDecode(ByteBuffer content,
                              TaggingOption taggingOption) throws IOException {
-        Asn1Reader1 reader = new Asn1Reader1(content);
+        Asn1Reader reader = new Asn1Reader2(content);
         Asn1Header header = reader.readHeader();
 
         useDefinitiveLength(header.isDefinitiveLength());
-        taggedDecode(header.getTag(), header.getValueBuffer(), taggingOption);
+        taggedDecode(header, taggingOption);
     }
 
-    protected void taggedDecode(Tag taggingTag, ByteBuffer content,
+    protected void taggedDecode(Asn1Header header,
                                 TaggingOption taggingOption) throws IOException {
         Tag expectedTaggingTagFlags = taggingOption.getTag(!isPrimitive());
-        if (!expectedTaggingTagFlags.equals(taggingTag)) {
-            throw new IOException("Unexpected tag " + taggingTag
+        if (!expectedTaggingTagFlags.equals(header.getTag())) {
+            throw new IOException("Unexpected tag " + header.getTag()
                     + ", expecting " + expectedTaggingTagFlags);
         }
 
         if (taggingOption.isImplicit()) {
-            decodeBody(content);
+            decodeBody(header);
         } else {
-            decode(content);
+            decode(header.getBodyBuffer());
         }
     }
 }

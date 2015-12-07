@@ -88,7 +88,7 @@ public class KrbCodec {
             throw new IOException("To be supported krb message type with tag: " + tag);
         }
 
-        msg.decode(tag, header.getValueBuffer());
+        msg.decode(header);
         return msg;
     }
 

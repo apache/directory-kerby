@@ -20,6 +20,7 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Factory;
+import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
 
@@ -36,34 +37,27 @@ import java.nio.ByteBuffer;
  * tagged value.
  *
  * For not fully decoded value, you tell your case using isSimple/isCollection/
- * isTagged/isContextSpecific etc., then call decodeValueAsSimple/
+ * isSpecific/isContextSpecific etc., then call decodeValueAsSimple/
  * decodeValueAsCollection/decodeValueAsImplicitTagged/decodeValueAsExplicitTagged etc.
  * to decode it fully. Or if you have already derived the value holder or
  * the holder type, you can use decodeValueWith or decodeValueAs with your
  * holder or hodler type.
  */
 public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
-    private ByteBuffer bodyContent;
+    private final Asn1ParsingResult parsingResult;
 
-    public Asn1Item(Asn1Type value) {
-        super(value.tag(), value);
+    public Asn1Item(Asn1ParsingResult parsingResult) {
+        super(parsingResult.tag());
+        this.parsingResult = parsingResult;
     }
 
-    public Asn1Item(Tag tag) {
+    public Asn1Item(Tag tag, Asn1ParsingResult parsingResult) {
         super(tag);
+        this.parsingResult = parsingResult;
     }
 
-    public Asn1Item(Tag tag, ByteBuffer bodyContent) {
-        super(tag);
-        this.bodyContent = bodyContent;
-    }
-
-    public void setBodyContent(ByteBuffer bodyContent) {
-        this.bodyContent = bodyContent;
-    }
-
-    public ByteBuffer getBodyContent() {
-        return bodyContent;
+    public Asn1ParsingResult getParsingResult() {
+        return parsingResult;
     }
 
     @Override
@@ -71,7 +65,7 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
         if (getValue() != null) {
             return ((AbstractAsn1Type<?>) getValue()).encodingBodyLength();
         }
-        return (int) bodyContent.remaining();
+        return parsingResult.encodingBodyLength();
     }
 
     @Override
@@ -82,8 +76,8 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
     }
 
     @Override
-    protected void decodeBody(ByteBuffer bodyContent) throws IOException {
-        this.bodyContent = bodyContent;
+    protected void decodeBody(Asn1Header header) throws IOException {
+        this.parsingResult.decodeBody(header);
     }
 
     public boolean isFullyDecoded() {
@@ -132,15 +126,15 @@ public class Asn1Item extends AbstractAsn1Type<Asn1Type> {
     public void decodeValueWith(Asn1Type value) throws IOException {
         setValue(value);
         value.useDefinitiveLength(isDefinitiveLength());
-        ((AbstractAsn1Type<?>) value).decode(tag(), bodyContent);
+        ((Asn1Object) value).decode(parsingResult.getHeader());
     }
 
     public void decodeValueWith(Asn1Type value, TaggingOption taggingOption) throws IOException {
-        if (!isTagged()) {
+        if (!isTagSpecific()) {
             throw new IllegalArgumentException(
                 "Attempting to decode non-tagged value using tagging way");
         }
-        ((Asn1Object) value).taggedDecode(tag(), getBodyContent(), taggingOption);
+        ((Asn1Object) value).taggedDecode(parsingResult.getHeader(), taggingOption);
         setValue(value);
     }
 }

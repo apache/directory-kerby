@@ -72,12 +72,14 @@ public class TestPersonnelRecord {
         assertThat(encoded).isEqualTo(data);
     }
 
-    //@Test
+    @Test
     public void testDecoding() throws IOException {
         PersonnelRecord expected = TestData.createSamplePersonnel();
         byte[] data = TestData.createSammplePersonnelEncodingData();
         PersonnelRecord decoded = new PersonnelRecord();
+        //Asn1.dump(data);
         decoded.decode(data);
+        Asn1.dump(decoded);
 
         assertThat(expected.getName().getGivenName())
                 .isEqualTo(decoded.getName().getGivenName());
@@ -97,6 +99,8 @@ public class TestPersonnelRecord {
                 .isEqualTo(decoded.getNameOfSpouse().getInitial());
         assertThat(expected.getNameOfSpouse().getFamilyName())
                 .isEqualTo(decoded.getNameOfSpouse().getFamilyName());
+        assertThat(decoded.getChildren().getElements().size())
+            .isEqualTo(expected.getChildren().getElements().size());
         assertThat(expected.getChildren().getElements().get(0).getName().getGivenName())
                 .isEqualTo(decoded.getChildren().getElements().get(0).getName().getGivenName());
         assertThat(expected.getChildren().getElements().get(0).getName().getInitial())

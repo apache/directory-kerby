@@ -97,8 +97,8 @@ public class Tag {
         return tagClass().isContextSpecific();
     }
 
-    public boolean isTagged() {
-        return tagClass().isTagged();
+    public boolean isSpecific() {
+        return tagClass().isSpecific();
     }
 
     @Override

@@ -21,6 +21,7 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
@@ -106,6 +107,11 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
             }
         }
         fields[foundPos] = item.getValue();
+    }
+
+    @Override
+    protected void decodeBody(Asn1Header header) throws IOException {
+
     }
 
     protected void decodeBody(ByteBuffer content) throws IOException {

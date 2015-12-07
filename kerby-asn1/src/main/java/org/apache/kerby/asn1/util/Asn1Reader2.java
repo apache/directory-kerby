@@ -38,20 +38,23 @@ public final class Asn1Reader2 extends Asn1Reader {
         this.position = buffer.position();
     }
 
+    @Override
     public int getPosition() {
         return position;
     }
 
+    @Override
     public void setPosition(int position) {
         this.position = position;
     }
 
+    @Override
     public boolean available() {
         return position < buffer.limit();
     }
 
     @Override
-    protected ByteBuffer getValueBuffer(int valueLength) {
+    public ByteBuffer getValueBuffer(int valueLength) {
         return buffer;
     }
 

@@ -32,12 +32,27 @@ public final class Asn1Reader1 extends Asn1Reader {
     }
 
     @Override
+    public void setPosition(int position) {
+        buffer.position(position);
+    }
+
+    @Override
+    public int getPosition() {
+        return buffer.position();
+    }
+
+    @Override
+    public boolean available() {
+        return buffer.remaining() > 0;
+    }
+
+    @Override
     protected byte readByte() throws IOException {
         return buffer.get();
     }
 
     @Override
-    protected ByteBuffer getValueBuffer(int valueLength) {
+    public ByteBuffer getValueBuffer(int valueLength) {
         ByteBuffer result = buffer.duplicate();
         result.limit(buffer.position() + valueLength);
         buffer.position(buffer.position() + valueLength);

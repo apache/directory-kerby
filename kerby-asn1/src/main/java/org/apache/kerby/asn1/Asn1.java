@@ -19,9 +19,10 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.Asn1Item;
+import org.apache.kerby.asn1.type.Asn1ParsingContainer;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.asn1.util.Asn1Reader1;
+import org.apache.kerby.asn1.util.Asn1Reader2;
 import org.apache.kerby.asn1.util.HexUtil;
 
 import java.io.IOException;
@@ -54,18 +55,30 @@ public final class Asn1 {
         return decode(ByteBuffer.wrap(content));
     }
 
+    /*
     public static Asn1Type decode(ByteBuffer content) throws IOException {
         Asn1Reader1 reader = new Asn1Reader1(content);
         Asn1Header header = reader.readHeader();
 
-        Asn1Item result = new Asn1Item(header.getTag(), header.getValueBuffer());
+        Asn1Item result = new Asn1Item(header.getTag(), header.getBuffer());
         result.useDefinitiveLength(header.isDefinitiveLength());
 
         return result;
+    }*/
+
+    public static Asn1Type decode(ByteBuffer content) throws IOException {
+        return Asn1ParsingContainer.decodeOne(content);
     }
 
     public static void dump(Asn1Type value) {
-        Asn1Dumper dumper = new Asn1Dumper();
+        dump(value, true);
+    }
+
+    public static void dump(Asn1Type value, boolean withType) {
+        Asn1Dumper dumper = new Asn1Dumper(withType);
+        if (!withType) {
+            dumper.dumpTypeInfo(value.getClass());
+        }
         dumper.dumpType(0, value);
         String output = dumper.output();
         System.out.println(output);
@@ -77,6 +90,8 @@ public final class Asn1 {
         Asn1Dumper dumper = new Asn1Dumper();
         byte[] data = HexUtil.hex2bytes(hexStr);
         dumper.dump(data);
+        String output = dumper.output();
+        System.out.println(output);
     }
 
     public static void dump(byte[] content) throws IOException {
@@ -85,6 +100,8 @@ public final class Asn1 {
         System.out.println(hexStr);
         Asn1Dumper dumper = new Asn1Dumper();
         dumper.dump(content);
+        String output = dumper.output();
+        System.out.println(output);
     }
 
     public static void dump(ByteBuffer content) throws IOException {

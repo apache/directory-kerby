@@ -20,40 +20,30 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Header;
-import org.apache.kerby.asn1.UniversalTag;
-
-import java.io.IOException;
 
 /**
- * The Asn1 Null type
+ * Asn1Item serves two purposes:
+ * 1. Wrapping an existing Asn1Type value for Asn1Collection;
+ * 2. Wrapping a half decoded value whose body content is left to be decoded
+ * later when appropriate.
+ * Why not fully decoded at once? Lazy and decode on demand for collection, or
+ * impossible due to lacking key parameters.
  */
-public final class Asn1Null extends Asn1Simple<Object> {
-    public static final Asn1Null INSTANCE = new Asn1Null();
-    private static final byte[]  EMPTY_BYTES = new byte[0];
+public class Asn1ParsingItem extends Asn1ParsingResult {
 
-    private Asn1Null() {
-        super(UniversalTag.NULL, null);
-    }
-
-    @Override
-    protected byte[] encodeBody() {
-        return EMPTY_BYTES;
-    }
-
-    @Override
-    protected int encodingBodyLength() {
-        return 0;
-    }
-
-    @Override
-    protected void decodeBody(Asn1Header header) throws IOException {
-        if (header.getLength() != 0) {
-            throw new IOException("Unexpected bytes found for NULL");
-        }
+    public Asn1ParsingItem(Asn1Header header) {
+        super(header);
     }
 
     @Override
     public String toString() {
-        return "null";
+        String valueStr = "##undecoded##";
+        String typeStr = tag().isUniversal() ? tag().universalTag().toStr()
+            : tag().tagClass().name().toLowerCase();
+        return typeStr + " ["
+            + "off=" + getOffset()
+            + ", len=" + encodingHeaderLength() + "+" + encodingBodyLength()
+            + "] "
+            + valueStr;
     }
 }

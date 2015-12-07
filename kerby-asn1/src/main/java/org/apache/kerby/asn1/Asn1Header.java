@@ -24,24 +24,63 @@ import java.nio.ByteBuffer;
 public class Asn1Header {
     private Tag tag;
     private int length;
-    private ByteBuffer valueBuffer;
+    private int bodyStart;
+    private int bodyEnd;
+    private ByteBuffer buffer;
 
-    public Asn1Header(Tag tag, int length, ByteBuffer valueBuffer) {
+    public Asn1Header(Tag tag, int length,
+                      int bodyStart, ByteBuffer buffer) {
         this.tag = tag;
         this.length = length;
-        this.valueBuffer = valueBuffer;
+        this.bodyStart = bodyStart;
+        this.buffer = buffer;
+
+        this.bodyEnd = isDefinitiveLength() ? bodyStart + length : -1;
     }
 
     public Tag getTag() {
         return tag;
     }
 
+    public int getActualBodyLength() {
+        if (isDefinitiveLength()) {
+            return getLength();
+        } else if (getBodyEnd() != -1) {
+            return getBodyEnd() - getBodyStart();
+        }
+        return -1;
+    }
+
     public int getLength() {
         return length;
     }
 
-    public ByteBuffer getValueBuffer() {
-        return valueBuffer;
+    public int getBodyStart() {
+        return bodyStart;
+    }
+
+    public int getBodyEnd() {
+        return bodyEnd;
+    }
+
+    public void setBodyEnd(int bodyEnd) {
+        this.bodyEnd = bodyEnd;
+    }
+
+    public ByteBuffer getBuffer() {
+        return buffer;
+    }
+
+    public ByteBuffer getBodyBuffer() {
+        ByteBuffer result = buffer.duplicate();
+        result.position(bodyStart);
+
+        int end = getBodyEnd();
+        if (end >= bodyStart) {
+            result.limit(end);
+        }
+
+        return result;
     }
 
     public boolean isEOC() {
@@ -50,5 +89,12 @@ public class Asn1Header {
 
     public boolean isDefinitiveLength() {
         return length != -1;
+    }
+
+    public byte[] readBodyBytes() {
+        ByteBuffer bodyBuffer = getBodyBuffer();
+        byte[] result = new byte[bodyBuffer.remaining()];
+        bodyBuffer.get(result);
+        return result;
     }
 }

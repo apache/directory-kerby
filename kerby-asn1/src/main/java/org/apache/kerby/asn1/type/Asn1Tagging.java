@@ -21,6 +21,7 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
+import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.Tag;
 
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class Asn1Tagging<T extends Asn1Type>
 
     @Override
     protected int encodingBodyLength() {
-        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
+        Asn1Object value = (Asn1Object) getValue();
         if (isImplicit()) {
             return value.encodingBodyLength();
         } else {
@@ -71,7 +72,7 @@ public class Asn1Tagging<T extends Asn1Type>
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
+        Asn1Object value = (Asn1Object) getValue();
         if (isImplicit()) {
             value.encodeBody(buffer);
         } else {
@@ -80,12 +81,12 @@ public class Asn1Tagging<T extends Asn1Type>
     }
 
     @Override
-    protected void decodeBody(ByteBuffer content) throws IOException {
-        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
+    protected void decodeBody(Asn1Header header) throws IOException {
+        Asn1Object value = (Asn1Object) getValue();
         if (isImplicit()) {
-            value.decodeBody(content);
+            value.decodeBody(header);
         } else {
-            value.decode(content);
+            value.decode(header.getBodyBuffer());
         }
     }
 
@@ -104,6 +105,7 @@ public class Asn1Tagging<T extends Asn1Type>
     @Override
     public void dumpWith(Asn1Dumper dumper, int indents) {
         Asn1Type taggedValue = getValue();
+        dumper.dumpTypeInfo(indents, getClass());
         dumper.dumpType(indents, taggedValue);
     }
 }

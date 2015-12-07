@@ -20,6 +20,7 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.UniversalTag;
 
 import java.io.IOException;
@@ -63,6 +64,11 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     @Override
     protected int encodingBodyLength() {
         return ((AbstractAsn1Type<?>) getValue()).encodingBodyLength();
+    }
+
+    @Override
+    protected void decodeBody(Asn1Header header) throws IOException {
+
     }
 
     @Override
