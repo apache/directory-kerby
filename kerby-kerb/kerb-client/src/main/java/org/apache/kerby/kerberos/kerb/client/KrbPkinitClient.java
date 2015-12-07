@@ -55,10 +55,13 @@ public class KrbPkinitClient {
      * @return TGT
      * @throws KrbException e
      */
-    public TgtTicket requestTgt(Certificate certificate,
-                                PrivateKey privateKey) throws KrbException {
+    public TgtTicket requestTgt(String principal, String certificate,
+                                String privateKey) throws KrbException {
         KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.PKINIT_X509_CERTIFICATE, certificate);
+        requestOptions.add(KrbOption.CLIENT_PRINCIPAL, principal);
+        requestOptions.add(KrbOption.USE_PKINIT);
+        requestOptions.add(KrbOption.PKINIT_USING_RSA);
+        requestOptions.add(KrbOption.PKINIT_X509_IDENTITY, certificate);
         requestOptions.add(KrbOption.PKINIT_X509_PRIVATE_KEY, privateKey);
         return krbClient.requestTgt(requestOptions);
     }

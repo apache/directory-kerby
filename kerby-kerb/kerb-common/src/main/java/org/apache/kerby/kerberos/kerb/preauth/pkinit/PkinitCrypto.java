@@ -52,7 +52,9 @@ import java.security.cert.CertPath;
 import java.security.cert.CertPathValidator;
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.PKIXParameters;
 import java.security.cert.TrustAnchor;
@@ -213,10 +215,18 @@ public class PkinitCrypto {
         return dhPublicKey;
     }
 
-    public static ByteArrayOutputStream cmsSignedDataCreate(byte[] data, ObjectIdentifier oid,
+    public static ByteArrayOutputStream cmsSignedDataCreate(PkinitPlgCryptoContext cryptoContext, byte[] data, ObjectIdentifier oid,
                                                             X509Certificate[] certificates) throws IOException {
 
         ContentInfo contentInfo = createContentInfo(data, oid);
+
+        try {
+            createCertChain(cryptoContext);
+        } catch (CertificateNotYetValidException e) {
+            e.printStackTrace();
+        } catch (CertificateExpiredException e) {
+            e.printStackTrace();
+        }
 
         PKCS7 p7 = new PKCS7(new AlgorithmId[0], contentInfo, certificates, new SignerInfo[0]);
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -244,6 +254,33 @@ public class PkinitCrypto {
         eContentInfo.setContentType(new Asn1ObjectIdentifier("1.3.6.1.5.2.3.1"));
         eContentInfo.setContent(data);
         return eContentInfo.encode();
+    }
+
+    public static X509Certificate[] createCertChain(PkinitPlgCryptoContext cryptoContext)
+            throws CertificateNotYetValidException, CertificateExpiredException {
+        LOG.info("Building certificate chain.");
+
+        X509Certificate[] clientChain;
+
+//        X509Certificate trustAnchorCert = cryptoContext.anchorCert;
+//        trustAnchorCert.checkValidity();
+//        trustAnchorCert.verify(trustAnchorPublicKey);
+//
+//        X509Certificate clientCaCert = cryptoContext.userCerts;
+//        clientCaCert.checkValidity();
+//        clientCaCert.verify(trustAnchorPublicKey);
+//
+//        X509Certificate clientCert = cryptoContext.anchorCert;
+//        clientCert.checkValidity();
+//        clientCert.verify(clientCaPublicKey);
+
+        // Build client chain.
+        clientChain = new X509Certificate[3];
+//        clientChain[2] = trustAnchorCert;
+//        clientChain[1] = clientCaCert;
+//        clientChain[0] = clientCert;
+
+        return clientChain;
     }
 
     public static ContentInfo createContentInfo(byte[] data, ObjectIdentifier oid) {

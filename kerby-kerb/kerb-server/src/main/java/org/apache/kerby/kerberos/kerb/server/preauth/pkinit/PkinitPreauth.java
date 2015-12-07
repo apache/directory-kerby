@@ -164,16 +164,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             checkClockskew(kdcRequest, pkAuthenticator.getCtime());
             DHParameter dhParameter = null;
-            if (authPack.getClientPublicValue() != null) {
-                //TODO
-                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParameters();
-                PkinitCrypto.serverCheckDH(pkinitContext.pluginOpts, pkinitContext.cryptoctx, dhParameter);
-            } else if (!isSigned) {
-                /*Anonymous pkinit requires DH*/
-                String errMessage = "Anonymous pkinit without DH public value not supported.";
-                LOG.error(errMessage);
-                throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED, errMessage);
-            }
 
             CheckSum expectedCheckSum = null;
             try {
@@ -195,33 +185,48 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             }
 
             SubjectPublicKeyInfo publicKeyInfo = authPack.getClientPublicValue();
-            byte[] clientSubjectPubKey = publicKeyInfo.getSubjectPubKey();
-            Asn1Integer clientPubKey = KrbCodec.decode(clientSubjectPubKey, Asn1Integer.class);
-            BigInteger y = clientPubKey.getValue();
 
-            BigInteger p = dhParameter.getP();
-            BigInteger g = dhParameter.getG();
+            if (publicKeyInfo.getSubjectPubKey() != null) {
+                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParameters();
+                PkinitCrypto.serverCheckDH(pkinitContext.pluginOpts, pkinitContext.cryptoctx, dhParameter);
 
-            DHPublicKey dhPublicKey = PkinitCrypto.createDHPublicKey(p, g, y);
+                byte[] clientSubjectPubKey = publicKeyInfo.getSubjectPubKey().getValue();
+                Asn1Integer clientPubKey = KrbCodec.decode(clientSubjectPubKey, Asn1Integer.class);
+                BigInteger y = clientPubKey.getValue();
 
-            DhServer server = new DhServer();
-            DHPublicKey serverPubKey = null;
-            try {
-                serverPubKey = (DHPublicKey) server.initAndDoPhase(dhPublicKey.getEncoded());
-            } catch (Exception e) {
-                LOG.error("Fail to create server public key.", e);
+                BigInteger p = dhParameter.getP();
+                BigInteger g = dhParameter.getG();
+
+                DHPublicKey dhPublicKey = PkinitCrypto.createDHPublicKey(p, g, y);
+
+                DhServer server = new DhServer();
+                DHPublicKey serverPubKey = null;
+                try {
+                    serverPubKey = (DHPublicKey) server.initAndDoPhase(dhPublicKey.getEncoded());
+                } catch (Exception e) {
+                    LOG.error("Fail to create server public key.", e);
+                }
+                EncryptionKey secretKey = server.generateKey(null, null, kdcRequest.getEncryptionType());
+
+                // Set the DH shared key as the client key
+                kdcRequest.setClientKey(secretKey);
+
+                String identity = pkinitContext.identityOpts.identity;
+
+                PaPkAsRep paPkAsRep = makePaPkAsRep(pkinitContext.cryptoctx, serverPubKey, identity);
+                PaDataEntry paDataEntry = makeEntry(paPkAsRep);
+
+                kdcRequest.getPreauthContext().getOutputPaData().add(paDataEntry);
+            } else {
+                if (!isSigned) {
+                /*Anonymous pkinit requires DH*/
+                    String errMessage = "Anonymous pkinit without DH public value not supported.";
+                    LOG.error(errMessage);
+                    throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED, errMessage);
+                } else {
+                    // rsa
+                }
             }
-            EncryptionKey secretKey = server.generateKey(null, null, kdcRequest.getEncryptionType());
-
-            // Set the DH shared key as the client key
-            kdcRequest.setClientKey(secretKey);
-
-            String identity = pkinitContext.identityOpts.identity;
-
-            PaPkAsRep paPkAsRep = makePaPkAsRep(pkinitContext.cryptoctx, serverPubKey, identity);
-            PaDataEntry paDataEntry = makeEntry(paPkAsRep);
-
-            kdcRequest.getPreauthContext().getOutputPaData().add(paDataEntry);
         }
 
         return true;
@@ -296,7 +301,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         ByteArrayOutputStream signedData = null;
         try {
-            signedData = PkinitCrypto.cmsSignedDataCreate(kdcDhKeyInfo.encode(),
+            signedData = PkinitCrypto.cmsSignedDataCreate(cryptoContext, kdcDhKeyInfo.encode(),
                     cryptoContext.getIdPkinitDHKeyDataOID(),
                     certificates.toArray(new X509Certificate[certificates.size()]));
         } catch (IOException e) {

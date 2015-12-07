@@ -229,7 +229,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         AuthPack authPack = new AuthPack();
         PkAuthenticator pkAuthen = new PkAuthenticator();
 
-        boolean usingRsa = reqCtx.requestOpts.usingRsa;
+        boolean usingRsa = pkinitContext.pluginOpts.usingRsa;
         reqCtx.paType = PaDataType.PK_AS_REQ;
 
         pkAuthen.setCusec(cusec);
@@ -242,6 +242,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         authPack.setPkAuthenticator(pkAuthen);
         authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
 
+        String certFile = null;
         if (!usingRsa) {
             // DH case
             LOG.info("DH key transport algorithm.");
@@ -287,12 +288,26 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 //            DHNonce dhNonce = new DHNonce();
 //            authPack.setClientDhNonce(dhNonce);
 
+            List<String> archors = pkinitContext.identityOpts.anchors;
+            certFile = archors.get(0);
+
         } else {
             LOG.info("RSA key transport algorithm");
-            authPack.setClientPublicValue(null);
+//            authPack.setClientPublicValue(null);
+            certFile = pkinitContext.identityOpts.identity;
         }
 
-        byte[] signedAuthPack = signAuthPack(kdcRequest, reqCtx, authPack);
+        X509Certificate certificate = null;
+        try {
+            certificate = (X509Certificate) CertificateHelper.loadCerts(
+                    certFile).iterator().next();
+        } catch (KrbException e) {
+            e.printStackTrace();
+        }
+
+        X509Certificate[] certificates = {certificate};
+
+        byte[] signedAuthPack = signAuthPack(kdcRequest, authPack, certificates);
 
         paPkAsReq.setSignedAuthPack(signedAuthPack);
 
@@ -305,23 +320,11 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         return paPkAsReq;
     }
 
-    private byte[] signAuthPack(KdcRequest kdcRequest,
-                                PkinitRequestContext reqCtx, AuthPack authPack) {
+    private byte[] signAuthPack(KdcRequest kdcRequest, AuthPack authPack, X509Certificate[] certificates) {
 
-        List<String> anchors = pkinitContext.identityOpts.anchors;
-
-        X509Certificate certificate = null;
-        try {
-            certificate = (X509Certificate) CertificateHelper.loadCerts(
-                    anchors.get(0)).iterator().next();
-        } catch (KrbException e) {
-            e.printStackTrace();
-        }
-
-        X509Certificate[] certificates = {certificate};
         byte[] signedDataBytes = new byte[0];
         try {
-            signedDataBytes = PkinitCrypto.cmsSignedDataCreate(authPack.encode(),
+            signedDataBytes = PkinitCrypto.cmsSignedDataCreate(pkinitContext.cryptoctx, authPack.encode(),
                     pkinitContext.cryptoctx.getIdPkinitAuthDataOID(), certificates).toByteArray();
         } catch (IOException e) {
             e.printStackTrace();

@@ -50,8 +50,8 @@ public class SubjectPublicKeyInfo extends Asn1SequenceType {
         setFieldAs(ALGORITHM, algorithm);
     }
 
-    public byte[] getSubjectPubKey() {
-        return getFieldAs(SUBJECT_PUBLIC_KEY, Asn1BitString.class).getValue();
+    public Asn1BitString getSubjectPubKey() {
+        return getFieldAs(SUBJECT_PUBLIC_KEY, Asn1BitString.class);
     }
 
     public void setSubjectPubKey(byte[] subjectPubKey) {

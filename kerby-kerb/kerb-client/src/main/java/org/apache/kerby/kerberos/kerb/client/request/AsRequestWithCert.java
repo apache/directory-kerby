@@ -68,7 +68,6 @@ public class AsRequestWithCert extends AsRequest {
         super(context);
 
         setAllowedPreauth(PaDataType.PK_AS_REQ);
-        getKdcOptions().setFlag(KdcOption.REQUEST_ANONYMOUS);
     }
 
     @Override
@@ -94,6 +93,10 @@ public class AsRequestWithCert extends AsRequest {
         results.add(krbOptions.getOption(KrbOption.PKINIT_X509_PRIVATE_KEY));
         results.add(krbOptions.getOption(KrbOption.PKINIT_X509_IDENTITY));
         results.add(krbOptions.getOption(KrbOption.PKINIT_USING_RSA));
+
+        if (krbOptions.contains(KrbOption.USE_PKINIT_ANONYMOUS)) {
+            getKdcOptions().setFlag(KdcOption.REQUEST_ANONYMOUS);
+        }
 
         return results;
     }

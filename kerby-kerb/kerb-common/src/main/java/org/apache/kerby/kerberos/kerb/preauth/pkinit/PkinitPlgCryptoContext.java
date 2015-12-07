@@ -24,11 +24,19 @@ import sun.security.util.ObjectIdentifier;
 import javax.crypto.spec.DHParameterSpec;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.cert.X509Certificate;
 
 public class PkinitPlgCryptoContext {
     private static final String ID_PKINIT_AUTHDATA = "1.3.6.1.5.2.3.1";
     private static final String ID_PKINIT_DHKEYDATA = "1.3.6.1.5.2.3.2";
     private static final String ID_PKINIT_RKEYDATA = "1.3.6.1.5.2.3.3";
+
+    /* available trusted ca certs */
+    public X509Certificate trustedCAs;
+    /* available intermediate ca certs */
+    public X509Certificate intermediateCAs;
+    /* available crls */
+    public X509Certificate revoked;
 
 
     /*

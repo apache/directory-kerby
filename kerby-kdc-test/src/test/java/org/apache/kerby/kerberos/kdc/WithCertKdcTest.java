@@ -69,7 +69,9 @@ public class WithCertKdcTest extends KdcTestBase {
 
         String pkinitIdentity = getClass().getResource("/kdccerttest.pem").getPath() + ","
                 + getClass().getResource("/kdckey.pem").getPath();
+        String pkinitAnchors = getClass().getResource("/cacert.pem").getPath();
         getKdcServer().getKdcConfig().setString(KdcConfigKey.PKINIT_IDENTITY, pkinitIdentity);
+        getKdcServer().getKdcConfig().setString(KdcConfigKey.PKINIT_ANCHORS, pkinitAnchors);
     }
 
     @Override
@@ -108,8 +110,8 @@ public class WithCertKdcTest extends KdcTestBase {
         assertThat(tkt).isNotNull();
     }
 
-    //@Test
-    public void testKdc() throws Exception {
+    @Test
+    public void testPkinit() throws Exception {
         assertThat(userCert).isNotNull();
 
         getKrbClient().init();
@@ -117,16 +119,19 @@ public class WithCertKdcTest extends KdcTestBase {
         TgtTicket tgt;
         KrbPkinitClient pkinitClient = new KrbPkinitClient(getKrbClient());
         try {
-            tgt = pkinitClient.requestTgt(userCert, userKey);
+            String userCertPath = getClass().getResource("/usercert.pem").getPath();
+            String userKeyPath = getClass().getResource("/userkey.pem").getPath();
+
+            tgt = pkinitClient.requestTgt(getClientPrincipal(), userCertPath, userKeyPath);
         } catch (KrbException te) {
             assertThat(te.getMessage().contains("timeout")).isTrue();
             return;
         }
-        assertThat(tgt).isNull();
+        assertThat(tgt).isNotNull();
 
         serverPrincipal = getServerPrincipal();
         SgtTicket tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
-        assertThat(tkt).isNull();
+        assertThat(tkt).isNotNull();
     }
 
     private void loadCredentials() throws KrbException {

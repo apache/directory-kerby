@@ -37,14 +37,7 @@ import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
-import sun.security.pkcs.ContentInfo;
-import sun.security.pkcs.PKCS7;
-import sun.security.pkcs.SignerInfo;
-import sun.security.util.DerValue;
-import sun.security.util.ObjectIdentifier;
-import sun.security.x509.AlgorithmId;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.Security;
@@ -214,26 +207,4 @@ public class SignedDataEngine {
         }
         return true;
     }
-
-    public static ContentInfo createContentInfo(byte[] data, ObjectIdentifier oid) {
-
-        ContentInfo contentInfo = new ContentInfo(
-                oid,
-                new DerValue(DerValue.tag_OctetString, data));
-        return contentInfo;
-    }
-
-    public static ByteArrayOutputStream cmsSignedDataCreate(AuthPack authPack,
-                                                            X509Certificate certificate) throws IOException {
-
-        ObjectIdentifier oid = new ObjectIdentifier(ID_PKINIT_AUTHDATA);
-        ContentInfo contentInfo = createContentInfo(authPack.encode(), oid);
-
-        X509Certificate[] certificates = {certificate};
-        PKCS7 p7 = new PKCS7(new AlgorithmId[0], contentInfo, certificates, new SignerInfo[0]);
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        p7.encodeSignedData(bytes);
-        return bytes;
-    }
-
 }
