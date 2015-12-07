@@ -22,7 +22,6 @@ package org.apache.kerby.asn1;
 import org.apache.kerby.asn1.type.Asn1ParsingContainer;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.asn1.util.Asn1Reader1;
-import org.apache.kerby.asn1.util.Asn1Reader2;
 import org.apache.kerby.asn1.util.HexUtil;
 
 import java.io.IOException;
