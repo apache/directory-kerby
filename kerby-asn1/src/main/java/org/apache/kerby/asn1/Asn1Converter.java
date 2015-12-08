@@ -28,13 +28,16 @@ import org.apache.kerby.asn1.type.Asn1Type;
 
 import java.io.IOException;
 
-public class DecodingUtil {
+/**
+ * Converting a ASN1 parsing result into an ASN1 object.
+ */
+public class Asn1Converter {
 
-    public static Asn1Type decodeValue(Asn1ParsingResult parsingResult) throws IOException {
+    public static Asn1Type convert(Asn1ParsingResult parsingResult) throws IOException {
         if (Asn1Simple.isSimple(parsingResult.tag())) {
-            return DecodingUtil.decodeValueAsSimple(parsingResult);
+            return Asn1Converter.convertAsSimple(parsingResult);
         } else if (Asn1Collection.isCollection(parsingResult.tag())) {
-            return DecodingUtil.decodeValueAsCollection(parsingResult);
+            return Asn1Converter.convertAsCollection(parsingResult);
         } else if (!parsingResult.tag().isPrimitive()) {
             Asn1Object tmpValue = new Asn1Constructed(parsingResult.tag());
             tmpValue.decode(parsingResult);
@@ -44,14 +47,14 @@ public class DecodingUtil {
         }
     }
 
-    public static Asn1Type decodeValueAsSimple(Asn1ParsingResult parsingResult) throws IOException {
+    public static Asn1Type convertAsSimple(Asn1ParsingResult parsingResult) throws IOException {
         Asn1Object value = (Asn1Object) Asn1Simple.createSimple(parsingResult.tagNo());
         value.useDefinitiveLength(parsingResult.isDefinitiveLength());
         decodeValueWith(parsingResult, value);
         return value;
     }
 
-    public static Asn1Type decodeValueAsCollection(Asn1ParsingResult parsingResult) throws IOException {
+    public static Asn1Type convertAsCollection(Asn1ParsingResult parsingResult) throws IOException {
         Asn1Collection value = Asn1Collection.createCollection(parsingResult.tag());
         value.useDefinitiveLength(parsingResult.isDefinitiveLength());
         value.setLazy(true);
@@ -59,8 +62,8 @@ public class DecodingUtil {
         return value;
     }
 
-    public static Asn1Type decodeValueAs(Asn1ParsingResult parsingResult,
-                                         Class<? extends Asn1Type> type) throws IOException {
+    public static Asn1Type convertAs(Asn1ParsingResult parsingResult,
+                                     Class<? extends Asn1Type> type) throws IOException {
         Asn1Type value;
         try {
             value = type.newInstance();

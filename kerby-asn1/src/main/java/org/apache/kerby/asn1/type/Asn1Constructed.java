@@ -21,7 +21,7 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
-import org.apache.kerby.asn1.DecodingUtil;
+import org.apache.kerby.asn1.Asn1Converter;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.parse.Asn1Container;
 import org.apache.kerby.asn1.parse.Asn1ParsingResult;
@@ -106,7 +106,7 @@ public class Asn1Constructed
                 continue;
             }
 
-            Asn1Type tmpValue = DecodingUtil.decodeValue(parsingItem);
+            Asn1Type tmpValue = Asn1Converter.convert(parsingItem);
             addItem(tmpValue);
         }
     }

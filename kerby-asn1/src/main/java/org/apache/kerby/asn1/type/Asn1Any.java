@@ -20,7 +20,7 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.DecodingUtil;
+import org.apache.kerby.asn1.Asn1Converter;
 import org.apache.kerby.asn1.UniversalTag;
 import org.apache.kerby.asn1.parse.Asn1ParsingResult;
 
@@ -85,10 +85,10 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
 
         try {
             if (field.isContextSpecific()) {
-                DecodingUtil.decodeValueWith(field, result,
+                Asn1Converter.decodeValueWith(field, result,
                     fieldInfo.getTaggingOption());
             } else {
-                DecodingUtil.decodeValueWith(field, result);
+                Asn1Converter.decodeValueWith(field, result);
             }
         } catch (IOException e) {
             throw new RuntimeException("Fully decoding failed", e);
