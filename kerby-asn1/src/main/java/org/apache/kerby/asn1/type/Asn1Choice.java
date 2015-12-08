@@ -101,9 +101,9 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
         if (!item.isFullyDecoded()) {
             AbstractAsn1Type<?> fieldValue = (AbstractAsn1Type<?>) fields[foundPos];
             if (item.isContextSpecific()) {
-                item.decodeValueWith(fieldValue, fieldInfos[foundPos].getTaggingOption());
+                item.bind(fieldValue, fieldInfos[foundPos].getTaggingOption());
             } else {
-                item.decodeValueWith(fieldValue);
+                item.bind(fieldValue);
             }
         }
         fields[foundPos] = item.getValue();

@@ -31,7 +31,11 @@ import java.io.IOException;
 /**
  * Converting a ASN1 parsing result into an ASN1 object.
  */
-public class Asn1Converter {
+public final class Asn1Converter {
+
+    private Asn1Converter() {
+
+    }
 
     public static Asn1Type convert(Asn1ParsingResult parsingResult) throws IOException {
         if (Asn1Simple.isSimple(parsingResult.tag())) {
@@ -50,7 +54,7 @@ public class Asn1Converter {
     public static Asn1Type convertAsSimple(Asn1ParsingResult parsingResult) throws IOException {
         Asn1Object value = (Asn1Object) Asn1Simple.createSimple(parsingResult.tagNo());
         value.useDefinitiveLength(parsingResult.isDefinitiveLength());
-        decodeValueWith(parsingResult, value);
+        Asn1Binder.bind(parsingResult, value);
         return value;
     }
 
@@ -58,7 +62,7 @@ public class Asn1Converter {
         Asn1Collection value = Asn1Collection.createCollection(parsingResult.tag());
         value.useDefinitiveLength(parsingResult.isDefinitiveLength());
         value.setLazy(true);
-        decodeValueWith(parsingResult, value);
+        Asn1Binder.bind(parsingResult, value);
         return value;
     }
 
@@ -71,21 +75,7 @@ public class Asn1Converter {
             throw new RuntimeException("Invalid type: "
                 + type.getCanonicalName(), e);
         }
-        decodeValueWith(parsingResult, value);
+        Asn1Binder.bind(parsingResult, value);
         return value;
-    }
-
-    public static void decodeValueWith(Asn1ParsingResult parsingResult, Asn1Type value) throws IOException {
-        value.useDefinitiveLength(parsingResult.isDefinitiveLength());
-        ((Asn1Object) value).decode(parsingResult);
-    }
-
-    public static void decodeValueWith(Asn1ParsingResult parsingResult,
-                                       Asn1Type value, TaggingOption taggingOption) throws IOException {
-        if (!parsingResult.isTagSpecific()) {
-            throw new IllegalArgumentException(
-                "Attempting to decode non-tagged value using tagging way");
-        }
-        ((Asn1Object) value).taggedDecode(parsingResult, taggingOption);
     }
 }

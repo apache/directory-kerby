@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1Binder;
 import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.Asn1Converter;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
@@ -121,10 +121,10 @@ public abstract class Asn1CollectionType
                 any.setFieldInfo(fieldInfos[foundPos]);
             } else {
                 if (parsingItem.isContextSpecific()) {
-                    Asn1Converter.decodeValueWith(parsingItem, fieldValue,
+                    Asn1Binder.bindWithTagging(parsingItem, fieldValue,
                         fieldInfos[foundPos].getTaggingOption());
                 } else {
-                    Asn1Converter.decodeValueWith(parsingItem, fieldValue);
+                    Asn1Binder.bind(parsingItem, fieldValue);
                 }
             }
         }
