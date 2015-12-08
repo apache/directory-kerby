@@ -19,48 +19,17 @@
  */
 package org.apache.kerby.asn1.parse;
 
-import org.apache.kerby.asn1.Tag;
+import org.apache.kerby.asn1.type.Asn1Object;
 import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.nio.ByteBuffer;
 
-public abstract class Asn1ParseResult {
+public abstract class Asn1ParseResult extends Asn1Object {
     protected Asn1Header header;
 
     public Asn1ParseResult(Asn1Header header) {
+        super(header.getTag());
         this.header = header;
-    }
-
-    public Tag tag() {
-        return header.getTag();
-    }
-
-    public int tagNo() {
-        return tag().tagNo();
-    }
-
-    public boolean isPrimitive() {
-        return tag().isPrimitive();
-    }
-
-    public boolean isUniversal() {
-        return tag().isUniversal();
-    }
-
-    public boolean isAppSpecific() {
-        return tag().isAppSpecific();
-    }
-
-    public boolean isContextSpecific() {
-        return tag().isContextSpecific();
-    }
-
-    public boolean isTagSpecific() {
-        return tag().isSpecific();
-    }
-
-    public boolean isEOC() {
-        return header.isEOC();
     }
 
     public Asn1Header getHeader() {

@@ -74,19 +74,19 @@ public abstract class Asn1Object {
     }
 
 
-    protected boolean isUniversal() {
+    public boolean isUniversal() {
         return tag.isUniversal();
     }
 
-    protected boolean isAppSpecific() {
+    public boolean isAppSpecific() {
         return tag.isAppSpecific();
     }
 
-    protected boolean isContextSpecific() {
+    public boolean isContextSpecific() {
         return tag.isContextSpecific();
     }
 
-    protected boolean isTagSpecific() {
+    public boolean isTagSpecific() {
         return tag.isSpecific();
     }
 
