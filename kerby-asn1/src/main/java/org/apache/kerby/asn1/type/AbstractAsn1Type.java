@@ -28,7 +28,7 @@ import org.apache.kerby.asn1.UniversalTag;
  *
  * @param <T> the type of the value encoded/decoded or wrapped by this
  */
-public abstract class AbstractAsn1Type<T> extends Asn1Object {
+public abstract class AbstractAsn1Type<T> extends Asn1Encodeable {
     // The wrapped real value.
     private T value;
 

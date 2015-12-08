@@ -57,17 +57,17 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
 
     @Override
     protected int encodingBodyLength() {
-        return ((Asn1Object) getValue()).encodingBodyLength();
+        return ((Asn1Encodeable) getValue()).encodingBodyLength();
     }
 
     @Override
     protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
-        ((Asn1Object) getValue()).decodeBody(parseResult);
+        ((Asn1Encodeable) getValue()).decodeBody(parseResult);
     }
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        ((Asn1Object) getValue()).encodeBody(buffer);
+        ((Asn1Encodeable) getValue()).encodeBody(buffer);
     }
 
     protected <T extends Asn1Type> T getValueAs(Class<T> t) {

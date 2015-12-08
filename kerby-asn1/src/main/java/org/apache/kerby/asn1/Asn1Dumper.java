@@ -20,8 +20,8 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.parse.Asn1Item;
-import org.apache.kerby.asn1.parse.Asn1Parser;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
+import org.apache.kerby.asn1.parse.Asn1Parser;
 import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;

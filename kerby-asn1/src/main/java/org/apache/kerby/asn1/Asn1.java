@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.parse.Asn1Parser;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
+import org.apache.kerby.asn1.parse.Asn1Parser;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.asn1.util.HexUtil;
 

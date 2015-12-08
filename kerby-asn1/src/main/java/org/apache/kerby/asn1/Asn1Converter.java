@@ -22,7 +22,7 @@ package org.apache.kerby.asn1;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.type.Asn1Collection;
 import org.apache.kerby.asn1.type.Asn1Constructed;
-import org.apache.kerby.asn1.type.Asn1Object;
+import org.apache.kerby.asn1.type.Asn1Encodeable;
 import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;
 
@@ -43,7 +43,7 @@ public final class Asn1Converter {
         } else if (Asn1Collection.isCollection(parseResult.tag())) {
             return Asn1Converter.convertAsCollection(parseResult);
         } else if (!parseResult.tag().isPrimitive()) {
-            Asn1Object tmpValue = new Asn1Constructed(parseResult.tag());
+            Asn1Encodeable tmpValue = new Asn1Constructed(parseResult.tag());
             tmpValue.decode(parseResult);
             return tmpValue;
         } else {
@@ -52,7 +52,7 @@ public final class Asn1Converter {
     }
 
     public static Asn1Type convertAsSimple(Asn1ParseResult parseResult) throws IOException {
-        Asn1Object value = (Asn1Object) Asn1Simple.createSimple(parseResult.tagNo());
+        Asn1Encodeable value = Asn1Simple.createSimple(parseResult.tagNo());
         value.useDefinitiveLength(parseResult.isDefinitiveLength());
         Asn1Binder.bind(parseResult, value);
         return value;

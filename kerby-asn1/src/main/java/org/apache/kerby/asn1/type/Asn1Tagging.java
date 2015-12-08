@@ -63,7 +63,7 @@ public class Asn1Tagging<T extends Asn1Type>
 
     @Override
     protected int encodingBodyLength() {
-        Asn1Object value = (Asn1Object) getValue();
+        Asn1Encodeable value = (Asn1Encodeable) getValue();
         if (isImplicit()) {
             return value.encodingBodyLength();
         } else {
@@ -73,7 +73,7 @@ public class Asn1Tagging<T extends Asn1Type>
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        Asn1Object value = (Asn1Object) getValue();
+        Asn1Encodeable value = (Asn1Encodeable) getValue();
         if (isImplicit()) {
             value.encodeBody(buffer);
         } else {
@@ -83,7 +83,7 @@ public class Asn1Tagging<T extends Asn1Type>
 
     @Override
     protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
-        Asn1Object value = (Asn1Object) getValue();
+        Asn1Encodeable value = (Asn1Encodeable) getValue();
         if (isImplicit()) {
             value.decodeBody(parseResult);
         } else {

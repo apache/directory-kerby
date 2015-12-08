@@ -144,7 +144,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
      * @param tagNo The tag number
      * @return A simple ASN1 object
      */
-    public static Asn1Type createSimple(int tagNo) {
+    public static Asn1Simple<?> createSimple(int tagNo) {
         if (!isSimple(tagNo)) {
             throw new IllegalArgumentException("Not simple type, tag: " + tagNo);
         }
@@ -156,7 +156,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
      * @param tagNo The tag number
      * @return The simple ASN1 object
      */
-    public static Asn1Type createSimple(UniversalTag tagNo) {
+    public static Asn1Simple<?> createSimple(UniversalTag tagNo) {
         if (!isSimple(tagNo)) {
             throw new IllegalArgumentException("Not simple type, tag: " + tagNo);
         }

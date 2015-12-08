@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.common;
 
-import org.apache.kerby.asn1.type.Asn1Object;
+import org.apache.kerby.asn1.type.Asn1Encodeable;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.CheckSumHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
@@ -50,14 +50,14 @@ public class CheckSumUtil {
         return CheckSumHandler.checksumWithKey(checkSumType, input, key.getKeyData(), usage);
     }
 
-    public static CheckSum seal(Asn1Object asn1Object,
+    public static CheckSum seal(Asn1Encodeable asn1Object,
                                 CheckSumType checkSumType) throws KrbException {
         byte[] encoded = asn1Object.encode();
         CheckSum checksum = makeCheckSum(checkSumType, encoded);
         return checksum;
     }
 
-    public static CheckSum seal(Asn1Object asn1Object, CheckSumType checkSumType,
+    public static CheckSum seal(Asn1Encodeable asn1Object, CheckSumType checkSumType,
                                      EncryptionKey key, KeyUsage usage) throws KrbException {
         byte[] encoded = asn1Object.encode();
         CheckSum checksum = makeCheckSumWithKey(checkSumType, encoded, key, usage);
