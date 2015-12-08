@@ -39,7 +39,7 @@ public class Asn1Parser {
         int pos = header.getBodyStart();
         while (true) {
             reader.setPosition(pos);
-            Asn1ParsingResult asn1Obj = parse(reader);
+            Asn1ParseResult asn1Obj = parse(reader);
             if (asn1Obj == null) {
                 break;
             }
@@ -61,28 +61,28 @@ public class Asn1Parser {
         header.setBodyEnd(pos);
     }
 
-    public static Asn1ParsingResult parse(ByteBuffer content) throws IOException {
+    public static Asn1ParseResult parse(ByteBuffer content) throws IOException {
         Asn1Reader reader = new Asn1Reader(content);
         return parse(reader);
     }
 
-    public static Asn1ParsingResult parse(Asn1Reader reader) throws IOException {
+    public static Asn1ParseResult parse(Asn1Reader reader) throws IOException {
         if (!reader.available()) {
             return null;
         }
 
         Asn1Header header = reader.readHeader();
         Tag tmpTag = header.getTag();
-        Asn1ParsingResult parsingResult;
+        Asn1ParseResult parseResult;
 
         if (tmpTag.isPrimitive()) {
-            parsingResult = new Asn1Item(header);
+            parseResult = new Asn1Item(header);
         } else {
             Asn1Container container = new Asn1Container(header);
             parse(container);
-            parsingResult = container;
+            parseResult = container;
         }
 
-        return parsingResult;
+        return parseResult;
     }
 }

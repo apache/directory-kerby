@@ -24,7 +24,7 @@ import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.parse.Asn1Container;
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -91,8 +91,8 @@ public class Asn1Constructed
     }
 
     @Override
-    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
-        Asn1Container container = (Asn1Container) parsingResult;
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
+        Asn1Container container = (Asn1Container) parseResult;
         this.container = container;
 
         if (!isLazy()) {
@@ -101,7 +101,7 @@ public class Asn1Constructed
     }
 
     protected void decodeElements() throws IOException {
-        for (Asn1ParsingResult parsingItem : getContainer().getChildren()) {
+        for (Asn1ParseResult parsingItem : getContainer().getChildren()) {
             if (parsingItem.isEOC()) {
                 continue;
             }

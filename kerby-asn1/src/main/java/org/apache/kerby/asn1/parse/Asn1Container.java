@@ -29,23 +29,23 @@ import java.util.List;
  * ASN1 constructed types, mainly structured ones, but also some primitive ones.
  */
 public class Asn1Container
-    extends Asn1ParsingResult implements Asn1Dumpable {
+    extends Asn1ParseResult implements Asn1Dumpable {
 
-    private List<Asn1ParsingResult> children = new ArrayList<>();
+    private List<Asn1ParseResult> children = new ArrayList<>();
 
     public Asn1Container(Asn1Header header) {
         super(header);
     }
 
-    public Asn1Container(Asn1ParsingResult parsingResult) {
-        super(parsingResult.header);
+    public Asn1Container(Asn1ParseResult parseResult) {
+        super(parseResult.header);
     }
 
-    public List<Asn1ParsingResult> getChildren() {
+    public List<Asn1ParseResult> getChildren() {
         return children;
     }
 
-    public void addItem(Asn1ParsingResult value) {
+    public void addItem(Asn1ParseResult value) {
         children.add(value);
     }
 
@@ -57,7 +57,7 @@ public class Asn1Container
     public void dumpWith(Asn1Dumper dumper, int indents) {
         dumper.indent(indents).append(toString()).newLine();
 
-        for (Asn1ParsingResult aObj : children) {
+        for (Asn1ParseResult aObj : children) {
             dumper.dumpParseResult(indents + 4, aObj).newLine();
         }
     }

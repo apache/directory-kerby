@@ -23,7 +23,7 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -111,7 +111,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
     }
 
     @Override
-    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
 
     }
 

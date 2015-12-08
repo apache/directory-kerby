@@ -21,7 +21,7 @@ package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.parse.Asn1Item;
 import org.apache.kerby.asn1.parse.Asn1Parser;
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;
@@ -66,8 +66,8 @@ public final class Asn1Dumper {
     public void dump(ByteBuffer content,
                      boolean useRawFormat) throws IOException {
         if (useRawFormat) {
-            Asn1ParsingResult parsingResult = Asn1Parser.parse(content);
-            dumpParseResult(0, parsingResult);
+            Asn1ParseResult parseResult = Asn1Parser.parse(content);
+            dumpParseResult(0, parseResult);
         } else {
             Asn1Type value = Asn1.decode(content);
             dumpType(0, value);
@@ -97,7 +97,7 @@ public final class Asn1Dumper {
         return this;
     }
 
-    public Asn1Dumper dumpParseResult(int indents, Asn1ParsingResult value) {
+    public Asn1Dumper dumpParseResult(int indents, Asn1ParseResult value) {
         if (value == null) {
             indent(indents).append("Null");
         } else if (value instanceof Asn1Item) {

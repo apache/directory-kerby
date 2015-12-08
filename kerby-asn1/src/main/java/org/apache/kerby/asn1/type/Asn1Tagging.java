@@ -23,7 +23,7 @@ import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.parse.Asn1Container;
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -82,13 +82,13 @@ public class Asn1Tagging<T extends Asn1Type>
     }
 
     @Override
-    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
         Asn1Object value = (Asn1Object) getValue();
         if (isImplicit()) {
-            value.decodeBody(parsingResult);
+            value.decodeBody(parseResult);
         } else {
-            Asn1Container container = (Asn1Container) parsingResult;
-            Asn1ParsingResult body = container.getChildren().get(0);
+            Asn1Container container = (Asn1Container) parseResult;
+            Asn1ParseResult body = container.getChildren().get(0);
             value.decode(body);
         }
     }

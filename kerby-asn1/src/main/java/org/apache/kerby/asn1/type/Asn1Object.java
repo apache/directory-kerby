@@ -24,7 +24,7 @@ import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
 import org.apache.kerby.asn1.parse.Asn1Container;
 import org.apache.kerby.asn1.parse.Asn1Parser;
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.io.IOException;
@@ -215,20 +215,20 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
-        Asn1ParsingResult parsingResult = Asn1Parser.parse(content);
-        decode(parsingResult);
+        Asn1ParseResult parseResult = Asn1Parser.parse(content);
+        decode(parseResult);
     }
 
-    public void decode(Asn1ParsingResult parsingResult) throws IOException {
-        if (!tag().equals(parsingResult.tag())) {
-            throw new IOException("Unexpected tag " + parsingResult.tag()
+    public void decode(Asn1ParseResult parseResult) throws IOException {
+        if (!tag().equals(parseResult.tag())) {
+            throw new IOException("Unexpected tag " + parseResult.tag()
                 + ", expecting " + tag());
         }
 
-        decodeBody(parsingResult);
+        decodeBody(parseResult);
     }
 
-    protected abstract void decodeBody(Asn1ParsingResult parsingResult) throws IOException;
+    protected abstract void decodeBody(Asn1ParseResult parseResult) throws IOException;
 
     protected int taggedEncodingLength(TaggingOption taggingOption) {
         int taggingTagNo = taggingOption.getTagNo();
@@ -271,23 +271,23 @@ public abstract class Asn1Object implements Asn1Type {
     @Override
     public void taggedDecode(ByteBuffer content,
                              TaggingOption taggingOption) throws IOException {
-        Asn1ParsingResult parsingResult = Asn1Parser.parse(content);
-        taggedDecode(parsingResult, taggingOption);
+        Asn1ParseResult parseResult = Asn1Parser.parse(content);
+        taggedDecode(parseResult, taggingOption);
     }
 
-    public void taggedDecode(Asn1ParsingResult parsingResult,
+    public void taggedDecode(Asn1ParseResult parseResult,
                                 TaggingOption taggingOption) throws IOException {
         Tag expectedTaggingTagFlags = taggingOption.getTag(!isPrimitive());
-        if (!expectedTaggingTagFlags.equals(parsingResult.tag())) {
-            throw new IOException("Unexpected tag " + parsingResult.tag()
+        if (!expectedTaggingTagFlags.equals(parseResult.tag())) {
+            throw new IOException("Unexpected tag " + parseResult.tag()
                     + ", expecting " + expectedTaggingTagFlags);
         }
 
         if (taggingOption.isImplicit()) {
-            decodeBody(parsingResult);
+            decodeBody(parseResult);
         } else {
-            Asn1Container container = (Asn1Container) parsingResult;
-            Asn1ParsingResult body = container.getChildren().get(0);
+            Asn1Container container = (Asn1Container) parseResult;
+            Asn1ParseResult body = container.getChildren().get(0);
             decode(body);
         }
     }

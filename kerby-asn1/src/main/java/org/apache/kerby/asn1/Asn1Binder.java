@@ -1,6 +1,6 @@
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.type.Asn1Object;
 import org.apache.kerby.asn1.type.Asn1Type;
 
@@ -15,18 +15,18 @@ public final class Asn1Binder {
 
     }
 
-    public static void bind(Asn1ParsingResult parsingResult,
+    public static void bind(Asn1ParseResult parseResult,
                             Asn1Type value) throws IOException {
-        value.useDefinitiveLength(parsingResult.isDefinitiveLength());
-        ((Asn1Object) value).decode(parsingResult);
+        value.useDefinitiveLength(parseResult.isDefinitiveLength());
+        ((Asn1Object) value).decode(parseResult);
     }
 
-    public static void bindWithTagging(Asn1ParsingResult parsingResult,
+    public static void bindWithTagging(Asn1ParseResult parseResult,
                                        Asn1Type value, TaggingOption taggingOption) throws IOException {
-        if (!parsingResult.isTagSpecific()) {
+        if (!parseResult.isTagSpecific()) {
             throw new IllegalArgumentException(
                 "Attempting to decode non-tagged value using tagging way");
         }
-        ((Asn1Object) value).taggedDecode(parsingResult, taggingOption);
+        ((Asn1Object) value).taggedDecode(parseResult, taggingOption);
     }
 }

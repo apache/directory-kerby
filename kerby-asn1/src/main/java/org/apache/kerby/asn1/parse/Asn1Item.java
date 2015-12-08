@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.asn1.parse;
 
-public class Asn1Item extends Asn1ParsingResult {
+public class Asn1Item extends Asn1ParseResult {
 
     public Asn1Item(Asn1Header header) {
         super(header);

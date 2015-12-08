@@ -27,7 +27,7 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
 import org.apache.kerby.asn1.parse.Asn1Container;
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -84,15 +84,15 @@ public abstract class Asn1CollectionType
     }
 
     @Override
-    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
         checkAndInitFields();
 
-        Asn1Container container = (Asn1Container) parsingResult;
-        List<Asn1ParsingResult> parsingResults = container.getChildren();
+        Asn1Container container = (Asn1Container) parseResult;
+        List<Asn1ParseResult> parseResults = container.getChildren();
 
         int lastPos = -1, foundPos = -1;
 
-        for (Asn1ParsingResult parsingItem : parsingResults) {
+        for (Asn1ParseResult parsingItem : parseResults) {
             if (parsingItem.isEOC()) {
                 continue;
             }

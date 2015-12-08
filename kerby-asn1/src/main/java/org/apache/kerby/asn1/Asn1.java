@@ -20,7 +20,7 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.parse.Asn1Parser;
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.asn1.util.HexUtil;
 
@@ -50,15 +50,15 @@ public final class Asn1 {
     }
 
     public static Asn1Type decode(ByteBuffer content) throws IOException {
-        Asn1ParsingResult parsingResult = Asn1Parser.parse(content);
-        return Asn1Converter.convert(parsingResult);
+        Asn1ParseResult parseResult = Asn1Parser.parse(content);
+        return Asn1Converter.convert(parseResult);
     }
 
-    public static Asn1ParsingResult parse(byte[] content) throws IOException {
+    public static Asn1ParseResult parse(byte[] content) throws IOException {
         return parse(ByteBuffer.wrap(content));
     }
 
-    public static Asn1ParsingResult parse(ByteBuffer content) throws IOException {
+    public static Asn1ParseResult parse(ByteBuffer content) throws IOException {
         return Asn1Parser.parse(content);
     }
 

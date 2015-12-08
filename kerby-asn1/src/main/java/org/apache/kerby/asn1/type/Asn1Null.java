@@ -20,7 +20,7 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.UniversalTag;
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
 
@@ -46,8 +46,8 @@ public final class Asn1Null extends Asn1Simple<Object> {
     }
 
     @Override
-    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
-        if (parsingResult.getHeader().getLength() != 0) {
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
+        if (parseResult.getHeader().getLength() != 0) {
             throw new IOException("Unexpected bytes found for NULL");
         }
     }

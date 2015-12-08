@@ -24,10 +24,10 @@ import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.nio.ByteBuffer;
 
-public abstract class Asn1ParsingResult {
+public abstract class Asn1ParseResult {
     protected Asn1Header header;
 
-    public Asn1ParsingResult(Asn1Header header) {
+    public Asn1ParseResult(Asn1Header header) {
         this.header = header;
     }
 

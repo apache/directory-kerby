@@ -22,7 +22,7 @@ package org.apache.kerby.asn1.type;
 import org.apache.kerby.asn1.Asn1Binder;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.UniversalTag;
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -32,7 +32,7 @@ import java.nio.ByteBuffer;
  */
 public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     private Asn1FieldInfo fieldInfo;
-    private Asn1ParsingResult field;
+    private Asn1ParseResult field;
 
     public Asn1Any() {
         super(UniversalTag.ANY);
@@ -43,7 +43,7 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
         setValue(anyValue);
     }
 
-    public void setField(Asn1ParsingResult field) {
+    public void setField(Asn1ParseResult field) {
         this.field = field;
     }
 
@@ -51,7 +51,7 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
         this.fieldInfo = fieldInfo;
     }
 
-    public Asn1ParsingResult getField() {
+    public Asn1ParseResult getField() {
         return field;
     }
 
@@ -61,8 +61,8 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     }
 
     @Override
-    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
-        ((Asn1Object) getValue()).decodeBody(parsingResult);
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
+        ((Asn1Object) getValue()).decodeBody(parseResult);
     }
 
     @Override

@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.type.Asn1Collection;
 import org.apache.kerby.asn1.type.Asn1Constructed;
 import org.apache.kerby.asn1.type.Asn1Object;
@@ -37,36 +37,36 @@ public final class Asn1Converter {
 
     }
 
-    public static Asn1Type convert(Asn1ParsingResult parsingResult) throws IOException {
-        if (Asn1Simple.isSimple(parsingResult.tag())) {
-            return Asn1Converter.convertAsSimple(parsingResult);
-        } else if (Asn1Collection.isCollection(parsingResult.tag())) {
-            return Asn1Converter.convertAsCollection(parsingResult);
-        } else if (!parsingResult.tag().isPrimitive()) {
-            Asn1Object tmpValue = new Asn1Constructed(parsingResult.tag());
-            tmpValue.decode(parsingResult);
+    public static Asn1Type convert(Asn1ParseResult parseResult) throws IOException {
+        if (Asn1Simple.isSimple(parseResult.tag())) {
+            return Asn1Converter.convertAsSimple(parseResult);
+        } else if (Asn1Collection.isCollection(parseResult.tag())) {
+            return Asn1Converter.convertAsCollection(parseResult);
+        } else if (!parseResult.tag().isPrimitive()) {
+            Asn1Object tmpValue = new Asn1Constructed(parseResult.tag());
+            tmpValue.decode(parseResult);
             return tmpValue;
         } else {
-            throw new IOException("Unknow type of tag=" + parsingResult.tag());
+            throw new IOException("Unknow type of tag=" + parseResult.tag());
         }
     }
 
-    public static Asn1Type convertAsSimple(Asn1ParsingResult parsingResult) throws IOException {
-        Asn1Object value = (Asn1Object) Asn1Simple.createSimple(parsingResult.tagNo());
-        value.useDefinitiveLength(parsingResult.isDefinitiveLength());
-        Asn1Binder.bind(parsingResult, value);
+    public static Asn1Type convertAsSimple(Asn1ParseResult parseResult) throws IOException {
+        Asn1Object value = (Asn1Object) Asn1Simple.createSimple(parseResult.tagNo());
+        value.useDefinitiveLength(parseResult.isDefinitiveLength());
+        Asn1Binder.bind(parseResult, value);
         return value;
     }
 
-    public static Asn1Type convertAsCollection(Asn1ParsingResult parsingResult) throws IOException {
-        Asn1Collection value = Asn1Collection.createCollection(parsingResult.tag());
-        value.useDefinitiveLength(parsingResult.isDefinitiveLength());
+    public static Asn1Type convertAsCollection(Asn1ParseResult parseResult) throws IOException {
+        Asn1Collection value = Asn1Collection.createCollection(parseResult.tag());
+        value.useDefinitiveLength(parseResult.isDefinitiveLength());
         value.setLazy(true);
-        Asn1Binder.bind(parsingResult, value);
+        Asn1Binder.bind(parseResult, value);
         return value;
     }
 
-    public static Asn1Type convertAs(Asn1ParsingResult parsingResult,
+    public static Asn1Type convertAs(Asn1ParseResult parseResult,
                                      Class<? extends Asn1Type> type) throws IOException {
         Asn1Type value;
         try {
@@ -75,7 +75,7 @@ public final class Asn1Converter {
             throw new RuntimeException("Invalid type: "
                 + type.getCanonicalName(), e);
         }
-        Asn1Binder.bind(parsingResult, value);
+        Asn1Binder.bind(parseResult, value);
         return value;
     }
 }
