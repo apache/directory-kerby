@@ -21,8 +21,10 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
-import org.apache.kerby.asn1.Asn1Header;
+import org.apache.kerby.asn1.DecodingUtil;
 import org.apache.kerby.asn1.Tag;
+import org.apache.kerby.asn1.parse.Asn1Container;
+import org.apache.kerby.asn1.parse.Asn1ParsingResult;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -35,12 +37,19 @@ import java.util.List;
 public class Asn1Constructed
     extends AbstractAsn1Type<List<Asn1Type>> implements Asn1Dumpable {
 
+    protected Asn1Container container;
+
     private boolean lazy = false;
 
     public Asn1Constructed(Tag tag) {
         super(tag);
         setValue(new ArrayList<Asn1Type>());
         usePrimitive(false);
+    }
+
+
+    public Asn1Container getContainer() {
+        return container;
     }
 
     public void setLazy(boolean lazy) {
@@ -82,20 +91,23 @@ public class Asn1Constructed
     }
 
     @Override
-    protected void decodeBody(Asn1Header header) throws IOException {
-        Asn1ParsingContainer container = new Asn1ParsingContainer(tag());
-        container.decode(header);
+    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
+        Asn1Container container = (Asn1Container) parsingResult;
+        this.container = container;
 
-        for (Asn1ParsingResult result : container.getParsingResults()) {
-            if (!result.isEOC()) {
-                Asn1Item item = new Asn1Item(result);
-                if (item.isSimple() && !isLazy()) {
-                    item.decodeValueAsSimple();
-                    addItem(item.getValue());
-                } else {
-                    addItem(item);
-                }
+        if (!isLazy()) {
+            decodeElements();
+        }
+    }
+
+    protected void decodeElements() throws IOException {
+        for (Asn1ParsingResult parsingItem : getContainer().getChildren()) {
+            if (parsingItem.isEOC()) {
+                continue;
             }
+
+            Asn1Type tmpValue = DecodingUtil.decodeValue(parsingItem);
+            addItem(tmpValue);
         }
     }
 

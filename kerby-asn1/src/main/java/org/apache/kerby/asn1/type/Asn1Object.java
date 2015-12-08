@@ -19,12 +19,12 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
-import org.apache.kerby.asn1.util.Asn1Reader;
-import org.apache.kerby.asn1.util.Asn1Reader2;
+import org.apache.kerby.asn1.parse.Asn1Container;
+import org.apache.kerby.asn1.parse.Asn1Parser;
+import org.apache.kerby.asn1.parse.Asn1ParsingResult;
 import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.io.IOException;
@@ -199,7 +199,7 @@ public abstract class Asn1Object implements Asn1Type {
         return tag.isSpecific();
     }
 
-    protected boolean isEOC() {
+    public boolean isEOC() {
         return tag().isEOC();
     }
 
@@ -215,23 +215,20 @@ public abstract class Asn1Object implements Asn1Type {
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
-        Asn1Reader reader = new Asn1Reader2(content);
-        Asn1Header header = reader.readHeader();
-
-        useDefinitiveLength(header.isDefinitiveLength());
-        decode(header);
+        Asn1ParsingResult parsingResult = Asn1Parser.parse(content);
+        decode(parsingResult);
     }
 
-    public void decode(Asn1Header header) throws IOException {
-        if (!tag().equals(header.getTag())) {
-            throw new IOException("Unexpected tag " + header.getTag()
+    public void decode(Asn1ParsingResult parsingResult) throws IOException {
+        if (!tag().equals(parsingResult.tag())) {
+            throw new IOException("Unexpected tag " + parsingResult.tag()
                 + ", expecting " + tag());
         }
 
-        decodeBody(header);
+        decodeBody(parsingResult);
     }
 
-    protected abstract void decodeBody(Asn1Header header) throws IOException;
+    protected abstract void decodeBody(Asn1ParsingResult parsingResult) throws IOException;
 
     protected int taggedEncodingLength(TaggingOption taggingOption) {
         int taggingTagNo = taggingOption.getTagNo();
@@ -242,8 +239,10 @@ public abstract class Asn1Object implements Asn1Type {
         return taggingEncodingLen;
     }
 
+    @Override
     public byte[] taggedEncode(TaggingOption taggingOption) {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(taggedEncodingLength(taggingOption));
+        int len = taggedEncodingLength(taggingOption);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(len);
         taggedEncode(byteBuffer, taggingOption);
         byteBuffer.flip();
         return byteBuffer.array();
@@ -263,6 +262,7 @@ public abstract class Asn1Object implements Asn1Type {
         }
     }
 
+    @Override
     public void taggedDecode(byte[] content,
                              TaggingOption taggingOption) throws IOException {
         taggedDecode(ByteBuffer.wrap(content), taggingOption);
@@ -271,25 +271,24 @@ public abstract class Asn1Object implements Asn1Type {
     @Override
     public void taggedDecode(ByteBuffer content,
                              TaggingOption taggingOption) throws IOException {
-        Asn1Reader reader = new Asn1Reader2(content);
-        Asn1Header header = reader.readHeader();
-
-        useDefinitiveLength(header.isDefinitiveLength());
-        taggedDecode(header, taggingOption);
+        Asn1ParsingResult parsingResult = Asn1Parser.parse(content);
+        taggedDecode(parsingResult, taggingOption);
     }
 
-    protected void taggedDecode(Asn1Header header,
+    public void taggedDecode(Asn1ParsingResult parsingResult,
                                 TaggingOption taggingOption) throws IOException {
         Tag expectedTaggingTagFlags = taggingOption.getTag(!isPrimitive());
-        if (!expectedTaggingTagFlags.equals(header.getTag())) {
-            throw new IOException("Unexpected tag " + header.getTag()
+        if (!expectedTaggingTagFlags.equals(parsingResult.tag())) {
+            throw new IOException("Unexpected tag " + parsingResult.tag()
                     + ", expecting " + expectedTaggingTagFlags);
         }
 
         if (taggingOption.isImplicit()) {
-            decodeBody(header);
+            decodeBody(parsingResult);
         } else {
-            decode(header.getBodyBuffer());
+            Asn1Container container = (Asn1Container) parsingResult;
+            Asn1ParsingResult body = container.getChildren().get(0);
+            decode(body);
         }
     }
 }

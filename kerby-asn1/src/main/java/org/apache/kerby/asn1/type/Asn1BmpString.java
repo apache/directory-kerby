@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.UniversalTag;
+import org.apache.kerby.asn1.parse.Asn1ParsingResult;
 
 import java.io.IOException;
 
@@ -61,10 +61,10 @@ public class Asn1BmpString extends Asn1Simple<String> {
     }
 
     @Override
-    protected void decodeBody(Asn1Header header) throws IOException {
-        if (header.getLength() % 2 != 0) {
+    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
+        if (parsingResult.getBodyLength() % 2 != 0) {
             throw new IOException("Bad stream, BMP string expecting multiple of 2 bytes");
         }
-        super.decodeBody(header);
+        super.decodeBody(parsingResult);
     }
 }

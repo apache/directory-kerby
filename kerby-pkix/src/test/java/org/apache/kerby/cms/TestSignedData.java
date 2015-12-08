@@ -32,7 +32,7 @@ public class TestSignedData extends CmsTestBase {
     public void testDump1WithSignedData() throws IOException {
         byte[] data = readDataFile("/signed-data.txt");
         try {
-            Asn1.dump(data);
+            Asn1.dump(data, true);
 
             ContentInfo contentInfo = new ContentInfo();
             contentInfo.decode(data);

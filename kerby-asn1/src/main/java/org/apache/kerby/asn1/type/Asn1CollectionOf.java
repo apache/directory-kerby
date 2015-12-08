@@ -20,47 +20,36 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Dumper;
-import org.apache.kerby.asn1.Asn1Header;
+import org.apache.kerby.asn1.DecodingUtil;
 import org.apache.kerby.asn1.UniversalTag;
+import org.apache.kerby.asn1.parse.Asn1ParsingResult;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Asn1CollectionOf<T extends Asn1Type>
     extends Asn1Collection {
-
-    private List<T> elements = new ArrayList<>();
 
     public Asn1CollectionOf(UniversalTag universalTag) {
         super(universalTag);
     }
 
     @Override
-    protected void decodeBody(Asn1Header header) throws IOException {
-        super.decodeBody(header);
-
-        decodeElements();
-    }
-
-    private void decodeElements() throws IOException {
-        List<Asn1Type> items = getValue();
-        for (Asn1Type itemObj : items) {
-            if (itemObj instanceof Asn1Item) {
-                Asn1Item item = (Asn1Item) itemObj;
-                if (!item.isFullyDecoded()) {
-                    Asn1Type tmpValue = createElement();
-                    item.decodeValueWith(tmpValue);
-                }
-                itemObj = item.getValue();
+    protected void decodeElements() throws IOException {
+        for (Asn1ParsingResult parsingItem : getContainer().getChildren()) {
+            if (parsingItem.isEOC()) {
+                continue;
             }
-            elements.add((T) itemObj);
+
+            Asn1Type tmpValue = createElement();
+            DecodingUtil.decodeValueWith(parsingItem, tmpValue);
+            addItem(tmpValue);
         }
     }
 
     public List<T> getElements() {
-        return elements;
+        return (List<T>) getValue();
     }
 
     public void setElements(List<T> elements) {
@@ -79,7 +68,6 @@ public abstract class Asn1CollectionOf<T extends Asn1Type>
 
     public void addElement(T element) {
         super.addItem(element);
-        this.elements.add(element);
     }
 
     private Class<T> getElementType() {
@@ -102,7 +90,7 @@ public abstract class Asn1CollectionOf<T extends Asn1Type>
     public void dumpWith(Asn1Dumper dumper, int indents) {
         dumper.dumpTypeInfo(indents, getClass());
 
-        for (Asn1Type aObj : elements) {
+        for (Asn1Type aObj : getValue()) {
             dumper.dumpType(indents + 4, aObj).newLine();
         }
     }

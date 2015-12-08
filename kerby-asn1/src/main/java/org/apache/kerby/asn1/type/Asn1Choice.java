@@ -19,12 +19,11 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
+import org.apache.kerby.asn1.parse.Asn1ParsingResult;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -75,6 +74,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
+        /*
         int foundPos = -1;
         Asn1Item item = (Asn1Item) Asn1.decode(content);
         for (int i = 0; i < fieldInfos.length; ++i) {
@@ -107,24 +107,22 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
             }
         }
         fields[foundPos] = item.getValue();
+        */
     }
 
     @Override
-    protected void decodeBody(Asn1Header header) throws IOException {
+    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
 
     }
 
-    protected void decodeBody(ByteBuffer content) throws IOException {
-        // Not used
-    }
-
+    /*
     private void initField(int idx) {
         try {
             fields[idx] = fieldInfos[idx].getType().newInstance();
         } catch (Exception e) {
             throw new IllegalArgumentException("Bad field info specified at index of " + idx, e);
         }
-    }
+    }*/
 
     protected <T extends Asn1Type> T getFieldAs(EnumType index, Class<T> t) {
         Asn1Type value = fields[index.getValue()];

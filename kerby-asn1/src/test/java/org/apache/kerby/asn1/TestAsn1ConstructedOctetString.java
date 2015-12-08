@@ -17,41 +17,19 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1.type;
+package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.UniversalTag;
-import org.apache.kerby.asn1.parse.Asn1ParsingResult;
+import org.apache.kerby.asn1.type.Asn1OctetString;
 
 import java.io.IOException;
 
-public class Asn1OctetString extends Asn1Simple<byte[]> {
-    public Asn1OctetString() {
-        this(null);
-    }
+public class TestAsn1ConstructedOctetString {
 
-    public Asn1OctetString(byte[] value) {
-        super(UniversalTag.OCTET_STRING, value);
-    }
-
-    @Override
-    protected byte[] encodeBody() {
-        return getValue();
-    }
-
-    @Override
-    protected int encodingBodyLength() {
-        return getValue().length;
-    }
-
-    @Override
-    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
-        setValue(parsingResult.readBodyBytes());
-    }
-
-    @Override
-    public String toString() {
-        String valueStr =
-            (getValue() != null ? (getValue().length + " octets") : "null");
-        return valueStr;
+    //@Test
+    public void testDecoding() throws IOException {
+        byte[] data = TestUtil.readBytesFromTxtFile("/constructed-octet-string.txt");
+        Asn1OctetString octetString = new Asn1OctetString();
+        octetString.decode(data);
+        Asn1.dump(octetString);
     }
 }

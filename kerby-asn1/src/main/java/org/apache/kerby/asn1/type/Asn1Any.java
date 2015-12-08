@@ -20,8 +20,9 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.Asn1Header;
+import org.apache.kerby.asn1.DecodingUtil;
 import org.apache.kerby.asn1.UniversalTag;
+import org.apache.kerby.asn1.parse.Asn1ParsingResult;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -31,7 +32,7 @@ import java.nio.ByteBuffer;
  */
 public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     private Asn1FieldInfo fieldInfo;
-    private Asn1Item field;
+    private Asn1ParsingResult field;
 
     public Asn1Any() {
         super(UniversalTag.ANY);
@@ -42,7 +43,7 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
         setValue(anyValue);
     }
 
-    public void setField(Asn1Item field) {
+    public void setField(Asn1ParsingResult field) {
         this.field = field;
     }
 
@@ -50,7 +51,7 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
         this.fieldInfo = fieldInfo;
     }
 
-    public Asn1Type getField() {
+    public Asn1ParsingResult getField() {
         return field;
     }
 
@@ -60,8 +61,8 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     }
 
     @Override
-    protected void decodeBody(Asn1Header header) throws IOException {
-        ((Asn1Object) getValue()).decodeBody(header);
+    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
+        ((Asn1Object) getValue()).decodeBody(parsingResult);
     }
 
     @Override
@@ -84,10 +85,10 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
 
         try {
             if (field.isContextSpecific()) {
-                field.decodeValueWith(result,
+                DecodingUtil.decodeValueWith(field, result,
                     fieldInfo.getTaggingOption());
             } else {
-                field.decodeValueWith(result);
+                DecodingUtil.decodeValueWith(field, result);
             }
         } catch (IOException e) {
             throw new RuntimeException("Fully decoding failed", e);

@@ -76,8 +76,8 @@ public class TestPersonnelRecord {
     public void testDecoding() throws IOException {
         PersonnelRecord expected = TestData.createSamplePersonnel();
         byte[] data = TestData.createSammplePersonnelEncodingData();
+        Asn1.dump(data, true);
         PersonnelRecord decoded = new PersonnelRecord();
-        Asn1.dump(data);
         decoded.decode(data);
         Asn1.dump(decoded);
 

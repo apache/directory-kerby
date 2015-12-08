@@ -17,21 +17,11 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1.type;
+package org.apache.kerby.asn1.parse;
 
-import org.apache.kerby.asn1.Asn1Header;
+public class Asn1Item extends Asn1ParsingResult {
 
-/**
- * Asn1Item serves two purposes:
- * 1. Wrapping an existing Asn1Type value for Asn1Collection;
- * 2. Wrapping a half decoded value whose body content is left to be decoded
- * later when appropriate.
- * Why not fully decoded at once? Lazy and decode on demand for collection, or
- * impossible due to lacking key parameters.
- */
-public class Asn1ParsingItem extends Asn1ParsingResult {
-
-    public Asn1ParsingItem(Asn1Header header) {
+    public Asn1Item(Asn1Header header) {
         super(header);
     }
 
@@ -42,7 +32,7 @@ public class Asn1ParsingItem extends Asn1ParsingResult {
             : tag().tagClass().name().toLowerCase();
         return typeStr + " ["
             + "off=" + getOffset()
-            + ", len=" + encodingHeaderLength() + "+" + encodingBodyLength()
+            + ", len=" + getHeaderLength() + "+" + getBodyLength()
             + "] "
             + valueStr;
     }

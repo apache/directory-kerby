@@ -22,9 +22,9 @@ package org.apache.kerby.asn1.type;
 import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.Tag;
+import org.apache.kerby.asn1.parse.Asn1ParsingResult;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -141,8 +141,8 @@ public abstract class Asn1TaggingCollection
     }
 
     @Override
-    protected void decodeBody(Asn1Header header) throws IOException {
-        tagging.decodeBody(header);
+    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
+        tagging.decodeBody(parsingResult);
     }
 
     protected <T extends Asn1Type> T getFieldAs(EnumType index, Class<T> t) {

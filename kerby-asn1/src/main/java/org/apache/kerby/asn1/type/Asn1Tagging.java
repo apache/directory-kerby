@@ -21,8 +21,9 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
-import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.Tag;
+import org.apache.kerby.asn1.parse.Asn1Container;
+import org.apache.kerby.asn1.parse.Asn1ParsingResult;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -81,19 +82,21 @@ public class Asn1Tagging<T extends Asn1Type>
     }
 
     @Override
-    protected void decodeBody(Asn1Header header) throws IOException {
+    protected void decodeBody(Asn1ParsingResult parsingResult) throws IOException {
         Asn1Object value = (Asn1Object) getValue();
         if (isImplicit()) {
-            value.decodeBody(header);
+            value.decodeBody(parsingResult);
         } else {
-            value.decode(header.getBodyBuffer());
+            Asn1Container container = (Asn1Container) parsingResult;
+            Asn1ParsingResult body = container.getChildren().get(0);
+            value.decode(body);
         }
     }
 
     private void initValue() {
         Class<? extends Asn1Type> valueType = (Class<T>) ((ParameterizedType)
                 getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        AbstractAsn1Type<?> value = null;
+        AbstractAsn1Type<?> value;
         try {
             value = (AbstractAsn1Type<?>) valueType.newInstance();
         } catch (Exception e) {
