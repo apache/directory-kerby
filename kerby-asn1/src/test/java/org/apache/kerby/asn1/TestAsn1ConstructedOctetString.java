@@ -20,12 +20,13 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.junit.Test;
 
 import java.io.IOException;
 
 public class TestAsn1ConstructedOctetString {
 
-    //@Test
+    @Test
     public void testDecoding() throws IOException {
         byte[] data = TestUtil.readBytesFromTxtFile("/constructed-octet-string.txt");
         Asn1OctetString octetString = new Asn1OctetString();

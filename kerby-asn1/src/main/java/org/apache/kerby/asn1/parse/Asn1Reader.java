@@ -38,9 +38,7 @@ public final class Asn1Reader {
     public Asn1Header readHeader() throws IOException {
         Tag tag = readTag();
         int valueLength = readLength();
-        int bodyStart = getPosition();
-        Asn1Header header = new Asn1Header(tag, valueLength,
-            bodyStart, getValueBuffer(valueLength));
+        Asn1Header header = new Asn1Header(tag, valueLength);
         return header;
     }
 
@@ -59,10 +57,6 @@ public final class Asn1Reader {
 
     public boolean available() {
         return position < buffer.limit();
-    }
-
-    public ByteBuffer getValueBuffer(int valueLength) {
-        return buffer;
     }
 
     protected byte readByte() throws IOException {

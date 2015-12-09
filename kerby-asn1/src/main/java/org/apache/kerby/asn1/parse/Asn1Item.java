@@ -19,10 +19,19 @@
  */
 package org.apache.kerby.asn1.parse;
 
+import java.nio.ByteBuffer;
+
 public class Asn1Item extends Asn1ParseResult {
 
-    public Asn1Item(Asn1Header header) {
-        super(header);
+    public Asn1Item(Asn1Header header, int bodyStart, ByteBuffer buffer) {
+        super(header, bodyStart, buffer);
+    }
+
+    public byte[] readBodyBytes() {
+        ByteBuffer bodyBuffer = getBodyBuffer();
+        byte[] result = new byte[bodyBuffer.remaining()];
+        bodyBuffer.get(result);
+        return result;
     }
 
     @Override

@@ -21,6 +21,7 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.UniversalTag;
+import org.apache.kerby.asn1.parse.Asn1Item;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.util.Asn1Util;
 
@@ -94,7 +95,8 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     @Override
     protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
-        byte[] leftBytes = parseResult.readBodyBytes();
+        Asn1Item item = (Asn1Item) parseResult;
+        byte[] leftBytes = item.readBodyBytes();
         if (leftBytes.length > 0) {
             setBytes(leftBytes);
             toValue();

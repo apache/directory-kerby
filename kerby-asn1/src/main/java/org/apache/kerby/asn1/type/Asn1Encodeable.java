@@ -23,6 +23,7 @@ import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
 import org.apache.kerby.asn1.parse.Asn1Container;
+import org.apache.kerby.asn1.parse.Asn1DerivedItem;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.parse.Asn1Parser;
 import org.apache.kerby.asn1.util.Asn1Util;
@@ -179,8 +180,14 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
 
     public void decode(Asn1ParseResult parseResult) throws IOException {
         if (!tag().equals(parseResult.tag())) {
-            throw new IOException("Unexpected tag " + parseResult.tag()
-                + ", expecting " + tag());
+            // Primitive but using constructed encoding
+            if (isPrimitive() && !parseResult.isPrimitive()) {
+                Asn1Container container = (Asn1Container) parseResult;
+                parseResult = new Asn1DerivedItem(tag(), container);
+            } else {
+                throw new IOException("Unexpected tag " + parseResult.tag()
+                    + ", expecting " + tag());
+            }
         }
 
         decodeBody(parseResult);

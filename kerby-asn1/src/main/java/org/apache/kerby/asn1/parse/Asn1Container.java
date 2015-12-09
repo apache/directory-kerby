@@ -22,6 +22,7 @@ package org.apache.kerby.asn1.parse;
 import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +34,8 @@ public class Asn1Container
 
     private List<Asn1ParseResult> children = new ArrayList<>();
 
-    public Asn1Container(Asn1Header header) {
-        super(header);
-    }
-
-    public Asn1Container(Asn1ParseResult parseResult) {
-        super(parseResult.header);
+    public Asn1Container(Asn1Header header, int bodyStart, ByteBuffer buffer) {
+        super(header, bodyStart, buffer);
     }
 
     public List<Asn1ParseResult> getChildren() {
