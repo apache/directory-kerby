@@ -101,6 +101,11 @@ public class Tag {
         return tagClass().isSpecific();
     }
 
+    public byte tagByte() {
+        int n = tagFlags | (tagNo < 0x1F ? tagNo : 0x1F);
+        return (byte) (n & 0xFF);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -128,7 +133,7 @@ public class Tag {
 
     @Override
     public String toString() {
-        return tagNo >= 0x1F ? "N/A" : "" + (tagFlags | tagNo);
+        return String.format("0x%02X", tagByte());
     }
 
     public static Tag newAppTag(int tagNo) {
