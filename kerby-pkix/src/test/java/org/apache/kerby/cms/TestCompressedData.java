@@ -20,6 +20,7 @@
 package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.cms.type.CompressedData;
 import org.apache.kerby.cms.type.ContentInfo;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,12 +39,9 @@ public class TestCompressedData extends CmsTestBase {
             contentInfo.decode(data);
             Asn1.dump(contentInfo);
 
-            //To be fixed.
-            /*
             CompressedData compressedData =
                 contentInfo.getContentAs(CompressedData.class);
             Asn1.dump(compressedData);
-            */
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
