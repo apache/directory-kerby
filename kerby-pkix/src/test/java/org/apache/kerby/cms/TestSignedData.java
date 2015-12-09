@@ -20,7 +20,9 @@
 package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.EncapsulatedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,5 +48,28 @@ public class TestSignedData extends CmsTestBase {
             e.printStackTrace();
             Assert.fail();
         }
+    }
+
+    @Test
+    public void testDecodeSignedData() throws IOException {
+        ContentInfo contentInfo = new ContentInfo();
+        contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
+        SignedData signedData = new SignedData();
+        EncapsulatedContentInfo eContentInfo = new EncapsulatedContentInfo();
+        eContentInfo.setContentType(new Asn1ObjectIdentifier("1.3.6.1.5.2.3.1"));
+        eContentInfo.setContent("data".getBytes());
+        signedData.setEncapContentInfo(eContentInfo);
+        contentInfo.setContent(signedData);
+        Asn1.dump(contentInfo);
+        Asn1.dump(contentInfo.encode(), true);
+
+        ContentInfo actualContentInfo = new ContentInfo();
+        actualContentInfo.decode(contentInfo.encode());
+        Asn1.dump(actualContentInfo);
+
+        /* Fail
+        SignedData actualSignedData =
+                actualContentInfo.getContentAs(SignedData.class);
+                */
     }
 }
