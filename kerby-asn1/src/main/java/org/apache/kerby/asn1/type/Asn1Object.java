@@ -66,32 +66,35 @@ public abstract class Asn1Object {
     }
 
     public void usePrimitive(boolean isPrimitive) {
-        tag.usePrimitive(isPrimitive);
+        tag().usePrimitive(isPrimitive);
     }
 
     public boolean isPrimitive() {
-        return tag.isPrimitive();
+        return tag().isPrimitive();
     }
 
-
     public boolean isUniversal() {
-        return tag.isUniversal();
+        return tag().isUniversal();
     }
 
     public boolean isAppSpecific() {
-        return tag.isAppSpecific();
+        return tag().isAppSpecific();
     }
 
     public boolean isContextSpecific() {
-        return tag.isContextSpecific();
+        return tag().isContextSpecific();
     }
 
     public boolean isTagSpecific() {
-        return tag.isSpecific();
+        return tag().isSpecific();
     }
 
     public boolean isEOC() {
         return tag().isEOC();
+    }
+
+    public boolean isNull() {
+        return tag().isNull();
     }
 
     public boolean isSimple() {

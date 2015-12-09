@@ -40,7 +40,8 @@ public class Asn1Item extends Asn1ParseResult {
         String typeStr = tag().isUniversal() ? tag().universalTag().toStr()
             : tag().tagClass().name().toLowerCase();
         return typeStr + " ["
-            + "off=" + getOffset()
+            + "tag=" + tag()
+            + ", off=" + getOffset()
             + ", len=" + getHeaderLength() + "+" + getBodyLength()
             + "] "
             + valueStr;

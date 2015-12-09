@@ -88,7 +88,7 @@ public abstract class Asn1ParseResult extends Asn1Object {
         return headerLen;
     }
 
-    protected int getOffset() {
+    public int getOffset() {
         return getBodyStart() - getHeaderLength();
     }
 

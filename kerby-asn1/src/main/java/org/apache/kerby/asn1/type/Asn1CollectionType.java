@@ -93,39 +93,41 @@ public abstract class Asn1CollectionType
 
         int lastPos = -1, foundPos = -1;
 
-        for (Asn1ParseResult parsingItem : parseResults) {
-            if (parsingItem.isEOC()) {
+        for (Asn1ParseResult parseItem : parseResults) {
+            if (parseItem.isEOC() || parseItem.isNull()) {
                 continue;
             }
 
             foundPos = -1;
             for (int i = lastPos + 1; i < fieldInfos.length; ++i) {
-                if (parsingItem.isContextSpecific()) {
-                    if (fieldInfos[i].getTagNo() == parsingItem.tagNo()) {
+                if (parseItem.isContextSpecific()) {
+                    if (fieldInfos[i].getTagNo() == parseItem.tagNo()) {
                         foundPos = i;
                         break;
                     }
-                } else if (fields[i].tag().equals(parsingItem.tag())) {
+                } else if (fields[i].tag().equals(parseItem.tag())) {
                     foundPos = i;
                     break;
                 }
             }
             if (foundPos == -1) {
-                throw new IOException("Unexpected item with tag: " + parsingItem.tag());
+                String error = String.format("Unexpected item tag=%s, off=%d",
+                    parseItem.tag(), parseItem.getOffset());
+                throw new IOException(error);
             }
             lastPos = foundPos;
 
-            AbstractAsn1Type<?> fieldValue = (AbstractAsn1Type<?>) fields[foundPos];
+            Asn1Type fieldValue = fields[foundPos];
             if (fieldValue instanceof Asn1Any) {
                 Asn1Any any = (Asn1Any) fieldValue;
-                any.setField(parsingItem);
+                any.setField(parseItem);
                 any.setFieldInfo(fieldInfos[foundPos]);
             } else {
-                if (parsingItem.isContextSpecific()) {
-                    Asn1Binder.bindWithTagging(parsingItem, fieldValue,
+                if (parseItem.isContextSpecific()) {
+                    Asn1Binder.bindWithTagging(parseItem, fieldValue,
                             fieldInfos[foundPos].getTaggingOption());
                 } else {
-                    Asn1Binder.bind(parsingItem, fieldValue);
+                    Asn1Binder.bind(parseItem, fieldValue);
                 }
             }
         }

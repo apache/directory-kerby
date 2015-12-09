@@ -85,6 +85,10 @@ public class Tag {
         return universalTag() == UniversalTag.EOC;
     }
 
+    public boolean isNull() {
+        return universalTag() == UniversalTag.NULL;
+    }
+
     public boolean isUniversal() {
         return tagClass().isUniversal();
     }
@@ -99,6 +103,11 @@ public class Tag {
 
     public boolean isSpecific() {
         return tagClass().isSpecific();
+    }
+
+    public byte tagByte() {
+        int n = tagFlags | (tagNo < 0x1F ? tagNo : 0x1F);
+        return (byte) (n & 0xFF);
     }
 
     @Override
@@ -128,7 +137,7 @@ public class Tag {
 
     @Override
     public String toString() {
-        return tagNo >= 0x1F ? "N/A" : "" + (tagFlags | tagNo);
+        return String.format("0x%02X", tagByte());
     }
 
     public static Tag newAppTag(int tagNo) {

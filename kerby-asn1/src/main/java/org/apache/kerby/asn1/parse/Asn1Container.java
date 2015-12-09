@@ -75,7 +75,8 @@ public class Asn1Container
             typeStr = "[" + tagNo() + "]";
         }
         return typeStr + " ["
-            + "off=" + getOffset()
+            + "tag=" + tag()
+            + ", off=" + getOffset()
             + ", len=" + getHeaderLength() + "+" + getBodyLength()
             + (isDefinitiveLength() ? "" : "(undefined)")
             + "]";
