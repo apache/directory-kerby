@@ -21,6 +21,7 @@ package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.SignedData;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,12 +39,9 @@ public class TestSignedData extends CmsTestBase {
             contentInfo.decode(data);
             Asn1.dump(contentInfo);
 
-            //To be fixed.
-            /*
             SignedData signedData =
                 contentInfo.getContentAs(SignedData.class);
             Asn1.dump(signedData);
-            */
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();

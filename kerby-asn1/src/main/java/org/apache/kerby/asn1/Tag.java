@@ -85,6 +85,10 @@ public class Tag {
         return universalTag() == UniversalTag.EOC;
     }
 
+    public boolean isNull() {
+        return universalTag() == UniversalTag.NULL;
+    }
+
     public boolean isUniversal() {
         return tagClass().isUniversal();
     }
