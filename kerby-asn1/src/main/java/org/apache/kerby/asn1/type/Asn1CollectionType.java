@@ -122,7 +122,7 @@ public abstract class Asn1CollectionType
             } else {
                 if (parsingItem.isContextSpecific()) {
                     Asn1Binder.bindWithTagging(parsingItem, fieldValue,
-                        fieldInfos[foundPos].getTaggingOption());
+                            fieldInfos[foundPos].getTaggingOption());
                 } else {
                     Asn1Binder.bind(parsingItem, fieldValue);
                 }
@@ -224,9 +224,11 @@ public abstract class Asn1CollectionType
 
             Asn1Type fdValue = fields[i];
             if (fdValue == null || fdValue instanceof Asn1Simple) {
-                dumper.append((Asn1Simple<?>) fdValue).newLine();
+                dumper.append((Asn1Simple<?>) fdValue);
             } else {
                 dumper.newLine().dumpType(indents + 8, fdValue);
+            }
+            if (i < fieldInfos.length - 1) {
                 dumper.newLine();
             }
         }
