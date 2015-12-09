@@ -110,9 +110,11 @@ public class AsRequestWithCert extends AsRequest {
             if (paEntry.getPaDataType() == PaDataType.PK_AS_REP) {
                 LOG.info("processing PK_AS_REP");
 
-                PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
+//                PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
+//
+//                DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
 
-                DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
+                DHRepInfo dhRepInfo = KrbCodec.decode(paEntry.getPaDataValue(), DHRepInfo.class);;
 
                 DHNonce nonce = dhRepInfo.getServerDhNonce();
                 byte[] dhSignedData = dhRepInfo.getDHSignedData();

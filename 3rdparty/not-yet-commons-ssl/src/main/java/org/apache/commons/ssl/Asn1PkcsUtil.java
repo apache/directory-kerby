@@ -25,14 +25,10 @@
 
 package org.apache.commons.ssl;
 
-import org.apache.kerby.asn1.Asn1InputBuffer;
-import org.apache.kerby.asn1.type.Asn1Collection;
-import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.asn1.type.Asn1Item;
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.asn1.type.Asn1OctetString;
-import org.apache.kerby.asn1.type.Asn1Type;
-import org.apache.kerby.util.Hex;
+import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.asn1.parse.Asn1Container;
+import org.apache.kerby.asn1.parse.Asn1Item;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -56,42 +52,35 @@ public class Asn1PkcsUtil {
 
     public static Asn1PkcsStructure analyze(byte[] asn1)
             throws IOException {
-        Asn1InputBuffer asn = new Asn1InputBuffer(asn1);
-        Asn1Type asn1Obj;
 
+        Asn1ParseResult parseResult = Asn1.parse(asn1);
         Asn1PkcsStructure pkcs8 = new Asn1PkcsStructure();
-        while ((asn1Obj = asn.read()) != null) {
-            if (asn1Obj instanceof Asn1Collection) {
-                Asn1PkcsUtil.analyze((Asn1Collection) asn1Obj, pkcs8, 0);
-            } else {
-                Asn1PkcsUtil.analyze(asn1Obj, pkcs8, 0);
-            }
+        if (parseResult instanceof Asn1Container) {
+            Asn1PkcsUtil.analyze((Asn1Container) parseResult, pkcs8, 0);
+        } else if (parseResult instanceof Asn1Item) {
+            Asn1PkcsUtil.analyze((Asn1Item) parseResult, pkcs8, 0);
         }
 
         return pkcs8;
     }
 
-    public static void analyze(Asn1Collection asn1Coll, Asn1PkcsStructure pkcs8, int depth) {
+    public static void analyze(Asn1Container asn1Coll, Asn1PkcsStructure pkcs8, int depth) {
         if (depth >= 2) {
             pkcs8.derIntegers = null;
         }
 
-        List<Asn1Item> items = asn1Coll.getValue();
-        for (Asn1Item item : items) {
-            if (!item.isCollection()) {
-                analyze(item.getValue(), pkcs8, depth);
-            } else {
-                try {
-                    item.decodeValueAsCollection();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                analyze((Asn1Collection) item.getValue(), pkcs8, depth + 1);
+        List<Asn1ParseResult> items = asn1Coll.getChildren();
+        for (Asn1ParseResult item : items) {
+            if (item instanceof Asn1Container) {
+                Asn1PkcsUtil.analyze((Asn1Container) item, pkcs8, depth);
+            } else if (item instanceof Asn1Item) {
+                Asn1PkcsUtil.analyze((Asn1Item) item, pkcs8, depth + 1);
             }
         }
     }
 
-    public static void analyze(Asn1Type obj, Asn1PkcsStructure pkcs8, int depth) {
+    public static void analyze(Asn1Item obj, Asn1PkcsStructure pkcs8, int depth) {
+
         String tag = null;
         if (depth >= 2) {
             pkcs8.derIntegers = null;
@@ -107,68 +96,68 @@ public class Asn1PkcsUtil {
             name = "  " + name;
         }
 
-        if (obj instanceof Asn1Integer) {
-            Asn1Integer dInt = (Asn1Integer) obj;
-            if (pkcs8.derIntegers != null) {
-                pkcs8.derIntegers.add(dInt);
-            }
-            BigInteger big = dInt.getValue();
-            int intValue = big.intValue();
-            if (BIGGEST.compareTo(big) >= 0 && intValue > 0) {
-                if (pkcs8.iterationCount == 0) {
-                    pkcs8.iterationCount = intValue;
-                } else if (pkcs8.keySize == 0) {
-                    pkcs8.keySize = intValue;
-                }
-            }
-        } else if (obj instanceof Asn1ObjectIdentifier) {
-            Asn1ObjectIdentifier id = (Asn1ObjectIdentifier) obj;
-            str = id.getValue();
-            pkcs8.oids.add(str);
-            if (pkcs8.oid1 == null) {
-                pkcs8.oid1 = str;
-            } else if (pkcs8.oid2 == null) {
-                pkcs8.oid2 = str;
-            } else if (pkcs8.oid3 == null) {
-                pkcs8.oid3 = str;
-            }
-        } else {
-            pkcs8.derIntegers = null;
-            if (obj instanceof Asn1OctetString) {
-                Asn1OctetString oct = (Asn1OctetString) obj;
-                byte[] octets = oct.getValue();
-                int len = Math.min(10, octets.length);
-                boolean probablyBinary = false;
-                for (int i = 0; i < len; i++) {
-                    byte b = octets[i];
-                    boolean isBinary = b > 128 || b < 0;
-                    if (isBinary) {
-                        probablyBinary = true;
-                        break;
-                    }
-                }
-                if (probablyBinary && octets.length > 64) {
-                    if (pkcs8.bigPayload == null) {
-                        pkcs8.bigPayload = octets;
-                    }
-                } else {
-                    str = Hex.encode(octets);
-                    if (octets.length <= 64) {
-                        if (octets.length % 8 == 0) {
-                            if (pkcs8.salt == null) {
-                                pkcs8.salt = octets;
-                            } else if (pkcs8.iv == null) {
-                                pkcs8.iv = octets;
-                            }
-                        } else {
-                            if (pkcs8.smallPayload == null) {
-                                pkcs8.smallPayload = octets;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        if (obj instanceof Asn1Integer) {
+//            Asn1Integer dInt = (Asn1Integer) obj;
+//            if (pkcs8.derIntegers != null) {
+//                pkcs8.derIntegers.add(dInt);
+//            }
+//            BigInteger big = dInt.getValue();
+//            int intValue = big.intValue();
+//            if (BIGGEST.compareTo(big) >= 0 && intValue > 0) {
+//                if (pkcs8.iterationCount == 0) {
+//                    pkcs8.iterationCount = intValue;
+//                } else if (pkcs8.keySize == 0) {
+//                    pkcs8.keySize = intValue;
+//                }
+//            }
+//        } else if (obj instanceof Asn1ObjectIdentifier) {
+//            Asn1ObjectIdentifier id = (Asn1ObjectIdentifier) obj;
+//            str = id.getValue();
+//            pkcs8.oids.add(str);
+//            if (pkcs8.oid1 == null) {
+//                pkcs8.oid1 = str;
+//            } else if (pkcs8.oid2 == null) {
+//                pkcs8.oid2 = str;
+//            } else if (pkcs8.oid3 == null) {
+//                pkcs8.oid3 = str;
+//            }
+//        } else {
+//            pkcs8.derIntegers = null;
+//            if (obj instanceof Asn1OctetString) {
+//                Asn1OctetString oct = (Asn1OctetString) obj;
+//                byte[] octets = oct.getValue();
+//                int len = Math.min(10, octets.length);
+//                boolean probablyBinary = false;
+//                for (int i = 0; i < len; i++) {
+//                    byte b = octets[i];
+//                    boolean isBinary = b > 128 || b < 0;
+//                    if (isBinary) {
+//                        probablyBinary = true;
+//                        break;
+//                    }
+//                }
+//                if (probablyBinary && octets.length > 64) {
+//                    if (pkcs8.bigPayload == null) {
+//                        pkcs8.bigPayload = octets;
+//                    }
+//                } else {
+//                    str = Hex.encode(octets);
+//                    if (octets.length <= 64) {
+//                        if (octets.length % 8 == 0) {
+//                            if (pkcs8.salt == null) {
+//                                pkcs8.salt = octets;
+//                            } else if (pkcs8.iv == null) {
+//                                pkcs8.iv = octets;
+//                            }
+//                        } else {
+//                            if (pkcs8.smallPayload == null) {
+//                                pkcs8.smallPayload = octets;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     public static void main(String[] args) throws Exception {

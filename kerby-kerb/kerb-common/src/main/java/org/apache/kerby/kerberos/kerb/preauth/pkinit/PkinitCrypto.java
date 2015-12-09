@@ -343,19 +343,19 @@ public class PkinitCrypto {
             cpe.printStackTrace();
         }
 
-        if (c != null) {
-            Iterator it = c.iterator();
-            while (it.hasNext()) {
-                List extensionEntry = (List) it.next();
-                int type = ((Integer) extensionEntry.get(0)).intValue();
-
-                Object name = extensionEntry.get(1);
-                byte[] nameAsBytes = (byte[]) name;
-                GeneralNames generalNames = null;
-                generalNames = KrbCodec.decode(nameAsBytes, GeneralNames.class);
+//        if (c != null) {
+//            Iterator it = c.iterator();
+//            while (it.hasNext()) {
+//                List extensionEntry = (List) it.next();
+//                int type = ((Integer) extensionEntry.get(0)).intValue();
+//
+//                Object name = extensionEntry.get(1);
+//                byte[] nameAsBytes = (byte[]) name;
+//                GeneralNames generalNames = null;
+//                generalNames = KrbCodec.decode(nameAsBytes, GeneralNames.class);
 //                OtherName otherName = generalNames.getElements().get(1).getOtherName();
-            }
-        }
+//            }
+//        }
         return null;
     }
 

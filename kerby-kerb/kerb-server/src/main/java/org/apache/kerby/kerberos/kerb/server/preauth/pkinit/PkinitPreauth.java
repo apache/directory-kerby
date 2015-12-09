@@ -18,6 +18,8 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth.pkinit;
 
+import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
