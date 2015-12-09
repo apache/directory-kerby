@@ -21,68 +21,21 @@ package org.apache.kerby.asn1.parse;
 
 import org.apache.kerby.asn1.Tag;
 
-import java.nio.ByteBuffer;
-
 public class Asn1Header {
     private Tag tag;
     private int length;
-    private int bodyStart;
-    private int bodyEnd;
-    private ByteBuffer buffer;
 
-    public Asn1Header(Tag tag, int length,
-                      int bodyStart, ByteBuffer buffer) {
+    public Asn1Header(Tag tag, int length) {
         this.tag = tag;
         this.length = length;
-        this.bodyStart = bodyStart;
-        this.buffer = buffer;
-
-        this.bodyEnd = isDefinitiveLength() ? bodyStart + length : -1;
     }
 
     public Tag getTag() {
         return tag;
     }
 
-    public int getActualBodyLength() {
-        if (isDefinitiveLength()) {
-            return getLength();
-        } else if (getBodyEnd() != -1) {
-            return getBodyEnd() - getBodyStart();
-        }
-        return -1;
-    }
-
     public int getLength() {
         return length;
-    }
-
-    public int getBodyStart() {
-        return bodyStart;
-    }
-
-    public int getBodyEnd() {
-        return bodyEnd;
-    }
-
-    public void setBodyEnd(int bodyEnd) {
-        this.bodyEnd = bodyEnd;
-    }
-
-    public ByteBuffer getBuffer() {
-        return buffer;
-    }
-
-    public ByteBuffer getBodyBuffer() {
-        ByteBuffer result = buffer.duplicate();
-        result.position(bodyStart);
-
-        int end = getBodyEnd();
-        if (end >= bodyStart) {
-            result.limit(end);
-        }
-
-        return result;
     }
 
     public boolean isEOC() {
@@ -91,9 +44,5 @@ public class Asn1Header {
 
     public boolean isDefinitiveLength() {
         return length != -1;
-    }
-
-    public boolean checkBodyFinished(int pos) {
-        return getBodyEnd() != -1 && pos >= getBodyEnd();
     }
 }

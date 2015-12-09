@@ -30,13 +30,8 @@ import java.nio.ByteBuffer;
 public class Asn1Parser {
 
     public static void parse(Asn1Container container) throws IOException {
-        parse(container.header, container);
-    }
-
-    public static void parse(Asn1Header header,
-                      Asn1Container parent) throws IOException {
-        Asn1Reader reader = new Asn1Reader(header.getBuffer());
-        int pos = header.getBodyStart();
+        Asn1Reader reader = new Asn1Reader(container.getBuffer());
+        int pos = container.getBodyStart();
         while (true) {
             reader.setPosition(pos);
             Asn1ParseResult asn1Obj = parse(reader);
@@ -44,21 +39,19 @@ public class Asn1Parser {
                 break;
             }
 
-            if (parent != null) {
-                parent.addItem(asn1Obj);
-            }
+            container.addItem(asn1Obj);
 
-            pos += asn1Obj.getAllLength();
+            pos += asn1Obj.getEncodingLength();
             if (asn1Obj.isEOC()) {
                 break;
             }
 
-            if (header.checkBodyFinished(pos)) {
+            if (container.checkBodyFinished(pos)) {
                 break;
             }
         }
 
-        header.setBodyEnd(pos);
+        container.setBodyEnd(pos);
     }
 
     public static Asn1ParseResult parse(ByteBuffer content) throws IOException {
@@ -73,12 +66,14 @@ public class Asn1Parser {
 
         Asn1Header header = reader.readHeader();
         Tag tmpTag = header.getTag();
+        int bodyStart = reader.getPosition();
         Asn1ParseResult parseResult;
 
         if (tmpTag.isPrimitive()) {
-            parseResult = new Asn1Item(header);
+            parseResult = new Asn1Item(header, bodyStart, reader.getBuffer());
         } else {
-            Asn1Container container = new Asn1Container(header);
+            Asn1Container container = new Asn1Container(header,
+                bodyStart, reader.getBuffer());
             parse(container);
             parseResult = container;
         }

@@ -25,22 +25,58 @@ import org.apache.kerby.asn1.util.Asn1Util;
 import java.nio.ByteBuffer;
 
 public abstract class Asn1ParseResult extends Asn1Object {
-    protected Asn1Header header;
+    private Asn1Header header;
+    private int bodyStart;
+    private int bodyEnd;
+    private ByteBuffer buffer;
 
-    public Asn1ParseResult(Asn1Header header) {
+    public Asn1ParseResult(Asn1Header header,
+                           int bodyStart, ByteBuffer buffer) {
         super(header.getTag());
         this.header = header;
+        this.bodyStart = bodyStart;
+        this.buffer = buffer;
+
+        this.bodyEnd = isDefinitiveLength() ? bodyStart + header.getLength() : -1;
     }
 
     public Asn1Header getHeader() {
         return header;
     }
 
+    public int getBodyStart() {
+        return bodyStart;
+    }
+
+    public int getBodyEnd() {
+        return bodyEnd;
+    }
+
+    public void setBodyEnd(int bodyEnd) {
+        this.bodyEnd = bodyEnd;
+    }
+
+    public ByteBuffer getBuffer() {
+        return buffer;
+    }
+
+    public ByteBuffer getBodyBuffer() {
+        ByteBuffer result = buffer.duplicate();
+        result.position(bodyStart);
+
+        int end = getBodyEnd();
+        if (end >= bodyStart) {
+            result.limit(end);
+        }
+
+        return result;
+    }
+
     public boolean isDefinitiveLength() {
         return header.isDefinitiveLength();
     }
 
-    public int getAllLength() {
+    public int getEncodingLength() {
         return getHeaderLength() + getBodyLength();
     }
 
@@ -52,18 +88,21 @@ public abstract class Asn1ParseResult extends Asn1Object {
         return headerLen;
     }
 
-    public int getBodyLength() {
-        return header.getActualBodyLength();
-    }
-
     protected int getOffset() {
-        return header.getBodyStart() - getHeaderLength();
+        return getBodyStart() - getHeaderLength();
     }
 
-    public byte[] readBodyBytes() {
-        ByteBuffer bodyBuffer = header.getBodyBuffer();
-        byte[] result = new byte[bodyBuffer.remaining()];
-        bodyBuffer.get(result);
-        return result;
+    public int getBodyLength() {
+        if (isDefinitiveLength()) {
+            return header.getLength();
+        } else if (getBodyEnd() != -1) {
+            return getBodyEnd() - getBodyStart();
+        }
+        return -1;
+    }
+
+
+    public boolean checkBodyFinished(int pos) {
+        return getBodyEnd() != -1 && pos >= getBodyEnd();
     }
 }
