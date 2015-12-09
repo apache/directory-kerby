@@ -32,7 +32,7 @@ import static org.apache.kerby.x509.type.NameConstraints.MyEnum.*;
  * }
  */
 public class NameConstraints extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         PERMITTED_SUBTREES,
         EXCLUDED_SUBTREES;
 

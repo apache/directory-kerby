@@ -41,7 +41,7 @@ import static org.apache.kerby.cms.type.SignerInfo.MyEnum.*;
  * </pre>
  */
 public class SignerInfo extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         CMS_VERSION,
         SID,
         DIGEST_ALGORITHM,

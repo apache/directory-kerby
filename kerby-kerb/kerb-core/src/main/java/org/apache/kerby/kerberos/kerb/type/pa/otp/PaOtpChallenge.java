@@ -38,7 +38,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.*
  }
  */
 public class PaOtpChallenge extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         NONCE,
         OTP_SERVICE,
         OTP_TOKEN_INFO,

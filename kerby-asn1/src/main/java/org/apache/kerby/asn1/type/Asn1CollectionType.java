@@ -19,16 +19,20 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1Binder;
 import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
+import org.apache.kerby.asn1.parse.Asn1Container;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 /**
  * For collection type that may consist of tagged fields
@@ -81,55 +85,61 @@ public abstract class Asn1CollectionType
     }
 
     @Override
-    protected void decodeBody(ByteBuffer content) throws IOException {
-        initFields();
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
+        checkAndInitFields();
 
-        Asn1Collection coll = createCollection();
-        coll.setLazy(true);
-        coll.decode(tag(), content);
+        Asn1Container container = (Asn1Container) parseResult;
+        List<Asn1ParseResult> parseResults = container.getChildren();
 
         int lastPos = -1, foundPos = -1;
-        for (Asn1Type itemObj : coll.getValue()) {
+
+        for (Asn1ParseResult parsingItem : parseResults) {
+            if (parsingItem.isEOC()) {
+                continue;
+            }
+
             foundPos = -1;
-            Asn1Item item = (Asn1Item) itemObj;
             for (int i = lastPos + 1; i < fieldInfos.length; ++i) {
-                if (item.isContextSpecific()) {
-                    if (fieldInfos[i].getTagNo() == item.tagNo()) {
+                if (parsingItem.isContextSpecific()) {
+                    if (fieldInfos[i].getTagNo() == parsingItem.tagNo()) {
                         foundPos = i;
                         break;
                     }
-                } else if (fields[i].tag().equals(item.tag())) {
+                } else if (fields[i].tag().equals(parsingItem.tag())) {
                     foundPos = i;
                     break;
                 }
             }
             if (foundPos == -1) {
-                throw new RuntimeException("Unexpected item with tag: " + item.tag());
+                throw new IOException("Unexpected item with tag: " + parsingItem.tag());
             }
             lastPos = foundPos;
 
             AbstractAsn1Type<?> fieldValue = (AbstractAsn1Type<?>) fields[foundPos];
             if (fieldValue instanceof Asn1Any) {
                 Asn1Any any = (Asn1Any) fieldValue;
-                any.setField(item);
+                any.setField(parsingItem);
                 any.setFieldInfo(fieldInfos[foundPos]);
             } else {
-                if (item.isContextSpecific()) {
-                    item.decodeValueWith(fieldValue,
-                        fieldInfos[foundPos].getTaggingOption());
+                if (parsingItem.isContextSpecific()) {
+                    Asn1Binder.bindWithTagging(parsingItem, fieldValue,
+                            fieldInfos[foundPos].getTaggingOption());
                 } else {
-                    item.decodeValueWith(fieldValue);
+                    Asn1Binder.bind(parsingItem, fieldValue);
                 }
             }
         }
     }
 
-    private void initFields() {
+    private void checkAndInitFields() {
         for (int i = 0; i < fieldInfos.length; ++i) {
-            try {
-                fields[i] = fieldInfos[i].getType().newInstance();
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Bad field info specified at index of " + i, e);
+            if (fields[i] == null) {
+                try {
+                    fields[i] = fieldInfos[i].getType().newInstance();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException(
+                        "Bad field info specified at index of " + i, e);
+                }
             }
         }
     }
@@ -207,9 +217,7 @@ public abstract class Asn1CollectionType
 
     @Override
     public void dumpWith(Asn1Dumper dumper, int indents) {
-        String type = getClass().getSimpleName();
-
-        dumper.indent(indents).append(type).newLine();
+        dumper.dumpTypeInfo(indents, getClass());
 
         String fdName;
         for (int i = 0; i < fieldInfos.length; i++) {
@@ -220,9 +228,11 @@ public abstract class Asn1CollectionType
 
             Asn1Type fdValue = fields[i];
             if (fdValue == null || fdValue instanceof Asn1Simple) {
-                dumper.append((Asn1Simple<?>) fdValue).newLine();
+                dumper.append((Asn1Simple<?>) fdValue);
             } else {
                 dumper.newLine().dumpType(indents + 8, fdValue);
+            }
+            if (i < fieldInfos.length - 1) {
                 dumper.newLine();
             }
         }

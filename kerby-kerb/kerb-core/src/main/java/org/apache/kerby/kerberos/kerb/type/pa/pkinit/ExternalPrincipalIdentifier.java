@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ExternalPrincipalIde
  }
  */
 public class ExternalPrincipalIdentifier extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         SUBJECT_NAME,
         ISSUER_AND_SERIAL_NUMBER,
         SUBJECT_KEY_IDENTIFIER;

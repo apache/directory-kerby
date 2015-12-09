@@ -35,7 +35,7 @@ import static org.apache.kerby.x509.type.UserNotice.MyEnum.*;
  *
  */
 public class UserNotice extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         NOTICE_REF,
         EXPLICIT_TEXT;
 

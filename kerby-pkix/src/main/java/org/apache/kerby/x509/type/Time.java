@@ -38,7 +38,7 @@ import java.util.Date;
  * </pre>
  */
 public class Time extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         UTC_TIME,
         GENERAL_TIME;
 

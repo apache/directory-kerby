@@ -51,7 +51,7 @@ import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.*;
 public class EncTicketPart extends KrbAppSequenceType {
     public static final int TAG = 3;
 
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         FLAGS,
         KEY,
         CREALM,

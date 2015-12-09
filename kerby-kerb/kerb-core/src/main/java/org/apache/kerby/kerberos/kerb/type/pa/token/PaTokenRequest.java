@@ -33,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest.MyEnum
  }
 */
 public class PaTokenRequest extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TOKEN_INFO,
         TOKEN;
 

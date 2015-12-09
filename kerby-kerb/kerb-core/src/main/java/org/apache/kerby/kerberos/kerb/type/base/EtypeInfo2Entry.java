@@ -36,7 +36,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.*;
  }
  */
 public class EtypeInfo2Entry extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ETYPE,
         SALT,
         S2KPARAMS;

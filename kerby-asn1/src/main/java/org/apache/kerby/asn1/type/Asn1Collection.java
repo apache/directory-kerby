@@ -23,7 +23,7 @@ import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.UniversalTag;
 
 /**
- * ASN1 complex type, may be better named.
+ * ASN1 complex type of multiple ASN1 objects.
  */
 public class Asn1Collection extends Asn1Constructed {
 

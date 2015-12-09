@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry.MyEn
  }
  */
 public class AuthorizationDataEntry extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         AD_TYPE,
         AD_DATA;
 

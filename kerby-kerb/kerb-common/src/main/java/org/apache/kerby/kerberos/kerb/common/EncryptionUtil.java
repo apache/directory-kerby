@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.common;
 
-import org.apache.kerby.asn1.type.Asn1Object;
+import org.apache.kerby.asn1.type.Asn1Encodeable;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -124,7 +124,7 @@ public class EncryptionUtil {
         return null;
     }
 
-    public static EncryptedData seal(Asn1Object asn1Type,
+    public static EncryptedData seal(Asn1Encodeable asn1Type,
                                      EncryptionKey key, KeyUsage usage) throws KrbException {
         byte[] encoded = asn1Type.encode();
         EncryptedData encrypted = EncryptionHandler.encrypt(encoded, key, usage);

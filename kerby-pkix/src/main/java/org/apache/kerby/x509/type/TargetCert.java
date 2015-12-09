@@ -32,7 +32,7 @@ import static org.apache.kerby.x509.type.TargetCert.MyEnum.*;
  * }
  */
 public class TargetCert extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TARGET_CERTIFICATE,
         TARGET_NAME,
         CERT_DIGEST_INFO;

@@ -62,7 +62,7 @@ import java.util.List;
  }
  */
 public class KdcReqBody extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         KDC_OPTIONS,
         CNAME,
         REALM,

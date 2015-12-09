@@ -44,7 +44,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEn
  }
  */
 public class PkAuthenticator extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         CUSEC,
         CTIME,
         NONCE,

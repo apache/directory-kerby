@@ -34,7 +34,7 @@ import static org.apache.kerby.x509.type.AttCertValidityPeriod.MyEnum.*;
  * </pre>
  */
 public class AttCertValidityPeriod extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         NOT_BEFORE,
         NOT_AFTER;
 

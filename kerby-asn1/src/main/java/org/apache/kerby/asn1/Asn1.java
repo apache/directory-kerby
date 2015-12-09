@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.Asn1Item;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
+import org.apache.kerby.asn1.parse.Asn1Parser;
 import org.apache.kerby.asn1.type.Asn1Type;
-import org.apache.kerby.asn1.util.Asn1Reader1;
 import org.apache.kerby.asn1.util.HexUtil;
 
 import java.io.IOException;
@@ -45,51 +45,58 @@ public final class Asn1 {
         return value.encode();
     }
 
-    public static Asn1Header decodeHeader(ByteBuffer content) throws IOException {
-        Asn1Reader1 reader = new Asn1Reader1(content);
-        return reader.readHeader();
-    }
-
     public static Asn1Type decode(byte[] content) throws IOException {
         return decode(ByteBuffer.wrap(content));
     }
 
     public static Asn1Type decode(ByteBuffer content) throws IOException {
-        Asn1Reader1 reader = new Asn1Reader1(content);
-        Asn1Header header = reader.readHeader();
+        Asn1ParseResult parseResult = Asn1Parser.parse(content);
+        return Asn1Converter.convert(parseResult);
+    }
 
-        Asn1Item result = new Asn1Item(header.getTag(), header.getValueBuffer());
-        result.useDefinitiveLength(header.isDefinitiveLength());
+    public static Asn1ParseResult parse(byte[] content) throws IOException {
+        return parse(ByteBuffer.wrap(content));
+    }
 
-        return result;
+    public static Asn1ParseResult parse(ByteBuffer content) throws IOException {
+        return Asn1Parser.parse(content);
     }
 
     public static void dump(Asn1Type value) {
-        Asn1Dumper dumper = new Asn1Dumper();
+        dump(value, true);
+    }
+
+    public static void dump(Asn1Type value, boolean withType) {
+        Asn1Dumper dumper = new Asn1Dumper(withType);
+        if (!withType) {
+            dumper.dumpTypeInfo(value.getClass());
+        }
         dumper.dumpType(0, value);
         String output = dumper.output();
         System.out.println(output);
     }
 
-    public static void dump(String hexStr) throws IOException {
-        System.out.println("Dumping data:");
-        System.out.println(hexStr);
-        Asn1Dumper dumper = new Asn1Dumper();
+    public static void dump(String hexStr,
+                            boolean useRawFormat) throws IOException {
         byte[] data = HexUtil.hex2bytes(hexStr);
-        dumper.dump(data);
+        dump(data, useRawFormat);
     }
 
-    public static void dump(byte[] content) throws IOException {
-        String hexStr = HexUtil.bytesToHex(content);
-        System.out.println("Dumping data:");
-        System.out.println(hexStr);
-        Asn1Dumper dumper = new Asn1Dumper();
-        dumper.dump(content);
-    }
-
-    public static void dump(ByteBuffer content) throws IOException {
+    public static void dump(ByteBuffer content,
+                            boolean useRawFormat) throws IOException {
         byte[] bytes = new byte[content.remaining()];
         content.get(bytes);
-        dump(bytes);
+        dump(bytes, useRawFormat);
+    }
+
+    public static void dump(byte[] content,
+                            boolean useRawFormat) throws IOException {
+        String hexStr = HexUtil.bytesToHex(content);
+        Asn1Dumper dumper = new Asn1Dumper();
+        System.out.println("Dumping data:");
+        dumper.dumpData(hexStr);
+        dumper.dump(content, useRawFormat);
+        String output = dumper.output();
+        System.out.println(output);
     }
 }

@@ -37,7 +37,7 @@ import static org.apache.kerby.x509.type.RevokedCertificate.MyEnum.*;
  * </pre>
  */
 public class RevokedCertificate extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         USER_CERTIFICATE,
         REVOCATION_DATA,
         CRL_ENTRY_EXTENSIONS;

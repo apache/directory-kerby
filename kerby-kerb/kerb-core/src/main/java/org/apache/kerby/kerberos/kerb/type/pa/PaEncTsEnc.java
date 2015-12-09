@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.PaEncTsEnc.MyEnum.*;
  }
  */
 public class PaEncTsEnc extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         PATIMESTAMP,
         PAUSEC;
 

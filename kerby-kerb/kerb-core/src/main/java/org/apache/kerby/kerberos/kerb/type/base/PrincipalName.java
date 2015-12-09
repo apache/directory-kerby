@@ -38,7 +38,7 @@ import java.util.List;
  }
  */
 public class PrincipalName extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         NAME_TYPE,
         NAME_STRING;
 

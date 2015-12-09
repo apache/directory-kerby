@@ -37,7 +37,7 @@ import java.math.BigInteger;
  * </pre>
  */
 public class BasicConstraints extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         CA,
         PATH_LEN_CONSTRAINT;
 

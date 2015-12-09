@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.LastReqEntry.MyEnum.*;
  }
  */
 public class LastReqEntry extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         LR_TYPE,
         LR_VALUE;
 

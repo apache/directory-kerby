@@ -43,7 +43,7 @@ public class Asn1GeneralizedTime extends Asn1Simple<Date> {
     }
 
     public Asn1GeneralizedTime(Date date) {
-        super(UniversalTag.UTC_TIME, date);
+        super(UniversalTag.GENERALIZED_TIME, date);
     }
 
     protected void toValue() throws IOException {

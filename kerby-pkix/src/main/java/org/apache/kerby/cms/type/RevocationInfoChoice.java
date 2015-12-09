@@ -32,7 +32,7 @@ import static org.apache.kerby.cms.type.RevocationInfoChoice.MyEnum.*;
  * }
  */
 public class RevocationInfoChoice extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         CRL,
         OTHER;
 

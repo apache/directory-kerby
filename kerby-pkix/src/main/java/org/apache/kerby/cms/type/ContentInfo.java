@@ -41,7 +41,7 @@ import static org.apache.kerby.cms.type.ContentInfo.MyEnum.*;
  * </pre>
  */
 public class ContentInfo extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         CONTENT_TYPE,
         CONTENT;
 

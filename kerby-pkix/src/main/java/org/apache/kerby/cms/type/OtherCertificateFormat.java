@@ -34,7 +34,7 @@ import static org.apache.kerby.cms.type.OtherCertificateFormat.MyEnum.*;
  * }
  */
 public class OtherCertificateFormat extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         OTHER_CERT_FORMAT,
         OTHER_CERT;
 

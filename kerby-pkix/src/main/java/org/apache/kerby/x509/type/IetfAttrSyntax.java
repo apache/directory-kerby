@@ -41,7 +41,7 @@ import static org.apache.kerby.x509.type.IetfAttrSyntax.MyEnum.*;
  * </pre>
  */
 public class IetfAttrSyntax extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         POLICY_AUTHORITY,
         VALUES;
 

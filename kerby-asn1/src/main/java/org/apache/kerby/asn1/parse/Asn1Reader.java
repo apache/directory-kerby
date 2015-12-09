@@ -6,34 +6,30 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *
+ *  
  *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License. 
- *
+ *  
  */
-package org.apache.kerby.asn1.util;
+package org.apache.kerby.asn1.parse;
 
-import org.apache.kerby.asn1.Asn1Header;
 import org.apache.kerby.asn1.Tag;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * ASN1 reader from a byte buffer.
+ * ASN1 reader for positional reading.
  */
-public abstract class Asn1Reader {
-    protected ByteBuffer buffer;
-
-    public Asn1Reader(ByteBuffer buffer) {
-        this.buffer = buffer;
-    }
+public final class Asn1Reader {
+    private ByteBuffer buffer;
+    private int position;
 
     public ByteBuffer getBuffer() {
         return buffer;
@@ -42,14 +38,36 @@ public abstract class Asn1Reader {
     public Asn1Header readHeader() throws IOException {
         Tag tag = readTag();
         int valueLength = readLength();
+        int bodyStart = getPosition();
         Asn1Header header = new Asn1Header(tag, valueLength,
-            getValueBuffer(valueLength));
+            bodyStart, getValueBuffer(valueLength));
         return header;
     }
 
-    protected abstract ByteBuffer getValueBuffer(int valueLength);
+    public Asn1Reader(ByteBuffer buffer) {
+        this.buffer = buffer;
+        this.position = buffer.position();
+    }
 
-    protected abstract byte readByte() throws IOException;
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public boolean available() {
+        return position < buffer.limit();
+    }
+
+    public ByteBuffer getValueBuffer(int valueLength) {
+        return buffer;
+    }
+
+    protected byte readByte() throws IOException {
+        return buffer.get(position++);
+    }
 
     private Tag readTag() throws IOException {
         int tagFlags = readTagFlags();

@@ -39,7 +39,7 @@ import static org.apache.kerby.x509.type.Extension.MyEnum.*;
  * </pre>
  */
 public class Extension extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         EXTN_ID,
         CRITICAL,
         EXTN_VALUE;

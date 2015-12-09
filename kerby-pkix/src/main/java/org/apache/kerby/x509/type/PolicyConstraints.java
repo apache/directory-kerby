@@ -39,7 +39,7 @@ import static org.apache.kerby.x509.type.PolicyConstraints.MyEnum.*;
  * </pre>
  */
 public class PolicyConstraints extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         REQUIRE_EXPLICIT_POLICY,
         INHIBIT_POLICY_MAPPING;
 

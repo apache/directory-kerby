@@ -40,7 +40,7 @@ import static org.apache.kerby.x509.type.Holder.MyEnum.*;
  * </pre>
  */
 public class Holder extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         BASE_CERTIFICATE_ID,
         ENTITY_NAME,
         OBJECT_DIGEST_INFO;

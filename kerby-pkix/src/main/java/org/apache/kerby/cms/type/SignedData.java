@@ -40,7 +40,7 @@ import static org.apache.kerby.cms.type.SignedData.MyEnum.*;
  *
  */
 public class SignedData extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         CMS_VERSION,
         DIGEST_ALGORITHMS,
         ENCAP_CONTENT_INFO,

@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.
  }
  */
 public class ReplyKeyPack extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         REPLY_KEY,
         AS_CHECKSUM;
 

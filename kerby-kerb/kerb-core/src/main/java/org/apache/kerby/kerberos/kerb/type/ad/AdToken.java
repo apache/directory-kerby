@@ -32,7 +32,7 @@ import static org.apache.kerby.kerberos.kerb.type.ad.AdToken.MyEnum.*;
  }
 */
 public class AdToken extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TOKEN;
 
         @Override

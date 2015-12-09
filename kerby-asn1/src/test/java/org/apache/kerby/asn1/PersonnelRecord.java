@@ -28,11 +28,11 @@ import org.apache.kerby.asn1.type.Asn1TaggingSet;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
 
 import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.CHILD_NAME;
-import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.DATEOFBIRTH;
+import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.DATE_OF_BIRTH;
 import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.CHILDREN;
-import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.DATEOFHIRE;
+import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.DATE_OF_HIRE;
 import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.NAME;
-import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.NAMEOFSPOUSE;
+import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.NAME_OF_SPOUSE;
 import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.NUMBER;
 import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.TITLE;
 import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.FAMILYNAME;
@@ -44,12 +44,12 @@ import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.INITIAL;
  * Annex A, A.1 ASN.1 description of the record structure
  */
 public class PersonnelRecord extends Asn1TaggingSet {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         NAME,
         TITLE,
         NUMBER,
-        DATEOFHIRE,
-        NAMEOFSPOUSE,
+        DATE_OF_HIRE,
+        NAME_OF_SPOUSE,
         CHILDREN;
 
         @Override
@@ -67,8 +67,8 @@ public class PersonnelRecord extends Asn1TaggingSet {
             new ExplicitField(NAME, -1, Name.class),
             new ExplicitField(TITLE, 0, Asn1VisibleString.class),
             new ExplicitField(NUMBER, -1, EmployeeNumber.class),
-            new ExplicitField(DATEOFHIRE, 1, Date.class),
-            new ExplicitField(NAMEOFSPOUSE, 2, Name.class),
+            new ExplicitField(DATE_OF_HIRE, 1, Date.class),
+            new ExplicitField(NAME_OF_SPOUSE, 2, Name.class),
             new ImplicitField(CHILDREN, 3, Children.class)
     };
 
@@ -101,19 +101,19 @@ public class PersonnelRecord extends Asn1TaggingSet {
     }
 
     public void setDateOfHire(Date dateOfHire) {
-        setFieldAs(DATEOFHIRE, dateOfHire);
+        setFieldAs(DATE_OF_HIRE, dateOfHire);
     }
 
     public Date getDateOfHire() {
-        return getFieldAs(DATEOFHIRE, Date.class);
+        return getFieldAs(DATE_OF_HIRE, Date.class);
     }
 
     public void setNameOfSpouse(Name spouse) {
-        setFieldAs(NAMEOFSPOUSE, spouse);
+        setFieldAs(NAME_OF_SPOUSE, spouse);
     }
 
     public Name getNameOfSpouse() {
-        return getFieldAs(NAMEOFSPOUSE, Name.class);
+        return getFieldAs(NAME_OF_SPOUSE, Name.class);
     }
 
     public void setChildren(Children children) {
@@ -138,9 +138,9 @@ public class PersonnelRecord extends Asn1TaggingSet {
     }
 
     public static class ChildInformation extends Asn1SetType {
-        protected static enum MyEnum implements EnumType {
+        protected enum MyEnum implements EnumType {
             CHILD_NAME,
-            DATEOFBIRTH;
+            DATE_OF_BIRTH;
 
             @Override
             public int getValue() {
@@ -155,7 +155,7 @@ public class PersonnelRecord extends Asn1TaggingSet {
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
                 new ExplicitField(CHILD_NAME, -1, Name.class),
-                new ExplicitField(DATEOFBIRTH, 0, Date.class)
+                new ExplicitField(DATE_OF_BIRTH, 0, Date.class)
         };
 
         public ChildInformation() {
@@ -171,17 +171,17 @@ public class PersonnelRecord extends Asn1TaggingSet {
         }
 
         public void setDateOfBirth(Date date) {
-            setFieldAs(DATEOFBIRTH, date);
+            setFieldAs(DATE_OF_BIRTH, date);
         }
 
         public Date getDateOfBirth() {
-            return getFieldAs(DATEOFBIRTH, Date.class);
+            return getFieldAs(DATE_OF_BIRTH, Date.class);
         }
     }
 
     public static class Name extends Asn1TaggingSequence {
 
-        protected static enum MyEnum implements EnumType {
+        protected enum MyEnum implements EnumType {
             GIVENNAME,
             INITIAL,
             FAMILYNAME;

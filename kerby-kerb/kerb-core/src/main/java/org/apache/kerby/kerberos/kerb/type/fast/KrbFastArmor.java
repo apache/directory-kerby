@@ -36,7 +36,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmor.MyEnum.*;
  }
  */
 public class KrbFastArmor extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ARMOR_TYPE,
         ARMOR_VALUE;
 

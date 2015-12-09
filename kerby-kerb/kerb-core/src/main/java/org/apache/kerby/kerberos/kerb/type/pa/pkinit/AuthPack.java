@@ -35,7 +35,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.*;
  }
  */
 public class AuthPack extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         PK_AUTHENTICATOR,
         CLIENT_PUBLIC_VALUE,
         SUPPORTED_CMS_TYPES,

@@ -46,7 +46,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     private static TokenEncoder tokenEncoder;
     private static TokenDecoder tokenDecoder;
 
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TOKEN_FORMAT,
         TOKEN_VALUE;
 

@@ -48,7 +48,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq.MyEnum.
  }
  */
 public class KrbFastArmoredReq extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ARMOR,
         REQ_CHECKSUM,
         ENC_FAST_REQ;

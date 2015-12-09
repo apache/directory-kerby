@@ -37,7 +37,7 @@ import static org.apache.kerby.cms.type.Subject.MyEnum.*;
  *
  */
 public class Subject extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         BASE_CERTIFICATE_ID,
         SUBJECT_NAME;
 

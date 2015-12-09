@@ -19,15 +19,16 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1Any;
+import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.type.Asn1IA5String;
-import org.apache.kerby.asn1.type.Asn1Item;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
-import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.x500.type.Name;
+
 import static org.apache.kerby.x509.type.GeneralName.MyEnum.*;
 
 /**
@@ -47,7 +48,7 @@ import static org.apache.kerby.x509.type.GeneralName.MyEnum.*;
  * </pre>
  */
 public class GeneralName extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         OTHER_NAME,
         RFC822_NAME,
         DNS_NAME,
@@ -74,7 +75,7 @@ public class GeneralName extends Asn1Choice {
         new ExplicitField(RFC822_NAME, Asn1IA5String.class),
         new ExplicitField(DNS_NAME, Asn1IA5String.class),
         // ORAddress is to be defined.
-        new ExplicitField(X400_ADDRESS, Asn1Item.class),
+        new ExplicitField(X400_ADDRESS, Asn1Any.class),
         new ExplicitField(DIRECTORY_NAME, Name.class),
         new ExplicitField(EDI_PARTY_NAME, EDIPartyName.class),
         new ExplicitField(UNIFORM_RESOURCE_IDENTIFIER, Asn1IA5String.class),
@@ -110,11 +111,11 @@ public class GeneralName extends Asn1Choice {
         setFieldAs(DNS_NAME, dnsName);
     }
 
-    public Asn1Item getX400Address() {
-        return getFieldAs(X400_ADDRESS, Asn1Item.class);
+    public Asn1Any getX400Address() {
+        return getFieldAs(X400_ADDRESS, Asn1Any.class);
     }
 
-    public void setX400Address(Asn1Item x400Address) {
+    public void setX400Address(Asn1Any x400Address) {
         setFieldAs(X400_ADDRESS, x400Address);
     }
 

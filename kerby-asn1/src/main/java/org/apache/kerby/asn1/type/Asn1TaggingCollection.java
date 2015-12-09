@@ -24,6 +24,7 @@ import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.Tag;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -43,7 +44,7 @@ public abstract class Asn1TaggingCollection
         super(makeTag(isAppSpecific, taggingTagNo));
         this.tagged = createTaggedCollection(tags);
         setValue(tagged);
-        this.tagging = new Asn1Tagging<Asn1CollectionType>(taggingTagNo,
+        this.tagging = new Asn1Tagging<>(taggingTagNo,
             tagged, isAppSpecific, isImplicit);
     }
 
@@ -135,8 +136,13 @@ public abstract class Asn1TaggingCollection
     }
 
     @Override
-    protected void decodeBody(ByteBuffer content) throws IOException {
-        tagging.decodeBody(content);
+    public void decode(ByteBuffer content) throws IOException {
+        tagging.decode(content);
+    }
+
+    @Override
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
+        tagging.decodeBody(parseResult);
     }
 
     protected <T extends Asn1Type> T getFieldAs(EnumType index, Class<T> t) {
@@ -178,6 +184,7 @@ public abstract class Asn1TaggingCollection
     @Override
     public void dumpWith(Asn1Dumper dumper, int indents) {
         Asn1Type taggedValue = getValue();
+        dumper.dumpTypeInfo(indents, getClass());
         dumper.dumpType(indents, taggedValue);
     }
 }

@@ -36,7 +36,7 @@ import java.util.Arrays;
  }
  */
 public class EncryptionKey extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         KEY_TYPE,
         KEY_VALUE;
 

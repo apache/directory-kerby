@@ -36,7 +36,7 @@ import static org.apache.kerby.x509.type.DistributionPoint.MyEnum.*;
  * </pre>
  */
 public class DistributionPoint extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         DISTRIBUTION_POINT,
         REASONS,
         CRL_ISSUER;

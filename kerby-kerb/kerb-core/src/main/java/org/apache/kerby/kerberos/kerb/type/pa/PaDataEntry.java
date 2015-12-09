@@ -35,7 +35,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry.MyEnum.*;
  }
  */
 public class PaDataEntry extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         PADATA_TYPE,
         PADATA_VALUE;
 

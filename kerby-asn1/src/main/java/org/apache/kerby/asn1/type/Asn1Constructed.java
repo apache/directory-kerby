@@ -19,8 +19,12 @@
  */
 package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.asn1.Asn1Converter;
+import org.apache.kerby.asn1.Asn1Dumpable;
+import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Tag;
+import org.apache.kerby.asn1.parse.Asn1Container;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -30,13 +34,22 @@ import java.util.List;
 /**
  * ASN1 constructed types, mainly structured ones, but also some primitive ones.
  */
-public class Asn1Constructed extends AbstractAsn1Type<List<Asn1Type>> {
+public class Asn1Constructed
+    extends AbstractAsn1Type<List<Asn1Type>> implements Asn1Dumpable {
+
+    protected Asn1Container container;
+
     private boolean lazy = false;
 
     public Asn1Constructed(Tag tag) {
         super(tag);
         setValue(new ArrayList<Asn1Type>());
         usePrimitive(false);
+    }
+
+
+    public Asn1Container getContainer() {
+        return container;
     }
 
     public void setLazy(boolean lazy) {
@@ -78,30 +91,32 @@ public class Asn1Constructed extends AbstractAsn1Type<List<Asn1Type>> {
     }
 
     @Override
-    protected void decodeBody(ByteBuffer content) throws IOException {
-        while (content.remaining() > 0) {
-            Asn1Item item = (Asn1Item) Asn1.decode(content);
-            if (item != null) {
-                if (item.isSimple() && !isLazy()) {
-                    item.decodeValueAsSimple();
-                    addItem(item.getValue());
-                } else {
-                    addItem(item);
-                }
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
+        Asn1Container container = (Asn1Container) parseResult;
+        this.container = container;
+
+        if (!isLazy()) {
+            decodeElements();
+        }
+    }
+
+    protected void decodeElements() throws IOException {
+        for (Asn1ParseResult parsingItem : getContainer().getChildren()) {
+            if (parsingItem.isEOC()) {
+                continue;
             }
+
+            Asn1Type tmpValue = Asn1Converter.convert(parsingItem);
+            addItem(tmpValue);
         }
     }
 
     @Override
-    public String toString() {
-        String typeStr;
-        if (tag().isUniversal()) {
-            typeStr = tag().universalTag().toStr();
-        } else if (tag().isAppSpecific()) {
-            typeStr = "application " + tagNo();
-        } else {
-            typeStr = "[" + tagNo() + "]";
+    public void dumpWith(Asn1Dumper dumper, int indents) {
+        dumper.indent(indents).append(toString()).newLine();
+
+        for (Asn1Type aObj : getValue()) {
+            dumper.dumpType(indents + 4, aObj).newLine();
         }
-        return typeStr;
     }
 }

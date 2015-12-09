@@ -34,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.My
  }
  */
 public class Krb5PrincipalName extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         REALM,
         PRINCIPAL_NAME;
 

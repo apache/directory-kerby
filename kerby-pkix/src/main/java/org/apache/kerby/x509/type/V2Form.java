@@ -39,7 +39,7 @@ import static org.apache.kerby.x509.type.V2Form.MyEnum.*;
  * </pre>
  */
 public class V2Form extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ISSUER_NAME,
         BASE_CERTIFICATE_ID,
         OBJECT_DIGEST_INFO;

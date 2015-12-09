@@ -36,7 +36,7 @@ import static org.apache.kerby.x509.type.CertificatePair.MyEnum.*;
  * </pre>
  */
 public class CertificatePair extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         FORWARD,
         REVERSE;
 

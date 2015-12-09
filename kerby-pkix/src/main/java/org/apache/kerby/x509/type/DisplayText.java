@@ -39,7 +39,7 @@ import static org.apache.kerby.x509.type.DisplayText.MyEnum.*;
  * </pre>
  */
 public class DisplayText extends Asn1Choice {
-   protected static enum MyEnum implements EnumType {
+   protected enum MyEnum implements EnumType {
       IA5_STRING,
       VISIBLE_STRING,
       BMP_STRING,

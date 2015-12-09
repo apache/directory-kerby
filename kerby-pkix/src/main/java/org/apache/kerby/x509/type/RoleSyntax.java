@@ -35,7 +35,7 @@ import static org.apache.kerby.x509.type.RoleSyntax.MyEnum.*;
  * </pre>
  */
 public class RoleSyntax extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         ROLE_AUTHORITY,
         ROLE_NAME;
 

@@ -22,6 +22,8 @@ package org.apache.kerby.asn1.type;
 import org.apache.kerby.asn1.Asn1Dumpable;
 import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.Tag;
+import org.apache.kerby.asn1.parse.Asn1Container;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -61,7 +63,7 @@ public class Asn1Tagging<T extends Asn1Type>
 
     @Override
     protected int encodingBodyLength() {
-        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
+        Asn1Encodeable value = (Asn1Encodeable) getValue();
         if (isImplicit()) {
             return value.encodingBodyLength();
         } else {
@@ -71,7 +73,7 @@ public class Asn1Tagging<T extends Asn1Type>
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
+        Asn1Encodeable value = (Asn1Encodeable) getValue();
         if (isImplicit()) {
             value.encodeBody(buffer);
         } else {
@@ -80,19 +82,21 @@ public class Asn1Tagging<T extends Asn1Type>
     }
 
     @Override
-    protected void decodeBody(ByteBuffer content) throws IOException {
-        AbstractAsn1Type<?> value = (AbstractAsn1Type<?>) getValue();
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
+        Asn1Encodeable value = (Asn1Encodeable) getValue();
         if (isImplicit()) {
-            value.decodeBody(content);
+            value.decodeBody(parseResult);
         } else {
-            value.decode(content);
+            Asn1Container container = (Asn1Container) parseResult;
+            Asn1ParseResult body = container.getChildren().get(0);
+            value.decode(body);
         }
     }
 
     private void initValue() {
         Class<? extends Asn1Type> valueType = (Class<T>) ((ParameterizedType)
                 getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        AbstractAsn1Type<?> value = null;
+        AbstractAsn1Type<?> value;
         try {
             value = (AbstractAsn1Type<?>) valueType.newInstance();
         } catch (Exception e) {
@@ -104,6 +108,7 @@ public class Asn1Tagging<T extends Asn1Type>
     @Override
     public void dumpWith(Asn1Dumper dumper, int indents) {
         Asn1Type taggedValue = getValue();
+        dumper.dumpTypeInfo(indents, getClass());
         dumper.dumpType(indents, taggedValue);
     }
 }

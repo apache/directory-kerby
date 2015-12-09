@@ -41,7 +41,7 @@ import static org.apache.kerby.x509.type.DirectoryString.MyEnum.*;
  * </pre>
  */
 public class DirectoryString extends Asn1Choice {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         TELETEX_STRING,
         PRINTABLE_STRING,
         UNIVERSAL_STRING,

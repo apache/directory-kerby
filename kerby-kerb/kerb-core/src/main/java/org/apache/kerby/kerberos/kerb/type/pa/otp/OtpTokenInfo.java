@@ -44,7 +44,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.*;
  }
  */
 public class OtpTokenInfo extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         FLAGS,
         OTP_VENDOR,
         OTP_CHALLENGE,

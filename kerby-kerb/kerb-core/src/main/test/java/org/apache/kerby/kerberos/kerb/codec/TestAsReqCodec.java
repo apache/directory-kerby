@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
+import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddrType;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddress;
@@ -44,18 +45,21 @@ import java.util.SimpleTimeZone;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Test AsReq message using a real 'correct' network packet captured from MS-AD to detective programming errors
- * and compatibility issues particularly regarding Kerberos crypto.
+ * Test AsReq message using a real 'correct' network packet captured from MS-AD
+ * to detective programming errors and compatibility issues particularly
+ * regarding Kerberos crypto.
  */
 public class TestAsReqCodec {
 
     @Test
     public void test() throws IOException, ParseException {
         byte[] bytes = CodecTestUtil.readBinaryFile("/asreq.token");
+        Asn1.dump(bytes);
         ByteBuffer asReqToken = ByteBuffer.wrap(bytes);
 
         AsReq asReq = new AsReq();
         asReq.decode(asReqToken);
+        Asn1.dump(asReq, false);
 
         assertThat(asReq.getPvno()).isEqualTo(5);
         assertThat(asReq.getMsgType()).isEqualTo(KrbMessageType.AS_REQ);

@@ -17,38 +17,23 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.asn1;
+package org.apache.kerby.asn1.parse;
 
-import java.nio.ByteBuffer;
+public class Asn1Item extends Asn1ParseResult {
 
-public class Asn1Header {
-    private Tag tag;
-    private int length;
-    private ByteBuffer valueBuffer;
-
-    public Asn1Header(Tag tag, int length, ByteBuffer valueBuffer) {
-        this.tag = tag;
-        this.length = length;
-        this.valueBuffer = valueBuffer;
+    public Asn1Item(Asn1Header header) {
+        super(header);
     }
 
-    public Tag getTag() {
-        return tag;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public ByteBuffer getValueBuffer() {
-        return valueBuffer;
-    }
-
-    public boolean isEOC() {
-        return length == 0 && tag.isEOC();
-    }
-
-    public boolean isDefinitiveLength() {
-        return length != -1;
+    @Override
+    public String toString() {
+        String valueStr = "##undecoded##";
+        String typeStr = tag().isUniversal() ? tag().universalTag().toStr()
+            : tag().tagClass().name().toLowerCase();
+        return typeStr + " ["
+            + "off=" + getOffset()
+            + ", len=" + getHeaderLength() + "+" + getBodyLength()
+            + "] "
+            + valueStr;
     }
 }

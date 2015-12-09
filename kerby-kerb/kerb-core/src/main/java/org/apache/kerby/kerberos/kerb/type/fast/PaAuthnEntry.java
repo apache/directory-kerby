@@ -36,7 +36,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.PaAuthnEntry.MyEnum.*;
  }
  */
 public class PaAuthnEntry extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected enum MyEnum implements EnumType {
         PA_TYPE,
         PA_HINT,
         PA_VALUE;
