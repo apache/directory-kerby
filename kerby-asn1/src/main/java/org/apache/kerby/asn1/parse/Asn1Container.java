@@ -54,8 +54,13 @@ public class Asn1Container
     public void dumpWith(Asn1Dumper dumper, int indents) {
         dumper.indent(indents).append(toString()).newLine();
 
+        int i = children.size();
         for (Asn1ParseResult aObj : children) {
-            dumper.dumpParseResult(indents + 4, aObj).newLine();
+            dumper.dumpParseResult(indents + 4, aObj);
+            i--;
+            if (i > 0) {
+                dumper.newLine();
+            }
         }
     }
 
