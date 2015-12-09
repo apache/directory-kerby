@@ -19,8 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.asn1.type.Asn1Item;
-import org.apache.kerby.asn1.type.Asn1Type;
+import org.apache.kerby.asn1.parse.Asn1Container;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
+import org.apache.kerby.asn1.parse.Asn1Parser;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -41,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 /**
  * KDC handler to process client requests. Currently only one realm is supported.
@@ -74,29 +76,19 @@ public class KdcHandler {
         KrbMessage krbResponse;
 
         ByteBuffer message = receivedMessage.duplicate();
-        Asn1InputBuffer ib = new Asn1InputBuffer(message);
-        Asn1Type body = null;
-        Asn1Type fd = null;
+
+        Asn1ParseResult parseResult = null;
         try {
-            fd = ib.read();
-            body = fd;
+            Asn1Parser.parse(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        while (fd != null) {
-            body = fd;
-            try {
-                fd = ib.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        byte[] reqBodyBytes = null;
-        try {
-            reqBodyBytes = ((Asn1Item)body).getBodyContent().readAllLeftBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Asn1Container container = (Asn1Container) parseResult;
+        List<Asn1ParseResult> parseResults = container.getChildren();
+
+        /**Get REQ_BODY in KDC_REQ for checksum*/
+        Asn1ParseResult parsingItem = parseResults.get(parseResults.size() - 1);
+        byte[] reqBodyBytes = parsingItem.getBodyBuffer().array();
 
         try {
             krbRequest = KrbCodec.decodeMessage(receivedMessage);
