@@ -20,7 +20,9 @@
 package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.EncapsulatedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,7 +32,7 @@ import java.io.IOException;
 public class TestSignedData extends CmsTestBase {
 
     @Test
-    public void testDump1WithSignedData() throws IOException {
+    public void testDecoding() throws IOException {
         byte[] data = readDataFile("/signed-data.txt");
         try {
             Asn1.dump(data, true);
@@ -42,9 +44,35 @@ public class TestSignedData extends CmsTestBase {
             SignedData signedData =
                 contentInfo.getContentAs(SignedData.class);
             Asn1.dump(signedData);
+
+            byte[] encodedData = contentInfo.encode();
+            Asn1.dump(encodedData, true);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
         }
+    }
+
+    @Test
+    public void testEncoding() throws IOException {
+        ContentInfo contentInfo = new ContentInfo();
+        contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
+        SignedData signedData = new SignedData();
+        EncapsulatedContentInfo eContentInfo = new EncapsulatedContentInfo();
+        eContentInfo.setContentType(new Asn1ObjectIdentifier("1.3.6.1.5.2.3.1"));
+        eContentInfo.setContent("data".getBytes());
+        signedData.setEncapContentInfo(eContentInfo);
+        contentInfo.setContent(signedData);
+        Asn1.dump(contentInfo);
+        byte[] encodedData = contentInfo.encode();
+        Asn1.dump(encodedData, true);
+
+        ContentInfo decodedContentInfo = new ContentInfo();
+        decodedContentInfo.decode(encodedData);
+        Asn1.dump(decodedContentInfo);
+
+        SignedData decodedSignedData =
+                decodedContentInfo.getContentAs(SignedData.class);
+        Asn1.dump(decodedSignedData);
     }
 }
