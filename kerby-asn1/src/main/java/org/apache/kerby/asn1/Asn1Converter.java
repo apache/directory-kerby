@@ -47,7 +47,7 @@ public final class Asn1Converter {
             tmpValue.decode(parseResult);
             return tmpValue;
         } else {
-            throw new IOException("Unknow type of tag=" + parseResult.tag());
+            throw new IOException("Unexpected item: " + parseResult.typeStr());
         }
     }
 

@@ -140,6 +140,16 @@ public class Tag {
         return String.format("0x%02X", tagByte());
     }
 
+    public String typeStr() {
+        if (isUniversal()) {
+            return universalTag().toStr();
+        } else if (isAppSpecific()) {
+            return "application [" + tagNo() + "]";
+        } else {
+            return "context [" + tagNo() + "]";
+        }
+    }
+
     public static Tag newAppTag(int tagNo) {
         return new Tag(TagClass.APPLICATION, tagNo);
     }

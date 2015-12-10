@@ -37,13 +37,6 @@ public class Asn1Item extends Asn1ParseResult {
     @Override
     public String toString() {
         String valueStr = "##undecoded##";
-        String typeStr = tag().isUniversal() ? tag().universalTag().toStr()
-            : tag().tagClass().name().toLowerCase();
-        return typeStr + " ["
-            + "tag=" + tag()
-            + ", off=" + getOffset()
-            + ", len=" + getHeaderLength() + "+" + getBodyLength()
-            + "] "
-            + valueStr;
+        return typeStr() + valueStr;
     }
 }

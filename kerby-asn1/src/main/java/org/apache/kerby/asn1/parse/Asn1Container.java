@@ -66,19 +66,13 @@ public class Asn1Container
 
     @Override
     public String toString() {
-        String typeStr;
-        if (tag().isUniversal()) {
-            typeStr = tag().universalTag().toStr();
-        } else if (tag().isAppSpecific()) {
-            typeStr = "application " + tagNo();
-        } else {
-            typeStr = "[" + tagNo() + "]";
-        }
-        return typeStr + " ["
+        String typeStr = tag().typeStr();
+        typeStr += " ["
             + "tag=" + tag()
             + ", off=" + getOffset()
             + ", len=" + getHeaderLength() + "+" + getBodyLength()
             + (isDefinitiveLength() ? "" : "(undefined)")
             + "]";
+        return typeStr;
     }
 }
