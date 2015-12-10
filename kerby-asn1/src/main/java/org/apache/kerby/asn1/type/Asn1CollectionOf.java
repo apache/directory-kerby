@@ -85,13 +85,4 @@ public abstract class Asn1CollectionOf<T extends Asn1Type>
             throw new IOException("Failed to create element type", e);
         }
     }
-
-    @Override
-    public void dumpWith(Asn1Dumper dumper, int indents) {
-        dumper.dumpTypeInfo(indents, getClass());
-
-        for (Asn1Type aObj : getValue()) {
-            dumper.dumpType(indents + 4, aObj).newLine();
-        }
-    }
 }

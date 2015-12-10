@@ -23,6 +23,7 @@ import org.apache.kerby.asn1.parse.Asn1Item;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.parse.Asn1Parser;
 import org.apache.kerby.asn1.type.Asn1Any;
+import org.apache.kerby.asn1.type.Asn1Application;
 import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.asn1.util.HexUtil;
@@ -83,11 +84,11 @@ public final class Asn1Dumper {
             indent(indents).append("Null");
         } else if (value instanceof Asn1Simple) {
             indent(indents).append(value.toString());
-        }  else if (value instanceof Asn1Item) {
-            indent(indents).append(value.toString());
         } else if (value instanceof Asn1Dumpable) {
             Asn1Dumpable dumpable = (Asn1Dumpable) value;
             dumpable.dumpWith(this, indents);
+        } else if (value instanceof Asn1Application) {
+            indent(indents).append(value.toString());
         } else if (value instanceof Asn1Any) {
             indent(indents).append("<Any>");
         } else {

@@ -75,4 +75,9 @@ public abstract class AbstractAsn1Type<T> extends Asn1Encodeable {
     public void setValue(T value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return tag().typeStr();
+    }
 }

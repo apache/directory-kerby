@@ -34,7 +34,7 @@ public class TestAsn1Dump {
 
             byte[] data = TestData.createSammplePersonnelEncodingData();
             Asn1.dump(data, true);
-            //Asn1.dump(data, false);
+            Asn1.dump(data, false);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -46,7 +46,7 @@ public class TestAsn1Dump {
         String hexStr = TestUtil.readStringFromTxtFile("/compressed-data.txt");
         try {
             Asn1.dump(hexStr, true);
-            //Asn1.dump(hexStr, false);
+            Asn1.dump(hexStr, false);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -58,7 +58,7 @@ public class TestAsn1Dump {
         String hexStr = TestUtil.readStringFromTxtFile("/signed-data.txt");
         try {
             Asn1.dump(hexStr, true);
-            //Asn1.dump(hexStr, false);
+            Asn1.dump(hexStr, false);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -70,7 +70,7 @@ public class TestAsn1Dump {
         byte[] data = TestUtil.readBytesFromBinFile("/der-data.dat");
         try {
             Asn1.dump(data, true);
-            //Asn1.dump(data, false);
+            Asn1.dump(data, false);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
