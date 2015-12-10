@@ -78,7 +78,7 @@ public class WithCertKdcTest extends KdcTestBase {
     protected void setUpClient() throws Exception {
         super.setUpClient();
 
-//        loadCredentials();
+        loadCredentials();
     }
 
     @Override
