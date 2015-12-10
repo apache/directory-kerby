@@ -185,7 +185,7 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
                 Asn1Container container = (Asn1Container) parseResult;
                 parseResult = new Asn1DerivedItem(tag(), container);
             } else {
-                throw new IOException("Unexpected tag " + parseResult.tag()
+                throw new IOException("Unexpected item " + parseResult.typeStr()
                     + ", expecting " + tag());
             }
         }

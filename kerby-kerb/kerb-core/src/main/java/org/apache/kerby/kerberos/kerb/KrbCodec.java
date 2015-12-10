@@ -67,7 +67,6 @@ public class KrbCodec {
     public static KrbMessage decodeMessage(ByteBuffer buffer) throws IOException {
         Asn1ParseResult parsingResult = Asn1.parse(buffer);
         Tag tag = parsingResult.tag();
-
         KrbMessage msg;
         KrbMessageType msgType = KrbMessageType.fromValue(tag.tagNo());
         if (msgType == KrbMessageType.TGS_REQ) {

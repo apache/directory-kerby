@@ -118,6 +118,6 @@ public abstract class Asn1ParseResult extends Asn1Object {
             + "tag=" + tag()
             + ", off=" + getOffset()
             + ", len=" + getHeaderLength() + "+" + getBodyLength()
-            + "] ";
+            + "]";
     }
 }

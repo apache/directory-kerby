@@ -26,8 +26,8 @@ import java.io.IOException;
 
 public class TestAsn1Dump {
 
-    @Test
-    public void testDump1WithPersonnelRecord() throws IOException {
+    //@Test
+    public void testDumpWithPersonnelRecord() throws IOException {
         try {
             PersonnelRecord pr = TestData.createSamplePersonnel();
             Asn1.dump(pr);
@@ -41,8 +41,8 @@ public class TestAsn1Dump {
         }
     }
 
-    @Test
-    public void testDump1WithCompressedData() throws IOException {
+    //@Test
+    public void testDumpWithCompressedData() throws IOException {
         String hexStr = TestUtil.readStringFromTxtFile("/compressed-data.txt");
         try {
             Asn1.dump(hexStr, true);
@@ -53,8 +53,8 @@ public class TestAsn1Dump {
         }
     }
 
-    @Test
-    public void testDump1WithSignedData() throws IOException {
+    //@Test
+    public void testDumpWithSignedData() throws IOException {
         String hexStr = TestUtil.readStringFromTxtFile("/signed-data.txt");
         try {
             Asn1.dump(hexStr, true);
@@ -65,9 +65,21 @@ public class TestAsn1Dump {
         }
     }
 
-    @Test
-    public void testDump1WithDerData() throws IOException {
+    //@Test
+    public void testDumpWithDerData() throws IOException {
         byte[] data = TestUtil.readBytesFromBinFile("/der-data.dat");
+        try {
+            Asn1.dump(data, true);
+            Asn1.dump(data, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testDumpWithEmptyContainer() throws IOException {
+        byte[] data = TestUtil.readBytesFromTxtFile("/empty-container.txt");
         try {
             Asn1.dump(data, true);
             Asn1.dump(data, false);
