@@ -20,7 +20,6 @@
 package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Binder;
-import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.UniversalTag;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
