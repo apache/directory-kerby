@@ -19,6 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
+import org.apache.kerby.asn1.util.HexUtil;
+import org.apache.kerby.asn1.util.IOUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -29,5 +32,11 @@ public class CodecTestUtil {
         byte[] bytes = new byte[is.available()];
         is.read(bytes);
         return bytes;
+    }
+
+    static byte[] readDataFile(String resource) throws IOException {
+        InputStream is = CodecTestUtil.class.getResourceAsStream(resource);
+        String hexStr = IOUtil.readInput(is);
+        return HexUtil.hex2bytes(hexStr);
     }
 }

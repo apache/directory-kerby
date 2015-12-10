@@ -75,4 +75,23 @@ public class TestSignedData extends CmsTestBase {
                 decodedContentInfo.getContentAs(SignedData.class);
         Asn1.dump(decodedSignedData);
     }
+
+    @Test
+    public void testContentInfo() throws IOException {
+        byte[] data = readDataFile("/anonymous.txt");
+        try {
+            Asn1.dump(data, true);
+
+            ContentInfo contentInfo = new ContentInfo();
+            contentInfo.decode(data);
+            Asn1.dump(contentInfo);
+/** Failed in DigestAlgorithmIdentifiers*/
+//            SignedData signedData =
+//                    contentInfo.getContentAs(SignedData.class);
+//            Asn1.dump(signedData);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+    }
 }
