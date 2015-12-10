@@ -21,6 +21,7 @@ package org.apache.kerby.asn1.type;
 
 import org.apache.kerby.asn1.Asn1Binder;
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.UniversalTag;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
@@ -56,8 +57,24 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     }
 
     @Override
+    public Tag tag() {
+        if (getValue() != null) {
+            return getValue().tag();
+        } else if (field != null) {
+            return field.tag();
+        }
+        return super.tag();
+    }
+
+    @Override
     protected int encodingBodyLength() {
-        return ((Asn1Encodeable) getValue()).encodingBodyLength();
+        if (getValue() != null) {
+            return ((Asn1Encodeable) getValue()).encodingBodyLength();
+        } else if (field != null) {
+            return field.getBodyLength();
+        }
+
+        return -1;
     }
 
     @Override
@@ -67,7 +84,12 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        ((Asn1Encodeable) getValue()).encodeBody(buffer);
+        if (getValue() != null) {
+            ((Asn1Encodeable) getValue()).encodeBody(buffer);
+        } else if (field != null) {
+            buffer.put(field.getBodyBuffer());
+        }
+
     }
 
     protected <T extends Asn1Type> T getValueAs(Class<T> t) {

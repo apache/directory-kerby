@@ -32,7 +32,7 @@ import java.io.IOException;
 public class TestSignedData extends CmsTestBase {
 
     @Test
-    public void testDump1WithSignedData() throws IOException {
+    public void testDecoding() throws IOException {
         byte[] data = readDataFile("/signed-data.txt");
         try {
             Asn1.dump(data, true);
@@ -44,6 +44,9 @@ public class TestSignedData extends CmsTestBase {
             SignedData signedData =
                 contentInfo.getContentAs(SignedData.class);
             Asn1.dump(signedData);
+
+            byte[] encodedData = contentInfo.encode();
+            Asn1.dump(encodedData, true);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -51,7 +54,7 @@ public class TestSignedData extends CmsTestBase {
     }
 
     @Test
-    public void testDecodeSignedData() throws IOException {
+    public void testEncoding() throws IOException {
         ContentInfo contentInfo = new ContentInfo();
         contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
         SignedData signedData = new SignedData();
@@ -61,15 +64,15 @@ public class TestSignedData extends CmsTestBase {
         signedData.setEncapContentInfo(eContentInfo);
         contentInfo.setContent(signedData);
         Asn1.dump(contentInfo);
-        Asn1.dump(contentInfo.encode(), true);
+        byte[] encodedData = contentInfo.encode();
+        Asn1.dump(encodedData, true);
 
-        ContentInfo actualContentInfo = new ContentInfo();
-        actualContentInfo.decode(contentInfo.encode());
-        Asn1.dump(actualContentInfo);
+        ContentInfo decodedContentInfo = new ContentInfo();
+        decodedContentInfo.decode(encodedData);
+        Asn1.dump(decodedContentInfo);
 
-        /* Fail
-        SignedData actualSignedData =
-                actualContentInfo.getContentAs(SignedData.class);
-                */
+        SignedData decodedSignedData =
+                decodedContentInfo.getContentAs(SignedData.class);
+        Asn1.dump(decodedSignedData);
     }
 }
