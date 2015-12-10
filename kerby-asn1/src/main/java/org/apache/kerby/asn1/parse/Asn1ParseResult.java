@@ -72,6 +72,13 @@ public abstract class Asn1ParseResult extends Asn1Object {
         return result;
     }
 
+    public byte[] readBodyBytes() {
+        ByteBuffer bodyBuffer = getBodyBuffer();
+        byte[] result = new byte[bodyBuffer.remaining()];
+        bodyBuffer.get(result);
+        return result;
+    }
+
     public boolean isDefinitiveLength() {
         return header.isDefinitiveLength();
     }
