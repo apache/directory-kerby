@@ -17,26 +17,41 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.codec;
+package org.apache.kerby.asn1.type;
 
-import org.apache.kerby.asn1.util.HexUtil;
-import org.apache.kerby.asn1.util.IOUtil;
+import org.apache.kerby.asn1.Tag;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-public class CodecTestUtil {
-    /*package*/ 
-    static byte[] readBinaryFile(String path) throws IOException {
-        InputStream is = CodecTestUtil.class.getResourceAsStream(path);
-        byte[] bytes = new byte[is.available()];
-        is.read(bytes);
-        return bytes;
+/**
+ * Application object mainly for using implicit encoding.
+ */
+public class Asn1Application extends AbstractAsn1Type<byte[]> {
+
+    public Asn1Application(Tag tag, byte[] value) {
+        super(tag, value);
     }
 
-    static byte[] readDataFile(String resource) throws IOException {
-        InputStream is = CodecTestUtil.class.getResourceAsStream(resource);
-        String hexStr = IOUtil.readInput(is);
-        return HexUtil.hex2bytes(hexStr);
+    public Asn1Application(Tag tag) {
+        super(tag);
+    }
+
+    @Override
+    protected int encodingBodyLength() {
+        if (getValue() != null) {
+            return getValue().length;
+        }
+        return 0;
+    }
+
+    @Override
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
+        setValue(parseResult.readBodyBytes());
+    }
+
+    @Override
+    public String toString() {
+        return tag().typeStr() + "  <" + getValue().length + " bytes>";
     }
 }

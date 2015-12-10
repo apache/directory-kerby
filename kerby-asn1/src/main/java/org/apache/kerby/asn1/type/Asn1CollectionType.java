@@ -111,9 +111,7 @@ public abstract class Asn1CollectionType
                 }
             }
             if (foundPos == -1) {
-                String error = String.format("Unexpected item tag=%s, off=%d",
-                    parseItem.tag(), parseItem.getOffset());
-                throw new IOException(error);
+                throw new IOException("Unexpected item: " + parseItem.typeStr());
             }
             lastPos = foundPos;
 

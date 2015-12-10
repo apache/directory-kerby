@@ -20,6 +20,7 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
+import org.apache.kerby.asn1.type.Asn1Application;
 import org.apache.kerby.asn1.type.Asn1Collection;
 import org.apache.kerby.asn1.type.Asn1Constructed;
 import org.apache.kerby.asn1.type.Asn1Encodeable;
@@ -46,8 +47,12 @@ public final class Asn1Converter {
             Asn1Encodeable tmpValue = new Asn1Constructed(parseResult.tag());
             tmpValue.decode(parseResult);
             return tmpValue;
+        } else if (parseResult.isAppSpecific()) {
+            Asn1Application app = new Asn1Application(parseResult.tag());
+            app.decode(parseResult);
+            return app;
         } else {
-            throw new IOException("Unknow type of tag=" + parseResult.tag());
+            throw new IOException("Unexpected item: " + parseResult.typeStr());
         }
     }
 

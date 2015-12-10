@@ -142,7 +142,8 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
     }
 
     /**
-     * Create a simple ASN1 object given tagNo, using the default constructor with no value provided
+     * Create a simple ASN1 object given tagNo, using the default constructor
+     * with no value provided
      * @param tagNo The tag number
      * @return A simple ASN1 object
      */
@@ -154,7 +155,8 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
     }
 
     /**
-     * Create a simple ASN1 object given tagNo, using the default constructor with no value provided
+     * Create a simple ASN1 object given tagNo, using the default constructor
+     * with no value provided
      * @param tagNo The tag number
      * @return The simple ASN1 object
      */
@@ -201,7 +203,8 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
             case VISIBLE_STRING:
                 return new Asn1VisibleString();
             default:
-                throw new IllegalArgumentException("Unexpected tag " + tagNo.getValue());
+                throw new IllegalArgumentException(
+                    "Unexpected tag " + tagNo.getValue());
         }
     }
 

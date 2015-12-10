@@ -115,8 +115,13 @@ public class Asn1Constructed
     public void dumpWith(Asn1Dumper dumper, int indents) {
         dumper.indent(indents).append(toString()).newLine();
 
-        for (Asn1Type aObj : getValue()) {
-            dumper.dumpType(indents + 4, aObj).newLine();
+        List<Asn1Type> items = getValue();
+        int i = 0;
+        for (Asn1Type aObj : items) {
+            dumper.dumpType(indents + 4, aObj);
+            if (i != items.size() - 1) {
+                dumper.newLine();
+            }
         }
     }
 }
