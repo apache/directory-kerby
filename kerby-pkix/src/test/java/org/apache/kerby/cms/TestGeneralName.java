@@ -21,23 +21,22 @@ package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.util.HexUtil;
-import org.apache.kerby.x509.type.GeneralName;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 
 public class TestGeneralName {
-    private static final byte[] ipv4 = HexUtil.hex2bytes("87040a090800");
+    private static final byte[] IPV4 = HexUtil.hex2bytes("87040a090800");
 
     @Test
     public void testIpAddress() throws IOException {
         try {
-            Asn1.dump(ipv4, true);
-            GeneralName generalName = new GeneralName();
+            Asn1.dump(IPV4, true);
+            //GeneralName generalName = new GeneralName();
             //TO BE FIXED
             //10.9.8.0
-//            generalName.decode(ipv4);
+            //generalName.decode(ipv4);
 
         } catch (Exception e) {
             e.printStackTrace();
