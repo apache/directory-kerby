@@ -59,18 +59,18 @@ public class EDIPartyName extends Asn1Choice {
     }
 
     public DirectoryString getNameAssigner() {
-        return getFieldAs(NAME_ASSIGNER, DirectoryString.class);
+        return getChoiceValueAs(NAME_ASSIGNER, DirectoryString.class);
     }
 
     public void setNameAssigner(DirectoryString nameAssigner) {
-        setFieldAs(NAME_ASSIGNER, nameAssigner);
+        setChoiceValue(NAME_ASSIGNER, nameAssigner);
     }
 
     public DirectoryString getPartyName() {
-        return getFieldAs(PARTY_NAME, DirectoryString.class);
+        return getChoiceValueAs(PARTY_NAME, DirectoryString.class);
     }
 
     public void setPartyName(DirectoryString partyName) {
-        setFieldAs(PARTY_NAME, partyName);
+        setChoiceValue(PARTY_NAME, partyName);
     }
 }

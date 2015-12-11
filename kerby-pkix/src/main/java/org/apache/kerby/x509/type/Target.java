@@ -63,26 +63,26 @@ public class Target extends Asn1Choice {
     }
 
     public GeneralName getTargetName() {
-        return getFieldAs(TARGET_NAME, GeneralName.class);
+        return getChoiceValueAs(TARGET_NAME, GeneralName.class);
     }
 
     public void setTargetName(GeneralName targetName) {
-        setFieldAs(TARGET_NAME, targetName);
+        setChoiceValue(TARGET_NAME, targetName);
     }
 
     public GeneralName getTargetGroup() {
-        return getFieldAs(TARGET_GROUP, GeneralName.class);
+        return getChoiceValueAs(TARGET_GROUP, GeneralName.class);
     }
 
     public void setTargetGroup(GeneralName targetGroup) {
-        setFieldAs(TARGET_GROUP, targetGroup);
+        setChoiceValue(TARGET_GROUP, targetGroup);
     }
 
     public TargetCert targetCert() {
-        return getFieldAs(TARGET_CERT, TargetCert.class);
+        return getChoiceValueAs(TARGET_CERT, TargetCert.class);
     }
 
     public void setTargetCert(TargetCert targetCert) {
-        setFieldAs(TARGET_CERT, targetCert);
+        setChoiceValue(TARGET_CERT, targetCert);
     }
 }

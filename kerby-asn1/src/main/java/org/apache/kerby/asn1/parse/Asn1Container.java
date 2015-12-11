@@ -52,7 +52,10 @@ public class Asn1Container
 
     @Override
     public void dumpWith(Asn1Dumper dumper, int indents) {
-        dumper.indent(indents).append(toString()).newLine();
+        dumper.indent(indents).append(toString());
+        if (children.size() > 0) {
+            dumper.newLine();
+        }
 
         int i = children.size();
         for (Asn1ParseResult aObj : children) {

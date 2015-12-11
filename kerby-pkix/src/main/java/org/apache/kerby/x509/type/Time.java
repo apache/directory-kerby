@@ -63,18 +63,18 @@ public class Time extends Asn1Choice {
     }
 
     public Date getUtcTime() {
-        return getFieldAs(UTC_TIME, Asn1UtcTime.class).getValue();
+        return getChoiceValueAs(UTC_TIME, Asn1UtcTime.class).getValue();
     }
 
     public void setUtcTime(Asn1UtcTime utcTime) {
-        setFieldAs(UTC_TIME, utcTime);
+        setChoiceValue(UTC_TIME, utcTime);
     }
 
     public Date generalizedTime() {
-        return getFieldAs(GENERAL_TIME, Asn1GeneralizedTime.class).getValue();
+        return getChoiceValueAs(GENERAL_TIME, Asn1GeneralizedTime.class).getValue();
     }
 
     public void setGeneralTime(Asn1GeneralizedTime generalTime) {
-        setFieldAs(GENERAL_TIME, generalTime);
+        setChoiceValue(GENERAL_TIME, generalTime);
     }
 }

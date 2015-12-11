@@ -57,18 +57,18 @@ public class RevocationInfoChoice extends Asn1Choice {
     }
 
     public CertificateList getCRL() {
-        return getFieldAs(CRL, CertificateList.class);
+        return getChoiceValueAs(CRL, CertificateList.class);
     }
 
     public void setCRL(CertificateList crl) {
-        setFieldAs(CRL, crl);
+        setChoiceValue(CRL, crl);
     }
 
     public OtherRevocationInfoFormat getOther() {
-        return getFieldAs(OTHER, OtherRevocationInfoFormat.class);
+        return getChoiceValueAs(OTHER, OtherRevocationInfoFormat.class);
     }
 
     public void setOther(OtherRevocationInfoFormat other) {
-        setFieldAs(OTHER, other);
+        setChoiceValue(OTHER, other);
     }
 }

@@ -63,18 +63,18 @@ public class SignerIdentifier extends Asn1Choice {
     }
 
     public IssuerAndSerialNumber getIssuerAndSerialNumber() {
-        return getFieldAs(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class);
+        return getChoiceValueAs(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class);
     }
 
     public void setIssuerAndSerialNumber(IssuerAndSerialNumber issuerAndSerialNumber) {
-        setFieldAs(ISSUER_AND_SERIAL_NUMBER, issuerAndSerialNumber);
+        setChoiceValue(ISSUER_AND_SERIAL_NUMBER, issuerAndSerialNumber);
     }
 
     public SubjectKeyIdentifier getSubjectKeyIdentifier() {
-        return getFieldAs(SUBJECT_KEY_IDENTIFIER, SubjectKeyIdentifier.class);
+        return getChoiceValueAs(SUBJECT_KEY_IDENTIFIER, SubjectKeyIdentifier.class);
     }
 
     public void setSubjectKeyIdentifier(SubjectKeyIdentifier subjectKeyIdentifier) {
-        setFieldAs(SUBJECT_KEY_IDENTIFIER, subjectKeyIdentifier);
+        setChoiceValue(SUBJECT_KEY_IDENTIFIER, subjectKeyIdentifier);
     }
 }

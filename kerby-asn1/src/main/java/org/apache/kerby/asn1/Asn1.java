@@ -91,10 +91,10 @@ public final class Asn1 {
 
     public static void dump(byte[] content,
                             boolean useRawFormat) throws IOException {
-        //String hexStr = HexUtil.bytesToHex(content);
+        String hexStr = HexUtil.bytesToHex(content);
         Asn1Dumper dumper = new Asn1Dumper();
-        //System.out.println("Dumping data:");
-        //dumper.dumpData(hexStr);
+        System.out.println("Dumping data:");
+        dumper.dumpData(hexStr);
         dumper.dump(content, useRawFormat);
         String output = dumper.output();
         System.out.println(output);

@@ -54,10 +54,10 @@ public class Name extends Asn1Choice {
     }
 
     public RDNSequence getName() {
-        return getFieldAs(RDN_SEQUENCE, RDNSequence.class);
+        return getChoiceValueAs(RDN_SEQUENCE, RDNSequence.class);
     }
 
     public void setName(RDNSequence name) {
-        setFieldAs(RDN_SEQUENCE, name);
+        setChoiceValue(RDN_SEQUENCE, name);
     }
 }

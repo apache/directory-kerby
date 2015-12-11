@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.codec;
 
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
@@ -45,12 +46,12 @@ public class TestPkinitAnonymousAsReqCodec {
     @Test
     public void test() throws IOException, ParseException {
         byte[] bytes = CodecTestUtil.readDataFile("/pkinit_anonymous_asreq.token");
-//        Asn1.dump(bytes, true);
+        //Asn1.dump(bytes, true);
         ByteBuffer asReqToken = ByteBuffer.wrap(bytes);
 
         AsReq asReq = new AsReq();
         asReq.decode(asReqToken);
-//        Asn1.dump(asReq, false);
+        //Asn1.dump(asReq, false);
 
         assertThat(asReq.getPvno()).isEqualTo(5);
         assertThat(asReq.getMsgType()).isEqualTo(KrbMessageType.AS_REQ);
@@ -72,10 +73,10 @@ public class TestPkinitAnonymousAsReqCodec {
         contentInfo.decode(paPkAsReq.getSignedAuthPack());
         assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
         Asn1.dump(contentInfo);
-        //Failed
-//        SignedData signedData = contentInfo.getContentAs(SignedData.class);
-//        assertThat(signedData.getCertificates()).isNull();
-//        assertThat(signedData.getEncapContentInfo().getContentType()).isEqualTo("1.3.6.1.5.2.3.1");
+
+        SignedData signedData = contentInfo.getContentAs(SignedData.class);
+        assertThat(signedData.getCertificates().getElements().isEmpty()).isEqualTo(true);
+        assertThat(signedData.getEncapContentInfo().getContentType().getValue()).isEqualTo("1.3.6.1.5.2.3.1");
 
         PaDataEntry encpaEntry = paData.findEntry(PaDataType.ENCPADATA_REQ_ENC_PA_REP);
         assertThat(encpaEntry.getPaDataType()).isEqualTo(PaDataType.ENCPADATA_REQ_ENC_PA_REP);

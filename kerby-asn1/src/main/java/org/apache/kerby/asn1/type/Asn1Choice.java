@@ -19,8 +19,10 @@
  */
 package org.apache.kerby.asn1.type;
 
+import org.apache.kerby.asn1.Asn1Binder;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
@@ -30,147 +32,148 @@ import java.nio.ByteBuffer;
 
 public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
 
-    private Asn1FieldInfo[] fieldInfos;
-    private Asn1Type[] fields;
+    private final Asn1FieldInfo[] fieldInfos;
+    private final Tag[] tags;
+
+    private Asn1FieldInfo chosenField;
 
     public Asn1Choice(Asn1FieldInfo[] fieldInfos) {
         super(UniversalTag.CHOICE);
+
         setValue(this);
-        this.fieldInfos = fieldInfos.clone();
-        this.fields = new Asn1Type[fieldInfos.length];
+        this.fieldInfos = fieldInfos;
+        this.tags = new Tag[fieldInfos.length];
+        initTags();
+    }
+
+    private void initTags() {
+        for (int i = 0; i < fieldInfos.length; i++) {
+            tags[i] = fieldInfos[i].getFieldTag();
+        }
+    }
+
+    public boolean matchAndSetValue(Tag tag) {
+        int foundPos = -1;
+        for (int i = 0; i < fieldInfos.length; i++) {
+            if (tag.isContextSpecific()) {
+                if (fieldInfos[i].getTagNo() == tag.tagNo()) {
+                    foundPos = i;
+                    break;
+                }
+            } else if (tags[i].equals(tag)) {
+                foundPos = i;
+                break;
+            }
+        }
+
+        if (foundPos != -1) {
+            this.chosenField = fieldInfos[foundPos];
+            setValue(fieldInfos[foundPos].createFieldValue());
+            return true;
+        }
+        return false;
     }
 
     @Override
     protected int encodingBodyLength() {
-        for (int i = 0; i < fields.length; ++i) {
-            AbstractAsn1Type<?> field = (AbstractAsn1Type<?>) fields[i];
-            if (field != null) {
-                if (fieldInfos[i].isTagged()) {
-                    TaggingOption taggingOption = fieldInfos[i].getTaggingOption();
-                    return field.taggedEncodingLength(taggingOption);
-                } else {
-                    return field.encodingLength();
-                }
+        Asn1Encodeable theValue = (Asn1Encodeable) getValue();
+
+        if (theValue != null) {
+            if (chosenField.isTagged()) {
+                TaggingOption taggingOption =
+                    chosenField.getTaggingOption();
+                return theValue.taggedEncodingLength(taggingOption);
+            } else {
+                return theValue.encodingLength();
             }
         }
+
         return 0;
     }
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        for (int i = 0; i < fields.length; ++i) {
-            Asn1Type field = fields[i];
-            if (field != null) {
-                if (fieldInfos[i].isTagged()) {
-                    TaggingOption taggingOption = fieldInfos[i].getTaggingOption();
-                    field.taggedEncode(buffer, taggingOption);
-                } else {
-                    field.encode(buffer);
-                }
-                break;
+        Asn1Encodeable theValue = (Asn1Encodeable) getValue();
+
+        if (theValue != null) {
+            if (chosenField.isTagged()) {
+                TaggingOption taggingOption =
+                    chosenField.getTaggingOption();
+                theValue.taggedEncode(buffer, taggingOption);
+            } else {
+                theValue.encode(buffer);
             }
         }
     }
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
-        /*
-        int foundPos = -1;
-        Asn1Item item = (Asn1Item) Asn1.decode(content);
-        for (int i = 0; i < fieldInfos.length; ++i) {
-            if (item.isContextSpecific()) {
-                if (fieldInfos[i].getTagNo() == item.tagNo()) {
-                    foundPos = i;
-                    break;
-                }
-            } else {
-                initField(i);
-                if (fields[i].tag().equals(item.tag())) {
-                    foundPos = i;
-                    break;
-                } else {
-                    fields[i] = null;
-                }
-            }
-        }
-        if (foundPos == -1) {
-            throw new RuntimeException("Unexpected item with (tagFlags, tagNo): ("
-                    + item.tag() + ", " + item.tagNo() + ")");
+        chosenField = null;
+        setValue(null);
+
+        super.decode(content);
+    }
+
+    @Override
+    public void decode(Asn1ParseResult parseResult) throws IOException {
+        if (chosenField == null) {
+            matchAndSetValue(parseResult.tag());
         }
 
-        if (!item.isFullyDecoded()) {
-            AbstractAsn1Type<?> fieldValue = (AbstractAsn1Type<?>) fields[foundPos];
-            if (item.isContextSpecific()) {
-                item.bind(fieldValue, fieldInfos[foundPos].getTaggingOption());
-            } else {
-                item.bind(fieldValue);
-            }
-        }
-        fields[foundPos] = item.getValue();
-        */
+        decodeBody(parseResult);
     }
 
     @Override
     protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
-
-    }
-
-    /*
-    private void initField(int idx) {
-        try {
-            fields[idx] = fieldInfos[idx].getType().newInstance();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Bad field info specified at index of " + idx, e);
+        if (chosenField == null) {
+            matchAndSetValue(parseResult.tag());
         }
-    }*/
 
-    protected <T extends Asn1Type> T getFieldAs(EnumType index, Class<T> t) {
-        Asn1Type value = fields[index.getValue()];
-        if (value == null) {
-            return null;
+        if (chosenField == null) {
+            throw new IOException("Unexpected item, not in choices: "
+                + parseResult.typeStr());
         }
-        return (T) value;
+
+        Asn1Type fieldValue = getValue();
+        if (parseResult.isContextSpecific()) {
+            Asn1Binder.bindWithTagging(parseResult, fieldValue,
+                chosenField.getTaggingOption());
+        } else {
+            Asn1Binder.bind(parseResult, fieldValue);
+        }
     }
 
-    protected void setFieldAs(EnumType index, Asn1Type value) {
-        fields[index.getValue()] = value;
-    }
-
-    protected String getFieldAsString(int index) {
-        Asn1Type value = fields[index];
-        if (value == null) {
+    protected <T extends Asn1Type> T getChoiceValueAs(EnumType index, Class<T> t) {
+        if (chosenField == null || getValue() == null) {
             return null;
         }
 
-        if (value instanceof Asn1String) {
-            return ((Asn1String) value).getValue();
+        if (chosenField != null && index != chosenField) {
+            throw new IllegalArgumentException("Incorrect chosen value requested");
         }
 
-        throw new RuntimeException("The targeted field type isn't of string");
+        return (T) getValue();
     }
 
-    protected byte[] getFieldAsOctets(EnumType index) {
-        Asn1OctetString value = getFieldAs(index, Asn1OctetString.class);
+    protected void setChoiceValue(EnumType index, Asn1Type value) {
+        if (fieldInfos[index.getValue()].getIndex() != index) {
+            throw new IllegalArgumentException("Incorrect choice option to set");
+        }
+
+        this.chosenField = fieldInfos[index.getValue()];
+        setValue(value);
+    }
+
+    protected void setChoiceValueAsOctets(EnumType index, byte[] bytes) {
+        Asn1OctetString value = new Asn1OctetString(bytes);
+        setChoiceValue(index, value);
+    }
+
+    protected byte[] getChoiceValueAsOctets(EnumType index) {
+        Asn1OctetString value = getChoiceValueAs(index, Asn1OctetString.class);
         if (value != null) {
             return value.getValue();
         }
         return null;
-    }
-
-    protected void setFieldAsOctets(EnumType index, byte[] bytes) {
-        Asn1OctetString value = new Asn1OctetString(bytes);
-        setFieldAs(index, value);
-    }
-
-    protected Integer getFieldAsInteger(EnumType index) {
-        Asn1Integer value = getFieldAs(index, Asn1Integer.class);
-        if (value != null) {
-            return value.getValue().intValue();
-        }
-        return null;
-    }
-
-    protected void setFieldAsInt(EnumType index, int value) {
-        setFieldAs(index, new Asn1Integer(value));
     }
 }

@@ -74,7 +74,9 @@ public class Asn1Parser {
         } else {
             Asn1Container container = new Asn1Container(header,
                 bodyStart, reader.getBuffer());
-            parse(container);
+            if (header.getLength() != 0) {
+                parse(container);
+            }
             parseResult = container;
         }
 

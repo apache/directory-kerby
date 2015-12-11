@@ -57,8 +57,8 @@ public class AttributeCertificateV1 extends Asn1SequenceType {
             new Asn1FieldInfo(SIGNATURE, Asn1BitString.class)
     };
 
-    public AttributeCertificateV1(Asn1FieldInfo[] tags) {
-        super(tags);
+    public AttributeCertificateV1() {
+        super(fieldInfos);
     }
 
     public AttributeCertificateInfo getAcinfo() {

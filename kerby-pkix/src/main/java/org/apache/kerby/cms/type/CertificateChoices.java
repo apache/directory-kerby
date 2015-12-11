@@ -65,42 +65,42 @@ public class CertificateChoices extends Asn1Choice {
     }
 
     public Certificate getCertificate() {
-        return getFieldAs(CERTIFICATE, Certificate.class);
+        return getChoiceValueAs(CERTIFICATE, Certificate.class);
     }
 
     public void setCertificate(Certificate certificate) {
-        setFieldAs(CERTIFICATE, certificate);
+        setChoiceValue(CERTIFICATE, certificate);
     }
 
     public ExtendedCertificate getExtendedCertificate() {
-        return getFieldAs(EXTENDED_CERTIFICATE, ExtendedCertificate.class);
+        return getChoiceValueAs(EXTENDED_CERTIFICATE, ExtendedCertificate.class);
     }
 
     public void setExtendedCertificate(ExtendedCertificate extendedCertificate) {
-        setFieldAs(EXTENDED_CERTIFICATE, extendedCertificate);
+        setChoiceValue(EXTENDED_CERTIFICATE, extendedCertificate);
     }
 
     public AttributeCertificateV1 getV1AttrCert() {
-        return getFieldAs(V1_ATTR_CERT, AttributeCertificateV1.class);
+        return getChoiceValueAs(V1_ATTR_CERT, AttributeCertificateV1.class);
     }
 
     public void setV1AttrCert(AttributeCertificateV1 v1AttrCert) {
-        setFieldAs(V1_ATTR_CERT, v1AttrCert);
+        setChoiceValue(V1_ATTR_CERT, v1AttrCert);
     }
 
     public AttributeCertificateV2 getV2AttrCert() {
-        return getFieldAs(V2_ATTR_CERT, AttributeCertificateV2.class);
+        return getChoiceValueAs(V2_ATTR_CERT, AttributeCertificateV2.class);
     }
 
     public void setV2AttrCert(AttributeCertificateV2 v2AttrCert) {
-        setFieldAs(V2_ATTR_CERT, v2AttrCert);
+        setChoiceValue(V2_ATTR_CERT, v2AttrCert);
     }
 
     public OtherCertificateFormat getOther() {
-        return getFieldAs(OTHER, OtherCertificateFormat.class);
+        return getChoiceValueAs(OTHER, OtherCertificateFormat.class);
     }
 
     public void setOther(OtherCertificateFormat other) {
-        setFieldAs(OTHER, other);
+        setChoiceValue(OTHER, other);
     }
 }

@@ -59,18 +59,18 @@ public class PaPkAsRep extends Asn1Choice {
     }
 
     public DHRepInfo getDHRepInfo() {
-        return getFieldAs(DH_INFO, DHRepInfo.class);
+        return getChoiceValueAs(DH_INFO, DHRepInfo.class);
     }
 
     public void setDHRepInfo(DHRepInfo dhRepInfo) {
-        setFieldAs(DH_INFO, dhRepInfo);
+        setChoiceValue(DH_INFO, dhRepInfo);
     }
 
     public byte[] getEncKeyPack() {
-        return getFieldAsOctets(ENCKEY_PACK);
+        return getChoiceValueAsOctets(ENCKEY_PACK);
     }
 
     public void setEncKeyPack(byte[] encKeyPack) {
-        setFieldAsOctets(ENCKEY_PACK, encKeyPack);
+        setChoiceValueAsOctets(ENCKEY_PACK, encKeyPack);
     }
 }
