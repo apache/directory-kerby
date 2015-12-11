@@ -19,11 +19,13 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
-import static org.apache.kerby.x509.type.AttCertIssuer.MyEnum.*;
+import org.apache.kerby.asn1.type.Asn1Choice;
+
+import static org.apache.kerby.x509.type.AttCertIssuer.MyEnum.V1_FORM;
+import static org.apache.kerby.x509.type.AttCertIssuer.MyEnum.V2_FORM;
 
 /**
  *
@@ -60,18 +62,18 @@ public class AttCertIssuer extends Asn1Choice {
     }
 
     public GeneralNames getV1Form() {
-        return getFieldAs(V1_FORM, GeneralNames.class);
+        return getChoiceValueAs(V1_FORM, GeneralNames.class);
     }
 
     public void setV1Form(GeneralNames v1Form) {
-        setFieldAs(V1_FORM, v1Form);
+        setChoiceValue(V1_FORM, v1Form);
     }
 
     public V2Form getV2Form() {
-        return getFieldAs(V2_FORM, V2Form.class);
+        return getChoiceValueAs(V2_FORM, V2Form.class);
     }
 
     public void setV2Form(V2Form v2Form) {
-        setFieldAs(V2_FORM, v2Form);
+        setChoiceValue(V2_FORM, v2Form);
     }
 }

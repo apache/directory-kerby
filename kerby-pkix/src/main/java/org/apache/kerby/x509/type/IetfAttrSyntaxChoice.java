@@ -67,26 +67,26 @@ public class IetfAttrSyntaxChoice extends Asn1Choice {
     }
 
     public Asn1OctetString getOctets() {
-        return getFieldAs(OCTETS, Asn1OctetString.class);
+        return getChoiceValueAs(OCTETS, Asn1OctetString.class);
     }
 
     public void setOctets(Asn1OctetString octets) {
-        setFieldAs(OCTETS, octets);
+        setChoiceValue(OCTETS, octets);
     }
 
     public Asn1ObjectIdentifier getOid() {
-        return getFieldAs(OID, Asn1ObjectIdentifier.class);
+        return getChoiceValueAs(OID, Asn1ObjectIdentifier.class);
     }
 
     public void setOid(Asn1ObjectIdentifier oid) {
-        setFieldAs(OID, oid);
+        setChoiceValue(OID, oid);
     }
 
     public Asn1ObjectIdentifier getUtf8() {
-        return getFieldAs(UTF8, Asn1ObjectIdentifier.class);
+        return getChoiceValueAs(UTF8, Asn1ObjectIdentifier.class);
     }
 
     public void setUtf8(Asn1ObjectIdentifier utf8) {
-        setFieldAs(UTF8, utf8);
+        setChoiceValue(UTF8, utf8);
     }
 }

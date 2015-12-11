@@ -88,74 +88,74 @@ public class GeneralName extends Asn1Choice {
     }
 
     public OtherName getOtherName() {
-        return getFieldAs(OTHER_NAME, OtherName.class);
+        return getChoiceValueAs(OTHER_NAME, OtherName.class);
     }
 
     public void setOtherName(OtherName otherName) {
-        setFieldAs(OTHER_NAME, otherName);
+        setChoiceValue(OTHER_NAME, otherName);
     }
 
     public Asn1IA5String getRfc822Name() {
-        return getFieldAs(RFC822_NAME, Asn1IA5String.class);
+        return getChoiceValueAs(RFC822_NAME, Asn1IA5String.class);
     }
 
     public void setRfc822Name(Asn1IA5String rfc822Name) {
-        setFieldAs(RFC822_NAME, rfc822Name);
+        setChoiceValue(RFC822_NAME, rfc822Name);
     }
 
     public Asn1IA5String getDNSName() {
-        return getFieldAs(DNS_NAME, Asn1IA5String.class);
+        return getChoiceValueAs(DNS_NAME, Asn1IA5String.class);
     }
 
     public void setDNSName(Asn1IA5String dnsName) {
-        setFieldAs(DNS_NAME, dnsName);
+        setChoiceValue(DNS_NAME, dnsName);
     }
 
     public Asn1Any getX400Address() {
-        return getFieldAs(X400_ADDRESS, Asn1Any.class);
+        return getChoiceValueAs(X400_ADDRESS, Asn1Any.class);
     }
 
     public void setX400Address(Asn1Any x400Address) {
-        setFieldAs(X400_ADDRESS, x400Address);
+        setChoiceValue(X400_ADDRESS, x400Address);
     }
 
     public Name getDirectoryName() {
-        return getFieldAs(DIRECTORY_NAME, Name.class);
+        return getChoiceValueAs(DIRECTORY_NAME, Name.class);
     }
 
     public void setDirectoryName(Name directoryName) {
-        setFieldAs(DIRECTORY_NAME, directoryName);
+        setChoiceValue(DIRECTORY_NAME, directoryName);
     }
 
     public EDIPartyName getEdiPartyName() {
-        return getFieldAs(EDI_PARTY_NAME, EDIPartyName.class);
+        return getChoiceValueAs(EDI_PARTY_NAME, EDIPartyName.class);
     }
 
     public void setEdiPartyName(EDIPartyName ediPartyName) {
-        setFieldAs(EDI_PARTY_NAME, ediPartyName);
+        setChoiceValue(EDI_PARTY_NAME, ediPartyName);
     }
 
     public Asn1IA5String getUniformResourceIdentifier() {
-        return getFieldAs(UNIFORM_RESOURCE_IDENTIFIER, Asn1IA5String.class);
+        return getChoiceValueAs(UNIFORM_RESOURCE_IDENTIFIER, Asn1IA5String.class);
     }
 
     public void setUniformResourceIdentifier(Asn1IA5String uniformResourceIdentifier) {
-        setFieldAs(UNIFORM_RESOURCE_IDENTIFIER, uniformResourceIdentifier);
+        setChoiceValue(UNIFORM_RESOURCE_IDENTIFIER, uniformResourceIdentifier);
     }
 
     public Asn1OctetString getIPAddress() {
-        return getFieldAs(IP_ADDRESS, Asn1OctetString.class);
+        return getChoiceValueAs(IP_ADDRESS, Asn1OctetString.class);
     }
 
     public void setIpAddress(Asn1OctetString ipAddress) {
-        setFieldAs(IP_ADDRESS, ipAddress);
+        setChoiceValue(IP_ADDRESS, ipAddress);
     }
 
     public Asn1ObjectIdentifier getRegisteredID() {
-        return getFieldAs(REGISTERED_ID, Asn1ObjectIdentifier.class);
+        return getChoiceValueAs(REGISTERED_ID, Asn1ObjectIdentifier.class);
     }
 
     public void setRegisteredID(Asn1ObjectIdentifier registeredID) {
-        setFieldAs(REGISTERED_ID, registeredID);
+        setChoiceValue(REGISTERED_ID, registeredID);
     }
 }

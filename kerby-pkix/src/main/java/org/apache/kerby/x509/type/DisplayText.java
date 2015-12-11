@@ -68,34 +68,34 @@ public class DisplayText extends Asn1Choice {
    }
 
    public Asn1IA5String getIA5String() {
-      return getFieldAs(IA5_STRING, Asn1IA5String.class);
+      return getChoiceValueAs(IA5_STRING, Asn1IA5String.class);
    }
 
    public void setIA5String(Asn1IA5String ia5String) {
-      setFieldAs(IA5_STRING, ia5String);
+      setChoiceValue(IA5_STRING, ia5String);
    }
 
    public Asn1VisibleString getVisibleString() {
-      return getFieldAs(VISIBLE_STRING, Asn1VisibleString.class);
+      return getChoiceValueAs(VISIBLE_STRING, Asn1VisibleString.class);
    }
 
    public void setVisibleString(Asn1VisibleString visibleString) {
-      setFieldAs(VISIBLE_STRING, visibleString);
+      setChoiceValue(VISIBLE_STRING, visibleString);
    }
 
    public Asn1BmpString getBmpString() {
-      return getFieldAs(BMP_STRING, Asn1BmpString.class);
+      return getChoiceValueAs(BMP_STRING, Asn1BmpString.class);
    }
 
    public void setBmpString(Asn1BmpString bmpString) {
-      setFieldAs(BMP_STRING, bmpString);
+      setChoiceValue(BMP_STRING, bmpString);
    }
 
    public Asn1Utf8String getUtf8String() {
-      return getFieldAs(UTF8_STRING, Asn1Utf8String.class);
+      return getChoiceValueAs(UTF8_STRING, Asn1Utf8String.class);
    }
 
    public void setUtf8String(Asn1Utf8String utf8String) {
-      setFieldAs(UTF8_STRING, utf8String);
+      setChoiceValue(UTF8_STRING, utf8String);
    }
 }

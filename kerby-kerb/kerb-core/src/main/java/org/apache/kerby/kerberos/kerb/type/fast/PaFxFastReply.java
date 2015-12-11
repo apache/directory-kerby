@@ -54,10 +54,10 @@ public class PaFxFastReply extends Asn1Choice {
     }
 
     public KrbFastArmoredRep getFastArmoredRep() {
-        return getFieldAs(ARMORED_DATA, KrbFastArmoredRep.class);
+        return getChoiceValueAs(ARMORED_DATA, KrbFastArmoredRep.class);
     }
 
     public void setFastArmoredRep(KrbFastArmoredRep fastArmoredRep) {
-        setFieldAs(ARMORED_DATA, fastArmoredRep);
+        setChoiceValue(ARMORED_DATA, fastArmoredRep);
     }
 }

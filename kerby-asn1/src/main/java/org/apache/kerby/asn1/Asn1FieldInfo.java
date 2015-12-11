@@ -91,7 +91,17 @@ public class Asn1FieldInfo {
         return isImplicit;
     }
 
-    public Class<? extends Asn1Type> getType() {
-        return type;
+    public Asn1Type createFieldValue() {
+        try {
+            return type.newInstance();
+        } catch (Exception e) {
+            throw new IllegalArgumentException(
+                "Bad field type provided, no default constructor?", e);
+        }
+    }
+
+    public Tag getFieldTag() {
+        Asn1Type fieldValue = createFieldValue();
+        return fieldValue.tag();
     }
 }

@@ -44,10 +44,6 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
         setValue(anyValue);
     }
 
-    public void setField(Asn1ParseResult field) {
-        this.field = field;
-    }
-
     public void setFieldInfo(Asn1FieldInfo fieldInfo) {
         this.fieldInfo = fieldInfo;
     }
@@ -78,18 +74,23 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     }
 
     @Override
-    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
-        ((Asn1Encodeable) getValue()).decodeBody(parseResult);
-    }
-
-    @Override
     protected void encodeBody(ByteBuffer buffer) {
         if (getValue() != null) {
             ((Asn1Encodeable) getValue()).encodeBody(buffer);
         } else if (field != null) {
             buffer.put(field.getBodyBuffer());
         }
+    }
 
+    @Override
+    public void decode(Asn1ParseResult parseResult) throws IOException {
+        // Avoid the tag checking here.
+        decodeBody(parseResult);
+    }
+
+    @Override
+    protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
+        this.field = parseResult;
     }
 
     protected <T extends Asn1Type> T getValueAs(Class<T> t) {

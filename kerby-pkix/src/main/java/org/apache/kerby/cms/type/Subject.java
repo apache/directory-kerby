@@ -62,18 +62,18 @@ public class Subject extends Asn1Choice {
     }
 
     public IssuerSerial getBaseCertificateID() {
-        return getFieldAs(BASE_CERTIFICATE_ID, IssuerSerial.class);
+        return getChoiceValueAs(BASE_CERTIFICATE_ID, IssuerSerial.class);
     }
 
     public void setBaseCertificateID(IssuerSerial baseCertificateID) {
-        setFieldAs(BASE_CERTIFICATE_ID, baseCertificateID);
+        setChoiceValue(BASE_CERTIFICATE_ID, baseCertificateID);
     }
 
     public GeneralNames getSubjectName() {
-        return getFieldAs(SUBJECT_NAME, GeneralNames.class);
+        return getChoiceValueAs(SUBJECT_NAME, GeneralNames.class);
     }
 
     public void setSubjectName(GeneralNames subjectName) {
-        setFieldAs(SUBJECT_NAME, subjectName);
+        setChoiceValue(SUBJECT_NAME, subjectName);
     }
 }

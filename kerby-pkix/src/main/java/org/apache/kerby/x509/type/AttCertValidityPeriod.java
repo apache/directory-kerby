@@ -23,6 +23,8 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+import org.apache.kerby.asn1.type.Asn1UtcTime;
+
 import static org.apache.kerby.x509.type.AttCertValidityPeriod.MyEnum.*;
 
 /**
@@ -50,8 +52,8 @@ public class AttCertValidityPeriod extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(NOT_BEFORE, Asn1GeneralizedTime.class),
-        new Asn1FieldInfo(NOT_AFTER, Asn1GeneralizedTime.class)
+        new Asn1FieldInfo(NOT_BEFORE, Asn1UtcTime.class),
+        new Asn1FieldInfo(NOT_AFTER, Asn1UtcTime.class)
     };
 
     public AttCertValidityPeriod() {

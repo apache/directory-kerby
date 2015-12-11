@@ -21,8 +21,8 @@ public final class Asn1Binder {
         ((Asn1Encodeable) value).decode(parseResult);
     }
 
-    public static void bindWithTagging(Asn1ParseResult parseResult,
-                                       Asn1Type value, TaggingOption taggingOption) throws IOException {
+    public static void bindWithTagging(Asn1ParseResult parseResult, Asn1Type value,
+                                       TaggingOption taggingOption) throws IOException {
         if (!parseResult.isTagSpecific()) {
             throw new IllegalArgumentException(
                 "Attempting to decode non-tagged value using tagging way");
