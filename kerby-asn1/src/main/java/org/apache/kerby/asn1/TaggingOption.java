@@ -76,9 +76,9 @@ public final class TaggingOption {
     }
 
     /**
-     * Make tag flags giving it's tagged constructed.
-     * @param isTaggedConstructed Tagged Constructed or not
-     * @return tag flag
+     * Make tag giving it's tagged constructed.
+     * @param isTaggedConstructed Tagged constructed or not
+     * @return tag
      */
     public Tag getTag(boolean isTaggedConstructed) {
         boolean isConstructed = isImplicit ? isTaggedConstructed : true;
