@@ -19,27 +19,24 @@
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.cms.type.Certificate;
+import org.apache.kerby.cms.type.CertificateSet;
+import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.DigestAlgorithmIdentifiers;
 import org.apache.kerby.cms.type.EncapsulatedContentInfo;
-import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.cms.type.RevocationInfoChoices;
+import org.apache.kerby.cms.type.SignedData;
+import org.apache.kerby.cms.type.SignerInfos;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.x509.type.DHParameter;
-import org.apache.kerby.x509.type.GeneralNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.security.pkcs.ContentInfo;
-import sun.security.pkcs.PKCS7;
-import sun.security.pkcs.ParsingException;
-import sun.security.pkcs.SignerInfo;
-import sun.security.util.DerValue;
-import sun.security.util.ObjectIdentifier;
-import sun.security.x509.AlgorithmId;
 
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.DHPublicKeySpec;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
@@ -48,22 +45,14 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.cert.CertPath;
-import java.security.cert.CertPathValidator;
 import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.CertificateParsingException;
-import java.security.cert.PKIXParameters;
-import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PkinitCrypto {
@@ -88,49 +77,32 @@ public class PkinitCrypto {
         return keyPairGenerator.generateKeyPair();
     }
 
-    public static PKCS7 verifyCMSSignedData(CMSMessageType cmsMsgType,
-                                            byte[] signedData)
-            throws IOException, KrbException {
-
-        ObjectIdentifier oid = pkinitPKCS7Type2OID(cmsMsgType);
+    public static void verifyCMSSignedData(CMSMessageType cmsMsgType, SignedData signedData)
+            throws KrbException {
+        Asn1ObjectIdentifier oid = pkinitType2OID(cmsMsgType);
         if (oid == null) {
             throw new KrbException("Can't get the right oid ");
         }
 
-        /* decode received CMS message */
-        PKCS7 pkcs7 = null;
-        try {
-            pkcs7 = new PKCS7(signedData);
-        } catch (ParsingException e) {
-            e.printStackTrace();
-        }
-        if (pkcs7 == null) {
-            LOG.error("failed to decode message");
-            throw new KrbException("failed to decode message");
-        }
-
-        ObjectIdentifier etype = pkcs7.getContentInfo().getContentType();
-
-        if (oid.equals(etype)) {
+        Asn1ObjectIdentifier etype = signedData.getEncapContentInfo().getContentType();
+        if (oid.getValue().equals(etype.getValue())) {
             LOG.info("CMS Verification successful");
         } else {
             LOG.error("Wrong oid in eContentType");
             throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED, "Wrong oid in eContentType");
         }
-
-        return pkcs7;
     }
 
-    public static boolean isSigned(PKCS7 pkcs7) {
+    public static boolean isSigned(SignedData signedData) {
         /* Not actually signed; anonymous case */
-        if (pkcs7.getSignerInfos().length == 0) {
+        if (signedData.getSignerInfos().getElements().size() == 0) {
             return false;
         } else {
             return true;
         }
     }
 
-    public static ObjectIdentifier pkinitPKCS7Type2OID(CMSMessageType cmsMsgType) throws IOException {
+    public static Asn1ObjectIdentifier pkinitType2OID(CMSMessageType cmsMsgType) {
         switch (cmsMsgType) {
             case UNKNOWN:
                 return null;
@@ -182,7 +154,6 @@ public class PkinitCrypto {
      * @param dh1 The DHParameterSpec
      * @param dh2 The DHParameter
      */
-
     public static boolean pkinitCheckDhParams(DHParameterSpec dh1, DHParameter dh2) {
 
         if (!dh1.getP().equals(dh2.getP())) {
@@ -215,27 +186,7 @@ public class PkinitCrypto {
         return dhPublicKey;
     }
 
-    public static ByteArrayOutputStream cmsSignedDataCreate(PkinitPlgCryptoContext cryptoContext, byte[] data, ObjectIdentifier oid,
-                                                            X509Certificate[] certificates) throws IOException {
-
-        ContentInfo contentInfo = createContentInfo(data, oid);
-
-        try {
-            createCertChain(cryptoContext);
-        } catch (CertificateNotYetValidException e) {
-            e.printStackTrace();
-        } catch (CertificateExpiredException e) {
-            e.printStackTrace();
-        }
-
-        PKCS7 p7 = new PKCS7(new AlgorithmId[0], contentInfo, certificates, new SignerInfo[0]);
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        p7.encodeSignedData(bytes);
-        return bytes;
-    }
-
     /*
-     *
      *   -- The contentType field of the type ContentInfo
      *   -- is id-signedData (1.2.840.113549.1.7.2),
      *   -- and the content field is a SignedData.
@@ -244,54 +195,46 @@ public class PkinitCrypto {
      *   -- eContent field contains the DER encoding of the
      *   -- type AuthPack.
      */
-    public static byte[] cmsSignedDataCreate(byte[] data) {
-//        org.apache.kerby.cms.type.ContentInfo contentInfo = new org.apache.kerby.cms.type.ContentInfo();
-//        contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
-//        SignedData signedData = new SignedData();
-//        signedData.setEncapContentInfo(eContentInfo);
-//        contentInfo.setContent(signedData);
+    public static byte[] cmsSignedDataCreate(byte[] data, Asn1ObjectIdentifier oid, int version,
+                                             DigestAlgorithmIdentifiers digestAlgorithmIdentifiers,
+                                             CertificateSet certificateSet,
+                                             RevocationInfoChoices crls, SignerInfos signerInfos) {
+        ContentInfo contentInfo = new ContentInfo();
+        contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
+        SignedData signedData = new SignedData();
+        signedData.setVersion(version);
+        if(digestAlgorithmIdentifiers != null) {
+            signedData.setDigestAlgorithms(digestAlgorithmIdentifiers);
+        }
         EncapsulatedContentInfo eContentInfo = new EncapsulatedContentInfo();
-        eContentInfo.setContentType(new Asn1ObjectIdentifier("1.3.6.1.5.2.3.1"));
+        eContentInfo.setContentType(oid);
         eContentInfo.setContent(data);
-        return eContentInfo.encode();
+        signedData.setEncapContentInfo(eContentInfo);
+        if(certificateSet != null) {
+            signedData.setCertificates(certificateSet);
+        }
+        if(crls != null) {
+            signedData.setCrls(crls);
+        }
+        if(signerInfos != null) {
+            signedData.setSignerInfos(signerInfos);
+        }
+        contentInfo.setContent(signedData);
+        return contentInfo.encode();
     }
 
     public static X509Certificate[] createCertChain(PkinitPlgCryptoContext cryptoContext)
             throws CertificateNotYetValidException, CertificateExpiredException {
         LOG.info("Building certificate chain.");
 
-        X509Certificate[] clientChain;
-
-//        X509Certificate trustAnchorCert = cryptoContext.anchorCert;
-//        trustAnchorCert.checkValidity();
-//        trustAnchorCert.verify(trustAnchorPublicKey);
-//
-//        X509Certificate clientCaCert = cryptoContext.userCerts;
-//        clientCaCert.checkValidity();
-//        clientCaCert.verify(trustAnchorPublicKey);
-//
-//        X509Certificate clientCert = cryptoContext.anchorCert;
-//        clientCert.checkValidity();
-//        clientCert.verify(clientCaPublicKey);
-
-        // Build client chain.
-        clientChain = new X509Certificate[3];
-//        clientChain[2] = trustAnchorCert;
-//        clientChain[1] = clientCaCert;
-//        clientChain[0] = clientCert;
+        // TODO Build client chain.
+        X509Certificate[] clientChain = new X509Certificate[3];
 
         return clientChain;
     }
 
-    public static ContentInfo createContentInfo(byte[] data, ObjectIdentifier oid) {
-
-        ContentInfo contentInfo = new ContentInfo(
-                oid,
-                new DerValue(DerValue.tag_OctetString, data));
-        return contentInfo;
-    }
-
-    public static boolean verifyKdcSan(String hostname, PrincipalName kdcPrincipal, X509Certificate[] cert) throws KrbException {
+    public static boolean verifyKdcSan(String hostname, PrincipalName kdcPrincipal,
+                                       List<Certificate> certificates) throws KrbException {
 
         if (hostname == null) {
             LOG.info("No pkinit_kdc_hostname values found in config file");
@@ -300,7 +243,7 @@ public class PkinitCrypto {
         }
 
         try {
-            List<PrincipalName> princs = cryptoRetrieveCertSans(cert[0]);
+            List<PrincipalName> princs = cryptoRetrieveCertSans(certificates);
             if(princs != null) {
                 for (PrincipalName princ : princs) {
                     LOG.info("PKINIT client found id-pkinit-san in KDC cert: " + princ.getName());
@@ -324,65 +267,51 @@ public class PkinitCrypto {
         }
     }
 
-    public static List<PrincipalName> cryptoRetrieveCertSans(X509Certificate cert) throws KrbException {
-        if (cert == null) {
+    public static List<PrincipalName> cryptoRetrieveCertSans(List<Certificate> certificates)
+            throws KrbException {
+        if (certificates.size() == 0) {
             LOG.info("no certificate!");
             return null;
         }
-        return cryptoRetrieveX509Sans(cert);
+        return cryptoRetrieveX509Sans(certificates);
     }
 
-    public static List<PrincipalName> cryptoRetrieveX509Sans(X509Certificate cert) throws KrbException {
+    public static List<PrincipalName> cryptoRetrieveX509Sans(List<Certificate> certificates)
+            throws KrbException {
 
-        LOG.info("Looking for SANs in cert: " + cert.getSubjectDN());
+        List<PrincipalName> principalNames = new ArrayList<>();
+        for(Certificate cert : certificates) {
+            LOG.info("Looking for SANs in cert: " + cert.getTBSCertificate().getSubject());
+            //TODO
 
-        Collection c = null;
-        try {
-            c = cert.getSubjectAlternativeNames();
-        } catch (CertificateParsingException cpe) {
-            cpe.printStackTrace();
         }
-
-//        if (c != null) {
-//            Iterator it = c.iterator();
-//            while (it.hasNext()) {
-//                List extensionEntry = (List) it.next();
-//                int type = ((Integer) extensionEntry.get(0)).intValue();
-//
-//                Object name = extensionEntry.get(1);
-//                byte[] nameAsBytes = (byte[]) name;
-//                GeneralNames generalNames = null;
-//                generalNames = KrbCodec.decode(nameAsBytes, GeneralNames.class);
-//                OtherName otherName = generalNames.getElements().get(1).getOtherName();
-//            }
-//        }
-        return null;
+        return principalNames;
     }
 
     /**
      * Validates a chain of {@link X509Certificate}s.
      *
-     * @param chain
      * @throws CertificateException
      * @throws NoSuchAlgorithmException
      * @throws InvalidAlgorithmParameterException
      * @throws CertPathValidatorException
      */
-    public static void validateChain(X509Certificate[] chain, X509Certificate anchor)
+    public static void validateChain(List<Certificate> certificateList, Certificate anchor)
             throws CertificateException, NoSuchAlgorithmException, NoSuchProviderException,
             InvalidAlgorithmParameterException, CertPathValidatorException {
-        List<X509Certificate> certificateList = Arrays.asList(chain);
-        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-        CertPath certPath = certificateFactory.generateCertPath(certificateList);
 
-        CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
-
-        TrustAnchor trustAnchor = new TrustAnchor(anchor, null);
-
-        PKIXParameters parameters = new PKIXParameters(Collections.singleton(trustAnchor));
-        parameters.setRevocationEnabled(false);
-
-        cpv.validate(certPath, parameters);
+        //TODO
+//        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+//        CertPath certPath = certificateFactory.generateCertPath(certificateList);
+//
+//        CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
+//
+//        TrustAnchor trustAnchor = new TrustAnchor(anchor, null);
+//
+//        PKIXParameters parameters = new PKIXParameters(Collections.singleton(trustAnchor));
+//        parameters.setRevocationEnabled(false);
+//
+//        cpv.validate(certPath, parameters);
     }
 
     public static Asn1ObjectIdentifier createOid(String content) {
@@ -394,5 +323,18 @@ public class PkinitCrypto {
             e.printStackTrace();
         }
         return oid;
+    }
+
+    public static Certificate changeCertificate(X509Certificate x509Certificate) {
+
+        Certificate certificate = new Certificate();
+        try {
+            certificate.decode(x509Certificate.getEncoded());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CertificateEncodingException e) {
+            e.printStackTrace();
+        }
+        return certificate;
     }
 }

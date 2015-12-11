@@ -21,6 +21,11 @@ package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.cms.type.Certificate;
+import org.apache.kerby.cms.type.CertificateChoices;
+import org.apache.kerby.cms.type.CertificateSet;
+import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -46,18 +51,13 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.security.pkcs.ContentInfo;
-import sun.security.pkcs.PKCS7;
 
 import javax.crypto.interfaces.DHPublicKey;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.cert.CertPathValidatorException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AsRequestWithCert extends AsRequest {
 
@@ -110,65 +110,66 @@ public class AsRequestWithCert extends AsRequest {
             if (paEntry.getPaDataType() == PaDataType.PK_AS_REP) {
                 LOG.info("processing PK_AS_REP");
 
-//                PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
-//
-//                DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
+                PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
 
-                DHRepInfo dhRepInfo = KrbCodec.decode(paEntry.getPaDataValue(), DHRepInfo.class);;
+                DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
 
                 DHNonce nonce = dhRepInfo.getServerDhNonce();
                 byte[] dhSignedData = dhRepInfo.getDHSignedData();
-                PKCS7 pkcs7 = null;
+
+                ContentInfo contentInfo = new ContentInfo();
                 try {
-                    pkcs7 = PkinitCrypto.verifyCMSSignedData(
-                            CMSMessageType.CMS_SIGN_SERVER, dhSignedData);
+                    contentInfo.decode(dhSignedData);
                 } catch (IOException e) {
-                    LOG.error("failed to verify pkcs7 signed data\n");
+                    e.printStackTrace();
                 }
+
+                SignedData signedData = contentInfo.getContentAs(SignedData.class);
+
+                PkinitCrypto.verifyCMSSignedData(
+                            CMSMessageType.CMS_SIGN_SERVER, signedData);
 
                 String anchorFileName = getPreauthOptions().getStringOption(KrbOption.PKINIT_X509_ANCHORS);
 
-                X509Certificate certificate = null;
+                X509Certificate x509Certificate = null;
                 try {
-                    certificate = (X509Certificate) CertificateHelper.loadCerts(
+                    x509Certificate = (X509Certificate) CertificateHelper.loadCerts(
                             anchorFileName).iterator().next();
                 } catch (KrbException e) {
                     e.printStackTrace();
                 }
+                Certificate archorCertificate = PkinitCrypto.changeCertificate(x509Certificate);
 
+                CertificateSet certificateSet = signedData.getCertificates();
+                List<CertificateChoices> certificateChoicesList = certificateSet.getElements();
+                List<Certificate> certificates = new ArrayList<>();
+                for(CertificateChoices certificateChoices : certificateChoicesList) {
+                    certificates.add(certificateChoices.getCertificate());
+                }
                 try {
-                    PkinitCrypto.validateChain(pkcs7.getCertificates(), certificate);
-                } catch (CertificateException e) {
-                    e.printStackTrace();
-                } catch (InvalidAlgorithmParameterException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (NoSuchProviderException e) {
-                    e.printStackTrace();
-                } catch (CertPathValidatorException e) {
+                    PkinitCrypto.validateChain(certificates, archorCertificate);
+                } catch (Exception e) {
                     throw new KrbException(KrbErrorCode.KDC_ERR_INVALID_CERTIFICATE, e);
                 }
 
                 PrincipalName kdcPrincipal = KrbUtil.makeTgsPrincipal(
                         getContext().getConfig().getKdcRealm());
+                //TODO USE CertificateSet
                 boolean validSan= PkinitCrypto.verifyKdcSan(
                         getContext().getConfig().getPkinitKdcHostName(), kdcPrincipal,
-                        pkcs7.getCertificates());
+                        certificates);
                 if (!validSan) {
                     LOG.error("Did not find an acceptable SAN in KDC certificate");
                 }
 
                 LOG.info("skipping EKU check");
 
-                ContentInfo contentInfo = pkcs7.getContentInfo();
-
                 LOG.info("as_rep: DH key transport algorithm");
-                KdcDHKeyInfo kdcDHKeyInfo;
+                KdcDHKeyInfo kdcDHKeyInfo = new KdcDHKeyInfo();
                 try {
-                    kdcDHKeyInfo = KrbCodec.decode(contentInfo.getContentBytes(), KdcDHKeyInfo.class);
+                    kdcDHKeyInfo.decode(signedData.getEncapContentInfo().getContent());
                 } catch (IOException e) {
-                    String errMessage = "failed to decode AuthPack " + e.getMessage();
+                    String errMessage = "failed to decode KdcDHKeyInfo " + e.getMessage();
                     LOG.error(errMessage);
                     throw new KrbException(errMessage);
                 }

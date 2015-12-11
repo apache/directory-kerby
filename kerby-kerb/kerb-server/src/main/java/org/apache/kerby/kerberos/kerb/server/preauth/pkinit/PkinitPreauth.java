@@ -18,15 +18,18 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth.pkinit;
 
-import org.apache.kerby.asn1.Asn1;
-import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.cms.type.Certificate;
+import org.apache.kerby.cms.type.CertificateChoices;
+import org.apache.kerby.cms.type.CertificateSet;
+import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
-import org.apache.kerby.kerberos.kerb.crypto.CheckSumHandler;
 import org.apache.kerby.kerberos.kerb.crypto.dh.DhServer;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CMSMessageType;
@@ -41,7 +44,6 @@ import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
@@ -56,11 +58,8 @@ import org.apache.kerby.x509.type.DHParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.security.pkcs.ContentInfo;
-import sun.security.pkcs.PKCS7;
 
 import javax.crypto.interfaces.DHPublicKey;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -129,15 +128,19 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             PaPkAsReq paPkAsReq = KrbCodec.decode(paData.getPaDataValue(), PaPkAsReq.class);
 
             byte[] signedAuthPack = paPkAsReq.getSignedAuthPack();
-            PKCS7 pkcs7 = null;
+
+            ContentInfo contentInfo = new ContentInfo();
             try {
-                pkcs7 = PkinitCrypto.verifyCMSSignedData(
-                        CMSMessageType.CMS_SIGN_CLIENT, signedAuthPack);
+                contentInfo.decode(signedAuthPack);
             } catch (IOException e) {
-                e.getMessage();
+                e.printStackTrace();
             }
 
-            Boolean isSigned = PkinitCrypto.isSigned(pkcs7);
+            SignedData signedData = contentInfo.getContentAs(SignedData.class);
+
+            PkinitCrypto.verifyCMSSignedData(CMSMessageType.CMS_SIGN_CLIENT, signedData);
+
+            Boolean isSigned = PkinitCrypto.isSigned(signedData);
             if (isSigned) {
                 //TODO
                 LOG.info("Signed data.");
@@ -154,13 +157,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 }
             }
 
-            ContentInfo contentInfo = pkcs7.getContentInfo();
-            AuthPack authPack = null;
-            try {
-                authPack = KrbCodec.decode(contentInfo.getContentBytes(), AuthPack.class);
-            } catch (IOException e) {
-                LOG.error("failed to decode AuthPack " + e.getMessage());
-            }
+            AuthPack authPack = KrbCodec.decode(
+                    signedData.getEncapContentInfo().getContent(), AuthPack.class);
 
             PkAuthenticator pkAuthenticator = authPack.getPkAuthenticator();
 
@@ -189,7 +187,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             SubjectPublicKeyInfo publicKeyInfo = authPack.getClientPublicValue();
 
             if (publicKeyInfo.getSubjectPubKey() != null) {
-                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParameters();
+                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParametersAs(DHParameter.class);
                 PkinitCrypto.serverCheckDH(pkinitContext.pluginOpts, pkinitContext.cryptoctx, dhParameter);
 
                 byte[] clientSubjectPubKey = publicKeyInfo.getSubjectPubKey().getValue();
@@ -253,7 +251,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         PaDataEntry paDataEntry = new PaDataEntry();
         paDataEntry.setPaDataType(PaDataType.PK_AS_REP);
         //TODO CHOICE
-        paDataEntry.setPaDataValue(paPkAsRep.getDHRepInfo().encode());
+        paDataEntry.setPaDataValue(paPkAsRep.encode());
         return paDataEntry;
     }
 
@@ -265,7 +263,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         List<X509Certificate> certificates = new ArrayList<>();
         for (String identity : identityList) {
             File file = new File(identity);
-
             try {
                 Scanner scanner = new Scanner(file);
                 String found = scanner.findInLine("CERTIFICATE");
@@ -300,20 +297,23 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         kdcDhKeyInfo.setDHKeyExpiration(
                 new KerberosTime(System.currentTimeMillis() + KerberosTime.DAY));
 
+        byte[] signedDataBytes = null;
 
-        ByteArrayOutputStream signedData = null;
-        try {
-            signedData = PkinitCrypto.cmsSignedDataCreate(cryptoContext, kdcDhKeyInfo.encode(),
-                    cryptoContext.getIdPkinitDHKeyDataOID(),
-                    certificates.toArray(new X509Certificate[certificates.size()]));
-        } catch (IOException e) {
-            e.printStackTrace();
+        CertificateSet certificateSet = new CertificateSet();
+        for(X509Certificate x509Certificate : certificates) {
+            Certificate certificate = PkinitCrypto.changeCertificate(x509Certificate);
+            CertificateChoices certificateChoices = new CertificateChoices();
+            certificateChoices.setCertificate(certificate);
+            certificateSet.addElement(certificateChoices);
         }
 
-        dhRepInfo.setDHSignedData(signedData.toByteArray());
+        Asn1ObjectIdentifier oid = cryptoContext.getIdPkinitDHKeyDataOID();
+        signedDataBytes = PkinitCrypto.cmsSignedDataCreate(kdcDhKeyInfo.encode(), oid, 3, null,
+                certificateSet, null, null);
+
+        dhRepInfo.setDHSignedData(signedDataBytes);
 
         paPkAsRep.setDHRepInfo(dhRepInfo);
-//        paPkAsRep.setEncKeyPack("enckey".getBytes());
 
         return paPkAsRep;
     }

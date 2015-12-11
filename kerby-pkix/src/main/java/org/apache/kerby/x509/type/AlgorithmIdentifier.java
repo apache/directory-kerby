@@ -21,11 +21,13 @@ package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.x509.type.AlgorithmIdentifier.MyEnum.*;
+import static org.apache.kerby.x509.type.AlgorithmIdentifier.MyEnum.ALGORITHM;
+import static org.apache.kerby.x509.type.AlgorithmIdentifier.MyEnum.PARAMETERS;
 
 /**
  * AlgorithmIdentifier  ::=  SEQUENCE  {
@@ -33,6 +35,7 @@ import static org.apache.kerby.x509.type.AlgorithmIdentifier.MyEnum.*;
  *    parameters              ANY DEFINED BY algorithm OPTIONAL
  * }
  */
+
 public class AlgorithmIdentifier extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {
         ALGORITHM,
@@ -49,9 +52,9 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
         }
     }
 
-    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
             new Asn1FieldInfo(ALGORITHM, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(PARAMETERS, DHParameter.class)
+            new Asn1FieldInfo(PARAMETERS, Asn1Any.class)
     };
 
     public AlgorithmIdentifier() {
@@ -70,11 +73,7 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
         return getFieldAsAny(PARAMETERS, t);
     }
 
-    public DHParameter getParameters() {
-        return getFieldAs(PARAMETERS, DHParameter.class);
-    }
-
-    public void setParameters(DHParameter parameters) {
-        setFieldAs(PARAMETERS, parameters);
+    public void setParameters(Asn1Type parameters) {
+        setFieldAsAny(PARAMETERS, parameters);
     }
 }

@@ -20,8 +20,12 @@
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.cms.type.Certificate;
+import org.apache.kerby.cms.type.CertificateChoices;
+import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
@@ -52,6 +56,7 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.TrustedCertifiers;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 import org.apache.kerby.x509.type.DHParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
+import org.apache.kerby.x509.type.TBSCertificate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +64,7 @@ import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -323,13 +329,16 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     private byte[] signAuthPack(KdcRequest kdcRequest, AuthPack authPack, X509Certificate[] certificates) {
 
         byte[] signedDataBytes = new byte[0];
-        try {
-            signedDataBytes = PkinitCrypto.cmsSignedDataCreate(pkinitContext.cryptoctx, authPack.encode(),
-                    pkinitContext.cryptoctx.getIdPkinitAuthDataOID(), certificates).toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        signedDataBytes = PkinitCrypto.cmsSignedDataCreate(authPack.encode());
+//        try {
+//            signedDataBytes = PkinitCrypto.cmsSignedDataCreate(pkinitContext.cryptoctx, authPack.encode(),
+//                    pkinitContext.cryptoctx.getIdPkinitAuthDataOID(), certificates).toByteArray();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        Asn1ObjectIdentifier oid = pkinitContext.cryptoctx.getIdPkinitAuthDataOID();
+
+        signedDataBytes = PkinitCrypto.cmsSignedDataCreate(
+                authPack.encode(), oid, 3, null, null, null, null);
 
         return signedDataBytes;
     }

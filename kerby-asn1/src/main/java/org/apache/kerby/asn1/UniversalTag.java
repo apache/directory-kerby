@@ -87,6 +87,7 @@ public enum UniversalTag {
      */
     public static UniversalTag fromValue(int value) {
         switch (value) {
+            case -2 : return CHOICE;
             case 0x00 : return EOC;
             case 0x01 : return BOOLEAN;
             case 0x02 : return INTEGER;
@@ -119,7 +120,6 @@ public enum UniversalTag {
             case 0x1D : return CHARACTER_STRING;
             case 0x1E : return BMP_STRING;
             case 0x1F : return RESERVED_31;
-            case 0x20 : return CHOICE;
             default : return UNKNOWN;
         }
     }
