@@ -85,14 +85,16 @@ public class KdcHandler {
             e.printStackTrace();
         }
         /**Get REQ_BODY in KDC_REQ for checksum*/
+        byte[] reqBodyBytes = null;
         Asn1Container container = (Asn1Container) parseResult;
         List<Asn1ParseResult> parseResults = container.getChildren();
         Asn1Container parsingItem = (Asn1Container)parseResults.get(0);
         List<Asn1ParseResult> items = parsingItem.getChildren();
-        ByteBuffer bodyBuffer = items.get(3).getBodyBuffer();
-        byte[] result = new byte[bodyBuffer.remaining()];
-        bodyBuffer.get(result);
-        byte[] reqBodyBytes = result;
+        if (items.size() > 3) { // TO BE FIXED: INDICATE PKINIT CASE!!
+            ByteBuffer bodyBuffer = items.get(3).getBodyBuffer();
+            byte[] result = new byte[bodyBuffer.remaining()];
+            bodyBuffer.get(result);
+        }
 
         try {
             krbRequest = KrbCodec.decodeMessage(receivedMessage);

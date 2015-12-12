@@ -268,7 +268,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             DHPublicKey clientPubKey = null;
             try {
-                clientPubKey = client.init(DhGroup.MODP_GROUP14);
+                // TO BE FIXED: MODP_GROUP14 may fail!
+                clientPubKey = client.init(DhGroup.MODP_GROUP2);
             } catch (Exception e) {
                 e.printStackTrace();
             }

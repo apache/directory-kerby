@@ -86,7 +86,7 @@ public class TestPkinitAnonymousAsReqCodec {
         assertThat(body.getKdcOptions().getPadding()).isEqualTo(0);
         assertThat(body.getKdcOptions().getValue()).isEqualTo(Arrays.copyOfRange(bytes, 1389, 1393));
         PrincipalName cName = body.getCname();
-        assertThat(cName.getNameType()).isEqualTo(NameType.NT_UNKNOWN);
+        assertThat(cName.getNameType()).isEqualTo(NameType.NT_WELLKNOWN);
         assertThat(cName.getName()).isEqualTo("WELLKNOWN/ANONYMOUS");
         assertThat(body.getRealm()).isEqualTo("EXAMPLE.COM");
         PrincipalName sName = body.getSname();

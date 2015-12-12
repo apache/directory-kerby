@@ -72,7 +72,7 @@ public class TestPkinitAnonymousAsRepCodec {
         assertThat(asRep.getCrealm()).isEqualTo("WELLKNOWN:ANONYMOUS");
 
         PrincipalName cName = asRep.getCname();
-        assertThat(cName.getNameType()).isEqualTo(NameType.NT_UNKNOWN);
+        assertThat(cName.getNameType()).isEqualTo(NameType.NT_WELLKNOWN);
         assertThat(cName.getNameStrings()).hasSize(2).contains("WELLKNOWN", "ANONYMOUS");
 
         Ticket ticket = asRep.getTicket();

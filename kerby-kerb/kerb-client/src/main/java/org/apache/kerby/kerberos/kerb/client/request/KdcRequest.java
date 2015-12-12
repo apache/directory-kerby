@@ -238,8 +238,13 @@ public abstract class KdcRequest {
         this.context = context;
     }
 
-    protected byte[] decryptWithClientKey(EncryptedData data, KeyUsage usage) throws KrbException {
-        return EncryptionHandler.decrypt(data, getClientKey(), usage);
+    protected byte[] decryptWithClientKey(EncryptedData data,
+                                          KeyUsage usage) throws KrbException {
+        EncryptionKey tmpKey = getClientKey();
+        if (tmpKey == null) {
+            throw new KrbException("Client key isn't availalbe");
+        }
+        return EncryptionHandler.decrypt(data, tmpKey, usage);
     }
 
     public abstract PrincipalName getClientPrincipal();

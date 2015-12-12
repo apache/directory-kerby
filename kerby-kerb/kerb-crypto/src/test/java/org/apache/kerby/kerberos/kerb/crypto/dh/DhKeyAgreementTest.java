@@ -20,9 +20,10 @@
 package org.apache.kerby.kerberos.kerb.crypto.dh;
 
 
-import junit.framework.TestCase;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
+import org.junit.Assert;
+import org.junit.Test;
 
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
@@ -48,7 +49,7 @@ import java.util.Arrays;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class DhKeyAgreementTest extends TestCase {
+public class DhKeyAgreementTest {
     private static SecureRandom secureRandom = new SecureRandom();
 
     /**
@@ -57,6 +58,7 @@ public class DhKeyAgreementTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testPreGeneratedDhParams() throws Exception {
         DhClient client = new DhClient();
         DhServer server = new DhServer();
@@ -75,7 +77,7 @@ public class DhKeyAgreementTest extends TestCase {
         byte[] cipherText = server.encrypt(clearText, KeyUsage.UNKNOWN);
         byte[] recovered = client.decrypt(cipherText, KeyUsage.UNKNOWN);
 
-        assertTrue(Arrays.equals(clearText, recovered));
+        Assert.assertTrue(Arrays.equals(clearText, recovered));
     }
 
 
@@ -88,6 +90,7 @@ public class DhKeyAgreementTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testPreGeneratedDhParamsWithNonce() throws Exception {
         byte[] clientDhNonce = new byte[16];
         secureRandom.nextBytes(clientDhNonce);
@@ -112,7 +115,7 @@ public class DhKeyAgreementTest extends TestCase {
         byte[] cipherText = server.encrypt(clearText, KeyUsage.UNKNOWN);
         byte[] recovered = client.decrypt(cipherText, KeyUsage.UNKNOWN);
 
-        assertTrue(Arrays.equals(clearText, recovered));
+        Assert.assertTrue(Arrays.equals(clearText, recovered));
     }
 
 
@@ -122,6 +125,7 @@ public class DhKeyAgreementTest extends TestCase {
      *
      * @throws Exception
      */
+    //@Test
     public void testGeneratedDhParams() throws Exception {
         DhClient client = new DhClient();
         DhServer server = new DhServer();
@@ -164,6 +168,6 @@ public class DhKeyAgreementTest extends TestCase {
         byte[] cipherText = server.encrypt(clearText, KeyUsage.UNKNOWN);
         byte[] recovered = client.decrypt(cipherText, KeyUsage.UNKNOWN);
 
-        assertTrue(Arrays.equals(clearText, recovered));
+        Assert.assertTrue(Arrays.equals(clearText, recovered));
     }
 }

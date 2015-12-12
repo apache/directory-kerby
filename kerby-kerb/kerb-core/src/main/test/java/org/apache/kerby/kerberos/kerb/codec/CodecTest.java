@@ -19,14 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
-import org.apache.kerby.asn1.Asn1InputBuffer;
-import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
-import org.apache.kerby.kerberos.kerb.type.kdc.AsReq;
-import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -48,26 +44,5 @@ public class CodecTest {
         assertThat(restored.getCksumtype()).isEqualTo(mcs.getCksumtype());
         assertThat(mcs.getChecksum()).isEqualTo(restored.getChecksum());
         assertThat(restored.tag()).isEqualTo(mcs.tag());
-    }
-
-    @Test
-    public void testDecode() throws IOException {
-        AsReq expected = new AsReq();
-
-        KdcReqBody body = new KdcReqBody();
-
-        expected.setReqBody(body);
-
-        Asn1InputBuffer ib = new Asn1InputBuffer(expected.encode());
-        Asn1Type fd1 = ib.read();
-        Asn1Type fd2 = ib.read();
-        Asn1Type fd3 = ib.read();
-        Asn1Type fd4 = ib.read();
-        Asn1Type fd5 = ib.read();
-        Asn1Type fd6 = ib.read();
-        Asn1Type fd7 = ib.read();
-        Asn1Type fd8 = ib.read();
-        Asn1Type fd9 = ib.read();
-
     }
 }

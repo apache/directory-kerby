@@ -158,12 +158,17 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             }
 
             AuthPack authPack = KrbCodec.decode(
-                    signedData.getEncapContentInfo().getContent(), AuthPack.class);
+                signedData.getEncapContentInfo().getContent(), AuthPack.class);
 
             PkAuthenticator pkAuthenticator = authPack.getPkAuthenticator();
 
             checkClockskew(kdcRequest, pkAuthenticator.getCtime());
-            DHParameter dhParameter = null;
+            DHParameter dhParameter;
+
+            if (kdcRequest.getReqBodyBytes() == null) {
+                LOG.error("ReqBodyBytes isn't available");
+                return false;
+            }
 
             CheckSum expectedCheckSum = null;
             try {
