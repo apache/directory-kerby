@@ -19,9 +19,20 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.type.Asn1SetOf;
-import org.apache.kerby.asn1.type.Asn1Type;
 
-public class AttributeValues extends Asn1SetOf<Asn1Type> {
+/**
+ * Ref. RFC 5652
+ * <pre>
+ * Attribute ::= SEQUENCE {
+ *     attrType OBJECT IDENTIFIER,
+ *     attrValues SET OF AttributeValue
+ * }
+ *
+ * AttributeValue ::= ANY
+ * </pre>
+ */
+public class AttributeValues extends Asn1SetOf<Asn1Any> {
 
 }

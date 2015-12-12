@@ -148,7 +148,7 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
             return null;
         }
 
-        if (chosenField != null && index != chosenField) {
+        if (chosenField != null && index != chosenField.getIndex()) {
             throw new IllegalArgumentException("Incorrect chosen value requested");
         }
 
