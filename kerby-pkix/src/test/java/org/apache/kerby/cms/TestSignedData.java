@@ -41,14 +41,13 @@ public class TestSignedData extends CmsTestBase {
             contentInfo.decode(data);
             Asn1.dump(contentInfo);
 
-            /** TO BE FIXED AFTER choice supported
             SignedData signedData =
                 contentInfo.getContentAs(SignedData.class);
             Asn1.dump(signedData);
 
-            byte[] encodedData = contentInfo.encode();
-            Asn1.dump(encodedData, true);
-             */
+            //TO BE FIXED
+            //byte[] encodedData = contentInfo.encode();
+            //Asn1.dump(encodedData, true);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -87,10 +86,9 @@ public class TestSignedData extends CmsTestBase {
             ContentInfo contentInfo = new ContentInfo();
             contentInfo.decode(data);
             Asn1.dump(contentInfo);
-/** Failed in DigestAlgorithmIdentifiers*/
-//            SignedData signedData =
-//                    contentInfo.getContentAs(SignedData.class);
-//            Asn1.dump(signedData);
+            SignedData signedData =
+                    contentInfo.getContentAs(SignedData.class);
+            Asn1.dump(signedData);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();

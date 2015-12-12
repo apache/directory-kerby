@@ -55,7 +55,7 @@ public abstract class Asn1CollectionType
     protected int encodingBodyLength() {
         int allLen = 0;
         for (int i = 0; i < fields.length; ++i) {
-            AbstractAsn1Type<?> field = (AbstractAsn1Type<?>) fields[i];
+            Asn1Encodeable field = (Asn1Encodeable) fields[i];
             if (field != null) {
                 if (fieldInfos[i].isTagged()) {
                     TaggingOption taggingOption =
@@ -105,18 +105,25 @@ public abstract class Asn1CollectionType
             }
             lastPos = foundPos;
 
-            Asn1Type fieldValue = fields[foundPos];
-            if (fieldValue instanceof Asn1Any) {
-                Asn1Any any = (Asn1Any) fieldValue;
-                any.setFieldInfo(fieldInfos[foundPos]);
-                Asn1Binder.bind(parseItem, any);
+            attemptBinding(parseItem, foundPos);
+        }
+    }
+
+    private void attemptBinding(Asn1ParseResult parseItem,
+                                int foundPos) throws IOException {
+        Asn1Type fieldValue = fields[foundPos];
+        Asn1FieldInfo fieldInfo = fieldInfos[foundPos];
+
+        if (fieldValue instanceof Asn1Any) {
+            Asn1Any any = (Asn1Any) fieldValue;
+            any.setFieldInfo(fieldInfo);
+            Asn1Binder.bind(parseItem, any);
+        } else {
+            if (parseItem.isContextSpecific()) {
+                Asn1Binder.bindWithTagging(parseItem, fieldValue,
+                    fieldInfo.getTaggingOption());
             } else {
-                if (parseItem.isContextSpecific()) {
-                    Asn1Binder.bindWithTagging(parseItem, fieldValue,
-                            fieldInfos[foundPos].getTaggingOption());
-                } else {
-                    Asn1Binder.bind(parseItem, fieldValue);
-                }
+                Asn1Binder.bind(parseItem, fieldValue);
             }
         }
     }
@@ -124,21 +131,27 @@ public abstract class Asn1CollectionType
     private int match(int lastPos, Asn1ParseResult parseItem) {
         int foundPos = -1;
         for (int i = lastPos + 1; i < fieldInfos.length; ++i) {
-            if (parseItem.isContextSpecific()) {
-                if (fieldInfos[i].getTagNo() == parseItem.tagNo()) {
+            Asn1Type fieldValue = fields[i];
+            Asn1FieldInfo fieldInfo = fieldInfos[i];
+
+            if (fieldInfo.isTagged()) {
+                if (!parseItem.isContextSpecific()) {
+                    continue;
+                }
+                if (fieldInfo.getTagNo() == parseItem.tagNo()) {
                     foundPos = i;
                     break;
                 }
-            } else if (fields[i].tag().equals(parseItem.tag())) {
+            } else if (fieldValue.tag().equals(parseItem.tag())) {
                 foundPos = i;
                 break;
-            } else if (fields[i] instanceof Asn1Choice) {
+            } else if (fieldValue instanceof Asn1Choice) {
                 Asn1Choice aChoice = (Asn1Choice) fields[i];
                 if (aChoice.matchAndSetValue(parseItem.tag())) {
                     foundPos = i;
                     break;
                 }
-            } else if (fields[i] instanceof Asn1Any) {
+            } else if (fieldValue instanceof Asn1Any) {
                 foundPos = i;
                 break;
             }

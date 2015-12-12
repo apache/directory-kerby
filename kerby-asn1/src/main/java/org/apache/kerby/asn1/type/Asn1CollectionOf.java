@@ -81,7 +81,8 @@ public abstract class Asn1CollectionOf<T extends Asn1Type>
             T result = (T) eleType.newInstance();
             return result;
         } catch (Exception e) {
-            throw new IOException("Failed to create element type", e);
+            throw new IOException("Failed to create element type, "
+                + "no default constructor? " + eleType.getName(), e);
         }
     }
 }

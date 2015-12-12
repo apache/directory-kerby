@@ -33,7 +33,7 @@ import static org.apache.kerby.cms.type.Attribute.MyEnum.*;
  *     attrType OBJECT IDENTIFIER,
  *     attrValues SET OF AttributeValue
  * }
- * 
+ *
  * AttributeValue ::= ANY
  * </pre>
  */

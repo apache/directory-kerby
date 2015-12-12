@@ -31,6 +31,9 @@ import static org.apache.kerby.x509.type.Attribute.MyEnum.*;
  *     attrType OBJECT IDENTIFIER,
  *     attrValues SET OF AttributeValue
  * }
+ *
+ * AttributeValue ::= ANY
+ *
  * </pre>
  */
 public class Attribute extends Asn1SequenceType {
