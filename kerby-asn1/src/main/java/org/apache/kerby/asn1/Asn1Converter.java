@@ -38,11 +38,12 @@ public final class Asn1Converter {
 
     }
 
-    public static Asn1Type convert(Asn1ParseResult parseResult) throws IOException {
+    public static Asn1Type convert(Asn1ParseResult parseResult,
+                                   boolean isLazy) throws IOException {
         if (Asn1Simple.isSimple(parseResult.tag())) {
             return Asn1Converter.convertAsSimple(parseResult);
         } else if (Asn1Collection.isCollection(parseResult.tag())) {
-            return Asn1Converter.convertAsCollection(parseResult);
+            return Asn1Converter.convertAsCollection(parseResult, isLazy);
         } else if (!parseResult.tag().isPrimitive()) {
             Asn1Encodeable tmpValue = new Asn1Constructed(parseResult.tag());
             tmpValue.decode(parseResult);
@@ -63,10 +64,11 @@ public final class Asn1Converter {
         return value;
     }
 
-    public static Asn1Type convertAsCollection(Asn1ParseResult parseResult) throws IOException {
+    public static Asn1Type convertAsCollection(Asn1ParseResult parseResult,
+                                               boolean isLazy) throws IOException {
         Asn1Collection value = Asn1Collection.createCollection(parseResult.tag());
         value.useDefinitiveLength(parseResult.isDefinitiveLength());
-        value.setLazy(true);
+        value.setLazy(isLazy);
         Asn1Binder.bind(parseResult, value);
         return value;
     }

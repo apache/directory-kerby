@@ -51,7 +51,7 @@ public final class Asn1 {
 
     public static Asn1Type decode(ByteBuffer content) throws IOException {
         Asn1ParseResult parseResult = Asn1Parser.parse(content);
-        return Asn1Converter.convert(parseResult);
+        return Asn1Converter.convert(parseResult, false);
     }
 
     public static Asn1ParseResult parse(byte[] content) throws IOException {

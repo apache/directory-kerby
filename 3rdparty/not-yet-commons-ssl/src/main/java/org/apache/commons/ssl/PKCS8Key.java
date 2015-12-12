@@ -440,7 +440,13 @@ public class PKCS8Key {
         } else {
             // DES, DESede, AES, BlowFish require IVParams (when in CBC, CFB,
             // or OFB mode).  (In ECB mode they don't require IVParams).
-            c.init(cipherMode, secret, ivParams);
+            try {
+                c.init(cipherMode, secret, ivParams);
+            } catch (InvalidKeyException e) {
+                // TO BE FIXED:
+                // Handling for larger key size beyond the JRE supported strength limit.
+                throw e;
+            }
         }
         return c;
     }

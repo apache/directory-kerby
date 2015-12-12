@@ -26,11 +26,8 @@
 package org.apache.commons.ssl;
 
 import org.apache.kerby.asn1.Asn1;
-import org.apache.kerby.asn1.Asn1Converter;
-import org.apache.kerby.asn1.parse.Asn1Container;
-import org.apache.kerby.asn1.parse.Asn1Item;
-import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.type.Asn1Collection;
+import org.apache.kerby.asn1.type.Asn1Encodeable;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
@@ -60,39 +57,39 @@ public class Asn1PkcsUtil {
     public static Asn1PkcsStructure analyze(byte[] asn1)
             throws IOException {
 
-        Asn1Type parseResult = Asn1.decode(asn1);
+        Asn1.dump(asn1, true);
+        Asn1Type aObj = Asn1.decode(asn1);
+        Asn1.dump(aObj);
+
         Asn1PkcsStructure pkcs8 = new Asn1PkcsStructure();
-        if (parseResult instanceof Asn1Collection) {
-            Asn1PkcsUtil.analyze(((Asn1Collection) parseResult).getContainer(), pkcs8, 0);
+        if (aObj instanceof Asn1Collection) {
+            Asn1PkcsUtil.analyze(((Asn1Collection) aObj), pkcs8, 0);
         } else {
-            Asn1PkcsUtil.analyze(parseResult, pkcs8, 0);
+            Asn1PkcsUtil.analyze(aObj, pkcs8, 0);
         }
 
         return pkcs8;
     }
 
-    public static void analyze(Asn1Container asn1Container, Asn1PkcsStructure pkcs8, int depth) {
+    public static void analyze(Asn1Collection asn1Coll,
+                               Asn1PkcsStructure pkcs8, int depth) {
         if (depth >= 2) {
             pkcs8.derIntegers = null;
         }
 
-        List<Asn1ParseResult> items = asn1Container.getChildren();
-        for (Asn1ParseResult item : items) {
-            if (item instanceof Asn1Container) {
-                analyze((Asn1Container) item, pkcs8, depth + 1);
-            } else if (item instanceof Asn1Item) {
-                Asn1Type type = null;
-                try {
-                    type = Asn1Converter.convert(item);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                analyze(type, pkcs8, depth);
+        List<Asn1Type> items = asn1Coll.getValue();
+        for (Asn1Type item : items) {
+            Asn1Encodeable aObj = (Asn1Encodeable) item;
+            if (!aObj.isCollection()) {
+                analyze(item, pkcs8, depth);
+            } else {
+                analyze((Asn1Collection) aObj, pkcs8, depth + 1);
             }
         }
     }
 
-    public static void analyze(Asn1Type obj, Asn1PkcsStructure pkcs8, int depth) {
+    public static void analyze(Asn1Type obj,
+                               Asn1PkcsStructure pkcs8, int depth) {
 
         String tag = null;
         if (depth >= 2) {
