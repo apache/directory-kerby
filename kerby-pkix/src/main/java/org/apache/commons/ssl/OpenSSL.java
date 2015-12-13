@@ -34,6 +34,7 @@ package org.apache.commons.ssl;
 import org.apache.kerby.util.Base64;
 import org.apache.kerby.util.Base64InputStream;
 import org.apache.kerby.util.Hex;
+import org.apache.kerby.util.Util;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;

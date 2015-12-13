@@ -33,6 +33,7 @@ package org.apache.commons.ssl;
 
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1Sequence;
+import org.apache.kerby.util.Util;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

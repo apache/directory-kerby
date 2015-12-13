@@ -1,6 +1,6 @@
 package org.apache.commons.ssl;
 
-import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
+import org.apache.kerby.util.Util;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,6 +9,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStoreException;
+
+import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
 
 public class TestTrustMaterial {
 

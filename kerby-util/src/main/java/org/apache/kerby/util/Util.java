@@ -29,10 +29,7 @@
  *
  */
 
-package org.apache.commons.ssl;
-
-import org.apache.commons.ssl.util.ByteArrayReadLine;
-import org.apache.commons.ssl.util.IPAddressParser;
+package org.apache.kerby.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -326,44 +323,6 @@ public class Util {
         } else {
             return s;
         }
-    }
-
-    public static Map parseArgs(final String[] cargs) {
-        Map args = new TreeMap();
-        Map argsMatch = Ping.argsMatch;
-
-        int l = cargs.length;
-        final String[] emptyValue = {""};
-        for (int i = 0; i < l; i++) {
-            String k = cargs[i];
-            Ping.Arg a = (Ping.Arg) argsMatch.get(k);
-            if (l > i + 1) {
-                String v = cargs[++i];
-                while (argsMatch.containsKey(v)) {
-                    args.put(a, emptyValue);
-                    a = (Ping.Arg) argsMatch.get(v);
-                    v = "";
-                    if (l > i + 1) {
-                        v = cargs[++i];
-                    }
-                }
-                String[] values = new String[1];
-                values[0] = v;
-                args.put(a, values);
-                if (l > i + 1 && !argsMatch.containsKey(cargs[i + 1])) {
-                    LinkedList list = new LinkedList();
-                    list.add(v);
-                    while (l > i + 1 && !argsMatch.containsKey(cargs[i + 1])) {
-                        v = cargs[++i];
-                        list.add(v);
-                    }
-                    args.put(a, list.toArray(new String[list.size()]));
-                }
-            } else {
-                args.put(a, emptyValue);
-            }
-        }
-        return args;
     }
 
     public static HostPort toAddress(final String target,

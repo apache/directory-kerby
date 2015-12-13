@@ -21,11 +21,13 @@ package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
-import org.apache.kerby.asn1.ExplicitField;
-import static org.apache.kerby.cms.type.EncapsulatedContentInfo.MyEnum.*;
+
+import static org.apache.kerby.cms.type.EncapsulatedContentInfo.MyEnum.CONTENT;
+import static org.apache.kerby.cms.type.EncapsulatedContentInfo.MyEnum.CONTENT_TYPE;
 
 /**
  * EncapsulatedContentInfo ::= SEQUENCE {

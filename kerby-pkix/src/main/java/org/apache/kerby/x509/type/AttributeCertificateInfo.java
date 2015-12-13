@@ -19,12 +19,21 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
-import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
-import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.*;
+
+import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.ATTRIBUTES;
+import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.ATTR_CERT_VALIDITY_PERIOD;
+import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.EXTENSIONS;
+import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.HOLDER;
+import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.ISSUER;
+import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.ISSUER_UNIQUE_ID;
+import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.SERIAL_NUMBER;
+import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.SIGNATURE;
+import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.VERSION;
 
 /**
  *

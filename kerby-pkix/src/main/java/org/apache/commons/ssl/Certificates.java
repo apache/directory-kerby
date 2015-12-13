@@ -32,6 +32,7 @@
 package org.apache.commons.ssl;
 
 import org.apache.kerby.util.Base64;
+import org.apache.kerby.util.Util;
 
 import javax.naming.InvalidNameException;
 import javax.naming.NamingException;
@@ -124,12 +125,12 @@ public class Certificates {
                 Date d2 = c2.getNotAfter();
                 int c = d1.compareTo(d2);
                 if (c == 0) {
-                    String s1 = JavaImpl.getSubjectX500(c1);
-                    String s2 = JavaImpl.getSubjectX500(c2);
+                    String s1 = c1.getSubjectX500Principal().toString();
+                    String s2 = c2.getSubjectX500Principal().toString();
                     c = s1.compareTo(s2);
                     if (c == 0) {
-                        s1 = JavaImpl.getIssuerX500(c1);
-                        s2 = JavaImpl.getIssuerX500(c2);
+                        s1 = c1.getIssuerX500Principal().toString();
+                        s2 = c2.getIssuerX500Principal().toString();
                         c = s1.compareTo(s2);
                         if (c == 0) {
                             BigInteger big1 = c1.getSerialNumber();
@@ -205,8 +206,8 @@ public class Certificates {
         String cn = getCN(cert);
         String startStart = DF.format(cert.getNotBefore());
         String endDate = DF.format(cert.getNotAfter());
-        String subject = JavaImpl.getSubjectX500(cert);
-        String issuer = JavaImpl.getIssuerX500(cert);
+        String subject = cert.getSubjectX500Principal().toString();
+        String issuer = cert.getIssuerX500Principal().toString();
         Iterator crls = getCRLs(cert).iterator();
         if (subject.equals(issuer)) {
             issuer = "self-signed";
@@ -333,7 +334,6 @@ public class Certificates {
                 }
             }
         }
-
     }
 
     public static BigInteger getFingerprint(X509Certificate x509)
@@ -347,7 +347,7 @@ public class Certificates {
         try {
             sha1 = MessageDigest.getInstance("SHA1");
         } catch (NoSuchAlgorithmException nsae) {
-            throw JavaImpl.newRuntimeException(nsae);
+            throw new RuntimeException(nsae);
         }
 
         sha1.reset();
@@ -417,7 +417,7 @@ public class Certificates {
                         // HTTPS sites will use special CRLSocket.getInstance() SocketFactory
                         // that is configured to timeout after 5 seconds:
                         HttpsURLConnection httpsConn = (HttpsURLConnection) urlConn;
-                        httpsConn.setSSLSocketFactory(CRLSocket.getSecureInstance());
+                        //httpsConn.setSSLSocketFactory(CRLSocket.getSecureInstance());
 
                     } else if (urlConn instanceof HttpURLConnection) {
 

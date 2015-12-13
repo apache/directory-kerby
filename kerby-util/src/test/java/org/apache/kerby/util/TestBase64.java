@@ -1,7 +1,5 @@
-package org.apache.commons.ssl;
+package org.apache.kerby.util;
 
-import org.apache.kerby.util.Base64;
-import org.apache.kerby.util.Base64InputStream;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

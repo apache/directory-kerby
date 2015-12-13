@@ -1,4 +1,4 @@
-package org.apache.commons.ssl.util;
+package org.apache.kerby.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

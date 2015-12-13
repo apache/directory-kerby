@@ -19,11 +19,14 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
-import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
-import static org.apache.kerby.x509.type.Certificate.MyEnum.*;
+
+import static org.apache.kerby.x509.type.Certificate.MyEnum.SIGNATURE;
+import static org.apache.kerby.x509.type.Certificate.MyEnum.SIGNATURE_ALGORITHM;
+import static org.apache.kerby.x509.type.Certificate.MyEnum.TBS_CERTIFICATE;
 
 /**
  * <pre>

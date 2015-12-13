@@ -19,13 +19,14 @@
  */
 package org.apache.kerby.cms.type;
 
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ImplicitField;
+import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.CertificateList;
 
-import static org.apache.kerby.cms.type.RevocationInfoChoice.MyEnum.*;
+import static org.apache.kerby.cms.type.RevocationInfoChoice.MyEnum.CRL;
+import static org.apache.kerby.cms.type.RevocationInfoChoice.MyEnum.OTHER;
 
 /**
  * RevocationInfoChoice ::= CHOICE {

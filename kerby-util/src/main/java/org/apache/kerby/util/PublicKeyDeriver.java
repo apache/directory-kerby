@@ -28,7 +28,7 @@
  * <http://www.apache.org/>.
  *
  */
-package org.apache.commons.ssl.util;
+package org.apache.kerby.util;
 
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;

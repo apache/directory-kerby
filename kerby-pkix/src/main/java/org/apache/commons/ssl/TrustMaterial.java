@@ -31,6 +31,8 @@
 
 package org.apache.commons.ssl;
 
+import org.apache.kerby.util.Util;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -76,7 +78,6 @@ public class TrustMaterial extends TrustChain {
     public static final TrustMaterial DEFAULT;
 
     static {
-        JavaImpl.load();
         String javaHome = System.getProperty("java.home");
         String pathToCacerts = javaHome + "/lib/security/cacerts";
         String pathToJSSECacerts = javaHome + "/lib/security/jssecacerts";

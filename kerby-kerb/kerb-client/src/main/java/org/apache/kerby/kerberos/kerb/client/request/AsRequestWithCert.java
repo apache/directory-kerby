@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.cms.type.Certificate;
+import org.apache.kerby.x509.type.Certificate;
 import org.apache.kerby.cms.type.CertificateChoices;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.ContentInfo;

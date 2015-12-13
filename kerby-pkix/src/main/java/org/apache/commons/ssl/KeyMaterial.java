@@ -31,6 +31,8 @@
 
 package org.apache.commons.ssl;
 
+import org.apache.kerby.util.Util;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -55,7 +57,7 @@ import java.util.List;
  * @since 27-Feb-2006
  */
 public class KeyMaterial extends TrustMaterial {
-    private final Object keyManagerFactory;
+    //private final Object keyManagerFactory;
     private final List aliases;
     private final List associatedChains;
 
@@ -214,11 +216,7 @@ public class KeyMaterial extends TrustMaterial {
         }
         this.aliases = Collections.unmodifiableList(myAliases);
         this.associatedChains = Collections.unmodifiableList(myChains);
-        this.keyManagerFactory = JavaImpl.newKeyManagerFactory(ks, keyPass);
-    }
-
-    public Object[] getKeyManagers() {
-        return JavaImpl.getKeyManagers(keyManagerFactory);
+        //this.keyManagerFactory = JavaImpl.newKeyManagerFactory(ks, keyPass);
     }
 
     public List getAssociatedCertificateChains() {

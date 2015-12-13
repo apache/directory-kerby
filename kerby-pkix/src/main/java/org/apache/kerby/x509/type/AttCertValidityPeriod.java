@@ -25,7 +25,8 @@ import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1UtcTime;
 
-import static org.apache.kerby.x509.type.AttCertValidityPeriod.MyEnum.*;
+import static org.apache.kerby.x509.type.AttCertValidityPeriod.MyEnum.NOT_AFTER;
+import static org.apache.kerby.x509.type.AttCertValidityPeriod.MyEnum.NOT_BEFORE;
 
 /**
  * <pre>

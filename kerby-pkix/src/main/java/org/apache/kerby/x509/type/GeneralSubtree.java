@@ -21,10 +21,13 @@ package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
-import org.apache.kerby.asn1.ExplicitField;
-import static org.apache.kerby.x509.type.GeneralSubtree.MyEnum.*;
+
+import static org.apache.kerby.x509.type.GeneralSubtree.MyEnum.BASE;
+import static org.apache.kerby.x509.type.GeneralSubtree.MyEnum.MAXMUM;
+import static org.apache.kerby.x509.type.GeneralSubtree.MyEnum.MINIMUM;
 
 /**
  *

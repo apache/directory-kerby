@@ -30,7 +30,15 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.x500.type.Name;
 
-import static org.apache.kerby.x509.type.GeneralName.MyEnum.*;
+import static org.apache.kerby.x509.type.GeneralName.MyEnum.DIRECTORY_NAME;
+import static org.apache.kerby.x509.type.GeneralName.MyEnum.DNS_NAME;
+import static org.apache.kerby.x509.type.GeneralName.MyEnum.EDI_PARTY_NAME;
+import static org.apache.kerby.x509.type.GeneralName.MyEnum.IP_ADDRESS;
+import static org.apache.kerby.x509.type.GeneralName.MyEnum.OTHER_NAME;
+import static org.apache.kerby.x509.type.GeneralName.MyEnum.REGISTERED_ID;
+import static org.apache.kerby.x509.type.GeneralName.MyEnum.RFC822_NAME;
+import static org.apache.kerby.x509.type.GeneralName.MyEnum.UNIFORM_RESOURCE_IDENTIFIER;
+import static org.apache.kerby.x509.type.GeneralName.MyEnum.X400_ADDRESS;
 
 /**
  *

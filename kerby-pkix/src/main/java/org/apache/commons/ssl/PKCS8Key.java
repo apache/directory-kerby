@@ -36,6 +36,7 @@ import org.apache.kerby.asn1.type.Asn1Null;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1Sequence;
+import org.apache.kerby.util.Util;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -107,10 +108,6 @@ public class PKCS8Key {
     private final int keySize;
     private final boolean isDSA;
     private final boolean isRSA;
-
-    static {
-        JavaImpl.load();
-    }
 
     /**
      * @param in       pkcs8 file to parse (pem or der, encrypted or unencrypted)

@@ -21,9 +21,12 @@ package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ExplicitField;
-import static org.apache.kerby.x509.type.DistributionPoint.MyEnum.*;
+import org.apache.kerby.asn1.type.Asn1SequenceType;
+
+import static org.apache.kerby.x509.type.DistributionPoint.MyEnum.CRL_ISSUER;
+import static org.apache.kerby.x509.type.DistributionPoint.MyEnum.DISTRIBUTION_POINT;
+import static org.apache.kerby.x509.type.DistributionPoint.MyEnum.REASONS;
 
 /**
  *

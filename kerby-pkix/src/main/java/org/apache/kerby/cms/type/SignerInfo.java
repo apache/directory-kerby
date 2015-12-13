@@ -21,9 +21,16 @@ package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.ImplicitField;
-import static org.apache.kerby.cms.type.SignerInfo.MyEnum.*;
+import org.apache.kerby.asn1.type.Asn1SequenceType;
+
+import static org.apache.kerby.cms.type.SignerInfo.MyEnum.CMS_VERSION;
+import static org.apache.kerby.cms.type.SignerInfo.MyEnum.DIGEST_ALGORITHM;
+import static org.apache.kerby.cms.type.SignerInfo.MyEnum.SID;
+import static org.apache.kerby.cms.type.SignerInfo.MyEnum.SIGNATURE;
+import static org.apache.kerby.cms.type.SignerInfo.MyEnum.SIGNATURE_ALGORITHMS;
+import static org.apache.kerby.cms.type.SignerInfo.MyEnum.SIGNED_ATTRS;
+import static org.apache.kerby.cms.type.SignerInfo.MyEnum.UNSIGNED_ATTRS;
 
 /**
  * Ref. RFC 5652

@@ -3,12 +3,7 @@ package org.apache.commons.ssl;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Test;
 
-import javax.net.ssl.SSLSocket;
 import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
@@ -72,48 +67,6 @@ public class TestKeyMaterial {
             }
         }
 
-        SSLServer server = new SSLServer();
-        server.setKeyMaterial(km);
-        ServerSocket ss = server.createServerSocket(0);
-        int port = ss.getLocalPort();
-        startServerThread(ss);
-        Thread.sleep(1);
-
-        SSLClient client = new SSLClient();
-        client.setTrustMaterial(TrustMaterial.TRUST_ALL);
-        client.setCheckHostname(false);
-        SSLSocket s = (SSLSocket) client.createSocket("localhost", port);
-        s.getSession().getPeerCertificates();
-        InputStream in = s.getInputStream();
-        Util.streamToBytes(in);
-        in.close();
-        // System.out.println(Certificates.toString((X509Certificate) certs[0]));
-        s.close();
-
         System.out.println("\t SUCCESS! ");
     }
-
-
-    private static void startServerThread(final ServerSocket ss) {
-        Runnable r = new Runnable() {
-            public void run() {
-                try {
-                    Socket s = ss.accept();
-                    OutputStream out = s.getOutputStream();
-                    Thread.sleep(1);
-                    out.write("Hello From Server\n".getBytes());
-                    Thread.sleep(1);
-                    out.close();
-                    s.close();
-                } catch (Exception e) {
-
-                    System.out.println("Test ssl server exception: " + e);
-
-                }
-            }
-        };
-
-        new Thread(r).start();
-    }
-
 }

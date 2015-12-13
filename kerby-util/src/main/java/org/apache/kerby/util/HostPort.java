@@ -1,7 +1,7 @@
 /*
- * $HeadURL: http://juliusdavies.ca/svn/not-yet-commons-ssl/tags/commons-ssl-0.3.16/src/java/org/apache/commons/ssl/LDAPSocket.java $
- * $Revision: 165 $
- * $Date: 2014-04-24 16:48:09 -0700 (Thu, 24 Apr 2014) $
+ * $HeadURL: http://juliusdavies.ca/svn/not-yet-commons-ssl/tags/commons-ssl-0.3.16/src/java/org/apache/commons/ssl/HostPort.java $
+ * $Revision: 166 $
+ * $Date: 2014-04-28 11:40:25 -0700 (Mon, 28 Apr 2014) $
  *
  * ====================================================================
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -29,52 +29,31 @@
  *
  */
 
-package org.apache.commons.ssl;
+package org.apache.kerby.util;
 
-import javax.net.SocketFactory;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
+import org.apache.kerby.util.Util;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * @author Credit Union Central of British Columbia
  * @author <a href="http://www.cucbc.com/">www.cucbc.com</a>
  * @author <a href="mailto:juliusdavies@cucbc.com">juliusdavies@cucbc.com</a>
- * @since 28-Feb-2006
+ * @since 14-July-2006
  */
-public final class LDAPSocket extends SSLClient {
-    private static final LDAPSocket INSTANCE;
+public class HostPort {
+    public final String host;
+    public final int port;
+    public final InetAddress addr;
 
-    static {
-        LDAPSocket sf = null;
-        try {
-            sf = new LDAPSocket();
-        } catch (Exception e) {
-            System.out.println("could not create LDAPSocket: " + e);
-            e.printStackTrace();
-        } finally {
-            INSTANCE = sf;
-        }
+    public HostPort(String host, int port) throws UnknownHostException {
+        this.host = host;
+        this.port = port;
+        this.addr = Util.toInetAddress(host);
     }
 
-    private LDAPSocket() throws GeneralSecurityException, IOException {
-        super();
-
-        // For now we setup the usual trust infrastructure, but consumers
-        // are encouraged to call getInstance().addTrustMaterial() or
-        // getInstance().setTrustMaterial() to customize the trust.
-        if (TrustMaterial.JSSE_CACERTS != null) {
-            setTrustMaterial(TrustMaterial.JSSE_CACERTS);
-        } else {
-            setTrustMaterial(TrustMaterial.CACERTS);
-        }
+    public String toString() {
+        return host + ":" + port;
     }
-
-    public static SocketFactory getDefault() {
-        return getInstance();
-    }
-
-    public static LDAPSocket getInstance() {
-        return INSTANCE;
-    }
-
 }

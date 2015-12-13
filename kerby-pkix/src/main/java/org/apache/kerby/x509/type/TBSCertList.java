@@ -21,11 +21,18 @@ package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
-import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.x500.type.Name;
-import static org.apache.kerby.x509.type.TBSCertList.MyEnum.*;
+
+import static org.apache.kerby.x509.type.TBSCertList.MyEnum.CRL_EXTENSIONS;
+import static org.apache.kerby.x509.type.TBSCertList.MyEnum.ISSUER;
+import static org.apache.kerby.x509.type.TBSCertList.MyEnum.NEXT_UPDATE;
+import static org.apache.kerby.x509.type.TBSCertList.MyEnum.REVOKED_CERTIFICATES;
+import static org.apache.kerby.x509.type.TBSCertList.MyEnum.SIGNATURE;
+import static org.apache.kerby.x509.type.TBSCertList.MyEnum.THIS_UPDATA;
+import static org.apache.kerby.x509.type.TBSCertList.MyEnum.VERSION;
 
 /**
  * Ref. RFC-2459

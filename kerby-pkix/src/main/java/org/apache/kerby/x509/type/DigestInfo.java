@@ -23,7 +23,9 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
-import static org.apache.kerby.x509.type.DigestInfo.MyEnum.*;
+
+import static org.apache.kerby.x509.type.DigestInfo.MyEnum.DIGEST;
+import static org.apache.kerby.x509.type.DigestInfo.MyEnum.DIGEST_ALGORITHM;
 
 /**
  * <pre>

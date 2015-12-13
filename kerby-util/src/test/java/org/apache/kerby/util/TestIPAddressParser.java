@@ -1,9 +1,9 @@
-package org.apache.commons.ssl;
+package org.apache.kerby.util;
 
 import org.junit.Test;
 
-import static org.apache.commons.ssl.util.IPAddressParser.parseIPv4Literal;
-import static org.apache.commons.ssl.util.IPAddressParser.parseIPv6Literal;
+import static org.apache.kerby.util.IPAddressParser.parseIPv4Literal;
+import static org.apache.kerby.util.IPAddressParser.parseIPv6Literal;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNull;
 

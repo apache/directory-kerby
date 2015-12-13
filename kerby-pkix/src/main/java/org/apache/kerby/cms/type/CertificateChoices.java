@@ -19,11 +19,17 @@
  */
 package org.apache.kerby.cms.type;
 
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ImplicitField;
-import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.*;
+import org.apache.kerby.asn1.type.Asn1Choice;
+import org.apache.kerby.x509.type.Certificate;
+
+import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.CERTIFICATE;
+import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.EXTENDED_CERTIFICATE;
+import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.OTHER;
+import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.V1_ATTR_CERT;
+import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.V2_ATTR_CERT;
 
 /**
  * CertificateChoices ::= CHOICE {

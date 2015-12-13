@@ -19,12 +19,18 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1Boolean;
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.type.Asn1SequenceType;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
-import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.*;
+import org.apache.kerby.asn1.type.Asn1Boolean;
+import org.apache.kerby.asn1.type.Asn1SequenceType;
+
+import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.DISTRIBUTION_POINT;
+import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.INDIRECT_CRL;
+import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.ONLY_CONTAINS_ATTRIBUTE_CERTS;
+import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.ONLY_CONTAINS_CA_CERTS;
+import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.ONLY_CONTAINS_USER_CERTS;
+import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.ONLY_SOME_REASONS;
 
 /**
  * <pre>

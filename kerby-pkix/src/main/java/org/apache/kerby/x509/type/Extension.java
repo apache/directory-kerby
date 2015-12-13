@@ -19,13 +19,16 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Boolean;
-import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
-import static org.apache.kerby.x509.type.Extension.MyEnum.*;
+
+import static org.apache.kerby.x509.type.Extension.MyEnum.CRITICAL;
+import static org.apache.kerby.x509.type.Extension.MyEnum.EXTN_ID;
+import static org.apache.kerby.x509.type.Extension.MyEnum.EXTN_VALUE;
 
 /**
  * Ref. X.509 V3 extension

@@ -20,8 +20,8 @@
 package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
-import org.apache.kerby.cms.type.Certificate;
 import org.apache.kerby.x500.type.Name;
+import org.apache.kerby.x509.type.Certificate;
 import org.junit.Assert;
 import org.junit.Test;
 

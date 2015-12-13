@@ -19,7 +19,7 @@
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.cms.type.Certificate;
+import org.apache.kerby.x509.type.Certificate;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.ContentInfo;
 import org.apache.kerby.cms.type.DigestAlgorithmIdentifiers;

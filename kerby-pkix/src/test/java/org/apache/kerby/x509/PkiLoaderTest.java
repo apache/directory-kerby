@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.x509;
 
+import org.apache.kerby.pki.PkiLoader;
 import org.junit.Before;
 import org.junit.Test;
 

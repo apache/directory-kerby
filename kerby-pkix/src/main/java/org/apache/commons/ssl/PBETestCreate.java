@@ -1,5 +1,7 @@
 package org.apache.commons.ssl;
 
+import org.apache.kerby.util.Util;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

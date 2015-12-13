@@ -31,8 +31,9 @@
 
 package org.apache.commons.ssl;
 
-import org.apache.commons.ssl.util.ByteArrayReadLine;
 import org.apache.kerby.util.Base64;
+import org.apache.kerby.util.ByteArrayReadLine;
+import org.apache.kerby.util.Util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
