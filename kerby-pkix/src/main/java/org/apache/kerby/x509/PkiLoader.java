@@ -17,11 +17,9 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.provider.pki;
+package org.apache.kerby.x509;
 
 import org.apache.commons.ssl.PKCS8Key;
-import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,21 +37,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class KerbyPkiLoader implements PkiLoader {
+public class PkiLoader {
 
-    @Override
-    public List<Certificate> loadCerts(String certFile) throws KrbException {
+    public List<Certificate> loadCerts(String certFile) throws IOException {
         InputStream is;
         try {
             is = new FileInputStream(new File(certFile));
         } catch (FileNotFoundException e) {
-            throw new KrbException("No cert file found", e);
+            throw new IOException("No cert file found", e);
         }
         return loadCerts(is);
     }
 
-    @Override
-    public List<Certificate> loadCerts(InputStream inputStream) throws KrbException {
+    public List<Certificate> loadCerts(InputStream inputStream) throws IOException {
         CertificateFactory certFactory = null;
         try {
             certFactory = CertificateFactory.getInstance("X.509");
@@ -61,29 +57,27 @@ public class KerbyPkiLoader implements PkiLoader {
                     certFactory.generateCertificates(inputStream);
             return new ArrayList<Certificate>(certs);
         } catch (CertificateException e) {
-            throw new KrbException("Failed to load certificates", e);
+            throw new IOException("Failed to load certificates", e);
         }
     }
 
-    @Override
-    public PrivateKey loadPrivateKey(String keyFile, String password) throws KrbException {
+    public PrivateKey loadPrivateKey(String keyFile, String password) throws IOException {
         InputStream in = null;
         try {
             in = new FileInputStream("/path/to/pkcs8_private_key.der");
         } catch (FileNotFoundException e) {
-            throw new KrbException("No cert file found", e);
+            throw new IOException("No cert file found", e);
         }
         return loadPrivateKey(in, password);
     }
 
-    @Override
-    public PrivateKey loadPrivateKey(InputStream inputStream, String password) throws KrbException {
+    public PrivateKey loadPrivateKey(InputStream inputStream, String password) throws IOException {
         try {
             return doLoadPrivateKey(inputStream, password);
         } catch (GeneralSecurityException e) {
-            throw new KrbException("Failed to load private key", e);
+            throw new IOException("Failed to load private key", e);
         } catch (IOException e) {
-            throw new KrbException("Failed to load private key", e);
+            throw new IOException("Failed to load private key", e);
         }
     }
 

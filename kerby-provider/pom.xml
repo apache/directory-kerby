@@ -26,7 +26,6 @@
 
   <modules>
     <module>token-provider</module>
-    <module>pki-provider</module>
   </modules>
 
 </project>

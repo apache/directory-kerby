@@ -17,13 +17,12 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.provider.pki;
+package org.apache.kerby.x509;
 
-import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
@@ -40,16 +39,16 @@ import static org.assertj.core.api.Assertions.assertThat;
  env REALM=SH.INTEL.COM openssl x509 -req -in kdc.req -CAkey cakey.pem \
  -CA cacert.pem -out kdc.pem -days 365 -extfile extensions.kdc -extensions kdc_cert -CAcreateserial
  */
-public class KerbyPkiLoaderTest {
+public class PkiLoaderTest {
     private PkiLoader pkiLoader;
 
     @Before
     public void setup() {
-        pkiLoader = new KerbyPkiLoader();
+        pkiLoader = new PkiLoader();
     }
 
     @Test
-    public void loadCert() throws KrbException {
+    public void loadCert() throws IOException {
         InputStream res = getClass().getResourceAsStream("/usercert.pem");
         List<Certificate> certs = pkiLoader.loadCerts(res);
         Certificate userCert = certs.iterator().next();
@@ -58,7 +57,7 @@ public class KerbyPkiLoaderTest {
     }
 
     @Test
-    public void loadKey() throws KrbException {
+    public void loadKey() throws IOException {
         InputStream res = getClass().getResourceAsStream("/userkey.pem");
         PrivateKey key = pkiLoader.loadPrivateKey(res, null);
 

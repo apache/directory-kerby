@@ -20,14 +20,12 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
-import org.apache.kerby.kerberos.kerb.provider.PkiLoader;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.apache.kerby.kerberos.provider.pki.KerbyPkiProvider;
+import org.apache.kerby.x509.PkiLoader;
 import org.junit.Before;
 
 import java.io.InputStream;
@@ -56,8 +54,7 @@ public class WithCertKdcTest extends KdcTestBase {
 
     @Before
     public void setUp() throws Exception {
-        KrbRuntime.setPkiProvider(new KerbyPkiProvider());
-        pkiLoader = KrbRuntime.getPkiProvider().createPkiLoader();
+        pkiLoader = new PkiLoader();
 
         super.setUp();
     }
@@ -135,7 +132,7 @@ public class WithCertKdcTest extends KdcTestBase {
         assertThat(tkt).isNotNull();
     }
 
-    private void loadCredentials() throws KrbException {
+    private void loadCredentials() throws Exception {
         InputStream res = getClass().getResourceAsStream("/usercert.pem");
         userCert = pkiLoader.loadCerts(res).iterator().next();
 
