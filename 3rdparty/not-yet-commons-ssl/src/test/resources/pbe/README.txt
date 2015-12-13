@@ -18,13 +18,13 @@ phrase "Hello World!" in UTF-8 with no trailing line-feed.
 
 The files underneath "pbe/java/" were created using commons-ssl's
 org.apache.commons.ssl.PBETestCreate utility, along with
-samples/pbe.tests as the single command-line argument.  These
+resources/pbe.tests as the single command-line argument.  These
 files were created using pure java.  It is useful to see whether
 commons-ssl can decrypt files it created itself, as well as to see
 if OpenSSL can also decrypt them.
 
 The files underneath "pbe/openssl/" were created using OpenSSL.
-Take a look at the "samples/createPBESamples.sh" shell script
+Take a look at the "resources/createPBESamples.sh" shell script
 to see how these were created.  You'll probably need to build
 your own version of OpenSSL from source to use some of the
 ciphers (idea, rc5, for example).

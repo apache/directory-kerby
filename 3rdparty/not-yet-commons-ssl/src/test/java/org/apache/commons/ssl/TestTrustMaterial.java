@@ -12,13 +12,13 @@ import java.security.KeyStoreException;
 
 public class TestTrustMaterial {
 
-    File pemFile = new File(TEST_HOME + "samples/x509/certificate.pem");
-    File derFile = new File(TEST_HOME + "samples/x509/certificate.der");
+    File pemFile = new File(TEST_HOME + "x509/certificate.pem");
+    File derFile = new File(TEST_HOME + "x509/certificate.der");
 
     @Test
     public void theTest() throws GeneralSecurityException, IOException {
         // TrustMaterial in 0.3.13 couldn't load cacerts if it contained any private keys.
-        TrustMaterial tm = new TrustMaterial(TEST_HOME + "samples/cacerts-with-78-entries-and-one-private-key.jks");
+        TrustMaterial tm = new TrustMaterial(TEST_HOME + "cacerts-with-78-entries-and-one-private-key.jks");
         Assert.assertEquals(78, tm.getCertificates().size());
     }
 

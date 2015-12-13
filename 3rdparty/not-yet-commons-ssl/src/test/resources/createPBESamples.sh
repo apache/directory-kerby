@@ -1,5 +1,5 @@
 #/bin/bash
-export TARGET_DIR=/home/julius/dev/commons-ssl/samples/pbe/openssl
+export TARGET_DIR=/home/julius/dev/commons-ssl/resources/pbe/openssl
 export OPENSSL_APP='/home/julius/dev/commons-ssl/t/openssl-0.9.8e/apps/openssl'
 
 export CIPHERS='

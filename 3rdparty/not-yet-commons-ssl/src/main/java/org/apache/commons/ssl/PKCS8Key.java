@@ -234,7 +234,7 @@ public class PKCS8Key {
                 break;
         }
 
-        oid = pkcs8.oid1;
+        oid = pkcs8.oid1 != null ? pkcs8.oid1 : "";
         if (!oid.startsWith("1.2.840.113549.1")) {
             boolean isOkay = false;
             if (oid.startsWith("1.2.840.10040.4.")) {

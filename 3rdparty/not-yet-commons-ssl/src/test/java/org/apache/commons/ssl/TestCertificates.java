@@ -47,7 +47,7 @@ public class TestCertificates {
 
     @Test
     public void testGetCNsReal() throws IOException, GeneralSecurityException {
-        String samplesDir = TEST_HOME + "samples/x509";
+        String samplesDir = TEST_HOME + "x509";
 
         TrustMaterial tm = new TrustMaterial(samplesDir + "/x509_three_cns_foo_bar_hanako.pem");
         X509Certificate c = (X509Certificate) tm.getCertificates().first();

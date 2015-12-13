@@ -25,7 +25,7 @@ public class TestPKCS8Key {
 
     private static void checkFiles(String type) throws Exception {
         String password = "changeit";
-        File dir = new File(TEST_HOME + "samples/" + type);
+        File dir = new File(TEST_HOME + type);
         File[] files = dir.listFiles();
         if (files == null) {
             fail("No files to test!");
@@ -49,7 +49,7 @@ public class TestPKCS8Key {
                 original = decrypted;
             } else {
                 boolean identical = Arrays.equals(original, decrypted);
-                assertTrue(f.getCanonicalPath() + " - all " + type + " samples decrypt to same key", identical);
+                assertTrue(f.getCanonicalPath() + " - all " + type + " resources decrypt to same key", identical);
             }
         }
 

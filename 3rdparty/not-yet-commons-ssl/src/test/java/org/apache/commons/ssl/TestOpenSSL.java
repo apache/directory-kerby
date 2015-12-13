@@ -69,7 +69,7 @@ public class TestOpenSSL {
 
     @Test
     public void testDecryptPBE() throws Exception {
-        File d = new File(TEST_HOME + "samples/pbe");
+        File d = new File(TEST_HOME + "pbe");
         File[] files = d.listFiles();
         if (files == null) {
             fail("No testDecryptPBE() files to test!");
@@ -115,6 +115,11 @@ public class TestOpenSSL {
                 if (x < 0) {
                     return 0;
                 }
+                if (fileName.endsWith(".failed")) {
+                    System.out.println("Skipping file marked with failed: " + fileName);
+                    return 0;
+                }
+
                 String cipher = fileName.substring(0, x);
                 String cipherPadded = Util.pad(cipher, 20, false);
                 String filePadded = Util.pad(fileName, 25, false);
@@ -126,8 +131,10 @@ public class TestOpenSSL {
                     try {
                         byte[] result = OpenSSL.decrypt(cipher, pwd, encrypted);
                         String s = new String(result, "ISO-8859-1");
-                        assertTrue(cipherPadded + "." + filePadded
-                            + " decrypts to 'Hello World!'", "Hello World!".equals(s));
+                        if (!"Hello World!".equals(s)) {
+                            fail(cipherPadded + "." + filePadded
+                                + " decrypts to 'Hello World!', but actually is" + s);
+                        }
                         return 1;
                     } catch (NoSuchAlgorithmException nsae) {
                         System.out.println("Warn: " + cipherPadded + filePadded

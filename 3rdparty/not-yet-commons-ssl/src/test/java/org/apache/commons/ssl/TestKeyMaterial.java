@@ -30,7 +30,7 @@ public class TestKeyMaterial {
 
     @Test
     public void testKeystores() throws Exception {
-        String samplesDir = TEST_HOME + "samples/keystores";
+        String samplesDir = TEST_HOME + "keystores";
         File dir = new File(samplesDir);
         String[] files = dir.list();
         Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
@@ -78,7 +78,6 @@ public class TestKeyMaterial {
         int port = ss.getLocalPort();
         startServerThread(ss);
         Thread.sleep(1);
-
 
         SSLClient client = new SSLClient();
         client.setTrustMaterial(TrustMaterial.TRUST_ALL);

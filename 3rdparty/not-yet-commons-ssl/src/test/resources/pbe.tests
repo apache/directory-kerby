@@ -1,4 +1,4 @@
-target=/home/julius/dev/commons-ssl/samples/pbe/java
+target=/home/julius/dev/commons-ssl/resources/pbe/java
 
 aes-128
 aes-192
