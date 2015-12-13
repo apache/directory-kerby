@@ -31,8 +31,6 @@
 
 package org.apache.kerby.util;
 
-import org.apache.kerby.util.Util;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 

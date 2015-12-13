@@ -825,7 +825,7 @@ public class PKCS8Key {
             dD[i] = (byte) idByte;
         }
         byte[] sS;
-        if ((salt != null) && (salt.length != 0)) {
+        if (salt != null && salt.length != 0) {
             sS = new byte[v * ((salt.length + v - 1) / v)];
             for (int i = 0; i != sS.length; i++) {
                 sS[i] = salt[i % salt.length];
@@ -834,7 +834,7 @@ public class PKCS8Key {
             sS = new byte[0];
         }
         byte[] pP;
-        if ((password != null) && (password.length != 0)) {
+        if (password != null && password.length != 0) {
             pP = new byte[v * ((password.length + v - 1) / v)];
             for (int i = 0; i != pP.length; i++) {
                 pP[i] = password[i % password.length];

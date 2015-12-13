@@ -96,10 +96,8 @@ public class IPAddressParser {
 
         // Check that we only have a single occurence of "::".
         x = s.indexOf("::");
-        if (x >= 0) {
-            if (s.indexOf("::", x + 1) >= 0) {
-                return null;
-            }
+        if (x >= 0 && s.indexOf("::", x + 1) >= 0) {
+            return null;
         }
 
         // This array helps us expand the "::" into the zeroes it represents.

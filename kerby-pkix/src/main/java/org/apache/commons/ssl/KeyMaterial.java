@@ -223,10 +223,6 @@ public class KeyMaterial extends TrustMaterial {
         return associatedChains;
     }
 
-    public KeyStore getKeyStore() {
-        return super.getKeyStore();
-    }
-
     public List getAliases() {
         return aliases;
     }
