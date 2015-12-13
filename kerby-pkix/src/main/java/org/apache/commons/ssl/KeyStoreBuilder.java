@@ -361,13 +361,13 @@ public class KeyStoreBuilder {
 
         boolean isProbablyPKCS12 = false;
         boolean isASN = false;
-        Asn1PkcsStructure asn1 = null;
+        PkcsStructure asn1 = null;
         try {
-            asn1 = Asn1PkcsUtil.analyze(stuff);
+            asn1 = PkcsUtil.analyze(stuff);
             isASN = true;
             isProbablyPKCS12 = asn1.oids.contains(PKCS7_ENCRYPTED);
             if (!isProbablyPKCS12 && asn1.bigPayload != null) {
-                asn1 = Asn1PkcsUtil.analyze(asn1.bigPayload);
+                asn1 = PkcsUtil.analyze(asn1.bigPayload);
                 isProbablyPKCS12 = asn1.oids.contains(PKCS7_ENCRYPTED);
             }
         } catch (Exception e) {

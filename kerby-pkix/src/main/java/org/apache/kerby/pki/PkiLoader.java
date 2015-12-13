@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.x509;
+package org.apache.kerby.pki;
 
 import org.apache.commons.ssl.PKCS8Key;
 

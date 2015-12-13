@@ -49,30 +49,30 @@ import java.util.List;
 /**
  * Adapted from ASN1Util in not-yet-commons-ssl
  */
-public class Asn1PkcsUtil {
+public class PkcsUtil {
 
     public static final BigInteger BIGGEST =
             new BigInteger(Integer.toString(Integer.MAX_VALUE));
 
-    public static Asn1PkcsStructure analyze(byte[] asn1)
+    public static PkcsStructure analyze(byte[] asn1)
             throws IOException {
 
         Asn1.dump(asn1, true);
         Asn1Type aObj = Asn1.decode(asn1);
         Asn1.dump(aObj);
 
-        Asn1PkcsStructure pkcs8 = new Asn1PkcsStructure();
+        PkcsStructure pkcs8 = new PkcsStructure();
         if (aObj instanceof Asn1Collection) {
-            Asn1PkcsUtil.analyze(((Asn1Collection) aObj), pkcs8, 0);
+            PkcsUtil.analyze(((Asn1Collection) aObj), pkcs8, 0);
         } else {
-            Asn1PkcsUtil.analyze(aObj, pkcs8, 0);
+            PkcsUtil.analyze(aObj, pkcs8, 0);
         }
 
         return pkcs8;
     }
 
     public static void analyze(Asn1Collection asn1Coll,
-                               Asn1PkcsStructure pkcs8, int depth) {
+                               PkcsStructure pkcs8, int depth) {
         if (depth >= 2) {
             pkcs8.derIntegers = null;
         }
@@ -89,7 +89,7 @@ public class Asn1PkcsUtil {
     }
 
     public static void analyze(Asn1Type obj,
-                               Asn1PkcsStructure pkcs8, int depth) {
+                               PkcsStructure pkcs8, int depth) {
 
         String tag = null;
         if (depth >= 2) {
@@ -178,7 +178,7 @@ public class Asn1PkcsUtil {
             bytes = ((PEMItem) list.get(0)).getDerBytes();
         }
 
-        Asn1PkcsStructure asn1 = analyze(bytes);
+        PkcsStructure asn1 = analyze(bytes);
         while (asn1.bigPayload != null) {
             System.out.println("------------------------------------------");
             System.out.println(asn1);

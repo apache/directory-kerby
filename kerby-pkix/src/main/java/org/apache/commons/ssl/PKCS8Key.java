@@ -204,9 +204,9 @@ public class PKCS8Key {
             }
         }
 
-        Asn1PkcsStructure pkcs8;
+        PkcsStructure pkcs8;
         try {
-            pkcs8 = Asn1PkcsUtil.analyze(derBytes);
+            pkcs8 = PkcsUtil.analyze(derBytes);
         } catch (Exception e) {
             throw new ProbablyNotPKCS8Exception("asn1 parse failure: " + e);
         }
@@ -261,7 +261,7 @@ public class PKCS8Key {
         }
         if (encrypted) {
             try {
-                pkcs8 = Asn1PkcsUtil.analyze(decryptedPKCS8);
+                pkcs8 = PkcsUtil.analyze(decryptedPKCS8);
             } catch (Exception e) {
                 throw new ProbablyBadPasswordException(
                     "Decrypted stream not ASN.1.  Probably bad decryption password.");
@@ -468,7 +468,7 @@ public class PKCS8Key {
     }
 
     @SuppressWarnings("checkstyle:methodlength")
-    private static DecryptResult decryptPKCS8(Asn1PkcsStructure pkcs8,
+    private static DecryptResult decryptPKCS8(PkcsStructure pkcs8,
                                               char[] password)
         throws GeneralSecurityException {
         boolean isVersion1 = true;
@@ -927,7 +927,7 @@ public class PKCS8Key {
     }
 
     public static byte[] formatAsPKCS8(byte[] privateKey, String oid,
-                                       Asn1PkcsStructure pkcs8) {
+                                       PkcsStructure pkcs8) {
         Asn1Integer derZero = new Asn1Integer(BigInteger.ZERO);
         Asn1Sequence outterSeq = new Asn1Sequence();
         Asn1Sequence innerSeq = new Asn1Sequence();
@@ -937,7 +937,7 @@ public class PKCS8Key {
         if (DSA_OID.equals(oid)) {
             if (pkcs8 == null) {
                 try {
-                    pkcs8 = Asn1PkcsUtil.analyze(privateKey);
+                    pkcs8 = PkcsUtil.analyze(privateKey);
                 } catch (Exception e) {
                     throw new RuntimeException("asn1 parse failure " + e);
                 }

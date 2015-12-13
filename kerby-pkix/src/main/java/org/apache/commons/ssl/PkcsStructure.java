@@ -44,7 +44,7 @@ import java.util.TreeSet;
 /**
  * Adapted from not-yet-commons-ssl ASN1Structure
  */
-class Asn1PkcsStructure {
+class PkcsStructure {
     List<Asn1Integer> derIntegers = new LinkedList<Asn1Integer>();
     Set oids = new TreeSet();
     String oid1;
