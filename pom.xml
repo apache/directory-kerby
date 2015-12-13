@@ -65,7 +65,6 @@
   </prerequisites>
 
   <modules>
-    <module>3rdparty</module>
     <module>kerby-config</module>
     <module>kerby-util</module>
     <module>kerby-asn1</module>

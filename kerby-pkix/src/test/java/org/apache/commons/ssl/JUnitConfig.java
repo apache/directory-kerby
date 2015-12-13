@@ -8,11 +8,9 @@ public class JUnitConfig {
     public static final String TEST_HOME;
 
     static {
-        URL url = JUnitConfig.class.getResource("/TEST-HOME");
-        String homeTestPath = url.getFile();
-        File homeTestFile = new File(homeTestPath);
-        File homeDir = homeTestFile.getParentFile();
-
+        URL url = JUnitConfig.class.getResource("/not-so-commons-ssl");
+        String tmpPath = url.getFile();
+        File homeDir = new File(tmpPath);
         TEST_HOME = homeDir.getAbsolutePath() + File.separator;
     }
 }
