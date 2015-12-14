@@ -203,20 +203,20 @@ public class PkinitCrypto {
         contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
         SignedData signedData = new SignedData();
         signedData.setVersion(version);
-        if(digestAlgorithmIdentifiers != null) {
+        if (digestAlgorithmIdentifiers != null) {
             signedData.setDigestAlgorithms(digestAlgorithmIdentifiers);
         }
         EncapsulatedContentInfo eContentInfo = new EncapsulatedContentInfo();
         eContentInfo.setContentType(oid);
         eContentInfo.setContent(data);
         signedData.setEncapContentInfo(eContentInfo);
-        if(certificateSet != null) {
+        if (certificateSet != null) {
             signedData.setCertificates(certificateSet);
         }
-        if(crls != null) {
+        if (crls != null) {
             signedData.setCrls(crls);
         }
-        if(signerInfos != null) {
+        if (signerInfos != null) {
             signedData.setSignerInfos(signerInfos);
         }
         contentInfo.setContent(signedData);
@@ -244,7 +244,7 @@ public class PkinitCrypto {
 
         try {
             List<PrincipalName> princs = cryptoRetrieveCertSans(certificates);
-            if(princs != null) {
+            if (princs != null) {
                 for (PrincipalName princ : princs) {
                     LOG.info("PKINIT client found id-pkinit-san in KDC cert: " + princ.getName());
                 }
@@ -280,7 +280,7 @@ public class PkinitCrypto {
             throws KrbException {
 
         List<PrincipalName> principalNames = new ArrayList<>();
-        for(Certificate cert : certificates) {
+        for (Certificate cert : certificates) {
             LOG.info("Looking for SANs in cert: " + cert.getTBSCertificate().getSubject());
             //TODO
 

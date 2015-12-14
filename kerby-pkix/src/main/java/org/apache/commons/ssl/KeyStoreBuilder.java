@@ -495,12 +495,10 @@ public class KeyStoreBuilder {
                     System.out.println("what kind of weird pkcs12 file has more than one alias?");
                 }
             }
-            if (key == null && uke != null) {
+            if (key == null && uke != null && !forTrustMaterial) {
                 // If we're trying to load KeyMaterial, then we *need* that key we spotted.
                 // But if we're trying to load TrustMaterial, then we're fine, and we can ignore the key.
-                if (!forTrustMaterial) {
-                    throw new ProbablyBadPasswordException("Probably bad JKS-Key password: " + uke);
-                }
+                throw new ProbablyBadPasswordException("Probably bad JKS-Key password: " + uke);
             }
             if (isPKCS12) {
                 // PKCS12 is supposed to be just a key and a chain, anyway.

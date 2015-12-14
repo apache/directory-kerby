@@ -23,9 +23,6 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
-
 /**
  * A krb PKINIT client API for applications to interact with KDC using PKINIT.
  */

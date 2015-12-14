@@ -47,6 +47,7 @@ import static org.apache.kerby.cms.type.SignerInfo.MyEnum.UNSIGNED_ATTRS;
  *
  * </pre>
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class SignerInfo extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {
         CMS_VERSION,

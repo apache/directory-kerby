@@ -56,6 +56,7 @@ import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.VERSIO
  *
  * AttCertVersionV1 ::= INTEGER { v1(0) }
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class AttributeCertificateInfoV1 extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {
         VERSION,

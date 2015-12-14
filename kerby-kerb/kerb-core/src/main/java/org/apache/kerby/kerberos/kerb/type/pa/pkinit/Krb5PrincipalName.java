@@ -25,7 +25,9 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.base.Realm;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.*;
+
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.PRINCIPAL_NAME;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.REALM;
 
 /**
  KRB5PrincipalName ::= SEQUENCE {

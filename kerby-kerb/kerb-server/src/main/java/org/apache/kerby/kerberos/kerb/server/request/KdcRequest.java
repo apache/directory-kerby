@@ -700,7 +700,7 @@ public abstract class KdcRequest {
         }
         methodData.add(new PaDataEntry(PaDataType.ETYPE_INFO2, encTypeInfo2));
 
-        if(pkinit) {
+        if (pkinit) {
             methodData.add(new PaDataEntry(PaDataType.PK_AS_REQ, "empty".getBytes()));
             methodData.add(new PaDataEntry(PaDataType.PK_AS_REP, "empty".getBytes()));
         }

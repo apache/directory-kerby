@@ -81,7 +81,7 @@ public class AsRequest extends KdcRequest {
         } else {
             clientEntry = getEntry(clientPrincipal.getName());
         }
-        if(isAnonymous()) {
+        if (isAnonymous()) {
             clientEntry.setPrincipal(new PrincipalName(clientPrincipal.getName(), NameType.NT_WELLKNOWN));
         }
 

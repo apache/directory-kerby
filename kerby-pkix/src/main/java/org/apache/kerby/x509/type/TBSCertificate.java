@@ -56,6 +56,7 @@ import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.VERSION;
  *  }
  * </pre>
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class TBSCertificate extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {
         VERSION,

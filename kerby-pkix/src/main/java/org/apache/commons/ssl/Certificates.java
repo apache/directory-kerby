@@ -40,7 +40,6 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
-import javax.net.ssl.HttpsURLConnection;
 import javax.security.auth.x500.X500Principal;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -88,6 +87,7 @@ import java.util.Set;
  * @author <a href="mailto:juliusdavies@cucbc.com">juliusdavies@cucbc.com</a>
  * @since 19-Aug-2005
  */
+@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 public class Certificates {
 
     public static final CertificateFactory CF;
@@ -412,14 +412,15 @@ public class Certificates {
                     // to enforce timeouts for CRL-checking (5 seconds).
                     URL url = new URL(urlString);
                     URLConnection urlConn = url.openConnection();
-                    if (urlConn instanceof HttpsURLConnection) {
+                    //if (urlConn instanceof HttpsURLConnection) {
 
                         // HTTPS sites will use special CRLSocket.getInstance() SocketFactory
                         // that is configured to timeout after 5 seconds:
-                        HttpsURLConnection httpsConn = (HttpsURLConnection) urlConn;
+                        //HttpsURLConnection httpsConn = (HttpsURLConnection) urlConn;
                         //httpsConn.setSSLSocketFactory(CRLSocket.getSecureInstance());
 
-                    } else if (urlConn instanceof HttpURLConnection) {
+                    //} else
+                    if (urlConn instanceof HttpURLConnection) {
 
                         // HTTP timeouts can only be set on Java 1.5 and up.  :-(
                         // The code required to set it for Java 1.4 and Java 1.3 is just too painful.

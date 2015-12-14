@@ -135,7 +135,8 @@ public class TrustChain {
         CertificateException {
         KeyStore uks = getUnifiedKeyStore();
         if (uks != null) {
-            return null;//JavaImpl.newTrustManagerFactory(uks);
+            return null;
+            //JavaImpl.newTrustManagerFactory(uks);
         } else {
             return null;
         }
@@ -153,7 +154,7 @@ public class TrustChain {
     public Object[] getTrustManagers()
         throws NoSuchAlgorithmException, KeyStoreException, IOException,
         CertificateException {
-        Object tmf = getTrustManagerFactory();
+//        Object tmf = getTrustManagerFactory();
         //return tmf != null ? JavaImpl.getTrustManagers(tmf) : null;
         return null;
     }

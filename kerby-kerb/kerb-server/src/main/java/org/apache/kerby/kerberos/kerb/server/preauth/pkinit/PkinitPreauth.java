@@ -1,20 +1,21 @@
 /**
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.kerb.server.preauth.pkinit;
 
@@ -183,7 +184,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 /**Get REQ_BODY in KDC_REQ for checksum*/
                 Asn1Container container = (Asn1Container) parseResult;
                 List<Asn1ParseResult> parseResults = container.getChildren();
-                Asn1Container parsingItem = (Asn1Container)parseResults.get(0);
+                Asn1Container parsingItem = (Asn1Container) parseResults.get(0);
                 List<Asn1ParseResult> items = parsingItem.getChildren();
                 if (items.size() > 3) { // TO BE FIXED: INDICATE PKINIT CASE!!
                     ByteBuffer bodyBuffer = items.get(3).getBodyBuffer();
@@ -252,6 +253,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                     throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED, errMessage);
                 } else {
                     // rsa
+                    System.out.println("rsa");
                 }
             }
         }
@@ -329,7 +331,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         byte[] signedDataBytes = null;
 
         CertificateSet certificateSet = new CertificateSet();
-        for(X509Certificate x509Certificate : certificates) {
+        for (X509Certificate x509Certificate : certificates) {
             Certificate certificate = PkinitCrypto.changeCertificate(x509Certificate);
             CertificateChoices certificateChoices = new CertificateChoices();
             certificateChoices.setCertificate(certificate);

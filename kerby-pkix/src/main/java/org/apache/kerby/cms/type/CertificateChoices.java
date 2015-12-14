@@ -39,6 +39,7 @@ import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.V2_ATTR_CERT;
  *   v2AttrCert [2] IMPLICIT AttributeCertificateV2,
  *   other [3] IMPLICIT OtherCertificateFormat }
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class CertificateChoices extends Asn1Choice {
     protected enum MyEnum implements EnumType {
         CERTIFICATE,

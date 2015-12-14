@@ -24,7 +24,8 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredRep.MyEnum.*;
+
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredRep.MyEnum.ENC_FAST_REP;
 
 /**
  KrbFastArmoredRep ::= SEQUENCE {

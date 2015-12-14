@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.kerb.client.request;
 
@@ -44,10 +44,8 @@ import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHNonce;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.x509.type.Certificate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +100,7 @@ public class AsRequestWithCert extends AsRequest {
     }
 
     @Override
-    public void processResponse(KdcRep kdcRep) throws KrbException  {
+    public void processResponse(KdcRep kdcRep) throws KrbException {
 
         PaData paData = kdcRep.getPaData();
         for (PaDataEntry paEntry : paData.getElements()) {
@@ -115,7 +113,6 @@ public class AsRequestWithCert extends AsRequest {
                 //DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
                 DHRepInfo dhRepInfo = KrbCodec.decode(paEntry.getPaDataValue(), DHRepInfo.class);
 
-                DHNonce nonce = dhRepInfo.getServerDhNonce();
                 byte[] dhSignedData = dhRepInfo.getDHSignedData();
 
                 ContentInfo contentInfo = new ContentInfo();
@@ -128,7 +125,7 @@ public class AsRequestWithCert extends AsRequest {
                 SignedData signedData = contentInfo.getContentAs(SignedData.class);
 
                 PkinitCrypto.verifyCMSSignedData(
-                            CMSMessageType.CMS_SIGN_SERVER, signedData);
+                        CMSMessageType.CMS_SIGN_SERVER, signedData);
 
                 String anchorFileName = getPreauthOptions().getStringOption(KrbOption.PKINIT_X509_ANCHORS);
 
@@ -144,7 +141,7 @@ public class AsRequestWithCert extends AsRequest {
                 CertificateSet certificateSet = signedData.getCertificates();
                 List<CertificateChoices> certificateChoicesList = certificateSet.getElements();
                 List<Certificate> certificates = new ArrayList<>();
-                for(CertificateChoices certificateChoices : certificateChoicesList) {
+                for (CertificateChoices certificateChoices : certificateChoicesList) {
                     certificates.add(certificateChoices.getCertificate());
                 }
                 try {
@@ -156,7 +153,7 @@ public class AsRequestWithCert extends AsRequest {
                 PrincipalName kdcPrincipal = KrbUtil.makeTgsPrincipal(
                         getContext().getConfig().getKdcRealm());
                 //TODO USE CertificateSet
-                boolean validSan= PkinitCrypto.verifyKdcSan(
+                boolean validSan = PkinitCrypto.verifyKdcSan(
                         getContext().getConfig().getPkinitKdcHostName(), kdcPrincipal,
                         certificates);
                 if (!validSan) {
@@ -194,7 +191,7 @@ public class AsRequestWithCert extends AsRequest {
                     e.printStackTrace();
                 }
                 // Set the DH shared key as the client key
-                if(secretKey == null) {
+                if (secretKey == null) {
                     throw new KrbException("Fail to create client key.");
                 } else {
                     setClientKey(secretKey);

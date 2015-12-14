@@ -44,6 +44,7 @@ import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.ONLY_SO
  * }
  * </pre>
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class IssuingDistributionPoint extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {
         DISTRIBUTION_POINT,

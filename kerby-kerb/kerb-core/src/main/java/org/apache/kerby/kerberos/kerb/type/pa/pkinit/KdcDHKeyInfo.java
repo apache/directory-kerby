@@ -19,14 +19,17 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1BitString;
+import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.*;
+
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.DH_KEY_EXPIRATION;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.NONCE;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.SUBJECT_PUBLIC_KEY;
 
 /**
  KDCDHKeyInfo ::= SEQUENCE {

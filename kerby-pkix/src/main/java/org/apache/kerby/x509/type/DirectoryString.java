@@ -45,6 +45,7 @@ import static org.apache.kerby.x509.type.DirectoryString.MyEnum.UTF8_STRING;
  * }
  * </pre>
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class DirectoryString extends Asn1Choice {
     protected enum MyEnum implements EnumType {
         TELETEX_STRING,

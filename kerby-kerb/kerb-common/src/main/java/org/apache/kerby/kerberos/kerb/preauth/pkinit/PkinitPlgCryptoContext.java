@@ -20,10 +20,8 @@ package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import sun.security.util.ObjectIdentifier;
 
 import javax.crypto.spec.DHParameterSpec;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 

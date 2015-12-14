@@ -220,7 +220,7 @@ public abstract class TicketIssuer {
             return new PrincipalName(kdcRequest.getToken().getSubject());
         } else {
             PrincipalName principalName = getKdcReq().getReqBody().getCname();
-            if(getKdcRequest().isAnonymous()) {
+            if (getKdcRequest().isAnonymous()) {
                 principalName.setNameType(NameType.NT_WELLKNOWN);
             }
             return principalName;

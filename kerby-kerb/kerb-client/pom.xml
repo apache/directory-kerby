@@ -51,10 +51,5 @@
       <artifactId>bcpkix-jdk15on</artifactId>
       <version>1.52</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>not-yet-commons-ssl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
 </project>

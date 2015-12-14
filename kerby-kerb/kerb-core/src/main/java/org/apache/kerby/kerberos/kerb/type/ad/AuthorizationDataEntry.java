@@ -21,11 +21,13 @@ package org.apache.kerby.kerberos.kerb.type.ad;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
-import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-import static org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry.MyEnum.*;
+
+import static org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry.MyEnum.AD_DATA;
+import static org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry.MyEnum.AD_TYPE;
 
 /**
  AuthorizationData       ::= SEQUENCE OF SEQUENCE {

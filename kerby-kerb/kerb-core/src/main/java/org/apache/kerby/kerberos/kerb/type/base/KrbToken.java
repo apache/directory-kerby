@@ -30,11 +30,13 @@ import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.TOKEN_FORMAT;
+import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.TOKEN_VALUE;
 
 /**
  * KRB-TOKEN_VALUE ::= SEQUENCE {

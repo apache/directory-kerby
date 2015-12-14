@@ -23,7 +23,9 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbMessage.MyEnum.*;
+
+import static org.apache.kerby.kerberos.kerb.type.base.KrbMessage.MyEnum.MSG_TYPE;
+import static org.apache.kerby.kerberos.kerb.type.base.KrbMessage.MyEnum.PVNO;
 
 public abstract class KrbMessage extends KrbAppSequenceType {
     protected enum MyEnum implements EnumType {

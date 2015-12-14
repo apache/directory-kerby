@@ -56,6 +56,7 @@ import static org.apache.kerby.x509.type.GeneralName.MyEnum.X400_ADDRESS;
  *  }
  * </pre>
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class GeneralName extends Asn1Choice {
     protected enum MyEnum implements EnumType {
         OTHER_NAME,

@@ -45,6 +45,7 @@ import static org.apache.kerby.cms.type.SignedData.MyEnum.SIGNER_INFOS;
  * </pre>
  *
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class SignedData extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {
         CMS_VERSION,

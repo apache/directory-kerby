@@ -55,6 +55,7 @@ import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.VERSION
  *  UniqueIdentifier  ::=  BIT STRING
  * </pre>
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class AttributeCertificateInfo extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {
         VERSION,

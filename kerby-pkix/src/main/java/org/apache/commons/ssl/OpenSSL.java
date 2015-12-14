@@ -453,6 +453,7 @@ public class OpenSSL {
         return deriveKey(password, salt, keySize, 0, des2);
     }
 
+    @SuppressWarnings("PMD.UselessParentheses")
     public static DerivedKey deriveKey(char[] password, byte[] salt,
                                        int keySize, int ivSize, boolean des2)
         throws NoSuchAlgorithmException {

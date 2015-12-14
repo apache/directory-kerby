@@ -33,7 +33,6 @@ import org.apache.kerby.kerberos.kerb.crypto.dh.DhGroup;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlag;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlags;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
-import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitIdenity;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
@@ -58,12 +57,12 @@ import org.slf4j.LoggerFactory;
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
 import java.math.BigInteger;
-import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+@SuppressWarnings("PMD.UnusedFormalParameter")
 public class PkinitPreauth extends AbstractPreauthPlugin {
     private static final Logger LOG = LoggerFactory.getLogger(PkinitPreauth.class);
 
@@ -241,7 +240,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         authPack.setPkAuthenticator(pkAuthen);
         authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
 
-        String certFile = null;
         if (!usingRsa) {
             // DH case
             LOG.info("DH key transport algorithm.");
@@ -287,26 +285,23 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 //            DHNonce dhNonce = new DHNonce();
 //            authPack.setClientDhNonce(dhNonce);
 
-            List<String> archors = pkinitContext.identityOpts.anchors;
-            certFile = archors.get(0);
-
         } else {
             LOG.info("RSA key transport algorithm");
 //            authPack.setClientPublicValue(null);
-            certFile = pkinitContext.identityOpts.identity;
+//            certFile = pkinitContext.identityOpts.identity;
+//
+//            X509Certificate certificate = null;
+//            try {
+//                certificate = (X509Certificate) CertificateHelper.loadCerts(
+//                        certFile).iterator().next();
+//            } catch (KrbException e) {
+//                e.printStackTrace();
+//            }
+//
+//            X509Certificate[] certificates = {certificate};
         }
 
-        X509Certificate certificate = null;
-        try {
-            certificate = (X509Certificate) CertificateHelper.loadCerts(
-                    certFile).iterator().next();
-        } catch (KrbException e) {
-            e.printStackTrace();
-        }
-
-        X509Certificate[] certificates = {certificate};
-
-        byte[] signedAuthPack = signAuthPack(kdcRequest, authPack, certificates);
+        byte[] signedAuthPack = signAuthPack(authPack);
 
         paPkAsReq.setSignedAuthPack(signedAuthPack);
 
@@ -319,18 +314,11 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         return paPkAsReq;
     }
 
-    private byte[] signAuthPack(KdcRequest kdcRequest, AuthPack authPack, X509Certificate[] certificates) {
+    private byte[] signAuthPack(AuthPack authPack) {
 
-        byte[] signedDataBytes = new byte[0];
-//        try {
-//            signedDataBytes = PkinitCrypto.cmsSignedDataCreate(pkinitContext.cryptoctx, authPack.encode(),
-//                    pkinitContext.cryptoctx.getIdPkinitAuthDataOID(), certificates).toByteArray();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         Asn1ObjectIdentifier oid = pkinitContext.cryptoctx.getIdPkinitAuthDataOID();
 
-        signedDataBytes = PkinitCrypto.cmsSignedDataCreate(
+        byte[] signedDataBytes = PkinitCrypto.cmsSignedDataCreate(
                 authPack.encode(), oid, 3, null, null, null, null);
 
         return signedDataBytes;
@@ -368,7 +356,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             //   switch (pde.getPaDataType()) {
             // TODO
             //    }
-            System.out.println();
+            System.out.println(pde.getPaDataType());
         }
 
         if (doAgain) {

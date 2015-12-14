@@ -812,6 +812,7 @@ public class PKCS8Key {
      * @param md             The message digest to use
      * @return byte[] the derived key
      */
+    @SuppressWarnings("PMD.UselessParentheses")
     private static byte[] pkcs12(int idByte, int n, byte[] salt,
                                  byte[] password, int iterationCount,
                                  MessageDigest md) {

@@ -21,12 +21,16 @@ package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
-import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.*;
+
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.CTIME;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.CUSEC;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.NONCE;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.PA_CHECKSUM;
 
 /**
  PKAuthenticator ::= SEQUENCE {

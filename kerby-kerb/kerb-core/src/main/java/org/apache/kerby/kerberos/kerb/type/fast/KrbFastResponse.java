@@ -21,12 +21,16 @@ package org.apache.kerby.kerberos.kerb.type.fast;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.*;
+
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.FINISHED;
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.NONCE;
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.PADATA;
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.STRENGTHEN_KEY;
 
 /**
  KrbFastResponse ::= SEQUENCE {
