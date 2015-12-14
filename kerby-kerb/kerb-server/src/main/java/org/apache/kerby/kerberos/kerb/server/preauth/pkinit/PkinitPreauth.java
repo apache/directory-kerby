@@ -277,7 +277,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         PaDataEntry paDataEntry = new PaDataEntry();
         paDataEntry.setPaDataType(PaDataType.PK_AS_REP);
-        paDataEntry.setPaDataValue(paPkAsRep.encode());
+        //TODO CHOICE
+        //paDataEntry.setPaDataValue(paPkAsRep.encode());
+        paDataEntry.setPaDataValue(paPkAsRep.getDHRepInfo().encode());
 
         return paDataEntry;
     }

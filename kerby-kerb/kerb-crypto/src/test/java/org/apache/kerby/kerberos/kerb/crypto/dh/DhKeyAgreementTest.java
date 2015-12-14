@@ -125,7 +125,7 @@ public class DhKeyAgreementTest {
      *
      * @throws Exception
      */
-    //@Test
+    @Test
     public void testGeneratedDhParams() throws Exception {
         DhClient client = new DhClient();
         DhServer server = new DhServer();

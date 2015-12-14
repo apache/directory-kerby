@@ -166,7 +166,7 @@ public class TBSCertificate extends Asn1SequenceType {
     }
 
     public void setSubjectUniqueId(byte[] issuerUniqueId) {
-        setFieldAs(ISSUER_UNIQUE_ID, new Asn1BitString(issuerUniqueId));
+        setFieldAs(SUBJECT_UNIQUE_ID, new Asn1BitString(issuerUniqueId));
     }
 
     public Extensions getExtensions() {

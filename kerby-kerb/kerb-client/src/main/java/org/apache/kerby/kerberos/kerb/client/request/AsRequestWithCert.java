@@ -21,7 +21,6 @@ package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.x509.type.Certificate;
 import org.apache.kerby.cms.type.CertificateChoices;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.ContentInfo;
@@ -49,6 +48,7 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHNonce;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
+import org.apache.kerby.x509.type.Certificate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,9 +110,10 @@ public class AsRequestWithCert extends AsRequest {
             if (paEntry.getPaDataType() == PaDataType.PK_AS_REP) {
                 LOG.info("processing PK_AS_REP");
 
-                PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
-
-                DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
+                //TODO CHOICE
+                //PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
+                //DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
+                DHRepInfo dhRepInfo = KrbCodec.decode(paEntry.getPaDataValue(), DHRepInfo.class);
 
                 DHNonce nonce = dhRepInfo.getServerDhNonce();
                 byte[] dhSignedData = dhRepInfo.getDHSignedData();
