@@ -19,19 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.type.kdc;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
-import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
-import org.apache.kerby.kerberos.kerb.type.pa.PaData;
-import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
+import org.apache.kerby.kerberos.kerb.type.base.*;
+import org.apache.kerby.kerberos.kerb.type.pa.*;
 
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.MSG_TYPE;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.PADATA;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.PVNO;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.REQ_BODY;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.*;
 
 /**
  KDC-REQ         ::= SEQUENCE {

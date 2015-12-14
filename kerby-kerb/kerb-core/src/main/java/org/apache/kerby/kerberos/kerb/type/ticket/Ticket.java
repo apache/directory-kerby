@@ -19,20 +19,13 @@
  */
 package org.apache.kerby.kerberos.kerb.type.ticket;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
-import org.apache.kerby.kerberos.kerb.type.KerberosString;
-import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
-import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
-import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.*;
+import org.apache.kerby.kerberos.kerb.type.base.*;
 
-import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.ENC_PART;
-import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.REALM;
-import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.SNAME;
-import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.TKT_VNO;
+import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.*;
 
 /**
  Ticket          ::= [APPLICATION 1] SEQUENCE {

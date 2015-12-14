@@ -19,18 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.type.ap;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.type.KerberosTime;
-import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
+import org.apache.kerby.kerberos.kerb.type.*;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 
-import static org.apache.kerby.kerberos.kerb.type.ap.EncAPRepPart.MyEnum.CTIME;
-import static org.apache.kerby.kerberos.kerb.type.ap.EncAPRepPart.MyEnum.CUSEC;
-import static org.apache.kerby.kerberos.kerb.type.ap.EncAPRepPart.MyEnum.SEQ_NUMBER;
-import static org.apache.kerby.kerberos.kerb.type.ap.EncAPRepPart.MyEnum.SUBKEY;
+import static org.apache.kerby.kerberos.kerb.type.ap.EncAPRepPart.MyEnum.*;
 
 /**
  EncAPRepPart    ::= [APPLICATION 27] SEQUENCE {

@@ -19,13 +19,10 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1OctetString;
-import org.apache.kerby.asn1.type.Asn1SequenceType;
+import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.type.*;
 
-import static org.apache.kerby.x509.type.DigestInfo.MyEnum.DIGEST;
-import static org.apache.kerby.x509.type.DigestInfo.MyEnum.DIGEST_ALGORITHM;
+import static org.apache.kerby.x509.type.DigestInfo.MyEnum.*;
 
 /**
  * <pre>

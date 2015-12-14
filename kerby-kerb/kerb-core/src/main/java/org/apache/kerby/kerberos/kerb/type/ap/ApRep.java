@@ -19,17 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.type.ap;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
-import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
-import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
+import org.apache.kerby.kerberos.kerb.type.base.*;
 
-import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.ENC_PART;
-import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.MSG_TYPE;
-import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.PVNO;
+import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.*;
 
 /**
  AP-REP          ::= [APPLICATION 15] SEQUENCE {

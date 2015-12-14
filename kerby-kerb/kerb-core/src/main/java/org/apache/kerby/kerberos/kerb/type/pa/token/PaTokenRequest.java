@@ -19,14 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa.token;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest.MyEnum.TOKEN;
-import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest.MyEnum.TOKEN_INFO;
+import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest.MyEnum.*;
 
 /**
  PA-TOKEN-REQUEST ::= SEQUENCE {

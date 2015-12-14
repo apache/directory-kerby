@@ -19,18 +19,10 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1BmpString;
-import org.apache.kerby.asn1.type.Asn1Choice;
-import org.apache.kerby.asn1.type.Asn1IA5String;
-import org.apache.kerby.asn1.type.Asn1Utf8String;
-import org.apache.kerby.asn1.type.Asn1VisibleString;
+import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.type.*;
 
-import static org.apache.kerby.x509.type.DisplayText.MyEnum.BMP_STRING;
-import static org.apache.kerby.x509.type.DisplayText.MyEnum.IA5_STRING;
-import static org.apache.kerby.x509.type.DisplayText.MyEnum.UTF8_STRING;
-import static org.apache.kerby.x509.type.DisplayText.MyEnum.VISIBLE_STRING;
+import static org.apache.kerby.x509.type.DisplayText.MyEnum.*;
 
 /**
  * <pre>

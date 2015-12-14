@@ -19,15 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.type.KerberosTime;
-import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import org.apache.kerby.kerberos.kerb.type.*;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.PaEncTsEnc.MyEnum.PATIMESTAMP;
-import static org.apache.kerby.kerberos.kerb.type.pa.PaEncTsEnc.MyEnum.PAUSEC;
+import static org.apache.kerby.kerberos.kerb.type.pa.PaEncTsEnc.MyEnum.*;
 
 /**
  PA-ENC-TS-ENC           ::= SEQUENCE {

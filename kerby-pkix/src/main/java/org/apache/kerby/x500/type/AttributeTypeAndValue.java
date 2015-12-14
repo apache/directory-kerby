@@ -19,15 +19,10 @@
  */
 package org.apache.kerby.x500.type;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1Any;
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.asn1.type.Asn1SequenceType;
-import org.apache.kerby.asn1.type.Asn1Type;
+import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.type.*;
 
-import static org.apache.kerby.x500.type.AttributeTypeAndValue.MyEnum.TYPE;
-import static org.apache.kerby.x500.type.AttributeTypeAndValue.MyEnum.VALUE;
+import static org.apache.kerby.x500.type.AttributeTypeAndValue.MyEnum.*;
 
 /**
  * AttributeTypeAndValue ::= SEQUENCE {

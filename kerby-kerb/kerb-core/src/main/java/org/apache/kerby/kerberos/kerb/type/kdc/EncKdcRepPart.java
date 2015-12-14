@@ -19,31 +19,13 @@
  */
 package org.apache.kerby.kerberos.kerb.type.kdc;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.type.KerberosString;
-import org.apache.kerby.kerberos.kerb.type.KerberosTime;
-import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
-import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
-import org.apache.kerby.kerberos.kerb.type.base.LastReq;
-import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.*;
+import org.apache.kerby.kerberos.kerb.type.base.*;
 import org.apache.kerby.kerberos.kerb.type.ticket.TicketFlags;
 
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.AUTHTIME;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.CADDR;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.ENDTIME;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.FLAGS;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.KEY;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.KEY_EXPIRATION;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.LAST_REQ;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.NONCE;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.RENEW_TILL;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.SNAME;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.SREALM;
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.STARTTIME;
+import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.*;
 
 /**
  EncKDCRepPart   ::= SEQUENCE {
@@ -61,7 +43,6 @@ import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.START
  caddr           [11] HostAddresses OPTIONAL
  }
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public abstract class EncKdcRepPart extends KrbAppSequenceType {
     protected enum MyEnum implements EnumType {
         KEY,

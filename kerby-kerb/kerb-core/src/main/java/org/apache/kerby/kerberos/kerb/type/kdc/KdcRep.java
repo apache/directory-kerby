@@ -19,25 +19,14 @@
  */
 package org.apache.kerby.kerberos.kerb.type.kdc;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
-import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
-import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
-import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
-import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.*;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.CNAME;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.CREALM;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.ENC_PART;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.MSG_TYPE;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.PADATA;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.PVNO;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.TICKET;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.*;
 
 /**
  KDC-REP         ::= SEQUENCE {
@@ -53,7 +42,6 @@ import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.TICKET;
  -- as appropriate
  }
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class KdcRep extends KrbMessage {
     protected enum MyEnum implements EnumType {
         PVNO,

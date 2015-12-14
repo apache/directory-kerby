@@ -19,14 +19,11 @@
  */
 package org.apache.kerby.cms.type;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.asn1.type.Asn1SequenceType;
+import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.type.*;
 import org.apache.kerby.x509.type.AttributeValues;
 
-import static org.apache.kerby.cms.type.Attribute.MyEnum.ATTR_TYPE;
-import static org.apache.kerby.cms.type.Attribute.MyEnum.ATTR_VALUES;
+import static org.apache.kerby.cms.type.Attribute.MyEnum.*;
 
 /**
  * Ref. RFC 5652

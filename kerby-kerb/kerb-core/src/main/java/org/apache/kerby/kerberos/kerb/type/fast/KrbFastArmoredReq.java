@@ -19,16 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.type.fast;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
-import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.type.base.*;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq.MyEnum.ARMOR;
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq.MyEnum.ENC_FAST_REQ;
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq.MyEnum.REQ_CHECKSUM;
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq.MyEnum.*;
 
 /**
  KrbFastArmoredReq ::= SEQUENCE {

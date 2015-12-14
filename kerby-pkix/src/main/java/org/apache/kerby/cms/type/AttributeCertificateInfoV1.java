@@ -19,27 +19,11 @@
  */
 package org.apache.kerby.cms.type;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1BitString;
-import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.asn1.type.Asn1SequenceType;
-import org.apache.kerby.x509.type.AlgorithmIdentifier;
-import org.apache.kerby.x509.type.AttCertIssuer;
-import org.apache.kerby.x509.type.AttCertValidityPeriod;
-import org.apache.kerby.x509.type.Attributes;
-import org.apache.kerby.x509.type.CertificateSerialNumber;
-import org.apache.kerby.x509.type.Extensions;
+import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.type.*;
+import org.apache.kerby.x509.type.*;
 
-import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.ATTRIBUTES;
-import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.ATTR_CERT_VALIDITY_PERIOD;
-import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.EXTENSIONS;
-import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.ISSUER;
-import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.ISSUER_UNIQUE_ID;
-import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.SERIAL_NUMBER;
-import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.SIGNATURE;
-import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.SUBJECT;
-import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.VERSION;
+import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.*;
 
 /**
  * AttributeCertificateInfoV1 ::= SEQUENCE {
@@ -56,7 +40,6 @@ import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.VERSIO
  *
  * AttCertVersionV1 ::= INTEGER { v1(0) }
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class AttributeCertificateInfoV1 extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {
         VERSION,

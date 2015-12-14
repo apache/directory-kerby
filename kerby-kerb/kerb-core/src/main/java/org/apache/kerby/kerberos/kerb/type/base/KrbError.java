@@ -19,28 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
-import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.type.*;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
-import org.apache.kerby.kerberos.kerb.type.KerberosString;
-import org.apache.kerby.kerberos.kerb.type.KerberosTime;
+import org.apache.kerby.kerberos.kerb.type.*;
 
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.CNAME;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.CREALM;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.CTIME;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.CUSEC;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.EDATA;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.ERROR_CODE;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.ETEXT;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.MSG_TYPE;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.PVNO;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.REALM;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.SNAME;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.STIME;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.SUSEC;
+import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.*;
 
 /**
  KRB-ERROR       ::= [APPLICATION 30] SEQUENCE {
@@ -59,7 +43,6 @@ import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.SUSEC;
      e-data          [12] OCTET STRING OPTIONAL
  }
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class KrbError extends KrbMessage {
     protected enum MyEnum implements EnumType {
         PVNO,

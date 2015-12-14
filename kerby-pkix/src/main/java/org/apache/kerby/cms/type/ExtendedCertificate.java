@@ -19,13 +19,10 @@
  */
 package org.apache.kerby.cms.type;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.ExtendedCertificate.MyEnum.EXTENDED_CERTIFICATE_INFO;
-import static org.apache.kerby.cms.type.ExtendedCertificate.MyEnum.SIGNATURE;
-import static org.apache.kerby.cms.type.ExtendedCertificate.MyEnum.SIGNATURE_ALGORITHMS;
+import static org.apache.kerby.cms.type.ExtendedCertificate.MyEnum.*;
 
 /**
  * ExtendedCertificate ::= SEQUENCE {

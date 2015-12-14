@@ -19,13 +19,10 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.RevokedCertificate.MyEnum.CRL_ENTRY_EXTENSIONS;
-import static org.apache.kerby.x509.type.RevokedCertificate.MyEnum.REVOCATION_DATA;
-import static org.apache.kerby.x509.type.RevokedCertificate.MyEnum.USER_CERTIFICATE;
+import static org.apache.kerby.x509.type.RevokedCertificate.MyEnum.*;
 
 /**
  * Ref. RFC 2459

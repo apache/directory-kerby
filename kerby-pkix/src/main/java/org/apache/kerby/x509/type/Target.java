@@ -19,14 +19,10 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.x509.type.Target.MyEnum.TARGET_CERT;
-import static org.apache.kerby.x509.type.Target.MyEnum.TARGET_GROUP;
-import static org.apache.kerby.x509.type.Target.MyEnum.TARGET_NAME;
+import static org.apache.kerby.x509.type.Target.MyEnum.*;
 
 /**
  * Ref. RFC 3281

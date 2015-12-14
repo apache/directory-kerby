@@ -19,27 +19,13 @@
  */
 package org.apache.kerby.kerberos.kerb.type.ap;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.type.KerberosString;
-import org.apache.kerby.kerberos.kerb.type.KerberosTime;
-import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
+import org.apache.kerby.kerberos.kerb.type.*;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
-import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
-import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.*;
 
-import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.AUTHENTICATOR_VNO;
-import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.AUTHORIZATION_DATA;
-import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.CKSUM;
-import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.CNAME;
-import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.CREALM;
-import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.CTIME;
-import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.CUSEC;
-import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.SEQ_NUMBER;
-import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.SUBKEY;
+import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.*;
 
 /**
  Authenticator   ::= [APPLICATION 2] SEQUENCE  {
@@ -54,7 +40,6 @@ import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.SUBKEY
  authorization-data      [8] AuthorizationData OPTIONAL
  }
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class Authenticator extends KrbAppSequenceType {
     public static final int TAG = 2;
 

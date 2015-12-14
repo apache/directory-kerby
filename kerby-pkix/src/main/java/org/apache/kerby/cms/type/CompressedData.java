@@ -19,14 +19,11 @@
  */
 package org.apache.kerby.cms.type;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.*;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 
-import static org.apache.kerby.cms.type.CompressedData.MyEnum.COMPRESSION_ALGORITHM;
-import static org.apache.kerby.cms.type.CompressedData.MyEnum.ENCAP_CONTENT_INFO;
-import static org.apache.kerby.cms.type.CompressedData.MyEnum.VERSION;
+import static org.apache.kerby.cms.type.CompressedData.MyEnum.*;
 
 /** 
  * Ref. RFC 3274

@@ -19,8 +19,7 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.type.Asn1Any;
-import org.apache.kerby.asn1.type.Asn1SetOf;
+import org.apache.kerby.asn1.type.*;
 
 /**
  * Ref. RFC 5652

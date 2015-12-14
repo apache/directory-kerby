@@ -19,17 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
-import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.asn1.type.Asn1OctetString;
-import org.apache.kerby.kerberos.kerb.type.KerberosString;
-import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.type.*;
+import org.apache.kerby.kerberos.kerb.type.*;
 
-import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.ETYPE;
-import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.S2KPARAMS;
-import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.SALT;
+import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.*;
 
 /**
  ETYPE-INFO2-ENTRY       ::= SEQUENCE {

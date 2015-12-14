@@ -19,8 +19,7 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.asn1.type.Asn1SequenceOf;
+import org.apache.kerby.asn1.type.*;
 
 /**
  * <pre>

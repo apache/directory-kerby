@@ -19,13 +19,10 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.asn1.type.Asn1SequenceType;
+import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.type.*;
 
-import static org.apache.kerby.x509.type.AccessDescription.MyEnum.ACCESS_LOCATION;
-import static org.apache.kerby.x509.type.AccessDescription.MyEnum.ACCESS_METHOD;
+import static org.apache.kerby.x509.type.AccessDescription.MyEnum.*;
 
 /**
  *
