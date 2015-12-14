@@ -19,10 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.asn1.Asn1;
-import org.apache.kerby.asn1.parse.Asn1Container;
-import org.apache.kerby.asn1.parse.Asn1Item;
-import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -43,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
-import java.util.List;
 
 /**
  * KDC handler to process client requests. Currently only one realm is supported.
@@ -78,24 +73,6 @@ public class KdcHandler {
 
         ByteBuffer message = receivedMessage.duplicate();
 
-        Asn1ParseResult parseResult = null;
-        try {
-            parseResult = Asn1.parse(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /**Get REQ_BODY in KDC_REQ for checksum*/
-        byte[] reqBodyBytes = null;
-        Asn1Container container = (Asn1Container) parseResult;
-        List<Asn1ParseResult> parseResults = container.getChildren();
-        Asn1Container parsingItem = (Asn1Container)parseResults.get(0);
-        List<Asn1ParseResult> items = parsingItem.getChildren();
-        if (items.size() > 3) { // TO BE FIXED: INDICATE PKINIT CASE!!
-            ByteBuffer bodyBuffer = items.get(3).getBodyBuffer();
-            byte[] result = new byte[bodyBuffer.remaining()];
-            bodyBuffer.get(result);
-        }
-
         try {
             krbRequest = KrbCodec.decodeMessage(receivedMessage);
         } catch (IOException e) {
@@ -124,7 +101,7 @@ public class KdcHandler {
         }
 
         // For checksum
-        kdcRequest.setReqBodyBytes(reqBodyBytes);
+        kdcRequest.setReqPackage(message);
 
         if (remoteAddress == null) {
             throw new KrbException("Remote address is null, not available.");

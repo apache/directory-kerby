@@ -18,9 +18,11 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth.pkinit;
 
+import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.asn1.parse.Asn1Container;
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.x509.type.Certificate;
 import org.apache.kerby.cms.type.CertificateChoices;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.ContentInfo;
@@ -54,6 +56,7 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator;
+import org.apache.kerby.x509.type.Certificate;
 import org.apache.kerby.x509.type.DHParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
@@ -66,6 +69,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,15 +169,33 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             checkClockskew(kdcRequest, pkAuthenticator.getCtime());
             DHParameter dhParameter;
 
-            if (kdcRequest.getReqBodyBytes() == null) {
+            byte[] reqBodyBytes = null;
+            if (kdcRequest.getReqPackage() == null) {
                 LOG.error("ReqBodyBytes isn't available");
                 return false;
+            } else {
+                Asn1ParseResult parseResult = null;
+                try {
+                    parseResult = Asn1.parse(kdcRequest.getReqPackage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                /**Get REQ_BODY in KDC_REQ for checksum*/
+                Asn1Container container = (Asn1Container) parseResult;
+                List<Asn1ParseResult> parseResults = container.getChildren();
+                Asn1Container parsingItem = (Asn1Container)parseResults.get(0);
+                List<Asn1ParseResult> items = parsingItem.getChildren();
+                if (items.size() > 3) { // TO BE FIXED: INDICATE PKINIT CASE!!
+                    ByteBuffer bodyBuffer = items.get(3).getBodyBuffer();
+                    reqBodyBytes = new byte[bodyBuffer.remaining()];
+                    bodyBuffer.get(reqBodyBytes);
+                }
             }
 
             CheckSum expectedCheckSum = null;
             try {
                 expectedCheckSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
-                        kdcRequest.getReqBodyBytes());
+                        reqBodyBytes);
             } catch (KrbException e) {
                 LOG.error("Unable to calculate AS REQ checksum.", e.getMessage());
             }
@@ -255,8 +277,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         PaDataEntry paDataEntry = new PaDataEntry();
         paDataEntry.setPaDataType(PaDataType.PK_AS_REP);
-        //TODO CHOICE
         paDataEntry.setPaDataValue(paPkAsRep.encode());
+
         return paDataEntry;
     }
 
@@ -314,7 +336,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         Asn1ObjectIdentifier oid = cryptoContext.getIdPkinitDHKeyDataOID();
         signedDataBytes = PkinitCrypto.cmsSignedDataCreate(kdcDhKeyInfo.encode(), oid, 3, null,
-                certificateSet, null, null);
+                null, null, null);
 
         dhRepInfo.setDHSignedData(signedDataBytes);
 

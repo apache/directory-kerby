@@ -97,7 +97,7 @@ public abstract class KdcRequest {
     private boolean isPkinit = false;
     private boolean isAnonymous = false;
     private EncryptionKey sessionKey;
-    private byte[] bodybytes;
+    private ByteBuffer reqPackage;
 
     /**
      * Get session key.
@@ -815,11 +815,11 @@ public abstract class KdcRequest {
         return kdcReq.getReqBody().getKdcOptions();
     }
 
-    public void setReqBodyBytes(byte[] bodyBytes) {
-        this.bodybytes = bodyBytes;
+    public void setReqPackage(ByteBuffer reqPackage) {
+        this.reqPackage = reqPackage;
     }
 
-    public byte[] getReqBodyBytes() {
-        return this.bodybytes;
+    public ByteBuffer getReqPackage() {
+        return this.reqPackage;
     }
 }
