@@ -20,6 +20,10 @@
 package org.apache.kerby.kerberos.kerb.codec;
 
 import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.EncapsulatedContentInfo;
+import org.apache.kerby.cms.type.SignedData;
+import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
@@ -28,6 +32,9 @@ import org.apache.kerby.kerberos.kerb.type.kdc.AsRep;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 import org.junit.Test;
 
@@ -40,12 +47,10 @@ public class TestPkinitAnonymousAsRepCodec {
     @Test
     public void test() throws IOException {
         byte[] bytes = CodecTestUtil.readDataFile("/pkinit_anonymous_asrep.token");
-        //Asn1.dump(bytes, true);
         ByteBuffer asRepToken = ByteBuffer.wrap(bytes);
 
         AsRep asRep = new AsRep();
         asRep.decode(asRepToken);
-        Asn1.dump(asRep, false);
 
         assertThat(asRep.getPvno()).isEqualTo(5);
         assertThat(asRep.getMsgType()).isEqualTo(KrbMessageType.AS_REP);
@@ -54,12 +59,30 @@ public class TestPkinitAnonymousAsRepCodec {
         PaDataEntry pkAsRepEntry = paData.findEntry(PaDataType.PK_AS_REP);
         assertThat(pkAsRepEntry.getPaDataType()).isEqualTo(PaDataType.PK_AS_REP);
 
-        // TO BE FIXED
-        //PaPkAsRep paPkAsRep = new PaPkAsRep();
-        //byte[] padataValue = pkAsRepEntry.getPaDataValue();
-        //Asn1.dump(padataValue, true);
-        //paPkAsRep.decode(padataValue);
-        //assertThat(paPkAsRep.getDHRepInfo()).isNotNull();
+        PaPkAsRep paPkAsRep = new PaPkAsRep();
+        byte[] padataValue = pkAsRepEntry.getPaDataValue();
+//        Asn1.dump(padataValue, true);
+        paPkAsRep.decode(padataValue);
+
+        assertThat(paPkAsRep.getDHRepInfo()).isNotNull();
+
+        DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
+        byte[] dhSignedData = dhRepInfo.getDHSignedData();
+        ContentInfo contentInfo = new ContentInfo();
+        contentInfo.decode(dhSignedData);
+        assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
+        SignedData signedData = contentInfo.getContentAs(SignedData.class);
+        assertThat(signedData.getCertificates()).isNotNull();
+
+        EncapsulatedContentInfo encapsulatedContentInfo = signedData.getEncapContentInfo();
+        assertThat(encapsulatedContentInfo.getContentType().getValue()).isEqualTo("1.3.6.1.5.2.3.2");
+
+        byte[] eContentInfo = encapsulatedContentInfo.getContent();
+        KdcDHKeyInfo kdcDhKeyInfo = new KdcDHKeyInfo();
+        kdcDhKeyInfo.decode(eContentInfo);
+        assertThat(kdcDhKeyInfo.getSubjectPublicKey()).isNotNull();
+        assertThat(kdcDhKeyInfo.getDHKeyExpiration()).isNotNull();
+        assertThat(kdcDhKeyInfo.getNonce()).isNotNull();
 
         PaDataEntry etypeInfo2Entry = paData.findEntry(PaDataType.ETYPE_INFO2);
         assertThat(etypeInfo2Entry.getPaDataType()).isEqualTo(PaDataType.ETYPE_INFO2);

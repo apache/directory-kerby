@@ -19,7 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
-import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.cms.type.ContentInfo;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
@@ -33,9 +35,12 @@ public class TestPaPkAsRep {
     public void test() throws IOException, KrbException {
         PaPkAsRep paPkAsRep = new PaPkAsRep();
         DHRepInfo dhRepInfo = new DHRepInfo();
-        dhRepInfo.setDHSignedData("dhSignedData".getBytes());
+        ContentInfo contentInfo = new ContentInfo();
+        contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
+        dhRepInfo.setDHSignedData(contentInfo.encode());
         paPkAsRep.setDHRepInfo(dhRepInfo);
+        Asn1.dump(paPkAsRep.encode(), true);
         //TO BE FIXED
-        //KrbCodec.decode(paPkAsRep.encode(), PaPkAsRep.class);
+//        KrbCodec.decode(paPkAsRep.encode(), PaPkAsRep.class);
     }
 }

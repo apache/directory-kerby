@@ -23,6 +23,7 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.ImplicitField;
+import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
@@ -37,7 +38,8 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo.MyEnum.*;
 public class DHRepInfo extends KrbSequenceType {
     protected enum MyEnum implements EnumType {
         DH_SIGNED_DATA,
-        SERVER_DH_NONCE;
+        SERVER_DH_NONCE,
+        KDF_ID;
 
         @Override
         public int getValue() {
@@ -52,7 +54,8 @@ public class DHRepInfo extends KrbSequenceType {
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ImplicitField(DH_SIGNED_DATA, Asn1OctetString.class),
-            new ExplicitField(SERVER_DH_NONCE, DHNonce.class)
+            new ExplicitField(SERVER_DH_NONCE, DHNonce.class),
+            new ExplicitField(KDF_ID, Asn1ObjectIdentifier.class)
     };
 
     public DHRepInfo() {
@@ -73,5 +76,13 @@ public class DHRepInfo extends KrbSequenceType {
 
     public void setServerDhNonce(DHNonce dhNonce) {
         setFieldAs(SERVER_DH_NONCE, dhNonce);
+    }
+
+    public Asn1ObjectIdentifier getKdfId() {
+        return getFieldAs(KDF_ID, Asn1ObjectIdentifier.class);
+    }
+
+    public void setKdfId(Asn1ObjectIdentifier kdfId) {
+        setFieldAs(KDF_ID, kdfId);
     }
 }
