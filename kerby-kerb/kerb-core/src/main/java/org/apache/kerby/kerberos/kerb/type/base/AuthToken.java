@@ -19,7 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This is the token definition API according to TokenPreauth draft.

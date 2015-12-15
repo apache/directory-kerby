@@ -19,11 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
-import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-import org.apache.kerby.kerberos.kerb.type.base.*;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.*;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.AS_CHECKSUM;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.REPLY_KEY;
 
 /**
  ReplyKeyPack ::= SEQUENCE {

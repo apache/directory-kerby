@@ -19,12 +19,16 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.*;
-import org.apache.kerby.asn1.type.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.type.Asn1Choice;
+import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
+import org.apache.kerby.asn1.type.Asn1UtcTime;
 
 import java.util.Date;
 
-import static org.apache.kerby.x509.type.Time.MyEnum.*;
+import static org.apache.kerby.x509.type.Time.MyEnum.GENERAL_TIME;
+import static org.apache.kerby.x509.type.Time.MyEnum.UTC_TIME;
 
 /**
  *

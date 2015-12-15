@@ -1,11 +1,15 @@
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.*;
-import org.apache.kerby.asn1.type.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1SequenceType;
 
 import java.math.BigInteger;
 
-import static org.apache.kerby.x509.type.DHParameter.MyEnum.*;
+import static org.apache.kerby.x509.type.DHParameter.MyEnum.G;
+import static org.apache.kerby.x509.type.DHParameter.MyEnum.P;
+import static org.apache.kerby.x509.type.DHParameter.MyEnum.Q;
 
 public class DHParameter extends Asn1SequenceType {
     protected static enum MyEnum implements EnumType {

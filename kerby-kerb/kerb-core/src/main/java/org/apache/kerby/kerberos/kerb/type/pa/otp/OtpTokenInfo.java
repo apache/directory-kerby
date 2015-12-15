@@ -19,12 +19,25 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa.otp;
 
-import org.apache.kerby.asn1.*;
-import org.apache.kerby.asn1.type.*;
-import org.apache.kerby.kerberos.kerb.type.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.Asn1Utf8String;
+import org.apache.kerby.kerberos.kerb.type.KerberosString;
+import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AlgorithmIdentifiers;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.*;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.FLAGS;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.ITERATION_COUNT;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.OTP_ALG_ID;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.OTP_CHALLENGE;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.OTP_FORMAT;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.OTP_LENGTH;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.OTP_TOKEN_ID;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.OTP_VENDOR;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.SUPPORTED_HASH_ALG;
 
 /**
  OTP-TOKENINFO ::= SEQUENCE {
@@ -39,6 +52,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.*;
      iterationCount   [8] Int32                    OPTIONAL
  }
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class OtpTokenInfo extends KrbSequenceType {
     protected enum MyEnum implements EnumType {
         FLAGS,

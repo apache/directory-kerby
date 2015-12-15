@@ -19,16 +19,37 @@
  */
 package org.apache.kerby.kerberos.kerb.type.kdc;
 
-import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.type.*;
+import org.apache.kerby.kerberos.kerb.type.KerberosString;
+import org.apache.kerby.kerberos.kerb.type.KerberosTime;
+import org.apache.kerby.kerberos.kerb.type.KrbIntegers;
+import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
-import org.apache.kerby.kerberos.kerb.type.base.*;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.Tickets;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.*;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.ADDITIONAL_TICKETS;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.ADDRESSES;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.CNAME;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.ENC_AUTHORIZATION_DATA;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.ETYPE;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.FROM;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.KDC_OPTIONS;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.NONCE;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.REALM;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.RTIME;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.SNAME;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.TILL;
 
 /**
  KDC-REQ-BODY    ::= SEQUENCE {
@@ -52,6 +73,7 @@ import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.*;
  -- NOTE: not empty
  }
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class KdcReqBody extends KrbSequenceType {
     protected enum MyEnum implements EnumType {
         KDC_OPTIONS,

@@ -19,13 +19,19 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.type.*;
+import org.apache.kerby.kerberos.kerb.type.KerberosStrings;
+import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import static org.apache.kerby.kerberos.kerb.type.base.PrincipalName.MyEnum.*;
+import static org.apache.kerby.kerberos.kerb.type.base.PrincipalName.MyEnum.NAME_STRING;
+import static org.apache.kerby.kerberos.kerb.type.base.PrincipalName.MyEnum.NAME_TYPE;
 
 /**
  PrincipalName   ::= SEQUENCE {

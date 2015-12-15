@@ -19,12 +19,20 @@
  */
 package org.apache.kerby.kerberos.kerb.type.ap;
 
-import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.kerberos.kerb.type.base.*;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
+import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
+import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
-import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.*;
+import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.AP_OPTIONS;
+import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.AUTHENTICATOR;
+import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.MSG_TYPE;
+import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.PVNO;
+import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.TICKET;
 
 /**
  AP-REQ          ::= [APPLICATION 14] SEQUENCE {
@@ -35,6 +43,7 @@ import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.*;
  authenticator   [4] EncryptedData -- Authenticator
  }
  */
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class ApReq extends KrbMessage {
     protected enum MyEnum implements EnumType {
         PVNO,

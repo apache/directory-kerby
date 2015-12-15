@@ -19,13 +19,17 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.*;
-import org.apache.kerby.asn1.type.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
 import java.util.Arrays;
 
-import static org.apache.kerby.kerberos.kerb.type.base.CheckSum.MyEnum.*;
+import static org.apache.kerby.kerberos.kerb.type.base.CheckSum.MyEnum.CHECK_SUM;
+import static org.apache.kerby.kerberos.kerb.type.base.CheckSum.MyEnum.CKSUM_TYPE;
 
 /**
  Checksum        ::= SEQUENCE {

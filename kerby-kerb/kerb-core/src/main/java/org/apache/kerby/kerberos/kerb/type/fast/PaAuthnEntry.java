@@ -19,12 +19,17 @@
  */
 package org.apache.kerby.kerberos.kerb.type.fast;
 
-import org.apache.kerby.asn1.*;
-import org.apache.kerby.asn1.type.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.PaAuthnEntry.MyEnum.*;
+import static org.apache.kerby.kerberos.kerb.type.fast.PaAuthnEntry.MyEnum.PA_HINT;
+import static org.apache.kerby.kerberos.kerb.type.fast.PaAuthnEntry.MyEnum.PA_TYPE;
+import static org.apache.kerby.kerberos.kerb.type.fast.PaAuthnEntry.MyEnum.PA_VALUE;
 
 /**
  PA-AUTHENTICATION-SET-ELEM ::= SEQUENCE {

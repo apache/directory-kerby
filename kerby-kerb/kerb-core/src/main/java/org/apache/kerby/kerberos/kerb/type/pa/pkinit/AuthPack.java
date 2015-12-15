@@ -19,11 +19,16 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
-import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.*;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.CLIENT_DH_NONCE;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.CLIENT_PUBLIC_VALUE;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.PK_AUTHENTICATOR;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.SUPPORTED_CMS_TYPES;
 
 /**
  AuthPack ::= SEQUENCE {

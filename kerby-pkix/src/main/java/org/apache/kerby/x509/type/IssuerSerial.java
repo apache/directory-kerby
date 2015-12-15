@@ -19,10 +19,14 @@
  */
 package org.apache.kerby.x509.type;
 
-import org.apache.kerby.asn1.*;
-import org.apache.kerby.asn1.type.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.type.Asn1BitString;
+import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.IssuerSerial.MyEnum.*;
+import static org.apache.kerby.x509.type.IssuerSerial.MyEnum.ISSUER;
+import static org.apache.kerby.x509.type.IssuerSerial.MyEnum.ISSUER_UID;
+import static org.apache.kerby.x509.type.IssuerSerial.MyEnum.SERIAL;
 
 /**
  * <pre>

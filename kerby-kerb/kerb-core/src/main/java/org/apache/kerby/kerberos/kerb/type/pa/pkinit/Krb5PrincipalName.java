@@ -19,11 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
-import org.apache.kerby.asn1.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-import org.apache.kerby.kerberos.kerb.type.base.*;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.base.Realm;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.*;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.PRINCIPAL_NAME;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.REALM;
 
 /**
  KRB5PrincipalName ::= SEQUENCE {

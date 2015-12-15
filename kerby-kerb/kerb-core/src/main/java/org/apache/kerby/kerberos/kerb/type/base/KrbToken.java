@@ -19,15 +19,24 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.asn1.*;
-import org.apache.kerby.asn1.type.*;
-import org.apache.kerby.kerberos.kerb.*;
-import org.apache.kerby.kerberos.kerb.provider.*;
+import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.kerberos.kerb.KrbConstant;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
+import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.*;
+import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.TOKEN_FORMAT;
+import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.TOKEN_VALUE;
 
 /**
  * KRB-TOKEN_VALUE ::= SEQUENCE {
