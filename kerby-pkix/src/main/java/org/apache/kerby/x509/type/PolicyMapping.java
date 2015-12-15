@@ -23,8 +23,7 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.PolicyMapping.MyEnum.ISSUER_DOMAIN_POLICY;
-import static org.apache.kerby.x509.type.PolicyMapping.MyEnum.SUBJECT_DOMAIN_POLICY;
+import static org.apache.kerby.x509.type.PolicyMapping.MyEnum.*;
 
 /**
  * Ref. RFC3280

@@ -29,10 +29,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
-import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.ENC_PART;
-import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.REALM;
-import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.SNAME;
-import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.TKT_VNO;
+import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.*;
 
 /**
  Ticket          ::= [APPLICATION 1] SEQUENCE {

@@ -27,10 +27,7 @@ import org.apache.kerby.asn1.type.Asn1IA5String;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
 
-import static org.apache.kerby.x509.type.DisplayText.MyEnum.BMP_STRING;
-import static org.apache.kerby.x509.type.DisplayText.MyEnum.IA5_STRING;
-import static org.apache.kerby.x509.type.DisplayText.MyEnum.UTF8_STRING;
-import static org.apache.kerby.x509.type.DisplayText.MyEnum.VISIBLE_STRING;
+import static org.apache.kerby.x509.type.DisplayText.MyEnum.*;
 
 /**
  * <pre>

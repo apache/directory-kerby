@@ -28,17 +28,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x500.type.Name;
 
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.EXTENSIONS;
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.ISSUER;
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.ISSUER_UNIQUE_ID;
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.SERIAL_NUMBER;
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.SIGNATURE;
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.SUBJECT;
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.SUBJECT_PUBLIC_KEY_INFO;
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.SUBJECT_UNIQUE_ID;
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.VALIDITY;
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.VERSION;
-
+import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.*;
 
 /**
  * <pre>
@@ -56,7 +46,6 @@ import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.VERSION;
  *  }
  * </pre>
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class TBSCertificate extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {
         VERSION,

@@ -25,11 +25,7 @@ import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.Certificate;
 
-import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.CERTIFICATE;
-import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.EXTENDED_CERTIFICATE;
-import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.OTHER;
-import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.V1_ATTR_CERT;
-import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.V2_ATTR_CERT;
+import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.*;
 
 /**
  * CertificateChoices ::= CHOICE {
@@ -39,7 +35,6 @@ import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.V2_ATTR_CERT;
  *   v2AttrCert [2] IMPLICIT AttributeCertificateV2,
  *   other [3] IMPLICIT OtherCertificateFormat }
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class CertificateChoices extends Asn1Choice {
     protected enum MyEnum implements EnumType {
         CERTIFICATE,

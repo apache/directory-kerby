@@ -28,8 +28,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
 import java.util.Arrays;
 
-import static org.apache.kerby.kerberos.kerb.type.base.EncryptionKey.MyEnum.KEY_TYPE;
-import static org.apache.kerby.kerberos.kerb.type.base.EncryptionKey.MyEnum.KEY_VALUE;
+import static org.apache.kerby.kerberos.kerb.type.base.EncryptionKey.MyEnum.*;
 
 /**
  EncryptionKey   ::= SEQUENCE {

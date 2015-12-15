@@ -25,9 +25,7 @@ import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 
-import static org.apache.kerby.x509.type.IetfAttrSyntaxChoice.MyEnum.OCTETS;
-import static org.apache.kerby.x509.type.IetfAttrSyntaxChoice.MyEnum.OID;
-import static org.apache.kerby.x509.type.IetfAttrSyntaxChoice.MyEnum.UTF8;
+import static org.apache.kerby.x509.type.IetfAttrSyntaxChoice.MyEnum.*;
 
 /**
  * Ref. RFC3281

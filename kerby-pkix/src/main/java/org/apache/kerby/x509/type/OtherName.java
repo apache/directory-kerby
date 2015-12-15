@@ -27,8 +27,7 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.x509.type.OtherName.MyEnum.TYPE_ID;
-import static org.apache.kerby.x509.type.OtherName.MyEnum.VALUE;
+import static org.apache.kerby.x509.type.OtherName.MyEnum.*;
 
 /**
  * <pre>

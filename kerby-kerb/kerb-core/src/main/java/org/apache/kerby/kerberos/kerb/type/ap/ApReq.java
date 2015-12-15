@@ -28,11 +28,7 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
-import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.AP_OPTIONS;
-import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.AUTHENTICATOR;
-import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.MSG_TYPE;
-import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.PVNO;
-import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.TICKET;
+import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.*;
 
 /**
  AP-REQ          ::= [APPLICATION 14] SEQUENCE {
@@ -43,7 +39,6 @@ import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.TICKET;
  authenticator   [4] EncryptedData -- Authenticator
  }
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class ApReq extends KrbMessage {
     protected enum MyEnum implements EnumType {
         PVNO,

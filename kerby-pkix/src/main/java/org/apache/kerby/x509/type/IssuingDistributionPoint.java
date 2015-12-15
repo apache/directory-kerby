@@ -25,12 +25,7 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Boolean;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.DISTRIBUTION_POINT;
-import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.INDIRECT_CRL;
-import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.ONLY_CONTAINS_ATTRIBUTE_CERTS;
-import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.ONLY_CONTAINS_CA_CERTS;
-import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.ONLY_CONTAINS_USER_CERTS;
-import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.ONLY_SOME_REASONS;
+import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.*;
 
 /**
  * <pre>
@@ -44,7 +39,6 @@ import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.ONLY_SO
  * }
  * </pre>
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class IssuingDistributionPoint extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {
         DISTRIBUTION_POINT,

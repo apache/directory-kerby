@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.cms.type.OtherRevocationInfoFormat.MyEnum.OTHER_REV_INFO;
-import static org.apache.kerby.cms.type.OtherRevocationInfoFormat.MyEnum.OTHER_REV_INFO_FORMAT;
+import static org.apache.kerby.cms.type.OtherRevocationInfoFormat.MyEnum.*;
 
 /**
  * OtherRevocationInfoFormat ::= SEQUENCE {

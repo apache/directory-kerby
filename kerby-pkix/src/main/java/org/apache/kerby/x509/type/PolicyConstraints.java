@@ -25,8 +25,7 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.PolicyConstraints.MyEnum.INHIBIT_POLICY_MAPPING;
-import static org.apache.kerby.x509.type.PolicyConstraints.MyEnum.REQUIRE_EXPLICIT_POLICY;
+import static org.apache.kerby.x509.type.PolicyConstraints.MyEnum.*;
 
 /**
  * Ref. RFC 5280

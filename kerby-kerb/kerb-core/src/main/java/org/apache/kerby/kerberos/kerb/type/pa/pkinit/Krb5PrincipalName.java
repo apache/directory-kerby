@@ -26,8 +26,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.base.Realm;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.PRINCIPAL_NAME;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.REALM;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.*;
 
 /**
  KRB5PrincipalName ::= SEQUENCE {

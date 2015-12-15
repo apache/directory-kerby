@@ -27,8 +27,7 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.cms.type.ContentInfo.MyEnum.CONTENT;
-import static org.apache.kerby.cms.type.ContentInfo.MyEnum.CONTENT_TYPE;
+import static org.apache.kerby.cms.type.ContentInfo.MyEnum.*;
 
 /**
  * Ref. RFC 5652

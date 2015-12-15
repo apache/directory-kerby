@@ -28,11 +28,7 @@ import org.apache.kerby.asn1.type.Asn1T61String;
 import org.apache.kerby.asn1.type.Asn1UniversalString;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
 
-import static org.apache.kerby.x509.type.DirectoryString.MyEnum.BMP_STRING;
-import static org.apache.kerby.x509.type.DirectoryString.MyEnum.PRINTABLE_STRING;
-import static org.apache.kerby.x509.type.DirectoryString.MyEnum.TELETEX_STRING;
-import static org.apache.kerby.x509.type.DirectoryString.MyEnum.UNIVERSAL_STRING;
-import static org.apache.kerby.x509.type.DirectoryString.MyEnum.UTF8_STRING;
+import static org.apache.kerby.x509.type.DirectoryString.MyEnum.*;
 
 /**
  * <pre>
@@ -45,7 +41,6 @@ import static org.apache.kerby.x509.type.DirectoryString.MyEnum.UTF8_STRING;
  * }
  * </pre>
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class DirectoryString extends Asn1Choice {
     protected enum MyEnum implements EnumType {
         TELETEX_STRING,

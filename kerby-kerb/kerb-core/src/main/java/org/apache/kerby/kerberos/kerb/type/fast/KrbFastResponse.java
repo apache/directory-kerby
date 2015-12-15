@@ -27,10 +27,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.FINISHED;
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.NONCE;
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.PADATA;
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.STRENGTHEN_KEY;
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.*;
 
 /**
  KrbFastResponse ::= SEQUENCE {

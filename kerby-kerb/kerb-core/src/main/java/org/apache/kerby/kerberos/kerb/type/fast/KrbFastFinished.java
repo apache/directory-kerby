@@ -27,9 +27,7 @@ import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastFinished.MyEnum.FAST_OPTIONS;
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastFinished.MyEnum.PADATA;
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastFinished.MyEnum.REQ_BODY;
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastFinished.MyEnum.*;
 
 /**
  KrbFastFinished ::= SEQUENCE {

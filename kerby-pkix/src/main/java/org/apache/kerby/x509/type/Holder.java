@@ -24,9 +24,7 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.Holder.MyEnum.BASE_CERTIFICATE_ID;
-import static org.apache.kerby.x509.type.Holder.MyEnum.ENTITY_NAME;
-import static org.apache.kerby.x509.type.Holder.MyEnum.OBJECT_DIGEST_INFO;
+import static org.apache.kerby.x509.type.Holder.MyEnum.*;
 
 /**
  * <pre>

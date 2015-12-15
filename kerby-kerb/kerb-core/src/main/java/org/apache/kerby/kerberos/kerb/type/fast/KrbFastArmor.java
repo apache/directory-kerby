@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmor.MyEnum.ARMOR_TYPE;
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmor.MyEnum.ARMOR_VALUE;
+import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmor.MyEnum.*;
 
 /**
  KrbFastArmor ::= SEQUENCE {

@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding.MyEnum.CONTENTS;
-import static org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding.MyEnum.TR_TYPE;
+import static org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding.MyEnum.*;;
 
 /**
  TransitedEncoding       ::= SEQUENCE {

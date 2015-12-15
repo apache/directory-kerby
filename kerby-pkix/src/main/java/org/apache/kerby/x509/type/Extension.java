@@ -26,9 +26,7 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.Extension.MyEnum.CRITICAL;
-import static org.apache.kerby.x509.type.Extension.MyEnum.EXTN_ID;
-import static org.apache.kerby.x509.type.Extension.MyEnum.EXTN_VALUE;
+import static org.apache.kerby.x509.type.Extension.MyEnum.*;
 
 /**
  * Ref. X.509 V3 extension

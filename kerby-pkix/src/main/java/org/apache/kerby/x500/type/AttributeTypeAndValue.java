@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.x500.type.AttributeTypeAndValue.MyEnum.TYPE;
-import static org.apache.kerby.x500.type.AttributeTypeAndValue.MyEnum.VALUE;
+import static org.apache.kerby.x500.type.AttributeTypeAndValue.MyEnum.*;
 
 /**
  * AttributeTypeAndValue ::= SEQUENCE {

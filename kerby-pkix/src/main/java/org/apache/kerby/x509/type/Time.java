@@ -27,8 +27,7 @@ import org.apache.kerby.asn1.type.Asn1UtcTime;
 
 import java.util.Date;
 
-import static org.apache.kerby.x509.type.Time.MyEnum.GENERAL_TIME;
-import static org.apache.kerby.x509.type.Time.MyEnum.UTC_TIME;
+import static org.apache.kerby.x509.type.Time.MyEnum.*;
 
 /**
  *

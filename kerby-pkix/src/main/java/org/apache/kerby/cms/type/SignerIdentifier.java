@@ -25,8 +25,7 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.SubjectKeyIdentifier;
 
-import static org.apache.kerby.cms.type.SignerIdentifier.MyEnum.ISSUER_AND_SERIAL_NUMBER;
-import static org.apache.kerby.cms.type.SignerIdentifier.MyEnum.SUBJECT_KEY_IDENTIFIER;
+import static org.apache.kerby.cms.type.SignerIdentifier.MyEnum.*;
 
 /**
  * Ref. RFC 5652

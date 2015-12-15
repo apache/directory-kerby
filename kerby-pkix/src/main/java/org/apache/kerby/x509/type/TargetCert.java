@@ -23,9 +23,7 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.TargetCert.MyEnum.CERT_DIGEST_INFO;
-import static org.apache.kerby.x509.type.TargetCert.MyEnum.TARGET_CERTIFICATE;
-import static org.apache.kerby.x509.type.TargetCert.MyEnum.TARGET_NAME;
+import static org.apache.kerby.x509.type.TargetCert.MyEnum.*;
 
 /**
  * TargetCert  ::= SEQUENCE {

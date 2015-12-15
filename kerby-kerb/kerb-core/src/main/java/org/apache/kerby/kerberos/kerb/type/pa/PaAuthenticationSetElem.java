@@ -26,9 +26,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.PaAuthenticationSetElem.MyEnum.PA_HINT;
-import static org.apache.kerby.kerberos.kerb.type.pa.PaAuthenticationSetElem.MyEnum.PA_TYPE;
-import static org.apache.kerby.kerberos.kerb.type.pa.PaAuthenticationSetElem.MyEnum.PA_VALUE;
+import static org.apache.kerby.kerberos.kerb.type.pa.PaAuthenticationSetElem.MyEnum.*;
 
 /**
  PA-AUTHENTICATION-SET-ELEM ::= SEQUENCE {

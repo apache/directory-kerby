@@ -23,7 +23,7 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.x500.type.Name.MyEnum.RDN_SEQUENCE;
+import static org.apache.kerby.x500.type.Name.MyEnum.*;
 
 /**
  *

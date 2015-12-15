@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.cms.type.OtherCertificateFormat.MyEnum.OTHER_CERT;
-import static org.apache.kerby.cms.type.OtherCertificateFormat.MyEnum.OTHER_CERT_FORMAT;
+import static org.apache.kerby.cms.type.OtherCertificateFormat.MyEnum.*;
 
 /**
  * OtherCertificateFormat ::= SEQUENCE {

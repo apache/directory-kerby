@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.EncapsulatedContentInfo.MyEnum.CONTENT;
-import static org.apache.kerby.cms.type.EncapsulatedContentInfo.MyEnum.CONTENT_TYPE;
+import static org.apache.kerby.cms.type.EncapsulatedContentInfo.MyEnum.*;
 
 /**
  * EncapsulatedContentInfo ::= SEQUENCE {

@@ -25,7 +25,7 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 
-import static org.apache.kerby.kerberos.kerb.type.ad.AdToken.MyEnum.TOKEN;
+import static org.apache.kerby.kerberos.kerb.type.ad.AdToken.MyEnum.*;
 
 /**
  AD-TOKEN ::= SEQUENCE {

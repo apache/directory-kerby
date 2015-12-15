@@ -26,8 +26,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.AS_CHECKSUM;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.REPLY_KEY;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.*;
 
 /**
  ReplyKeyPack ::= SEQUENCE {

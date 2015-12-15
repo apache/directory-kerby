@@ -25,10 +25,7 @@ import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.ObjectDigestInfo.MyEnum.DIGESTED_OBJECT_TYPE;
-import static org.apache.kerby.x509.type.ObjectDigestInfo.MyEnum.DIGEST_ALGORITHM;
-import static org.apache.kerby.x509.type.ObjectDigestInfo.MyEnum.OBJECT_DIGEST;
-import static org.apache.kerby.x509.type.ObjectDigestInfo.MyEnum.OTHER_OBJECT_TYPE_ID;
+import static org.apache.kerby.x509.type.ObjectDigestInfo.MyEnum.*;
 
 /**
  *

@@ -29,8 +29,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import java.net.InetAddress;
 import java.util.Arrays;
 
-import static org.apache.kerby.kerberos.kerb.type.base.HostAddress.MyEnum.ADDRESS;
-import static org.apache.kerby.kerberos.kerb.type.base.HostAddress.MyEnum.ADDR_TYPE;
+import static org.apache.kerby.kerberos.kerb.type.base.HostAddress.MyEnum.*;
 
 /*
 HostAddress     ::= SEQUENCE  {

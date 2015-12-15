@@ -24,9 +24,7 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.AttributeCertificate.MyEnum.ACI_INFO;
-import static org.apache.kerby.x509.type.AttributeCertificate.MyEnum.SIGNATURE_ALGORITHM;
-import static org.apache.kerby.x509.type.AttributeCertificate.MyEnum.SIGNATURE_VALUE;
+import static org.apache.kerby.x509.type.AttributeCertificate.MyEnum.*;
 
 /**
  * <pre>

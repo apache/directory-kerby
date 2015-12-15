@@ -27,11 +27,7 @@ import org.apache.kerby.asn1.type.Asn1Utf8String;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.NONCE;
-import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.OTP_SERVICE;
-import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.OTP_TOKEN_INFO;
-import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.S2KPARAMS;
-import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.SALT;
+import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.*;
 
 /**
  PA-OTP-CHALLENGE ::= SEQUENCE {
@@ -42,7 +38,6 @@ import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.S
      s2kparams        [4] OCTET STRING             OPTIONAL,
  }
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class PaOtpChallenge extends KrbSequenceType {
     protected enum MyEnum implements EnumType {
         NONCE,

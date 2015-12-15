@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.x509.type.AlgorithmIdentifier.MyEnum.ALGORITHM;
-import static org.apache.kerby.x509.type.AlgorithmIdentifier.MyEnum.PARAMETERS;
+import static org.apache.kerby.x509.type.AlgorithmIdentifier.MyEnum.*;
 
 /**
  * AlgorithmIdentifier  ::=  SEQUENCE  {

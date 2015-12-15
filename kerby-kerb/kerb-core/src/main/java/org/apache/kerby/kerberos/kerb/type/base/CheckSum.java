@@ -28,8 +28,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
 import java.util.Arrays;
 
-import static org.apache.kerby.kerberos.kerb.type.base.CheckSum.MyEnum.CHECK_SUM;
-import static org.apache.kerby.kerberos.kerb.type.base.CheckSum.MyEnum.CKSUM_TYPE;
+import static org.apache.kerby.kerberos.kerb.type.base.CheckSum.MyEnum.*;
 
 /**
  Checksum        ::= SEQUENCE {

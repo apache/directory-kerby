@@ -25,8 +25,7 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.PrivateKeyUsagePeriod.MyEnum.NOT_AFTER;
-import static org.apache.kerby.x509.type.PrivateKeyUsagePeriod.MyEnum.NOT_BEFORE;
+import static org.apache.kerby.x509.type.PrivateKeyUsagePeriod.MyEnum.*;
 
 /**
  * <pre>

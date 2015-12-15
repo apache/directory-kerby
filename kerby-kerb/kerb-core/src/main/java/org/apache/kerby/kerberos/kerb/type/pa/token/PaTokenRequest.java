@@ -25,8 +25,7 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest.MyEnum.TOKEN;
-import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest.MyEnum.TOKEN_INFO;
+import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest.MyEnum.*;
 
 /**
  PA-TOKEN-REQUEST ::= SEQUENCE {

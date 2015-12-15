@@ -30,8 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.apache.kerby.kerberos.kerb.type.base.PrincipalName.MyEnum.NAME_STRING;
-import static org.apache.kerby.kerberos.kerb.type.base.PrincipalName.MyEnum.NAME_TYPE;
+import static org.apache.kerby.kerberos.kerb.type.base.PrincipalName.MyEnum.*;
 
 /**
  PrincipalName   ::= SEQUENCE {

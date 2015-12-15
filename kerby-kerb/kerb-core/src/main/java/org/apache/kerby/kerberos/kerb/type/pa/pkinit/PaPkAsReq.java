@@ -26,9 +26,7 @@ import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq.MyEnum.KDC_PKID;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq.MyEnum.SIGNED_AUTH_PACK;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq.MyEnum.TRUSTED_CERTIFIERS;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq.MyEnum.*;
 
 /**
  PA-PK-AS-REQ ::= SEQUENCE {

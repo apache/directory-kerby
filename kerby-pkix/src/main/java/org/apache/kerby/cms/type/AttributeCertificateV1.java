@@ -26,9 +26,7 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 import org.apache.kerby.x509.type.AttributeCertificateInfo;
 
-import static org.apache.kerby.cms.type.AttributeCertificateV1.MyEnum.ACI_INFO;
-import static org.apache.kerby.cms.type.AttributeCertificateV1.MyEnum.SIGNATURE;
-import static org.apache.kerby.cms.type.AttributeCertificateV1.MyEnum.SIGNATURE_ALGORITHM;
+import static org.apache.kerby.cms.type.AttributeCertificateV1.MyEnum.*;
 
 /**
  * AttributeCertificateV1 ::= SEQUENCE {

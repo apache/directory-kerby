@@ -31,17 +31,7 @@ import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding;
 
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.AUTHORIZATION_DATA;
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.AUTHTIME;
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.CADDR;
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.CNAME;
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.CREALM;
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.ENDTIME;
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.FLAGS;
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.KEY;
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.RENEW_TILL;
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.STARTTIME;
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.TRANSITED;
+import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.*;
 
 /**
  -- Encrypted part of ticket
@@ -59,7 +49,6 @@ import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.TR
  authorization-data      [10] AuthorizationData OPTIONAL
  }
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 public class EncTicketPart extends KrbAppSequenceType {
     public static final int TAG = 3;
 

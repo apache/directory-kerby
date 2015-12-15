@@ -24,8 +24,7 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.x509.type.EDIPartyName.MyEnum.NAME_ASSIGNER;
-import static org.apache.kerby.x509.type.EDIPartyName.MyEnum.PARTY_NAME;
+import static org.apache.kerby.x509.type.EDIPartyName.MyEnum.*;
 
 /**
  * <pre>

@@ -27,9 +27,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.DH_KEY_EXPIRATION;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.NONCE;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.SUBJECT_PUBLIC_KEY;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.*;
 
 /**
  KDCDHKeyInfo ::= SEQUENCE {

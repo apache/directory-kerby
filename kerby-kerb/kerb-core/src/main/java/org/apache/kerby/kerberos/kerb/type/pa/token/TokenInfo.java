@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.token.TokenInfo.MyEnum.FLAGS;
-import static org.apache.kerby.kerberos.kerb.type.pa.token.TokenInfo.MyEnum.TOKEN_VENDOR;
+import static org.apache.kerby.kerberos.kerb.type.pa.token.TokenInfo.MyEnum.*;
 
 /**
  TokenInfo ::= SEQUENCE {

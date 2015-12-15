@@ -24,7 +24,7 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.PaFxFastReply.MyEnum.ARMORED_DATA;
+import static org.apache.kerby.kerberos.kerb.type.fast.PaFxFastReply.MyEnum.*;
 
 /**
  PA-FX-FAST-REPLY ::= CHOICE {

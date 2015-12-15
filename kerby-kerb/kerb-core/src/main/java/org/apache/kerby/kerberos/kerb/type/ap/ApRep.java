@@ -27,9 +27,7 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 
-import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.ENC_PART;
-import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.MSG_TYPE;
-import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.PVNO;
+import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.*;
 
 /**
  AP-REP          ::= [APPLICATION 15] SEQUENCE {

@@ -28,9 +28,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
 import java.util.Arrays;
 
-import static org.apache.kerby.kerberos.kerb.type.base.EncryptedData.MyEnum.CIPHER;
-import static org.apache.kerby.kerberos.kerb.type.base.EncryptedData.MyEnum.ETYPE;
-import static org.apache.kerby.kerberos.kerb.type.base.EncryptedData.MyEnum.KVNO;
+import static org.apache.kerby.kerberos.kerb.type.base.EncryptedData.MyEnum.*;
 
 /**
  EncryptedData   ::= SEQUENCE {

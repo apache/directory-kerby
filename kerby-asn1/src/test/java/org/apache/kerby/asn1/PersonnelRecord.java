@@ -27,17 +27,9 @@ import org.apache.kerby.asn1.type.Asn1TaggingSequence;
 import org.apache.kerby.asn1.type.Asn1TaggingSet;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
 
-import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.CHILD_NAME;
-import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.DATE_OF_BIRTH;
-import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.CHILDREN;
-import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.DATE_OF_HIRE;
-import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.NAME;
-import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.NAME_OF_SPOUSE;
-import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.NUMBER;
-import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.TITLE;
-import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.FAMILYNAME;
-import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.GIVENNAME;
-import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.INITIAL;
+import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.*;
+import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.*;
+import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.*;
 
 /**
  * Ref. X.690-0207(http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf),

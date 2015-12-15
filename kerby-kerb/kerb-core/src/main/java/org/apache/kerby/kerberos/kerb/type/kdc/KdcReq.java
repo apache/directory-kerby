@@ -28,10 +28,7 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.MSG_TYPE;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.PADATA;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.PVNO;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.REQ_BODY;
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.*;
 
 /**
  KDC-REQ         ::= SEQUENCE {

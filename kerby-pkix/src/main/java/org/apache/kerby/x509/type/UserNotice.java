@@ -23,8 +23,7 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.UserNotice.MyEnum.EXPLICIT_TEXT;
-import static org.apache.kerby.x509.type.UserNotice.MyEnum.NOTICE_REF;
+import static org.apache.kerby.x509.type.UserNotice.MyEnum.*;
 
 /**
  *

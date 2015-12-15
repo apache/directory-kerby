@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.PaEncTsEnc.MyEnum.PATIMESTAMP;
-import static org.apache.kerby.kerberos.kerb.type.pa.PaEncTsEnc.MyEnum.PAUSEC;
+import static org.apache.kerby.kerberos.kerb.type.pa.PaEncTsEnc.MyEnum.*;
 
 /**
  PA-ENC-TS-ENC           ::= SEQUENCE {

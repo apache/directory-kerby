@@ -35,8 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.TOKEN_FORMAT;
-import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.TOKEN_VALUE;
+import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.*;
 
 /**
  * KRB-TOKEN_VALUE ::= SEQUENCE {

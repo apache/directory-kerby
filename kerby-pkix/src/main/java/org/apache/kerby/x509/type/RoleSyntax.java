@@ -24,8 +24,7 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.RoleSyntax.MyEnum.ROLE_AUTHORITY;
-import static org.apache.kerby.x509.type.RoleSyntax.MyEnum.ROLE_NAME;
+import static org.apache.kerby.x509.type.RoleSyntax.MyEnum.*;
 
 /**
  *Ref. RFC3281

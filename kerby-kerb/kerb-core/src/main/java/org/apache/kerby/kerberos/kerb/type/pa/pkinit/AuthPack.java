@@ -25,10 +25,7 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.CLIENT_DH_NONCE;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.CLIENT_PUBLIC_VALUE;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.PK_AUTHENTICATOR;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.SUPPORTED_CMS_TYPES;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.*;
 
 /**
  AuthPack ::= SEQUENCE {

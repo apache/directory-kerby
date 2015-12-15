@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo.MyEnum.DH_SIGNED_DATA;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo.MyEnum.SERVER_DH_NONCE;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo.MyEnum.*;
 
 /**
  DHRepInfo ::= SEQUENCE {

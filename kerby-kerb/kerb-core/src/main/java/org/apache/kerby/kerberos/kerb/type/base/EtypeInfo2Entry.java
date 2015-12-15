@@ -27,9 +27,7 @@ import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.ETYPE;
-import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.S2KPARAMS;
-import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.SALT;
+import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.*;
 
 /**
  ETYPE-INFO2-ENTRY       ::= SEQUENCE {

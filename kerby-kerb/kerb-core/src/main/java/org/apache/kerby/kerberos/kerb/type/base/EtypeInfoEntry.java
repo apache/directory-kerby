@@ -26,8 +26,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfoEntry.MyEnum.ETYPE;
-import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfoEntry.MyEnum.SALT;
+import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfoEntry.MyEnum.*;
 
 /**
  ETYPE-INFO-ENTRY        ::= SEQUENCE {

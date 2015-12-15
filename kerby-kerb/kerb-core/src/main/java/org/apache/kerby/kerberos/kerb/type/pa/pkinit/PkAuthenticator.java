@@ -27,10 +27,7 @@ import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.CTIME;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.CUSEC;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.NONCE;
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.PA_CHECKSUM;
+import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.*;
 
 /**
  PKAuthenticator ::= SEQUENCE {
