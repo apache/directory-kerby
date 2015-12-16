@@ -121,7 +121,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             pkinitContext.pluginOpts.usingRsa =
                     options.getBooleanOption(KrbOption.PKINIT_USING_RSA, true);
         }
-
     }
 
     /**
@@ -149,8 +148,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                          PluginRequestContext requestContext,
                          PaData outPadata) throws KrbException {
 
-
-
         /* XXX PKINIT RFC says that nonce in PKAuthenticator doesn't have be the
          * same as in the AS_REQ. However, if we pick a different nonce, then we
          * need to remember that info when AS_REP is returned. Here choose to
@@ -173,7 +170,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         } catch (KrbException e) {
             throw new KrbException("Fail to encode checksum.", e);
         }
-
 
         PaPkAsReq paPkAsReq = makePaPkAsReq(kdcRequest, (PkinitRequestContext) requestContext,
                 cusec, ctime, nonce, checkSum);
@@ -234,9 +230,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         pkAuthen.setCtime(ctime);
         pkAuthen.setNonce(nonce);
         pkAuthen.setPaChecksum(checkSum.getChecksum());
-
-//        pkAuthen.setPaChecksum(checkSum.encode());
-
         authPack.setPkAuthenticator(pkAuthen);
         authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
 
@@ -244,15 +237,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             // DH case
             LOG.info("DH key transport algorithm.");
 
-            AlgorithmIdentifier dhAlg = new AlgorithmIdentifier();
-
-//            byte[] dh_oid = new byte[]{0, 7, (byte) 0x2A, (byte) 0x86, (byte) 0x48, (byte) 0xce,
-//                    (byte) 0x3e, (byte) 0x02, (byte) 0x01};
-//            String dhOidStr = Utf8.toString(dh_oid);
-//            String dhOidStr = "0.7.42.840.10046.2.1";
-
             String content = "0x06 07 2A 86 48 ce 3e 02 01";
             Asn1ObjectIdentifier dhOid = PkinitCrypto.createOid(content);
+            AlgorithmIdentifier dhAlg = new AlgorithmIdentifier();
             dhAlg.setAlgorithm(dhOid);
 
             DhClient client = new DhClient();
@@ -288,17 +275,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         } else {
             LOG.info("RSA key transport algorithm");
 //            authPack.setClientPublicValue(null);
-//            certFile = pkinitContext.identityOpts.identity;
-//
-//            X509Certificate certificate = null;
-//            try {
-//                certificate = (X509Certificate) CertificateHelper.loadCerts(
-//                        certFile).iterator().next();
-//            } catch (KrbException e) {
-//                e.printStackTrace();
-//            }
-//
-//            X509Certificate[] certificates = {certificate};
         }
 
         byte[] signedAuthPack = signAuthPack(authPack);

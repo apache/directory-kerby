@@ -168,7 +168,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             PkAuthenticator pkAuthenticator = authPack.getPkAuthenticator();
 
             checkClockskew(kdcRequest, pkAuthenticator.getCtime());
-            DHParameter dhParameter;
 
             byte[] reqBodyBytes = null;
             if (kdcRequest.getReqPackage() == null) {
@@ -186,7 +185,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 List<Asn1ParseResult> parseResults = container.getChildren();
                 Asn1Container parsingItem = (Asn1Container) parseResults.get(0);
                 List<Asn1ParseResult> items = parsingItem.getChildren();
-                if (items.size() > 3) { // TO BE FIXED: INDICATE PKINIT CASE!!
+                if (items.size() > 3) {
                     ByteBuffer bodyBuffer = items.get(3).getBodyBuffer();
                     reqBodyBytes = new byte[bodyBuffer.remaining()];
                     bodyBuffer.get(reqBodyBytes);
@@ -214,6 +213,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             SubjectPublicKeyInfo publicKeyInfo = authPack.getClientPublicValue();
 
+            DHParameter dhParameter;
             if (publicKeyInfo.getSubjectPubKey() != null) {
                 dhParameter = authPack.getClientPublicValue().getAlgorithm().getParametersAs(DHParameter.class);
                 PkinitCrypto.serverCheckDH(pkinitContext.pluginOpts, pkinitContext.cryptoctx, dhParameter);
@@ -221,7 +221,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 byte[] clientSubjectPubKey = publicKeyInfo.getSubjectPubKey().getValue();
                 Asn1Integer clientPubKey = KrbCodec.decode(clientSubjectPubKey, Asn1Integer.class);
                 BigInteger y = clientPubKey.getValue();
-
                 BigInteger p = dhParameter.getP();
                 BigInteger g = dhParameter.getG();
 
@@ -247,7 +246,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 kdcRequest.getPreauthContext().getOutputPaData().add(paDataEntry);
             } else {
                 if (!isSigned) {
-                /*Anonymous pkinit requires DH*/
+                    /*Anonymous pkinit requires DH*/
                     String errMessage = "Anonymous pkinit without DH public value not supported.";
                     LOG.error(errMessage);
                     throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED, errMessage);
@@ -332,7 +331,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         CertificateSet certificateSet = new CertificateSet();
         for (X509Certificate x509Certificate : certificates) {
-            Certificate certificate = PkinitCrypto.changeCertificate(x509Certificate);
+            Certificate certificate = PkinitCrypto.changeToCertificate(x509Certificate);
             CertificateChoices certificateChoices = new CertificateChoices();
             certificateChoices.setCertificate(certificate);
             certificateSet.addElement(certificateChoices);
@@ -349,7 +348,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         return paPkAsRep;
     }
 
-    public boolean checkClockskew(KdcRequest kdcRequest, KerberosTime time) throws KrbException {
+    private boolean checkClockskew(KdcRequest kdcRequest, KerberosTime time) throws KrbException {
         long clockSkew = kdcRequest.getKdcContext().getConfig().getAllowableClockSkew() * 1000;
 
         if (!time.isInClockSkew(clockSkew)) {

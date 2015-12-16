@@ -136,7 +136,7 @@ public class AsRequestWithCert extends AsRequest {
                 } catch (KrbException e) {
                     e.printStackTrace();
                 }
-                Certificate archorCertificate = PkinitCrypto.changeCertificate(x509Certificate);
+                Certificate archorCertificate = PkinitCrypto.changeToCertificate(x509Certificate);
 
                 CertificateSet certificateSet = signedData.getCertificates();
                 List<CertificateChoices> certificateChoicesList = certificateSet.getElements();

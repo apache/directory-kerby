@@ -19,7 +19,6 @@
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.x509.type.Certificate;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.ContentInfo;
 import org.apache.kerby.cms.type.DigestAlgorithmIdentifiers;
@@ -30,6 +29,7 @@ import org.apache.kerby.cms.type.SignerInfos;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.x509.type.Certificate;
 import org.apache.kerby.x509.type.DHParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,24 +59,11 @@ public class PkinitCrypto {
 
     private static final Logger LOG = LoggerFactory.getLogger(PkinitCrypto.class);
 
-    public static KeyPair getKeyPair(DHParameterSpec dhParameterSpec) {
-        String algo = "DH";
-        KeyPairGenerator keyPairGenerator = null;
-        try {
-            keyPairGenerator = KeyPairGenerator.getInstance(algo);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        if (keyPairGenerator != null) {
-            try {
-                keyPairGenerator.initialize(dhParameterSpec);
-            } catch (InvalidAlgorithmParameterException e) {
-                e.printStackTrace();
-            }
-        }
-        return keyPairGenerator.generateKeyPair();
-    }
-
+    /**
+     * Verify CMS Signed Data
+     * @param cmsMsgType The CMS message type
+     * @param signedData The signed data
+     */
     public static void verifyCMSSignedData(CMSMessageType cmsMsgType, SignedData signedData)
             throws KrbException {
         Asn1ObjectIdentifier oid = pkinitType2OID(cmsMsgType);
@@ -93,6 +80,11 @@ public class PkinitCrypto {
         }
     }
 
+    /**
+     * Check whether signed of data, true if the SignerInfos are not null
+     * @param signedData The signed data
+     * @return boolean
+     */
     public static boolean isSigned(SignedData signedData) {
         /* Not actually signed; anonymous case */
         if (signedData.getSignerInfos().getElements().size() == 0) {
@@ -102,6 +94,11 @@ public class PkinitCrypto {
         }
     }
 
+    /**
+     * Change the CMS message type to oid
+     * @param cmsMsgType The CMS message type
+     * @return oid
+     */
     public static Asn1ObjectIdentifier pkinitType2OID(CMSMessageType cmsMsgType) {
         switch (cmsMsgType) {
             case UNKNOWN:
@@ -117,6 +114,12 @@ public class PkinitCrypto {
         }
     }
 
+    /**
+     * KDC check the key parameter
+     * @param pluginOpts The PluginOpts
+     * @param cryptoctx The PkinitPlgCryptoContext
+     * @param dhParameter The DHParameter
+     */
     public static void serverCheckDH(PluginOpts pluginOpts, PkinitPlgCryptoContext cryptoctx,
                                      DHParameter dhParameter) throws KrbException {
          /* KDC SHOULD check to see if the key parameters satisfy its policy */
@@ -130,6 +133,13 @@ public class PkinitCrypto {
         checkDHWellknown(cryptoctx, dhParameter, dhPrimeBits);
     }
 
+    /**
+     * Check DH wellknown
+     * @param cryptoctx The PkinitPlgCryptoContext
+     * @param dhParameter The DHParameter
+     * @param dhPrimeBits The dh prime bits
+     * @return boolean
+     */
     public static boolean checkDHWellknown(PkinitPlgCryptoContext cryptoctx,
                                            DHParameter dhParameter, int dhPrimeBits) throws KrbException {
         boolean valid = false;
@@ -168,6 +178,14 @@ public class PkinitCrypto {
         return true;
     }
 
+    /**
+     * Create DH public key
+     *
+     * @param p The prime modulus
+     * @param g The base generator
+     * @param y The public value
+     * @return  DHPublicKey
+     */
     public static DHPublicKey createDHPublicKey(BigInteger p, BigInteger g, BigInteger y) {
         DHPublicKeySpec dhPublicKeySpec = new DHPublicKeySpec(y, p, g);
 
@@ -186,14 +204,23 @@ public class PkinitCrypto {
         return dhPublicKey;
     }
 
-    /*
-     *   -- The contentType field of the type ContentInfo
-     *   -- is id-signedData (1.2.840.113549.1.7.2),
-     *   -- and the content field is a SignedData.
-     *   -- The eContentType field for the type SignedData is
-     *   -- id-pkinit-authData (1.3.6.1.5.2.3.1), and the
-     *   -- eContent field contains the DER encoding of the
-     *   -- type AuthPack.
+    /**
+     * The contentType field of the type ContentInfo
+     * is id-signedData (1.2.840.113549.1.7.2),
+     * and the content field is a SignedData.
+     * The eContentType field for the type SignedData is
+     * id-pkinit-authData (1.3.6.1.5.2.3.1), and the
+     * eContent field contains the DER encoding of the
+     * type AuthPack.
+     *
+     * @param data The data
+     * @param oid The oid for eContentType
+     * @param version The SignedData version
+     * @param digestAlgorithmIdentifiers The digest algorithmIdentifiers
+     * @param certificateSet The certificate set
+     * @param crls The revocation info choices
+     * @param signerInfos The signerInfos
+     * @return The encoded ContentInfo
      */
     public static byte[] cmsSignedDataCreate(byte[] data, Asn1ObjectIdentifier oid, int version,
                                              DigestAlgorithmIdentifiers digestAlgorithmIdentifiers,
@@ -314,6 +341,12 @@ public class PkinitCrypto {
 //        cpv.validate(certPath, parameters);
     }
 
+    /**
+     * Create oid
+     *
+     * @param content The hex content
+     * @return  The oid
+     */
     public static Asn1ObjectIdentifier createOid(String content) {
         Asn1ObjectIdentifier oid = new Asn1ObjectIdentifier();
         oid.useDER();
@@ -325,7 +358,13 @@ public class PkinitCrypto {
         return oid;
     }
 
-    public static Certificate changeCertificate(X509Certificate x509Certificate) {
+    /**
+     * Change the X509Certificate to Certificate
+     *
+     * @param x509Certificate The X509Certificate
+     * @return The Certificate
+     */
+    public static Certificate changeToCertificate(X509Certificate x509Certificate) {
 
         Certificate certificate = new Certificate();
         try {
