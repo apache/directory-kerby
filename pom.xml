@@ -56,7 +56,6 @@
     <slf4j.version>1.7.12</slf4j.version>
     <assertj.version>2.2.0</assertj.version>
     <findbugs.version>3.0.1</findbugs.version>
-    <checkstyle.dir>${basedir}/docs</checkstyle.dir>
     <skipTests>false</skipTests>
   </properties>
 
@@ -65,6 +64,7 @@
   </prerequisites>
 
   <modules>
+    <module>build-tools</module>
     <module>kerby-config</module>
     <module>kerby-util</module>
     <module>kerby-asn1</module>
@@ -197,7 +197,7 @@
           <version>3.5</version>
           <configuration>
             <rulesets>
-              <ruleset>${checkstyle.dir}/kerby-pmd-ruleset.xml</ruleset>
+              <ruleset>kerby-pmd-ruleset.xml</ruleset>
             </rulesets>
             <linkXRef>false</linkXRef>
             <sourceEncoding>utf-8</sourceEncoding>
@@ -206,6 +206,13 @@
             <includeTests>true</includeTests>
             <targetJdk>1.7</targetJdk>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.kerby</groupId>
+              <artifactId>build-tools</artifactId>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
           <executions>
             <execution>
               <id>validate</id>
@@ -222,11 +229,18 @@
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>2.15</version>
           <configuration>
-            <configLocation>${checkstyle.dir}/kerby-checkstyle.xml</configLocation>
+            <configLocation>kerby-checkstyle.xml</configLocation>
             <includeTestSourceDirectory>true</includeTestSourceDirectory>
             <encoding>UTF-8</encoding>
             <failOnViolation>true</failOnViolation>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.kerby</groupId>
+              <artifactId>build-tools</artifactId>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
           <executions>
             <execution>
               <id>validate</id>
@@ -338,29 +352,6 @@
         <checkstyle.skip>true</checkstyle.skip>
       </properties>
     </profile>
-    <profile>
-      <id>activate-checkstyle-in-module</id>
-      <activation>
-        <file>
-          <exists>${basedir}/../docs/kerby-checkstyle.xml</exists>
-        </file>
-      </activation>
-      <properties>
-        <checkstyle.dir>${basedir}/../docs</checkstyle.dir>
-      </properties>
-    </profile>
-    <profile>
-      <id>activate-checkstyle-in-submodule</id>
-      <activation>
-        <file>
-          <exists>${basedir}/../../docs/kerby-checkstyle.xml</exists>
-        </file>
-      </activation>
-      <properties>
-        <checkstyle.dir>${basedir}/../../docs</checkstyle.dir>
-      </properties>
-    </profile>
-
     <profile>
       <id>activate-checkstyle-supression</id>
       <activation>
