@@ -33,7 +33,7 @@ public class TestOpenSSL {
         }
 
         for (int i = 5; i < 50; i++) {
-            int testSize = (i * 1000) + 123;
+            int testSize = i * 1000 + 123;
             byte[] buf = new byte[testSize];
             random.nextBytes(buf);
             byte[] enc = OpenSSL.encrypt(cipher, pwd, buf);

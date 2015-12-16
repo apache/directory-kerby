@@ -196,10 +196,14 @@
           <artifactId>maven-pmd-plugin</artifactId>
           <version>3.5</version>
           <configuration>
+            <rulesets>
+              <ruleset>${checkstyle.dir}/kerby-pmd-ruleset.xml</ruleset>
+            </rulesets>
             <linkXRef>false</linkXRef>
             <sourceEncoding>utf-8</sourceEncoding>
             <failOnViolation>true</failOnViolation>
             <verbose>true</verbose>
+            <includeTests>true</includeTests>
             <targetJdk>1.7</targetJdk>
           </configuration>
           <executions>

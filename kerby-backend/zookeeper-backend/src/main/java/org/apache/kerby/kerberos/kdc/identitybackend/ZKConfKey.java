@@ -25,7 +25,7 @@ import org.apache.kerby.config.ConfigKey;
  * Define all the ZK backend related configuration items with default values.
  */
 public enum ZKConfKey implements ConfigKey {
-    ZK_HOST("127.0.0.1"), //NOPMD
+    ZK_HOST("127.0.0.1"),
     ZK_PORT(2181),
     DATA_DIR,
     DATA_LOG_DIR;

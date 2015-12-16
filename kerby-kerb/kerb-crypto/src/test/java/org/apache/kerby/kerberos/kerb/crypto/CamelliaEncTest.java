@@ -39,7 +39,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CamelliaEncTest {
 
     private List<String> outputs = new ArrayList<String>();
-    private int keySize;
 
     private byte[] plain = new byte[16];
     private byte[] cipher = new byte[16];
@@ -74,7 +73,6 @@ public class CamelliaEncTest {
     }
 
     private void testWith(int keySize) throws KrbException {
-        this.keySize = keySize;
         outputs.add("KEYSIZE=" + (keySize * 8));
 
         encProvider = keySize == 16 ? new Camellia128Provider() : new Camellia256Provider();

@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs;
 
 import junit.framework.TestCase;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.junit.Before;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
@@ -45,6 +46,8 @@ import java.util.List;
  * @version $Rev$, $Date$
  */
 public class CertificateChainFactoryTest extends TestCase {
+
+    @Before
     public void setUp() {
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
             Security.addProvider(new BouncyCastleProvider());

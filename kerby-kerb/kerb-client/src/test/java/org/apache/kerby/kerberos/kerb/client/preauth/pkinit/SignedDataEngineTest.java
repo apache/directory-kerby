@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 import org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs.CertificateChainFactory;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +70,7 @@ public class SignedDataEngineTest extends TestCase {
     private PrivateKey privateKey;
 
 
+    @Before
     public void setUp() throws Exception {
         if (Security.getProvider("BC") == null) {
             Security.addProvider(new BouncyCastleProvider());

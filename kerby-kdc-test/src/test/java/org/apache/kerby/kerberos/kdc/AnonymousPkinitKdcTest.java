@@ -25,7 +25,6 @@ import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.apache.kerby.pki.PkiLoader;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,13 +34,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnonymousPkinitKdcTest extends KdcTestBase {
 
-    private PkiLoader pkiLoader;
     private String serverPrincipal;
 
     @Before
     public void setUp() throws Exception {
-        pkiLoader = new PkiLoader();
-
         super.setUp();
     }
 
@@ -52,11 +48,6 @@ public class AnonymousPkinitKdcTest extends KdcTestBase {
         String pkinitIdentity = getClass().getResource("/kdccerttest.pem").getPath() + ","
                 + getClass().getResource("/kdckey.pem").getPath();
         getKdcServer().getKdcConfig().setString(KdcConfigKey.PKINIT_IDENTITY, pkinitIdentity);
-    }
-
-    @Override
-    protected void setUpClient() throws Exception {
-        super.setUpClient();
     }
 
     @Override

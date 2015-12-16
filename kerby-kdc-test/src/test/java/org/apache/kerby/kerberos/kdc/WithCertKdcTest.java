@@ -45,11 +45,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class WithCertKdcTest extends KdcTestBase {
     private PkiLoader pkiLoader;
-    private String clientPrincipal;
     private String serverPrincipal;
     private Certificate userCert;
-    private PrivateKey userKey;
-    private Certificate caCert;
+    private PrivateKey userKey; //NOPMD
 
     @Before
     public void setUp() throws Exception {
@@ -74,11 +72,6 @@ public class WithCertKdcTest extends KdcTestBase {
         super.setUpClient();
 
         loadCredentials();
-    }
-
-    @Override
-    protected void createPrincipals() throws KrbException {
-        super.createPrincipals();
     }
 
     //@Test

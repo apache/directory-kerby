@@ -29,7 +29,7 @@ public class TestBase64 {
             assertTrue(result);
         }
         for (int i = 5; i < 50; i++) {
-            int testSize = (i * 1000) + 123;
+            int testSize = i * 1000 + 123;
             byte[] buf = new byte[testSize];
             random.nextBytes(buf);
             byte[] enc = Base64.encodeBase64(buf);
@@ -67,7 +67,7 @@ public class TestBase64 {
             assertTrue(result);
         }
         for (int i = 5; i < 50; i++) {
-            int testSize = (i * 1000) + 123;
+            int testSize = i * 1000 + 123;
             byte[] buf = new byte[testSize];
             random.nextBytes(buf);
 

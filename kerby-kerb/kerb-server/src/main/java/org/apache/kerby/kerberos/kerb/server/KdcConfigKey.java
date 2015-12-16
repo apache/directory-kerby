@@ -25,7 +25,7 @@ public enum KdcConfigKey implements ConfigKey {
     KRB_DEBUG(true),
     KDC_SERVICE_NAME("KDC-Server"),
     KDC_IDENTITY_BACKEND,
-    KDC_HOST("127.0.0.1"), // NOPMD
+    KDC_HOST("127.0.0.1"),
     KDC_PORT,
     KDC_ALLOW_TCP(true),
     KDC_ALLOW_UDP(true),
