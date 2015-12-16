@@ -118,19 +118,12 @@ public class DhKeyAgreementTest {
         Assert.assertTrue(Arrays.equals(clearText, recovered));
     }
 
-
-    /**
-     * Tests Diffie-Hellman using Oakley 1024-bit Modular Exponential (MODP)
-     * well-known group 2 [RFC2412].
-     *
-     * @throws Exception
-     */
     @Test
     public void testGeneratedDhParams() throws Exception {
         DhClient client = new DhClient();
         DhServer server = new DhServer();
 
-        DHPublicKey clientPubKey = client.init(DhGroup.MODP_GROUP14);
+        DHPublicKey clientPubKey = client.init(DhGroup.MODP_GROUP2);
         DHParameterSpec spec = clientPubKey.getParams();
 
         BigInteger y = clientPubKey.getY();

@@ -39,8 +39,8 @@ public class PluginOpts {
     // require CRL for a CA (default is false)
     public boolean requireCrlChecking = false;
     // the size of the Diffie-Hellman key the client will attempt to use.
-    // The acceptable values are 1024, 2048, and 4096. The default is 2048.
-    public int dhMinBits = 2048;
+    // The acceptable values are 1024, 2048, and 4096. The default is 1024.
+    public int dhMinBits = 1024;
 
     public AlgorithmIdentifiers createSupportedCMSTypes() {
         AlgorithmIdentifiers cmsAlgorithms = new AlgorithmIdentifiers();
