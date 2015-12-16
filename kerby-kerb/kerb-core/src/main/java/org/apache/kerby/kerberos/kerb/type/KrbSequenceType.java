@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.type;
 
-import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
 public abstract class KrbSequenceType extends Asn1SequenceType {

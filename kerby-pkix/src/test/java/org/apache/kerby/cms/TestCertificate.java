@@ -20,8 +20,8 @@
 package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
-import org.apache.kerby.cms.type.Certificate;
 import org.apache.kerby.x500.type.Name;
+import org.apache.kerby.x509.type.Certificate;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,6 +36,21 @@ public class TestCertificate extends CmsTestBase {
             Certificate certificate = new Certificate();
             certificate.decode(data);
             Asn1.dump(certificate);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testEncodingCertificate() throws IOException {
+        byte[] data = readDataFile("/certificate1.txt");
+        try {
+            Certificate certificate = new Certificate();
+            certificate.decode(data);
+            //TO BE FIXED
+            //certificate.encode();
 
         } catch (Exception e) {
             e.printStackTrace();

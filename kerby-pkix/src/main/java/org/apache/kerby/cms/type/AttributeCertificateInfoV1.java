@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.cms.type;
 
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
-import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
@@ -30,6 +30,7 @@ import org.apache.kerby.x509.type.AttCertValidityPeriod;
 import org.apache.kerby.x509.type.Attributes;
 import org.apache.kerby.x509.type.CertificateSerialNumber;
 import org.apache.kerby.x509.type.Extensions;
+
 import static org.apache.kerby.cms.type.AttributeCertificateInfoV1.MyEnum.*;
 
 /**

@@ -21,6 +21,9 @@ package org.apache.kerby.x509.type;
 
 import org.apache.kerby.asn1.type.Asn1SequenceOf;
 
+/*
+ * GeneralNames ::= SEQUENCE SIZE (1..MAX) OF GeneralName
+ */
 public class GeneralNames extends Asn1SequenceOf<GeneralName> {
 
 }

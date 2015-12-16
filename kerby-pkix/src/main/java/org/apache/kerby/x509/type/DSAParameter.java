@@ -23,9 +23,10 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
-import static org.apache.kerby.x509.type.DSAParameter.MyEnum.*;
 
 import java.math.BigInteger;
+
+import static org.apache.kerby.x509.type.DSAParameter.MyEnum.*;
 
 public class DSAParameter extends Asn1SequenceType {
     protected enum MyEnum implements EnumType {

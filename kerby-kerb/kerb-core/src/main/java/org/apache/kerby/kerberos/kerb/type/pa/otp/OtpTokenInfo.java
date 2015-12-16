@@ -21,13 +21,14 @@ package org.apache.kerby.kerberos.kerb.type.pa.otp;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
-import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AlgorithmIdentifiers;
+
 import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.*;
 
 /**

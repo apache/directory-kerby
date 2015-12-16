@@ -89,8 +89,11 @@ public class AsRequest extends KdcRequest {
         PrincipalName clientPrincipal = getKdcRep().getCname();
         String clientRealm = getKdcRep().getCrealm();
         clientPrincipal.setRealm(clientRealm);
-        if (!getKrbOptions().contains(KrbOption.TOKEN_USER_ID_TOKEN)
-            && !clientPrincipal.equals(getClientPrincipal())) {
+
+        if (!(getKrbOptions().contains(KrbOption.USE_PKINIT_ANONYMOUS)
+                && KrbUtil.pricipalCompareIgnoreRealm(clientPrincipal, getClientPrincipal()))
+                && !getKrbOptions().contains(KrbOption.TOKEN_USER_ID_TOKEN)
+                && !clientPrincipal.equals(getClientPrincipal())) {
             throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_NAME_MISMATCH);
         }
 
@@ -137,7 +140,7 @@ public class AsRequest extends KdcRequest {
 
     public TgtTicket getTicket() {
         TgtTicket tgtTicket = new TgtTicket(getKdcRep().getTicket(),
-                (EncAsRepPart) getKdcRep().getEncPart(), getKdcRep().getCname().getName());
+                (EncAsRepPart) getKdcRep().getEncPart(), getKdcRep().getCname());
         return tgtTicket;
     }
 
@@ -151,4 +154,5 @@ public class AsRequest extends KdcRequest {
 
         return cc;
     }
+
 }

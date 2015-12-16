@@ -19,15 +19,19 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.type.pa.PaData;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PreauthContext {
     private boolean preauthRequired = true;
     private List<PreauthHandle> handles = new ArrayList<PreauthHandle>(5);
+    private PaData outputPaData;
 
     public PreauthContext() {
-
+        this.outputPaData = new PaData();
     }
 
     public boolean isPreauthRequired() {
@@ -40,5 +44,13 @@ public class PreauthContext {
 
     public List<PreauthHandle> getHandles() {
         return handles;
+    }
+
+    public void reset() {
+        this.outputPaData = new PaData();
+    }
+
+    public PaData getOutputPaData() throws KrbException {
+        return outputPaData;
     }
 }

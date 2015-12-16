@@ -19,12 +19,13 @@
  */
 package org.apache.kerby.cms.type;
 
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.Asn1FieldInfo;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.GeneralNames;
 import org.apache.kerby.x509.type.IssuerSerial;
+
 import static org.apache.kerby.cms.type.Subject.MyEnum.*;
 
 /**

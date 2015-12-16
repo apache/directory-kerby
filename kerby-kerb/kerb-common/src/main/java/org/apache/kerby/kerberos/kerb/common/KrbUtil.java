@@ -20,10 +20,17 @@
 package org.apache.kerby.kerberos.kerb.common;
 
 import org.apache.kerby.kerberos.kerb.KrbConstant;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
 public class KrbUtil {
+
+    public static final String ANONYMOUS_PRINCIPAL = "ANONYMOUS@WELLKNOWN:ANONYMOUS";
+    /** First component of NT_WELLKNOWN principals */
+    public static final String KRB5_WELLKNOWN_NAMESTR = "WELLKNOWN";
+    public static final String KRB5_ANONYMOUS_PRINCSTR = "ANONYMOUS";
+    public static final String KRB5_ANONYMOUS_REALMSTR = "WELLKNOWN:ANONYMOUS";
 
     /**
      * Construct TGS principal name.
@@ -43,5 +50,28 @@ public class KrbUtil {
     public static PrincipalName makeKadminPrincipal(String realm) {
         String nameString = "kadmin/" + realm + "@" + realm;
         return new PrincipalName(nameString, NameType.NT_PRINCIPAL);
+    }
+
+    public static boolean pricipalCompareIgnoreRealm(PrincipalName princ1, PrincipalName princ2)
+            throws KrbException {
+
+        if (princ1 != null && princ2 != null) {
+            princ1.setRealm(null);
+            princ2.setRealm(null);
+            if (princ1.getName().equals(princ2.getName())) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            throw new KrbException("principal can't be null.");
+        }
+    }
+
+    public static PrincipalName makeAnonymousPrincipal() {
+        PrincipalName principalName = new PrincipalName(KRB5_WELLKNOWN_NAMESTR + "/" + KRB5_ANONYMOUS_PRINCSTR);
+        principalName.setRealm(KRB5_ANONYMOUS_REALMSTR);
+        principalName.setNameType(NameType.NT_WELLKNOWN);
+        return principalName;
     }
 }

@@ -86,7 +86,7 @@ public class TestPkinitAnonymousAsReqCodec {
         assertThat(body.getKdcOptions().getPadding()).isEqualTo(0);
         assertThat(body.getKdcOptions().getValue()).isEqualTo(Arrays.copyOfRange(bytes, 1389, 1393));
         PrincipalName cName = body.getCname();
-        assertThat(cName.getNameType()).isEqualTo(NameType.NT_UNKNOWN);
+        assertThat(cName.getNameType()).isEqualTo(NameType.NT_WELLKNOWN);
         assertThat(cName.getName()).isEqualTo("WELLKNOWN/ANONYMOUS");
         assertThat(body.getRealm()).isEqualTo("EXAMPLE.COM");
         PrincipalName sName = body.getSname();
@@ -104,5 +104,11 @@ public class TestPkinitAnonymousAsReqCodec {
         assertThat(types.get(3).getValue()).isEqualTo(0x0017);
         assertThat(types.get(4).getValue()).isEqualTo(0x0019);
         assertThat(types.get(5).getValue()).isEqualTo(0x001A);
+
+        // Test encode PaPkAsReq
+        //TO BE FIXED
+//        byte[] encodedPaPkAsReq = paPkAsReq.encode();
+//        PaPkAsReq decodedPaPkAsReq = new PaPkAsReq();
+//        decodedPaPkAsReq.decode(encodedPaPkAsReq);
     }
 }

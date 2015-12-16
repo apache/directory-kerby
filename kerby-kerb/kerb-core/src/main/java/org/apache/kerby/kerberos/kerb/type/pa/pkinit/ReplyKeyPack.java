@@ -25,6 +25,7 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+
 import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.*;
 
 /**

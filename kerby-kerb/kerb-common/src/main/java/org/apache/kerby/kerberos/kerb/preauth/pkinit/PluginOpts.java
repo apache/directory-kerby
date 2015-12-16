@@ -35,7 +35,7 @@ public class PluginOpts {
     // allow UPN-SAN instead of pkinit-SAN
     public boolean allowUpn = true;
     // selects DH or RSA based pkinit
-    public boolean usingRsa = true;
+    public boolean usingRsa = false;
     // require CRL for a CA (default is false)
     public boolean requireCrlChecking = false;
     // the size of the Diffie-Hellman key the client will attempt to use.
@@ -45,12 +45,13 @@ public class PluginOpts {
     public AlgorithmIdentifiers createSupportedCMSTypes() {
         AlgorithmIdentifiers cmsAlgorithms = new AlgorithmIdentifiers();
         AlgorithmIdentifier des3Alg = new AlgorithmIdentifier();
-        cmsAlgorithms.add(des3Alg);
 
-        String oidStr = "DES3-OID";
-        Asn1ObjectIdentifier des3Oid = new Asn1ObjectIdentifier(oidStr);
+        /* krb5_data des3oid = {0, 8, "\x2A\x86\x48\x86\xF7\x0D\x03\x07" };*/
+        String content = "0x06 08 2A 86 48 86 F7 0D 03 07";
+        Asn1ObjectIdentifier des3Oid = PkinitCrypto.createOid(content);
         des3Alg.setAlgorithm(des3Oid);
-        des3Alg.setParameters(null);
+
+        cmsAlgorithms.add(des3Alg);
 
         return cmsAlgorithms;
     }

@@ -19,12 +19,13 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Boolean;
-import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+
 import static org.apache.kerby.x509.type.Extension.MyEnum.*;
 
 /**
@@ -55,6 +56,8 @@ public class Extension extends Asn1SequenceType {
         }
     }
 
+    private final boolean critical = false;
+
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(EXTN_ID, Asn1ObjectIdentifier.class),
         new Asn1FieldInfo(CRITICAL, Asn1Boolean.class),
@@ -63,6 +66,7 @@ public class Extension extends Asn1SequenceType {
 
     public Extension() {
         super(fieldInfos);
+        setCritical(critical);
     }
 
     public Asn1ObjectIdentifier getExtnId() {
@@ -85,7 +89,7 @@ public class Extension extends Asn1SequenceType {
         return getFieldAsOctets(EXTN_VALUE);
     }
 
-    public void setValue(byte[] value) {
+    public void setExtnValue(byte[] value) {
         setFieldAsOctets(EXTN_VALUE, value);
     }
 }

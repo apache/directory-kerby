@@ -30,6 +30,7 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding;
+
 import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.*;
 
 /**

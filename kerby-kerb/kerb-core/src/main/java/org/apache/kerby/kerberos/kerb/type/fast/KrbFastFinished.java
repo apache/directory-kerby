@@ -26,6 +26,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
+
 import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastFinished.MyEnum.*;
 
 /**

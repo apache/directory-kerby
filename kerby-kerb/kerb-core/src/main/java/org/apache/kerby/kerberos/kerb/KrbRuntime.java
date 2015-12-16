@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb;
 
-import org.apache.kerby.kerberos.kerb.provider.PkiProvider;
 import org.apache.kerby.kerberos.kerb.provider.TokenProvider;
 
 /**
@@ -31,7 +30,6 @@ import org.apache.kerby.kerberos.kerb.provider.TokenProvider;
 public class KrbRuntime {
 
     private static TokenProvider tokenProvider;
-    private static PkiProvider pkiProvider;
 
     /**
      * Set up token provider, should be done at very initial time
@@ -50,24 +48,5 @@ public class KrbRuntime {
      */
     public static synchronized void setTokenProvider(TokenProvider tokenProvider) {
         KrbRuntime.tokenProvider = tokenProvider;
-    }
-
-    /**
-     * Get pki provider
-     * @return pki provider
-     */
-    public static synchronized PkiProvider getPkiProvider() {
-        if (pkiProvider == null) {
-            throw new RuntimeException("No token provider is hooked into yet");
-        }
-        return pkiProvider;
-    }
-
-    /**
-     * Setup pkiProvider.
-     * @param pkiProvider The pki provider
-     */
-    public static synchronized void setPkiProvider(PkiProvider pkiProvider) {
-        KrbRuntime.pkiProvider = pkiProvider;
     }
 }

@@ -51,7 +51,9 @@ public enum KdcConfigKey implements ConfigKey {
     KDC_MAX_DGRAM_REPLY_SIZE(4096),
     TOKEN_VERIFY_KEYS(),
     TOKEN_DECRYPTION_KEYS(),
-    TOKEN_ISSUERS();
+    TOKEN_ISSUERS(),
+    PKINIT_IDENTITY(null),
+    PKINIT_ANCHORS(null);
 
     private Object defaultValue;
 

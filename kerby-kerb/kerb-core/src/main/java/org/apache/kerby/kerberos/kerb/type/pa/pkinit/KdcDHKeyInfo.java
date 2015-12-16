@@ -19,13 +19,14 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.type.Asn1Integer;
+import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1BitString;
+import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+
 import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.*;
 
 /**
@@ -36,8 +37,8 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.
  }
  */
 public class KdcDHKeyInfo extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
-        SUBJECT_PUBLICK_KEY,
+    protected static enum MyEnum implements EnumType {
+        SUBJECT_PUBLIC_KEY,
         NONCE,
         DH_KEY_EXPIRATION;
 
@@ -53,7 +54,7 @@ public class KdcDHKeyInfo extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(SUBJECT_PUBLICK_KEY, Asn1BitString.class),
+            new ExplicitField(SUBJECT_PUBLIC_KEY, Asn1BitString.class),
             new ExplicitField(NONCE, Asn1Integer.class),
             new ExplicitField(DH_KEY_EXPIRATION, KerberosTime.class)
     };
@@ -62,12 +63,12 @@ public class KdcDHKeyInfo extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public byte[] getSubjectPublicKey() {
-        return getFieldAsOctets(SUBJECT_PUBLICK_KEY);
+    public Asn1BitString getSubjectPublicKey() {
+        return getFieldAs(SUBJECT_PUBLIC_KEY, Asn1BitString.class);
     }
 
-    public void setSubjectPublicKey(byte[] subjectPublicKey) {
-        setFieldAsOctets(SUBJECT_PUBLICK_KEY, subjectPublicKey);
+    public void setSubjectPublicKey(byte[] subjectPubKey) {
+        setFieldAs(SUBJECT_PUBLIC_KEY, new Asn1BitString(subjectPubKey));
     }
 
     public int getNonce() {
@@ -76,5 +77,13 @@ public class KdcDHKeyInfo extends KrbSequenceType {
 
     public void setNonce(int nonce) {
         setFieldAsInt(NONCE, nonce);
+    }
+
+    public KerberosTime getDHKeyExpiration() {
+        return getFieldAsTime(DH_KEY_EXPIRATION);
+    }
+
+    public void setDHKeyExpiration(KerberosTime time) {
+        setFieldAs(DH_KEY_EXPIRATION, time);
     }
 }

@@ -23,6 +23,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.preauth.builtin.EncTsPreauth;
 import org.apache.kerby.kerberos.kerb.server.preauth.builtin.TgtPreauth;
+import org.apache.kerby.kerberos.kerb.server.preauth.pkinit.PkinitPreauth;
 import org.apache.kerby.kerberos.kerb.server.preauth.token.TokenPreauth;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
@@ -54,6 +55,9 @@ public class PreauthHandler {
 
         preauth = new TokenPreauth();
         preauths.add(preauth);
+
+        preauth = new PkinitPreauth();
+        preauths.add(preauth);
     }
 
     /**
@@ -70,6 +74,7 @@ public class PreauthHandler {
         PreauthContext preauthContext = new PreauthContext();
 
         KdcContext kdcContext = kdcRequest.getKdcContext();
+        initWith(kdcContext);
         preauthContext.setPreauthRequired(kdcContext.getConfig().isPreauthRequired());
 
         for (KdcPreauth preauth : preauths) {
@@ -128,6 +133,15 @@ public class PreauthHandler {
     public static boolean isToken(PaData paData) {
         for (PaDataEntry paEntry : paData.getElements()) {
             if (paEntry.getPaDataType() == PaDataType.TOKEN_REQUEST) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isPkinit(PaData paData) {
+        for (PaDataEntry paEntry : paData.getElements()) {
+            if (paEntry.getPaDataType() == PaDataType.PK_AS_REQ) {
                 return true;
             }
         }

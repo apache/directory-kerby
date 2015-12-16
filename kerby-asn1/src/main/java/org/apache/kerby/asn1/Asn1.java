@@ -51,7 +51,7 @@ public final class Asn1 {
 
     public static Asn1Type decode(ByteBuffer content) throws IOException {
         Asn1ParseResult parseResult = Asn1Parser.parse(content);
-        return Asn1Converter.convert(parseResult);
+        return Asn1Converter.convert(parseResult, false);
     }
 
     public static Asn1ParseResult parse(byte[] content) throws IOException {
@@ -91,10 +91,10 @@ public final class Asn1 {
 
     public static void dump(byte[] content,
                             boolean useRawFormat) throws IOException {
-        String hexStr = HexUtil.bytesToHex(content);
+        //String hexStr = HexUtil.bytesToHex(content);
         Asn1Dumper dumper = new Asn1Dumper();
-        System.out.println("Dumping data:");
-        dumper.dumpData(hexStr);
+        //System.out.println("Dumping data:");
+        //dumper.dumpData(hexStr);
         dumper.dump(content, useRawFormat);
         String output = dumper.output();
         System.out.println(output);

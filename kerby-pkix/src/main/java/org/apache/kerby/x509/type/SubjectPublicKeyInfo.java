@@ -19,10 +19,11 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
-import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
+
 import static org.apache.kerby.x509.type.SubjectPublicKeyInfo.MyEnum.*;
 
 /**
@@ -64,8 +65,8 @@ public class SubjectPublicKeyInfo extends Asn1SequenceType {
         setFieldAs(ALGORITHM, algorithm);
     }
 
-    public byte[] getSubjectPubKey() {
-        return getFieldAsOctets(SUBJECT_PUBLIC_KEY);
+    public Asn1BitString getSubjectPubKey() {
+        return getFieldAs(SUBJECT_PUBLIC_KEY, Asn1BitString.class);
     }
 
     public void setSubjectPubKey(byte[] subjectPubKey) {

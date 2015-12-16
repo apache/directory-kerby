@@ -32,6 +32,7 @@ import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.type.base.LastReq;
 import org.apache.kerby.kerberos.kerb.type.base.LastReqEntry;
 import org.apache.kerby.kerberos.kerb.type.base.LastReqType;
+import org.apache.kerby.kerberos.kerb.type.base.NameType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.kdc.AsRep;
 import org.apache.kerby.kerberos.kerb.type.kdc.AsReq;
@@ -79,6 +80,9 @@ public class AsRequest extends KdcRequest {
             clientEntry.setExpireTime(new KerberosTime(getToken().getExpiredTime().getTime()));
         } else {
             clientEntry = getEntry(clientPrincipal.getName());
+        }
+        if (isAnonymous()) {
+            clientEntry.setPrincipal(new PrincipalName(clientPrincipal.getName(), NameType.NT_WELLKNOWN));
         }
 
         if (clientEntry == null) {
@@ -128,6 +132,10 @@ public class AsRequest extends KdcRequest {
         EncryptedData encryptedData = EncryptionUtil.seal(encKdcRepPart,
             clientKey, KeyUsage.AS_REP_ENCPART);
         reply.setEncryptedEncPart(encryptedData);
+
+        if (isPkinit()) {
+            reply.setPaData(getPreauthContext().getOutputPaData());
+        }
 
         setReply(reply);
     }

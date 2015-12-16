@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.type.kdc;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
@@ -31,6 +31,7 @@ import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.LastReq;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.TicketFlags;
+
 import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.*;
 
 /**

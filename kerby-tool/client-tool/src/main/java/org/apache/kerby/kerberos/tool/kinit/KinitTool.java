@@ -112,8 +112,11 @@ public class KinitTool {
             confDir = ktOptions.getDirOption(KinitOption.CONF_DIR);
         }
 
-        //If not request tickets by keytab than by password.
-        if (!ktOptions.contains(KinitOption.USE_KEYTAB)) {
+        if (ktOptions.contains(KinitOption.ANONYMOUS)) {
+            ktOptions.add(KrbOption.USE_PKINIT_ANONYMOUS);
+            ktOptions.add(KrbOption.PKINIT_X509_ANCHORS);
+        } else if (!ktOptions.contains(KinitOption.USE_KEYTAB)) {
+            //If not request tickets by keytab than by password.
             ktOptions.add(KinitOption.USE_PASSWD);
             String password = getPassword(principal);
             ktOptions.add(KinitOption.USER_PASSWD, password);
@@ -180,6 +183,10 @@ public class KinitTool {
         return krbClient;
     }
 
+    private static String getAnonymousPrincipal() {
+        return "WELLKNOWN/ANONYMOUS";
+    }
+
     public static void main(String[] args) throws Exception {
         KOptions ktOptions = new KOptions();
         KinitOption kto;
@@ -222,7 +229,11 @@ public class KinitTool {
         }
 
         if (principal == null) {
-            printUsage("No principal is specified");
+            if (ktOptions.contains(KinitOption.ANONYMOUS)) {
+                principal = getAnonymousPrincipal();
+            } else {
+                printUsage("No principal is specified");
+            }
         }
 
         requestTicket(principal, ktOptions);

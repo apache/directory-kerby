@@ -54,6 +54,8 @@ import org.apache.kerby.kerberos.kerb.type.fast.ArmorType;
 import org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmor;
 import org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq;
 import org.apache.kerby.kerberos.kerb.type.fast.KrbFastReq;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
@@ -91,8 +93,11 @@ public abstract class KdcRequest {
     private PrincipalName serverPrincipal;
     private byte[] innerBodyout;
     private AuthToken token;
-    private Boolean isToken = false;
+    private boolean isToken = false;
+    private boolean isPkinit = false;
+    private boolean isAnonymous = false;
     private EncryptionKey sessionKey;
+    private ByteBuffer reqPackage;
 
     /**
      * Get session key.
@@ -161,17 +166,20 @@ public abstract class KdcRequest {
         checkVersion();
         checkTgsEntry();
         kdcFindFast();
+        authenticate();
         if (PreauthHandler.isToken(getKdcReq().getPaData())) {
             isToken = true;
             preauth();
             checkClient();
             checkServer();
         } else {
+            if (PreauthHandler.isPkinit(getKdcReq().getPaData())) {
+                isPkinit = true;
+            }
             checkClient();
             checkServer();
             preauth();
         }
-        authenticate();
         issueTicket();
         makeReply();
     }
@@ -537,10 +545,17 @@ public abstract class KdcRequest {
         PaData preAuthData = request.getPaData();
 
         if (isPreauthRequired()) {
+            if (isAnonymous && !isPkinit) {
+                LOG.info("Need PKINIT.");
+                KrbError krbError = makePreAuthenticationError(kdcContext, request,
+                        KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, true);
+                throw new KdcRecoverableException(krbError);
+            }
+
             if (preAuthData == null || preAuthData.isEmpty()) {
                 LOG.info("The preauth data is empty.");
                 KrbError krbError = makePreAuthenticationError(kdcContext, request,
-                        KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED);
+                        KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, false);
                 throw new KdcRecoverableException(krbError);
             } else {
                 getPreauthHandler().verify(this, preAuthData);
@@ -646,7 +661,7 @@ public abstract class KdcRequest {
      * @return The krb error reply to client
      */
     protected KrbError makePreAuthenticationError(KdcContext kdcContext, KdcReq request,
-                                                  KrbErrorCode errorCode)
+                                                  KrbErrorCode errorCode, boolean pkinit)
             throws KrbException {
         List<EncryptionType> encryptionTypes = kdcContext.getConfig().getEncryptionTypes();
         List<EncryptionType> clientEtypes = request.getReqBody().getEtypes();
@@ -684,6 +699,11 @@ public abstract class KdcRequest {
             methodData.add(new PaDataEntry(PaDataType.ETYPE_INFO, encTypeInfo));
         }
         methodData.add(new PaDataEntry(PaDataType.ETYPE_INFO2, encTypeInfo2));
+
+        if (pkinit) {
+            methodData.add(new PaDataEntry(PaDataType.PK_AS_REQ, "empty".getBytes()));
+            methodData.add(new PaDataEntry(PaDataType.PK_AS_REP, "empty".getBytes()));
+        }
 
         KrbError krbError = new KrbError();
         krbError.setErrorCode(errorCode);
@@ -781,5 +801,25 @@ public abstract class KdcRequest {
      */
     protected AuthToken getToken() {
         return token;
+    }
+
+    protected boolean isPkinit() {
+        return isPkinit;
+    }
+
+    protected boolean isAnonymous() {
+        return getKdcOptions().isFlagSet(KdcOption.REQUEST_ANONYMOUS);
+    }
+
+    public KdcOptions getKdcOptions() {
+        return kdcReq.getReqBody().getKdcOptions();
+    }
+
+    public void setReqPackage(ByteBuffer reqPackage) {
+        this.reqPackage = reqPackage;
+    }
+
+    public ByteBuffer getReqPackage() {
+        return this.reqPackage;
     }
 }

@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.type.kdc;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbIntegers;
@@ -33,11 +33,12 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.Tickets;
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.*;
 
 /**
  KDC-REQ-BODY    ::= SEQUENCE {

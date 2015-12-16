@@ -29,6 +29,7 @@ import org.apache.kerby.kerberos.kerb.client.preauth.PreauthContext;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
+import org.apache.kerby.kerberos.kerb.crypto.dh.DhClient;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
@@ -74,6 +75,8 @@ public abstract class KdcRequest {
     private byte[] outerRequestBody;
 
     private boolean isRetrying;
+
+    private DhClient dhClient;
 
     public KdcRequest(KrbContext context) {
         this.context = context;
@@ -235,8 +238,13 @@ public abstract class KdcRequest {
         this.context = context;
     }
 
-    protected byte[] decryptWithClientKey(EncryptedData data, KeyUsage usage) throws KrbException {
-        return EncryptionHandler.decrypt(data, getClientKey(), usage);
+    protected byte[] decryptWithClientKey(EncryptedData data,
+                                          KeyUsage usage) throws KrbException {
+        EncryptionKey tmpKey = getClientKey();
+        if (tmpKey == null) {
+            throw new KrbException("Client key isn't availalbe");
+        }
+        return EncryptionHandler.decrypt(data, tmpKey, usage);
     }
 
     public abstract PrincipalName getClientPrincipal();
@@ -408,5 +416,13 @@ public abstract class KdcRequest {
                 kdcOptions.setFlag(kdcOption, flagValue);
             }
         }
+    }
+
+    public void setDhClient(DhClient client) {
+        this.dhClient = client;
+    }
+
+    public DhClient getDhClient() {
+        return this.dhClient;
     }
 }

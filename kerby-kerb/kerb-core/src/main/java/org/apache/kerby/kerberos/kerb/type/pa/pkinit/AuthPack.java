@@ -24,6 +24,7 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
+
 import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.*;
 
 /**
@@ -80,11 +81,11 @@ public class AuthPack extends KrbSequenceType {
     }
 
     public AlgorithmIdentifiers getsupportedCmsTypes() {
-        return getFieldAs(CLIENT_DH_NONCE, AlgorithmIdentifiers.class);
+        return getFieldAs(SUPPORTED_CMS_TYPES, AlgorithmIdentifiers.class);
     }
 
     public void setsupportedCmsTypes(AlgorithmIdentifiers supportedCMSTypes) {
-        setFieldAs(CLIENT_DH_NONCE, supportedCMSTypes);
+        setFieldAs(SUPPORTED_CMS_TYPES, supportedCMSTypes);
     }
 
     public DHNonce getClientDhNonce() {

@@ -19,18 +19,20 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodecTest {
 
     @Test
-    public void testCodec() throws KrbException {
+    public void testCodec() throws KrbException, IOException {
         CheckSum mcs = new CheckSum();
         mcs.setCksumtype(CheckSumType.CRC32);
         mcs.setChecksum(new byte[] {0x10});

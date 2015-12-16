@@ -19,14 +19,15 @@
  */
 package org.apache.kerby.x509.type;
 
+import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BmpString;
 import org.apache.kerby.asn1.type.Asn1Choice;
-import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.type.Asn1PrintableString;
 import org.apache.kerby.asn1.type.Asn1T61String;
 import org.apache.kerby.asn1.type.Asn1UniversalString;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
+
 import static org.apache.kerby.x509.type.DirectoryString.MyEnum.*;
 
 /**

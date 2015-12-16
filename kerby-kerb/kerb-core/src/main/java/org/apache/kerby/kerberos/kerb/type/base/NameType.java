@@ -27,7 +27,8 @@ public enum NameType implements EnumType {
     NT_SRV_INST(2),
     NT_SRV_HST(3),
     NT_SRV_XHST(4),
-    NT_UID(5);
+    NT_UID(5),
+    NT_WELLKNOWN(11);
     
     private int value;
 

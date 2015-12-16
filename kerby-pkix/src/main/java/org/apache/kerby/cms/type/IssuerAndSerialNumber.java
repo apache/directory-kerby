@@ -24,6 +24,7 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x500.type.Name;
+
 import static org.apache.kerby.cms.type.IssuerAndSerialNumber.MyEnum.*;
 
 /**

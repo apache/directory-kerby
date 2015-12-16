@@ -108,6 +108,7 @@ public abstract class KrbHandler {
 
         KrbMessageType messageType = kdcRep.getMsgType();
         if (messageType == KrbMessageType.AS_REP) {
+
             kdcRequest.processResponse((KdcRep) kdcRep);
         } else if (messageType == KrbMessageType.TGS_REP) {
             kdcRequest.processResponse((KdcRep) kdcRep);

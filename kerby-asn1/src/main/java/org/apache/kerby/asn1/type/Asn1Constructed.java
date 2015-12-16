@@ -106,7 +106,7 @@ public class Asn1Constructed
                 continue;
             }
 
-            Asn1Type tmpValue = Asn1Converter.convert(parsingItem);
+            Asn1Type tmpValue = Asn1Converter.convert(parsingItem, lazy);
             addItem(tmpValue);
         }
     }

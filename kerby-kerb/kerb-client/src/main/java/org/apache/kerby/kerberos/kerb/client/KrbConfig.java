@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.client;
 import org.apache.kerby.kerberos.kerb.common.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -295,5 +296,20 @@ public class KrbConfig extends Krb5Conf {
      */
     public List<EncryptionType> getDefaultTktEnctypes() {
         return getEncTypes(KrbConfigKey.DEFAULT_TKT_ENCTYPES, true, LIBDEFAULT);
+    }
+
+    public List<String> getPkinitAnchors() {
+        return Arrays.asList(getStringArray(
+                KrbConfigKey.PKINIT_ANCHORS, true, LIBDEFAULT));
+    }
+
+    public List<String> getPkinitIdentities() {
+        return Arrays.asList(getStringArray(
+                KrbConfigKey.PKINIT_IDENTITIES, true, LIBDEFAULT));
+    }
+
+    public String getPkinitKdcHostName() {
+        return getString(
+                KrbConfigKey.PKINIT_KDC_HOSTNAME, true, LIBDEFAULT);
     }
 }

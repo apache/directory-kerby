@@ -24,8 +24,7 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.x509.type.AttCertIssuer.MyEnum.V1_FORM;
-import static org.apache.kerby.x509.type.AttCertIssuer.MyEnum.V2_FORM;
+import static org.apache.kerby.x509.type.AttCertIssuer.MyEnum.*;
 
 /**
  *

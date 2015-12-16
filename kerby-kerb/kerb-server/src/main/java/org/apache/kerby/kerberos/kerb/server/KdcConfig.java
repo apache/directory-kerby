@@ -170,4 +170,14 @@ public class KdcConfig extends Krb5Conf {
     public List<String> getIssuers() {
         return Arrays.asList(getStringArray(KdcConfigKey.TOKEN_ISSUERS, true, KDCDEFAULT));
     }
+
+    public List<String> getPkinitAnchors() {
+        return Arrays.asList(getString(
+                KdcConfigKey.PKINIT_ANCHORS, true, KDCDEFAULT));
+    }
+
+    public String getPkinitIdentity() {
+        return getString(
+                KdcConfigKey.PKINIT_IDENTITY, true, KDCDEFAULT);
+    }
 }

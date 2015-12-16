@@ -30,6 +30,7 @@ import org.apache.kerby.asn1.parse.Asn1Container;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -220,13 +221,16 @@ public abstract class Asn1CollectionType
         setFieldAs(index, new Asn1Integer(value));
     }
 
+    protected void setFieldAsBigInteger(EnumType index, BigInteger value) {
+        setFieldAs(index, new Asn1Integer(value));
+    }
+
     protected <T extends Asn1Type> T getFieldAsAny(EnumType index, Class<T> t) {
         Asn1Type value = fields[index.getValue()];
         if (value != null && value instanceof Asn1Any) {
             Asn1Any any = (Asn1Any) value;
             return any.getValueAs(t);
         }
-
         return null;
     }
 
