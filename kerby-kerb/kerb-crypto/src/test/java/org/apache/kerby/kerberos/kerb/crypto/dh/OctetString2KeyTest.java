@@ -20,9 +20,8 @@
 package org.apache.kerby.kerberos.kerb.crypto.dh;
 
 
-import junit.framework.TestCase;
-
 import java.util.Arrays;
+import org.junit.Test;
 
 
 /**
@@ -36,7 +35,7 @@ import java.util.Arrays;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class OctetString2KeyTest extends TestCase {
+public class OctetString2KeyTest extends org.junit.Assert {
     /**
      * Set 1:
      * =====
@@ -64,6 +63,7 @@ public class OctetString2KeyTest extends TestCase {
      * 5e e5 0d 67 5c 80 9f e5 9e 4a 77 62 c5 4b 65 83
      * 75 47 ea fb 15 9b d8 cd c7 5f fc a5 91 1e 4c 41
      */
+    @Test
     public void testSet1() {
         byte[] inputOctetString = new byte[16 * 16];
 
@@ -101,6 +101,7 @@ public class OctetString2KeyTest extends TestCase {
      * ac f7 70 7c 08 97 3d df db 27 cd 36 14 42 cc fb
      * a3 55 c8 88 4c b4 72 f3 7d a6 36 d0 7d 56 78 7e
      */
+    @Test
     public void testSet2() {
         byte[] inputOctetString = new byte[16 * 8];
 
@@ -138,6 +139,7 @@ public class OctetString2KeyTest extends TestCase {
      * c4 42 da 58 5f cb 80 e4 3b 47 94 6f 25 40 93 e3
      * 73 29 d9 90 01 38 0d b7 83 71 db 3a cf 5c 79 7e
      */
+    @Test
     public void testSet3() {
         byte[] inputOctetString =
                 {(byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05, (byte) 0x06,
@@ -193,6 +195,7 @@ public class OctetString2KeyTest extends TestCase {
      * 00 53 95 3b 84 c8 96 f4 eb 38 5c 3f 2e 75 1c 4a
      * 59 0e d6 ff ad ca 6f f6 4f 47 eb eb 8d 78 0f fc
      */
+    @Test
     public void testSet4() {
         byte[] inputOctetString =
                 {(byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05, (byte) 0x06,

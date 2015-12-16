@@ -24,6 +24,8 @@ import org.apache.kerby.util.HexUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.Test;
+
 /**
  * This is just for my experimental tweaking, so pleas bear it.
  */
@@ -73,7 +75,8 @@ public class DesKeyMakerTest {
     /**
      * This is just for my experimental tweaking, so pleas bear it.
      */
-    //@Test
+    @Test
+    @org.junit.Ignore
     public void testCase1() {
         TestCase tc = new TestCase("ATHENA.MIT.EDUraeburn",
                 "password", "70617373776f7264415448454e412e4d49542e4544557261656275726e",

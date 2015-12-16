@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.dh;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * "When using the Diffie-Hellman key agreement method, implementations MUST
@@ -30,23 +30,25 @@ import junit.framework.TestCase;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class DhGroupTest extends TestCase {
+public class DhGroupTest extends org.junit.Assert {
     /**
      * Tests that the translation of the hex representation of the prime modulus
      * resulted in the expected bit length.
      */
+    @Test
     public void testPrimeBitLengths() {
-        TestCase.assertEquals(1024, DhGroup.MODP_GROUP2.getP().bitLength());
-        TestCase.assertEquals(2048, DhGroup.MODP_GROUP14.getP().bitLength());
-        TestCase.assertEquals(4096, DhGroup.MODP_GROUP16.getP().bitLength());
+        assertEquals(1024, DhGroup.MODP_GROUP2.getP().bitLength());
+        assertEquals(2048, DhGroup.MODP_GROUP14.getP().bitLength());
+        assertEquals(4096, DhGroup.MODP_GROUP16.getP().bitLength());
     }
 
     /**
      * Tests the generator values.
      */
+    @Test
     public void testGeneratorValues() {
-        TestCase.assertEquals(2, DhGroup.MODP_GROUP2.getG().intValue());
-        TestCase.assertEquals(2, DhGroup.MODP_GROUP14.getG().intValue());
-        TestCase.assertEquals(2, DhGroup.MODP_GROUP16.getG().intValue());
+        assertEquals(2, DhGroup.MODP_GROUP2.getG().intValue());
+        assertEquals(2, DhGroup.MODP_GROUP14.getG().intValue());
+        assertEquals(2, DhGroup.MODP_GROUP16.getG().intValue());
     }
 }

@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
-import junit.framework.TestCase;
 import org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs.CertificateChainFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.util.Arrays;
 
-public class EnvelopedDataEngineTest extends TestCase {
+public class EnvelopedDataEngineTest extends org.junit.Assert {
     /**
      * The log for this class.
      */
@@ -76,6 +76,7 @@ public class EnvelopedDataEngineTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testEnvelopedData() throws Exception {
         byte[] dataToEnvelope = "Hello".getBytes();
 

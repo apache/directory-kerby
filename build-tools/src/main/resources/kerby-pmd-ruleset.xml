@@ -32,8 +32,7 @@
   <rule ref="rulesets/java/braces.xml"/>
   <rule ref="rulesets/java/empty.xml"/>
   <rule ref="rulesets/java/migrating.xml">
-     <exclude name="JUnit4TestShouldUseAfterAnnotation" />
-     <exclude name="JUnit4TestShouldUseTestAnnotation" />
+     <exclude name="JUnit4TestShouldUseAfterAnnotation" /> 
   </rule>
   <rule ref="rulesets/java/unnecessary.xml"/>
 

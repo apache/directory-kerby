@@ -26,7 +26,8 @@ import java.io.IOException;
 
 public class TestAsn1Dump {
 
-    //@Test
+    @Test
+    @org.junit.Ignore
     public void testDumpWithPersonnelRecord() throws IOException {
         try {
             PersonnelRecord pr = TestData.createSamplePersonnel();
@@ -41,7 +42,8 @@ public class TestAsn1Dump {
         }
     }
 
-    //@Test
+    @Test
+    @org.junit.Ignore
     public void testDumpWithCompressedData() throws IOException {
         String hexStr = TestUtil.readStringFromTxtFile("/compressed-data.txt");
         try {
@@ -53,7 +55,8 @@ public class TestAsn1Dump {
         }
     }
 
-    //@Test
+    @Test
+    @org.junit.Ignore
     public void testDumpWithSignedData() throws IOException {
         String hexStr = TestUtil.readStringFromTxtFile("/signed-data.txt");
         try {
@@ -65,7 +68,8 @@ public class TestAsn1Dump {
         }
     }
 
-    //@Test
+    @Test
+    @org.junit.Ignore
     public void testDumpWithDerData() throws IOException {
         byte[] data = TestUtil.readBytesFromBinFile("/der-data.dat");
         try {

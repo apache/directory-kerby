@@ -27,6 +27,7 @@ import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.pki.PkiLoader;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.security.PrivateKey;
@@ -74,7 +75,8 @@ public class WithCertKdcTest extends KdcTestBase {
         loadCredentials();
     }
 
-    //@Test
+    @Test
+    @org.junit.Ignore
     public void testPkinit() throws Exception {
         assertThat(userCert).isNotNull();
 

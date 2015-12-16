@@ -20,11 +20,11 @@
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
 
-import junit.framework.TestCase;
 import org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs.CertificateChainFactory;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ import java.security.interfaces.RSAPrivateCrtKey;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class SignedDataEngineTest extends TestCase {
+public class SignedDataEngineTest extends org.junit.Assert {
     /**
      * The log for this class.
      */
@@ -86,6 +86,7 @@ public class SignedDataEngineTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testSignedData() throws Exception {
         byte[] data = "Hello".getBytes();
 

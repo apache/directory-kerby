@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs;
 
-import junit.framework.TestCase;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
@@ -45,7 +45,7 @@ import java.util.List;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class CertificateChainFactoryTest extends TestCase {
+public class CertificateChainFactoryTest {
 
     @Before
     public void setUp() {
@@ -64,6 +64,7 @@ public class CertificateChainFactoryTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testClientChain() throws Exception {
         X509Certificate[] clientChain = CertificateChainFactory.getClientChain();
 
@@ -80,6 +81,7 @@ public class CertificateChainFactoryTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testKdcChain() throws Exception {
         X509Certificate[] kdcChain = CertificateChainFactory.getKdcChain();
 
