@@ -109,5 +109,11 @@ public class TestPkinitAnonymousAsRepCodec {
         EncryptedData encryptedData = ticket.getEncryptedEncPart();
         assertThat(encryptedData.getKvno()).isEqualTo(1);
         assertThat(encryptedData.getEType().getValue()).isEqualTo(0x0012);
+
+        // Test encode PaPkAsRep
+        //TO BE FIXED
+//        byte[] encodedPaPkAsRep = paPkAsRep.encode();
+//        PaPkAsRep decodedPaPkAsReq = new PaPkAsRep();
+//        decodedPaPkAsReq.decode(encodedPaPkAsRep);
     }
 }

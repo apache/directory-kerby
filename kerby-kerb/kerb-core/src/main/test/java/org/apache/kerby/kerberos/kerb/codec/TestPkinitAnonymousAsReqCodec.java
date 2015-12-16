@@ -104,5 +104,11 @@ public class TestPkinitAnonymousAsReqCodec {
         assertThat(types.get(3).getValue()).isEqualTo(0x0017);
         assertThat(types.get(4).getValue()).isEqualTo(0x0019);
         assertThat(types.get(5).getValue()).isEqualTo(0x001A);
+
+        // Test encode PaPkAsReq
+        //TO BE FIXED
+//        byte[] encodedPaPkAsReq = paPkAsReq.encode();
+//        PaPkAsReq decodedPaPkAsReq = new PaPkAsReq();
+//        decodedPaPkAsReq.decode(encodedPaPkAsReq);
     }
 }
