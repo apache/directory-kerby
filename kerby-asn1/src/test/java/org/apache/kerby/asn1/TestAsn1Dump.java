@@ -34,8 +34,8 @@ public class TestAsn1Dump {
             Asn1.dump(pr);
 
             byte[] data = TestData.createSammplePersonnelEncodingData();
-            Asn1.dump(data, true);
-            Asn1.dump(data, false);
+            Asn1.parseAndDump(data);
+            Asn1.decodeAndDump(data);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -47,8 +47,8 @@ public class TestAsn1Dump {
     public void testDumpWithCompressedData() throws IOException {
         String hexStr = TestUtil.readStringFromTxtFile("/compressed-data.txt");
         try {
-            Asn1.dump(hexStr, true);
-            Asn1.dump(hexStr, false);
+            Asn1.parseAndDump(hexStr);
+            Asn1.decodeAndDump(hexStr);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -60,8 +60,8 @@ public class TestAsn1Dump {
     public void testDumpWithSignedData() throws IOException {
         String hexStr = TestUtil.readStringFromTxtFile("/signed-data.txt");
         try {
-            Asn1.dump(hexStr, true);
-            Asn1.dump(hexStr, false);
+            Asn1.parseAndDump(hexStr);
+            Asn1.decodeAndDump(hexStr);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -73,8 +73,8 @@ public class TestAsn1Dump {
     public void testDumpWithDerData() throws IOException {
         byte[] data = TestUtil.readBytesFromBinFile("/der-data.dat");
         try {
-            Asn1.dump(data, true);
-            Asn1.dump(data, false);
+            Asn1.parseAndDump(data);
+            Asn1.decodeAndDump(data);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -85,8 +85,8 @@ public class TestAsn1Dump {
     public void testDumpWithEmptyContainer() throws IOException {
         byte[] data = TestUtil.readBytesFromTxtFile("/empty-container.txt");
         try {
-            Asn1.dump(data, true);
-            Asn1.dump(data, false);
+            Asn1.parseAndDump(data);
+            Asn1.decodeAndDump(data);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();

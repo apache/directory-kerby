@@ -33,7 +33,7 @@ public class TestCompressedData extends CmsTestBase {
     public void testDump1WithCompressedData() throws IOException {
         byte[] data = readDataFile("/compressed-data.txt");
         try {
-            Asn1.dump(data, true);
+            Asn1.parseAndDump(data);
 
             ContentInfo contentInfo = new ContentInfo();
             contentInfo.decode(data);

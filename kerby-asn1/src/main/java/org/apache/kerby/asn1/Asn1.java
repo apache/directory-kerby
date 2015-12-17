@@ -76,26 +76,44 @@ public final class Asn1 {
         System.out.println(output);
     }
 
-    public static void dump(String hexStr,
-                            boolean useRawFormat) throws IOException {
+    public static void parseAndDump(String hexStr) throws IOException {
         byte[] data = HexUtil.hex2bytes(hexStr);
-        dump(data, useRawFormat);
+        parseAndDump(data);
     }
 
-    public static void dump(ByteBuffer content,
-                            boolean useRawFormat) throws IOException {
+    public static void decodeAndDump(String hexStr) throws IOException {
+        byte[] data = HexUtil.hex2bytes(hexStr);
+        decodeAndDump(data);
+    }
+
+    public static void parseAndDump(ByteBuffer content) throws IOException {
         byte[] bytes = new byte[content.remaining()];
         content.get(bytes);
-        dump(bytes, useRawFormat);
+        parseAndDump(bytes);
     }
 
-    public static void dump(byte[] content,
-                            boolean useRawFormat) throws IOException {
+    public static void decodeAndDump(ByteBuffer content) throws IOException {
+        byte[] bytes = new byte[content.remaining()];
+        content.get(bytes);
+        decodeAndDump(bytes);
+    }
+
+    public static void parseAndDump(byte[] content) throws IOException {
         //String hexStr = HexUtil.bytesToHex(content);
         Asn1Dumper dumper = new Asn1Dumper();
         //System.out.println("Dumping data:");
         //dumper.dumpData(hexStr);
-        dumper.dump(content, useRawFormat);
+        dumper.parseAndDump(content);
+        String output = dumper.output();
+        System.out.println(output);
+    }
+
+    public static void decodeAndDump(byte[] content) throws IOException {
+        //String hexStr = HexUtil.bytesToHex(content);
+        Asn1Dumper dumper = new Asn1Dumper();
+        //System.out.println("Dumping data:");
+        //dumper.dumpData(hexStr);
+        dumper.decodeAndDump(content);
         String output = dumper.output();
         System.out.println(output);
     }

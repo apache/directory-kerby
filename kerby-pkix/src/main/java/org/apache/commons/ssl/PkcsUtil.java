@@ -58,7 +58,7 @@ public class PkcsUtil {
     public static PkcsStructure analyze(byte[] asn1)
             throws IOException {
 
-        Asn1.dump(asn1, true);
+        Asn1.parseAndDump(asn1);
         Asn1Type aObj = Asn1.decode(asn1);
         Asn1.dump(aObj);
 

@@ -32,7 +32,7 @@ public class TestCertificate extends CmsTestBase {
     public void testDecodingCertificate() throws IOException {
         byte[] data = readDataFile("/certificate1.txt");
         try {
-            Asn1.dump(data, true);
+            Asn1.parseAndDump(data);
             Certificate certificate = new Certificate();
             certificate.decode(data);
             Asn1.dump(certificate);
@@ -62,7 +62,7 @@ public class TestCertificate extends CmsTestBase {
     public void testDecodingName() throws IOException {
         byte[] data = readDataFile("/name.txt");
         try {
-            Asn1.dump(data, true);
+            Asn1.parseAndDump(data);
             Name name = new Name();
             name.decode(data);
             Asn1.dump(name.getName());

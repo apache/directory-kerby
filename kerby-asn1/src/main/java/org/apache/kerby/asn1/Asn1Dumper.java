@@ -27,7 +27,6 @@ import org.apache.kerby.asn1.type.Asn1Application;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;
-import org.apache.kerby.asn1.util.HexUtil;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -52,28 +51,22 @@ public final class Asn1Dumper {
         return builder.toString();
     }
 
-    public void dumpWithHex(byte[] content,
-                                  boolean useRawFormat) throws IOException {
-        String hexStr = HexUtil.bytesToHex(content);
-        append("Dumping data:").newLine();
-        dumpData(hexStr);
-        dump(content, useRawFormat);
+    public void parseAndDump(byte[] content) throws IOException {
+        parseAndDump(ByteBuffer.wrap(content));
     }
 
-    public void dump(byte[] content,
-                     boolean useRawFormat) throws IOException {
-        dump(ByteBuffer.wrap(content), useRawFormat);
+    public void decodeAndDump(byte[] content) throws IOException {
+        decodeAndDump(ByteBuffer.wrap(content));
     }
 
-    public void dump(ByteBuffer content,
-                     boolean useRawFormat) throws IOException {
-        if (useRawFormat) {
-            Asn1ParseResult parseResult = Asn1Parser.parse(content);
-            dumpParseResult(0, parseResult);
-        } else {
-            Asn1Type value = Asn1.decode(content);
-            dumpType(0, value);
-        }
+    public void decodeAndDump(ByteBuffer content) throws IOException {
+        Asn1Type value = Asn1.decode(content);
+        dumpType(0, value);
+    }
+
+    public void parseAndDump(ByteBuffer content) throws IOException {
+        Asn1ParseResult parseResult = Asn1Parser.parse(content);
+        dumpParseResult(0, parseResult);
     }
 
     public void dumpType(Asn1Type value) {

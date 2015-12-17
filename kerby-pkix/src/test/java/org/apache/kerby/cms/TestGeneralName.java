@@ -35,7 +35,7 @@ public class TestGeneralName {
     @Test
     public void testIpAddress() throws IOException {
         try {
-            Asn1.dump(IPV4, true);
+            Asn1.parseAndDump(IPV4);
             GeneralName generalName = new GeneralName();
             generalName.decode(IPV4);
             assertThat(generalName.getIPAddress()).isNotNull();

@@ -54,7 +54,7 @@ public class TestAsReqCodec {
     @Test
     public void test() throws IOException, ParseException {
         byte[] bytes = CodecTestUtil.readBinaryFile("/asreq.token");
-        Asn1.dump(bytes, false);
+        Asn1.decodeAndDump(bytes);
         ByteBuffer asReqToken = ByteBuffer.wrap(bytes);
 
         AsReq asReq = new AsReq();

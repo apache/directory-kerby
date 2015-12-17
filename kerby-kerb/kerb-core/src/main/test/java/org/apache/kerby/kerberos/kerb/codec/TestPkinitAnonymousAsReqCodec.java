@@ -69,7 +69,7 @@ public class TestPkinitAnonymousAsReqCodec {
         PaPkAsReq paPkAsReq = new PaPkAsReq();
         paPkAsReq.decode(pkAsReqEntry.getPaDataValue());
         ContentInfo contentInfo = new ContentInfo();
-        Asn1.dump(paPkAsReq.getSignedAuthPack(), true);
+        Asn1.parseAndDump(paPkAsReq.getSignedAuthPack());
         contentInfo.decode(paPkAsReq.getSignedAuthPack());
         assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
         Asn1.dump(contentInfo);

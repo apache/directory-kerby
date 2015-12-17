@@ -38,7 +38,7 @@ public class TestSignedData extends CmsTestBase {
     public void testDecoding() throws IOException {
         byte[] data = readDataFile("/signed-data.txt");
         try {
-            Asn1.dump(data, true);
+            Asn1.parseAndDump(data);
 
             ContentInfo contentInfo = new ContentInfo();
             contentInfo.decode(data);
@@ -81,7 +81,7 @@ public class TestSignedData extends CmsTestBase {
         contentInfo.setContent(signedData);
         Asn1.dump(contentInfo);
         byte[] encodedData = contentInfo.encode();
-        Asn1.dump(encodedData, true);
+        Asn1.parseAndDump(encodedData);
 
         ContentInfo decodedContentInfo = new ContentInfo();
         decodedContentInfo.decode(encodedData);
@@ -96,7 +96,7 @@ public class TestSignedData extends CmsTestBase {
     public void testContentInfo() throws IOException {
         byte[] data = readDataFile("/anonymous.txt");
         try {
-            Asn1.dump(data, true);
+            Asn1.parseAndDump(data);
 
             ContentInfo contentInfo = new ContentInfo();
             contentInfo.decode(data);
