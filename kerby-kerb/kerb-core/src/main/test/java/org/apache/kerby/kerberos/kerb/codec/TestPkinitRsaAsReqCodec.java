@@ -46,12 +46,12 @@ public class TestPkinitRsaAsReqCodec {
     @Test
     public void test() throws IOException, ParseException {
         byte[] bytes = CodecTestUtil.readDataFile("/pkinit_rsa_asreq.token");
-        Asn1.dump(bytes, true);
+        Asn1.parseAndDump(bytes);
         ByteBuffer asReqToken = ByteBuffer.wrap(bytes);
 
         AsReq asReq = new AsReq();
         asReq.decode(asReqToken);
-        //Asn1.dump(asReq, false);
+        //Asn1.decodeAndDump(asReq);
 
         assertThat(asReq.getPvno()).isEqualTo(5);
         assertThat(asReq.getMsgType()).isEqualTo(KrbMessageType.AS_REQ);
