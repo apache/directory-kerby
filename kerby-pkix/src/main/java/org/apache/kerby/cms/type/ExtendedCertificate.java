@@ -63,7 +63,7 @@ public class ExtendedCertificate extends Asn1SequenceType {
         return getFieldAs(EXTENDED_CERTIFICATE_INFO, ExtendedCertificateInfo.class);
     }
 
-    public void setCmsVersion(ExtendedCertificateInfo extendedCertificateInfo) {
+    public void setExtendedCertificateInfo(ExtendedCertificateInfo extendedCertificateInfo) {
         setFieldAs(EXTENDED_CERTIFICATE_INFO, extendedCertificateInfo);
     }
 
