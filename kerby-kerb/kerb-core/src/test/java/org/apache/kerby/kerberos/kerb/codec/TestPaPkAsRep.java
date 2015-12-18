@@ -22,7 +22,6 @@ package org.apache.kerby.kerberos.kerb.codec;
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.cms.type.ContentInfo;
-import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;

@@ -19,11 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
-import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.ContentInfo;
 import org.apache.kerby.cms.type.EncapsulatedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
-import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
