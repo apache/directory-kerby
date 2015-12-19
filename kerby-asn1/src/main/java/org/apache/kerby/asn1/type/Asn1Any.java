@@ -22,6 +22,7 @@ package org.apache.kerby.asn1.type;
 import org.apache.kerby.asn1.Asn1Binder;
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.Tag;
+import org.apache.kerby.asn1.TaggingOption;
 import org.apache.kerby.asn1.UniversalTag;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 
@@ -63,23 +64,35 @@ public class Asn1Any extends AbstractAsn1Type<Asn1Type> {
     }
 
     @Override
-    protected int encodingBodyLength() {
-        if (getValue() != null) {
-            return ((Asn1Encodeable) getValue()).encodingBodyLength();
-        } else if (field != null) {
-            return field.getBodyLength();
-        }
+    public void encode(ByteBuffer buffer) {
+        Asn1Encodeable theValue = (Asn1Encodeable) getValue();
 
-        return -1;
+        if (theValue != null) {
+            if (fieldInfo.isTagged()) {
+                TaggingOption taggingOption =
+                        fieldInfo.getTaggingOption();
+                theValue.taggedEncode(buffer, taggingOption);
+            } else {
+                theValue.encode(buffer);
+            }
+        }
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer) {
-        if (getValue() != null) {
-            ((Asn1Encodeable) getValue()).encodeBody(buffer);
-        } else if (field != null) {
-            buffer.put(field.getBodyBuffer());
+    protected int encodingBodyLength() {
+        Asn1Encodeable theValue = (Asn1Encodeable) getValue();
+
+        if (theValue != null) {
+            if (fieldInfo.isTagged()) {
+                TaggingOption taggingOption =
+                    fieldInfo.getTaggingOption();
+                return theValue.taggedEncodingLength(taggingOption);
+            } else {
+                return theValue.encodingLength();
+            }
         }
+
+        return 0; //field.getBodyLength();
     }
 
     @Override

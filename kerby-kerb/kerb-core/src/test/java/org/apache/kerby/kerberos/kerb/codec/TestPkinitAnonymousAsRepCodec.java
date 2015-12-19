@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
+import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.ContentInfo;
 import org.apache.kerby.cms.type.EncapsulatedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
@@ -59,7 +60,7 @@ public class TestPkinitAnonymousAsRepCodec {
 
         PaPkAsRep paPkAsRep = new PaPkAsRep();
         byte[] padataValue = pkAsRepEntry.getPaDataValue();
-//        Asn1.dump(padataValue, true);
+        //Asn1.parseAndDump(padataValue);
         paPkAsRep.decode(padataValue);
 
         assertThat(paPkAsRep.getDHRepInfo()).isNotNull();
@@ -109,9 +110,9 @@ public class TestPkinitAnonymousAsRepCodec {
         assertThat(encryptedData.getEType().getValue()).isEqualTo(0x0012);
 
         // Test encode PaPkAsRep
-        //TO BE FIXED
-//        byte[] encodedPaPkAsRep = paPkAsRep.encode();
-//        PaPkAsRep decodedPaPkAsReq = new PaPkAsRep();
-//        decodedPaPkAsReq.decode(encodedPaPkAsRep);
+        byte[] encodedPaPkAsRep = paPkAsRep.encode();
+        Asn1.parseAndDump(encodedPaPkAsRep);
+        PaPkAsRep decodedPaPkAsReq = new PaPkAsRep();
+        decodedPaPkAsReq.decode(encodedPaPkAsRep);
     }
 }

@@ -49,8 +49,7 @@ public class TestCertificate extends CmsTestBase {
         try {
             Certificate certificate = new Certificate();
             certificate.decode(data);
-            //TO BE FIXED
-            //certificate.encode();
+            certificate.encode();
 
         } catch (Exception e) {
             e.printStackTrace();

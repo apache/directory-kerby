@@ -63,14 +63,7 @@ public final class Asn1 {
     }
 
     public static void dump(Asn1Type value) {
-        dump(value, true);
-    }
-
-    public static void dump(Asn1Type value, boolean withType) {
-        Asn1Dumper dumper = new Asn1Dumper(withType);
-        if (!withType) {
-            dumper.dumpTypeInfo(value.getClass());
-        }
+        Asn1Dumper dumper = new Asn1Dumper();
         dumper.dumpType(0, value);
         String output = dumper.output();
         System.out.println(output);
@@ -99,20 +92,20 @@ public final class Asn1 {
     }
 
     public static void parseAndDump(byte[] content) throws IOException {
-        //String hexStr = HexUtil.bytesToHex(content);
+        String hexStr = HexUtil.bytesToHex(content);
         Asn1Dumper dumper = new Asn1Dumper();
-        //System.out.println("Dumping data:");
-        //dumper.dumpData(hexStr);
+        System.out.println("Dumping data:");
+        dumper.dumpData(hexStr);
         dumper.parseAndDump(content);
         String output = dumper.output();
         System.out.println(output);
     }
 
     public static void decodeAndDump(byte[] content) throws IOException {
-        //String hexStr = HexUtil.bytesToHex(content);
+        String hexStr = HexUtil.bytesToHex(content);
         Asn1Dumper dumper = new Asn1Dumper();
-        //System.out.println("Dumping data:");
-        //dumper.dumpData(hexStr);
+        System.out.println("Dumping data:");
+        dumper.dumpData(hexStr);
         dumper.decodeAndDump(content);
         String output = dumper.output();
         System.out.println(output);

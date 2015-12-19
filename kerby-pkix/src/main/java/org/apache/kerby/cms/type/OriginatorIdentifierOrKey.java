@@ -21,7 +21,7 @@ package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.SubjectKeyIdentifier;
 
@@ -52,8 +52,8 @@ public class OriginatorIdentifierOrKey extends Asn1Choice {
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
             new Asn1FieldInfo(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class),
-            new ExplicitField(SUBJECT_KEY_IDENTIFIER, 0, SubjectKeyIdentifier.class),
-            new ExplicitField(ORIGINATOR_KEY, 1, OriginatorPublicKey.class)
+            new ImplicitField(SUBJECT_KEY_IDENTIFIER, 0, SubjectKeyIdentifier.class),
+            new ImplicitField(ORIGINATOR_KEY, 1, OriginatorPublicKey.class)
     };
 
     public OriginatorIdentifierOrKey() {

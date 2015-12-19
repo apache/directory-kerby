@@ -54,6 +54,10 @@ public final class Asn1Null extends Asn1Simple<Object> {
 
     @Override
     public String toString() {
-        return "null";
+        String typeStr = tag().typeStr() + " ["
+            + "tag=" + tag()
+            + ", len=" + getHeaderLength() + "+" + getBodyLength()
+            + "] ";
+        return typeStr + "null";
     }
 }

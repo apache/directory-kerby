@@ -39,8 +39,10 @@ public abstract class Asn1String extends Asn1Simple<String> {
 
     @Override
     protected void toBytes() {
-        byte[] bytes = getValue().getBytes(StandardCharsets.US_ASCII);
-        setBytes(bytes);
+        if (getValue() != null) {
+            byte[] bytes = getValue().getBytes(StandardCharsets.US_ASCII);
+            setBytes(bytes);
+        }
     }
 
     @Override

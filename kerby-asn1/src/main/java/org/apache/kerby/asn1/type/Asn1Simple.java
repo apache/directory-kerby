@@ -23,7 +23,6 @@ import org.apache.kerby.asn1.Tag;
 import org.apache.kerby.asn1.UniversalTag;
 import org.apache.kerby.asn1.parse.Asn1Item;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
-import org.apache.kerby.asn1.util.Asn1Util;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -52,22 +51,17 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
         usePrimitive(true);
     }
 
+    @Override
+    public boolean isDefinitiveLength() {
+        return true; // TO-BE-FIXED: some primitive types may not.
+    }
+
     protected byte[] getBytes() {
         return bytes;
     }
 
     protected void setBytes(byte[] bytes) {
         this.bytes = bytes;
-    }
-
-    @Override
-    public void encode(ByteBuffer buffer) {
-        Asn1Util.encodeTag(buffer, tag());
-        int bodyLen = encodingBodyLength();
-        Asn1Util.encodeLength(buffer, bodyLen);
-        if (bodyLen > 0) {
-            buffer.put(encodeBody());
-        }
     }
 
     protected byte[] encodeBody() {
@@ -79,7 +73,10 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     @Override
     protected void encodeBody(ByteBuffer buffer) {
-        buffer.put(encodeBody());
+        byte[] body = encodeBody();
+        if (body != null) {
+            buffer.put(body);
+        }
     }
 
     @Override
@@ -210,8 +207,12 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
 
     @Override
     public String toString() {
+        String typeStr = tag().typeStr() + " ["
+            + "tag=" + tag()
+            + ", len=" + getHeaderLength() + "+" + getBodyLength()
+            + "] ";
         String valueStr =
             (getValue() != null ? String.valueOf(getValue()) : "null");
-        return valueStr;
+        return typeStr + valueStr;
     }
 }

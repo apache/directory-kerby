@@ -41,7 +41,10 @@ public class Asn1OctetString extends Asn1Simple<byte[]> {
 
     @Override
     protected int encodingBodyLength() {
-        return getValue().length;
+        if (getValue() != null) {
+            return getValue().length;
+        }
+        return 0;
     }
 
     @Override
@@ -52,8 +55,17 @@ public class Asn1OctetString extends Asn1Simple<byte[]> {
 
     @Override
     public String toString() {
-        String valueStr =
-            (getValue() != null ? (getValue().length + " octets") : "null");
-        return valueStr;
+        String typeStr = tag().typeStr() + " ["
+            + "tag=" + tag()
+            + ", len=" + getHeaderLength() + "+" + getBodyLength()
+            + "] ";
+
+        byte[] valueBytes = getValue();
+        String valueStr = "<null>";
+        if (valueBytes != null) {
+            valueStr = "<" + valueBytes.length + " octets>";
+        }
+
+        return typeStr + valueStr;
     }
 }

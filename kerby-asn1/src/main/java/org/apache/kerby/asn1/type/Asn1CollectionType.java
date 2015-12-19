@@ -55,16 +55,18 @@ public abstract class Asn1CollectionType
     @Override
     protected int encodingBodyLength() {
         int allLen = 0;
+        int fieldLen;
         for (int i = 0; i < fields.length; ++i) {
             Asn1Encodeable field = (Asn1Encodeable) fields[i];
             if (field != null) {
                 if (fieldInfos[i].isTagged()) {
                     TaggingOption taggingOption =
                         fieldInfos[i].getTaggingOption();
-                    allLen += field.taggedEncodingLength(taggingOption);
+                    fieldLen = field.taggedEncodingLength(taggingOption);
                 } else {
-                    allLen += field.encodingLength();
+                    fieldLen = field.encodingLength();
                 }
+                allLen += fieldLen;
             }
         }
         return allLen;
@@ -89,6 +91,7 @@ public abstract class Asn1CollectionType
     @Override
     protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
         checkAndInitFields();
+        useDefinitiveLength(parseResult.isDefinitiveLength());
 
         Asn1Container container = (Asn1Container) parseResult;
         List<Asn1ParseResult> parseResults = container.getChildren();
@@ -236,7 +239,9 @@ public abstract class Asn1CollectionType
 
     protected void setFieldAsAny(EnumType index, Asn1Type value) {
         if (value != null) {
-            setFieldAs(index, new Asn1Any(value));
+            Asn1Any any = new Asn1Any(value);
+            any.setFieldInfo(fieldInfos[index.getValue()]);
+            setFieldAs(index, any);
         }
     }
 

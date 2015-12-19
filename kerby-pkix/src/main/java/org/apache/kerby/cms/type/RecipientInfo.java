@@ -21,7 +21,7 @@ package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
 import static org.apache.kerby.cms.type.RecipientInfo.MyEnum.*;
@@ -55,10 +55,10 @@ public class RecipientInfo extends Asn1Choice {
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new Asn1FieldInfo(KTRI, KeyTransRecipientInfo.class),
-            new ExplicitField(KARI, 1, KeyAgreeRecipientInfo.class),
-            new ExplicitField(KEKRI, 2, KEKRecipientInfo.class),
-            new ExplicitField(PWRI, 3, PasswordRecipientInfo.class),
-            new ExplicitField(ORI, 4, OtherRecipientInfo.class)
+            new ImplicitField(KARI, 1, KeyAgreeRecipientInfo.class),
+            new ImplicitField(KEKRI, 2, KEKRecipientInfo.class),
+            new ImplicitField(PWRI, 3, PasswordRecipientInfo.class),
+            new ImplicitField(ORI, 4, OtherRecipientInfo.class)
     };
 
     public RecipientInfo() {

@@ -75,6 +75,37 @@ public class Asn1Choice extends AbstractAsn1Type<Asn1Type> {
     }
 
     @Override
+    public byte[] encode() {
+        Asn1Encodeable theValue = (Asn1Encodeable) getValue();
+
+        if (theValue != null) {
+            if (chosenField.isTagged()) {
+                TaggingOption taggingOption =
+                        chosenField.getTaggingOption();
+                return theValue.taggedEncode(taggingOption);
+            } else {
+                return theValue.encode();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void encode(ByteBuffer buffer) {
+        Asn1Encodeable theValue = (Asn1Encodeable) getValue();
+
+        if (theValue != null) {
+            if (chosenField.isTagged()) {
+                TaggingOption taggingOption =
+                        chosenField.getTaggingOption();
+                theValue.taggedEncode(buffer, taggingOption);
+            } else {
+                theValue.encode(buffer);
+            }
+        }
+    }
+
+    @Override
     protected int encodingBodyLength() {
         Asn1Encodeable theValue = (Asn1Encodeable) getValue();
 

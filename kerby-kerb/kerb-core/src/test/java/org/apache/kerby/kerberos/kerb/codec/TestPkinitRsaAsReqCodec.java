@@ -69,10 +69,10 @@ public class TestPkinitRsaAsReqCodec {
         PaPkAsReq paPkAsReq = new PaPkAsReq();
         paPkAsReq.decode(pkAsReqEntry.getPaDataValue());
         ContentInfo contentInfo = new ContentInfo();
-//        Asn1.dump(paPkAsReq.getSignedAuthPack(), true);
+        //Asn1.parseAndDump(paPkAsReq.getSignedAuthPack());
         contentInfo.decode(paPkAsReq.getSignedAuthPack());
         assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
-//        Asn1.dump(contentInfo);
+        //Asn1.dump(contentInfo);
 
         SignedData signedData = contentInfo.getContentAs(SignedData.class);
         assertThat(signedData.getCertificates().getElements().size()).isEqualTo(1);
@@ -105,9 +105,8 @@ public class TestPkinitRsaAsReqCodec {
         assertThat(types.get(5).getValue()).isEqualTo(0x001A);
 
         // Test encode PaPkAsReq
-        //TO BE FIXED
-//        byte[] encodedPaPkAsReq = paPkAsReq.encode();
-//        PaPkAsReq decodedPaPkAsReq = new PaPkAsReq();
-//        decodedPaPkAsReq.decode(encodedPaPkAsReq);
+        byte[] encodedPaPkAsReq = paPkAsReq.encode();
+        PaPkAsReq decodedPaPkAsReq = new PaPkAsReq();
+        decodedPaPkAsReq.decode(encodedPaPkAsReq);
     }
 }
