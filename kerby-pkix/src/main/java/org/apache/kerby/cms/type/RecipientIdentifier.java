@@ -21,7 +21,7 @@ package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.SubjectKeyIdentifier;
 
@@ -30,7 +30,8 @@ import static org.apache.kerby.cms.type.RecipientIdentifier.MyEnum.*;
 /**
  * RecipientIdentifier ::= CHOICE {
  *   issuerAndSerialNumber IssuerAndSerialNumber,
- *   subjectKeyIdentifier [0] SubjectKeyIdentifier }
+ *   subjectKeyIdentifier [0] SubjectKeyIdentifier
+ * }
  */
 public class RecipientIdentifier extends Asn1Choice {
     protected enum MyEnum implements EnumType {
@@ -50,7 +51,7 @@ public class RecipientIdentifier extends Asn1Choice {
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
             new Asn1FieldInfo(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class),
-            new ExplicitField(SUBJECT_KEY_IDENTIFIER, 0, SubjectKeyIdentifier.class)
+            new ImplicitField(SUBJECT_KEY_IDENTIFIER, 0, SubjectKeyIdentifier.class)
     };
 
     public RecipientIdentifier() {

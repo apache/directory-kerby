@@ -130,7 +130,8 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
 
     @Override
     public byte[] encode() {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(encodingLength());
+        int len = encodingLength();
+        ByteBuffer byteBuffer = ByteBuffer.allocate(len);
         encode(byteBuffer);
         byteBuffer.flip();
         return byteBuffer.array();
@@ -139,7 +140,8 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
     @Override
     public void encode(ByteBuffer buffer) {
         Asn1Util.encodeTag(buffer, tag());
-        Asn1Util.encodeLength(buffer, encodingBodyLength());
+        int bodyLen = getBodyLength();
+        Asn1Util.encodeLength(buffer, bodyLen);
         encodeBody(buffer);
     }
 
@@ -152,10 +154,14 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
 
     @Override
     public int encodingLength() {
-        return encodingHeaderLength() + getBodyLength();
+        return getHeaderLength() + getBodyLength();
     }
 
-    private int getBodyLength() {
+    protected int getHeaderLength() {
+        return encodingHeaderLength();
+    }
+
+    protected int getBodyLength() {
         if (bodyLength == -1) {
             bodyLength = encodingBodyLength();
         }
@@ -163,10 +169,10 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
     }
 
     protected int encodingHeaderLength() {
-        int bodyLen = getBodyLength();
         int headerLen = Asn1Util.lengthOfTagLength(tagNo());
-        headerLen += (isDefinitiveLength()
-            ? Asn1Util.lengthOfBodyLength(bodyLen) : 1);
+        int bodyLen = getBodyLength();
+        headerLen += Asn1Util.lengthOfBodyLength(bodyLen);
+
         return headerLen;
     }
 
@@ -179,28 +185,30 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
     }
 
     public void decode(Asn1ParseResult parseResult) throws IOException {
+        Asn1ParseResult tmpParseResult = parseResult;
+
         if (!tag().equals(parseResult.tag())) {
             // Primitive but using constructed encoding
             if (isPrimitive() && !parseResult.isPrimitive()) {
                 Asn1Container container = (Asn1Container) parseResult;
-                parseResult = new Asn1DerivedItem(tag(), container);
+                tmpParseResult = new Asn1DerivedItem(tag(), container);
             } else {
                 throw new IOException("Unexpected item " + parseResult.typeStr()
                     + ", expecting " + tag());
             }
         }
 
-        decodeBody(parseResult);
+        decodeBody(tmpParseResult);
     }
 
     protected abstract void decodeBody(Asn1ParseResult parseResult) throws IOException;
 
     protected int taggedEncodingLength(TaggingOption taggingOption) {
         int taggingTagNo = taggingOption.getTagNo();
-        int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength()
+        int taggingBodyLen = taggingOption.isImplicit() ? getBodyLength()
                 : encodingLength();
         int taggingEncodingLen = Asn1Util.lengthOfTagLength(taggingTagNo)
-                + Asn1Util.lengthOfBodyLength(taggingBodyLen) + taggingBodyLen;
+                    + Asn1Util.lengthOfBodyLength(taggingBodyLen) + taggingBodyLen;
         return taggingEncodingLen;
     }
 
@@ -217,9 +225,11 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
     public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption) {
         Tag taggingTag = taggingOption.getTag(!isPrimitive());
         Asn1Util.encodeTag(buffer, taggingTag);
+
         int taggingBodyLen = taggingOption.isImplicit() ? encodingBodyLength()
-                : encodingLength();
+            : encodingLength();
         Asn1Util.encodeLength(buffer, taggingBodyLen);
+
         if (taggingOption.isImplicit()) {
             encodeBody(buffer);
         } else {
@@ -243,17 +253,27 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
     public void taggedDecode(Asn1ParseResult parseResult,
                                 TaggingOption taggingOption) throws IOException {
         Tag expectedTaggingTagFlags = taggingOption.getTag(!isPrimitive());
+
+        Asn1ParseResult tmpParseResult = parseResult;
         if (!expectedTaggingTagFlags.equals(parseResult.tag())) {
-            throw new IOException("Unexpected tag " + parseResult.tag()
+            // Primitive but using constructed encoding
+            if (isPrimitive() && !parseResult.isPrimitive()) {
+                Asn1Container container = (Asn1Container) parseResult;
+                tmpParseResult = new Asn1DerivedItem(tag(), container);
+            } else {
+                throw new IOException("Unexpected tag " + parseResult.tag()
                     + ", expecting " + expectedTaggingTagFlags);
+            }
         }
 
         if (taggingOption.isImplicit()) {
-            decodeBody(parseResult);
+            decodeBody(tmpParseResult);
         } else {
+
             Asn1Container container = (Asn1Container) parseResult;
-            Asn1ParseResult body = container.getChildren().get(0);
-            decode(body);
+            tmpParseResult = container.getChildren().get(0);
+            
+            decode(tmpParseResult);
         }
     }
 }

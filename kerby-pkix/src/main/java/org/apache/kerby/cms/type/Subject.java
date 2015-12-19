@@ -21,7 +21,7 @@ package org.apache.kerby.cms.type;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
+import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.GeneralNames;
 import org.apache.kerby.x509.type.IssuerSerial;
@@ -54,8 +54,8 @@ public class Subject extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new ExplicitField(BASE_CERTIFICATE_ID, IssuerSerial.class),
-            new ExplicitField(SUBJECT_NAME, GeneralNames.class)
+            new ImplicitField(BASE_CERTIFICATE_ID, IssuerSerial.class),
+            new ImplicitField(SUBJECT_NAME, GeneralNames.class)
     };
 
     public Subject() {

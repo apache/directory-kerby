@@ -49,14 +49,21 @@ public class Asn1BitString extends Asn1Simple<byte[]> {
 
     @Override
     protected int encodingBodyLength() {
-        return getValue().length + 1;
+        byte[] body = getValue();
+        if (body != null) {
+            return body.length + 1;
+        }
+        return 1;
     }
 
     @Override
     protected void toBytes() {
         byte[] bytes = new byte[encodingBodyLength()];
         bytes[0] = (byte) padding;
-        System.arraycopy(getValue(), 0, bytes, 1, bytes.length - 1);
+        byte[] body = getValue();
+        if (body != null) {
+            System.arraycopy(body, 0, bytes, 1, bytes.length - 1);
+        }
         setBytes(bytes);
     }
 
@@ -85,8 +92,17 @@ public class Asn1BitString extends Asn1Simple<byte[]> {
 
     @Override
     public String toString() {
-        String valueStr =
-            (getValue() != null ? (getValue().length + " bytes") : "null");
-        return valueStr;
+        String typeStr = tag().typeStr() + " ["
+            + "tag=" + tag()
+            + ", len=" + getHeaderLength() + "+" + getBodyLength()
+            + "] ";
+
+        byte[] valueBytes = getValue();
+        String valueStr = "<null>";
+        if (valueBytes != null) {
+            valueStr = "<" + valueBytes.length + " bytes>";
+        }
+
+        return typeStr + valueStr;
     }
 }

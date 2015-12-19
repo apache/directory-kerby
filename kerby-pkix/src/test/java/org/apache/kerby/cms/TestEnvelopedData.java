@@ -21,12 +21,14 @@ package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.EnvelopedData;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 
 public class TestEnvelopedData extends CmsTestBase {
+
     @Test
     public void testDecodingKeyTrns() throws IOException {
         byte[] data = readDataFile("/enveloped-keytrns.txt");
@@ -37,10 +39,9 @@ public class TestEnvelopedData extends CmsTestBase {
             contentInfo.decode(data);
             Asn1.dump(contentInfo);
 
-            //TO BE FIXED
-//            EnvelopedData envelopedData =
-//                    contentInfo.getContentAs(EnvelopedData.class);
-//            Asn1.dump(envelopedData);
+            EnvelopedData envelopedData =
+                    contentInfo.getContentAs(EnvelopedData.class);
+            Asn1.dump(envelopedData);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -57,10 +58,9 @@ public class TestEnvelopedData extends CmsTestBase {
             contentInfo.decode(data);
             Asn1.dump(contentInfo);
 
-            //TO BE FIXED
-//            EnvelopedData envelopedData =
-//                    contentInfo.getContentAs(EnvelopedData.class);
-//            Asn1.dump(envelopedData);
+            EnvelopedData envelopedData =
+                    contentInfo.getContentAs(EnvelopedData.class);
+            Asn1.dump(envelopedData);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -77,10 +77,9 @@ public class TestEnvelopedData extends CmsTestBase {
             contentInfo.decode(data);
             Asn1.dump(contentInfo);
 
-            //TO BE FIXED
-//            EnvelopedData envelopedData =
-//                    contentInfo.getContentAs(EnvelopedData.class);
-//            Asn1.dump(envelopedData);
+            EnvelopedData envelopedData =
+                    contentInfo.getContentAs(EnvelopedData.class);
+            Asn1.dump(envelopedData);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();

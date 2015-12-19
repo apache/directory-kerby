@@ -94,6 +94,7 @@ public class Asn1Constructed
     protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
         Asn1Container container = (Asn1Container) parseResult;
         this.container = container;
+        useDefinitiveLength(parseResult.isDefinitiveLength());
 
         if (!isLazy()) {
             decodeElements();
@@ -113,13 +114,17 @@ public class Asn1Constructed
 
     @Override
     public void dumpWith(Asn1Dumper dumper, int indents) {
-        dumper.indent(indents).append(toString()).newLine();
+        String typeStr = tag().typeStr() + " ["
+            + "tag=" + tag()
+            + ", len=" + getHeaderLength() + "+" + getBodyLength()
+            + "] ";
+        dumper.indent(indents).append(typeStr).newLine();
 
         List<Asn1Type> items = getValue();
         int i = 0;
         for (Asn1Type aObj : items) {
             dumper.dumpType(indents + 4, aObj);
-            if (i != items.size() - 1) {
+            if (i++ != items.size() - 1) {
                 dumper.newLine();
             }
         }

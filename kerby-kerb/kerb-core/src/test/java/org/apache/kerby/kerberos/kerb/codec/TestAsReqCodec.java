@@ -54,7 +54,7 @@ public class TestAsReqCodec {
 
         AsReq asReq = new AsReq();
         asReq.decode(asReqToken);
-        Asn1.dump(asReq, false);
+        Asn1.dump(asReq);
 
         assertThat(asReq.getPvno()).isEqualTo(5);
         assertThat(asReq.getMsgType()).isEqualTo(KrbMessageType.AS_REQ);

@@ -39,10 +39,6 @@ public final class Asn1Dumper {
         this.withType = true;
     }
 
-    public Asn1Dumper(boolean withType) {
-        this.withType = withType;
-    }
-
     public boolean withType() {
         return withType;
     }

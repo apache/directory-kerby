@@ -19,7 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
+import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.EnvelopedData;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.kdc.AsRep;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
@@ -60,6 +62,7 @@ public class TestPkinitRsaAsRepCodec {
         ContentInfo contentInfo = new ContentInfo();
         contentInfo.decode(encKeyPack);
         assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.3");
-//        EnvelopedData envelopedData = contentInfo.getContentAs(EnvelopedData.class);
+        EnvelopedData envelopedData = contentInfo.getContentAs(EnvelopedData.class);
+        Asn1.dump(envelopedData);
     }
 }
