@@ -21,36 +21,21 @@ package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
-import org.apache.kerby.kerberos.kerb.client.impl.DefaultInternalKrbClient;
-import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClient;
-import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * A Krb client API for applications to interact with KDC
  */
-public class KrbClient {
-    private final KrbConfig krbConfig;
-    private final KOptions commonOptions;
-    private final KrbSetting krbSetting;
-
-    private InternalKrbClient innerClient;
-    private static final Logger LOG = LoggerFactory.getLogger(KrbClient.class);
+public class KrbClient extends KrbClientBase {
 
     /**
      * Default constructor.
      * @throws KrbException e
      */
     public KrbClient() throws KrbException {
-        this.krbConfig = ClientUtil.getDefaultConfig();
-        this.commonOptions = new KOptions();
-        this.krbSetting = new KrbSetting(commonOptions, krbConfig);
+        super();
     }
 
     /**
@@ -58,9 +43,7 @@ public class KrbClient {
      * @param krbConfig The krb config
      */
     public KrbClient(KrbConfig krbConfig) {
-        this.krbConfig = krbConfig;
-        this.commonOptions = new KOptions();
-        this.krbSetting = new KrbSetting(commonOptions, krbConfig);
+        super(krbConfig);
     }
 
     /**
@@ -69,94 +52,7 @@ public class KrbClient {
      * @throws KrbException e
      */
     public KrbClient(File confDir) throws KrbException {
-        this.commonOptions = new KOptions();
-        this.krbConfig = ClientUtil.getConfig(confDir);
-        this.krbSetting = new KrbSetting(commonOptions, krbConfig);
-    }
-
-    /**
-     * Set KDC realm for ticket request
-     * @param realm The realm
-     */
-    public void setKdcRealm(String realm) {
-        commonOptions.add(KrbOption.KDC_REALM, realm);
-    }
-
-    /**
-     * Set KDC host.
-     * @param kdcHost The kdc host
-     */
-    public void setKdcHost(String kdcHost) {
-        commonOptions.add(KrbOption.KDC_HOST, kdcHost);
-    }
-
-    /**
-     * Set KDC tcp port.
-     * @param kdcTcpPort The kdc tcp port
-     */
-    public void setKdcTcpPort(int kdcTcpPort) {
-        if (kdcTcpPort < 1) {
-            throw new IllegalArgumentException("Invalid port");
-        }
-        commonOptions.add(KrbOption.KDC_TCP_PORT, kdcTcpPort);
-        setAllowTcp(true);
-    }
-
-    /**
-     * Set to allow UDP or not.
-     * @param allowUdp true if allow udp
-     */
-    public void setAllowUdp(boolean allowUdp) {
-        commonOptions.add(KrbOption.ALLOW_UDP, allowUdp);
-    }
-
-    /**
-     * Set to allow TCP or not.
-     * @param allowTcp true if allow tcp
-     */
-    public void setAllowTcp(boolean allowTcp) {
-        commonOptions.add(KrbOption.ALLOW_TCP, allowTcp);
-    }
-
-    /**
-     * Set KDC udp port. Only makes sense when allowUdp is set.
-     * @param kdcUdpPort The kdc udp port
-     */
-    public void setKdcUdpPort(int kdcUdpPort) {
-        if (kdcUdpPort < 1) {
-            throw new IllegalArgumentException("Invalid port");
-        }
-        commonOptions.add(KrbOption.KDC_UDP_PORT, kdcUdpPort);
-        setAllowUdp(true);
-    }
-
-    /**
-     * Set time out for connection
-     * @param timeout in seconds
-     */
-    public void setTimeout(int timeout) {
-        commonOptions.add(KrbOption.CONN_TIMEOUT, timeout);
-    }
-
-    /**
-     * Init the client.
-     * @throws KrbException e
-     */
-    public void init() throws KrbException {
-        innerClient = new DefaultInternalKrbClient(krbSetting);
-        innerClient.init();
-    }
-
-    /**
-     * Get krb client settings from options and configs.
-     * @return setting
-     */
-    public KrbSetting getSetting() {
-        return krbSetting;
-    }
-
-    public KrbConfig getKrbConfig() {
-        return krbConfig;
+        super(confDir);
     }
 
     /**
@@ -189,77 +85,5 @@ public class KrbClient {
         requestOptions.add(KrbOption.USE_KEYTAB, true);
         requestOptions.add(KrbOption.KEYTAB_FILE, keytabFile);
         return requestTgt(requestOptions);
-    }
-
-    /**
-     * Request a TGT with using well prepared requestOptions.
-     * @param requestOptions The request options
-     * @return TGT
-     * @throws KrbException e
-     */
-    public TgtTicket requestTgt(KOptions requestOptions) throws KrbException {
-        if (requestOptions == null) {
-            throw new IllegalArgumentException("Null requestOptions specified");
-        }
-
-        return innerClient.requestTgt(requestOptions);
-    }
-
-    /**
-     * Request a service ticket with a TGT targeting for a server
-     * @param tgt The tgt ticket
-     * @param serverPrincipal The server principal
-     * @return Service ticket
-     * @throws KrbException e
-     */
-    public SgtTicket requestSgt(TgtTicket tgt,
-                                String serverPrincipal) throws KrbException {
-        KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.USE_TGT, tgt);
-        requestOptions.add(KrbOption.SERVER_PRINCIPAL, serverPrincipal);
-        return innerClient.requestSgt(requestOptions);
-    }
-
-    /**
-     * Request a service ticket provided request options
-     * @param requestOptions The request options
-     * @return service ticket
-     * @throws KrbException e
-     */
-    public SgtTicket requestSgt(KOptions requestOptions) throws KrbException {
-        return innerClient.requestSgt(requestOptions);
-    }
-
-    /**
-     * Store tgt into the specified credential cache file.
-     * @param tgtTicket The tgt ticket
-     * @param ccacheFile The credential cache file
-     * @throws KrbException e
-     */
-    public void storeTicket(TgtTicket tgtTicket,
-                            File ccacheFile) throws KrbException {
-        LOG.info("Storing the tgt to the credential cache file.");
-        if (!ccacheFile.exists()) {
-            try {
-                if (!ccacheFile.createNewFile()) {
-                    throw new KrbException("Failed to create ccache file "
-                        + ccacheFile.getAbsolutePath());
-                }
-            } catch (IOException e) {
-                throw new KrbException("Failed to create ccache file "
-                    + ccacheFile.getAbsolutePath(), e);
-            }
-        }
-        if (ccacheFile.exists() && ccacheFile.canWrite()) {
-            CredentialCache cCache = new CredentialCache(tgtTicket);
-            try {
-                cCache.store(ccacheFile);
-            } catch (IOException e) {
-                throw new KrbException("Failed to store tgt", e);
-            }
-        } else {
-            throw new IllegalArgumentException("Invalid ccache file, "
-                    + "not exist or writable: " + ccacheFile.getAbsolutePath());
-        }
     }
 }

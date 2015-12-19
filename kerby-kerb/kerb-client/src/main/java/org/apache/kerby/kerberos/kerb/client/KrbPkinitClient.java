@@ -23,26 +23,44 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
+import java.io.File;
+
 /**
  * A krb PKINIT client API for applications to interact with KDC using PKINIT.
  */
-public class KrbPkinitClient {
-    private final KrbClient krbClient;
+public class KrbPkinitClient extends KrbClientBase {
+
+    /**
+     * Default constructor.
+     * @throws KrbException e
+     */
+    public KrbPkinitClient() throws KrbException {
+        super();
+    }
+
+    /**
+     * Construct with prepared KrbConfig.
+     * @param krbConfig The krb config
+     */
+    public KrbPkinitClient(KrbConfig krbConfig) {
+        super(krbConfig);
+    }
+
+    /**
+     * Constructor with conf dir
+     * @param confDir The conf dir
+     * @throws KrbException e
+     */
+    public KrbPkinitClient(File confDir) throws KrbException {
+        super(confDir);
+    }
 
     /**
      * Constructor with prepared KrbClient.
      * @param krbClient The krb client
      */
     public KrbPkinitClient(KrbClient krbClient) {
-        this.krbClient = krbClient;
-    }
-
-    /**
-     * Get krb client.
-     * @return KrbClient
-     */
-    public KrbClient getKrbClient() {
-        return krbClient;
+        super(krbClient);
     }
 
     /**
@@ -60,7 +78,7 @@ public class KrbPkinitClient {
         requestOptions.add(KrbOption.PKINIT_USING_RSA);
         requestOptions.add(KrbOption.PKINIT_X509_IDENTITY, certificate);
         requestOptions.add(KrbOption.PKINIT_X509_PRIVATE_KEY, privateKey);
-        return krbClient.requestTgt(requestOptions);
+        return requestTgt(requestOptions);
     }
 
     /**
@@ -73,6 +91,6 @@ public class KrbPkinitClient {
         requestOptions.add(KrbOption.USE_PKINIT_ANONYMOUS);
         requestOptions.add(KrbOption.CLIENT_PRINCIPAL, "WELLKNOWN/ANONYMOUS");
         requestOptions.add(KrbOption.PKINIT_X509_ANCHORS, anchors);
-        return krbClient.requestTgt(requestOptions);
+        return requestTgt(requestOptions);
     }
 }

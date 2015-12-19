@@ -25,26 +25,44 @@ import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
+import java.io.File;
+
 /**
  * A krb token client API for applications to interact with KDC using token.
  */
-public class KrbTokenClient {
-    private final KrbClient krbClient;
+public class KrbTokenClient extends KrbClientBase {
+
+    /**
+     * Default constructor.
+     * @throws KrbException e
+     */
+    public KrbTokenClient() throws KrbException {
+        super();
+    }
+
+    /**
+     * Construct with prepared KrbConfig.
+     * @param krbConfig The krb config
+     */
+    public KrbTokenClient(KrbConfig krbConfig) {
+        super(krbConfig);
+    }
+
+    /**
+     * Constructor with conf dir
+     * @param confDir The conf dir
+     * @throws KrbException e
+     */
+    public KrbTokenClient(File confDir) throws KrbException {
+        super(confDir);
+    }
 
     /**
      * Constructor with prepared KrbClient.
      * @param krbClient The krb client
      */
     public KrbTokenClient(KrbClient krbClient) {
-        this.krbClient = krbClient;
-    }
-
-    /**
-     * Get krb client.
-     * @return KrbClient
-     */
-    public KrbClient getKrbClient() {
-        return krbClient;
+        super(krbClient);
     }
 
     /**
@@ -62,7 +80,7 @@ public class KrbTokenClient {
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
         requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
-        return krbClient.requestTgt(requestOptions);
+        return requestTgt(requestOptions);
     }
 
     /**
@@ -84,6 +102,6 @@ public class KrbTokenClient {
         requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
         requestOptions.add(KrbOption.SERVER_PRINCIPAL, serverPrincipal);
 
-        return krbClient.requestSgt(requestOptions);
+        return requestSgt(requestOptions);
     }
 }
