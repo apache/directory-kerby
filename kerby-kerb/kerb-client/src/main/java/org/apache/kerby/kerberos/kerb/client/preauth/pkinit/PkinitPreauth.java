@@ -24,7 +24,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.client.PkinitOption;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
@@ -100,13 +100,13 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     public void setPreauthOptions(KdcRequest kdcRequest,
                                   PluginRequestContext requestContext,
                                   KOptions options) {
-        if (options.contains(KrbOption.PKINIT_X509_IDENTITY)) {
+        if (options.contains(PkinitOption.X509_IDENTITY)) {
             pkinitContext.identityOpts.identity =
-                    options.getStringOption(KrbOption.PKINIT_X509_IDENTITY);
+                    options.getStringOption(PkinitOption.X509_IDENTITY);
         }
 
-        if (options.contains(KrbOption.PKINIT_X509_ANCHORS)) {
-            String anchorsString = options.getStringOption(KrbOption.PKINIT_X509_ANCHORS);
+        if (options.contains(PkinitOption.X509_ANCHORS)) {
+            String anchorsString = options.getStringOption(PkinitOption.X509_ANCHORS);
 
             List<String> anchors;
             if (anchorsString == null) {
@@ -117,9 +117,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             pkinitContext.identityOpts.anchors.addAll(anchors);
         }
 
-        if (options.contains(KrbOption.PKINIT_USING_RSA)) {
+        if (options.contains(PkinitOption.USING_RSA)) {
             pkinitContext.pluginOpts.usingRsa =
-                    options.getBooleanOption(KrbOption.PKINIT_USING_RSA, true);
+                    options.getBooleanOption(PkinitOption.USING_RSA, true);
         }
     }
 

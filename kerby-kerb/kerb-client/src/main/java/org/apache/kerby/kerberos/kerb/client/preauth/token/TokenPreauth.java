@@ -23,7 +23,7 @@ import org.apache.kerby.KOption;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.client.TokenOption;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
@@ -98,16 +98,16 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                                   PluginRequestContext requestContext,
                                   KOptions options) {
 
-        tokenContext.usingIdToken = options.getBooleanOption(KrbOption.USE_TOKEN, false);
+        tokenContext.usingIdToken = options.getBooleanOption(TokenOption.USE_TOKEN, false);
         if (tokenContext.usingIdToken) {
-            if (options.contains(KrbOption.TOKEN_USER_ID_TOKEN)) {
+            if (options.contains(TokenOption.USER_ID_TOKEN)) {
                 tokenContext.token =
-                        (AuthToken) options.getOptionValue(KrbOption.TOKEN_USER_ID_TOKEN);
+                        (AuthToken) options.getOptionValue(TokenOption.USER_ID_TOKEN);
             }
         } else {
-            if (options.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
+            if (options.contains(TokenOption.USER_AC_TOKEN)) {
                 tokenContext.token =
-                        (AuthToken) options.getOptionValue(KrbOption.TOKEN_USER_AC_TOKEN);
+                        (AuthToken) options.getOptionValue(TokenOption.USER_AC_TOKEN);
             }
         }
 
@@ -174,13 +174,13 @@ public class TokenPreauth extends AbstractPreauthPlugin {
     private PaDataEntry makeEntry(KdcRequest kdcRequest) throws KrbException {
         KOptions options = kdcRequest.getPreauthOptions();
 
-        KOption idToken = options.getOption(KrbOption.TOKEN_USER_ID_TOKEN);
-        KOption acToken = options.getOption(KrbOption.TOKEN_USER_AC_TOKEN);
+        KOption idToken = options.getOption(TokenOption.USER_ID_TOKEN);
+        KOption acToken = options.getOption(TokenOption.USER_AC_TOKEN);
         AuthToken authToken;
         if (idToken != null) {
-            authToken = (AuthToken) idToken.getValue();
+            authToken = (AuthToken) idToken.getOptionInfo().getValue();
         } else if (acToken != null) {
-            authToken = (AuthToken) acToken.getValue();
+            authToken = (AuthToken) acToken.getOptionInfo().getValue();
         } else {
             throw new KrbException("missing token.");
         }

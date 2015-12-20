@@ -34,8 +34,7 @@ import java.util.Map;
  */
 public class KOptions {
 
-    private final Map<KOption, KOption> options =
-            new HashMap<KOption, KOption>();
+    private final Map<KOption, KOption> options = new HashMap<>();
 
     /**
      * Parse string value according to kopt type.
@@ -43,7 +42,7 @@ public class KOptions {
      * @param strValue The string value
      * @return true when successful, false otherwise
      */
-    public static boolean parseSetValue(KOption kopt, String strValue) {
+    public static boolean parseSetValue(KOptionInfo kopt, String strValue) {
         KOptionType kt = kopt.getType();
         if (kt == KOptionType.NOV) {
             return true; // no need of a value
@@ -95,7 +94,7 @@ public class KOptions {
 
     public void add(KOption option, Object optionValue) {
         if (option != null) {
-            option.setValue(optionValue);
+            option.getOptionInfo().setValue(optionValue);
             add(option);
         }
     }
@@ -120,7 +119,7 @@ public class KOptions {
         if (!contains(option)) {
             return null;
         }
-        return options.get(option).getValue();
+        return options.get(option).getOptionInfo().getValue();
     }
 
     public String getStringOption(KOption option) {

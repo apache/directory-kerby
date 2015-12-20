@@ -22,14 +22,14 @@ package org.apache.kerby.kerberos.kerb.client;
 import org.apache.kerby.KOptionGroup;
 
 /**
- * This defines option groups to categorize the options defined in KrbOption.
+ * This defines option groups to categorize the options defined in client side.
  */
 public enum KrbOptionGroup implements KOptionGroup {
     NONE,
+    KRB,
     KDC_FLAGS,
     PKINIT,
-    TOKEN,
-    KINIT;
+    TOKEN;
 
     @Override
     public String getGroupName() {

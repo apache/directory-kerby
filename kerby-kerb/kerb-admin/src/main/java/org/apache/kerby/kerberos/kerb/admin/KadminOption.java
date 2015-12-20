@@ -20,148 +20,55 @@
 package org.apache.kerby.kerberos.kerb.admin;
 
 import org.apache.kerby.KOption;
-import org.apache.kerby.KOptionGroup;
+import org.apache.kerby.KOptionInfo;
 import org.apache.kerby.KOptionType;
 
 public enum KadminOption implements KOption {
-    NONE("NONE"),
-    EXPIRE("-expire", "expire time", KOptionType.DATE),
-    DISABLED("-disabled", "disabled", KOptionType.BOOL),
-    LOCKED("-locked", "locked", KOptionType.BOOL),
-    FORCE("-force", "force", KOptionType.NOV),
-    KVNO("-kvno", "initial key version number", KOptionType.INT),
-    PW("-pw", "password", KOptionType.STR),
-    RANDKEY("-randkey", "random key", KOptionType.NOV),
-    KEEPOLD("-keepold", "keep old passowrd", KOptionType.NOV),
-    KEYSALTLIST("-e", "key saltlist", KOptionType.STR),
-    K("-k", "keytab file path", KOptionType.STR),
-    KEYTAB("-keytab", "keytab file path", KOptionType.STR),
-    CCACHE("-c", "credentials cache", KOptionType.FILE);
+    NONE(null),
+    EXPIRE(new KOptionInfo("-expire", "expire time", KOptionType.DATE)),
+    DISABLED(new KOptionInfo("-disabled", "disabled", KOptionType.BOOL)),
+    LOCKED(new KOptionInfo("-locked", "locked", KOptionType.BOOL)),
+    FORCE(new KOptionInfo("-force", "force", KOptionType.NOV)),
+    KVNO(new KOptionInfo("-kvno", "initial key version number", KOptionType.INT)),
+    PW(new KOptionInfo("-pw", "password", KOptionType.STR)),
+    RANDKEY(new KOptionInfo("-randkey", "random key", KOptionType.NOV)),
+    KEEPOLD(new KOptionInfo("-keepold", "keep old passowrd", KOptionType.NOV)),
+    KEYSALTLIST(new KOptionInfo("-e", "key saltlist", KOptionType.STR)),
+    K(new KOptionInfo("-k", "keytab file path", KOptionType.STR)),
+    KEYTAB(new KOptionInfo("-keytab", "keytab file path", KOptionType.STR)),
+    CCACHE(new KOptionInfo("-c", "credentials cache", KOptionType.FILE));
 
-    private String name;
-    private KOptionGroup group;
-    private KOptionType type = KOptionType.NONE;
-    private String description;
-    private Object value;
+    private final KOptionInfo optionInfo;
 
-    KadminOption(String description) {
-        this(description, KOptionType.NOV);
+    KadminOption(KOptionInfo optionInfo) {
+        this.optionInfo = optionInfo;
     }
 
-    KadminOption(String description, KOptionType type) {
-        this.description = description;
-        this.type = type;
-    }
-
-    KadminOption(String name, String description) {
-        this(name, description, KOptionType.NOV);
-    }
-
-    KadminOption(String name, String description, KOptionType type) {
-        this.name = name;
-        this.description = description;
-        this.type = type;
+    @Override
+    public KOptionInfo getOptionInfo() {
+        return optionInfo;
     }
 
     public static KadminOption fromName(String name) {
         if (name != null) {
-            for (KadminOption kopt : values()) {
-                if (kopt.getName().equals(name)) {
-                    return (KadminOption) kopt;
+            for (KadminOption ko : values()) {
+                if (ko.name().equals(name)) {
+                    return ko;
                 }
             }
         }
         return NONE;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getOptionName() {
-        return name();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public KOptionType getType() {
-        return this.type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setType(KOptionType type) {
-        this.type = type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getName() {
-        if (name != null) {
-            return name;
+    public static KadminOption fromOptionName(String optionName) {
+        if (optionName != null) {
+            for (KadminOption ko : values()) {
+                if (ko.optionInfo != null
+                    && ko.optionInfo.getName().equals(optionName)) {
+                    return ko;
+                }
+            }
         }
-        return name();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object getValue() {
-        return value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setGroup(KOptionGroup group) {
-        this.group = group;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public KOptionGroup getGroup() {
-        return group;
+        return NONE;
     }
 }

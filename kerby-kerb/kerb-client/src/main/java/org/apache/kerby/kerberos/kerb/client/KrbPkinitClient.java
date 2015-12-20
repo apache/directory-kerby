@@ -74,10 +74,10 @@ public class KrbPkinitClient extends KrbClientBase {
                                 String privateKey) throws KrbException {
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.CLIENT_PRINCIPAL, principal);
-        requestOptions.add(KrbOption.USE_PKINIT);
-        requestOptions.add(KrbOption.PKINIT_USING_RSA);
-        requestOptions.add(KrbOption.PKINIT_X509_IDENTITY, certificate);
-        requestOptions.add(KrbOption.PKINIT_X509_PRIVATE_KEY, privateKey);
+        requestOptions.add(PkinitOption.USE_PKINIT);
+        requestOptions.add(PkinitOption.USING_RSA);
+        requestOptions.add(PkinitOption.X509_IDENTITY, certificate);
+        requestOptions.add(PkinitOption.X509_PRIVATE_KEY, privateKey);
         return requestTgt(requestOptions);
     }
 
@@ -88,9 +88,9 @@ public class KrbPkinitClient extends KrbClientBase {
      */
     public TgtTicket requestTgt(String anchors) throws KrbException {
         KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.USE_PKINIT_ANONYMOUS);
+        requestOptions.add(PkinitOption.USE_ANONYMOUS);
         requestOptions.add(KrbOption.CLIENT_PRINCIPAL, "WELLKNOWN/ANONYMOUS");
-        requestOptions.add(KrbOption.PKINIT_X509_ANCHORS, anchors);
+        requestOptions.add(PkinitOption.X509_ANCHORS, anchors);
         return requestTgt(requestOptions);
     }
 }

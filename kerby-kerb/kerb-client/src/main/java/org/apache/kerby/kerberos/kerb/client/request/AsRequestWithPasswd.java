@@ -35,7 +35,7 @@ public class AsRequestWithPasswd extends AsRequest {
     }
 
     public String getPassword() {
-        return getKrbOptions().getStringOption(KrbOption.USER_PASSWD);
+        return getRequestOptions().getStringOption(KrbOption.USER_PASSWD);
     }
 
     @Override

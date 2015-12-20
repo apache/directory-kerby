@@ -23,6 +23,7 @@ import org.apache.kerby.KOption;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
+import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.client.KrbOptionGroup;
 import org.apache.kerby.kerberos.kerb.client.preauth.KrbFastRequestState;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthContext;
@@ -59,7 +60,7 @@ public abstract class KdcRequest {
     protected Map<String, Object> credCache;
     private KrbContext context;
     private Object sessionData;
-    private KOptions krbOptions;
+    private KOptions requestOptions;
     private PrincipalName serverPrincipal;
     private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
     private KdcOptions kdcOptions = new KdcOptions();
@@ -111,12 +112,12 @@ public abstract class KdcRequest {
         this.sessionData = sessionData;
     }
 
-    public KOptions getKrbOptions() {
-        return krbOptions;
+    public KOptions getRequestOptions() {
+        return requestOptions;
     }
 
-    public void setKrbOptions(KOptions options) {
-        this.krbOptions = options;
+    public void setRequestOptions(KOptions options) {
+        this.requestOptions = options;
     }
 
     public boolean isRetrying() {
@@ -409,10 +410,11 @@ public abstract class KdcRequest {
         kdcOptions.setFlag(KdcOption.PROXIABLE);
         kdcOptions.setFlag(KdcOption.RENEWABLE_OK);
 
-        for (KOption kOpt: krbOptions.getOptions()) {
-            if (kOpt.getGroup() == KrbOptionGroup.KDC_FLAGS) {
-                KdcOption kdcOption = KdcOption.valueOf(kOpt.getOptionName());
-                boolean flagValue = krbOptions.getBooleanOption(kOpt, false);
+        for (KOption kOpt: requestOptions.getOptions()) {
+            if (kOpt.getOptionInfo().getGroup() == KrbOptionGroup.KDC_FLAGS) {
+                KrbOption krbOption = (KrbOption) kOpt;
+                KdcOption kdcOption = KdcOption.valueOf(krbOption.name());
+                boolean flagValue = requestOptions.getBooleanOption(kOpt, false);
                 kdcOptions.setFlag(kdcOption, flagValue);
             }
         }

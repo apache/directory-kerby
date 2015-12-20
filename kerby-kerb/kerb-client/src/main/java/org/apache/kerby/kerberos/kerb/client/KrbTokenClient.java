@@ -78,7 +78,7 @@ public class KrbTokenClient extends KrbClientBase {
         }
 
         KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.TOKEN_USER_ID_TOKEN, token);
+        requestOptions.add(TokenOption.USER_ID_TOKEN, token);
         requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
         return requestTgt(requestOptions);
     }
@@ -98,7 +98,7 @@ public class KrbTokenClient extends KrbClientBase {
         }
 
         KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbOption.TOKEN_USER_AC_TOKEN, token);
+        requestOptions.add(TokenOption.USER_AC_TOKEN, token);
         requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
         requestOptions.add(KrbOption.SERVER_PRINCIPAL, serverPrincipal);
 

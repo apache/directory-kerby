@@ -23,7 +23,7 @@ import org.apache.kerby.KOption;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.client.TokenOption;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
@@ -42,18 +42,18 @@ public class TgsRequestWithToken extends ArmoredTgsRequest {
     @Override
     public KOptions getPreauthOptions() {
         KOptions results = super.getPreauthOptions();
-        KOptions krbOptions = getKrbOptions();
+        KOptions krbOptions = getRequestOptions();
 
-        results.add(krbOptions.getOption(KrbOption.USE_TOKEN));
-        results.add(krbOptions.getOption(KrbOption.TOKEN_USER_AC_TOKEN));
+        results.add(krbOptions.getOption(TokenOption.USE_TOKEN));
+        results.add(krbOptions.getOption(TokenOption.USER_AC_TOKEN));
 
         return results;
     }
 
     @Override
     public PrincipalName getClientPrincipal() {
-        KOption acToken = getPreauthOptions().getOption(KrbOption.TOKEN_USER_AC_TOKEN);
-        AuthToken authToken = (AuthToken) acToken.getValue();
+        KOption acToken = getPreauthOptions().getOption(TokenOption.USER_AC_TOKEN);
+        AuthToken authToken = (AuthToken) acToken.getOptionInfo().getValue();
         return new PrincipalName(authToken.getSubject());
     }
 }

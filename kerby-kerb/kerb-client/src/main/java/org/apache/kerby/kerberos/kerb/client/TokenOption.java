@@ -17,36 +17,45 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.server;
+package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOption;
+import org.apache.kerby.KOptionGroup;
 import org.apache.kerby.KOptionInfo;
 import org.apache.kerby.KOptionType;
 
 /**
- * KDC server startup options
+ * This defines all the token options.
  */
-public enum KdcServerOption implements KOption {
+public enum TokenOption implements KOption {
     NONE(null),
-    INNER_KDC_IMPL(new KOptionInfo("inner KDC impl", "inner KDC impl", KOptionType.OBJ)),
-    KDC_REALM(new KOptionInfo("kdc realm", "kdc realm", KOptionType.STR)),
-    KDC_HOST(new KOptionInfo("kdc host", "kdc host", KOptionType.STR)),
-    KDC_PORT(new KOptionInfo("kdc port", "kdc port", KOptionType.INT)),
-    ALLOW_TCP(new KOptionInfo("allow tcp", "allow tcp", KOptionType.BOOL)),
-    KDC_TCP_PORT(new KOptionInfo("kdc tcp port", "kdc tcp port", KOptionType.INT)),
-    ALLOW_UDP(new KOptionInfo("allow udp", "allow udp", KOptionType.BOOL)),
-    KDC_UDP_PORT(new KOptionInfo("kdc udp port", "kdc udp port", KOptionType.INT)),
-    WORK_DIR(new KOptionInfo("work dir", "work dir", KOptionType.DIR)),
-    ENABLE_DEBUG(new KOptionInfo("enable debug", "enable debug", KOptionType.BOOL));
+
+    USE_TOKEN(new KOptionInfo("use-id-token", "Using identity token")),
+    USER_ID_TOKEN(new KOptionInfo("user-id-token", "User identity token",
+        KOptionType.STR)),
+    USER_AC_TOKEN(new KOptionInfo("user-ac-token", "User access token",
+        KOptionType.STR));
 
     private final KOptionInfo optionInfo;
 
-    KdcServerOption(KOptionInfo optionInfo) {
+    TokenOption(KOptionInfo optionInfo) {
         this.optionInfo = optionInfo;
     }
 
     @Override
     public KOptionInfo getOptionInfo() {
         return optionInfo;
+    }
+
+    public static TokenOption fromOptionName(String optionName) {
+        if (optionName != null) {
+            for (TokenOption ko : values()) {
+                if (ko.optionInfo != null
+                    && ko.optionInfo.getName().equals(optionName)) {
+                    return ko;
+                }
+            }
+        }
+        return NONE;
     }
 }

@@ -29,7 +29,7 @@ import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.client.PkinitOption;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.crypto.dh.DhClient;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CMSMessageType;
@@ -85,14 +85,14 @@ public class AsRequestWithCert extends AsRequest {
     public KOptions getPreauthOptions() {
         KOptions results = new KOptions();
 
-        KOptions krbOptions = getKrbOptions();
-        results.add(krbOptions.getOption(KrbOption.PKINIT_X509_CERTIFICATE));
-        results.add(krbOptions.getOption(KrbOption.PKINIT_X509_ANCHORS));
-        results.add(krbOptions.getOption(KrbOption.PKINIT_X509_PRIVATE_KEY));
-        results.add(krbOptions.getOption(KrbOption.PKINIT_X509_IDENTITY));
-        results.add(krbOptions.getOption(KrbOption.PKINIT_USING_RSA));
+        KOptions krbOptions = getRequestOptions();
+        results.add(krbOptions.getOption(PkinitOption.X509_CERTIFICATE));
+        results.add(krbOptions.getOption(PkinitOption.X509_ANCHORS));
+        results.add(krbOptions.getOption(PkinitOption.X509_PRIVATE_KEY));
+        results.add(krbOptions.getOption(PkinitOption.X509_IDENTITY));
+        results.add(krbOptions.getOption(PkinitOption.USING_RSA));
 
-        if (krbOptions.contains(KrbOption.USE_PKINIT_ANONYMOUS)) {
+        if (krbOptions.contains(PkinitOption.USE_ANONYMOUS)) {
             getKdcOptions().setFlag(KdcOption.REQUEST_ANONYMOUS);
         }
 
@@ -127,7 +127,8 @@ public class AsRequestWithCert extends AsRequest {
                 PkinitCrypto.verifyCMSSignedData(
                         CMSMessageType.CMS_SIGN_SERVER, signedData);
 
-                String anchorFileName = getPreauthOptions().getStringOption(KrbOption.PKINIT_X509_ANCHORS);
+                String anchorFileName =
+                    getPreauthOptions().getStringOption(PkinitOption.X509_ANCHORS);
 
                 X509Certificate x509Certificate = null;
                 try {

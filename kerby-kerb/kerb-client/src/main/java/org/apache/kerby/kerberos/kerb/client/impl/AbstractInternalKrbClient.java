@@ -25,6 +25,8 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
+import org.apache.kerby.kerberos.kerb.client.PkinitOption;
+import org.apache.kerby.kerberos.kerb.client.TokenOption;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithCert;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithKeytab;
@@ -81,13 +83,13 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             asRequest = new AsRequestWithPasswd(context);
         } else if (requestOptions.contains(KrbOption.USE_KEYTAB)) {
             asRequest = new AsRequestWithKeytab(context);
-        } else if (requestOptions.contains(KrbOption.USE_PKINIT_ANONYMOUS)) {
+        } else if (requestOptions.contains(PkinitOption.USE_ANONYMOUS)) {
             asRequest = new AsRequestWithCert(context);
-        } else if (requestOptions.contains(KrbOption.USE_PKINIT)) {
+        } else if (requestOptions.contains(PkinitOption.USE_PKINIT)) {
             asRequest = new AsRequestWithCert(context);
-        } else if (requestOptions.contains(KrbOption.USE_TOKEN)) {
+        } else if (requestOptions.contains(TokenOption.USE_TOKEN)) {
             asRequest = new AsRequestWithToken(context);
-        } else if (requestOptions.contains(KrbOption.TOKEN_USER_ID_TOKEN)) {
+        } else if (requestOptions.contains(TokenOption.USER_ID_TOKEN)) {
             asRequest = new AsRequestWithToken(context);
         }
 
@@ -100,7 +102,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
                     KrbOption.CLIENT_PRINCIPAL);
             principal = fixPrincipal(principal);
             PrincipalName principalName = new PrincipalName(principal);
-            if (requestOptions.contains(KrbOption.USE_PKINIT_ANONYMOUS)) {
+            if (requestOptions.contains(PkinitOption.USE_ANONYMOUS)) {
                 principalName.setNameType(NameType.NT_WELLKNOWN);
             }
             asRequest.setClientPrincipal(principalName);
@@ -112,7 +114,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             asRequest.setServerPrincipal(serverPrincipal);
         }
 
-        asRequest.setKrbOptions(requestOptions);
+        asRequest.setRequestOptions(requestOptions);
 
         return doRequestTgt(asRequest);
     }
@@ -123,11 +125,12 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     @Override
     public SgtTicket requestSgt(KOptions requestOptions) throws KrbException {
         TgsRequest tgsRequest = null;
-        if (requestOptions.contains(KrbOption.TOKEN_USER_AC_TOKEN)) {
+        if (requestOptions.contains(TokenOption.USER_AC_TOKEN)) {
             tgsRequest = new TgsRequestWithToken(context);
         } else if (requestOptions.contains(KrbOption.USE_TGT)) {
-            KOption tgt = requestOptions.getOption(KrbOption.USE_TGT);
-            tgsRequest = new TgsRequestWithTgt(context, (TgtTicket) tgt.getValue());
+            KOption kOpt = requestOptions.getOption(KrbOption.USE_TGT);
+            tgsRequest = new TgsRequestWithTgt(context,
+                (TgtTicket) kOpt.getOptionInfo().getValue());
         }
 
         if (tgsRequest == null) {
@@ -138,7 +141,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         String serverPrincipal = fixPrincipal(requestOptions.
                 getStringOption(KrbOption.SERVER_PRINCIPAL));
         tgsRequest.setServerPrincipal(new PrincipalName(serverPrincipal));
-        tgsRequest.setKrbOptions(requestOptions);
+        tgsRequest.setRequestOptions(requestOptions);
 
         return doRequestSgt(tgsRequest);
     }

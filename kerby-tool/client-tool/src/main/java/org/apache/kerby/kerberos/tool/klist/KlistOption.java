@@ -20,150 +20,46 @@
 package org.apache.kerby.kerberos.tool.klist;
 
 import org.apache.kerby.KOption;
-import org.apache.kerby.KOptionGroup;
+import org.apache.kerby.KOptionInfo;
 import org.apache.kerby.KOptionType;
 
 public enum KlistOption implements KOption {
-    NONE("NONE"),
-    CREDENTIALS_CACHE("-c", "specifies path of credentials cache", KOptionType.STR),
-    KEYTAB("-k", "specifies keytab"),
-    DEFAULT_CLIENT_KEYTAB("-i", "uses default client keytab if no name given"),
-    LIST_CREDENTIAL_CACHES("-l", "list credential caches in collection"),
-    ALL_CREDENTIAL_CACHES("-A", "shows content of all credential caches"),
-    ENCRYPTION_TYPE("-e", "shows encryption type"),
-    KERBEROS_VERSION("-V", "shows Kerberos version"),
-    AUTHORIZATION_DATA_TYPE("-d", "shows the submitted authorization data type"),
-    CREDENTIALS_FLAGS("-f", "show credential flags"),
-    EXIT_TGT_EXISTENCE("-s", "sets exit status based on valid tgt existence"),
-    DISPL_ADDRESS_LIST("-a", "displays the address list"),
-    NO_REVERSE_RESOLVE("-n", "do not reverse resolve"),
-    SHOW_KTAB_ENTRY_TS("-t", "shows keytab entry timestamps"),
-    SHOW_KTAB_ENTRY_KEY("-K", "show keytab entry keys");
+    NONE(null),
+    CREDENTIALS_CACHE(new KOptionInfo("-c", "specifies path of credentials cache",
+        KOptionType.STR)),
+    KEYTAB(new KOptionInfo("-k", "specifies keytab")),
+    DEFAULT_CLIENT_KEYTAB(new KOptionInfo("-i", "uses default client keytab if no name given")),
+    LIST_CREDENTIAL_CACHES(new KOptionInfo("-l", "list credential caches in collection")),
+    ALL_CREDENTIAL_CACHES(new KOptionInfo("-A", "shows content of all credential caches")),
+    ENCRYPTION_TYPE(new KOptionInfo("-e", "shows encryption type")),
+    KERBEROS_VERSION(new KOptionInfo("-V", "shows Kerberos version")),
+    AUTHORIZATION_DATA_TYPE(new KOptionInfo("-d", "shows the submitted authorization data type")),
+    CREDENTIALS_FLAGS(new KOptionInfo("-f", "show credential flags")),
+    EXIT_TGT_EXISTENCE(new KOptionInfo("-s", "sets exit status based on valid tgt existence")),
+    DISPL_ADDRESS_LIST(new KOptionInfo("-a", "displays the address list")),
+    NO_REVERSE_RESOLVE(new KOptionInfo("-n", "do not reverse resolve")),
+    SHOW_KTAB_ENTRY_TS(new KOptionInfo("-t", "shows keytab entry timestamps")),
+    SHOW_KTAB_ENTRY_KEY(new KOptionInfo("-K", "show keytab entry keys"));
 
-    private String name;
-    private KOptionGroup group;
-    private KOptionType type = KOptionType.NONE;
-    private String description;
-    private Object value;
+    private final KOptionInfo optionInfo;
 
-    KlistOption(String description) {
-        this(description, KOptionType.NOV);
+    KlistOption(KOptionInfo optionInfo) {
+        this.optionInfo = optionInfo;
     }
 
-    KlistOption(String description, KOptionType type) {
-        this.description = description;
-        this.type = type;
-    }
-
-    KlistOption(String name, String description) {
-        this(name, description, KOptionType.NOV);
-    }
-
-    KlistOption(String name, String description, KOptionType type) {
-        this.name = name;
-        this.description = description;
-        this.type = type;
+    @Override
+    public KOptionInfo getOptionInfo() {
+        return optionInfo;
     }
 
     public static KlistOption fromName(String name) {
         if (name != null) {
-            for (KlistOption klopt : values()) {
-                if (klopt.getName().equals(name)) {
-                    return (KlistOption) klopt;
+            for (KlistOption ko : values()) {
+                if (ko.name().equals(name)) {
+                    return ko;
                 }
             }
         }
         return NONE;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getOptionName() {
-        return name();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public KOptionType getType() {
-        return this.type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setType(KOptionType type) {
-        this.type = type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getName() {
-        if (name != null) {
-            return name;
-        }
-        return name();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object getValue() {
-        return value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setGroup(KOptionGroup group) {
-        this.group = group;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public KOptionGroup getGroup() {
-        return group;
     }
 }

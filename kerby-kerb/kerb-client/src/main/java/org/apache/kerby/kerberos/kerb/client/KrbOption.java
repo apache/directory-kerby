@@ -20,209 +20,79 @@
 package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOption;
-import org.apache.kerby.KOptionGroup;
+import org.apache.kerby.KOptionInfo;
 import org.apache.kerby.KOptionType;
 
 /**
  * This defines all the options that come across the client side.
  */
 public enum KrbOption implements KOption {
-    NONE("NONE", null),
-    CLIENT_PRINCIPAL("client-principal", "Client principal", KOptionType.STR),
-    KDC_REALM("kdc-realm", "kdc realm", KOptionType.STR),
-    KDC_HOST("kdc-host", "kdc host", KOptionType.STR),
-    KDC_TCP_PORT("kdc-tcp-port", "kdc tcp port", KOptionType.INT),
-    ALLOW_UDP("allow-udp", "allow udp", KOptionType.BOOL),
-    ALLOW_TCP("allow-tcp", "allow tcp", KOptionType.BOOL),
-    KDC_UDP_PORT("kdc-udp-port", "kdc udp port", KOptionType.INT),
-    CONN_TIMEOUT("conn-timeout", "connection timeout", KOptionType.INT),
-    LIFE_TIME("life-time", "life time", KOptionType.INT),
-    START_TIME("start-time", "start time", KOptionType.INT),
-    RENEWABLE_TIME("renewable_lifetime", "renewable lifetime", KOptionType.INT),
+    NONE(null),
 
-    /* KDC flags */
-    FORWARDABLE("forwardable", "forwardable", KrbOptionGroup.KDC_FLAGS),
-    PROXIABLE("proxiable", "proxiable", KrbOptionGroup.KDC_FLAGS),
-    ANONYMOUS("anonymous", "anonymous", KrbOptionGroup.KDC_FLAGS),
-    VALIDATE("validate", "validate", KrbOptionGroup.KDC_FLAGS),
-    RENEW("renew", "renew", KrbOptionGroup.KDC_FLAGS),
-    RENEWABLE("renewable", "renewable", KrbOptionGroup.KDC_FLAGS),
-    RENEWABLE_OK("renewable-ok", "renewable ok", KrbOptionGroup.KDC_FLAGS),
-    CANONICALIZE("canonicalize", "canonicalize", KrbOptionGroup.KDC_FLAGS),
+    KDC_REALM(new KOptionInfo("kdc-realm", "kdc realm",
+        KOptionType.STR)),
+    KDC_HOST(new KOptionInfo("kdc-host", "kdc host",
+        KOptionType.STR)),
+    KDC_TCP_PORT(new KOptionInfo("kdc-tcp-port", "kdc tcp port",
+        KOptionType.INT)),
+    ALLOW_UDP(new KOptionInfo("allow-udp", "allow udp",
+        KOptionType.BOOL)),
+    ALLOW_TCP(new KOptionInfo("allow-tcp", "allow tcp",
+        KOptionType.BOOL)),
+    KDC_UDP_PORT(new KOptionInfo("kdc-udp-port", "kdc udp port",
+        KOptionType.INT)),
+    CONN_TIMEOUT(new KOptionInfo("conn-timeout", "connection timeout",
+        KOptionType.INT)),
 
-    INCLUDE_ADDRESSES("include_addresses", "include addresses"),
-    AS_ENTERPRISE_PN("as-enterprise-pn", "client is enterprise principal name"),
+    LIFE_TIME(new KOptionInfo("life-time", "life time",
+        KOptionType.INT)),
+    START_TIME(new KOptionInfo("start-time", "start time",
+        KOptionType.INT)),
+    RENEWABLE_TIME(new KOptionInfo("renewable_lifetime", "renewable lifetime",
+        KOptionType.INT)),
+    INCLUDE_ADDRESSES(new KOptionInfo("include_addresses",
+        "include addresses")),
+    AS_ENTERPRISE_PN(new KOptionInfo("as-enterprise-pn",
+        "client is enterprise principal name")),
+    CLIENT_PRINCIPAL(new KOptionInfo("client-principal", "Client principal",
+        KOptionType.STR)),
 
-    USE_PASSWD("using-password", "using password"),
-    USER_PASSWD("user-passwd", "User plain password"),
+    USE_PASSWD(new KOptionInfo("using-password", "using password")),
+    USER_PASSWD(new KOptionInfo("user-passwd", "User plain password")),
 
-    USE_KEYTAB("use-keytab", "use keytab"),
-    USE_DFT_KEYTAB("use-dft-keytab", "use default client keytab (with -k)"),
-    KEYTAB_FILE("keytab-file", "filename of keytab to use", KOptionType.FILE),
+    USE_KEYTAB(new KOptionInfo("use-keytab", "use keytab")),
+    USE_DFT_KEYTAB(new KOptionInfo("use-dft-keytab", "use default client keytab (with -k)")),
+    KEYTAB_FILE(new KOptionInfo("keytab-file", "filename of keytab to use",
+        KOptionType.FILE)),
 
-    KRB5_CACHE("krb5-cache", "K5 cache name", KOptionType.FILE),
-    SERVICE_PRINCIPAL("service-principal", "service principal", KOptionType.STR),
-    SERVER_PRINCIPAL("server-principal", "server principal", KOptionType.STR),
-    ARMOR_CACHE("armor-cache", "armor credential cache", KOptionType.STR),
+    KRB5_CACHE(new KOptionInfo("krb5-cache", "K5 cache name",
+        KOptionType.FILE)),
+    SERVICE_PRINCIPAL(new KOptionInfo("service-principal", "service principal",
+        KOptionType.STR)),
+    SERVER_PRINCIPAL(new KOptionInfo("server-principal", "server principal",
+        KOptionType.STR)),
+    ARMOR_CACHE(new KOptionInfo("armor-cache", "armor credential cache",
+        KOptionType.STR)),
+    USE_TGT(new KOptionInfo("use-tgt", "use tgt to get service ticket",
+        KOptionType.OBJ));
 
-    USE_PKINIT("use-pkinit", "using pkinit"),
-    PKINIT_X509_IDENTITY("x509-identities", "X509 user private key and cert",
-        KrbOptionGroup.PKINIT, KOptionType.STR),
-    PKINIT_X509_PRIVATE_KEY("x509-privatekey", "X509 user private key",
-        KrbOptionGroup.PKINIT, KOptionType.STR),
-    PKINIT_X509_CERTIFICATE("x509-cert", "X509 user certificate",
-        KrbOptionGroup.PKINIT, KOptionType.STR),
-    PKINIT_X509_ANCHORS("x509-anchors", "X509 anchors",
-        KrbOptionGroup.PKINIT,
-        KOptionType.STR),
-    PKINIT_USING_RSA("using-rsa-or-dh", "Using RSA or DH",
-        KrbOptionGroup.PKINIT),
-    USE_PKINIT_ANONYMOUS("use-pkinit-anonymous", "X509 anonymous",
-        KrbOptionGroup.PKINIT),
+    private final KOptionInfo optionInfo;
 
-    USE_TOKEN("use-id-token", "Using identity token", KrbOptionGroup.TOKEN),
-    TOKEN_USER_ID_TOKEN("user-id-token", "User identity token",
-        KrbOptionGroup.TOKEN, KOptionType.STR),
-    TOKEN_USER_AC_TOKEN("user-ac-token", "User access token",
-        KrbOptionGroup.TOKEN, KOptionType.STR),
-    USE_TGT("use-tgt", "use tgt to get service ticket", KOptionType.OBJ);
-
-    private String name;
-    private KOptionGroup group;
-    private KOptionType type;
-    private String description;
-    private Object value;
-
-    KrbOption(String name, String description) {
-        this(name, description, KOptionType.NOV);
+    KrbOption(KOptionInfo optionInfo) {
+        this.optionInfo = optionInfo;
     }
 
-    KrbOption(String name, String description, KOptionType type) {
-        this(name, description, null, type);
-    }
-
-    KrbOption(String name, String description, KrbOptionGroup group) {
-        this(name, description, group, KOptionType.NOV);
-    }
-
-    KrbOption(String name, String description,
-              KrbOptionGroup group, KOptionType type) {
-        this.name = name;
-        this.description = description;
-        this.group = group;
-        this.type = type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public String getOptionName() {
-        return name();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setType(KOptionType type) {
-        this.type = type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public KOptionType getType() {
-        return this.type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getName() {
-        if (name != null) {
-            return name;
-        }
-        return name();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object getValue() {
-        return value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setGroup(KOptionGroup group) {
-        this.group = group;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public KOptionGroup getGroup() {
-        return group;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public static KrbOption fromName(String name) {
-        if (name != null) {
-            for (KrbOption ko : values()) {
-                if (ko.getName().equals(name)) {
-                    return (KrbOption) ko;
-                }
-            }
-        }
-        return NONE;
+    public KOptionInfo getOptionInfo() {
+        return optionInfo;
     }
 
     public static KrbOption fromOptionName(String optionName) {
         if (optionName != null) {
             for (KrbOption ko : values()) {
-                if (ko.getOptionName().equals(optionName)) {
-                    return (KrbOption) ko;
+                if (ko.optionInfo != null
+                    && ko.name().equals(optionName)) {
+                    return ko;
                 }
             }
         }

@@ -80,13 +80,14 @@ public class ModifyPrincipalCommand extends KadminCommand {
                 kOption = KadminOption.NONE;
             }
 
-            if (kOption.getType() != KOptionType.NOV) { // require a parameter
+            if (kOption.getOptionInfo().getType() != KOptionType.NOV) {
+                // require a parameter
                 param = null;
                 if (i < commands.length) {
                     param = commands[i++];
                 }
                 if (param != null) {
-                    KOptions.parseSetValue(kOption, param);
+                    KOptions.parseSetValue(kOption.getOptionInfo(), param);
                 } else {
                     error = "Option " + opt + " require a parameter";
                 }

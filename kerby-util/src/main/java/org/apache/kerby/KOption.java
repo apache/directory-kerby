@@ -22,85 +22,8 @@ package org.apache.kerby;
 public interface KOption {
 
     /**
-     * Set koption type.
-     *
-     * @param type The type
+     * @return option info object
      */
-    void setType(KOptionType type);
-
-    /**
-     * Get koption type.
-     *
-     * @return The koption type
-     */
-    KOptionType getType();
-
-    /**
-     * Get option name.
-     *
-     * @return The koption name
-     */
-    String getOptionName();
-
-
-    /**
-     * Set name.
-     *
-     * @param name The name
-     */
-    void setName(String name);
-
-    /**
-     * Get name.
-     *
-     * @return The name
-     */
-    String getName();
-
-
-    /**
-     * Set description.
-     *
-     * @param description The description
-     */
-    void setDescription(String description);
-
-    /**
-     * Get description.
-     *
-     * @return The description
-     */
-    String getDescription();
-
-
-    /**
-     * Set value.
-     *
-     * @param value The value
-     */
-    void setValue(Object value);
-
-
-    /**
-     * Get value.
-     *
-     * @return The value
-     */
-    Object getValue();
-
-    /**
-     * Set group.
-     *
-     * @param value The group
-     */
-    void setGroup(KOptionGroup value);
-
-
-    /**
-     * Get group.
-     *
-     * @return The group
-     */
-    KOptionGroup getGroup();
+    KOptionInfo getOptionInfo();
 }
 

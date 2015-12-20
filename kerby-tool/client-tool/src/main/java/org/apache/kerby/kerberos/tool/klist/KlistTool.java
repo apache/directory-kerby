@@ -211,13 +211,14 @@ public class KlistTool {
                 break;
             }
 
-            if (error == null && klopt.getType() != KOptionType.NOV) { //needs value for this parameter
+            if (error == null && klopt.getOptionInfo().getType() != KOptionType.NOV) {
+                //needs value for this parameter
                 value = null;
                 if (i < args.length) {
                     value = args[i++];
                 }
                 if (value != null) {
-                    KOptions.parseSetValue(klopt, value);
+                    KOptions.parseSetValue(klopt.getOptionInfo(), value);
                 } else {
                     error = "Option" + klopt + "requires a following value";
                 }
@@ -228,7 +229,8 @@ public class KlistTool {
             }
 
             klOptions.add(klopt);
-            if (klOptions.contains(KlistOption.KEYTAB) && klOptions.contains(KlistOption.CREDENTIALS_CACHE)) {
+            if (klOptions.contains(KlistOption.KEYTAB)
+                && klOptions.contains(KlistOption.CREDENTIALS_CACHE)) {
                 error = "Can not use '-c' and '-k' at the same time ";
                 printUsage(error);
             }

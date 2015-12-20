@@ -23,7 +23,8 @@ import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.client.PkinitOption;
+import org.apache.kerby.kerberos.kerb.client.TokenOption;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddress;
@@ -90,9 +91,9 @@ public class AsRequest extends KdcRequest {
         String clientRealm = getKdcRep().getCrealm();
         clientPrincipal.setRealm(clientRealm);
 
-        if (!(getKrbOptions().contains(KrbOption.USE_PKINIT_ANONYMOUS)
+        if (!(getRequestOptions().contains(PkinitOption.USE_ANONYMOUS)
                 && KrbUtil.pricipalCompareIgnoreRealm(clientPrincipal, getClientPrincipal()))
-                && !getKrbOptions().contains(KrbOption.TOKEN_USER_ID_TOKEN)
+                && !getRequestOptions().contains(TokenOption.USER_ID_TOKEN)
                 && !clientPrincipal.equals(getClientPrincipal())) {
             throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_NAME_MISMATCH);
         }

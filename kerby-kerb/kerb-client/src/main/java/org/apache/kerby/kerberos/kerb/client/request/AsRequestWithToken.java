@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.client.TokenOption;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 
 /**
@@ -38,11 +38,11 @@ public class AsRequestWithToken extends ArmoredAsRequest {
     @Override
     public KOptions getPreauthOptions() {
         KOptions results = super.getPreauthOptions();
-        KOptions krbOptions = getKrbOptions();
+        KOptions krbOptions = getRequestOptions();
 
-        results.add(krbOptions.getOption(KrbOption.USE_TOKEN));
-        results.add(krbOptions.getOption(KrbOption.TOKEN_USER_ID_TOKEN));
-        //results.add(krbOptions.getOption(KrbOption.TOKEN_USER_AC_TOKEN));
+        results.add(krbOptions.getOption(TokenOption.USE_TOKEN));
+        results.add(krbOptions.getOption(TokenOption.USER_ID_TOKEN));
+        //results.add(krbOptions.getOption(KrbOption.USER_AC_TOKEN));
 
         return results;
     }

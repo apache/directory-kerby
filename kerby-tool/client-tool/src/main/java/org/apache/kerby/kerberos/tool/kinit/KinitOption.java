@@ -20,161 +20,81 @@
 package org.apache.kerby.kerberos.tool.kinit;
 
 import org.apache.kerby.KOption;
-import org.apache.kerby.KOptionGroup;
+import org.apache.kerby.KOptionInfo;
 import org.apache.kerby.KOptionType;
+import org.apache.kerby.kerberos.kerb.client.KrbOptionGroup;
 
 public enum KinitOption implements KOption {
-    NONE("NONE"),
-    CLIENT_PRINCIPAL("client-principal", "Client principal", KOptionType.STR),
-    LIFE_TIME("-l", "lifetime", KOptionType.INT),
-    START_TIME("-s", "start time", KOptionType.INT),
-    RENEWABLE_LIFE("-r", "renewable lifetime", KOptionType.INT),
-    FORWARDABLE("-f", "forwardable"),
-    NOT_FORWARDABLE("-F", "not forwardable"),
-    PROXIABLE("-p", "proxiable"),
-    NOT_PROXIABLE("-P", "not proxiable"),
-    ANONYMOUS("-n", "anonymous"),
-    INCLUDE_ADDRESSES("-a", "include addresses"),
-    NOT_INCLUDE_ADDRESSES("-A", "do not include addresses"),
-    VALIDATE("-v", "validate"),
-    RENEW("-R", "renew"),
-    CANONICALIZE("-C", "canonicalize"),
-    AS_ENTERPRISE_PN("-E", "client is enterprise principal name"),
-    USE_PASSWD("using password", "using password"),
-    USER_PASSWD("user-passwd", "User plain password"),
-    USE_KEYTAB("-k", "use keytab"),
-    USE_DFT_KEYTAB("-i", "use default client keytab (with -k)"),
-    KEYTAB_FILE("-t", "filename of keytab to use", KOptionType.FILE),
-    KRB5_CACHE("-c", "Kerberos 5 cache name", KOptionType.STR),
-    SERVICE("-S", "service", KOptionType.STR),
-    ARMOR_CACHE("-T", "armor credential cache", KOptionType.FILE),
-    XATTR("-X", "<attribute>[=<value>]", KOptionType.STR),
-    CONF_DIR("-conf", "conf dir", KOptionType.DIR);
+    NONE(null),
 
-    private String name;
-    private KOptionGroup group;
-    private KOptionType type = KOptionType.NONE;
-    private String description;
-    private Object value;
+    CLIENT_PRINCIPAL(new KOptionInfo("client-principal", "Client principal",
+        KrbOptionGroup.KRB, KOptionType.STR)),
+    LIFE_TIME(new KOptionInfo("-l", "lifetime",
+        KrbOptionGroup.KRB, KOptionType.INT)),
+    START_TIME(new KOptionInfo("-s", "start time",
+        KrbOptionGroup.KRB, KOptionType.INT)),
+    RENEWABLE_LIFE(new KOptionInfo("-r", "renewable lifetime",
+        KrbOptionGroup.KRB, KOptionType.INT)),
+    AS_ENTERPRISE_PN(new KOptionInfo("-E", "client is enterprise principal name",
+        KrbOptionGroup.KRB)),
+    INCLUDE_ADDRESSES(new KOptionInfo("-a", "include addresses",
+        KrbOptionGroup.KRB)),
+    NOT_INCLUDE_ADDRESSES(new KOptionInfo("-A", "do not include addresses",
+        KrbOptionGroup.KRB)),
 
-    KinitOption(String description) {
-        this(description, KOptionType.NOV); // As a flag by default
+    FORWARDABLE(new KOptionInfo("-f", "forwardable",
+        KrbOptionGroup.KDC_FLAGS)),
+    NOT_FORWARDABLE(new KOptionInfo("-F", "not forwardable",
+        KrbOptionGroup.KDC_FLAGS)),
+    PROXIABLE(new KOptionInfo("-p", "proxiable",
+        KrbOptionGroup.KDC_FLAGS)),
+    NOT_PROXIABLE(new KOptionInfo("-P", "not proxiable",
+        KrbOptionGroup.KDC_FLAGS)),
+    ANONYMOUS(new KOptionInfo("-n", "anonymous",
+        KrbOptionGroup.KDC_FLAGS)),
+    VALIDATE(new KOptionInfo("-v", "validate",
+        KrbOptionGroup.KDC_FLAGS)),
+    RENEW(new KOptionInfo("-R", "renew",
+        KrbOptionGroup.KDC_FLAGS)),
+    CANONICALIZE(new KOptionInfo("-C", "canonicalize",
+        KrbOptionGroup.KDC_FLAGS)),
+
+    USE_PASSWD(new KOptionInfo("using password", "using password",
+        KrbOptionGroup.KRB)),
+    USER_PASSWD(new KOptionInfo("user-passwd", "User plain password",
+        KrbOptionGroup.KRB)),
+    USE_KEYTAB(new KOptionInfo("-k", "use keytab",
+        KrbOptionGroup.KRB)),
+    USE_DFT_KEYTAB(new KOptionInfo("-i", "use default client keytab (with -k)",
+        KrbOptionGroup.KRB)),
+    KEYTAB_FILE(new KOptionInfo("-t", "filename of keytab to use",
+        KrbOptionGroup.KRB, KOptionType.FILE)),
+    KRB5_CACHE(new KOptionInfo("-c", "Kerberos 5 cache name",
+        KrbOptionGroup.KRB, KOptionType.STR)),
+    SERVICE(new KOptionInfo("-S", "service",
+        KrbOptionGroup.KRB, KOptionType.STR)),
+    ARMOR_CACHE(new KOptionInfo("-T", "armor credential cache",
+        KrbOptionGroup.KRB, KOptionType.FILE)),
+
+    XATTR(new KOptionInfo("-X", "<attribute>[=<value>]", KOptionType.STR)),
+    CONF_DIR(new KOptionInfo("-conf", "conf dir", KOptionType.DIR));
+
+    private final KOptionInfo optionInfo;
+
+    KinitOption(KOptionInfo optionInfo) {
+        this.optionInfo = optionInfo;
     }
 
-    KinitOption(String description, KOptionType type) {
-        this.description = description;
-        this.type = type;
-    }
-
-    KinitOption(String name, String description) {
-        this(name, description, KOptionType.NOV); // As a flag by default
-    }
-
-    KinitOption(String name, String description, KOptionType type) {
-        this.name = name;
-        this.description = description;
-        this.type = type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public String getOptionName() {
-        return name();
+    public KOptionInfo getOptionInfo() {
+        return optionInfo;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setType(KOptionType type) {
-        this.type = type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public KOptionType getType() {
-        return this.type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getName() {
-        if (name != null) {
-            return name;
-        }
-        return name();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object getValue() {
-        return value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setGroup(KOptionGroup group) {
-        this.group = group;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public KOptionGroup getGroup() {
-        return group;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public static KinitOption fromName(String name) {
         if (name != null) {
             for (KinitOption ko : values()) {
-                if (ko.getName().equals(name)) {
-                    return (KinitOption) ko;
+                if (ko.name().equals(name)) {
+                    return ko;
                 }
             }
         }

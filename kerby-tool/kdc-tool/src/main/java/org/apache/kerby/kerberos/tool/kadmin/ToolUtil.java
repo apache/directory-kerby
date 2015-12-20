@@ -56,13 +56,14 @@ public class ToolUtil {
                 error = "Invalid parameter:" + opt + " , it does not belong to any option.";
             }
 
-            if (kOption.getType() != KOptionType.NOV) { // require a parameter
+            if (kOption.getOptionInfo().getType() != KOptionType.NOV) {
+                // require a parameter
                 param = null;
                 if (i <= endIndex) {
                     param = commands[i++];
                 }
                 if (param != null) {
-                    kOptions.parseSetValue(kOption, param);
+                    kOptions.parseSetValue(kOption.getOptionInfo(), param);
                 } else {
                     error = "Option " + opt + " require a parameter";
                 }

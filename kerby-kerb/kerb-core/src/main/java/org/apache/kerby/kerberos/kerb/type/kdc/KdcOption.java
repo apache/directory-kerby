@@ -58,7 +58,7 @@ public enum KdcOption implements EnumType {
 
     private final int value;
 
-    private KdcOption(int value) {
+    KdcOption(int value) {
         this.value = value;
     }
 

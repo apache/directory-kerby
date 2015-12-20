@@ -88,7 +88,7 @@ public class ArmoredRequest {
     public KOptions getPreauthOptions() {
         KOptions results = new KOptions();
 
-        KOptions krbOptions = kdcRequest.getKrbOptions();
+        KOptions krbOptions = kdcRequest.getRequestOptions();
         results.add(krbOptions.getOption(KrbOption.ARMOR_CACHE));
 
         return results;

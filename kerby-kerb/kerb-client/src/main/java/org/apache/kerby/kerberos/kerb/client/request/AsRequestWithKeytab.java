@@ -40,7 +40,7 @@ public class AsRequestWithKeytab extends AsRequest {
 
     private Keytab getKeytab() {
         File keytabFile = null;
-        KOptions kOptions = getKrbOptions();
+        KOptions kOptions = getRequestOptions();
 
         if (kOptions.contains(KrbOption.KEYTAB_FILE)) {
             keytabFile = kOptions.getFileOption(KrbOption.KEYTAB_FILE);
