@@ -29,6 +29,6 @@ public class Asn1Item extends Asn1ParseResult {
 
     @Override
     public String toString() {
-        return typeStr();
+        return simpleInfo();
     }
 }

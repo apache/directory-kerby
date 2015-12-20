@@ -105,7 +105,7 @@ public abstract class Asn1CollectionType
 
             foundPos = match(lastPos, parseItem);
             if (foundPos == -1) {
-                throw new IOException("Unexpected item: " + parseItem.typeStr());
+                throw new IOException("Unexpected item: " + parseItem.simpleInfo());
             }
             lastPos = foundPos;
 
@@ -120,7 +120,7 @@ public abstract class Asn1CollectionType
 
         if (fieldValue instanceof Asn1Any) {
             Asn1Any any = (Asn1Any) fieldValue;
-            any.setFieldInfo(fieldInfo);
+            any.setDecodeInfo(fieldInfo);
             Asn1Binder.bind(parseItem, any);
         } else {
             if (parseItem.isContextSpecific()) {
@@ -240,14 +240,15 @@ public abstract class Asn1CollectionType
     protected void setFieldAsAny(EnumType index, Asn1Type value) {
         if (value != null) {
             Asn1Any any = new Asn1Any(value);
-            any.setFieldInfo(fieldInfos[index.getValue()]);
+            any.setDecodeInfo(fieldInfos[index.getValue()]);
             setFieldAs(index, any);
         }
     }
 
     @Override
     public void dumpWith(Asn1Dumper dumper, int indents) {
-        dumper.dumpTypeInfo(indents, getClass());
+        dumper.indent(indents).appendType(getClass());
+        dumper.append(simpleInfo()).newLine();
 
         String fdName;
         for (int i = 0; i < fieldInfos.length; i++) {

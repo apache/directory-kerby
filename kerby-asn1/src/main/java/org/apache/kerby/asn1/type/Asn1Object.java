@@ -104,4 +104,19 @@ public abstract class Asn1Object {
     public boolean isCollection() {
         return Asn1Collection.isCollection(tag());
     }
+
+    protected abstract int getHeaderLength();
+
+    protected abstract int getBodyLength();
+
+    protected String simpleInfo() {
+        String simpleInfo = tag().typeStr();
+
+        simpleInfo += " ["
+            + "tag=" + tag()
+            + ", len=" + getHeaderLength() + "+" + getBodyLength()
+            + "] ";
+
+        return simpleInfo;
+    }
 }

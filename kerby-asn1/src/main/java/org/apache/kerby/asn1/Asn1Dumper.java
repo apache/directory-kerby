@@ -22,9 +22,7 @@ package org.apache.kerby.asn1;
 import org.apache.kerby.asn1.parse.Asn1Item;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.parse.Asn1Parser;
-import org.apache.kerby.asn1.type.Asn1Any;
-import org.apache.kerby.asn1.type.Asn1Application;
-import org.apache.kerby.asn1.type.Asn1Choice;
+import org.apache.kerby.asn1.type.Asn1Specifix;
 import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;
 
@@ -32,16 +30,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public final class Asn1Dumper {
-    private boolean withType;
     private StringBuilder builder = new StringBuilder();
-
-    public Asn1Dumper() {
-        this.withType = true;
-    }
-
-    public boolean withType() {
-        return withType;
-    }
 
     public String output() {
         return builder.toString();
@@ -77,12 +66,8 @@ public final class Asn1Dumper {
         } else if (value instanceof Asn1Dumpable) {
             Asn1Dumpable dumpable = (Asn1Dumpable) value;
             dumpable.dumpWith(this, indents);
-        } else if (value instanceof Asn1Application) {
+        } else if (value instanceof Asn1Specifix) {
             indent(indents).append(value.toString());
-        } else if (value instanceof Asn1Any) {
-            indent(indents).append("<Any>");
-        } else if (value instanceof Asn1Choice) {
-            indent(indents).append("<Choice>");
         } else {
             indent(indents).append("<Unknown>");
         }
@@ -126,20 +111,8 @@ public final class Asn1Dumper {
         return this;
     }
 
-    public Asn1Dumper dumpTypeInfo(Class<?> cls) {
-        appendType(cls).newLine();
-        return this;
-    }
-
-    public Asn1Dumper dumpTypeInfo(int indents, Class<?> cls) {
-        if (withType()) {
-            indent(indents).appendType(cls).newLine();
-        }
-        return this;
-    }
-
-    private Asn1Dumper appendType(Class<?> cls) {
-        builder.append("<").append(cls.getSimpleName()).append(">");
+    public Asn1Dumper appendType(Class<?> cls) {
+        builder.append("<").append(cls.getSimpleName()).append("> ");
         return this;
     }
 

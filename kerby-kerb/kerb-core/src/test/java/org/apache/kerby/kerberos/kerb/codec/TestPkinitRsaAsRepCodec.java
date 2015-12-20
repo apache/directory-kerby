@@ -58,7 +58,7 @@ public class TestPkinitRsaAsRepCodec {
         assertThat(paPkAsRep.getEncKeyPack()).isNotNull();
 
         byte[] encKeyPack = paPkAsRep.getEncKeyPack();
-
+        Asn1.parseAndDump(encKeyPack);
         ContentInfo contentInfo = new ContentInfo();
         contentInfo.decode(encKeyPack);
         assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.3");

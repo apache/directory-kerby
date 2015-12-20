@@ -157,10 +157,12 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
         return getHeaderLength() + getBodyLength();
     }
 
+    @Override
     protected int getHeaderLength() {
         return encodingHeaderLength();
     }
 
+    @Override
     protected int getBodyLength() {
         if (bodyLength == -1) {
             bodyLength = encodingBodyLength();
@@ -193,7 +195,7 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
                 Asn1Container container = (Asn1Container) parseResult;
                 tmpParseResult = new Asn1DerivedItem(tag(), container);
             } else {
-                throw new IOException("Unexpected item " + parseResult.typeStr()
+                throw new IOException("Unexpected item " + parseResult.simpleInfo()
                     + ", expecting " + tag());
             }
         }

@@ -184,7 +184,8 @@ public abstract class Asn1TaggingCollection
     @Override
     public void dumpWith(Asn1Dumper dumper, int indents) {
         Asn1Type taggedValue = getValue();
-        dumper.dumpTypeInfo(indents, getClass());
+        dumper.indent(indents).appendType(getClass());
+        dumper.append(simpleInfo()).newLine();
         dumper.dumpType(indents, taggedValue);
     }
 }

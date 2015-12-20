@@ -113,7 +113,8 @@ public abstract class Asn1ParseResult extends Asn1Object {
         return getBodyEnd() != -1 && pos >= getBodyEnd();
     }
 
-    public String typeStr() {
+    @Override
+    public String simpleInfo() {
         return tag().typeStr() + " ["
             + "tag=" + tag()
             + ", off=" + getOffset()
