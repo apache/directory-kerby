@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 public class TestGeneralName {
     private static final byte[] IPV4 = HexUtil.hex2bytes("87040a090800");

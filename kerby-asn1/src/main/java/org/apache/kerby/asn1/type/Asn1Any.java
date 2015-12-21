@@ -37,6 +37,7 @@ import java.nio.ByteBuffer;
  */
 public class Asn1Any
     extends AbstractAsn1Type<Asn1Type> implements Asn1Dumpable {
+    private Class<? extends Asn1Type> valueType;
     private Asn1FieldInfo decodeInfo;
     private Asn1ParseResult parseResult;
     private boolean isBlindlyDecoded = true;
@@ -58,6 +59,10 @@ public class Asn1Any
             return parseResult.tag();
         }
         return super.tag();
+    }
+
+    public void setValueType(Class<? extends Asn1Type> valueType) {
+        this.valueType = valueType;
     }
 
     public void setDecodeInfo(Asn1FieldInfo decodeInfo) {
@@ -135,7 +140,12 @@ public class Asn1Any
     @Override
     protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
         this.parseResult = parseResult;
-        blindlyDecode();
+
+        if (valueType != null) {
+            typeAwareDecode(valueType);
+        } else {
+            blindlyDecode();
+        }
     }
 
     private void blindlyDecode() throws IOException {
@@ -158,28 +168,33 @@ public class Asn1Any
             return (T) value;
         }
 
-        typeAwareDecode(t);
+        if (valueType != null && valueType != t) {
+            throw new RuntimeException("Required value type isn't the same"
+            + " with the value type set before");
+        }
+
+        try {
+            typeAwareDecode(t);
+        } catch (IOException e) {
+            throw new RuntimeException("Type aware decoding of Any type failed");
+        }
 
         return (T) getValue();
     }
 
-    private <T extends Asn1Type> void typeAwareDecode(Class<T> t) {
+    private <T extends Asn1Type> void typeAwareDecode(Class<T> t) throws IOException {
         T result;
         try {
             result = t.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("No default constructor?", e);
+            throw new IOException("No default constructor?", e);
         }
 
-        try {
-            if (parseResult.isContextSpecific()) {
-                Asn1Binder.bindWithTagging(parseResult, result,
-                    decodeInfo.getTaggingOption());
-            } else {
-                Asn1Binder.bind(parseResult, result);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Fully decoding failed", e);
+        if (parseResult.isContextSpecific()) {
+            Asn1Binder.bindWithTagging(parseResult, result,
+                decodeInfo.getTaggingOption());
+        } else {
+            Asn1Binder.bind(parseResult, result);
         }
 
         setValue(result);

@@ -166,9 +166,13 @@ public abstract class Asn1CollectionType
 
     private void checkAndInitFields() {
         for (int i = 0; i < fieldInfos.length; ++i) {
-            if (fields[i] == null) {
-                fields[i] = fieldInfos[i].createFieldValue();
-            }
+            checkAndInitField(i);
+        }
+    }
+
+    private void checkAndInitField(int index) {
+        if (fields[index] == null) {
+            fields[index] = fieldInfos[index].createFieldValue();
         }
     }
 
@@ -242,6 +246,18 @@ public abstract class Asn1CollectionType
             Asn1Any any = new Asn1Any(value);
             any.setDecodeInfo(fieldInfos[index.getValue()]);
             setFieldAs(index, any);
+        }
+    }
+
+    protected void setAnyFieldValueType(EnumType index,
+                                        Class<? extends Asn1Type> valueType) {
+        if (valueType != null) {
+            checkAndInitField(index.getValue());
+            Asn1Type value = fields[index.getValue()];
+            if (value != null && value instanceof Asn1Any) {
+                Asn1Any any = (Asn1Any) value;
+                any.setValueType(valueType);
+            }
         }
     }
 

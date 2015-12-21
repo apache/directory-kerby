@@ -20,7 +20,7 @@
 package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
-import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.EnvelopedContentInfo;
 import org.apache.kerby.cms.type.EnvelopedData;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,12 +35,11 @@ public class TestEnvelopedData extends CmsTestBase {
         try {
             Asn1.parseAndDump(data);
 
-            ContentInfo contentInfo = new ContentInfo();
+            EnvelopedContentInfo contentInfo = new EnvelopedContentInfo();
             contentInfo.decode(data);
             Asn1.dump(contentInfo);
 
-            EnvelopedData envelopedData =
-                    contentInfo.getContentAs(EnvelopedData.class);
+            EnvelopedData envelopedData = contentInfo.getEnvelopedData();
             Asn1.dump(envelopedData);
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,12 +53,11 @@ public class TestEnvelopedData extends CmsTestBase {
         try {
             Asn1.parseAndDump(data);
 
-            ContentInfo contentInfo = new ContentInfo();
+            EnvelopedContentInfo contentInfo = new EnvelopedContentInfo();
             contentInfo.decode(data);
             Asn1.dump(contentInfo);
 
-            EnvelopedData envelopedData =
-                    contentInfo.getContentAs(EnvelopedData.class);
+            EnvelopedData envelopedData = contentInfo.getEnvelopedData();
             Asn1.dump(envelopedData);
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,12 +71,11 @@ public class TestEnvelopedData extends CmsTestBase {
         try {
             Asn1.parseAndDump(data);
 
-            ContentInfo contentInfo = new ContentInfo();
+            EnvelopedContentInfo contentInfo = new EnvelopedContentInfo();
             contentInfo.decode(data);
             Asn1.dump(contentInfo);
 
-            EnvelopedData envelopedData =
-                    contentInfo.getContentAs(EnvelopedData.class);
+            EnvelopedData envelopedData = contentInfo.getEnvelopedData();
             Asn1.dump(envelopedData);
         } catch (Exception e) {
             e.printStackTrace();

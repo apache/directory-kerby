@@ -25,6 +25,7 @@ import org.apache.kerby.cms.type.CertificateChoices;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.ContentInfo;
 import org.apache.kerby.cms.type.EncapsulatedContentInfo;
+import org.apache.kerby.cms.type.SignedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.x509.type.Certificate;
 import org.junit.Assert;
@@ -41,12 +42,11 @@ public class TestSignedData extends CmsTestBase {
             Asn1.parseAndDump(data);
             //Asn1.decodeAndDump(data);
 
-            ContentInfo contentInfo = new ContentInfo();
+            SignedContentInfo contentInfo = new SignedContentInfo();
             contentInfo.decode(data);
             //Asn1.dump(contentInfo);
 
-            SignedData signedData =
-            contentInfo.getContentAs(SignedData.class);
+            SignedData signedData = contentInfo.getSignedData();
             Asn1.dump(signedData);
 
             Asn1.dump(contentInfo);
@@ -60,7 +60,7 @@ public class TestSignedData extends CmsTestBase {
 
     @Test
     public void testEncoding() throws IOException {
-        ContentInfo contentInfo = new ContentInfo();
+        SignedContentInfo contentInfo = new SignedContentInfo();
         contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
         SignedData signedData = new SignedData();
         EncapsulatedContentInfo eContentInfo = new EncapsulatedContentInfo();
@@ -77,18 +77,18 @@ public class TestSignedData extends CmsTestBase {
         certificateSet.addElement(certificateChoices);
         signedData.setCertificates(certificateSet);
 
-        contentInfo.setContent(signedData);
+        contentInfo.setSignedData(signedData);
         Asn1.dump(contentInfo);
 
         byte[] encodedData = contentInfo.encode();
         Asn1.parseAndDump(encodedData);
 
-        ContentInfo decodedContentInfo = new ContentInfo();
+        SignedContentInfo decodedContentInfo = new SignedContentInfo();
         decodedContentInfo.decode(encodedData);
         Asn1.dump(decodedContentInfo);
 
         SignedData decodedSignedData =
-                decodedContentInfo.getContentAs(SignedData.class);
+                decodedContentInfo.getSignedData();
         Asn1.dump(decodedSignedData);
     }
 

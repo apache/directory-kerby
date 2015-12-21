@@ -20,10 +20,10 @@ package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.cms.type.CertificateSet;
-import org.apache.kerby.cms.type.ContentInfo;
 import org.apache.kerby.cms.type.DigestAlgorithmIdentifiers;
 import org.apache.kerby.cms.type.EncapsulatedContentInfo;
 import org.apache.kerby.cms.type.RevocationInfoChoices;
+import org.apache.kerby.cms.type.SignedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.cms.type.SignerInfos;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
@@ -225,7 +225,7 @@ public class PkinitCrypto {
                                              DigestAlgorithmIdentifiers digestAlgorithmIdentifiers,
                                              CertificateSet certificateSet,
                                              RevocationInfoChoices crls, SignerInfos signerInfos) throws KrbException {
-        ContentInfo contentInfo = new ContentInfo();
+        SignedContentInfo contentInfo = new SignedContentInfo();
         contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
         SignedData signedData = new SignedData();
         signedData.setVersion(version);
@@ -245,7 +245,7 @@ public class PkinitCrypto {
         if (signerInfos != null) {
             signedData.setSignerInfos(signerInfos);
         }
-        contentInfo.setContent(signedData);
+        contentInfo.setSignedData(signedData);
         return KrbCodec.encode(contentInfo);
     }
 
