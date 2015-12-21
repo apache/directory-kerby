@@ -126,12 +126,12 @@ public abstract class Asn1TaggingCollection
 
 
     @Override
-    protected int encodingBodyLength() {
+    protected int encodingBodyLength() throws IOException {
         return tagging.encodingBodyLength();
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer) {
+    protected void encodeBody(ByteBuffer buffer) throws IOException {
         tagging.encodeBody(buffer);
     }
 

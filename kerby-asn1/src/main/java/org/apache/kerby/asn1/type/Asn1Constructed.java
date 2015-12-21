@@ -69,7 +69,7 @@ public class Asn1Constructed
     }
 
     @Override
-    protected int encodingBodyLength() {
+    protected int encodingBodyLength() throws IOException {
         List<Asn1Type> valueItems = getValue();
         int allLen = 0;
         for (Asn1Type item : valueItems) {
@@ -81,7 +81,7 @@ public class Asn1Constructed
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer) {
+    protected void encodeBody(ByteBuffer buffer) throws IOException {
         List<Asn1Type> valueItems = getValue();
         for (Asn1Type item : valueItems) {
             if (item != null) {

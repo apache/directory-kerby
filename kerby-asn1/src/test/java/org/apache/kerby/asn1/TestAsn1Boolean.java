@@ -30,13 +30,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TestAsn1Boolean {
 
     @Test
-    public void testEncoding() {
+    public void testEncoding() throws IOException {
         testEncodingWith(true, "0x01 01 FF", true);
         testEncodingWith(false, "0x01 01 00", true);
     }
 
     private void testEncodingWith(Boolean value, String expectedEncoding,
-                                  boolean isDer) {
+                                  boolean isDer) throws IOException {
         byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
         Asn1Boolean aValue = new Asn1Boolean(value);
         if (isDer) {

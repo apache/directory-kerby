@@ -323,7 +323,7 @@ public class IdentityZNode {
         return keys;
     }
 
-    public void setKeys(Map<EncryptionType, EncryptionKey> keys) throws KeeperException {
+    public void setKeys(Map<EncryptionType, EncryptionKey> keys) throws KeeperException, IOException {
         if (ZKUtil.checkExists(this.zk, IdentityZNodeHelper.getKeysZNode(this.identityName)) == -1) {
             ZKUtil.createWithParents(this.zk, IdentityZNodeHelper.getKeysZNode(this.identityName));
         }

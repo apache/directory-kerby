@@ -43,7 +43,7 @@ public class TestAsn1ObjectIdentifier {
                 "0x06 08 2A 86 48 86 F7 0D 02 05");
     }
 
-    private void testEncodingWith(String oid, String expectedEncoding) {
+    private void testEncodingWith(String oid, String expectedEncoding) throws IOException {
         byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
         Asn1ObjectIdentifier aValue = new Asn1ObjectIdentifier(oid);
         aValue.useDER();

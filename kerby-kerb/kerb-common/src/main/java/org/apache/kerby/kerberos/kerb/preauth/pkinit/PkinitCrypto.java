@@ -26,6 +26,7 @@ import org.apache.kerby.cms.type.EncapsulatedContentInfo;
 import org.apache.kerby.cms.type.RevocationInfoChoices;
 import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.cms.type.SignerInfos;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
@@ -223,7 +224,7 @@ public class PkinitCrypto {
     public static byte[] cmsSignedDataCreate(byte[] data, Asn1ObjectIdentifier oid, int version,
                                              DigestAlgorithmIdentifiers digestAlgorithmIdentifiers,
                                              CertificateSet certificateSet,
-                                             RevocationInfoChoices crls, SignerInfos signerInfos) {
+                                             RevocationInfoChoices crls, SignerInfos signerInfos) throws KrbException {
         ContentInfo contentInfo = new ContentInfo();
         contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
         SignedData signedData = new SignedData();
@@ -245,7 +246,7 @@ public class PkinitCrypto {
             signedData.setSignerInfos(signerInfos);
         }
         contentInfo.setContent(signedData);
-        return contentInfo.encode();
+        return KrbCodec.encode(contentInfo);
     }
 
     public static X509Certificate[] createCertChain(PkinitPlgCryptoContext cryptoContext)

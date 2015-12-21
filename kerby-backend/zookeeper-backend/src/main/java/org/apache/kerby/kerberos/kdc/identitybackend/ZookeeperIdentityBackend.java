@@ -229,7 +229,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     protected KrbIdentity doAddIdentity(KrbIdentity identity) throws KrbException {
         try {
             setIdentity(identity);
-        } catch (KeeperException e) {
+        } catch (Exception e) {
             throw new KrbException("Fail to add identity to zookeeper", e);
         }
         return doGetIdentity(identity.getPrincipalName());
@@ -242,7 +242,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) throws KrbException {
         try {
             setIdentity(identity);
-        } catch (KeeperException e) {
+        } catch (Exception e) {
             throw new KrbException("Fail to update identity in zookeeper", e);
         }
         return doGetIdentity(identity.getPrincipalName());
@@ -296,7 +296,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
      * @param identity . The identity to update
      * @throws org.apache.zookeeper.KeeperException
      */
-    private void setIdentity(KrbIdentity identity) throws KeeperException {
+    private void setIdentity(KrbIdentity identity) throws KeeperException, IOException {
         String principalName = identity.getPrincipalName();
         principalName = replaceSlash(principalName);
         IdentityZNode identityZNode = new IdentityZNode(zooKeeper, principalName);

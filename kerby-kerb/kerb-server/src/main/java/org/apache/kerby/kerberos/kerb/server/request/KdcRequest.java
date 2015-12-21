@@ -214,7 +214,7 @@ public abstract class KdcRequest {
                 KrbFastReq fastReq = KrbCodec.decode(
                         EncryptionHandler.decrypt(encryptedData, getArmorKey(), KeyUsage.FAST_ENC),
                         KrbFastReq.class);
-                innerBodyout = fastReq.getKdcReqBody().encode();
+                innerBodyout = KrbCodec.encode(fastReq.getKdcReqBody());
 
                 // TODO: get checksumed data in stream
                 CheckSum checkSum = fastArmoredReq.getReqChecksum();
@@ -222,7 +222,8 @@ public abstract class KdcRequest {
                     LOG.warn("Checksum is empty.");
                     throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED);
                 }
-                CheckSumHandler.verifyWithKey(checkSum, getKdcReq().getReqBody().encode(),
+                byte[] reqBody = KrbCodec.encode(getKdcReq().getReqBody());
+                    CheckSumHandler.verifyWithKey(checkSum, reqBody,
                         getArmorKey().getKeyData(), KeyUsage.FAST_REQ_CHKSUM);
             }
         }

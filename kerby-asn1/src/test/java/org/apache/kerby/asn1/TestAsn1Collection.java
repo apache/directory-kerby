@@ -38,7 +38,7 @@ public class TestAsn1Collection {
     };
 
     @Test
-    public void testSequenceEncoding() {
+    public void testSequenceEncoding() throws IOException {
         Asn1Sequence seq = new Asn1Sequence();
         seq.addItem(new Asn1IA5String(TEST_STR));
         seq.addItem(new Asn1Boolean(TEST_BOOL));

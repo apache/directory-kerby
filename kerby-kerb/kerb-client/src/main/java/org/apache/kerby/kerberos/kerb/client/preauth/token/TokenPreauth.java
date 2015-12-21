@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.preauth.token;
 
 import org.apache.kerby.KOption;
 import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.TokenOption;
@@ -196,7 +197,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
 
         PaDataEntry paDataEntry = new PaDataEntry();
         paDataEntry.setPaDataType(PaDataType.TOKEN_REQUEST);
-        paDataEntry.setPaDataValue(paDataValue.encode());
+        paDataEntry.setPaDataValue(KrbCodec.encode(paDataValue));
 
         return paDataEntry;
     }

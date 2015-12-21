@@ -53,7 +53,7 @@ public abstract class Asn1CollectionType
     }
 
     @Override
-    protected int encodingBodyLength() {
+    protected int encodingBodyLength() throws IOException {
         int allLen = 0;
         int fieldLen;
         for (int i = 0; i < fields.length; ++i) {
@@ -73,7 +73,7 @@ public abstract class Asn1CollectionType
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer) {
+    protected void encodeBody(ByteBuffer buffer) throws IOException {
         for (int i = 0; i < fields.length; ++i) {
             Asn1Type field = fields[i];
             if (field != null) {
@@ -99,7 +99,7 @@ public abstract class Asn1CollectionType
         int lastPos = -1, foundPos = -1;
 
         for (Asn1ParseResult parseItem : parseResults) {
-            if (parseItem.isEOC() || parseItem.isNull()) {
+            if (parseItem.isEOC()) {
                 continue;
             }
 

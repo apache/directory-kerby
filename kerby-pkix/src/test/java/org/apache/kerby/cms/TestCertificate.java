@@ -46,10 +46,13 @@ public class TestCertificate extends CmsTestBase {
     @Test
     public void testEncodingCertificate() throws IOException {
         byte[] data = readDataFile("/certificate1.txt");
+        Asn1.parseAndDump(data);
         try {
             Certificate certificate = new Certificate();
             certificate.decode(data);
-            certificate.encode();
+            Asn1.dump(certificate);
+            byte[] encodedData = certificate.encode();
+            Asn1.parseAndDump(encodedData);
 
         } catch (Exception e) {
             e.printStackTrace();

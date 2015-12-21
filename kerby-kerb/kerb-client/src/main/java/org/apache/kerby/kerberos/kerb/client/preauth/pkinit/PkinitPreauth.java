@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.PkinitOption;
@@ -166,7 +167,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         CheckSum checkSum = null;
         try {
             checkSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
-                    kdcRequest.getKdcReq().getReqBody().encode());
+                KrbCodec.encode(kdcRequest.getKdcReq().getReqBody()));
         } catch (KrbException e) {
             throw new KrbException("Fail to encode checksum.", e);
         }
@@ -216,7 +217,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     private PaPkAsReq makePaPkAsReq(KdcRequest kdcRequest,
                                     PkinitRequestContext reqCtx,
-                                    int cusec, KerberosTime ctime, int nonce, CheckSum checkSum) {
+                                    int cusec, KerberosTime ctime, int nonce, CheckSum checkSum) throws KrbException {
 
         LOG.info("Making the PK_AS_REQ.");
         PaPkAsReq paPkAsReq = new PaPkAsReq();
@@ -265,7 +266,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             pubInfo.setAlgorithm(dhAlg);
 
             Asn1Integer publickey = new Asn1Integer(clientPubKey.getY());
-            pubInfo.setSubjectPubKey(publickey.encode());
+            pubInfo.setSubjectPubKey(KrbCodec.encode(publickey));
 
             authPack.setClientPublicValue(pubInfo);
 
@@ -290,12 +291,12 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         return paPkAsReq;
     }
 
-    private byte[] signAuthPack(AuthPack authPack) {
+    private byte[] signAuthPack(AuthPack authPack) throws KrbException {
 
         Asn1ObjectIdentifier oid = pkinitContext.cryptoctx.getIdPkinitAuthDataOID();
 
         byte[] signedDataBytes = PkinitCrypto.cmsSignedDataCreate(
-                authPack.encode(), oid, 3, null, null, null, null);
+            KrbCodec.encode(authPack), oid, 3, null, null, null, null);
 
         return signedDataBytes;
     }
@@ -363,7 +364,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         PaDataEntry paDataEntry = new PaDataEntry();
         paDataEntry.setPaDataType(PaDataType.PK_AS_REQ);
-        paDataEntry.setPaDataValue(paPkAsReq.encode());
+        paDataEntry.setPaDataValue(KrbCodec.encode(paPkAsReq));
         return paDataEntry;
     }
 }

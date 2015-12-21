@@ -122,7 +122,7 @@ public class TestTaggingEncoding {
     }
 
     @Test
-    public void testAsn1TaggingEncoding() {
+    public void testAsn1TaggingEncoding() throws IOException {
         Type1 aType1 = new Type1(TEST_STRING);
         Type2 aType2 = new Type2(aType1);
         Type3 aType3 = new Type3(aType2);
@@ -160,7 +160,7 @@ public class TestTaggingEncoding {
     }
 
     @Test
-    public void testTaggingEncodingOption() {
+    public void testTaggingEncodingOption() throws IOException {
         Type1 aType1 = new Type1(TEST_STRING);
         Type2 aType2 = new Type2(aType1);
         Type3 aType3 = new Type3(aType2);

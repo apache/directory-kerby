@@ -49,17 +49,15 @@ public class TestSignedData extends CmsTestBase {
             contentInfo.getContentAs(SignedData.class);
             Asn1.dump(signedData);
 
-            // TO BE FIXED
-            //Asn1.dump(contentInfo);
-            //byte[] encodedData = contentInfo.encode();
-            //Asn1.parseAndDump(encodedData);
+            Asn1.dump(contentInfo);
+            byte[] encodedData = contentInfo.encode();
+            Asn1.parseAndDump(encodedData);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
         }
     }
 
-    // To be fixed
     @Test
     public void testEncoding() throws IOException {
         ContentInfo contentInfo = new ContentInfo();
@@ -77,7 +75,7 @@ public class TestSignedData extends CmsTestBase {
         certificateChoices.setCertificate(certificate);
         CertificateSet certificateSet = new CertificateSet();
         certificateSet.addElement(certificateChoices);
-        //signedData.setCertificates(certificateSet);
+        signedData.setCertificates(certificateSet);
 
         contentInfo.setContent(signedData);
         Asn1.dump(contentInfo);

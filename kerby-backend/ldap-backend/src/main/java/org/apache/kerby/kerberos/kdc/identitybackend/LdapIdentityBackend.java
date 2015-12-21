@@ -155,7 +155,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         private byte[][] keys;
         private String[] kvnos;
 
-        public KeysInfo(KrbIdentity identity) {
+        public KeysInfo(KrbIdentity identity) throws KrbException {
             Map<EncryptionType, EncryptionKey> keymap = identity.getKeys();
             this.etypes = new String[keymap.size()];
             this.keys = new byte[keymap.size()][];
@@ -163,7 +163,11 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             int i = 0;
             for (Map.Entry<EncryptionType, EncryptionKey> entryKey : keymap.entrySet()) {
                 etypes[i] = entryKey.getKey().getValue() + "";
-                keys[i] = entryKey.getValue().encode();
+                try {
+                    keys[i] = entryKey.getValue().encode();
+                } catch (IOException e) {
+                    throw new KrbException("encode key failed", e);
+                }
                 kvnos[i] = entryKey.getValue().getKvno() + "";
                 i++;
             }

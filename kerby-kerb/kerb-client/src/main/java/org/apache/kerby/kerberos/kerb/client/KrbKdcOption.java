@@ -20,9 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOption;
-import org.apache.kerby.KOptionGroup;
 import org.apache.kerby.KOptionInfo;
-import org.apache.kerby.KOptionType;
 
 /**
  * This defines KDC options for client side API to use.

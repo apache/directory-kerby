@@ -24,11 +24,11 @@ import org.apache.kerby.kerberos.kerb.client.ClientUtil;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
-import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
-import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
 import java.io.IOException;
 

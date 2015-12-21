@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TestAsn1Integer {
 
     @Test
-    public void testEncoding() {
+    public void testEncoding() throws IOException {
         testEncodingWith(0, "0x02 01 00");
         testEncodingWith(1, "0x02 01 01");
         testEncodingWith(2, "0x02 01 02");
@@ -42,7 +42,7 @@ public class TestAsn1Integer {
         testEncodingWith(1234567890, "0x02 04 49 96 02 D2");
     }
 
-    private void testEncodingWith(int value, String expectedEncoding) {
+    private void testEncodingWith(int value, String expectedEncoding) throws IOException {
         byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
         Asn1Integer aValue = new Asn1Integer(value);
         aValue.useDER();

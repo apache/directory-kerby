@@ -46,7 +46,7 @@ public class TestAsn1UtcTime {
         testEncodingWith(date, "0x17 0D 30 33 30 37 30 34 31 31 33 33 32 38 5A");
     }
 
-    private void testEncodingWith(Date value, String expectedEncoding) {
+    private void testEncodingWith(Date value, String expectedEncoding) throws IOException {
         byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
         Asn1UtcTime aValue = new Asn1UtcTime(value);
         aValue.useDER();

@@ -87,7 +87,7 @@ public class Asn1Choice
     }
 
     @Override
-    public byte[] encode() {
+    public byte[] encode() throws IOException {
         Asn1Encodeable theValue = (Asn1Encodeable) getValue();
 
         if (theValue != null) {
@@ -103,7 +103,7 @@ public class Asn1Choice
     }
 
     @Override
-    public void encode(ByteBuffer buffer) {
+    public void encode(ByteBuffer buffer) throws IOException {
         Asn1Encodeable theValue = (Asn1Encodeable) getValue();
 
         if (theValue != null) {
@@ -118,7 +118,7 @@ public class Asn1Choice
     }
 
     @Override
-    protected int encodingBodyLength() {
+    public int encodingLength() {
         Asn1Encodeable theValue = (Asn1Encodeable) getValue();
 
         if (theValue != null) {
@@ -131,11 +131,22 @@ public class Asn1Choice
             }
         }
 
-        return 0;
+        return super.encodingLength();
     }
 
     @Override
-    protected void encodeBody(ByteBuffer buffer) {
+    protected int encodingBodyLength() {
+        Asn1Encodeable theValue = (Asn1Encodeable) getValue();
+
+        if (theValue == null) {
+            return 0;
+        }
+
+        return -1; // Indicate error, shouldn't be here.
+    }
+
+    @Override
+    protected void encodeBody(ByteBuffer buffer) throws IOException {
         Asn1Encodeable theValue = (Asn1Encodeable) getValue();
 
         if (theValue != null) {

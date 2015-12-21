@@ -130,7 +130,7 @@ public class PKCS8Key {
      *                                  occured.
      */
     public PKCS8Key(final ByteArrayInputStream in, char[] password)
-        throws GeneralSecurityException {
+        throws GeneralSecurityException, IOException {
         this(Util.streamToBytes(in), password);
     }
 
@@ -142,7 +142,7 @@ public class PKCS8Key {
      *                                  occured.
      */
     public PKCS8Key(final byte[] encoded, char[] password)
-        throws GeneralSecurityException {
+        throws GeneralSecurityException, IOException {
         DecryptResult decryptResult =
             new DecryptResult("UNENCRYPTED", 0, encoded);
 
@@ -925,7 +925,7 @@ public class PKCS8Key {
     }
 
     public static byte[] formatAsPKCS8(byte[] privateKey, String oid,
-                                       PkcsStructure pkcs8) {
+                                       PkcsStructure pkcs8) throws IOException {
         Asn1Integer derZero = new Asn1Integer(BigInteger.ZERO);
         Asn1Sequence outterSeq = new Asn1Sequence();
         Asn1Sequence innerSeq = new Asn1Sequence();

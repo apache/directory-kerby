@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
@@ -69,7 +70,7 @@ public class ArmoredRequest {
         KrbFastRequestState state = kdcRequest.getFastRequestState();
         fastAsArmor(state, kdcRequest.getArmorKey(), subKey, credential, kdcReq);
         kdcRequest.setFastRequestState(state);
-        kdcRequest.setOuterRequestBody(state.getFastOuterRequest().encode());
+        kdcRequest.setOuterRequestBody(KrbCodec.encode(state.getFastOuterRequest()));
         kdcReq.getPaData().addElement(makeFastEntry(state, kdcReq,
             kdcRequest.getOuterRequestBody()));
     }
@@ -149,7 +150,7 @@ public class ArmoredRequest {
 
         PaDataEntry paDataEntry = new PaDataEntry();
         paDataEntry.setPaDataType(PaDataType.FX_FAST);
-        paDataEntry.setPaDataValue(armoredReq.encode());
+        paDataEntry.setPaDataValue(KrbCodec.encode(armoredReq));
 
         return paDataEntry;
     }
@@ -159,7 +160,7 @@ public class ArmoredRequest {
         KrbFastArmor fastArmor = new KrbFastArmor();
         fastArmor.setArmorType(ArmorType.ARMOR_AP_REQUEST);
         ApReq apReq = makeApReq(subKey, credential);
-        fastArmor.setArmorValue(apReq.encode());
+        fastArmor.setArmorValue(KrbCodec.encode(apReq));
         return fastArmor;
     }
 

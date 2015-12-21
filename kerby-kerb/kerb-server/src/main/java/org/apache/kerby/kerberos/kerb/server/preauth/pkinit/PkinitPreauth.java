@@ -280,13 +280,14 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         paDataEntry.setPaDataType(PaDataType.PK_AS_REP);
         //TODO CHOICE
         //paDataEntry.setPaDataValue(paPkAsRep.encode());
-        paDataEntry.setPaDataValue(paPkAsRep.getDHRepInfo().encode());
+        byte[] paData = KrbCodec.encode(paPkAsRep.getDHRepInfo());
+        paDataEntry.setPaDataValue(paData);
 
         return paDataEntry;
     }
 
     private PaPkAsRep makePaPkAsRep(PkinitPlgCryptoContext cryptoContext,
-                                    DHPublicKey severPubKey, String identityString) {
+                                    DHPublicKey severPubKey, String identityString) throws KrbException {
 
         List<String> identityList = Arrays.asList(identityString.split(","));
 
@@ -322,7 +323,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         KdcDHKeyInfo kdcDhKeyInfo = new KdcDHKeyInfo();
 
         Asn1Integer publickey = new Asn1Integer(severPubKey.getY());
-        kdcDhKeyInfo.setSubjectPublicKey(publickey.encode());
+        byte[] pubKeyData = KrbCodec.encode(publickey);
+        kdcDhKeyInfo.setSubjectPublicKey(pubKeyData);
         kdcDhKeyInfo.setNonce(0);
         kdcDhKeyInfo.setDHKeyExpiration(
                 new KerberosTime(System.currentTimeMillis() + KerberosTime.DAY));
@@ -338,7 +340,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         }
 
         Asn1ObjectIdentifier oid = cryptoContext.getIdPkinitDHKeyDataOID();
-        signedDataBytes = PkinitCrypto.cmsSignedDataCreate(kdcDhKeyInfo.encode(), oid, 3, null,
+        signedDataBytes = PkinitCrypto.cmsSignedDataCreate(KrbCodec.encode(kdcDhKeyInfo), oid, 3, null,
                 null, null, null);
 
         dhRepInfo.setDHSignedData(signedDataBytes);

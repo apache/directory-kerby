@@ -37,11 +37,11 @@ public final class Asn1 {
 
     }
 
-    public static void encode(ByteBuffer buffer, Asn1Type value) {
+    public static void encode(ByteBuffer buffer, Asn1Type value) throws IOException {
         value.encode(buffer);
     }
 
-    public static byte[] encode(Asn1Type value) {
+    public static byte[] encode(Asn1Type value) throws IOException {
         return value.encode();
     }
 

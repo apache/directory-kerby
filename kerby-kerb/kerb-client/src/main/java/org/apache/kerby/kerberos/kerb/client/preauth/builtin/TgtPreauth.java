@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.builtin;
 
+import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
@@ -72,7 +73,7 @@ public class TgtPreauth extends AbstractPreauthPlugin {
 
         PaDataEntry paEntry = new PaDataEntry();
         paEntry.setPaDataType(PaDataType.TGS_REQ);
-        paEntry.setPaDataValue(tgsRequest.getApReq().encode());
+        paEntry.setPaDataValue(KrbCodec.encode(tgsRequest.getApReq()));
 
         return paEntry;
     }

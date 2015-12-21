@@ -35,7 +35,7 @@ public class TestPersonnelRecord {
     static boolean verbose = false;
 
     @Test
-    public void testEncoding() {
+    public void testEncoding() throws IOException {
         PersonnelRecord pr = TestData.createSamplePersonnel();
 
         if (verbose) {

@@ -129,7 +129,7 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
     }
 
     @Override
-    public byte[] encode() {
+    public byte[] encode() throws IOException {
         int len = encodingLength();
         ByteBuffer byteBuffer = ByteBuffer.allocate(len);
         encode(byteBuffer);
@@ -138,14 +138,14 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
     }
 
     @Override
-    public void encode(ByteBuffer buffer) {
+    public void encode(ByteBuffer buffer) throws IOException {
         Asn1Util.encodeTag(buffer, tag());
         int bodyLen = getBodyLength();
         Asn1Util.encodeLength(buffer, bodyLen);
         encodeBody(buffer);
     }
 
-    protected void encodeBody(ByteBuffer buffer) { }
+    protected void encodeBody(ByteBuffer buffer) throws IOException { }
 
     @Override
     public void decode(byte[] content) throws IOException {
@@ -159,18 +159,29 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
 
     @Override
     protected int getHeaderLength() {
-        return encodingHeaderLength();
+        try {
+            return encodingHeaderLength();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     protected int getBodyLength() {
         if (bodyLength == -1) {
-            bodyLength = encodingBodyLength();
+            try {
+                bodyLength = encodingBodyLength();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if (bodyLength == -1) {
+                throw new RuntimeException("Unexpected body length: -1");
+            }
         }
         return bodyLength;
     }
 
-    protected int encodingHeaderLength() {
+    protected int encodingHeaderLength() throws IOException {
         int headerLen = Asn1Util.lengthOfTagLength(tagNo());
         int bodyLen = getBodyLength();
         headerLen += Asn1Util.lengthOfBodyLength(bodyLen);
@@ -178,7 +189,7 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
         return headerLen;
     }
 
-    protected abstract int encodingBodyLength();
+    protected abstract int encodingBodyLength() throws IOException;
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
@@ -215,7 +226,7 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
     }
 
     @Override
-    public byte[] taggedEncode(TaggingOption taggingOption) {
+    public byte[] taggedEncode(TaggingOption taggingOption) throws IOException {
         int len = taggedEncodingLength(taggingOption);
         ByteBuffer byteBuffer = ByteBuffer.allocate(len);
         taggedEncode(byteBuffer, taggingOption);
@@ -224,7 +235,7 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
     }
 
     @Override
-    public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption) {
+    public void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption) throws IOException {
         Tag taggingTag = taggingOption.getTag(!isPrimitive());
         Asn1Util.encodeTag(buffer, taggingTag);
 

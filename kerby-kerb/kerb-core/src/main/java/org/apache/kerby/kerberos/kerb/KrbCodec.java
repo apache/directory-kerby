@@ -38,7 +38,19 @@ import java.nio.ByteBuffer;
 public class KrbCodec {
 
     public static byte[] encode(Asn1Type krbObj) throws KrbException {
-        return krbObj.encode();
+        try {
+            return krbObj.encode();
+        } catch (IOException e) {
+            throw new KrbException("encode failed", e);
+        }
+    }
+
+    public static void encode(Asn1Type krbObj, ByteBuffer buffer) throws KrbException {
+        try {
+            krbObj.encode(buffer);
+        } catch (IOException e) {
+            throw new KrbException("encode failed", e);
+        }
     }
 
     public static <T extends Asn1Type> T decode(

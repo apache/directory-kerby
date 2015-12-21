@@ -20,13 +20,21 @@
 package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.junit.Before;
+import org.junit.Test;
+
+import java.net.URL;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnonymousPkinitKdcTest extends KdcTestBase {
 
-    //private String serverPrincipal;
+    private String serverPrincipal;
 
     @Before
     public void setUp() throws Exception {
@@ -50,8 +58,6 @@ public class AnonymousPkinitKdcTest extends KdcTestBase {
         getKdcServer().createPrincipal("WELLKNOWN/ANONYMOUS");
     }
 
-    // TO BE FIXED
-    /*
     @Test
     public void testAnonymity() throws Exception {
 
@@ -72,5 +78,5 @@ public class AnonymousPkinitKdcTest extends KdcTestBase {
         serverPrincipal = getServerPrincipal();
         SgtTicket tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
         assertThat(tkt).isNotNull();
-    }*/
+    }
 }

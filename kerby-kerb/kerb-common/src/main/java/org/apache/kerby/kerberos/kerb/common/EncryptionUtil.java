@@ -126,7 +126,7 @@ public class EncryptionUtil {
 
     public static EncryptedData seal(Asn1Encodeable asn1Type,
                                      EncryptionKey key, KeyUsage usage) throws KrbException {
-        byte[] encoded = asn1Type.encode();
+        byte[] encoded = KrbCodec.encode(asn1Type);
         EncryptedData encrypted = EncryptionHandler.encrypt(encoded, key, usage);
         return encrypted;
     }

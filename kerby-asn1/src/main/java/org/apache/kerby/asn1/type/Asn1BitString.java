@@ -53,15 +53,15 @@ public class Asn1BitString extends Asn1Simple<byte[]> {
         if (body != null) {
             return body.length + 1;
         }
-        return 1;
+        return 0;
     }
 
     @Override
     protected void toBytes() {
         byte[] bytes = new byte[encodingBodyLength()];
-        bytes[0] = (byte) padding;
         byte[] body = getValue();
         if (body != null) {
+            bytes[0] = (byte) padding;
             System.arraycopy(body, 0, bytes, 1, bytes.length - 1);
         }
         setBytes(bytes);

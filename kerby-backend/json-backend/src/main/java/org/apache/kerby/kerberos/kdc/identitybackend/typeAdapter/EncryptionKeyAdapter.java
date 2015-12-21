@@ -26,6 +26,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.util.HexUtil;
 
@@ -56,7 +58,11 @@ public class EncryptionKeyAdapter implements JsonSerializer<EncryptionKey>,
                                  Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("kvno", encryptionKey.getKvno());
-        jsonObject.addProperty("key", HexUtil.bytesToHex(encryptionKey.encode()));
+        try {
+            jsonObject.addProperty("key", HexUtil.bytesToHex(KrbCodec.encode(encryptionKey)));
+        } catch (KrbException e) {
+            throw new RuntimeException(e);
+        }
         return jsonObject;
     }
 }

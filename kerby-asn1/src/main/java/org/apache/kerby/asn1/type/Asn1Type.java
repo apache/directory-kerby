@@ -121,19 +121,19 @@ public interface Asn1Type {
      * Generally it's called to prepare for the encoding buffer.
      * @return length of encoding bytes
      */
-    int encodingLength();
+    int encodingLength() throws IOException;
 
     /**
      * Encode the type, by recursively.
      * @return encoded bytes
      */
-    byte[] encode();
+    byte[] encode() throws IOException;
 
     /**
      * Encode the type, by recursively, using the provided buffer.
      * @param buffer The byte buffer
      */
-    void encode(ByteBuffer buffer);
+    void encode(ByteBuffer buffer) throws IOException;
 
     /**
      * Decode the content bytes into this type.
@@ -154,14 +154,14 @@ public interface Asn1Type {
      * @param taggingOption The tagging option
      * @return encoded bytes
      */
-    byte[] taggedEncode(TaggingOption taggingOption);
+    byte[] taggedEncode(TaggingOption taggingOption) throws IOException;
 
     /**
      * Tag and encode this type using the provided tagging option.
      * @param buffer The byte buffer
      * @param taggingOption The tagging option
      */
-    void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption);
+    void taggedEncode(ByteBuffer buffer, TaggingOption taggingOption) throws IOException;
 
     /**
      * Decode the content bytes into this type as it's tagged with the provided

@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2;
 import org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry;
@@ -35,7 +36,6 @@ import org.apache.kerby.kerberos.kerb.type.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +80,7 @@ public abstract class KrbHandler {
             requestMessage = ByteBuffer.allocate(bodyLen + 4);
             requestMessage.putInt(bodyLen);
         }
-        kdcReq.encode(requestMessage);
+        KrbCodec.encode(kdcReq, requestMessage);
         requestMessage.flip();
         try {
             sendMessage(kdcRequest, requestMessage);

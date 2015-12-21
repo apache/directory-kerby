@@ -129,7 +129,7 @@ public class KdcHandler {
         } else {
             responseMessage = ByteBuffer.allocate(bodyLen);
         }
-        krbResponse.encode(responseMessage);
+        KrbCodec.encode(krbResponse, responseMessage);
         responseMessage.flip();
 
         return responseMessage;

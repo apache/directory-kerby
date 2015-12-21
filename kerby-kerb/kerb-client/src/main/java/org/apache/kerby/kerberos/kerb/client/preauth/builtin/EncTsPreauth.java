@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.builtin;
 
+import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
@@ -26,7 +28,6 @@ import org.apache.kerby.kerberos.kerb.preauth.PaFlag;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlags;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.preauth.builtin.EncTsPreauthMeta;
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
@@ -106,7 +107,7 @@ public class EncTsPreauth extends AbstractPreauthPlugin {
                 kdcRequest.getAsKey(), KeyUsage.AS_REQ_PA_ENC_TS);
         PaDataEntry tsPaEntry = new PaDataEntry();
         tsPaEntry.setPaDataType(PaDataType.ENC_TIMESTAMP);
-        tsPaEntry.setPaDataValue(paDataValue.encode());
+        tsPaEntry.setPaDataValue(KrbCodec.encode(paDataValue));
 
         return tsPaEntry;
     }
