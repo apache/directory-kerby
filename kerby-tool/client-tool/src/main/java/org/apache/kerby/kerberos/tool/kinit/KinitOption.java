@@ -93,7 +93,8 @@ public enum KinitOption implements KOption {
     public static KinitOption fromName(String name) {
         if (name != null) {
             for (KinitOption ko : values()) {
-                if (ko.name().equals(name)) {
+                if (ko.optionInfo != null
+                        && ko.optionInfo.getName().equals(name)) {
                     return ko;
                 }
             }
