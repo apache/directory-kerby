@@ -31,10 +31,14 @@ import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
+import org.apache.kerby.x509.type.DHParameter;
+import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -114,6 +118,29 @@ public class TestPkinitAnonymousAsReqCodec {
 
         SignedData signedData = contentInfo.getContentAs(SignedData.class);
         assertThat(signedData.getCertificates().getElements().isEmpty()).isEqualTo(true);
-        assertThat(signedData.getEncapContentInfo().getContentType().getValue()).isEqualTo("1.3.6.1.5.2.3.1");
+        assertThat(signedData.getEncapContentInfo().getContentType().getValue())
+                .isEqualTo("1.3.6.1.5.2.3.1");
+
+        AuthPack authPack = new AuthPack();
+        Asn1.parseAndDump(signedData.getEncapContentInfo().getContent());
+        authPack.decode(signedData.getEncapContentInfo().getContent());
+        assertThat(authPack.getsupportedCmsTypes().getElements().size()).isEqualTo(1);
+        assertThat(authPack.getsupportedCmsTypes().getElements().get(0).getAlgorithm().getValue())
+                .isEqualTo("1.2.840.113549.3.7");
+        SubjectPublicKeyInfo subjectPublicKeyInfo = authPack.getClientPublicValue();
+        assertThat(subjectPublicKeyInfo.getAlgorithm().getAlgorithm().getValue())
+                .isEqualTo("1.2.840.10046.2.1");
+        DHParameter dhParameter = subjectPublicKeyInfo.getAlgorithm().getParametersAs(DHParameter.class);
+        assertThat(dhParameter.getG()).isEqualTo(BigInteger.valueOf(2));
+
+        assertThat(authPack.getsupportedKDFs().getElements().size()).isEqualTo(3);
+
+        //TO BE FIXED
+//        assertThat(authPack.getsupportedKDFs().getElements().get(0).getValue())
+//                .isEqualTo("1.3.6.1.5.2.3.6.2");
+//        assertThat(authPack.getsupportedKDFs().getElements().get(1).getValue())
+//                .isEqualTo("1.3.6.1.5.2.3.6.1");
+//        assertThat(authPack.getsupportedKDFs().getElements().get(2).getValue())
+//                .isEqualTo("1.3.6.1.5.2.3.6.3");
     }
 }

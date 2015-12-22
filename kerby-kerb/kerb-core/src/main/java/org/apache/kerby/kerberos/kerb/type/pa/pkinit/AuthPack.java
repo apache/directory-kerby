@@ -40,7 +40,8 @@ public class AuthPack extends KrbSequenceType {
         PK_AUTHENTICATOR,
         CLIENT_PUBLIC_VALUE,
         SUPPORTED_CMS_TYPES,
-        CLIENT_DH_NONCE;
+        CLIENT_DH_NONCE,
+        SUPPORTED_KDFS;
 
         @Override
         public int getValue() {
@@ -57,7 +58,8 @@ public class AuthPack extends KrbSequenceType {
             new ExplicitField(PK_AUTHENTICATOR, PkAuthenticator.class),
             new ExplicitField(CLIENT_PUBLIC_VALUE, SubjectPublicKeyInfo.class),
             new ExplicitField(SUPPORTED_CMS_TYPES, AlgorithmIdentifiers.class),
-            new ExplicitField(CLIENT_DH_NONCE, DHNonce.class)
+            new ExplicitField(CLIENT_DH_NONCE, DHNonce.class),
+            new ExplicitField(SUPPORTED_KDFS, SupportedKDFs.class)
     };
 
     public AuthPack() {
@@ -94,5 +96,13 @@ public class AuthPack extends KrbSequenceType {
 
     public void setClientDhNonce(DHNonce dhNonce) {
         setFieldAs(CLIENT_DH_NONCE, dhNonce);
+    }
+
+    public SupportedKDFs getsupportedKDFs() {
+        return getFieldAs(SUPPORTED_KDFS, SupportedKDFs.class);
+    }
+
+    public void setsupportedKDFs(SupportedKDFs supportedKDFs) {
+        setFieldAs(SUPPORTED_KDFS, supportedKDFs);
     }
 }
