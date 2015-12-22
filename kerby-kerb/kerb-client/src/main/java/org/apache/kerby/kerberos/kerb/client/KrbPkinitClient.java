@@ -86,11 +86,10 @@ public class KrbPkinitClient extends KrbClientBase {
      * @return TGT
      * @throws KrbException e
      */
-    public TgtTicket requestTgt(String anchors) throws KrbException {
+    public TgtTicket requestTgt() throws KrbException {
         KOptions requestOptions = new KOptions();
         requestOptions.add(PkinitOption.USE_ANONYMOUS);
         requestOptions.add(KrbOption.CLIENT_PRINCIPAL, "WELLKNOWN/ANONYMOUS");
-        requestOptions.add(PkinitOption.X509_ANCHORS, anchors);
         return requestTgt(requestOptions);
     }
 }

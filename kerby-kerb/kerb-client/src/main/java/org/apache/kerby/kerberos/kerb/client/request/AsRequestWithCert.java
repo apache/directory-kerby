@@ -46,6 +46,7 @@ import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.x509.type.Certificate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,10 +109,8 @@ public class AsRequestWithCert extends AsRequest {
             if (paEntry.getPaDataType() == PaDataType.PK_AS_REP) {
                 LOG.info("processing PK_AS_REP");
 
-                //TODO CHOICE
-                //PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
-                //DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
-                DHRepInfo dhRepInfo = KrbCodec.decode(paEntry.getPaDataValue(), DHRepInfo.class);
+                PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
+                DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
 
                 byte[] dhSignedData = dhRepInfo.getDHSignedData();
 
@@ -127,8 +126,8 @@ public class AsRequestWithCert extends AsRequest {
                 PkinitCrypto.verifyCMSSignedData(
                         CMSMessageType.CMS_SIGN_SERVER, signedData);
 
-                String anchorFileName =
-                    getPreauthOptions().getStringOption(PkinitOption.X509_ANCHORS);
+
+                String anchorFileName = getContext().getConfig().getPkinitAnchors().get(0);
 
                 X509Certificate x509Certificate = null;
                 try {

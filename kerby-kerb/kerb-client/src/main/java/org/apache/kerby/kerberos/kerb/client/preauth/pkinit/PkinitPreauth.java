@@ -20,8 +20,10 @@
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.cms.type.SignedContentInfo;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
@@ -57,6 +59,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Calendar;

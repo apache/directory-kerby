@@ -116,8 +116,12 @@ public class TestPkinitAnonymousAsReqCodec {
         assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
         Asn1.dump(contentInfo);
 
-        SignedData signedData = contentInfo.getContentAs(SignedData.class);
-        assertThat(signedData.getCertificates().getElements().isEmpty()).isEqualTo(true);
+        SignedData signedData = contentInfo.getSignedData();
+        assertThat(signedData.getVersion()).isEqualTo(3);
+        assertThat(signedData.getDigestAlgorithms().getElements().isEmpty()).isTrue();
+        assertThat(signedData.getCertificates().getElements().isEmpty()).isTrue();
+        assertThat(signedData.getCrls().getElements().isEmpty()).isTrue();
+        assertThat(signedData.getSignerInfos().getElements().isEmpty()).isTrue();
         assertThat(signedData.getEncapContentInfo().getContentType().getValue())
                 .isEqualTo("1.3.6.1.5.2.3.1");
 
