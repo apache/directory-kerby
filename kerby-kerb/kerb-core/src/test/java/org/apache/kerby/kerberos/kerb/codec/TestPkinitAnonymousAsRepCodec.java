@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.codec;
 
 import org.apache.kerby.asn1.Asn1;
-import org.apache.kerby.cms.type.ContentInfo;
 import org.apache.kerby.cms.type.EncapsulatedContentInfo;
+import org.apache.kerby.cms.type.SignedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
@@ -63,25 +63,7 @@ public class TestPkinitAnonymousAsRepCodec {
         //Asn1.parseAndDump(padataValue);
         paPkAsRep.decode(padataValue);
 
-        assertThat(paPkAsRep.getDHRepInfo()).isNotNull();
-
-        DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
-        byte[] dhSignedData = dhRepInfo.getDHSignedData();
-        ContentInfo contentInfo = new ContentInfo();
-        contentInfo.decode(dhSignedData);
-        assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
-        SignedData signedData = contentInfo.getContentAs(SignedData.class);
-        assertThat(signedData.getCertificates()).isNotNull();
-
-        EncapsulatedContentInfo encapsulatedContentInfo = signedData.getEncapContentInfo();
-        assertThat(encapsulatedContentInfo.getContentType().getValue()).isEqualTo("1.3.6.1.5.2.3.2");
-
-        byte[] eContentInfo = encapsulatedContentInfo.getContent();
-        KdcDHKeyInfo kdcDhKeyInfo = new KdcDHKeyInfo();
-        kdcDhKeyInfo.decode(eContentInfo);
-        assertThat(kdcDhKeyInfo.getSubjectPublicKey()).isNotNull();
-        assertThat(kdcDhKeyInfo.getDHKeyExpiration()).isNotNull();
-        assertThat(kdcDhKeyInfo.getNonce()).isNotNull();
+        testPaPkAsRep(paPkAsRep);
 
         PaDataEntry etypeInfo2Entry = paData.findEntry(PaDataType.ETYPE_INFO2);
         assertThat(etypeInfo2Entry.getPaDataType()).isEqualTo(PaDataType.ETYPE_INFO2);
@@ -112,7 +94,30 @@ public class TestPkinitAnonymousAsRepCodec {
         // Test encode PaPkAsRep
         byte[] encodedPaPkAsRep = paPkAsRep.encode();
         Asn1.parseAndDump(encodedPaPkAsRep);
-        PaPkAsRep decodedPaPkAsReq = new PaPkAsRep();
-        decodedPaPkAsReq.decode(encodedPaPkAsRep);
+        PaPkAsRep decodedPaPkAsRep = new PaPkAsRep();
+        decodedPaPkAsRep.decode(encodedPaPkAsRep);
+        testPaPkAsRep(decodedPaPkAsRep);
+    }
+
+    private void testPaPkAsRep(PaPkAsRep paPkAsRep) throws IOException {
+        assertThat(paPkAsRep.getDHRepInfo()).isNotNull();
+
+        DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
+        byte[] dhSignedData = dhRepInfo.getDHSignedData();
+        SignedContentInfo contentInfo = new SignedContentInfo();
+        contentInfo.decode(dhSignedData);
+        assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
+        SignedData signedData = contentInfo.getContentAs(SignedData.class);
+        assertThat(signedData.getCertificates()).isNotNull();
+
+        EncapsulatedContentInfo encapsulatedContentInfo = signedData.getEncapContentInfo();
+        assertThat(encapsulatedContentInfo.getContentType().getValue()).isEqualTo("1.3.6.1.5.2.3.2");
+
+        byte[] eContentInfo = encapsulatedContentInfo.getContent();
+        KdcDHKeyInfo kdcDhKeyInfo = new KdcDHKeyInfo();
+        kdcDhKeyInfo.decode(eContentInfo);
+        assertThat(kdcDhKeyInfo.getSubjectPublicKey()).isNotNull();
+        assertThat(kdcDhKeyInfo.getDHKeyExpiration()).isNotNull();
+        assertThat(kdcDhKeyInfo.getNonce()).isNotNull();
     }
 }

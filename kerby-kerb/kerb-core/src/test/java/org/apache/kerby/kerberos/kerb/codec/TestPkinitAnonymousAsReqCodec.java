@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.codec;
 
 import org.apache.kerby.asn1.Asn1;
-import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.SignedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
@@ -68,15 +68,8 @@ public class TestPkinitAnonymousAsReqCodec {
 
         PaPkAsReq paPkAsReq = new PaPkAsReq();
         paPkAsReq.decode(pkAsReqEntry.getPaDataValue());
-        ContentInfo contentInfo = new ContentInfo();
-        Asn1.parseAndDump(paPkAsReq.getSignedAuthPack());
-        contentInfo.decode(paPkAsReq.getSignedAuthPack());
-        assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
-        Asn1.dump(contentInfo);
 
-        SignedData signedData = contentInfo.getContentAs(SignedData.class);
-        assertThat(signedData.getCertificates().getElements().isEmpty()).isEqualTo(true);
-        assertThat(signedData.getEncapContentInfo().getContentType().getValue()).isEqualTo("1.3.6.1.5.2.3.1");
+        testPaPkAsReq(paPkAsReq);
 
         PaDataEntry encpaEntry = paData.findEntry(PaDataType.ENCPADATA_REQ_ENC_PA_REP);
         assertThat(encpaEntry.getPaDataType()).isEqualTo(PaDataType.ENCPADATA_REQ_ENC_PA_REP);
@@ -109,5 +102,18 @@ public class TestPkinitAnonymousAsReqCodec {
         byte[] encodedPaPkAsReq = paPkAsReq.encode();
         PaPkAsReq decodedPaPkAsReq = new PaPkAsReq();
         decodedPaPkAsReq.decode(encodedPaPkAsReq);
+        testPaPkAsReq(decodedPaPkAsReq);
+    }
+
+    private void testPaPkAsReq(PaPkAsReq paPkAsReq) throws IOException {
+        SignedContentInfo contentInfo = new SignedContentInfo();
+        Asn1.parseAndDump(paPkAsReq.getSignedAuthPack());
+        contentInfo.decode(paPkAsReq.getSignedAuthPack());
+        assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
+        Asn1.dump(contentInfo);
+
+        SignedData signedData = contentInfo.getContentAs(SignedData.class);
+        assertThat(signedData.getCertificates().getElements().isEmpty()).isEqualTo(true);
+        assertThat(signedData.getEncapContentInfo().getContentType().getValue()).isEqualTo("1.3.6.1.5.2.3.1");
     }
 }
