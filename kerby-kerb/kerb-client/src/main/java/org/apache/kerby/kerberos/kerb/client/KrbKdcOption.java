@@ -44,7 +44,9 @@ public enum KrbKdcOption implements KOption {
     RENEWABLE_OK(new KOptionInfo("renewable-ok", "renewable ok",
         KrbOptionGroup.KDC_FLAGS)),
     CANONICALIZE(new KOptionInfo("canonicalize", "canonicalize",
-        KrbOptionGroup.KDC_FLAGS));
+        KrbOptionGroup.KDC_FLAGS)),
+    ANONYMOUS(new KOptionInfo("-n", "anonymous",
+              KrbOptionGroup.KDC_FLAGS));
 
     private final KOptionInfo optionInfo;
 

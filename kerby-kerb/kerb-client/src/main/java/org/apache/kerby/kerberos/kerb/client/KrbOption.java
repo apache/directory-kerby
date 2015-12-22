@@ -74,7 +74,8 @@ public enum KrbOption implements KOption {
     ARMOR_CACHE(new KOptionInfo("armor-cache", "armor credential cache",
         KOptionType.STR)),
     USE_TGT(new KOptionInfo("use-tgt", "use tgt to get service ticket",
-        KOptionType.OBJ));
+        KOptionType.OBJ)),
+    CONF_DIR(new KOptionInfo("-conf", "conf dir", KrbOptionGroup.KRB, KOptionType.DIR));
 
     private final KOptionInfo optionInfo;
 
@@ -91,7 +92,7 @@ public enum KrbOption implements KOption {
         if (optionName != null) {
             for (KrbOption ko : values()) {
                 if (ko.optionInfo != null
-                    && ko.name().equals(optionName)) {
+                    && ko.optionInfo.getName().equals(optionName)) {
                     return ko;
                 }
             }

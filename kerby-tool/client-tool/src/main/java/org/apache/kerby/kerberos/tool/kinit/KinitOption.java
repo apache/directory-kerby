@@ -77,7 +77,7 @@ public enum KinitOption implements KOption {
         KrbOptionGroup.KRB, KOptionType.FILE)),
 
     XATTR(new KOptionInfo("-X", "<attribute>[=<value>]", KOptionType.STR)),
-    CONF_DIR(new KOptionInfo("-conf", "conf dir", KOptionType.DIR));
+    CONF_DIR(new KOptionInfo("-conf", "conf dir", KrbOptionGroup.KRB, KOptionType.DIR));
 
     private final KOptionInfo optionInfo;
 
