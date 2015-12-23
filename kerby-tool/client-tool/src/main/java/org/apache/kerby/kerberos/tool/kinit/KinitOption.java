@@ -59,7 +59,7 @@ public enum KinitOption implements KOption {
     CANONICALIZE(new KOptionInfo("-C", "canonicalize",
         KrbOptionGroup.KDC_FLAGS)),
 
-    USE_PASSWD(new KOptionInfo("using password", "using password",
+    USE_PASSWD(new KOptionInfo("using-password", "using password",
         KrbOptionGroup.KRB)),
     USER_PASSWD(new KOptionInfo("user-passwd", "User plain password",
         KrbOptionGroup.KRB)),

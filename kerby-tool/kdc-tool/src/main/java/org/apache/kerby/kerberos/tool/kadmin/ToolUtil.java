@@ -56,7 +56,7 @@ public class ToolUtil {
                 error = "Invalid parameter:" + opt + " , it does not belong to any option.";
             }
 
-            if (kOption.getOptionInfo().getType() != KOptionType.NOV) {
+            if (kOption != KadminOption.NONE && kOption.getOptionInfo().getType() != KOptionType.NOV) {
                 // require a parameter
                 param = null;
                 if (i <= endIndex) {
@@ -72,7 +72,9 @@ public class ToolUtil {
                 System.out.println(error);
                 return null;
             }
-            kOptions.add(kOption);
+            if (kOption != KadminOption.NONE) {
+                kOptions.add(kOption);
+            }
         }
         return kOptions;
     }

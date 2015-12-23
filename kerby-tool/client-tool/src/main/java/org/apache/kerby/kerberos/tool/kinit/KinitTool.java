@@ -215,7 +215,7 @@ public class KinitTool {
                 kto = KinitOption.NONE;
             }
 
-            if (kto.getOptionInfo().getType() != KOptionType.NOV) {
+            if (kto != KinitOption.NONE && kto.getOptionInfo().getType() != KOptionType.NOV) {
                 // require a parameter
                 param = null;
                 if (i < args.length) {
@@ -231,7 +231,9 @@ public class KinitTool {
             if (error != null) {
                 printUsage(error);
             }
-            ktOptions.add(kto);
+            if (kto != KinitOption.NONE) {
+                ktOptions.add(kto);
+            }
         }
 
         if (principal == null) {
