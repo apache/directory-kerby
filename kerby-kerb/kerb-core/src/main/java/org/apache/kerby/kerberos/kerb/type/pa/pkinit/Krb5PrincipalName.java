@@ -26,8 +26,6 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.base.Realm;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.MyEnum.*;
-
 /**
  KRB5PrincipalName ::= SEQUENCE {
      realm                   [0] Realm,
@@ -35,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.Krb5PrincipalName.My
  }
  */
 public class Krb5PrincipalName extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum Krb5PrincipalNameField implements EnumType {
         REALM,
         PRINCIPAL_NAME;
 
@@ -51,8 +49,8 @@ public class Krb5PrincipalName extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(REALM, Realm.class),
-            new ExplicitField(PRINCIPAL_NAME, PrincipalName.class)
+            new ExplicitField(Krb5PrincipalNameField.REALM, Realm.class),
+            new ExplicitField(Krb5PrincipalNameField.PRINCIPAL_NAME, PrincipalName.class)
     };
 
     public Krb5PrincipalName() {
@@ -60,18 +58,18 @@ public class Krb5PrincipalName extends KrbSequenceType {
     }
 
     public String getRelm() {
-        return getFieldAsString(REALM);
+        return getFieldAsString(Krb5PrincipalNameField.REALM);
     }
 
     public void setRealm(String realm) {
-        setFieldAsString(REALM, realm);
+        setFieldAsString(Krb5PrincipalNameField.REALM, realm);
     }
 
     public PrincipalName getPrincipalName() {
-        return getFieldAs(PRINCIPAL_NAME, PrincipalName.class);
+        return getFieldAs(Krb5PrincipalNameField.PRINCIPAL_NAME, PrincipalName.class);
     }
 
     public void setPrincipalName(PrincipalName principalName) {
-        setFieldAs(PRINCIPAL_NAME, principalName);
+        setFieldAs(Krb5PrincipalNameField.PRINCIPAL_NAME, principalName);
     }
 }

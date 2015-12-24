@@ -24,10 +24,8 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.base.KrbMessage.MyEnum.*;
-
 public abstract class KrbMessage extends KrbAppSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KrbMessageField implements EnumType {
         PVNO,
         MSG_TYPE;
 
@@ -55,15 +53,15 @@ public abstract class KrbMessage extends KrbAppSequenceType {
     }
 
     protected void setPvno(int pvno) {
-        setFieldAsInt(PVNO, pvno);
+        setFieldAsInt(KrbMessageField.PVNO, pvno);
     }
 
     public KrbMessageType getMsgType() {
-        Integer value = getFieldAsInteger(MSG_TYPE);
+        Integer value = getFieldAsInteger(KrbMessageField.MSG_TYPE);
         return KrbMessageType.fromValue(value);
     }
 
     public void setMsgType(KrbMessageType msgType) {
-        setFieldAsInt(MSG_TYPE, msgType.getValue());
+        setFieldAsInt(KrbMessageField.MSG_TYPE, msgType.getValue());
     }
 }

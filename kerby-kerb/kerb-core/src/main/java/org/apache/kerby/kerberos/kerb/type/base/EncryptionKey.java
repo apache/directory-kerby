@@ -19,16 +19,14 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
+import java.util.Arrays;
+
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-
-import java.util.Arrays;
-
-import static org.apache.kerby.kerberos.kerb.type.base.EncryptionKey.MyEnum.*;
 
 /**
  EncryptionKey   ::= SEQUENCE {
@@ -37,7 +35,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.EncryptionKey.MyEnum.*;
  }
  */
 public class EncryptionKey extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum EncryptionKeyField implements EnumType {
         KEY_TYPE,
         KEY_VALUE;
 
@@ -55,8 +53,8 @@ public class EncryptionKey extends KrbSequenceType {
     private int kvno = -1;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(KEY_TYPE, 0, Asn1Integer.class),
-            new ExplicitField(KEY_VALUE, 1, Asn1OctetString.class)
+            new ExplicitField(EncryptionKeyField.KEY_TYPE, Asn1Integer.class),
+            new ExplicitField(EncryptionKeyField.KEY_VALUE, Asn1OctetString.class)
     };
 
     public EncryptionKey() {
@@ -83,20 +81,20 @@ public class EncryptionKey extends KrbSequenceType {
     }
 
     public EncryptionType getKeyType() {
-        Integer value = getFieldAsInteger(KEY_TYPE);
+        Integer value = getFieldAsInteger(EncryptionKeyField.KEY_TYPE);
         return EncryptionType.fromValue(value);
     }
 
     public void setKeyType(EncryptionType keyType) {
-        setFieldAsInt(KEY_TYPE, keyType.getValue());
+        setFieldAsInt(EncryptionKeyField.KEY_TYPE, keyType.getValue());
     }
 
     public byte[] getKeyData() {
-        return getFieldAsOctets(KEY_VALUE);
+        return getFieldAsOctets(EncryptionKeyField.KEY_VALUE);
     }
 
     public void setKeyData(byte[] keyData) {
-        setFieldAsOctets(KEY_VALUE, keyData);
+        setFieldAsOctets(EncryptionKeyField.KEY_VALUE, keyData);
     }
 
     public void setKvno(int kvno) {

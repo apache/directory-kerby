@@ -27,8 +27,6 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 
-import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.*;
-
 /**
  AP-REP          ::= [APPLICATION 15] SEQUENCE {
  pvno            [0] INTEGER (5),
@@ -37,7 +35,7 @@ import static org.apache.kerby.kerberos.kerb.type.ap.ApRep.MyEnum.*;
  }
  */
 public class ApRep extends KrbMessage {
-    protected enum MyEnum implements EnumType {
+    protected enum ApRepField implements EnumType {
         PVNO,
         MSG_TYPE,
         ENC_PART;
@@ -54,9 +52,9 @@ public class ApRep extends KrbMessage {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PVNO, 0, Asn1Integer.class),
-            new ExplicitField(MSG_TYPE, 1, Asn1Integer.class),
-            new ExplicitField(ENC_PART, 2, EncryptedData.class)
+            new ExplicitField(ApRepField.PVNO, Asn1Integer.class),
+            new ExplicitField(ApRepField.MSG_TYPE, Asn1Integer.class),
+            new ExplicitField(ApRepField.ENC_PART, EncryptedData.class)
     };
 
     public ApRep() {
@@ -74,10 +72,10 @@ public class ApRep extends KrbMessage {
     }
 
     public EncryptedData getEncryptedEncPart() {
-        return getFieldAs(ENC_PART, EncryptedData.class);
+        return getFieldAs(ApRepField.ENC_PART, EncryptedData.class);
     }
 
     public void setEncryptedEncPart(EncryptedData encryptedEncPart) {
-        setFieldAs(ENC_PART, encryptedEncPart);
+        setFieldAs(ApRepField.ENC_PART, encryptedEncPart);
     }
 }

@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry.MyEnum.*;
-
 /**
  PA-DATA         ::= SEQUENCE {
      -- NOTE: first tag is [1], not [0]
@@ -36,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry.MyEnum.*;
  }
  */
 public class PaDataEntry extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PaDataEntryField implements EnumType {
         PADATA_TYPE,
         PADATA_VALUE;
 
@@ -52,8 +50,8 @@ public class PaDataEntry extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PADATA_TYPE, 1, Asn1Integer.class),
-            new ExplicitField(PADATA_VALUE, 2, Asn1OctetString.class)
+            new ExplicitField(PaDataEntryField.PADATA_TYPE, 1, Asn1Integer.class),
+            new ExplicitField(PaDataEntryField.PADATA_VALUE, 2, Asn1OctetString.class)
     };
 
     public PaDataEntry() {
@@ -67,19 +65,19 @@ public class PaDataEntry extends KrbSequenceType {
     }
 
     public PaDataType getPaDataType() {
-        Integer value = getFieldAsInteger(PADATA_TYPE);
+        Integer value = getFieldAsInteger(PaDataEntryField.PADATA_TYPE);
         return PaDataType.fromValue(value);
     }
 
     public void setPaDataType(PaDataType paDataType) {
-        setFieldAsInt(PADATA_TYPE, paDataType.getValue());
+        setFieldAsInt(PaDataEntryField.PADATA_TYPE, paDataType.getValue());
     }
 
     public byte[] getPaDataValue() {
-        return getFieldAsOctets(PADATA_VALUE);
+        return getFieldAsOctets(PaDataEntryField.PADATA_VALUE);
     }
 
     public void setPaDataValue(byte[] paDataValue) {
-        setFieldAsOctets(PADATA_VALUE, paDataValue);
+        setFieldAsOctets(PaDataEntryField.PADATA_VALUE, paDataValue);
     }
 }

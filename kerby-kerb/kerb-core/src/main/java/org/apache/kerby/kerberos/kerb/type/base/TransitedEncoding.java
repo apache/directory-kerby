@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding.MyEnum.*;;
-
 /**
  TransitedEncoding       ::= SEQUENCE {
  tr-type         [0] Int32 -- must be registered --,
@@ -35,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding.MyEnum.
  }
  */
 public class TransitedEncoding extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum TransitedEncodingField implements EnumType {
         TR_TYPE,
         CONTENTS;
 
@@ -51,8 +49,8 @@ public class TransitedEncoding extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(TR_TYPE, 0, Asn1Integer.class),
-            new ExplicitField(CONTENTS, 1, Asn1OctetString.class)
+            new ExplicitField(TransitedEncodingField.TR_TYPE, Asn1Integer.class),
+            new ExplicitField(TransitedEncodingField.CONTENTS, Asn1OctetString.class)
     };
 
     public TransitedEncoding() {
@@ -60,19 +58,19 @@ public class TransitedEncoding extends KrbSequenceType {
     }
 
     public TransitedEncodingType getTrType() {
-        Integer value = getFieldAsInteger(TR_TYPE);
+        Integer value = getFieldAsInteger(TransitedEncodingField.TR_TYPE);
         return TransitedEncodingType.fromValue(value);
     }
 
     public void setTrType(TransitedEncodingType trType) {
-        setField(TR_TYPE, trType);
+        setField(TransitedEncodingField.TR_TYPE, trType);
     }
 
     public byte[] getContents() {
-        return getFieldAsOctets(CONTENTS);
+        return getFieldAsOctets(TransitedEncodingField.CONTENTS);
     }
 
     public void setContents(byte[] contents) {
-        setFieldAsOctets(CONTENTS, contents);
+        setFieldAsOctets(TransitedEncodingField.CONTENTS, contents);
     }
 }

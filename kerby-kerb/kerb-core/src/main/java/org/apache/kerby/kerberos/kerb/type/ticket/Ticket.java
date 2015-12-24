@@ -29,8 +29,6 @@ import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
-import static org.apache.kerby.kerberos.kerb.type.ticket.Ticket.MyEnum.*;
-
 /**
  Ticket          ::= [APPLICATION 1] SEQUENCE {
  tkt-vno         [0] INTEGER (5),
@@ -43,7 +41,7 @@ public class Ticket extends KrbAppSequenceType {
     public static final int TKT_KVNO = KrbConstant.KRB_V5;
     public static final int TAG = 1;
 
-    protected enum MyEnum implements EnumType {
+    protected enum TicketField implements EnumType {
         TKT_VNO,
         REALM,
         SNAME,
@@ -61,10 +59,10 @@ public class Ticket extends KrbAppSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(TKT_VNO, 0, Asn1Integer.class),
-            new ExplicitField(REALM, 1, KerberosString.class),
-            new ExplicitField(SNAME, 2, PrincipalName.class),
-            new ExplicitField(ENC_PART, 3, EncryptedData.class)
+            new ExplicitField(TicketField.TKT_VNO, 0, Asn1Integer.class),
+            new ExplicitField(TicketField.REALM, 1, KerberosString.class),
+            new ExplicitField(TicketField.SNAME, 2, PrincipalName.class),
+            new ExplicitField(TicketField.ENC_PART, 3, EncryptedData.class)
     };
 
     public Ticket() {
@@ -75,34 +73,34 @@ public class Ticket extends KrbAppSequenceType {
     private EncTicketPart encPart;
 
     public int getTktvno() {
-        return getFieldAsInt(TKT_VNO);
+        return getFieldAsInt(TicketField.TKT_VNO);
     }
 
     public void setTktKvno(int kvno) {
-        setFieldAsInt(TKT_VNO, kvno);
+        setFieldAsInt(TicketField.TKT_VNO, kvno);
     }
     public PrincipalName getSname() {
-        return getFieldAs(SNAME, PrincipalName.class);
+        return getFieldAs(TicketField.SNAME, PrincipalName.class);
     }
 
     public void setSname(PrincipalName sname) {
-        setFieldAs(SNAME, sname);
+        setFieldAs(TicketField.SNAME, sname);
     }
 
     public String getRealm() {
-        return getFieldAsString(REALM);
+        return getFieldAsString(TicketField.REALM);
     }
 
     public void setRealm(String realm) {
-        setFieldAs(REALM, new KerberosString(realm));
+        setFieldAs(TicketField.REALM, new KerberosString(realm));
     }
 
     public EncryptedData getEncryptedEncPart() {
-        return getFieldAs(ENC_PART, EncryptedData.class);
+        return getFieldAs(TicketField.ENC_PART, EncryptedData.class);
     }
 
     public void setEncryptedEncPart(EncryptedData encryptedEncPart) {
-        setFieldAs(ENC_PART, encryptedEncPart);
+        setFieldAs(TicketField.ENC_PART, encryptedEncPart);
     }
 
     public EncTicketPart getEncPart() {

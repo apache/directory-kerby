@@ -28,8 +28,6 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.*;
-
 /**
  KDC-REQ         ::= SEQUENCE {
  -- NOTE: first tag is [1], not [0]
@@ -41,7 +39,7 @@ import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReq.MyEnum.*;
  }
  */
 public class KdcReq extends KrbMessage {
-    protected enum MyEnum implements EnumType {
+    protected enum KdcReqField implements EnumType {
         PVNO,
         MSG_TYPE,
         PADATA,
@@ -59,10 +57,10 @@ public class KdcReq extends KrbMessage {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PVNO, 1, Asn1Integer.class),
-            new ExplicitField(MSG_TYPE, 2, Asn1Integer.class),
-            new ExplicitField(PADATA, 3, PaData.class),
-            new ExplicitField(REQ_BODY, 4, KdcReqBody.class)
+            new ExplicitField(KdcReqField.PVNO, 1, Asn1Integer.class),
+            new ExplicitField(KdcReqField.MSG_TYPE, 2, Asn1Integer.class),
+            new ExplicitField(KdcReqField.PADATA, 3, PaData.class),
+            new ExplicitField(KdcReqField.REQ_BODY, 4, KdcReqBody.class)
     };
 
     public KdcReq(KrbMessageType msgType) {
@@ -70,11 +68,11 @@ public class KdcReq extends KrbMessage {
     }
 
     public PaData getPaData() {
-        return getFieldAs(PADATA, PaData.class);
+        return getFieldAs(KdcReqField.PADATA, PaData.class);
     }
 
     public void setPaData(PaData paData) {
-        setFieldAs(PADATA, paData);
+        setFieldAs(KdcReqField.PADATA, paData);
     }
 
     public void addPaData(PaDataEntry paDataEntry) {
@@ -85,10 +83,10 @@ public class KdcReq extends KrbMessage {
     }
 
     public KdcReqBody getReqBody() {
-        return getFieldAs(REQ_BODY, KdcReqBody.class);
+        return getFieldAs(KdcReqField.REQ_BODY, KdcReqBody.class);
     }
 
     public void setReqBody(KdcReqBody reqBody) {
-        setFieldAs(REQ_BODY, reqBody);
+        setFieldAs(KdcReqField.REQ_BODY, reqBody);
     }
 }

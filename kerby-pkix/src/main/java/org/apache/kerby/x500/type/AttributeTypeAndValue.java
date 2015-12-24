@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.x500.type.AttributeTypeAndValue.MyEnum.*;
-
 /**
  * AttributeTypeAndValue ::= SEQUENCE {
  *     type  OBJECT IDENTIFIER,
@@ -35,7 +33,7 @@ import static org.apache.kerby.x500.type.AttributeTypeAndValue.MyEnum.*;
  * }
  */
 public class AttributeTypeAndValue extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum AttributeTypeAndValueField implements EnumType {
         TYPE,
         VALUE;
 
@@ -51,8 +49,8 @@ public class AttributeTypeAndValue extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new Asn1FieldInfo(TYPE, -1, Asn1ObjectIdentifier.class, true),
-            new Asn1FieldInfo(VALUE, -1, Asn1Any.class, true)
+            new Asn1FieldInfo(AttributeTypeAndValueField.TYPE, -1, Asn1ObjectIdentifier.class, true),
+            new Asn1FieldInfo(AttributeTypeAndValueField.VALUE, -1, Asn1Any.class, true)
     };
 
     public AttributeTypeAndValue() {
@@ -60,18 +58,18 @@ public class AttributeTypeAndValue extends Asn1SequenceType {
     }
 
     public Asn1ObjectIdentifier getType() {
-        return getFieldAs(TYPE, Asn1ObjectIdentifier.class);
+        return getFieldAs(AttributeTypeAndValueField.TYPE, Asn1ObjectIdentifier.class);
     }
 
     public void setType(Asn1ObjectIdentifier type) {
-        setFieldAs(TYPE, type);
+        setFieldAs(AttributeTypeAndValueField.TYPE, type);
     }
 
     public <T extends Asn1Type> T getAttributeValueAs(Class<T> t) {
-        return getFieldAsAny(VALUE, t);
+        return getFieldAsAny(AttributeTypeAndValueField.VALUE, t);
     }
 
     public void setAttributeValue(Asn1Type value) {
-        setFieldAsAny(VALUE, value);
+        setFieldAsAny(AttributeTypeAndValueField.VALUE, value);
     }
 }

@@ -26,8 +26,6 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.*;
-
 /**
  ReplyKeyPack ::= SEQUENCE {
     replyKey                [0] EncryptionKey,
@@ -35,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack.MyEnum.
  }
  */
 public class ReplyKeyPack extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum ReplyKeyPackField implements EnumType {
         REPLY_KEY,
         AS_CHECKSUM;
 
@@ -51,8 +49,8 @@ public class ReplyKeyPack extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(REPLY_KEY, EncryptionKey.class),
-            new ExplicitField(AS_CHECKSUM, CheckSum.class)
+            new ExplicitField(ReplyKeyPackField.REPLY_KEY, EncryptionKey.class),
+            new ExplicitField(ReplyKeyPackField.AS_CHECKSUM, CheckSum.class)
     };
 
     public ReplyKeyPack() {
@@ -60,18 +58,18 @@ public class ReplyKeyPack extends KrbSequenceType {
     }
 
     public EncryptionKey getReplyKey() {
-        return getFieldAs(REPLY_KEY, EncryptionKey.class);
+        return getFieldAs(ReplyKeyPackField.REPLY_KEY, EncryptionKey.class);
     }
 
     public void setReplyKey(EncryptionKey replyKey) {
-        setFieldAs(REPLY_KEY, replyKey);
+        setFieldAs(ReplyKeyPackField.REPLY_KEY, replyKey);
     }
 
     public CheckSum getAsChecksum() {
-        return getFieldAs(AS_CHECKSUM, CheckSum.class);
+        return getFieldAs(ReplyKeyPackField.AS_CHECKSUM, CheckSum.class);
     }
 
     public void setAsChecksum(CheckSum checkSum) {
-        setFieldAs(AS_CHECKSUM, checkSum);
+        setFieldAs(ReplyKeyPackField.AS_CHECKSUM, checkSum);
     }
 }

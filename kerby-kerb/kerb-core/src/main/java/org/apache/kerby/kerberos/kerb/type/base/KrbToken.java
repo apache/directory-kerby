@@ -19,6 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
@@ -31,12 +35,6 @@ import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import static org.apache.kerby.kerberos.kerb.type.base.KrbToken.MyEnum.*;
-
 /**
  * KRB-TOKEN_VALUE ::= SEQUENCE {
  * token-format [0] INTEGER,
@@ -47,7 +45,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     private static TokenEncoder tokenEncoder;
     private static TokenDecoder tokenDecoder;
 
-    protected enum MyEnum implements EnumType {
+    protected enum KrbTokenField implements EnumType {
         TOKEN_FORMAT,
         TOKEN_VALUE;
 
@@ -65,8 +63,8 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
     private AuthToken innerToken = null;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new ExplicitField(TOKEN_FORMAT, 0, Asn1Integer.class),
-            new ExplicitField(TOKEN_VALUE, 1, Asn1OctetString.class)
+            new ExplicitField(KrbTokenField.TOKEN_FORMAT, Asn1Integer.class),
+            new ExplicitField(KrbTokenField.TOKEN_VALUE, Asn1OctetString.class)
     };
 
 
@@ -155,7 +153,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
      * @return The token format
      */
     public TokenFormat getTokenFormat() {
-        Integer value = getFieldAsInteger(TOKEN_FORMAT);
+        Integer value = getFieldAsInteger(KrbTokenField.TOKEN_FORMAT);
         return TokenFormat.fromValue(value);
     }
 
@@ -164,7 +162,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
      * @param tokenFormat The token format
      */
     public void setTokenFormat(TokenFormat tokenFormat) {
-        setFieldAsInt(TOKEN_FORMAT, tokenFormat.getValue());
+        setFieldAsInt(KrbTokenField.TOKEN_FORMAT, tokenFormat.getValue());
     }
 
     /**
@@ -172,7 +170,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
      * @return The token value
      */
     public byte[] getTokenValue() {
-        return getFieldAsOctets(TOKEN_VALUE);
+        return getFieldAsOctets(KrbTokenField.TOKEN_VALUE);
     }
 
     /**
@@ -180,7 +178,7 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
      * @param tokenValue The token value
      */
     public void setTokenValue(byte[] tokenValue) {
-        setFieldAsOctets(TOKEN_VALUE, tokenValue);
+        setFieldAsOctets(KrbTokenField.TOKEN_VALUE, tokenValue);
     }
 
     /**

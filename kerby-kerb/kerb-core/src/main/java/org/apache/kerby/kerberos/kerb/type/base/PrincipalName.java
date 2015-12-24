@@ -19,18 +19,16 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosStrings;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.apache.kerby.kerberos.kerb.type.base.PrincipalName.MyEnum.*;
 
 /**
  PrincipalName   ::= SEQUENCE {
@@ -39,7 +37,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.PrincipalName.MyEnum.*;
  }
  */
 public class PrincipalName extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PrincipalNameField implements EnumType {
         NAME_TYPE,
         NAME_STRING;
 
@@ -55,8 +53,8 @@ public class PrincipalName extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(NAME_TYPE, Asn1Integer.class),
-            new ExplicitField(NAME_STRING, KerberosStrings.class)
+            new ExplicitField(PrincipalNameField.NAME_TYPE, Asn1Integer.class),
+            new ExplicitField(PrincipalNameField.NAME_STRING, KerberosStrings.class)
     };
     private String realm;
 
@@ -115,16 +113,16 @@ public class PrincipalName extends KrbSequenceType {
     }
 
     public NameType getNameType() {
-        Integer value = getFieldAsInteger(NAME_TYPE);
+        Integer value = getFieldAsInteger(PrincipalNameField.NAME_TYPE);
         return NameType.fromValue(value);
     }
 
     public void setNameType(NameType nameType) {
-        setFieldAsInt(NAME_TYPE, nameType.getValue());
+        setFieldAsInt(PrincipalNameField.NAME_TYPE, nameType.getValue());
     }
 
     public List<String> getNameStrings() {
-        KerberosStrings krbStrings = getFieldAs(NAME_STRING, KerberosStrings.class);
+        KerberosStrings krbStrings = getFieldAs(PrincipalNameField.NAME_STRING, KerberosStrings.class);
         if (krbStrings != null) {
             return krbStrings.getAsStrings();
         }
@@ -132,7 +130,7 @@ public class PrincipalName extends KrbSequenceType {
     }
 
     public void setNameStrings(List<String> nameStrings) {
-        setFieldAs(NAME_STRING, new KerberosStrings(nameStrings));
+        setFieldAs(PrincipalNameField.NAME_STRING, new KerberosStrings(nameStrings));
     }
 
     public String getRealm() {

@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.*;
-
 /**
  AuthPack ::= SEQUENCE {
      pkAuthenticator         [0] PKAuthenticator,
@@ -36,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack.MyEnum.*;
  }
  */
 public class AuthPack extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum AuthPackField implements EnumType {
         PK_AUTHENTICATOR,
         CLIENT_PUBLIC_VALUE,
         SUPPORTED_CMS_TYPES,
@@ -55,11 +53,11 @@ public class AuthPack extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PK_AUTHENTICATOR, PkAuthenticator.class),
-            new ExplicitField(CLIENT_PUBLIC_VALUE, SubjectPublicKeyInfo.class),
-            new ExplicitField(SUPPORTED_CMS_TYPES, AlgorithmIdentifiers.class),
-            new ExplicitField(CLIENT_DH_NONCE, DHNonce.class),
-            new ExplicitField(SUPPORTED_KDFS, SupportedKDFs.class)
+            new ExplicitField(AuthPackField.PK_AUTHENTICATOR, PkAuthenticator.class),
+            new ExplicitField(AuthPackField.CLIENT_PUBLIC_VALUE, SubjectPublicKeyInfo.class),
+            new ExplicitField(AuthPackField.SUPPORTED_CMS_TYPES, AlgorithmIdentifiers.class),
+            new ExplicitField(AuthPackField.CLIENT_DH_NONCE, DHNonce.class),
+            new ExplicitField(AuthPackField.SUPPORTED_KDFS, SupportedKDFs.class)
     };
 
     public AuthPack() {
@@ -67,42 +65,42 @@ public class AuthPack extends KrbSequenceType {
     }
 
     public PkAuthenticator getPkAuthenticator() {
-        return getFieldAs(PK_AUTHENTICATOR, PkAuthenticator.class);
+        return getFieldAs(AuthPackField.PK_AUTHENTICATOR, PkAuthenticator.class);
     }
 
     public void setPkAuthenticator(PkAuthenticator pkAuthenticator) {
-        setFieldAs(PK_AUTHENTICATOR, pkAuthenticator);
+        setFieldAs(AuthPackField.PK_AUTHENTICATOR, pkAuthenticator);
     }
 
     public SubjectPublicKeyInfo getClientPublicValue() {
-        return getFieldAs(CLIENT_PUBLIC_VALUE, SubjectPublicKeyInfo.class);
+        return getFieldAs(AuthPackField.CLIENT_PUBLIC_VALUE, SubjectPublicKeyInfo.class);
     }
 
     public void setClientPublicValue(SubjectPublicKeyInfo clientPublicValue) {
-        setFieldAs(CLIENT_PUBLIC_VALUE, clientPublicValue);
+        setFieldAs(AuthPackField.CLIENT_PUBLIC_VALUE, clientPublicValue);
     }
 
     public AlgorithmIdentifiers getsupportedCmsTypes() {
-        return getFieldAs(SUPPORTED_CMS_TYPES, AlgorithmIdentifiers.class);
+        return getFieldAs(AuthPackField.SUPPORTED_CMS_TYPES, AlgorithmIdentifiers.class);
     }
 
     public void setsupportedCmsTypes(AlgorithmIdentifiers supportedCMSTypes) {
-        setFieldAs(SUPPORTED_CMS_TYPES, supportedCMSTypes);
+        setFieldAs(AuthPackField.SUPPORTED_CMS_TYPES, supportedCMSTypes);
     }
 
     public DHNonce getClientDhNonce() {
-        return getFieldAs(CLIENT_DH_NONCE, DHNonce.class);
+        return getFieldAs(AuthPackField.CLIENT_DH_NONCE, DHNonce.class);
     }
 
     public void setClientDhNonce(DHNonce dhNonce) {
-        setFieldAs(CLIENT_DH_NONCE, dhNonce);
+        setFieldAs(AuthPackField.CLIENT_DH_NONCE, dhNonce);
     }
 
     public SupportedKDFs getsupportedKDFs() {
-        return getFieldAs(SUPPORTED_KDFS, SupportedKDFs.class);
+        return getFieldAs(AuthPackField.SUPPORTED_KDFS, SupportedKDFs.class);
     }
 
     public void setsupportedKDFs(SupportedKDFs supportedKDFs) {
-        setFieldAs(SUPPORTED_KDFS, supportedKDFs);
+        setFieldAs(AuthPackField.SUPPORTED_KDFS, supportedKDFs);
     }
 }

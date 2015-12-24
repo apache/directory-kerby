@@ -26,8 +26,6 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq.MyEnum.*;
-
 /**
  KrbFastArmoredReq ::= SEQUENCE {
      armor        [0] KrbFastArmor OPTIONAL,
@@ -49,7 +47,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq.MyEnum.
  }
  */
 public class KrbFastArmoredReq extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KrbFastArmoredReqField implements EnumType {
         ARMOR,
         REQ_CHECKSUM,
         ENC_FAST_REQ;
@@ -68,9 +66,9 @@ public class KrbFastArmoredReq extends KrbSequenceType {
     private KrbFastReq fastReq;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(ARMOR, KrbFastArmor.class),
-            new ExplicitField(REQ_CHECKSUM, CheckSum.class),
-            new ExplicitField(ENC_FAST_REQ, EncryptedData.class),
+            new ExplicitField(KrbFastArmoredReqField.ARMOR, KrbFastArmor.class),
+            new ExplicitField(KrbFastArmoredReqField.REQ_CHECKSUM, CheckSum.class),
+            new ExplicitField(KrbFastArmoredReqField.ENC_FAST_REQ, EncryptedData.class),
     };
 
     public KrbFastArmoredReq() {
@@ -78,19 +76,19 @@ public class KrbFastArmoredReq extends KrbSequenceType {
     }
 
     public KrbFastArmor getArmor() {
-        return getFieldAs(ARMOR, KrbFastArmor.class);
+        return getFieldAs(KrbFastArmoredReqField.ARMOR, KrbFastArmor.class);
     }
 
     public void setArmor(KrbFastArmor armor) {
-        setFieldAs(ARMOR, armor);
+        setFieldAs(KrbFastArmoredReqField.ARMOR, armor);
     }
 
     public CheckSum getReqChecksum() {
-        return getFieldAs(REQ_CHECKSUM, CheckSum.class);
+        return getFieldAs(KrbFastArmoredReqField.REQ_CHECKSUM, CheckSum.class);
     }
 
     public void setReqChecksum(CheckSum checkSum) {
-        setFieldAs(REQ_CHECKSUM, checkSum);
+        setFieldAs(KrbFastArmoredReqField.REQ_CHECKSUM, checkSum);
     }
 
     public KrbFastReq getFastReq() {
@@ -102,10 +100,10 @@ public class KrbFastArmoredReq extends KrbSequenceType {
     }
 
     public EncryptedData getEncryptedFastReq() {
-        return getFieldAs(ENC_FAST_REQ, EncryptedData.class);
+        return getFieldAs(KrbFastArmoredReqField.ENC_FAST_REQ, EncryptedData.class);
     }
 
     public void setEncryptedFastReq(EncryptedData encFastReq) {
-        setFieldAs(ENC_FAST_REQ, encFastReq);
+        setFieldAs(KrbFastArmoredReqField.ENC_FAST_REQ, encFastReq);
     }
 }

@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.base.LastReqEntry.MyEnum.*;
-
 /**
  LastReq         ::=     SEQUENCE OF SEQUENCE {
  lr-type         [0] Int32,
@@ -35,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.LastReqEntry.MyEnum.*;
  }
  */
 public class LastReqEntry extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum LastReqEntryField implements EnumType {
         LR_TYPE,
         LR_VALUE;
 
@@ -51,8 +49,8 @@ public class LastReqEntry extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(LR_TYPE, 0, Asn1Integer.class),
-            new ExplicitField(LR_VALUE, 1, KerberosTime.class)
+            new ExplicitField(LastReqEntryField.LR_TYPE, Asn1Integer.class),
+            new ExplicitField(LastReqEntryField.LR_VALUE, KerberosTime.class)
     };
 
     public LastReqEntry() {
@@ -60,19 +58,19 @@ public class LastReqEntry extends KrbSequenceType {
     }
 
     public LastReqType getLrType() {
-        Integer value = getFieldAsInteger(LR_TYPE);
+        Integer value = getFieldAsInteger(LastReqEntryField.LR_TYPE);
         return LastReqType.fromValue(value);
     }
 
     public void setLrType(LastReqType lrType) {
-        setFieldAsInt(LR_TYPE, lrType.getValue());
+        setFieldAsInt(LastReqEntryField.LR_TYPE, lrType.getValue());
     }
 
     public KerberosTime getLrValue() {
-        return getFieldAs(LR_VALUE, KerberosTime.class);
+        return getFieldAs(LastReqEntryField.LR_VALUE, KerberosTime.class);
     }
 
     public void setLrValue(KerberosTime lrValue) {
-        setFieldAs(LR_VALUE, lrValue);
+        setFieldAs(LastReqEntryField.LR_VALUE, lrValue);
     }
 }

@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep.MyEnum.*;
-
 /**
  PA-PK-AS-REP ::= CHOICE {
     dhInfo                  [0] DHRepInfo,
@@ -35,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep.MyEnum.*;
  }
  */
 public class PaPkAsRep extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum PaPkAsRepField implements EnumType {
         DH_INFO,
         ENCKEY_PACK;
 
@@ -51,8 +49,8 @@ public class PaPkAsRep extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(DH_INFO, DHRepInfo.class),
-            new ImplicitField(ENCKEY_PACK, Asn1OctetString.class)
+            new ExplicitField(PaPkAsRepField.DH_INFO, DHRepInfo.class),
+            new ImplicitField(PaPkAsRepField.ENCKEY_PACK, Asn1OctetString.class)
     };
 
     public PaPkAsRep() {
@@ -60,18 +58,18 @@ public class PaPkAsRep extends Asn1Choice {
     }
 
     public DHRepInfo getDHRepInfo() {
-        return getChoiceValueAs(DH_INFO, DHRepInfo.class);
+        return getChoiceValueAs(PaPkAsRepField.DH_INFO, DHRepInfo.class);
     }
 
     public void setDHRepInfo(DHRepInfo dhRepInfo) {
-        setChoiceValue(DH_INFO, dhRepInfo);
+        setChoiceValue(PaPkAsRepField.DH_INFO, dhRepInfo);
     }
 
     public byte[] getEncKeyPack() {
-        return getChoiceValueAsOctets(ENCKEY_PACK);
+        return getChoiceValueAsOctets(PaPkAsRepField.ENCKEY_PACK);
     }
 
     public void setEncKeyPack(byte[] encKeyPack) {
-        setChoiceValueAsOctets(ENCKEY_PACK, encKeyPack);
+        setChoiceValueAsOctets(PaPkAsRepField.ENCKEY_PACK, encKeyPack);
     }
 }

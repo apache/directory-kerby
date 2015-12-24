@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredRep.MyEnum.*;
-
 /**
  KrbFastArmoredRep ::= SEQUENCE {
     enc-fast-rep      [0] EncryptedData, -- KrbFastResponse --
@@ -35,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredRep.MyEnum.
  }
  */
 public class KrbFastArmoredRep extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KrbFastArmoredRepField implements EnumType {
         ENC_FAST_REP;
 
         @Override
@@ -51,7 +49,7 @@ public class KrbFastArmoredRep extends KrbSequenceType {
 
     //private
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(ENC_FAST_REP, EncryptedData.class)
+            new ExplicitField(KrbFastArmoredRepField.ENC_FAST_REP, EncryptedData.class)
     };
 
     public KrbFastArmoredRep() {
@@ -59,10 +57,10 @@ public class KrbFastArmoredRep extends KrbSequenceType {
     }
 
     public EncryptedData getEncFastRep() {
-        return getFieldAs(ENC_FAST_REP, EncryptedData.class);
+        return getFieldAs(KrbFastArmoredRepField.ENC_FAST_REP, EncryptedData.class);
     }
 
     public void setEncFastRep(EncryptedData encFastRep) {
-        setFieldAs(ENC_FAST_REP, encFastRep);
+        setFieldAs(KrbFastArmoredRepField.ENC_FAST_REP, encFastRep);
     }
 }

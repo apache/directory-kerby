@@ -19,16 +19,14 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
+import java.util.Arrays;
+
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-
-import java.util.Arrays;
-
-import static org.apache.kerby.kerberos.kerb.type.base.EncryptedData.MyEnum.*;
 
 /**
  EncryptedData   ::= SEQUENCE {
@@ -38,7 +36,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.EncryptedData.MyEnum.*;
  }
  */
 public class EncryptedData extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum EncryptedDataField implements EnumType {
         ETYPE,
         KVNO,
         CIPHER;
@@ -55,9 +53,9 @@ public class EncryptedData extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(ETYPE, 0, Asn1Integer.class),
-            new ExplicitField(KVNO, 1, Asn1Integer.class),
-            new ExplicitField(CIPHER, 2, Asn1OctetString.class)
+            new ExplicitField(EncryptedDataField.ETYPE, Asn1Integer.class),
+            new ExplicitField(EncryptedDataField.KVNO, Asn1Integer.class),
+            new ExplicitField(EncryptedDataField.CIPHER, Asn1OctetString.class)
     };
 
     public EncryptedData() {
@@ -65,16 +63,16 @@ public class EncryptedData extends KrbSequenceType {
     }
 
     public EncryptionType getEType() {
-        Integer value = getFieldAsInteger(ETYPE);
+        Integer value = getFieldAsInteger(EncryptedDataField.ETYPE);
         return EncryptionType.fromValue(value);
     }
 
     public void setEType(EncryptionType eType) {
-        setFieldAsInt(ETYPE, eType.getValue());
+        setFieldAsInt(EncryptedDataField.ETYPE, eType.getValue());
     }
 
     public int getKvno() {
-        Integer value = getFieldAsInteger(KVNO);
+        Integer value = getFieldAsInteger(EncryptedDataField.KVNO);
         if (value != null) {
             return value.intValue();
         }
@@ -82,15 +80,15 @@ public class EncryptedData extends KrbSequenceType {
     }
 
     public void setKvno(int kvno) {
-        setFieldAsInt(KVNO, kvno);
+        setFieldAsInt(EncryptedDataField.KVNO, kvno);
     }
 
     public byte[] getCipher() {
-        return getFieldAsOctets(CIPHER);
+        return getFieldAsOctets(EncryptedDataField.CIPHER);
     }
 
     public void setCipher(byte[] cipher) {
-        setFieldAsOctets(CIPHER, cipher);
+        setFieldAsOctets(EncryptedDataField.CIPHER, cipher);
     }
 
     @Override

@@ -29,7 +29,6 @@ import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AlgorithmIdentifiers;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.*;
 
 /**
  OTP-TOKENINFO ::= SEQUENCE {
@@ -45,7 +44,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.otp.OtpTokenInfo.MyEnum.*;
  }
  */
 public class OtpTokenInfo extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum OtpTokenInfoField implements EnumType {
         FLAGS,
         OTP_VENDOR,
         OTP_CHALLENGE,
@@ -68,15 +67,15 @@ public class OtpTokenInfo extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(FLAGS, Asn1OctetString.class),
-            new ExplicitField(OTP_VENDOR, Asn1Utf8String.class),
-            new ExplicitField(OTP_CHALLENGE, Asn1OctetString.class),
-            new ExplicitField(OTP_LENGTH, KerberosString.class),
-            new ExplicitField(OTP_FORMAT, Asn1OctetString.class),
-            new ExplicitField(OTP_TOKEN_ID, Asn1Utf8String.class),
-            new ExplicitField(OTP_ALG_ID, Asn1OctetString.class),
-            new ExplicitField(SUPPORTED_HASH_ALG, AlgorithmIdentifiers.class),
-            new ExplicitField(ITERATION_COUNT, Asn1Integer.class)
+            new ExplicitField(OtpTokenInfoField.FLAGS, Asn1OctetString.class),
+            new ExplicitField(OtpTokenInfoField.OTP_VENDOR, Asn1Utf8String.class),
+            new ExplicitField(OtpTokenInfoField.OTP_CHALLENGE, Asn1OctetString.class),
+            new ExplicitField(OtpTokenInfoField.OTP_LENGTH, KerberosString.class),
+            new ExplicitField(OtpTokenInfoField.OTP_FORMAT, Asn1OctetString.class),
+            new ExplicitField(OtpTokenInfoField.OTP_TOKEN_ID, Asn1Utf8String.class),
+            new ExplicitField(OtpTokenInfoField.OTP_ALG_ID, Asn1OctetString.class),
+            new ExplicitField(OtpTokenInfoField.SUPPORTED_HASH_ALG, AlgorithmIdentifiers.class),
+            new ExplicitField(OtpTokenInfoField.ITERATION_COUNT, Asn1Integer.class)
     };
 
     public OtpTokenInfo() {

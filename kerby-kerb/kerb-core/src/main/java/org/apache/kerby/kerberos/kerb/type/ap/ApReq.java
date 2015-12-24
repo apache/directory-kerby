@@ -28,8 +28,6 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
-import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.*;
-
 /**
  AP-REQ          ::= [APPLICATION 14] SEQUENCE {
  pvno            [0] INTEGER (5),
@@ -40,7 +38,7 @@ import static org.apache.kerby.kerberos.kerb.type.ap.ApReq.MyEnum.*;
  }
  */
 public class ApReq extends KrbMessage {
-    protected enum MyEnum implements EnumType {
+    protected enum ApReqField implements EnumType {
         PVNO,
         MSG_TYPE,
         AP_OPTIONS,
@@ -59,11 +57,11 @@ public class ApReq extends KrbMessage {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PVNO, Asn1Integer.class),
-            new ExplicitField(MSG_TYPE, Asn1Integer.class),
-            new ExplicitField(AP_OPTIONS, ApOptions.class),
-            new ExplicitField(TICKET, Ticket.class),
-            new ExplicitField(AUTHENTICATOR, EncryptedData.class)
+            new ExplicitField(ApReqField.PVNO, Asn1Integer.class),
+            new ExplicitField(ApReqField.MSG_TYPE, Asn1Integer.class),
+            new ExplicitField(ApReqField.AP_OPTIONS, ApOptions.class),
+            new ExplicitField(ApReqField.TICKET, Ticket.class),
+            new ExplicitField(ApReqField.AUTHENTICATOR, EncryptedData.class)
     };
 
     private Authenticator authenticator;
@@ -73,19 +71,19 @@ public class ApReq extends KrbMessage {
     }
 
     public ApOptions getApOptions() {
-        return getFieldAs(AP_OPTIONS, ApOptions.class);
+        return getFieldAs(ApReqField.AP_OPTIONS, ApOptions.class);
     }
 
     public void setApOptions(ApOptions apOptions) {
-        setFieldAs(AP_OPTIONS, apOptions);
+        setFieldAs(ApReqField.AP_OPTIONS, apOptions);
     }
 
     public Ticket getTicket() {
-        return getFieldAs(TICKET, Ticket.class);
+        return getFieldAs(ApReqField.TICKET, Ticket.class);
     }
 
     public void setTicket(Ticket ticket) {
-        setFieldAs(TICKET, ticket);
+        setFieldAs(ApReqField.TICKET, ticket);
     }
 
     public Authenticator getAuthenticator() {
@@ -97,11 +95,11 @@ public class ApReq extends KrbMessage {
     }
 
     public EncryptedData getEncryptedAuthenticator() {
-        return getFieldAs(AUTHENTICATOR, EncryptedData.class);
+        return getFieldAs(ApReqField.AUTHENTICATOR, EncryptedData.class);
     }
 
     public void setEncryptedAuthenticator(EncryptedData encryptedAuthenticator) {
-        setFieldAs(AUTHENTICATOR, encryptedAuthenticator);
+        setFieldAs(ApReqField.AUTHENTICATOR, encryptedAuthenticator);
     }
 }
 

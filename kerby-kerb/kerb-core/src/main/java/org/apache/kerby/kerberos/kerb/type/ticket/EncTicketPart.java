@@ -31,8 +31,6 @@ import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding;
 
-import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.*;
-
 /**
  -- Encrypted part of ticket
  EncTicketPart   ::= [APPLICATION 3] SEQUENCE {
@@ -52,7 +50,7 @@ import static org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart.MyEnum.*;
 public class EncTicketPart extends KrbAppSequenceType {
     public static final int TAG = 3;
 
-    protected enum MyEnum implements EnumType {
+    protected enum EncTicketPartField implements EnumType {
         FLAGS,
         KEY,
         CREALM,
@@ -77,17 +75,17 @@ public class EncTicketPart extends KrbAppSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(FLAGS, 0, TicketFlags.class),
-            new ExplicitField(KEY, 1, EncryptionKey.class),
-            new ExplicitField(CREALM, 2, KerberosString.class),
-            new ExplicitField(CNAME, 3, PrincipalName.class),
-            new ExplicitField(TRANSITED, 4, TransitedEncoding.class),
-            new ExplicitField(AUTHTIME, 5, KerberosTime.class),
-            new ExplicitField(STARTTIME, 6, KerberosTime.class),
-            new ExplicitField(ENDTIME, 7, KerberosTime.class),
-            new ExplicitField(ENDTIME, 8, KerberosTime.class),
-            new ExplicitField(CADDR, 9, HostAddresses.class),
-            new ExplicitField(AUTHORIZATION_DATA, 10, AuthorizationData.class)
+            new ExplicitField(EncTicketPartField.FLAGS, TicketFlags.class),
+            new ExplicitField(EncTicketPartField.KEY, EncryptionKey.class),
+            new ExplicitField(EncTicketPartField.CREALM, KerberosString.class),
+            new ExplicitField(EncTicketPartField.CNAME, PrincipalName.class),
+            new ExplicitField(EncTicketPartField.TRANSITED, TransitedEncoding.class),
+            new ExplicitField(EncTicketPartField.AUTHTIME, KerberosTime.class),
+            new ExplicitField(EncTicketPartField.STARTTIME, KerberosTime.class),
+            new ExplicitField(EncTicketPartField.ENDTIME, KerberosTime.class),
+            new ExplicitField(EncTicketPartField.ENDTIME, KerberosTime.class),
+            new ExplicitField(EncTicketPartField.CADDR, HostAddresses.class),
+            new ExplicitField(EncTicketPartField.AUTHORIZATION_DATA, AuthorizationData.class)
     };
 
     public EncTicketPart() {
@@ -95,90 +93,90 @@ public class EncTicketPart extends KrbAppSequenceType {
     }
 
     public TicketFlags getFlags() {
-        return getFieldAs(FLAGS, TicketFlags.class);
+        return getFieldAs(EncTicketPartField.FLAGS, TicketFlags.class);
     }
 
     public void setFlags(TicketFlags flags) {
-        setFieldAs(FLAGS, flags);
+        setFieldAs(EncTicketPartField.FLAGS, flags);
     }
 
     public EncryptionKey getKey() {
-        return getFieldAs(KEY, EncryptionKey.class);
+        return getFieldAs(EncTicketPartField.KEY, EncryptionKey.class);
     }
 
     public void setKey(EncryptionKey key) {
-        setFieldAs(KEY, key);
+        setFieldAs(EncTicketPartField.KEY, key);
     }
 
     public String getCrealm() {
-        return getFieldAsString(CREALM);
+        return getFieldAsString(EncTicketPartField.CREALM);
     }
 
     public void setCrealm(String crealm) {
-        setFieldAsString(CREALM, crealm);
+        setFieldAsString(EncTicketPartField.CREALM, crealm);
     }
 
     public PrincipalName getCname() {
-        return getFieldAs(CNAME, PrincipalName.class);
+        return getFieldAs(EncTicketPartField.CNAME, PrincipalName.class);
     }
 
     public void setCname(PrincipalName cname) {
-        setFieldAs(CNAME, cname);
+        setFieldAs(EncTicketPartField.CNAME, cname);
     }
 
     public TransitedEncoding getTransited() {
-        return getFieldAs(TRANSITED, TransitedEncoding.class);
+        return getFieldAs(EncTicketPartField.TRANSITED, TransitedEncoding.class);
     }
 
     public void setTransited(TransitedEncoding transited) {
-        setFieldAs(TRANSITED, transited);
+        setFieldAs(EncTicketPartField.TRANSITED, transited);
     }
 
     public KerberosTime getAuthTime() {
-        return getFieldAs(AUTHTIME, KerberosTime.class);
+        return getFieldAs(EncTicketPartField.AUTHTIME, KerberosTime.class);
     }
 
     public void setAuthTime(KerberosTime authTime) {
-        setFieldAs(AUTHTIME, authTime);
+        setFieldAs(EncTicketPartField.AUTHTIME, authTime);
     }
 
     public KerberosTime getStartTime() {
-        return getFieldAs(STARTTIME, KerberosTime.class);
+        return getFieldAs(EncTicketPartField.STARTTIME, KerberosTime.class);
     }
 
     public void setStartTime(KerberosTime startTime) {
-        setFieldAs(STARTTIME, startTime);
+        setFieldAs(EncTicketPartField.STARTTIME, startTime);
     }
 
     public KerberosTime getEndTime() {
-        return getFieldAs(ENDTIME, KerberosTime.class);
+        return getFieldAs(EncTicketPartField.ENDTIME, KerberosTime.class);
     }
 
     public void setEndTime(KerberosTime endTime) {
-        setFieldAs(ENDTIME, endTime);
+        setFieldAs(EncTicketPartField.ENDTIME, endTime);
     }
 
     public KerberosTime getRenewtill() {
-        return getFieldAs(RENEW_TILL, KerberosTime.class);
+        return getFieldAs(EncTicketPartField.RENEW_TILL, KerberosTime.class);
     }
 
     public void setRenewtill(KerberosTime renewtill) {
-        setFieldAs(RENEW_TILL, renewtill);
+        setFieldAs(EncTicketPartField.RENEW_TILL, renewtill);
     }
 
     public HostAddresses getClientAddresses() {
-        return getFieldAs(CADDR, HostAddresses.class);
+        return getFieldAs(EncTicketPartField.CADDR, HostAddresses.class);
     }
 
     public void setClientAddresses(HostAddresses clientAddresses) {
-        setFieldAs(CADDR, clientAddresses);
+        setFieldAs(EncTicketPartField.CADDR, clientAddresses);
     }
 
     public AuthorizationData getAuthorizationData() {
-        return getFieldAs(AUTHORIZATION_DATA, AuthorizationData.class);
+        return getFieldAs(EncTicketPartField.AUTHORIZATION_DATA, AuthorizationData.class);
     }
 
     public void setAuthorizationData(AuthorizationData authorizationData) {
-        setFieldAs(AUTHORIZATION_DATA, authorizationData);
+        setFieldAs(EncTicketPartField.AUTHORIZATION_DATA, authorizationData);
     }
 }

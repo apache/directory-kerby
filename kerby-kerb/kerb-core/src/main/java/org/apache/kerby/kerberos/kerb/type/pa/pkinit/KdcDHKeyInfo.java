@@ -27,8 +27,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.*;
-
 /**
  KDCDHKeyInfo ::= SEQUENCE {
     subjectPublicKey        [0] BIT STRING,
@@ -37,7 +35,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo.MyEnum.
  }
  */
 public class KdcDHKeyInfo extends KrbSequenceType {
-    protected static enum MyEnum implements EnumType {
+    protected static enum KdcDHKeyInfoField implements EnumType {
         SUBJECT_PUBLIC_KEY,
         NONCE,
         DH_KEY_EXPIRATION;
@@ -54,9 +52,9 @@ public class KdcDHKeyInfo extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(SUBJECT_PUBLIC_KEY, Asn1BitString.class),
-            new ExplicitField(NONCE, Asn1Integer.class),
-            new ExplicitField(DH_KEY_EXPIRATION, KerberosTime.class)
+            new ExplicitField(KdcDHKeyInfoField.SUBJECT_PUBLIC_KEY, Asn1BitString.class),
+            new ExplicitField(KdcDHKeyInfoField.NONCE, Asn1Integer.class),
+            new ExplicitField(KdcDHKeyInfoField.DH_KEY_EXPIRATION, KerberosTime.class)
     };
 
     public KdcDHKeyInfo() {
@@ -64,26 +62,26 @@ public class KdcDHKeyInfo extends KrbSequenceType {
     }
 
     public Asn1BitString getSubjectPublicKey() {
-        return getFieldAs(SUBJECT_PUBLIC_KEY, Asn1BitString.class);
+        return getFieldAs(KdcDHKeyInfoField.SUBJECT_PUBLIC_KEY, Asn1BitString.class);
     }
 
     public void setSubjectPublicKey(byte[] subjectPubKey) {
-        setFieldAs(SUBJECT_PUBLIC_KEY, new Asn1BitString(subjectPubKey));
+        setFieldAs(KdcDHKeyInfoField.SUBJECT_PUBLIC_KEY, new Asn1BitString(subjectPubKey));
     }
 
     public int getNonce() {
-        return getFieldAsInt(NONCE);
+        return getFieldAsInt(KdcDHKeyInfoField.NONCE);
     }
 
     public void setNonce(int nonce) {
-        setFieldAsInt(NONCE, nonce);
+        setFieldAsInt(KdcDHKeyInfoField.NONCE, nonce);
     }
 
     public KerberosTime getDHKeyExpiration() {
-        return getFieldAsTime(DH_KEY_EXPIRATION);
+        return getFieldAsTime(KdcDHKeyInfoField.DH_KEY_EXPIRATION);
     }
 
     public void setDHKeyExpiration(KerberosTime time) {
-        setFieldAs(DH_KEY_EXPIRATION, time);
+        setFieldAs(KdcDHKeyInfoField.DH_KEY_EXPIRATION, time);
     }
 }

@@ -28,8 +28,6 @@ import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 
-import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.*;
-
 /**
  KRB-ERROR       ::= [APPLICATION 30] SEQUENCE {
      pvno            [0] INTEGER (5),
@@ -48,7 +46,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.KrbError.MyEnum.*;
  }
  */
 public class KrbError extends KrbMessage {
-    protected enum MyEnum implements EnumType {
+    protected enum KrbErrorField implements EnumType {
         PVNO,
         MSG_TYPE,
         CTIME,
@@ -75,19 +73,19 @@ public class KrbError extends KrbMessage {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PVNO, Asn1Integer.class),
-            new ExplicitField(MSG_TYPE, Asn1Integer.class),
-            new ExplicitField(CTIME, KerberosTime.class),
-            new ExplicitField(CUSEC, Asn1Integer.class),
-            new ExplicitField(STIME, KerberosTime.class),
-            new ExplicitField(SUSEC, Asn1Integer.class),
-            new ExplicitField(ERROR_CODE, Asn1Integer.class),
-            new ExplicitField(CREALM, KerberosString.class),
-            new ExplicitField(CNAME, PrincipalName.class),
-            new ExplicitField(REALM, KerberosString.class),
-            new ExplicitField(SNAME, PrincipalName.class),
-            new ExplicitField(ETEXT, KerberosString.class),
-            new ExplicitField(EDATA, Asn1OctetString.class)
+            new ExplicitField(KrbErrorField.PVNO, Asn1Integer.class),
+            new ExplicitField(KrbErrorField.MSG_TYPE, Asn1Integer.class),
+            new ExplicitField(KrbErrorField.CTIME, KerberosTime.class),
+            new ExplicitField(KrbErrorField.CUSEC, Asn1Integer.class),
+            new ExplicitField(KrbErrorField.STIME, KerberosTime.class),
+            new ExplicitField(KrbErrorField.SUSEC, Asn1Integer.class),
+            new ExplicitField(KrbErrorField.ERROR_CODE, Asn1Integer.class),
+            new ExplicitField(KrbErrorField.CREALM, KerberosString.class),
+            new ExplicitField(KrbErrorField.CNAME, PrincipalName.class),
+            new ExplicitField(KrbErrorField.REALM, KerberosString.class),
+            new ExplicitField(KrbErrorField.SNAME, PrincipalName.class),
+            new ExplicitField(KrbErrorField.ETEXT, KerberosString.class),
+            new ExplicitField(KrbErrorField.EDATA, Asn1OctetString.class)
     };
 
     public KrbError() {
@@ -95,90 +93,90 @@ public class KrbError extends KrbMessage {
     }
 
     public KerberosTime getCtime() {
-        return getFieldAs(CTIME, KerberosTime.class);
+        return getFieldAs(KrbErrorField.CTIME, KerberosTime.class);
     }
 
     public void setCtime(KerberosTime ctime) {
-        setFieldAs(CTIME, ctime);
+        setFieldAs(KrbErrorField.CTIME, ctime);
     }
 
     public int getCusec() {
-        return getFieldAsInt(CUSEC);
+        return getFieldAsInt(KrbErrorField.CUSEC);
     }
 
     public void setCusec(int cusec) {
-        setFieldAsInt(CUSEC, cusec);
+        setFieldAsInt(KrbErrorField.CUSEC, cusec);
     }
 
     public KerberosTime getStime() {
-        return getFieldAs(STIME, KerberosTime.class);
+        return getFieldAs(KrbErrorField.STIME, KerberosTime.class);
     }
 
     public void setStime(KerberosTime stime) {
-        setFieldAs(STIME, stime);
+        setFieldAs(KrbErrorField.STIME, stime);
     }
 
     public int getSusec() {
-        return getFieldAsInt(SUSEC);
+        return getFieldAsInt(KrbErrorField.SUSEC);
     }
 
     public void setSusec(int susec) {
-        setFieldAsInt(SUSEC, susec);
+        setFieldAsInt(KrbErrorField.SUSEC, susec);
     }
 
     public KrbErrorCode getErrorCode() {
-        return KrbErrorCode.fromValue(getFieldAsInt(ERROR_CODE));
+        return KrbErrorCode.fromValue(getFieldAsInt(KrbErrorField.ERROR_CODE));
     }
 
     public void setErrorCode(KrbErrorCode errorCode) {
-        setField(ERROR_CODE, errorCode);
+        setField(KrbErrorField.ERROR_CODE, errorCode);
     }
 
     public String getCrealm() {
-        return getFieldAsString(CREALM);
+        return getFieldAsString(KrbErrorField.CREALM);
     }
 
     public void setCrealm(String realm) {
-        setFieldAs(CREALM, new KerberosString(realm));
+        setFieldAs(KrbErrorField.CREALM, new KerberosString(realm));
     }
 
     public PrincipalName getCname() {
-        return getFieldAs(CNAME, PrincipalName.class);
+        return getFieldAs(KrbErrorField.CNAME, PrincipalName.class);
     }
 
     public void setCname(PrincipalName sname) {
-        setFieldAs(CNAME, sname);
+        setFieldAs(KrbErrorField.CNAME, sname);
     }
 
     public PrincipalName getSname() {
-        return getFieldAs(SNAME, PrincipalName.class);
+        return getFieldAs(KrbErrorField.SNAME, PrincipalName.class);
     }
 
     public void setSname(PrincipalName sname) {
-        setFieldAs(SNAME, sname);
+        setFieldAs(KrbErrorField.SNAME, sname);
     }
 
     public String getRealm() {
-        return getFieldAsString(REALM);
+        return getFieldAsString(KrbErrorField.REALM);
     }
 
     public void setRealm(String realm) {
-        setFieldAs(REALM, new KerberosString(realm));
+        setFieldAs(KrbErrorField.REALM, new KerberosString(realm));
     }
 
     public String getEtext() {
-        return getFieldAsString(ETEXT);
+        return getFieldAsString(KrbErrorField.ETEXT);
     }
 
     public void setEtext(String realm) {
-        setFieldAs(ETEXT, new KerberosString(realm));
+        setFieldAs(KrbErrorField.ETEXT, new KerberosString(realm));
     }
 
     public byte[] getEdata() {
-        return getFieldAsOctetBytes(EDATA);
+        return getFieldAsOctetBytes(KrbErrorField.EDATA);
     }
 
     public void setEdata(byte[] edata) {
-        setFieldAsOctetBytes(EDATA, edata);
+        setFieldAsOctetBytes(KrbErrorField.EDATA, edata);
     }
 }

@@ -27,8 +27,6 @@ import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.*;
-
 /**
  ETYPE-INFO2-ENTRY       ::= SEQUENCE {
  etype           [0] Int32,
@@ -37,7 +35,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfo2Entry.MyEnum.*;
  }
  */
 public class EtypeInfo2Entry extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum EtypeInfo2EntryField implements EnumType {
         ETYPE,
         SALT,
         S2KPARAMS;
@@ -54,9 +52,9 @@ public class EtypeInfo2Entry extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(ETYPE, 0, Asn1Integer.class),
-            new ExplicitField(SALT, 1, KerberosString.class),
-            new ExplicitField(S2KPARAMS, 2, Asn1OctetString.class)
+            new ExplicitField(EtypeInfo2EntryField.ETYPE, Asn1Integer.class),
+            new ExplicitField(EtypeInfo2EntryField.SALT, KerberosString.class),
+            new ExplicitField(EtypeInfo2EntryField.S2KPARAMS, Asn1OctetString.class)
     };
 
     public EtypeInfo2Entry() {
@@ -64,26 +62,26 @@ public class EtypeInfo2Entry extends KrbSequenceType {
     }
 
     public EncryptionType getEtype() {
-        return EncryptionType.fromValue(getFieldAsInt(ETYPE));
+        return EncryptionType.fromValue(getFieldAsInt(EtypeInfo2EntryField.ETYPE));
     }
 
     public void setEtype(EncryptionType etype) {
-        setField(ETYPE, etype);
+        setField(EtypeInfo2EntryField.ETYPE, etype);
     }
 
     public String getSalt() {
-        return getFieldAsString(SALT);
+        return getFieldAsString(EtypeInfo2EntryField.SALT);
     }
 
     public void setSalt(String salt) {
-        setFieldAsString(SALT, salt);
+        setFieldAsString(EtypeInfo2EntryField.SALT, salt);
     }
 
     public byte[] getS2kParams() {
-        return getFieldAsOctets(S2KPARAMS);
+        return getFieldAsOctets(EtypeInfo2EntryField.S2KPARAMS);
     }
 
     public void setS2kParams(byte[] s2kParams) {
-        setFieldAsOctets(S2KPARAMS, s2kParams);
+        setFieldAsOctets(EtypeInfo2EntryField.S2KPARAMS, s2kParams);
     }
 }

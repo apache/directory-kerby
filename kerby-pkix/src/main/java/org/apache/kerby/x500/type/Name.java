@@ -23,8 +23,6 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.x500.type.Name.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -32,7 +30,7 @@ import static org.apache.kerby.x500.type.Name.MyEnum.*;
  * </pre>
  */
 public class Name extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum NameField implements EnumType {
         RDN_SEQUENCE;
 
         @Override
@@ -47,7 +45,7 @@ public class Name extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-        new Asn1FieldInfo(RDN_SEQUENCE, RDNSequence.class),
+        new Asn1FieldInfo(NameField.RDN_SEQUENCE, RDNSequence.class),
     };
 
     public Name() {
@@ -55,10 +53,10 @@ public class Name extends Asn1Choice {
     }
 
     public RDNSequence getName() {
-        return getChoiceValueAs(RDN_SEQUENCE, RDNSequence.class);
+        return getChoiceValueAs(NameField.RDN_SEQUENCE, RDNSequence.class);
     }
 
     public void setName(RDNSequence name) {
-        setChoiceValue(RDN_SEQUENCE, name);
+        setChoiceValue(NameField.RDN_SEQUENCE, name);
     }
 }

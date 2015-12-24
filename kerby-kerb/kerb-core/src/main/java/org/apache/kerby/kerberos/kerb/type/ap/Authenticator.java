@@ -31,8 +31,6 @@ import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
-import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.*;
-
 /**
  Authenticator   ::= [APPLICATION 2] SEQUENCE  {
  authenticator-vno       [0] INTEGER (5),
@@ -49,7 +47,7 @@ import static org.apache.kerby.kerberos.kerb.type.ap.Authenticator.MyEnum.*;
 public class Authenticator extends KrbAppSequenceType {
     public static final int TAG = 2;
 
-    protected enum MyEnum implements EnumType {
+    protected enum AuthenticatorField implements EnumType {
         AUTHENTICATOR_VNO,
         CREALM,
         CNAME,
@@ -72,15 +70,15 @@ public class Authenticator extends KrbAppSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(AUTHENTICATOR_VNO, 0, Asn1Integer.class),
-            new ExplicitField(CREALM, 1, KerberosString.class),
-            new ExplicitField(CNAME, 2, PrincipalName.class),
-            new ExplicitField(CKSUM, 3, CheckSum.class),
-            new ExplicitField(CUSEC, 4, Asn1Integer.class),
-            new ExplicitField(CTIME, 5, KerberosTime.class),
-            new ExplicitField(SUBKEY, 6, EncryptionKey.class),
-            new ExplicitField(SEQ_NUMBER, 7, Asn1Integer.class),
-            new ExplicitField(AUTHORIZATION_DATA, 8, AuthorizationData.class)
+            new ExplicitField(AuthenticatorField.AUTHENTICATOR_VNO, Asn1Integer.class),
+            new ExplicitField(AuthenticatorField.CREALM, KerberosString.class),
+            new ExplicitField(AuthenticatorField.CNAME, PrincipalName.class),
+            new ExplicitField(AuthenticatorField.CKSUM, CheckSum.class),
+            new ExplicitField(AuthenticatorField.CUSEC, Asn1Integer.class),
+            new ExplicitField(AuthenticatorField.CTIME, KerberosTime.class),
+            new ExplicitField(AuthenticatorField.SUBKEY, EncryptionKey.class),
+            new ExplicitField(AuthenticatorField.SEQ_NUMBER, Asn1Integer.class),
+            new ExplicitField(AuthenticatorField.AUTHORIZATION_DATA, AuthorizationData.class)
     };
 
     public Authenticator() {
@@ -88,74 +86,74 @@ public class Authenticator extends KrbAppSequenceType {
     }
 
     public int getAuthenticatorVno() {
-        return getFieldAsInt(AUTHENTICATOR_VNO);
+        return getFieldAsInt(AuthenticatorField.AUTHENTICATOR_VNO);
     }
 
     public void setAuthenticatorVno(int authenticatorVno) {
-        setFieldAsInt(AUTHENTICATOR_VNO, authenticatorVno);
+        setFieldAsInt(AuthenticatorField.AUTHENTICATOR_VNO, authenticatorVno);
     }
 
     public String getCrealm() {
-        return getFieldAsString(CREALM);
+        return getFieldAsString(AuthenticatorField.CREALM);
     }
 
     public void setCrealm(String crealm) {
-        setFieldAsString(CREALM, crealm);
+        setFieldAsString(AuthenticatorField.CREALM, crealm);
     }
 
     public PrincipalName getCname() {
-        return getFieldAs(CNAME, PrincipalName.class);
+        return getFieldAs(AuthenticatorField.CNAME, PrincipalName.class);
     }
 
     public void setCname(PrincipalName cname) {
-        setFieldAs(CNAME, cname);
+        setFieldAs(AuthenticatorField.CNAME, cname);
     }
 
     public CheckSum getCksum() {
-        return getFieldAs(CKSUM, CheckSum.class);
+        return getFieldAs(AuthenticatorField.CKSUM, CheckSum.class);
     }
 
     public void setCksum(CheckSum cksum) {
-        setFieldAs(CKSUM, cksum);
+        setFieldAs(AuthenticatorField.CKSUM, cksum);
     }
 
     public int getCusec() {
-        return getFieldAsInt(CUSEC);
+        return getFieldAsInt(AuthenticatorField.CUSEC);
     }
 
     public void setCusec(int cusec) {
-        setFieldAsInt(CUSEC, cusec);
+        setFieldAsInt(AuthenticatorField.CUSEC, cusec);
     }
 
     public KerberosTime getCtime() {
-        return getFieldAsTime(CTIME);
+        return getFieldAsTime(AuthenticatorField.CTIME);
     }
 
     public void setCtime(KerberosTime ctime) {
-        setFieldAs(CTIME, ctime);
+        setFieldAs(AuthenticatorField.CTIME, ctime);
     }
 
     public EncryptionKey getSubKey() {
-        return getFieldAs(SUBKEY, EncryptionKey.class);
+        return getFieldAs(AuthenticatorField.SUBKEY, EncryptionKey.class);
     }
 
     public void setSubKey(EncryptionKey subKey) {
-        setFieldAs(SUBKEY, subKey);
+        setFieldAs(AuthenticatorField.SUBKEY, subKey);
     }
 
     public int getSeqNumber() {
-        return getFieldAsInt(SEQ_NUMBER);
+        return getFieldAsInt(AuthenticatorField.SEQ_NUMBER);
     }
 
     public void setSeqNumber(Integer seqNumber) {
-        setFieldAsInt(SEQ_NUMBER, seqNumber);
+        setFieldAsInt(AuthenticatorField.SEQ_NUMBER, seqNumber);
     }
 
     public AuthorizationData getAuthorizationData() {
-        return getFieldAs(AUTHORIZATION_DATA, AuthorizationData.class);
+        return getFieldAs(AuthenticatorField.AUTHORIZATION_DATA, AuthorizationData.class);
     }
 
     public void setAuthorizationData(AuthorizationData authorizationData) {
-        setFieldAs(AUTHORIZATION_DATA, authorizationData);
+        setFieldAs(AuthenticatorField.AUTHORIZATION_DATA, authorizationData);
     }
 }

@@ -27,8 +27,6 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.*;
-
 /**
  KrbFastResponse ::= SEQUENCE {
      padata         [0] SEQUENCE OF PA-DATA,
@@ -44,7 +42,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastResponse.MyEnum.*;
  }
  */
 public class KrbFastResponse extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KrbFastResponseField implements EnumType {
         PADATA,
         STRENGTHEN_KEY,
         FINISHED,
@@ -62,10 +60,10 @@ public class KrbFastResponse extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PADATA, PaData.class),
-            new ExplicitField(STRENGTHEN_KEY, EncryptionKey.class),
-            new ExplicitField(FINISHED, KrbFastFinished.class),
-            new ExplicitField(NONCE, Asn1Integer.class)
+            new ExplicitField(KrbFastResponseField.PADATA, PaData.class),
+            new ExplicitField(KrbFastResponseField.STRENGTHEN_KEY, EncryptionKey.class),
+            new ExplicitField(KrbFastResponseField.FINISHED, KrbFastFinished.class),
+            new ExplicitField(KrbFastResponseField.NONCE, Asn1Integer.class)
     };
 
     public KrbFastResponse() {
@@ -73,34 +71,34 @@ public class KrbFastResponse extends KrbSequenceType {
     }
 
     public PaData getPaData() {
-        return getFieldAs(PADATA, PaData.class);
+        return getFieldAs(KrbFastResponseField.PADATA, PaData.class);
     }
 
     public void setPaData(PaData paData) {
-        setFieldAs(PADATA, paData);
+        setFieldAs(KrbFastResponseField.PADATA, paData);
     }
 
     public EncryptionKey getStrengthenKey() {
-        return getFieldAs(STRENGTHEN_KEY, EncryptionKey.class);
+        return getFieldAs(KrbFastResponseField.STRENGTHEN_KEY, EncryptionKey.class);
     }
 
     public void setStrengthenKey(EncryptionKey strengthenKey) {
-        setFieldAs(STRENGTHEN_KEY, strengthenKey);
+        setFieldAs(KrbFastResponseField.STRENGTHEN_KEY, strengthenKey);
     }
 
     public KrbFastFinished getFastFinished() {
-        return getFieldAs(FINISHED, KrbFastFinished.class);
+        return getFieldAs(KrbFastResponseField.FINISHED, KrbFastFinished.class);
     }
 
     public void setFastFinished(KrbFastFinished fastFinished) {
-        setFieldAs(FINISHED, fastFinished);
+        setFieldAs(KrbFastResponseField.FINISHED, fastFinished);
     }
 
     public int getNonce() {
-        return getFieldAsInt(NONCE);
+        return getFieldAsInt(KrbFastResponseField.NONCE);
     }
 
     public void setNonce(int nonce) {
-        setFieldAsInt(NONCE, nonce);
+        setFieldAsInt(KrbFastResponseField.NONCE, nonce);
     }
 }

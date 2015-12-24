@@ -27,16 +27,12 @@ import org.apache.kerby.asn1.type.Asn1TaggingSequence;
 import org.apache.kerby.asn1.type.Asn1TaggingSet;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
 
-import static org.apache.kerby.asn1.PersonnelRecord.ChildInformation.MyEnum.*;
-import static org.apache.kerby.asn1.PersonnelRecord.MyEnum.*;
-import static org.apache.kerby.asn1.PersonnelRecord.Name.MyEnum.*;
-
 /**
  * Ref. X.690-0207(http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf),
  * Annex A, A.1 ASN.1 description of the record structure
  */
 public class PersonnelRecord extends Asn1TaggingSet {
-    protected enum MyEnum implements EnumType {
+    protected enum PersonnelRecordField implements EnumType {
         NAME,
         TITLE,
         NUMBER,
@@ -56,12 +52,12 @@ public class PersonnelRecord extends Asn1TaggingSet {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(NAME, -1, Name.class),
-            new ExplicitField(TITLE, 0, Asn1VisibleString.class),
-            new ExplicitField(NUMBER, -1, EmployeeNumber.class),
-            new ExplicitField(DATE_OF_HIRE, 1, Date.class),
-            new ExplicitField(NAME_OF_SPOUSE, 2, Name.class),
-            new ImplicitField(CHILDREN, 3, Children.class)
+            new ExplicitField(PersonnelRecordField.NAME, -1, Name.class),
+            new ExplicitField(PersonnelRecordField.TITLE, 0, Asn1VisibleString.class),
+            new ExplicitField(PersonnelRecordField.NUMBER, -1, EmployeeNumber.class),
+            new ExplicitField(PersonnelRecordField.DATE_OF_HIRE, 1, Date.class),
+            new ExplicitField(PersonnelRecordField.NAME_OF_SPOUSE, 2, Name.class),
+            new ImplicitField(PersonnelRecordField.CHILDREN, 3, Children.class)
     };
 
     public PersonnelRecord() {
@@ -69,51 +65,51 @@ public class PersonnelRecord extends Asn1TaggingSet {
     }
 
     public void setName(Name name) {
-        setFieldAs(NAME, name);
+        setFieldAs(PersonnelRecordField.NAME, name);
     }
 
     public Name getName() {
-        return getFieldAs(NAME, Name.class);
+        return getFieldAs(PersonnelRecordField.NAME, Name.class);
     }
 
     public void setTitle(String title) {
-        setFieldAs(TITLE, new Asn1VisibleString(title));
+        setFieldAs(PersonnelRecordField.TITLE, new Asn1VisibleString(title));
     }
 
     public String getTitle() {
-        return getFieldAsString(TITLE);
+        return getFieldAsString(PersonnelRecordField.TITLE);
     }
 
     public void setEmployeeNumber(EmployeeNumber employeeNumber) {
-        setFieldAs(NUMBER, employeeNumber);
+        setFieldAs(PersonnelRecordField.NUMBER, employeeNumber);
     }
 
     public EmployeeNumber getEmployeeNumber() {
-        return getFieldAs(NUMBER, EmployeeNumber.class);
+        return getFieldAs(PersonnelRecordField.NUMBER, EmployeeNumber.class);
     }
 
     public void setDateOfHire(Date dateOfHire) {
-        setFieldAs(DATE_OF_HIRE, dateOfHire);
+        setFieldAs(PersonnelRecordField.DATE_OF_HIRE, dateOfHire);
     }
 
     public Date getDateOfHire() {
-        return getFieldAs(DATE_OF_HIRE, Date.class);
+        return getFieldAs(PersonnelRecordField.DATE_OF_HIRE, Date.class);
     }
 
     public void setNameOfSpouse(Name spouse) {
-        setFieldAs(NAME_OF_SPOUSE, spouse);
+        setFieldAs(PersonnelRecordField.NAME_OF_SPOUSE, spouse);
     }
 
     public Name getNameOfSpouse() {
-        return getFieldAs(NAME_OF_SPOUSE, Name.class);
+        return getFieldAs(PersonnelRecordField.NAME_OF_SPOUSE, Name.class);
     }
 
     public void setChildren(Children children) {
-        setFieldAs(CHILDREN, children);
+        setFieldAs(PersonnelRecordField.CHILDREN, children);
     }
 
     public Children getChildren() {
-        return getFieldAs(CHILDREN, Children.class);
+        return getFieldAs(PersonnelRecordField.CHILDREN, Children.class);
     }
 
     public static class Children extends Asn1SequenceOf<ChildInformation> {
@@ -130,7 +126,7 @@ public class PersonnelRecord extends Asn1TaggingSet {
     }
 
     public static class ChildInformation extends Asn1SetType {
-        protected enum MyEnum implements EnumType {
+        protected enum ChildInformationField implements EnumType {
             CHILD_NAME,
             DATE_OF_BIRTH;
 
@@ -146,8 +142,8 @@ public class PersonnelRecord extends Asn1TaggingSet {
         }
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
-                new ExplicitField(CHILD_NAME, -1, Name.class),
-                new ExplicitField(DATE_OF_BIRTH, 0, Date.class)
+                new ExplicitField(ChildInformationField.CHILD_NAME, -1, Name.class),
+                new ExplicitField(ChildInformationField.DATE_OF_BIRTH, 0, Date.class)
         };
 
         public ChildInformation() {
@@ -155,25 +151,25 @@ public class PersonnelRecord extends Asn1TaggingSet {
         }
 
         public void setName(Name name) {
-            setFieldAs(CHILD_NAME, name);
+            setFieldAs(ChildInformationField.CHILD_NAME, name);
         }
 
         public Name getName() {
-            return getFieldAs(CHILD_NAME, Name.class);
+            return getFieldAs(ChildInformationField.CHILD_NAME, Name.class);
         }
 
         public void setDateOfBirth(Date date) {
-            setFieldAs(DATE_OF_BIRTH, date);
+            setFieldAs(ChildInformationField.DATE_OF_BIRTH, date);
         }
 
         public Date getDateOfBirth() {
-            return getFieldAs(DATE_OF_BIRTH, Date.class);
+            return getFieldAs(ChildInformationField.DATE_OF_BIRTH, Date.class);
         }
     }
 
     public static class Name extends Asn1TaggingSequence {
 
-        protected enum MyEnum implements EnumType {
+        protected enum NameField implements EnumType {
             GIVENNAME,
             INITIAL,
             FAMILYNAME;
@@ -190,9 +186,9 @@ public class PersonnelRecord extends Asn1TaggingSet {
         }
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
-                new ExplicitField(GIVENNAME, -1, Asn1VisibleString.class),
-                new ExplicitField(INITIAL, -1, Asn1VisibleString.class),
-                new ExplicitField(FAMILYNAME, -1, Asn1VisibleString.class)
+                new ExplicitField(NameField.GIVENNAME, -1, Asn1VisibleString.class),
+                new ExplicitField(NameField.INITIAL, -1, Asn1VisibleString.class),
+                new ExplicitField(NameField.FAMILYNAME, -1, Asn1VisibleString.class)
         };
 
         public Name() {
@@ -207,27 +203,27 @@ public class PersonnelRecord extends Asn1TaggingSet {
         }
 
         public void setGivenName(String givenName) {
-            setFieldAs(GIVENNAME, new Asn1VisibleString(givenName));
+            setFieldAs(NameField.GIVENNAME, new Asn1VisibleString(givenName));
         }
 
         public String getGivenName() {
-            return getFieldAsString(GIVENNAME);
+            return getFieldAsString(NameField.GIVENNAME);
         }
 
         public void setInitial(String initial) {
-            setFieldAs(INITIAL, new Asn1VisibleString(initial));
+            setFieldAs(NameField.INITIAL, new Asn1VisibleString(initial));
         }
 
         public String getInitial() {
-            return getFieldAsString(INITIAL);
+            return getFieldAsString(NameField.INITIAL);
         }
 
         public void setFamilyName(String familyName) {
-            setFieldAs(FAMILYNAME, new Asn1VisibleString(familyName));
+            setFieldAs(NameField.FAMILYNAME, new Asn1VisibleString(familyName));
         }
 
         public String getFamilyName() {
-            return getFieldAsString(FAMILYNAME);
+            return getFieldAsString(NameField.FAMILYNAME);
         }
     }
 

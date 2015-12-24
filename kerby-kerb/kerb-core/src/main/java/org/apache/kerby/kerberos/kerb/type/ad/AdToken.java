@@ -25,15 +25,13 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 
-import static org.apache.kerby.kerberos.kerb.type.ad.AdToken.MyEnum.*;
-
 /**
  AD-TOKEN ::= SEQUENCE {
     token     [0]  OCTET STRING,
  }
 */
 public class AdToken extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum AdTokenField implements EnumType {
         TOKEN;
 
         @Override
@@ -48,7 +46,7 @@ public class AdToken extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(TOKEN, KrbToken.class)
+            new ExplicitField(AdTokenField.TOKEN, KrbToken.class)
     };
 
     public AdToken() {
@@ -56,11 +54,11 @@ public class AdToken extends KrbSequenceType {
     }
 
     public KrbToken getToken() {
-        return getFieldAs(TOKEN, KrbToken.class);
+        return getFieldAs(AdTokenField.TOKEN, KrbToken.class);
     }
 
     public void setToken(KrbToken token) {
-        setFieldAs(TOKEN, token);
+        setFieldAs(AdTokenField.TOKEN, token);
     }
 
 }

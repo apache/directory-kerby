@@ -31,8 +31,6 @@ import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.*;
-
 /**
  KDC-REP         ::= SEQUENCE {
  pvno            [0] INTEGER (5),
@@ -48,7 +46,7 @@ import static org.apache.kerby.kerberos.kerb.type.kdc.KdcRep.MyEnum.*;
  }
  */
 public class KdcRep extends KrbMessage {
-    protected enum MyEnum implements EnumType {
+    protected enum KdcRepField implements EnumType {
         PVNO,
         MSG_TYPE,
         PADATA,
@@ -69,13 +67,13 @@ public class KdcRep extends KrbMessage {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PVNO, Asn1Integer.class),
-            new ExplicitField(MSG_TYPE, Asn1Integer.class),
-            new ExplicitField(PADATA, PaData.class),
-            new ExplicitField(CREALM, KerberosString.class),
-            new ExplicitField(CNAME, PrincipalName.class),
-            new ExplicitField(TICKET, Ticket.class),
-            new ExplicitField(ENC_PART, EncryptedData.class)
+            new ExplicitField(KdcRepField.PVNO, Asn1Integer.class),
+            new ExplicitField(KdcRepField.MSG_TYPE, Asn1Integer.class),
+            new ExplicitField(KdcRepField.PADATA, PaData.class),
+            new ExplicitField(KdcRepField.CREALM, KerberosString.class),
+            new ExplicitField(KdcRepField.CNAME, PrincipalName.class),
+            new ExplicitField(KdcRepField.TICKET, Ticket.class),
+            new ExplicitField(KdcRepField.ENC_PART, EncryptedData.class)
     };
 
     private EncKdcRepPart encPart;
@@ -85,43 +83,43 @@ public class KdcRep extends KrbMessage {
     }
 
     public PaData getPaData() {
-        return getFieldAs(PADATA, PaData.class);
+        return getFieldAs(KdcRepField.PADATA, PaData.class);
     }
 
     public void setPaData(PaData paData) {
-        setFieldAs(PADATA, paData);
+        setFieldAs(KdcRepField.PADATA, paData);
     }
 
     public PrincipalName getCname() {
-        return getFieldAs(CNAME, PrincipalName.class);
+        return getFieldAs(KdcRepField.CNAME, PrincipalName.class);
     }
 
     public void setCname(PrincipalName sname) {
-        setFieldAs(CNAME, sname);
+        setFieldAs(KdcRepField.CNAME, sname);
     }
 
     public String getCrealm() {
-        return getFieldAsString(CREALM);
+        return getFieldAsString(KdcRepField.CREALM);
     }
 
     public void setCrealm(String realm) {
-        setFieldAs(CREALM, new KerberosString(realm));
+        setFieldAs(KdcRepField.CREALM, new KerberosString(realm));
     }
 
     public Ticket getTicket() {
-        return getFieldAs(TICKET, Ticket.class);
+        return getFieldAs(KdcRepField.TICKET, Ticket.class);
     }
 
     public void setTicket(Ticket ticket) {
-        setFieldAs(TICKET, ticket);
+        setFieldAs(KdcRepField.TICKET, ticket);
     }
 
     public EncryptedData getEncryptedEncPart() {
-        return getFieldAs(ENC_PART, EncryptedData.class);
+        return getFieldAs(KdcRepField.ENC_PART, EncryptedData.class);
     }
 
     public void setEncryptedEncPart(EncryptedData encryptedEncPart) {
-        setFieldAs(ENC_PART, encryptedEncPart);
+        setFieldAs(KdcRepField.ENC_PART, encryptedEncPart);
     }
 
     public EncKdcRepPart getEncPart() {

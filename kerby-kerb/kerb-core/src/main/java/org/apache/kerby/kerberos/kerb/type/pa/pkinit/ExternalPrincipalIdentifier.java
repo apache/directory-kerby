@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ExternalPrincipalIdentifier.MyEnum.*;
-
 /**
  ExternalPrincipalIdentifier ::= SEQUENCE {
      subjectName             [0] IMPLICIT OCTET STRING OPTIONAL,
@@ -35,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.ExternalPrincipalIde
  }
  */
 public class ExternalPrincipalIdentifier extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum ExternalPrincipalIdentifierField implements EnumType {
         SUBJECT_NAME,
         ISSUER_AND_SERIAL_NUMBER,
         SUBJECT_KEY_IDENTIFIER;
@@ -52,9 +50,9 @@ public class ExternalPrincipalIdentifier extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ImplicitField(SUBJECT_NAME, Asn1OctetString.class),
-            new ImplicitField(ISSUER_AND_SERIAL_NUMBER, Asn1OctetString.class),
-            new ImplicitField(SUBJECT_KEY_IDENTIFIER, Asn1OctetString.class)
+            new ImplicitField(ExternalPrincipalIdentifierField.SUBJECT_NAME, Asn1OctetString.class),
+            new ImplicitField(ExternalPrincipalIdentifierField.ISSUER_AND_SERIAL_NUMBER, Asn1OctetString.class),
+            new ImplicitField(ExternalPrincipalIdentifierField.SUBJECT_KEY_IDENTIFIER, Asn1OctetString.class)
     };
 
     public ExternalPrincipalIdentifier() {
@@ -62,26 +60,26 @@ public class ExternalPrincipalIdentifier extends KrbSequenceType {
     }
 
     public byte[] getSubjectName() {
-        return getFieldAsOctets(SUBJECT_NAME);
+        return getFieldAsOctets(ExternalPrincipalIdentifierField.SUBJECT_NAME);
     }
 
     public void setSubjectName(byte[] subjectName) {
-        setFieldAsOctets(SUBJECT_NAME, subjectName);
+        setFieldAsOctets(ExternalPrincipalIdentifierField.SUBJECT_NAME, subjectName);
     }
 
     public byte[] getIssuerSerialNumber() {
-        return getFieldAsOctets(ISSUER_AND_SERIAL_NUMBER);
+        return getFieldAsOctets(ExternalPrincipalIdentifierField.ISSUER_AND_SERIAL_NUMBER);
     }
 
     public void setIssuerSerialNumber(byte[] issuerSerialNumber) {
-        setFieldAsOctets(ISSUER_AND_SERIAL_NUMBER, issuerSerialNumber);
+        setFieldAsOctets(ExternalPrincipalIdentifierField.ISSUER_AND_SERIAL_NUMBER, issuerSerialNumber);
     }
 
     public byte[] getSubjectKeyIdentifier() {
-        return getFieldAsOctets(SUBJECT_KEY_IDENTIFIER);
+        return getFieldAsOctets(ExternalPrincipalIdentifierField.SUBJECT_KEY_IDENTIFIER);
     }
 
     public void setSubjectKeyIdentifier(byte[] subjectKeyIdentifier) {
-        setFieldAsOctets(SUBJECT_KEY_IDENTIFIER, subjectKeyIdentifier);
+        setFieldAsOctets(ExternalPrincipalIdentifierField.SUBJECT_KEY_IDENTIFIER, subjectKeyIdentifier);
     }
 }

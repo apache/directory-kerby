@@ -26,8 +26,6 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastReq.MyEnum.*;
-
 /**
  KrbFastReq ::= SEQUENCE {
      fast-options [0] FastOptions,
@@ -42,7 +40,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastReq.MyEnum.*;
  }
  */
 public class KrbFastReq extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KrbFastReqField implements EnumType {
         FAST_OPTIONS,
         PADATA,
         REQ_BODY;
@@ -59,9 +57,9 @@ public class KrbFastReq extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(FAST_OPTIONS, FastOptions.class),
-            new ExplicitField(PADATA, PaData.class),
-            new ExplicitField(REQ_BODY, KdcReqBody.class),
+            new ExplicitField(KrbFastReqField.FAST_OPTIONS, FastOptions.class),
+            new ExplicitField(KrbFastReqField.PADATA, PaData.class),
+            new ExplicitField(KrbFastReqField.REQ_BODY, KdcReqBody.class),
     };
 
     public KrbFastReq() {
@@ -69,26 +67,26 @@ public class KrbFastReq extends KrbSequenceType {
     }
 
     public FastOptions getFastOptions() {
-        return getFieldAs(FAST_OPTIONS, FastOptions.class);
+        return getFieldAs(KrbFastReqField.FAST_OPTIONS, FastOptions.class);
     }
 
     public void setFastOptions(FastOptions fastOptions) {
-        setFieldAs(FAST_OPTIONS, fastOptions);
+        setFieldAs(KrbFastReqField.FAST_OPTIONS, fastOptions);
     }
 
     public PaData getPaData() {
-        return getFieldAs(PADATA, PaData.class);
+        return getFieldAs(KrbFastReqField.PADATA, PaData.class);
     }
 
     public void setPaData(PaData paData) {
-        setFieldAs(PADATA, paData);
+        setFieldAs(KrbFastReqField.PADATA, paData);
     }
 
     public KdcReqBody getKdcReqBody() {
-        return getFieldAs(REQ_BODY, KdcReqBody.class);
+        return getFieldAs(KrbFastReqField.REQ_BODY, KdcReqBody.class);
     }
 
     public void setKdcReqBody(KdcReqBody kdcReqBody) {
-        setFieldAs(REQ_BODY, kdcReqBody);
+        setFieldAs(KrbFastReqField.REQ_BODY, kdcReqBody);
     }
 }

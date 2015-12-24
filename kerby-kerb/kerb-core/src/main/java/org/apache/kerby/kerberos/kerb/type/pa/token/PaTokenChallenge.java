@@ -24,15 +24,13 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenChallenge.MyEnum.*;
-
 /**
  PA-TOKEN-CHALLENGE ::= SEQUENCE {
     tokenInfos       [0] SEQUENCE (SIZE(1..MAX)) OF TokenInfo,
  }
 */
 public class PaTokenChallenge extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PaTokenChallengeField implements EnumType {
         TOKENINFOS;
 
         @Override
@@ -47,7 +45,7 @@ public class PaTokenChallenge extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(TOKENINFOS, TokenInfos.class)
+            new ExplicitField(PaTokenChallengeField.TOKENINFOS, TokenInfos.class)
     };
 
     public PaTokenChallenge() {

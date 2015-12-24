@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmor.MyEnum.*;
-
 /**
  KrbFastArmor ::= SEQUENCE {
      armor-type   [0] Int32,
@@ -37,7 +35,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmor.MyEnum.*;
  }
  */
 public class KrbFastArmor extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KrbFastArmorField implements EnumType {
         ARMOR_TYPE,
         ARMOR_VALUE;
 
@@ -53,8 +51,8 @@ public class KrbFastArmor extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(ARMOR_TYPE, Asn1Integer.class),
-            new ExplicitField(ARMOR_VALUE, Asn1OctetString.class)
+            new ExplicitField(KrbFastArmorField.ARMOR_TYPE, Asn1Integer.class),
+            new ExplicitField(KrbFastArmorField.ARMOR_VALUE, Asn1OctetString.class)
     };
 
     public KrbFastArmor() {
@@ -62,19 +60,19 @@ public class KrbFastArmor extends KrbSequenceType {
     }
 
     public ArmorType getArmorType() {
-        Integer value = getFieldAsInteger(ARMOR_TYPE);
+        Integer value = getFieldAsInteger(KrbFastArmorField.ARMOR_TYPE);
         return ArmorType.fromValue(value);
     }
 
     public void setArmorType(ArmorType armorType) {
-        setFieldAsInt(ARMOR_TYPE, armorType.getValue());
+        setFieldAsInt(KrbFastArmorField.ARMOR_TYPE, armorType.getValue());
     }
 
     public byte[] getArmorValue() {
-        return getFieldAsOctets(ARMOR_VALUE);
+        return getFieldAsOctets(KrbFastArmorField.ARMOR_VALUE);
     }
 
     public void setArmorValue(byte[] armorValue) {
-        setFieldAsOctets(ARMOR_VALUE, armorValue);
+        setFieldAsOctets(KrbFastArmorField.ARMOR_VALUE, armorValue);
     }
 }

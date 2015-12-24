@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq.MyEnum.*;
-
 /**
  PA-PK-AS-REQ ::= SEQUENCE {
      signedAuthPack          [0] IMPLICIT OCTET STRING,
@@ -36,7 +34,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq.MyEnum.*;
  }
  */
 public class PaPkAsReq extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PaPkAsReqField implements EnumType {
         SIGNED_AUTH_PACK,
         TRUSTED_CERTIFIERS,
         KDC_PKID;
@@ -53,9 +51,9 @@ public class PaPkAsReq extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ImplicitField(SIGNED_AUTH_PACK, Asn1OctetString.class),
-            new ExplicitField(TRUSTED_CERTIFIERS, TrustedCertifiers.class),
-            new ImplicitField(KDC_PKID, Asn1OctetString.class)
+            new ImplicitField(PaPkAsReqField.SIGNED_AUTH_PACK, Asn1OctetString.class),
+            new ExplicitField(PaPkAsReqField.TRUSTED_CERTIFIERS, TrustedCertifiers.class),
+            new ImplicitField(PaPkAsReqField.KDC_PKID, Asn1OctetString.class)
     };
 
     public PaPkAsReq() {
@@ -63,26 +61,26 @@ public class PaPkAsReq extends KrbSequenceType {
     }
 
     public byte[] getSignedAuthPack() {
-        return getFieldAsOctets(SIGNED_AUTH_PACK);
+        return getFieldAsOctets(PaPkAsReqField.SIGNED_AUTH_PACK);
     }
 
     public void setSignedAuthPack(byte[] signedAuthPack) {
-        setFieldAsOctets(SIGNED_AUTH_PACK, signedAuthPack);
+        setFieldAsOctets(PaPkAsReqField.SIGNED_AUTH_PACK, signedAuthPack);
     }
 
     public TrustedCertifiers getTrustedCertifiers() {
-        return getFieldAs(TRUSTED_CERTIFIERS, TrustedCertifiers.class);
+        return getFieldAs(PaPkAsReqField.TRUSTED_CERTIFIERS, TrustedCertifiers.class);
     }
 
     public void setTrustedCertifiers(TrustedCertifiers trustedCertifiers) {
-        setFieldAs(TRUSTED_CERTIFIERS, trustedCertifiers);
+        setFieldAs(PaPkAsReqField.TRUSTED_CERTIFIERS, trustedCertifiers);
     }
 
     public byte[] getKdcPkId() {
-        return getFieldAsOctets(KDC_PKID);
+        return getFieldAsOctets(PaPkAsReqField.KDC_PKID);
     }
 
     public void setKdcPkId(byte[] kdcPkId) {
-        setFieldAsOctets(KDC_PKID, kdcPkId);
+        setFieldAsOctets(PaPkAsReqField.KDC_PKID, kdcPkId);
     }
 }

@@ -27,8 +27,6 @@ import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEnum.*;
-
 /**
  PKAuthenticator ::= SEQUENCE {
      cusec                   [0] INTEGER (0..999999),
@@ -45,7 +43,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator.MyEn
  }
  */
 public class PkAuthenticator extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PkAuthenticatorField implements EnumType {
         CUSEC,
         CTIME,
         NONCE,
@@ -63,10 +61,10 @@ public class PkAuthenticator extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(CUSEC, Asn1Integer.class),
-            new ExplicitField(CTIME, KerberosTime.class),
-            new ExplicitField(NONCE, Asn1Integer.class),
-            new ExplicitField(PA_CHECKSUM, Asn1OctetString.class)
+            new ExplicitField(PkAuthenticatorField.CUSEC, Asn1Integer.class),
+            new ExplicitField(PkAuthenticatorField.CTIME, KerberosTime.class),
+            new ExplicitField(PkAuthenticatorField.NONCE, Asn1Integer.class),
+            new ExplicitField(PkAuthenticatorField.PA_CHECKSUM, Asn1OctetString.class)
     };
 
     public PkAuthenticator() {
@@ -74,34 +72,34 @@ public class PkAuthenticator extends KrbSequenceType {
     }
 
     public int getCusec() {
-        return getFieldAsInt(CUSEC);
+        return getFieldAsInt(PkAuthenticatorField.CUSEC);
     }
 
     public void setCusec(int cusec) {
-        setFieldAsInt(CUSEC, cusec);
+        setFieldAsInt(PkAuthenticatorField.CUSEC, cusec);
     }
 
     public KerberosTime getCtime() {
-        return getFieldAsTime(CTIME);
+        return getFieldAsTime(PkAuthenticatorField.CTIME);
     }
 
     public void setCtime(KerberosTime ctime) {
-        setFieldAs(CTIME, ctime);
+        setFieldAs(PkAuthenticatorField.CTIME, ctime);
     }
 
     public int getNonce() {
-        return getFieldAsInt(NONCE);
+        return getFieldAsInt(PkAuthenticatorField.NONCE);
     }
 
     public void setNonce(int nonce) {
-        setFieldAsInt(NONCE, nonce);
+        setFieldAsInt(PkAuthenticatorField.NONCE, nonce);
     }
 
     public byte[] getPaChecksum() {
-        return getFieldAsOctets(PA_CHECKSUM);
+        return getFieldAsOctets(PkAuthenticatorField.PA_CHECKSUM);
     }
 
     public void setPaChecksum(byte[] paChecksum) {
-        setFieldAsOctets(PA_CHECKSUM, paChecksum);
+        setFieldAsOctets(PkAuthenticatorField.PA_CHECKSUM, paChecksum);
     }
 }

@@ -32,8 +32,6 @@ import org.apache.kerby.kerberos.kerb.type.base.LastReq;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.TicketFlags;
 
-import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.*;
-
 /**
  EncKDCRepPart   ::= SEQUENCE {
  key             [0] EncryptionKey,
@@ -51,7 +49,7 @@ import static org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart.MyEnum.*;
  }
  */
 public abstract class EncKdcRepPart extends KrbAppSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum EncKdcRepPartField implements EnumType {
         KEY,
         LAST_REQ,
         NONCE,
@@ -77,18 +75,18 @@ public abstract class EncKdcRepPart extends KrbAppSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(KEY, EncryptionKey.class),
-            new ExplicitField(LAST_REQ, LastReq.class),
-            new ExplicitField(NONCE, Asn1Integer.class),
-            new ExplicitField(KEY_EXPIRATION, KerberosTime.class),
-            new ExplicitField(FLAGS, TicketFlags.class),
-            new ExplicitField(AUTHTIME, KerberosTime.class),
-            new ExplicitField(STARTTIME, KerberosTime.class),
-            new ExplicitField(ENDTIME, KerberosTime.class),
-            new ExplicitField(RENEW_TILL, KerberosTime.class),
-            new ExplicitField(SREALM, KerberosString.class),
-            new ExplicitField(SNAME, PrincipalName.class),
-            new ExplicitField(CADDR, HostAddresses.class)
+            new ExplicitField(EncKdcRepPartField.KEY, EncryptionKey.class),
+            new ExplicitField(EncKdcRepPartField.LAST_REQ, LastReq.class),
+            new ExplicitField(EncKdcRepPartField.NONCE, Asn1Integer.class),
+            new ExplicitField(EncKdcRepPartField.KEY_EXPIRATION, KerberosTime.class),
+            new ExplicitField(EncKdcRepPartField.FLAGS, TicketFlags.class),
+            new ExplicitField(EncKdcRepPartField.AUTHTIME, KerberosTime.class),
+            new ExplicitField(EncKdcRepPartField.STARTTIME, KerberosTime.class),
+            new ExplicitField(EncKdcRepPartField.ENDTIME, KerberosTime.class),
+            new ExplicitField(EncKdcRepPartField.RENEW_TILL, KerberosTime.class),
+            new ExplicitField(EncKdcRepPartField.SREALM, KerberosString.class),
+            new ExplicitField(EncKdcRepPartField.SNAME, PrincipalName.class),
+            new ExplicitField(EncKdcRepPartField.CADDR, HostAddresses.class)
     };
 
     public EncKdcRepPart(int tagNo) {
@@ -96,98 +94,98 @@ public abstract class EncKdcRepPart extends KrbAppSequenceType {
     }
 
     public EncryptionKey getKey() {
-        return getFieldAs(KEY, EncryptionKey.class);
+        return getFieldAs(EncKdcRepPartField.KEY, EncryptionKey.class);
     }
 
     public void setKey(EncryptionKey key) {
-        setFieldAs(KEY, key);
+        setFieldAs(EncKdcRepPartField.KEY, key);
     }
 
     public LastReq getLastReq() {
-        return getFieldAs(LAST_REQ, LastReq.class);
+        return getFieldAs(EncKdcRepPartField.LAST_REQ, LastReq.class);
     }
 
     public void setLastReq(LastReq lastReq) {
-        setFieldAs(LAST_REQ, lastReq);
+        setFieldAs(EncKdcRepPartField.LAST_REQ, lastReq);
     }
 
     public int getNonce() {
-        return getFieldAsInt(NONCE);
+        return getFieldAsInt(EncKdcRepPartField.NONCE);
     }
 
     public void setNonce(int nonce) {
-        setFieldAsInt(NONCE, nonce);
+        setFieldAsInt(EncKdcRepPartField.NONCE, nonce);
     }
 
     public KerberosTime getKeyExpiration() {
-        return getFieldAsTime(KEY_EXPIRATION);
+        return getFieldAsTime(EncKdcRepPartField.KEY_EXPIRATION);
     }
 
     public void setKeyExpiration(KerberosTime keyExpiration) {
-        setFieldAs(KEY_EXPIRATION, keyExpiration);
+        setFieldAs(EncKdcRepPartField.KEY_EXPIRATION, keyExpiration);
     }
 
     public TicketFlags getFlags() {
-        return getFieldAs(FLAGS, TicketFlags.class);
+        return getFieldAs(EncKdcRepPartField.FLAGS, TicketFlags.class);
     }
 
     public void setFlags(TicketFlags flags) {
-        setFieldAs(FLAGS, flags);
+        setFieldAs(EncKdcRepPartField.FLAGS, flags);
     }
 
     public KerberosTime getAuthTime() {
-        return getFieldAsTime(AUTHTIME);
+        return getFieldAsTime(EncKdcRepPartField.AUTHTIME);
     }
 
     public void setAuthTime(KerberosTime authTime) {
-        setFieldAs(AUTHTIME, authTime);
+        setFieldAs(EncKdcRepPartField.AUTHTIME, authTime);
     }
 
     public KerberosTime getStartTime() {
-        return getFieldAsTime(STARTTIME);
+        return getFieldAsTime(EncKdcRepPartField.STARTTIME);
     }
 
     public void setStartTime(KerberosTime startTime) {
-        setFieldAs(STARTTIME, startTime);
+        setFieldAs(EncKdcRepPartField.STARTTIME, startTime);
     }
 
     public KerberosTime getEndTime() {
-        return getFieldAsTime(ENDTIME);
+        return getFieldAsTime(EncKdcRepPartField.ENDTIME);
     }
 
     public void setEndTime(KerberosTime endTime) {
-        setFieldAs(ENDTIME, endTime);
+        setFieldAs(EncKdcRepPartField.ENDTIME, endTime);
     }
 
     public KerberosTime getRenewTill() {
-        return getFieldAsTime(RENEW_TILL);
+        return getFieldAsTime(EncKdcRepPartField.RENEW_TILL);
     }
 
     public void setRenewTill(KerberosTime renewTill) {
-        setFieldAs(RENEW_TILL, renewTill);
+        setFieldAs(EncKdcRepPartField.RENEW_TILL, renewTill);
     }
 
     public String getSrealm() {
-        return getFieldAsString(SREALM);
+        return getFieldAsString(EncKdcRepPartField.SREALM);
     }
 
     public void setSrealm(String srealm) {
-        setFieldAsString(SREALM, srealm);
+        setFieldAsString(EncKdcRepPartField.SREALM, srealm);
     }
 
     public PrincipalName getSname() {
-        return getFieldAs(SNAME, PrincipalName.class);
+        return getFieldAs(EncKdcRepPartField.SNAME, PrincipalName.class);
     }
 
     public void setSname(PrincipalName sname) {
-        setFieldAs(SNAME, sname);
+        setFieldAs(EncKdcRepPartField.SNAME, sname);
     }
 
     public HostAddresses getCaddr() {
-        return getFieldAs(CADDR, HostAddresses.class);
+        return getFieldAs(EncKdcRepPartField.CADDR, HostAddresses.class);
     }
 
     public void setCaddr(HostAddresses caddr) {
-        setFieldAs(CADDR, caddr);
+        setFieldAs(EncKdcRepPartField.CADDR, caddr);
     }
 }

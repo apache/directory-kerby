@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.PaEncTsEnc.MyEnum.*;
-
 /**
  PA-ENC-TS-ENC           ::= SEQUENCE {
     patimestamp     [0] KerberosTime -- client's time --,
@@ -35,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.PaEncTsEnc.MyEnum.*;
  }
  */
 public class PaEncTsEnc extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PaEncTsEncField implements EnumType {
         PATIMESTAMP,
         PAUSEC;
 
@@ -51,8 +49,8 @@ public class PaEncTsEnc extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PATIMESTAMP, 0, KerberosTime.class),
-            new ExplicitField(PAUSEC, 1, Asn1Integer.class)
+            new ExplicitField(PaEncTsEncField.PATIMESTAMP, KerberosTime.class),
+            new ExplicitField(PaEncTsEncField.PAUSEC, Asn1Integer.class)
     };
 
     public PaEncTsEnc() {
@@ -60,19 +58,19 @@ public class PaEncTsEnc extends KrbSequenceType {
     }
 
     public KerberosTime getPaTimestamp() {
-        return getFieldAsTime(PATIMESTAMP);
+        return getFieldAsTime(PaEncTsEncField.PATIMESTAMP);
     }
 
     public void setPaTimestamp(KerberosTime paTimestamp) {
-        setFieldAs(PATIMESTAMP, paTimestamp);
+        setFieldAs(PaEncTsEncField.PATIMESTAMP, paTimestamp);
     }
 
     public int getPaUsec() {
-        return getFieldAsInt(PAUSEC);
+        return getFieldAsInt(PaEncTsEncField.PAUSEC);
     }
 
     public void setPaUsec(int paUsec) {
-        setFieldAsInt(PAUSEC, paUsec);
+        setFieldAsInt(PaEncTsEncField.PAUSEC, paUsec);
     }
 
     public KerberosTime getAllTime() {

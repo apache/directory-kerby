@@ -27,8 +27,6 @@ import org.apache.kerby.asn1.type.Asn1Utf8String;
 import org.apache.kerby.kerberos.kerb.type.KerberosString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.*;
-
 /**
  PA-OTP-CHALLENGE ::= SEQUENCE {
      nonce            [0] OCTET STRING,
@@ -39,7 +37,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.otp.PaOtpChallenge.MyEnum.*
  }
  */
 public class PaOtpChallenge extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PaOtpChallengeField implements EnumType {
         NONCE,
         OTP_SERVICE,
         OTP_TOKEN_INFO,
@@ -58,11 +56,11 @@ public class PaOtpChallenge extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(NONCE, Asn1OctetString.class),
-            new ExplicitField(OTP_SERVICE, Asn1Utf8String.class),
-            new ExplicitField(OTP_TOKEN_INFO, Asn1OctetString.class),
-            new ExplicitField(SALT, KerberosString.class),
-            new ExplicitField(S2KPARAMS, Asn1OctetString.class)
+            new ExplicitField(PaOtpChallengeField.NONCE, Asn1OctetString.class),
+            new ExplicitField(PaOtpChallengeField.OTP_SERVICE, Asn1Utf8String.class),
+            new ExplicitField(PaOtpChallengeField.OTP_TOKEN_INFO, Asn1OctetString.class),
+            new ExplicitField(PaOtpChallengeField.SALT, KerberosString.class),
+            new ExplicitField(PaOtpChallengeField.S2KPARAMS, Asn1OctetString.class)
     };
 
     public PaOtpChallenge() {

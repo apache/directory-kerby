@@ -19,16 +19,14 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
+import java.util.Arrays;
+
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-
-import java.util.Arrays;
-
-import static org.apache.kerby.kerberos.kerb.type.base.CheckSum.MyEnum.*;
 
 /**
  Checksum        ::= SEQUENCE {
@@ -37,7 +35,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.CheckSum.MyEnum.*;
  }
  */
 public class CheckSum extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum CheckSumField implements EnumType {
         CKSUM_TYPE,
         CHECK_SUM;
 
@@ -53,8 +51,8 @@ public class CheckSum extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(CKSUM_TYPE, 0, Asn1Integer.class),
-        new ExplicitField(CHECK_SUM, 1, Asn1OctetString.class)
+        new ExplicitField(CheckSumField.CKSUM_TYPE, Asn1Integer.class),
+        new ExplicitField(CheckSumField.CHECK_SUM, Asn1OctetString.class)
     };
 
     public CheckSum() {
@@ -73,20 +71,20 @@ public class CheckSum extends KrbSequenceType {
     }
 
     public CheckSumType getCksumtype() {
-        Integer value = getFieldAsInteger(CKSUM_TYPE);
+        Integer value = getFieldAsInteger(CheckSumField.CKSUM_TYPE);
         return CheckSumType.fromValue(value);
     }
 
     public void setCksumtype(CheckSumType cksumtype) {
-        setFieldAsInt(CKSUM_TYPE, cksumtype.getValue());
+        setFieldAsInt(CheckSumField.CKSUM_TYPE, cksumtype.getValue());
     }
 
     public byte[] getChecksum() {
-        return getFieldAsOctets(CHECK_SUM);
+        return getFieldAsOctets(CheckSumField.CHECK_SUM);
     }
 
     public void setChecksum(byte[] checksum) {
-        setFieldAsOctets(CHECK_SUM, checksum);
+        setFieldAsOctets(CheckSumField.CHECK_SUM, checksum);
     }
 
     @Override

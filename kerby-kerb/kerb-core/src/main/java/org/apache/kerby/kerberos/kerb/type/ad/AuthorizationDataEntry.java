@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry.MyEnum.*;
-
 /**
  AuthorizationData       ::= SEQUENCE OF SEQUENCE {
  ad-type         [0] Int32,
@@ -35,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry.MyEn
  }
  */
 public class AuthorizationDataEntry extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum AuthorizationDataEntryField implements EnumType {
         AD_TYPE,
         AD_DATA;
 
@@ -51,8 +49,8 @@ public class AuthorizationDataEntry extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(AD_TYPE, 0, Asn1Integer.class),
-            new ExplicitField(AD_DATA, 1, Asn1OctetString.class)
+            new ExplicitField(AuthorizationDataEntryField.AD_TYPE, Asn1Integer.class),
+            new ExplicitField(AuthorizationDataEntryField.AD_DATA, Asn1OctetString.class)
     };
 
     public AuthorizationDataEntry() {
@@ -60,19 +58,19 @@ public class AuthorizationDataEntry extends KrbSequenceType {
     }
 
     public AuthorizationType getAuthzType() {
-        Integer value = getFieldAsInteger(AD_TYPE);
+        Integer value = getFieldAsInteger(AuthorizationDataEntryField.AD_TYPE);
         return AuthorizationType.fromValue(value);
     }
 
     public void setAuthzType(AuthorizationType authzType) {
-        setFieldAsInt(AD_TYPE, authzType.getValue());
+        setFieldAsInt(AuthorizationDataEntryField.AD_TYPE, authzType.getValue());
     }
 
     public byte[] getAuthzData() {
-        return getFieldAsOctets(AD_DATA);
+        return getFieldAsOctets(AuthorizationDataEntryField.AD_DATA);
     }
 
     public void setAuthzData(byte[] authzData) {
-        setFieldAsOctets(AD_DATA, authzData);
+        setFieldAsOctets(AuthorizationDataEntryField.AD_DATA, authzData);
     }
 }

@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest.MyEnum.*;
-
 /**
  PA-TOKEN-REQUEST ::= SEQUENCE {
     token          [0]  OCTET STRING,
@@ -34,7 +32,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest.MyEnum
  }
 */
 public class PaTokenRequest extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PaTokenRequestField implements EnumType {
         TOKEN_INFO,
         TOKEN;
 
@@ -50,8 +48,8 @@ public class PaTokenRequest extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(TOKEN_INFO, TokenInfo.class),
-            new ExplicitField(TOKEN, KrbToken.class)
+            new ExplicitField(PaTokenRequestField.TOKEN_INFO, TokenInfo.class),
+            new ExplicitField(PaTokenRequestField.TOKEN, KrbToken.class)
     };
 
     public PaTokenRequest() {
@@ -59,19 +57,18 @@ public class PaTokenRequest extends KrbSequenceType {
     }
 
     public KrbToken getToken() {
-        return getFieldAs(TOKEN, KrbToken.class);
+        return getFieldAs(PaTokenRequestField.TOKEN, KrbToken.class);
     }
 
     public void setToken(KrbToken token) {
-        setFieldAs(TOKEN, token);
+        setFieldAs(PaTokenRequestField.TOKEN, token);
     }
 
     public TokenInfo getTokenInfo() {
-        return getFieldAs(TOKEN_INFO, TokenInfo.class);
+        return getFieldAs(PaTokenRequestField.TOKEN_INFO, TokenInfo.class);
     }
 
     public void setTokenInfo(TokenInfo tokenInfo) {
-        setFieldAs(TOKEN_INFO, tokenInfo);
+        setFieldAs(PaTokenRequestField.TOKEN_INFO, tokenInfo);
     }
-
 }

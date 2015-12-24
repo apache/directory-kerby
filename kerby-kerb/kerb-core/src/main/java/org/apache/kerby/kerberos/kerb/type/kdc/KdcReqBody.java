@@ -19,6 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.type.kdc;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
@@ -33,12 +37,6 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.Tickets;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.*;
 
 /**
  KDC-REQ-BODY    ::= SEQUENCE {
@@ -63,7 +61,7 @@ import static org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody.MyEnum.*;
  }
  */
 public class KdcReqBody extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KdcReqBodyField implements EnumType {
         KDC_OPTIONS,
         CNAME,
         REALM,
@@ -89,18 +87,18 @@ public class KdcReqBody extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(KDC_OPTIONS, KdcOptions.class),
-            new ExplicitField(CNAME, PrincipalName.class),
-            new ExplicitField(REALM, KerberosString.class),
-            new ExplicitField(SNAME, PrincipalName.class),
-            new ExplicitField(FROM, KerberosTime.class),
-            new ExplicitField(TILL, KerberosTime.class),
-            new ExplicitField(RTIME, KerberosTime.class),
-            new ExplicitField(NONCE, Asn1Integer.class),
-            new ExplicitField(ETYPE, KrbIntegers.class),
-            new ExplicitField(ADDRESSES, HostAddresses.class),
-            new ExplicitField(ENC_AUTHORIZATION_DATA, AuthorizationData.class),
-            new ExplicitField(ADDITIONAL_TICKETS, Tickets.class)
+            new ExplicitField(KdcReqBodyField.KDC_OPTIONS, KdcOptions.class),
+            new ExplicitField(KdcReqBodyField.CNAME, PrincipalName.class),
+            new ExplicitField(KdcReqBodyField.REALM, KerberosString.class),
+            new ExplicitField(KdcReqBodyField.SNAME, PrincipalName.class),
+            new ExplicitField(KdcReqBodyField.FROM, KerberosTime.class),
+            new ExplicitField(KdcReqBodyField.TILL, KerberosTime.class),
+            new ExplicitField(KdcReqBodyField.RTIME, KerberosTime.class),
+            new ExplicitField(KdcReqBodyField.NONCE, Asn1Integer.class),
+            new ExplicitField(KdcReqBodyField.ETYPE, KrbIntegers.class),
+            new ExplicitField(KdcReqBodyField.ADDRESSES, HostAddresses.class),
+            new ExplicitField(KdcReqBodyField.ENC_AUTHORIZATION_DATA, AuthorizationData.class),
+            new ExplicitField(KdcReqBodyField.ADDITIONAL_TICKETS, Tickets.class)
     };
 
     public KdcReqBody() {
@@ -110,39 +108,39 @@ public class KdcReqBody extends KrbSequenceType {
     private AuthorizationData authorizationData;
 
     public KerberosTime getFrom() {
-        return getFieldAs(FROM, KerberosTime.class);
+        return getFieldAs(KdcReqBodyField.FROM, KerberosTime.class);
     }
 
     public void setFrom(KerberosTime from) {
-        setFieldAs(FROM, from);
+        setFieldAs(KdcReqBodyField.FROM, from);
     }
 
     public KerberosTime getTill() {
-        return getFieldAs(TILL, KerberosTime.class);
+        return getFieldAs(KdcReqBodyField.TILL, KerberosTime.class);
     }
 
     public void setTill(KerberosTime till) {
-        setFieldAs(TILL, till);
+        setFieldAs(KdcReqBodyField.TILL, till);
     }
 
     public KerberosTime getRtime() {
-        return getFieldAs(RTIME, KerberosTime.class);
+        return getFieldAs(KdcReqBodyField.RTIME, KerberosTime.class);
     }
 
     public void setRtime(KerberosTime rtime) {
-        setFieldAs(RTIME, rtime);
+        setFieldAs(KdcReqBodyField.RTIME, rtime);
     }
 
     public int getNonce() {
-        return getFieldAsInt(NONCE);
+        return getFieldAsInt(KdcReqBodyField.NONCE);
     }
 
     public void setNonce(int nonce) {
-        setFieldAsInt(NONCE, nonce);
+        setFieldAsInt(KdcReqBodyField.NONCE, nonce);
     }
 
     public List<EncryptionType> getEtypes() {
-        KrbIntegers values = getFieldAs(ETYPE, KrbIntegers.class);
+        KrbIntegers values = getFieldAs(KdcReqBodyField.ETYPE, KrbIntegers.class);
         if (values == null) {
             return Collections.emptyList();
         }
@@ -160,23 +158,23 @@ public class KdcReqBody extends KrbSequenceType {
             values.add(etype.getValue());
         }
         KrbIntegers value = new KrbIntegers(values);
-        setFieldAs(ETYPE, value);
+        setFieldAs(KdcReqBodyField.ETYPE, value);
     }
 
     public HostAddresses getAddresses() {
-        return getFieldAs(ADDRESSES, HostAddresses.class);
+        return getFieldAs(KdcReqBodyField.ADDRESSES, HostAddresses.class);
     }
 
     public void setAddresses(HostAddresses addresses) {
-        setFieldAs(ADDRESSES, addresses);
+        setFieldAs(KdcReqBodyField.ADDRESSES, addresses);
     }
 
     public EncryptedData getEncryptedAuthorizationData() {
-        return getFieldAs(ENC_AUTHORIZATION_DATA, EncryptedData.class);
+        return getFieldAs(KdcReqBodyField.ENC_AUTHORIZATION_DATA, EncryptedData.class);
     }
 
     public void setEncryptedAuthorizationData(EncryptedData encAuthorizationData) {
-        setFieldAs(ENC_AUTHORIZATION_DATA, encAuthorizationData);
+        setFieldAs(KdcReqBodyField.ENC_AUTHORIZATION_DATA, encAuthorizationData);
     }
 
     public AuthorizationData getAuthorizationData() {
@@ -188,42 +186,42 @@ public class KdcReqBody extends KrbSequenceType {
     }
 
     public Tickets getAdditionalTickets() {
-        return getFieldAs(ADDITIONAL_TICKETS, Tickets.class);
+        return getFieldAs(KdcReqBodyField.ADDITIONAL_TICKETS, Tickets.class);
     }
 
     public void setAdditionalTickets(Tickets additionalTickets) {
-        setFieldAs(ADDITIONAL_TICKETS, additionalTickets);
+        setFieldAs(KdcReqBodyField.ADDITIONAL_TICKETS, additionalTickets);
     }
 
     public KdcOptions getKdcOptions() {
-        return getFieldAs(KDC_OPTIONS, KdcOptions.class);
+        return getFieldAs(KdcReqBodyField.KDC_OPTIONS, KdcOptions.class);
     }
 
     public void setKdcOptions(KdcOptions kdcOptions) {
-        setFieldAs(KDC_OPTIONS, kdcOptions);
+        setFieldAs(KdcReqBodyField.KDC_OPTIONS, kdcOptions);
     }
 
     public PrincipalName getSname() {
-        return getFieldAs(SNAME, PrincipalName.class);
+        return getFieldAs(KdcReqBodyField.SNAME, PrincipalName.class);
     }
 
     public void setSname(PrincipalName sname) {
-        setFieldAs(SNAME, sname);
+        setFieldAs(KdcReqBodyField.SNAME, sname);
     }
 
     public PrincipalName getCname() {
-        return getFieldAs(CNAME, PrincipalName.class);
+        return getFieldAs(KdcReqBodyField.CNAME, PrincipalName.class);
     }
 
     public void setCname(PrincipalName cname) {
-        setFieldAs(CNAME, cname);
+        setFieldAs(KdcReqBodyField.CNAME, cname);
     }
 
     public String getRealm() {
-        return getFieldAsString(REALM);
+        return getFieldAsString(KdcReqBodyField.REALM);
     }
 
     public void setRealm(String realm) {
-        setFieldAs(REALM, new KerberosString(realm));
+        setFieldAs(KdcReqBodyField.REALM, new KerberosString(realm));
     }
 }

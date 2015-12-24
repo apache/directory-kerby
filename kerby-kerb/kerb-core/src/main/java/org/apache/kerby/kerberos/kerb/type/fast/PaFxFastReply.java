@@ -24,15 +24,13 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.PaFxFastReply.MyEnum.*;
-
 /**
  PA-FX-FAST-REPLY ::= CHOICE {
     armored-data [0] KrbFastArmoredRep,
  }
  */
 public class PaFxFastReply extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum PaFxFastReplyField implements EnumType {
         ARMORED_DATA;
 
         @Override
@@ -47,7 +45,7 @@ public class PaFxFastReply extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(ARMORED_DATA, KrbFastArmoredRep.class)
+            new ExplicitField(PaFxFastReplyField.ARMORED_DATA, KrbFastArmoredRep.class)
     };
 
     public PaFxFastReply() {
@@ -55,10 +53,10 @@ public class PaFxFastReply extends Asn1Choice {
     }
 
     public KrbFastArmoredRep getFastArmoredRep() {
-        return getChoiceValueAs(ARMORED_DATA, KrbFastArmoredRep.class);
+        return getChoiceValueAs(PaFxFastReplyField.ARMORED_DATA, KrbFastArmoredRep.class);
     }
 
     public void setFastArmoredRep(KrbFastArmoredRep fastArmoredRep) {
-        setChoiceValue(ARMORED_DATA, fastArmoredRep);
+        setChoiceValue(PaFxFastReplyField.ARMORED_DATA, fastArmoredRep);
     }
 }

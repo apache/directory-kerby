@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.pa.PaAuthenticationSetElem.MyEnum.*;
-
 /**
  PA-AUTHENTICATION-SET-ELEM ::= SEQUENCE {
      pa-type      [0] Int32,
@@ -37,7 +35,7 @@ import static org.apache.kerby.kerberos.kerb.type.pa.PaAuthenticationSetElem.MyE
  }
  */
 public class PaAuthenticationSetElem extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PaAuthenticationSetElemField implements EnumType {
         PA_TYPE,
         PA_HINT,
         PA_VALUE;
@@ -54,9 +52,9 @@ public class PaAuthenticationSetElem extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PA_TYPE, Asn1Integer.class),
-            new ExplicitField(PA_HINT, Asn1OctetString.class),
-            new ExplicitField(PA_VALUE, Asn1OctetString.class)
+            new ExplicitField(PaAuthenticationSetElemField.PA_TYPE, Asn1Integer.class),
+            new ExplicitField(PaAuthenticationSetElemField.PA_HINT, Asn1OctetString.class),
+            new ExplicitField(PaAuthenticationSetElemField.PA_VALUE, Asn1OctetString.class)
     };
 
     public PaAuthenticationSetElem() {
@@ -64,27 +62,27 @@ public class PaAuthenticationSetElem extends KrbSequenceType {
     }
 
     public PaDataType getPaType() {
-        Integer value = getFieldAsInteger(PA_TYPE);
+        Integer value = getFieldAsInteger(PaAuthenticationSetElemField.PA_TYPE);
         return PaDataType.fromValue(value);
     }
 
     public void setPaType(PaDataType paDataType) {
-        setFieldAsInt(PA_TYPE, paDataType.getValue());
+        setFieldAsInt(PaAuthenticationSetElemField.PA_TYPE, paDataType.getValue());
     }
 
     public byte[] getPaHint() {
-        return getFieldAsOctets(PA_HINT);
+        return getFieldAsOctets(PaAuthenticationSetElemField.PA_HINT);
     }
 
     public void setPaHint(byte[] paHint) {
-        setFieldAsOctets(PA_HINT, paHint);
+        setFieldAsOctets(PaAuthenticationSetElemField.PA_HINT, paHint);
     }
 
     public byte[] getPaValue() {
-        return getFieldAsOctets(PA_VALUE);
+        return getFieldAsOctets(PaAuthenticationSetElemField.PA_VALUE);
     }
 
     public void setPaValue(byte[] paDataValue) {
-        setFieldAsOctets(PA_VALUE, paDataValue);
+        setFieldAsOctets(PaAuthenticationSetElemField.PA_VALUE, paDataValue);
     }
 }

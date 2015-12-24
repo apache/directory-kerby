@@ -27,8 +27,6 @@ import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 
-import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastFinished.MyEnum.*;
-
 /**
  KrbFastFinished ::= SEQUENCE {
      timestamp       [0] KerberosTime,
@@ -46,7 +44,7 @@ import static org.apache.kerby.kerberos.kerb.type.fast.KrbFastFinished.MyEnum.*;
  }
  */
 public class KrbFastFinished extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KrbFastFinishedField implements EnumType {
         FAST_OPTIONS,
         PADATA,
         REQ_BODY;
@@ -63,9 +61,9 @@ public class KrbFastFinished extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(FAST_OPTIONS, KrbFastArmor.class),
-            new ExplicitField(PADATA, PaData.class),
-            new ExplicitField(REQ_BODY, EncryptedData.class),
+            new ExplicitField(KrbFastFinishedField.FAST_OPTIONS, KrbFastArmor.class),
+            new ExplicitField(KrbFastFinishedField.PADATA, PaData.class),
+            new ExplicitField(KrbFastFinishedField.REQ_BODY, EncryptedData.class),
     };
 
     public KrbFastFinished() {
@@ -73,26 +71,26 @@ public class KrbFastFinished extends KrbSequenceType {
     }
 
     public KrbFastArmor getArmor() {
-        return getFieldAs(FAST_OPTIONS, KrbFastArmor.class);
+        return getFieldAs(KrbFastFinishedField.FAST_OPTIONS, KrbFastArmor.class);
     }
 
     public void setArmor(KrbFastArmor armor) {
-        setFieldAs(FAST_OPTIONS, armor);
+        setFieldAs(KrbFastFinishedField.FAST_OPTIONS, armor);
     }
 
     public CheckSum getReqChecksum() {
-        return getFieldAs(PADATA, CheckSum.class);
+        return getFieldAs(KrbFastFinishedField.PADATA, CheckSum.class);
     }
 
     public void setReqChecksum(CheckSum checkSum) {
-        setFieldAs(PADATA, checkSum);
+        setFieldAs(KrbFastFinishedField.PADATA, checkSum);
     }
 
     public EncryptedData getEncFastReq() {
-        return getFieldAs(REQ_BODY, EncryptedData.class);
+        return getFieldAs(KrbFastFinishedField.REQ_BODY, EncryptedData.class);
     }
 
     public void setEncFastReq(EncryptedData encFastReq) {
-        setFieldAs(REQ_BODY, encFastReq);
+        setFieldAs(KrbFastFinishedField.REQ_BODY, encFastReq);
     }
 }

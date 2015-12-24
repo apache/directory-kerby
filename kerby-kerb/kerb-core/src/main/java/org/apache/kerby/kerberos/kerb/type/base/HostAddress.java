@@ -19,17 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
+import java.net.InetAddress;
+import java.util.Arrays;
+
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-
-import java.net.InetAddress;
-import java.util.Arrays;
-
-import static org.apache.kerby.kerberos.kerb.type.base.HostAddress.MyEnum.*;
 
 /*
 HostAddress     ::= SEQUENCE  {
@@ -38,7 +36,7 @@ HostAddress     ::= SEQUENCE  {
 }
  */
 public class HostAddress extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum HostAddressField implements EnumType {
         ADDR_TYPE,
         ADDRESS;
 
@@ -54,8 +52,8 @@ public class HostAddress extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(ADDR_TYPE, 0, Asn1Integer.class),
-            new ExplicitField(ADDRESS, 1, Asn1OctetString.class)
+            new ExplicitField(HostAddressField.ADDR_TYPE, 0, Asn1Integer.class),
+            new ExplicitField(HostAddressField.ADDRESS, 1, Asn1OctetString.class)
     };
 
     public HostAddress() {
@@ -70,20 +68,20 @@ public class HostAddress extends KrbSequenceType {
     }
 
     public HostAddrType getAddrType() {
-        Integer value = getFieldAsInteger(ADDR_TYPE);
+        Integer value = getFieldAsInteger(HostAddressField.ADDR_TYPE);
         return HostAddrType.fromValue(value);
     }
 
     public void setAddrType(HostAddrType addrType) {
-        setField(ADDR_TYPE, addrType);
+        setField(HostAddressField.ADDR_TYPE, addrType);
     }
 
     public byte[] getAddress() {
-        return getFieldAsOctets(ADDRESS);
+        return getFieldAsOctets(HostAddressField.ADDRESS);
     }
 
     public void setAddress(byte[] address) {
-        setFieldAsOctets(ADDRESS, address);
+        setFieldAsOctets(HostAddressField.ADDRESS, address);
     }
 
     public boolean equalsWith(InetAddress address) {

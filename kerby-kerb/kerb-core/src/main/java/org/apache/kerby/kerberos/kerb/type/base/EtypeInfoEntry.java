@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfoEntry.MyEnum.*;
-
 /**
  ETYPE-INFO-ENTRY        ::= SEQUENCE {
  etype           [0] Int32,
@@ -35,7 +33,7 @@ import static org.apache.kerby.kerberos.kerb.type.base.EtypeInfoEntry.MyEnum.*;
  }
  */
 public class EtypeInfoEntry extends KrbSequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum EtypeInfoEntryField implements EnumType {
         ETYPE,
         SALT;
 
@@ -51,8 +49,8 @@ public class EtypeInfoEntry extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(ETYPE, 0, Asn1Integer.class),
-            new ExplicitField(SALT, 1, Asn1OctetString.class)
+            new ExplicitField(EtypeInfoEntryField.ETYPE, Asn1Integer.class),
+            new ExplicitField(EtypeInfoEntryField.SALT, Asn1OctetString.class)
     };
 
     public EtypeInfoEntry() {
@@ -60,18 +58,18 @@ public class EtypeInfoEntry extends KrbSequenceType {
     }
 
     public EncryptionType getEtype() {
-        return EncryptionType.fromValue(getFieldAsInt(ETYPE));
+        return EncryptionType.fromValue(getFieldAsInt(EtypeInfoEntryField.ETYPE));
     }
 
     public void setEtype(EncryptionType etype) {
-        setField(ETYPE, etype);
+        setField(EtypeInfoEntryField.ETYPE, etype);
     }
 
     public byte[] getSalt() {
-        return getFieldAsOctets(SALT);
+        return getFieldAsOctets(EtypeInfoEntryField.SALT);
     }
 
     public void setSalt(byte[] salt) {
-        setFieldAsOctets(SALT, salt);
+        setFieldAsOctets(EtypeInfoEntryField.SALT, salt);
     }
 }

@@ -27,8 +27,6 @@ import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.KrbAppSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 
-import static org.apache.kerby.kerberos.kerb.type.ap.EncAPRepPart.MyEnum.*;
-
 /**
  EncAPRepPart    ::= [APPLICATION 27] SEQUENCE {
  ctime           [0] KerberosTime,
@@ -40,7 +38,7 @@ import static org.apache.kerby.kerberos.kerb.type.ap.EncAPRepPart.MyEnum.*;
 public class EncAPRepPart extends KrbAppSequenceType {
     public static final int TAG = 27;
 
-    protected enum MyEnum implements EnumType {
+    protected enum EncAPRepPartField implements EnumType {
         CTIME,
         CUSEC,
         SUBKEY,
@@ -58,10 +56,10 @@ public class EncAPRepPart extends KrbAppSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(CTIME, 0, KerberosTime.class),
-            new ExplicitField(CUSEC, 1, Asn1Integer.class),
-            new ExplicitField(SUBKEY, 2, EncryptionKey.class),
-            new ExplicitField(SEQ_NUMBER, 3, Asn1Integer.class)
+            new ExplicitField(EncAPRepPartField.CTIME, KerberosTime.class),
+            new ExplicitField(EncAPRepPartField.CUSEC, Asn1Integer.class),
+            new ExplicitField(EncAPRepPartField.SUBKEY, EncryptionKey.class),
+            new ExplicitField(EncAPRepPartField.SEQ_NUMBER, Asn1Integer.class)
     };
 
     public EncAPRepPart() {
@@ -69,34 +67,34 @@ public class EncAPRepPart extends KrbAppSequenceType {
     }
 
     public KerberosTime getCtime() {
-        return getFieldAsTime(CTIME);
+        return getFieldAsTime(EncAPRepPartField.CTIME);
     }
 
     public void setCtime(KerberosTime ctime) {
-        setFieldAs(CTIME, ctime);
+        setFieldAs(EncAPRepPartField.CTIME, ctime);
     }
 
     public int getCusec() {
-        return getFieldAsInt(CUSEC);
+        return getFieldAsInt(EncAPRepPartField.CUSEC);
     }
 
     public void setCusec(int cusec) {
-        setFieldAsInt(CUSEC, cusec);
+        setFieldAsInt(EncAPRepPartField.CUSEC, cusec);
     }
 
     public EncryptionKey getSubkey() {
-        return getFieldAs(SUBKEY, EncryptionKey.class);
+        return getFieldAs(EncAPRepPartField.SUBKEY, EncryptionKey.class);
     }
 
     public void setSubkey(EncryptionKey subkey) {
-        setFieldAs(SUBKEY, subkey);
+        setFieldAs(EncAPRepPartField.SUBKEY, subkey);
     }
 
     public int getSeqNumber() {
-        return getFieldAsInt(SEQ_NUMBER);
+        return getFieldAsInt(EncAPRepPartField.SEQ_NUMBER);
     }
 
     public void setSeqNumber(Integer seqNumber) {
-        setFieldAsInt(SEQ_NUMBER, seqNumber);
+        setFieldAsInt(EncAPRepPartField.SEQ_NUMBER, seqNumber);
     }
 }
