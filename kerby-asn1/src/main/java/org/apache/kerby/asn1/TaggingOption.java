@@ -23,8 +23,13 @@ package org.apache.kerby.asn1;
  * Tagging option for tagging an ASN1 type.
  */
 public final class TaggingOption {
+    /** The tag number. We limit it to an int, although it's theorically unlimited */
     private int tagNo;
+    
+    /** A flag set to TRUE when the tag is IMPLICIT */
     private boolean isImplicit;
+    
+    /** A flag set to TRUE when the tag is an APPLICATION tag */
     private boolean isAppSpecific;
 
     /**
