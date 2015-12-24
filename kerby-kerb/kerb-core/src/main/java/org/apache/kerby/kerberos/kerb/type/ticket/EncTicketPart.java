@@ -83,7 +83,7 @@ public class EncTicketPart extends KrbAppSequenceType {
             new ExplicitField(EncTicketPartField.AUTHTIME, KerberosTime.class),
             new ExplicitField(EncTicketPartField.STARTTIME, KerberosTime.class),
             new ExplicitField(EncTicketPartField.ENDTIME, KerberosTime.class),
-            new ExplicitField(EncTicketPartField.ENDTIME, KerberosTime.class),
+            new ExplicitField(EncTicketPartField.RENEW_TILL, KerberosTime.class),
             new ExplicitField(EncTicketPartField.CADDR, HostAddresses.class),
             new ExplicitField(EncTicketPartField.AUTHORIZATION_DATA, AuthorizationData.class)
     };
