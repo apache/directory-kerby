@@ -50,11 +50,15 @@ public class WithCertKdcTest extends KdcTestBase {
     private Certificate userCert;
     private PrivateKey userKey; //NOPMD
 
+    private KrbPkinitClient pkinitClient;
+
     @Before
     public void setUp() throws Exception {
         pkiLoader = new PkiLoader();
 
         super.setUp();
+
+        pkinitClient = getPkinitClient();
     }
 
     @Override
@@ -80,10 +84,7 @@ public class WithCertKdcTest extends KdcTestBase {
     public void testPkinit() throws Exception {
         assertThat(userCert).isNotNull();
 
-        getKrbClient().init();
-
         TgtTicket tgt;
-        KrbPkinitClient pkinitClient = new KrbPkinitClient(getKrbClient());
         try {
             String userCertPath = getClass().getResource("/usercert.pem").getPath();
             String userKeyPath = getClass().getResource("/userkey.pem").getPath();

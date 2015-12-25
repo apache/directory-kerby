@@ -136,7 +136,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
     private void performTest() throws Exception {
         createCredentialCache(getClientPrincipal(), getClientPassword());
 
-        KrbTokenClient tokenClient = new KrbTokenClient(getKrbClient());
+        KrbTokenClient tokenClient = getTokenClient();
         try {
             SgtTicket sgtTicket = tokenClient.requestSgt(
                 getKrbToken(), getServerPrincipal(), getcCacheFile().getPath());

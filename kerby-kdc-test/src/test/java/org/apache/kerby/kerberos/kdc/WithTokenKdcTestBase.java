@@ -120,10 +120,10 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
 
         if (tokenEncoder instanceof JwtTokenEncoder && signingKey != null) {
-            ((JwtTokenEncoder) tokenEncoder).setSignKey(signingKey);
+            tokenEncoder.setSignKey(signingKey);
         }
         if (tokenEncoder instanceof JwtTokenEncoder && encryptionKey != null) {
-            ((JwtTokenEncoder) tokenEncoder).setEncryptionKey(encryptionKey);
+            tokenEncoder.setEncryptionKey(encryptionKey);
         }
 
         krbToken = new KrbToken();

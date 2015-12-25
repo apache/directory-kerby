@@ -27,18 +27,21 @@ import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnonymousPkinitKdcTest extends KdcTestBase {
-
     private String serverPrincipal;
+    private KrbPkinitClient pkinitClient;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
+
+        pkinitClient = getPkinitClient();
     }
 
     @Override
@@ -63,23 +66,19 @@ public class AnonymousPkinitKdcTest extends KdcTestBase {
 
     @Test
     public void testAnonymity() throws Exception {
-
-        getKrbClient().init();
-
-
         TgtTicket tgt;
-        KrbPkinitClient pkinitClient = new KrbPkinitClient(getKrbClient());
+
         try {
             tgt = pkinitClient.requestTgt();
         } catch (KrbException te) {
             te.printStackTrace();
-            assertThat(te.getMessage().contains("timeout")).isTrue();
+            Assert.fail();
             return;
         }
         assertThat(tgt).isNotNull();
 
         serverPrincipal = getServerPrincipal();
-        SgtTicket tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
+        SgtTicket tkt = pkinitClient.requestSgt(tgt, serverPrincipal);
         assertThat(tkt).isNotNull();
     }
 }
