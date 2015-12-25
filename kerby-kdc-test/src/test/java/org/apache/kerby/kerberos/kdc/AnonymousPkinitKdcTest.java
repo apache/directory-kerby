@@ -33,6 +33,9 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Anonymous PKINIT test.
+ */
 public class AnonymousPkinitKdcTest extends KdcTestBase {
     private String serverPrincipal;
     private KrbPkinitClient pkinitClient;

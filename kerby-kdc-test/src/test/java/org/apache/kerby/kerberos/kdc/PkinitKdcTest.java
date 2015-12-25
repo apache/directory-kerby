@@ -36,6 +36,10 @@ import java.security.cert.Certificate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * RSA PKINIT test.
+ */
+
+/**
  openssl genrsa -out cakey.pem 2048
  openssl req -key cakey.pem -new -x509 -out cacert.pem -days 3650
  vi extensions.kdc
@@ -44,7 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  env REALM=SH.INTEL.COM openssl x509 -req -in kdc.req -CAkey cakey.pem \
  -CA cacert.pem -out kdc.pem -days 365 -extfile extensions.kdc -extensions kdc_cert -CAcreateserial
  */
-public class WithCertKdcTest extends KdcTestBase {
+public class PkinitKdcTest extends KdcTestBase {
     private PkiLoader pkiLoader;
     private String serverPrincipal;
     private Certificate userCert;

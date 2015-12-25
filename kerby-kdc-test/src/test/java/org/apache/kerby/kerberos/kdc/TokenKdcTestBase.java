@@ -48,7 +48,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class WithTokenKdcTestBase extends KdcTestBase {
+public class TokenKdcTestBase extends KdcTestBase {
     static final String SUBJECT = "test-sub";
     static final String ISSUER = "oauth2.com";
     static final String GROUP = "sales-group";
@@ -68,7 +68,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
         String verifyKeyPath = this.getClass().getResource("/").getPath();
         getKdcServer().getKdcConfig().setString(KdcConfigKey.TOKEN_VERIFY_KEYS, verifyKeyPath);
         
-        URL privateKeyPath = WithTokenKdcTestBase.class.getResource("/private_key.pem");
+        URL privateKeyPath = TokenKdcTestBase.class.getResource("/private_key.pem");
         getKdcServer().getKdcConfig().setString(KdcConfigKey.TOKEN_DECRYPTION_KEYS, privateKeyPath.getPath());
         getKdcServer().getKdcConfig().setString(KdcConfigKey.TOKEN_ISSUERS, ISSUER);
     }
@@ -82,7 +82,7 @@ public class WithTokenKdcTestBase extends KdcTestBase {
     }
     
     protected AuthToken prepareToken(String audience) {
-        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = null;
         try {
             privateKey = PrivateKeyReader.loadPrivateKey(is);
