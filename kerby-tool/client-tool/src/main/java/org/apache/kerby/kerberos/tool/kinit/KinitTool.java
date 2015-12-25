@@ -24,6 +24,7 @@ import org.apache.kerby.KOptionGroup;
 import org.apache.kerby.KOptionInfo;
 import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbKdcOption;
@@ -188,10 +189,6 @@ public class KinitTool {
         return krbClient;
     }
 
-    private static String getAnonymousPrincipal() {
-        return "WELLKNOWN/ANONYMOUS";
-    }
-
     public static void main(String[] args) throws Exception {
         KOptions ktOptions = new KOptions();
         KinitOption kto;
@@ -238,7 +235,7 @@ public class KinitTool {
 
         if (principal == null) {
             if (ktOptions.contains(KinitOption.ANONYMOUS)) {
-                principal = getAnonymousPrincipal();
+                principal = KrbConstant.ANONYMOUS_PRINCIPAL;
             } else {
                 printUsage("No principal is specified");
             }

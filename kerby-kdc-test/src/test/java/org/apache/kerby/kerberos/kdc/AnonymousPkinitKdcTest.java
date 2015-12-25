@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
+import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbConfigKey;
 import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
@@ -57,7 +58,7 @@ public class AnonymousPkinitKdcTest extends KdcTestBase {
         super.createPrincipals();
         //Anonymity support is not enabled by default.
         //To enable it, you must create the principal WELLKNOWN/ANONYMOUS
-        getKdcServer().createPrincipal("WELLKNOWN/ANONYMOUS");
+        getKdcServer().createPrincipal(KrbConstant.ANONYMOUS_PRINCIPAL);
     }
 
     @Test

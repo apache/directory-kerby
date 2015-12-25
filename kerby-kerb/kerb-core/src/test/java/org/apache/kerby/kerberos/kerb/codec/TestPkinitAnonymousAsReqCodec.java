@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.codec;
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.SignedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
+import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
@@ -84,7 +85,7 @@ public class TestPkinitAnonymousAsReqCodec {
         assertThat(body.getKdcOptions().getValue()).isEqualTo(Arrays.copyOfRange(bytes, 1389, 1393));
         PrincipalName cName = body.getCname();
         assertThat(cName.getNameType()).isEqualTo(NameType.NT_WELLKNOWN);
-        assertThat(cName.getName()).isEqualTo("WELLKNOWN/ANONYMOUS");
+        assertThat(cName.getName()).isEqualTo(KrbConstant.ANONYMOUS_PRINCIPAL);
         assertThat(body.getRealm()).isEqualTo("EXAMPLE.COM");
         PrincipalName sName = body.getSname();
         assertThat(sName.getNameType()).isEqualTo(NameType.NT_SRV_INST);
