@@ -19,8 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceOfType;
 
-public class SupportedKDFs extends KrbSequenceOfType<Asn1ObjectIdentifier> {
+public class SupportedKDFs extends KrbSequenceOfType<KDFAlgorithmId> {
 }

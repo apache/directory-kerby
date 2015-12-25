@@ -139,12 +139,11 @@ public class TestPkinitAnonymousAsReqCodec {
 
         assertThat(authPack.getsupportedKDFs().getElements().size()).isEqualTo(3);
 
-        //TO BE FIXED
-//        assertThat(authPack.getsupportedKDFs().getElements().get(0).getValue())
-//                .isEqualTo("1.3.6.1.5.2.3.6.2");
-//        assertThat(authPack.getsupportedKDFs().getElements().get(1).getValue())
-//                .isEqualTo("1.3.6.1.5.2.3.6.1");
-//        assertThat(authPack.getsupportedKDFs().getElements().get(2).getValue())
-//                .isEqualTo("1.3.6.1.5.2.3.6.3");
+        assertThat(authPack.getsupportedKDFs().getElements().get(0).getKdfId().getValue())
+                .isEqualTo("1.3.6.1.5.2.3.6.2");
+        assertThat(authPack.getsupportedKDFs().getElements().get(1).getKdfId().getValue())
+                .isEqualTo("1.3.6.1.5.2.3.6.1");
+        assertThat(authPack.getsupportedKDFs().getElements().get(2).getKdfId().getValue())
+                .isEqualTo("1.3.6.1.5.2.3.6.3");
     }
 }

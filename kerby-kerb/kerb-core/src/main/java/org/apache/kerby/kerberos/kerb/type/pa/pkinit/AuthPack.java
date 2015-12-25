@@ -31,8 +31,11 @@ import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
      clientPublicValue       [1] SubjectPublicKeyInfo OPTIONAL,
      supportedCMSTypes       [2] SEQUENCE OF AlgorithmIdentifier OPTIONAL,
      clientDHNonce           [3] DHNonce OPTIONAL
-     supportedCMSTypes       [4] SEQUENCE OF AlgorithmIdentifier,
-                                 OIDs of KDFs OPTIONAL,
+     supportedKDFs           [4] SEQUENCE OF KDFAlgorithmId OPTIONAL,
+                             -- Contains an unordered set of KDFs supported by the client.
+ KDFAlgorithmId ::= SEQUENCE {
+     kdf-id            [0] OBJECT IDENTIFIER,
+                       -- The object identifier of the KDF
  }
  */
 public class AuthPack extends KrbSequenceType {
