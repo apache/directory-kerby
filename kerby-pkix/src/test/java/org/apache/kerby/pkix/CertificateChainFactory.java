@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs;
+package org.apache.kerby.pkix;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +40,6 @@ import java.security.spec.InvalidKeySpecException;
  * @version $Rev$, $Date$
  */
 public class CertificateChainFactory {
-    /**
-     * The log for this class.
-     */
     private static final Logger LOG = LoggerFactory.getLogger(CertificateChainFactory.class);
 
     private static int trustAnchorLevel = 2;
@@ -117,7 +114,7 @@ public class CertificateChainFactory {
         PublicKey trustAnchorPublicKey = keyPair.getPublic();
 
         X509Certificate trustAnchorCert = TrustAnchorGenerator.generate(trustAnchorPublicKey, trustAnchorPrivateKey,
-                dn, validityDays, friendlyName);
+            dn, validityDays, friendlyName);
 
         trustAnchorCert.checkValidity();
         trustAnchorCert.verify(trustAnchorPublicKey);
@@ -134,7 +131,7 @@ public class CertificateChainFactory {
         PublicKey clientCaPublicKey = keyPair.getPublic();
 
         X509Certificate clientCaCert = IntermediateCaGenerator.generate(trustAnchorCert, trustAnchorPrivateKey,
-                clientCaPublicKey, dn, validityDays, friendlyName);
+            clientCaPublicKey, dn, validityDays, friendlyName);
 
         clientCaCert.checkValidity();
         clientCaCert.verify(trustAnchorPublicKey);
@@ -151,7 +148,7 @@ public class CertificateChainFactory {
         PublicKey clientPublicKey = keyPair.getPublic();
 
         X509Certificate clientCert = EndEntityGenerator.generate(clientCaCert, clientCaPrivateKey, clientPublicKey,
-                dn, validityDays, friendlyName);
+            dn, validityDays, friendlyName);
 
         clientCert.checkValidity();
         clientCert.verify(clientCaPublicKey);

@@ -361,7 +361,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
      * @return PaDataEntry to be made.
      */
     private PaDataEntry makeEntry(PaPkAsReq paPkAsReq) throws KrbException {
-
         PaDataEntry paDataEntry = new PaDataEntry();
         paDataEntry.setPaDataType(PaDataType.PK_AS_REQ);
         paDataEntry.setPaDataValue(KrbCodec.encode(paPkAsReq));

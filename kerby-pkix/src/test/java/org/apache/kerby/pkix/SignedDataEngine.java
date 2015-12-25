@@ -17,11 +17,8 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
+package org.apache.kerby.pkix;
 
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.ReplyKeyPack;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
@@ -56,9 +53,9 @@ import java.util.List;
  * @version $Rev$, $Date$
  */
 public class SignedDataEngine {
-    private static final String ID_PKINIT_AUTHDATA = "1.3.6.1.5.2.3.1";
-    private static final String ID_PKINIT_DHKEYDATA = "1.3.6.1.5.2.3.2";
-    private static final String ID_PKINIT_RKEYDATA = "1.3.6.1.5.2.3.3";
+    //private static final String ID_PKINIT_AUTHDATA = "1.3.6.1.5.2.3.1";
+    //private static final String ID_PKINIT_DHKEYDATA = "1.3.6.1.5.2.3.2";
+    //private static final String ID_PKINIT_RKEYDATA = "1.3.6.1.5.2.3.3";
 
     /**
      * Uses a private key to sign data in a CMS SignedData structure and returns
@@ -70,21 +67,13 @@ public class SignedDataEngine {
      * <p/>
      * The eContentType field for the type SignedData is id-pkinit-authData (1.3.6.1.5.2.3.1),
      * and the eContent field contains the DER encoding of the type AuthPack.
-     *
-     * @param privateKey
-     * @param certificate
-     * @param authPack
-     * @return The CMS SignedData bytes.
-     * @throws OperatorCreationException
-     * @throws CertificateEncodingException
-     * @throws CMSException
-     * @throws IOException
      */
+    /*
     public static byte[] getSignedAuthPack(PrivateKey privateKey, X509Certificate certificate,
                                            AuthPack authPack)
             throws OperatorCreationException, CertificateEncodingException, CMSException, IOException {
         return getSignedData(privateKey, certificate, authPack.encode(), ID_PKINIT_AUTHDATA);
-    }
+    }*/
 
 
     /**
@@ -107,11 +96,12 @@ public class SignedDataEngine {
      * @throws CMSException
      * @throws IOException
      */
+    /*
     public static byte[] getSignedKdcDhKeyInfo(PrivateKey privateKey, X509Certificate certificate,
                                                KdcDHKeyInfo kdcDhKeyInfo)
             throws OperatorCreationException, CertificateEncodingException, CMSException, IOException {
         return getSignedData(privateKey, certificate, kdcDhKeyInfo.encode(), ID_PKINIT_DHKEYDATA);
-    }
+    }*/
 
 
     /**
@@ -123,21 +113,13 @@ public class SignedDataEngine {
      * The eContentType field for the inner type SignedData (when unencrypted) is
      * id-pkinit-rkeyData (1.3.6.1.5.2.3.3) and the eContent field contains the
      * DER encoding of the type ReplyKeyPack.
-     *
-     * @param privateKey
-     * @param certificate
-     * @param replyKeyPack
-     * @return The CMS SignedData bytes.
-     * @throws OperatorCreationException
-     * @throws CertificateEncodingException
-     * @throws CMSException
-     * @throws IOException
      */
+    /*
     public static byte[] getSignedReplyKeyPack(PrivateKey privateKey, X509Certificate certificate,
                                                ReplyKeyPack replyKeyPack)
             throws OperatorCreationException, CertificateEncodingException, CMSException, IOException {
         return getSignedData(privateKey, certificate, replyKeyPack.encode(), ID_PKINIT_RKEYDATA);
-    }
+    }*/
 
 
     static byte[] getSignedData(PrivateKey privateKey, X509Certificate certificate, byte[] dataToSign,
