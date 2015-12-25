@@ -20,7 +20,7 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
-import org.apache.kerby.asn1.type.Asn1Specifix;
+import org.apache.kerby.asn1.type.Asn1Specific;
 import org.apache.kerby.asn1.type.Asn1Collection;
 import org.apache.kerby.asn1.type.Asn1Constructed;
 import org.apache.kerby.asn1.type.Asn1Encodeable;
@@ -49,7 +49,7 @@ public final class Asn1Converter {
             tmpValue.decode(parseResult);
             return tmpValue;
         } else if (parseResult.isTagSpecific()) {
-            Asn1Specifix app = new Asn1Specifix(parseResult.tag());
+            Asn1Specific app = new Asn1Specific(parseResult.tag());
             app.decode(parseResult);
             return app;
         } else {
