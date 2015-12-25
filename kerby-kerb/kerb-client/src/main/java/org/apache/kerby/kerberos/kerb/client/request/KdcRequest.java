@@ -23,7 +23,7 @@ import org.apache.kerby.KOption;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
-import org.apache.kerby.kerberos.kerb.client.KrbOption;
+import org.apache.kerby.kerberos.kerb.client.KrbKdcOption;
 import org.apache.kerby.kerberos.kerb.client.KrbOptionGroup;
 import org.apache.kerby.kerberos.kerb.client.preauth.KrbFastRequestState;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthContext;
@@ -412,9 +412,9 @@ public abstract class KdcRequest {
 
         for (KOption kOpt: requestOptions.getOptions()) {
             if (kOpt.getOptionInfo().getGroup() == KrbOptionGroup.KDC_FLAGS) {
-                KrbOption krbOption = (KrbOption) kOpt;
-                KdcOption kdcOption = KdcOption.valueOf(krbOption.name());
-                boolean flagValue = requestOptions.getBooleanOption(kOpt, false);
+                KrbKdcOption krbKdcOption = (KrbKdcOption) kOpt;
+                KdcOption kdcOption = KdcOption.valueOf(krbKdcOption.name());
+                boolean flagValue = requestOptions.getBooleanOption(kOpt, true);
                 kdcOptions.setFlag(kdcOption, flagValue);
             }
         }
