@@ -31,6 +31,8 @@ import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
      clientPublicValue       [1] SubjectPublicKeyInfo OPTIONAL,
      supportedCMSTypes       [2] SEQUENCE OF AlgorithmIdentifier OPTIONAL,
      clientDHNonce           [3] DHNonce OPTIONAL
+     supportedCMSTypes       [4] SEQUENCE OF AlgorithmIdentifier,
+                                 OIDs of KDFs OPTIONAL,
  }
  */
 public class AuthPack extends KrbSequenceType {
