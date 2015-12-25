@@ -25,27 +25,23 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * A general class to describe and store all the config files.
+ */
 public class Conf implements Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(Conf.class);
 
     private List<ConfigLoader> resourceConfigs;
     private final ConfigImpl config;
-    private final Map<String, String> setValues;
-    private boolean needReload;
 
     public Conf() {
         this.resourceConfigs = new ArrayList<ConfigLoader>(1);
         this.config = new ConfigImpl("Conf");
-        this.setValues = new HashMap<>(10);
-        this.needReload = true;
-
-        addMapConfig(setValues);
     }
 
     public void addXmlConfig(File xmlFile) throws IOException {
@@ -72,10 +68,16 @@ public class Conf implements Config {
         addResource(Resource.createMapResource(mapConfig));
     }
 
-    public void addResource(Resource resource) {
+    /**
+     * Load the resource name and content in one step.
+     * Add synchronized to avoid conflicts
+     * @param resource the config resource
+     */
+    public synchronized void addResource(Resource resource) {
         ConfigLoader loader = getLoader(resource);
         resourceConfigs.add(loader);
-        needReload = true;
+        Config loaded = loader.load();
+        config.add(loaded);
     }
 
     private static ConfigLoader getLoader(Resource resource) {
@@ -94,16 +96,12 @@ public class Conf implements Config {
         return loader;
     }
 
-    private void checkAndLoad() {
-        if (needReload) {
-            reload();
-            needReload = false;
-        }
-    }
-
-    public void reload() {
+    /**
+     * For users usage, to determine whether to reload config files.
+     * Add synchronized to avoid conflicts
+     */
+    public synchronized void reload() {
         config.reset();
-
         for (ConfigLoader loader : resourceConfigs) {
             Config loaded = loader.load();
             config.add(loaded);
@@ -112,37 +110,38 @@ public class Conf implements Config {
 
     @Override
     public String getResource() {
-        checkAndLoad();
         return config.getResource();
     }
 
     @Override
     public Set<String> getNames() {
-        checkAndLoad();
         return config.getNames();
     }
 
     @Override
     public String getString(String name) {
-        checkAndLoad();
         return config.getString(name);
     }
 
     @Override
     public String getString(ConfigKey name, boolean useDefault) {
-        checkAndLoad();
         return config.getString(name, useDefault);
     }
 
     @Override
     public String getString(String name, String defaultValue) {
-        checkAndLoad();
         return config.getString(name, defaultValue);
     }
 
+    /**
+     * Values user sets will be add in config directly.
+     * Add synchronized to avoid conflicts
+     * @param name The property name
+     * @param value The string value
+     */
     @Override
-    public void setString(String name, String value) {
-        setValues.put(name, value);
+    public synchronized void setString(String name, String value) {
+        config.set(name, value);
     }
 
     @Override
@@ -152,31 +151,26 @@ public class Conf implements Config {
 
     @Override
     public String getTrimmed(String name) {
-        checkAndLoad();
         return config.getTrimmed(name);
     }
 
     @Override
     public String getTrimmed(ConfigKey name) {
-        checkAndLoad();
         return config.getTrimmed(name);
     }
 
     @Override
     public Boolean getBoolean(String name) {
-        checkAndLoad();
         return config.getBoolean(name);
     }
 
     @Override
     public Boolean getBoolean(ConfigKey name, boolean useDefault) {
-        checkAndLoad();
         return config.getBoolean(name, useDefault);
     }
 
     @Override
     public Boolean getBoolean(String name, Boolean defaultValue) {
-        checkAndLoad();
         return config.getBoolean(name, defaultValue);
     }
 
@@ -192,19 +186,16 @@ public class Conf implements Config {
 
     @Override
     public Integer getInt(String name) {
-        checkAndLoad();
         return config.getInt(name);
     }
 
     @Override
     public Integer getInt(ConfigKey name, boolean useDefault) {
-        checkAndLoad();
         return config.getInt(name, useDefault);
     }
 
     @Override
     public Integer getInt(String name, Integer defaultValue) {
-        checkAndLoad();
         return config.getInt(name, defaultValue);
     }
 
@@ -220,19 +211,16 @@ public class Conf implements Config {
 
     @Override
     public Long getLong(String name) {
-        checkAndLoad();
         return config.getLong(name);
     }
 
     @Override
     public Long getLong(ConfigKey name, boolean useDefault) {
-        checkAndLoad();
         return config.getLong(name, useDefault);
     }
 
     @Override
     public Long getLong(String name, Long defaultValue) {
-        checkAndLoad();
         return config.getLong(name, defaultValue);
     }
 
@@ -248,19 +236,16 @@ public class Conf implements Config {
 
     @Override
     public Float getFloat(String name) {
-        checkAndLoad();
         return config.getFloat(name);
     }
 
     @Override
     public Float getFloat(ConfigKey name, boolean useDefault) {
-        checkAndLoad();
         return config.getFloat(name, useDefault);
     }
 
     @Override
     public Float getFloat(String name, Float defaultValue) {
-        checkAndLoad();
         return config.getFloat(name, defaultValue);
     }
 
@@ -276,69 +261,58 @@ public class Conf implements Config {
 
     @Override
     public List<String> getList(String name) {
-        checkAndLoad();
         return config.getList(name);
     }
 
     @Override
     public List<String> getList(String name, String[] defaultValue) {
-        checkAndLoad();
         return config.getList(name, defaultValue);
     }
 
     @Override
     public List<String> getList(ConfigKey name) {
-        checkAndLoad();
         return config.getList(name);
     }
 
     @Override
     public Config getConfig(String name) {
-        checkAndLoad();
         return config.getConfig(name);
     }
 
     @Override
     public Config getConfig(ConfigKey name) {
-        checkAndLoad();
         return config.getConfig(name);
     }
 
     @Override
     public Class<?> getClass(String name) throws ClassNotFoundException {
-        checkAndLoad();
         return config.getClass(name);
     }
 
     @Override
     public Class<?> getClass(String name, Class<?> defaultValue)
             throws ClassNotFoundException {
-        checkAndLoad();
         return config.getClass(name, defaultValue);
     }
 
     @Override
     public Class<?> getClass(ConfigKey name, boolean useDefault)
             throws ClassNotFoundException {
-        checkAndLoad();
         return config.getClass(name, useDefault);
     }
 
     @Override
     public <T> T getInstance(String name) throws ClassNotFoundException {
-        checkAndLoad();
         return config.getInstance(name);
     }
 
     @Override
     public <T> T getInstance(ConfigKey name) throws ClassNotFoundException {
-        checkAndLoad();
         return config.getInstance(name);
     }
 
     @Override
     public <T> T getInstance(String name, Class<T> xface) throws ClassNotFoundException {
-        checkAndLoad();
         return config.getInstance(name, xface);
     }
 }
