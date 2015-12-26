@@ -293,7 +293,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     private byte[] signAuthPack(AuthPack authPack) throws KrbException {
 
-        Asn1ObjectIdentifier oid = pkinitContext.cryptoctx.getIdPkinitAuthDataOID();
+        String oid = pkinitContext.cryptoctx.getIdPkinitAuthDataOID();
 
         byte[] signedDataBytes = PkinitCrypto.cmsSignedDataCreate(
             KrbCodec.encode(authPack), oid, 3, null, null, null, null);

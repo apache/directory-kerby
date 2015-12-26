@@ -106,7 +106,7 @@ public class TestPkinitAnonymousAsRepCodec {
         byte[] dhSignedData = dhRepInfo.getDHSignedData();
         SignedContentInfo contentInfo = new SignedContentInfo();
         contentInfo.decode(dhSignedData);
-        assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
+        assertThat(contentInfo.getContentType()).isEqualTo("1.2.840.113549.1.7.2");
         SignedData signedData = contentInfo.getContentAs(SignedData.class);
         assertThat(signedData.getCertificates()).isNotNull();
 

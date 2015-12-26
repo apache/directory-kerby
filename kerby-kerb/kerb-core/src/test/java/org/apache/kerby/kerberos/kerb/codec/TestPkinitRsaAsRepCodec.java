@@ -33,7 +33,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 public class TestPkinitRsaAsRepCodec {
     @Test
@@ -61,7 +61,7 @@ public class TestPkinitRsaAsRepCodec {
         Asn1.parseAndDump(encKeyPack);
         ContentInfo contentInfo = new ContentInfo();
         contentInfo.decode(encKeyPack);
-        assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.3");
+        assertThat(contentInfo.getContentType()).isEqualTo("1.2.840.113549.1.7.3");
         EnvelopedData envelopedData = contentInfo.getContentAs(EnvelopedData.class);
         Asn1.dump(envelopedData);
     }

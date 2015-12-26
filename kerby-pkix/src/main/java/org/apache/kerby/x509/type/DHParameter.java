@@ -37,7 +37,7 @@ public class DHParameter extends Asn1SequenceType {
     }
 
     public void setP(BigInteger p) {
-        setFieldAsBigInteger(P, p);
+        setFieldAsInt(P, p);
     }
 
     public BigInteger getP() {
@@ -46,7 +46,7 @@ public class DHParameter extends Asn1SequenceType {
     }
 
     public void setG(BigInteger g) {
-        setFieldAsBigInteger(G, g);
+        setFieldAsInt(G, g);
     }
 
     public BigInteger getG() {
@@ -55,7 +55,7 @@ public class DHParameter extends Asn1SequenceType {
     }
 
     public void setQ(BigInteger q) {
-        setFieldAsBigInteger(Q, q);
+        setFieldAsInt(Q, q);
     }
 
     public BigInteger getQ() {

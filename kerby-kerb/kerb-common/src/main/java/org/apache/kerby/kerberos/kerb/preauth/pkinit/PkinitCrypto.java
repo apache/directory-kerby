@@ -65,13 +65,13 @@ public class PkinitCrypto {
      */
     public static void verifyCMSSignedData(CMSMessageType cmsMsgType, SignedData signedData)
             throws KrbException {
-        Asn1ObjectIdentifier oid = pkinitType2OID(cmsMsgType);
+        String oid = pkinitType2OID(cmsMsgType);
         if (oid == null) {
             throw new KrbException("Can't get the right oid ");
         }
 
         Asn1ObjectIdentifier etype = signedData.getEncapContentInfo().getContentType();
-        if (oid.getValue().equals(etype.getValue())) {
+        if (oid.equals(etype.getValue())) {
             LOG.info("CMS Verification successful");
         } else {
             LOG.error("Wrong oid in eContentType");
@@ -98,7 +98,7 @@ public class PkinitCrypto {
      * @param cmsMsgType The CMS message type
      * @return oid
      */
-    public static Asn1ObjectIdentifier pkinitType2OID(CMSMessageType cmsMsgType) {
+    public static String pkinitType2OID(CMSMessageType cmsMsgType) {
         switch (cmsMsgType) {
             case UNKNOWN:
                 return null;
@@ -221,12 +221,12 @@ public class PkinitCrypto {
      * @param signerInfos The signerInfos
      * @return The encoded ContentInfo
      */
-    public static byte[] cmsSignedDataCreate(byte[] data, Asn1ObjectIdentifier oid, int version,
+    public static byte[] cmsSignedDataCreate(byte[] data, String oid, int version,
                                              DigestAlgorithmIdentifiers digestAlgorithmIdentifiers,
                                              CertificateSet certificateSet,
                                              RevocationInfoChoices crls, SignerInfos signerInfos) throws KrbException {
         SignedContentInfo contentInfo = new SignedContentInfo();
-        contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
+        contentInfo.setContentType("1.2.840.113549.1.7.2");
         SignedData signedData = new SignedData();
         signedData.setVersion(version);
         if (digestAlgorithmIdentifiers != null) {

@@ -23,7 +23,6 @@ import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.parse.Asn1Container;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.cms.type.CertificateChoices;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.ContentInfo;
@@ -341,7 +340,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             certificateSet.addElement(certificateChoices);
         }
 
-        Asn1ObjectIdentifier oid = cryptoContext.getIdPkinitDHKeyDataOID();
+        String oid = cryptoContext.getIdPkinitDHKeyDataOID();
         signedDataBytes = PkinitCrypto.cmsSignedDataCreate(KrbCodec.encode(kdcDhKeyInfo), oid, 3, null,
                 null, null, null);
 

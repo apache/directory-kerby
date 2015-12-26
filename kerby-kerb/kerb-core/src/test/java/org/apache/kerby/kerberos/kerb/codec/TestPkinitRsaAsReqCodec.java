@@ -40,7 +40,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 public class TestPkinitRsaAsReqCodec {
     @Test
@@ -71,7 +71,7 @@ public class TestPkinitRsaAsReqCodec {
         ContentInfo contentInfo = new ContentInfo();
         //Asn1.parseAndDump(paPkAsReq.getSignedAuthPack());
         contentInfo.decode(paPkAsReq.getSignedAuthPack());
-        assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
+        assertThat(contentInfo.getContentType()).isEqualTo("1.2.840.113549.1.7.2");
         //Asn1.dump(contentInfo);
 
         SignedData signedData = contentInfo.getContentAs(SignedData.class);

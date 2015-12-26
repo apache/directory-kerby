@@ -20,7 +20,6 @@
 package org.apache.kerby.cms;
 
 import org.apache.kerby.asn1.Asn1;
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.cms.type.CertificateChoices;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.ContentInfo;
@@ -61,10 +60,10 @@ public class TestSignedData extends CmsTestBase {
     @Test
     public void testEncoding() throws IOException {
         SignedContentInfo contentInfo = new SignedContentInfo();
-        contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
+        contentInfo.setContentType("1.2.840.113549.1.7.2");
         SignedData signedData = new SignedData();
         EncapsulatedContentInfo eContentInfo = new EncapsulatedContentInfo();
-        eContentInfo.setContentType(new Asn1ObjectIdentifier("1.3.6.1.5.2.3.1"));
+        eContentInfo.setContentType("1.3.6.1.5.2.3.1");
         eContentInfo.setContent("data".getBytes());
         signedData.setEncapContentInfo(eContentInfo);
 
