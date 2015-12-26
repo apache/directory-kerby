@@ -54,11 +54,11 @@ public class KdfAlgorithmId extends KrbSequenceType {
         super(fieldInfos);
     }
 
-    public Asn1ObjectIdentifier getKdfId() {
-        return getFieldAs(KdfAlgorithmIdField.KDF_ID, Asn1ObjectIdentifier.class);
+    public String getKdfId() {
+        return getFieldAsObjId(KdfAlgorithmIdField.KDF_ID);
     }
 
-    public void setKdfId(Asn1ObjectIdentifier kdfId) {
-        setFieldAs(KdfAlgorithmIdField.KDF_ID, kdfId);
+    public void setKdfId(String kdfId) {
+        setFieldAsObjId(KdfAlgorithmIdField.KDF_ID, kdfId);
     }
 }

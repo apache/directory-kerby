@@ -49,7 +49,7 @@ public class PluginOpts {
         /* krb5_data des3oid = {0, 8, "\x2A\x86\x48\x86\xF7\x0D\x03\x07" };*/
         String content = "0x06 08 2A 86 48 86 F7 0D 03 07";
         Asn1ObjectIdentifier des3Oid = PkinitCrypto.createOid(content);
-        des3Alg.setAlgorithm(des3Oid);
+        des3Alg.setAlgorithm(des3Oid.getValue());
 
         cmsAlgorithms.add(des3Alg);
 

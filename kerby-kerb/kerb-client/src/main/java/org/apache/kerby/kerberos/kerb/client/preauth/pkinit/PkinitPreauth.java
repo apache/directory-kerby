@@ -50,7 +50,7 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.TrustedCertifiers;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
-import org.apache.kerby.x509.type.DHParameter;
+import org.apache.kerby.x509.type.DhParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -241,7 +241,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             String content = "0x06 07 2A 86 48 ce 3e 02 01";
             Asn1ObjectIdentifier dhOid = PkinitCrypto.createOid(content);
             AlgorithmIdentifier dhAlg = new AlgorithmIdentifier();
-            dhAlg.setAlgorithm(dhOid);
+            dhAlg.setAlgorithm(dhOid.getValue());
 
             DhClient client = new DhClient();
 
@@ -256,7 +256,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             DHParameterSpec type = clientPubKey.getParams();
             BigInteger q = type.getP().shiftRight(1);
-            DHParameter dhParameter = new DHParameter();
+            DhParameter dhParameter = new DhParameter();
             dhParameter.setP(type.getP());
             dhParameter.setG(type.getG());
             dhParameter.setQ(q);

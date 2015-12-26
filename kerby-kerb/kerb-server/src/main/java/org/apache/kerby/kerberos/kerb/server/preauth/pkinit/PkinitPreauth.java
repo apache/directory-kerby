@@ -57,7 +57,7 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator;
 import org.apache.kerby.x509.type.Certificate;
-import org.apache.kerby.x509.type.DHParameter;
+import org.apache.kerby.x509.type.DhParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -212,9 +212,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             SubjectPublicKeyInfo publicKeyInfo = authPack.getClientPublicValue();
 
-            DHParameter dhParameter;
+            DhParameter dhParameter;
             if (publicKeyInfo.getSubjectPubKey() != null) {
-                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParametersAs(DHParameter.class);
+                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParametersAs(DhParameter.class);
                 PkinitCrypto.serverCheckDH(pkinitContext.pluginOpts, pkinitContext.cryptoctx, dhParameter);
 
                 byte[] clientSubjectPubKey = publicKeyInfo.getSubjectPubKey().getValue();

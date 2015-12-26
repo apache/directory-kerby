@@ -31,7 +31,7 @@ import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.x509.type.Certificate;
-import org.apache.kerby.x509.type.DHParameter;
+import org.apache.kerby.x509.type.DhParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,10 +117,10 @@ public class PkinitCrypto {
      * KDC check the key parameter
      * @param pluginOpts The PluginOpts
      * @param cryptoctx The PkinitPlgCryptoContext
-     * @param dhParameter The DHParameter
+     * @param dhParameter The DhParameter
      */
     public static void serverCheckDH(PluginOpts pluginOpts, PkinitPlgCryptoContext cryptoctx,
-                                     DHParameter dhParameter) throws KrbException {
+                                     DhParameter dhParameter) throws KrbException {
          /* KDC SHOULD check to see if the key parameters satisfy its policy */
         int dhPrimeBits = dhParameter.getP().bitLength();
         if (dhPrimeBits < pluginOpts.dhMinBits) {
@@ -135,12 +135,12 @@ public class PkinitCrypto {
     /**
      * Check DH wellknown
      * @param cryptoctx The PkinitPlgCryptoContext
-     * @param dhParameter The DHParameter
+     * @param dhParameter The DhParameter
      * @param dhPrimeBits The dh prime bits
      * @return boolean
      */
     public static boolean checkDHWellknown(PkinitPlgCryptoContext cryptoctx,
-                                           DHParameter dhParameter, int dhPrimeBits) throws KrbException {
+                                           DhParameter dhParameter, int dhPrimeBits) throws KrbException {
         boolean valid = false;
         switch (dhPrimeBits) {
             case 1024:
@@ -161,9 +161,9 @@ public class PkinitCrypto {
      * Check parameters against a well-known DH group
      *
      * @param dh1 The DHParameterSpec
-     * @param dh2 The DHParameter
+     * @param dh2 The DhParameter
      */
-    public static boolean pkinitCheckDhParams(DHParameterSpec dh1, DHParameter dh2) {
+    public static boolean pkinitCheckDhParams(DHParameterSpec dh1, DhParameter dh2) {
 
         if (!dh1.getP().equals(dh2.getP())) {
             LOG.error("p is not well-known group dhparameter");

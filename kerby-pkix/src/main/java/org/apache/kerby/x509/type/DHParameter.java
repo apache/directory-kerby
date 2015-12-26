@@ -7,10 +7,10 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
 
 import java.math.BigInteger;
 
-import static org.apache.kerby.x509.type.DHParameter.MyEnum.*;
+import static org.apache.kerby.x509.type.DhParameter.MyEnum.*;
 
-public class DHParameter extends Asn1SequenceType {
-    protected static enum MyEnum implements EnumType {
+public class DhParameter extends Asn1SequenceType {
+    protected enum MyEnum implements EnumType {
         P,
         G,
         Q;
@@ -32,7 +32,7 @@ public class DHParameter extends Asn1SequenceType {
             new Asn1FieldInfo(Q, Asn1Integer.class),
     };
 
-    public DHParameter() {
+    public DhParameter() {
         super(fieldInfos);
     }
 
