@@ -24,5 +24,5 @@ import org.apache.kerby.asn1.type.Asn1OctetString;
 /**
  * DHNonce ::= OCTET STRING
  */
-public class DHNonce extends Asn1OctetString {
+public class DhNonce extends Asn1OctetString {
 }

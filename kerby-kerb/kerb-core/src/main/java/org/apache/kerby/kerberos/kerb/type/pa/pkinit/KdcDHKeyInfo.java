@@ -34,8 +34,8 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
     dhKeyExpiration         [2] KerberosTime OPTIONAL,
  }
  */
-public class KdcDHKeyInfo extends KrbSequenceType {
-    protected static enum KdcDHKeyInfoField implements EnumType {
+public class KdcDhKeyInfo extends KrbSequenceType {
+    protected enum KdcDHKeyInfoField implements EnumType {
         SUBJECT_PUBLIC_KEY,
         NONCE,
         DH_KEY_EXPIRATION;
@@ -57,7 +57,7 @@ public class KdcDHKeyInfo extends KrbSequenceType {
             new ExplicitField(KdcDHKeyInfoField.DH_KEY_EXPIRATION, KerberosTime.class)
     };
 
-    public KdcDHKeyInfo() {
+    public KdcDhKeyInfo() {
         super(fieldInfos);
     }
 

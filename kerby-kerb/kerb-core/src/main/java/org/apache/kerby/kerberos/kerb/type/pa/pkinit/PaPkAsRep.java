@@ -28,7 +28,7 @@ import org.apache.kerby.asn1.type.Asn1OctetString;
 
 /**
  PA-PK-AS-REP ::= CHOICE {
-    dhInfo                  [0] DHRepInfo,
+    dhInfo                  [0] DhRepInfo,
     encKeyPack              [1] IMPLICIT OCTET STRING,
  }
  */
@@ -49,7 +49,7 @@ public class PaPkAsRep extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(PaPkAsRepField.DH_INFO, DHRepInfo.class),
+            new ExplicitField(PaPkAsRepField.DH_INFO, DhRepInfo.class),
             new ImplicitField(PaPkAsRepField.ENCKEY_PACK, Asn1OctetString.class)
     };
 
@@ -57,11 +57,11 @@ public class PaPkAsRep extends Asn1Choice {
         super(fieldInfos);
     }
 
-    public DHRepInfo getDHRepInfo() {
-        return getChoiceValueAs(PaPkAsRepField.DH_INFO, DHRepInfo.class);
+    public DhRepInfo getDHRepInfo() {
+        return getChoiceValueAs(PaPkAsRepField.DH_INFO, DhRepInfo.class);
     }
 
-    public void setDHRepInfo(DHRepInfo dhRepInfo) {
+    public void setDHRepInfo(DhRepInfo dhRepInfo) {
         setChoiceValue(PaPkAsRepField.DH_INFO, dhRepInfo);
     }
 

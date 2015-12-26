@@ -31,7 +31,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
                        -- The object identifier of the KDF
  }
  */
-public class KDFAlgorithmId extends KrbSequenceType {
+public class KdfAlgorithmId extends KrbSequenceType {
     protected enum KDFAlgorithmIdField implements EnumType {
         KDF_ID;
 
@@ -50,7 +50,7 @@ public class KDFAlgorithmId extends KrbSequenceType {
             new ExplicitField(KDFAlgorithmIdField.KDF_ID, Asn1ObjectIdentifier.class)
     };
 
-    public KDFAlgorithmId() {
+    public KdfAlgorithmId() {
         super(fieldInfos);
     }
 

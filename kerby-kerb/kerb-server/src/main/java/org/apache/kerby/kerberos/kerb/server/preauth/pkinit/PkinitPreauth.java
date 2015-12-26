@@ -51,8 +51,8 @@ import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DhRepInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDhKeyInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator;
@@ -320,8 +320,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         }
 
         PaPkAsRep paPkAsRep = new PaPkAsRep();
-        DHRepInfo dhRepInfo = new DHRepInfo();
-        KdcDHKeyInfo kdcDhKeyInfo = new KdcDHKeyInfo();
+        DhRepInfo dhRepInfo = new DhRepInfo();
+        KdcDhKeyInfo kdcDhKeyInfo = new KdcDhKeyInfo();
 
         Asn1Integer publickey = new Asn1Integer(severPubKey.getY());
         byte[] pubKeyData = KrbCodec.encode(publickey);

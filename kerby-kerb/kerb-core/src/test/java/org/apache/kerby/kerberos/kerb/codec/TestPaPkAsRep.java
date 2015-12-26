@@ -23,7 +23,7 @@ import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.ContentInfo;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DhRepInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class TestPaPkAsRep {
     @Test
     public void test() throws IOException, KrbException {
         PaPkAsRep paPkAsRep = new PaPkAsRep();
-        DHRepInfo dhRepInfo = new DHRepInfo();
+        DhRepInfo dhRepInfo = new DhRepInfo();
         ContentInfo contentInfo = new ContentInfo();
         contentInfo.setContentType("1.2.840.113549.1.7.2");
         dhRepInfo.setDHSignedData(contentInfo.encode());

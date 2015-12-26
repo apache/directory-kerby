@@ -44,8 +44,8 @@ import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DhRepInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDhKeyInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.x509.type.Certificate;
 import org.slf4j.Logger;
@@ -110,7 +110,7 @@ public class AsRequestWithCert extends AsRequest {
                 LOG.info("processing PK_AS_REP");
 
                 PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
-                DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
+                DhRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
 
                 byte[] dhSignedData = dhRepInfo.getDHSignedData();
 
@@ -163,16 +163,16 @@ public class AsRequestWithCert extends AsRequest {
                 LOG.info("skipping EKU check");
 
                 LOG.info("as_rep: DH key transport algorithm");
-                KdcDHKeyInfo kdcDHKeyInfo = new KdcDHKeyInfo();
+                KdcDhKeyInfo kdcDhKeyInfo = new KdcDhKeyInfo();
                 try {
-                    kdcDHKeyInfo.decode(signedData.getEncapContentInfo().getContent());
+                    kdcDhKeyInfo.decode(signedData.getEncapContentInfo().getContent());
                 } catch (IOException e) {
-                    String errMessage = "failed to decode KdcDHKeyInfo " + e.getMessage();
+                    String errMessage = "failed to decode KdcDhKeyInfo " + e.getMessage();
                     LOG.error(errMessage);
                     throw new KrbException(errMessage);
                 }
 
-                byte[] subjectPublicKey = kdcDHKeyInfo.getSubjectPublicKey().getValue();
+                byte[] subjectPublicKey = kdcDhKeyInfo.getSubjectPublicKey().getValue();
 
                 Asn1Integer clientPubKey = KrbCodec.decode(subjectPublicKey, Asn1Integer.class);
                 BigInteger y = clientPubKey.getValue();

@@ -270,7 +270,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             authPack.setClientPublicValue(pubInfo);
 
-//            DHNonce dhNonce = new DHNonce();
+//            DhNonce dhNonce = new DhNonce();
 //            authPack.setClientDhNonce(dhNonce);
 
         } else {

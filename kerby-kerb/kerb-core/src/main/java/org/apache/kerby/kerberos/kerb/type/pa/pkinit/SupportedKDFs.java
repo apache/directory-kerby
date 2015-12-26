@@ -21,5 +21,5 @@ package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceOfType;
 
-public class SupportedKDFs extends KrbSequenceOfType<KDFAlgorithmId> {
+public class SupportedKdfs extends KrbSequenceOfType<KdfAlgorithmId> {
 }
