@@ -31,6 +31,8 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  DHRepInfo ::= SEQUENCE {
     dhSignedData            [0] IMPLICIT OCTET STRING,
     serverDHNonce           [1] DHNonce OPTIONAL
+    kdf                     [2] KDFAlgorithmId OPTIONAL,
+                                -- The KDF picked by the KDC.
  }
  */
 public class DHRepInfo extends KrbSequenceType {
@@ -53,7 +55,7 @@ public class DHRepInfo extends KrbSequenceType {
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ImplicitField(DHRepInfoField.DH_SIGNED_DATA, Asn1OctetString.class),
             new ExplicitField(DHRepInfoField.SERVER_DH_NONCE, DHNonce.class),
-            new ExplicitField(DHRepInfoField.KDF_ID, Asn1ObjectIdentifier.class)
+            new ExplicitField(DHRepInfoField.KDF_ID, KDFAlgorithmId.class)
     };
 
     public DHRepInfo() {
@@ -76,11 +78,11 @@ public class DHRepInfo extends KrbSequenceType {
         setFieldAs(DHRepInfoField.SERVER_DH_NONCE, dhNonce);
     }
 
-    public Asn1ObjectIdentifier getKdfId() {
-        return getFieldAs(DHRepInfoField.KDF_ID, Asn1ObjectIdentifier.class);
+    public KDFAlgorithmId getKdfId() {
+        return getFieldAs(DHRepInfoField.KDF_ID, KDFAlgorithmId.class);
     }
 
-    public void setKdfId(Asn1ObjectIdentifier kdfId) {
+    public void setKdfId(KDFAlgorithmId kdfId) {
         setFieldAs(DHRepInfoField.KDF_ID, kdfId);
     }
 }
