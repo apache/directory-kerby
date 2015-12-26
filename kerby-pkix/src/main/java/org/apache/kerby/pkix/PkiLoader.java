@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.pki;
+package org.apache.kerby.pkix;
 
 import org.apache.commons.ssl.PKCS8Key;
 
@@ -53,9 +53,9 @@ public class PkiLoader {
         CertificateFactory certFactory = null;
         try {
             certFactory = CertificateFactory.getInstance("X.509");
-            Collection<? extends Certificate> certs = (Collection<? extends Certificate>)
-                    certFactory.generateCertificates(inputStream);
-            return new ArrayList<Certificate>(certs);
+            Collection<? extends Certificate> certs =
+                certFactory.generateCertificates(inputStream);
+            return new ArrayList<>(certs);
         } catch (CertificateException e) {
             throw new IOException("Failed to load certificates", e);
         }

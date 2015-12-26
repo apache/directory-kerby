@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.apache.kerby.pki.PkiLoader;
+import org.apache.kerby.pkix.PkiLoader;
 import org.junit.Before;
 import org.junit.Test;
 
