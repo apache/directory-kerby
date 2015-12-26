@@ -32,7 +32,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  }
  */
 public class KdfAlgorithmId extends KrbSequenceType {
-    protected enum KDFAlgorithmIdField implements EnumType {
+    protected enum KdfAlgorithmIdField implements EnumType {
         KDF_ID;
 
         @Override
@@ -47,7 +47,7 @@ public class KdfAlgorithmId extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(KDFAlgorithmIdField.KDF_ID, Asn1ObjectIdentifier.class)
+            new ExplicitField(KdfAlgorithmIdField.KDF_ID, Asn1ObjectIdentifier.class)
     };
 
     public KdfAlgorithmId() {
@@ -55,10 +55,10 @@ public class KdfAlgorithmId extends KrbSequenceType {
     }
 
     public Asn1ObjectIdentifier getKdfId() {
-        return getFieldAs(KDFAlgorithmIdField.KDF_ID, Asn1ObjectIdentifier.class);
+        return getFieldAs(KdfAlgorithmIdField.KDF_ID, Asn1ObjectIdentifier.class);
     }
 
     public void setKdfId(Asn1ObjectIdentifier kdfId) {
-        setFieldAs(KDFAlgorithmIdField.KDF_ID, kdfId);
+        setFieldAs(KdfAlgorithmIdField.KDF_ID, kdfId);
     }
 }

@@ -35,7 +35,7 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  }
  */
 public class DhRepInfo extends KrbSequenceType {
-    protected enum DHRepInfoField implements EnumType {
+    protected enum DhRepInfoField implements EnumType {
         DH_SIGNED_DATA,
         SERVER_DH_NONCE,
         KDF_ID;
@@ -52,9 +52,9 @@ public class DhRepInfo extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ImplicitField(DHRepInfoField.DH_SIGNED_DATA, Asn1OctetString.class),
-            new ExplicitField(DHRepInfoField.SERVER_DH_NONCE, DhNonce.class),
-            new ExplicitField(DHRepInfoField.KDF_ID, KdfAlgorithmId.class)
+            new ImplicitField(DhRepInfoField.DH_SIGNED_DATA, Asn1OctetString.class),
+            new ExplicitField(DhRepInfoField.SERVER_DH_NONCE, DhNonce.class),
+            new ExplicitField(DhRepInfoField.KDF_ID, KdfAlgorithmId.class)
     };
 
     public DhRepInfo() {
@@ -62,26 +62,26 @@ public class DhRepInfo extends KrbSequenceType {
     }
 
     public byte[] getDHSignedData() {
-        return getFieldAsOctets(DHRepInfoField.DH_SIGNED_DATA);
+        return getFieldAsOctets(DhRepInfoField.DH_SIGNED_DATA);
     }
 
     public void setDHSignedData(byte[] dhSignedData) {
-        setFieldAsOctets(DHRepInfoField.DH_SIGNED_DATA, dhSignedData);
+        setFieldAsOctets(DhRepInfoField.DH_SIGNED_DATA, dhSignedData);
     }
 
     public DhNonce getServerDhNonce() {
-        return getFieldAs(DHRepInfoField.SERVER_DH_NONCE, DhNonce.class);
+        return getFieldAs(DhRepInfoField.SERVER_DH_NONCE, DhNonce.class);
     }
 
     public void setServerDhNonce(DhNonce dhNonce) {
-        setFieldAs(DHRepInfoField.SERVER_DH_NONCE, dhNonce);
+        setFieldAs(DhRepInfoField.SERVER_DH_NONCE, dhNonce);
     }
 
     public KdfAlgorithmId getKdfId() {
-        return getFieldAs(DHRepInfoField.KDF_ID, KdfAlgorithmId.class);
+        return getFieldAs(DhRepInfoField.KDF_ID, KdfAlgorithmId.class);
     }
 
     public void setKdfId(KdfAlgorithmId kdfId) {
-        setFieldAs(DHRepInfoField.KDF_ID, kdfId);
+        setFieldAs(DhRepInfoField.KDF_ID, kdfId);
     }
 }
