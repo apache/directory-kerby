@@ -338,7 +338,7 @@ public class PkinitCrypto {
     public static Asn1ObjectIdentifier createOid(String content) throws KrbException {
         Asn1ObjectIdentifier oid = new Asn1ObjectIdentifier();
         oid.useDER();
-        KrbCodec.decode(HexUtil.hex2bytes(content), oid);
+        KrbCodec.decode(HexUtil.hex2bytesFriendly(content), oid);
         return oid;
     }
 
