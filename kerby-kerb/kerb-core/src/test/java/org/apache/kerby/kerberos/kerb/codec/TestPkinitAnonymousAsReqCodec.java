@@ -123,7 +123,7 @@ public class TestPkinitAnonymousAsReqCodec {
         assertThat(signedData.getCertificates().getElements().isEmpty()).isTrue();
         assertThat(signedData.getCrls().getElements().isEmpty()).isTrue();
         assertThat(signedData.getSignerInfos().getElements().isEmpty()).isTrue();
-        assertThat(signedData.getEncapContentInfo().getContentType().getValue())
+        assertThat(signedData.getEncapContentInfo().getContentType())
                 .isEqualTo("1.3.6.1.5.2.3.1");
 
         AuthPack authPack = new AuthPack();

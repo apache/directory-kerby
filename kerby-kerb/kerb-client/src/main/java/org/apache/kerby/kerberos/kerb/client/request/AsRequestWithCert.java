@@ -32,7 +32,7 @@ import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.PkinitOption;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.crypto.dh.DhClient;
-import org.apache.kerby.kerberos.kerb.preauth.pkinit.CMSMessageType;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.CmsMessageType;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
@@ -123,8 +123,8 @@ public class AsRequestWithCert extends AsRequest {
 
                 SignedData signedData = contentInfo.getContentAs(SignedData.class);
 
-                PkinitCrypto.verifyCMSSignedData(
-                        CMSMessageType.CMS_SIGN_SERVER, signedData);
+                PkinitCrypto.verifyCmsSignedData(
+                    CmsMessageType.CMS_SIGN_SERVER, signedData);
 
 
                 String anchorFileName = getContext().getConfig().getPkinitAnchors().get(0);

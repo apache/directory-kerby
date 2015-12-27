@@ -76,7 +76,7 @@ public class TestPkinitRsaAsReqCodec {
 
         SignedData signedData = contentInfo.getContentAs(SignedData.class);
         assertThat(signedData.getCertificates().getElements().size()).isEqualTo(1);
-        assertThat(signedData.getEncapContentInfo().getContentType().getValue()).isEqualTo("1.3.6.1.5.2.3.1");
+        assertThat(signedData.getEncapContentInfo().getContentType()).isEqualTo("1.3.6.1.5.2.3.1");
 
         PaDataEntry encpaEntry = paData.findEntry(PaDataType.ENCPADATA_REQ_ENC_PA_REP);
         assertThat(encpaEntry.getPaDataType()).isEqualTo(PaDataType.ENCPADATA_REQ_ENC_PA_REP);

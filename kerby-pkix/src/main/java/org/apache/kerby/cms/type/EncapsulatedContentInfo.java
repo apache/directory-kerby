@@ -61,8 +61,8 @@ public class EncapsulatedContentInfo extends Asn1SequenceType {
         super(fieldInfos);
     }
 
-    public Asn1ObjectIdentifier getContentType() {
-        return getFieldAs(CONTENT_TYPE, Asn1ObjectIdentifier.class);
+    public String getContentType() {
+        return getFieldAsObjId(CONTENT_TYPE);
     }
 
     public void setContentType(String contentType) {

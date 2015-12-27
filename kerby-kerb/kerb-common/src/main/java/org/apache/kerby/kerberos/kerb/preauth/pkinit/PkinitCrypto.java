@@ -63,15 +63,15 @@ public class PkinitCrypto {
      * @param cmsMsgType The CMS message type
      * @param signedData The signed data
      */
-    public static void verifyCMSSignedData(CMSMessageType cmsMsgType, SignedData signedData)
+    public static void verifyCmsSignedData(CmsMessageType cmsMsgType, SignedData signedData)
             throws KrbException {
         String oid = pkinitType2OID(cmsMsgType);
         if (oid == null) {
             throw new KrbException("Can't get the right oid ");
         }
 
-        Asn1ObjectIdentifier etype = signedData.getEncapContentInfo().getContentType();
-        if (oid.equals(etype.getValue())) {
+        String etype = signedData.getEncapContentInfo().getContentType();
+        if (oid.equals(etype)) {
             LOG.info("CMS Verification successful");
         } else {
             LOG.error("Wrong oid in eContentType");
@@ -80,25 +80,11 @@ public class PkinitCrypto {
     }
 
     /**
-     * Check whether signed of data, true if the SignerInfos are not null
-     * @param signedData The signed data
-     * @return boolean
-     */
-    public static boolean isSigned(SignedData signedData) {
-        /* Not actually signed; anonymous case */
-        if (signedData.getSignerInfos().getElements().size() == 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * Change the CMS message type to oid
      * @param cmsMsgType The CMS message type
      * @return oid
      */
-    public static String pkinitType2OID(CMSMessageType cmsMsgType) {
+    public static String pkinitType2OID(CmsMessageType cmsMsgType) {
         switch (cmsMsgType) {
             case UNKNOWN:
                 return null;
@@ -327,17 +313,19 @@ public class PkinitCrypto {
             InvalidAlgorithmParameterException, CertPathValidatorException {
 
         //TODO
-//        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-//        CertPath certPath = certificateFactory.generateCertPath(certificateList);
-//
-//        CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
-//
-//        TrustAnchor trustAnchor = new TrustAnchor(anchor, null);
-//
-//        PKIXParameters parameters = new PKIXParameters(Collections.singleton(trustAnchor));
-//        parameters.setRevocationEnabled(false);
-//
-//        cpv.validate(certPath, parameters);
+        /*
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        CertPath certPath = certificateFactory.generatertPath(certificateList);
+
+        CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
+
+        TrustAnchor trustAnchor = new TrustAnchor(anchor, null);
+
+        PKIXParameters parameters = new PKIXParameters(Collections.singleton(trustAnchor));
+        parameters.setRevocationEnabled(false);
+
+        cpv.validate(certPath, parameters);
+        */
     }
 
     /**

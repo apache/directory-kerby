@@ -17,28 +17,19 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb;
+package org.apache.kerby.pkix;
 
-public class KrbException extends Exception {
+/**
+ * The root exception for the module.
+ */
+public class PkiException extends Exception {
     private static final long serialVersionUID = 7305497872367599428L;
 
-    public KrbException(String message) {
+    public PkiException(String message) {
         super(message);
     }
 
-    public KrbException(String message, Throwable cause) {
+    public PkiException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public KrbException(KrbErrorCode errorCode) {
-        super(errorCode.getMessage());
-    }
-
-    public KrbException(KrbErrorCode errorCode, Throwable cause) {
-        super(errorCode.getMessage(), cause);
-    }
-
-    public KrbException(KrbErrorCode errorCode, String message) {
-        super(message + " with error code: " + errorCode.name());
     }
 }

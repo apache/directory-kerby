@@ -120,4 +120,16 @@ public class SignedData extends Asn1SequenceType {
     public void setSignerInfos(SignerInfos signerInfos) {
         setFieldAs(SIGNER_INFOS, signerInfos);
     }
+
+    /**
+     * Check whether signed of data, true if the SignerInfos are not null
+     * @return boolean
+     */
+    public boolean isSigned() {
+        if (getSignerInfos().getElements().size() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

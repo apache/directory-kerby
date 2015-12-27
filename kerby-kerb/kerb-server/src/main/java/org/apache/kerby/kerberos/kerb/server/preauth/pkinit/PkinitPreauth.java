@@ -34,8 +34,8 @@ import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.crypto.dh.DhServer;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
-import org.apache.kerby.kerberos.kerb.preauth.pkinit.CMSMessageType;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.CmsMessageType;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPlgCryptoContext;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
@@ -142,9 +142,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             SignedData signedData = contentInfo.getContentAs(SignedData.class);
 
-            PkinitCrypto.verifyCMSSignedData(CMSMessageType.CMS_SIGN_CLIENT, signedData);
+            PkinitCrypto.verifyCmsSignedData(CmsMessageType.CMS_SIGN_CLIENT, signedData);
 
-            Boolean isSigned = PkinitCrypto.isSigned(signedData);
+            Boolean isSigned = signedData.isSigned();
             if (isSigned) {
                 //TODO
                 LOG.info("Signed data.");

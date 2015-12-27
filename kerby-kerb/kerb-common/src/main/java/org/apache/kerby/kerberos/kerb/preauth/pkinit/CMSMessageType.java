@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
-public enum CMSMessageType {
+public enum CmsMessageType {
     UNKNOWN                  (-1),
     CMS_SIGN_CLIENT          (0x01),
     CMS_SIGN_SERVER          (0x03),
@@ -32,7 +32,7 @@ public enum CMSMessageType {
     /**
      * Create an instance of this class
      */
-    private CMSMessageType(int value) {
+    private CmsMessageType(int value) {
         this.value = value;
     }
 
@@ -48,7 +48,7 @@ public enum CMSMessageType {
      * @param value The integer value
      * @return The associated UniversalTag
      */
-    public static CMSMessageType fromValue(int value) {
+    public static CmsMessageType fromValue(int value) {
         switch (value) {
             case 0x01 : return CMS_SIGN_CLIENT;
             case 0x03 : return CMS_SIGN_SERVER;

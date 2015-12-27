@@ -111,7 +111,7 @@ public class TestPkinitAnonymousAsRepCodec {
         assertThat(signedData.getCertificates()).isNotNull();
 
         EncapsulatedContentInfo encapsulatedContentInfo = signedData.getEncapContentInfo();
-        assertThat(encapsulatedContentInfo.getContentType().getValue()).isEqualTo("1.3.6.1.5.2.3.2");
+        assertThat(encapsulatedContentInfo.getContentType()).isEqualTo("1.3.6.1.5.2.3.2");
 
         byte[] eContentInfo = encapsulatedContentInfo.getContent();
         KdcDhKeyInfo kdcDhKeyInfo = new KdcDhKeyInfo();

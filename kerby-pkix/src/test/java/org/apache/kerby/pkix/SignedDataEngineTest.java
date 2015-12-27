@@ -29,18 +29,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Security;
-import java.security.SignatureException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateCrtKey;
 
@@ -79,7 +70,6 @@ public class SignedDataEngineTest extends org.junit.Assert {
         getCaFromFactory();
     }
 
-
     /**
      * Tests that signed data signature validation works.
      *
@@ -105,9 +95,7 @@ public class SignedDataEngineTest extends org.junit.Assert {
     }
 
 
-    void getCaFromFile(String caFile, String caPassword, String caAlias) throws KeyStoreException,
-            NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException,
-            UnrecoverableKeyException, InvalidKeyException, SignatureException, NoSuchProviderException {
+    void getCaFromFile(String caFile, String caPassword, String caAlias) throws Exception {
         // Open the keystore.
         KeyStore caKs = KeyStore.getInstance("PKCS12");
         caKs.load(new FileInputStream(new File(caFile)), caPassword.toCharArray());
