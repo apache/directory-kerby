@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AlgorithmIdentifiers;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.TrustedCertifiers;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
@@ -42,7 +43,7 @@ public class PluginOpts {
     // The acceptable values are 1024, 2048, and 4096. The default is 1024.
     public int dhMinBits = 1024;
 
-    public AlgorithmIdentifiers createSupportedCMSTypes() {
+    public AlgorithmIdentifiers createSupportedCMSTypes() throws KrbException {
         AlgorithmIdentifiers cmsAlgorithms = new AlgorithmIdentifiers();
         AlgorithmIdentifier des3Alg = new AlgorithmIdentifier();
 

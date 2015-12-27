@@ -49,7 +49,19 @@ public class KrbCodec {
         try {
             krbObj.encode(buffer);
         } catch (IOException e) {
-            throw new KrbException("encode failed", e);
+            throw new KrbException("Encoding failed", e);
+        }
+    }
+
+    public static void decode(byte[] content, Asn1Type value) throws KrbException {
+        decode(ByteBuffer.wrap(content), value);
+    }
+
+    public static void decode(ByteBuffer content, Asn1Type value) throws KrbException {
+        try {
+            value.decode(content);
+        } catch (IOException e) {
+            throw new KrbException("Decoding failed", e);
         }
     }
 

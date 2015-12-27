@@ -30,6 +30,7 @@ import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.util.HexUtil;
 import org.apache.kerby.x509.type.Certificate;
 import org.apache.kerby.x509.type.DhParameter;
 import org.slf4j.Logger;
@@ -334,14 +335,10 @@ public class PkinitCrypto {
      * @param content The hex content
      * @return  The oid
      */
-    public static Asn1ObjectIdentifier createOid(String content) {
+    public static Asn1ObjectIdentifier createOid(String content) throws KrbException {
         Asn1ObjectIdentifier oid = new Asn1ObjectIdentifier();
         oid.useDER();
-        try {
-            oid.decode(Util.hex2bytes(content));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        KrbCodec.decode(HexUtil.hex2bytes(content), oid);
         return oid;
     }
 

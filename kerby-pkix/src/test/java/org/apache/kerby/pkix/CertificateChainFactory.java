@@ -35,9 +35,6 @@ import java.security.spec.InvalidKeySpecException;
 
 /**
  * Factory for dynamically generating certificate chains.
- *
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
- * @version $Rev$, $Date$
  */
 public class CertificateChainFactory {
     private static final Logger LOG = LoggerFactory.getLogger(CertificateChainFactory.class);

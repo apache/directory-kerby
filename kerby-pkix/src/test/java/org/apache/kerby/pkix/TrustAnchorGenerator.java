@@ -47,9 +47,6 @@ import java.util.Date;
 
 /**
  * Generates an X.509 "trust anchor" certificate programmatically.
- *
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
- * @version $Rev$, $Date$
  */
 public class TrustAnchorGenerator {
     /**
