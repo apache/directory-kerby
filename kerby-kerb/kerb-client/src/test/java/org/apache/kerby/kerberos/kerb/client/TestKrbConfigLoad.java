@@ -39,7 +39,7 @@ public class TestKrbConfigLoad {
         File confFile = new File(confFileUrl.toURI());
 
         KrbConfig krbConfig = new KrbConfig();
-        krbConfig.addIniConfig(confFile);
+        krbConfig.addKrb5Config(confFile);
         assertThat(krbConfig.getDefaultRealm()).isEqualTo("KRB.COM");
         assertThat(krbConfig.getKdcRealm()).isEqualTo("TEST.COM");
         assertThat(krbConfig.getKdcHost()).isEqualTo("kdc-server.example.com");

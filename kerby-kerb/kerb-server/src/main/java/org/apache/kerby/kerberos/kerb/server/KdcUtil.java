@@ -47,7 +47,7 @@ public final class KdcUtil {
         if (kdcConfFile.exists()) {
             KdcConfig kdcConfig = new KdcConfig();
             try {
-                kdcConfig.addIniConfig(kdcConfFile);
+                kdcConfig.addKrb5Config(kdcConfFile);
             } catch (IOException e) {
                 throw new KrbException("Can not load the kdc configuration file "
                         + kdcConfFile.getAbsolutePath());

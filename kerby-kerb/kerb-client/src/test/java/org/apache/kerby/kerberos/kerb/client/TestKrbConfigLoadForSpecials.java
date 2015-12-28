@@ -39,7 +39,7 @@ public class TestKrbConfigLoadForSpecials {
         File confFile = new File(confFileUrl.toURI());
 
         KrbConfig krbConfig = new KrbConfig();
-        krbConfig.addIniConfig(confFile);
+        krbConfig.addKrb5Config(confFile);
         assertThat(krbConfig.getKdcRealm()).isEqualTo("KRB.COM");
         assertThat(krbConfig.getKdcPort()).isEqualTo(88);
 

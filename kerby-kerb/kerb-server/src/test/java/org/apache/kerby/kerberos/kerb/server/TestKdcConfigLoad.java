@@ -36,7 +36,7 @@ public class TestKdcConfigLoad {
         File confFile = new File(confFileUrl.toURI());
 
         KdcConfig kdcConfig = new KdcConfig();
-        kdcConfig.addIniConfig(confFile);
+        kdcConfig.addKrb5Config(confFile);
 
         assertThat(kdcConfig.getKdcHost()).isEqualTo("localhost");
         assertThat(kdcConfig.getKdcUdpPort()).isEqualTo(88);
