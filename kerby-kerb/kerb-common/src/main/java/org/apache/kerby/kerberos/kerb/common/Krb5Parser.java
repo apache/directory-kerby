@@ -120,8 +120,9 @@ public class Krb5Parser {
             line = br.readLine();
             while (line.startsWith("#")) {
                 line = br.readLine();
-                if (line == null)
+                if (line == null) {
                     break;
+                }
             }
             if (line != null) {
                 line = line.trim();

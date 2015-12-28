@@ -42,7 +42,7 @@ public class Krb5Conf extends Conf {
      */
     private static final String LIST_SPLITTER = " |,";
 
-    public void addKrb5Config (File krb5File) throws IOException {
+    public void addKrb5Config(File krb5File) throws IOException {
         Krb5Parser krb5Parser = new Krb5Parser(krb5File);
         krb5Parser.load();
         Map<String, Object> krb5Map = krb5Parser.getItems();
