@@ -21,8 +21,17 @@ package org.apache.kerby.asn1;
 
 /**
  * A helper interface used by Asn1Enumerated.
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public interface EnumType {
+    /**
+     * @return the Enum element value
+     */
     int getValue();
+    
+    /**
+     * @return The enum element name
+     */
     String getName();
 }

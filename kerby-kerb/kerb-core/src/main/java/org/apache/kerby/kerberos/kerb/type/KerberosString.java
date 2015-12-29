@@ -25,7 +25,9 @@ import org.apache.kerby.asn1.type.Asn1GeneralString;
  * The Kerberos String, as defined in RFC 4120. It restricts the set of chars that
  * can be used to [0x00..0x7F]
  * 
+ * <pre>
  * KerberosString  ::= GeneralString -- (IA5String)
+ * </pre>
  * 
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
@@ -40,9 +42,18 @@ public class KerberosString extends Asn1GeneralString {
     /**
      * Creates a new KerberosString with an initial value
      * 
-     * @param value The String to store in teh KerberosString
+     * @param value The String to store in the KerberosString
      */
     public KerberosString(String value) {
         super(value);
+        
+        // Check that the value is valid
+        if (value != null) {
+            for (char c:value.toCharArray()) {
+                if ((c & 0xFF80) != 0x0000) {
+                    throw new IllegalArgumentException("The value contains non ASCII chars " + value);
+                }
+            }
+        }
     }
 }
