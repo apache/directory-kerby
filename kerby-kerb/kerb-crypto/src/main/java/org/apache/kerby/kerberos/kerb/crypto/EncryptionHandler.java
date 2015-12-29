@@ -38,31 +38,12 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
-import javax.crypto.Cipher;
-
 /**
  * Encryption handler as the highest level API for encryption stuffs defined in
  * Kerberos RFC3961. It supports all the encryption types. New encryption type
  * should be added updating this.
  */
 public class EncryptionHandler {
-
-    private static boolean isAES256Enabled = false;
-
-    static {
-        try {
-            isAES256Enabled = Cipher.getMaxAllowedKeyLength("AES") >= 256;
-        } catch (Exception e) {
-            System.err.println(e);
-        }
-    }
-
-    /**
-     * @return true if aes256 is enabled
-     */
-    public static boolean isAES256Enabled() {
-        return isAES256Enabled;
-    }
 
     /**
      * Get the encryption type.

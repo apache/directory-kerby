@@ -23,6 +23,7 @@ import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
+import org.apache.kerby.util.EncryptoUtil;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 
@@ -112,7 +113,7 @@ public class CheckSumsTest {
 
     @Test
     public void testCheckSums_HMAC_SHA1_96_AES256() throws Exception {
-        assumeTrue(EncryptionHandler.isAES256Enabled());
+        assumeTrue(EncryptoUtil.isAES256Enabled());
 
         performTest(new CksumTest(
             "fourteen",

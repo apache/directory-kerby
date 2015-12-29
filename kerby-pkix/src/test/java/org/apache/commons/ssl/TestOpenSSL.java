@@ -1,5 +1,6 @@
 package org.apache.commons.ssl;
 
+import org.apache.kerby.util.EncryptoUtil;
 import org.apache.kerby.util.Util;
 import org.junit.Test;
 
@@ -12,6 +13,7 @@ import java.util.Random;
 import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 public class TestOpenSSL {
 
@@ -130,6 +132,7 @@ public class TestOpenSSL {
                     byte[] encrypted = Util.streamToBytes(in);
                     char[] pwd = "changeit".toCharArray();
                     try {
+                        assumeTrue(EncryptoUtil.isAES256Enabled());
                         byte[] result = OpenSSL.decrypt(cipher, pwd, encrypted);
                         String s = new String(result, "ISO-8859-1");
                         if (!"Hello World!".equals(s)) {
