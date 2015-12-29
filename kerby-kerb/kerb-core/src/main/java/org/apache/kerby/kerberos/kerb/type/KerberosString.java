@@ -22,13 +22,26 @@ package org.apache.kerby.kerberos.kerb.type;
 import org.apache.kerby.asn1.type.Asn1GeneralString;
 
 /**
- KerberosString  ::= GeneralString -- (IA5String)
+ * The Kerberos String, as defined in RFC 4120. It restricts the set of chars that
+ * can be used to [0x00..0x7F]
+ * 
+ * KerberosString  ::= GeneralString -- (IA5String)
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class KerberosString extends Asn1GeneralString {
+    /**
+     * Creates a new KerberosString
+     */
     public KerberosString() {
         super();
     }
 
+    /**
+     * Creates a new KerberosString with an initial value
+     * 
+     * @param value The String to store in teh KerberosString
+     */
     public KerberosString(String value) {
         super(value);
     }
