@@ -19,18 +19,34 @@
  */
 package org.apache.kerby.kerberos.kerb.type;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.kerby.asn1.type.Asn1SequenceOf;
 import org.apache.kerby.asn1.type.Asn1String;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * A class that represents a SequenceOf Kerberos elements. 
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ *
+ * @param <T> The KrbSequence type
+ */
 public class KrbSequenceOfType<T extends Asn1Type> extends Asn1SequenceOf<T> {
-
+    /**
+     * @return A String List of the Kerberos Elements in this sequenceOf.
+     */
     public List<String> getAsStrings() {
         List<T> elements = getElements();
-        List<String> results = new ArrayList<String>();
+        
+        // may be spurious... Careful check of the elements nullity.
+        if (elements == null) {
+            return new ArrayList<String>();
+        }
+        
+        List<String> results = new ArrayList<String>(elements.size());
+        
         for (T ele : elements) {
             if (ele instanceof Asn1String) {
                 results.add(((Asn1String) ele).getValue());
@@ -38,6 +54,7 @@ public class KrbSequenceOfType<T extends Asn1Type> extends Asn1SequenceOf<T> {
                 throw new RuntimeException("The targeted field type isn't of string");
             }
         }
+        
         return results;
     }
 }
