@@ -68,12 +68,14 @@ public enum NameType implements EnumType {
      * Get the NameType associated with a value.
      * 
      * @param value The integer value of the NameType we are looking for
-     * @return The associated NameType, or NT_UNKNOWN
+     * @return The associated NameType, or NT_UNKNOWN if not found or if value is null
      */
-    public static NameType fromValue(int value) {
-        for (NameType nameType : values()) {
-            if (nameType.getValue() == value) {
-                return nameType;
+    public static NameType fromValue(Integer value) {
+        if (value != null) {
+            for (NameType nameType : values()) {
+                if (nameType.getValue() == value) {
+                    return nameType;
+                }
             }
         }
 
