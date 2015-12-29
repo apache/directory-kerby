@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kdc;
 
+import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbConfigKey;
 import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
@@ -26,18 +27,24 @@ import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Anonymous PKINIT test.
+ */
 public class AnonymousPkinitKdcTest extends KdcTestBase {
-
     private String serverPrincipal;
+    private KrbPkinitClient pkinitClient;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
+
+        pkinitClient = getPkinitClient();
     }
 
     @Override
@@ -57,28 +64,24 @@ public class AnonymousPkinitKdcTest extends KdcTestBase {
         super.createPrincipals();
         //Anonymity support is not enabled by default.
         //To enable it, you must create the principal WELLKNOWN/ANONYMOUS
-        getKdcServer().createPrincipal("WELLKNOWN/ANONYMOUS");
+        getKdcServer().createPrincipal(KrbConstant.ANONYMOUS_PRINCIPAL);
     }
 
     @Test
     public void testAnonymity() throws Exception {
-
-        getKrbClient().init();
-
-
         TgtTicket tgt;
-        KrbPkinitClient pkinitClient = new KrbPkinitClient(getKrbClient());
+
         try {
             tgt = pkinitClient.requestTgt();
         } catch (KrbException te) {
             te.printStackTrace();
-            assertThat(te.getMessage().contains("timeout")).isTrue();
+            Assert.fail();
             return;
         }
         assertThat(tgt).isNotNull();
 
         serverPrincipal = getServerPrincipal();
-        SgtTicket tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
+        SgtTicket tkt = pkinitClient.requestSgt(tgt, serverPrincipal);
         assertThat(tkt).isNotNull();
     }
 }

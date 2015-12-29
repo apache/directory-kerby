@@ -46,10 +46,5 @@
       <artifactId>kerb-util</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcpkix-jdk15on</artifactId>
-      <version>1.52</version>
-    </dependency>
   </dependencies>
 </project>

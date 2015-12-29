@@ -17,9 +17,10 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
+package org.apache.kerby.pkix;
 
-import org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs.CertificateChainFactory;
+
+import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,41 +29,40 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Security;
-import java.security.SignatureException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateCrtKey;
-import java.util.Arrays;
 
-public class EnvelopedDataEngineTest extends org.junit.Assert {
+/**
+ * Tests the use of {@link CMSSignedData}.
+ *
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ * @version $Rev$, $Date$
+ */
+public class SignedDataEngineTest extends org.junit.Assert {
     /**
      * The log for this class.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(EnvelopedDataEngineTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SignedDataEngineTest.class);
+
+    private static final String ID_DATA = "1.2.840.113549.1.7.1";
 
     /**
-     * Certificate used to encrypt the data.
+     * Certificate used to verify the signature.
      */
     private X509Certificate certificate;
 
     /**
-     * Private key used to decrypt the data.
+     * Private key used to sign the data.
      */
     private PrivateKey privateKey;
 
 
     @Before
     public void setUp() throws Exception {
-        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+        if (Security.getProvider("BC") == null) {
             Security.addProvider(new BouncyCastleProvider());
         }
 
@@ -70,22 +70,20 @@ public class EnvelopedDataEngineTest extends org.junit.Assert {
         getCaFromFactory();
     }
 
-
     /**
-     * Tests that enveloped data wrapping and unwrapping works.
+     * Tests that signed data signature validation works.
      *
      * @throws Exception
      */
     @Test
-    public void testEnvelopedData() throws Exception {
-        byte[] dataToEnvelope = "Hello".getBytes();
+    public void testSignedData() throws Exception {
+        byte[] data = "Hello".getBytes();
 
-        byte[] envelopedDataBytes = EnvelopedDataEngine.getEnvelopedReplyKeyPack(
-                dataToEnvelope, certificate);
-        byte[] unenvelopedData = EnvelopedDataEngine.getUnenvelopedData(
-                envelopedDataBytes, privateKey);
+        byte[] signedDataBytes = SignedDataEngine.getSignedData(privateKey, certificate, data, ID_DATA);
 
-        assertTrue(Arrays.equals(dataToEnvelope, unenvelopedData));
+        CMSSignedData signedData = new CMSSignedData(signedDataBytes);
+
+        assertTrue(SignedDataEngine.validateSignedData(signedData));
     }
 
 
@@ -97,9 +95,7 @@ public class EnvelopedDataEngineTest extends org.junit.Assert {
     }
 
 
-    void getCaFromFile(String caFile, String caPassword, String caAlias) throws KeyStoreException,
-            UnrecoverableKeyException, NoSuchAlgorithmException, IOException, CertificateException,
-            NoSuchProviderException, InvalidKeyException, SignatureException {
+    void getCaFromFile(String caFile, String caPassword, String caAlias) throws Exception {
         // Open the keystore.
         KeyStore caKs = KeyStore.getInstance("PKCS12");
         caKs.load(new FileInputStream(new File(caFile)), caPassword.toCharArray());
@@ -118,7 +114,7 @@ public class EnvelopedDataEngineTest extends org.junit.Assert {
             throw new IllegalStateException("Got null cert from keystore!");
         }
 
-        LOG.debug("Successfully loaded key and certificate having DN '{}'.", certificate.getSubjectDN().getName());
+        LOG.debug("Successfully loaded CA key and certificate. CA DN is '{}'.", certificate.getSubjectDN().getName());
 
         // Verify.
         certificate.verify(certificate.getPublicKey());

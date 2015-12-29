@@ -17,12 +17,19 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
-
-import org.apache.kerby.asn1.type.Asn1OctetString;
+package org.apache.kerby.pkix;
 
 /**
- * DHNonce ::= OCTET STRING
+ * The root exception for the module.
  */
-public class DHNonce extends Asn1OctetString {
+public class PkiException extends Exception {
+    private static final long serialVersionUID = 7305497872367599428L;
+
+    public PkiException(String message) {
+        super(message);
+    }
+
+    public PkiException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

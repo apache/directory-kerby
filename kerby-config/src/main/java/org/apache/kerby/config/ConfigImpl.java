@@ -38,8 +38,6 @@ public class ConfigImpl implements Config {
      */
     private List<Config> configs;
 
-    private Set<String> propNames;
-
     protected ConfigImpl(String resource) {
         this.resource = resource;
         this.properties = new HashMap<String, ConfigObject>();
@@ -58,7 +56,10 @@ public class ConfigImpl implements Config {
 
     @Override
     public Set<String> getNames() {
-        reloadNames();
+        Set<String>propNames = new HashSet<String>(properties.keySet());
+        for (Config config : configs) {
+            propNames.addAll(config.getNames());
+        }
         return propNames;
     }
 
@@ -422,16 +423,6 @@ public class ConfigImpl implements Config {
                         "You can not add a config to itself");
             }
             this.configs.add(config);
-        }
-    }
-
-    private void reloadNames() {
-        if (propNames != null) {
-            propNames.clear();
-        }
-        propNames = new HashSet<String>(properties.keySet());
-        for (Config config : configs) {
-            propNames.addAll(config.getNames());
         }
     }
 }

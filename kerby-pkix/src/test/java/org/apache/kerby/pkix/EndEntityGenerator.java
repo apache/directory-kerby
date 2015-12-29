@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs;
+package org.apache.kerby.pkix;
 
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.DERBMPString;

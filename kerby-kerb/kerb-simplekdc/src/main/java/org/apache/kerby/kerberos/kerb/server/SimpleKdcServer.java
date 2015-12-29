@@ -23,6 +23,8 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.client.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
+import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
+import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
 import org.apache.kerby.util.NetworkUtil;
 
 import java.io.File;
@@ -36,8 +38,10 @@ public class SimpleKdcServer extends KdcServer {
     private final KrbClient krbClnt;
     private Kadmin kadmin;
     private Krb5Conf krb5Conf;
-
     private File workDir;
+
+    private KrbPkinitClient pkinitClient;
+    private KrbTokenClient tokenClient;
 
     /**
      * Default constructor.
@@ -152,6 +156,26 @@ public class SimpleKdcServer extends KdcServer {
      */
     public KrbClient getKrbClient() {
         return krbClnt;
+    }
+
+    /**
+     * @return PKINIT client
+     */
+    public KrbPkinitClient getPkinitClient() {
+        if (pkinitClient == null) {
+            pkinitClient = new KrbPkinitClient(krbClnt);
+        }
+        return pkinitClient;
+    }
+
+    /**
+     * @return Token client
+     */
+    public KrbTokenClient getTokenClient() {
+        if (tokenClient == null) {
+            tokenClient = new KrbTokenClient(krbClnt);
+        }
+        return tokenClient;
     }
 
     /**

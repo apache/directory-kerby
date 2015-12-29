@@ -34,7 +34,7 @@ import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
+public class AccessTokenKdcTest extends TokenKdcTestBase {
 
     @Test
     public void testRequestServiceTicketWithAccessToken() throws Exception {
@@ -44,7 +44,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
 
     @Test
     public void testBadIssuer() throws Exception {
-        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
         prepareToken(getServerPrincipal(), "oauth1.com", privateKey, null);
         
@@ -59,7 +59,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
 
     @Test
     public void testBadAudienceRestriction() throws Exception {
-        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
         prepareToken("bad-service" + "/" + getHostname() + "@" + TestKdcServer.KDC_REALM,
                 ISSUER, privateKey, null);
@@ -103,10 +103,10 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
     
     @Test
     public void testSignedEncryptedToken() throws Exception {
-        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
         
-        is = WithTokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
+        is = TokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
         PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
         
         prepareToken(getServerPrincipal(), ISSUER, privateKey, publicKey);
@@ -119,7 +119,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         KeyPair keyPair = keyGen.generateKeyPair();
         
-        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
+        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
         PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
         
         prepareToken(getServerPrincipal(), ISSUER, keyPair.getPrivate(), publicKey);
@@ -136,7 +136,7 @@ public class WithAccessTokenKdcTest extends WithTokenKdcTestBase {
     private void performTest() throws Exception {
         createCredentialCache(getClientPrincipal(), getClientPassword());
 
-        KrbTokenClient tokenClient = new KrbTokenClient(getKrbClient());
+        KrbTokenClient tokenClient = getTokenClient();
         try {
             SgtTicket sgtTicket = tokenClient.requestSgt(
                 getKrbToken(), getServerPrincipal(), getcCacheFile().getPath());

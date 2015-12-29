@@ -25,7 +25,7 @@ import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.apache.kerby.pki.PkiLoader;
+import org.apache.kerby.pkix.PkiLoader;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,6 +36,10 @@ import java.security.cert.Certificate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * RSA PKINIT test.
+ */
+
+/**
  openssl genrsa -out cakey.pem 2048
  openssl req -key cakey.pem -new -x509 -out cacert.pem -days 3650
  vi extensions.kdc
@@ -44,17 +48,21 @@ import static org.assertj.core.api.Assertions.assertThat;
  env REALM=SH.INTEL.COM openssl x509 -req -in kdc.req -CAkey cakey.pem \
  -CA cacert.pem -out kdc.pem -days 365 -extfile extensions.kdc -extensions kdc_cert -CAcreateserial
  */
-public class WithCertKdcTest extends KdcTestBase {
+public class PkinitKdcTest extends KdcTestBase {
     private PkiLoader pkiLoader;
     private String serverPrincipal;
     private Certificate userCert;
     private PrivateKey userKey; //NOPMD
+
+    private KrbPkinitClient pkinitClient;
 
     @Before
     public void setUp() throws Exception {
         pkiLoader = new PkiLoader();
 
         super.setUp();
+
+        pkinitClient = getPkinitClient();
     }
 
     @Override
@@ -80,10 +88,7 @@ public class WithCertKdcTest extends KdcTestBase {
     public void testPkinit() throws Exception {
         assertThat(userCert).isNotNull();
 
-        getKrbClient().init();
-
         TgtTicket tgt;
-        KrbPkinitClient pkinitClient = new KrbPkinitClient(getKrbClient());
         try {
             String userCertPath = getClass().getResource("/usercert.pem").getPath();
             String userKeyPath = getClass().getResource("/userkey.pem").getPath();

@@ -21,6 +21,8 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
+import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
+import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -69,6 +71,14 @@ public abstract class KdcTestBase {
 
     protected KrbClient getKrbClient() {
         return kdcServer.getKrbClient();
+    }
+
+    protected KrbPkinitClient getPkinitClient() {
+        return kdcServer.getPkinitClient();
+    }
+
+    protected KrbTokenClient getTokenClient() {
+        return kdcServer.getTokenClient();
     }
 
     protected String getClientPrincipalName() {

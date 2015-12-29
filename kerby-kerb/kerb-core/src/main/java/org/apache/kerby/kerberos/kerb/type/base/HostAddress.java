@@ -52,8 +52,8 @@ public class HostAddress extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(HostAddressField.ADDR_TYPE, 0, Asn1Integer.class),
-            new ExplicitField(HostAddressField.ADDRESS, 1, Asn1OctetString.class)
+            new ExplicitField(HostAddressField.ADDR_TYPE, Asn1Integer.class),
+            new ExplicitField(HostAddressField.ADDRESS, Asn1OctetString.class)
     };
 
     public HostAddress() {

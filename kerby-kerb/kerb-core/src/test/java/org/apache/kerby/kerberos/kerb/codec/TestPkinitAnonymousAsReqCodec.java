@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.codec;
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.SignedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
+import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
@@ -33,7 +34,7 @@ import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
-import org.apache.kerby.x509.type.DHParameter;
+import org.apache.kerby.x509.type.DhParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.junit.Test;
 
@@ -44,7 +45,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 public class TestPkinitAnonymousAsReqCodec {
     @Test
@@ -84,7 +85,7 @@ public class TestPkinitAnonymousAsReqCodec {
         assertThat(body.getKdcOptions().getValue()).isEqualTo(Arrays.copyOfRange(bytes, 1389, 1393));
         PrincipalName cName = body.getCname();
         assertThat(cName.getNameType()).isEqualTo(NameType.NT_WELLKNOWN);
-        assertThat(cName.getName()).isEqualTo("WELLKNOWN/ANONYMOUS");
+        assertThat(cName.getName()).isEqualTo(KrbConstant.ANONYMOUS_PRINCIPAL);
         assertThat(body.getRealm()).isEqualTo("EXAMPLE.COM");
         PrincipalName sName = body.getSname();
         assertThat(sName.getNameType()).isEqualTo(NameType.NT_SRV_INST);
@@ -113,7 +114,7 @@ public class TestPkinitAnonymousAsReqCodec {
         SignedContentInfo contentInfo = new SignedContentInfo();
         Asn1.parseAndDump(paPkAsReq.getSignedAuthPack());
         contentInfo.decode(paPkAsReq.getSignedAuthPack());
-        assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
+        assertThat(contentInfo.getContentType()).isEqualTo("1.2.840.113549.1.7.2");
         Asn1.dump(contentInfo);
 
         SignedData signedData = contentInfo.getSignedData();
@@ -122,29 +123,29 @@ public class TestPkinitAnonymousAsReqCodec {
         assertThat(signedData.getCertificates().getElements().isEmpty()).isTrue();
         assertThat(signedData.getCrls().getElements().isEmpty()).isTrue();
         assertThat(signedData.getSignerInfos().getElements().isEmpty()).isTrue();
-        assertThat(signedData.getEncapContentInfo().getContentType().getValue())
+        assertThat(signedData.getEncapContentInfo().getContentType())
                 .isEqualTo("1.3.6.1.5.2.3.1");
 
         AuthPack authPack = new AuthPack();
         Asn1.parseAndDump(signedData.getEncapContentInfo().getContent());
         authPack.decode(signedData.getEncapContentInfo().getContent());
         assertThat(authPack.getsupportedCmsTypes().getElements().size()).isEqualTo(1);
-        assertThat(authPack.getsupportedCmsTypes().getElements().get(0).getAlgorithm().getValue())
+        assertThat(authPack.getsupportedCmsTypes().getElements().get(0).getAlgorithm())
                 .isEqualTo("1.2.840.113549.3.7");
         SubjectPublicKeyInfo subjectPublicKeyInfo = authPack.getClientPublicValue();
-        assertThat(subjectPublicKeyInfo.getAlgorithm().getAlgorithm().getValue())
+        assertThat(subjectPublicKeyInfo.getAlgorithm().getAlgorithm())
                 .isEqualTo("1.2.840.10046.2.1");
-        DHParameter dhParameter = subjectPublicKeyInfo.getAlgorithm().getParametersAs(DHParameter.class);
+        DhParameter dhParameter =
+            subjectPublicKeyInfo.getAlgorithm().getParametersAs(DhParameter.class);
         assertThat(dhParameter.getG()).isEqualTo(BigInteger.valueOf(2));
 
         assertThat(authPack.getsupportedKDFs().getElements().size()).isEqualTo(3);
 
-        //TO BE FIXED
-//        assertThat(authPack.getsupportedKDFs().getElements().get(0).getValue())
-//                .isEqualTo("1.3.6.1.5.2.3.6.2");
-//        assertThat(authPack.getsupportedKDFs().getElements().get(1).getValue())
-//                .isEqualTo("1.3.6.1.5.2.3.6.1");
-//        assertThat(authPack.getsupportedKDFs().getElements().get(2).getValue())
-//                .isEqualTo("1.3.6.1.5.2.3.6.3");
+        assertThat(authPack.getsupportedKDFs().getElements().get(0).getKdfId())
+                .isEqualTo("1.3.6.1.5.2.3.6.2");
+        assertThat(authPack.getsupportedKDFs().getElements().get(1).getKdfId())
+                .isEqualTo("1.3.6.1.5.2.3.6.1");
+        assertThat(authPack.getsupportedKDFs().getElements().get(2).getKdfId())
+                .isEqualTo("1.3.6.1.5.2.3.6.3");
     }
 }

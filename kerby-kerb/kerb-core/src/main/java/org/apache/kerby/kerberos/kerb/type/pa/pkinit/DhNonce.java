@@ -6,21 +6,23 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *
+ *  
  *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License.
- *
+ *  under the License. 
+ *  
  */
 package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.kerberos.kerb.type.KrbSequenceOfType;
+import org.apache.kerby.asn1.type.Asn1OctetString;
 
-public class SupportedKDFs extends KrbSequenceOfType<Asn1ObjectIdentifier> {
+/**
+ * DHNonce ::= OCTET STRING
+ */
+public class DhNonce extends Asn1OctetString {
 }

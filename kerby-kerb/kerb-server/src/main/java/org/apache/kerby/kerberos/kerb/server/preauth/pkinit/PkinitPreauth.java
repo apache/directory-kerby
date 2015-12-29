@@ -23,7 +23,6 @@ import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.parse.Asn1Container;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.cms.type.CertificateChoices;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.ContentInfo;
@@ -35,8 +34,8 @@ import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.crypto.dh.DhServer;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
-import org.apache.kerby.kerberos.kerb.preauth.pkinit.CMSMessageType;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.CmsMessageType;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPlgCryptoContext;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
@@ -52,13 +51,13 @@ import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DhRepInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDhKeyInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator;
 import org.apache.kerby.x509.type.Certificate;
-import org.apache.kerby.x509.type.DHParameter;
+import org.apache.kerby.x509.type.DhParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,9 +142,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             SignedData signedData = contentInfo.getContentAs(SignedData.class);
 
-            PkinitCrypto.verifyCMSSignedData(CMSMessageType.CMS_SIGN_CLIENT, signedData);
+            PkinitCrypto.verifyCmsSignedData(CmsMessageType.CMS_SIGN_CLIENT, signedData);
 
-            Boolean isSigned = PkinitCrypto.isSigned(signedData);
+            Boolean isSigned = signedData.isSigned();
             if (isSigned) {
                 //TODO
                 LOG.info("Signed data.");
@@ -213,9 +212,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             SubjectPublicKeyInfo publicKeyInfo = authPack.getClientPublicValue();
 
-            DHParameter dhParameter;
+            DhParameter dhParameter;
             if (publicKeyInfo.getSubjectPubKey() != null) {
-                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParametersAs(DHParameter.class);
+                dhParameter = authPack.getClientPublicValue().getAlgorithm().getParametersAs(DhParameter.class);
                 PkinitCrypto.serverCheckDH(pkinitContext.pluginOpts, pkinitContext.cryptoctx, dhParameter);
 
                 byte[] clientSubjectPubKey = publicKeyInfo.getSubjectPubKey().getValue();
@@ -321,8 +320,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         }
 
         PaPkAsRep paPkAsRep = new PaPkAsRep();
-        DHRepInfo dhRepInfo = new DHRepInfo();
-        KdcDHKeyInfo kdcDhKeyInfo = new KdcDHKeyInfo();
+        DhRepInfo dhRepInfo = new DhRepInfo();
+        KdcDhKeyInfo kdcDhKeyInfo = new KdcDhKeyInfo();
 
         Asn1Integer publickey = new Asn1Integer(severPubKey.getY());
         byte[] pubKeyData = KrbCodec.encode(publickey);
@@ -341,7 +340,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             certificateSet.addElement(certificateChoices);
         }
 
-        Asn1ObjectIdentifier oid = cryptoContext.getIdPkinitDHKeyDataOID();
+        String oid = cryptoContext.getIdPkinitDHKeyDataOID();
         signedDataBytes = PkinitCrypto.cmsSignedDataCreate(KrbCodec.encode(kdcDhKeyInfo), oid, 3, null,
                 null, null, null);
 

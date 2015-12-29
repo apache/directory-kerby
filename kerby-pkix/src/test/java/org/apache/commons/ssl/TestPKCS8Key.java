@@ -1,5 +1,6 @@
 package org.apache.commons.ssl;
 
+import org.apache.kerby.util.EncryptoUtil;
 import org.apache.kerby.util.Util;
 import org.junit.Test;
 
@@ -11,6 +12,7 @@ import java.util.Locale;
 import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 public class TestPKCS8Key {
 
@@ -44,6 +46,7 @@ public class TestPKCS8Key {
             System.out.println("Checking PKCS file:" + filename);
             FileInputStream in = new FileInputStream(f);
             byte[] bytes = Util.streamToBytes(in);
+            assumeTrue(EncryptoUtil.isAES256Enabled());
             PKCS8Key key = new PKCS8Key(bytes, password.toCharArray());
             byte[] decrypted = key.getDecryptedBytes();
             if (original == null) {

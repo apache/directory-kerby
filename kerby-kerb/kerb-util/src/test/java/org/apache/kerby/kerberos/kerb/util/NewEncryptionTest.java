@@ -25,6 +25,7 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
+import org.apache.kerby.util.EncryptoUtil;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class NewEncryptionTest {
 
     @Test
     public void testAes256CtsHmacSha1() throws IOException, KrbException {
-        assumeTrue(EncryptionHandler.isAES256Enabled());
+        assumeTrue(EncryptoUtil.isAES256Enabled());
 
         testEncWith(EncryptionType.AES256_CTS_HMAC_SHA1_96);
     }

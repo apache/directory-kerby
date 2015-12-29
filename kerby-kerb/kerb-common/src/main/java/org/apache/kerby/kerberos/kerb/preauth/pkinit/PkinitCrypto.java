@@ -30,8 +30,9 @@ import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.util.HexUtil;
 import org.apache.kerby.x509.type.Certificate;
-import org.apache.kerby.x509.type.DHParameter;
+import org.apache.kerby.x509.type.DhParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,15 +64,15 @@ public class PkinitCrypto {
      * @param cmsMsgType The CMS message type
      * @param signedData The signed data
      */
-    public static void verifyCMSSignedData(CMSMessageType cmsMsgType, SignedData signedData)
+    public static void verifyCmsSignedData(CmsMessageType cmsMsgType, SignedData signedData)
             throws KrbException {
-        Asn1ObjectIdentifier oid = pkinitType2OID(cmsMsgType);
+        String oid = pkinitType2OID(cmsMsgType);
         if (oid == null) {
             throw new KrbException("Can't get the right oid ");
         }
 
-        Asn1ObjectIdentifier etype = signedData.getEncapContentInfo().getContentType();
-        if (oid.getValue().equals(etype.getValue())) {
+        String etype = signedData.getEncapContentInfo().getContentType();
+        if (oid.equals(etype)) {
             LOG.info("CMS Verification successful");
         } else {
             LOG.error("Wrong oid in eContentType");
@@ -80,25 +81,11 @@ public class PkinitCrypto {
     }
 
     /**
-     * Check whether signed of data, true if the SignerInfos are not null
-     * @param signedData The signed data
-     * @return boolean
-     */
-    public static boolean isSigned(SignedData signedData) {
-        /* Not actually signed; anonymous case */
-        if (signedData.getSignerInfos().getElements().size() == 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * Change the CMS message type to oid
      * @param cmsMsgType The CMS message type
      * @return oid
      */
-    public static Asn1ObjectIdentifier pkinitType2OID(CMSMessageType cmsMsgType) {
+    public static String pkinitType2OID(CmsMessageType cmsMsgType) {
         switch (cmsMsgType) {
             case UNKNOWN:
                 return null;
@@ -117,10 +104,10 @@ public class PkinitCrypto {
      * KDC check the key parameter
      * @param pluginOpts The PluginOpts
      * @param cryptoctx The PkinitPlgCryptoContext
-     * @param dhParameter The DHParameter
+     * @param dhParameter The DhParameter
      */
     public static void serverCheckDH(PluginOpts pluginOpts, PkinitPlgCryptoContext cryptoctx,
-                                     DHParameter dhParameter) throws KrbException {
+                                     DhParameter dhParameter) throws KrbException {
          /* KDC SHOULD check to see if the key parameters satisfy its policy */
         int dhPrimeBits = dhParameter.getP().bitLength();
         if (dhPrimeBits < pluginOpts.dhMinBits) {
@@ -135,12 +122,12 @@ public class PkinitCrypto {
     /**
      * Check DH wellknown
      * @param cryptoctx The PkinitPlgCryptoContext
-     * @param dhParameter The DHParameter
+     * @param dhParameter The DhParameter
      * @param dhPrimeBits The dh prime bits
      * @return boolean
      */
     public static boolean checkDHWellknown(PkinitPlgCryptoContext cryptoctx,
-                                           DHParameter dhParameter, int dhPrimeBits) throws KrbException {
+                                           DhParameter dhParameter, int dhPrimeBits) throws KrbException {
         boolean valid = false;
         switch (dhPrimeBits) {
             case 1024:
@@ -161,9 +148,9 @@ public class PkinitCrypto {
      * Check parameters against a well-known DH group
      *
      * @param dh1 The DHParameterSpec
-     * @param dh2 The DHParameter
+     * @param dh2 The DhParameter
      */
-    public static boolean pkinitCheckDhParams(DHParameterSpec dh1, DHParameter dh2) {
+    public static boolean pkinitCheckDhParams(DHParameterSpec dh1, DhParameter dh2) {
 
         if (!dh1.getP().equals(dh2.getP())) {
             LOG.error("p is not well-known group dhparameter");
@@ -221,12 +208,12 @@ public class PkinitCrypto {
      * @param signerInfos The signerInfos
      * @return The encoded ContentInfo
      */
-    public static byte[] cmsSignedDataCreate(byte[] data, Asn1ObjectIdentifier oid, int version,
+    public static byte[] cmsSignedDataCreate(byte[] data, String oid, int version,
                                              DigestAlgorithmIdentifiers digestAlgorithmIdentifiers,
                                              CertificateSet certificateSet,
                                              RevocationInfoChoices crls, SignerInfos signerInfos) throws KrbException {
         SignedContentInfo contentInfo = new SignedContentInfo();
-        contentInfo.setContentType(new Asn1ObjectIdentifier("1.2.840.113549.1.7.2"));
+        contentInfo.setContentType("1.2.840.113549.1.7.2");
         SignedData signedData = new SignedData();
         signedData.setVersion(version);
         if (digestAlgorithmIdentifiers != null) {
@@ -327,17 +314,19 @@ public class PkinitCrypto {
             InvalidAlgorithmParameterException, CertPathValidatorException {
 
         //TODO
-//        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-//        CertPath certPath = certificateFactory.generateCertPath(certificateList);
-//
-//        CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
-//
-//        TrustAnchor trustAnchor = new TrustAnchor(anchor, null);
-//
-//        PKIXParameters parameters = new PKIXParameters(Collections.singleton(trustAnchor));
-//        parameters.setRevocationEnabled(false);
-//
-//        cpv.validate(certPath, parameters);
+        /*
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        CertPath certPath = certificateFactory.generatertPath(certificateList);
+
+        CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
+
+        TrustAnchor trustAnchor = new TrustAnchor(anchor, null);
+
+        PKIXParameters parameters = new PKIXParameters(Collections.singleton(trustAnchor));
+        parameters.setRevocationEnabled(false);
+
+        cpv.validate(certPath, parameters);
+        */
     }
 
     /**
@@ -346,14 +335,10 @@ public class PkinitCrypto {
      * @param content The hex content
      * @return  The oid
      */
-    public static Asn1ObjectIdentifier createOid(String content) {
+    public static Asn1ObjectIdentifier createOid(String content) throws KrbException {
         Asn1ObjectIdentifier oid = new Asn1ObjectIdentifier();
         oid.useDER();
-        try {
-            oid.decode(Util.hex2bytes(content));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        KrbCodec.decode(HexUtil.hex2bytesFriendly(content), oid);
         return oid;
     }
 

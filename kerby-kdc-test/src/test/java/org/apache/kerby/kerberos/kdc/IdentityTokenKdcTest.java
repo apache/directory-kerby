@@ -35,7 +35,7 @@ import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
+public class IdentityTokenKdcTest extends TokenKdcTestBase {
 
     @Test
     public void testKdc() throws Exception {
@@ -45,7 +45,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
 
     @Test
     public void testBadIssuer() throws Exception {
-        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
         prepareToken(getAudience("krbtgt"), "oauth1.com", privateKey, null);
 
@@ -60,7 +60,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
 
     @Test
     public void testBadAudienceRestriction() throws Exception {
-        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
         prepareToken("krbtgt2@EXAMPLE.COM", ISSUER, privateKey, null);
 
@@ -102,10 +102,10 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
 
     @Test
     public void testSignedEncryptedToken() throws Exception {
-        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
+        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
 
-        is = WithTokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
+        is = TokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
         PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
 
         prepareToken(getAudience("krbtgt"), ISSUER, privateKey, publicKey);
@@ -118,7 +118,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         KeyPair keyPair = keyGen.generateKeyPair();
 
-        InputStream is = WithTokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
+        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
         PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
 
         prepareToken(getAudience("krbtgt"), ISSUER, keyPair.getPrivate(), publicKey);
@@ -137,7 +137,7 @@ public class WithIdentityTokenKdcTest extends WithTokenKdcTestBase {
         createCredentialCache(getClientPrincipal(), getClientPassword());
 
         TgtTicket tgt;
-        KrbTokenClient tokenClient = new KrbTokenClient(getKrbClient());
+        KrbTokenClient tokenClient = getTokenClient();
         try {
             tgt = tokenClient.requestTgt(getKrbToken(),
                 getcCacheFile().getPath());

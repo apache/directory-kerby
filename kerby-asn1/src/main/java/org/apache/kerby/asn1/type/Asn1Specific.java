@@ -25,15 +25,15 @@ import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import java.io.IOException;
 
 /**
- * Application or context object mainly for using implicit encoding.
+ * Application or context specific object mainly for using implicit encoding.
  */
-public class Asn1Specifix extends AbstractAsn1Type<byte[]> {
+public class Asn1Specific extends AbstractAsn1Type<byte[]> {
 
-    public Asn1Specifix(Tag tag, byte[] value) {
+    public Asn1Specific(Tag tag, byte[] value) {
         super(tag, value);
     }
 
-    public Asn1Specifix(Tag tag) {
+    public Asn1Specific(Tag tag) {
         super(tag);
     }
 

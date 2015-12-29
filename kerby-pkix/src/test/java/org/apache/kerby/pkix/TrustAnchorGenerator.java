@@ -17,8 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs;
-
+package org.apache.kerby.pkix;
 
 import org.bouncycastle.asn1.DERBMPString;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
@@ -30,11 +29,9 @@ import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.crypto.DataLengthException;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
-import org.bouncycastle.jce.PrincipalUtil;
 import org.bouncycastle.jce.X509Principal;
 import org.bouncycastle.jce.interfaces.PKCS12BagAttributeCarrier;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
-import org.bouncycastle.x509.extension.AuthorityKeyIdentifierStructure;
 
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
@@ -49,18 +46,14 @@ import java.util.Date;
 
 
 /**
- * Generates an X.509 "intermediate CA" certificate programmatically.
- *
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
- * @version $Rev$, $Date$
+ * Generates an X.509 "trust anchor" certificate programmatically.
  */
-public class IntermediateCaGenerator {
+public class TrustAnchorGenerator {
     /**
-     * Create certificate.
+     * Create CA certificate.
      *
-     * @param issuerCert
-     * @param issuerPrivateKey
      * @param publicKey
+     * @param privateKey
      * @param dn
      * @param validityDays
      * @param friendlyName
@@ -72,9 +65,8 @@ public class IntermediateCaGenerator {
      * @throws DataLengthException
      * @throws CertificateException
      */
-    public static X509Certificate generate(X509Certificate issuerCert, PrivateKey issuerPrivateKey,
-                                           PublicKey publicKey, String dn, int validityDays,
-                                           String friendlyName)
+    public static X509Certificate generate(PublicKey publicKey, PrivateKey privateKey,
+                                           String dn, int validityDays, String friendlyName)
             throws InvalidKeyException, SecurityException, SignatureException,
             NoSuchAlgorithmException, DataLengthException, CertificateException {
         X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
@@ -82,8 +74,9 @@ public class IntermediateCaGenerator {
         // Set certificate attributes.
         certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
 
-        certGen.setIssuerDN(PrincipalUtil.getSubjectX509Principal(issuerCert));
-        certGen.setSubjectDN(new X509Principal(dn));
+        X509Principal x509Principal = new X509Principal(dn);
+        certGen.setIssuerDN(x509Principal);
+        certGen.setSubjectDN(x509Principal);
 
         certGen.setNotBefore(new Date());
 
@@ -99,15 +92,12 @@ public class IntermediateCaGenerator {
                 .addExtension(X509Extensions.SubjectKeyIdentifier, false,
                         new SubjectKeyIdentifier(getDigest(SubjectPublicKeyInfo.getInstance(publicKey.getEncoded()))));
 
-        certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(0));
-
-        certGen.addExtension(X509Extensions.AuthorityKeyIdentifier, false,
-                new AuthorityKeyIdentifierStructure(issuerCert));
+        certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(1));
 
         certGen.addExtension(X509Extensions.KeyUsage, true, new KeyUsage(KeyUsage.digitalSignature
                 | KeyUsage.keyCertSign | KeyUsage.cRLSign));
 
-        X509Certificate cert = certGen.generate(issuerPrivateKey);
+        X509Certificate cert = certGen.generate(privateKey);
 
         PKCS12BagAttributeCarrier bagAttr = (PKCS12BagAttributeCarrier) cert;
 

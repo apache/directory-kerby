@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.client.preauth.pkinit.certs;
+package org.apache.kerby.pkix;
 
 
 import java.math.BigInteger;
@@ -27,9 +27,6 @@ import java.security.spec.RSAPublicKeySpec;
 
 /**
  * Specifications for asymmetric key pairs.
- *
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
- * @version $Rev$, $Date$
  */
 @SuppressWarnings("checkstyle:linelength")
 class KeyPairSpec {

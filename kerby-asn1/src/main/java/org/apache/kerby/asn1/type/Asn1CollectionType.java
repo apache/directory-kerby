@@ -228,8 +228,20 @@ public abstract class Asn1CollectionType
         setFieldAs(index, new Asn1Integer(value));
     }
 
-    protected void setFieldAsBigInteger(EnumType index, BigInteger value) {
+    protected void setFieldAsInt(EnumType index, BigInteger value) {
         setFieldAs(index, new Asn1Integer(value));
+    }
+
+    protected void setFieldAsObjId(EnumType index, String value) {
+        setFieldAs(index, new Asn1ObjectIdentifier(value));
+    }
+
+    protected String getFieldAsObjId(EnumType index) {
+        Asn1ObjectIdentifier objId = getFieldAs(index, Asn1ObjectIdentifier.class);
+        if (objId != null) {
+            return objId.getValue();
+        }
+        return null;
     }
 
     protected <T extends Asn1Type> T getFieldAsAny(EnumType index, Class<T> t) {

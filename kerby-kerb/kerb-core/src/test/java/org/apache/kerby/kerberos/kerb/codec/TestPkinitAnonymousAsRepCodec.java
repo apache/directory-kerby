@@ -31,8 +31,8 @@ import org.apache.kerby.kerberos.kerb.type.kdc.AsRep;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DHRepInfo;
-import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDHKeyInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DhRepInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDhKeyInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 import org.junit.Test;
@@ -102,19 +102,19 @@ public class TestPkinitAnonymousAsRepCodec {
     private void testPaPkAsRep(PaPkAsRep paPkAsRep) throws IOException {
         assertThat(paPkAsRep.getDHRepInfo()).isNotNull();
 
-        DHRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
+        DhRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
         byte[] dhSignedData = dhRepInfo.getDHSignedData();
         SignedContentInfo contentInfo = new SignedContentInfo();
         contentInfo.decode(dhSignedData);
-        assertThat(contentInfo.getContentType().getValue()).isEqualTo("1.2.840.113549.1.7.2");
+        assertThat(contentInfo.getContentType()).isEqualTo("1.2.840.113549.1.7.2");
         SignedData signedData = contentInfo.getContentAs(SignedData.class);
         assertThat(signedData.getCertificates()).isNotNull();
 
         EncapsulatedContentInfo encapsulatedContentInfo = signedData.getEncapContentInfo();
-        assertThat(encapsulatedContentInfo.getContentType().getValue()).isEqualTo("1.3.6.1.5.2.3.2");
+        assertThat(encapsulatedContentInfo.getContentType()).isEqualTo("1.3.6.1.5.2.3.2");
 
         byte[] eContentInfo = encapsulatedContentInfo.getContent();
-        KdcDHKeyInfo kdcDhKeyInfo = new KdcDHKeyInfo();
+        KdcDhKeyInfo kdcDhKeyInfo = new KdcDhKeyInfo();
         kdcDhKeyInfo.decode(eContentInfo);
         assertThat(kdcDhKeyInfo.getSubjectPublicKey()).isNotNull();
         assertThat(kdcDhKeyInfo.getDHKeyExpiration()).isNotNull();

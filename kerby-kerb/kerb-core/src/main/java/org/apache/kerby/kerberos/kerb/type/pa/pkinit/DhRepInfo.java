@@ -23,18 +23,19 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.ImplicitField;
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
 /**
- DHRepInfo ::= SEQUENCE {
+ DhRepInfo ::= SEQUENCE {
     dhSignedData            [0] IMPLICIT OCTET STRING,
     serverDHNonce           [1] DHNonce OPTIONAL
+    kdf                     [2] KDFAlgorithmId OPTIONAL,
+                                -- The KDF picked by the KDC.
  }
  */
-public class DHRepInfo extends KrbSequenceType {
-    protected enum DHRepInfoField implements EnumType {
+public class DhRepInfo extends KrbSequenceType {
+    protected enum DhRepInfoField implements EnumType {
         DH_SIGNED_DATA,
         SERVER_DH_NONCE,
         KDF_ID;
@@ -51,36 +52,36 @@ public class DHRepInfo extends KrbSequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ImplicitField(DHRepInfoField.DH_SIGNED_DATA, Asn1OctetString.class),
-            new ExplicitField(DHRepInfoField.SERVER_DH_NONCE, DHNonce.class),
-            new ExplicitField(DHRepInfoField.KDF_ID, Asn1ObjectIdentifier.class)
+            new ImplicitField(DhRepInfoField.DH_SIGNED_DATA, Asn1OctetString.class),
+            new ExplicitField(DhRepInfoField.SERVER_DH_NONCE, DhNonce.class),
+            new ExplicitField(DhRepInfoField.KDF_ID, KdfAlgorithmId.class)
     };
 
-    public DHRepInfo() {
+    public DhRepInfo() {
         super(fieldInfos);
     }
 
     public byte[] getDHSignedData() {
-        return getFieldAsOctets(DHRepInfoField.DH_SIGNED_DATA);
+        return getFieldAsOctets(DhRepInfoField.DH_SIGNED_DATA);
     }
 
     public void setDHSignedData(byte[] dhSignedData) {
-        setFieldAsOctets(DHRepInfoField.DH_SIGNED_DATA, dhSignedData);
+        setFieldAsOctets(DhRepInfoField.DH_SIGNED_DATA, dhSignedData);
     }
 
-    public DHNonce getServerDhNonce() {
-        return getFieldAs(DHRepInfoField.SERVER_DH_NONCE, DHNonce.class);
+    public DhNonce getServerDhNonce() {
+        return getFieldAs(DhRepInfoField.SERVER_DH_NONCE, DhNonce.class);
     }
 
-    public void setServerDhNonce(DHNonce dhNonce) {
-        setFieldAs(DHRepInfoField.SERVER_DH_NONCE, dhNonce);
+    public void setServerDhNonce(DhNonce dhNonce) {
+        setFieldAs(DhRepInfoField.SERVER_DH_NONCE, dhNonce);
     }
 
-    public Asn1ObjectIdentifier getKdfId() {
-        return getFieldAs(DHRepInfoField.KDF_ID, Asn1ObjectIdentifier.class);
+    public KdfAlgorithmId getKdfId() {
+        return getFieldAs(DhRepInfoField.KDF_ID, KdfAlgorithmId.class);
     }
 
-    public void setKdfId(Asn1ObjectIdentifier kdfId) {
-        setFieldAs(DHRepInfoField.KDF_ID, kdfId);
+    public void setKdfId(KdfAlgorithmId kdfId) {
+        setFieldAs(DhRepInfoField.KDF_ID, kdfId);
     }
 }

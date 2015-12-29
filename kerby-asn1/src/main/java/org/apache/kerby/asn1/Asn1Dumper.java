@@ -22,7 +22,7 @@ package org.apache.kerby.asn1;
 import org.apache.kerby.asn1.parse.Asn1Item;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.asn1.parse.Asn1Parser;
-import org.apache.kerby.asn1.type.Asn1Specifix;
+import org.apache.kerby.asn1.type.Asn1Specific;
 import org.apache.kerby.asn1.type.Asn1Simple;
 import org.apache.kerby.asn1.type.Asn1Type;
 
@@ -66,7 +66,7 @@ public final class Asn1Dumper {
         } else if (value instanceof Asn1Dumpable) {
             Asn1Dumpable dumpable = (Asn1Dumpable) value;
             dumpable.dumpWith(this, indents);
-        } else if (value instanceof Asn1Specifix) {
+        } else if (value instanceof Asn1Specific) {
             indent(indents).append(value.toString());
         } else {
             indent(indents).append("<Unknown>");

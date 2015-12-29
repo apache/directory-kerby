@@ -60,12 +60,12 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
         super(fieldInfos);
     }
 
-    public Asn1ObjectIdentifier getAlgorithm() {
-        return getFieldAs(ALGORITHM, Asn1ObjectIdentifier.class);
+    public String getAlgorithm() {
+        return getFieldAsObjId(ALGORITHM);
     }
 
-    public void setAlgorithm(Asn1ObjectIdentifier algorithm) {
-        setFieldAs(ALGORITHM, algorithm);
+    public void setAlgorithm(String algorithm) {
+        setFieldAsObjId(ALGORITHM, algorithm);
     }
 
     public <T extends Asn1Type> T getParametersAs(Class<T> t) {

@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
@@ -89,7 +90,8 @@ public class KrbPkinitClient extends KrbClientBase {
     public TgtTicket requestTgt() throws KrbException {
         KOptions requestOptions = new KOptions();
         requestOptions.add(PkinitOption.USE_ANONYMOUS);
-        requestOptions.add(KrbOption.CLIENT_PRINCIPAL, "WELLKNOWN/ANONYMOUS");
+        requestOptions.add(KrbOption.CLIENT_PRINCIPAL,
+            KrbConstant.ANONYMOUS_PRINCIPAL);
         return requestTgt(requestOptions);
     }
 }

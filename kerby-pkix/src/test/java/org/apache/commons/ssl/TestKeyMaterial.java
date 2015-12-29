@@ -1,5 +1,6 @@
 package org.apache.commons.ssl;
 
+import org.apache.kerby.util.EncryptoUtil;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Test;
 
@@ -14,6 +15,7 @@ import java.util.Locale;
 import static org.apache.commons.ssl.JUnitConfig.TEST_HOME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 public class TestKeyMaterial {
     public static final char[] PASSWORD1 = "changeit".toCharArray();
@@ -54,7 +56,10 @@ public class TestKeyMaterial {
 
         Date today = new Date();
         KeyMaterial km;
+
+
         try {
+            assumeTrue(EncryptoUtil.isAES256Enabled());
             km = new KeyMaterial(dir + "/" + fileName, file2, pass1, pass2);
         } catch (ProbablyBadPasswordException pbpe) {
             System.out.println("  WARN:  " + pbpe);

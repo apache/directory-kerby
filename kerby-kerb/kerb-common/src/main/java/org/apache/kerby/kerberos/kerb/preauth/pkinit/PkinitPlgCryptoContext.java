@@ -18,7 +18,6 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 import javax.crypto.spec.DHParameterSpec;
@@ -134,15 +133,15 @@ public class PkinitPlgCryptoContext {
     }
 
 
-    public static Asn1ObjectIdentifier getIdPkinitAuthDataOID() {
-        return new Asn1ObjectIdentifier(ID_PKINIT_AUTHDATA);
+    public static String getIdPkinitAuthDataOID() {
+        return ID_PKINIT_AUTHDATA;
     }
 
-    public static Asn1ObjectIdentifier getIdPkinitDHKeyDataOID() {
-        return new Asn1ObjectIdentifier(ID_PKINIT_DHKEYDATA);
+    public static String getIdPkinitDHKeyDataOID() {
+        return ID_PKINIT_DHKEYDATA;
     }
 
-    public static Asn1ObjectIdentifier getIdPkinitRkeyDataOID() {
-        return new Asn1ObjectIdentifier(ID_PKINIT_RKEYDATA);
+    public static String getIdPkinitRkeyDataOID() {
+        return ID_PKINIT_RKEYDATA;
     }
 }

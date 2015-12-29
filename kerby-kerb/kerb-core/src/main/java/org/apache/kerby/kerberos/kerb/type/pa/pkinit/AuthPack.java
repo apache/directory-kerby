@@ -31,6 +31,11 @@ import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
      clientPublicValue       [1] SubjectPublicKeyInfo OPTIONAL,
      supportedCMSTypes       [2] SEQUENCE OF AlgorithmIdentifier OPTIONAL,
      clientDHNonce           [3] DHNonce OPTIONAL
+     supportedKDFs           [4] SEQUENCE OF KDFAlgorithmId OPTIONAL,
+                             -- Contains an unordered set of KDFs supported by the client.
+ KDFAlgorithmId ::= SEQUENCE {
+     kdf-id            [0] OBJECT IDENTIFIER,
+                       -- The object identifier of the KDF
  }
  */
 public class AuthPack extends KrbSequenceType {
@@ -56,8 +61,8 @@ public class AuthPack extends KrbSequenceType {
             new ExplicitField(AuthPackField.PK_AUTHENTICATOR, PkAuthenticator.class),
             new ExplicitField(AuthPackField.CLIENT_PUBLIC_VALUE, SubjectPublicKeyInfo.class),
             new ExplicitField(AuthPackField.SUPPORTED_CMS_TYPES, AlgorithmIdentifiers.class),
-            new ExplicitField(AuthPackField.CLIENT_DH_NONCE, DHNonce.class),
-            new ExplicitField(AuthPackField.SUPPORTED_KDFS, SupportedKDFs.class)
+            new ExplicitField(AuthPackField.CLIENT_DH_NONCE, DhNonce.class),
+            new ExplicitField(AuthPackField.SUPPORTED_KDFS, SupportedKdfs.class)
     };
 
     public AuthPack() {
@@ -88,19 +93,19 @@ public class AuthPack extends KrbSequenceType {
         setFieldAs(AuthPackField.SUPPORTED_CMS_TYPES, supportedCMSTypes);
     }
 
-    public DHNonce getClientDhNonce() {
-        return getFieldAs(AuthPackField.CLIENT_DH_NONCE, DHNonce.class);
+    public DhNonce getClientDhNonce() {
+        return getFieldAs(AuthPackField.CLIENT_DH_NONCE, DhNonce.class);
     }
 
-    public void setClientDhNonce(DHNonce dhNonce) {
+    public void setClientDhNonce(DhNonce dhNonce) {
         setFieldAs(AuthPackField.CLIENT_DH_NONCE, dhNonce);
     }
 
-    public SupportedKDFs getsupportedKDFs() {
-        return getFieldAs(AuthPackField.SUPPORTED_KDFS, SupportedKDFs.class);
+    public SupportedKdfs getsupportedKDFs() {
+        return getFieldAs(AuthPackField.SUPPORTED_KDFS, SupportedKdfs.class);
     }
 
-    public void setsupportedKDFs(SupportedKDFs supportedKDFs) {
-        setFieldAs(AuthPackField.SUPPORTED_KDFS, supportedKDFs);
+    public void setsupportedKDFs(SupportedKdfs supportedKdfs) {
+        setFieldAs(AuthPackField.SUPPORTED_KDFS, supportedKdfs);
     }
 }

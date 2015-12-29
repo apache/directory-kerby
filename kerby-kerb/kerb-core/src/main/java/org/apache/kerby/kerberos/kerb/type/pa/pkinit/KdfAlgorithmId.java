@@ -17,34 +17,23 @@
  *  under the License.
  *
  */
-package org.apache.kerby.cms.type;
+package org.apache.kerby.kerberos.kerb.type.pa.pkinit;
 
 import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
-import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.asn1.type.Asn1SequenceType;
-import org.apache.kerby.asn1.type.Asn1Type;
+import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
-import static org.apache.kerby.cms.type.ContentInfo.MyEnum.*;
-
-/**
- * Ref. RFC 5652
- *
- * <pre>
- * ContentInfo ::= SEQUENCE {
- *     contentType ContentType,
- *     content [0] EXPLICIT ANY DEFINED BY contentType OPTIONAL
- * }
- *
- * ContentType ::= OBJECT IDENTIFIER
- * </pre>
+/*
+ KDFAlgorithmId ::= SEQUENCE {
+     kdf-id            [0] OBJECT IDENTIFIER,
+                       -- The object identifier of the KDF
+ }
  */
-public class ContentInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
-        CONTENT_TYPE,
-        CONTENT;
+public class KdfAlgorithmId extends KrbSequenceType {
+    protected enum KdfAlgorithmIdField implements EnumType {
+        KDF_ID;
 
         @Override
         public int getValue() {
@@ -57,28 +46,19 @@ public class ContentInfo extends Asn1SequenceType {
         }
     }
 
-    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-        new Asn1FieldInfo(CONTENT_TYPE, Asn1ObjectIdentifier.class),
-        new ExplicitField(CONTENT, 0, Asn1Any.class),
+    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new ExplicitField(KdfAlgorithmIdField.KDF_ID, Asn1ObjectIdentifier.class)
     };
 
-    public ContentInfo() {
+    public KdfAlgorithmId() {
         super(fieldInfos);
     }
 
-    public String getContentType() {
-        return getFieldAsObjId(CONTENT_TYPE);
+    public String getKdfId() {
+        return getFieldAsObjId(KdfAlgorithmIdField.KDF_ID);
     }
 
-    public void setContentType(String contentType) {
-        setFieldAsObjId(CONTENT_TYPE, contentType);
-    }
-
-    public <T extends Asn1Type> T getContentAs(Class<T> t) {
-        return getFieldAsAny(CONTENT, t);
-    }
-
-    public void setContent(Asn1Type content) {
-        setFieldAsAny(CONTENT, content);
+    public void setKdfId(String kdfId) {
+        setFieldAsObjId(KdfAlgorithmIdField.KDF_ID, kdfId);
     }
 }
