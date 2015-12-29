@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Boolean;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.*;
-
 /**
  * <pre>
  * IssuingDistributionPoint ::= SEQUENCE { 
@@ -40,7 +38,7 @@ import static org.apache.kerby.x509.type.IssuingDistributionPoint.MyEnum.*;
  * </pre>
  */
 public class IssuingDistributionPoint extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum IDPointField implements EnumType {
         DISTRIBUTION_POINT,
         ONLY_CONTAINS_USER_CERTS,
         ONLY_CONTAINS_CA_CERTS,
@@ -59,12 +57,12 @@ public class IssuingDistributionPoint extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(DISTRIBUTION_POINT, DistributionPointName.class),
-        new ExplicitField(ONLY_CONTAINS_USER_CERTS, Asn1Boolean.class),
-        new ExplicitField(ONLY_CONTAINS_CA_CERTS, Asn1Boolean.class),
-        new ExplicitField(ONLY_SOME_REASONS, ReasonFlags.class),
-        new ExplicitField(INDIRECT_CRL, Asn1Boolean.class),
-        new ExplicitField(ONLY_CONTAINS_ATTRIBUTE_CERTS, Asn1Boolean.class)
+        new ExplicitField(IDPointField.DISTRIBUTION_POINT, DistributionPointName.class),
+        new ExplicitField(IDPointField.ONLY_CONTAINS_USER_CERTS, Asn1Boolean.class),
+        new ExplicitField(IDPointField.ONLY_CONTAINS_CA_CERTS, Asn1Boolean.class),
+        new ExplicitField(IDPointField.ONLY_SOME_REASONS, ReasonFlags.class),
+        new ExplicitField(IDPointField.INDIRECT_CRL, Asn1Boolean.class),
+        new ExplicitField(IDPointField.ONLY_CONTAINS_ATTRIBUTE_CERTS, Asn1Boolean.class)
     };
 
     public IssuingDistributionPoint() {
@@ -72,50 +70,50 @@ public class IssuingDistributionPoint extends Asn1SequenceType {
     }
 
     public DistributionPointName getDistributionPoint() {
-        return getFieldAs(DISTRIBUTION_POINT, DistributionPointName.class);
+        return getFieldAs(IDPointField.DISTRIBUTION_POINT, DistributionPointName.class);
     }
 
     public void setDistributionPoint(DistributionPointName distributionPoint) {
-        setFieldAs(DISTRIBUTION_POINT, distributionPoint);
+        setFieldAs(IDPointField.DISTRIBUTION_POINT, distributionPoint);
     }
 
     public boolean getOnlyContainsUserCerts() {
-        return getFieldAs(ONLY_CONTAINS_USER_CERTS, Asn1Boolean.class).getValue();
+        return getFieldAs(IDPointField.ONLY_CONTAINS_USER_CERTS, Asn1Boolean.class).getValue();
     }
 
     public void setOnlyContainsUserCerts(boolean onlyContainsUserCerts) {
-        setFieldAs(ONLY_CONTAINS_USER_CERTS, new Asn1Boolean(onlyContainsUserCerts));
+        setFieldAs(IDPointField.ONLY_CONTAINS_USER_CERTS, new Asn1Boolean(onlyContainsUserCerts));
     }
 
     public boolean getOnlyContainsCACerts() {
-        return getFieldAs(ONLY_CONTAINS_CA_CERTS, Asn1Boolean.class).getValue();
+        return getFieldAs(IDPointField.ONLY_CONTAINS_CA_CERTS, Asn1Boolean.class).getValue();
     }
 
     public void setOnlyContainsCaCerts(boolean onlyContainsCaCerts) {
-        setFieldAs(ONLY_CONTAINS_CA_CERTS, new Asn1Boolean(onlyContainsCaCerts));
+        setFieldAs(IDPointField.ONLY_CONTAINS_CA_CERTS, new Asn1Boolean(onlyContainsCaCerts));
     }
 
     public ReasonFlags getOnlySomeReasons() {
-        return getFieldAs(ONLY_SOME_REASONS, ReasonFlags.class);
+        return getFieldAs(IDPointField.ONLY_SOME_REASONS, ReasonFlags.class);
     }
 
     public void setOnlySomeReasons(ReasonFlags onlySomeReasons) {
-        setFieldAs(ONLY_SOME_REASONS, onlySomeReasons);
+        setFieldAs(IDPointField.ONLY_SOME_REASONS, onlySomeReasons);
     }
 
     public boolean getIndirectCRL() {
-        return getFieldAs(INDIRECT_CRL, Asn1Boolean.class).getValue();
+        return getFieldAs(IDPointField.INDIRECT_CRL, Asn1Boolean.class).getValue();
     }
 
     public void setIndirectCrl(boolean indirectCrl) {
-        setFieldAs(INDIRECT_CRL, new Asn1Boolean(indirectCrl));
+        setFieldAs(IDPointField.INDIRECT_CRL, new Asn1Boolean(indirectCrl));
     }
 
     public boolean getOnlyContainsAttributeCerts() {
-        return getFieldAs(ONLY_CONTAINS_ATTRIBUTE_CERTS, Asn1Boolean.class).getValue();
+        return getFieldAs(IDPointField.ONLY_CONTAINS_ATTRIBUTE_CERTS, Asn1Boolean.class).getValue();
     }
 
     public void setOnlyContainsAttributeCerts(boolean onlyContainsAttributeCerts) {
-        setFieldAs(ONLY_CONTAINS_ATTRIBUTE_CERTS, new Asn1Boolean(onlyContainsAttributeCerts));
+        setFieldAs(IDPointField.ONLY_CONTAINS_ATTRIBUTE_CERTS, new Asn1Boolean(onlyContainsAttributeCerts));
     }
 }

@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.x509.type.AttCertIssuer.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -36,7 +34,7 @@ import static org.apache.kerby.x509.type.AttCertIssuer.MyEnum.*;
  * </pre>
  */
 public class AttCertIssuer extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum AttCertIssuerField implements EnumType {
         V1_FORM,
         V2_FORM;
 
@@ -52,8 +50,8 @@ public class AttCertIssuer extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(V1_FORM, GeneralNames.class),
-        new ExplicitField(V2_FORM, 0, V2Form.class)
+        new Asn1FieldInfo(AttCertIssuerField.V1_FORM, GeneralNames.class),
+        new ExplicitField(AttCertIssuerField.V2_FORM, 0, V2Form.class)
     };
 
     public AttCertIssuer() {
@@ -61,18 +59,18 @@ public class AttCertIssuer extends Asn1Choice {
     }
 
     public GeneralNames getV1Form() {
-        return getChoiceValueAs(V1_FORM, GeneralNames.class);
+        return getChoiceValueAs(AttCertIssuerField.V1_FORM, GeneralNames.class);
     }
 
     public void setV1Form(GeneralNames v1Form) {
-        setChoiceValue(V1_FORM, v1Form);
+        setChoiceValue(AttCertIssuerField.V1_FORM, v1Form);
     }
 
     public V2Form getV2Form() {
-        return getChoiceValueAs(V2_FORM, V2Form.class);
+        return getChoiceValueAs(AttCertIssuerField.V2_FORM, V2Form.class);
     }
 
     public void setV2Form(V2Form v2Form) {
-        setChoiceValue(V2_FORM, v2Form);
+        setChoiceValue(AttCertIssuerField.V2_FORM, v2Form);
     }
 }

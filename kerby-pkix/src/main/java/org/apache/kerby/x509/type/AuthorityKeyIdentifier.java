@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.AuthorityKeyIdentifier.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -42,7 +40,7 @@ import static org.apache.kerby.x509.type.AuthorityKeyIdentifier.MyEnum.*;
  *
  */
 public class AuthorityKeyIdentifier extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum AKIdentifierField implements EnumType {
         KEY_IDENTIFIER,
         AUTHORITY_CERT_ISSUER,
         AUTHORITY_CERT_SERIAL_NUMBER;
@@ -59,9 +57,9 @@ public class AuthorityKeyIdentifier extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ImplicitField(KEY_IDENTIFIER, KeyIdentifier.class),
-        new ImplicitField(AUTHORITY_CERT_ISSUER, GeneralNames.class),
-        new ImplicitField(AUTHORITY_CERT_SERIAL_NUMBER, CertificateSerialNumber.class)
+        new ImplicitField(AKIdentifierField.KEY_IDENTIFIER, KeyIdentifier.class),
+        new ImplicitField(AKIdentifierField.AUTHORITY_CERT_ISSUER, GeneralNames.class),
+        new ImplicitField(AKIdentifierField.AUTHORITY_CERT_SERIAL_NUMBER, CertificateSerialNumber.class)
     };
 
     public AuthorityKeyIdentifier() {
@@ -69,26 +67,26 @@ public class AuthorityKeyIdentifier extends Asn1SequenceType {
     }
 
     public KeyIdentifier getKeyIdentifier() {
-        return getFieldAs(KEY_IDENTIFIER, KeyIdentifier.class);
+        return getFieldAs(AKIdentifierField.KEY_IDENTIFIER, KeyIdentifier.class);
     }
 
     public void setKeyIdentifier(KeyIdentifier keyIdentifier) {
-        setFieldAs(KEY_IDENTIFIER, keyIdentifier);
+        setFieldAs(AKIdentifierField.KEY_IDENTIFIER, keyIdentifier);
     }
 
     public GeneralNames getAuthorityCertIssuer() {
-        return getFieldAs(AUTHORITY_CERT_ISSUER, GeneralNames.class);
+        return getFieldAs(AKIdentifierField.AUTHORITY_CERT_ISSUER, GeneralNames.class);
     }
 
     public void setAuthorityCertIssuer(GeneralNames authorityCertIssuer) {
-        setFieldAs(AUTHORITY_CERT_ISSUER, authorityCertIssuer);
+        setFieldAs(AKIdentifierField.AUTHORITY_CERT_ISSUER, authorityCertIssuer);
     }
     
     public CertificateSerialNumber getAuthorityCertSerialNumber() {
-        return getFieldAs(AUTHORITY_CERT_SERIAL_NUMBER, CertificateSerialNumber.class);
+        return getFieldAs(AKIdentifierField.AUTHORITY_CERT_SERIAL_NUMBER, CertificateSerialNumber.class);
     }
 
     public void setAuthorityCertSerialNumber(CertificateSerialNumber authorityCertSerialNumber) {
-        setFieldAs(AUTHORITY_CERT_SERIAL_NUMBER, authorityCertSerialNumber);
+        setFieldAs(AKIdentifierField.AUTHORITY_CERT_SERIAL_NUMBER, authorityCertSerialNumber);
     }
 }

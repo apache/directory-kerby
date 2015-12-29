@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.ObjectDigestInfo.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -46,7 +44,7 @@ import static org.apache.kerby.x509.type.ObjectDigestInfo.MyEnum.*;
  * 
  */
 public class ObjectDigestInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum ODInfoField implements EnumType {
         DIGESTED_OBJECT_TYPE,
         OTHER_OBJECT_TYPE_ID,
         DIGEST_ALGORITHM,
@@ -64,10 +62,10 @@ public class ObjectDigestInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(DIGESTED_OBJECT_TYPE, DigestedObjectType.class),
-        new Asn1FieldInfo(OTHER_OBJECT_TYPE_ID, Asn1ObjectIdentifier.class),
-        new Asn1FieldInfo(DIGEST_ALGORITHM, AlgorithmIdentifier.class),
-        new Asn1FieldInfo(OBJECT_DIGEST, Asn1BitString.class)
+        new Asn1FieldInfo(ODInfoField.DIGESTED_OBJECT_TYPE, DigestedObjectType.class),
+        new Asn1FieldInfo(ODInfoField.OTHER_OBJECT_TYPE_ID, Asn1ObjectIdentifier.class),
+        new Asn1FieldInfo(ODInfoField.DIGEST_ALGORITHM, AlgorithmIdentifier.class),
+        new Asn1FieldInfo(ODInfoField.OBJECT_DIGEST, Asn1BitString.class)
     };
 
     public ObjectDigestInfo() {
@@ -75,34 +73,34 @@ public class ObjectDigestInfo extends Asn1SequenceType {
     }
 
     public DigestedObjectType getDigestedObjectType() {
-        return getFieldAs(DIGESTED_OBJECT_TYPE, DigestedObjectType.class);
+        return getFieldAs(ODInfoField.DIGESTED_OBJECT_TYPE, DigestedObjectType.class);
     }
 
     public void setDigestedObjectType(DigestedObjectType digestedObjectType) {
-        setFieldAs(DIGESTED_OBJECT_TYPE, digestedObjectType);
+        setFieldAs(ODInfoField.DIGESTED_OBJECT_TYPE, digestedObjectType);
     }
 
     public Asn1ObjectIdentifier getOtherObjectTypeID() {
-        return getFieldAs(OTHER_OBJECT_TYPE_ID, Asn1ObjectIdentifier.class);
+        return getFieldAs(ODInfoField.OTHER_OBJECT_TYPE_ID, Asn1ObjectIdentifier.class);
     }
 
     public void setOtherObjectTypeId(Asn1ObjectIdentifier otherObjectTypeID) {
-        setFieldAs(OTHER_OBJECT_TYPE_ID, otherObjectTypeID);
+        setFieldAs(ODInfoField.OTHER_OBJECT_TYPE_ID, otherObjectTypeID);
     }
 
     public AlgorithmIdentifier getDigestAlgorithm() {
-        return getFieldAs(DIGEST_ALGORITHM, AlgorithmIdentifier.class);
+        return getFieldAs(ODInfoField.DIGEST_ALGORITHM, AlgorithmIdentifier.class);
     }
 
     public void setDigestAlgorithm(AlgorithmIdentifier digestAlgorithm) {
-        setFieldAs(DIGEST_ALGORITHM, digestAlgorithm);
+        setFieldAs(ODInfoField.DIGEST_ALGORITHM, digestAlgorithm);
     }
 
     public Asn1BitString getObjectDigest() {
-        return getFieldAs(OBJECT_DIGEST, Asn1BitString.class);
+        return getFieldAs(ODInfoField.OBJECT_DIGEST, Asn1BitString.class);
     }
 
     public void setObjectDigest(Asn1BitString objectDigest) {
-        setFieldAs(OBJECT_DIGEST, objectDigest);
+        setFieldAs(ODInfoField.OBJECT_DIGEST, objectDigest);
     }
 }

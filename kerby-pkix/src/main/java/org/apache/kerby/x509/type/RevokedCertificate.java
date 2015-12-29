@@ -23,8 +23,6 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.RevokedCertificate.MyEnum.*;
-
 /**
  * Ref. RFC 2459
  *
@@ -38,7 +36,7 @@ import static org.apache.kerby.x509.type.RevokedCertificate.MyEnum.*;
  * </pre>
  */
 public class RevokedCertificate extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum RevokedCertificateField implements EnumType {
         USER_CERTIFICATE,
         REVOCATION_DATA,
         CRL_ENTRY_EXTENSIONS;
@@ -55,9 +53,9 @@ public class RevokedCertificate extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(USER_CERTIFICATE, CertificateSerialNumber.class),
-        new Asn1FieldInfo(REVOCATION_DATA, Time.class),
-        new Asn1FieldInfo(CRL_ENTRY_EXTENSIONS, Extensions.class)
+        new Asn1FieldInfo(RevokedCertificateField.USER_CERTIFICATE, CertificateSerialNumber.class),
+        new Asn1FieldInfo(RevokedCertificateField.REVOCATION_DATA, Time.class),
+        new Asn1FieldInfo(RevokedCertificateField.CRL_ENTRY_EXTENSIONS, Extensions.class)
     };
 
     public RevokedCertificate() {
@@ -65,26 +63,26 @@ public class RevokedCertificate extends Asn1SequenceType {
     }
 
     public CertificateSerialNumber getUserCertificate() {
-        return getFieldAs(USER_CERTIFICATE, CertificateSerialNumber.class);
+        return getFieldAs(RevokedCertificateField.USER_CERTIFICATE, CertificateSerialNumber.class);
     }
 
     public void setUserCertificate(CertificateSerialNumber userCertificate) {
-        setFieldAs(USER_CERTIFICATE, userCertificate);
+        setFieldAs(RevokedCertificateField.USER_CERTIFICATE, userCertificate);
     }
 
     public Time getRevocationDate() {
-        return getFieldAs(REVOCATION_DATA, Time.class);
+        return getFieldAs(RevokedCertificateField.REVOCATION_DATA, Time.class);
     }
 
     public void setRevocationData(Time revocationData) {
-        setFieldAs(REVOCATION_DATA, revocationData);
+        setFieldAs(RevokedCertificateField.REVOCATION_DATA, revocationData);
     }
 
     public Extensions getCrlEntryExtensions() {
-        return getFieldAs(CRL_ENTRY_EXTENSIONS, Extensions.class);
+        return getFieldAs(RevokedCertificateField.CRL_ENTRY_EXTENSIONS, Extensions.class);
     }
 
     public void setCrlEntryExtensions(Extensions crlEntryExtensions) {
-        setFieldAs(CRL_ENTRY_EXTENSIONS, crlEntryExtensions);
+        setFieldAs(RevokedCertificateField.CRL_ENTRY_EXTENSIONS, crlEntryExtensions);
     }
 }

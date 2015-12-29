@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.Certificate.MyEnum.*;
-
 /**
  * <pre>
  *  Certificate ::= SEQUENCE {
@@ -36,7 +34,7 @@ import static org.apache.kerby.x509.type.Certificate.MyEnum.*;
  * </pre>
  */
 public class Certificate extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum CertificateField implements EnumType {
         TBS_CERTIFICATE,
         SIGNATURE_ALGORITHM,
         SIGNATURE;
@@ -53,9 +51,9 @@ public class Certificate extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(TBS_CERTIFICATE, TBSCertificate.class),
-        new Asn1FieldInfo(SIGNATURE_ALGORITHM, AlgorithmIdentifier.class),
-        new Asn1FieldInfo(SIGNATURE, Asn1BitString.class)
+        new Asn1FieldInfo(CertificateField.TBS_CERTIFICATE, TBSCertificate.class),
+        new Asn1FieldInfo(CertificateField.SIGNATURE_ALGORITHM, AlgorithmIdentifier.class),
+        new Asn1FieldInfo(CertificateField.SIGNATURE, Asn1BitString.class)
     };
 
     public Certificate() {
@@ -63,26 +61,26 @@ public class Certificate extends Asn1SequenceType {
     }
 
     public TBSCertificate getTBSCertificate() {
-        return getFieldAs(TBS_CERTIFICATE, TBSCertificate.class);
+        return getFieldAs(CertificateField.TBS_CERTIFICATE, TBSCertificate.class);
     }
 
     public void setTbsCertificate(TBSCertificate tbsCertificate) {
-        setFieldAs(TBS_CERTIFICATE, tbsCertificate);
+        setFieldAs(CertificateField.TBS_CERTIFICATE, tbsCertificate);
     }
 
     public AlgorithmIdentifier getSignatureAlgorithm() {
-        return getFieldAs(SIGNATURE_ALGORITHM, AlgorithmIdentifier.class);
+        return getFieldAs(CertificateField.SIGNATURE_ALGORITHM, AlgorithmIdentifier.class);
     }
 
     public void setSignatureAlgorithm(AlgorithmIdentifier signatureAlgorithm) {
-        setFieldAs(SIGNATURE_ALGORITHM, signatureAlgorithm);
+        setFieldAs(CertificateField.SIGNATURE_ALGORITHM, signatureAlgorithm);
     }
 
     public Asn1BitString getSignature() {
-        return getFieldAs(SIGNATURE, Asn1BitString.class);
+        return getFieldAs(CertificateField.SIGNATURE, Asn1BitString.class);
     }
 
     public void setSignature(Asn1BitString signature) {
-        setFieldAs(SIGNATURE, signature);
+        setFieldAs(CertificateField.SIGNATURE, signature);
     }
 }

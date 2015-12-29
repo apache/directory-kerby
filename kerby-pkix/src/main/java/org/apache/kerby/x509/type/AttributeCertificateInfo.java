@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -48,7 +46,7 @@ import static org.apache.kerby.x509.type.AttributeCertificateInfo.MyEnum.*;
  * </pre>
  */
 public class AttributeCertificateInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum ACInfoField implements EnumType {
         VERSION,
         HOLDER,
         ISSUER,
@@ -71,15 +69,15 @@ public class AttributeCertificateInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(VERSION, Asn1Integer.class),
-        new Asn1FieldInfo(HOLDER, Holder.class),
-        new Asn1FieldInfo(ISSUER, AttCertIssuer.class),
-        new Asn1FieldInfo(SIGNATURE, AlgorithmIdentifier.class),
-        new Asn1FieldInfo(SERIAL_NUMBER, CertificateSerialNumber.class),
-        new Asn1FieldInfo(ATTR_CERT_VALIDITY_PERIOD, AttCertValidityPeriod.class),
-        new Asn1FieldInfo(ATTRIBUTES, Attributes.class),
-        new Asn1FieldInfo(ISSUER_UNIQUE_ID, Asn1BitString.class),
-        new Asn1FieldInfo(EXTENSIONS, Extensions.class)
+        new Asn1FieldInfo(ACInfoField.VERSION, Asn1Integer.class),
+        new Asn1FieldInfo(ACInfoField.HOLDER, Holder.class),
+        new Asn1FieldInfo(ACInfoField.ISSUER, AttCertIssuer.class),
+        new Asn1FieldInfo(ACInfoField.SIGNATURE, AlgorithmIdentifier.class),
+        new Asn1FieldInfo(ACInfoField.SERIAL_NUMBER, CertificateSerialNumber.class),
+        new Asn1FieldInfo(ACInfoField.ATTR_CERT_VALIDITY_PERIOD, AttCertValidityPeriod.class),
+        new Asn1FieldInfo(ACInfoField.ATTRIBUTES, Attributes.class),
+        new Asn1FieldInfo(ACInfoField.ISSUER_UNIQUE_ID, Asn1BitString.class),
+        new Asn1FieldInfo(ACInfoField.EXTENSIONS, Extensions.class)
     };
 
     public AttributeCertificateInfo() {
@@ -87,74 +85,74 @@ public class AttributeCertificateInfo extends Asn1SequenceType {
     }
 
     public int getVersion() {
-        return getFieldAsInteger(VERSION);
+        return getFieldAsInteger(ACInfoField.VERSION);
     }
 
     public void setVersion(int version) {
-        setFieldAsInt(VERSION, version);
+        setFieldAsInt(ACInfoField.VERSION, version);
     }
 
     public Holder getHolder() {
-        return getFieldAs(HOLDER, Holder.class);
+        return getFieldAs(ACInfoField.HOLDER, Holder.class);
     }
 
     public void setHolder(Holder holder) {
-        setFieldAs(HOLDER, holder);
+        setFieldAs(ACInfoField.HOLDER, holder);
     }
 
     public AttCertIssuer getIssuer() {
-        return getFieldAs(ISSUER, AttCertIssuer.class);
+        return getFieldAs(ACInfoField.ISSUER, AttCertIssuer.class);
     }
 
     public void setIssuer(AttCertIssuer attCertIssuer) {
-        setFieldAs(ISSUER, attCertIssuer);
+        setFieldAs(ACInfoField.ISSUER, attCertIssuer);
     }
 
     public AlgorithmIdentifier getSignature() {
-        return getFieldAs(SIGNATURE, AlgorithmIdentifier.class);
+        return getFieldAs(ACInfoField.SIGNATURE, AlgorithmIdentifier.class);
     }
 
     public void setSignature(AlgorithmIdentifier signature) {
-        setFieldAs(SIGNATURE, signature);
+        setFieldAs(ACInfoField.SIGNATURE, signature);
     }
 
     public CertificateSerialNumber getSerialNumber() {
-        return getFieldAs(SERIAL_NUMBER, CertificateSerialNumber.class);
+        return getFieldAs(ACInfoField.SERIAL_NUMBER, CertificateSerialNumber.class);
     }
 
     public void setSerialNumber(CertificateSerialNumber certificateSerialNumber) {
-        setFieldAs(SERIAL_NUMBER, certificateSerialNumber);
+        setFieldAs(ACInfoField.SERIAL_NUMBER, certificateSerialNumber);
     }
 
     public AttCertValidityPeriod getAttrCertValidityPeriod() {
-        return getFieldAs(ATTR_CERT_VALIDITY_PERIOD, AttCertValidityPeriod.class);
+        return getFieldAs(ACInfoField.ATTR_CERT_VALIDITY_PERIOD, AttCertValidityPeriod.class);
     }
 
     public void setAttrCertValidityPeriod(AttCertValidityPeriod attrCertValidityPeriod) {
-        setFieldAs(ATTR_CERT_VALIDITY_PERIOD, attrCertValidityPeriod);
+        setFieldAs(ACInfoField.ATTR_CERT_VALIDITY_PERIOD, attrCertValidityPeriod);
     }
 
     public Attributes getAttributes() {
-        return getFieldAs(ATTRIBUTES, Attributes.class);
+        return getFieldAs(ACInfoField.ATTRIBUTES, Attributes.class);
     }
 
     public void setAttributes(Attributes attributes) {
-        setFieldAs(ATTRIBUTES, attributes);
+        setFieldAs(ACInfoField.ATTRIBUTES, attributes);
     }
 
     public byte[] getIssuerUniqueID() {
-        return getFieldAs(ISSUER_UNIQUE_ID, Asn1BitString.class).getValue();
+        return getFieldAs(ACInfoField.ISSUER_UNIQUE_ID, Asn1BitString.class).getValue();
     }
 
     public void setIssuerUniqueId(byte[] issuerUniqueId) {
-        setFieldAs(ISSUER_UNIQUE_ID, new Asn1BitString(issuerUniqueId));
+        setFieldAs(ACInfoField.ISSUER_UNIQUE_ID, new Asn1BitString(issuerUniqueId));
     }
 
     public Extensions getExtensions() {
-        return getFieldAs(EXTENSIONS, Extensions.class);
+        return getFieldAs(ACInfoField.EXTENSIONS, Extensions.class);
     }
 
     public void setExtensions(Extensions extensions) {
-        setFieldAs(EXTENSIONS, extensions);
+        setFieldAs(ACInfoField.EXTENSIONS, extensions);
     }
 }

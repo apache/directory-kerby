@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.Holder.MyEnum.*;
-
 /**
  * <pre>
  *            Holder ::= SEQUENCE {
@@ -41,7 +39,7 @@ import static org.apache.kerby.x509.type.Holder.MyEnum.*;
  * </pre>
  */
 public class Holder extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum HolderField implements EnumType {
         BASE_CERTIFICATE_ID,
         ENTITY_NAME,
         OBJECT_DIGEST_INFO;
@@ -58,9 +56,9 @@ public class Holder extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(BASE_CERTIFICATE_ID, IssuerSerial.class),
-        new ExplicitField(ENTITY_NAME, GeneralNames.class),
-        new ExplicitField(OBJECT_DIGEST_INFO, ObjectDigestInfo.class)
+        new ExplicitField(HolderField.BASE_CERTIFICATE_ID, IssuerSerial.class),
+        new ExplicitField(HolderField.ENTITY_NAME, GeneralNames.class),
+        new ExplicitField(HolderField.OBJECT_DIGEST_INFO, ObjectDigestInfo.class)
     };
 
     public Holder() {
@@ -68,26 +66,26 @@ public class Holder extends Asn1SequenceType {
     }
 
     public IssuerSerial getBaseCertificateID() {
-        return getFieldAs(BASE_CERTIFICATE_ID, IssuerSerial.class);
+        return getFieldAs(HolderField.BASE_CERTIFICATE_ID, IssuerSerial.class);
     }
 
     public void setBaseCertificateId(IssuerSerial baseCertificateId) {
-        setFieldAs(BASE_CERTIFICATE_ID, baseCertificateId);
+        setFieldAs(HolderField.BASE_CERTIFICATE_ID, baseCertificateId);
     }
 
     public GeneralNames getEntityName() {
-        return getFieldAs(ENTITY_NAME, GeneralNames.class);
+        return getFieldAs(HolderField.ENTITY_NAME, GeneralNames.class);
     }
 
     public void setEntityName(GeneralNames entityName) {
-        setFieldAs(ENTITY_NAME, entityName);
+        setFieldAs(HolderField.ENTITY_NAME, entityName);
     }
 
     public ObjectDigestInfo getObjectDigestInfo() {
-        return getFieldAs(OBJECT_DIGEST_INFO, ObjectDigestInfo.class);
+        return getFieldAs(HolderField.OBJECT_DIGEST_INFO, ObjectDigestInfo.class);
     }
 
     public void setObjectDigestInfo(ObjectDigestInfo objectDigestInfo) {
-        setFieldAs(OBJECT_DIGEST_INFO, objectDigestInfo);
+        setFieldAs(HolderField.OBJECT_DIGEST_INFO, objectDigestInfo);
     }
 }

@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1UtcTime;
 
-import static org.apache.kerby.x509.type.AttCertValidityPeriod.MyEnum.*;
-
 /**
  * <pre>
  *  AttCertValidityPeriod  ::= SEQUENCE {
@@ -36,7 +34,7 @@ import static org.apache.kerby.x509.type.AttCertValidityPeriod.MyEnum.*;
  * </pre>
  */
 public class AttCertValidityPeriod extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum AttCertValidityPeriodField implements EnumType {
         NOT_BEFORE,
         NOT_AFTER;
 
@@ -52,8 +50,8 @@ public class AttCertValidityPeriod extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(NOT_BEFORE, Asn1UtcTime.class),
-        new Asn1FieldInfo(NOT_AFTER, Asn1UtcTime.class)
+        new Asn1FieldInfo(AttCertValidityPeriodField.NOT_BEFORE, Asn1UtcTime.class),
+        new Asn1FieldInfo(AttCertValidityPeriodField.NOT_AFTER, Asn1UtcTime.class)
     };
 
     public AttCertValidityPeriod() {
@@ -61,18 +59,18 @@ public class AttCertValidityPeriod extends Asn1SequenceType {
     }
 
     public Asn1GeneralizedTime getNotBeforeTime() {
-        return getFieldAs(NOT_BEFORE, Asn1GeneralizedTime.class);
+        return getFieldAs(AttCertValidityPeriodField.NOT_BEFORE, Asn1GeneralizedTime.class);
     }
 
     public void setNotBeforeTime(Asn1GeneralizedTime notBeforeTime) {
-        setFieldAs(NOT_BEFORE, notBeforeTime);
+        setFieldAs(AttCertValidityPeriodField.NOT_BEFORE, notBeforeTime);
     }
 
     public Asn1GeneralizedTime getNotAfterTime() {
-        return getFieldAs(NOT_AFTER, Asn1GeneralizedTime.class);
+        return getFieldAs(AttCertValidityPeriodField.NOT_AFTER, Asn1GeneralizedTime.class);
     }
 
     public void setNotAfterTime(Asn1GeneralizedTime notAfterTime) {
-        setFieldAs(NOT_AFTER, notAfterTime);
+        setFieldAs(AttCertValidityPeriodField.NOT_AFTER, notAfterTime);
     }
 }

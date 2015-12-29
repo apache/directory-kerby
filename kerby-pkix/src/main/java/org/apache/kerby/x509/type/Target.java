@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.x509.type.Target.MyEnum.*;
-
 /**
  * Ref. RFC 3281
  * <pre>
@@ -37,7 +35,7 @@ import static org.apache.kerby.x509.type.Target.MyEnum.*;
  * </pre>
  */
 public class Target extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum TargetField implements EnumType {
         TARGET_NAME,
         TARGET_GROUP,
         TARGET_CERT;
@@ -54,9 +52,9 @@ public class Target extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(TARGET_NAME, GeneralName.class),
-        new ExplicitField(TARGET_GROUP, GeneralName.class),
-        new ExplicitField(TARGET_CERT, TargetCert.class),
+        new ExplicitField(TargetField.TARGET_NAME, GeneralName.class),
+        new ExplicitField(TargetField.TARGET_GROUP, GeneralName.class),
+        new ExplicitField(TargetField.TARGET_CERT, TargetCert.class),
     };
 
     public Target() {
@@ -64,26 +62,26 @@ public class Target extends Asn1Choice {
     }
 
     public GeneralName getTargetName() {
-        return getChoiceValueAs(TARGET_NAME, GeneralName.class);
+        return getChoiceValueAs(TargetField.TARGET_NAME, GeneralName.class);
     }
 
     public void setTargetName(GeneralName targetName) {
-        setChoiceValue(TARGET_NAME, targetName);
+        setChoiceValue(TargetField.TARGET_NAME, targetName);
     }
 
     public GeneralName getTargetGroup() {
-        return getChoiceValueAs(TARGET_GROUP, GeneralName.class);
+        return getChoiceValueAs(TargetField.TARGET_GROUP, GeneralName.class);
     }
 
     public void setTargetGroup(GeneralName targetGroup) {
-        setChoiceValue(TARGET_GROUP, targetGroup);
+        setChoiceValue(TargetField.TARGET_GROUP, targetGroup);
     }
 
     public TargetCert targetCert() {
-        return getChoiceValueAs(TARGET_CERT, TargetCert.class);
+        return getChoiceValueAs(TargetField.TARGET_CERT, TargetCert.class);
     }
 
     public void setTargetCert(TargetCert targetCert) {
-        setChoiceValue(TARGET_CERT, targetCert);
+        setChoiceValue(TargetField.TARGET_CERT, targetCert);
     }
 }

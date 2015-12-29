@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.AccessDescription.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -36,7 +34,7 @@ import static org.apache.kerby.x509.type.AccessDescription.MyEnum.*;
  * </pre>
  */
 public class AccessDescription extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum AccessDescriptionField implements EnumType {
         ACCESS_METHOD,
         ACCESS_LOCATION;
 
@@ -52,8 +50,8 @@ public class AccessDescription extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(ACCESS_METHOD, Asn1ObjectIdentifier.class),
-        new Asn1FieldInfo(ACCESS_LOCATION, GeneralName.class)
+        new Asn1FieldInfo(AccessDescriptionField.ACCESS_METHOD, Asn1ObjectIdentifier.class),
+        new Asn1FieldInfo(AccessDescriptionField.ACCESS_LOCATION, GeneralName.class)
     };
 
     public AccessDescription() {
@@ -61,18 +59,18 @@ public class AccessDescription extends Asn1SequenceType {
     }
 
     public Asn1ObjectIdentifier getAccessMethod() {
-        return getFieldAs(ACCESS_METHOD, Asn1ObjectIdentifier.class);
+        return getFieldAs(AccessDescriptionField.ACCESS_METHOD, Asn1ObjectIdentifier.class);
     }
 
     public void setAccessMethod(Asn1ObjectIdentifier accessMethod) {
-        setFieldAs(ACCESS_METHOD, accessMethod);
+        setFieldAs(AccessDescriptionField.ACCESS_METHOD, accessMethod);
     }
 
     public GeneralName getAccessLocation() {
-        return getFieldAs(ACCESS_LOCATION, GeneralName.class);
+        return getFieldAs(AccessDescriptionField.ACCESS_LOCATION, GeneralName.class);
     }
 
     public void setAccessLocation(GeneralName accessLocation) {
-        setFieldAs(ACCESS_LOCATION, accessLocation);
+        setFieldAs(AccessDescriptionField.ACCESS_LOCATION, accessLocation);
     }
 }

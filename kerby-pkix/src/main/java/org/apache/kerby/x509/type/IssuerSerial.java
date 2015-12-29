@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.IssuerSerial.MyEnum.*;
-
 /**
  * <pre>
  *  IssuerSerial  ::=  SEQUENCE {
@@ -36,7 +34,7 @@ import static org.apache.kerby.x509.type.IssuerSerial.MyEnum.*;
  * </pre>
  */
 public class IssuerSerial extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum IssuerSerialField implements EnumType {
         ISSUER,
         SERIAL,
         ISSUER_UID;
@@ -53,9 +51,9 @@ public class IssuerSerial extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(ISSUER, GeneralNames.class),
-        new Asn1FieldInfo(SERIAL, CertificateSerialNumber.class),
-        new Asn1FieldInfo(ISSUER_UID, Asn1BitString.class)
+        new Asn1FieldInfo(IssuerSerialField.ISSUER, GeneralNames.class),
+        new Asn1FieldInfo(IssuerSerialField.SERIAL, CertificateSerialNumber.class),
+        new Asn1FieldInfo(IssuerSerialField.ISSUER_UID, Asn1BitString.class)
     };
 
     public IssuerSerial() {
@@ -63,26 +61,26 @@ public class IssuerSerial extends Asn1SequenceType {
     }
 
     public GeneralNames getIssuer() {
-        return getFieldAs(ISSUER, GeneralNames.class);
+        return getFieldAs(IssuerSerialField.ISSUER, GeneralNames.class);
     }
 
     public void setIssuer(GeneralNames issuer) {
-        setFieldAs(ISSUER, issuer);
+        setFieldAs(IssuerSerialField.ISSUER, issuer);
     }
 
     public CertificateSerialNumber getSerial() {
-        return getFieldAs(SERIAL, CertificateSerialNumber.class);
+        return getFieldAs(IssuerSerialField.SERIAL, CertificateSerialNumber.class);
     }
 
     public void setSerial(CertificateSerialNumber serial) {
-        setFieldAs(SERIAL, serial);
+        setFieldAs(IssuerSerialField.SERIAL, serial);
     }
 
     public Asn1BitString getIssuerUID() {
-        return getFieldAs(ISSUER_UID, Asn1BitString.class);
+        return getFieldAs(IssuerSerialField.ISSUER_UID, Asn1BitString.class);
     }
 
     public void setIssuerUID(Asn1BitString issuerUID) {
-        setFieldAs(ISSUER_UID, issuerUID);
+        setFieldAs(IssuerSerialField.ISSUER_UID, issuerUID);
     }
 }

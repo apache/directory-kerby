@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.V2Form.MyEnum.*;
-
 /**
  * Produce an object suitable for an ASN1OutputStream.
  * <pre>
@@ -40,7 +38,7 @@ import static org.apache.kerby.x509.type.V2Form.MyEnum.*;
  * </pre>
  */
 public class V2Form extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum V2FormField implements EnumType {
         ISSUER_NAME,
         BASE_CERTIFICATE_ID,
         OBJECT_DIGEST_INFO;
@@ -57,9 +55,9 @@ public class V2Form extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(ISSUER_NAME, GeneralNames.class),
-        new ExplicitField(BASE_CERTIFICATE_ID, 0, IssuerSerial.class),
-        new ExplicitField(OBJECT_DIGEST_INFO, 1, ObjectDigestInfo.class)
+        new Asn1FieldInfo(V2FormField.ISSUER_NAME, GeneralNames.class),
+        new ExplicitField(V2FormField.BASE_CERTIFICATE_ID, 0, IssuerSerial.class),
+        new ExplicitField(V2FormField.OBJECT_DIGEST_INFO, 1, ObjectDigestInfo.class)
     };
 
     public V2Form() {
@@ -67,26 +65,26 @@ public class V2Form extends Asn1SequenceType {
     }
 
     public GeneralNames getIssuerName() {
-        return getFieldAs(ISSUER_NAME, GeneralNames.class);
+        return getFieldAs(V2FormField.ISSUER_NAME, GeneralNames.class);
     }
 
     public void setIssuerName(GeneralNames issuerName) {
-        setFieldAs(ISSUER_NAME, issuerName);
+        setFieldAs(V2FormField.ISSUER_NAME, issuerName);
     }
 
     public IssuerSerial getBaseCertificateID() {
-        return getFieldAs(BASE_CERTIFICATE_ID, IssuerSerial.class);
+        return getFieldAs(V2FormField.BASE_CERTIFICATE_ID, IssuerSerial.class);
     }
 
     public void setBaseCertificateId(IssuerSerial baseCertificateId) {
-        setFieldAs(BASE_CERTIFICATE_ID, baseCertificateId);
+        setFieldAs(V2FormField.BASE_CERTIFICATE_ID, baseCertificateId);
     }
 
     public ObjectDigestInfo getObjectDigestInfo() {
-        return getFieldAs(OBJECT_DIGEST_INFO, ObjectDigestInfo.class);
+        return getFieldAs(V2FormField.OBJECT_DIGEST_INFO, ObjectDigestInfo.class);
     }
 
     public void setObjectDigestInfo(ObjectDigestInfo objectDigestInfo) {
-        setFieldAs(OBJECT_DIGEST_INFO, objectDigestInfo);
+        setFieldAs(V2FormField.OBJECT_DIGEST_INFO, objectDigestInfo);
     }
 }
