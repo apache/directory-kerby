@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.EnvelopedData.MyEnum.*;
-
 /**
  * EnvelopedData ::= SEQUENCE {
  *   version CMSVersion,
@@ -54,7 +52,7 @@ import static org.apache.kerby.cms.type.EnvelopedData.MyEnum.*;
  */
 public class EnvelopedData extends Asn1SequenceType {
 
-    protected enum MyEnum implements EnumType {
+    protected enum EnvelopedDataField implements EnumType {
         CMS_VERSION,
         ORIGINATOR_INFO,
         RECIPIENT_INFOS,
@@ -73,11 +71,11 @@ public class EnvelopedData extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new Asn1FieldInfo(CMS_VERSION, CmsVersion.class),
-            new ImplicitField(ORIGINATOR_INFO, 0, OriginatorInfo.class),
-            new Asn1FieldInfo(RECIPIENT_INFOS, RecipientInfos.class),
-            new Asn1FieldInfo(ENCRYPTED_CONTENT_INFO, EncryptedContentInfo.class),
-            new ImplicitField(UNPROTECTED_ATTRS, 1, UnprotectedAttributes.class)
+            new Asn1FieldInfo(EnvelopedDataField.CMS_VERSION, CmsVersion.class),
+            new ImplicitField(EnvelopedDataField.ORIGINATOR_INFO, 0, OriginatorInfo.class),
+            new Asn1FieldInfo(EnvelopedDataField.RECIPIENT_INFOS, RecipientInfos.class),
+            new Asn1FieldInfo(EnvelopedDataField.ENCRYPTED_CONTENT_INFO, EncryptedContentInfo.class),
+            new ImplicitField(EnvelopedDataField.UNPROTECTED_ATTRS, 1, UnprotectedAttributes.class)
     };
 
     public EnvelopedData() {
@@ -85,39 +83,39 @@ public class EnvelopedData extends Asn1SequenceType {
     }
 
     public CmsVersion getCmsVersion() {
-        return getFieldAs(CMS_VERSION, CmsVersion.class);
+        return getFieldAs(EnvelopedDataField.CMS_VERSION, CmsVersion.class);
     }
 
     public void setCmsVersion(CmsVersion cmsVersion) {
-        setFieldAs(CMS_VERSION, cmsVersion);
+        setFieldAs(EnvelopedDataField.CMS_VERSION, cmsVersion);
     }
 
     public OriginatorInfo getOriginatorInfo() {
-        return getFieldAs(ORIGINATOR_INFO, OriginatorInfo.class);
+        return getFieldAs(EnvelopedDataField.ORIGINATOR_INFO, OriginatorInfo.class);
     }
 
     public void setOriginatorInfo(OriginatorInfo originatorInfo) {
-        setFieldAs(ORIGINATOR_INFO, originatorInfo);
+        setFieldAs(EnvelopedDataField.ORIGINATOR_INFO, originatorInfo);
     }
     public RecipientInfos getRecipientInfos() {
-        return getFieldAs(RECIPIENT_INFOS, RecipientInfos.class);
+        return getFieldAs(EnvelopedDataField.RECIPIENT_INFOS, RecipientInfos.class);
     }
 
     public void setRecipientInfos(RecipientInfos recipientInfos) {
-        setFieldAs(RECIPIENT_INFOS, recipientInfos);
+        setFieldAs(EnvelopedDataField.RECIPIENT_INFOS, recipientInfos);
     }
     public EncryptedContentInfo getEncryptedContentInfo() {
-        return getFieldAs(ENCRYPTED_CONTENT_INFO, EncryptedContentInfo.class);
+        return getFieldAs(EnvelopedDataField.ENCRYPTED_CONTENT_INFO, EncryptedContentInfo.class);
     }
 
     public void setEncryptedContentInfo(EncryptedContentInfo encryptedContentInfo) {
-        setFieldAs(ENCRYPTED_CONTENT_INFO, encryptedContentInfo);
+        setFieldAs(EnvelopedDataField.ENCRYPTED_CONTENT_INFO, encryptedContentInfo);
     }
     public UnprotectedAttributes getUnprotectedAttributes() {
-        return getFieldAs(UNPROTECTED_ATTRS, UnprotectedAttributes.class);
+        return getFieldAs(EnvelopedDataField.UNPROTECTED_ATTRS, UnprotectedAttributes.class);
     }
 
     public void setUnprotectedAttributes(UnprotectedAttributes unprotectedAttributes) {
-        setFieldAs(UNPROTECTED_ATTRS, unprotectedAttributes);
+        setFieldAs(EnvelopedDataField.UNPROTECTED_ATTRS, unprotectedAttributes);
     }
 }

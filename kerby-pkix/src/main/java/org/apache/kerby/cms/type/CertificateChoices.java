@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.Certificate;
 
-import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.*;
-
 /**
  * CertificateChoices ::= CHOICE {
  *   certificate Certificate,
@@ -36,7 +34,7 @@ import static org.apache.kerby.cms.type.CertificateChoices.MyEnum.*;
  *   other [3] IMPLICIT OtherCertificateFormat }
  */
 public class CertificateChoices extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum CertificateChoicesField implements EnumType {
         CERTIFICATE,
         EXTENDED_CERTIFICATE,
         V1_ATTR_CERT,
@@ -55,11 +53,11 @@ public class CertificateChoices extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(CERTIFICATE, Certificate.class),
-            new ImplicitField(EXTENDED_CERTIFICATE, 0, ExtendedCertificate.class),
-            new ImplicitField(V1_ATTR_CERT, 1, AttributeCertificateV1.class),
-            new ImplicitField(V2_ATTR_CERT, 2, AttributeCertificateV2.class),
-            new ImplicitField(OTHER, 3, OtherCertificateFormat.class),
+            new Asn1FieldInfo(CertificateChoicesField.CERTIFICATE, Certificate.class),
+            new ImplicitField(CertificateChoicesField.EXTENDED_CERTIFICATE, 0, ExtendedCertificate.class),
+            new ImplicitField(CertificateChoicesField.V1_ATTR_CERT, 1, AttributeCertificateV1.class),
+            new ImplicitField(CertificateChoicesField.V2_ATTR_CERT, 2, AttributeCertificateV2.class),
+            new ImplicitField(CertificateChoicesField.OTHER, 3, OtherCertificateFormat.class),
     };
 
     public CertificateChoices() {
@@ -67,42 +65,42 @@ public class CertificateChoices extends Asn1Choice {
     }
 
     public Certificate getCertificate() {
-        return getChoiceValueAs(CERTIFICATE, Certificate.class);
+        return getChoiceValueAs(CertificateChoicesField.CERTIFICATE, Certificate.class);
     }
 
     public void setCertificate(Certificate certificate) {
-        setChoiceValue(CERTIFICATE, certificate);
+        setChoiceValue(CertificateChoicesField.CERTIFICATE, certificate);
     }
 
     public ExtendedCertificate getExtendedCertificate() {
-        return getChoiceValueAs(EXTENDED_CERTIFICATE, ExtendedCertificate.class);
+        return getChoiceValueAs(CertificateChoicesField.EXTENDED_CERTIFICATE, ExtendedCertificate.class);
     }
 
     public void setExtendedCertificate(ExtendedCertificate extendedCertificate) {
-        setChoiceValue(EXTENDED_CERTIFICATE, extendedCertificate);
+        setChoiceValue(CertificateChoicesField.EXTENDED_CERTIFICATE, extendedCertificate);
     }
 
     public AttributeCertificateV1 getV1AttrCert() {
-        return getChoiceValueAs(V1_ATTR_CERT, AttributeCertificateV1.class);
+        return getChoiceValueAs(CertificateChoicesField.V1_ATTR_CERT, AttributeCertificateV1.class);
     }
 
     public void setV1AttrCert(AttributeCertificateV1 v1AttrCert) {
-        setChoiceValue(V1_ATTR_CERT, v1AttrCert);
+        setChoiceValue(CertificateChoicesField.V1_ATTR_CERT, v1AttrCert);
     }
 
     public AttributeCertificateV2 getV2AttrCert() {
-        return getChoiceValueAs(V2_ATTR_CERT, AttributeCertificateV2.class);
+        return getChoiceValueAs(CertificateChoicesField.V2_ATTR_CERT, AttributeCertificateV2.class);
     }
 
     public void setV2AttrCert(AttributeCertificateV2 v2AttrCert) {
-        setChoiceValue(V2_ATTR_CERT, v2AttrCert);
+        setChoiceValue(CertificateChoicesField.V2_ATTR_CERT, v2AttrCert);
     }
 
     public OtherCertificateFormat getOther() {
-        return getChoiceValueAs(OTHER, OtherCertificateFormat.class);
+        return getChoiceValueAs(CertificateChoicesField.OTHER, OtherCertificateFormat.class);
     }
 
     public void setOther(OtherCertificateFormat other) {
-        setChoiceValue(OTHER, other);
+        setChoiceValue(CertificateChoicesField.OTHER, other);
     }
 }

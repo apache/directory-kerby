@@ -26,15 +26,13 @@ import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.OtherRecipientInfo.MyEnum.*;
-
 /**
  * OtherRecipientInfo ::= SEQUENCE {
  *   oriType OBJECT IDENTIFIER,
  *   oriValue ANY DEFINED BY oriType }
  */
 public class OtherRecipientInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum OtherRecipientInfoField implements EnumType {
         ORI_TYPE,
         ORI_VALUE;
 
@@ -50,8 +48,8 @@ public class OtherRecipientInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ORI_TYPE, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(ORI_VALUE, Asn1Any.class)
+            new Asn1FieldInfo(OtherRecipientInfoField.ORI_TYPE, Asn1ObjectIdentifier.class),
+            new Asn1FieldInfo(OtherRecipientInfoField.ORI_VALUE, Asn1Any.class)
     };
 
     public OtherRecipientInfo() {
@@ -59,18 +57,18 @@ public class OtherRecipientInfo extends Asn1SequenceType {
     }
 
     public Asn1ObjectIdentifier getOriType() {
-        return getFieldAs(ORI_TYPE, Asn1ObjectIdentifier.class);
+        return getFieldAs(OtherRecipientInfoField.ORI_TYPE, Asn1ObjectIdentifier.class);
     }
 
     public void setOriType(Asn1ObjectIdentifier oriType) {
-        setFieldAs(ORI_TYPE, oriType);
+        setFieldAs(OtherRecipientInfoField.ORI_TYPE, oriType);
     }
 
     public Asn1BitString getPublicKey() {
-        return getFieldAs(ORI_VALUE, Asn1BitString.class);
+        return getFieldAs(OtherRecipientInfoField.ORI_VALUE, Asn1BitString.class);
     }
 
     public void setOriValue(Asn1BitString oriValue) {
-        setFieldAs(ORI_VALUE, oriValue);
+        setFieldAs(OtherRecipientInfoField.ORI_VALUE, oriValue);
     }
 }

@@ -23,15 +23,13 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.RecipientEncryptedKey.MyEnum.*;
-
 /**
  * RecipientEncryptedKey ::= SEQUENCE {
  *   rid KeyAgreeRecipientIdentifier,
  *   encryptedKey EncryptedKey }
  */
 public class RecipientEncryptedKey extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum RecipientEncryptedKeyField implements EnumType {
         RID,
         ENCRYPTED_KEY;
 
@@ -47,8 +45,8 @@ public class RecipientEncryptedKey extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(RID, KeyAgreeRecipientIdentifier.class),
-            new Asn1FieldInfo(ENCRYPTED_KEY, EncryptedKey.class)
+            new Asn1FieldInfo(RecipientEncryptedKeyField.RID, KeyAgreeRecipientIdentifier.class),
+            new Asn1FieldInfo(RecipientEncryptedKeyField.ENCRYPTED_KEY, EncryptedKey.class)
     };
 
     public RecipientEncryptedKey() {
@@ -56,18 +54,18 @@ public class RecipientEncryptedKey extends Asn1SequenceType {
     }
 
     public KeyAgreeRecipientIdentifier getRid() {
-        return getFieldAs(RID, KeyAgreeRecipientIdentifier.class);
+        return getFieldAs(RecipientEncryptedKeyField.RID, KeyAgreeRecipientIdentifier.class);
     }
 
     public void setRid(KeyAgreeRecipientIdentifier rid) {
-        setFieldAs(RID, rid);
+        setFieldAs(RecipientEncryptedKeyField.RID, rid);
     }
 
     public EncryptedKey getEncryptedKey() {
-        return getFieldAs(ENCRYPTED_KEY, EncryptedKey.class);
+        return getFieldAs(RecipientEncryptedKeyField.ENCRYPTED_KEY, EncryptedKey.class);
     }
 
     public void setEncryptedKey(EncryptedKey encryptedKey) {
-        setFieldAs(ENCRYPTED_KEY, encryptedKey);
+        setFieldAs(RecipientEncryptedKeyField.ENCRYPTED_KEY, encryptedKey);
     }
 }

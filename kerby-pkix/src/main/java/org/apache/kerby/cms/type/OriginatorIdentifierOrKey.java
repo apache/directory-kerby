@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.SubjectKeyIdentifier;
 
-import static org.apache.kerby.cms.type.OriginatorIdentifierOrKey.MyEnum.*;
-
 /**
  * OriginatorIdentifierOrKey ::= CHOICE {
  *   issuerAndSerialNumber IssuerAndSerialNumber,
@@ -34,7 +32,7 @@ import static org.apache.kerby.cms.type.OriginatorIdentifierOrKey.MyEnum.*;
  *   originatorKey [1] OriginatorPublicKey }
  */
 public class OriginatorIdentifierOrKey extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum OriginatorIdentifierOrKeyField implements EnumType {
         ISSUER_AND_SERIAL_NUMBER,
         SUBJECT_KEY_IDENTIFIER,
         ORIGINATOR_KEY;
@@ -51,9 +49,9 @@ public class OriginatorIdentifierOrKey extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new Asn1FieldInfo(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class),
-            new ImplicitField(SUBJECT_KEY_IDENTIFIER, 0, SubjectKeyIdentifier.class),
-            new ImplicitField(ORIGINATOR_KEY, 1, OriginatorPublicKey.class)
+            new Asn1FieldInfo(OriginatorIdentifierOrKeyField.ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class),
+            new ImplicitField(OriginatorIdentifierOrKeyField.SUBJECT_KEY_IDENTIFIER, 0, SubjectKeyIdentifier.class),
+            new ImplicitField(OriginatorIdentifierOrKeyField.ORIGINATOR_KEY, 1, OriginatorPublicKey.class)
     };
 
     public OriginatorIdentifierOrKey() {
@@ -61,26 +59,26 @@ public class OriginatorIdentifierOrKey extends Asn1Choice {
     }
 
     public IssuerAndSerialNumber getIssuerAndSerialNumber() {
-        return getChoiceValueAs(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class);
+        return getChoiceValueAs(OriginatorIdentifierOrKeyField.ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class);
     }
 
     public void setIssuerAndSerialNumber(IssuerAndSerialNumber issuerAndSerialNumber) {
-        setChoiceValue(ISSUER_AND_SERIAL_NUMBER, issuerAndSerialNumber);
+        setChoiceValue(OriginatorIdentifierOrKeyField.ISSUER_AND_SERIAL_NUMBER, issuerAndSerialNumber);
     }
 
     public SubjectKeyIdentifier getSubjectKeyIdentifier() {
-        return getChoiceValueAs(SUBJECT_KEY_IDENTIFIER, SubjectKeyIdentifier.class);
+        return getChoiceValueAs(OriginatorIdentifierOrKeyField.SUBJECT_KEY_IDENTIFIER, SubjectKeyIdentifier.class);
     }
 
     public void setSubjectKeyIdentifier(SubjectKeyIdentifier subjectKeyIdentifier) {
-        setChoiceValue(SUBJECT_KEY_IDENTIFIER, subjectKeyIdentifier);
+        setChoiceValue(OriginatorIdentifierOrKeyField.SUBJECT_KEY_IDENTIFIER, subjectKeyIdentifier);
     }
 
     public OriginatorPublicKey getOriginatorPublicKey() {
-        return getChoiceValueAs(ORIGINATOR_KEY, OriginatorPublicKey.class);
+        return getChoiceValueAs(OriginatorIdentifierOrKeyField.ORIGINATOR_KEY, OriginatorPublicKey.class);
     }
 
     public void setOriginatorPublicKey(OriginatorPublicKey originatorPublicKey) {
-        setChoiceValue(ORIGINATOR_KEY, originatorPublicKey);
+        setChoiceValue(OriginatorIdentifierOrKeyField.ORIGINATOR_KEY, originatorPublicKey);
     }
 }

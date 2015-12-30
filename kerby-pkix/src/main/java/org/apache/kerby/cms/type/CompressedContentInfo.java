@@ -19,8 +19,6 @@
  */
 package org.apache.kerby.cms.type;
 
-import static org.apache.kerby.cms.type.ContentInfo.MyEnum.*;
-
 /**
  * A ContentInfo that wraps CompressedData.
  */
@@ -28,14 +26,14 @@ public class CompressedContentInfo extends ContentInfo {
 
     public CompressedContentInfo() {
         super();
-        setAnyFieldValueType(CONTENT, CompressedData.class);
+        setAnyFieldValueType(ContentInfoField.CONTENT, CompressedData.class);
     }
 
     public CompressedData getCompressedData() {
-        return getFieldAsAny(CONTENT, CompressedData.class);
+        return getFieldAsAny(ContentInfoField.CONTENT, CompressedData.class);
     }
 
     public void setCompressedData(CompressedData signedData) {
-        setFieldAsAny(CONTENT, signedData);
+        setFieldAsAny(ContentInfoField.CONTENT, signedData);
     }
 }

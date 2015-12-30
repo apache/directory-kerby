@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.SignerInfo.MyEnum.*;
-
 /**
  * Ref. RFC 5652
  *
@@ -42,7 +40,7 @@ import static org.apache.kerby.cms.type.SignerInfo.MyEnum.*;
  * </pre>
  */
 public class SignerInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum SignerInfoField implements EnumType {
         CMS_VERSION,
         SID,
         DIGEST_ALGORITHM,
@@ -63,13 +61,13 @@ public class SignerInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-        new Asn1FieldInfo(CMS_VERSION, CmsVersion.class),
-        new Asn1FieldInfo(SID, SignerIdentifier.class),
-        new Asn1FieldInfo(DIGEST_ALGORITHM, DigestAlgorithmIdentifier.class),
-        new ImplicitField(SIGNED_ATTRS, 0, SignedAttributes.class),
-        new Asn1FieldInfo(SIGNATURE_ALGORITHMS, SignatureAlgorithmIdentifier.class),
-        new Asn1FieldInfo(SIGNATURE, SignatureValue.class),
-        new ImplicitField(UNSIGNED_ATTRS, 1, UnsignedAttributes.class)
+        new Asn1FieldInfo(SignerInfoField.CMS_VERSION, CmsVersion.class),
+        new Asn1FieldInfo(SignerInfoField.SID, SignerIdentifier.class),
+        new Asn1FieldInfo(SignerInfoField.DIGEST_ALGORITHM, DigestAlgorithmIdentifier.class),
+        new ImplicitField(SignerInfoField.SIGNED_ATTRS, 0, SignedAttributes.class),
+        new Asn1FieldInfo(SignerInfoField.SIGNATURE_ALGORITHMS, SignatureAlgorithmIdentifier.class),
+        new Asn1FieldInfo(SignerInfoField.SIGNATURE, SignatureValue.class),
+        new ImplicitField(SignerInfoField.UNSIGNED_ATTRS, 1, UnsignedAttributes.class)
     };
 
     public SignerInfo() {
@@ -77,58 +75,58 @@ public class SignerInfo extends Asn1SequenceType {
     }
 
     public int getCmsVersion() {
-        return getFieldAsInteger(CMS_VERSION);
+        return getFieldAsInteger(SignerInfoField.CMS_VERSION);
     }
 
     public void setCmsVersion(int version) {
-        setFieldAsInt(CMS_VERSION, version);
+        setFieldAsInt(SignerInfoField.CMS_VERSION, version);
     }
 
     public SignerIdentifier getSignerIdentifier() {
-        return getFieldAs(SID, SignerIdentifier.class);
+        return getFieldAs(SignerInfoField.SID, SignerIdentifier.class);
     }
 
     public void setSignerIdentifier(SignerIdentifier signerIdentifier) {
-        setFieldAs(SID, signerIdentifier);
+        setFieldAs(SignerInfoField.SID, signerIdentifier);
     }
 
     public DigestAlgorithmIdentifier getDigestAlgorithmIdentifier() {
-        return getFieldAs(DIGEST_ALGORITHM, DigestAlgorithmIdentifier.class);
+        return getFieldAs(SignerInfoField.DIGEST_ALGORITHM, DigestAlgorithmIdentifier.class);
     }
 
     public void setDigestAlgorithmIdentifier(DigestAlgorithmIdentifier digestAlgorithmIdentifier) {
-        setFieldAs(DIGEST_ALGORITHM, digestAlgorithmIdentifier);
+        setFieldAs(SignerInfoField.DIGEST_ALGORITHM, digestAlgorithmIdentifier);
     }
 
     public SignedAttributes getSignedAttributes() {
-        return getFieldAs(SIGNED_ATTRS, SignedAttributes.class);
+        return getFieldAs(SignerInfoField.SIGNED_ATTRS, SignedAttributes.class);
     }
 
     public void setSignedAttributes(SignedAttributes signedAttributes) {
-        setFieldAs(SIGNED_ATTRS, signedAttributes);
+        setFieldAs(SignerInfoField.SIGNED_ATTRS, signedAttributes);
     }
 
     public SignatureAlgorithmIdentifier getSignatureAlgorithmIdentifier() {
-        return getFieldAs(SIGNATURE_ALGORITHMS, SignatureAlgorithmIdentifier.class);
+        return getFieldAs(SignerInfoField.SIGNATURE_ALGORITHMS, SignatureAlgorithmIdentifier.class);
     }
 
     public void setSignatureAlgorithmIdentifier(SignatureAlgorithmIdentifier signatureAlgorithmIdentifier) {
-        setFieldAs(SIGNATURE_ALGORITHMS, signatureAlgorithmIdentifier);
+        setFieldAs(SignerInfoField.SIGNATURE_ALGORITHMS, signatureAlgorithmIdentifier);
     }
 
     public SignatureValue getSignatureValue() {
-        return getFieldAs(SIGNATURE, SignatureValue.class);
+        return getFieldAs(SignerInfoField.SIGNATURE, SignatureValue.class);
     }
 
     public void setSignatureValue(SignatureValue signatureValue) {
-        setFieldAs(SIGNATURE, signatureValue);
+        setFieldAs(SignerInfoField.SIGNATURE, signatureValue);
     }
 
     public UnsignedAttributes getUnsignedAttributes() {
-        return getFieldAs(UNSIGNED_ATTRS, UnsignedAttributes.class);
+        return getFieldAs(SignerInfoField.UNSIGNED_ATTRS, UnsignedAttributes.class);
     }
 
     public void setUnsignedAttributes(UnsignedAttributes unsignedAttributes) {
-        setFieldAs(UNSIGNED_ATTRS, unsignedAttributes);
+        setFieldAs(SignerInfoField.UNSIGNED_ATTRS, unsignedAttributes);
     }
 }

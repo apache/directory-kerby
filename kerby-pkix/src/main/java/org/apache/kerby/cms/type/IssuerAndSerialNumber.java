@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x500.type.Name;
 
-import static org.apache.kerby.cms.type.IssuerAndSerialNumber.MyEnum.*;
-
 /**
  * Ref. RFC5652
  * <pre>
@@ -39,7 +37,7 @@ import static org.apache.kerby.cms.type.IssuerAndSerialNumber.MyEnum.*;
  * </pre>
  */
 public class IssuerAndSerialNumber extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum IssuerAndSerialNumberField implements EnumType {
         ISSUER,
         SERIAL_NUMBER;
 
@@ -55,8 +53,8 @@ public class IssuerAndSerialNumber extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-        new Asn1FieldInfo(ISSUER, Name.class),
-        new Asn1FieldInfo(SERIAL_NUMBER, Asn1Integer.class)
+        new Asn1FieldInfo(IssuerAndSerialNumberField.ISSUER, Name.class),
+        new Asn1FieldInfo(IssuerAndSerialNumberField.SERIAL_NUMBER, Asn1Integer.class)
     };
 
     public IssuerAndSerialNumber() {
@@ -64,18 +62,18 @@ public class IssuerAndSerialNumber extends Asn1SequenceType {
     }
 
     public Name getIssuer() {
-        return getFieldAs(ISSUER, Name.class);
+        return getFieldAs(IssuerAndSerialNumberField.ISSUER, Name.class);
     }
 
     public void setIssuer(Name name) {
-        setFieldAs(ISSUER, name);
+        setFieldAs(IssuerAndSerialNumberField.ISSUER, name);
     }
 
     public Asn1Integer getSerialNumber() {
-        return getFieldAs(SERIAL_NUMBER, Asn1Integer.class);
+        return getFieldAs(IssuerAndSerialNumberField.SERIAL_NUMBER, Asn1Integer.class);
     }
 
     public void setSerialNumber(int serialNumber) {
-        setFieldAsInt(SERIAL_NUMBER, serialNumber);
+        setFieldAsInt(IssuerAndSerialNumberField.SERIAL_NUMBER, serialNumber);
     }
 }

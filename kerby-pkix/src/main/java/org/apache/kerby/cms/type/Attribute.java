@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AttributeValues;
 
-import static org.apache.kerby.cms.type.Attribute.MyEnum.*;
-
 /**
  * Ref. RFC 5652
  * <pre>
@@ -39,7 +37,7 @@ import static org.apache.kerby.cms.type.Attribute.MyEnum.*;
  * </pre>
  */
 public class Attribute extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum AttributeField implements EnumType {
         ATTR_TYPE,
         ATTR_VALUES;
 
@@ -55,8 +53,8 @@ public class Attribute extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-        new Asn1FieldInfo(ATTR_TYPE, Asn1ObjectIdentifier.class),
-        new Asn1FieldInfo(ATTR_VALUES, AttributeValues.class),
+        new Asn1FieldInfo(AttributeField.ATTR_TYPE, Asn1ObjectIdentifier.class),
+        new Asn1FieldInfo(AttributeField.ATTR_VALUES, AttributeValues.class),
     };
 
     public Attribute() {
@@ -64,18 +62,18 @@ public class Attribute extends Asn1SequenceType {
     }
 
     public Asn1ObjectIdentifier getAttrType() {
-        return getFieldAs(ATTR_TYPE, Asn1ObjectIdentifier.class);
+        return getFieldAs(AttributeField.ATTR_TYPE, Asn1ObjectIdentifier.class);
     }
 
     public void setAttrType(Asn1ObjectIdentifier attrType) {
-        setFieldAs(ATTR_TYPE, attrType);
+        setFieldAs(AttributeField.ATTR_TYPE, attrType);
     }
 
     public AttributeValues getAttrValues() {
-        return getFieldAs(ATTR_VALUES, AttributeValues.class);
+        return getFieldAs(AttributeField.ATTR_VALUES, AttributeValues.class);
     }
 
     public void setAttrValues(AttributeValues values) {
-        setFieldAs(ATTR_VALUES, values);
+        setFieldAs(AttributeField.ATTR_VALUES, values);
     }
 }

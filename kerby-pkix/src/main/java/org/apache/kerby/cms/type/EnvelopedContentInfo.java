@@ -19,8 +19,6 @@
  */
 package org.apache.kerby.cms.type;
 
-import static org.apache.kerby.cms.type.ContentInfo.MyEnum.*;
-
 /**
  * A ContentInfo that wraps EnvelopedData.
  */
@@ -28,14 +26,14 @@ public class EnvelopedContentInfo extends ContentInfo {
 
     public EnvelopedContentInfo() {
         super();
-        setAnyFieldValueType(CONTENT, EnvelopedData.class);
+        setAnyFieldValueType(ContentInfoField.CONTENT, EnvelopedData.class);
     }
 
     public EnvelopedData getEnvelopedData() {
-        return getFieldAsAny(CONTENT, EnvelopedData.class);
+        return getFieldAsAny(ContentInfoField.CONTENT, EnvelopedData.class);
     }
 
     public void setEnvelopedData(EnvelopedData signedData) {
-        setFieldAsAny(CONTENT, signedData);
+        setFieldAsAny(ContentInfoField.CONTENT, signedData);
     }
 }

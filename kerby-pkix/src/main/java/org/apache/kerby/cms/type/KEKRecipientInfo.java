@@ -23,8 +23,6 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.KEKRecipientInfo.MyEnum.*;
-
 /**
  * KEKRecipientInfo ::= SEQUENCE {
  *   version CMSVersion,  -- always set to 4
@@ -33,7 +31,7 @@ import static org.apache.kerby.cms.type.KEKRecipientInfo.MyEnum.*;
  *   encryptedKey EncryptedKey }
  */
 public class KEKRecipientInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KEKRecipientInfoField implements EnumType {
         VERSION,
         KE_KID,
         KEY_ENCRYPTION_ALGORITHM,
@@ -51,10 +49,10 @@ public class KEKRecipientInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(VERSION, CmsVersion.class),
-            new Asn1FieldInfo(KE_KID, KEKIdentifier.class),
-            new Asn1FieldInfo(KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class),
-            new Asn1FieldInfo(ENCRYPTED_KEY, EncryptedKey.class)
+            new Asn1FieldInfo(KEKRecipientInfoField.VERSION, CmsVersion.class),
+            new Asn1FieldInfo(KEKRecipientInfoField.KE_KID, KEKIdentifier.class),
+            new Asn1FieldInfo(KEKRecipientInfoField.KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class),
+            new Asn1FieldInfo(KEKRecipientInfoField.ENCRYPTED_KEY, EncryptedKey.class)
     };
 
     public KEKRecipientInfo() {
@@ -62,35 +60,35 @@ public class KEKRecipientInfo extends Asn1SequenceType {
     }
 
     public CmsVersion getVersion() {
-        return getFieldAs(VERSION, CmsVersion.class);
+        return getFieldAs(KEKRecipientInfoField.VERSION, CmsVersion.class);
     }
 
     public void setVersion(CmsVersion version) {
-        setFieldAs(VERSION, version);
+        setFieldAs(KEKRecipientInfoField.VERSION, version);
     }
 
     public KEKIdentifier getKEKIdentifier() {
-        return getFieldAs(KE_KID, KEKIdentifier.class);
+        return getFieldAs(KEKRecipientInfoField.KE_KID, KEKIdentifier.class);
     }
 
     public void setKEKIdentifier(KEKIdentifier kekIdentifier) {
-        setFieldAs(KE_KID, kekIdentifier);
+        setFieldAs(KEKRecipientInfoField.KE_KID, kekIdentifier);
     }
 
     public KeyEncryptionAlgorithmIdentifier getKeyEncryptionAlgorithmIdentifier() {
-        return getFieldAs(KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class);
+        return getFieldAs(KEKRecipientInfoField.KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class);
     }
 
     public void setKeyEncryptionAlgorithmIdentifier(KeyEncryptionAlgorithmIdentifier
                                                             keyEncryptionAlgorithmIdentifier) {
-        setFieldAs(KEY_ENCRYPTION_ALGORITHM, keyEncryptionAlgorithmIdentifier);
+        setFieldAs(KEKRecipientInfoField.KEY_ENCRYPTION_ALGORITHM, keyEncryptionAlgorithmIdentifier);
     }
 
     public EncryptedKey getEncryptedKey() {
-        return getFieldAs(ENCRYPTED_KEY, EncryptedKey.class);
+        return getFieldAs(KEKRecipientInfoField.ENCRYPTED_KEY, EncryptedKey.class);
     }
 
     public void setEncryptedKey(EncryptedKey encryptedKey) {
-        setFieldAs(ENCRYPTED_KEY, encryptedKey);
+        setFieldAs(KEKRecipientInfoField.ENCRYPTED_KEY, encryptedKey);
     }
 }

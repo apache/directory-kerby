@@ -25,15 +25,13 @@ import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 
-import static org.apache.kerby.cms.type.OriginatorPublicKey.MyEnum.*;
-
 /**
  * OriginatorPublicKey ::= SEQUENCE {
  *   algorithm AlgorithmIdentifier,
  *   publicKey BIT STRING }
  */
 public class OriginatorPublicKey extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum OriginatorPublicKeyField implements EnumType {
         ALGORITHM,
         PUBLIC_KEY;
 
@@ -49,8 +47,8 @@ public class OriginatorPublicKey extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ALGORITHM, AlgorithmIdentifier.class),
-            new Asn1FieldInfo(PUBLIC_KEY, Asn1BitString.class)
+            new Asn1FieldInfo(OriginatorPublicKeyField.ALGORITHM, AlgorithmIdentifier.class),
+            new Asn1FieldInfo(OriginatorPublicKeyField.PUBLIC_KEY, Asn1BitString.class)
     };
 
     public OriginatorPublicKey() {
@@ -58,18 +56,18 @@ public class OriginatorPublicKey extends Asn1SequenceType {
     }
 
     public AlgorithmIdentifier getAlgorithm() {
-        return getFieldAs(ALGORITHM, AlgorithmIdentifier.class);
+        return getFieldAs(OriginatorPublicKeyField.ALGORITHM, AlgorithmIdentifier.class);
     }
 
     public void setAlgorithm(AlgorithmIdentifier algorithm) {
-        setFieldAs(ALGORITHM, algorithm);
+        setFieldAs(OriginatorPublicKeyField.ALGORITHM, algorithm);
     }
 
     public Asn1BitString getPublicKey() {
-        return getFieldAs(PUBLIC_KEY, Asn1BitString.class);
+        return getFieldAs(OriginatorPublicKeyField.PUBLIC_KEY, Asn1BitString.class);
     }
 
     public void setPublicKey(Asn1BitString publicKey) {
-        setFieldAs(PUBLIC_KEY, publicKey);
+        setFieldAs(OriginatorPublicKeyField.PUBLIC_KEY, publicKey);
     }
 }

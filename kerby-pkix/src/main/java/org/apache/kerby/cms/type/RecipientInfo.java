@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.cms.type.RecipientInfo.MyEnum.*;
-
 /**
  * RecipientInfo ::= CHOICE {
  *   ktri KeyTransRecipientInfo,
@@ -35,7 +33,7 @@ import static org.apache.kerby.cms.type.RecipientInfo.MyEnum.*;
  *   ori [4] OtherRecipientInfo }
  */
 public class RecipientInfo extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum RecipientInfoField implements EnumType {
         KTRI,
         KARI,
         KEKRI,
@@ -54,11 +52,11 @@ public class RecipientInfo extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(KTRI, KeyTransRecipientInfo.class),
-            new ImplicitField(KARI, 1, KeyAgreeRecipientInfo.class),
-            new ImplicitField(KEKRI, 2, KEKRecipientInfo.class),
-            new ImplicitField(PWRI, 3, PasswordRecipientInfo.class),
-            new ImplicitField(ORI, 4, OtherRecipientInfo.class)
+            new Asn1FieldInfo(RecipientInfoField.KTRI, KeyTransRecipientInfo.class),
+            new ImplicitField(RecipientInfoField.KARI, KeyAgreeRecipientInfo.class),
+            new ImplicitField(RecipientInfoField.KEKRI, KEKRecipientInfo.class),
+            new ImplicitField(RecipientInfoField.PWRI, PasswordRecipientInfo.class),
+            new ImplicitField(RecipientInfoField.ORI, OtherRecipientInfo.class)
     };
 
     public RecipientInfo() {
@@ -66,42 +64,42 @@ public class RecipientInfo extends Asn1Choice {
     }
 
     public KeyTransRecipientInfo getKtri() {
-        return getChoiceValueAs(KTRI, KeyTransRecipientInfo.class);
+        return getChoiceValueAs(RecipientInfoField.KTRI, KeyTransRecipientInfo.class);
     }
 
     public void setKtri(KeyTransRecipientInfo ktri) {
-        setChoiceValue(KTRI, ktri);
+        setChoiceValue(RecipientInfoField.KTRI, ktri);
     }
 
     public KeyAgreeRecipientInfo getKari() {
-        return getChoiceValueAs(KARI, KeyAgreeRecipientInfo.class);
+        return getChoiceValueAs(RecipientInfoField.KARI, KeyAgreeRecipientInfo.class);
     }
 
     public void setKari(KeyAgreeRecipientInfo kari) {
-        setChoiceValue(KARI, kari);
+        setChoiceValue(RecipientInfoField.KARI, kari);
     }
 
     public KEKRecipientInfo getKekri() {
-        return getChoiceValueAs(KEKRI, KEKRecipientInfo.class);
+        return getChoiceValueAs(RecipientInfoField.KEKRI, KEKRecipientInfo.class);
     }
 
     public void setKekri(KEKRecipientInfo kekri) {
-        setChoiceValue(KEKRI, kekri);
+        setChoiceValue(RecipientInfoField.KEKRI, kekri);
     }
 
     public PasswordRecipientInfo getPwri() {
-        return getChoiceValueAs(PWRI, PasswordRecipientInfo.class);
+        return getChoiceValueAs(RecipientInfoField.PWRI, PasswordRecipientInfo.class);
     }
 
     public void setPwri(PasswordRecipientInfo pwri) {
-        setChoiceValue(PWRI, pwri);
+        setChoiceValue(RecipientInfoField.PWRI, pwri);
     }
 
     public OtherRecipientInfo getori() {
-        return getChoiceValueAs(ORI, OtherRecipientInfo.class);
+        return getChoiceValueAs(RecipientInfoField.ORI, OtherRecipientInfo.class);
     }
 
     public void setOri(OtherRecipientInfo ori) {
-        setChoiceValue(ORI, ori);
+        setChoiceValue(RecipientInfoField.ORI, ori);
     }
 }

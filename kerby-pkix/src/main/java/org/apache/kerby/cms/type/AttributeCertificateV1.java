@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 import org.apache.kerby.x509.type.AttributeCertificateInfo;
 
-import static org.apache.kerby.cms.type.AttributeCertificateV1.MyEnum.*;
-
 /**
  * AttributeCertificateV1 ::= SEQUENCE {
  *   acInfo AttributeCertificateInfoV1,
@@ -36,7 +34,7 @@ import static org.apache.kerby.cms.type.AttributeCertificateV1.MyEnum.*;
  * }
  */
 public class AttributeCertificateV1 extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum AttributeCertificateV1Field implements EnumType {
         ACI_INFO,
         SIGNATURE_ALGORITHM,
         SIGNATURE;
@@ -53,9 +51,9 @@ public class AttributeCertificateV1 extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ACI_INFO, AttributeCertificateInfoV1.class),
-            new Asn1FieldInfo(SIGNATURE_ALGORITHM, AlgorithmIdentifier.class),
-            new Asn1FieldInfo(SIGNATURE, Asn1BitString.class)
+            new Asn1FieldInfo(AttributeCertificateV1Field.ACI_INFO, AttributeCertificateInfoV1.class),
+            new Asn1FieldInfo(AttributeCertificateV1Field.SIGNATURE_ALGORITHM, AlgorithmIdentifier.class),
+            new Asn1FieldInfo(AttributeCertificateV1Field.SIGNATURE, Asn1BitString.class)
     };
 
     public AttributeCertificateV1() {
@@ -63,26 +61,26 @@ public class AttributeCertificateV1 extends Asn1SequenceType {
     }
 
     public AttributeCertificateInfo getAcinfo() {
-        return getFieldAs(ACI_INFO, AttributeCertificateInfo.class);
+        return getFieldAs(AttributeCertificateV1Field.ACI_INFO, AttributeCertificateInfo.class);
     }
 
     public void setAciInfo(AttributeCertificateInfo aciInfo) {
-        setFieldAs(ACI_INFO, aciInfo);
+        setFieldAs(AttributeCertificateV1Field.ACI_INFO, aciInfo);
     }
 
     public AlgorithmIdentifier getSignatureAlgorithm() {
-        return getFieldAs(SIGNATURE_ALGORITHM, AlgorithmIdentifier.class);
+        return getFieldAs(AttributeCertificateV1Field.SIGNATURE_ALGORITHM, AlgorithmIdentifier.class);
     }
 
     public void setSignatureAlgorithm(AlgorithmIdentifier signatureAlgorithm) {
-        setFieldAs(SIGNATURE_ALGORITHM, signatureAlgorithm);
+        setFieldAs(AttributeCertificateV1Field.SIGNATURE_ALGORITHM, signatureAlgorithm);
     }
 
     public Asn1BitString getSignatureValue() {
-        return getFieldAs(SIGNATURE, Asn1BitString.class);
+        return getFieldAs(AttributeCertificateV1Field.SIGNATURE, Asn1BitString.class);
     }
 
     public void setSignatureValue(Asn1BitString signatureValue) {
-        setFieldAs(SIGNATURE, signatureValue);
+        setFieldAs(AttributeCertificateV1Field.SIGNATURE, signatureValue);
     }
 }

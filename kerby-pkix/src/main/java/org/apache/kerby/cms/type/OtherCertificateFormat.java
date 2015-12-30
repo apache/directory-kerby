@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.cms.type.OtherCertificateFormat.MyEnum.*;
-
 /**
  * OtherCertificateFormat ::= SEQUENCE {
  *   otherCertFormat OBJECT IDENTIFIER,
@@ -35,7 +33,7 @@ import static org.apache.kerby.cms.type.OtherCertificateFormat.MyEnum.*;
  * }
  */
 public class OtherCertificateFormat extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum OtherCertificateFormatField implements EnumType {
         OTHER_CERT_FORMAT,
         OTHER_CERT;
 
@@ -51,8 +49,8 @@ public class OtherCertificateFormat extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(OTHER_CERT_FORMAT, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(OTHER_CERT, Asn1Any.class),
+            new Asn1FieldInfo(OtherCertificateFormatField.OTHER_CERT_FORMAT, Asn1ObjectIdentifier.class),
+            new Asn1FieldInfo(OtherCertificateFormatField.OTHER_CERT, Asn1Any.class),
     };
 
     public OtherCertificateFormat() {
@@ -60,18 +58,18 @@ public class OtherCertificateFormat extends Asn1SequenceType {
     }
 
     public Asn1ObjectIdentifier getOtherCertFormat() {
-        return getFieldAs(OTHER_CERT_FORMAT, Asn1ObjectIdentifier.class);
+        return getFieldAs(OtherCertificateFormatField.OTHER_CERT_FORMAT, Asn1ObjectIdentifier.class);
     }
 
     public void setOtherCertFormat(Asn1ObjectIdentifier otherCertFormat) {
-        setFieldAs(OTHER_CERT_FORMAT, otherCertFormat);
+        setFieldAs(OtherCertificateFormatField.OTHER_CERT_FORMAT, otherCertFormat);
     }
 
     public <T extends Asn1Type> T getOtherCertAs(Class<T> t) {
-        return getFieldAsAny(OTHER_CERT, t);
+        return getFieldAsAny(OtherCertificateFormatField.OTHER_CERT, t);
     }
 
     public void setOtherCert(Asn1Type otherCert) {
-        setFieldAsAny(OTHER_CERT, otherCert);
+        setFieldAsAny(OtherCertificateFormatField.OTHER_CERT, otherCert);
     }
 }

@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.OriginatorInfo.MyEnum.*;
-
 /**
  * OriginatorInfo ::= SEQUENCE {
  *   certs [0] IMPLICIT CertificateSet OPTIONAL,
@@ -33,7 +31,7 @@ import static org.apache.kerby.cms.type.OriginatorInfo.MyEnum.*;
  * }
  */
 public class OriginatorInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum OriginatorInfoField implements EnumType {
         CERTS,
         CRLS;
 
@@ -49,8 +47,8 @@ public class OriginatorInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new ImplicitField(CERTS, CertificateSet.class),
-            new ImplicitField(CRLS, RevocationInfoChoices.class)
+            new ImplicitField(OriginatorInfoField.CERTS, CertificateSet.class),
+            new ImplicitField(OriginatorInfoField.CRLS, RevocationInfoChoices.class)
     };
 
     public OriginatorInfo() {
@@ -58,18 +56,18 @@ public class OriginatorInfo extends Asn1SequenceType {
     }
 
     public CertificateSet getCerts() {
-        return getFieldAs(CERTS, CertificateSet.class);
+        return getFieldAs(OriginatorInfoField.CERTS, CertificateSet.class);
     }
 
     public void setCerts(CertificateSet certs) {
-        setFieldAs(CERTS, certs);
+        setFieldAs(OriginatorInfoField.CERTS, certs);
     }
 
     public RevocationInfoChoices getCrls() {
-        return getFieldAs(CRLS, RevocationInfoChoices.class);
+        return getFieldAs(OriginatorInfoField.CRLS, RevocationInfoChoices.class);
     }
 
     public void setCrls(RevocationInfoChoices crls) {
-        setFieldAs(CRLS, crls);
+        setFieldAs(OriginatorInfoField.CRLS, crls);
     }
 }

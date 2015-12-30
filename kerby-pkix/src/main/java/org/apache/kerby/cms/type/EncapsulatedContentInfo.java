@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.EncapsulatedContentInfo.MyEnum.*;
-
 /**
  * EncapsulatedContentInfo ::= SEQUENCE {
  *   eContentType ContentType,
@@ -37,7 +35,7 @@ import static org.apache.kerby.cms.type.EncapsulatedContentInfo.MyEnum.*;
  * ContentType ::= OBJECT IDENTIFIER
  */
 public class EncapsulatedContentInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum EncapsulatedContentInfoField implements EnumType {
         CONTENT_TYPE,
         CONTENT;
 
@@ -53,8 +51,8 @@ public class EncapsulatedContentInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new Asn1FieldInfo(CONTENT_TYPE, Asn1ObjectIdentifier.class),
-            new ExplicitField(CONTENT, 0, Asn1OctetString.class)
+            new Asn1FieldInfo(EncapsulatedContentInfoField.CONTENT_TYPE, Asn1ObjectIdentifier.class),
+            new ExplicitField(EncapsulatedContentInfoField.CONTENT, 0, Asn1OctetString.class)
     };
 
     public EncapsulatedContentInfo() {
@@ -62,18 +60,18 @@ public class EncapsulatedContentInfo extends Asn1SequenceType {
     }
 
     public String getContentType() {
-        return getFieldAsObjId(CONTENT_TYPE);
+        return getFieldAsObjId(EncapsulatedContentInfoField.CONTENT_TYPE);
     }
 
     public void setContentType(String contentType) {
-        setFieldAsObjId(CONTENT_TYPE, contentType);
+        setFieldAsObjId(EncapsulatedContentInfoField.CONTENT_TYPE, contentType);
     }
 
     public byte[] getContent() {
-        return getFieldAsOctets(CONTENT);
+        return getFieldAsOctets(EncapsulatedContentInfoField.CONTENT);
     }
 
     public void setContent(byte[] content) {
-        setFieldAsOctets(CONTENT, content);
+        setFieldAsOctets(EncapsulatedContentInfoField.CONTENT, content);
     }
 }

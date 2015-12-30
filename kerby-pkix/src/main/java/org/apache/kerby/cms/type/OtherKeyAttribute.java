@@ -26,15 +26,13 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.cms.type.OtherKeyAttribute.MyEnum.*;
-
 /**
  * OtherKeyAttribute ::= SEQUENCE {
  *   keyAttrId OBJECT IDENTIFIER,
  *   keyAttr ANY DEFINED BY keyAttrId OPTIONAL }
  */
 public class OtherKeyAttribute extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum OtherKeyAttributeField implements EnumType {
         KEY_ATTR_ID,
         KEY_ATTR;
 
@@ -50,8 +48,8 @@ public class OtherKeyAttribute extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(KEY_ATTR_ID, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(KEY_ATTR, Asn1Any.class)
+            new Asn1FieldInfo(OtherKeyAttributeField.KEY_ATTR_ID, Asn1ObjectIdentifier.class),
+            new Asn1FieldInfo(OtherKeyAttributeField.KEY_ATTR, Asn1Any.class)
     };
 
     public OtherKeyAttribute() {
@@ -59,18 +57,18 @@ public class OtherKeyAttribute extends Asn1SequenceType {
     }
 
     public Asn1ObjectIdentifier getAlgorithm() {
-        return getFieldAs(KEY_ATTR_ID, Asn1ObjectIdentifier.class);
+        return getFieldAs(OtherKeyAttributeField.KEY_ATTR_ID, Asn1ObjectIdentifier.class);
     }
 
     public void setAlgorithm(Asn1ObjectIdentifier keyAttrId) {
-        setFieldAs(KEY_ATTR_ID, keyAttrId);
+        setFieldAs(OtherKeyAttributeField.KEY_ATTR_ID, keyAttrId);
     }
 
     public <T extends Asn1Type> T getKeyAttrAs(Class<T> t) {
-        return getFieldAsAny(KEY_ATTR, t);
+        return getFieldAsAny(OtherKeyAttributeField.KEY_ATTR, t);
     }
 
     public void setKeyAttr(Asn1Type keyAttr) {
-        setFieldAsAny(KEY_ATTR, keyAttr);
+        setFieldAsAny(OtherKeyAttributeField.KEY_ATTR, keyAttr);
     }
 }

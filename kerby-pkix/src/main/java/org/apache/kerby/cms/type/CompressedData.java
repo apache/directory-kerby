@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 
-import static org.apache.kerby.cms.type.CompressedData.MyEnum.*;
-
 /** 
  * Ref. RFC 3274
  * 
@@ -38,7 +36,7 @@ import static org.apache.kerby.cms.type.CompressedData.MyEnum.*;
  * </pre>
  */
 public class CompressedData extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum CompressedDataField implements EnumType {
         VERSION,
         COMPRESSION_ALGORITHM,
         ENCAP_CONTENT_INFO;
@@ -55,9 +53,9 @@ public class CompressedData extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(VERSION, CmsVersion.class),
-            new Asn1FieldInfo(COMPRESSION_ALGORITHM, AlgorithmIdentifier.class),
-            new Asn1FieldInfo(ENCAP_CONTENT_INFO, EncapsulatedContentInfo.class)
+            new Asn1FieldInfo(CompressedDataField.VERSION, CmsVersion.class),
+            new Asn1FieldInfo(CompressedDataField.COMPRESSION_ALGORITHM, AlgorithmIdentifier.class),
+            new Asn1FieldInfo(CompressedDataField.ENCAP_CONTENT_INFO, EncapsulatedContentInfo.class)
     };
 
     public CompressedData() {
@@ -65,27 +63,27 @@ public class CompressedData extends Asn1SequenceType {
     }
 
     public CmsVersion getVersion() {
-        return getFieldAs(VERSION, CmsVersion.class);
+        return getFieldAs(CompressedDataField.VERSION, CmsVersion.class);
     }
 
     public void setVersion(CmsVersion version) {
-        setFieldAs(VERSION, version);
+        setFieldAs(CompressedDataField.VERSION, version);
     }
 
     public AlgorithmIdentifier getCompressionAlgorithm() {
-        return getFieldAs(COMPRESSION_ALGORITHM, AlgorithmIdentifier.class);
+        return getFieldAs(CompressedDataField.COMPRESSION_ALGORITHM, AlgorithmIdentifier.class);
     }
 
     public void setCompressionAlgorithm(AlgorithmIdentifier compressionAlgorithm) {
-        setFieldAs(COMPRESSION_ALGORITHM, compressionAlgorithm);
+        setFieldAs(CompressedDataField.COMPRESSION_ALGORITHM, compressionAlgorithm);
     }
 
     public EncapsulatedContentInfo getEncapContentInfo() {
-        return getFieldAs(ENCAP_CONTENT_INFO, EncapsulatedContentInfo.class);
+        return getFieldAs(CompressedDataField.ENCAP_CONTENT_INFO, EncapsulatedContentInfo.class);
     }
 
     public void setEncapContentInfo(EncapsulatedContentInfo encapContentInfo) {
-        setFieldAs(ENCAP_CONTENT_INFO, encapContentInfo);
+        setFieldAs(CompressedDataField.ENCAP_CONTENT_INFO, encapContentInfo);
     }
 
 }
