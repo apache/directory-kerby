@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.KEKIdentifier.MyEnum.*;
-
 /**
  * KEKIdentifier ::= SEQUENCE {
  *   keyIdentifier OCTET STRING,
@@ -34,7 +32,7 @@ import static org.apache.kerby.cms.type.KEKIdentifier.MyEnum.*;
  *   other OtherKeyAttribute OPTIONAL }
  */
 public class KEKIdentifier extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KEKIdentifierField implements EnumType {
         KEY_IDENTIFIER,
         DATE,
         OTHER;
@@ -51,9 +49,9 @@ public class KEKIdentifier extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(KEY_IDENTIFIER, Asn1OctetString.class),
-            new Asn1FieldInfo(DATE, Asn1GeneralizedTime.class),
-            new Asn1FieldInfo(OTHER, OtherKeyAttribute.class)
+            new Asn1FieldInfo(KEKIdentifierField.KEY_IDENTIFIER, Asn1OctetString.class),
+            new Asn1FieldInfo(KEKIdentifierField.DATE, Asn1GeneralizedTime.class),
+            new Asn1FieldInfo(KEKIdentifierField.OTHER, OtherKeyAttribute.class)
     };
 
     public KEKIdentifier() {
@@ -61,26 +59,26 @@ public class KEKIdentifier extends Asn1SequenceType {
     }
 
     public Asn1OctetString getKeyIdentifier() {
-        return getFieldAs(KEY_IDENTIFIER, Asn1OctetString.class);
+        return getFieldAs(KEKIdentifierField.KEY_IDENTIFIER, Asn1OctetString.class);
     }
 
     public void setKeyIdentifier(Asn1OctetString keyIdentifier) {
-        setFieldAs(KEY_IDENTIFIER, keyIdentifier);
+        setFieldAs(KEKIdentifierField.KEY_IDENTIFIER, keyIdentifier);
     }
 
     public Asn1GeneralizedTime getDate() {
-        return getFieldAs(DATE, Asn1GeneralizedTime.class);
+        return getFieldAs(KEKIdentifierField.DATE, Asn1GeneralizedTime.class);
     }
 
     public void setDate(Asn1GeneralizedTime date) {
-        setFieldAs(DATE, date);
+        setFieldAs(KEKIdentifierField.DATE, date);
     }
 
     public OtherKeyAttribute getOther() {
-        return getFieldAs(OTHER, OtherKeyAttribute.class);
+        return getFieldAs(KEKIdentifierField.OTHER, OtherKeyAttribute.class);
     }
 
     public void setOther(OtherKeyAttribute other) {
-        setFieldAs(OTHER, other);
+        setFieldAs(KEKIdentifierField.OTHER, other);
     }
 }

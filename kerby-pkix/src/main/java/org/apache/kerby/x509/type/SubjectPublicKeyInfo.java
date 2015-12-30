@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1BitString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.SubjectPublicKeyInfo.MyEnum.*;
-
 /**
  * SubjectPublicKeyInfo  ::=  SEQUENCE  {
  *    algorithm            AlgorithmIdentifier,
@@ -33,7 +31,7 @@ import static org.apache.kerby.x509.type.SubjectPublicKeyInfo.MyEnum.*;
  * }
  */
 public class SubjectPublicKeyInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum SubjectPublicKeyInfoField implements EnumType {
         ALGORITHM,
         SUBJECT_PUBLIC_KEY;
 
@@ -49,8 +47,8 @@ public class SubjectPublicKeyInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(ALGORITHM, AlgorithmIdentifier.class),
-            new Asn1FieldInfo(SUBJECT_PUBLIC_KEY, Asn1BitString.class)
+            new Asn1FieldInfo(SubjectPublicKeyInfoField.ALGORITHM, AlgorithmIdentifier.class),
+            new Asn1FieldInfo(SubjectPublicKeyInfoField.SUBJECT_PUBLIC_KEY, Asn1BitString.class)
     };
 
     public SubjectPublicKeyInfo() {
@@ -58,18 +56,18 @@ public class SubjectPublicKeyInfo extends Asn1SequenceType {
     }
 
     public AlgorithmIdentifier getAlgorithm() {
-        return getFieldAs(ALGORITHM, AlgorithmIdentifier.class);
+        return getFieldAs(SubjectPublicKeyInfoField.ALGORITHM, AlgorithmIdentifier.class);
     }
 
     public void setAlgorithm(AlgorithmIdentifier algorithm) {
-        setFieldAs(ALGORITHM, algorithm);
+        setFieldAs(SubjectPublicKeyInfoField.ALGORITHM, algorithm);
     }
 
     public Asn1BitString getSubjectPubKey() {
-        return getFieldAs(SUBJECT_PUBLIC_KEY, Asn1BitString.class);
+        return getFieldAs(SubjectPublicKeyInfoField.SUBJECT_PUBLIC_KEY, Asn1BitString.class);
     }
 
     public void setSubjectPubKey(byte[] subjectPubKey) {
-        setFieldAs(SUBJECT_PUBLIC_KEY, new Asn1BitString(subjectPubKey));
+        setFieldAs(SubjectPublicKeyInfoField.SUBJECT_PUBLIC_KEY, new Asn1BitString(subjectPubKey));
     }
 }

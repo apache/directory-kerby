@@ -24,15 +24,13 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.cms.type.KeyAgreeRecipientIdentifier.MyEnum.*;
-
 /**
  * KeyAgreeRecipientIdentifier ::= CHOICE {
  *   issuerAndSerialNumber IssuerAndSerialNumber,
  *   rKeyId [0] IMPLICIT RecipientKeyIdentifier }
  */
 public class KeyAgreeRecipientIdentifier extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum KeyAgreeRecipientIdentifierField implements EnumType {
         ISSUER_AND_SERIAL_NUMBER,
         R_KEY_ID;
 
@@ -48,8 +46,8 @@ public class KeyAgreeRecipientIdentifier extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new Asn1FieldInfo(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class),
-            new ImplicitField(R_KEY_ID, 0, RecipientKeyIdentifier.class)
+            new Asn1FieldInfo(KeyAgreeRecipientIdentifierField.ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class),
+            new ImplicitField(KeyAgreeRecipientIdentifierField.R_KEY_ID, 0, RecipientKeyIdentifier.class)
     };
 
     public KeyAgreeRecipientIdentifier() {
@@ -57,18 +55,18 @@ public class KeyAgreeRecipientIdentifier extends Asn1Choice {
     }
 
     public IssuerAndSerialNumber getIssuerAndSerialNumber() {
-        return getChoiceValueAs(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class);
+        return getChoiceValueAs(KeyAgreeRecipientIdentifierField.ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class);
     }
 
     public void setIssuerAndSerialNumber(IssuerAndSerialNumber issuerAndSerialNumber) {
-        setChoiceValue(ISSUER_AND_SERIAL_NUMBER, issuerAndSerialNumber);
+        setChoiceValue(KeyAgreeRecipientIdentifierField.ISSUER_AND_SERIAL_NUMBER, issuerAndSerialNumber);
     }
 
     public RecipientKeyIdentifier getRecipientKeyIdentifier() {
-        return getChoiceValueAs(R_KEY_ID, RecipientKeyIdentifier.class);
+        return getChoiceValueAs(KeyAgreeRecipientIdentifierField.R_KEY_ID, RecipientKeyIdentifier.class);
     }
 
     public void setRecipientKeyIdentifier(RecipientKeyIdentifier recipientKeyIdentifier) {
-        setChoiceValue(R_KEY_ID, recipientKeyIdentifier);
+        setChoiceValue(KeyAgreeRecipientIdentifierField.R_KEY_ID, recipientKeyIdentifier);
     }
 }

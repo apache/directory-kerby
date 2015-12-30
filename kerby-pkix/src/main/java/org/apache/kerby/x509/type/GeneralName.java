@@ -30,8 +30,6 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.x500.type.Name;
 
-import static org.apache.kerby.x509.type.GeneralName.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -49,7 +47,7 @@ import static org.apache.kerby.x509.type.GeneralName.MyEnum.*;
  * </pre>
  */
 public class GeneralName extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum GeneralNameField implements EnumType {
         OTHER_NAME,
         RFC822_NAME,
         DNS_NAME,
@@ -72,16 +70,16 @@ public class GeneralName extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ImplicitField(OTHER_NAME, OtherName.class),
-        new ImplicitField(RFC822_NAME, Asn1IA5String.class),
-        new ImplicitField(DNS_NAME, Asn1IA5String.class),
+        new ImplicitField(GeneralNameField.OTHER_NAME, OtherName.class),
+        new ImplicitField(GeneralNameField.RFC822_NAME, Asn1IA5String.class),
+        new ImplicitField(GeneralNameField.DNS_NAME, Asn1IA5String.class),
         // ORAddress is to be defined.
-        new ImplicitField(X400_ADDRESS, Asn1Any.class),
-        new ExplicitField(DIRECTORY_NAME, Name.class),
-        new ImplicitField(EDI_PARTY_NAME, EDIPartyName.class),
-        new ImplicitField(UNIFORM_RESOURCE_IDENTIFIER, Asn1IA5String.class),
-        new ImplicitField(IP_ADDRESS, Asn1OctetString.class),
-        new ImplicitField(REGISTERED_ID, Asn1ObjectIdentifier.class)
+        new ImplicitField(GeneralNameField.X400_ADDRESS, Asn1Any.class),
+        new ExplicitField(GeneralNameField.DIRECTORY_NAME, Name.class),
+        new ImplicitField(GeneralNameField.EDI_PARTY_NAME, EDIPartyName.class),
+        new ImplicitField(GeneralNameField.UNIFORM_RESOURCE_IDENTIFIER, Asn1IA5String.class),
+        new ImplicitField(GeneralNameField.IP_ADDRESS, Asn1OctetString.class),
+        new ImplicitField(GeneralNameField.REGISTERED_ID, Asn1ObjectIdentifier.class)
     };
 
     public GeneralName() {
@@ -89,74 +87,74 @@ public class GeneralName extends Asn1Choice {
     }
 
     public OtherName getOtherName() {
-        return getChoiceValueAs(OTHER_NAME, OtherName.class);
+        return getChoiceValueAs(GeneralNameField.OTHER_NAME, OtherName.class);
     }
 
     public void setOtherName(OtherName otherName) {
-        setChoiceValue(OTHER_NAME, otherName);
+        setChoiceValue(GeneralNameField.OTHER_NAME, otherName);
     }
 
     public Asn1IA5String getRfc822Name() {
-        return getChoiceValueAs(RFC822_NAME, Asn1IA5String.class);
+        return getChoiceValueAs(GeneralNameField.RFC822_NAME, Asn1IA5String.class);
     }
 
     public void setRfc822Name(Asn1IA5String rfc822Name) {
-        setChoiceValue(RFC822_NAME, rfc822Name);
+        setChoiceValue(GeneralNameField.RFC822_NAME, rfc822Name);
     }
 
     public Asn1IA5String getDNSName() {
-        return getChoiceValueAs(DNS_NAME, Asn1IA5String.class);
+        return getChoiceValueAs(GeneralNameField.DNS_NAME, Asn1IA5String.class);
     }
 
     public void setDNSName(Asn1IA5String dnsName) {
-        setChoiceValue(DNS_NAME, dnsName);
+        setChoiceValue(GeneralNameField.DNS_NAME, dnsName);
     }
 
     public Asn1Any getX400Address() {
-        return getChoiceValueAs(X400_ADDRESS, Asn1Any.class);
+        return getChoiceValueAs(GeneralNameField.X400_ADDRESS, Asn1Any.class);
     }
 
     public void setX400Address(Asn1Any x400Address) {
-        setChoiceValue(X400_ADDRESS, x400Address);
+        setChoiceValue(GeneralNameField.X400_ADDRESS, x400Address);
     }
 
     public Name getDirectoryName() {
-        return getChoiceValueAs(DIRECTORY_NAME, Name.class);
+        return getChoiceValueAs(GeneralNameField.DIRECTORY_NAME, Name.class);
     }
 
     public void setDirectoryName(Name directoryName) {
-        setChoiceValue(DIRECTORY_NAME, directoryName);
+        setChoiceValue(GeneralNameField.DIRECTORY_NAME, directoryName);
     }
 
     public EDIPartyName getEdiPartyName() {
-        return getChoiceValueAs(EDI_PARTY_NAME, EDIPartyName.class);
+        return getChoiceValueAs(GeneralNameField.EDI_PARTY_NAME, EDIPartyName.class);
     }
 
     public void setEdiPartyName(EDIPartyName ediPartyName) {
-        setChoiceValue(EDI_PARTY_NAME, ediPartyName);
+        setChoiceValue(GeneralNameField.EDI_PARTY_NAME, ediPartyName);
     }
 
     public Asn1IA5String getUniformResourceIdentifier() {
-        return getChoiceValueAs(UNIFORM_RESOURCE_IDENTIFIER, Asn1IA5String.class);
+        return getChoiceValueAs(GeneralNameField.UNIFORM_RESOURCE_IDENTIFIER, Asn1IA5String.class);
     }
 
     public void setUniformResourceIdentifier(Asn1IA5String uniformResourceIdentifier) {
-        setChoiceValue(UNIFORM_RESOURCE_IDENTIFIER, uniformResourceIdentifier);
+        setChoiceValue(GeneralNameField.UNIFORM_RESOURCE_IDENTIFIER, uniformResourceIdentifier);
     }
 
     public byte[] getIPAddress() {
-        return getChoiceValueAsOctets(IP_ADDRESS);
+        return getChoiceValueAsOctets(GeneralNameField.IP_ADDRESS);
     }
 
     public void setIpAddress(byte[] ipAddress) {
-        setChoiceValueAsOctets(IP_ADDRESS, ipAddress);
+        setChoiceValueAsOctets(GeneralNameField.IP_ADDRESS, ipAddress);
     }
 
     public Asn1ObjectIdentifier getRegisteredID() {
-        return getChoiceValueAs(REGISTERED_ID, Asn1ObjectIdentifier.class);
+        return getChoiceValueAs(GeneralNameField.REGISTERED_ID, Asn1ObjectIdentifier.class);
     }
 
     public void setRegisteredID(Asn1ObjectIdentifier registeredID) {
-        setChoiceValue(REGISTERED_ID, registeredID);
+        setChoiceValue(GeneralNameField.REGISTERED_ID, registeredID);
     }
 }

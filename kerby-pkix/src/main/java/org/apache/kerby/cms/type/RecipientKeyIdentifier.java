@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x509.type.SubjectKeyIdentifier;
 
-import static org.apache.kerby.cms.type.RecipientKeyIdentifier.MyEnum.*;
-
 /**
  * RecipientKeyIdentifier ::= SEQUENCE {
  *   subjectKeyIdentifier SubjectKeyIdentifier,
@@ -34,7 +32,7 @@ import static org.apache.kerby.cms.type.RecipientKeyIdentifier.MyEnum.*;
  *   other OtherKeyAttribute OPTIONAL }
  */
 public class RecipientKeyIdentifier extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum RecipientKeyIdentifierField implements EnumType {
         SUBJECT_KEY_IDENTIFIER,
         DATE,
         OTHER;
@@ -51,9 +49,9 @@ public class RecipientKeyIdentifier extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(SUBJECT_KEY_IDENTIFIER, SubjectKeyIdentifier.class),
-            new Asn1FieldInfo(DATE, Asn1GeneralizedTime.class),
-            new Asn1FieldInfo(OTHER, OtherKeyAttribute.class)
+            new Asn1FieldInfo(RecipientKeyIdentifierField.SUBJECT_KEY_IDENTIFIER, SubjectKeyIdentifier.class),
+            new Asn1FieldInfo(RecipientKeyIdentifierField.DATE, Asn1GeneralizedTime.class),
+            new Asn1FieldInfo(RecipientKeyIdentifierField.OTHER, OtherKeyAttribute.class)
     };
 
     public RecipientKeyIdentifier() {
@@ -61,26 +59,26 @@ public class RecipientKeyIdentifier extends Asn1SequenceType {
     }
 
     public SubjectKeyIdentifier getSubjectKeyIdentifier() {
-        return getFieldAs(SUBJECT_KEY_IDENTIFIER, SubjectKeyIdentifier.class);
+        return getFieldAs(RecipientKeyIdentifierField.SUBJECT_KEY_IDENTIFIER, SubjectKeyIdentifier.class);
     }
 
     public void setKeyIdentifier(SubjectKeyIdentifier subjectKeyIdentifier) {
-        setFieldAs(SUBJECT_KEY_IDENTIFIER, subjectKeyIdentifier);
+        setFieldAs(RecipientKeyIdentifierField.SUBJECT_KEY_IDENTIFIER, subjectKeyIdentifier);
     }
 
     public Asn1GeneralizedTime getDate() {
-        return getFieldAs(DATE, Asn1GeneralizedTime.class);
+        return getFieldAs(RecipientKeyIdentifierField.DATE, Asn1GeneralizedTime.class);
     }
 
     public void setDate(Asn1GeneralizedTime date) {
-        setFieldAs(DATE, date);
+        setFieldAs(RecipientKeyIdentifierField.DATE, date);
     }
 
     public OtherKeyAttribute getOther() {
-        return getFieldAs(OTHER, OtherKeyAttribute.class);
+        return getFieldAs(RecipientKeyIdentifierField.OTHER, OtherKeyAttribute.class);
     }
 
     public void setOther(OtherKeyAttribute other) {
-        setFieldAs(OTHER, other);
+        setFieldAs(RecipientKeyIdentifierField.OTHER, other);
     }
 }

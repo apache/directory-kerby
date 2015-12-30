@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.PasswordRecipientInfo.MyEnum.*;
-
 /**
  * PasswordRecipientInfo ::= SEQUENCE {
  *   version CMSVersion,   -- always set to 0
@@ -34,7 +32,7 @@ import static org.apache.kerby.cms.type.PasswordRecipientInfo.MyEnum.*;
  *   encryptedKey EncryptedKey }
  */
 public class PasswordRecipientInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PwdRInfoField implements EnumType {
         VERSION,
         KEY_DERIVATION_ALGORIGHM,
         KEY_ENCRYPTION_ALGORITHMS,
@@ -52,10 +50,10 @@ public class PasswordRecipientInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(VERSION, CmsVersion.class),
-            new ExplicitField(KEY_DERIVATION_ALGORIGHM, 0, KeyDerivationAlgorithmIdentifier.class),
-            new Asn1FieldInfo(KEY_ENCRYPTION_ALGORITHMS, KeyEncryptionAlgorithmIdentifier.class),
-            new Asn1FieldInfo(ENCRYPTED_KEY, EncryptedKey.class)
+            new Asn1FieldInfo(PwdRInfoField.VERSION, CmsVersion.class),
+            new ExplicitField(PwdRInfoField.KEY_DERIVATION_ALGORIGHM, 0, KeyDerivationAlgorithmIdentifier.class),
+            new Asn1FieldInfo(PwdRInfoField.KEY_ENCRYPTION_ALGORITHMS, KeyEncryptionAlgorithmIdentifier.class),
+            new Asn1FieldInfo(PwdRInfoField.ENCRYPTED_KEY, EncryptedKey.class)
     };
 
     public PasswordRecipientInfo() {
@@ -63,36 +61,36 @@ public class PasswordRecipientInfo extends Asn1SequenceType {
     }
 
     public CmsVersion getVersion() {
-        return getFieldAs(VERSION, CmsVersion.class);
+        return getFieldAs(PwdRInfoField.VERSION, CmsVersion.class);
     }
 
     public void setVersion(CmsVersion version) {
-        setFieldAs(VERSION, version);
+        setFieldAs(PwdRInfoField.VERSION, version);
     }
 
     public KeyDerivationAlgorithmIdentifier getKeyDerivationAlgorithmIdentifier() {
-        return getFieldAs(KEY_DERIVATION_ALGORIGHM, KeyDerivationAlgorithmIdentifier.class);
+        return getFieldAs(PwdRInfoField.KEY_DERIVATION_ALGORIGHM, KeyDerivationAlgorithmIdentifier.class);
     }
 
     public void setKeyDerivationAlgorithmIdentifier(KeyDerivationAlgorithmIdentifier
                                                             keyDerivationAlgorithmIdentifier) {
-        setFieldAs(KEY_DERIVATION_ALGORIGHM, keyDerivationAlgorithmIdentifier);
+        setFieldAs(PwdRInfoField.KEY_DERIVATION_ALGORIGHM, keyDerivationAlgorithmIdentifier);
     }
 
     public KeyEncryptionAlgorithmIdentifier getKeyEncryptionAlgorithmIdentifier() {
-        return getFieldAs(KEY_ENCRYPTION_ALGORITHMS, KeyEncryptionAlgorithmIdentifier.class);
+        return getFieldAs(PwdRInfoField.KEY_ENCRYPTION_ALGORITHMS, KeyEncryptionAlgorithmIdentifier.class);
     }
 
     public void setKeyEncryptionAlgorithmIdentifier(KeyEncryptionAlgorithmIdentifier
                                                             keyEncryptionAlgorithmIdentifier) {
-        setFieldAs(KEY_ENCRYPTION_ALGORITHMS, keyEncryptionAlgorithmIdentifier);
+        setFieldAs(PwdRInfoField.KEY_ENCRYPTION_ALGORITHMS, keyEncryptionAlgorithmIdentifier);
     }
 
     public EncryptedKey getEncryptedKey() {
-        return getFieldAs(ENCRYPTED_KEY, EncryptedKey.class);
+        return getFieldAs(PwdRInfoField.ENCRYPTED_KEY, EncryptedKey.class);
     }
 
     public void setEncryptedKey(EncryptedKey encryptedKey) {
-        setFieldAs(ENCRYPTED_KEY, encryptedKey);
+        setFieldAs(PwdRInfoField.ENCRYPTED_KEY, encryptedKey);
     }
 }

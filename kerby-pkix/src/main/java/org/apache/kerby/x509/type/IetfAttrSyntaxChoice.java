@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 
-import static org.apache.kerby.x509.type.IetfAttrSyntaxChoice.MyEnum.*;
-
 /**
  * Ref. RFC3281
  * <pre>
@@ -41,7 +39,7 @@ import static org.apache.kerby.x509.type.IetfAttrSyntaxChoice.MyEnum.*;
  * </pre>
  */
 public class IetfAttrSyntaxChoice extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum IetfAttrSyntaxChoiceField implements EnumType {
         OCTETS,
         OID,
         UTF8;
@@ -58,9 +56,9 @@ public class IetfAttrSyntaxChoice extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(OCTETS, Asn1OctetString.class),
-        new Asn1FieldInfo(OID, Asn1ObjectIdentifier.class),
-        new Asn1FieldInfo(UTF8, Asn1ObjectIdentifier.class)
+        new Asn1FieldInfo(IetfAttrSyntaxChoiceField.OCTETS, Asn1OctetString.class),
+        new Asn1FieldInfo(IetfAttrSyntaxChoiceField.OID, Asn1ObjectIdentifier.class),
+        new Asn1FieldInfo(IetfAttrSyntaxChoiceField.UTF8, Asn1ObjectIdentifier.class)
     };
 
     public IetfAttrSyntaxChoice() {
@@ -68,26 +66,26 @@ public class IetfAttrSyntaxChoice extends Asn1Choice {
     }
 
     public Asn1OctetString getOctets() {
-        return getChoiceValueAs(OCTETS, Asn1OctetString.class);
+        return getChoiceValueAs(IetfAttrSyntaxChoiceField.OCTETS, Asn1OctetString.class);
     }
 
     public void setOctets(Asn1OctetString octets) {
-        setChoiceValue(OCTETS, octets);
+        setChoiceValue(IetfAttrSyntaxChoiceField.OCTETS, octets);
     }
 
     public Asn1ObjectIdentifier getOid() {
-        return getChoiceValueAs(OID, Asn1ObjectIdentifier.class);
+        return getChoiceValueAs(IetfAttrSyntaxChoiceField.OID, Asn1ObjectIdentifier.class);
     }
 
     public void setOid(Asn1ObjectIdentifier oid) {
-        setChoiceValue(OID, oid);
+        setChoiceValue(IetfAttrSyntaxChoiceField.OID, oid);
     }
 
     public Asn1ObjectIdentifier getUtf8() {
-        return getChoiceValueAs(UTF8, Asn1ObjectIdentifier.class);
+        return getChoiceValueAs(IetfAttrSyntaxChoiceField.UTF8, Asn1ObjectIdentifier.class);
     }
 
     public void setUtf8(Asn1ObjectIdentifier utf8) {
-        setChoiceValue(UTF8, utf8);
+        setChoiceValue(IetfAttrSyntaxChoiceField.UTF8, utf8);
     }
 }

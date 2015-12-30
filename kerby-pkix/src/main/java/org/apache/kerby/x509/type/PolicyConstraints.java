@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.PolicyConstraints.MyEnum.*;
-
 /**
  * Ref. RFC 5280
  * <pre>
@@ -40,7 +38,7 @@ import static org.apache.kerby.x509.type.PolicyConstraints.MyEnum.*;
  * </pre>
  */
 public class PolicyConstraints extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PolicyConstraintsField implements EnumType {
         REQUIRE_EXPLICIT_POLICY,
         INHIBIT_POLICY_MAPPING;
 
@@ -56,8 +54,8 @@ public class PolicyConstraints extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(REQUIRE_EXPLICIT_POLICY, Asn1Integer.class),
-        new ExplicitField(INHIBIT_POLICY_MAPPING, Asn1Integer.class)
+        new ExplicitField(PolicyConstraintsField.REQUIRE_EXPLICIT_POLICY, Asn1Integer.class),
+        new ExplicitField(PolicyConstraintsField.INHIBIT_POLICY_MAPPING, Asn1Integer.class)
     };
 
     public PolicyConstraints() {
@@ -65,18 +63,18 @@ public class PolicyConstraints extends Asn1SequenceType {
     }
 
     public Asn1Integer getRequireExplicitPolicy() {
-        return getFieldAs(REQUIRE_EXPLICIT_POLICY, Asn1Integer.class);
+        return getFieldAs(PolicyConstraintsField.REQUIRE_EXPLICIT_POLICY, Asn1Integer.class);
     }
 
     public void setRequireExplicitPolicy(Asn1Integer requireExplicitPolicy) {
-        setFieldAs(REQUIRE_EXPLICIT_POLICY, requireExplicitPolicy);
+        setFieldAs(PolicyConstraintsField.REQUIRE_EXPLICIT_POLICY, requireExplicitPolicy);
     }
 
     public Asn1Integer getInhibitPolicyMapping() {
-        return getFieldAs(INHIBIT_POLICY_MAPPING, Asn1Integer.class);
+        return getFieldAs(PolicyConstraintsField.INHIBIT_POLICY_MAPPING, Asn1Integer.class);
     }
 
     public void setInhibitPolicyMapping(Asn1Integer inhibitPolicyMapping) {
-        setFieldAs(INHIBIT_POLICY_MAPPING, inhibitPolicyMapping);
+        setFieldAs(PolicyConstraintsField.INHIBIT_POLICY_MAPPING, inhibitPolicyMapping);
     }
 }

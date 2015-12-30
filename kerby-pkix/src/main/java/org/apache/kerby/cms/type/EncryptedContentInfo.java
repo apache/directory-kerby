@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.EncryptedContentInfo.MyEnum.*;
-
 /**
  * EncryptedContentInfo ::= SEQUENCE {
  *   contentType ContentType,
@@ -39,7 +37,7 @@ import static org.apache.kerby.cms.type.EncryptedContentInfo.MyEnum.*;
  * EncryptedContent ::= OCTET STRING
  */
 public class EncryptedContentInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum ECInfoField implements EnumType {
         CONTENT_TYPE,
         CONTENT_ENCRYPTION_ALGORITHM,
         ENCRYPTED_CONTENT;
@@ -56,9 +54,9 @@ public class EncryptedContentInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(CONTENT_TYPE, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(CONTENT_ENCRYPTION_ALGORITHM, ContentEncryptionAlgorithmIdentifier.class),
-            new ImplicitField(ENCRYPTED_CONTENT, 0, Asn1OctetString.class)
+            new Asn1FieldInfo(ECInfoField.CONTENT_TYPE, Asn1ObjectIdentifier.class),
+            new Asn1FieldInfo(ECInfoField.CONTENT_ENCRYPTION_ALGORITHM, ContentEncryptionAlgorithmIdentifier.class),
+            new ImplicitField(ECInfoField.ENCRYPTED_CONTENT, 0, Asn1OctetString.class)
     };
 
     public EncryptedContentInfo() {
@@ -66,27 +64,27 @@ public class EncryptedContentInfo extends Asn1SequenceType {
     }
 
     public Asn1ObjectIdentifier getContentType() {
-        return getFieldAs(CONTENT_TYPE, Asn1ObjectIdentifier.class);
+        return getFieldAs(ECInfoField.CONTENT_TYPE, Asn1ObjectIdentifier.class);
     }
 
     public void setContentType(Asn1ObjectIdentifier contentType) {
-        setFieldAs(CONTENT_TYPE, contentType);
+        setFieldAs(ECInfoField.CONTENT_TYPE, contentType);
     }
 
     public ContentEncryptionAlgorithmIdentifier getContentEncryptionAlgorithmIdentifier() {
-        return getFieldAs(CONTENT_ENCRYPTION_ALGORITHM, ContentEncryptionAlgorithmIdentifier.class);
+        return getFieldAs(ECInfoField.CONTENT_ENCRYPTION_ALGORITHM, ContentEncryptionAlgorithmIdentifier.class);
     }
 
     public void setContentEncryptionAlgorithmIdentifier(ContentEncryptionAlgorithmIdentifier
                                                                 contentEncryptionAlgorithmIdentifier) {
-        setFieldAs(CONTENT_ENCRYPTION_ALGORITHM, contentEncryptionAlgorithmIdentifier);
+        setFieldAs(ECInfoField.CONTENT_ENCRYPTION_ALGORITHM, contentEncryptionAlgorithmIdentifier);
     }
 
     public Asn1OctetString getEncryptedContent() {
-        return getFieldAs(ENCRYPTED_CONTENT, Asn1OctetString.class);
+        return getFieldAs(ECInfoField.ENCRYPTED_CONTENT, Asn1OctetString.class);
     }
 
     public void setEncryptedContent(Asn1OctetString encryptedContent) {
-        setFieldAs(ENCRYPTED_CONTENT, encryptedContent);
+        setFieldAs(ECInfoField.ENCRYPTED_CONTENT, encryptedContent);
     }
 }

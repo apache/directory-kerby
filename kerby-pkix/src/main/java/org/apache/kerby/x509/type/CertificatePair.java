@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.CertificatePair.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -37,7 +35,7 @@ import static org.apache.kerby.x509.type.CertificatePair.MyEnum.*;
  * </pre>
  */
 public class CertificatePair extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum CertificatePairField implements EnumType {
         FORWARD,
         REVERSE;
 
@@ -53,8 +51,8 @@ public class CertificatePair extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(FORWARD, Certificate.class),
-        new ExplicitField(REVERSE, Certificate.class)
+        new ExplicitField(CertificatePairField.FORWARD, Certificate.class),
+        new ExplicitField(CertificatePairField.REVERSE, Certificate.class)
     };
 
     public CertificatePair() {
@@ -62,18 +60,18 @@ public class CertificatePair extends Asn1SequenceType {
     }
 
     public Certificate getForward() {
-        return getFieldAs(FORWARD, Certificate.class);
+        return getFieldAs(CertificatePairField.FORWARD, Certificate.class);
     }
 
     public void setForward(Certificate forward) {
-        setFieldAs(FORWARD, forward);
+        setFieldAs(CertificatePairField.FORWARD, forward);
     }
 
     public Certificate getReverse() {
-        return getFieldAs(REVERSE, Certificate.class);
+        return getFieldAs(CertificatePairField.REVERSE, Certificate.class);
     }
 
     public void setReverse(Certificate reverse) {
-        setFieldAs(REVERSE, reverse);
+        setFieldAs(CertificatePairField.REVERSE, reverse);
     }
 }

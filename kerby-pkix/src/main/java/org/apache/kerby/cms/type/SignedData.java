@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.SignedData.MyEnum.*;
-
 /**
  * Ref. RFC 5652
  * <pre>
@@ -41,7 +39,7 @@ import static org.apache.kerby.cms.type.SignedData.MyEnum.*;
  *
  */
 public class SignedData extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum SignedDataField implements EnumType {
         CMS_VERSION,
         DIGEST_ALGORITHMS,
         ENCAP_CONTENT_INFO,
@@ -61,12 +59,12 @@ public class SignedData extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-        new Asn1FieldInfo(CMS_VERSION, CmsVersion.class),
-        new Asn1FieldInfo(DIGEST_ALGORITHMS, DigestAlgorithmIdentifiers.class),
-        new Asn1FieldInfo(ENCAP_CONTENT_INFO, EncapsulatedContentInfo.class),
-        new ImplicitField(CERTIFICATES, 0, CertificateSet.class),
-        new ImplicitField(CRLS, 1, RevocationInfoChoices.class),
-        new Asn1FieldInfo(SIGNER_INFOS, SignerInfos.class)
+        new Asn1FieldInfo(SignedDataField.CMS_VERSION, CmsVersion.class),
+        new Asn1FieldInfo(SignedDataField.DIGEST_ALGORITHMS, DigestAlgorithmIdentifiers.class),
+        new Asn1FieldInfo(SignedDataField.ENCAP_CONTENT_INFO, EncapsulatedContentInfo.class),
+        new ImplicitField(SignedDataField.CERTIFICATES, 0, CertificateSet.class),
+        new ImplicitField(SignedDataField.CRLS, 1, RevocationInfoChoices.class),
+        new Asn1FieldInfo(SignedDataField.SIGNER_INFOS, SignerInfos.class)
     };
 
     public SignedData() {
@@ -74,51 +72,51 @@ public class SignedData extends Asn1SequenceType {
     }
 
     public int getVersion() {
-        return getFieldAsInteger(CMS_VERSION);
+        return getFieldAsInteger(SignedDataField.CMS_VERSION);
     }
 
     public void setVersion(int version) {
-        setFieldAsInt(CMS_VERSION, version);
+        setFieldAsInt(SignedDataField.CMS_VERSION, version);
     }
 
     public DigestAlgorithmIdentifiers getDigestAlgorithms() {
-        return getFieldAs(DIGEST_ALGORITHMS, DigestAlgorithmIdentifiers.class);
+        return getFieldAs(SignedDataField.DIGEST_ALGORITHMS, DigestAlgorithmIdentifiers.class);
     }
 
     public void setDigestAlgorithms(DigestAlgorithmIdentifiers digestAlgorithms) {
-        setFieldAs(DIGEST_ALGORITHMS, digestAlgorithms);
+        setFieldAs(SignedDataField.DIGEST_ALGORITHMS, digestAlgorithms);
     }
 
     public EncapsulatedContentInfo getEncapContentInfo() {
-        return getFieldAs(ENCAP_CONTENT_INFO, EncapsulatedContentInfo.class);
+        return getFieldAs(SignedDataField.ENCAP_CONTENT_INFO, EncapsulatedContentInfo.class);
     }
 
     public void setEncapContentInfo(EncapsulatedContentInfo contentInfo) {
-        setFieldAs(ENCAP_CONTENT_INFO, contentInfo);
+        setFieldAs(SignedDataField.ENCAP_CONTENT_INFO, contentInfo);
     }
 
     public CertificateSet getCertificates() {
-        return getFieldAs(CERTIFICATES, CertificateSet.class);
+        return getFieldAs(SignedDataField.CERTIFICATES, CertificateSet.class);
     }
 
     public void setCertificates(CertificateSet certificates) {
-        setFieldAs(CERTIFICATES, certificates);
+        setFieldAs(SignedDataField.CERTIFICATES, certificates);
     }
 
     public RevocationInfoChoices getCrls() {
-        return getFieldAs(CRLS, RevocationInfoChoices.class);
+        return getFieldAs(SignedDataField.CRLS, RevocationInfoChoices.class);
     }
 
     public void setCrls(RevocationInfoChoices crls) {
-        setFieldAs(CRLS, crls);
+        setFieldAs(SignedDataField.CRLS, crls);
     }
 
     public SignerInfos getSignerInfos() {
-        return getFieldAs(SIGNER_INFOS, SignerInfos.class);
+        return getFieldAs(SignedDataField.SIGNER_INFOS, SignerInfos.class);
     }
 
     public void setSignerInfos(SignerInfos signerInfos) {
-        setFieldAs(SIGNER_INFOS, signerInfos);
+        setFieldAs(SignedDataField.SIGNER_INFOS, signerInfos);
     }
 
     /**

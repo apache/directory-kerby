@@ -27,8 +27,6 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.cms.type.ContentInfo.MyEnum.*;
-
 /**
  * Ref. RFC 5652
  *
@@ -42,7 +40,7 @@ import static org.apache.kerby.cms.type.ContentInfo.MyEnum.*;
  * </pre>
  */
 public class ContentInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum ContentInfoField implements EnumType {
         CONTENT_TYPE,
         CONTENT;
 
@@ -58,8 +56,8 @@ public class ContentInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-        new Asn1FieldInfo(CONTENT_TYPE, Asn1ObjectIdentifier.class),
-        new ExplicitField(CONTENT, 0, Asn1Any.class),
+        new Asn1FieldInfo(ContentInfoField.CONTENT_TYPE, Asn1ObjectIdentifier.class),
+        new ExplicitField(ContentInfoField.CONTENT, 0, Asn1Any.class),
     };
 
     public ContentInfo() {
@@ -67,18 +65,18 @@ public class ContentInfo extends Asn1SequenceType {
     }
 
     public String getContentType() {
-        return getFieldAsObjId(CONTENT_TYPE);
+        return getFieldAsObjId(ContentInfoField.CONTENT_TYPE);
     }
 
     public void setContentType(String contentType) {
-        setFieldAsObjId(CONTENT_TYPE, contentType);
+        setFieldAsObjId(ContentInfoField.CONTENT_TYPE, contentType);
     }
 
     public <T extends Asn1Type> T getContentAs(Class<T> t) {
-        return getFieldAsAny(CONTENT, t);
+        return getFieldAsAny(ContentInfoField.CONTENT, t);
     }
 
     public void setContent(Asn1Type content) {
-        setFieldAsAny(CONTENT, content);
+        setFieldAsAny(ContentInfoField.CONTENT, content);
     }
 }

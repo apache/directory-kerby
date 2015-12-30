@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.type.Asn1Any;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.x509.type.PolicyQualifierInfo.MyEnum.*;
-
 /**
  * 
  * <pre>
@@ -39,7 +37,7 @@ import static org.apache.kerby.x509.type.PolicyQualifierInfo.MyEnum.*;
  * </pre>
  */
 public class PolicyQualifierInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PolicyQualifierInfoField implements EnumType {
         POLICY_QUALIFIER_ID,
         QUALIFIER;
 
@@ -55,8 +53,8 @@ public class PolicyQualifierInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(POLICY_QUALIFIER_ID, PolicyQualifierId.class),
-        new Asn1FieldInfo(QUALIFIER, Asn1Any.class)
+        new Asn1FieldInfo(PolicyQualifierInfoField.POLICY_QUALIFIER_ID, PolicyQualifierId.class),
+        new Asn1FieldInfo(PolicyQualifierInfoField.QUALIFIER, Asn1Any.class)
     };
 
     public PolicyQualifierInfo() {
@@ -64,18 +62,18 @@ public class PolicyQualifierInfo extends Asn1SequenceType {
     }
 
     public PolicyQualifierId getPolicyQualifierId() {
-        return getFieldAs(POLICY_QUALIFIER_ID, PolicyQualifierId.class);
+        return getFieldAs(PolicyQualifierInfoField.POLICY_QUALIFIER_ID, PolicyQualifierId.class);
     }
 
     public void setPolicyQualifierId(PolicyQualifierId policyQualifierId) {
-        setFieldAs(POLICY_QUALIFIER_ID, policyQualifierId);
+        setFieldAs(PolicyQualifierInfoField.POLICY_QUALIFIER_ID, policyQualifierId);
     }
 
     public <T extends Asn1Type> T getQualifierAs(Class<T> t) {
-        return getFieldAsAny(QUALIFIER, t);
+        return getFieldAsAny(PolicyQualifierInfoField.QUALIFIER, t);
     }
 
     public void setQualifier(Asn1Type qualifier) {
-        setFieldAsAny(QUALIFIER, qualifier);
+        setFieldAsAny(PolicyQualifierInfoField.QUALIFIER, qualifier);
     }
 }

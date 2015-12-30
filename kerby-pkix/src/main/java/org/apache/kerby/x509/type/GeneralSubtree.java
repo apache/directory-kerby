@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.GeneralSubtree.MyEnum.*;
-
 /**
  *
  * Ref. RFC 3280.
@@ -40,7 +38,7 @@ import static org.apache.kerby.x509.type.GeneralSubtree.MyEnum.*;
  * 
  */
 public class GeneralSubtree extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum GeneralSubtreeField implements EnumType {
         BASE,
         MINIMUM,
         MAXMUM;
@@ -57,9 +55,9 @@ public class GeneralSubtree extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(BASE, GeneralName.class),
-        new ExplicitField(MINIMUM, 0, Asn1Integer.class),
-        new ExplicitField(MAXMUM, 1, Asn1Integer.class)
+        new Asn1FieldInfo(GeneralSubtreeField.BASE, GeneralName.class),
+        new ExplicitField(GeneralSubtreeField.MINIMUM, 0, Asn1Integer.class),
+        new ExplicitField(GeneralSubtreeField.MAXMUM, 1, Asn1Integer.class)
     };
 
     public GeneralSubtree() {
@@ -67,26 +65,26 @@ public class GeneralSubtree extends Asn1SequenceType {
     }
 
     public GeneralName getBase() {
-        return getFieldAs(BASE, GeneralName.class);
+        return getFieldAs(GeneralSubtreeField.BASE, GeneralName.class);
     }
 
     public void setBase(GeneralName base) {
-        setFieldAs(BASE, base);
+        setFieldAs(GeneralSubtreeField.BASE, base);
     }
 
     public int getMinimum() {
-        return getFieldAsInteger(MINIMUM);
+        return getFieldAsInteger(GeneralSubtreeField.MINIMUM);
     }
 
     public void setMinimum(int minimum) {
-        setFieldAsInt(MINIMUM, minimum);
+        setFieldAsInt(GeneralSubtreeField.MINIMUM, minimum);
     }
 
     public int getMaximum() {
-        return getFieldAsInteger(MAXMUM);
+        return getFieldAsInteger(GeneralSubtreeField.MAXMUM);
     }
 
     public void setMaxmum(int maxmum) {
-        setFieldAsInt(MAXMUM, maxmum);
+        setFieldAsInt(GeneralSubtreeField.MAXMUM, maxmum);
     }
 }

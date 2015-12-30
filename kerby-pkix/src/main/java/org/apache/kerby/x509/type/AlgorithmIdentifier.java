@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.x509.type.AlgorithmIdentifier.MyEnum.*;
-
 /**
  * AlgorithmIdentifier  ::=  SEQUENCE  {
  *    algorithm               OBJECT IDENTIFIER,
@@ -36,7 +34,7 @@ import static org.apache.kerby.x509.type.AlgorithmIdentifier.MyEnum.*;
  */
 
 public class AlgorithmIdentifier extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum AlgorithmIdentifierField implements EnumType {
         ALGORITHM,
         PARAMETERS;
 
@@ -52,8 +50,8 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new Asn1FieldInfo(ALGORITHM, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(PARAMETERS, Asn1Any.class)
+            new Asn1FieldInfo(AlgorithmIdentifierField.ALGORITHM, Asn1ObjectIdentifier.class),
+            new Asn1FieldInfo(AlgorithmIdentifierField.PARAMETERS, Asn1Any.class)
     };
 
     public AlgorithmIdentifier() {
@@ -61,18 +59,18 @@ public class AlgorithmIdentifier extends Asn1SequenceType {
     }
 
     public String getAlgorithm() {
-        return getFieldAsObjId(ALGORITHM);
+        return getFieldAsObjId(AlgorithmIdentifierField.ALGORITHM);
     }
 
     public void setAlgorithm(String algorithm) {
-        setFieldAsObjId(ALGORITHM, algorithm);
+        setFieldAsObjId(AlgorithmIdentifierField.ALGORITHM, algorithm);
     }
 
     public <T extends Asn1Type> T getParametersAs(Class<T> t) {
-        return getFieldAsAny(PARAMETERS, t);
+        return getFieldAsAny(AlgorithmIdentifierField.PARAMETERS, t);
     }
 
     public void setParameters(Asn1Type parameters) {
-        setFieldAsAny(PARAMETERS, parameters);
+        setFieldAsAny(AlgorithmIdentifierField.PARAMETERS, parameters);
     }
 }

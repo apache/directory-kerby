@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.SubjectKeyIdentifier;
 
-import static org.apache.kerby.cms.type.SignerIdentifier.MyEnum.*;
-
 /**
  * Ref. RFC 5652
  * <pre>
@@ -39,7 +37,7 @@ import static org.apache.kerby.cms.type.SignerIdentifier.MyEnum.*;
  * </pre>
  */
 public class SignerIdentifier extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum SignerIdentifierField implements EnumType {
         ISSUER_AND_SERIAL_NUMBER,
         SUBJECT_KEY_IDENTIFIER;
 
@@ -55,8 +53,8 @@ public class SignerIdentifier extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-        new Asn1FieldInfo(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class),
-        new ImplicitField(SUBJECT_KEY_IDENTIFIER, 0, SubjectKeyIdentifier.class)
+        new Asn1FieldInfo(SignerIdentifierField.ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class),
+        new ImplicitField(SignerIdentifierField.SUBJECT_KEY_IDENTIFIER, 0, SubjectKeyIdentifier.class)
     };
 
     public SignerIdentifier() {
@@ -64,18 +62,18 @@ public class SignerIdentifier extends Asn1Choice {
     }
 
     public IssuerAndSerialNumber getIssuerAndSerialNumber() {
-        return getChoiceValueAs(ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class);
+        return getChoiceValueAs(SignerIdentifierField.ISSUER_AND_SERIAL_NUMBER, IssuerAndSerialNumber.class);
     }
 
     public void setIssuerAndSerialNumber(IssuerAndSerialNumber issuerAndSerialNumber) {
-        setChoiceValue(ISSUER_AND_SERIAL_NUMBER, issuerAndSerialNumber);
+        setChoiceValue(SignerIdentifierField.ISSUER_AND_SERIAL_NUMBER, issuerAndSerialNumber);
     }
 
     public SubjectKeyIdentifier getSubjectKeyIdentifier() {
-        return getChoiceValueAs(SUBJECT_KEY_IDENTIFIER, SubjectKeyIdentifier.class);
+        return getChoiceValueAs(SignerIdentifierField.SUBJECT_KEY_IDENTIFIER, SubjectKeyIdentifier.class);
     }
 
     public void setSubjectKeyIdentifier(SubjectKeyIdentifier subjectKeyIdentifier) {
-        setChoiceValue(SUBJECT_KEY_IDENTIFIER, subjectKeyIdentifier);
+        setChoiceValue(SignerIdentifierField.SUBJECT_KEY_IDENTIFIER, subjectKeyIdentifier);
     }
 }

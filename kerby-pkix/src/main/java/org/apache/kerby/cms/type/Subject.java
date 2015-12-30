@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.GeneralNames;
 import org.apache.kerby.x509.type.IssuerSerial;
 
-import static org.apache.kerby.cms.type.Subject.MyEnum.*;
-
 /**
  * subject CHOICE {
  *   baseCertificateID [0] IssuerSerial,
@@ -38,7 +36,7 @@ import static org.apache.kerby.cms.type.Subject.MyEnum.*;
  *
  */
 public class Subject extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum SubjectField implements EnumType {
         BASE_CERTIFICATE_ID,
         SUBJECT_NAME;
 
@@ -54,8 +52,8 @@ public class Subject extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new ImplicitField(BASE_CERTIFICATE_ID, IssuerSerial.class),
-            new ImplicitField(SUBJECT_NAME, GeneralNames.class)
+            new ImplicitField(SubjectField.BASE_CERTIFICATE_ID, IssuerSerial.class),
+            new ImplicitField(SubjectField.SUBJECT_NAME, GeneralNames.class)
     };
 
     public Subject() {
@@ -63,18 +61,18 @@ public class Subject extends Asn1Choice {
     }
 
     public IssuerSerial getBaseCertificateID() {
-        return getChoiceValueAs(BASE_CERTIFICATE_ID, IssuerSerial.class);
+        return getChoiceValueAs(SubjectField.BASE_CERTIFICATE_ID, IssuerSerial.class);
     }
 
     public void setBaseCertificateID(IssuerSerial baseCertificateID) {
-        setChoiceValue(BASE_CERTIFICATE_ID, baseCertificateID);
+        setChoiceValue(SubjectField.BASE_CERTIFICATE_ID, baseCertificateID);
     }
 
     public GeneralNames getSubjectName() {
-        return getChoiceValueAs(SUBJECT_NAME, GeneralNames.class);
+        return getChoiceValueAs(SubjectField.SUBJECT_NAME, GeneralNames.class);
     }
 
     public void setSubjectName(GeneralNames subjectName) {
-        setChoiceValue(SUBJECT_NAME, subjectName);
+        setChoiceValue(SubjectField.SUBJECT_NAME, subjectName);
     }
 }

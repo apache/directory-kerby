@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ImplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x509.type.CertificateList;
 
-import static org.apache.kerby.cms.type.RevocationInfoChoice.MyEnum.*;
-
 /**
  * RevocationInfoChoice ::= CHOICE {
  *   crl CertificateList,
@@ -34,7 +32,7 @@ import static org.apache.kerby.cms.type.RevocationInfoChoice.MyEnum.*;
  * }
  */
 public class RevocationInfoChoice extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum RevocationInfoChoiceField implements EnumType {
         CRL,
         OTHER;
 
@@ -50,8 +48,8 @@ public class RevocationInfoChoice extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(CRL, CertificateList.class),
-            new ImplicitField(OTHER, 1, OtherRevocationInfoFormat.class)
+            new Asn1FieldInfo(RevocationInfoChoiceField.CRL, CertificateList.class),
+            new ImplicitField(RevocationInfoChoiceField.OTHER, OtherRevocationInfoFormat.class)
     };
 
     public RevocationInfoChoice() {
@@ -59,18 +57,18 @@ public class RevocationInfoChoice extends Asn1Choice {
     }
 
     public CertificateList getCRL() {
-        return getChoiceValueAs(CRL, CertificateList.class);
+        return getChoiceValueAs(RevocationInfoChoiceField.CRL, CertificateList.class);
     }
 
     public void setCRL(CertificateList crl) {
-        setChoiceValue(CRL, crl);
+        setChoiceValue(RevocationInfoChoiceField.CRL, crl);
     }
 
     public OtherRevocationInfoFormat getOther() {
-        return getChoiceValueAs(OTHER, OtherRevocationInfoFormat.class);
+        return getChoiceValueAs(RevocationInfoChoiceField.OTHER, OtherRevocationInfoFormat.class);
     }
 
     public void setOther(OtherRevocationInfoFormat other) {
-        setChoiceValue(OTHER, other);
+        setChoiceValue(RevocationInfoChoiceField.OTHER, other);
     }
 }

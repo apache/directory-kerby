@@ -27,8 +27,6 @@ import org.apache.kerby.asn1.type.Asn1UtcTime;
 
 import java.util.Date;
 
-import static org.apache.kerby.x509.type.Time.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -39,7 +37,7 @@ import static org.apache.kerby.x509.type.Time.MyEnum.*;
  * </pre>
  */
 public class Time extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum TimeField implements EnumType {
         UTC_TIME,
         GENERAL_TIME;
 
@@ -55,8 +53,8 @@ public class Time extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(UTC_TIME, Asn1UtcTime.class),
-        new Asn1FieldInfo(GENERAL_TIME, Asn1GeneralizedTime.class)
+        new Asn1FieldInfo(TimeField.UTC_TIME, Asn1UtcTime.class),
+        new Asn1FieldInfo(TimeField.GENERAL_TIME, Asn1GeneralizedTime.class)
     };
 
     public Time() {
@@ -64,18 +62,18 @@ public class Time extends Asn1Choice {
     }
 
     public Date getUtcTime() {
-        return getChoiceValueAs(UTC_TIME, Asn1UtcTime.class).getValue();
+        return getChoiceValueAs(TimeField.UTC_TIME, Asn1UtcTime.class).getValue();
     }
 
     public void setUtcTime(Asn1UtcTime utcTime) {
-        setChoiceValue(UTC_TIME, utcTime);
+        setChoiceValue(TimeField.UTC_TIME, utcTime);
     }
 
     public Date generalizedTime() {
-        return getChoiceValueAs(GENERAL_TIME, Asn1GeneralizedTime.class).getValue();
+        return getChoiceValueAs(TimeField.GENERAL_TIME, Asn1GeneralizedTime.class).getValue();
     }
 
     public void setGeneralTime(Asn1GeneralizedTime generalTime) {
-        setChoiceValue(GENERAL_TIME, generalTime);
+        setChoiceValue(TimeField.GENERAL_TIME, generalTime);
     }
 }

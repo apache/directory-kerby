@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.IetfAttrSyntax.MyEnum.*;
-
 /**
  * Ref. RFC3281
  * <pre>
@@ -42,7 +40,7 @@ import static org.apache.kerby.x509.type.IetfAttrSyntax.MyEnum.*;
  * </pre>
  */
 public class IetfAttrSyntax extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum IetfAttrSyntaxField implements EnumType {
         POLICY_AUTHORITY,
         VALUES;
 
@@ -58,8 +56,8 @@ public class IetfAttrSyntax extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(POLICY_AUTHORITY, GeneralNames.class),
-        new Asn1FieldInfo(VALUES, IetfAttrSyntaxChoices.class)
+        new ExplicitField(IetfAttrSyntaxField.POLICY_AUTHORITY, GeneralNames.class),
+        new Asn1FieldInfo(IetfAttrSyntaxField.VALUES, IetfAttrSyntaxChoices.class)
     };
 
     public IetfAttrSyntax() {
@@ -67,18 +65,18 @@ public class IetfAttrSyntax extends Asn1SequenceType {
     }
 
     public GeneralNames getPolicyAuthority() {
-        return getFieldAs(POLICY_AUTHORITY, GeneralNames.class);
+        return getFieldAs(IetfAttrSyntaxField.POLICY_AUTHORITY, GeneralNames.class);
     }
 
     public void setPolicyAuthority(GeneralNames policyAuthority) {
-        setFieldAs(POLICY_AUTHORITY, policyAuthority);
+        setFieldAs(IetfAttrSyntaxField.POLICY_AUTHORITY, policyAuthority);
     }
 
     public IetfAttrSyntaxChoices getValues() {
-        return getFieldAs(VALUES, IetfAttrSyntaxChoices.class);
+        return getFieldAs(IetfAttrSyntaxField.VALUES, IetfAttrSyntaxChoices.class);
     }
 
     public void setValues(IetfAttrSyntaxChoices values) {
-        setFieldAs(VALUES, values);
+        setFieldAs(IetfAttrSyntaxField.VALUES, values);
     }
 }

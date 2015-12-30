@@ -19,8 +19,6 @@
  */
 package org.apache.kerby.cms.type;
 
-import static org.apache.kerby.cms.type.ContentInfo.MyEnum.*;
-
 /**
  * A ContentInfo that wraps SignedData.
  */
@@ -28,14 +26,14 @@ public class SignedContentInfo extends ContentInfo {
 
     public SignedContentInfo() {
         super();
-        setAnyFieldValueType(CONTENT, SignedData.class);
+        setAnyFieldValueType(ContentInfoField.CONTENT, SignedData.class);
     }
 
     public SignedData getSignedData() {
-        return getFieldAsAny(CONTENT, SignedData.class);
+        return getFieldAsAny(ContentInfoField.CONTENT, SignedData.class);
     }
 
     public void setSignedData(SignedData signedData) {
-        setFieldAsAny(CONTENT, signedData);
+        setFieldAsAny(ContentInfoField.CONTENT, signedData);
     }
 }

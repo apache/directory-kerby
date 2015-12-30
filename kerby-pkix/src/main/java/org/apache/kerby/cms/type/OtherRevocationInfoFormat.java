@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.asn1.type.Asn1Type;
 
-import static org.apache.kerby.cms.type.OtherRevocationInfoFormat.MyEnum.*;
-
 /**
  * OtherRevocationInfoFormat ::= SEQUENCE {
  *   otherRevInfoFormat OBJECT IDENTIFIER,
@@ -35,7 +33,7 @@ import static org.apache.kerby.cms.type.OtherRevocationInfoFormat.MyEnum.*;
  * }
  */
 public class OtherRevocationInfoFormat extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum OtherRevocationInfoFormatField implements EnumType {
         OTHER_REV_INFO_FORMAT,
         OTHER_REV_INFO;
 
@@ -51,8 +49,8 @@ public class OtherRevocationInfoFormat extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(OTHER_REV_INFO_FORMAT, Asn1ObjectIdentifier.class),
-            new Asn1FieldInfo(OTHER_REV_INFO, Asn1Any.class)
+            new Asn1FieldInfo(OtherRevocationInfoFormatField.OTHER_REV_INFO_FORMAT, Asn1ObjectIdentifier.class),
+            new Asn1FieldInfo(OtherRevocationInfoFormatField.OTHER_REV_INFO, Asn1Any.class)
     };
 
     public OtherRevocationInfoFormat() {
@@ -60,18 +58,18 @@ public class OtherRevocationInfoFormat extends Asn1SequenceType {
     }
 
     public Asn1ObjectIdentifier getOtherRevInfoFormat() {
-        return getFieldAs(OTHER_REV_INFO_FORMAT, Asn1ObjectIdentifier.class);
+        return getFieldAs(OtherRevocationInfoFormatField.OTHER_REV_INFO_FORMAT, Asn1ObjectIdentifier.class);
     }
 
     public void setOtherRevInfoFormat(Asn1ObjectIdentifier otherRevInfoFormat) {
-        setFieldAs(OTHER_REV_INFO_FORMAT, otherRevInfoFormat);
+        setFieldAs(OtherRevocationInfoFormatField.OTHER_REV_INFO_FORMAT, otherRevInfoFormat);
     }
 
     public <T extends Asn1Type> T getOtherRevInfoAs(Class<T> t) {
-        return getFieldAsAny(OTHER_REV_INFO, t);
+        return getFieldAsAny(OtherRevocationInfoFormatField.OTHER_REV_INFO, t);
     }
 
     public void setOtherRevInfo(Asn1Type otherRevInfo) {
-        setFieldAsAny(OTHER_REV_INFO, otherRevInfo);
+        setFieldAsAny(OtherRevocationInfoFormatField.OTHER_REV_INFO, otherRevInfo);
     }
 }

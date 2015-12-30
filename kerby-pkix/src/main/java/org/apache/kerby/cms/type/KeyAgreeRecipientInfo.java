@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.KeyAgreeRecipientInfo.MyEnum.*;
-
 /**
  * KeyAgreeRecipientInfo ::= SEQUENCE {
  *   version CMSVersion,  -- always set to 3
@@ -38,7 +36,7 @@ import static org.apache.kerby.cms.type.KeyAgreeRecipientInfo.MyEnum.*;
  * UserKeyingMaterial ::= OCTET STRING
  */
 public class KeyAgreeRecipientInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KARInfoField implements EnumType {
         VERSION,
         ORIGINATOR,
         UKM,
@@ -57,11 +55,11 @@ public class KeyAgreeRecipientInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(VERSION, CmsVersion.class),
-            new ExplicitField(ORIGINATOR, 0, OriginatorIdentifierOrKey.class),
-            new ExplicitField(UKM, 1, Asn1OctetString.class),
-            new Asn1FieldInfo(KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class),
-            new Asn1FieldInfo(RECIPIENT_ENCRYPTED_KEY, RecipientEncryptedKeys.class)
+            new Asn1FieldInfo(KARInfoField.VERSION, CmsVersion.class),
+            new ExplicitField(KARInfoField.ORIGINATOR, 0, OriginatorIdentifierOrKey.class),
+            new ExplicitField(KARInfoField.UKM, 1, Asn1OctetString.class),
+            new Asn1FieldInfo(KARInfoField.KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class),
+            new Asn1FieldInfo(KARInfoField.RECIPIENT_ENCRYPTED_KEY, RecipientEncryptedKeys.class)
     };
 
     public KeyAgreeRecipientInfo() {
@@ -69,43 +67,43 @@ public class KeyAgreeRecipientInfo extends Asn1SequenceType {
     }
 
     public CmsVersion getVersion() {
-        return getFieldAs(VERSION, CmsVersion.class);
+        return getFieldAs(KARInfoField.VERSION, CmsVersion.class);
     }
 
     public void setVersion(CmsVersion version) {
-        setFieldAs(VERSION, version);
+        setFieldAs(KARInfoField.VERSION, version);
     }
 
     public OriginatorIdentifierOrKey getOriginator() {
-        return getFieldAs(ORIGINATOR, OriginatorIdentifierOrKey.class);
+        return getFieldAs(KARInfoField.ORIGINATOR, OriginatorIdentifierOrKey.class);
     }
 
     public void setOriginator(OriginatorIdentifierOrKey originator) {
-        setFieldAs(ORIGINATOR, originator);
+        setFieldAs(KARInfoField.ORIGINATOR, originator);
     }
 
     public Asn1OctetString getUkm() {
-        return getFieldAs(UKM, Asn1OctetString.class);
+        return getFieldAs(KARInfoField.UKM, Asn1OctetString.class);
     }
 
     public void setUkm(Asn1OctetString ukm) {
-        setFieldAs(UKM, ukm);
+        setFieldAs(KARInfoField.UKM, ukm);
     }
 
     public KeyEncryptionAlgorithmIdentifier getKeyEncryptionAlgorithmIdentifier() {
-        return getFieldAs(KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class);
+        return getFieldAs(KARInfoField.KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class);
     }
 
     public void setkeyEncryptionAlgorithmIdentifier(KeyEncryptionAlgorithmIdentifier
                                                             keyEncryptionAlgorithmIdentifier) {
-        setFieldAs(KEY_ENCRYPTION_ALGORITHM, keyEncryptionAlgorithmIdentifier);
+        setFieldAs(KARInfoField.KEY_ENCRYPTION_ALGORITHM, keyEncryptionAlgorithmIdentifier);
     }
 
     public RecipientEncryptedKeys getRecipientEncryptedKeys() {
-        return getFieldAs(RECIPIENT_ENCRYPTED_KEY, RecipientEncryptedKeys.class);
+        return getFieldAs(KARInfoField.RECIPIENT_ENCRYPTED_KEY, RecipientEncryptedKeys.class);
     }
 
     public void setRecipientEncryptedKeys(RecipientEncryptedKeys recipientEncryptedKeys) {
-        setFieldAs(RECIPIENT_ENCRYPTED_KEY, recipientEncryptedKeys);
+        setFieldAs(KARInfoField.RECIPIENT_ENCRYPTED_KEY, recipientEncryptedKeys);
     }
 }

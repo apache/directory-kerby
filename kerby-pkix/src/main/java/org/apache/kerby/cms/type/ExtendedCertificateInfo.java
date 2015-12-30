@@ -23,8 +23,6 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.ExtendedCertificateInfo.MyEnum.*;
-
 /**
  * ExtendedCertificateInfo ::= SEQUENCE {
  *   version CMSVersion,
@@ -33,7 +31,7 @@ import static org.apache.kerby.cms.type.ExtendedCertificateInfo.MyEnum.*;
  * }
  */
 public class ExtendedCertificateInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum ExtendedCertificateInfoField implements EnumType {
         CMS_VERSION,
         CERTIFICATE,
         ATTRIBUTES;
@@ -50,9 +48,9 @@ public class ExtendedCertificateInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(CMS_VERSION, CmsVersion.class),
-            new Asn1FieldInfo(CERTIFICATE, SignatureAlgorithmIdentifier.class),
-            new Asn1FieldInfo(ATTRIBUTES, Signature.class)
+            new Asn1FieldInfo(ExtendedCertificateInfoField.CMS_VERSION, CmsVersion.class),
+            new Asn1FieldInfo(ExtendedCertificateInfoField.CERTIFICATE, SignatureAlgorithmIdentifier.class),
+            new Asn1FieldInfo(ExtendedCertificateInfoField.ATTRIBUTES, Signature.class)
     };
 
     public ExtendedCertificateInfo() {
@@ -60,27 +58,27 @@ public class ExtendedCertificateInfo extends Asn1SequenceType {
     }
 
     public CmsVersion getCmsVersion() {
-        return getFieldAs(CMS_VERSION, CmsVersion.class);
+        return getFieldAs(ExtendedCertificateInfoField.CMS_VERSION, CmsVersion.class);
     }
 
     public void setCmsVersion(CmsVersion version) {
-        setFieldAs(CMS_VERSION, version);
+        setFieldAs(ExtendedCertificateInfoField.CMS_VERSION, version);
     }
 
     public SignatureAlgorithmIdentifier getCertificate() {
-        return getFieldAs(CERTIFICATE, SignatureAlgorithmIdentifier.class);
+        return getFieldAs(ExtendedCertificateInfoField.CERTIFICATE, SignatureAlgorithmIdentifier.class);
     }
 
     public void setCertificate(SignatureAlgorithmIdentifier signatureAlgorithmIdentifier) {
-        setFieldAs(CERTIFICATE, signatureAlgorithmIdentifier);
+        setFieldAs(ExtendedCertificateInfoField.CERTIFICATE, signatureAlgorithmIdentifier);
     }
 
     public Signature getAttributes() {
-        return getFieldAs(ATTRIBUTES, Signature.class);
+        return getFieldAs(ExtendedCertificateInfoField.ATTRIBUTES, Signature.class);
     }
 
     public void setAttributes(Signature signature) {
-        setFieldAs(ATTRIBUTES, signature);
+        setFieldAs(ExtendedCertificateInfoField.ATTRIBUTES, signature);
     }
 
 }

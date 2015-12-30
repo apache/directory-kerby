@@ -23,8 +23,6 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.cms.type.KeyTransRecipientInfo.MyEnum.*;
-
 /**
  * KeyTransRecipientInfo ::= SEQUENCE {
  *   version CMSVersion,  -- always set to 0 or 2
@@ -33,7 +31,7 @@ import static org.apache.kerby.cms.type.KeyTransRecipientInfo.MyEnum.*;
  *   encryptedKey EncryptedKey }
  */
 public class KeyTransRecipientInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum KTRInfoField implements EnumType {
         VERSION,
         RID,
         KEY_ENCRYPTION_ALGORITHM,
@@ -51,10 +49,10 @@ public class KeyTransRecipientInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(VERSION, CmsVersion.class),
-            new Asn1FieldInfo(RID, RecipientIdentifier.class),
-            new Asn1FieldInfo(KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class),
-            new Asn1FieldInfo(ENCRYPTED_KEY, EncryptedKey.class)
+            new Asn1FieldInfo(KTRInfoField.VERSION, CmsVersion.class),
+            new Asn1FieldInfo(KTRInfoField.RID, RecipientIdentifier.class),
+            new Asn1FieldInfo(KTRInfoField.KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class),
+            new Asn1FieldInfo(KTRInfoField.ENCRYPTED_KEY, EncryptedKey.class)
     };
 
     public KeyTransRecipientInfo() {
@@ -62,35 +60,35 @@ public class KeyTransRecipientInfo extends Asn1SequenceType {
     }
 
     public CmsVersion getVersion() {
-        return getFieldAs(VERSION, CmsVersion.class);
+        return getFieldAs(KTRInfoField.VERSION, CmsVersion.class);
     }
 
     public void setVersion(CmsVersion version) {
-        setFieldAs(VERSION, version);
+        setFieldAs(KTRInfoField.VERSION, version);
     }
 
     public RecipientIdentifier getRid() {
-        return getFieldAs(RID, RecipientIdentifier.class);
+        return getFieldAs(KTRInfoField.RID, RecipientIdentifier.class);
     }
 
     public void setRid(RecipientIdentifier rid) {
-        setFieldAs(RID, rid);
+        setFieldAs(KTRInfoField.RID, rid);
     }
 
     public KeyEncryptionAlgorithmIdentifier getKeyEncryptionAlgorithmIdentifier() {
-        return getFieldAs(KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class);
+        return getFieldAs(KTRInfoField.KEY_ENCRYPTION_ALGORITHM, KeyEncryptionAlgorithmIdentifier.class);
     }
 
     public void setKeyEncryptionAlgorithmIdentifier(KeyEncryptionAlgorithmIdentifier
                                                             keyEncryptionAlgorithmIdentifier) {
-        setFieldAs(KEY_ENCRYPTION_ALGORITHM, keyEncryptionAlgorithmIdentifier);
+        setFieldAs(KTRInfoField.KEY_ENCRYPTION_ALGORITHM, keyEncryptionAlgorithmIdentifier);
     }
 
     public EncryptedKey getEncryptedKey() {
-        return getFieldAs(ENCRYPTED_KEY, EncryptedKey.class);
+        return getFieldAs(KTRInfoField.ENCRYPTED_KEY, EncryptedKey.class);
     }
 
     public void setEncryptedKey(EncryptedKey encryptedKey) {
-        setFieldAs(ENCRYPTED_KEY, encryptedKey);
+        setFieldAs(KTRInfoField.ENCRYPTED_KEY, encryptedKey);
     }
 }

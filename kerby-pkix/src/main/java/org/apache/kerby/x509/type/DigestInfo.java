@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.DigestInfo.MyEnum.*;
-
 /**
  * <pre>
  * DigestInfo::=SEQUENCE{
@@ -35,7 +33,7 @@ import static org.apache.kerby.x509.type.DigestInfo.MyEnum.*;
  * </pre>
  */
 public class DigestInfo extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum DigestInfoField implements EnumType {
         DIGEST_ALGORITHM,
         DIGEST;
 
@@ -51,8 +49,8 @@ public class DigestInfo extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(DIGEST_ALGORITHM, AlgorithmIdentifier.class),
-        new Asn1FieldInfo(DIGEST, Asn1OctetString.class)
+        new Asn1FieldInfo(DigestInfoField.DIGEST_ALGORITHM, AlgorithmIdentifier.class),
+        new Asn1FieldInfo(DigestInfoField.DIGEST, Asn1OctetString.class)
     };
 
     public DigestInfo() {
@@ -60,18 +58,18 @@ public class DigestInfo extends Asn1SequenceType {
     }
 
     public AlgorithmIdentifier getAlgorithmId() {
-        return getFieldAs(DIGEST_ALGORITHM, AlgorithmIdentifier.class);
+        return getFieldAs(DigestInfoField.DIGEST_ALGORITHM, AlgorithmIdentifier.class);
     }
 
     public void setDigestAlgorithm(AlgorithmIdentifier digestAlgorithm) {
-        setFieldAs(DIGEST_ALGORITHM, digestAlgorithm);
+        setFieldAs(DigestInfoField.DIGEST_ALGORITHM, digestAlgorithm);
     }
 
     public byte[] getDigest() {
-        return getFieldAsOctets(DIGEST);
+        return getFieldAsOctets(DigestInfoField.DIGEST);
     }
 
     public void setDigest(byte[] digest) {
-        setFieldAsOctets(DIGEST, digest);
+        setFieldAsOctets(DigestInfoField.DIGEST, digest);
     }
 }
