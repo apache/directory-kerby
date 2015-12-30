@@ -37,6 +37,8 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  *         address         [1] OCTET STRING
  * }
  * </pre>
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class HostAddress extends KrbSequenceType {
     /**

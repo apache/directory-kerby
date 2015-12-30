@@ -19,25 +19,35 @@
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
-import org.apache.kerby.kerberos.kerb.type.KrbSequenceOfType;
-
 import java.net.InetAddress;
 
+import org.apache.kerby.kerberos.kerb.type.KrbSequenceOfType;
+
 /**
- -- NOTE: HostAddresses is always used as an OPTIONAL field and
- -- should not be empty.
- HostAddresses   -- NOTE: subtly different from rfc1510,
- -- but has a value mapping and encodes the same
- ::= SEQUENCE OF HostAddress
+ * The HostAddress as defined in RFC 4120 :
+ * <pre>
+ * -- NOTE: HostAddresses is always used as an OPTIONAL field and
+ * -- should not be empty.
+ * HostAddresses   -- NOTE: subtly different from rfc1510,
+ *                 -- but has a value mapping and encodes the same
+ *         ::= SEQUENCE OF HostAddress
+ * </pre>
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class HostAddresses extends KrbSequenceOfType<HostAddress> {
-
+    /**
+     * Tells if the list of HostAddresses contain a given HostAddress
+     * @param address The {@link InetAddress} we are looking for
+     * @return <tt>true</tt> if it's present
+     */
     public boolean contains(InetAddress address) {
         for (HostAddress hostAddress : getElements()) {
             if (hostAddress.equalsWith(address)) {
                 return true;
             }
         }
+        
         return false;
     }
 }
