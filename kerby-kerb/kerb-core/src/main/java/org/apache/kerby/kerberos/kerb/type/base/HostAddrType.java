@@ -21,6 +21,11 @@ package org.apache.kerby.kerberos.kerb.type.base;
 
 import org.apache.kerby.asn1.EnumType;
 
+/**
+ * The various possible HostAddress types.
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ */
 public enum HostAddrType implements EnumType {
     /**
      * Constant for the "null" host address type.
@@ -74,23 +79,38 @@ public enum HostAddrType implements EnumType {
      */
     ADDRTYPE_INET6(24);
 
-
+    /** the inner value */
     private final int value;
 
+    /**
+     * Create a new enum instance
+     */
     private HostAddrType(int value) {
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getValue() {
         return value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name();
     }
 
+    /**
+     * Get the HostAddrType associated with a value.
+     * 
+     * @param value The integer value of the HostAddrType we are looking for
+     * @return The associated NameType, or NULL if not found or if value is null
+     */
     public static HostAddrType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {
