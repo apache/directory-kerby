@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.type;
 
-import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
-
 import java.util.Date;
+
+import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 
 /**
  * A specialization of the ASN.1 GeneralTime. The Kerberos time contains date and
@@ -67,6 +67,7 @@ public class KerberosTime extends Asn1GeneralizedTime {
     }
 
     /**
+     * Set the Kerberos time
      * @param time set time in milliseconds
      */
     public void setTime(long time) {
@@ -74,35 +75,50 @@ public class KerberosTime extends Asn1GeneralizedTime {
     }
 
     /**
-     * get the time in seconds
+     * Gets the time in seconds
+     * 
      * @return The time
      */
     public long getTimeInSeconds() {
         return getTime() / 1000;
     }
 
+    /**
+     * Compare the KerberosTime with another one, and return <tt>true</tt>
+     * if it's lesser than the provided one
+     * 
+     * @param time in milliseconds
+     * @return <tt>true</tt> if less
+     */
     public boolean lessThan(KerberosTime ktime) {
         return getValue().compareTo(ktime.getValue()) < 0;
     }
 
     /**
+     * Compare the KerberosTime with a time, and return <tt>true</tt>
+     * if it's lesser than the provided one
+     * 
      * @param time in milliseconds
-     * @return true if less
+     * @return <tt>true</tt> if less
      */
     public boolean lessThan(long time) {
         return getValue().getTime() < time;
     }
 
     /**
+     * Compare the KerberosTime with another one, and return <tt>true</tt>
+     * if it's greater than the provided one
+     * 
      * @param ktime compare with milliseconds
-     * @return true if greater
+     * @return <tt>true</tt> if greater
      */
     public boolean greaterThan(KerberosTime ktime) {
         return getValue().compareTo(ktime.getValue()) > 0;
     }
 
     /**
-     * time in milliseconds
+     * Check if the KerberosTime is within the provided clock skew
+     * 
      * @param clockSkew The clock skew
      * @return true if in clock skew
      */
@@ -112,49 +128,65 @@ public class KerberosTime extends Asn1GeneralizedTime {
         return delta < clockSkew;
     }
 
+    /**
+     * @return A copy of the KerbeorsTime
+     */
     public KerberosTime copy() {
         long time = getTime();
+        
         return new KerberosTime(time);
     }
 
     /**
-     * time in milliseconds.
+     * Create a KerberosTime based on a time in milliseconds.
+     * 
      * @param duration The duration
-     * @return The kerberos time
+     * @return The created kerberos time
      */
     public KerberosTime extend(long duration) {
         long result = getTime() + duration;
+        
         return new KerberosTime(result);
     }
 
     /**
-     * Return diff time in milliseconds
-     * @param other The kerberos time
-     * @return The diff time
+     * Return the difference between the currentKerberosTime and the provided one
+     * 
+     * @param kerberosTime The kerberos time
+     * @return The difference between the two KerberosTime
      */
-    public long diff(KerberosTime other) {
-        return getTime() - other.getTime();
+    public long diff(KerberosTime kerberosTime) {
+        return getTime() - kerberosTime.getTime();
     }
 
+    /**
+     * @return The current KerberosTime
+     */
     public static KerberosTime now() {
-        return new KerberosTime(new Date().getTime());
+        return new KerberosTime(System.currentTimeMillis());
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        KerberosTime time = (KerberosTime) o;
-        return this.getValue().equals(time.getValue());
-    }
-
+    /**
+     * @see Object#hashCode()
+     */
     @Override
     public int hashCode() {
         return getValue().hashCode();
+    }
+    
+    /**
+     * @see Object#equals()
+     */
+    @Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        }
+        
+        if (!(that instanceof KerberosTime)) {
+            return false;
+        }
+        
+        return this.getValue().equals(((KerberosTime) that).getValue());
     }
 }
