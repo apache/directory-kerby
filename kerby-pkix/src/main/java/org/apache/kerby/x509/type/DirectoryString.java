@@ -28,8 +28,6 @@ import org.apache.kerby.asn1.type.Asn1T61String;
 import org.apache.kerby.asn1.type.Asn1UniversalString;
 import org.apache.kerby.asn1.type.Asn1Utf8String;
 
-import static org.apache.kerby.x509.type.DirectoryString.MyEnum.*;
-
 /**
  * <pre>
  *  DirectoryString ::= CHOICE {
@@ -42,7 +40,7 @@ import static org.apache.kerby.x509.type.DirectoryString.MyEnum.*;
  * </pre>
  */
 public class DirectoryString extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum DirectoryStringField implements EnumType {
         TELETEX_STRING,
         PRINTABLE_STRING,
         UNIVERSAL_STRING,
@@ -61,11 +59,11 @@ public class DirectoryString extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new Asn1FieldInfo(TELETEX_STRING, Asn1T61String.class),
-            new Asn1FieldInfo(PRINTABLE_STRING, Asn1PrintableString.class),
-            new Asn1FieldInfo(UNIVERSAL_STRING, Asn1UniversalString.class),
-            new Asn1FieldInfo(UTF8_STRING, Asn1Utf8String.class),
-            new Asn1FieldInfo(BMP_STRING, Asn1BmpString.class)
+            new Asn1FieldInfo(DirectoryStringField.TELETEX_STRING, Asn1T61String.class),
+            new Asn1FieldInfo(DirectoryStringField.PRINTABLE_STRING, Asn1PrintableString.class),
+            new Asn1FieldInfo(DirectoryStringField.UNIVERSAL_STRING, Asn1UniversalString.class),
+            new Asn1FieldInfo(DirectoryStringField.UTF8_STRING, Asn1Utf8String.class),
+            new Asn1FieldInfo(DirectoryStringField.BMP_STRING, Asn1BmpString.class)
     };
 
     public DirectoryString() {
@@ -73,42 +71,42 @@ public class DirectoryString extends Asn1Choice {
     }
 
     public Asn1T61String getTeletexString() {
-        return getChoiceValueAs(TELETEX_STRING, Asn1T61String.class);
+        return getChoiceValueAs(DirectoryStringField.TELETEX_STRING, Asn1T61String.class);
     }
 
     public void setTeletexString(Asn1T61String teletexString) {
-        setChoiceValue(TELETEX_STRING, teletexString);
+        setChoiceValue(DirectoryStringField.TELETEX_STRING, teletexString);
     }
 
     public Asn1PrintableString getPrintableString() {
-        return getChoiceValueAs(PRINTABLE_STRING, Asn1PrintableString.class);
+        return getChoiceValueAs(DirectoryStringField.PRINTABLE_STRING, Asn1PrintableString.class);
     }
 
     public void setPrintableString(Asn1PrintableString printableString) {
-        setChoiceValue(PRINTABLE_STRING, printableString);
+        setChoiceValue(DirectoryStringField.PRINTABLE_STRING, printableString);
     }
 
     public Asn1UniversalString getUniversalString() {
-        return getChoiceValueAs(UNIVERSAL_STRING, Asn1UniversalString.class);
+        return getChoiceValueAs(DirectoryStringField.UNIVERSAL_STRING, Asn1UniversalString.class);
     }
 
     public void setUniversalString(Asn1UniversalString universalString) {
-        setChoiceValue(UNIVERSAL_STRING, universalString);
+        setChoiceValue(DirectoryStringField.UNIVERSAL_STRING, universalString);
     }
 
     public Asn1Utf8String getUtf8String() {
-        return getChoiceValueAs(UTF8_STRING, Asn1Utf8String.class);
+        return getChoiceValueAs(DirectoryStringField.UTF8_STRING, Asn1Utf8String.class);
     }
 
     public void setUtf8String(Asn1Utf8String utf8String) {
-        setChoiceValue(UTF8_STRING, utf8String);
+        setChoiceValue(DirectoryStringField.UTF8_STRING, utf8String);
     }
 
     public Asn1BmpString getBmpString() {
-        return getChoiceValueAs(BMP_STRING, Asn1BmpString.class);
+        return getChoiceValueAs(DirectoryStringField.BMP_STRING, Asn1BmpString.class);
     }
 
     public void setBmpString(Asn1BmpString bmpString) {
-        setChoiceValue(BMP_STRING, bmpString);
+        setChoiceValue(DirectoryStringField.BMP_STRING, bmpString);
     }
 }

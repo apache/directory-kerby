@@ -23,8 +23,6 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.UserNotice.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -36,7 +34,7 @@ import static org.apache.kerby.x509.type.UserNotice.MyEnum.*;
  *
  */
 public class UserNotice extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum UserNoticeField implements EnumType {
         NOTICE_REF,
         EXPLICIT_TEXT;
 
@@ -52,8 +50,8 @@ public class UserNotice extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(NOTICE_REF, NoticeReference.class),
-        new Asn1FieldInfo(EXPLICIT_TEXT, DisplayText.class)
+        new Asn1FieldInfo(UserNoticeField.NOTICE_REF, NoticeReference.class),
+        new Asn1FieldInfo(UserNoticeField.EXPLICIT_TEXT, DisplayText.class)
     };
 
     public UserNotice() {
@@ -61,18 +59,18 @@ public class UserNotice extends Asn1SequenceType {
     }
 
     public NoticeReference getNoticeRef() {
-        return getFieldAs(NOTICE_REF, NoticeReference.class);
+        return getFieldAs(UserNoticeField.NOTICE_REF, NoticeReference.class);
     }
 
     public void setNoticeRef(NoticeReference noticeRef) {
-        setFieldAs(NOTICE_REF, noticeRef);
+        setFieldAs(UserNoticeField.NOTICE_REF, noticeRef);
     }
     
     public DisplayText getExplicitText() {
-        return getFieldAs(EXPLICIT_TEXT, DisplayText.class);
+        return getFieldAs(UserNoticeField.EXPLICIT_TEXT, DisplayText.class);
     }
 
     public void setExplicitText(DisplayText explicitText) {
-        setFieldAs(EXPLICIT_TEXT, explicitText);
+        setFieldAs(UserNoticeField.EXPLICIT_TEXT, explicitText);
     }
 }

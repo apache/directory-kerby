@@ -28,8 +28,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x500.type.Name;
 
-import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.*;
-
 /**
  * <pre>
  * TBSCertificate ::= SEQUENCE {
@@ -47,7 +45,7 @@ import static org.apache.kerby.x509.type.TBSCertificate.MyEnum.*;
  * </pre>
  */
 public class TBSCertificate extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum TBSCertificateField implements EnumType {
         VERSION,
         SERIAL_NUMBER,
         SIGNATURE,
@@ -71,16 +69,16 @@ public class TBSCertificate extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new ExplicitField(VERSION, 0, Asn1Integer.class),
-            new Asn1FieldInfo(SERIAL_NUMBER, CertificateSerialNumber.class),
-            new Asn1FieldInfo(SIGNATURE, AlgorithmIdentifier.class),
-            new Asn1FieldInfo(ISSUER, Name.class),
-            new Asn1FieldInfo(VALIDITY, AttCertValidityPeriod.class),
-            new Asn1FieldInfo(SUBJECT, Name.class),
-            new Asn1FieldInfo(SUBJECT_PUBLIC_KEY_INFO, SubjectPublicKeyInfo.class),
-            new ImplicitField(ISSUER_UNIQUE_ID, 1, Asn1BitString.class),
-            new ImplicitField(SUBJECT_UNIQUE_ID, 2, Asn1BitString.class),
-            new ExplicitField(EXTENSIONS, 3, Extensions.class)
+            new ExplicitField(TBSCertificateField.VERSION, Asn1Integer.class),
+            new Asn1FieldInfo(TBSCertificateField.SERIAL_NUMBER, CertificateSerialNumber.class),
+            new Asn1FieldInfo(TBSCertificateField.SIGNATURE, AlgorithmIdentifier.class),
+            new Asn1FieldInfo(TBSCertificateField.ISSUER, Name.class),
+            new Asn1FieldInfo(TBSCertificateField.VALIDITY, AttCertValidityPeriod.class),
+            new Asn1FieldInfo(TBSCertificateField.SUBJECT, Name.class),
+            new Asn1FieldInfo(TBSCertificateField.SUBJECT_PUBLIC_KEY_INFO, SubjectPublicKeyInfo.class),
+            new ImplicitField(TBSCertificateField.ISSUER_UNIQUE_ID, 1, Asn1BitString.class),
+            new ImplicitField(TBSCertificateField.SUBJECT_UNIQUE_ID, 2, Asn1BitString.class),
+            new ExplicitField(TBSCertificateField.EXTENSIONS, 3, Extensions.class)
     };
 
     public TBSCertificate() {
@@ -88,82 +86,82 @@ public class TBSCertificate extends Asn1SequenceType {
     }
 
     public int getVersion() {
-        return getFieldAsInteger(VERSION);
+        return getFieldAsInteger(TBSCertificateField.VERSION);
     }
 
     public void setVersion(int version) {
-        setFieldAsInt(VERSION, version);
+        setFieldAsInt(TBSCertificateField.VERSION, version);
     }
 
     public CertificateSerialNumber getSerialNumber() {
-        return getFieldAs(SERIAL_NUMBER, CertificateSerialNumber.class);
+        return getFieldAs(TBSCertificateField.SERIAL_NUMBER, CertificateSerialNumber.class);
     }
 
     public void setSerialNumber(CertificateSerialNumber certificateSerialNumber) {
-        setFieldAs(SERIAL_NUMBER, certificateSerialNumber);
+        setFieldAs(TBSCertificateField.SERIAL_NUMBER, certificateSerialNumber);
     }
 
     public AlgorithmIdentifier getSignature() {
-        return getFieldAs(SIGNATURE, AlgorithmIdentifier.class);
+        return getFieldAs(TBSCertificateField.SIGNATURE, AlgorithmIdentifier.class);
     }
 
     public void setSignature(AlgorithmIdentifier signature) {
-        setFieldAs(SIGNATURE, signature);
+        setFieldAs(TBSCertificateField.SIGNATURE, signature);
     }
 
     public Name getIssuer() {
-        return getFieldAs(ISSUER, Name.class);
+        return getFieldAs(TBSCertificateField.ISSUER, Name.class);
     }
 
     public void setIssuer(Name attCertIssuer) {
-        setFieldAs(ISSUER, attCertIssuer);
+        setFieldAs(TBSCertificateField.ISSUER, attCertIssuer);
     }
 
     public AttCertValidityPeriod getValidity() {
-        return getFieldAs(VALIDITY, AttCertValidityPeriod.class);
+        return getFieldAs(TBSCertificateField.VALIDITY, AttCertValidityPeriod.class);
     }
 
     public void setValidity(AttCertValidityPeriod validity) {
-        setFieldAs(VALIDITY, validity);
+        setFieldAs(TBSCertificateField.VALIDITY, validity);
     }
 
     public Name getSubject() {
-        return getFieldAs(SUBJECT, Name.class);
+        return getFieldAs(TBSCertificateField.SUBJECT, Name.class);
     }
 
     public void setSubject(Name subject) {
-        setFieldAs(SUBJECT, subject);
+        setFieldAs(TBSCertificateField.SUBJECT, subject);
     }
 
     public SubjectPublicKeyInfo getSubjectPublicKeyInfo() {
-        return getFieldAs(SUBJECT_PUBLIC_KEY_INFO, SubjectPublicKeyInfo.class);
+        return getFieldAs(TBSCertificateField.SUBJECT_PUBLIC_KEY_INFO, SubjectPublicKeyInfo.class);
     }
 
     public void setSubjectPublicKeyInfo(SubjectPublicKeyInfo subjectPublicKeyInfo) {
-        setFieldAs(SUBJECT_PUBLIC_KEY_INFO, subjectPublicKeyInfo);
+        setFieldAs(TBSCertificateField.SUBJECT_PUBLIC_KEY_INFO, subjectPublicKeyInfo);
     }
 
     public byte[] getIssuerUniqueID() {
-        return getFieldAs(ISSUER_UNIQUE_ID, Asn1BitString.class).getValue();
+        return getFieldAs(TBSCertificateField.ISSUER_UNIQUE_ID, Asn1BitString.class).getValue();
     }
 
     public void setIssuerUniqueId(byte[] issuerUniqueId) {
-        setFieldAs(ISSUER_UNIQUE_ID, new Asn1BitString(issuerUniqueId));
+        setFieldAs(TBSCertificateField.ISSUER_UNIQUE_ID, new Asn1BitString(issuerUniqueId));
     }
 
     public byte[] getSubjectUniqueId() {
-        return getFieldAs(ISSUER_UNIQUE_ID, Asn1BitString.class).getValue();
+        return getFieldAs(TBSCertificateField.ISSUER_UNIQUE_ID, Asn1BitString.class).getValue();
     }
 
     public void setSubjectUniqueId(byte[] issuerUniqueId) {
-        setFieldAs(SUBJECT_UNIQUE_ID, new Asn1BitString(issuerUniqueId));
+        setFieldAs(TBSCertificateField.SUBJECT_UNIQUE_ID, new Asn1BitString(issuerUniqueId));
     }
 
     public Extensions getExtensions() {
-        return getFieldAs(EXTENSIONS, Extensions.class);
+        return getFieldAs(TBSCertificateField.EXTENSIONS, Extensions.class);
     }
 
     public void setExtensions(Extensions extensions) {
-        setFieldAs(EXTENSIONS, extensions);
+        setFieldAs(TBSCertificateField.EXTENSIONS, extensions);
     }
 }

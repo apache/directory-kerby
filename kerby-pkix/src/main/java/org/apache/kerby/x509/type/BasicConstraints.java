@@ -27,8 +27,6 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
 
 import java.math.BigInteger;
 
-import static org.apache.kerby.x509.type.BasicConstraints.MyEnum.*;
-
 /**
  * <pre>
  * BasicConstraints := SEQUENCE {
@@ -38,7 +36,7 @@ import static org.apache.kerby.x509.type.BasicConstraints.MyEnum.*;
  * </pre>
  */
 public class BasicConstraints extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum BasicConstraintsField implements EnumType {
         CA,
         PATH_LEN_CONSTRAINT;
 
@@ -54,8 +52,8 @@ public class BasicConstraints extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(CA, Asn1Boolean.class),
-        new Asn1FieldInfo(PATH_LEN_CONSTRAINT, Asn1Integer.class)
+        new Asn1FieldInfo(BasicConstraintsField.CA, Asn1Boolean.class),
+        new Asn1FieldInfo(BasicConstraintsField.PATH_LEN_CONSTRAINT, Asn1Integer.class)
     };
 
     public BasicConstraints() {
@@ -67,18 +65,18 @@ public class BasicConstraints extends Asn1SequenceType {
     }
 
     public boolean getCA() {
-        return getFieldAs(CA, Asn1Boolean.class).getValue();
+        return getFieldAs(BasicConstraintsField.CA, Asn1Boolean.class).getValue();
     }
 
     public void setCA(Asn1Boolean isCA) {
-        setFieldAs(CA, isCA);
+        setFieldAs(BasicConstraintsField.CA, isCA);
     }
 
     public BigInteger getPathLenConstraint() {
-        return getFieldAs(PATH_LEN_CONSTRAINT, Asn1Integer.class).getValue();
+        return getFieldAs(BasicConstraintsField.PATH_LEN_CONSTRAINT, Asn1Integer.class).getValue();
     }
 
     public void setPathLenConstraint(Asn1Integer pathLenConstraint) {
-        setFieldAs(PATH_LEN_CONSTRAINT, pathLenConstraint);
+        setFieldAs(BasicConstraintsField.PATH_LEN_CONSTRAINT, pathLenConstraint);
     }
 }

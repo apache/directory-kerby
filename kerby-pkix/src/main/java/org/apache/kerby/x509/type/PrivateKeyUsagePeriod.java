@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.PrivateKeyUsagePeriod.MyEnum.*;
-
 /**
  * <pre>
  *    PrivateKeyUsagePeriod ::= SEQUENCE {
@@ -36,7 +34,7 @@ import static org.apache.kerby.x509.type.PrivateKeyUsagePeriod.MyEnum.*;
  * </pre>
  */
 public class PrivateKeyUsagePeriod extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PrivateKeyUsagePeriodField implements EnumType {
         NOT_BEFORE,
         NOT_AFTER;
 
@@ -52,8 +50,8 @@ public class PrivateKeyUsagePeriod extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(NOT_BEFORE, Asn1GeneralizedTime.class),
-        new ExplicitField(NOT_AFTER, Asn1GeneralizedTime.class)
+        new ExplicitField(PrivateKeyUsagePeriodField.NOT_BEFORE, Asn1GeneralizedTime.class),
+        new ExplicitField(PrivateKeyUsagePeriodField.NOT_AFTER, Asn1GeneralizedTime.class)
     };
 
     public PrivateKeyUsagePeriod() {
@@ -61,18 +59,18 @@ public class PrivateKeyUsagePeriod extends Asn1SequenceType {
     }
 
     public Asn1GeneralizedTime getNotBeforeTime() {
-        return getFieldAs(NOT_BEFORE, Asn1GeneralizedTime.class);
+        return getFieldAs(PrivateKeyUsagePeriodField.NOT_BEFORE, Asn1GeneralizedTime.class);
     }
 
     public void setNotBeforeTime(Asn1GeneralizedTime notBeforeTime) {
-        setFieldAs(NOT_BEFORE, notBeforeTime);
+        setFieldAs(PrivateKeyUsagePeriodField.NOT_BEFORE, notBeforeTime);
     }
 
     public Asn1GeneralizedTime getNotAfterTime() {
-        return getFieldAs(NOT_AFTER, Asn1GeneralizedTime.class);
+        return getFieldAs(PrivateKeyUsagePeriodField.NOT_AFTER, Asn1GeneralizedTime.class);
     }
 
     public void setNotAfterTime(Asn1GeneralizedTime notAfterTime) {
-        setFieldAs(NOT_AFTER, notAfterTime);
+        setFieldAs(PrivateKeyUsagePeriodField.NOT_AFTER, notAfterTime);
     }
 }

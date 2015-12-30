@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.Extension.MyEnum.*;
-
 /**
  * Ref. X.509 V3 extension
  * <pre>
@@ -40,7 +38,7 @@ import static org.apache.kerby.x509.type.Extension.MyEnum.*;
  * </pre>
  */
 public class Extension extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum ExtensionField implements EnumType {
         EXTN_ID,
         CRITICAL,
         EXTN_VALUE;
@@ -59,9 +57,9 @@ public class Extension extends Asn1SequenceType {
     private final boolean critical = false;
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(EXTN_ID, Asn1ObjectIdentifier.class),
-        new Asn1FieldInfo(CRITICAL, Asn1Boolean.class),
-        new Asn1FieldInfo(EXTN_VALUE, Asn1OctetString.class)
+        new Asn1FieldInfo(ExtensionField.EXTN_ID, Asn1ObjectIdentifier.class),
+        new Asn1FieldInfo(ExtensionField.CRITICAL, Asn1Boolean.class),
+        new Asn1FieldInfo(ExtensionField.EXTN_VALUE, Asn1OctetString.class)
     };
 
     public Extension() {
@@ -70,26 +68,26 @@ public class Extension extends Asn1SequenceType {
     }
 
     public Asn1ObjectIdentifier getExtnId() {
-        return getFieldAs(EXTN_ID, Asn1ObjectIdentifier.class);
+        return getFieldAs(ExtensionField.EXTN_ID, Asn1ObjectIdentifier.class);
     }
 
     public void setExtnId(Asn1ObjectIdentifier extnId) {
-        setFieldAs(EXTN_ID, extnId);
+        setFieldAs(ExtensionField.EXTN_ID, extnId);
     }
 
     public boolean getCritical() {
-        return getFieldAs(CRITICAL, Asn1Boolean.class).getValue();
+        return getFieldAs(ExtensionField.CRITICAL, Asn1Boolean.class).getValue();
     }
 
     public void setCritical(boolean critical) {
-        setFieldAs(CRITICAL, new Asn1Boolean(critical));
+        setFieldAs(ExtensionField.CRITICAL, new Asn1Boolean(critical));
     }
 
     public byte[] getExtnValue() {
-        return getFieldAsOctets(EXTN_VALUE);
+        return getFieldAsOctets(ExtensionField.EXTN_VALUE);
     }
 
     public void setExtnValue(byte[] value) {
-        setFieldAsOctets(EXTN_VALUE, value);
+        setFieldAsOctets(ExtensionField.EXTN_VALUE, value);
     }
 }

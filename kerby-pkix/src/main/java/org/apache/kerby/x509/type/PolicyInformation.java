@@ -23,8 +23,6 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.PolicyInformation.MyEnum.*;
-
 /*
  * <pre>
  * PolicyInformation ::= SEQUENCE {
@@ -34,7 +32,7 @@ import static org.apache.kerby.x509.type.PolicyInformation.MyEnum.*;
  * </pre>
  */
 public class PolicyInformation extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PolicyInformationField implements EnumType {
         POLICY_IDENTIFIER,
         POLICY_QUALIFIERS;
 
@@ -50,8 +48,8 @@ public class PolicyInformation extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(POLICY_IDENTIFIER, CertPolicyId.class),
-        new Asn1FieldInfo(POLICY_QUALIFIERS, PolicyQualifierInfos.class)
+        new Asn1FieldInfo(PolicyInformationField.POLICY_IDENTIFIER, CertPolicyId.class),
+        new Asn1FieldInfo(PolicyInformationField.POLICY_QUALIFIERS, PolicyQualifierInfos.class)
     };
 
     public PolicyInformation() {
@@ -59,18 +57,18 @@ public class PolicyInformation extends Asn1SequenceType {
     }
 
     public CertPolicyId getPolicyIdentifier() {
-        return getFieldAs(POLICY_IDENTIFIER, CertPolicyId.class);
+        return getFieldAs(PolicyInformationField.POLICY_IDENTIFIER, CertPolicyId.class);
     }
 
     public void setPolicyIdentifier(CertPolicyId policyIdentifier) {
-        setFieldAs(POLICY_IDENTIFIER, policyIdentifier);
+        setFieldAs(PolicyInformationField.POLICY_IDENTIFIER, policyIdentifier);
     }
     
     public PolicyQualifierInfos getPolicyQualifiers() {
-        return getFieldAs(POLICY_QUALIFIERS, PolicyQualifierInfos.class);
+        return getFieldAs(PolicyInformationField.POLICY_QUALIFIERS, PolicyQualifierInfos.class);
     }
 
     public void setPolicyQualifiers(PolicyQualifierInfos policyQualifiers) {
-        setFieldAs(POLICY_QUALIFIERS, policyQualifiers);
+        setFieldAs(PolicyInformationField.POLICY_QUALIFIERS, policyQualifiers);
     }
 }

@@ -25,8 +25,6 @@ import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 import org.apache.kerby.x500.type.RelativeDistinguishedName;
 
-import static org.apache.kerby.x509.type.DistributionPointName.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -37,7 +35,7 @@ import static org.apache.kerby.x509.type.DistributionPointName.MyEnum.*;
  * </pre>
  */
 public class DistributionPointName extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum DPNameField implements EnumType {
         FULL_NAME,
         NAME_RELATIVE_TO_CRL_ISSUER;
 
@@ -53,8 +51,8 @@ public class DistributionPointName extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(FULL_NAME, GeneralNames.class),
-        new ExplicitField(NAME_RELATIVE_TO_CRL_ISSUER, RelativeDistinguishedName.class)
+        new ExplicitField(DPNameField.FULL_NAME, GeneralNames.class),
+        new ExplicitField(DPNameField.NAME_RELATIVE_TO_CRL_ISSUER, RelativeDistinguishedName.class)
     };
 
     public DistributionPointName() {
@@ -62,18 +60,18 @@ public class DistributionPointName extends Asn1Choice {
     }
 
     public GeneralNames getFullName() {
-        return getChoiceValueAs(FULL_NAME, GeneralNames.class);
+        return getChoiceValueAs(DPNameField.FULL_NAME, GeneralNames.class);
     }
 
     public void setFullName(GeneralNames fullName) {
-        setChoiceValue(FULL_NAME, fullName);
+        setChoiceValue(DPNameField.FULL_NAME, fullName);
     }
 
     public RelativeDistinguishedName getNameRelativeToCRLIssuer() {
-        return getChoiceValueAs(NAME_RELATIVE_TO_CRL_ISSUER, RelativeDistinguishedName.class);
+        return getChoiceValueAs(DPNameField.NAME_RELATIVE_TO_CRL_ISSUER, RelativeDistinguishedName.class);
     }
 
     public void setNameRelativeToCrlIssuer(RelativeDistinguishedName nameRelativeToCrlIssuer) {
-        setChoiceValue(NAME_RELATIVE_TO_CRL_ISSUER, nameRelativeToCrlIssuer);
+        setChoiceValue(DPNameField.NAME_RELATIVE_TO_CRL_ISSUER, nameRelativeToCrlIssuer);
     }
 }

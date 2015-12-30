@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.RoleSyntax.MyEnum.*;
-
 /**
  *Ref. RFC3281
  * <pre>
@@ -36,7 +34,7 @@ import static org.apache.kerby.x509.type.RoleSyntax.MyEnum.*;
  * </pre>
  */
 public class RoleSyntax extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum RoleSyntaxField implements EnumType {
         ROLE_AUTHORITY,
         ROLE_NAME;
 
@@ -52,8 +50,8 @@ public class RoleSyntax extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(ROLE_AUTHORITY, GeneralNames.class),
-        new ExplicitField(ROLE_NAME, GeneralName.class)
+        new ExplicitField(RoleSyntaxField.ROLE_AUTHORITY, GeneralNames.class),
+        new ExplicitField(RoleSyntaxField.ROLE_NAME, GeneralName.class)
     };
 
     public RoleSyntax() {
@@ -61,18 +59,18 @@ public class RoleSyntax extends Asn1SequenceType {
     }
 
     public GeneralNames getRoleAuthority() {
-        return getFieldAs(ROLE_AUTHORITY, GeneralNames.class);
+        return getFieldAs(RoleSyntaxField.ROLE_AUTHORITY, GeneralNames.class);
     }
 
     public void setRoleAuthority(GeneralNames roleAuthority) {
-        setFieldAs(ROLE_AUTHORITY, roleAuthority);
+        setFieldAs(RoleSyntaxField.ROLE_AUTHORITY, roleAuthority);
     }
 
     public GeneralName getRoleName() {
-        return getFieldAs(ROLE_NAME, GeneralName.class);
+        return getFieldAs(RoleSyntaxField.ROLE_NAME, GeneralName.class);
     }
 
     public void setRoleName(GeneralName roleName) {
-        setFieldAs(ROLE_NAME, roleName);
+        setFieldAs(RoleSyntaxField.ROLE_NAME, roleName);
     }
 }

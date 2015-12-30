@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Choice;
 
-import static org.apache.kerby.x509.type.EDIPartyName.MyEnum.*;
-
 /**
  * <pre>
  * EDIPartyName ::= SEQUENCE {
@@ -35,7 +33,7 @@ import static org.apache.kerby.x509.type.EDIPartyName.MyEnum.*;
  * </pre>
  */
 public class EDIPartyName extends Asn1Choice {
-    protected enum MyEnum implements EnumType {
+    protected enum EDIPartyNameField implements EnumType {
         NAME_ASSIGNER,
         PARTY_NAME;
 
@@ -51,8 +49,8 @@ public class EDIPartyName extends Asn1Choice {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new ExplicitField(NAME_ASSIGNER, DirectoryString.class),
-            new ExplicitField(PARTY_NAME, DirectoryString.class)
+            new ExplicitField(EDIPartyNameField.NAME_ASSIGNER, DirectoryString.class),
+            new ExplicitField(EDIPartyNameField.PARTY_NAME, DirectoryString.class)
     };
 
     public EDIPartyName() {
@@ -60,18 +58,18 @@ public class EDIPartyName extends Asn1Choice {
     }
 
     public DirectoryString getNameAssigner() {
-        return getChoiceValueAs(NAME_ASSIGNER, DirectoryString.class);
+        return getChoiceValueAs(EDIPartyNameField.NAME_ASSIGNER, DirectoryString.class);
     }
 
     public void setNameAssigner(DirectoryString nameAssigner) {
-        setChoiceValue(NAME_ASSIGNER, nameAssigner);
+        setChoiceValue(EDIPartyNameField.NAME_ASSIGNER, nameAssigner);
     }
 
     public DirectoryString getPartyName() {
-        return getChoiceValueAs(PARTY_NAME, DirectoryString.class);
+        return getChoiceValueAs(EDIPartyNameField.PARTY_NAME, DirectoryString.class);
     }
 
     public void setPartyName(DirectoryString partyName) {
-        setChoiceValue(PARTY_NAME, partyName);
+        setChoiceValue(EDIPartyNameField.PARTY_NAME, partyName);
     }
 }

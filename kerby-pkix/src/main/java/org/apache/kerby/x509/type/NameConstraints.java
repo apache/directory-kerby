@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.NameConstraints.MyEnum.*;
-
 /*
  * NameConstraints ::= SEQUENCE {
  *     permittedSubtrees [0] GeneralSubtrees OPTIONAL,
@@ -33,7 +31,7 @@ import static org.apache.kerby.x509.type.NameConstraints.MyEnum.*;
  * }
  */
 public class NameConstraints extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum NameConstraintsField implements EnumType {
         PERMITTED_SUBTREES,
         EXCLUDED_SUBTREES;
 
@@ -49,8 +47,8 @@ public class NameConstraints extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(PERMITTED_SUBTREES, GeneralSubtrees.class),
-        new ExplicitField(EXCLUDED_SUBTREES, GeneralSubtrees.class)
+        new ExplicitField(NameConstraintsField.PERMITTED_SUBTREES, GeneralSubtrees.class),
+        new ExplicitField(NameConstraintsField.EXCLUDED_SUBTREES, GeneralSubtrees.class)
     };
 
     public NameConstraints() {
@@ -58,18 +56,18 @@ public class NameConstraints extends Asn1SequenceType {
     }
 
     public GeneralSubtrees getPermittedSubtrees() {
-        return getFieldAs(PERMITTED_SUBTREES, GeneralSubtrees.class);
+        return getFieldAs(NameConstraintsField.PERMITTED_SUBTREES, GeneralSubtrees.class);
     }
 
     public void setPermittedSubtrees(GeneralSubtrees permittedSubtrees) {
-        setFieldAs(PERMITTED_SUBTREES, permittedSubtrees);
+        setFieldAs(NameConstraintsField.PERMITTED_SUBTREES, permittedSubtrees);
     }
 
     public GeneralSubtrees getExcludedSubtrees() {
-        return getFieldAs(EXCLUDED_SUBTREES, GeneralSubtrees.class);
+        return getFieldAs(NameConstraintsField.EXCLUDED_SUBTREES, GeneralSubtrees.class);
     }
 
     public void setExcludedSubtrees(GeneralSubtrees excludedSubtrees) {
-        setFieldAs(EXCLUDED_SUBTREES, excludedSubtrees);
+        setFieldAs(NameConstraintsField.EXCLUDED_SUBTREES, excludedSubtrees);
     }
 }

@@ -24,8 +24,6 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.DistributionPoint.MyEnum.*;
-
 /**
  *
  * <pre>
@@ -37,7 +35,7 @@ import static org.apache.kerby.x509.type.DistributionPoint.MyEnum.*;
  * </pre>
  */
 public class DistributionPoint extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum DistributionPointField implements EnumType {
         DISTRIBUTION_POINT,
         REASONS,
         CRL_ISSUER;
@@ -54,9 +52,9 @@ public class DistributionPoint extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new ExplicitField(DISTRIBUTION_POINT, DistributionPointName.class),
-        new ExplicitField(REASONS, ReasonFlags.class),
-        new ExplicitField(CRL_ISSUER, GeneralNames.class)
+        new ExplicitField(DistributionPointField.DISTRIBUTION_POINT, DistributionPointName.class),
+        new ExplicitField(DistributionPointField.REASONS, ReasonFlags.class),
+        new ExplicitField(DistributionPointField.CRL_ISSUER, GeneralNames.class)
     };
 
     public DistributionPoint() {
@@ -64,26 +62,26 @@ public class DistributionPoint extends Asn1SequenceType {
     }
 
     public DistributionPointName getDistributionPoint() {
-        return getFieldAs(DISTRIBUTION_POINT, DistributionPointName.class);
+        return getFieldAs(DistributionPointField.DISTRIBUTION_POINT, DistributionPointName.class);
     }
 
     public void setDistributionPoint(DistributionPointName distributionPoint) {
-        setFieldAs(DISTRIBUTION_POINT, distributionPoint);
+        setFieldAs(DistributionPointField.DISTRIBUTION_POINT, distributionPoint);
     }
 
     public ReasonFlags getReasons() {
-        return getFieldAs(REASONS, ReasonFlags.class);
+        return getFieldAs(DistributionPointField.REASONS, ReasonFlags.class);
     }
 
     public void setReasons(ReasonFlags reasons) {
-        setFieldAs(REASONS, reasons);
+        setFieldAs(DistributionPointField.REASONS, reasons);
     }
 
     public GeneralNames getCRLIssuer() {
-        return getFieldAs(CRL_ISSUER, GeneralNames.class);
+        return getFieldAs(DistributionPointField.CRL_ISSUER, GeneralNames.class);
     }
 
     public void setCRLIssuer(GeneralNames crlIssuer) {
-        setFieldAs(CRL_ISSUER, crlIssuer);
+        setFieldAs(DistributionPointField.CRL_ISSUER, crlIssuer);
     }
 }

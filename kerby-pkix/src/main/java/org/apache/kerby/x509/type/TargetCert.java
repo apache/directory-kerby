@@ -23,8 +23,6 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.TargetCert.MyEnum.*;
-
 /**
  * TargetCert  ::= SEQUENCE {
  *   targetCertificate    IssuerSerial,
@@ -33,7 +31,7 @@ import static org.apache.kerby.x509.type.TargetCert.MyEnum.*;
  * }
  */
 public class TargetCert extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum TargetCertField implements EnumType {
         TARGET_CERTIFICATE,
         TARGET_NAME,
         CERT_DIGEST_INFO;
@@ -50,9 +48,9 @@ public class TargetCert extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(TARGET_CERTIFICATE, IssuerSerial.class),
-            new Asn1FieldInfo(TARGET_NAME, GeneralName.class),
-            new Asn1FieldInfo(CERT_DIGEST_INFO, ObjectDigestInfo.class)
+            new Asn1FieldInfo(TargetCertField.TARGET_CERTIFICATE, IssuerSerial.class),
+            new Asn1FieldInfo(TargetCertField.TARGET_NAME, GeneralName.class),
+            new Asn1FieldInfo(TargetCertField.CERT_DIGEST_INFO, ObjectDigestInfo.class)
     };
 
     public TargetCert() {
@@ -60,26 +58,26 @@ public class TargetCert extends Asn1SequenceType {
     }
 
     public IssuerSerial getTargetCertificate() {
-        return getFieldAs(TARGET_CERTIFICATE, IssuerSerial.class);
+        return getFieldAs(TargetCertField.TARGET_CERTIFICATE, IssuerSerial.class);
     }
 
     public void setTargetCertificate(IssuerSerial targetCertificate) {
-        setFieldAs(TARGET_CERTIFICATE, targetCertificate);
+        setFieldAs(TargetCertField.TARGET_CERTIFICATE, targetCertificate);
     }
 
     public GeneralName getTargetName() {
-        return getFieldAs(TARGET_NAME, GeneralName.class);
+        return getFieldAs(TargetCertField.TARGET_NAME, GeneralName.class);
     }
 
     public void setTargetName(GeneralName targetName) {
-        setFieldAs(TARGET_NAME, targetName);
+        setFieldAs(TargetCertField.TARGET_NAME, targetName);
     }
 
     public ObjectDigestInfo getCertDigestInfo() {
-        return getFieldAs(CERT_DIGEST_INFO, ObjectDigestInfo.class);
+        return getFieldAs(TargetCertField.CERT_DIGEST_INFO, ObjectDigestInfo.class);
     }
 
     public void setCerttDigestInfo(ObjectDigestInfo certDigestInfo) {
-        setFieldAs(CERT_DIGEST_INFO, certDigestInfo);
+        setFieldAs(TargetCertField.CERT_DIGEST_INFO, certDigestInfo);
     }
 }

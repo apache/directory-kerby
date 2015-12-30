@@ -23,8 +23,6 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.NoticeReference.MyEnum.*;
-
 /**
  * <pre>
  *  NoticeReference ::= SEQUENCE {
@@ -36,7 +34,7 @@ import static org.apache.kerby.x509.type.NoticeReference.MyEnum.*;
  *
  */
 public class NoticeReference extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum NoticeReferenceField implements EnumType {
         ORGANIZATION,
         NOTICE_NUMBERS;
 
@@ -52,8 +50,8 @@ public class NoticeReference extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(ORGANIZATION, DisplayText.class),
-        new Asn1FieldInfo(NOTICE_NUMBERS, NoticeNumbers.class)
+        new Asn1FieldInfo(NoticeReferenceField.ORGANIZATION, DisplayText.class),
+        new Asn1FieldInfo(NoticeReferenceField.NOTICE_NUMBERS, NoticeNumbers.class)
     };
 
     public NoticeReference() {
@@ -61,18 +59,18 @@ public class NoticeReference extends Asn1SequenceType {
     }
 
     public DisplayText getOrganization() {
-        return getFieldAs(ORGANIZATION, DisplayText.class);
+        return getFieldAs(NoticeReferenceField.ORGANIZATION, DisplayText.class);
     }
 
     public void setOrganization(DisplayText organization) {
-        setFieldAs(ORGANIZATION, organization);
+        setFieldAs(NoticeReferenceField.ORGANIZATION, organization);
     }
 
     public NoticeNumbers getNoticeNumbers() {
-        return getFieldAs(NOTICE_NUMBERS, NoticeNumbers.class);
+        return getFieldAs(NoticeReferenceField.NOTICE_NUMBERS, NoticeNumbers.class);
     }
 
     public void setNoticeNumbers(NoticeNumbers noticeNumbers) {
-        setFieldAs(NOTICE_NUMBERS, noticeNumbers);
+        setFieldAs(NoticeReferenceField.NOTICE_NUMBERS, noticeNumbers);
     }
 }

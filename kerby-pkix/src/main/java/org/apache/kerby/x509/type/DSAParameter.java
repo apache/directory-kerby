@@ -26,10 +26,8 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
 
 import java.math.BigInteger;
 
-import static org.apache.kerby.x509.type.DSAParameter.MyEnum.*;
-
 public class DSAParameter extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum DSAParameterField implements EnumType {
         P,
         Q,
         G;
@@ -46,9 +44,9 @@ public class DSAParameter extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(P, Asn1Integer.class),
-        new Asn1FieldInfo(Q, Asn1Integer.class),
-        new Asn1FieldInfo(G, Asn1Integer.class)
+        new Asn1FieldInfo(DSAParameterField.P, Asn1Integer.class),
+        new Asn1FieldInfo(DSAParameterField.Q, Asn1Integer.class),
+        new Asn1FieldInfo(DSAParameterField.G, Asn1Integer.class)
     };
 
     public DSAParameter() {
@@ -56,26 +54,26 @@ public class DSAParameter extends Asn1SequenceType {
     }
 
     public BigInteger getP() {
-        return getFieldAs(P, Asn1Integer.class).getValue();
+        return getFieldAs(DSAParameterField.P, Asn1Integer.class).getValue();
     }
 
     public void setP(BigInteger p) {
-        setFieldAs(P, new Asn1Integer(p));
+        setFieldAs(DSAParameterField.P, new Asn1Integer(p));
     }
 
     public BigInteger getQ() {
-        return getFieldAs(Q, Asn1Integer.class).getValue();
+        return getFieldAs(DSAParameterField.Q, Asn1Integer.class).getValue();
     }
 
     public void setQ(BigInteger q) {
-        setFieldAs(Q, new Asn1Integer(q));
+        setFieldAs(DSAParameterField.Q, new Asn1Integer(q));
     }
 
     public BigInteger getG() {
-        return getFieldAs(G, Asn1Integer.class).getValue();
+        return getFieldAs(DSAParameterField.G, Asn1Integer.class).getValue();
     }
 
     public void setG(BigInteger g) {
-        setFieldAs(G, new Asn1Integer(g));
+        setFieldAs(DSAParameterField.G, new Asn1Integer(g));
     }
 }

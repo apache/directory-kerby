@@ -23,8 +23,6 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 
-import static org.apache.kerby.x509.type.PolicyMapping.MyEnum.*;
-
 /**
  * Ref. RFC3280
  * <pre>
@@ -35,7 +33,7 @@ import static org.apache.kerby.x509.type.PolicyMapping.MyEnum.*;
  *
  */
 public class PolicyMapping extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum PolicyMappingField implements EnumType {
         ISSUER_DOMAIN_POLICY,
         SUBJECT_DOMAIN_POLICY;
 
@@ -51,8 +49,8 @@ public class PolicyMapping extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(ISSUER_DOMAIN_POLICY, CertPolicyId.class),
-        new Asn1FieldInfo(SUBJECT_DOMAIN_POLICY, CertPolicyId.class)
+        new Asn1FieldInfo(PolicyMappingField.ISSUER_DOMAIN_POLICY, CertPolicyId.class),
+        new Asn1FieldInfo(PolicyMappingField.SUBJECT_DOMAIN_POLICY, CertPolicyId.class)
     };
 
     public PolicyMapping() {
@@ -60,18 +58,18 @@ public class PolicyMapping extends Asn1SequenceType {
     }
 
     public CertPolicyId getIssuerDomainPolicy() {
-        return  getFieldAs(ISSUER_DOMAIN_POLICY, CertPolicyId.class);
+        return  getFieldAs(PolicyMappingField.ISSUER_DOMAIN_POLICY, CertPolicyId.class);
     }
 
     public void setIssuerDomainPolicy(CertPolicyId issuerDomainPolicy) {
-        setFieldAs(ISSUER_DOMAIN_POLICY, issuerDomainPolicy);
+        setFieldAs(PolicyMappingField.ISSUER_DOMAIN_POLICY, issuerDomainPolicy);
     }
 
     public CertPolicyId getSubjectDomainPolicy() {
-        return getFieldAs(SUBJECT_DOMAIN_POLICY, CertPolicyId.class);
+        return getFieldAs(PolicyMappingField.SUBJECT_DOMAIN_POLICY, CertPolicyId.class);
     }
 
     public void setSubjectDomainPolicy(CertPolicyId subjectDomainPolicy) {
-        setFieldAs(SUBJECT_DOMAIN_POLICY, subjectDomainPolicy);
+        setFieldAs(PolicyMappingField.SUBJECT_DOMAIN_POLICY, subjectDomainPolicy);
     }
 }

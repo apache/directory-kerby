@@ -26,8 +26,6 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1SequenceType;
 import org.apache.kerby.x500.type.Name;
 
-import static org.apache.kerby.x509.type.TBSCertList.MyEnum.*;
-
 /**
  * Ref. RFC-2459
  * <pre>
@@ -50,7 +48,7 @@ import static org.apache.kerby.x509.type.TBSCertList.MyEnum.*;
  * </pre>
  */
 public class TBSCertList extends Asn1SequenceType {
-    protected enum MyEnum implements EnumType {
+    protected enum TBSCertListField implements EnumType {
         VERSION,
         SIGNATURE,
         ISSUER,
@@ -71,13 +69,13 @@ public class TBSCertList extends Asn1SequenceType {
     }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-        new Asn1FieldInfo(VERSION, Asn1Integer.class),
-        new Asn1FieldInfo(SIGNATURE, AlgorithmIdentifier.class),
-        new Asn1FieldInfo(ISSUER, Name.class),
-        new Asn1FieldInfo(THIS_UPDATA, Time.class),
-        new Asn1FieldInfo(NEXT_UPDATE, Time.class),
-        new Asn1FieldInfo(REVOKED_CERTIFICATES, RevokedCertificates.class),
-        new ExplicitField(CRL_EXTENSIONS, 0, Extensions.class)
+        new Asn1FieldInfo(TBSCertListField.VERSION, Asn1Integer.class),
+        new Asn1FieldInfo(TBSCertListField.SIGNATURE, AlgorithmIdentifier.class),
+        new Asn1FieldInfo(TBSCertListField.ISSUER, Name.class),
+        new Asn1FieldInfo(TBSCertListField.THIS_UPDATA, Time.class),
+        new Asn1FieldInfo(TBSCertListField.NEXT_UPDATE, Time.class),
+        new Asn1FieldInfo(TBSCertListField.REVOKED_CERTIFICATES, RevokedCertificates.class),
+        new ExplicitField(TBSCertListField.CRL_EXTENSIONS, 0, Extensions.class)
     };
 
     public TBSCertList() {
@@ -85,58 +83,58 @@ public class TBSCertList extends Asn1SequenceType {
     }
 
     public Asn1Integer getVersion() {
-        return getFieldAs(VERSION, Asn1Integer.class);
+        return getFieldAs(TBSCertListField.VERSION, Asn1Integer.class);
     }
 
     public void setVersion(Asn1Integer version) {
-        setFieldAs(VERSION, version);
+        setFieldAs(TBSCertListField.VERSION, version);
     }
 
     public AlgorithmIdentifier getSignature() {
-        return getFieldAs(SIGNATURE, AlgorithmIdentifier.class);
+        return getFieldAs(TBSCertListField.SIGNATURE, AlgorithmIdentifier.class);
     }
 
     public void setSignature(AlgorithmIdentifier signature) {
-        setFieldAs(SIGNATURE, signature);
+        setFieldAs(TBSCertListField.SIGNATURE, signature);
     }
 
     public Name getIssuer() {
-        return getFieldAs(ISSUER, Name.class);
+        return getFieldAs(TBSCertListField.ISSUER, Name.class);
     }
 
     public void setIssuer(Name issuer) {
-        setFieldAs(ISSUER, issuer);
+        setFieldAs(TBSCertListField.ISSUER, issuer);
     }
 
     public Time getThisUpdate() {
-        return getFieldAs(THIS_UPDATA, Time.class);
+        return getFieldAs(TBSCertListField.THIS_UPDATA, Time.class);
     }
 
     public void setThisUpdata(Time thisUpdata) {
-        setFieldAs(THIS_UPDATA, thisUpdata);
+        setFieldAs(TBSCertListField.THIS_UPDATA, thisUpdata);
     }
 
     public Time getNextUpdate() {
-        return getFieldAs(NEXT_UPDATE, Time.class);
+        return getFieldAs(TBSCertListField.NEXT_UPDATE, Time.class);
     }
 
     public void setNextUpdate(Time nextUpdate) {
-        setFieldAs(NEXT_UPDATE, nextUpdate);
+        setFieldAs(TBSCertListField.NEXT_UPDATE, nextUpdate);
     }
 
     public RevokedCertificates getRevokedCertificates() {
-        return getFieldAs(REVOKED_CERTIFICATES, RevokedCertificates.class);
+        return getFieldAs(TBSCertListField.REVOKED_CERTIFICATES, RevokedCertificates.class);
     }
 
     public void setRevokedCertificates(RevokedCertificates revokedCertificates) {
-        setFieldAs(REVOKED_CERTIFICATES, revokedCertificates);
+        setFieldAs(TBSCertListField.REVOKED_CERTIFICATES, revokedCertificates);
     }
 
     public Extensions getCrlExtensions() {
-        return getFieldAs(CRL_EXTENSIONS, Extensions.class);
+        return getFieldAs(TBSCertListField.CRL_EXTENSIONS, Extensions.class);
     }
 
     public void setCrlExtensions(Extensions crlExtensions) {
-        setFieldAs(CRL_EXTENSIONS, crlExtensions);
+        setFieldAs(TBSCertListField.CRL_EXTENSIONS, crlExtensions);
     }
 }
