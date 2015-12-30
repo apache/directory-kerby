@@ -21,6 +21,11 @@ package org.apache.kerby.kerberos.kerb.type.ad;
 
 import org.apache.kerby.asn1.EnumType;
 
+/**
+ * The various AuthorizationType values, as defined in RFC 4120 and RFC 1510.
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ */
 public enum AuthorizationType implements EnumType {
     /**
      * Constant for the "null" authorization type.
@@ -118,22 +123,38 @@ public enum AuthorizationType implements EnumType {
      */
     AD_ETYPE_NEGOTIATION(129);
 
+    /** The internal value */
     private final int value;
 
+    /**
+     * Create a new enum 
+     */
     private AuthorizationType(int value) {
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getValue() {
         return value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name();
     }
 
+    /**
+     * Get the AuthorizationType associated with a value.
+     * 
+     * @param value The integer value of the AuthorizationType we are looking for
+     * @return The associated AuthorizationType, or NULL if not found or if value is null
+     */
     public static AuthorizationType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

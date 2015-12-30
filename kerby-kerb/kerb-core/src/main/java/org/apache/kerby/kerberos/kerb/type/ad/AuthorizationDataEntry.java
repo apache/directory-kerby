@@ -27,49 +27,85 @@ import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
 /**
- AuthorizationData       ::= SEQUENCE OF SEQUENCE {
- ad-type         [0] Int32,
- ad-data         [1] OCTET STRING
- }
+ * The AuthorizationData component as defined in RFC 4120 :
+ * 
+ * <pre>
+ * AuthorizationData       ::= SEQUENCE {
+ *         ad-type         [0] Int32,
+ *         ad-data         [1] OCTET STRING
+ * }
+ * </pre>
+ * 
+ * We just implement what is in the SEQUENCE OF.
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class AuthorizationDataEntry extends KrbSequenceType {
+    /**
+     * The possible fields
+     */
     protected enum AuthorizationDataEntryField implements EnumType {
         AD_TYPE,
         AD_DATA;
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getValue() {
             return ordinal();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getName() {
             return name();
         }
     }
 
-    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+    /** The AuthorizationDataEntry's fields */
+    private static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(AuthorizationDataEntryField.AD_TYPE, Asn1Integer.class),
             new ExplicitField(AuthorizationDataEntryField.AD_DATA, Asn1OctetString.class)
     };
 
+    /**
+     * Creates an AuthorizationDataEntry instance
+     */
     public AuthorizationDataEntry() {
         super(fieldInfos);
     }
 
+    /**
+     * @return The AuthorizationType (AD_TYPE) field
+     */
     public AuthorizationType getAuthzType() {
         Integer value = getFieldAsInteger(AuthorizationDataEntryField.AD_TYPE);
+        
         return AuthorizationType.fromValue(value);
     }
 
+    /**
+     * Sets the AuthorizationType (AD_TYPE) field
+     * @param authzType The AuthorizationType to set
+     */
     public void setAuthzType(AuthorizationType authzType) {
         setFieldAsInt(AuthorizationDataEntryField.AD_TYPE, authzType.getValue());
     }
 
+    /**
+     * @return The AuthorizationType (AD_DATA) field
+     */
     public byte[] getAuthzData() {
         return getFieldAsOctets(AuthorizationDataEntryField.AD_DATA);
     }
 
+    /**
+     * Sets the AuthorizationData (AD_DATA) field
+     * @param authzData The AuthorizationData to set
+     */
     public void setAuthzData(byte[] authzData) {
         setFieldAsOctets(AuthorizationDataEntryField.AD_DATA, authzData);
     }
