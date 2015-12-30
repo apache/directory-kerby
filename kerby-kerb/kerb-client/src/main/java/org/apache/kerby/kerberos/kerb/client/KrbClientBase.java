@@ -225,6 +225,12 @@ public class KrbClientBase {
                     throw new KrbException("Failed to create ccache file "
                         + ccacheFile.getAbsolutePath());
                 }
+                // sets read-write permissions to owner only
+                ccacheFile.setReadable(false, false);
+                ccacheFile.setReadable(true, true);
+                if (!ccacheFile.setWritable(true, true)) {
+                    throw new KrbException("Cache file is not readable.");
+                }
             } catch (IOException e) {
                 throw new KrbException("Failed to create ccache file "
                     + ccacheFile.getAbsolutePath(), e);
