@@ -36,8 +36,8 @@ public class KerberosTimeTest {
     public void testLessThan() {
         KerberosTime kerberosTime = new KerberosTime();
         
-        assertTrue( kerberosTime.lessThan(System.currentTimeMillis() + 100));
-        assertFalse( kerberosTime.lessThan(System.currentTimeMillis() - 10000));
+        assertTrue(kerberosTime.lessThan(System.currentTimeMillis() + 100));
+        assertFalse(kerberosTime.lessThan(System.currentTimeMillis() - 10000));
     }
     
     
@@ -45,8 +45,8 @@ public class KerberosTimeTest {
     public void testGreaterThan() {
         KerberosTime kerberosTime = new KerberosTime();
         
-        assertTrue( kerberosTime.greaterThan(new KerberosTime(System.currentTimeMillis() - 10000)));
-        assertFalse( kerberosTime.greaterThan(new KerberosTime(System.currentTimeMillis() + 100)));
+        assertTrue(kerberosTime.greaterThan(new KerberosTime(System.currentTimeMillis() - 10000)));
+        assertFalse(kerberosTime.greaterThan(new KerberosTime(System.currentTimeMillis() + 100)));
     }
     
     
@@ -59,6 +59,6 @@ public class KerberosTimeTest {
         assertTrue(kerberosTime.lessThan(extended));
         assertFalse(kerberosTime.greaterThan(extended));
         
-        assertEquals( -1000L, kerberosTime.diff(extended));
+        assertEquals(-1000L, kerberosTime.diff(extended));
     }
 }
