@@ -27,6 +27,6 @@ for %%a in (%*) do (
 )
 
 java %DEBUG% ^
--classpath lib\* ^
+-classpath target\lib\* ^
 -DKERBY_LOGFILE=kerby-kdc ^
 org.apache.kerby.kerberos.tool.kadmin.KadminTool %args%

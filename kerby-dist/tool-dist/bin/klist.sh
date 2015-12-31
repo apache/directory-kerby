@@ -27,6 +27,6 @@ for var in $*; do
 done
 
 java $DEBUG \
--classpath lib/*:. \
+-classpath target/lib/*:. \
 -DKERBY_LOGFILE=klist \
 org.apache.kerby.kerberos.tool.klist.KlistTool $args

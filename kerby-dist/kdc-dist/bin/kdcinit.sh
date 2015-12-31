@@ -27,6 +27,6 @@ for var in $*; do
 done
 
 java $DEBUG \
--classpath lib/*:. \
+-classpath target/lib/*:. \
 -DKERBY_LOGFILE=kdcinit \
 org.apache.kerby.kerberos.tool.kdcinit.KdcInitTool $args

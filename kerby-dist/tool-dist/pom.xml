@@ -87,7 +87,7 @@
                   <goal>copy-dependencies</goal>
                 </goals>
                 <configuration>
-                  <outputDirectory>lib</outputDirectory>
+                  <outputDirectory>target/lib</outputDirectory>
                   <excludeTransitive>true</excludeTransitive>
                   <excludeGroupIds>junit, org.assertj</excludeGroupIds>
                 </configuration>
