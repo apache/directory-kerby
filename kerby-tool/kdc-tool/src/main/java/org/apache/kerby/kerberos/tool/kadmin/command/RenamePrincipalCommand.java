@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.tool.kadmin.command;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
@@ -33,7 +34,7 @@ public class RenamePrincipalCommand extends KadminCommand {
     private String oldPrincipalName;
     private String newPrincipalName;
 
-    public RenamePrincipalCommand(Kadmin kadmin) {
+    public RenamePrincipalCommand(LocalKadmin kadmin) {
         super(kadmin);
     }
 

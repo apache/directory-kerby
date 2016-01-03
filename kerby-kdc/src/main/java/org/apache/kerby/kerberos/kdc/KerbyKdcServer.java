@@ -21,7 +21,8 @@ package org.apache.kerby.kerberos.kdc;
 
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadminImpl;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.util.OSUtil;
 
@@ -31,7 +32,7 @@ import java.io.File;
  * The mentioned Kerby KDC server implementation.
  */
 public class KerbyKdcServer extends KdcServer {
-    private Kadmin kadmin;
+    private LocalKadmin kadmin;
     public KerbyKdcServer(File confDir) throws KrbException {
         super(confDir);
         setInnerKdcImpl(new NettyKdcServerImpl(getKdcSetting()));
@@ -44,7 +45,7 @@ public class KerbyKdcServer extends KdcServer {
     public void init() throws KrbException {
         super.init();
 
-        kadmin = new Kadmin(getKdcSetting(), getIdentityService());
+        kadmin = new LocalKadminImpl(getKdcSetting(), getIdentityService());
 
         kadmin.checkBuiltinPrincipals();
     }

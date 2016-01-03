@@ -33,9 +33,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
- * Kadmin utilities.
+ * LocalKadmin utilities.
  */
 public final class AdminHelper {
 
@@ -271,5 +273,36 @@ public final class AdminHelper {
         if (kOptions.contains(KadminOption.LOCKED)) {
             identity.setLocked(kOptions.getBooleanOption(KadminOption.LOCKED, false));
         }
+    }
+
+    /**
+     * Get all the Pattern for matching from glob string.
+     * The glob string can contain "." "*" and "[]"
+     *
+     * @param globString The glob string for matching
+     * @return pattern
+     * @throws KrbException
+     */
+    static Pattern getPatternFromGlobPatternString(String globString) throws KrbException {
+        if (globString == null || globString.equals("")) {
+            return null;
+        }
+        if (!Pattern.matches("^[0-9A-Za-z._/@*?\\[\\]\\-]+$", globString)) {
+            throw new KrbException("Glob pattern string contains invalid character");
+        }
+
+        String patternString = globString;
+        patternString = patternString.replaceAll("\\.", "\\\\.");
+        patternString = patternString.replaceAll("\\?", ".");
+        patternString = patternString.replaceAll("\\*", ".*");
+        patternString = "^" + patternString + "$";
+
+        Pattern pt;
+        try {
+            pt = Pattern.compile(patternString);
+        } catch (PatternSyntaxException e) {
+            throw new KrbException("Invalid glob pattern string");
+        }
+        return pt;
     }
 }

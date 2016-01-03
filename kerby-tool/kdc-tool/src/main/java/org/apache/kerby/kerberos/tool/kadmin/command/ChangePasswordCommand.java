@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
@@ -35,7 +35,7 @@ public class ChangePasswordCommand extends KadminCommand {
 
     private KOptions kOptions;
 
-    public ChangePasswordCommand(Kadmin kadmin) {
+    public ChangePasswordCommand(LocalKadmin kadmin) {
         super(kadmin);
     }
 
@@ -57,7 +57,7 @@ public class ChangePasswordCommand extends KadminCommand {
                 return;
             }
             try {
-                getKadmin().updatePassword(principal, password);
+                getKadmin().changePassword(principal, password);
                 System.out.println("Update password success.");
             } catch (KrbException e) {
                 System.err.println("Fail to update password. " + e.getCause());
@@ -71,7 +71,7 @@ public class ChangePasswordCommand extends KadminCommand {
             if (kOptions.contains(KadminOption.PW)) {
                 password = kOptions.getStringOption(KadminOption.PW);
                 try {
-                    getKadmin().updatePassword(principal, password);
+                    getKadmin().changePassword(principal, password);
                     System.out.println("Update password success.");
                 } catch (KrbException e) {
                     System.err.println("Fail to update password. " + e.getMessage());

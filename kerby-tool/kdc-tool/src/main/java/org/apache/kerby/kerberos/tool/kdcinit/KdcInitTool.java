@@ -20,7 +20,8 @@
 package org.apache.kerby.kerberos.tool.kdcinit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadminImpl;
 import org.apache.kerby.util.OSUtil;
 
 import java.io.File;
@@ -29,7 +30,7 @@ import java.io.File;
  * A tool to initialize KDC backend for the first time when setup the KDC.
  */
 public class KdcInitTool {
-    private Kadmin kadmin;
+    private LocalKadmin kadmin;
     private static File keytabFile;
 
     private static  final String USAGE = (OSUtil.isWindows()
@@ -44,7 +45,7 @@ public class KdcInitTool {
             + " conf admin.keytab\n";
 
     void initKdc(File confDir) throws KrbException {
-        kadmin = new Kadmin(confDir);
+        kadmin = new LocalKadminImpl(confDir);
         try {
             kadmin.createBuiltinPrincipals();
             kadmin.exportKeytab(keytabFile, kadmin.getKadminPrincipal());

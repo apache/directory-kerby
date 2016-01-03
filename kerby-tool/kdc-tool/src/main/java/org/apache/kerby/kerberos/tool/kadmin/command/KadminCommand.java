@@ -19,17 +19,17 @@
  */
 package org.apache.kerby.kerberos.tool.kadmin.command;
 
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
 
 public abstract class KadminCommand {
 
-    private Kadmin kadmin;
+    private LocalKadmin kadmin;
 
-    public KadminCommand(Kadmin kadmin) {
+    public KadminCommand(LocalKadmin kadmin) {
         this.kadmin = kadmin;
     }
 
-    protected Kadmin getKadmin() {
+    protected LocalKadmin getKadmin() {
         return kadmin;
     }
 

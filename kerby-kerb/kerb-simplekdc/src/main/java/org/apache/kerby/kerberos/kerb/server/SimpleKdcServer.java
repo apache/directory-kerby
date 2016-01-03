@@ -20,7 +20,8 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadminImpl;
 import org.apache.kerby.kerberos.kerb.client.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
@@ -36,7 +37,7 @@ import java.io.IOException;
  */
 public class SimpleKdcServer extends KdcServer {
     private final KrbClient krbClnt;
-    private Kadmin kadmin;
+    private LocalKadmin kadmin;
     private Krb5Conf krb5Conf;
     private File workDir;
 
@@ -128,7 +129,7 @@ public class SimpleKdcServer extends KdcServer {
     public void init() throws KrbException {
         super.init();
 
-        kadmin = new Kadmin(getKdcSetting(), getIdentityService());
+        kadmin = new LocalKadminImpl(getKdcSetting(), getIdentityService());
 
         kadmin.createBuiltinPrincipals();
 
@@ -182,7 +183,7 @@ public class SimpleKdcServer extends KdcServer {
      * Get Kadmin operation interface.
      * @return Kadmin
      */
-    public Kadmin getKadmin() {
+    public LocalKadmin getKadmin() {
         return kadmin;
     }
 

@@ -20,16 +20,15 @@
 package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class ListPrincipalCommand extends KadminCommand {
     private static final String USAGE = "Usage: list_principals [expression]\n"
             + "\t'expression' is a shell-style glob expression that can contain the wild-card characters ?, *, and [].";
 
-    public ListPrincipalCommand(Kadmin kadmin) {
+    public ListPrincipalCommand(LocalKadmin kadmin) {
         super(kadmin);
     }
 
@@ -40,8 +39,7 @@ public class ListPrincipalCommand extends KadminCommand {
         if (commands.length <= 2) {
             String expression = commands.length == 2 ? commands[1] : null;
             try {
-                Pattern pt = getKadmin().getPatternFromGlobPatternString(expression);
-                List<String> principalNames = getKadmin().getPrincipalNamesByPattern(pt);
+                List<String> principalNames = getKadmin().getPrincipals(expression);
                 if (principalNames.size() == 0) {
                     return;
                 }

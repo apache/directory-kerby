@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.tool.kadmin.command;
 import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
@@ -39,7 +39,7 @@ public class ModifyPrincipalCommand extends KadminCommand {
     private KOptions kOptions;
     private String principal;
 
-    public ModifyPrincipalCommand(Kadmin kadmin) {
+    public ModifyPrincipalCommand(LocalKadmin kadmin) {
         super(kadmin);
         this.kOptions = new KOptions();
     }

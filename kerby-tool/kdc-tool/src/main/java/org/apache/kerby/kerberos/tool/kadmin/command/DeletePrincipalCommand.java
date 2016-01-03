@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
 
 import java.io.Console;
 import java.util.Scanner;
@@ -34,7 +35,7 @@ public class DeletePrincipalCommand extends KadminCommand {
 
     private Boolean force = false;
 
-    public DeletePrincipalCommand(Kadmin kadmin) {
+    public DeletePrincipalCommand(LocalKadmin kadmin) {
         super(kadmin);
     }
 

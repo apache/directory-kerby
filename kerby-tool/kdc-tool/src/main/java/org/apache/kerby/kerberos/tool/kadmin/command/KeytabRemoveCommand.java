@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
@@ -33,7 +33,7 @@ public class KeytabRemoveCommand extends KadminCommand {
 
     private static final String DEFAULT_KEYTAB_FILE = "/etc/krb5.keytab";
 
-    public KeytabRemoveCommand(Kadmin kadmin) {
+    public KeytabRemoveCommand(LocalKadmin kadmin) {
         super(kadmin);
     }
 

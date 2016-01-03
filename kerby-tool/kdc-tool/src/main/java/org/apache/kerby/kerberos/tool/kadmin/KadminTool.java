@@ -21,7 +21,8 @@ package org.apache.kerby.kerberos.tool.kadmin;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadminImpl;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.command.AddPrincipalCommand;
 import org.apache.kerby.kerberos.tool.kadmin.command.ChangePasswordCommand;
@@ -102,7 +103,7 @@ public class KadminTool {
         System.exit(-1);
     }
 
-    private static void execute(Kadmin kadmin, String command) {
+    private static void execute(LocalKadmin kadmin, String command) {
         //Omit the leading and trailing whitespace.
         command = command.trim();
         if (command.equals("list_requests")
@@ -182,9 +183,9 @@ public class KadminTool {
             return;
         }
 
-        Kadmin kadmin;
+        LocalKadmin kadmin;
         try {
-            kadmin = new Kadmin(getConfDir(args));
+            kadmin = new LocalKadminImpl(getConfDir(args));
         } catch (KrbException e) {
             System.err.println("Failed to init Kadmin due to " + e.getMessage());
             return;

@@ -20,11 +20,10 @@
 package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
 
 import java.io.File;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class KeytabAddCommand extends KadminCommand {
     private static final String USAGE =
@@ -32,7 +31,7 @@ public class KeytabAddCommand extends KadminCommand {
 
     private static final String DEFAULT_KEYTAB_FILE_LOCATION = "/etc/krb5.keytab";
 
-    public KeytabAddCommand(Kadmin kadmin) {
+    public KeytabAddCommand(LocalKadmin kadmin) {
         super(kadmin);
     }
 
@@ -77,8 +76,7 @@ public class KeytabAddCommand extends KadminCommand {
 
         try {
             if (glob) {
-                Pattern pt = getKadmin().getPatternFromGlobPatternString(principal);
-                List<String> principals = getKadmin().getPrincipalNamesByPattern(pt);
+                List<String> principals = getKadmin().getPrincipals(principal);
                 if (principals.size() != 0) {
                     getKadmin().exportKeytab(keytabFile, principals);
                 }

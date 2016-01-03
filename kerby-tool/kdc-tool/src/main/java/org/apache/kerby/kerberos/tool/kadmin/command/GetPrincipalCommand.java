@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
@@ -31,7 +31,7 @@ public class GetPrincipalCommand extends KadminCommand {
     private static final String USAGE = "Usage: getprinc principalName\n"
             + "such as, getprinc hello@TEST.COM";
 
-    public GetPrincipalCommand(Kadmin kadmin) {
+    public GetPrincipalCommand(LocalKadmin kadmin) {
         super(kadmin);
     }
 
