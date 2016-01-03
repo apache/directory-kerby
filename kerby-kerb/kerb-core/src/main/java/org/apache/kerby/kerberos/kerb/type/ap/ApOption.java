@@ -22,35 +22,57 @@ package org.apache.kerby.kerberos.kerb.type.ap;
 import org.apache.kerby.asn1.EnumType;
 
 /**
- APOptions       ::= KrbFlags
- -- reserved(0),
- -- use-session-key(1),
- -- mutual-required(2)
+ * The various APOptions values, as defined in RFC 4120.
+ * 
+ * <pre>
+ * APOptions       ::= KerberosFlags
+ *         -- reserved(0),
+ *         -- use-session-key(1),
+ *         -- mutual-required(2)
+ * </pre>
+ *         
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public enum ApOption implements EnumType {
     NONE(-1),
-    RESERVED(0x80000000),
-    USE_SESSION_KEY(0x40000000),
-    MUTUAL_REQUIRED(0x20000000),
-    ETYPE_NEGOTIATION(0x00000002),
-    USE_SUBKEY(0x00000001);
+    RESERVED(0x80000000),               // Bit 0, in ASN.1 BIT STRING definition : the most left-handed bit 
+    USE_SESSION_KEY(0x40000000),        // Bit 1
+    MUTUAL_REQUIRED(0x20000000),        // Bit 2
+    ETYPE_NEGOTIATION(0x00000002),      // ???
+    USE_SUBKEY(0x00000001);             // ???
 
+    /** The internal value */
     private final int value;
 
+    /**
+     * Create a new enum 
+     */
     private ApOption(int value) {
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getValue() {
         return value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name();
     }
 
+    /**
+     * Get the APOptions associated with a value.
+     * 
+     * @param value The integer value of the APOptions we are looking for
+     * @return The associated APOptions, or NONE if not found or if value is null
+     */
     public static ApOption fromValue(int value) {
         for (EnumType e : values()) {
             if (e.getValue() == value) {

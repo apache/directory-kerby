@@ -21,12 +21,41 @@ package org.apache.kerby.kerberos.kerb.type.ap;
 
 import org.apache.kerby.asn1.type.Asn1Flags;
 
+/**
+ * The APOptions container, as defined in RFC 4120 :
+ *  
+ * <pre>
+ * APOptions       ::= KerberosFlags
+ *         -- reserved(0),
+ *         -- use-session-key(1),
+ *         -- mutual-required(2)
+ * </pre>
+ * 
+ * The KerberosFlags element is defined as :
+ *
+ * <pre>
+ * KerberosFlags   ::= BIT STRING (SIZE (32..MAX))
+ *                  -- minimum number of bits shall be sent,
+ *                  -- but no fewer than 32
+ * </pre>
+ *
+ * which defines a 32 bits length for the BIT STRING (it may be longer, but for Kerberos, it won't).
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ */
 public class ApOptions extends Asn1Flags {
-
+    /**
+     * Creates a default ApOptions container, with no bit set
+     */
     public ApOptions() {
         this(0);
     }
 
+    /**
+     * Set the flags into the container
+     * 
+     * @param value The flag as an integer
+     */
     public ApOptions(int value) {
         setFlags(value);
     }
