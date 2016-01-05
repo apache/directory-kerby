@@ -61,7 +61,7 @@ public class Krb5Parser {
         while (originLine != null) {
             String line = originLine.trim();
             /*parse through comments*/
-            if (line.startsWith("#")) {
+            if (line.startsWith("#") || line.length() == 0) {
                 originLine = br.readLine();
             }   else if (line.startsWith("[")) {
                 insertSections(line, br, items);
@@ -72,6 +72,16 @@ public class Krb5Parser {
         }
         br.close();
     }
+
+    /**
+     * Get the whole map.
+     * @return member variable items.
+     */
+    public Map<String, Object> getItems() {
+        return items;
+    }
+
+
 
     /**
      * Get all the names of sections in a list.
@@ -108,6 +118,12 @@ public class Krb5Parser {
             String sectionName = line.substring(1, line.length() - 1);
             Map<String, Object> entries = new HashMap<String, Object>();
             line = br.readLine();
+            while (line.startsWith("#")) {
+                line = br.readLine();
+                if (line == null) {
+                    break;
+                }
+            }
             if (line != null) {
                 line = line.trim();
                 line = insertEntries(line, br, entries);
@@ -128,7 +144,7 @@ public class Krb5Parser {
         if (line == null) {
             return line;
         }
-        if (line.startsWith("[")) {
+        if (line.startsWith("[") || line.startsWith("#")) {
             return line;
         }
         if (line.startsWith("}")) {
@@ -147,10 +163,7 @@ public class Krb5Parser {
             return line;
         }
         /*some special cases above*/
-        String[] kv = line.split("=");
-        if (kv.length > 2) {
-            throw new RuntimeException("Unable to parse:" + line);
-        }
+        String[] kv = line.split("=", 2);
         kv[0] = kv[0].trim();
         kv[1] = kv[1].trim();
 

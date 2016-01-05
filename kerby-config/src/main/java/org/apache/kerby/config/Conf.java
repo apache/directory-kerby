@@ -64,7 +64,7 @@ public class Conf implements Config {
         addResource(Resource.createPropertiesResource(propertiesConfig));
     }
 
-    public void addMapConfig(Map<String, String> mapConfig) {
+    public void addMapConfig(Map<String, Object> mapConfig) {
         addResource(Resource.createMapResource(mapConfig));
     }
 

@@ -38,7 +38,7 @@ public class ConfTest {
         String strProp = "hello";
         Integer intProp = 123456;
         Boolean boolProp = true;
-        Map<String, String> mapConfig = new HashMap<String, String>();
+        Map<String, Object> mapConfig = new HashMap<String, Object>();
         mapConfig.put("strProp", strProp);
         mapConfig.put("intProp", String.valueOf(intProp));
         mapConfig.put("boolProp", String.valueOf(boolProp));
@@ -74,7 +74,7 @@ public class ConfTest {
     public void testMixedConfig() {
         String mapStrProp = "hello map";
         Integer intProp = 123456;
-        Map<String, String> mapConfig = new HashMap<String, String>();
+        Map<String, Object> mapConfig = new HashMap<String, Object>();
         mapConfig.put("mapStrProp", mapStrProp);
         mapConfig.put("intProp", String.valueOf(intProp));
 
@@ -121,7 +121,7 @@ public class ConfTest {
         Conf conf = new Conf();
         assertThat(conf.getString(TestConfKey.ADDRESS, true)).isEqualTo(
                 TestConfKey.ADDRESS.getDefaultValue());
-        Map<String, String> mapConfig = new HashMap<String, String>();
+        Map<String, Object> mapConfig = new HashMap<String, Object>();
         String myAddress = "www.google.com";
         mapConfig.put(TestConfKey.ADDRESS.getPropertyKey(), myAddress);
         conf.addMapConfig(mapConfig);

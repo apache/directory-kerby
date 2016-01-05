@@ -232,7 +232,7 @@ public class TokenAuthLoginModule implements LoginModule {
         try {
             File confFile = new File(System.getProperty(Krb5Conf.KRB5_CONF));
             KrbConfig krbConfig = new KrbConfig();
-            krbConfig.addIniConfig(confFile);
+            krbConfig.addKrb5Config(confFile);
             krbClient = new KrbClient(krbConfig);
             krbClient.init();
         } catch (KrbException e) {
