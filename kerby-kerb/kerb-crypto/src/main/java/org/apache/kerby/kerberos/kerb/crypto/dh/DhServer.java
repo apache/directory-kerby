@@ -113,9 +113,7 @@ public class DhServer {
     private byte[] concatenateBytes(byte[] array1, byte[] array2) {
         byte[] concatenatedBytes = new byte[array1.length + array2.length];
 
-        for (int i = 0; i < array1.length; i++) {
-            concatenatedBytes[i] = array1[i];
-        }
+        System.arraycopy(array1, 0, concatenatedBytes, 0, array1.length);
 
         for (int j = array1.length; j < concatenatedBytes.length; j++) {
             concatenatedBytes[j] = array2[j - array1.length];
