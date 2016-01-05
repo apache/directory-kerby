@@ -55,7 +55,8 @@ public enum KlistOption implements KOption {
     public static KlistOption fromName(String name) {
         if (name != null) {
             for (KlistOption ko : values()) {
-                if (ko.name().equals(name)) {
+                if (ko.optionInfo != null
+                        && ko.optionInfo.getName().equals(name)) {
                     return ko;
                 }
             }
