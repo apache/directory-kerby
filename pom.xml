@@ -165,6 +165,8 @@
               <exclude>**/bin/**/*</exclude>
               <!-- The IP clearance XML doc -->
               <exclude>docs/kerby-ip-clearance.xml</exclude>
+              <!-- The resources files -->
+              <exclude>**/src/test/resources/**/*</exclude>
             </excludes>
           </configuration>
         </plugin>
