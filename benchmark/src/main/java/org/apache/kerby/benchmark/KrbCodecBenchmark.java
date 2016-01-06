@@ -46,6 +46,7 @@ public class KrbCodecBenchmark {
             byte[] bytes = new byte[is.available()];
             is.read(bytes);
             apreqToken = ByteBuffer.wrap(bytes);
+            is.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

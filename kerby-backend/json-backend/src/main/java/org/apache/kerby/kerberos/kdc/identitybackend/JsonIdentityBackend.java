@@ -266,8 +266,14 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
             File newJsonKdbFile = File.createTempFile("kerby-kdb",
                     ".json", jsonKdbFile.getParentFile());
             IOUtil.writeFile(newJsonContent, newJsonKdbFile);
-            jsonKdbFile.delete();
-            newJsonKdbFile.renameTo(jsonKdbFile);
+            boolean delete = jsonKdbFile.delete();
+            if (!delete) {
+                throw new RuntimeException("File delete error!");
+            }
+            boolean rename = newJsonKdbFile.renameTo(jsonKdbFile);
+            if (!rename) {
+                throw new RuntimeException("File rename error!");
+            }
             kdbFileUpdateTime = jsonKdbFile.lastModified();
         } catch (IOException e) {
             LOG.error("Error occurred while writing identities to file: " + jsonKdbFile);

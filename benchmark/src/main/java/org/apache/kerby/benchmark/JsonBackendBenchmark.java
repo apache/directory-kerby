@@ -84,7 +84,10 @@ public class JsonBackendBenchmark {
         }
 
         if (jsonBackendFile.exists()) {
-            jsonBackendFile.delete();
+            boolean delete = jsonBackendFile.delete();
+            if (!delete) {
+                throw new RuntimeException("File delete error!");
+            }
         }
     }
 }
