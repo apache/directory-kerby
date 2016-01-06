@@ -77,7 +77,7 @@ public class KeytabInputStream extends KrbInputStream {
     public String readCountedString() throws IOException {
         byte[] countedOctets = readCountedOctets();
         // ASCII
-        return new String(countedOctets);
+        return new String(countedOctets, "ASCII");
     }
 
     @Override

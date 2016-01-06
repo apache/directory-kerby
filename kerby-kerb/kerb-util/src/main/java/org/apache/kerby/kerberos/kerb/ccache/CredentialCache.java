@@ -81,9 +81,9 @@ public class CredentialCache implements KrbCredentialCache {
 
     @Override
     public void store(File ccacheFile) throws IOException {
-        OutputStream outputStream = new FileOutputStream(ccacheFile);
-        store(outputStream);
-        outputStream.close();
+        try (OutputStream outputStream = new FileOutputStream(ccacheFile)) {
+            store(outputStream);
+        }
     }
 
     @Override
@@ -190,9 +190,9 @@ public class CredentialCache implements KrbCredentialCache {
                     + ccacheFile.getAbsolutePath());
         }
 
-        InputStream inputStream = new FileInputStream(ccacheFile);
-        load(inputStream);
-        inputStream.close();
+        try (InputStream inputStream = new FileInputStream(ccacheFile)) {
+            load(inputStream);
+        }
     }
 
     @Override
