@@ -138,7 +138,7 @@ public class HostAddress extends KrbSequenceType {
     }
 
     /**
-     * @see Object#equals()
+     * @see Object#equals(Object)
      */
     @Override
     public boolean equals(Object other) {

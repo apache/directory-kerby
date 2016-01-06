@@ -100,9 +100,9 @@ public class DhServer {
     /**
      * Encrypt
      *
-     * @param clearText
+     * @param clearText The clear test
      * @return The cipher text.
-     * @throws Exception
+     * @throws Exception e
      */
     public byte[] encrypt(byte[] clearText, KeyUsage usage) throws Exception {
         // Use the secret key to encrypt/decrypt data.

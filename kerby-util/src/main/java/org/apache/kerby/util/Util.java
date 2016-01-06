@@ -62,6 +62,10 @@ public class Util {
      * True if the Keystores have the same # of entries, have the same set of aliases, and all the certificate-chains
      * (of the certificate entries) match.   Does not check the private keys for equality, since we
      * don't bother taking the passwords to get at them.
+     * @param ks1 The first key store
+     * @param ks2 The second key store
+     * @return boolean
+     * @throws KeyStoreException e
      */
     public static boolean equals(KeyStore ks1, KeyStore ks2) throws KeyStoreException {
         if (ks1 == null || ks2 == null) {
@@ -372,6 +376,9 @@ public class Util {
 
     /**
      * Utility method to make sure IP-literals don't trigger reverse-DNS lookups.
+     * @param s The string
+     * @return The InetAddress
+     * @throws UnknownHostException e
      */
     public static InetAddress toInetAddress(String s) throws UnknownHostException {
         byte[] ip = IPAddressParser.parseIPv4Literal(s);

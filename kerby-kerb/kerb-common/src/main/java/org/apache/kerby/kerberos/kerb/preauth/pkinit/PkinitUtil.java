@@ -42,13 +42,17 @@ public class PkinitUtil {
     /**
      * Uses a private key to sign data in a CMS SignedData structure and returns
      * the encoded CMS SignedData as bytes.
-     * <p/>
+     *
      * 'signedAuthPack' contains a CMS type ContentInfo encoded according to [RFC3852].
      * The contentType field of the type ContentInfo is id-signedData (1.2.840.113549.1.7.2),
      * and the content field is a SignedData.
-     * <p/>
+     *
      * The eContentType field for the type SignedData is id-pkinit-authData (1.3.6.1.5.2.3.1),
      * and the eContent field contains the DER encoding of the type AuthPack.
+     * @param privateKey The private key
+     * @param certificate The certificate
+     * @param  authPack The auth pack
+     * @throws KrbException e
      */
     public static byte[] getSignedAuthPack(PrivateKey privateKey, X509Certificate certificate,
                                            AuthPack authPack) throws KrbException {
@@ -67,13 +71,18 @@ public class PkinitUtil {
     /**
      * Uses a private key to sign data in a CMS SignedData structure and returns
      * the encoded CMS SignedData as bytes.
-     * <p/>
+     *
      * 'dhSignedData' contains a CMS type ContentInfo encoded according to [RFC3852].
      * The contentType field of the type ContentInfo is id-signedData (1.2.840.113549.1.7.2),
      * and the content field is a SignedData.
-     * <p/>
+     *
      * The eContentType field for the type SignedData is id-pkinit-DHKeyData (1.3.6.1.5.2.3.2),
      * and the eContent field contains the DER encoding of the type KDCDHKeyInfo.
+     *
+     * @param privateKey The private Key
+     * @param certificate The certificate
+     * @param kdcDhKeyInfo The kdc dh key info
+     * @throws KrbException e
      */
     public static byte[] getSignedKdcDhKeyInfo(PrivateKey privateKey, X509Certificate certificate,
                                                KdcDhKeyInfo kdcDhKeyInfo) throws KrbException {
@@ -92,12 +101,16 @@ public class PkinitUtil {
     /**
      * Uses a private key to sign data in a CMS SignedData structure and returns
      * the encoded CMS SignedData as bytes.
-     * <p/>
+     *
      * Selected when public key encryption is used.
-     * <p/>
+     *
      * The eContentType field for the inner type SignedData (when unencrypted) is
      * id-pkinit-rkeyData (1.3.6.1.5.2.3.3) and the eContent field contains the
      * DER encoding of the type ReplyKeyPack.
+     * @param privateKey The private key
+     * @param  certificate The certificate
+     * @param replyKeyPack The reply key pack
+     * @throws KrbException e
      */
     public static byte[] getSignedReplyKeyPack(PrivateKey privateKey, X509Certificate certificate,
                                                ReplyKeyPack replyKeyPack) throws KrbException {

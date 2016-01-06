@@ -103,8 +103,8 @@ public class DhClient {
      * Decrypt
      *
      * @param cipherText
-     * @return
-     * @throws Exception
+     * @return The decrypted byte
+     * @throws Exception e
      */
     public byte[] decrypt(byte[] cipherText, KeyUsage usage) throws Exception {
         // Use the secret key to encrypt/decrypt data.

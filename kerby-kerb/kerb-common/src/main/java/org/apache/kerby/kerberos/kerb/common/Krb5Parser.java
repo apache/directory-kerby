@@ -51,7 +51,7 @@ public class Krb5Parser {
 
     /**
      * Load the krb5.conf into a member variable, which is a Map.
-     * @throws IOException
+     * @throws IOException e
      */
     public void load() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(krb5conf)));

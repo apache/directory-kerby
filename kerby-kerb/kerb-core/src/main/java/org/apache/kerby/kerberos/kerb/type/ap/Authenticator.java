@@ -145,7 +145,7 @@ public class Authenticator extends KrbAppSequenceType {
 
     /**
      * Sets the Client Principal's name
-     * @param crealm The Client Principal's name to store
+     * @param cname The Client Principal's name to store
      */
     public void setCname(PrincipalName cname) {
         setFieldAs(AuthenticatorField.CNAME, cname);

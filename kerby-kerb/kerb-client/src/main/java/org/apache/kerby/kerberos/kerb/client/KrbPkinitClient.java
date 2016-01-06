@@ -66,6 +66,7 @@ public class KrbPkinitClient extends KrbClientBase {
 
     /**
      * Request a TGT with user x509 certificate credential
+     * @param principal The principal
      * @param certificate The certificate
      * @param privateKey The private key
      * @return TGT

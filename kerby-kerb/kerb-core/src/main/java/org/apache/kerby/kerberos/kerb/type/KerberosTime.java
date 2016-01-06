@@ -87,7 +87,7 @@ public class KerberosTime extends Asn1GeneralizedTime {
      * Compare the KerberosTime with another one, and return <tt>true</tt>
      * if it's lesser than the provided one
      * 
-     * @param time in milliseconds
+     * @param ktime in milliseconds
      * @return <tt>true</tt> if less
      */
     public boolean lessThan(KerberosTime ktime) {
@@ -173,10 +173,7 @@ public class KerberosTime extends Asn1GeneralizedTime {
     public int hashCode() {
         return getValue().hashCode();
     }
-    
-    /**
-     * @see Object#equals()
-     */
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
