@@ -120,6 +120,9 @@ public class Krb5Parser {
             String sectionName = line.substring(1, line.length() - 1);
             Map<String, Object> entries = new HashMap<String, Object>();
             line = br.readLine();
+            if (line == null) {
+                break;
+            }
             while (line.startsWith("#")) {
                 line = br.readLine();
                 if (line == null) {

@@ -186,7 +186,9 @@ public class PkinitCrypto {
         }
         DHPublicKey dhPublicKey = null;
         try {
-            dhPublicKey = (DHPublicKey) keyFactory.generatePublic(dhPublicKeySpec);
+            if (keyFactory != null) {
+                dhPublicKey = (DHPublicKey) keyFactory.generatePublic(dhPublicKeySpec);
+            }
         } catch (InvalidKeySpecException e) {
             e.printStackTrace();
         }
