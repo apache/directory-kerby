@@ -34,7 +34,7 @@ package org.apache.kerby.util;
  * Parses String representations of IPv4 and IPv6 addresses, and converts
  * them to byte[].  Returns null if the supplied String is not a valid IP
  * address.
- * <p/>
+
  * IPv6 addresses are allowed to include square brackets (e.g., "[::a:b:c:d]"),
  * but IPv4 addresses are not.  This is to help in situation where an IPv6
  * literal address is encoded directly inside a URL (the square brackets allow

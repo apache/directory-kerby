@@ -35,7 +35,7 @@ public class KrbClientSettingTest {
         File confFile = new File(confFileUrl.toURI());
 
         KrbConfig conf = new KrbConfig();
-        conf.addIniConfig(confFile);
+        conf.addKrb5Config(confFile);
         KrbClient krbClient = new KrbClient(conf);
 
         KrbSetting krbSetting = krbClient.getSetting();

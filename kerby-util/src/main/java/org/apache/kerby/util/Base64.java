@@ -420,7 +420,7 @@ public class Base64 {
         // We can re-use consumer's original output array under
         // special circumstances, saving on some System.arraycopy().
         if (out != null && out.length == outAvail) {
-            buffer = out;
+            buffer = out.clone();
             pos = outPos;
             readPos = outPos;
         }

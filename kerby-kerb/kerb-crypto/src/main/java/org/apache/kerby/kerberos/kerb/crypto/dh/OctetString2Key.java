@@ -24,16 +24,16 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * From RFC 4556:
- * <p/>
+ *
  * Define the function octetstring2key() as follows:
- * <p/>
+ *
  * octetstring2key(x) == random-to-key(K-truncate(
  * SHA1(0x00 | x) |
  * SHA1(0x01 | x) |
  * SHA1(0x02 | x) |
  * ...
  * ))
- * <p/>
+ *
  * where x is an octet string; | is the concatenation operator; 0x00,
  * 0x01, 0x02, etc. are each represented as a single octet; random-
  * to-key() is an operation that generates a protocol key from a
@@ -48,8 +48,8 @@ public class OctetString2Key {
     /**
      * Performs the function K-truncate to generate the AS reply key k.
      *
-     * @param k
-     * @param x
+     * @param k The k
+     * @param x The x
      * @return The AS reply key value.
      */
     public static byte[] kTruncate(int k, byte[] x) {

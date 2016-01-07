@@ -38,7 +38,7 @@ public class DhGroup {
      * From:
      * The OAKLEY Key Determination Protocol
      * http://www.ietf.org/rfc/rfc2412.txt
-     * <p/>
+     *
      * Well-Known Group 2:  A 1024 bit prime
      * This group is assigned id 2 (two).
      * The prime is 2^1024 - 2^960 - 1 + 2^64 * { [2^894 pi] + 129093 }.
@@ -65,7 +65,7 @@ public class DhGroup {
      * From:
      * More Modular Exponential (MODP) Diffie-Hellman groups for Internet Key Exchange (IKE)
      * http://www.ietf.org/rfc/rfc3526.txt
-     * <p/>
+     *
      * 2048-bit MODP Group
      * This group is assigned id 14.
      * This prime is: 2^2048 - 2^1984 - 1 + 2^64 * { [2^1918 pi] + 124476 }
@@ -97,7 +97,7 @@ public class DhGroup {
      * From:
      * More Modular Exponential (MODP) Diffie-Hellman groups for Internet Key Exchange (IKE)
      * http://www.ietf.org/rfc/rfc3526.txt
-     * <p/>
+     *
      * 4096-bit MODP Group
      * This group is assigned id 16.
      * This prime is: 2^4096 - 2^4032 - 1 + 2^64 * { [2^3966 pi] + 240904 }

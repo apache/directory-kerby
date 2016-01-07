@@ -111,7 +111,7 @@ public abstract class KrbMessage extends KrbAppSequenceType {
 
     /**
      * Sets the Kerberos Message Type field
-     * @param pmsgType The Kerberos Message Type to set
+     * @param msgType The Kerberos Message Type to set
      */
     public void setMsgType(KrbMessageType msgType) {
         setFieldAsInt(KrbMessageField.MSG_TYPE, msgType.getValue());

@@ -41,7 +41,7 @@ public interface Kadmin {
      * Add principal to backend.
      *
      * @param principal The principal to be added into backend
-     * @throws KrbException
+     * @throws KrbException e
      */
     void addPrincipal(String principal) throws KrbException;
 
@@ -50,7 +50,7 @@ public interface Kadmin {
      *
      * @param principal The principal to be added into backend
      * @param kOptions The KOptions with principal info
-     * @throws KrbException
+     * @throws KrbException e
      */
     void addPrincipal(String principal, KOptions kOptions) throws KrbException;
 
@@ -59,7 +59,7 @@ public interface Kadmin {
      *
      * @param principal The principal to be added into backend
      * @param password  The password to create encryption key
-     * @throws KrbException
+     * @throws KrbException e
      */
     void addPrincipal(String principal, String password) throws KrbException;
 
@@ -69,7 +69,7 @@ public interface Kadmin {
      * @param principal The principal to be added into backend
      * @param password  The password to create encryption key
      * @param kOptions  The KOptions with principal info
-     * @throws KrbException
+     * @throws KrbException e
      */
     void addPrincipal(String principal, String password,
                       KOptions kOptions) throws KrbException;
@@ -80,7 +80,7 @@ public interface Kadmin {
      *
      * @param keytabFile The keytab file
      * @param principal The principal name
-     * @throws KrbException
+     * @throws KrbException e
      */
     void exportKeytab(File keytabFile, String principal) throws KrbException;
 
@@ -90,7 +90,7 @@ public interface Kadmin {
      *
      * @param keytabFile The keytab file
      * @param principals The principal names
-     * @throws KrbException
+     * @throws KrbException e
      */
     void exportKeytab(File keytabFile,
                       List<String> principals) throws KrbException;
@@ -99,7 +99,7 @@ public interface Kadmin {
      * Export all identity keys to the specified keytab file.
      *
      * @param keytabFile The keytab file
-     * @throws KrbException
+     * @throws KrbException e
      */
     void exportKeytab(File keytabFile) throws KrbException;
 
@@ -109,7 +109,7 @@ public interface Kadmin {
      *
      * @param keytabFile The keytab file
      * @param principal The principal name
-     * @throws KrbException
+     * @throws KrbException e
      */
     void removeKeytabEntriesOf(File keytabFile, String principal)
             throws KrbException;
@@ -121,7 +121,7 @@ public interface Kadmin {
      * @param keytabFile The keytab file
      * @param principal The principal name
      * @param kvno The kvno
-     * @throws KrbException
+     * @throws KrbException e
      */
     void removeKeytabEntriesOf(File keytabFile, String principal, int kvno)
             throws KrbException;
@@ -132,7 +132,7 @@ public interface Kadmin {
      *
      * @param keytabFile The keytab file
      * @param principal The principal name
-     * @throws KrbException
+     * @throws KrbException e
      */
     void removeOldKeytabEntriesOf(File keytabFile, String principal)
             throws KrbException;
@@ -141,7 +141,7 @@ public interface Kadmin {
      * Delete the principal in backend.
      *
      * @param principal The principal to be deleted from backend
-     * @throws KrbException
+     * @throws KrbException e
      */
     void deletePrincipal(String principal) throws KrbException;
 
@@ -150,7 +150,7 @@ public interface Kadmin {
      *
      * @param principal The principal to be modified
      * @param kOptions The KOptions with changed principal info
-     * @throws KrbException
+     * @throws KrbException e
      */
     void modifyPrincipal(String principal, KOptions kOptions) throws KrbException;
 
@@ -159,7 +159,7 @@ public interface Kadmin {
      *
      * @param oldPrincipalName The original principal name
      * @param newPrincipalName The new principal name
-     * @throws KrbException
+     * @throws KrbException e
      */
     void renamePrincipal(String oldPrincipalName,
                          String newPrincipalName) throws KrbException;
@@ -168,7 +168,7 @@ public interface Kadmin {
      * Get all the principal names from backend.
      *
      * @return principal list
-     * @throws KrbException
+     * @throws KrbException e
      */
     List<String> getPrincipals() throws KrbException;
 
@@ -177,7 +177,7 @@ public interface Kadmin {
      *
      * @param globString The glob string for matching
      * @return Principal names
-     * @throws KrbException
+     * @throws KrbException e
      */
     List<String> getPrincipals(String globString) throws KrbException;
 
@@ -186,7 +186,7 @@ public interface Kadmin {
      *
      * @param principal The principal to be updated password
      * @param newPassword The new password
-     * @throws KrbException
+     * @throws KrbException e
      */
     void changePassword(String principal, String newPassword) throws KrbException;
 
@@ -194,14 +194,14 @@ public interface Kadmin {
      * Update the random keys of specified principal.
      *
      * @param principal The principal to be updated keys
-     * @throws KrbException
+     * @throws KrbException e
      */
     void updateKeys(String principal) throws KrbException;
 
     /**
      * Release any resources associated.
      *
-     * @throws KrbException
+     * @throws KrbException e
      */
     void release() throws KrbException;
 }

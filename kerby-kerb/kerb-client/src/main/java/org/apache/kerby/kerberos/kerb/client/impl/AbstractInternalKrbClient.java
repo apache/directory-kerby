@@ -156,6 +156,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
      * Fix principal name.
      *
      * @param principal The principal name
+     * @return The fixed principal
      */
     protected String fixPrincipal(String principal) {
         if (!principal.contains("@")) {

@@ -158,7 +158,10 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         if (file.isDirectory()) {
             File[] listOfFiles = file.listFiles();
             File verifyKeyFile = null;
-    
+
+            if (listOfFiles == null) {
+                throw new RuntimeException("List of files is null.");
+            }
             for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile() && listOfFiles[i].getName().contains(issuer)) {
                     verifyKeyFile = listOfFiles[i];

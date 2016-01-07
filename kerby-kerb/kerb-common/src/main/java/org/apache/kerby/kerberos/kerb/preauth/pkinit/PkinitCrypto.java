@@ -63,6 +63,7 @@ public class PkinitCrypto {
      * Verify CMS Signed Data
      * @param cmsMsgType The CMS message type
      * @param signedData The signed data
+     * @throws KrbException e
      */
     public static void verifyCmsSignedData(CmsMessageType cmsMsgType, SignedData signedData)
             throws KrbException {
@@ -105,6 +106,7 @@ public class PkinitCrypto {
      * @param pluginOpts The PluginOpts
      * @param cryptoctx The PkinitPlgCryptoContext
      * @param dhParameter The DhParameter
+     * @throws KrbException e
      */
     public static void serverCheckDH(PluginOpts pluginOpts, PkinitPlgCryptoContext cryptoctx,
                                      DhParameter dhParameter) throws KrbException {
@@ -125,6 +127,7 @@ public class PkinitCrypto {
      * @param dhParameter The DhParameter
      * @param dhPrimeBits The dh prime bits
      * @return boolean
+     * @throws KrbException e
      */
     public static boolean checkDHWellknown(PkinitPlgCryptoContext cryptoctx,
                                            DhParameter dhParameter, int dhPrimeBits) throws KrbException {
@@ -183,7 +186,9 @@ public class PkinitCrypto {
         }
         DHPublicKey dhPublicKey = null;
         try {
-            dhPublicKey = (DHPublicKey) keyFactory.generatePublic(dhPublicKeySpec);
+            if (keyFactory != null) {
+                dhPublicKey = (DHPublicKey) keyFactory.generatePublic(dhPublicKeySpec);
+            }
         } catch (InvalidKeySpecException e) {
             e.printStackTrace();
         }
@@ -206,7 +211,8 @@ public class PkinitCrypto {
      * @param certificateSet The certificate set
      * @param crls The revocation info choices
      * @param signerInfos The signerInfos
-     * @return The encoded ContentInfo
+     * @return The encoded
+     * @throws KrbException e
      */
     public static byte[] cmsSignedDataCreate(byte[] data, String oid, int version,
                                              DigestAlgorithmIdentifiers digestAlgorithmIdentifiers,
@@ -304,10 +310,12 @@ public class PkinitCrypto {
     /**
      * Validates a chain of {@link X509Certificate}s.
      *
-     * @throws CertificateException
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidAlgorithmParameterException
-     * @throws CertPathValidatorException
+     * @param certificateList The certificate list
+     * @param anchor The anchor
+     * @throws CertificateException e
+     * @throws NoSuchAlgorithmException e
+     * @throws InvalidAlgorithmParameterException e
+     * @throws CertPathValidatorException e
      */
     public static void validateChain(List<Certificate> certificateList, Certificate anchor)
             throws CertificateException, NoSuchAlgorithmException, NoSuchProviderException,
@@ -334,6 +342,7 @@ public class PkinitCrypto {
      *
      * @param content The hex content
      * @return  The oid
+     * @throws KrbException e
      */
     public static Asn1ObjectIdentifier createOid(String content) throws KrbException {
         Asn1ObjectIdentifier oid = new Asn1ObjectIdentifier();

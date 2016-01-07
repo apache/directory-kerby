@@ -32,7 +32,6 @@ import java.io.File;
  * The mentioned Kerby KDC server implementation.
  */
 public class KerbyKdcServer extends KdcServer {
-    private LocalKadmin kadmin;
     public KerbyKdcServer(File confDir) throws KrbException {
         super(confDir);
         setInnerKdcImpl(new NettyKdcServerImpl(getKdcSetting()));
@@ -45,7 +44,7 @@ public class KerbyKdcServer extends KdcServer {
     public void init() throws KrbException {
         super.init();
 
-        kadmin = new LocalKadminImpl(getKdcSetting(), getIdentityService());
+        LocalKadmin kadmin = new LocalKadminImpl(getKdcSetting(), getIdentityService());
 
         kadmin.checkBuiltinPrincipals();
     }

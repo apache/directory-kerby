@@ -22,11 +22,15 @@ package org.apache.kerby.kerberos.kerb.common;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.config.ConfigKey;
+import org.apache.kerby.config.Resource;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A krb5.conf format support.
@@ -37,6 +41,13 @@ public class Krb5Conf extends Conf {
      * of config value(string list).
      */
     private static final String LIST_SPLITTER = " |,";
+
+    public void addKrb5Config(File krb5File) throws IOException {
+        Krb5Parser krb5Parser = new Krb5Parser(krb5File);
+        krb5Parser.load();
+        Map<String, Object> krb5Map = krb5Parser.getItems();
+        addResource(Resource.createMapResource(krb5Map));
+    }
 
     protected String getString(ConfigKey key, boolean useDefault,
                             String ... sections) {

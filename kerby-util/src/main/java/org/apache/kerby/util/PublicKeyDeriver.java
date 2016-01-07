@@ -44,9 +44,6 @@ import java.security.spec.RSAPublicKeySpec;
 
 /**
  * Utility class for deriving a public key from a given private key.
- *
- * @author Chad La Joie <lajoie OF georgetown.edu>
- * @since November 14th, 2007
  */
 public class PublicKeyDeriver {
 
