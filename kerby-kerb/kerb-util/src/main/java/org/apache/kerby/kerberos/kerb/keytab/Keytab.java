@@ -201,9 +201,9 @@ public final class Keytab implements KrbKeytab {
 
     @Override
     public void store(File keytabFile) throws IOException {
-        OutputStream outputStream = new FileOutputStream(keytabFile);
-        store(outputStream);
-        outputStream.close();
+        try (OutputStream outputStream = new FileOutputStream(keytabFile)) {
+            store(outputStream);
+        }
     }
 
     @Override

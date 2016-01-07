@@ -254,7 +254,12 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             kdcRequest.setDhClient(client);
 
-            DHParameterSpec type = clientPubKey.getParams();
+            DHParameterSpec type = null;
+            try {
+                type = clientPubKey.getParams();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             BigInteger q = type.getP().shiftRight(1);
             DhParameter dhParameter = new DhParameter();
             dhParameter.setP(type.getP());

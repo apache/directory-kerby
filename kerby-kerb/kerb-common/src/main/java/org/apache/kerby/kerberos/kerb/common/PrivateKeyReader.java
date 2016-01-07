@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -35,7 +36,7 @@ public class PrivateKeyReader {
 
     public static PrivateKey loadPrivateKey(InputStream in) throws Exception {
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             String readLine = null;
             StringBuilder sb = new StringBuilder();
             while ((readLine = br.readLine()) != null) {

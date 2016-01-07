@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,7 +55,7 @@ public class Krb5Parser {
      * @throws IOException e
      */
     public void load() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(krb5conf)));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(krb5conf), StandardCharsets.UTF_8));
         items = new HashMap<String, Object>();
 
         String originLine = br.readLine();
@@ -118,6 +119,9 @@ public class Krb5Parser {
             String sectionName = line.substring(1, line.length() - 1);
             Map<String, Object> entries = new HashMap<String, Object>();
             line = br.readLine();
+            if (line == null) {
+                break;
+            }
             while (line.startsWith("#")) {
                 line = br.readLine();
                 if (line == null) {
