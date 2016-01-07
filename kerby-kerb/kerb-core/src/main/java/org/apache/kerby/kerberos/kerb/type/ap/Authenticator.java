@@ -33,7 +33,7 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
 /**
- * The definition of the unencrypted AUthenticator, per RFC 4120 :
+ * The definition of the unencrypted AUthenticator, per RFC 4120, section 5.5.1 :
  * <pre>
  * Authenticator   ::= [APPLICATION 2] SEQUENCE  {
  *         authenticator-vno       [0] INTEGER (5),
