@@ -38,8 +38,19 @@ public enum ApOption implements EnumType {
     RESERVED(0x80000000),               // Bit 0, in ASN.1 BIT STRING definition : the most left-handed bit 
     USE_SESSION_KEY(0x40000000),        // Bit 1
     MUTUAL_REQUIRED(0x20000000),        // Bit 2
-    ETYPE_NEGOTIATION(0x00000002),      // ???
-    USE_SUBKEY(0x00000001);             // ???
+    //
+    // The following values are taken from the MIT Kerberos file krb5.hin :
+    // 
+    // #define AP_OPTS_ETYPE_NEGOTIATION  0x00000002
+    // #define AP_OPTS_USE_SUBKEY         0x00000001 /**< Generate a subsession key
+    //                                                  from the current session key
+    //                                                  obtained from the
+    //                                                  credentials */
+    //
+    // ---->
+    ETYPE_NEGOTIATION(0x00000002),      // bit 30
+    USE_SUBKEY(0x00000001);             // bit 31
+    // <---- End of krb5.hin inclusion
 
     /** The internal value */
     private final int value;
