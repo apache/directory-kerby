@@ -55,7 +55,8 @@ public class Krb5Parser {
      * @throws IOException e
      */
     public void load() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(krb5conf), StandardCharsets.UTF_8));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(krb5conf),
+                StandardCharsets.UTF_8));
         items = new HashMap<String, Object>();
 
         String originLine = br.readLine();

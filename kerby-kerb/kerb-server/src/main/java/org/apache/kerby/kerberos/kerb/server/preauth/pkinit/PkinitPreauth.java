@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth.pkinit;
 
-import com.sun.xml.internal.ws.util.pipe.StandaloneTubeAssembler;
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.parse.Asn1Container;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
@@ -71,7 +70,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
