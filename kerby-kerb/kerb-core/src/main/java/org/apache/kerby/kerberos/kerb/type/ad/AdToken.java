@@ -27,7 +27,7 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 
 /**
  * The AdToken component as defined in "Token Pre-Authentication for Kerberos", "draft-ietf-kitten-kerb-token-preauth-01" 
- * (not yet published) :
+ * (not yet published, but stored in docs/Token-preauth.pdf) :
  * 
  * <pre>
  * 6.4. AD-TOKEN
