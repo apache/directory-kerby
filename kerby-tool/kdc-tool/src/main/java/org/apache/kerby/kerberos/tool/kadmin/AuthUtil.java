@@ -34,7 +34,7 @@ import java.util.Set;
 
 public class AuthUtil {
 
-    public static boolean enableDebug = true;
+    public static final boolean ENABLE_DEBUG = true;
 
     private static String getKrb5LoginModuleName() {
         return System.getProperty("java.vendor").contains("IBM")
@@ -101,7 +101,7 @@ public class AuthUtil {
             options.put("refreshKrb5Config", "true");
             options.put("isInitiator", "true");
             options.put("ticketCache", clientCredentialFile.getAbsolutePath());
-            options.put("debug", String.valueOf(enableDebug));
+            options.put("debug", String.valueOf(ENABLE_DEBUG));
 
             return new AppConfigurationEntry[]{
                 new AppConfigurationEntry(getKrb5LoginModuleName(),
@@ -130,7 +130,7 @@ public class AuthUtil {
             options.put("renewTGT", "false");
             options.put("refreshKrb5Config", "true");
             options.put("isInitiator", "true");
-            options.put("debug", String.valueOf(enableDebug));
+            options.put("debug", String.valueOf(ENABLE_DEBUG));
 
             return new AppConfigurationEntry[]{
                 new AppConfigurationEntry(getKrb5LoginModuleName(),

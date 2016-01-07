@@ -74,7 +74,10 @@ public class Krb5Conf {
 
         File confFile = new File(confDir, KRB5_CONF_FILE);
         if (confFile.exists()) {
-            confFile.delete();
+            boolean delete = confFile.delete();
+            if (!delete) {
+                throw new RuntimeException("File delete error!");
+            }
         }
         IOUtil.writeFile(content, confFile);
 

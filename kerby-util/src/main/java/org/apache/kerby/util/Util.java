@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
@@ -396,7 +397,7 @@ public class Util {
 
     public static void main(String[] args) throws Exception {
         String s = "line1\n\rline2\n\rline3";
-        ByteArrayInputStream in = new ByteArrayInputStream(s.getBytes());
+        ByteArrayInputStream in = new ByteArrayInputStream(s.getBytes(Charset.forName("UTF-8")));
         ByteArrayReadLine readLine = new ByteArrayReadLine(in);
         String line = readLine.next();
         while (line != null) {
