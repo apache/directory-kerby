@@ -22,20 +22,32 @@ package org.apache.kerby.kerberos.kerb.type.pa;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceOfType;
 
 /**
- PA-DATA         ::= SEQUENCE {
-     -- NOTE: first tag is [1], not [0]
-     padata-type     [1] Int32,
-     padata-value    [2] OCTET STRING -- might be encoded AP-REQ
- }
+ * The PaData component as defined in RFC 4120 :
+ * 
+ * <pre>
+ * PA-DATA         ::= SEQUENCE {
+ *         -- NOTE: first tag is [1], not [0]
+ *         padata-type     [1] Int32,
+ *         padata-value    [2] OCTET STRING -- might be encoded AP-REQ
+ * }
+ * </pre>
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class PaData extends KrbSequenceOfType<PaDataEntry> {
-
+    /**
+     * Creates an instance of PaData
+     * 
+     * @param paType The {@link PaDataType}
+     * @return An instance of {@link PaDataEntry}, or null if not found
+     */
     public PaDataEntry findEntry(PaDataType paType) {
         for (PaDataEntry pae : getElements()) {
             if (pae.getPaDataType() == paType) {
                 return pae;
             }
         }
+        
         return null;
     }
 }

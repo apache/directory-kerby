@@ -72,7 +72,7 @@ public class HostAddress extends KrbSequenceType {
     };
 
     /**
-     * Creates a new (empty) instance ofHostAddress
+     * Creates a new (empty) instance of HostAddress
      */
     public HostAddress() {
         super(fieldInfos);
