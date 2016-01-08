@@ -296,7 +296,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         for (String identity : identityList) {
             File file = new File(identity);
             try {
-                Scanner scanner = new Scanner(file);
+                Scanner scanner = new Scanner(file, "UTF-8");
                 String found = scanner.findInLine("CERTIFICATE");
 
                 if (found != null) {

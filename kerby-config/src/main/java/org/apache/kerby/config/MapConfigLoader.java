@@ -19,15 +19,61 @@
  */
 package org.apache.kerby.config;
 
+import java.util.Iterator;
 import java.util.Map;
 
 public class MapConfigLoader extends ConfigLoader {
     @Override
     protected void loadConfig(ConfigImpl config, Resource resource) {
         @SuppressWarnings("unchecked")
-        Map<String, String> mapConfig = (Map<String, String>) resource.getResource();
-        for (Map.Entry<String, String> entry : mapConfig.entrySet()) {
-            config.set(entry.getKey(), entry.getValue());
+        Map<String, Object> mapConfig = (Map<String, Object>) resource.getResource();
+        Iterator<Map.Entry<String, Object>> iter = mapConfig.entrySet().iterator();
+        if (iter.hasNext()) {
+            Map.Entry entry = iter.next();
+            if (entry.getValue() instanceof String) {
+                //insert StringMap
+                loadStringMap(config, mapConfig);
+            }   else {
+                //insert objectMap
+                loadObjectMap(config, mapConfig);
+            }
+        }
+    }
+
+    private void loadStringMap(ConfigImpl config, Map<String, Object> stringMap) {
+        for (Map.Entry<String, Object> entry: stringMap.entrySet()) {
+            config.set(entry.getKey(), (String) entry.getValue());
+        }
+    }
+
+    private void loadObjectMap(ConfigImpl config, Map<String, Object> objectMap) {
+        for (Map.Entry<String, Object> entry: objectMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            if (value instanceof Map) {
+                ConfigImpl subConfig = new ConfigImpl(key); //new section
+                loadSubmap(subConfig, (Map) value);
+                config.add(subConfig);
+            }   else {
+                throw new RuntimeException("Unable to resolve config:" + key);
+            }
+        }
+    }
+
+    private void loadSubmap(ConfigImpl config, Map<String, Object> map) {
+        for (Map.Entry<String, Object> entry: map.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            if (value instanceof String) {
+                config.set(key, (String) value);
+            }
+            if (value instanceof Map) {
+                ConfigImpl subConfig = new ConfigImpl(key);
+                loadSubmap(subConfig, (Map) value);
+                config.add(subConfig);
+            }
         }
     }
 }

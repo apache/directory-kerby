@@ -101,8 +101,10 @@ public class KdcHandler {
         }
 
         // For checksum
+        if (kdcRequest == null) {
+            throw new KrbException("Kdc request is null.");
+        }
         kdcRequest.setReqPackage(message);
-
         if (remoteAddress == null) {
             throw new KrbException("Remote address is null, not available.");
         }

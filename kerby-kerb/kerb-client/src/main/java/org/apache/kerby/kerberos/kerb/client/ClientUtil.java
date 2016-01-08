@@ -48,7 +48,7 @@ public final class ClientUtil {
         if (confFile != null && confFile.exists()) {
             KrbConfig krbConfig = new KrbConfig();
             try {
-                krbConfig.addIniConfig(confFile);
+                krbConfig.addKrb5Config(confFile);
                 return krbConfig;
             } catch (IOException e) {
                 throw new KrbException("Failed to load krb config "
@@ -91,7 +91,7 @@ public final class ClientUtil {
         KrbConfig krbConfig = new KrbConfig();
         if (confFile != null && confFile.exists()) {
             try {
-                krbConfig.addIniConfig(confFile);
+                krbConfig.addKrb5Config(confFile);
             } catch (IOException e) {
                 throw new KrbException("Failed to load krb config "
                         + confFile.getAbsolutePath());

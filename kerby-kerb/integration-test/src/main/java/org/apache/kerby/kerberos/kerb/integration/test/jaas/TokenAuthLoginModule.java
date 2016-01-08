@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Iterator;
@@ -155,7 +156,11 @@ public class TokenAuthLoginModule implements LoginModule {
             throw new LoginException("Subject is Readonly");
         }
 
-        subject.getPrincipals().remove(princName);
+        for (Principal principal: subject.getPrincipals()) {
+            if (principal.getName().equals(princName)) {
+                subject.getPrincipals().remove(principal);
+            }
+        }
         // Let us remove all Kerberos credentials stored in the Subject
         Iterator<Object> it = subject.getPrivateCredentials().iterator();
         while (it.hasNext()) {
@@ -232,7 +237,7 @@ public class TokenAuthLoginModule implements LoginModule {
         try {
             File confFile = new File(System.getProperty(Krb5Conf.KRB5_CONF));
             KrbConfig krbConfig = new KrbConfig();
-            krbConfig.addIniConfig(confFile);
+            krbConfig.addKrb5Config(confFile);
             krbClient = new KrbClient(krbConfig);
             krbClient.init();
         } catch (KrbException e) {
@@ -256,7 +261,9 @@ public class TokenAuthLoginModule implements LoginModule {
             e.printStackTrace();
         }
         try {
-            krbClient.storeTicket(tgtTicket, cCache);
+            if (krbClient != null) {
+                krbClient.storeTicket(tgtTicket, cCache);
+            }
         } catch (KrbException e) {
             e.printStackTrace();
         }
@@ -277,7 +284,10 @@ public class TokenAuthLoginModule implements LoginModule {
 
     private void cleanup() {
         if (cCache != null && cCache.exists()) {
-            cCache.delete();
+            boolean delete = cCache.delete();
+            if (!delete) {
+                throw new RuntimeException("File delete error!");
+            }
         }
     }
 

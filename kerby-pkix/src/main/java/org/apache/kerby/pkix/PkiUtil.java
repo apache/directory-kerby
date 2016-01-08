@@ -46,9 +46,9 @@ public final class PkiUtil {
      * Validates a CMS SignedData using the public key corresponding to the private
      * key used to sign the structure.
      *
-     * @param signedData
+     * @param signedData The signed Data
      * @return true if the signature is valid.
-     * @throws PkiException
+     * @throws PkiException e
      */
     public static boolean validateSignedData(SignedData signedData) throws PkiException {
         /**

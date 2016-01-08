@@ -114,7 +114,7 @@ public class PrincipalName extends KrbSequenceType {
      * Creates a PrincipalName instance, using a given type
      * 
      * @param nameString The PrincipalName as a String
-     * @param nameType The nameType to use
+     * @param type The nameType to use
      */
     public PrincipalName(String nameString, NameType type) {
         super(fieldInfos);
@@ -316,7 +316,7 @@ public class PrincipalName extends KrbSequenceType {
     }
 
     /**
-     * @see Object#equals()
+     * @see Object#equals(Object)
      */
     @Override
     public boolean equals(Object other) {

@@ -37,19 +37,19 @@ public interface LocalKadmin extends Kadmin {
 
     /**
      * Check the built-in principals, will throw KrbException if not exist.
-     * @throws KrbException
+     * @throws KrbException e
      */
     void checkBuiltinPrincipals() throws KrbException;
 
     /**
      * Create build-in principals.
-     * @throws KrbException
+     * @throws KrbException e
      */
     void createBuiltinPrincipals() throws KrbException;
 
     /**
      * Delete build-in principals.
-     * @throws KrbException
+     * @throws KrbException e
      */
     void deleteBuiltinPrincipals() throws KrbException;
 
@@ -79,6 +79,7 @@ public interface LocalKadmin extends Kadmin {
      *
      * @param principalName The principal name
      * @return identity
+     * @throws KrbException e
      */
     KrbIdentity getPrincipal(String principalName) throws KrbException;
 }

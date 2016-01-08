@@ -28,54 +28,91 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 
 /**
- AP-REP          ::= [APPLICATION 15] SEQUENCE {
- pvno            [0] INTEGER (5),
- msg-type        [1] INTEGER (15),
- enc-part        [2] EncryptedData -- EncAPRepPart
- }
+ * The AP-REP message, as defined in RFC 4120 :
+ * 
+ * <pre>
+ * AP-REP          ::= [APPLICATION 15] SEQUENCE {
+ *         pvno            [0] INTEGER (5),
+ *         msg-type        [1] INTEGER (15),
+ *         enc-part        [2] EncryptedData -- EncAPRepPart
+ * }
+ * </pre>
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class ApRep extends KrbMessage {
+    /**
+     * The possible fields
+     */
     protected enum ApRepField implements EnumType {
         PVNO,
         MSG_TYPE,
         ENC_PART;
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getValue() {
             return ordinal();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getName() {
             return name();
         }
     }
 
+    /** The ApRep's fields */
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(ApRepField.PVNO, Asn1Integer.class),
             new ExplicitField(ApRepField.MSG_TYPE, Asn1Integer.class),
             new ExplicitField(ApRepField.ENC_PART, EncryptedData.class)
     };
 
+    /** The decrypted part of this message (Not used atm) */
+    private EncAPRepPart encRepPart;
+
+    /**
+     * Creates an instance of ApRep
+     */
     public ApRep() {
         super(KrbMessageType.AP_REP, fieldInfos);
     }
 
-    private EncAPRepPart encRepPart;
 
+    /**
+     * @return The decrypted EncRepPart 
+     */
     public EncAPRepPart getEncRepPart() {
         return encRepPart;
     }
 
+    /**
+     * Set the decrypted EncRepPart into the message 
+     * 
+     * @param encRepPart The decrypted EncRepPart to store
+     */
     public void setEncRepPart(EncAPRepPart encRepPart) {
         this.encRepPart = encRepPart;
     }
 
+    /**
+     * @return The encrypted part 
+     */
     public EncryptedData getEncryptedEncPart() {
         return getFieldAs(ApRepField.ENC_PART, EncryptedData.class);
     }
 
-    public void setEncryptedEncPart(EncryptedData encryptedEncPart) {
-        setFieldAs(ApRepField.ENC_PART, encryptedEncPart);
+    /**
+     * Set the encrypted part into the message 
+     * 
+     * @param encPart The encrypted part to store
+     */
+    public void setEncryptedEncPart(EncryptedData encPart) {
+        setFieldAs(ApRepField.ENC_PART, encPart);
     }
 }

@@ -41,8 +41,7 @@ public class KrbCodecBenchmark {
     private static ByteBuffer apreqToken;
 
     static {
-        InputStream is = KrbCodecBenchmark.class.getResourceAsStream("/apreq.token");
-        try {
+        try (InputStream is = KrbCodecBenchmark.class.getResourceAsStream("/apreq.token");) {
             byte[] bytes = new byte[is.available()];
             is.read(bytes);
             apreqToken = ByteBuffer.wrap(bytes);

@@ -27,6 +27,8 @@ import org.apache.kerby.asn1.type.Asn1SequenceType;
 /**
  * Ref. RFC 5652
  *
+ * <pre>
+ *
  * SignerInfo ::= SEQUENCE {
  *     version            CMSVersion,
  *     sid                SignerIdentifier,

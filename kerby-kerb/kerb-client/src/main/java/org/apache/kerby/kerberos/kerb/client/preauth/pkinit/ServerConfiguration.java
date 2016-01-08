@@ -26,7 +26,7 @@ import javax.crypto.spec.DHParameterSpec;
 
 /**
  * Server configuration settings.
- * <p/>
+ *
  * TODO - Whether to use user cert vs. SAN binding.
  * TODO - What trusted roots to use.
  * TODO - The minimum allowed enc_types.

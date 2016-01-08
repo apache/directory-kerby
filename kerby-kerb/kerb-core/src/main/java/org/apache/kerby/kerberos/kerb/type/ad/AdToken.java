@@ -26,39 +26,73 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 
 /**
- AD-TOKEN ::= SEQUENCE {
-    token     [0]  OCTET STRING,
- }
-*/
+ * The AdToken component as defined in "Token Pre-Authentication for Kerberos", "draft-ietf-kitten-kerb-token-preauth-01" 
+ * (not yet published) :
+ * 
+ * <pre>
+ * 6.4. AD-TOKEN
+ *   The new Authorization Data Type AD-TOKEN type contains token
+ *   derivation and is meant to be encapsulated into AD-KDC-ISSUED type
+ *   and to be put into tgt or service tickets. Application can safely
+ *   ignore it if the application doesn't understand it. The token field
+ *   SHOULD be ASN.1 encoded of the binary representation of the
+ *   serialization result of the derivation token according to [JWT].
+ *   
+ *         AD-TOKEN ::= SEQUENCE {
+ *            token     [0]  OCTET STRING,
+ *         }
+ * </pre>
+ * 
+ * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ */
 public class AdToken extends KrbSequenceType {
+    /**
+     * The possible fields
+     */
     protected enum AdTokenField implements EnumType {
         TOKEN;
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getValue() {
             return ordinal();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getName() {
             return name();
         }
     }
 
+    /** The AdToken's fields */
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(AdTokenField.TOKEN, KrbToken.class)
     };
 
+    /**
+     * Creates an instance of AdToken
+     */
     public AdToken() {
         super(fieldInfos);
     }
 
+    /**
+     * @return The token
+     */
     public KrbToken getToken() {
         return getFieldAs(AdTokenField.TOKEN, KrbToken.class);
     }
 
+    /**
+     * Sets the token
+     * @param token The token to store
+     */
     public void setToken(KrbToken token) {
         setFieldAs(AdTokenField.TOKEN, token);
     }
-
 }

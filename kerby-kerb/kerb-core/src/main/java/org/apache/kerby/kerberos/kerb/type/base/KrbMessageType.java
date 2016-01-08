@@ -21,6 +21,25 @@ package org.apache.kerby.kerberos.kerb.type.base;
 
 import org.apache.kerby.asn1.EnumType;
 
+/**
+ * The possible Kerberos Messages :
+ * 
+ * <ul>
+ *   <li>AS-REQ    : [APPLICATION 10]</li>
+ *   <li>AS-REP    : [APPLICATION 11]</li>
+ *   <li>TGS-REQ   : [APPLICATION 12]</li>
+ *   <li>TGS-REP   : [APPLICATION 13]</li>
+ *   <li>AP-REQ    : [APPLICATION 14]</li>
+ *   <li>AP-REP    : [APPLICATION 15]</li>
+ *   <li>KRB-SAFE  : [APPLICATION 20]</li>
+ *   <li>KRB-PRIV  : [APPLICATION 21]</li>
+ *   <li>KRB-CRED  : [APPLICATION 22]</li>
+ *   <li>KRB_ERROR : [APPLICATION 30]</li>
+ * </ul>
+ * 
+ * @author elecharny
+ *
+ */
 public enum KrbMessageType implements EnumType {
     NONE(-1),
     AS_REQ(10),
@@ -34,22 +53,38 @@ public enum KrbMessageType implements EnumType {
     KRB_CRED(22),
     KRB_ERROR(30);
 
+    /** The internal value  */
     private int value;
 
+    /**
+     * Create a new enum 
+     */
     private KrbMessageType(int value) {
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getValue() {
         return value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name();
     }
 
+    /**
+     * Get the KrbMessageType associated with a value.
+     * 
+     * @param value The integer value of the KrbMessageType we are looking for
+     * @return The associated KrbMessageType, or NONE if not found or if value is null
+     */
     public static KrbMessageType fromValue(Integer value) {
         if (value != null) {
             for (EnumType e : values()) {

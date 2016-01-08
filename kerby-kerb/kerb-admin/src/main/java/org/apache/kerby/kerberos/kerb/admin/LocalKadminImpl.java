@@ -57,7 +57,7 @@ public class LocalKadminImpl implements LocalKadmin {
      *
      * @param kdcConfig     The kdc config
      * @param backendConfig The backend config
-     * @throws KrbException
+     * @throws KrbException e
      */
     public LocalKadminImpl(KdcConfig kdcConfig,
                            BackendConfig backendConfig) throws KrbException {
@@ -69,7 +69,7 @@ public class LocalKadminImpl implements LocalKadmin {
      * Construct with prepared conf dir.
      *
      * @param confDir The path of conf dir
-     * @throws KrbException
+     * @throws KrbException e
      */
     public LocalKadminImpl(File confDir) throws KrbException {
         KdcConfig tmpKdcConfig = KdcUtil.getKdcConfig(confDir);
@@ -92,7 +92,6 @@ public class LocalKadminImpl implements LocalKadmin {
      *
      * @param kdcSetting The kdc setting
      * @param backend    The identity backend
-     * @throws KrbException
      */
     public LocalKadminImpl(KdcSetting kdcSetting, IdentityBackend backend) {
         this.kdcSetting = kdcSetting;
