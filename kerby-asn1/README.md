@@ -45,31 +45,81 @@ With the following definition from Kerberos protocol
  
 You can model AuthzDataEntry as follows
 ```java
-public class AuthzDataEntry extends Asn1SequenceType {
-    static int AD_TYPE = 0;
-    static int AD_DATA = 1;
+public class AuthorizationDataEntry extends KrbSequenceType {
+    /**
+     * The possible fields
+     */
+    protected enum AuthorizationDataEntryField implements EnumType {
+        AD_TYPE,
+        AD_DATA;
 
-    public AuthzDataEntry() {
-        super(new Asn1FieldInfo[] {
-                new Asn1FieldInfo(AD_TYPE, Asn1Integer.class),
-                new Asn1FieldInfo(AD_DATA, Asn1OctetString.class)
-        });
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String getName() {
+            return name();
+        }
     }
 
-    public int getAuthzType() {
-        Integer value = getFieldAsInteger(AD_TYPE);
-        return value;
+    /** The AuthorizationDataEntry's fields */
+    private static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
+            new ExplicitField(AuthorizationDataEntryField.AD_TYPE, Asn1Integer.class),
+            new ExplicitField(AuthorizationDataEntryField.AD_DATA, Asn1OctetString.class)
+    };
+
+    /**
+     * Creates an AuthorizationDataEntry instance
+     */
+    public AuthorizationDataEntry() {
+        super(fieldInfos);
     }
 
+    /**
+     * @return The AuthorizationType (AD_TYPE) field
+     */
+    public AuthorizationType getAuthzType() {
+        Integer value = getFieldAsInteger(AuthorizationDataEntryField.AD_TYPE);
+        
+        return AuthorizationType.fromValue(value);
+    }
+
+    /**
+     * Sets the AuthorizationType (AD_TYPE) field
+     * @param authzType The AuthorizationType to set
+     */
+    public void setAuthzType(AuthorizationType authzType) {
+        setFieldAsInt(AuthorizationDataEntryField.AD_TYPE, authzType.getValue());
+    }
+
+    /**
+     * @return The AuthorizationType (AD_DATA) field
+     */
     public byte[] getAuthzData() {
-        return getFieldAsOctetBytes(AD_DATA);
+        return getFieldAsOctets(AuthorizationDataEntryField.AD_DATA);
+    }
+
+    /**
+     * Sets the AuthorizationData (AD_DATA) field
+     * @param authzData The AuthorizationData to set
+     */
+    public void setAuthzData(byte[] authzData) {
+        setFieldAsOctets(AuthorizationDataEntryField.AD_DATA, authzData);
     }
 }
 ```
 
 And then define AuthorizationData simply
 ```java
-public class AuthorizationData extends Asn1SequenceOf<AuthzDataEntry> {
+public class AuthorizationData extends KrbSequenceOfType<AuthorizationDataEntry> {
 
 }
 ```
@@ -108,74 +158,85 @@ Date ::= [APPLICATION 3] IMPLICIT VisibleString -- YYYYMMDD
 ```
 Similarly as above, we can have (from the unit test codes):
 ```java
-public class PersonnelRecord extends TaggingSet {
-    private static int NAME = 0;
-    private static int TITLE = 1;
-    private static int NUMBER = 2;
-    private static int DATEOFHIRE= 3;
-    private static int NAMEOFSPOUSE = 4;
-    private static int CHILDREN = 5;
+public class PersonnelRecord extends Asn1TaggingSet {
+    protected enum PersonnelRecordField implements EnumType {
+        NAME,
+        TITLE,
+        NUMBER,
+        DATE_OF_HIRE,
+        NAME_OF_SPOUSE,
+        CHILDREN;
+
+        @Override
+        public int getValue() {
+            return ordinal();
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
-            new Asn1FieldInfo(NAME, -1, Name.class),
-            new Asn1FieldInfo(TITLE, 0, Asn1VisibleString.class),
-            new Asn1FieldInfo(NUMBER, -1, EmployeeNumber.class),
-            new Asn1FieldInfo(DATEOFHIRE, 1, Date.class),
-            new Asn1FieldInfo(NAMEOFSPOUSE, 2, Name.class),
-            new Asn1FieldInfo(CHILDREN, 3, Children.class, true)
+            new ExplicitField(PersonnelRecordField.NAME, -1, Name.class),
+            new ExplicitField(PersonnelRecordField.TITLE, 0, Asn1VisibleString.class),
+            new ExplicitField(PersonnelRecordField.NUMBER, -1, EmployeeNumber.class),
+            new ExplicitField(PersonnelRecordField.DATE_OF_HIRE, 1, Date.class),
+            new ExplicitField(PersonnelRecordField.NAME_OF_SPOUSE, 2, Name.class),
+            new ImplicitField(PersonnelRecordField.CHILDREN, 3, Children.class)
     };
 
     public PersonnelRecord() {
-        super(0, fieldInfos, true);
-        setEncodingOption(EncodingOption.IMPLICIT);
+        super(0, fieldInfos, true, true);
     }
 
     public void setName(Name name) {
-        setFieldAs(NAME, name);
+        setFieldAs(PersonnelRecordField.NAME, name);
     }
 
     public Name getName() {
-        return getFieldAs(NAME, Name.class);
+        return getFieldAs(PersonnelRecordField.NAME, Name.class);
     }
 
     public void setTitle(String title) {
-        setFieldAs(TITLE, new Asn1VisibleString(title));
+        setFieldAs(PersonnelRecordField.TITLE, new Asn1VisibleString(title));
     }
 
     public String getTitle() {
-        return getFieldAsString(TITLE);
+        return getFieldAsString(PersonnelRecordField.TITLE);
     }
 
     public void setEmployeeNumber(EmployeeNumber employeeNumber) {
-        setFieldAs(NUMBER, employeeNumber);
+        setFieldAs(PersonnelRecordField.NUMBER, employeeNumber);
     }
 
     public EmployeeNumber getEmployeeNumber() {
-        return getFieldAs(NUMBER, EmployeeNumber.class);
+        return getFieldAs(PersonnelRecordField.NUMBER, EmployeeNumber.class);
     }
 
     public void setDateOfHire(Date dateOfHire) {
-        setFieldAs(DATEOFHIRE, dateOfHire);
+        setFieldAs(PersonnelRecordField.DATE_OF_HIRE, dateOfHire);
     }
 
     public Date getDateOfHire() {
-        return getFieldAs(DATEOFHIRE, Date.class);
+        return getFieldAs(PersonnelRecordField.DATE_OF_HIRE, Date.class);
     }
 
     public void setNameOfSpouse(Name spouse) {
-        setFieldAs(NAMEOFSPOUSE, spouse);
+        setFieldAs(PersonnelRecordField.NAME_OF_SPOUSE, spouse);
     }
 
     public Name getNameOfSpouse() {
-        return getFieldAs(NAMEOFSPOUSE, Name.class);
+        return getFieldAs(PersonnelRecordField.NAME_OF_SPOUSE, Name.class);
     }
 
     public void setChildren(Children children) {
-        setFieldAs(CHILDREN, children);
+        setFieldAs(PersonnelRecordField.CHILDREN, children);
     }
 
     public Children getChildren() {
-        return getFieldAs(CHILDREN, Children.class);
+        return getFieldAs(PersonnelRecordField.CHILDREN, Children.class);
     }
 
     public static class Children extends Asn1SequenceOf<ChildInformation> {
@@ -192,12 +253,24 @@ public class PersonnelRecord extends TaggingSet {
     }
 
     public static class ChildInformation extends Asn1SetType {
-        private static int NAME = 0;
-        private static int DATEOFBIRTH = 1;
+        protected enum ChildInformationField implements EnumType {
+            CHILD_NAME,
+            DATE_OF_BIRTH;
+
+            @Override
+            public int getValue() {
+                return ordinal();
+            }
+
+            @Override
+            public String getName() {
+                return name();
+            }
+        }
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
-                new Asn1FieldInfo(NAME, -1, Name.class),
-                new Asn1FieldInfo(DATEOFBIRTH, 0, Date.class)
+                new ExplicitField(ChildInformationField.CHILD_NAME, -1, Name.class),
+                new ExplicitField(ChildInformationField.DATE_OF_BIRTH, 0, Date.class)
         };
 
         public ChildInformation() {
@@ -205,36 +278,48 @@ public class PersonnelRecord extends TaggingSet {
         }
 
         public void setName(Name name) {
-            setFieldAs(NAME, name);
+            setFieldAs(ChildInformationField.CHILD_NAME, name);
         }
 
         public Name getName() {
-            return getFieldAs(NAME, Name.class);
+            return getFieldAs(ChildInformationField.CHILD_NAME, Name.class);
         }
 
         public void setDateOfBirth(Date date) {
-            setFieldAs(DATEOFBIRTH, date);
+            setFieldAs(ChildInformationField.DATE_OF_BIRTH, date);
         }
 
         public Date getDateOfBirth() {
-            return getFieldAs(DATEOFBIRTH, Date.class);
+            return getFieldAs(ChildInformationField.DATE_OF_BIRTH, Date.class);
         }
     }
 
-    public static class Name extends TaggingSequence {
-        private static int GIVENNAME = 0;
-        private static int INITIAL = 1;
-        private static int FAMILYNAME = 2;
+    public static class Name extends Asn1TaggingSequence {
+
+        protected enum NameField implements EnumType {
+            GIVENNAME,
+            INITIAL,
+            FAMILYNAME;
+
+            @Override
+            public int getValue() {
+                return ordinal();
+            }
+
+            @Override
+            public String getName() {
+                return name();
+            }
+        }
 
         static Asn1FieldInfo[] tags = new Asn1FieldInfo[] {
-                new Asn1FieldInfo(GIVENNAME, -1, Asn1VisibleString.class),
-                new Asn1FieldInfo(INITIAL, -1, Asn1VisibleString.class),
-                new Asn1FieldInfo(FAMILYNAME, -1, Asn1VisibleString.class)
+                new ExplicitField(NameField.GIVENNAME, -1, Asn1VisibleString.class),
+                new ExplicitField(NameField.INITIAL, -1, Asn1VisibleString.class),
+                new ExplicitField(NameField.FAMILYNAME, -1, Asn1VisibleString.class)
         };
 
         public Name() {
-            super(1, tags, true);
-            setEncodingOption(EncodingOption.IMPLICIT);
+            super(1, tags, true, true);
         }
 
         public Name(String givenName, String initial, String familyName) {
@@ -245,44 +330,43 @@ public class PersonnelRecord extends TaggingSet {
         }
 
         public void setGivenName(String givenName) {
-            setFieldAs(GIVENNAME, new Asn1VisibleString(givenName));
+            setFieldAs(NameField.GIVENNAME, new Asn1VisibleString(givenName));
         }
 
         public String getGivenName() {
-            return getFieldAsString(GIVENNAME);
+            return getFieldAsString(NameField.GIVENNAME);
         }
 
         public void setInitial(String initial) {
-            setFieldAs(INITIAL, new Asn1VisibleString(initial));
+            setFieldAs(NameField.INITIAL, new Asn1VisibleString(initial));
         }
 
         public String getInitial() {
-            return getFieldAsString(INITIAL);
+            return getFieldAsString(NameField.INITIAL);
         }
 
         public void setFamilyName(String familyName) {
-            setFieldAs(FAMILYNAME, new Asn1VisibleString(familyName));
+            setFieldAs(NameField.FAMILYNAME, new Asn1VisibleString(familyName));
         }
 
         public String getFamilyName() {
-            return getFieldAsString(FAMILYNAME);
+            return getFieldAsString(NameField.FAMILYNAME);
         }
     }
 
     public static class EmployeeNumber extends Asn1Tagging<Asn1Integer> {
         public EmployeeNumber(Integer value) {
-            super(2, new Asn1Integer(value), true);
-            setEncodingOption(EncodingOption.IMPLICIT);
+            super(2, new Asn1Integer(value), true, true);
         }
+
         public EmployeeNumber() {
-            this(null);
+            super(2, new Asn1Integer(), true, true);
         }
     }
 
     public static class Date extends Asn1Tagging<Asn1VisibleString> {
         public Date(String value) {
-            super(3, new Asn1VisibleString(value), true);
-            setEncodingOption(EncodingOption.IMPLICIT);
+            super(3, new Asn1VisibleString(value), true, true);
         }
         public Date() {
             this(null);
