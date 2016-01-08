@@ -27,7 +27,7 @@ Apache Kerby is a Java Kerberos binding. It provides a rich, intuitive and inter
 ### The Initiatives/Goals 
 - Aims as a Java Kerberos binding, with rich and integrated facilities that integrate Kerberos, PKI and token (OAuth2) for both client and server sides.
 - Provides client APIs at the Kerberos protocol level to interact with a KDC server through AS and TGS exchanges.
-- Provides a standalone KDC server that supports various identity back ends including memory based, Json file based, LDAP backed and even Zookeeper backed.
+- Provides a standalone KDC server that supports various identity backends including memory based, Json file based, LDAP based and even Zookeeper based.
 - Provides an embedded KDC server that applications can easily integrate into products, unit tests or integration tests.
 - Supports FAST/Preauthentication framework to allow popular and useful authentication mechanisms.
 - Supports PKINIT mechanism to allow clients to request tickets using x509 certificate credentials.
@@ -83,7 +83,7 @@ Independent of Kerberos code in JRE, but rely on JCE
 | camellia | The Camellia family: camellia256-cts-cmac and camellia128-cts-cmac |
 
 ### Identity Backend
-A standalone KDC server that can integrate various identity back ends including:
+A standalone KDC server that can integrate various identity backends including:
 - MemoryIdentityBackend.
   - It is default Identity Backend, and no cofiguration is needed. This backend is for no permanent storage requirements.
 - JsonIdentityBackend.
@@ -123,7 +123,6 @@ A standalone KDC server that can integrate various identity back ends including:
 - [Nimbus JOSE + JWT](http://connect2id.com/products/nimbus-jose-jwt), needed by token-provider and TokenPreauth mechanism.
 - [Netty](http://netty.io/), needed by netty based KDC server.
 - [Zookeeper](https://zookeeper.apache.org/), needed by zookeeper identity backend.
-
 
 ### How to use library
 The Apache Kerby is also available as a Maven dependency:
