@@ -20,32 +20,87 @@
 kerb-client
 ============
 
-### Initiate a KrbClient
+### 1. KrbClient
+## Initiate a KrbClient
 * Initiate a KrbClient with prepared KrbConfig.
 <pre>
 KrbClient krbClient = new KrbClient(krbConfig);
 </pre>
-* Initiate a KrbClient with with conf dir.
+* Initiate a KrbClient with conf dir.
 <pre>
 KrbClient krbClient = new KrbClient(confDir);
 </pre>
 
-### Request a TGT
+## Request a TGT
+* Request a TGT with using well prepared requestOptions.
+<pre>
+requestTgt(requestOptions);
+</pre>
 * Request a TGT with user plain password credential
 <pre>
-requestTgtWithPassword(principal, password);
+requestTgt(principal, password);
 </pre>
+* Request a TGT with user plain keytab credential
+<pre>
+requestTgt(principal, keytabFile);
+</pre>
+
+## Request a service ticket
+* Request a service ticket with a TGT targeting for a server
+<pre>
+requestSgt(tgt, serverPrincipal);
+</pre>
+* Request a service ticket provided request options
+<pre>
+requestSgt(requestOptions);
+</pre>
+
+### 2. KrbTokenClient
+## Initiate a KrbTokenClient
+* Initiate a KrbTokenClient with prepared KrbConfig.
+<pre>
+KrbTokenClient krbTokenClient = new KrbTokenClient(krbConfig);
+</pre>
+* Initiate a KrbTokenClient with conf dir.
+<pre>
+KrbTokenClient krbTokenClient = new KrbTokenClient(confDir);
+</pre>
+* Initiate a KrbTokenClient with prepared KrbClient.
+<pre>
+KrbTokenClient krbTokenClient = new KrbTokenClient(krbClient);
+</pre>
+
+## Request a TGT
 * Request a TGT with user token credential
 <pre>
 requestTgtWithToken(token, armorCache);
 </pre>
 
-### Request a service ticket
-* Request a service ticket with user TGT credential for a server
-<pre>
-requestServiceTicketWithTgt(tgt, serverPrincipal);
+## Request a service ticket
 </pre>
 * Request a service ticket with user AccessToken credential for a server
 <pre>
-requestServiceTicketWithAccessToken(accessToken, serverPrincipal, armorCache);
+requestSgt(accessToken, serverPrincipal, armorCache);
 </pre>
+
+### 3. KrbPkinitClient
+## Initiate a KrbPkinitClient
+* Initiate a KrbPkinitClient with prepared KrbConfig.
+<pre>
+KrbPkinitClient krbPkinitClient = new KrbPkinitClient(krbConfig);
+</pre>
+* Initiate a KrbPkinitClient with conf dir.
+<pre>
+KrbPkinitClient krbPkinitClient = new KrbPkinitClient(confDir);
+</pre>
+* Initiate a KrbPkinitClient with prepared KrbClient.
+<pre>
+KrbPkinitClient krbPkinitClient = new KrbPkinitClient(krbClient);
+</pre>
+
+## Request a TGT
+* Request a TGT with using Anonymous PKINIT
+<pre>
+requestTgt();
+</pre>
+
