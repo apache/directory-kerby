@@ -20,8 +20,8 @@
 kerb-client
 ============
 
-### 1. KrbClient
-## Initiate a KrbClient
+## 1. KrbClient
+### Initiate a KrbClient
 * Initiate a KrbClient with prepared KrbConfig.
 <pre>
 KrbClient krbClient = new KrbClient(krbConfig);
@@ -31,7 +31,7 @@ KrbClient krbClient = new KrbClient(krbConfig);
 KrbClient krbClient = new KrbClient(confDir);
 </pre>
 
-## Request a TGT
+### Request a TGT
 * Request a TGT with using well prepared requestOptions.
 <pre>
 requestTgt(requestOptions);
@@ -45,7 +45,7 @@ requestTgt(principal, password);
 requestTgt(principal, keytabFile);
 </pre>
 
-## Request a service ticket
+### Request a service ticket
 * Request a service ticket with a TGT targeting for a server
 <pre>
 requestSgt(tgt, serverPrincipal);
@@ -55,8 +55,8 @@ requestSgt(tgt, serverPrincipal);
 requestSgt(requestOptions);
 </pre>
 
-### 2. KrbTokenClient
-## Initiate a KrbTokenClient
+## 2. KrbTokenClient
+### Initiate a KrbTokenClient
 * Initiate a KrbTokenClient with prepared KrbConfig.
 <pre>
 KrbTokenClient krbTokenClient = new KrbTokenClient(krbConfig);
@@ -70,21 +70,21 @@ KrbTokenClient krbTokenClient = new KrbTokenClient(confDir);
 KrbTokenClient krbTokenClient = new KrbTokenClient(krbClient);
 </pre>
 
-## Request a TGT
+### Request a TGT
 * Request a TGT with user token credential
 <pre>
 requestTgtWithToken(token, armorCache);
 </pre>
 
-## Request a service ticket
+### Request a service ticket
 </pre>
 * Request a service ticket with user AccessToken credential for a server
 <pre>
 requestSgt(accessToken, serverPrincipal, armorCache);
 </pre>
 
-### 3. KrbPkinitClient
-## Initiate a KrbPkinitClient
+## 3. KrbPkinitClient
+### Initiate a KrbPkinitClient
 * Initiate a KrbPkinitClient with prepared KrbConfig.
 <pre>
 KrbPkinitClient krbPkinitClient = new KrbPkinitClient(krbConfig);
@@ -98,7 +98,7 @@ KrbPkinitClient krbPkinitClient = new KrbPkinitClient(confDir);
 KrbPkinitClient krbPkinitClient = new KrbPkinitClient(krbClient);
 </pre>
 
-## Request a TGT
+### Request a TGT
 * Request a TGT with using Anonymous PKINIT
 <pre>
 requestTgt();
