@@ -6,32 +6,40 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *
+ *  
  *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License.
- *
+ *  under the License. 
+ *  
  */
-package org.apache.kerby.asn1;
+package org.apache.kerby.xdr;
+
+import org.apache.kerby.xdr.type.XdrType;
 
 /**
- * A helper interface for enum types.
- * 
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ * Representing a field in a XDR struct.
  */
-public interface EnumType {
+public class XdrFieldInfo {
+    private EnumType index;
+    private Class<? extends XdrType> type;
+
     /**
-     * @return the Enum element value
+     * Constructor.
+     * @param index
+     * @param type
      */
-    int getValue();
-    
-    /**
-     * @return The enum element name
-     */
-    String getName();
+    public XdrFieldInfo(EnumType index, Class<? extends XdrType> type) {
+        this.index = index;
+        this.type = type;
+    }
+
+    public EnumType getIndex() {
+        return index;
+    }
+
 }

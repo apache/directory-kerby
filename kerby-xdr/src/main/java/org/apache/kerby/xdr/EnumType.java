@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.asn1;
+package org.apache.kerby.xdr;
 
 /**
  * A helper interface for enum types.

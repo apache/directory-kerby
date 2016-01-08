@@ -17,21 +17,18 @@
  *  under the License.
  *
  */
-package org.apache.kerby.asn1;
+package org.apache.kerby.xdr.util;
 
-/**
- * A helper interface for enum types.
- * 
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
- */
-public interface EnumType {
-    /**
-     * @return the Enum element value
-     */
-    int getValue();
-    
-    /**
-     * @return The enum element name
-     */
-    String getName();
+import java.nio.charset.StandardCharsets;
+
+public final class Utf8 {
+    private Utf8() { }
+
+    public static String toString(byte[] bytes) {
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    public static byte[] toBytes(String s) {
+        return s.getBytes(StandardCharsets.UTF_8);
+    }
 }

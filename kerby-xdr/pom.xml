@@ -22,8 +22,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>kerby-asn1</artifactId>
-  <name>Kerby ASN1 Project</name>
-  <description>Kerby ASN1 Project</description>
+  <artifactId>kerby-xdr</artifactId>
+  <name>Kerby XDR Project</name>
+  <description>Kerby XDR Project</description>
 
 </project>
