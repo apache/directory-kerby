@@ -88,7 +88,6 @@ public class AuthorizationDataEntry extends KrbSequenceType {
      */
     public AuthorizationType getAuthzType() {
         Integer value = getFieldAsInteger(AuthorizationDataEntryField.AD_TYPE);
-        
         return AuthorizationType.fromValue(value);
     }
 
