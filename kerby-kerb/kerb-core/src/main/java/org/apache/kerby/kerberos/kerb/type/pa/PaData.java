@@ -22,21 +22,19 @@ package org.apache.kerby.kerberos.kerb.type.pa;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceOfType;
 
 /**
- * The PaData component as defined in RFC 4120 :
+ * The PaData Sequence as defined in RFC 4120, like in :
  * 
  * <pre>
- * PA-DATA         ::= SEQUENCE {
- *         -- NOTE: first tag is [1], not [0]
- *         padata-type     [1] Int32,
- *         padata-value    [2] OCTET STRING -- might be encoded AP-REQ
- * }
+ * ...
+ * padata          [3] SEQUENCE OF PA-DATA
+ * ...
  * </pre>
  * 
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class PaData extends KrbSequenceOfType<PaDataEntry> {
     /**
-     * Creates an instance of PaData
+     * Find a PaData from its type
      * 
      * @param paType The {@link PaDataType}
      * @return An instance of {@link PaDataEntry}, or null if not found
