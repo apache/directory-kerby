@@ -42,7 +42,7 @@ cd kerby-dist/kdc-dist
 sh bin/start-kdc.sh [server-conf-dir] [work-dir]
 ```
 
-* 4. Run kadmin to add principals:
+* 4. Run kadmin to add or delete principals:
 ```
 cd kerby-dist/kdc-dist
 sh bin/kadmin.sh [server-conf-dir] -k [keytab]
