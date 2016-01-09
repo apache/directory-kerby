@@ -151,7 +151,7 @@ public class EncryptedData extends KrbSequenceType {
         
         EncryptedData that = (EncryptedData) o;
 
-        return ((getEType() == that.getEType()) && Arrays.equals(getCipher(), that.getCipher()));
+        return getEType() == that.getEType() && Arrays.equals(getCipher(), that.getCipher());
     }
     
     /**

@@ -148,7 +148,7 @@ public class CheckSum extends KrbSequenceType {
 
         CheckSum that = (CheckSum) other;
 
-        return ((getCksumtype() == that.getCksumtype()) && Arrays.equals(getChecksum(), that.getChecksum()));
+        return getCksumtype() == that.getCksumtype() && Arrays.equals(getChecksum(), that.getChecksum());
     }
     
     /**
