@@ -17,9 +17,10 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin;
+package org.apache.kerby.kerberos.kerb.admin.local;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
@@ -31,7 +32,7 @@ import org.apache.kerby.kerberos.kerb.server.KdcConfig;
  * is supported to be accessed from remote, it won't have to be remote; but if
  * not, then it must be local to the KDC server bounded with the local backend.
  *
- * Note, suitable with Kerby KdcServer based KDCs like Kerby KDC.
+ * Note, suitable with Kerby AdminServerImpl based KDCs like Kerby KDC.
  */
 public interface LocalKadmin extends Kadmin {
 

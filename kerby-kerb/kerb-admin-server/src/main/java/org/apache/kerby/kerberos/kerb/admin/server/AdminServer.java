@@ -17,10 +17,11 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin;
+package org.apache.kerby.kerberos.kerb.admin.server;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.io.File;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.List;
  *
  * TO BE IMPLEMENTED.
  */
-public class KadminServer implements Kadmin {
+public class AdminServer implements Kadmin {
     //private LocalKadmin localKadmin;
 
     @Override

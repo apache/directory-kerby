@@ -17,7 +17,7 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin;
+package org.apache.kerby.kerberos.kerb.admin.local;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -53,7 +53,7 @@ public class LocalKadminImpl implements LocalKadmin {
     private final IdentityBackend backend;
 
     /**
-     * Construct with prepared KdcConfig and BackendConfig.
+     * Construct with prepared AdminServerConfig and BackendConfig.
      *
      * @param kdcConfig     The kdc config
      * @param backendConfig The backend config
@@ -88,7 +88,7 @@ public class LocalKadminImpl implements LocalKadmin {
     }
 
     /**
-     * Construct with prepared KdcSetting and Backend.
+     * Construct with prepared AdminServerSetting and Backend.
      *
      * @param kdcSetting The kdc setting
      * @param backend    The identity backend

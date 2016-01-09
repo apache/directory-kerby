@@ -17,10 +17,11 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.admin;
+package org.apache.kerby.kerberos.kerb.admin.local;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;

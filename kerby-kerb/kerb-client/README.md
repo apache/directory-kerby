@@ -24,7 +24,7 @@ kerb-client
 ### Initiate a KrbClient
 * Initiate a KrbClient with prepared KrbConfig.
 <pre>
-KrbClient krbClient = new KrbClient(krbConfig);
+KrbClient krbClient = new KrbClient(adminConfig);
 </pre>
 * Initiate a KrbClient with conf dir.
 <pre>
@@ -59,7 +59,7 @@ requestSgt(requestOptions);
 ### Initiate a KrbTokenClient
 * Initiate a KrbTokenClient with prepared KrbConfig.
 <pre>
-KrbTokenClient krbTokenClient = new KrbTokenClient(krbConfig);
+KrbTokenClient krbTokenClient = new KrbTokenClient(adminConfig);
 </pre>
 * Initiate a KrbTokenClient with conf dir.
 <pre>
@@ -87,7 +87,7 @@ requestSgt(accessToken, serverPrincipal, armorCache);
 ### Initiate a KrbPkinitClient
 * Initiate a KrbPkinitClient with prepared KrbConfig.
 <pre>
-KrbPkinitClient krbPkinitClient = new KrbPkinitClient(krbConfig);
+KrbPkinitClient krbPkinitClient = new KrbPkinitClient(adminConfig);
 </pre>
 * Initiate a KrbPkinitClient with conf dir.
 <pre>

@@ -17,10 +17,11 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin;
+package org.apache.kerby.kerberos.kerb.admin.remote;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.Kadmin;
 
 import java.io.File;
 import java.util.List;

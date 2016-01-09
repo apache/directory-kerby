@@ -23,15 +23,15 @@ kerb-admin
 ### Initiate a LocalKadminImpl
 * Initiate a LocalKadminImpl with prepared KdcConfig and BackendConfig.
 <pre>
-LocalKadminImpl kadmin = new LocalKadminImpl(kdcConfig, backendConfig);
+LocalKadminImpl kadmin = new LocalKadminImpl(adminServerConfig, backendConfig);
 </pre>
 * Initiate a LocalKadminImpl with confDir.
 <pre>
 LocalKadminImpl kadmin = new LocalKadminImpl(confDir);
 </pre>
-* Initiate a LocalKadminImpl with kdcSetting and backend.
+* Initiate a LocalKadminImpl with adminServerSetting and backend.
 <pre>
-LocalKadminImpl kadmin = new LocalKadminImpl(kdcSetting, backend);
+LocalKadminImpl kadmin = new LocalKadminImpl(adminServerSetting, backend);
 </pre>
 
 ### Principal operating
