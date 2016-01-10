@@ -145,7 +145,7 @@ public class EncryptedData extends KrbSequenceType {
             return true;
         }
         
-        if (!( o instanceof EncryptedData)) {
+        if (!(o instanceof EncryptedData)) {
             return false;
         }
         

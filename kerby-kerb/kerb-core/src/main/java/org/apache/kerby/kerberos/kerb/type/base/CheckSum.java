@@ -142,7 +142,7 @@ public class CheckSum extends KrbSequenceType {
             return true;
         }
         
-        if (!( other instanceof CheckSum )) {
+        if (!(other instanceof CheckSum)) {
             return false;
         }
 
