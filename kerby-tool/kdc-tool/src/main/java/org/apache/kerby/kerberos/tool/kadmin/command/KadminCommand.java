@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.tool.kadmin.command;
 
-import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.local.LocalKadmin;
 
 public abstract class KadminCommand {
 

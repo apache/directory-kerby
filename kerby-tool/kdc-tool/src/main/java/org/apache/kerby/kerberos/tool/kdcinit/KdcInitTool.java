@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.tool.kdcinit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
-import org.apache.kerby.kerberos.kerb.admin.LocalKadminImpl;
+import org.apache.kerby.kerberos.kerb.admin.local.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.local.LocalKadminImpl;
 import org.apache.kerby.util.OSUtil;
 
 import java.io.File;

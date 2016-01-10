@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.tool.kadmin.command;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.Kadmin;
-import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.local.LocalKadmin;
 
 import java.io.Console;
 import java.util.Scanner;

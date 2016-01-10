@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.tool.kadmin;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
-import org.apache.kerby.kerberos.kerb.admin.LocalKadminImpl;
+import org.apache.kerby.kerberos.kerb.admin.local.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.local.LocalKadminImpl;
 import org.apache.kerby.kerberos.kerb.admin.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.command.AddPrincipalCommand;
 import org.apache.kerby.kerberos.tool.kadmin.command.ChangePasswordCommand;
