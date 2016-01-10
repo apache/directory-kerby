@@ -44,7 +44,7 @@ public class AdminSetting {
     }
 
     public String getKdcRealm() {
-        String kdcRealm = commonOptions.getStringOption(KrbOption.KDC_REALM);
+        String kdcRealm = commonOptions.getStringOption(AdminOption.KDC_REALM);
         if (kdcRealm == null || kdcRealm.isEmpty()) {
             kdcRealm = adminConfig.getKdcRealm();
         }
@@ -52,7 +52,7 @@ public class AdminSetting {
     }
 
     public String getKdcHost() {
-        String kdcHost = commonOptions.getStringOption(KrbOption.KDC_HOST);
+        String kdcHost = commonOptions.getStringOption(AdminOption.KDC_HOST);
         if (kdcHost == null) {
             return adminConfig.getKdcHost();
         }
@@ -92,7 +92,7 @@ public class AdminSetting {
     }
 
     public int getKdcTcpPort() {
-        int tcpPort = commonOptions.getIntegerOption(KrbOption.KDC_TCP_PORT);
+        int tcpPort = commonOptions.getIntegerOption(AdminOption.KDC_TCP_PORT);
         if (tcpPort > 0) {
             return tcpPort;
         }
@@ -101,18 +101,18 @@ public class AdminSetting {
 
     public boolean allowUdp() {
         Boolean allowUdp = commonOptions.getBooleanOption(
-                KrbOption.ALLOW_UDP, adminConfig.allowUdp());
+                AdminOption.ALLOW_UDP, adminConfig.allowUdp());
         return allowUdp;
     }
 
     public boolean allowTcp() {
         Boolean allowTcp = commonOptions.getBooleanOption(
-                KrbOption.ALLOW_TCP, adminConfig.allowTcp());
+                AdminOption.ALLOW_TCP, adminConfig.allowTcp());
         return allowTcp;
     }
 
     public int getKdcUdpPort() {
-        int udpPort = commonOptions.getIntegerOption(KrbOption.KDC_UDP_PORT);
+        int udpPort = commonOptions.getIntegerOption(AdminOption.KDC_UDP_PORT);
         if (udpPort > 0) {
             return udpPort;
         }
@@ -120,7 +120,7 @@ public class AdminSetting {
     }
 
     public int getTimeout() {
-        int timeout = commonOptions.getIntegerOption(KrbOption.CONN_TIMEOUT);
+        int timeout = commonOptions.getIntegerOption(AdminOption.CONN_TIMEOUT);
         if (timeout > 0) {
             return timeout;
         }

@@ -19,10 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.server.impl;
 
-import org.apache.kerby.kerberos.kerb.server.KdcContext;
-import org.apache.kerby.kerberos.kerb.server.KdcSetting;
-import org.apache.kerby.kerberos.kerb.server.KdcUtil;
-import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
+import org.apache.kerby.kerberos.kerb.admin.server.AdminServerContext;
+import org.apache.kerby.kerberos.kerb.admin.server.AdminServerSetting;
+import org.apache.kerby.kerberos.kerb.admin.server.AdminServerUtil;
 import org.apache.kerby.kerberos.kerb.transport.KdcNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
@@ -31,15 +30,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * A default KDC server implementation.
+ * A default admin server implementation.
  */
 public class DefaultInternalAdminServerImpl extends AbstractInternalAdminServer {
     private ExecutorService executor;
-    private KdcContext kdcContext;
+    private AdminServerContext adminContext;
     private KdcNetwork network;
 
-    public DefaultInternalAdminServerImpl(KdcSetting kdcSetting) {
-        super(kdcSetting);
+    public DefaultInternalAdminServerImpl(AdminServerSetting adminSetting) {
+        super(adminSetting);
     }
 
     @Override
@@ -53,23 +52,21 @@ public class DefaultInternalAdminServerImpl extends AbstractInternalAdminServer 
         network = new KdcNetwork() {
             @Override
             protected void onNewTransport(KrbTransport transport) {
-                DefaultAdminServerHandler kdcHandler = new DefaultAdminServerHandler(kdcContext, transport);
+                DefaultAdminServerHandler kdcHandler = 
+                    new DefaultAdminServerHandler(adminContext, transport);
                 executor.execute(kdcHandler);
             }
         };
 
         network.init();
-        TransportPair tpair = KdcUtil.getTransportPair(getSetting());
+        TransportPair tpair = AdminServerUtil.getTransportPair(getSetting());
         network.listen(tpair);
         network.start();
     }
 
     private void prepareHandler() {
-        kdcContext = new KdcContext(getSetting());
-        kdcContext.setIdentityService(getIdentityService());
-        PreauthHandler preauthHandler = new PreauthHandler();
-        preauthHandler.init();
-        kdcContext.setPreauthHandler(preauthHandler);
+        adminContext = new AdminServerContext(getSetting());
+        adminContext.setIdentityService(getIdentityService());
     }
 
     @Override

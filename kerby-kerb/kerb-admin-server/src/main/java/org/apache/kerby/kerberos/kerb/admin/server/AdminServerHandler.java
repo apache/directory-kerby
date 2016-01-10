@@ -19,26 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.server;
 
-import org.apache.kerby.kerberos.kerb.KrbCodec;
-import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.server.KdcContext;
-import org.apache.kerby.kerberos.kerb.server.KdcRecoverableException;
-import org.apache.kerby.kerberos.kerb.server.request.AsRequest;
-import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
-import org.apache.kerby.kerberos.kerb.server.request.TgsRequest;
-import org.apache.kerby.kerberos.kerb.type.KerberosTime;
-import org.apache.kerby.kerberos.kerb.type.base.KrbError;
-import org.apache.kerby.kerberos.kerb.type.base.KrbMessage;
-import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
-import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
-import org.apache.kerby.kerberos.kerb.type.kdc.AsReq;
-import org.apache.kerby.kerberos.kerb.type.kdc.KdcReq;
-import org.apache.kerby.kerberos.kerb.type.kdc.TgsReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
@@ -46,16 +30,16 @@ import java.nio.ByteBuffer;
  * KDC handler to process client requests. Currently only one realm is supported.
  */
 public class AdminServerHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(org.apache.kerby.kerberos.kerb.server.KdcHandler.class);
-    private final KdcContext kdcContext;
+    private static final Logger LOG = LoggerFactory.getLogger(AdminServerHandler.class);
+    private final AdminServerContext adminServerContext;
 
     /**
      * Constructor with kdc context.
      *
-     * @param kdcContext kdc context
+     * @param adminServerContext admin server context
      */
-    public AdminServerHandler(KdcContext kdcContext) {
-        this.kdcContext = kdcContext;
+    public AdminServerHandler(AdminServerContext adminServerContext) {
+        this.adminServerContext = adminServerContext;
     }
 
     /**
@@ -63,12 +47,13 @@ public class AdminServerHandler {
      *
      * @throws KrbException e
      * @param receivedMessage The client request message
-     * @param  isTcp whether the protocol is tcp
      * @param remoteAddress Address from remote side
      * @return The response message
      */
-    public ByteBuffer handleMessage(ByteBuffer receivedMessage, boolean isTcp,
+    public ByteBuffer handleMessage(ByteBuffer receivedMessage,
                                     InetAddress remoteAddress) throws KrbException {
+        return null;
+        /*
         KrbMessage krbRequest;
         KdcRequest kdcRequest = null;
         KrbMessage krbResponse;
@@ -137,46 +122,6 @@ public class AdminServerHandler {
         responseMessage.flip();
 
         return responseMessage;
-    }
-
-    /**
-     * Process the recoverable exception.
-     *
-     * @param e The exception return by kdc
-     * @param kdcRequest kdc request
-     * @return The KrbError
-     */
-    private KrbMessage handleRecoverableException(KdcRecoverableException e,
-                                                  KdcRequest kdcRequest)
-            throws KrbException {
-        LOG.info("KRB error occurred while processing request:"
-                + e.getMessage());
-
-        KrbError error = e.getKrbError();
-        error.setStime(KerberosTime.now());
-        error.setSusec(100);
-        error.setErrorCode(e.getKrbError().getErrorCode());
-        error.setRealm(kdcContext.getKdcRealm());
-        if (kdcRequest != null) {
-            error.setSname(kdcRequest.getKdcReq().getReqBody().getCname());
-        } else {
-            error.setSname(new PrincipalName("NONE"));
-        }
-        error.setEtext(e.getMessage());
-        return error;
-    }
-
-    /**
-     * Get request realm.
-     * @param kdcReq kdc request
-     * @return realm
-     */
-    private String getRequestRealm(KdcReq kdcReq) {
-        String realm = kdcReq.getReqBody().getRealm();
-        if (realm == null && kdcReq.getReqBody().getCname() != null) {
-            realm = kdcReq.getReqBody().getCname().getRealm();
-        }
-
-        return realm;
+        */
     }
 }

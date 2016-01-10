@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.admin.server.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.server.AdminServerSetting;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.apache.kerby.kerberos.kerb.server.KdcSetting;
 
 /**
  * An internal KDC server interface.
@@ -47,10 +47,10 @@ public interface InternalAdminServer {
     void stop() throws KrbException;
 
     /**
-     * Get KDC setting.
+     * Get admin server setting.
      * @return setting
      */
-    KdcSetting getSetting();
+    AdminServerSetting getSetting();
 
     /**
      * Get identity backend.

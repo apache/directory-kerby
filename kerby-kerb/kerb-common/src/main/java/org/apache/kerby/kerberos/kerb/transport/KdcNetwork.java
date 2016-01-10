@@ -118,7 +118,6 @@ public abstract class KdcNetwork {
         }
     }
 
-
     private void checkUdpMessage() throws IOException {
         InetSocketAddress fromAddress = (InetSocketAddress) udpServer.receive(recvBuffer);
         if (fromAddress != null) {

@@ -20,6 +20,8 @@
 package org.apache.kerby.kerberos.kerb.admin.server.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.server.AdminServerConfig;
+import org.apache.kerby.kerberos.kerb.admin.server.AdminServerSetting;
 import org.apache.kerby.kerberos.kerb.identity.CacheableIdentityService;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
@@ -34,20 +36,20 @@ import org.apache.kerby.kerberos.kerb.server.KdcUtil;
  */
 public class AbstractInternalAdminServer implements InternalAdminServer {
     private boolean started;
-    private final KdcConfig kdcConfig;
+    private final AdminServerConfig kdcConfig;
     private final BackendConfig backendConfig;
-    private final KdcSetting kdcSetting;
+    private final AdminServerSetting kdcSetting;
     private IdentityBackend backend;
     private IdentityService identityService;
 
-    public AbstractInternalAdminServer(KdcSetting kdcSetting) {
+    public AbstractInternalAdminServer(AdminServerSetting kdcSetting) {
         this.kdcSetting = kdcSetting;
-        this.kdcConfig = kdcSetting.getKdcConfig();
+        this.kdcConfig = kdcSetting.getAdminServerConfig();
         this.backendConfig = kdcSetting.getBackendConfig();
     }
 
     @Override
-    public KdcSetting getSetting() {
+    public AdminServerSetting getSetting() {
         return kdcSetting;
     }
 

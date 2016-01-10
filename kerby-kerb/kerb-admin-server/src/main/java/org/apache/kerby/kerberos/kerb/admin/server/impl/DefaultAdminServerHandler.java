@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.server.impl;
 
+import org.apache.kerby.kerberos.kerb.admin.server.AdminServerContext;
+import org.apache.kerby.kerberos.kerb.admin.server.AdminServerHandler;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.KdcHandler;
 import org.apache.kerby.kerberos.kerb.transport.KrbTcpTransport;
@@ -30,12 +32,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
-public class DefaultAdminServerHandler extends KdcHandler implements Runnable {
+public class DefaultAdminServerHandler extends AdminServerHandler implements Runnable {
     private static Logger logger = LoggerFactory.getLogger(DefaultAdminServerHandler.class);
     private final KrbTransport transport;
 
-    public DefaultAdminServerHandler(KdcContext kdcContext, KrbTransport transport) {
-        super(kdcContext);
+    public DefaultAdminServerHandler(AdminServerContext adminServerContext, KrbTransport transport) {
+        super(adminServerContext);
         this.transport  = transport;
     }
 
@@ -64,7 +66,7 @@ public class DefaultAdminServerHandler extends KdcHandler implements Runnable {
         boolean isTcp = transport instanceof KrbTcpTransport;
 
         try {
-            ByteBuffer krbResponse = handleMessage(message, isTcp, clientAddress);
+            ByteBuffer krbResponse = handleMessage(message, clientAddress);
             transport.sendMessage(krbResponse);
         } catch (Exception e) {
             transport.release();

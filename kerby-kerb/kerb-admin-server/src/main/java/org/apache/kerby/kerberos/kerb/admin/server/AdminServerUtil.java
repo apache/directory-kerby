@@ -43,7 +43,7 @@ public final class AdminServerUtil {
      * @return kdc configuration
      * @throws KrbException e.
      */
-    public static AdminServerConfig getKdcConfig(File confDir) throws KrbException {
+    public static AdminServerConfig getAdminServerConfig(File confDir) throws KrbException {
         File kdcConfFile = new File(confDir, "kdc.conf");
         if (kdcConfFile.exists()) {
             AdminServerConfig adminServerConfig = new AdminServerConfig();
