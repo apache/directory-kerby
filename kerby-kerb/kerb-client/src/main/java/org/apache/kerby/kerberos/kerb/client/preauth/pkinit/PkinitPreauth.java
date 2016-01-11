@@ -22,18 +22,26 @@ package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.cms.type.CertificateChoices;
+import org.apache.kerby.cms.type.CertificateSet;
+import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.PkinitOption;
 import org.apache.kerby.kerberos.kerb.client.preauth.AbstractPreauthPlugin;
 import org.apache.kerby.kerberos.kerb.client.request.KdcRequest;
 import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
-import org.apache.kerby.kerberos.kerb.crypto.dh.DhClient;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.crypto.dh.DhGroup;
+import org.apache.kerby.kerberos.kerb.crypto.dh.DiffieHellmanClient;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlag;
 import org.apache.kerby.kerberos.kerb.preauth.PaFlags;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.CmsMessageType;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitIdenity;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
@@ -42,14 +50,19 @@ import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DhRepInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDhKeyInfo;
+import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PkAuthenticator;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.TrustedCertifiers;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
+import org.apache.kerby.x509.type.Certificate;
 import org.apache.kerby.x509.type.DhParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
@@ -57,7 +70,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -202,12 +218,12 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         if (processingRequest) {
             generateRequest(reqCtx, kdcRequest, outPadata);
+            return true;
         } else {
             EncryptionType encType = kdcRequest.getEncType();
             processReply(kdcRequest, reqCtx, inPadata, encType);
+            return true;
         }
-
-        return false;
     }
 
     private void generateRequest(PkinitRequestContext reqCtx, KdcRequest kdcRequest,
@@ -243,7 +259,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             AlgorithmIdentifier dhAlg = new AlgorithmIdentifier();
             dhAlg.setAlgorithm(dhOid.getValue());
 
-            DhClient client = new DhClient();
+            DiffieHellmanClient client = new DiffieHellmanClient();
 
             DHPublicKey clientPubKey = null;
             try {
@@ -252,7 +268,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 e.printStackTrace();
             }
 
-            kdcRequest.setDhClient(client);
+            reqCtx.setDhClient(client);
 
             DHParameterSpec type = null;
             try {
@@ -308,14 +324,101 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     private void processReply(KdcRequest kdcRequest,
                               PkinitRequestContext reqCtx,
-                              PaDataEntry inPadata,
-                              EncryptionType encType) {
+                              PaDataEntry paEntry,
+                              EncryptionType encType) throws KrbException {
 
-        EncryptionKey asKey = null;
+        // Parse PA-PK-AS-REP message.
+        if (paEntry.getPaDataType() == PaDataType.PK_AS_REP) {
+            LOG.info("processing PK_AS_REP");
 
-        // TODO
+            PaPkAsRep paPkAsRep = KrbCodec.decode(paEntry.getPaDataValue(), PaPkAsRep.class);
+            DhRepInfo dhRepInfo = paPkAsRep.getDHRepInfo();
 
-        kdcRequest.setAsKey(asKey);
+            byte[] dhSignedData = dhRepInfo.getDHSignedData();
+
+            ContentInfo contentInfo = new ContentInfo();
+            try {
+                contentInfo.decode(dhSignedData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            SignedData signedData = contentInfo.getContentAs(SignedData.class);
+
+            PkinitCrypto.verifyCmsSignedData(
+                    CmsMessageType.CMS_SIGN_SERVER, signedData);
+
+
+            String anchorFileName = kdcRequest.getContext().getConfig().getPkinitAnchors().get(0);
+
+            X509Certificate x509Certificate = null;
+            try {
+                x509Certificate = (X509Certificate) CertificateHelper.loadCerts(
+                        anchorFileName).iterator().next();
+            } catch (KrbException e) {
+                e.printStackTrace();
+            }
+            Certificate archorCertificate = PkinitCrypto.changeToCertificate(x509Certificate);
+
+            CertificateSet certificateSet = signedData.getCertificates();
+            List<CertificateChoices> certificateChoicesList = certificateSet.getElements();
+            List<Certificate> certificates = new ArrayList<>();
+            for (CertificateChoices certificateChoices : certificateChoicesList) {
+                certificates.add(certificateChoices.getCertificate());
+            }
+            try {
+                PkinitCrypto.validateChain(certificates, archorCertificate);
+            } catch (Exception e) {
+                throw new KrbException(KrbErrorCode.KDC_ERR_INVALID_CERTIFICATE, e);
+            }
+
+            PrincipalName kdcPrincipal = KrbUtil.makeTgsPrincipal(
+                    kdcRequest.getContext().getConfig().getKdcRealm());
+            //TODO USE CertificateSet
+            boolean validSan = PkinitCrypto.verifyKdcSan(
+                    kdcRequest.getContext().getConfig().getPkinitKdcHostName(), kdcPrincipal,
+                    certificates);
+            if (!validSan) {
+                LOG.error("Did not find an acceptable SAN in KDC certificate");
+            }
+
+            LOG.info("skipping EKU check");
+
+            LOG.info("as_rep: DH key transport algorithm");
+            KdcDhKeyInfo kdcDhKeyInfo = new KdcDhKeyInfo();
+            try {
+                kdcDhKeyInfo.decode(signedData.getEncapContentInfo().getContent());
+            } catch (IOException e) {
+                String errMessage = "failed to decode KdcDhKeyInfo " + e.getMessage();
+                LOG.error(errMessage);
+                throw new KrbException(errMessage);
+            }
+
+            byte[] subjectPublicKey = kdcDhKeyInfo.getSubjectPublicKey().getValue();
+
+            Asn1Integer clientPubKey = KrbCodec.decode(subjectPublicKey, Asn1Integer.class);
+            BigInteger y = clientPubKey.getValue();
+
+            DiffieHellmanClient client = reqCtx.getDhClient();
+            BigInteger p = client.getDhParam().getP();
+            BigInteger g = client.getDhParam().getG();
+
+            DHPublicKey dhPublicKey = PkinitCrypto.createDHPublicKey(p, g, y);
+
+            EncryptionKey secretKey = null;
+            try {
+                client.doPhase(dhPublicKey.getEncoded());
+                secretKey = client.generateKey(null, null, encType);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // Set the DH shared key as the client key
+            if (secretKey == null) {
+                throw new KrbException("Fail to create client key.");
+            } else {
+                kdcRequest.setAsKey(secretKey);
+            }
+        }
     }
 
     /**

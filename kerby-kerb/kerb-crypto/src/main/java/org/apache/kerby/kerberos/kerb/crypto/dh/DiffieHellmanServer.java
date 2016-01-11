@@ -36,54 +36,53 @@ import java.security.spec.X509EncodedKeySpec;
 
 
 /**
- * The client-side of Diffie-Hellman key agreement for Kerberos PKINIT.
+ * The server-side of Diffie-Hellman key agreement for Kerberos PKINIT.
  *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class DhClient {
+public class DiffieHellmanServer {
 
-    private KeyAgreement clientKeyAgree;
-    private EncryptionKey clientKey;
-    private DHParameterSpec dhParameterSpec;
+    private KeyAgreement serverKeyAgree;
+    private EncryptionKey serverKey;
 
-
-    public DHParameterSpec getDhParam() {
-        return dhParameterSpec;
-    }
-
-    public DHPublicKey init(DHParameterSpec dhParamSpec) throws Exception {
-        dhParameterSpec = dhParamSpec;
-        // The client creates its own DH key pair, using the DH parameters from above.
-        KeyPairGenerator clientKpairGen = KeyPairGenerator.getInstance("DH");
-        clientKpairGen.initialize(dhParamSpec);
-        KeyPair clientKpair = clientKpairGen.generateKeyPair();
-
-        // The client creates and initializes its DH KeyAgreement object.
-        clientKeyAgree = KeyAgreement.getInstance("DH");
-        clientKeyAgree.init(clientKpair.getPrivate());
-
-        // The client encodes its public key, and sends it over to the server.
-        return (DHPublicKey) clientKpair.getPublic();
-    }
-
-
-    public void doPhase(byte[] serverPubKeyEnc) throws Exception {
+    public PublicKey initAndDoPhase(byte[] clientPubKeyEnc) throws Exception {
         /*
-         * The client uses the server's public key for the first (and only) phase
-         * of its version of the DH protocol.  Before it can do so, it has to
-         * instantiate a DH public key from the server's encoded key material.
+         * The server has received the client's public key in encoded format.  The
+         * server instantiates a DH public key from the encoded key material.
          */
-        KeyFactory clientKeyFac = KeyFactory.getInstance("DH");
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(serverPubKeyEnc);
-        PublicKey serverPubKey = clientKeyFac.generatePublic(x509KeySpec);
+        KeyFactory serverKeyFac = KeyFactory.getInstance("DH");
+        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(clientPubKeyEnc);
+        PublicKey clientPubKey = serverKeyFac.generatePublic(x509KeySpec);
 
-        clientKeyAgree.doPhase(serverPubKey, true);
+        /*
+         * The server gets the DH parameters associated with the client's public
+         * key.  The server must use the same parameters when it generates its own key pair.
+         */
+        DHParameterSpec dhParamSpec = ((DHPublicKey) clientPubKey).getParams();
+
+        // The server creates its own DH key pair.
+        KeyPairGenerator serverKpairGen = KeyPairGenerator.getInstance("DH");
+        serverKpairGen.initialize(dhParamSpec);
+        KeyPair serverKpair = serverKpairGen.generateKeyPair();
+
+        // The server creates and initializes its DH KeyAgreement object.
+        serverKeyAgree = KeyAgreement.getInstance("DH");
+        serverKeyAgree.init(serverKpair.getPrivate());
+
+        /*
+         * The server uses the client's public key for the only phase of its
+         * side of the DH protocol.
+         */
+        serverKeyAgree.doPhase(clientPubKey, true);
+
+        // The server encodes its public key, and sends it over to the client.
+        return serverKpair.getPublic();
     }
 
     public EncryptionKey generateKey(byte[] clientDhNonce, byte[] serverDhNonce, EncryptionType type) {
         // ZZ length will be same as public key.
-        byte[] dhSharedSecret = clientKeyAgree.generateSecret();
+        byte[] dhSharedSecret = serverKeyAgree.generateSecret();
         byte[] x = dhSharedSecret;
 
         if (clientDhNonce != null && clientDhNonce.length > 0
@@ -93,23 +92,22 @@ public class DhClient {
         }
 
         byte[] secret = OctetString2Key.kTruncate(dhSharedSecret.length, x);
+        serverKey = new EncryptionKey(type, secret);
 
-        clientKey = new EncryptionKey(type, secret);
-
-        return clientKey;
+        return serverKey;
     }
 
     /**
-     * Decrypt
+     * Encrypt
      *
-     * @param cipherText
-     * @return The decrypted byte
+     * @param clearText The clear test
+     * @return The cipher text.
      * @throws Exception e
      */
-    public byte[] decrypt(byte[] cipherText, KeyUsage usage) throws Exception {
+    public byte[] encrypt(byte[] clearText, KeyUsage usage) throws Exception {
         // Use the secret key to encrypt/decrypt data.
-        EncTypeHandler encType = EncryptionHandler.getEncHandler(clientKey.getKeyType());
-        return encType.decrypt(cipherText, clientKey.getKeyData(), usage.getValue());
+        EncTypeHandler encType = EncryptionHandler.getEncHandler(serverKey.getKeyType());
+        return encType.encrypt(clearText, serverKey.getKeyData(), usage.getValue());
     }
 
     private byte[] concatenateBytes(byte[] array1, byte[] array2) {
