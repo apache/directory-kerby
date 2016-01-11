@@ -17,12 +17,12 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.server.admin;
+package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.server.admin.impl.DefaultInternalAdminServerImpl;
-import org.apache.kerby.kerberos.kerb.admin.server.admin.impl.InternalAdminServer;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl.DefaultInternalAdminServerImpl;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl.InternalAdminServer;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.KdcServerOption;

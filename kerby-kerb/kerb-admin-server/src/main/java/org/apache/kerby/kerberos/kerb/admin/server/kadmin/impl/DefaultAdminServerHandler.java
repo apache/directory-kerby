@@ -17,10 +17,10 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.admin.server.passwd.impl;
+package org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl;
 
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerContext;
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerHandler;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerContext;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerHandler;
 import org.apache.kerby.kerberos.kerb.transport.KrbTcpTransport;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.slf4j.Logger;
@@ -30,12 +30,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
-public class DefaultPasswdServerHandler extends PasswdServerHandler implements Runnable {
-    private static Logger logger = LoggerFactory.getLogger(DefaultPasswdServerHandler.class);
+public class DefaultAdminServerHandler extends AdminServerHandler implements Runnable {
+    private static Logger logger = LoggerFactory.getLogger(DefaultAdminServerHandler.class);
     private final KrbTransport transport;
 
-    public DefaultPasswdServerHandler(PasswdServerContext passwdServerContext, KrbTransport transport) {
-        super(passwdServerContext);
+    public DefaultAdminServerHandler(AdminServerContext adminServerContext, KrbTransport transport) {
+        super(adminServerContext);
         this.transport  = transport;
     }
 

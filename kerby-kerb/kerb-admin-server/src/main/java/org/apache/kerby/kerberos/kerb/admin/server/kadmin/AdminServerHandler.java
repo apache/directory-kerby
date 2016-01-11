@@ -17,7 +17,7 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.server.admin;
+package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.slf4j.Logger;

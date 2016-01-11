@@ -17,29 +17,28 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.server.passwd.impl;
+package org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl;
 
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerContext;
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerSetting;
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerUtil;
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.impl.AbstractInternalPasswdServer;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerContext;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerSetting;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerUtil;
 import org.apache.kerby.kerberos.kerb.transport.KdcNetwork;
-import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
+import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * A default passwd passwd implementation.
+ * A default admin admin implementation.
  */
-public class DefaultInternalPasswdServerImpl extends AbstractInternalPasswdServer {
+public class DefaultInternalAdminServerImpl extends AbstractInternalAdminServer {
     private ExecutorService executor;
-    private PasswdServerContext passwdContext;
+    private AdminServerContext adminContext;
     private KdcNetwork network;
 
-    public DefaultInternalPasswdServerImpl(PasswdServerSetting passwdSetting) {
-        super(passwdSetting);
+    public DefaultInternalAdminServerImpl(AdminServerSetting adminSetting) {
+        super(adminSetting);
     }
 
     @Override
@@ -53,21 +52,21 @@ public class DefaultInternalPasswdServerImpl extends AbstractInternalPasswdServe
         network = new KdcNetwork() {
             @Override
             protected void onNewTransport(KrbTransport transport) {
-                DefaultPasswdServerHandler passwdHandler =
-                    new DefaultPasswdServerHandler(passwdContext, transport);
-                executor.execute(passwdHandler);
+                DefaultAdminServerHandler kdcHandler = 
+                    new DefaultAdminServerHandler(adminContext, transport);
+                executor.execute(kdcHandler);
             }
         };
 
         network.init();
-        TransportPair tpair = PasswdServerUtil.getTransportPair(getSetting());
+        TransportPair tpair = AdminServerUtil.getTransportPair(getSetting());
         network.listen(tpair);
         network.start();
     }
 
     private void prepareHandler() {
-        passwdContext = new PasswdServerContext(getSetting());
-        passwdContext.setIdentityService(getIdentityService());
+        adminContext = new AdminServerContext(getSetting());
+        adminContext.setIdentityService(getIdentityService());
     }
 
     @Override

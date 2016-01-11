@@ -17,7 +17,7 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.server.passwd;
+package org.apache.kerby.kerberos.kerb.admin.server.kpasswd;
 
 import org.apache.kerby.KOption;
 import org.apache.kerby.KOptionInfo;

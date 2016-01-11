@@ -17,25 +17,25 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.admin.server.admin;
+package org.apache.kerby.kerberos.kerb.admin.server.kpasswd;
 
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
 
-public class AdminServerContext {
-    private final AdminServerSetting adminServerSetting;
+public class PasswdServerContext {
+    private final PasswdServerSetting passwdServerSetting;
 
     private IdentityService identityService;
 
-    public AdminServerContext(AdminServerSetting adminServerSetting) {
-        this.adminServerSetting = adminServerSetting;
+    public PasswdServerContext(PasswdServerSetting passwdServerSetting) {
+        this.passwdServerSetting = passwdServerSetting;
     }
 
-    public AdminServerSetting getAdminServerSetting() {
-        return adminServerSetting;
+    public PasswdServerSetting getPasswdServerSetting() {
+        return passwdServerSetting;
     }
 
-    public AdminServerConfig getConfig() {
-        return adminServerSetting.getAdminServerConfig();
+    public PasswdServerConfig getConfig() {
+        return passwdServerSetting.getPasswdServerConfig();
     }
 
     public void setIdentityService(IdentityService identityService) {
@@ -46,7 +46,7 @@ public class AdminServerContext {
         return identityService;
     }
 
-    public String getAdminRealm() {
-        return adminServerSetting.getAdminRealm();
+    public String getPasswdRealm() {
+        return passwdServerSetting.getPasswdRealm();
     }
 }

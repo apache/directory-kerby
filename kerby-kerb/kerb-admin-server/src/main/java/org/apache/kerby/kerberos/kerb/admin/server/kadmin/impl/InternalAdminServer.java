@@ -17,16 +17,16 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.server.passwd.impl;
+package org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerSetting;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerSetting;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 
 /**
- * An internal KDC passwd interface.
+ * An internal KDC admin interface.
  */
-public interface InternalPasswdServer {
+public interface InternalAdminServer {
 
     /**
      * Initialize.
@@ -35,22 +35,22 @@ public interface InternalPasswdServer {
     void init() throws KrbException;
 
     /**
-     * Start the KDC passwd.
+     * Start the KDC admin.
      * @throws KrbException e
      */
     void start() throws KrbException;
 
     /**
-     * Stop the KDC passwd.
+     * Stop the KDC admin.
      * @throws KrbException e
      */
     void stop() throws KrbException;
 
     /**
-     * Get passwd passwd setting.
+     * Get admin admin setting.
      * @return setting
      */
-    PasswdServerSetting getSetting();
+    AdminServerSetting getSetting();
 
     /**
      * Get identity backend.

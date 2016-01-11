@@ -17,39 +17,38 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.server.passwd.impl;
+package org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerConfig;
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerSetting;
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerConfig;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerConfig;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerSetting;
 import org.apache.kerby.kerberos.kerb.identity.CacheableIdentityService;
 import org.apache.kerby.kerberos.kerb.identity.IdentityService;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
+import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.KdcUtil;
 
 /**
- * Abstract Kpasswd passwd implementation.
+ * Abstract Kadmin admin implementation.
  */
-public class AbstractInternalPasswdServer implements InternalPasswdServer {
+public class AbstractInternalAdminServer implements InternalAdminServer {
     private boolean started;
-    private final PasswdServerConfig passwdConfig;
+    private final AdminServerConfig adminServerConfig;
     private final BackendConfig backendConfig;
-    private final PasswdServerSetting passwdSetting;
+    private final AdminServerSetting adminServerSetting;
     private IdentityBackend backend;
     private IdentityService identityService;
 
-    public AbstractInternalPasswdServer(PasswdServerSetting passwdSetting) {
-        this.passwdSetting = passwdSetting;
-        this.passwdConfig = passwdSetting.getPasswdServerConfig();
-        this.backendConfig = passwdSetting.getBackendConfig();
+    public AbstractInternalAdminServer(AdminServerSetting adminServerSetting) {
+        this.adminServerSetting = adminServerSetting;
+        this.adminServerConfig = adminServerSetting.getAdminServerConfig();
+        this.backendConfig = adminServerSetting.getBackendConfig();
     }
 
     @Override
-    public PasswdServerSetting getSetting() {
-        return passwdSetting;
+    public AdminServerSetting getSetting() {
+        return adminServerSetting;
     }
 
     public boolean isStarted() {
@@ -57,7 +56,7 @@ public class AbstractInternalPasswdServer implements InternalPasswdServer {
     }
 
     protected String getServiceName() {
-        return passwdConfig.getPasswdServiceName();
+        return adminServerConfig.getAdminServiceName();
     }
 
     protected IdentityService getIdentityService() {
@@ -89,7 +88,7 @@ public class AbstractInternalPasswdServer implements InternalPasswdServer {
     }
 
     public boolean enableDebug() {
-        return passwdConfig.enableDebug();
+        return adminServerConfig.enableDebug();
     }
 
     @Override

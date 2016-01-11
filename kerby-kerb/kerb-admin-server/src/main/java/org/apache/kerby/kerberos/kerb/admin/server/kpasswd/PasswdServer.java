@@ -17,12 +17,11 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.server.passwd;
+package org.apache.kerby.kerberos.kerb.admin.server.kpasswd;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerConfig;
-import org.apache.kerby.kerberos.kerb.admin.server.passwd.impl.InternalPasswdServer;
+import org.apache.kerby.kerberos.kerb.admin.server.kpasswd.impl.InternalPasswdServer;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 
@@ -107,7 +106,7 @@ public class PasswdServer {
      * @param passwdHost The passwd host
      */
     public void setPasswdHost(String passwdHost) {
-        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.ADMIN_HOST, passwdHost);
+        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.ADMIN_HOST, passwdHost);
     }
 
     /**
@@ -115,7 +114,7 @@ public class PasswdServer {
      * @param passwdPort The passwd port
      */
     public void setPasswdServerPort(int passwdPort) {
-        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.ADMIN_PORT, passwdPort);
+        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.ADMIN_PORT, passwdPort);
     }
 
     /**
@@ -123,7 +122,7 @@ public class PasswdServer {
      * @param passwdTcpPort The passwd tcp port
      */
     public void setPasswdTcpPort(int passwdTcpPort) {
-        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.ADMIN_TCP_PORT, passwdTcpPort);
+        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.ADMIN_TCP_PORT, passwdTcpPort);
     }
 
     /**
@@ -131,7 +130,7 @@ public class PasswdServer {
      * @param allowUdp true if allow udp
      */
     public void setAllowUdp(boolean allowUdp) {
-        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.ALLOW_UDP, allowUdp);
+        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.ALLOW_UDP, allowUdp);
     }
 
     /**
@@ -139,14 +138,14 @@ public class PasswdServer {
      * @param allowTcp true if allow tcp
      */
     public void setAllowTcp(boolean allowTcp) {
-        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.ALLOW_TCP, allowTcp);
+        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.ALLOW_TCP, allowTcp);
     }
     /**
      * Set Passwd udp port. Only makes sense when allowUdp is set.
      * @param passwdUdpPort The passwd udp port
      */
     public void setPasswdUdpPort(int passwdUdpPort) {
-        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.ADMIN_UDP_PORT, passwdUdpPort);
+        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.ADMIN_UDP_PORT, passwdUdpPort);
     }
 
     /**
@@ -154,14 +153,14 @@ public class PasswdServer {
      * @param workDir The work dir
      */
     public void setWorkDir(File workDir) {
-        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.WORK_DIR, workDir);
+        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.WORK_DIR, workDir);
     }
 
     /**
      * Allow to debug so have more logs.
      */
     public void enableDebug() {
-        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.ENABLE_DEBUG);
+        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.ENABLE_DEBUG);
     }
 
     /**
@@ -170,14 +169,14 @@ public class PasswdServer {
      * @param innerPasswdServerImpl The inner passwd implementation
      */
     public void setInnerPasswdServerImpl(InternalPasswdServer innerPasswdServerImpl) {
-        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.INNER_ADMIN_IMPL, innerPasswdServerImpl);
+        startupOptions.add(org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.INNER_ADMIN_IMPL, innerPasswdServerImpl);
     }
 
     /**
      * Get Passwd setting from startup options and configs.
      * @return setting
      */
-    public org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerSetting getPasswdServerSetting() {
+    public org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerSetting getPasswdServerSetting() {
         return passwdServerSetting;
     }
 
@@ -215,12 +214,12 @@ public class PasswdServer {
      * @throws KrbException e.
      */
     public void init() throws KrbException {
-        if (startupOptions.contains(org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.INNER_ADMIN_IMPL)) {
+        if (startupOptions.contains(org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.INNER_ADMIN_IMPL)) {
             innerPasswdServer = (InternalPasswdServer) startupOptions.getOptionValue(
-                org.apache.kerby.kerberos.kerb.admin.server.passwd.PasswdServerOption.INNER_ADMIN_IMPL);
+                org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerOption.INNER_ADMIN_IMPL);
         } else {
             innerPasswdServer =
-                new org.apache.kerby.kerberos.kerb.admin.server.passwd.impl.DefaultInternalPasswdServerImpl(passwdServerSetting);
+                new org.apache.kerby.kerberos.kerb.admin.server.kpasswd.impl.DefaultInternalPasswdServerImpl(passwdServerSetting);
         }
 
         innerPasswdServer.init();

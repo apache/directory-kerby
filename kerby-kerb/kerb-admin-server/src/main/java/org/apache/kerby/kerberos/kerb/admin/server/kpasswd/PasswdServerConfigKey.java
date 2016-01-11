@@ -17,13 +17,13 @@
  *  under the License. 
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.server.admin;
+package org.apache.kerby.kerberos.kerb.admin.server.kpasswd;
 
 import org.apache.kerby.config.ConfigKey;
 
-public enum AdminServerConfigKey implements ConfigKey {
+public enum PasswdServerConfigKey implements ConfigKey {
     KRB_DEBUG(true),
-    ADMIN_SERVICE_NAME("Kadmin-Server"),
+    ADMIN_SERVICE_NAME("Kpasswd-Server"),
     KDC_IDENTITY_BACKEND,
     ADMIN_HOST("127.0.0.1"),
     ADMIN_PORT,
@@ -36,11 +36,11 @@ public enum AdminServerConfigKey implements ConfigKey {
 
     private Object defaultValue;
 
-    private AdminServerConfigKey() {
+    private PasswdServerConfigKey() {
         this.defaultValue = null;
     }
 
-    private AdminServerConfigKey(Object defaultValue) {
+    private PasswdServerConfigKey(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 
