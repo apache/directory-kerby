@@ -23,7 +23,7 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 /**
- * Krb client setting that combines common options and client config.
+ * Admin client setting that combines common options and client config.
  */
 public class AdminSetting {
     private final KOptions commonOptions;
@@ -44,17 +44,17 @@ public class AdminSetting {
     }
 
     public String getKdcRealm() {
-        String kdcRealm = commonOptions.getStringOption(AdminOption.KDC_REALM);
+        String kdcRealm = commonOptions.getStringOption(AdminOption.ADMIN_REALM);
         if (kdcRealm == null || kdcRealm.isEmpty()) {
-            kdcRealm = adminConfig.getKdcRealm();
+            kdcRealm = adminConfig.getAdminRealm();
         }
         return kdcRealm;
     }
 
     public String getKdcHost() {
-        String kdcHost = commonOptions.getStringOption(AdminOption.KDC_HOST);
+        String kdcHost = commonOptions.getStringOption(AdminOption.ADMIN_HOST);
         if (kdcHost == null) {
-            return adminConfig.getKdcHost();
+            return adminConfig.getAdminHost();
         }
         return kdcHost;
     }
@@ -92,11 +92,11 @@ public class AdminSetting {
     }
 
     public int getKdcTcpPort() {
-        int tcpPort = commonOptions.getIntegerOption(AdminOption.KDC_TCP_PORT);
+        int tcpPort = commonOptions.getIntegerOption(AdminOption.ADMIN_TCP_PORT);
         if (tcpPort > 0) {
             return tcpPort;
         }
-        return adminConfig.getKdcTcpPort();
+        return adminConfig.getAdminTcpPort();
     }
 
     public boolean allowUdp() {
@@ -112,11 +112,11 @@ public class AdminSetting {
     }
 
     public int getKdcUdpPort() {
-        int udpPort = commonOptions.getIntegerOption(AdminOption.KDC_UDP_PORT);
+        int udpPort = commonOptions.getIntegerOption(AdminOption.ADMIN_UDP_PORT);
         if (udpPort > 0) {
             return udpPort;
         }
-        return adminConfig.getKdcUdpPort();
+        return adminConfig.getAdminUdpPort();
     }
 
     public int getTimeout() {

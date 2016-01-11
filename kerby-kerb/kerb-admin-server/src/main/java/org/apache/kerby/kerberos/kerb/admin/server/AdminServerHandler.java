@@ -72,7 +72,7 @@ public class AdminServerHandler {
                 == KrbMessageType.AS_REQ) {
             KdcReq kdcReq = (KdcReq) krbRequest;
             String realm = getRequestRealm(kdcReq);
-            if (realm == null || !kdcContext.getKdcRealm().equals(realm)) {
+            if (realm == null || !kdcContext.getAdminRealm().equals(realm)) {
                 LOG.error("Invalid realm from kdc request: " + realm);
                 throw new KrbException("Invalid realm from kdc request: " + realm);
             }

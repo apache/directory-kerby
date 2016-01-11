@@ -127,15 +127,15 @@ public final class AdminServerUtil {
             AdminServerSetting setting) throws KrbException {
         TransportPair result = new TransportPair();
 
-        int tcpPort = setting.checkGetKdcTcpPort();
+        int tcpPort = setting.checkGetAdminTcpPort();
         if (tcpPort > 0) {
             result.tcpAddress = new InetSocketAddress(
-                    setting.getKdcHost(), tcpPort);
+                    setting.getAdminHost(), tcpPort);
         }
-        int udpPort = setting.checkGetKdcUdpPort();
+        int udpPort = setting.checkGetAdminUdpPort();
         if (udpPort > 0) {
             result.udpAddress = new InetSocketAddress(
-                    setting.getKdcHost(), udpPort);
+                    setting.getAdminHost(), udpPort);
         }
 
         return result;

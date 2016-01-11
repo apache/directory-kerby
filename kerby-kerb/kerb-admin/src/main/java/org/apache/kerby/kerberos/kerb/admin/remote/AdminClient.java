@@ -86,27 +86,56 @@ public class AdminClient {
      * Set KDC realm for ticket request
      * @param realm The realm
      */
-    public void setKdcRealm(String realm) {
-        commonOptions.add(AdminOption.KDC_REALM, realm);
+    public void setAdminRealm(String realm) {
+        commonOptions.add(AdminOption.ADMIN_REALM, realm);
     }
 
     /**
-     * Set KDC host.
+     * Set Admin Server host.
      * @param kdcHost The kdc host
      */
     public void setKdcHost(String kdcHost) {
-        commonOptions.add(AdminOption.KDC_HOST, kdcHost);
+        commonOptions.add(AdminOption.ADMIN_HOST, kdcHost);
     }
 
     /**
-     * Set KDC tcp port.
+     * Set Admin Server tcp port.
      * @param kdcTcpPort The kdc tcp port
      */
-    public void setKdcTcpPort(int kdcTcpPort) {
+    public void setAdminTcpPort(int kdcTcpPort) {
         if (kdcTcpPort < 1) {
             throw new IllegalArgumentException("Invalid port");
         }
-        commonOptions.add(AdminOption.KDC_TCP_PORT, kdcTcpPort);
+        commonOptions.add(AdminOption.ADMIN_TCP_PORT, kdcTcpPort);
+        setAllowTcp(true);
+    }
+
+    /**
+     * Set to allow UDP or not.
+     * @param allowUdp true if allow udp
+     */
+    public void setAllowUdp(boolean allowUdp) {
+        commonOptions.add(AdminOption.ALLOW_UDP, allowUdp);
+    }
+
+    /**
+     * Set to allow TCP or not.
+     * @param allowTcp true if allow tcp
+     */
+    public void setAllowTcp(boolean allowTcp) {
+        commonOptions.add(AdminOption.ALLOW_TCP, allowTcp);
+    }
+
+    /**
+     * Set Admin Server udp port. Only makes sense when allowUdp is set.
+     * @param adminUdpPort The kdc udp port
+     */
+    public void setAdminUdpPort(int adminUdpPort) {
+        if (adminUdpPort < 1) {
+            throw new IllegalArgumentException("Invalid port");
+        }
+        commonOptions.add(AdminOption.ADMIN_UDP_PORT, adminUdpPort);
+        setAllowUdp(true);
     }
 
     /**

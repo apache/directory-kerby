@@ -20,11 +20,6 @@
 package org.apache.kerby.kerberos.kerb.admin.server;
 
 import org.apache.kerby.kerberos.kerb.common.Krb5Conf;
-import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
-import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Kerb KDC side configuration API.
@@ -36,28 +31,28 @@ public class AdminServerConfig extends Krb5Conf {
         return getBoolean(AdminServerConfigKey.KRB_DEBUG, true, KDCDEFAULT);
     }
 
-    public String getKdcServiceName() {
-        return getString(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_SERVICE_NAME, true, KDCDEFAULT);
+    public String getAdminServiceName() {
+        return getString(AdminServerConfigKey.ADMIN_SERVICE_NAME, true, KDCDEFAULT);
     }
 
-    public String getKdcHost() {
-        return getString(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_HOST, true, KDCDEFAULT);
+    public String getAdminHost() {
+        return getString(AdminServerConfigKey.ADMIN_HOST, true, KDCDEFAULT);
     }
 
-    public int getKdcPort() {
-        Integer kdcPort = getInt(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_PORT, true, KDCDEFAULT);
+    public int getAdminPort() {
+        Integer kdcPort = getInt(AdminServerConfigKey.ADMIN_PORT, true, KDCDEFAULT);
         if (kdcPort != null && kdcPort > 0) {
             return kdcPort.intValue();
         }
         return -1;
     }
 
-    public int getKdcTcpPort() {
-        Integer kdcTcpPort = getInt(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_TCP_PORT, true, KDCDEFAULT);
+    public int getAdminTcpPort() {
+        Integer kdcTcpPort = getInt(AdminServerConfigKey.ADMIN_TCP_PORT, true, KDCDEFAULT);
         if (kdcTcpPort != null && kdcTcpPort > 0) {
             return kdcTcpPort.intValue();
         }
-        return getKdcPort();
+        return getAdminPort();
     }
 
     /**
@@ -65,9 +60,9 @@ public class AdminServerConfig extends Krb5Conf {
      * @return true to allow TCP, false otherwise
      */
     public Boolean allowTcp() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_ALLOW_TCP, true, KDCDEFAULT)
-                || getInt(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_TCP_PORT, true, KDCDEFAULT) != null
-            || getInt(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_PORT, false, KDCDEFAULT) != null;
+        return getBoolean(AdminServerConfigKey.ADMIN_ALLOW_TCP, true, KDCDEFAULT)
+                || getInt(AdminServerConfigKey.ADMIN_TCP_PORT, true, KDCDEFAULT) != null
+            || getInt(AdminServerConfigKey.ADMIN_PORT, false, KDCDEFAULT) != null;
     }
 
     /**
@@ -75,110 +70,24 @@ public class AdminServerConfig extends Krb5Conf {
      * @return true to allow UDP, false otherwise
      */
     public Boolean allowUdp() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_ALLOW_UDP, true, KDCDEFAULT)
-                || getInt(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_UDP_PORT, true, KDCDEFAULT) != null
-            || getInt(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_PORT, false, KDCDEFAULT) != null;
+        return getBoolean(AdminServerConfigKey.ADMIN_ALLOW_UDP, true, KDCDEFAULT)
+                || getInt(AdminServerConfigKey.ADMIN_UDP_PORT, true, KDCDEFAULT) != null
+            || getInt(AdminServerConfigKey.ADMIN_PORT, false, KDCDEFAULT) != null;
     }
 
-    public int getKdcUdpPort() {
-        Integer kdcUdpPort = getInt(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_UDP_PORT, true, KDCDEFAULT);
+    public int getAdminUdpPort() {
+        Integer kdcUdpPort = getInt(AdminServerConfigKey.ADMIN_UDP_PORT, true, KDCDEFAULT);
         if (kdcUdpPort != null && kdcUdpPort > 0) {
             return kdcUdpPort.intValue();
         }
-        return getKdcPort();
+        return getAdminPort();
     }
 
-    public String getKdcRealm() {
-        return getString(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_REALM, true, KDCDEFAULT);
+    public String getAdminRealm() {
+        return getString(AdminServerConfigKey.ADMIN_REALM, true, KDCDEFAULT);
     }
 
-    public String getKdcDomain() {
-        return getString(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_DOMAIN, true, KDCDEFAULT);
-    }
-
-    public boolean isPreauthRequired() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.PREAUTH_REQUIRED, true, KDCDEFAULT);
-    }
-
-    public boolean isAllowTokenPreauth() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.ALLOW_TOKEN_PREAUTH, true, KDCDEFAULT);
-    }
-
-    public long getAllowableClockSkew() {
-        return getLong(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.ALLOWABLE_CLOCKSKEW, true, KDCDEFAULT);
-    }
-
-    public boolean isEmptyAddressesAllowed() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.EMPTY_ADDRESSES_ALLOWED, true, KDCDEFAULT);
-    }
-
-    public boolean isForwardableAllowed() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.FORWARDABLE_ALLOWED, true, KDCDEFAULT);
-    }
-
-    public boolean isPostdatedAllowed() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.POSTDATED_ALLOWED, true, KDCDEFAULT);
-    }
-
-    public boolean isProxiableAllowed() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.PROXIABLE_ALLOWED, true, KDCDEFAULT);
-    }
-
-    public boolean isRenewableAllowed() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.RENEWABLE_ALLOWED, true, KDCDEFAULT);
-    }
-
-    public long getMaximumRenewableLifetime() {
-        return getLong(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.MAXIMUM_RENEWABLE_LIFETIME, true, KDCDEFAULT);
-    }
-
-    public long getMaximumTicketLifetime() {
-        return getLong(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.MAXIMUM_TICKET_LIFETIME, true, KDCDEFAULT);
-    }
-
-    public long getMinimumTicketLifetime() {
-        return getLong(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.MINIMUM_TICKET_LIFETIME, true, KDCDEFAULT);
-    }
-
-    public List<EncryptionType> getEncryptionTypes() {
-        return getEncTypes(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.ENCRYPTION_TYPES, true, KDCDEFAULT);
-    }
-
-    public boolean isPaEncTimestampRequired() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.PA_ENC_TIMESTAMP_REQUIRED, true, KDCDEFAULT);
-    }
-
-    public boolean isBodyChecksumVerified() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.VERIFY_BODY_CHECKSUM, true, KDCDEFAULT);
-    }
-
-    public boolean isRestrictAnonymousToTgt() {
-        return getBoolean(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.RESTRICT_ANONYMOUS_TO_TGT, true, KDCDEFAULT);
-    }
-
-    public int getKdcMaxDgramReplySize() {
-        return getInt(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.KDC_MAX_DGRAM_REPLY_SIZE, true, KDCDEFAULT);
-    }
-
-    public String getVerifyKeyConfig() {
-        return getString(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.TOKEN_VERIFY_KEYS, true, KDCDEFAULT);
-    }
-
-    public String getDecryptionKeyConfig() {
-        return getString(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.TOKEN_DECRYPTION_KEYS, true, KDCDEFAULT);
-    }
-
-    public List<String> getIssuers() {
-        return Arrays.asList(getStringArray(org.apache.kerby.kerberos.kerb.server.KdcConfigKey.TOKEN_ISSUERS, true, KDCDEFAULT));
-    }
-
-    public List<String> getPkinitAnchors() {
-        return Arrays.asList(getString(
-                org.apache.kerby.kerberos.kerb.server.KdcConfigKey.PKINIT_ANCHORS, true, KDCDEFAULT));
-    }
-
-    public String getPkinitIdentity() {
-        return getString(
-                KdcConfigKey.PKINIT_IDENTITY, true, KDCDEFAULT);
+    public String getAdminDomain() {
+        return getString(AdminServerConfigKey.ADMIN_DOMAIN, true, KDCDEFAULT);
     }
 }

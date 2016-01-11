@@ -24,7 +24,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 
 /**
- * KDC setting that combines startup options and kdc config.
+ * Admin Server setting that combines startup options and admin config.
  */
 public class AdminServerSetting {
     private final KOptions startupOptions;
@@ -34,23 +34,25 @@ public class AdminServerSetting {
     /**
      * AdminServerSetting constructor
      * @param startupOptions startup options
-     * @param config kdc configuration
+     * @param config admin configuration
      * @param backendConfig backend configuration
      */
     public AdminServerSetting(KOptions startupOptions,
-                              AdminServerConfig config, BackendConfig backendConfig) {
+                              AdminServerConfig config, 
+                              BackendConfig backendConfig) {
         this.startupOptions = startupOptions;
         this.adminServerConfig = config;
         this.backendConfig = backendConfig;
     }
 
-    public AdminServerSetting(AdminServerConfig adminServerConfig, BackendConfig backendConfig) {
+    public AdminServerSetting(AdminServerConfig adminServerConfig, 
+                              BackendConfig backendConfig) {
         this(new KOptions(), adminServerConfig, backendConfig);
     }
 
     /**
-     * Get the KDC config.
-     * @return kdc configuration
+     * Get the Admin Server config.
+     * @return admin configuration
      */
     public AdminServerConfig getAdminServerConfig() {
         return adminServerConfig;
@@ -64,75 +66,75 @@ public class AdminServerSetting {
         return backendConfig;
     }
 
-    public String getKdcHost() {
-        String kdcHost = startupOptions.getStringOption(
-                AdminServerOption.KDC_HOST);
-        if (kdcHost == null) {
-            kdcHost = adminServerConfig.getKdcHost();
+    public String getAdminHost() {
+        String adminHost = startupOptions.getStringOption(
+                AdminServerOption.ADMIN_HOST);
+        if (adminHost == null) {
+            adminHost = adminServerConfig.getAdminHost();
         }
-        return kdcHost;
+        return adminHost;
     }
 
     /**
-     * Check kdc tcp setting and see if any bad.
+     * Check admin tcp setting and see if any bad.
      * @return valid tcp port or -1 if not allowTcp
      * @throws KrbException e
      */
-    public int checkGetKdcTcpPort() throws KrbException {
+    public int checkGetAdminTcpPort() throws KrbException {
         if (allowTcp()) {
-            int kdcPort = getKdcTcpPort();
-            if (kdcPort < 1) {
-                throw new KrbException("KDC tcp port isn't set or configured");
+            int adminPort = getAdminTcpPort();
+            if (adminPort < 1) {
+                throw new KrbException("Admin Server tcp port isn't set or configured");
             }
-            return kdcPort;
+            return adminPort;
         }
         return -1;
     }
 
     /**
-     * Check kdc udp setting and see if any bad.
+     * Check admin udp setting and see if any bad.
      * @return valid udp port or -1 if not allowUdp
      * @throws KrbException e
      */
-    public int checkGetKdcUdpPort() throws KrbException {
+    public int checkGetAdminUdpPort() throws KrbException {
         if (allowUdp()) {
-            int kdcPort = getKdcUdpPort();
-            if (kdcPort < 1) {
-                throw new KrbException("KDC udp port isn't set or configured");
+            int adminPort = getAdminUdpPort();
+            if (adminPort < 1) {
+                throw new KrbException("Admin Server udp port isn't set or configured");
             }
-            return kdcPort;
+            return adminPort;
         }
         return -1;
     }
 
     /**
-     * Get kdc tcp port
+     * Get admin tcp port
      *
-     * @return kdc tcp port
+     * @return admin tcp port
      */
-    public int getKdcTcpPort() {
-        int tcpPort = startupOptions.getIntegerOption(AdminServerOption.KDC_TCP_PORT);
+    public int getAdminTcpPort() {
+        int tcpPort = startupOptions.getIntegerOption(AdminServerOption.ADMIN_TCP_PORT);
         if (tcpPort < 1) {
-            tcpPort = adminServerConfig.getKdcTcpPort();
+            tcpPort = adminServerConfig.getAdminTcpPort();
         }
         if (tcpPort < 1) {
-            tcpPort = getKdcPort();
+            tcpPort = getAdminPort();
         }
 
         return tcpPort;
     }
 
     /**
-     * Get kdc port
+     * Get admin port
      *
-     * @return kdc port
+     * @return admin port
      */
-    public int getKdcPort() {
-        int kdcPort = startupOptions.getIntegerOption(AdminServerOption.KDC_PORT);
-        if (kdcPort < 1) {
-            kdcPort = adminServerConfig.getKdcPort();
+    public int getAdminPort() {
+        int adminPort = startupOptions.getIntegerOption(AdminServerOption.ADMIN_PORT);
+        if (adminPort < 1) {
+            adminPort = adminServerConfig.getAdminPort();
         }
-        return kdcPort;
+        return adminPort;
     }
 
     /**
@@ -156,31 +158,31 @@ public class AdminServerSetting {
     }
 
     /**
-     * Get kdc udp port
+     * Get admin udp port
      *
      * @return udp port
      */
-    public int getKdcUdpPort() {
-        int udpPort = startupOptions.getIntegerOption(AdminServerOption.KDC_UDP_PORT);
+    public int getAdminUdpPort() {
+        int udpPort = startupOptions.getIntegerOption(AdminServerOption.ADMIN_UDP_PORT);
         if (udpPort < 1) {
-            udpPort = adminServerConfig.getKdcUdpPort();
+            udpPort = adminServerConfig.getAdminUdpPort();
         }
         if (udpPort < 1) {
-            udpPort = getKdcPort();
+            udpPort = getAdminPort();
         }
 
         return udpPort;
     }
 
     /**
-     * Get KDC realm.
-     * @return KDC realm
+     * Get Admin Server realm.
+     * @return Admin Server realm
      */
-    public String getKdcRealm() {
-        String kdcRealm = startupOptions.getStringOption(AdminServerOption.KDC_REALM);
-        if (kdcRealm == null || kdcRealm.isEmpty()) {
-            kdcRealm = adminServerConfig.getKdcRealm();
+    public String getAdminRealm() {
+        String adminRealm = startupOptions.getStringOption(AdminServerOption.ADMIN_REALM);
+        if (adminRealm == null || adminRealm.isEmpty()) {
+            adminRealm = adminServerConfig.getAdminRealm();
         }
-        return kdcRealm;
+        return adminRealm;
     }
 }

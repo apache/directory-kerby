@@ -27,8 +27,6 @@ public class AdminServerContext {
     private final AdminServerSetting adminServerSetting;
 
     private IdentityService identityService;
-    private ReplayCheckService replayCache;
-    private PreauthHandler preauthHandler;
 
     public AdminServerContext(AdminServerSetting adminServerSetting) {
         this.adminServerSetting = adminServerSetting;
@@ -42,22 +40,6 @@ public class AdminServerContext {
         return adminServerSetting.getAdminServerConfig();
     }
 
-    public void setPreauthHandler(PreauthHandler preauthHandler) {
-        this.preauthHandler = preauthHandler;
-    }
-
-    public PreauthHandler getPreauthHandler() {
-        return this.preauthHandler;
-    }
-
-    public void setReplayCache(ReplayCheckService replayCache) {
-        this.replayCache = replayCache;
-    }
-
-    public ReplayCheckService getReplayCache() {
-        return replayCache;
-    }
-
     public void setIdentityService(IdentityService identityService) {
         this.identityService = identityService;
     }
@@ -66,7 +48,7 @@ public class AdminServerContext {
         return identityService;
     }
 
-    public String getKdcRealm() {
-        return adminServerSetting.getKdcRealm();
+    public String getAdminRealm() {
+        return adminServerSetting.getAdminRealm();
     }
 }

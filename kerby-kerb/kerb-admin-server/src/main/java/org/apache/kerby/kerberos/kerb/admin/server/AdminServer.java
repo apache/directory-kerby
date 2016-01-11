@@ -50,7 +50,8 @@ public class AdminServer {
         this.adminServerConfig = kdcConfig;
         this.backendConfig = backendConfig;
         startupOptions = new KOptions();
-        adminServerSetting = new AdminServerSetting(startupOptions, kdcConfig, backendConfig);
+        adminServerSetting = new AdminServerSetting(startupOptions,
+            kdcConfig, backendConfig);
     }
 
     /**
@@ -63,7 +64,8 @@ public class AdminServer {
      * @throws KrbException e
      */
     public AdminServer(File confDir) throws KrbException {
-        AdminServerConfig tmpAdminServerConfig = AdminServerUtil.getAdminServerConfig(confDir);
+        AdminServerConfig tmpAdminServerConfig =
+            AdminServerUtil.getAdminServerConfig(confDir);
         if (tmpAdminServerConfig == null) {
             tmpAdminServerConfig = new AdminServerConfig();
         }
@@ -93,35 +95,35 @@ public class AdminServer {
     }
 
     /**
-     * Set KDC realm for ticket request
+     * Set Admin realm for ticket request
      * @param realm The kdc realm
      */
     public void setAdminServerRealm(String realm) {
-        startupOptions.add(AdminServerOption.KDC_REALM, realm);
+        startupOptions.add(AdminServerOption.ADMIN_REALM, realm);
     }
 
     /**
-     * Set KDC host.
+     * Set Admin host.
      * @param kdcHost The kdc host
      */
-    public void setAdminServerHost(String kdcHost) {
-        startupOptions.add(AdminServerOption.KDC_HOST, kdcHost);
+    public void setAdminHost(String kdcHost) {
+        startupOptions.add(AdminServerOption.ADMIN_HOST, kdcHost);
     }
 
     /**
-     * Set KDC port.
+     * Set Admin port.
      * @param kdcPort The kdc port
      */
     public void setAdminServerPort(int kdcPort) {
-        startupOptions.add(AdminServerOption.KDC_PORT, kdcPort);
+        startupOptions.add(AdminServerOption.ADMIN_PORT, kdcPort);
     }
 
     /**
-     * Set KDC tcp port.
+     * Set Admin tcp port.
      * @param kdcTcpPort The kdc tcp port
      */
-    public void setAdminServerTcpPort(int kdcTcpPort) {
-        startupOptions.add(AdminServerOption.KDC_TCP_PORT, kdcTcpPort);
+    public void setAdminTcpPort(int kdcTcpPort) {
+        startupOptions.add(AdminServerOption.ADMIN_TCP_PORT, kdcTcpPort);
     }
 
     /**
@@ -140,11 +142,11 @@ public class AdminServer {
         startupOptions.add(AdminServerOption.ALLOW_TCP, allowTcp);
     }
     /**
-     * Set KDC udp port. Only makes sense when allowUdp is set.
+     * Set Admin udp port. Only makes sense when allowUdp is set.
      * @param kdcUdpPort The kdc udp port
      */
-    public void setAdminServerUdpPort(int kdcUdpPort) {
-        startupOptions.add(AdminServerOption.KDC_UDP_PORT, kdcUdpPort);
+    public void setAdminUdpPort(int kdcUdpPort) {
+        startupOptions.add(AdminServerOption.ADMIN_UDP_PORT, kdcUdpPort);
     }
 
     /**
@@ -168,11 +170,11 @@ public class AdminServer {
      * @param innerAdminServerImpl The inner kdc implementation
      */
     public void setInnerAdminServerImpl(InternalAdminServer innerAdminServerImpl) {
-        startupOptions.add(AdminServerOption.INNER_KDC_IMPL, innerAdminServerImpl);
+        startupOptions.add(AdminServerOption.INNER_ADMIN_IMPL, innerAdminServerImpl);
     }
 
     /**
-     * Get KDC setting from startup options and configs.
+     * Get Admin setting from startup options and configs.
      * @return setting
      */
     public AdminServerSetting getAdminServerSetting() {
@@ -180,7 +182,7 @@ public class AdminServer {
     }
 
     /**
-     * Get the KDC config.
+     * Get the Admin config.
      * @return AdminServerConfig
      */
     public AdminServerConfig getAdminServerConfig() {
@@ -213,9 +215,9 @@ public class AdminServer {
      * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
     public void init() throws KrbException {
-        if (startupOptions.contains(AdminServerOption.INNER_KDC_IMPL)) {
+        if (startupOptions.contains(AdminServerOption.INNER_ADMIN_IMPL)) {
             innerAdminServer = (InternalAdminServer) startupOptions.getOptionValue(
-                AdminServerOption.INNER_KDC_IMPL);
+                AdminServerOption.INNER_ADMIN_IMPL);
         } else {
             innerAdminServer =
                 new DefaultInternalAdminServerImpl(adminServerSetting);
@@ -225,7 +227,7 @@ public class AdminServer {
     }
 
     /**
-     * Start the KDC server.
+     * Start the Admin server.
      *
      * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
@@ -237,7 +239,7 @@ public class AdminServer {
     }
 
     /**
-     * Stop the KDC server.
+     * Stop the Admin server.
      *
      * @throws org.apache.kerby.kerberos.kerb.KrbException e.
      */
