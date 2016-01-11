@@ -70,7 +70,7 @@ public class EncAPRepPart extends KrbAppSequenceType {
         }
     }
 
-    /** The ApRep's fields */
+    /** The EncAPRepPart's fields */
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(EncAPRepPartField.CTIME, KerberosTime.class),
             new ExplicitField(EncAPRepPartField.CUSEC, Asn1Integer.class),
