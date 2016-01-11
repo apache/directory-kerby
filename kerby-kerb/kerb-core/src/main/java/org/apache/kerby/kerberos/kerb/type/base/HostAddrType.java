@@ -109,7 +109,7 @@ public enum HostAddrType implements EnumType {
      * Get the HostAddrType associated with a value.
      * 
      * @param value The integer value of the HostAddrType we are looking for
-     * @return The associated NameType, or NULL if not found or if value is null
+     * @return The associated HostAddrType, or NULL if not found or if value is null
      */
     public static HostAddrType fromValue(Integer value) {
         if (value != null) {
