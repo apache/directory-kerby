@@ -29,7 +29,9 @@ public enum XdrDataType {
     BOOLEAN             (0x01),
     INTEGER             (0x02),
     BYTES               (0x03),
-    STRING              (0X04);
+    STRING              (0X04),
+    ENUM                (0x05),
+    OPAQUE              (0x06);
 
     /** The dataType value */
     private int value;

@@ -28,7 +28,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ *  From RFC 4506 :
+ *
+ *  0     1     2     3     4     5   ...
+ *        +-----+-----+-----+-----+-----+-----+...+-----+-----+...+-----+
+ *        |        length n       |byte0|byte1|...| n-1 |  0  |...|  0  |
+ *        +-----+-----+-----+-----+-----+-----+...+-----+-----+...+-----+
+ *        |<-------4 bytes------->|<------n bytes------>|<---r bytes--->|
+ *                                |<----n+r (where (n+r) mod 4 = 0)---->|
+ *                                                                 STRING
+ */
 public abstract class XdrString extends XdrSimple<String> {
+    private int padding;
+
     public XdrString(XdrDataType xdrDataType) {
         super(xdrDataType, null);
     }
@@ -40,7 +53,9 @@ public abstract class XdrString extends XdrSimple<String> {
     @Override
     protected void toBytes() {
         if (getValue() != null) {
-            byte[] bytes = getValue().getBytes(StandardCharsets.US_ASCII);
+            byte[] bytes = new byte[encodingBodyLength()];
+            bytes[0] = (byte) (bytes.length - padding);
+            System.arraycopy(getValue(), 0, bytes, 1, bytes.length - 1);
             setBytes(bytes);
         }
     }
@@ -48,14 +63,31 @@ public abstract class XdrString extends XdrSimple<String> {
     @Override
     protected int encodingBodyLength() {
         if (getValue() != null) {
-            return getValue().length();
+            return getValue().length() + 1;
         }
         return 0;
     }
 
     protected void toValue() throws IOException {
         byte[] bytes = getBytes();
-        setValue(new String(bytes, StandardCharsets.US_ASCII));
+
+        int paddingBytes = bytes.length - bytes[0];
+        validatePaddingBytes(paddingBytes);
+        setPadding(paddingBytes);
+
+        byte[] newBytes = new byte[bytes.length - 1];
+        if (bytes.length > 1) {
+            System.arraycopy(bytes, 1, newBytes, 0, bytes.length - 1);
+        }
+        setValue(new String(newBytes, StandardCharsets.US_ASCII));
+    }
+
+    public void setPadding(int padding) {
+        this.padding = padding;
+    }
+
+    public int getPadding() {
+        return padding;
     }
 
     public static String fromUTF8ByteArray(byte[] bytes) {
@@ -289,4 +321,9 @@ public abstract class XdrString extends XdrSimple<String> {
         return v.toArray(new String[v.size()]);
     }
 
+    private void validatePaddingBytes(int paddingBytes) throws IOException {
+        if (paddingBytes < 0 || paddingBytes > 3) {
+            throw new IOException("Bad padding number: " + paddingBytes + ", should be in [0, 3]");
+        }
+    }
 }

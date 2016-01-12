@@ -22,6 +22,9 @@ package org.apache.kerby.xdr.type;
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
 /**
  * For collection type that may consist of dataTypeged fields
  */
@@ -36,5 +39,27 @@ public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
         setValue(this);
         this.fieldInfos = fieldInfos;
         this.fields = new XdrType[fieldInfos.length];
+    }
+
+    @Override
+    protected int encodingBodyLength() {
+        int allLen = 0;
+        for (int i = 0; i < fields.length; ++i) {
+            AbstractXdrType field = (AbstractXdrType) fields[i];
+            if (field != null) {
+                allLen += field.encodingLength();
+            }
+        }
+        return allLen;
+    }
+
+    @Override
+    protected void encodeBody(ByteBuffer buffer) throws IOException {
+        for (int i = 0; i < fields.length; ++i) {
+            XdrType field = fields[i];
+            if (field != null) {
+                field.encode(buffer);
+            }
+        }
     }
 }
