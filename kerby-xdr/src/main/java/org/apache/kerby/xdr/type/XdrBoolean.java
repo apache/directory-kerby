@@ -22,14 +22,19 @@ package org.apache.kerby.xdr.type;
 import org.apache.kerby.xdr.XdrDataType;
 
 import java.io.IOException;
-<<<<<<< 5f54df40ccea4ed12465e44ff1e40cba860d6424
 import java.util.Arrays;
-=======
->>>>>>> finish xdr-boolean encode
+
 
 /**
  * Xdr Boolean type from RFC 4506
  * Boolean type has the same representation as signed integers.
+=======
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+/**
+ * Xdr Boolean type
+>>>>>>> finish Xdr-boolean encode and decode, unit tests passed
  */
 public class XdrBoolean extends XdrSimple<Boolean> {
     private static final byte[] TRUE_BYTE = new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01};
@@ -53,22 +58,17 @@ public class XdrBoolean extends XdrSimple<Boolean> {
         super(XdrDataType.BOOLEAN, value);
     }
 
-    /**
-     * The length of a signed integer is 4.
-     * @return Length of a boolean type.
-     */
-    @Override
-    protected int encodingHeaderLength() throws IOException {
-        return 0;
-    }
-
     @Override
     protected int encodingBodyLength() {
-<<<<<<< 5f54df40ccea4ed12465e44ff1e40cba860d6424
         return 4;
-=======
-        return 4;//as signed integer??
     }
+
+    /*
+    @Override
+    protected  ByteBuffer decodeHead(ByteBuffer content) {
+        return content;
+    }
+    */
 
     /*
     @Override

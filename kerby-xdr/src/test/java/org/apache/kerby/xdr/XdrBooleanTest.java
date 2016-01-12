@@ -32,6 +32,7 @@ public class XdrBooleanTest {
     public void testEncoding() throws IOException {
         testEncodingWith(true, "0x00 00 00 01");
         testEncodingWith(false, "0x00 00 00 00");
+        //undefined?
     }
 
     private void testEncodingWith(Boolean value, String expectedEncoding) throws IOException {
@@ -42,10 +43,18 @@ public class XdrBooleanTest {
         assertThat(encodingBytes).isEqualTo(expected);
     }
 
+<<<<<<< 8b24b28596aa2987e1fa51e318917c47b776fe24
+=======
+
+>>>>>>> finish Xdr-boolean encode and decode, unit tests passed
     @Test
     public void testDecoding() throws IOException {
         testDecodingWith(true, "0x00 00 00 01");
         testDecodingWith(false, "0x00 00 00 00");
+<<<<<<< 8b24b28596aa2987e1fa51e318917c47b776fe24
+=======
+        //undefined?
+>>>>>>> finish Xdr-boolean encode and decode, unit tests passed
     }
 
     private void testDecodingWith(Boolean expectedValue, String content) throws IOException {
@@ -54,4 +63,8 @@ public class XdrBooleanTest {
         decoded.decode(HexUtil.hex2bytesFriendly(content));
         assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }
+<<<<<<< 8b24b28596aa2987e1fa51e318917c47b776fe24
+=======
+
+>>>>>>> finish Xdr-boolean encode and decode, unit tests passed
 }
