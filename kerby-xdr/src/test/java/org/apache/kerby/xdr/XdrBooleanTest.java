@@ -32,6 +32,7 @@ public class XdrBooleanTest {
     public void testEncoding() throws IOException {
         testEncodingWith(true, "0x00 00 00 01");
         testEncodingWith(false, "0x00 00 00 00");
+        //undefined?
     }
 
     private void testEncodingWith(Boolean value, String expectedEncoding) throws IOException {
@@ -42,25 +43,19 @@ public class XdrBooleanTest {
         assertThat(encodingBytes).isEqualTo(expected);
     }
 
-    /*
+
     @Test
     public void testDecoding() throws IOException {
-        testDecodingWith(true, "0x01 01 FF", true);
-        testDecodingWith(false, "0x01 01 7F", true);
-        testDecodingWith(true, "0x01 01 7F", false);
-        testDecodingWith(false, "0x01 01 00", true);
+        testDecodingWith(true, "0x00 00 00 01");
+        testDecodingWith(false, "0x00 00 00 00");
+        //undefined?
     }
 
-    private void testDecodingWith(Boolean expectedValue, String content,
-                                  boolean isDer) throws IOException {
+    private void testDecodingWith(Boolean expectedValue, String content) throws IOException {
         XdrBoolean decoded = new XdrBoolean();
-        if (isDer) {
-            decoded.useDER();
-        } else {
-            decoded.useBER();
-        }
+
         decoded.decode(HexUtil.hex2bytesFriendly(content));
         assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }
-    */
+
 }

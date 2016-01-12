@@ -22,9 +22,11 @@ package org.apache.kerby.xdr.type;
 import org.apache.kerby.xdr.XdrDataType;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
- * ASN1 Boolean type
+ * Xdr Boolean type
  */
 public class XdrBoolean extends XdrSimple<Boolean> {
     private static final byte[] TRUE_BYTE = new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01};
@@ -60,6 +62,13 @@ public class XdrBoolean extends XdrSimple<Boolean> {
 
     /*
     @Override
+    protected  ByteBuffer decodeHead(ByteBuffer content) {
+        return content;
+    }
+    */
+
+    /*
+    @Override
     protected  byte[] headToByte() {
         return null;
     }
@@ -68,5 +77,19 @@ public class XdrBoolean extends XdrSimple<Boolean> {
     @Override
     protected void toBytes() {
         setBytes(getValue() ? TRUE_BYTE : FALSE_BYTE);
+    }
+
+    @Override
+    protected void toValue() {
+        byte[] bytes = getBytes();
+        if (Arrays.equals(bytes, TRUE_BYTE)) {
+            setValue(true);
+        }
+        else if (Arrays.equals(bytes, FALSE_BYTE)) {
+            setValue(false);
+        }
+        else {
+            throw new RuntimeException("Fail to decode: " + bytes.toString());
+        }
     }
 }

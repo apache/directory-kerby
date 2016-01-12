@@ -94,7 +94,6 @@ public abstract class AbstractXdrType<T> implements XdrType {
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
-
     }
 
     public T getValue() {

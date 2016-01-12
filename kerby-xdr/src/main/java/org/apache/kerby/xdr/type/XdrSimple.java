@@ -93,7 +93,25 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
         return bytes.length;
     }
 
-    protected void toValue() throws IOException { }
+    @Override
+    public void decode(ByteBuffer content) throws IOException {
+        ByteBuffer body = decodeHead(content);
+        decodeBody(body);
+    }
+
+    protected ByteBuffer decodeHead(ByteBuffer content) {
+        return content;
+    }
+
+    protected void decodeBody(ByteBuffer body) {
+        byte[] result = body.array();
+        if (result.length > 0) {
+            setBytes(result);
+            toValue();
+        }
+    }
+
+    protected void toValue() { }
 
     protected void toBytes() { }
 

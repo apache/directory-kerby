@@ -45,7 +45,7 @@ public class XdrInteger extends XdrSimple<BigInteger> {
         setBytes(getValue().toByteArray());
     }
 
-    protected void toValue() throws IOException {
+    protected void toValue() {
         setValue(new BigInteger(getBytes()));
     }
 
