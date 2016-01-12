@@ -21,12 +21,14 @@ package org.apache.kerby.xdr.type;
 
 import org.apache.kerby.xdr.XdrDataType;
 
+import java.io.IOException;
+
 /**
  * ASN1 Boolean type
  */
 public class XdrBoolean extends XdrSimple<Boolean> {
-    private static final byte[] TRUE_BYTE = new byte[] {(byte) 0xff};
-    private static final byte[] FALSE_BYTE = new byte[] {(byte) 0x00};
+    private static final byte[] TRUE_BYTE = new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01};
+    private static final byte[] FALSE_BYTE = new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
 
     public static final XdrBoolean TRUE = new XdrBoolean(true);
     public static final XdrBoolean FALSE = new XdrBoolean(false);
@@ -47,9 +49,21 @@ public class XdrBoolean extends XdrSimple<Boolean> {
     }
 
     @Override
-    protected int encodingBodyLength() {
-        return 1;
+    protected int encodingHeaderLength() throws IOException {
+        return 0;
     }
+
+    @Override
+    protected int encodingBodyLength() {
+        return 4;//as signed integer??
+    }
+
+    /*
+    @Override
+    protected  byte[] headToByte() {
+        return null;
+    }
+    */
 
     @Override
     protected void toBytes() {

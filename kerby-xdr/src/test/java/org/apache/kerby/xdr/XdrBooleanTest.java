@@ -19,6 +19,48 @@
  */
 package org.apache.kerby.xdr;
 
-public class XdrBooleanTest {
+import org.apache.kerby.xdr.type.XdrBoolean;
+import org.apache.kerby.xdr.util.HexUtil;
+import org.junit.Test;
 
+import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class XdrBooleanTest {
+    @Test
+    public void testEncoding() throws IOException {
+        testEncodingWith(true, "0x00 00 00 01");
+        testEncodingWith(false, "0x00 00 00 00");
+    }
+
+    private void testEncodingWith(Boolean value, String expectedEncoding) throws IOException {
+        byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
+        XdrBoolean aValue = new XdrBoolean(value);
+
+        byte[] encodingBytes = aValue.encode();
+        assertThat(encodingBytes).isEqualTo(expected);
+    }
+
+    /*
+    @Test
+    public void testDecoding() throws IOException {
+        testDecodingWith(true, "0x01 01 FF", true);
+        testDecodingWith(false, "0x01 01 7F", true);
+        testDecodingWith(true, "0x01 01 7F", false);
+        testDecodingWith(false, "0x01 01 00", true);
+    }
+
+    private void testDecodingWith(Boolean expectedValue, String content,
+                                  boolean isDer) throws IOException {
+        XdrBoolean decoded = new XdrBoolean();
+        if (isDer) {
+            decoded.useDER();
+        } else {
+            decoded.useBER();
+        }
+        decoded.decode(HexUtil.hex2bytesFriendly(content));
+        assertThat(decoded.getValue()).isEqualTo(expectedValue);
+    }
+    */
 }

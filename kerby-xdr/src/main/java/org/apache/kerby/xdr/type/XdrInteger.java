@@ -48,4 +48,9 @@ public class XdrInteger extends XdrSimple<BigInteger> {
     protected void toValue() throws IOException {
         setValue(new BigInteger(getBytes()));
     }
+
+    @Override
+    protected int encodingHeaderLength() throws IOException {
+        return 0;
+    }
 }

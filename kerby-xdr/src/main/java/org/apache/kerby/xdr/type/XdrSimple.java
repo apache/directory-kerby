@@ -63,6 +63,18 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
     }
 
     @Override
+    protected  void encodeHead(ByteBuffer buffer) {
+        byte[] head = headToByte();
+        if (head != null) {
+            buffer.put(head);
+        }
+    }
+
+    protected byte[] headToByte() {
+        return null;
+    }
+
+    @Override
     protected void encodeBody(ByteBuffer buffer) {
         byte[] body = encodeBody();
         if (body != null) {
