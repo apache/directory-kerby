@@ -20,6 +20,7 @@
 package org.apache.kerby.xdr.type;
 
 import org.apache.kerby.xdr.XdrDataType;
+import org.apache.kerby.xdr.util.XdrUtil;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
