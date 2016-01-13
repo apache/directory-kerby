@@ -28,13 +28,6 @@ import java.util.Arrays;
 /**
  * Xdr Boolean type from RFC 4506
  * Boolean type has the same representation as signed integers.
-=======
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-
-/**
- * Xdr Boolean type
->>>>>>> finish Xdr-boolean encode and decode, unit tests passed
  */
 public class XdrBoolean extends XdrSimple<Boolean> {
     private static final byte[] TRUE_BYTE = new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01};
@@ -62,21 +55,6 @@ public class XdrBoolean extends XdrSimple<Boolean> {
     protected int encodingBodyLength() {
         return 4;
     }
-
-    /*
-    @Override
-    protected  ByteBuffer decodeHead(ByteBuffer content) {
-        return content;
-    }
-    */
-
-    /*
-    @Override
-    protected  byte[] headToByte() {
-        return null;
->>>>>>> finish xdr-boolean encode
-    }
-    */
 
     /**
      * Encode boolean type to bytes.
