@@ -20,7 +20,6 @@
 package org.apache.kerby.xdr.type;
 
 import org.apache.kerby.xdr.XdrDataType;
-import org.apache.kerby.xdr.util.XdrUtil;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -62,21 +61,16 @@ public abstract class AbstractXdrType<T> implements XdrType {
         int len = encodingLength();
         ByteBuffer byteBuffer = ByteBuffer.allocate(len);
         encode(byteBuffer);
-        byteBuffer.flip();//??
+        byteBuffer.flip();
         return byteBuffer.array();
     }
 
     @Override
     public void encode(ByteBuffer buffer) throws IOException {
-        encodeHead(buffer);
         encodeBody(buffer);
     }
 
-    protected void encodeHead(ByteBuffer buffer) throws IOException {//??why not abstract?
-    }
-
-    protected void encodeBody(ByteBuffer buffer) throws IOException {//??why not abstract?
-    }
+    protected abstract void encodeBody(ByteBuffer buffer) throws IOException;
 
     @Override
     public void decode(byte[] content) throws IOException {
@@ -85,10 +79,8 @@ public abstract class AbstractXdrType<T> implements XdrType {
 
     @Override
     public int encodingLength() throws IOException {
-        return encodingHeaderLength() + encodingBodyLength();
+        return encodingBodyLength();
     }
-
-    protected abstract int encodingHeaderLength() throws IOException;
 
     protected abstract int encodingBodyLength() throws IOException;
 

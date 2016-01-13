@@ -32,7 +32,7 @@ public class XdrBooleanTest {
     public void testEncoding() throws IOException {
         testEncodingWith(true, "0x00 00 00 01");
         testEncodingWith(false, "0x00 00 00 00");
-        //undefined?
+        //what about undefined codeBytes?
     }
 
     private void testEncodingWith(Boolean value, String expectedEncoding) throws IOException {
@@ -48,7 +48,7 @@ public class XdrBooleanTest {
     public void testDecoding() throws IOException {
         testDecodingWith(true, "0x00 00 00 01");
         testDecodingWith(false, "0x00 00 00 00");
-        //undefined?
+        //what about undefined codeBytes?
     }
 
     private void testDecodingWith(Boolean expectedValue, String content) throws IOException {

@@ -22,11 +22,11 @@ package org.apache.kerby.xdr.type;
 import org.apache.kerby.xdr.XdrDataType;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
- * Xdr Boolean type
+ * Xdr Boolean type from RFC 4506
+ * Boolean type has the same representation as signed integers.
  */
 public class XdrBoolean extends XdrSimple<Boolean> {
     private static final byte[] TRUE_BYTE = new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01};
@@ -50,37 +50,29 @@ public class XdrBoolean extends XdrSimple<Boolean> {
         super(XdrDataType.BOOLEAN, value);
     }
 
-    @Override
-    protected int encodingHeaderLength() throws IOException {
-        return 0;
-    }
-
+    /**
+     * The length of a signed integer is 4.
+     * @return Length of a boolean type.
+     */
     @Override
     protected int encodingBodyLength() {
-        return 4;//as signed integer??
+        return 4;
     }
 
-    /*
-    @Override
-    protected  ByteBuffer decodeHead(ByteBuffer content) {
-        return content;
-    }
-    */
-
-    /*
-    @Override
-    protected  byte[] headToByte() {
-        return null;
-    }
-    */
-
+    /**
+     * Encode boolean type to bytes.
+     */
     @Override
     protected void toBytes() {
         setBytes(getValue() ? TRUE_BYTE : FALSE_BYTE);
     }
 
+    /**
+     * Decode bytes to boolean value.
+     * @throws IOException Wrong bytes for boolean.
+     */
     @Override
-    protected void toValue() {
+    protected void toValue() throws IOException {
         byte[] bytes = getBytes();
         if (Arrays.equals(bytes, TRUE_BYTE)) {
             setValue(true);
@@ -89,7 +81,7 @@ public class XdrBoolean extends XdrSimple<Boolean> {
             setValue(false);
         }
         else {
-            throw new RuntimeException("Fail to decode: " + bytes.toString());
+            throw new IOException("Fail to decode boolean type: " + bytes.toString());
         }
     }
 }

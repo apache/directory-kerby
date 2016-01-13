@@ -72,7 +72,7 @@ public abstract class XdrString extends XdrSimple<String> {
         return 0;
     }
 
-    protected void toValue() {
+    protected void toValue() throws IOException {
         byte[] bytes = getBytes();
 
         int paddingBytes = bytes.length - bytes[0];
