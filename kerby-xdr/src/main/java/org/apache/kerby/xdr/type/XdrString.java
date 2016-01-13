@@ -54,8 +54,12 @@ public abstract class XdrString extends XdrSimple<String> {
     protected void toBytes() {
         if (getValue() != null) {
             byte[] bytes = new byte[encodingBodyLength()];
-            bytes[0] = (byte) (bytes.length - padding);
-            System.arraycopy(getValue(), 0, bytes, 1, bytes.length - 1);
+            int length = bytes.length - padding;
+            bytes[0] = (byte) (length >> 24);
+            bytes[1] = (byte) (length >> 16);
+            bytes[2] = (byte) (length >> 8);
+            bytes[3] = (byte) (length);
+            System.arraycopy(getValue(), 0, bytes, 4, bytes.length - 4);
             setBytes(bytes);
         }
     }
@@ -63,7 +67,7 @@ public abstract class XdrString extends XdrSimple<String> {
     @Override
     protected int encodingBodyLength() {
         if (getValue() != null) {
-            return getValue().length() + 1;
+            return getValue().length() + 4;
         }
         return 0;
     }
@@ -75,9 +79,9 @@ public abstract class XdrString extends XdrSimple<String> {
         validatePaddingBytes(paddingBytes);
         setPadding(paddingBytes);
 
-        byte[] newBytes = new byte[bytes.length - 1];
+        byte[] newBytes = new byte[bytes.length - 4];
         if (bytes.length > 1) {
-            System.arraycopy(bytes, 1, newBytes, 0, bytes.length - 1);
+            System.arraycopy(bytes, 4, newBytes, 0, bytes.length - 4);
         }
         setValue(new String(newBytes, StandardCharsets.US_ASCII));
     }
