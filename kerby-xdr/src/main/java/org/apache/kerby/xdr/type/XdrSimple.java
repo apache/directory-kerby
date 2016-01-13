@@ -104,9 +104,15 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
         }
     }
 
-    protected void toValue() throws IOException { }
+    /**
+     * Decode bytes to simple value.
+     */
+    protected abstract void toValue() throws IOException;
 
-    protected void toBytes() { }
+    /**
+     * Encode simple type to bytes.
+     */
+    protected abstract void toBytes();
 
     public static boolean isSimple(XdrDataType dataType) {
         switch (dataType) {
