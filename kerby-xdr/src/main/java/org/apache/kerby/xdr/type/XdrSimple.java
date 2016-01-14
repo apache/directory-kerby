@@ -57,7 +57,7 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
         this.bytes = bytes;
     }
 
-    protected byte[] encodeBody() {
+    protected byte[] encodeBody() throws IOException {
         if (bytes == null) {
             toBytes();  /**Terminal step for encoding all the simple type to bytes.*/
         }
@@ -69,7 +69,7 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
      * @param buffer ByteBuffer to hold encoded bytes.
      */
     @Override
-    protected void encodeBody(ByteBuffer buffer) {
+    protected void encodeBody(ByteBuffer buffer) throws IOException {
         byte[] body = encodeBody();
         if (body != null) {
             buffer.put(body);
@@ -81,7 +81,7 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
      * @return
      */
     @Override
-    protected int encodingBodyLength() {
+    protected int encodingBodyLength() throws IOException {
         if (getValue() == null) {
             return 0;
         }
@@ -112,7 +112,7 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
     /**
      * Encode simple type to bytes.
      */
-    protected abstract void toBytes();
+    protected abstract void toBytes() throws IOException;
 
     public static boolean isSimple(XdrDataType dataType) {
         switch (dataType) {

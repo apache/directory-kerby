@@ -20,7 +20,7 @@
 package org.apache.kerby.xdr.type;
 
 import org.apache.kerby.xdr.XdrDataType;
-import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
 /**
  * Xdr Integer type from RFC 4506
@@ -37,26 +37,18 @@ import java.math.BigInteger;
  *      +-------+-------+-------+-------+
  *      <------------32 bits------------>
  */
-public class XdrInteger extends XdrSimple<BigInteger> {
+public class XdrInteger extends XdrSimple<Integer> {
     public XdrInteger() {
-        this((BigInteger) null);
+        this((Integer) null);
     }
 
     public XdrInteger(Integer value) {
-        this(BigInteger.valueOf(value));
-    }
-
-    public XdrInteger(Long value) {
-        this(BigInteger.valueOf(value));
-    }
-
-    public XdrInteger(BigInteger value) {
         super(XdrDataType.INTEGER, value);
     }
 
     /**
      * The length of a signed integer is 4.
-     * @return Length of a boolean type.
+     * @return Length of a signed integer type.
      */
     @Override
     protected int encodingBodyLength() {
@@ -69,21 +61,11 @@ public class XdrInteger extends XdrSimple<BigInteger> {
      */
     @Override
     protected void toBytes() {
-        BigInteger bi = getValue();
-        byte[] complement = new byte[4];
-        byte[] array = bi.toByteArray(); /**array[0] has full 8 bits with top bits are signed bits*/
-        int length = array.length;
-
-        /**fit for top bytes*/
-        for (int i = 0; i < 4 - length; i++) {
-            complement[i] = (byte) (array[0] >> (8 * (4 - length - i)));
-        }
-        /**copy lower bytes*/
-        for (int i = 0; i < length; i++) {
-            complement[4 - length + i] = array[i];
-        }
-
-        setBytes(complement);
+        int value = getValue().intValue();
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.putInt(value);
+        buffer.flip();
+        setBytes(buffer.array());
     }
 
     /**
@@ -91,7 +73,8 @@ public class XdrInteger extends XdrSimple<BigInteger> {
      */
     @Override
     protected void toValue() {
-        setValue(new BigInteger(getBytes()));
+        ByteBuffer buffer = ByteBuffer.wrap(getBytes());
+        setValue(buffer.getInt());
     }
 
 }

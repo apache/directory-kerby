@@ -43,7 +43,6 @@ public class XdrBooleanTest {
         assertThat(encodingBytes).isEqualTo(expected);
     }
 
-
     @Test
     public void testDecoding() throws IOException {
         testDecodingWith(true, "0x00 00 00 01");
