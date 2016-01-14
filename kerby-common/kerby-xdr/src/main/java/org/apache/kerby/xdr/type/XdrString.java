@@ -24,6 +24,7 @@ import org.apache.kerby.xdr.XdrDataType;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ import java.util.List;
  *                                |<----n+r (where (n+r) mod 4 = 0)---->|
  *                                                                 STRING
  */
-public abstract class XdrString extends XdrSimple<String> {
+public class XdrString extends XdrSimple<String> {
     private int padding;
 
     public XdrString(XdrDataType xdrDataType) {
@@ -54,12 +55,14 @@ public abstract class XdrString extends XdrSimple<String> {
     protected void toBytes() {
         if (getValue() != null) {
             byte[] bytes = new byte[encodingBodyLength()];
-            int length = bytes.length - padding;
+            int length = bytes.length - padding - 4;
+            System.out.println("length: " + length);
             bytes[0] = (byte) (length >> 24);
             bytes[1] = (byte) (length >> 16);
             bytes[2] = (byte) (length >> 8);
             bytes[3] = (byte) (length);
-            System.arraycopy(getValue(), 0, bytes, 4, bytes.length - 4);
+            System.out.println("value: " + getValue());
+            System.arraycopy(getValue().getBytes(), 0, bytes, 4, length);
             setBytes(bytes);
         }
     }
@@ -67,7 +70,8 @@ public abstract class XdrString extends XdrSimple<String> {
     @Override
     protected int encodingBodyLength() {
         if (getValue() != null) {
-            return getValue().length() + 4;
+            padding = 4 - getValue().length() % 4;
+            return getValue().length() + padding + 4;
         }
         return 0;
     }
@@ -75,7 +79,13 @@ public abstract class XdrString extends XdrSimple<String> {
     protected void toValue() throws IOException {
         byte[] bytes = getBytes();
 
-        int paddingBytes = bytes.length - bytes[0];
+        byte[] length = new byte[4];
+        System.arraycopy(bytes, 0, length, 0, 4);
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.wrap(length);
+        int len  = buffer.getInt();
+        System.out.println("len:" +len );
+        int paddingBytes = bytes.length - len;
         validatePaddingBytes(paddingBytes);
         setPadding(paddingBytes);
 
