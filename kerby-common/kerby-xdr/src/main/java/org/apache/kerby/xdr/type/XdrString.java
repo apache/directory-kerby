@@ -54,14 +54,12 @@ public class XdrString extends XdrSimple<String> {
     @Override
     protected void toBytes() {
         if (getValue() != null) {
-            byte[] bytes = new byte[encodingBodyLength()];
+            byte[] bytes = new byte[encodingBodyLength()]; /**Default value of byte is 0. So we don't have to initialize it with 0*/
             int length = bytes.length - padding - 4;
-            System.out.println("length: " + length);
             bytes[0] = (byte) (length >> 24);
             bytes[1] = (byte) (length >> 16);
             bytes[2] = (byte) (length >> 8);
             bytes[3] = (byte) (length);
-            System.out.println("value: " + getValue());
             System.arraycopy(getValue().getBytes(), 0, bytes, 4, length);
             setBytes(bytes);
         }
@@ -78,22 +76,18 @@ public class XdrString extends XdrSimple<String> {
 
     protected void toValue() throws IOException {
         byte[] bytes = getBytes();
-
-        byte[] length = new byte[4];
-        System.arraycopy(bytes, 0, length, 0, 4);
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.wrap(length);
-        int len  = buffer.getInt();
-        System.out.println("len:" +len );
-        int paddingBytes = bytes.length - len;
+        byte[] header = new byte[4];
+        System.arraycopy(bytes, 0, header, 0, 4);
+        int StringLen  = ByteBuffer.wrap(header).getInt();
+        int paddingBytes = bytes.length - StringLen - 4;
         validatePaddingBytes(paddingBytes);
         setPadding(paddingBytes);
 
-        byte[] newBytes = new byte[bytes.length - 4];
+        byte[] content = new byte[StringLen];
         if (bytes.length > 1) {
-            System.arraycopy(bytes, 4, newBytes, 0, bytes.length - 4);
+            System.arraycopy(bytes, 4, content, 0, StringLen);
         }
-        setValue(new String(newBytes, StandardCharsets.US_ASCII));
+        setValue(new String(content, StandardCharsets.US_ASCII));
     }
 
     public void setPadding(int padding) {

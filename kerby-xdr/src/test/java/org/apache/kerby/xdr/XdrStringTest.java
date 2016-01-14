@@ -30,8 +30,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class XdrStringTest {
         @Test
         public void testEncoding() throws IOException {
-            //testEncodingWith("Hello, Kerby!", "");
+            testEncodingWith("Hello, Kerby!", "0X00 00 00 0D 48 65 6C 6C 6F 2C 20 4B 65 72 62 79 21 00 00 00");
             testEncodingWith("sillyprog", "0X00 00 00 09 73 69 6C 6C 79 70 72 6F 67 00 00 00");
+            testEncodingWith("(quit)", "0X00 00 00 06 28 71 75 69 74 29 00 00");
         }
 
         private void testEncodingWith(String value, String expectedEncoding) throws IOException {
@@ -45,7 +46,9 @@ public class XdrStringTest {
 
         @Test
         public void testDecoding() throws IOException {
-            testDecodingWith("sillyprog", "0X73 69 6c 6c 79 70 72 6f 67 00 00 00");
+            testDecodingWith("Hello, Kerby!", "0X00 00 00 0D 48 65 6C 6C 6F 2C 20 4B 65 72 62 79 21 00 00 00");
+            testDecodingWith("sillyprog", "0X00 00 00 09 73 69 6c 6c 79 70 72 6f 67 00 00 00");
+            testDecodingWith("(quit)", "0X00 00 00 06 28 71 75 69 74 29 00 00");
         }
 
         private void testDecodingWith(String expectedValue, String content) throws IOException {
