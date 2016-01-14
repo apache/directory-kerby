@@ -25,7 +25,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * ASN1 simple type, of single value other than complex type of multiple values.
+ * Xdr simple type, of single value other than complex type of multiple values.
+ * Including: Bytes, Integer, Boolean, String.
+ * Use toBytes() for encoding, toValue() for decoding.
  */
 public abstract class XdrSimple<T> extends AbstractXdrType<T> {
     private byte[] bytes;
@@ -57,11 +59,15 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
 
     protected byte[] encodeBody() {
         if (bytes == null) {
-            toBytes();
+            toBytes();  /**Terminal step for encoding all the simple type to bytes.*/
         }
         return bytes;
     }
 
+    /**
+     * Put encoded bytes into buffer.
+     * @param buffer ByteBuffer to hold encoded bytes.
+     */
     @Override
     protected void encodeBody(ByteBuffer buffer) {
         byte[] body = encodeBody();
@@ -70,20 +76,43 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
         }
     }
 
+    /**
+     * Length including null bytes to maintain an multiple of 4.
+     * @return
+     */
     @Override
     protected int encodingBodyLength() {
         if (getValue() == null) {
             return 0;
         }
         if (bytes == null) {
-            toBytes();
+            toBytes(); /**Terminal step for decoding all the simple type to bytes.*/
         }
         return bytes.length;
     }
 
-    protected void toValue() throws IOException { }
+    @Override
+    public void decode(ByteBuffer content) throws IOException {
+        decodeBody(content);
+    }
 
-    protected void toBytes() { }
+    protected void decodeBody(ByteBuffer body) throws IOException {
+        byte[] result = body.array();
+        if (result.length > 0) {
+            setBytes(result);
+            toValue(); /**Terminal step for decoding all the bytes into simple types.*/
+        }
+    }
+
+    /**
+     * Decode bytes to simple value.
+     */
+    protected abstract void toValue() throws IOException;
+
+    /**
+     * Encode simple type to bytes.
+     */
+    protected abstract void toBytes();
 
     public static boolean isSimple(XdrDataType dataType) {
         switch (dataType) {

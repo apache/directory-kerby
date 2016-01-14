@@ -42,7 +42,7 @@ public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
     }
 
     @Override
-    protected int encodingBodyLength() {
+    protected int encodingBodyLength() throws IOException {
         int allLen = 0;
         for (int i = 0; i < fields.length; ++i) {
             AbstractXdrType field = (AbstractXdrType) fields[i];

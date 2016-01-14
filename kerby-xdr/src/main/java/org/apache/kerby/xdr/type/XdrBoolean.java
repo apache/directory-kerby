@@ -21,12 +21,16 @@ package org.apache.kerby.xdr.type;
 
 import org.apache.kerby.xdr.XdrDataType;
 
+import java.io.IOException;
+import java.util.Arrays;
+
 /**
- * ASN1 Boolean type
+ * Xdr Boolean type from RFC 4506
+ * Boolean type has the same representation as signed integers.
  */
 public class XdrBoolean extends XdrSimple<Boolean> {
-    private static final byte[] TRUE_BYTE = new byte[] {(byte) 0xff};
-    private static final byte[] FALSE_BYTE = new byte[] {(byte) 0x00};
+    private static final byte[] TRUE_BYTE = new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01};
+    private static final byte[] FALSE_BYTE = new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
 
     public static final XdrBoolean TRUE = new XdrBoolean(true);
     public static final XdrBoolean FALSE = new XdrBoolean(false);
@@ -46,13 +50,38 @@ public class XdrBoolean extends XdrSimple<Boolean> {
         super(XdrDataType.BOOLEAN, value);
     }
 
+    /**
+     * The length of a signed integer is 4.
+     * @return Length of a boolean type.
+     */
     @Override
     protected int encodingBodyLength() {
-        return 1;
+        return 4;
     }
 
+    /**
+     * Encode boolean type to bytes.
+     */
     @Override
     protected void toBytes() {
         setBytes(getValue() ? TRUE_BYTE : FALSE_BYTE);
+    }
+
+    /**
+     * Decode bytes to boolean value.
+     * @throws IOException Wrong bytes for boolean.
+     */
+    @Override
+    protected void toValue() throws IOException {
+        byte[] bytes = getBytes();
+        if (Arrays.equals(bytes, TRUE_BYTE)) {
+            setValue(true);
+        }
+        else if (Arrays.equals(bytes, FALSE_BYTE)) {
+            setValue(false);
+        }
+        else {
+            throw new IOException("Fail to decode boolean type: " + bytes.toString());
+        }
     }
 }

@@ -21,6 +21,8 @@ package org.apache.kerby.xdr.type;
 
 import org.apache.kerby.xdr.XdrDataType;
 
+import java.io.IOException;
+
 public class XdrBytes extends XdrSimple<byte[]> {
     private int padding;
 
@@ -30,5 +32,15 @@ public class XdrBytes extends XdrSimple<byte[]> {
 
     public XdrBytes(byte[] value) {
         super(XdrDataType.BYTES, value);
+    }
+
+    @Override
+    protected void toValue() throws IOException {
+
+    }
+
+    @Override
+    protected void toBytes() {
+
     }
 }

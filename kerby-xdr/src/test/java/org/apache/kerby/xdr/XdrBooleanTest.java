@@ -19,6 +19,43 @@
  */
 package org.apache.kerby.xdr;
 
+import org.apache.kerby.xdr.type.XdrBoolean;
+import org.apache.kerby.xdr.util.HexUtil;
+import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class XdrBooleanTest {
+    @Test
+    public void testEncoding() throws IOException {
+        testEncodingWith(true, "0x00 00 00 01");
+        testEncodingWith(false, "0x00 00 00 00");
+        //what about undefined codeBytes?
+    }
+
+    private void testEncodingWith(Boolean value, String expectedEncoding) throws IOException {
+        byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
+        XdrBoolean aValue = new XdrBoolean(value);
+
+        byte[] encodingBytes = aValue.encode();
+        assertThat(encodingBytes).isEqualTo(expected);
+    }
+
+
+    @Test
+    public void testDecoding() throws IOException {
+        testDecodingWith(true, "0x00 00 00 01");
+        testDecodingWith(false, "0x00 00 00 00");
+        //what about undefined codeBytes?
+    }
+
+    private void testDecodingWith(Boolean expectedValue, String content) throws IOException {
+        XdrBoolean decoded = new XdrBoolean();
+
+        decoded.decode(HexUtil.hex2bytesFriendly(content));
+        assertThat(decoded.getValue()).isEqualTo(expectedValue);
+    }
 
 }

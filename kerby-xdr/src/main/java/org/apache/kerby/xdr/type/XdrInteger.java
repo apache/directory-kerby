@@ -20,10 +20,23 @@
 package org.apache.kerby.xdr.type;
 
 import org.apache.kerby.xdr.XdrDataType;
-
-import java.io.IOException;
 import java.math.BigInteger;
 
+/**
+ * Xdr Integer type from RFC 4506
+ * An XDR signed integer is a 32-bit datum
+ * that encodes an integer in the range [-2147483648,2147483647].
+ * The integer is represented in two's complement notation.
+ * The most and least significant bytes are0 and 3, respectively.
+ * Integers are declared as follows:
+ * int identifier;
+ *
+ *      (MSB)                   (LSB)
+ *      +-------+-------+-------+-------+
+ *      |byte 0 |byte 1 |byte 2 |byte 3 |
+ *      +-------+-------+-------+-------+
+ *      <------------32 bits------------>
+ */
 public class XdrInteger extends XdrSimple<BigInteger> {
     public XdrInteger() {
         this((BigInteger) null);
@@ -41,11 +54,44 @@ public class XdrInteger extends XdrSimple<BigInteger> {
         super(XdrDataType.INTEGER, value);
     }
 
-    protected void toBytes() {
-        setBytes(getValue().toByteArray());
+    /**
+     * The length of a signed integer is 4.
+     * @return Length of a boolean type.
+     */
+    @Override
+    protected int encodingBodyLength() {
+        return 4; /**Length of XdrInteger is fixed as 4 bytes*/
     }
 
-    protected void toValue() throws IOException {
+    /**
+     * Encode Integer type to bytes.
+     * Cannot only use toByteArray() because of fixed 4 bytes length.
+     */
+    @Override
+    protected void toBytes() {
+        BigInteger bi = getValue();
+        byte[] complement = new byte[4];
+        byte[] array = bi.toByteArray(); /**array[0] has full 8 bits with top bits are signed bits*/
+        int length = array.length;
+
+        /**fit for top bytes*/
+        for (int i = 0; i < 4 - length; i++) {
+            complement[i] = (byte) (array[0] >> (8 * (4 - length - i)));
+        }
+        /**copy lower bytes*/
+        for (int i = 0; i < length; i++) {
+            complement[4 - length + i] = array[i];
+        }
+
+        setBytes(complement);
+    }
+
+    /**
+     * Decode bytes to Integer value.
+     */
+    @Override
+    protected void toValue() {
         setValue(new BigInteger(getBytes()));
     }
+
 }

@@ -67,11 +67,10 @@ public abstract class AbstractXdrType<T> implements XdrType {
 
     @Override
     public void encode(ByteBuffer buffer) throws IOException {
-
+        encodeBody(buffer);
     }
 
-    protected void encodeBody(ByteBuffer buffer) throws IOException {
-    }
+    protected abstract void encodeBody(ByteBuffer buffer) throws IOException;
 
     @Override
     public void decode(byte[] content) throws IOException {
@@ -79,19 +78,14 @@ public abstract class AbstractXdrType<T> implements XdrType {
     }
 
     @Override
-    public int encodingLength() {
-        return -1;
-    }
-
-    protected int encodingHeaderLength() throws IOException {
-        return -1;
+    public int encodingLength() throws IOException {
+        return encodingBodyLength();
     }
 
     protected abstract int encodingBodyLength() throws IOException;
 
     @Override
     public void decode(ByteBuffer content) throws IOException {
-
     }
 
     public T getValue() {
