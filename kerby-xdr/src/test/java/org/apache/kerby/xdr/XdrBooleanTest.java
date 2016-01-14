@@ -56,5 +56,5 @@ public class XdrBooleanTest {
         decoded.decode(HexUtil.hex2bytesFriendly(content));
         assertThat(decoded.getValue()).isEqualTo(expectedValue);
     }
-    
+
 }

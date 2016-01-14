@@ -50,11 +50,11 @@ public class XdrBoolean extends XdrSimple<Boolean> {
         super(XdrDataType.BOOLEAN, value);
     }
 
-    @Override
     /**
      * The length of a signed integer is 4.
      * @return Length of a boolean type.
      */
+    @Override
     protected int encodingBodyLength() {
         return 4;
     }
