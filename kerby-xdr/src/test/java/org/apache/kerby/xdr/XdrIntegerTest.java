@@ -40,6 +40,9 @@ public class XdrIntegerTest {
         testEncodingWith(-255, "0xFF FF FF 01");
         testEncodingWith(-32768, "0xFF FF 80 00");
         testEncodingWith(1234567890, "0x49 96 02 D2");
+        testEncodingWith(2147483647, "0x7F FF FF FF");
+        testEncodingWith(-2147483647, "0x80 00 00 01");
+        testEncodingWith(-2147483648, "0x80 00 00 00");
     }
 
     private void testEncodingWith(int value, String expectedEncoding) throws IOException {
@@ -63,6 +66,9 @@ public class XdrIntegerTest {
         testDecodingWith(-255, "0xFF FF FF 01");
         testDecodingWith(-32768, "0xFF FF 80 00");
         testDecodingWith(1234567890, "0x49 96 02 D2");
+        testDecodingWith(2147483647, "0x7F FF FF FF");
+        testDecodingWith(-2147483647, "0x80 00 00 01");
+        testDecodingWith(-2147483648, "0x80 00 00 00");
     }
 
     private void testDecodingWith(int expectedValue, String content) throws IOException {
