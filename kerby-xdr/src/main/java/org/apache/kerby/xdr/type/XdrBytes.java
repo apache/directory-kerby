@@ -36,9 +36,11 @@ public class XdrBytes extends XdrSimple<byte[]> {
 
     @Override
     protected void toValue() throws IOException {
+
     }
 
     @Override
     protected void toBytes() {
+
     }
 }

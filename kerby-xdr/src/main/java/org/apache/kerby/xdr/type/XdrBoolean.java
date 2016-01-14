@@ -24,7 +24,6 @@ import org.apache.kerby.xdr.XdrDataType;
 import java.io.IOException;
 import java.util.Arrays;
 
-
 /**
  * Xdr Boolean type from RFC 4506
  * Boolean type has the same representation as signed integers.
@@ -52,6 +51,10 @@ public class XdrBoolean extends XdrSimple<Boolean> {
     }
 
     @Override
+    /**
+     * The length of a signed integer is 4.
+     * @return Length of a boolean type.
+     */
     protected int encodingBodyLength() {
         return 4;
     }
