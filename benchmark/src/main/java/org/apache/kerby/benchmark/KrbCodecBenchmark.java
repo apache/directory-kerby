@@ -19,15 +19,8 @@
  */
 package org.apache.kerby.benchmark;
 
-import org.apache.directory.api.asn1.ber.Asn1Decoder;
-import org.apache.directory.shared.kerberos.codec.apReq.ApReqContainer;
 import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.annotations.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,20 +50,6 @@ public class KrbCodecBenchmark {
         ApReq apReq = new ApReq();
         apReq.decode(apreqToken.duplicate());
         String serverName = apReq.getTicket().getSname().toString();
-        if (serverName == null) {
-            throw new RuntimeException("Decoding test failed");
-        }
-    }
-
-    @Benchmark
-    @Fork(1)
-    @Warmup(iterations = 5)
-    public void decodeWithApacheDS() throws Exception {
-        ByteBuffer content = apreqToken.duplicate();
-        Asn1Decoder krbDecoder = new Asn1Decoder();
-        ApReqContainer apreqContainer = new ApReqContainer(content);
-        krbDecoder.decode(content, apreqContainer);
-        String serverName = apreqContainer.getApReq().getTicket().getSName().toString();
         if (serverName == null) {
             throw new RuntimeException("Decoding test failed");
         }
