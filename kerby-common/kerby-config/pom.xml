@@ -16,17 +16,26 @@
 
   <parent>
     <groupId>org.apache.kerby</groupId>
-    <artifactId>kerby-all</artifactId>
+    <artifactId>kerby-common</artifactId>
     <version>1.0.0-RC2-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>kerby-asn1</artifactId>
-  <name>Kerby ASN1 Project</name>
-  <description>Kerby ASN1 Project</description>
+  <artifactId>kerby-config</artifactId>
+  <name>Kerby Config</name>
+  <description>Kerby config library</description>
 
   <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.version}</version>
+   </dependency>
   </dependencies>
-
 </project>
