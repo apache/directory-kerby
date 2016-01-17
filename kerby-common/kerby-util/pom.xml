@@ -14,26 +14,28 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
-  <groupId>org.apache.kerby</groupId>
-  <artifactId>build-tools</artifactId>
-  <version>1.0.0-RC2-SNAPSHOT</version>
-  <name>Kerby Build Tools</name>
-  <packaging>jar</packaging>
+  <parent>
+    <groupId>org.apache.kerby</groupId>
+    <artifactId>kerby-common</artifactId>
+    <version>1.0.0-RC2-SNAPSHOT</version>
+  </parent>
 
-  <distributionManagement>
-        <repository>
-            <id>apache.releases.https</id>
-            <name>Apache Release Distribution Repository</name>
-            <url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
-        </repository>
-        <snapshotRepository>
-            <id>apache.snapshots.https</id>
-            <name>Apache Development Snapshot Repository</name>
-            <url>https://repository.apache.org/content/repositories/snapshots</url>
-            <!--uniqueVersion>false</uniqueVersion-->
-        </snapshotRepository>
-  </distributionManagement>
+  <artifactId>kerby-util</artifactId>
 
+  <name>Kerby Util</name>
+  <description>Kerby common util, without any 3rd party dependency</description>
 
 </project>

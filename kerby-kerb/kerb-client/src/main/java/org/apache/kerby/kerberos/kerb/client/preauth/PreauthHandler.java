@@ -167,10 +167,11 @@ public class PreauthHandler {
                 }
 
                 // Make sure this type is for the current pass
-                int tmpReal = handle.isReal(pae.getPaDataType()) ? 1 : 0;
-                if (tmpReal != real) {
-                    continue;
-                }
+                // TODO
+//                int tmpReal = handle.isReal(pae.getPaDataType()) ? 1 : 0;
+//                if (tmpReal != real) {
+//                    continue;
+//                }
 
                 if (real > 0 && preauthContext.checkAndPutTried(pae.getPaDataType())) {
                     continue;

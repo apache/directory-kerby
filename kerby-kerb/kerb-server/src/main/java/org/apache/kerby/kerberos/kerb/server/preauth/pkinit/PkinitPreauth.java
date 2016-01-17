@@ -32,7 +32,7 @@ import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
-import org.apache.kerby.kerberos.kerb.crypto.dh.DhServer;
+import org.apache.kerby.kerberos.kerb.crypto.dh.DiffieHellmanServer;
 import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CmsMessageType;
@@ -225,7 +225,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
                 DHPublicKey dhPublicKey = PkinitCrypto.createDHPublicKey(p, g, y);
 
-                DhServer server = new DhServer();
+                DiffieHellmanServer server = new DiffieHellmanServer();
                 DHPublicKey serverPubKey = null;
                 try {
                     serverPubKey = (DHPublicKey) server.initAndDoPhase(dhPublicKey.getEncoded());

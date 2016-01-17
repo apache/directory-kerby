@@ -67,10 +67,7 @@
 
   <modules>
     <module>build-tools</module>
-    <module>kerby-config</module>
-    <module>kerby-util</module>
-    <module>kerby-asn1</module>
-    <module>kerby-xdr</module>
+    <module>kerby-common</module>
     <module>kerby-pkix</module>
     <module>kerby-kerb</module>
     <module>kerby-kdc</module>

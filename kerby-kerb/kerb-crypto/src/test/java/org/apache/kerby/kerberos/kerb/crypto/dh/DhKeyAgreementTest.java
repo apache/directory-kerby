@@ -60,8 +60,8 @@ public class DhKeyAgreementTest {
      */
     @Test
     public void testPreGeneratedDhParams() throws Exception {
-        DhClient client = new DhClient();
-        DhServer server = new DhServer();
+        DiffieHellmanClient client = new DiffieHellmanClient();
+        DiffieHellmanServer server = new DiffieHellmanServer();
 
         byte[] clientPubKeyEnc = client.init(DhGroup.MODP_GROUP2).getEncoded();
         byte[] serverPubKeyEnc = server.initAndDoPhase(clientPubKeyEnc).getEncoded();
@@ -98,8 +98,8 @@ public class DhKeyAgreementTest {
         byte[] serverDhNonce = new byte[16];
         secureRandom.nextBytes(serverDhNonce);
 
-        DhClient client = new DhClient();
-        DhServer server = new DhServer();
+        DiffieHellmanClient client = new DiffieHellmanClient();
+        DiffieHellmanServer server = new DiffieHellmanServer();
 
         byte[] clientPubKeyEnc = client.init(DhGroup.MODP_GROUP2).getEncoded();
         byte[] serverPubKeyEnc = server.initAndDoPhase(clientPubKeyEnc).getEncoded();
@@ -120,8 +120,8 @@ public class DhKeyAgreementTest {
 
     @Test
     public void testGeneratedDhParams() throws Exception {
-        DhClient client = new DhClient();
-        DhServer server = new DhServer();
+        DiffieHellmanClient client = new DiffieHellmanClient();
+        DiffieHellmanServer server = new DiffieHellmanServer();
 
         DHPublicKey clientPubKey = client.init(DhGroup.MODP_GROUP2);
         DHParameterSpec spec = clientPubKey.getParams();
