@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.crypto;
 
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
-import org.apache.kerby.util.EncryptoUtil;
+import org.apache.kerby.util.CryptoUtil;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 
@@ -87,7 +87,7 @@ public class PrfTest {
 
     @Test
     public void testPrf_AES256_CTS_HMAC_SHA1() throws Exception {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,

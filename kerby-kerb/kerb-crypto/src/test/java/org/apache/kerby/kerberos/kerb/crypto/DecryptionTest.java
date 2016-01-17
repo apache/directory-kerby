@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.kerb.crypto;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
-import org.apache.kerby.util.EncryptoUtil;
+import org.apache.kerby.util.CryptoUtil;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 
@@ -696,7 +696,7 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_0() {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -716,7 +716,7 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_1() {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -736,7 +736,7 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_9() {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -757,7 +757,7 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_13() {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -778,7 +778,7 @@ public class DecryptionTest {
      */
     @Test
     public void testDecryptAES256_CTS_HMAC_SHA1_96_30() {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         TestCase testCase = new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
