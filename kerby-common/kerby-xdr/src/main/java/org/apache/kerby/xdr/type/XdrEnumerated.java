@@ -35,7 +35,7 @@ public abstract class XdrEnumerated<T extends EnumType> extends XdrSimple<T> {
 
     /**
      * Constructor with a value, generally for encoding of the value
-     * @param value The boolean value
+     * @param value The Enum value
      */
     public XdrEnumerated(T value) {
         super(XdrDataType.ENUM, value);
