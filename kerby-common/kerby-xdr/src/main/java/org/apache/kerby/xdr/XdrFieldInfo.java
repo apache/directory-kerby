@@ -25,21 +25,37 @@ import org.apache.kerby.xdr.type.XdrType;
  * Representing a field in a XDR struct.
  */
 public class XdrFieldInfo {
-    private EnumType index;
-    private Class<? extends XdrType> type;
+    private int index;
+    //private Class<? extends XdrType> type;
+    private XdrDataType dataType;
+    private Object value;
 
     /**
      * Constructor.
      * @param index
-     * @param type
+     * @param dataType
+     *
      */
-    public XdrFieldInfo(EnumType index, Class<? extends XdrType> type) {
+    public XdrFieldInfo(int index, XdrDataType dataType, Object value) {//Class<? extends XdrType> type
         this.index = index;
-        this.type = type;
+        //this.type = type;
+        this.dataType = dataType;
+        this.value = value;
     }
 
-    public EnumType getIndex() {
+    public int getIndex() {
         return index;
     }
 
+    //public Class<? extends XdrType> getTypeClass() {
+        //return type;
+    //}
+
+    public XdrDataType getDataType() {
+        return dataType;
+    }
+
+    public Object getValue() {
+        return value;
+    }
 }

@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.xdr;
 
+import java.sql.Struct;
+
 /**
  * An enumeration for every XDR type.
  * 
@@ -32,7 +34,8 @@ public enum XdrDataType {
     STRING              (0X04),
     ENUM                (0x05),
     OPAQUE              (0x06),
-    UNSIGNED_INTEGER   (0x07);
+    UNSIGNED_INTEGER   (0x07),
+    STRUCT               (0x08);
 
     /** The dataType value */
     private int value;

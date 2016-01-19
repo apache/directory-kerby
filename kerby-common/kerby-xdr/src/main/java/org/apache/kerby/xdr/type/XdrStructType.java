@@ -28,7 +28,7 @@ import java.nio.ByteBuffer;
 /**
  * For collection type that may consist of dataTypeged fields
  */
-public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
+public class XdrStructType extends AbstractXdrType<XdrStructType> {
     private final XdrFieldInfo[] fieldInfos;
     private final XdrType[] fields;
 
@@ -39,6 +39,28 @@ public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
         setValue(this);
         this.fieldInfos = fieldInfos;
         this.fields = new XdrType[fieldInfos.length];
+        for (int i = 0; i < fieldInfos.length; i++) {
+            switch (fieldInfos[i].getDataType()) {
+                case INTEGER:
+                    fields[i] = new XdrInteger((Integer) fieldInfos[i].getValue());
+                    break;
+                case UNSIGNED_INTEGER:
+                    fields[i] = new XdrUnsignedInteger((Long) fieldInfos[i].getValue());
+                    break;
+                case BOOLEAN:
+                    fields[i] = new XdrBoolean((Boolean) fieldInfos[i].getValue());
+                    break;
+                case ENUM:
+                    //fields[i] = new XdrInteger((Integer) fieldInfos[i].getValue());
+                    break;
+                case STRING:
+                    fields[i] = new XdrString((String) fieldInfos[i].getValue());
+                    break;
+                case STRUCT:
+                    //fields[i] = new XdrStructType(fieldInfos[i].getValue());
+                    break;
+            }
+        }
     }
 
     @Override

@@ -37,7 +37,7 @@ public class XdrStringTest {
 
         private void testEncodingWith(String value, String expectedEncoding) throws IOException {
             byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
-            XdrString aValue = new XdrString(XdrDataType.STRING, value);
+            XdrString aValue = new XdrString(value);
 
             byte[] encodingBytes = aValue.encode();
             assertThat(encodingBytes).isEqualTo(expected);
@@ -52,7 +52,7 @@ public class XdrStringTest {
         }
 
         private void testDecodingWith(String expectedValue, String content) throws IOException {
-            XdrString decoded = new XdrString(XdrDataType.STRING);
+            XdrString decoded = new XdrString();
 
             decoded.decode(HexUtil.hex2bytesFriendly(content));
             assertThat(decoded.getValue()).isEqualTo(expectedValue);

@@ -43,12 +43,12 @@ import java.util.List;
 public class XdrString extends XdrSimple<String> {
     private int padding;
 
-    public XdrString(XdrDataType xdrDataType) {
-        super(xdrDataType, null);
+    public XdrString() {
+        this((String) null);
     }
 
-    public XdrString(XdrDataType dataTypeNo, String value) {
-        super(dataTypeNo, value);
+    public XdrString(String value) {
+        super(XdrDataType.STRING, value);
     }
 
     @Override
