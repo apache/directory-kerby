@@ -38,25 +38,21 @@ Apache Kerby is a Java Kerberos binding. It provides a rich, intuitive and inter
 
 ### KrbClient APIs
 A Krb client API for applications to interact with KDC.  
-Please look at [kerb-client](kerby-kerb/kerb-client/README.md) for details.
 
 ### Kadmin
 Server side admin facilities.  
-Please look at [kerb-admin](kerby-kerb/kerb-admin/README.md) for details.
 
 ### KdcServer
 Kerberos Server API.  
-Please look at [kerb-server](kerby-kerb/kerb-server/README.md) for details.
 
 ### SimpleKdcServer
 A simplified Kdc server. It can be imported by other project to work as a kdc server.  
-Please look at [kerb-simplekdc](kerby-kerb/kerb-simplekdc/README.md) for details.
+
+### ASN-1 support
+A model driven ASN-1 encoding and decoding framework implemented with Java.
 
 ### How to play with the standalone KDC
 Please look at [Kerby KDC](kerby-dist/README.md) for details.
-
-### ASN-1 support
-Please look at [kerby-asn1](kerby-asn1/) for details.
 
 ### Kerberos Crypto and Encryption Types
 Implementing des, des3, rc4, aes, camellia encryption and corresponding checksum types
@@ -125,13 +121,14 @@ A standalone KDC server that can integrate various identity backends including:
 - [Zookeeper](https://zookeeper.apache.org/), needed by zookeeper identity backend.
 
 ### How to use library
-The Apache Kerby is also available as a Maven dependency:
+The Apache Kerby is also available as a Maven dependency.
+
 - Kerby Client API:
 ```
 <dependency>
     <groupId>org.apache.kerby</groupId>
     <artifactId>kerb-client-api-all</artifactId>
-    <version>1.0.0-RC1</version>
+    <version>${kerby-version}</version>
 </dependency>
 ```
 
@@ -140,7 +137,7 @@ The Apache Kerby is also available as a Maven dependency:
 <dependency>
     <groupId>org.apache.kerby</groupId>
     <artifactId>kerb-server-api-all</artifactId>
-    <version>1.0.0-RC1</version>
+    <version>${kerby-version}</version>
 </dependency>
 ```
 
@@ -149,7 +146,7 @@ The Apache Kerby is also available as a Maven dependency:
 <dependency>
     <groupId>org.apache.kerby</groupId>
     <artifactId>kerby-asn1</artifactId>
-    <version>1.0.0-RC1</version>
+    <version>${kerby-version}</version>
 </dependency>
 ```
 
@@ -158,9 +155,11 @@ The Apache Kerby is also available as a Maven dependency:
 <dependency>
     <groupId>org.apache.kerby</groupId>
     <artifactId>kerb-simplekdc</artifactId>
-    <version>1.0.0-RC1</version>
+    <version>${kerby-version}/version>
 </dependency>
 ```
+- please replace the ${kerby-version} with the release version.
+- Apache Kerby 1.0.0-RC1 is the latest release and recommended version for all users.
 
 ### License
 Apache License V2.0
@@ -173,3 +172,6 @@ Apache License V2.0
 
 ### Downloads
 - [Version 1.0.0-RC1](https://directory.apache.org/kerby/download/download-sources.html)
+
+### News
+- Sep 23, the first release 1.0.0-RC1 of Kerby was released.

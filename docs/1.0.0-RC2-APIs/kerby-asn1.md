@@ -42,7 +42,7 @@ With the following definition from Kerberos protocol
      ad-data         [1] OCTET STRING
  }
  ```
- 
+
 You can model AuthzDataEntry as follows
 ```java
 public class AuthorizationDataEntry extends KrbSequenceType {
@@ -138,7 +138,7 @@ PersonnelRecord ::= [APPLICATION 0] IMPLICIT SET {
     dateOfHire [1] Date,
     nameOfSpouse [2] Name,
     children [3] IMPLICIT
-    SEQUENCE OF ChildInformation DEFAULT {} 
+    SEQUENCE OF ChildInformation DEFAULT {}
 }
 
 ChildInformation ::= SET {
