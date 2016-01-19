@@ -37,7 +37,11 @@ public class XdrStringTest {
 
         private void testEncodingWith(String value, String expectedEncoding) throws IOException {
             byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
+<<<<<<< c66c805766213686752c80880808b7870a86a627
             XdrString aValue = new XdrString(value);
+=======
+            XdrString aValue = new XdrString(XdrDataType.STRING, value);
+>>>>>>> DIRKRB-527 Encode and decode XDR: String and Enumerated. Contributed by Yan.
 
             byte[] encodingBytes = aValue.encode();
             assertThat(encodingBytes).isEqualTo(expected);
@@ -52,7 +56,11 @@ public class XdrStringTest {
         }
 
         private void testDecodingWith(String expectedValue, String content) throws IOException {
+<<<<<<< c66c805766213686752c80880808b7870a86a627
             XdrString decoded = new XdrString();
+=======
+            XdrString decoded = new XdrString(XdrDataType.STRING);
+>>>>>>> DIRKRB-527 Encode and decode XDR: String and Enumerated. Contributed by Yan.
 
             decoded.decode(HexUtil.hex2bytesFriendly(content));
             assertThat(decoded.getValue()).isEqualTo(expectedValue);
