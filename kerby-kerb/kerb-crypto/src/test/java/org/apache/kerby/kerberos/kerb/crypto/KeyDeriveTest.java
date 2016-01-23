@@ -39,6 +39,8 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assume.assumeTrue;
 
 /**
+ * Ref. t_derive.c test in MIT krb5 project.
+ *
  * Key derivation test with known values.
  */
 public class KeyDeriveTest {

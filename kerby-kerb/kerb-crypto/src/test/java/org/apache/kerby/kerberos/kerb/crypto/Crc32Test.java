@@ -25,6 +25,9 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Ref. t_crc.c test in MIT krb5 project.
+ */
 public class Crc32Test {
 
     static class TestCase {

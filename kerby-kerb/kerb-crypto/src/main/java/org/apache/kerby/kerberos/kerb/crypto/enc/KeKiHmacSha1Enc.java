@@ -39,7 +39,8 @@ public abstract class KeKiHmacSha1Enc extends KeKiEnc {
     @Override
     public byte[] prf(byte[] key, byte[] seed) throws KrbException {
         byte[] prfConst = "prf".getBytes(StandardCharsets.UTF_8);
-        int cksumSize = (hashProvider().hashSize() / encProvider().blockSize()) * encProvider().blockSize();
+        int cksumSize = (hashProvider().hashSize() / encProvider().blockSize())
+            * encProvider().blockSize();
         byte[] cksum = new byte[cksumSize];
         byte[] kp;
         byte[] output = new byte[prfSize()];

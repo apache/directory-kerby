@@ -29,6 +29,9 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assume.assumeTrue;
 
+/**
+ * Ref. t_prf.c test in MIT krb5 project.
+ */
 public class PrfTest {
     private static void performTest(TestCase testCase) throws Exception {
         byte[] keyData = EncryptionHandler.getEncHandler(testCase.encType)

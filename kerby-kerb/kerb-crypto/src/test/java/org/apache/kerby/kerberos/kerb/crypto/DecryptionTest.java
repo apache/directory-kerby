@@ -31,6 +31,8 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assume.assumeTrue;
 
 /**
+ * Ref. t_decrypt.c test in MIT krb5 project.
+ *
  * Decryption test with known ciphertexts.
  *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>

@@ -31,6 +31,8 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assume.assumeTrue;
 
 /**
+ * Ref. t_cksums.c in MIT krb5 project.
+ *
  * These are to test the checksums of good answers, and the checksums
  * are deterministic. For other cases, look at CheckSumTest.
  */

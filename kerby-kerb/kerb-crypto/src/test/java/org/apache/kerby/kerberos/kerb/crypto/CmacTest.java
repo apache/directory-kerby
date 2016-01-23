@@ -28,6 +28,9 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Ref. t_cmac.c test in MIT krb5 project.
+ */
 public class CmacTest {
 
     /* All examples use the following Camellia-128 key. */

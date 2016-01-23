@@ -31,6 +31,9 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assume.assumeTrue;
 
+/**
+ * Ref. fast util test codes in MIT krb5 project.
+ */
 public class FastUtilTest {
     static class TestCase {
         EncryptionType encType;
@@ -39,6 +42,7 @@ public class FastUtilTest {
         String pepper1;
         String pepper2;
         String answer;
+
         TestCase(EncryptionType encType, String keyData1, String keyData2,
                  String pepper1, String pepper2, String answer) {
             this.encType = encType;
