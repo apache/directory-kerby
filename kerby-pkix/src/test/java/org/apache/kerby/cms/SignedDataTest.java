@@ -32,6 +32,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+/**
+ * Ref. CMSTest test in BouncyCastle library.
+ */
 public class SignedDataTest extends CmsTestBase {
 
     @Test

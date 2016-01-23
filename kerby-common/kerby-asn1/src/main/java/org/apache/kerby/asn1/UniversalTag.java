@@ -23,7 +23,7 @@ package org.apache.kerby.asn1;
  * An enumeration for every ASN.1 UNIVERSAL type.
  *
  * Ref. BERTags in BouncyCastle library.
- * 
+ *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public enum UniversalTag {
