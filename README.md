@@ -60,9 +60,9 @@ Please look at [kerby-asn1](docs/1.0.0-RC2-APIs/kerby-asn1.md) for details.
 Please look at [Kerby KDC](kerby-dist/README.md) for details.
 
 ### Kerberos Crypto and Encryption Types
-Implementing des, des3, rc4, aes, camellia encryption and corresponding checksum types
-Interoperates with MIT Kerberos and Microsoft AD
-Independent of Kerberos code in JRE, but relies on JCE
+- Implementing des, des3, rc4, aes, camellia encryption and corresponding checksum types
+- Interoperates with MIT Kerberos and Microsoft AD
+- Independent of Kerberos code in JRE, but relies on JCE
 
 Similar to [MIT krb5 encryption types](http://web.mit.edu/kerberos/krb5-1.14/doc/admin/conf_files/kdc_conf.html#encryption-types):
 
