@@ -19,6 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
+/*
+ * Ref. cms_msg_types in MIT krb5 project.
+ */
 public enum CmsMessageType {
     UNKNOWN                  (-1),
     CMS_SIGN_CLIENT          (0x01),

@@ -24,6 +24,9 @@ import javax.crypto.spec.DHParameterSpec;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 
+/*
+ * Ref. _pkinit_plg_crypto_context in
+ */
 public class PkinitPlgCryptoContext {
     private static final String ID_PKINIT_AUTHDATA = "1.3.6.1.5.2.3.1";
     private static final String ID_PKINIT_DHKEYDATA = "1.3.6.1.5.2.3.2";

@@ -55,6 +55,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+  * Ref. pkinit_crypto_openssl.c in MIT krb5 project.
+  */
 public class PkinitCrypto {
 
     private static final Logger LOG = LoggerFactory.getLogger(PkinitCrypto.class);
