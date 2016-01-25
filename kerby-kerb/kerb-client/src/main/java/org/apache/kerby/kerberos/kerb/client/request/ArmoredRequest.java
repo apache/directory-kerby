@@ -186,7 +186,7 @@ public class ArmoredRequest {
      */
     private EncryptionKey makeArmorKey(EncryptionKey subKey, EncryptionKey armorCacheKey)
         throws KrbException {
-        EncryptionKey armorKey = FastUtil.cf2(subKey, "subkeyarmor", armorCacheKey, "ticketarmor");
+        EncryptionKey armorKey = FastUtil.makeArmorKey(subKey, armorCacheKey);
         return armorKey;
     }
 

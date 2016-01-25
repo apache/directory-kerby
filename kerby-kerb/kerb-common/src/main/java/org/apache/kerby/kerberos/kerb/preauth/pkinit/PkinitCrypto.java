@@ -121,7 +121,9 @@ public class PkinitCrypto {
             LOG.error(errMsg);
             throw new KrbException(KrbErrorCode.KDC_ERR_DH_KEY_PARAMETERS_NOT_ACCEPTED, errMsg);
         }
-        checkDHWellknown(cryptoctx, dhParameter, dhPrimeBits);
+        if (!checkDHWellknown(cryptoctx, dhParameter, dhPrimeBits)) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_DH_KEY_PARAMETERS_NOT_ACCEPTED);
+        }
     }
 
     /**
@@ -199,7 +201,7 @@ public class PkinitCrypto {
     }
 
     /**
-     * The contentType field of the type ContentInfo
+     * RFC4556: The contentType field of the type ContentInfo
      * is id-signedData (1.2.840.113549.1.7.2),
      * and the content field is a SignedData.
      * The eContentType field for the type SignedData is
@@ -214,7 +216,7 @@ public class PkinitCrypto {
      * @param certificateSet The certificate set
      * @param crls The revocation info choices
      * @param signerInfos The signerInfos
-     * @return The encoded
+     * @return The encoded signed data bytes
      * @throws KrbException e
      */
     public static byte[] cmsSignedDataCreate(byte[] data, String oid, int version,
