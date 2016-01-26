@@ -22,7 +22,7 @@ Kerby-dist
 
 The distribution of Kerby.
 
-### To run with a standalone kdc server, kdcinit, kadmin, kinit and klist
+### 1. To run with a standalone kdc server, kdcinit, kadmin, kinit and klist
 
 * 1. Generate libraries for distribution:
 ```
@@ -89,4 +89,54 @@ An example of krb5.conf:
     kdc_realm=TEST.COM
     kdc_tcp_port = 8015
 ```
+
+### 2. Anonymous PKINIT configuration
+generate a private key:
+```
+openssl genrsa -out cakey.pem 2048
+```
+
+generate the CA certificate:
+```
+openssl req -key cakey.pem -new -x509 -out cacert.pem -days 3650
+```
+
+generate the KDC key:
+```
+openssl genrsa -out kdckey.pem 2048
+```
+
+generate a certificate request:
+```
+openssl req -new -out kdc.req -key kdckey.pem
+```
+
+generate the certificate:
+```
+openssl x509 -req -in kdc.req -CAkey cakey.pem -CA cacert.pem -out kdc.pem -extfile pkinit_extensions -extensions kdc_cert -CAcreateserial
+```
+
+On the KDC, you must set the pkinit_identity variable to provide the KDC certificate.
+Configure the following relation in the[kdcdefaults] section of the KDC’s kdc.conf file
+```
+pkinit_identity = FILE:/var/lib/krb5kdc/kdc.pem,/var/lib/krb5kdc/kdckey.pem
+```
+
+On client hosts, you must set the pkinit_anchors variable in order to trust the issuing authority for the KDC certificate. Configure the following relation in krb5.conf file.
+```
+pkinit_anchors = FILE:/etc/krb5/cacert.pem
+```
+
+create the principalWELLKNOWN/ANONYMOUS using the command:
+```
+sh bin/kadmin.sh [server-conf-dir] -k [keytab]
+addprinc -randkey WELLKNOWN/ANONYMOUS
+```
+
+To obtain anonymous credentials on a client, run:
+```
+sh bin/kinit.sh -conf [client-conf-dir] -n
+```
+The resulting tickets will have the client name WELLKNOWN/ANONYMOUS@WELLKNOWN:ANONYMOUS.
+
 
