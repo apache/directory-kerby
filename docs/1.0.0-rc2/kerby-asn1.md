@@ -18,6 +18,9 @@
 -->
 kerby-asn1
 =========
+### ASN1 hierarcy
+
+![](https://github.com/apache/directory-kerby/blob/trunk/kerby-common/kerby-asn1/docs/hierarchy.png)
 
 ### A ASN1 parser with easy and simple API
 
