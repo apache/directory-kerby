@@ -27,7 +27,7 @@ public enum ArmorType implements EnumType {
 
     private final int value;
 
-    private ArmorType(int value) {
+    ArmorType(int value) {
         this.value = value;
     }
 

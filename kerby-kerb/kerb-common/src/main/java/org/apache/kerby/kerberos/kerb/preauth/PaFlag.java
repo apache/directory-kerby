@@ -28,7 +28,7 @@ public enum PaFlag implements EnumType {
 
     private final int value;
 
-    private PaFlag(int value) {
+    PaFlag(int value) {
         this.value = value;
     }
 

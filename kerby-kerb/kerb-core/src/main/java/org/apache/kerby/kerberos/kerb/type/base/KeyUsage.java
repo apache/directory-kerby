@@ -104,7 +104,7 @@ public enum KeyUsage implements EnumType {
 
     private int value;
 
-    private KeyUsage(int value) {
+    KeyUsage(int value) {
         this.value = value;
     }
 

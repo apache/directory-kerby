@@ -43,7 +43,7 @@ public enum SamType implements EnumType {
 
     private int value;
 
-    private SamType(int value) {
+    SamType(int value) {
         this.value = value;
     }
 

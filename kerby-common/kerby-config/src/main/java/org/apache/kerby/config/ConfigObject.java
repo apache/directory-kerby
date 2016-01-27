@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigObject {
-    protected static enum ValueType { PROPERTY, LIST, CONFIG };
+    protected enum ValueType { PROPERTY, LIST, CONFIG };
 
     private ValueType valueType;
     private Object value;

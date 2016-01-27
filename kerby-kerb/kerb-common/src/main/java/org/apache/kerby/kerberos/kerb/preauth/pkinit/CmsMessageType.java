@@ -35,7 +35,7 @@ public enum CmsMessageType {
     /**
      * Create an instance of this class
      */
-    private CmsMessageType(int value) {
+    CmsMessageType(int value) {
         this.value = value;
     }
 

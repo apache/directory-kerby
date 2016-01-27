@@ -71,7 +71,7 @@ public enum UniversalTag {
     /**
      * Create an instance of this class
      */
-    private UniversalTag(int value) {
+    UniversalTag(int value) {
         this.value = value;
     }
 

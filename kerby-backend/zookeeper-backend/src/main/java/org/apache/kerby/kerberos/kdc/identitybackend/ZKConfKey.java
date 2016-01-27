@@ -32,11 +32,11 @@ public enum ZKConfKey implements ConfigKey {
 
     private Object defaultValue;
 
-    private ZKConfKey() {
+    ZKConfKey() {
         this.defaultValue = null;
     }
 
-    private ZKConfKey(Object defaultValue) {
+    ZKConfKey(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 

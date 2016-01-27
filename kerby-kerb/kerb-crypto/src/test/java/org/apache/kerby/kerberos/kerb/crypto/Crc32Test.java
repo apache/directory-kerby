@@ -34,7 +34,7 @@ public class Crc32Test {
         String data;
         long answer;
 
-        public TestCase(String data, long answer) {
+        TestCase(String data, long answer) {
             this.data = data;
             this.answer = answer;
         }

@@ -94,14 +94,14 @@ public class ConfTest {
         assertThat(conf.getBoolean("boolProp")).isEqualTo(boolProp);
     }
 
-    static enum TestConfKey implements ConfigKey {
+    enum TestConfKey implements ConfigKey {
         ADDRESS("127.0.0.1"),
         PORT(8015),
         ENABLE(false);
 
         private Object defaultValue;
 
-        private TestConfKey(Object defaultValue) {
+        TestConfKey(Object defaultValue) {
             this.defaultValue = defaultValue;
         }
 

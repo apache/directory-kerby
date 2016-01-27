@@ -50,7 +50,7 @@ public class Asn1FlagsTest {
     
     private int value;
     
-    private TestEnum(int value) {
+    TestEnum(int value) {
       this.value = value;
     }
 

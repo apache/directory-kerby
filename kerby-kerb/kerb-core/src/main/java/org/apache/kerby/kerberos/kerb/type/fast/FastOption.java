@@ -30,7 +30,7 @@ public enum FastOption implements EnumType {
 
     private final int value;
 
-    private FastOption(int value) {
+    FastOption(int value) {
         this.value = value;
     }
 

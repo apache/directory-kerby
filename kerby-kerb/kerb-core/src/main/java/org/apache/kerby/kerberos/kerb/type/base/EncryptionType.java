@@ -89,7 +89,7 @@ public enum EncryptionType implements EnumType {
 
     private final String displayName;
 
-    private EncryptionType(int value, String name, String displayName) {
+    EncryptionType(int value, String name, String displayName) {
         this.value = value;
         this.name = name;
         this.displayName = displayName;

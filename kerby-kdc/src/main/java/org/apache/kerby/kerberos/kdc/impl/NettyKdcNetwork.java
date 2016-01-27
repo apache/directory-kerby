@@ -99,7 +99,7 @@ public class NettyKdcNetwork {
     }
 
     static class KrbMessageDecoder extends LengthFieldBasedFrameDecoder {
-        public KrbMessageDecoder() {
+        KrbMessageDecoder() {
             super(1 * 1024 * 1024, 0, 4, 0, 4, true);
         }
     }

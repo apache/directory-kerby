@@ -29,7 +29,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 
 abstract class DesCbcEnc extends AbstractEncTypeHandler {
 
-    public DesCbcEnc(HashProvider hashProvider) {
+    DesCbcEnc(HashProvider hashProvider) {
         super(new DesProvider(), hashProvider, 16);
         keyMaker(new DesKeyMaker(this.encProvider()));
     }
