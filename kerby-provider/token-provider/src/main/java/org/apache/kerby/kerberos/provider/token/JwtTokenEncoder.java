@@ -183,7 +183,11 @@ public class JwtTokenEncoder implements TokenEncoder {
      */
     @Override
     public void setEncryptionKey(byte[] key) {
-        encryptionKey = key;
+        if (key == null) {
+            encryptionKey = new byte[0];
+        } else {
+            encryptionKey = key.clone();
+        }
     }
 
     /**
@@ -199,7 +203,11 @@ public class JwtTokenEncoder implements TokenEncoder {
      */
     @Override
     public void setSignKey(byte[] key) {
-        signKey = key;
+        if (key == null) {
+            signKey = new byte[0];
+        } else {
+            signKey = key.clone();
+        }
     }
     
     public JWEAlgorithm getJweAlgorithm() {

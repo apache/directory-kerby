@@ -36,7 +36,7 @@ public abstract class BackendTestBase extends BackendTest {
      */
     @BeforeClass
     public static void setup() throws Exception {
-        //backend = prepareBackend();
+        backend = null;
     }
 
     @Test

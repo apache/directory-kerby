@@ -129,7 +129,7 @@ public class Conf implements Config {
     }
 
     @Override
-    public String getString(String name, String defaultValue) {
+    public synchronized String getString(String name, String defaultValue) {
         return config.getString(name, defaultValue);
     }
 
