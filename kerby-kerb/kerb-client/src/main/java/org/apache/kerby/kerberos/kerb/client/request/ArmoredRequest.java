@@ -49,6 +49,7 @@ import org.apache.kerby.kerberos.kerb.type.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
 import java.io.File;
@@ -77,21 +78,34 @@ public class ArmoredRequest {
 
     protected void preauth() throws KrbException {
         KOptions preauthOptions = getPreauthOptions();
-        String ccache = preauthOptions.getStringOption(KrbOption.ARMOR_CACHE);
-        credential = getCredential(ccache);
-
+        getCredential(preauthOptions);
         armorCacheKey = getArmorCacheKey(credential);
+
         subKey = getSubKey(armorCacheKey.getKeyType());
         EncryptionKey armorKey = makeArmorKey(subKey, armorCacheKey);
         kdcRequest.getFastRequestState().setArmorKey(armorKey);
+    }
+
+    private void getCredential(KOptions kOptions) throws KrbException {
+
+        if (kOptions.contains(KrbOption.ARMOR_CACHE)) {
+            String ccache = kOptions.getStringOption(KrbOption.ARMOR_CACHE);
+            credential = getCredentialFromFile(ccache);
+        } else if (kOptions.contains(KrbOption.TGT)) {
+            TgtTicket tgt = (TgtTicket) kOptions.getOptionValue(KrbOption.TGT);
+            credential = new Credential(tgt);
+        }
     }
 
     public KOptions getPreauthOptions() {
         KOptions results = new KOptions();
 
         KOptions krbOptions = kdcRequest.getRequestOptions();
-        results.add(krbOptions.getOption(KrbOption.ARMOR_CACHE));
-
+        if (krbOptions.contains(KrbOption.ARMOR_CACHE)) {
+            results.add(krbOptions.getOption(KrbOption.ARMOR_CACHE));
+        } else if (krbOptions.contains(KrbOption.TGT)) {
+            results.add(krbOptions.getOption(KrbOption.TGT));
+        }
         return results;
     }
 
@@ -103,7 +117,7 @@ public class ArmoredRequest {
         return armorCacheKey;
     }
 
-    private Credential getCredential(String ccache) throws KrbException {
+    private Credential getCredentialFromFile(String ccache) throws KrbException {
         File ccacheFile = new File(ccache);
         CredentialCache cc = null;
         try {

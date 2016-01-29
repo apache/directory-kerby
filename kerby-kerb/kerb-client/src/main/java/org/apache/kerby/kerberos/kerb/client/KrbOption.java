@@ -73,6 +73,7 @@ public enum KrbOption implements KOption {
         KOptionType.STR)),
     ARMOR_CACHE(new KOptionInfo("armor-cache", "armor credential cache",
         KOptionType.STR)),
+    TGT(new KOptionInfo("tgt", "tgt ticket", KOptionType.OBJ)),
     USE_TGT(new KOptionInfo("use-tgt", "use tgt to get service ticket",
         KOptionType.OBJ)),
     CONF_DIR(new KOptionInfo("-conf", "conf dir", KrbOptionGroup.KRB, KOptionType.DIR));

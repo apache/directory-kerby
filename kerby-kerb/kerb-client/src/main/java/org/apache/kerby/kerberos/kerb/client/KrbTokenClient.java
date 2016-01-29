@@ -66,7 +66,7 @@ public class KrbTokenClient extends KrbClientBase {
     }
 
     /**
-     * Request a TGT with user token credential
+     * Request a TGT with user token credential and armor cache
      * @param token The auth token
      * @param armorCache The armor cache
      * @return TGT
@@ -80,6 +80,24 @@ public class KrbTokenClient extends KrbClientBase {
         KOptions requestOptions = new KOptions();
         requestOptions.add(TokenOption.USER_ID_TOKEN, token);
         requestOptions.add(KrbOption.ARMOR_CACHE, armorCache);
+        return requestTgt(requestOptions);
+    }
+
+    /**
+     * Request a TGT with user token credential and tgt
+     * @param token The auth token
+     * @param tgt The tgt ticket
+     * @return TGT
+     * @throws KrbException e
+     */
+    public TgtTicket requestTgt(AuthToken token, TgtTicket tgt) throws KrbException {
+        if (!token.isIdToken()) {
+            throw new IllegalArgumentException("Identity token is expected");
+        }
+
+        KOptions requestOptions = new KOptions();
+        requestOptions.add(TokenOption.USER_ID_TOKEN, token);
+        requestOptions.add(KrbOption.TGT, tgt);
         return requestTgt(requestOptions);
     }
 
