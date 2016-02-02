@@ -19,8 +19,6 @@
  */
 package org.apache.kerby.xdr;
 
-import java.sql.Struct;
-
 /**
  * An enumeration for every XDR type.
  * 
