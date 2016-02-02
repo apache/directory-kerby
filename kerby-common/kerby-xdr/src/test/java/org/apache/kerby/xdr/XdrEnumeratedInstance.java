@@ -39,11 +39,7 @@ enum Color implements EnumType {
     }
 }
 
-<<<<<<< c66c805766213686752c80880808b7870a86a627
 public class XdrEnumeratedInstance extends XdrEnumerated<Color> {
-=======
-public class XdrEnumeratedInstance  extends XdrEnumerated<Color> {
->>>>>>> DIRKRB-527 Encode and decode XDR: String and Enumerated. Contributed by Yan.
 
     public XdrEnumeratedInstance() {
         super(null);
