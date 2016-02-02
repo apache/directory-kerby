@@ -68,7 +68,7 @@ public class XdrString extends XdrSimple<String> {
     @Override
     protected int encodingBodyLength() {
         if (getValue() != null) {
-            padding = 4 - getValue().length() % 4;
+            padding = (4 - getValue().length() % 4) % 4;
             return getValue().length() + padding + 4;
         }
         return 0;
@@ -79,7 +79,7 @@ public class XdrString extends XdrSimple<String> {
         byte[] header = new byte[4];
         System.arraycopy(bytes, 0, header, 0, 4);
         int StringLen  = ByteBuffer.wrap(header).getInt();
-        int paddingBytes = bytes.length - StringLen - 4;
+        int paddingBytes = (4 - (StringLen % 4)) % 4;
         validatePaddingBytes(paddingBytes);
         setPadding(paddingBytes);
 

@@ -39,7 +39,7 @@ enum Color implements EnumType {
     }
 }
 
-public class XdrEnumeratedInstance  extends XdrEnumerated<Color> {
+public class XdrEnumeratedInstance extends XdrEnumerated<Color> {
 
     public XdrEnumeratedInstance() {
         super(null);
