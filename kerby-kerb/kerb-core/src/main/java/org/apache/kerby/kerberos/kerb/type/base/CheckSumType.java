@@ -94,7 +94,7 @@ public enum CheckSumType implements EnumType {
     /**
      * Create a new enum instance
      */
-    private CheckSumType(int value, String name, String displayName) {
+    CheckSumType(int value, String name, String displayName) {
         this.value = value;
         this.name = name;
         this.displayName = displayName;

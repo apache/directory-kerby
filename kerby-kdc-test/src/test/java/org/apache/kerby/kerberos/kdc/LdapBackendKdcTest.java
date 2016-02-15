@@ -46,7 +46,7 @@ import org.junit.runner.RunWith;
 @CreateLdapServer(
         transports =
                 {
-                        @CreateTransport(protocol = "LDAP")
+                        @CreateTransport(protocol = "LDAP", address = "127.0.0.1")
                 })
 @ApplyLdifs(
         {
@@ -69,7 +69,7 @@ public class LdapBackendKdcTest extends AbstractLdapBackendKdcTest {
     @Before
     public void startUp() throws Exception {
         Conf config = new Conf();
-        config.setString("host", "localhost");
+        config.setString("host", "127.0.0.1");
         config.setString("admin_dn", ADMIN_DN);
         config.setString("admin_pw", ADMIN_PW);
         config.setString("base_dn", BASE_DN);

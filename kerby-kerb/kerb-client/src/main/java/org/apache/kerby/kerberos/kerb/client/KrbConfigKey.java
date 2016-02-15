@@ -64,11 +64,11 @@ public enum KrbConfigKey implements ConfigKey {
 
     private Object defaultValue;
 
-    private KrbConfigKey() {
+    KrbConfigKey() {
         this.defaultValue = null;
     }
 
-    private KrbConfigKey(Object defaultValue) {
+    KrbConfigKey(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 

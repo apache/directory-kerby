@@ -26,6 +26,8 @@ import java.nio.ByteBuffer;
 
 /**
  * ASN1 object identifier.
+ *
+ * Ref. ASN1ObjectIdentifier class in BouncyCastle library.
  */
 public class Asn1ObjectIdentifier extends Asn1Simple<String> {
     public Asn1ObjectIdentifier() {

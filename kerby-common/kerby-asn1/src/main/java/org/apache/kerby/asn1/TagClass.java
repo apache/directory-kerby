@@ -35,7 +35,7 @@ public enum TagClass {
      * The constructor given the value.
      * @param value
      */
-    private TagClass(int value) {
+    TagClass(int value) {
         this.value = value;
     }
 

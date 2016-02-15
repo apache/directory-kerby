@@ -57,11 +57,11 @@ public enum KdcConfigKey implements ConfigKey {
 
     private Object defaultValue;
 
-    private KdcConfigKey() {
+    KdcConfigKey() {
         this.defaultValue = null;
     }
 
-    private KdcConfigKey(Object defaultValue) {
+    KdcConfigKey(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 

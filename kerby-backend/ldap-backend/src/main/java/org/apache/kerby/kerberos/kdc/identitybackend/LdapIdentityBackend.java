@@ -155,7 +155,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         private byte[][] keys;
         private String[] kvnos;
 
-        public KeysInfo(KrbIdentity identity) throws KrbException {
+        KeysInfo(KrbIdentity identity) throws KrbException {
             Map<EncryptionType, EncryptionKey> keymap = identity.getKeys();
             this.etypes = new String[keymap.size()];
             this.keys = new byte[keymap.size()][];

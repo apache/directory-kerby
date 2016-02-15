@@ -36,6 +36,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Ref. camellia-test.c test in MIT krb5 project.
+ */
 public class CamelliaEncTest {
 
     private List<String> outputs = new ArrayList<String>();
@@ -45,7 +48,7 @@ public class CamelliaEncTest {
     private EncryptProvider encProvider;
 
     private List<String> getExpectedLines() throws IOException {
-        InputStream res = CamelliaEncTest.class.getResourceAsStream("/camellia-expect-vt.txt");
+        InputStream res = getClass().getResourceAsStream("/camellia-expect-vt.txt");
         BufferedReader br = new BufferedReader(new InputStreamReader(res));
 
         List<String> results = new ArrayList<String>();

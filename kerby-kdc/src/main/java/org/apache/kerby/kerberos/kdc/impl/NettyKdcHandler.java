@@ -56,7 +56,7 @@ public class NettyKdcHandler extends ChannelInboundHandlerAdapter {
             ctx.writeAndFlush(Unpooled.wrappedBuffer(responseMessage));
         } catch (Exception e) {
             LOG.error("Error occurred while processing request:"
-                    + e.getMessage());
+                    + e);
         }
     }
 }

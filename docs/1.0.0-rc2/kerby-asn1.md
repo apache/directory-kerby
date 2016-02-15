@@ -18,6 +18,9 @@
 -->
 kerby-asn1
 =========
+### ASN1 hierarcy
+
+![](https://github.com/apache/directory-kerby/blob/trunk/kerby-common/kerby-asn1/docs/hierarchy.png)
 
 ### A ASN1 parser with easy and simple API
 
@@ -42,7 +45,7 @@ With the following definition from Kerberos protocol
      ad-data         [1] OCTET STRING
  }
  ```
- 
+
 You can model AuthzDataEntry as follows
 ```java
 public class AuthorizationDataEntry extends KrbSequenceType {
@@ -138,7 +141,7 @@ PersonnelRecord ::= [APPLICATION 0] IMPLICIT SET {
     dateOfHire [1] Date,
     nameOfSpouse [2] Name,
     children [3] IMPLICIT
-    SEQUENCE OF ChildInformation DEFAULT {} 
+    SEQUENCE OF ChildInformation DEFAULT {}
 }
 
 ChildInformation ::= SET {
@@ -373,14 +376,13 @@ public class PersonnelRecord extends Asn1TaggingSet {
     }
 }
 ```
-### ASN1 dumping tool
+### Asn1 API and parsing/dumping facilities
 * ASN1 dumping tool to help analyze ASN1 encoding stream or packet. It can be used to exercise the framework with all kinds of testing binary inputs.
-* The shortcut API for ASN1 encoding, decoding and dumping in Asn1.java
+* The shortcut API for ASN1 parser, encoding, decoding.
 
 ### Notes
-* 90% tests coverage for DER encoding
-* For BER & CER encoding, to be fully supported
-* No extra dependency
+* Extensive tests coverage for BER & DER encoding and decoding
+* Fully self-contained, no extra dependency
 
 ### License
 Apache V2 License

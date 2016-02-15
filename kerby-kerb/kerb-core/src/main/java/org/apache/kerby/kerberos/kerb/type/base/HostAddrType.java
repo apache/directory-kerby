@@ -85,7 +85,7 @@ public enum HostAddrType implements EnumType {
     /**
      * Create a new enum instance
      */
-    private HostAddrType(int value) {
+    HostAddrType(int value) {
         this.value = value;
     }
 

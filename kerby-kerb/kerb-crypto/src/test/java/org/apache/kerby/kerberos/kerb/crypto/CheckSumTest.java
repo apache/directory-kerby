@@ -30,6 +30,8 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
+ * Ref. t_cksum.c in MIT krb5 project.
+ *
  * Only used to test for rsa-md4-des and rsa-md5-des
  */
 public class CheckSumTest {

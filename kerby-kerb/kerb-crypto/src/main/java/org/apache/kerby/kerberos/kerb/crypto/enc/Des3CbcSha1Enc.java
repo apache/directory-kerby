@@ -28,7 +28,8 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 public class Des3CbcSha1Enc extends KeKiHmacSha1Enc {
 
     public Des3CbcSha1Enc() {
-        super(new Des3Provider(), new Sha1Provider(), new Des3KeyMaker(new Des3Provider()));
+        super(new Des3Provider(), new Sha1Provider(),
+            new Des3KeyMaker(new Des3Provider()));
         keyMaker(new Des3KeyMaker(this.encProvider()));
     }
 

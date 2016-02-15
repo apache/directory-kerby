@@ -31,7 +31,6 @@ import java.math.BigInteger;
  * SHOULD support Oakley 4096-bit MODP well-known group 16 [RFC3526]."
  *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
- * @version $Rev$, $Date$
  */
 public class DhGroup {
     /**

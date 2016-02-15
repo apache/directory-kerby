@@ -58,7 +58,7 @@ public enum ApOption implements EnumType {
     /**
      * Create a new enum 
      */
-    private ApOption(int value) {
+    ApOption(int value) {
         this.value = value;
     }
 

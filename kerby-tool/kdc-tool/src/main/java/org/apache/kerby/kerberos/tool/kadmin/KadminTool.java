@@ -44,6 +44,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Ref. MIT kadmin command tool usage.
+ */
 public class KadminTool {
     private static final Logger LOG = LoggerFactory.getLogger(KadminTool.class);
     private static File confDir;

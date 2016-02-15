@@ -23,6 +23,9 @@ import org.apache.kerby.kerberos.kerb.preauth.pkinit.IdentityOpts;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPlgCryptoContext;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PluginOpts;
 
+/*
+ * Ref. _pkinit_context in MIT krb5 project.
+ */
 public class PkinitContext {
 
     public PkinitPlgCryptoContext cryptoctx = new PkinitPlgCryptoContext();

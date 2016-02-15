@@ -86,7 +86,7 @@ public class GssInteropTest extends LoginTestBase {
         private Principal clientPrincipal;
         private String serviceName;
 
-        public KerberosClientExceptionAction(Principal clientPrincipal, String serviceName) {
+        KerberosClientExceptionAction(Principal clientPrincipal, String serviceName) {
             this.clientPrincipal = clientPrincipal;
             this.serviceName = serviceName;
         }
@@ -129,7 +129,7 @@ public class GssInteropTest extends LoginTestBase {
         private byte[] ticket;
         private String serviceName;
 
-        public KerberosServiceExceptionAction(byte[] ticket, String serviceName) {
+        KerberosServiceExceptionAction(byte[] ticket, String serviceName) {
             this.ticket = ticket;
             this.serviceName = serviceName;
         }

@@ -29,7 +29,7 @@ import org.apache.kerby.kerberos.kerb.crypto.key.CamelliaKeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.key.Des3KeyMaker;
 import org.apache.kerby.kerberos.kerb.crypto.key.DkKeyMaker;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
-import org.apache.kerby.util.EncryptoUtil;
+import org.apache.kerby.util.CryptoUtil;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 
@@ -39,6 +39,8 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assume.assumeTrue;
 
 /**
+ * Ref. t_derive.c test in MIT krb5 project.
+ *
  * Key derivation test with known values.
  */
 public class KeyDeriveTest {
@@ -127,7 +129,7 @@ public class KeyDeriveTest {
     
     @Test
     public void testKeyDerive_AES256_CTS_HMAC_SHA1_96_299() throws Exception {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -141,7 +143,7 @@ public class KeyDeriveTest {
     
     @Test
     public void testKeyDerive_AES256_CTS_HMAC_SHA1_96_2AA() throws Exception {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,
@@ -155,7 +157,7 @@ public class KeyDeriveTest {
     
     @Test
     public void testKeyDerive_AES256_CTS_HMAC_SHA1_96_255() throws Exception {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,

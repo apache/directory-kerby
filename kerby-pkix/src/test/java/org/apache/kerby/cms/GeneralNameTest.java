@@ -29,6 +29,9 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.*;
 
+/**
+ * Ref. GeneralNameTest test in BouncyCastle library.
+ */
 public class GeneralNameTest {
     private static final byte[] IPV4 = HexUtil.hex2bytes("87040a090800");
 

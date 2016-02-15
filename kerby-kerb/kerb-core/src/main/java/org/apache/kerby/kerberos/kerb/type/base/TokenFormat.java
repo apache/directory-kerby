@@ -27,7 +27,7 @@ public enum TokenFormat implements EnumType {
 
     private final int value;
 
-    private TokenFormat(int value) {
+    TokenFormat(int value) {
         this.value = value;
     }
 

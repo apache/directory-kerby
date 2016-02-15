@@ -28,7 +28,7 @@ public enum TransitedEncodingType implements EnumType {
 
     private final int value;
 
-    private TransitedEncodingType(int value) {
+    TransitedEncodingType(int value) {
         this.value = value;
     }
 
