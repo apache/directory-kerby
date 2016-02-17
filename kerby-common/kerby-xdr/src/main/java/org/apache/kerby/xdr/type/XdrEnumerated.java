@@ -47,7 +47,11 @@ public abstract class XdrEnumerated<T extends EnumType> extends XdrSimple<T> {
     }
 
     protected void toValue() {
-        BigInteger biVal = new BigInteger(getBytes());
+        byte[] intBytes = ByteBuffer.allocate(4).put(getBytes(), 0, 4).array();
+        if (getBytes().length != 4) {
+            setBytes(intBytes); /**reset bytes in case the enum type is in a struct or union*/
+        }
+        BigInteger biVal = new BigInteger(intBytes);
         int iVal = biVal.intValue();
         EnumType[] allValues = getAllEnumValues();
         for (EnumType val : allValues) {

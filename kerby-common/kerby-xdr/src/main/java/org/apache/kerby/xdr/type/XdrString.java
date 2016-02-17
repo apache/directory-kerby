@@ -83,6 +83,12 @@ public class XdrString extends XdrSimple<String> {
         validatePaddingBytes(paddingBytes);
         setPadding(paddingBytes);
 
+        if(bytes.length != StringLen + 4 + paddingBytes) {
+            int totalLength = StringLen + paddingBytes + 4;
+            byte[] StringBytes = ByteBuffer.allocate(totalLength).put(getBytes(), 0, totalLength).array();
+            setBytes(StringBytes);
+        }
+
         byte[] content = new byte[StringLen];
         if (bytes.length > 1) {
             System.arraycopy(bytes, 4, content, 0, StringLen);

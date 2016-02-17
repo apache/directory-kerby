@@ -36,7 +36,8 @@ public class XdrUnionTest {
 
     private void testEncodingWith(UnionFileTypeSwitch value, String expectedEncoding) throws IOException {
         byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
-        XdrFieldInfo[] fieldInfos = {new XdrFieldInfo(0, value.getFileKind(), value.getFileValue()), new XdrFieldInfo(1, value.getArmKind(), value.getArmValue())};
+        XdrFieldInfo[] fieldInfos = {new XdrFieldInfo(0, value.getFileKind(), value.getFileValue()),
+                new XdrFieldInfo(1, value.getArmKind(), value.getArmValue())};
 
         XdrUnion aValue = new XdrUnionInstance(fieldInfos);
 
@@ -48,7 +49,7 @@ public class XdrUnionTest {
     @Test
     public void testDecoding() throws IOException {
         UnionFileTypeSwitch fileType = new UnionFileTypeSwitch(FileKind.EXEC);
-        testEncodingWith(fileType, "0x00 00 00 02 00 00 00 04 6c 69 73 70");
+        testDecodingWith(fileType, "0x00 00 00 02 00 00 00 04 6c 69 73 70");
     }
 
     private void testDecodingWith(UnionFileTypeSwitch expectedValue, String content) throws IOException {

@@ -26,53 +26,30 @@ import org.apache.kerby.xdr.type.XdrInteger;
 import org.apache.kerby.xdr.type.XdrString;
 import org.apache.kerby.xdr.type.XdrStructType;
 import org.apache.kerby.xdr.type.XdrType;
+import org.apache.kerby.xdr.type.XdrUnion;
 import org.apache.kerby.xdr.type.XdrUnsignedInteger;
-
-enum FileType implements EnumType {
-    TEXT,
-    DATA,
-    EXEC;
-
-    public int getValue() {
-        return ordinal();
-    }
-
-    public String getName() {
-        return name();
-    }
-}
-
-class FileTypeEnumeratedInstance extends XdrEnumerated<FileType> {
-
-    public FileTypeEnumeratedInstance() {
-        super(null);
-    }
-
-    public FileTypeEnumeratedInstance(FileType value) {
-        super(value);
-    }
-    @Override
-    protected EnumType[] getAllEnumValues() {
-        return FileType.values();
-    }
-
-}
 
 class MyFile {
     String fileName;
-    FileType fileType;
+    UnionFileTypeSwitch fileType;
+    String owner;
 
-    public MyFile(String name, FileType fileType) {
+    public MyFile(String name, UnionFileTypeSwitch fileType, String owner) {
         this.fileName = name;
         this.fileType = fileType;
+        this.owner = owner;
     }
 
     public String getFileName() {
         return fileName;
     }
 
-    public FileType getType() {
+    public UnionFileTypeSwitch getFileType() {
         return fileType;
+    }
+
+    public String getOwner() {
+        return owner;
     }
 
 }
@@ -99,12 +76,16 @@ public class XdrStructTypeInstance extends XdrStructType {
                     fields[i] = new XdrBoolean((Boolean) fieldInfos[i].getValue());
                     break;
                 case ENUM:
-                    fields[i] = new FileTypeEnumeratedInstance((FileType) fieldInfos[i].getValue());
+                    fields[i] = new FileKindEnumeratedInstance((FileKind) fieldInfos[i].getValue());
+                    break;
+                case UNION:
+                    XdrUnion value = (XdrUnionInstance) fieldInfos[i].getValue();
+                    XdrFieldInfo[] unionFieldInfos = value.getXdrFieldInfos();
+                    fields[i] = new XdrUnionInstance(unionFieldInfos);
                     break;
                 case STRING:
                     fields[i] = new XdrString((String) fieldInfos[i].getValue());
                     break;
-                //case STRUCT:
                 default:
                     fields[i] = null;
             }
@@ -115,15 +96,17 @@ public class XdrStructTypeInstance extends XdrStructType {
     @Override
     protected XdrStructType fieldsToValues(AbstractXdrType[] fields) {
         XdrFieldInfo[] fieldInfos = {new XdrFieldInfo(0, XdrDataType.STRING, fields[0].getValue()),
-                new XdrFieldInfo(1, XdrDataType.ENUM,fields[1].getValue())};
+                new XdrFieldInfo(1, XdrDataType.UNION, fields[1].getValue()),
+                new XdrFieldInfo(2, XdrDataType.STRING, fields[2].getValue())};
         return new XdrStructTypeInstance(fieldInfos);
     }
 
     @Override
     protected AbstractXdrType[] getAllFields() {
-        AbstractXdrType[] fields = new AbstractXdrType[2];
+        AbstractXdrType[] fields = new AbstractXdrType[3];
         fields[0] = new XdrString();
-        fields[1] = new FileTypeEnumeratedInstance();
+        fields[1] = new XdrUnionInstance();
+        fields[2] = new XdrString();
         return fields;
     }
 }

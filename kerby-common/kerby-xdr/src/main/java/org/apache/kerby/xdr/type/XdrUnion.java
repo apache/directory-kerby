@@ -61,8 +61,8 @@ public abstract class XdrUnion extends AbstractXdrType<XdrUnion> {
      *      index, XdrDataType, value;
      * [1] is the implied arm
      */
-    private final XdrFieldInfo[] fieldInfos;
-    private final XdrType[] fields;
+    private XdrFieldInfo[] fieldInfos;
+    private XdrType[] fields;
 
     public XdrUnion(XdrDataType xdrDataType) {
         super(xdrDataType);
@@ -121,6 +121,7 @@ public abstract class XdrUnion extends AbstractXdrType<XdrUnion> {
                 content = ByteBuffer.wrap(newArray);
             }
         }
+        this.fields = fields;
         setValue(fieldsToValues(fields));
     }
 
