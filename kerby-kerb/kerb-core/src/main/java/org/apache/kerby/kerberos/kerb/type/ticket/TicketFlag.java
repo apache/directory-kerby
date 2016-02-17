@@ -41,7 +41,7 @@ public enum TicketFlag implements EnumType {
 
     private final int value;
 
-    private TicketFlag(int value) {
+    TicketFlag(int value) {
         this.value = value;
     }
 

@@ -65,6 +65,9 @@ public class CheckSumHandler {
         return getCheckSumHandler(cksumType, false);
     }
 
+    /**
+     * Ref. cksumtypes.c in MIT krb5 project.
+     */
     private static CheckSumTypeHandler getCheckSumHandler(CheckSumType cksumType,
                                                           boolean check) throws KrbException {
         CheckSumTypeHandler cksumHandler = null;

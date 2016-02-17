@@ -88,12 +88,16 @@
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
+      <properties>
+        <pmd.skip>true</pmd.skip>
+        <checkstyle.skip>true</checkstyle.skip>
+      </properties>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.1</version>
+            <version>3.3</version>
             <configuration>
               <compilerVersion>${javac.target}</compilerVersion>
               <source>${javac.target}</source>
@@ -104,7 +108,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
-            <version>2.4</version>
+            <version>2.4.2</version>
             <executions>
               <execution>
                 <phase>package</phase>
@@ -160,6 +164,16 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>nochecks</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <pmd.skip>true</pmd.skip>
+        <checkstyle.skip>true</checkstyle.skip>
+      </properties>
     </profile>
   </profiles>
 

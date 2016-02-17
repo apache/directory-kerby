@@ -129,7 +129,7 @@ public enum AuthorizationType implements EnumType {
     /**
      * Create a new enum 
      */
-    private AuthorizationType(int value) {
+    AuthorizationType(int value) {
         this.value = value;
     }
 

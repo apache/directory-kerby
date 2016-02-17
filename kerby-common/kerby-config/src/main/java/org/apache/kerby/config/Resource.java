@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Properties;
 
 public final class Resource {
-    public static enum Format {
+    public enum Format {
         XML_FILE(XmlConfigLoader.class),
         INI_FILE(IniConfigLoader.class),
         JSON_FILE(JsonConfigLoader.class),
@@ -38,7 +38,7 @@ public final class Resource {
 
         private Class<? extends ConfigLoader> loaderClass;
 
-        private Format(Class<? extends ConfigLoader> loaderClass) {
+        Format(Class<? extends ConfigLoader> loaderClass) {
             this.loaderClass = loaderClass;
         }
 

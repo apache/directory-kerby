@@ -40,7 +40,7 @@ public enum LastReqType implements EnumType {
 
     private int value;
 
-    private LastReqType(int value) {
+    LastReqType(int value) {
         this.value = value;
     }
 

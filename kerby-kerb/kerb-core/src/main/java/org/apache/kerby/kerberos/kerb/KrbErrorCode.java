@@ -101,7 +101,7 @@ public enum KrbErrorCode implements EnumType {
     private final int value;
     private final String message;
 
-    private KrbErrorCode(int value, String message) {
+    KrbErrorCode(int value, String message) {
         this.value = value;
         this.message = message;
     }

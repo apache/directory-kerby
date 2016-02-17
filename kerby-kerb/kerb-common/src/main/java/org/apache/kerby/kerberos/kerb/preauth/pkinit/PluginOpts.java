@@ -25,9 +25,10 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AlgorithmIdentifiers;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.TrustedCertifiers;
 import org.apache.kerby.x509.type.AlgorithmIdentifier;
 
+/*
+ *Ref. MIT Krb5 _pkinit_plg_opts
+ */
 public class PluginOpts {
-
-    // From MIT Krb5 _pkinit_plg_opts
 
     // require EKU checking (default is true)
     public boolean requireEku = true;

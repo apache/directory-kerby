@@ -108,7 +108,7 @@ public class TokenJaasKrbUtil {
         private File ccache;
         private File signKeyFile;
 
-        public TokenJaasConf(String principal, File tokenCache, File armorCache, File ccache,
+        TokenJaasConf(String principal, File tokenCache, File armorCache, File ccache,
             File signKeyFile) {
             this.principal = principal;
             this.tokenCache = tokenCache;
@@ -117,7 +117,7 @@ public class TokenJaasKrbUtil {
             this.signKeyFile = signKeyFile;
         }
 
-        public TokenJaasConf(String principal, String tokenStr, File armorCache, File ccache,
+        TokenJaasConf(String principal, String tokenStr, File armorCache, File ccache,
             File signKeyFile) {
             this.principal = principal;
             this.tokenStr = tokenStr;

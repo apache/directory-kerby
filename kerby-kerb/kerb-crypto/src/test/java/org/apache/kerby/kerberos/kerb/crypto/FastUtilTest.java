@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.kerb.crypto;
 import org.apache.kerby.kerberos.kerb.crypto.fast.FastUtil;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
-import org.apache.kerby.util.EncryptoUtil;
+import org.apache.kerby.util.CryptoUtil;
 import org.apache.kerby.util.HexUtil;
 import org.junit.Test;
 
@@ -31,6 +31,9 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assume.assumeTrue;
 
+/**
+ * Ref. fast util test codes in MIT krb5 project.
+ */
 public class FastUtilTest {
     static class TestCase {
         EncryptionType encType;
@@ -39,6 +42,7 @@ public class FastUtilTest {
         String pepper1;
         String pepper2;
         String answer;
+
         TestCase(EncryptionType encType, String keyData1, String keyData2,
                  String pepper1, String pepper2, String answer) {
             this.encType = encType;
@@ -126,7 +130,7 @@ public class FastUtilTest {
 
     @Test
     public void testFastUtil_AES256_CTS_HMAC_SHA1() throws Exception {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         performTest(new TestCase(
                 EncryptionType.AES256_CTS_HMAC_SHA1_96,

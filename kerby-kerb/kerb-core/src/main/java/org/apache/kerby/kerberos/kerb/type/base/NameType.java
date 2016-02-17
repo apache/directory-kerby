@@ -44,7 +44,7 @@ public enum NameType implements EnumType {
     /**
      * Create a new enum 
      */
-    private NameType(int value) {
+    NameType(int value) {
         this.value = value;
     }
 

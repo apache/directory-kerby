@@ -59,7 +59,7 @@ public enum KrbMessageType implements EnumType {
     /**
      * Create a new enum 
      */
-    private KrbMessageType(int value) {
+    KrbMessageType(int value) {
         this.value = value;
     }
 

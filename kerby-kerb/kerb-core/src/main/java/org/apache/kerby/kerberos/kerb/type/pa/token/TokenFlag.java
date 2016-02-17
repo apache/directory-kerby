@@ -30,7 +30,7 @@ public enum TokenFlag implements EnumType {
 
     private final int value;
 
-    private TokenFlag(int value) {
+    TokenFlag(int value) {
         this.value = value;
     }
 

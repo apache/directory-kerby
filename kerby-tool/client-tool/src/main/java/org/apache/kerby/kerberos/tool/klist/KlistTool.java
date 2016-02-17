@@ -40,6 +40,8 @@ import java.util.List;
 
 /**
  * klist like tool
+ *
+ * Ref. MIT klist command tool usage.
  */
 public class KlistTool {
 

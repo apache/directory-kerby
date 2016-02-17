@@ -115,7 +115,7 @@ public final class JaasKrbUtil {
         private String principal;
         private File keytabFile;
 
-        public KeytabJaasConf(String principal, File keytab) {
+        KeytabJaasConf(String principal, File keytab) {
             this.principal = principal;
             this.keytabFile = keytab;
         }
@@ -144,7 +144,7 @@ public final class JaasKrbUtil {
         private String principal;
         private File clientCredentialFile;
 
-        public TicketCacheJaasConf(String principal, File clientCredentialFile) {
+        TicketCacheJaasConf(String principal, File clientCredentialFile) {
             this.principal = principal;
             this.clientCredentialFile = clientCredentialFile;
         }
@@ -172,7 +172,7 @@ public final class JaasKrbUtil {
     static class PasswordJaasConf extends Configuration {
         private String principal;
 
-        public PasswordJaasConf(String principal) {
+        PasswordJaasConf(String principal) {
             this.principal = principal;
         }
 

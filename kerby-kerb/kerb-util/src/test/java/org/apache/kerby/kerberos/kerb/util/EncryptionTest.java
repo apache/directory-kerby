@@ -31,7 +31,7 @@ import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
-import org.apache.kerby.util.EncryptoUtil;
+import org.apache.kerby.util.CryptoUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -75,7 +75,7 @@ public class EncryptionTest {
 
     @Test
     public void testAes256() throws IOException, KrbException {
-        assumeTrue(EncryptoUtil.isAES256Enabled());
+        assumeTrue(CryptoUtil.isAES256Enabled());
 
         testEncWith("aes256-cts-hmac-sha1-96.cc");
     }

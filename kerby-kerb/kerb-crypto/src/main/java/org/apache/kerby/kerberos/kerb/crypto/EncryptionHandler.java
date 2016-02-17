@@ -103,6 +103,9 @@ public class EncryptionHandler {
                                                 boolean check) throws KrbException {
         EncTypeHandler encHandler = null;
 
+        /**
+         * Ref. etypes.c in MIT krb5 project.
+         */
         switch (eType) {
             case DES_CBC_CRC:
                 encHandler = new DesCbcCrcEnc();

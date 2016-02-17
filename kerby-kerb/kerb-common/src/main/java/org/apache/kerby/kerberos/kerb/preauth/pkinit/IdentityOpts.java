@@ -22,9 +22,11 @@ package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Ref. MIT Krb5 _pkinit_identity_opts MIT krb5 project.
+ */
 public class IdentityOpts {
 
-    // From MIT Krb5 _pkinit_identity_opts
     public String identity;
     public List<String> altIdentities = new ArrayList<String>(1);
     public List<String> anchors = new ArrayList<String>(4);

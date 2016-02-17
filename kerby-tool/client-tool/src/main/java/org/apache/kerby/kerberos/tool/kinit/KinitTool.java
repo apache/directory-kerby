@@ -44,6 +44,8 @@ import java.util.Scanner;
 
 /**
  * kinit like tool
+ *
+ * Ref. MIT kinit command tool usage.
  */
 public class KinitTool {
 

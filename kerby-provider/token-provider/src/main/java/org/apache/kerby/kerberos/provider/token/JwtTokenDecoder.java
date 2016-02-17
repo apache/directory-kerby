@@ -176,7 +176,11 @@ public class JwtTokenDecoder implements TokenDecoder {
      */
     @Override
     public void setDecryptionKey(byte[] key) {
-        decryptionKey = key;
+        if (key == null) {
+            decryptionKey = new byte[0];
+        } else {
+            decryptionKey = key.clone();
+        }
     }
 
     /**
@@ -222,7 +226,11 @@ public class JwtTokenDecoder implements TokenDecoder {
      */
     @Override
     public void setVerifyKey(byte[] key) {
-        verifyKey = key;
+        if (key == null) {
+            verifyKey = new byte[0];
+        } else {
+            verifyKey = key.clone();
+        }
     }
 
     /**

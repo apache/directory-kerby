@@ -28,6 +28,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SimpleTimeZone;
 
+/**
+ * Ref. ASN1UTCTime class in BouncyCastle library.
+ */
 public class Asn1UtcTime extends Asn1Simple<Date> {
     public Asn1UtcTime() {
         this(null);

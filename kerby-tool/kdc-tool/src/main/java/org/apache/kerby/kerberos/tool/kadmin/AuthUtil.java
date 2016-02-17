@@ -85,7 +85,7 @@ public class AuthUtil {
         private String principal;
         private File clientCredentialFile;
 
-        public TicketCacheJaasConf(String principal, File clientCredentialFile) {
+        TicketCacheJaasConf(String principal, File clientCredentialFile) {
             this.principal = principal;
             this.clientCredentialFile = clientCredentialFile;
         }
@@ -114,7 +114,7 @@ public class AuthUtil {
         private String principal;
         private File keytabFile;
 
-        public KeytabJaasConf(String principal, File keytab) {
+        KeytabJaasConf(String principal, File keytab) {
             this.principal = principal;
             this.keytabFile = keytab;
         }

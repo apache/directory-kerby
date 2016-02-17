@@ -25,13 +25,16 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Ref. t_crc.c test in MIT krb5 project.
+ */
 public class Crc32Test {
 
     static class TestCase {
         String data;
         long answer;
 
-        public TestCase(String data, long answer) {
+        TestCase(String data, long answer) {
             this.data = data;
             this.answer = answer;
         }

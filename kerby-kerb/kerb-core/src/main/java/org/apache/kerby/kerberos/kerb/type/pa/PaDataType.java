@@ -170,7 +170,7 @@ public enum PaDataType implements EnumType {
     /**
      * Create a new enum instance
      */
-    private PaDataType(int value) {
+    PaDataType(int value) {
         this.value = value;
     }
 

@@ -39,7 +39,6 @@ import java.security.spec.X509EncodedKeySpec;
  * The server-side of Diffie-Hellman key agreement for Kerberos PKINIT.
  *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
- * @version $Rev$, $Date$
  */
 public class DiffieHellmanServer {
 

@@ -31,7 +31,6 @@ import java.nio.charset.StandardCharsets;
  */
 public class FastUtil {
 
-
     /**
      * Call the PRF function multiple times with the pepper prefixed with
      * a count byte to get enough bits of output.

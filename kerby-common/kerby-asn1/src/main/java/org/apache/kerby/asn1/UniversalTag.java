@@ -21,7 +21,9 @@ package org.apache.kerby.asn1;
 
 /**
  * An enumeration for every ASN.1 UNIVERSAL type.
- * 
+ *
+ * Ref. BERTags in BouncyCastle library.
+ *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public enum UniversalTag {
@@ -69,7 +71,7 @@ public enum UniversalTag {
     /**
      * Create an instance of this class
      */
-    private UniversalTag(int value) {
+    UniversalTag(int value) {
         this.value = value;
     }
 

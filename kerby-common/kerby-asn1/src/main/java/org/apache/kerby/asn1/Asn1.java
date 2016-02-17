@@ -145,10 +145,10 @@ public final class Asn1 {
      * See avove.
      */
     public static void parseAndDump(byte[] content) throws IOException {
-        String hexStr = HexUtil.bytesToHex(content);
+        //String hexStr = HexUtil.bytesToHex(content);
         Asn1Dumper dumper = new Asn1Dumper();
-        System.out.println("Dumping data:");
-        dumper.dumpData(hexStr);
+        //System.out.println("Dumping data:");
+        //dumper.dumpData(hexStr);
         dumper.parseAndDump(content);
         String output = dumper.output();
         System.out.println(output);
@@ -177,10 +177,10 @@ public final class Asn1 {
      * See avove.
      */
     public static void decodeAndDump(byte[] content) throws IOException {
-        String hexStr = HexUtil.bytesToHex(content);
+        //String hexStr = HexUtil.bytesToHex(content);
         Asn1Dumper dumper = new Asn1Dumper();
-        System.out.println("Dumping data:");
-        dumper.dumpData(hexStr);
+        //System.out.println("Dumping data:");
+        //dumper.dumpData(hexStr);
         dumper.decodeAndDump(content);
         String output = dumper.output();
         System.out.println(output);
