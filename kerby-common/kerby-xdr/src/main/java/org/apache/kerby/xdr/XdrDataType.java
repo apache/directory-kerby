@@ -33,7 +33,8 @@ public enum XdrDataType {
     ENUM                (0x05),
     OPAQUE              (0x06),
     UNSIGNED_INTEGER   (0x07),
-    STRUCT               (0x08);
+    STRUCT               (0x08),
+    UNION                (0x09);
 
     /** The dataType value */
     private int value;
