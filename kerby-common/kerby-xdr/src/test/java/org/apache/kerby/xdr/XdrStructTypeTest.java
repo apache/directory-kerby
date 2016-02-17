@@ -38,8 +38,11 @@ public class XdrStructTypeTest {
 
     private void testEncodingWith(MyFile value, String expectedEncoding) throws IOException {
         byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
+        UnionFileTypeSwitch fileType = value.getFileType();
+        XdrFieldInfo[] unionFieldInfo = {new XdrFieldInfo(0, fileType.getFileKind(), fileType.getFileValue()),
+                new XdrFieldInfo(1, fileType.getArmKind(), fileType.getArmValue())};
         XdrFieldInfo[] fieldInfos = {new XdrFieldInfo(0, XdrDataType.STRING, value.getFileName()),
-                new XdrFieldInfo(1, XdrDataType.UNION, value.getFileType()),
+                new XdrFieldInfo(1, XdrDataType.UNION, new XdrUnionInstance(unionFieldInfo)),
                 new XdrFieldInfo(2, XdrDataType.STRING, value.getOwner())};
 
         XdrStructType aValue = new XdrStructTypeInstance(fieldInfos);

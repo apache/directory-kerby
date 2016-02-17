@@ -22,6 +22,7 @@ package org.apache.kerby.xdr.type;
 import org.apache.kerby.xdr.XdrDataType;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -73,6 +74,11 @@ public class XdrBoolean extends XdrSimple<Boolean> {
      */
     @Override
     protected void toValue() throws IOException {
+        if (getBytes().length != 4) {
+            byte[] boolBytes = ByteBuffer.allocate(4).put(getBytes(), 0, 4).array();
+            setBytes(boolBytes); /**reset bytes in case the enum type is in a struct or union*/
+        }
+
         byte[] bytes = getBytes();
         if (Arrays.equals(bytes, TRUE_BYTE)) {
             setValue(true);

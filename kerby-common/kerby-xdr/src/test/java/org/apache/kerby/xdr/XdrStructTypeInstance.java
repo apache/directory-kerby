@@ -79,13 +79,13 @@ public class XdrStructTypeInstance extends XdrStructType {
                     fields[i] = new FileKindEnumeratedInstance((FileKind) fieldInfos[i].getValue());
                     break;
                 case UNION:
-                    XdrUnion value = (XdrUnionInstance) fieldInfos[i].getValue();
-                    XdrFieldInfo[] unionFieldInfos = value.getXdrFieldInfos();
-                    fields[i] = new XdrUnionInstance(unionFieldInfos);
+                    fields[i] = (XdrUnion) fieldInfos[i].getValue();
                     break;
                 case STRING:
                     fields[i] = new XdrString((String) fieldInfos[i].getValue());
                     break;
+                case STRUCT:
+                    fields[i] = new XdrStructTypeInstance((XdrFieldInfo[]) fieldInfos[i].getValue());
                 default:
                     fields[i] = null;
             }
@@ -96,7 +96,7 @@ public class XdrStructTypeInstance extends XdrStructType {
     @Override
     protected XdrStructType fieldsToValues(AbstractXdrType[] fields) {
         XdrFieldInfo[] fieldInfos = {new XdrFieldInfo(0, XdrDataType.STRING, fields[0].getValue()),
-                new XdrFieldInfo(1, XdrDataType.UNION, fields[1].getValue()),
+                new XdrFieldInfo(1, XdrDataType.UNION,fields[1].getValue()),
                 new XdrFieldInfo(2, XdrDataType.STRING, fields[2].getValue())};
         return new XdrStructTypeInstance(fieldInfos);
     }

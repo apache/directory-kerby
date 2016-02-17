@@ -83,10 +83,10 @@ public class XdrString extends XdrSimple<String> {
         validatePaddingBytes(paddingBytes);
         setPadding(paddingBytes);
 
-        if(bytes.length != StringLen + 4 + paddingBytes) {
+        if (bytes.length != StringLen + 4 + paddingBytes) {
             int totalLength = StringLen + paddingBytes + 4;
             byte[] StringBytes = ByteBuffer.allocate(totalLength).put(getBytes(), 0, totalLength).array();
-            setBytes(StringBytes);
+            setBytes(StringBytes); /**reset bytes in case the enum type is in a struct or union*/
         }
 
         byte[] content = new byte[StringLen];

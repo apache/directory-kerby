@@ -29,8 +29,8 @@ import java.nio.ByteBuffer;
  * For collection type that may consist of dataTypeged fields
  */
 public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
-    private final XdrFieldInfo[] fieldInfos;
-    private final XdrType[] fields;
+    private XdrFieldInfo[] fieldInfos;
+    private XdrType[] fields;
 
     public XdrStructType(XdrDataType xdrDataType) {
         super(xdrDataType);
@@ -89,6 +89,7 @@ public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
                 content = ByteBuffer.wrap(newArray);
             }
         }
+        this.fields = fields;
         setValue(fieldsToValues(fields));
     }
 
