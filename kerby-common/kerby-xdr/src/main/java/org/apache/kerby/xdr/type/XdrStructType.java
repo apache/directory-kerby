@@ -29,16 +29,28 @@ import java.nio.ByteBuffer;
  * For collection type that may consist of dataTypeged fields
  */
 public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
-    private final XdrFieldInfo[] fieldInfos;
-    private final XdrType[] fields;
+    private XdrFieldInfo[] fieldInfos;
+    private XdrType[] fields;
+
+    public XdrStructType(XdrDataType xdrDataType) {
+        super(xdrDataType);
+        this.fieldInfos = null;
+        this.fields = null;
+    }
 
     public XdrStructType(XdrDataType xdrDataType,
                          final XdrFieldInfo[] fieldInfos) {
         super(xdrDataType);
-
-        setValue(this);
         this.fieldInfos = fieldInfos;
         this.fields = new XdrType[fieldInfos.length];
+
+        getStructTypeInstance(this.fields, fieldInfos);
+    }
+
+    protected abstract void getStructTypeInstance(final XdrType[] fields, final XdrFieldInfo[] fieldInfos);
+
+    public XdrFieldInfo[] getXdrFieldInfos() {
+        return fieldInfos;
     }
 
     @Override
@@ -62,4 +74,26 @@ public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
             }
         }
     }
+
+    @Override
+    public void decode(ByteBuffer content) throws IOException {
+        AbstractXdrType[] fields = getAllFields();
+        Object[] value;
+        for (int i = 0; i < fields.length; i++) {
+            if (fields[i] != null) {
+                fields[i].decode(content);
+                int length = fields[i].encodingLength();
+                byte[] array = content.array();
+                byte[] newArray = new byte[array.length - length];
+                System.arraycopy(array, length, newArray, 0, array.length - length);
+                content = ByteBuffer.wrap(newArray);
+            }
+        }
+        this.fields = fields;
+        setValue(fieldsToValues(fields));
+    }
+
+    protected abstract XdrStructType fieldsToValues(AbstractXdrType[] fields);
+
+    protected abstract AbstractXdrType[] getAllFields();
 }
