@@ -43,12 +43,12 @@ import java.util.List;
 public class XdrString extends XdrSimple<String> {
     private int padding;
 
-    public XdrString(XdrDataType xdrDataType) {
-        super(xdrDataType, null);
+    public XdrString() {
+        this((String) null);
     }
 
-    public XdrString(XdrDataType dataTypeNo, String value) {
-        super(dataTypeNo, value);
+    public XdrString(String value) {
+        super(XdrDataType.STRING, value);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class XdrString extends XdrSimple<String> {
     @Override
     protected int encodingBodyLength() {
         if (getValue() != null) {
-            padding = 4 - getValue().length() % 4;
+            padding = (4 - getValue().length() % 4) % 4;
             return getValue().length() + padding + 4;
         }
         return 0;
@@ -79,9 +79,15 @@ public class XdrString extends XdrSimple<String> {
         byte[] header = new byte[4];
         System.arraycopy(bytes, 0, header, 0, 4);
         int StringLen  = ByteBuffer.wrap(header).getInt();
-        int paddingBytes = bytes.length - StringLen - 4;
+        int paddingBytes = (4 - (StringLen % 4)) % 4;
         validatePaddingBytes(paddingBytes);
         setPadding(paddingBytes);
+
+        if (bytes.length != StringLen + 4 + paddingBytes) {
+            int totalLength = StringLen + paddingBytes + 4;
+            byte[] StringBytes = ByteBuffer.allocate(totalLength).put(getBytes(), 0, totalLength).array();
+            setBytes(StringBytes); /**reset bytes in case the enum type is in a struct or union*/
+        }
 
         byte[] content = new byte[StringLen];
         if (bytes.length > 1) {

@@ -118,6 +118,8 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
         switch (dataType) {
             case BOOLEAN:
             case INTEGER:
+            case UNSIGNED_INTEGER:
+            case ENUM:
             case STRING:
                 return true;
             default:

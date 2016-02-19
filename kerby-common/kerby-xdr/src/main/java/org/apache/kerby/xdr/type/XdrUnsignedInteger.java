@@ -86,6 +86,11 @@ public class XdrUnsignedInteger extends XdrSimple<Long> {
      */
     @Override
     protected void toValue() {
+        if (getBytes().length != 4) {
+            byte[] Bytes = ByteBuffer.allocate(4).put(getBytes(), 0, 4).array();
+            setBytes(Bytes); /**reset bytes in case the enum type is in a struct or union*/
+        }
+
         byte[] longBytes = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
                 (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
         System.arraycopy(getBytes(), 0, longBytes, 4, 4);
