@@ -808,7 +808,7 @@ public abstract class KdcRequest {
         return isPkinit;
     }
 
-    protected boolean isAnonymous() {
+    public boolean isAnonymous() {
         return getKdcOptions().isFlagSet(KdcOption.REQUEST_ANONYMOUS);
     }
 

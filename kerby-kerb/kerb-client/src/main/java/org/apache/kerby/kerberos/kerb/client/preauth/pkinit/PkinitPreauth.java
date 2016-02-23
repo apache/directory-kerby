@@ -293,15 +293,15 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
 //            DhNonce dhNonce = new DhNonce();
 //            authPack.setClientDhNonce(dhNonce);
+            byte[] signedAuthPack = signAuthPack(authPack);
+            paPkAsReq.setSignedAuthPack(signedAuthPack);
 
         } else {
             LOG.info("RSA key transport algorithm");
 //            authPack.setClientPublicValue(null);
         }
 
-        byte[] signedAuthPack = signAuthPack(authPack);
 
-        paPkAsReq.setSignedAuthPack(signedAuthPack);
 
         TrustedCertifiers trustedCertifiers = pkinitContext.pluginOpts.createTrustedCertifiers();
         paPkAsReq.setTrustedCertifiers(trustedCertifiers);
@@ -316,8 +316,8 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         String oid = pkinitContext.cryptoctx.getIdPkinitAuthDataOID();
 
-        byte[] signedDataBytes = PkinitCrypto.cmsSignedDataCreate(
-            KrbCodec.encode(authPack), oid, 3, null, null, null, null);
+        byte[] signedDataBytes = PkinitCrypto.eContentInfoCreate(
+                KrbCodec.encode(authPack), oid);
 
         return signedDataBytes;
     }
