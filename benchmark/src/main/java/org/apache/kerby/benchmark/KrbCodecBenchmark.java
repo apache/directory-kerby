@@ -20,7 +20,13 @@
 package org.apache.kerby.benchmark;
 
 import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Warmup;
+
 
 import java.io.IOException;
 import java.io.InputStream;
