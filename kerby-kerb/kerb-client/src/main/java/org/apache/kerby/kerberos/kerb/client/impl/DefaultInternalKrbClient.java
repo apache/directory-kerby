@@ -73,7 +73,6 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
 
         krbHandler.handleRequest(tgtTktReq);
 
-        transport.release();
         return tgtTktReq.getTicket();
     }
 
@@ -86,7 +85,6 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
 
         krbHandler.handleRequest(ticketReq);
 
-        transport.release();
         return ticketReq.getSgt();
     }
 
