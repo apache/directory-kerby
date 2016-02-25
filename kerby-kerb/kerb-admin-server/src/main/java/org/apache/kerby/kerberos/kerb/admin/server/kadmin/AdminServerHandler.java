@@ -52,7 +52,24 @@ public class AdminServerHandler {
      */
     public ByteBuffer handleMessage(ByteBuffer receivedMessage,
                                     InetAddress remoteAddress) throws KrbException {
-        return null;
+        byte bytes[] = new byte[receivedMessage.remaining()];
+        receivedMessage.get(bytes);
+        String receiveMsg = new String (bytes);
+        System.out.println("server handleMessage: " + receiveMsg);
+        String[] principal = receiveMsg.split("@");
+        System.out.println("clientName: " + principal[0]);
+        System.out.println("realm: " + principal[1]);
+
+        /**Add principal to backend here*/
+        String message = "add principal of " + principal[0];
+        ByteBuffer responseMessage = ByteBuffer.allocate(message.getBytes().length);
+        responseMessage.put(message.getBytes());
+
+
+        return responseMessage;
+
+
+        //return null;
         /*
         KrbMessage krbRequest;
         KdcRequest kdcRequest = null;

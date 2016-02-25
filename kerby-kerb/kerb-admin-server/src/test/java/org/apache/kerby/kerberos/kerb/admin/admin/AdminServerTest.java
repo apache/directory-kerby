@@ -33,9 +33,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 public class AdminServerTest {
+    private final String KDC_REALM = "TEST.COM";
     private String serverHost = "localhost";
     private int serverPort = -1;
-
+    private final String clientPrincipalName = "alice";
+    private final String clientPrincipal =
+            clientPrincipalName + "@" + KDC_REALM;
     private AdminServer adminServer;
 
     @Before
@@ -59,17 +62,36 @@ public class AdminServerTest {
         SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
         socketChannel.connect(sa);
 
-        String badKrbMessage = "Hello World!";
+        /*String badKrbMessage = "Hello World!";
         ByteBuffer writeBuffer = ByteBuffer.allocate(4 + badKrbMessage.getBytes().length);
         writeBuffer.putInt(badKrbMessage.getBytes().length);
         writeBuffer.put(badKrbMessage.getBytes());
         writeBuffer.flip();
+*/
+
+        ByteBuffer writeBuffer = ByteBuffer.allocate(4 + clientPrincipal.getBytes().length);
+        //System.out.println(clientPrincipal.getBytes().length);
+        writeBuffer.putInt(clientPrincipal.getBytes().length);
+        writeBuffer.put(clientPrincipal.getBytes());
+        writeBuffer.flip();
 
         socketChannel.write(writeBuffer);
+
+        Thread.sleep(150);
+        ByteBuffer bf = ByteBuffer.allocate(100);
+
+        socketChannel.read(bf);
+        System.out.println("client receive message: " + new String (bf.array()));
     }
 
     @After
     public void tearDown() throws Exception {
+
+        //server receive message
+        //serverhandler
+        adminServer.getAdminServerConfig();
+
+
         adminServer.stop();
     }
 }
