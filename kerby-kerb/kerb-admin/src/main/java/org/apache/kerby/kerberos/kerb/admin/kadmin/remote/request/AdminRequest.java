@@ -20,9 +20,19 @@
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminContext;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminHandler;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultAdminHandler;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 public class AdminRequest {
+    private String principal;
+    private KrbTransport transport;
+
     private AdminContext context;
+
+    public AdminRequest(String principal) {
+        this.principal = principal;
+    }
 
     public AdminRequest(AdminContext context) {
         this.context = context;
@@ -36,7 +46,25 @@ public class AdminRequest {
         this.context = context;
     }
 
-    public void process() {
+    public String getPrincipal() {
+        return principal;
+    }
 
+    public void setPrincipal(String principal) {
+        this.principal = principal;
+    }
+
+    public void process() {
+        //
+
+    }
+
+
+    public void setTransport(KrbTransport transport) {
+        this.transport = transport;
+    }
+
+    public KrbTransport getTransport() {
+        return transport;
     }
 }

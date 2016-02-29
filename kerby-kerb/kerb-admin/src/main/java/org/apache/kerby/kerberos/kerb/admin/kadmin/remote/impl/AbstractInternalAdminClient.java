@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminContext;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminSetting;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
 
 /**
  * A krb client API for applications to interact with KDC

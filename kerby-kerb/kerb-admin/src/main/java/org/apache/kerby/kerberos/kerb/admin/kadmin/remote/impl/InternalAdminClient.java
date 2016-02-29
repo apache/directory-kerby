@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminSetting;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
 
 /**
  * An internal krb client interface.
@@ -32,6 +33,8 @@ public interface InternalAdminClient {
      * @throws KrbException e
      */
     void init() throws KrbException;
+
+    void doRequestAddPrincipal(AdminRequest adminRequest) throws KrbException;
 
     /**
      * Get krb client settings.

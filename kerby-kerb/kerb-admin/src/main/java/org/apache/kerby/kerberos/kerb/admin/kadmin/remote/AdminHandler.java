@@ -48,21 +48,23 @@ public abstract class AdminHandler {
      */
     public void handleRequest(AdminRequest adminRequest) throws KrbException {
         adminRequest.process();
-        /*
+        String principal = adminRequest.getPrincipal();
         ByteBuffer requestMessage;
-
-        requestMessage = ByteBuffer.allocate(bodyLen + 4);
-        requestMessage.putInt(bodyLen);
+        requestMessage = ByteBuffer.allocate(principal.getBytes().length + 4);
+        requestMessage.putInt(principal.getBytes().length);
+        requestMessage.put(principal.getBytes());
+        requestMessage.flip();
 
         try {
             sendMessage(adminRequest, requestMessage);
         } catch (IOException e) {
-            throw new KrbException("sending message failed", e);
-        }*/
+            throw new KrbException("Admin sends request message failed", e);
+        }
+
     }
 
     /**
-     * Process the response messabe from kdc.
+     * Process the response message from kdc.
      *
      * @param adminRequest The admin request
      * @param responseMessage The message from kdc
@@ -70,6 +72,11 @@ public abstract class AdminHandler {
      */
     public void onResponseMessage(AdminRequest adminRequest,
                                   ByteBuffer responseMessage) throws KrbException {
+        byte bytes[] = new byte[responseMessage.remaining()];
+        responseMessage.get(bytes);
+        String receiveMsg = new String (bytes);
+        System.out.println("Admin receive message success: " + receiveMsg);
+
         /*
         KrbMessage kdcRep = null;
         try {
@@ -91,7 +98,7 @@ public abstract class AdminHandler {
     /**
      * Send message to kdc.
      *
-     * @param adminRequest The kdc request
+     * @param adminRequest The admin request
      * @param requestMessage The request message to kdc
      * @throws IOException e
      */

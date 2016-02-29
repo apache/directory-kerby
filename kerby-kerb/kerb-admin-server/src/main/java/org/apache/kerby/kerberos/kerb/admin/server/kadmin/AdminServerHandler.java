@@ -62,7 +62,8 @@ public class AdminServerHandler {
 
         /**Add principal to backend here*/
         String message = "add principal of " + principal[0];
-        ByteBuffer responseMessage = ByteBuffer.allocate(message.getBytes().length);
+        ByteBuffer responseMessage = ByteBuffer.allocate(4 + message.getBytes().length);
+        responseMessage.putInt(message.getBytes().length);
         responseMessage.put(message.getBytes());
 
 
