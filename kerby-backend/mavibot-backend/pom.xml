@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.kerby</groupId>
     <artifactId>kerby-backend</artifactId>
-    <version>1.0.0-RC3-SNAPSHOT</version>
+    <version>1.0.0-RC2</version>
   </parent>
   <artifactId>mavibot-backend</artifactId>
   <name>Mavibot based backend</name>
