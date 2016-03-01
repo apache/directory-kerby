@@ -32,10 +32,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jmh.version>1.11.1</jmh.version>
-    <javac.target>1.6</javac.target>
+    <javac.target>1.7</javac.target>
     <uberjar.name>benchmarks</uberjar.name>
-    <apache.ds.version>2.0.0-M20</apache.ds.version>
-    <apache.ds.api.version>1.0.0-M32</apache.ds.api.version>
   </properties>
 
   <dependencies>
