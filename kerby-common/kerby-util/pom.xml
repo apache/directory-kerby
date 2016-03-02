@@ -18,7 +18,7 @@
   <parent>
     <groupId>org.apache.kerby</groupId>
     <artifactId>kerby-common</artifactId>
-    <version>1.0.0-RC2</version>
+    <version>1.0.0-RC3-SNAPSHOT</version>
   </parent>
 
   <artifactId>kerby-util</artifactId>
