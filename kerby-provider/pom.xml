@@ -16,7 +16,7 @@
   <parent>
     <artifactId>kerby-all</artifactId>
     <groupId>org.apache.kerby</groupId>
-    <version>1.0.0-RC2</version>
+    <version>1.0.0-RC2-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
