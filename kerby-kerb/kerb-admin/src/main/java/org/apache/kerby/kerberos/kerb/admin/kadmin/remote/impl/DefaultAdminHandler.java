@@ -45,19 +45,6 @@ public class DefaultAdminHandler extends AdminHandler {
             throw new KrbException("Admin receives response message failed", e);
         }
         super.onResponseMessage(adminRequest, receiveMessage);
-        /*
-        KrbTransport transport = (KrbTransport) kdcRequest.getSessionData();
-        transport.setAttachment(kdcRequest);
-
-        super.handleRequest(kdcRequest);
-        ByteBuffer receivedMessage = null;
-        try {
-            receivedMessage = transport.receiveMessage();
-        } catch (IOException e) {
-            throw new KrbException("Receiving response message failed", e);
-        }
-        super.onResponseMessage(kdcRequest, receivedMessage);
-        */
     }
 
     /**
@@ -68,9 +55,5 @@ public class DefaultAdminHandler extends AdminHandler {
                                ByteBuffer requestMessage) throws IOException {
         KrbTransport transport = adminRequest.getTransport();
         transport.sendMessage(requestMessage);
-        /*
-        KrbTransport transport = (KrbTransport) kdcRequest.getSessionData();
-        transport.sendMessage(requestMessage);
-        */
     }
 }
