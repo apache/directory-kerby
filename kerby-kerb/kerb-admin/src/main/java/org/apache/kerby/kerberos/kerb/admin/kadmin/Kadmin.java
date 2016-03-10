@@ -48,7 +48,7 @@ public interface Kadmin {
     /**
      * Add principal to backend.
      *
-     * @param principal The principal to be added into backend
+     * @par am principal The principal to be added into backend
      * @param kOptions The KOptions with principal info
      * @throws KrbException e
      */

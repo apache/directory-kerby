@@ -45,5 +45,6 @@ public class AdminServerTest {
         adminServer.setAdminTcpPort(65417);
         adminServer.init();
         adminServer.start();
+        System.out.println("Server started!");
     }
 }

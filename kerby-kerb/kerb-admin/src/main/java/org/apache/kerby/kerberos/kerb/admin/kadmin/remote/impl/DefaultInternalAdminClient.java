@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminHandler;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminSetting;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminUtil;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
@@ -41,6 +42,14 @@ public class DefaultInternalAdminClient extends AbstractInternalAdminClient {
         super(krbSetting);
     }
 
+    public AdminHandler getAdminHanlder() {
+        return adminHandler;
+    }
+
+    public KrbTransport getTransport() {
+        return transport;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -59,13 +68,5 @@ public class DefaultInternalAdminClient extends AbstractInternalAdminClient {
         } catch (IOException e) {
             throw new KrbException("Failed to create transport", e);
         }
-    }
-
-    @Override
-    public void doRequestAddPrincipal(AdminRequest adminRequest) throws KrbException {
-        adminRequest.setTransport(transport);
-        adminHandler.handleRequest(adminRequest);
-
-        //return ticketReq.getSgt();
     }
 }

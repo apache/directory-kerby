@@ -22,8 +22,16 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultAdminHandler;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdRequest;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
+import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
+import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -37,6 +45,31 @@ import java.util.List;
  */
 public class RemoteKadminImpl implements Kadmin {
 
+    private InternalAdminClient innerClient;
+    private KrbTransport transport;
+
+    public RemoteKadminImpl(InternalAdminClient innerClient) throws KrbException {
+        this.innerClient = innerClient;
+        TransportPair tpair = null;
+        try {
+            tpair = AdminUtil.getTransportPair(innerClient.getSetting());
+        } catch (KrbException e) {
+            e.printStackTrace();
+        }
+        KrbNetwork network = new KrbNetwork();
+        network.setSocketTimeout(innerClient.getSetting().getTimeout());
+        try {
+            transport = network.connect(tpair);
+        } catch (IOException e) {
+            throw new KrbException("Failed to create transport", e);
+        }
+    }
+
+    public InternalAdminClient getInnerClient() {
+        return innerClient;
+    }
+
+
     @Override
     public String getKadminPrincipal() {
         return null;
@@ -44,6 +77,12 @@ public class RemoteKadminImpl implements Kadmin {
 
     @Override
     public void addPrincipal(String principal) throws KrbException {
+        //generate an admin request
+        AdminRequest adRequest = new AdRequest(principal);
+        adRequest.setTransport(transport);
+        //handle it
+        AdminHandler adminHandler = new DefaultAdminHandler();
+        adminHandler.handleRequest(adRequest);
 
     }
 

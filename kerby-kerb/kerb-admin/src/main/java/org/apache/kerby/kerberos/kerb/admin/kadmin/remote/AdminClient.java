@@ -21,9 +21,11 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.Kadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultAdminHandler;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultInternalAdminClient;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,7 +172,7 @@ public class AdminClient {
     }
 
     public void requestAddPrincial(String principal) throws KrbException {
-        AdminRequest adminRequest = new AdminRequest(principal);
-        innerClient.doRequestAddPrincipal(adminRequest);
+        Kadmin remote = new RemoteKadminImpl(innerClient);
+        remote.addPrincipal(principal);
     }
 }
