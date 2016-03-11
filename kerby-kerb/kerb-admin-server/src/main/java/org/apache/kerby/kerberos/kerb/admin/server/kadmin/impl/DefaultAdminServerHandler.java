@@ -64,8 +64,8 @@ public class DefaultAdminServerHandler extends AdminServerHandler implements Run
         boolean isTcp = transport instanceof KrbTcpTransport;
 
         try {
-            ByteBuffer krbResponse = handleMessage(message, clientAddress);
-            transport.sendMessage(krbResponse);
+            ByteBuffer adminResponse = handleMessage(message, clientAddress);
+            transport.sendMessage(adminResponse);
         } catch (Exception e) {
             transport.release();
             logger.error("Error occured while processing request:", e);

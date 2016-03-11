@@ -21,6 +21,8 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminSetting;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 /**
  * An internal krb client interface.

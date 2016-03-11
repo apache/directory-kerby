@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminHandler;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -32,31 +33,27 @@ public class DefaultAdminHandler extends AdminHandler {
      * {@inheritDoc}
      */
     @Override
-    public void handleRequest(AdminRequest kdcRequest) throws KrbException {
-        /*
-        KrbTransport transport = (KrbTransport) kdcRequest.getSessionData();
-        transport.setAttachment(kdcRequest);
+    public void handleRequest(AdminRequest adminRequest) throws KrbException {
+        //
+        super.handleRequest(adminRequest);
 
-        super.handleRequest(kdcRequest);
-        ByteBuffer receivedMessage = null;
+        KrbTransport transport = adminRequest.getTransport();
+        ByteBuffer receiveMessage = null;
         try {
-            receivedMessage = transport.receiveMessage();
+            receiveMessage = transport.receiveMessage();
         } catch (IOException e) {
-            throw new KrbException("Receiving response message failed", e);
+            throw new KrbException("Admin receives response message failed", e);
         }
-        super.onResponseMessage(kdcRequest, receivedMessage);
-        */
+        super.onResponseMessage(adminRequest, receiveMessage);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void sendMessage(AdminRequest kdcRequest,
+    protected void sendMessage(AdminRequest adminRequest,
                                ByteBuffer requestMessage) throws IOException {
-        /*
-        KrbTransport transport = (KrbTransport) kdcRequest.getSessionData();
+        KrbTransport transport = adminRequest.getTransport();
         transport.sendMessage(requestMessage);
-        */
     }
 }

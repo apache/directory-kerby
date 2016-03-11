@@ -19,10 +19,16 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 
+import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
+import org.apache.kerby.kerberos.kerb.admin.tool.KadminCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdRep;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
@@ -51,77 +57,25 @@ public class AdminServerHandler {
      * @return The response message
      */
     public ByteBuffer handleMessage(ByteBuffer receivedMessage,
-                                    InetAddress remoteAddress) throws KrbException {
-        return null;
-        /*
-        KrbMessage krbRequest;
-        KdcRequest kdcRequest = null;
-        KrbMessage krbResponse;
+                                    InetAddress remoteAddress) throws KrbException, IOException {
+        AdminMessage requestMessage = KadminCode.decodeMessage(receivedMessage);
+        System.out.println("receive message type: " + requestMessage.getAdminMessageType());
+        String receiveMsg = new String (requestMessage.getMessageBuffer().array());
+        System.out.println("server handleMessage: " + receiveMsg);
+        String[] principal = receiveMsg.split("@");
+        System.out.println("clientName: " + principal[0]);
+        System.out.println("realm: " + principal[1]);
 
-        ByteBuffer message = receivedMessage.duplicate();
+        /**Add principal to backend here*/
+        //LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting().getAdminServerConfig(),
+         //       adminServerContext.getAdminServerSetting().getBackendConfig());
+        //localKadmin.addPrincipal(principal[0]);
 
-        try {
-            krbRequest = KrbCodec.decodeMessage(receivedMessage);
-        } catch (IOException e) {
-            LOG.error("Krb decoding message failed", e);
-            throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE, "Krb decoding message failed");
-        }
-
-        KrbMessageType messageType = krbRequest.getMsgType();
-        if (messageType == KrbMessageType.TGS_REQ || messageType
-                == KrbMessageType.AS_REQ) {
-            KdcReq kdcReq = (KdcReq) krbRequest;
-            String realm = getRequestRealm(kdcReq);
-            if (realm == null || !kdcContext.getAdminRealm().equals(realm)) {
-                LOG.error("Invalid realm from kdc request: " + realm);
-                throw new KrbException("Invalid realm from kdc request: " + realm);
-            }
-
-            if (messageType == KrbMessageType.TGS_REQ) {
-                kdcRequest = new TgsRequest((TgsReq) kdcReq, kdcContext);
-            } else if (messageType == KrbMessageType.AS_REQ) {
-                kdcRequest = new AsRequest((AsReq) kdcReq, kdcContext);
-            } else {
-                LOG.error("Invalid message type: " + messageType);
-                throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
-            }
-        }
-
-        // For checksum
-        if (kdcRequest == null) {
-            throw new KrbException("Kdc request is null.");
-        }
-        kdcRequest.setReqPackage(message);
-        if (remoteAddress == null) {
-            throw new KrbException("Remote address is null, not available.");
-        }
-        kdcRequest.setClientAddress(remoteAddress);
-        kdcRequest.isTcp(isTcp);
-
-        try {
-            kdcRequest.process();
-            krbResponse = kdcRequest.getReply();
-        } catch (KrbException e) {
-            if (e instanceof KdcRecoverableException) {
-                krbResponse = handleRecoverableException(
-                        (KdcRecoverableException) e, kdcRequest);
-            } else {
-                throw e;
-            }
-        }
-
-        int bodyLen = krbResponse.encodingLength();
-        ByteBuffer responseMessage;
-        if (isTcp) {
-            responseMessage = ByteBuffer.allocate(bodyLen + 4);
-            responseMessage.putInt(bodyLen);
-        } else {
-            responseMessage = ByteBuffer.allocate(bodyLen);
-        }
-        KrbCodec.encode(krbResponse, responseMessage);
-        responseMessage.flip();
+        String message = "add principal of " + principal[0];
+        AdminMessage replyMeesage = new AdRep(ByteBuffer.wrap(message.getBytes()));
+        ByteBuffer responseMessage = KadminCode.encodeMessage(replyMeesage);
 
         return responseMessage;
-        */
+
     }
 }

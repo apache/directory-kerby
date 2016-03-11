@@ -19,8 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote;
 
+import org.apache.kerby.kerberos.kerb.admin.tool.KadminCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminReq;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessage;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,26 +47,25 @@ public abstract class AdminHandler {
     /**
      * Handle the kdc request.
      *
-     * @param adminRequest The kdc request
+     * @param adminRequest The admin request
      * @throws KrbException e
      */
     public void handleRequest(AdminRequest adminRequest) throws KrbException {
         adminRequest.process();
-        /*
-        ByteBuffer requestMessage;
-
-        requestMessage = ByteBuffer.allocate(bodyLen + 4);
-        requestMessage.putInt(bodyLen);
+        AdminReq adminReq = adminRequest.getAdminReq();
+        ByteBuffer requestMessage = KadminCode.encodeMessage(adminReq);
+        requestMessage.flip();
 
         try {
             sendMessage(adminRequest, requestMessage);
         } catch (IOException e) {
-            throw new KrbException("sending message failed", e);
-        }*/
+            throw new KrbException("Admin sends request message failed", e);
+        }
+
     }
 
     /**
-     * Process the response messabe from kdc.
+     * Process the response message from kdc.
      *
      * @param adminRequest The admin request
      * @param responseMessage The message from kdc
@@ -70,28 +73,26 @@ public abstract class AdminHandler {
      */
     public void onResponseMessage(AdminRequest adminRequest,
                                   ByteBuffer responseMessage) throws KrbException {
-        /*
-        KrbMessage kdcRep = null;
+        AdminMessage replyMessage = null;
         try {
-            kdcRep = KrbCodec.decodeMessage(responseMessage);
+            replyMessage = KadminCode.decodeMessage(responseMessage);
         } catch (IOException e) {
-            throw new KrbException("Krb decoding message failed", e);
+            throw new KrbException("Kadmin decoding message failed", e);
         }
-
-        KrbMessageType messageType = kdcRep.getMsgType();
-        if (messageType == KrbMessageType.AS_REP) {
-
-            kdcRequest.processResponse((KdcRep) kdcRep);
-        } else if (messageType == KrbMessageType.TGS_REP) {
-            kdcRequest.processResponse((KdcRep) kdcRep);
+        AdminMessageType messageType = replyMessage.getAdminMessageType();
+        if (messageType == AdminMessageType.AD_REP &&
+                adminRequest.getAdminReq().getAdminMessageType() == AdminMessageType.AD_REQ) {
+            String receiveMsg = new String(replyMessage.getMessageBuffer().array());
+            System.out.println("Admin receive message success: " + receiveMsg);
+        } else {
+            throw new RuntimeException("Receive wrong reply");
         }
-        */
     }
 
     /**
      * Send message to kdc.
      *
-     * @param adminRequest The kdc request
+     * @param adminRequest The admin request
      * @param requestMessage The request message to kdc
      * @throws IOException e
      */

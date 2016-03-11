@@ -20,8 +20,10 @@
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminHandler;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminSetting;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminUtil;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
@@ -33,11 +35,19 @@ import java.io.IOException;
  */
 public class DefaultInternalAdminClient extends AbstractInternalAdminClient {
 
-    private DefaultAdminHandler krbHandler;
+    private DefaultAdminHandler adminHandler;
     private KrbTransport transport;
 
     public DefaultInternalAdminClient(AdminSetting krbSetting) {
         super(krbSetting);
+    }
+
+    public AdminHandler getAdminHanlder() {
+        return adminHandler;
+    }
+
+    public KrbTransport getTransport() {
+        return transport;
     }
 
     /**
@@ -47,8 +57,8 @@ public class DefaultInternalAdminClient extends AbstractInternalAdminClient {
     public void init() throws KrbException {
         super.init();
 
-        this.krbHandler = new DefaultAdminHandler();
-        krbHandler.init(getContext());
+        this.adminHandler = new DefaultAdminHandler();
+        adminHandler.init(getContext());
 
         TransportPair tpair = AdminUtil.getTransportPair(getSetting());
         KrbNetwork network = new KrbNetwork();
