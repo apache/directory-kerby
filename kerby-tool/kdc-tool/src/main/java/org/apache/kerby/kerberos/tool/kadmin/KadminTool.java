@@ -93,7 +93,7 @@ public class KadminTool {
 
     private static  final String USAGE = (OSUtil.isWindows()
             ? "Usage: bin\\kadmin.cmd" : "Usage: sh bin/kadmin.sh")
-            + " [conf-dir] [-c cache_name]|[-k keytab]\n"
+            + " <conf-dir> <-c cache_name>|<-k keytab>\n"
             + "\tExample:\n"
             + "\t\t"
             + (OSUtil.isWindows()

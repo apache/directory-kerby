@@ -35,7 +35,7 @@ public class KdcInitTool {
 
     private static  final String USAGE = (OSUtil.isWindows()
             ? "Usage: bin\\kdcinit.cmd" : "Usage: sh bin/kdcinit.sh")
-            + " [conf-dir] [output-keytab]\n"
+            + " <conf-dir> <output-keytab>\n"
             + "\tThis tool initializes KDC backend and should only be performed the first time,\n"
             + "\tand the output keytab should be carefully kept to administrate/kadmin KDC later.\n"
             + "\tExample:\n"

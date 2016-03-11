@@ -51,7 +51,7 @@ public class KerbyKdcServer extends KdcServer {
 
     private static final String USAGE = (OSUtil.isWindows()
             ? "Usage: bin\\start-kdc.cmd" : "Usage: sh bin/start-kdc.sh")
-            + " [conf-dir] [working-dir] \n"
+            + " <conf-dir> <working-dir> \n"
             + "\tExample:\n"
             + "\t\t"
             + (OSUtil.isWindows()
