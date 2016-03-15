@@ -17,48 +17,23 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.server;
 
-import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 
 /**
- * Type of Admin Message:
- * NONE(-1)
- * AD_REQ(0) add principal request
- * AD_REP(1) add principal reply
+ * Super clsss of KdcSetting and AdminServer Setting.
+ * This class is used to solve the problem of member variable in
+ * LocalKadminImpl (KdcSetting or AdminServerSetting).
  */
-
-public enum AdminMessageType implements EnumType {
-    NONE(-1),
-    AD_REQ(0),
-    AD_REP(1),
-    DE_REQ(2),
-    DE_REP(3);
-
-    private int value;
-
-    AdminMessageType(int value) {
-        this.value = value;
+public abstract class ServerSetting {
+    public String getKdcRealm() {
+        return null;
     }
 
-    @Override
-    public int getValue() {
-        return value;
+    public KdcConfig getKdcConfig() {
+        return null;
     }
 
-    @Override
-    public String getName() {
-        return name();
-    }
-
-    public static AdminMessageType findType(int value) {
-        if (value >= 0) {
-            for (EnumType e : values()) {
-                if (e.getValue() == value) {
-                    return (AdminMessageType) e;
-                }
-            }
-        }
-        return NONE;
-    }
+    public abstract BackendConfig getBackendConfig();
 }

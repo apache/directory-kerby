@@ -53,6 +53,12 @@ public abstract class AdminHandler {
     public void handleRequest(AdminRequest adminRequest) throws KrbException {
         adminRequest.process();
         AdminReq adminReq = adminRequest.getAdminReq();
+
+        //encode the message
+
+
+
+
         ByteBuffer requestMessage = KadminCode.encodeMessage(adminReq);
         requestMessage.flip();
 

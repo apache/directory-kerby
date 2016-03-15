@@ -19,43 +19,25 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
-import org.apache.kerby.KOption;
-import org.apache.kerby.KOptions;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminContext;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdReq;
+import org.apache.kerby.kerberos.kerb.admin.tool.DeReq;
 
 import java.nio.ByteBuffer;
 
 /**
- * AddPrincipal request
+ * DeletePrincipal request
  */
-public class AdRequest extends AdminRequest {
+public class DeRequest extends AdminRequest {
 
-    private KOptions kOptions;
-    private String password;
-
-    public AdRequest(String principal) {
+    public DeRequest(String principal) {
         super(principal);
-    }
-
-    public AdRequest(String principal, KOptions kOptions) {
-        super(principal);
-        this.kOptions = kOptions;
-    }
-
-    public AdRequest(String princial, KOptions kOptions, String password) {
-        super(princial);
-        this.kOptions = kOptions;
-        this.password = password;
     }
 
     @Override
     public void process() {
         super.process();
         /**replace this with encode in handler*/
-        AdReq adReq = new AdReq(ByteBuffer.wrap(super.getPrincipal().getBytes()));
-        setAdminReq(adReq);
+        DeReq deReq = new DeReq(ByteBuffer.wrap(super.getPrincipal().getBytes()));
+        setAdminReq(deReq);
 
     }
-
 }

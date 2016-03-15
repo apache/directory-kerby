@@ -19,46 +19,13 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.tool;
 
-import org.apache.kerby.asn1.EnumType;
+import java.nio.ByteBuffer;
 
 /**
- * Type of Admin Message:
- * NONE(-1)
- * AD_REQ(0) add principal request
- * AD_REP(1) add principal reply
+ * Delete principal request, to general admin message
  */
-
-public enum AdminMessageType implements EnumType {
-    NONE(-1),
-    AD_REQ(0),
-    AD_REP(1),
-    DE_REQ(2),
-    DE_REP(3);
-
-    private int value;
-
-    AdminMessageType(int value) {
-        this.value = value;
-    }
-
-    @Override
-    public int getValue() {
-        return value;
-    }
-
-    @Override
-    public String getName() {
-        return name();
-    }
-
-    public static AdminMessageType findType(int value) {
-        if (value >= 0) {
-            for (EnumType e : values()) {
-                if (e.getValue() == value) {
-                    return (AdminMessageType) e;
-                }
-            }
-        }
-        return NONE;
+public class DeReq extends AdminReq{
+    public DeReq(ByteBuffer messageBuffer) {
+        super(AdminMessageType.DE_REQ, messageBuffer);
     }
 }

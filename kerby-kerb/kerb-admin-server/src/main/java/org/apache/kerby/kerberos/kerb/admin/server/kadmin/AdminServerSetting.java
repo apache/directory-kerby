@@ -22,11 +22,12 @@ package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
+import org.apache.kerby.kerberos.kerb.server.ServerSetting;
 
 /**
  * Admin Server setting that combines startup options and admin config.
  */
-public class AdminServerSetting {
+public class AdminServerSetting extends ServerSetting {
     private final KOptions startupOptions;
     private final AdminServerConfig adminServerConfig;
     private final BackendConfig backendConfig;

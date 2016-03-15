@@ -26,6 +26,7 @@ import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcSetting;
 import org.apache.kerby.kerberos.kerb.server.KdcUtil;
+import org.apache.kerby.kerberos.kerb.server.ServerSetting;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
@@ -49,7 +50,7 @@ import java.util.regex.Pattern;
 public class LocalKadminImpl implements LocalKadmin {
     private static final Logger LOG = LoggerFactory.getLogger(LocalKadminImpl.class);
 
-    private final KdcSetting kdcSetting;
+    private final ServerSetting serverSetting;
     private final IdentityBackend backend;
 
     /**
@@ -62,10 +63,14 @@ public class LocalKadminImpl implements LocalKadmin {
     public LocalKadminImpl(KdcConfig kdcConfig,
                            BackendConfig backendConfig) throws KrbException {
         this.backend = KdcUtil.getBackend(backendConfig);
-        this.kdcSetting = new KdcSetting(kdcConfig, backendConfig);
+        this.serverSetting = new KdcSetting(kdcConfig, backendConfig);
     }
 
     //
+    public LocalKadminImpl(ServerSetting serverSetting) throws KrbException {
+        this.backend = KdcUtil.getBackend(serverSetting.getBackendConfig());
+        this.serverSetting = serverSetting;
+    }
 
     /**
      * Construct with prepared conf dir.
@@ -84,7 +89,7 @@ public class LocalKadminImpl implements LocalKadmin {
             tmpBackendConfig = new BackendConfig();
         }
 
-        this.kdcSetting = new KdcSetting(tmpKdcConfig, tmpBackendConfig);
+        this.serverSetting = new KdcSetting(tmpKdcConfig, tmpBackendConfig);
 
         backend = KdcUtil.getBackend(tmpBackendConfig);
     }
@@ -96,7 +101,7 @@ public class LocalKadminImpl implements LocalKadmin {
      * @param backend    The identity backend
      */
     public LocalKadminImpl(KdcSetting kdcSetting, IdentityBackend backend) {
-        this.kdcSetting = kdcSetting;
+        this.serverSetting = kdcSetting;
         this.backend = backend;
     }
 
@@ -104,12 +109,13 @@ public class LocalKadminImpl implements LocalKadmin {
      * Get the tgs principal name.
      */
     private String getTgsPrincipal() {
-        return KrbUtil.makeTgsPrincipal(kdcSetting.getKdcRealm()).getName();
+        return KrbUtil.makeTgsPrincipal(serverSetting.getKdcRealm()).getName();
     }
 
+    // TODO: 2016/3/14 check whether it is possible to return getAdminServerRealm
     @Override
     public String getKadminPrincipal() {
-        return KrbUtil.makeKadminPrincipal(kdcSetting.getKdcRealm()).getName();
+        return KrbUtil.makeKadminPrincipal(serverSetting.getKdcRealm()).getName();
     }
 
     @Override
@@ -154,12 +160,12 @@ public class LocalKadminImpl implements LocalKadmin {
 
     @Override
     public KdcConfig getKdcConfig() {
-        return kdcSetting.getKdcConfig();
+        return serverSetting.getKdcConfig();
     }
 
     @Override
     public BackendConfig getBackendConfig() {
-        return kdcSetting.getBackendConfig();
+        return serverSetting.getBackendConfig();
     }
 
     @Override
@@ -182,6 +188,7 @@ public class LocalKadminImpl implements LocalKadmin {
                 getKdcConfig().getEncryptionTypes());
         identity.addKeys(keys);
         backend.addIdentity(identity);
+        System.out.println("add backend success");
     }
 
     @Override
@@ -387,7 +394,7 @@ public class LocalKadminImpl implements LocalKadmin {
      */
     private String fixPrincipal(String principal) {
         if (!principal.contains("@")) {
-            principal += "@" + kdcSetting.getKdcRealm();
+            principal += "@" + serverSetting.getKdcRealm();
         }
         return principal;
     }

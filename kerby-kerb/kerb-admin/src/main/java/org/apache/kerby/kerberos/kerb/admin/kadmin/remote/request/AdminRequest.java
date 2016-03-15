@@ -19,32 +19,40 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
+import org.apache.kerby.KOption;
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminContext;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdminReq;
 
 public class AdminRequest {
     private String principal;
+    //private KOptions kOptions;
     private KrbTransport transport;
     private AdminReq adminReq;
 
-    private AdminContext context;
+    //private AdminContext context;
 
-    public AdminRequest(AdminContext context) {
-        this.context = context;
-    }
+    //public AdminRequest(AdminContext context) {
+        //this.context = context;
+    //}
 
     public AdminRequest(String principal) {
         this.principal = principal;
     }
 
-    public AdminContext getContext() {
-        return context;
-    }
+    //public AdminRequest(String principal, KOptions kOptions) {
+        //this.principal = principal;
+        //this.kOptions = kOptions;
+    //}
 
-    public void setContext(AdminContext context) {
-        this.context = context;
-    }
+    //public AdminContext getContext() {
+        //return context;
+    //}
+
+    //public void setContext(AdminContext context) {
+        //this.context = context;
+    //}
 
     public String getPrincipal() {
         return principal;

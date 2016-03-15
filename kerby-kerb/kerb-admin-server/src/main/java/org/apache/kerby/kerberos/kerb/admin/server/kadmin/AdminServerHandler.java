@@ -67,9 +67,8 @@ public class AdminServerHandler {
         System.out.println("realm: " + principal[1]);
 
         /**Add principal to backend here*/
-        //LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting().getAdminServerConfig(),
-         //       adminServerContext.getAdminServerSetting().getBackendConfig());
-        //localKadmin.addPrincipal(principal[0]);
+        LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting());
+        localKadmin.addPrincipal(principal[0]);
 
         String message = "add principal of " + principal[0];
         AdminMessage replyMeesage = new AdRep(ByteBuffer.wrap(message.getBytes()));
