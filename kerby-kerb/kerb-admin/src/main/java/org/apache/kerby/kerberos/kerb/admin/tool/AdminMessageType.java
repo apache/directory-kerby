@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.tool;
 
-import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.xdr.EnumType;
 
 /**
  * Type of Admin Message:

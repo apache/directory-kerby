@@ -25,7 +25,7 @@ import java.nio.ByteBuffer;
  * Delete principal request, to general admin message
  */
 public class DeReq extends AdminReq{
-    public DeReq(ByteBuffer messageBuffer) {
-        super(AdminMessageType.DE_REQ, messageBuffer);
+    public DeReq() {
+        super(AdminMessageType.DE_REQ);
     }
 }

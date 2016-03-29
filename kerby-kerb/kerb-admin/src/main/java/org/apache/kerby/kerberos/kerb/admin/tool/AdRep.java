@@ -25,7 +25,7 @@ import java.nio.ByteBuffer;
  * Add principal reply, to general admin message
  */
 public class AdRep extends AdminRep {
-    public AdRep(ByteBuffer messageBuffer) {
-        super(AdminMessageType.AD_REP, messageBuffer);
+    public AdRep() {
+        super(AdminMessageType.AD_REP);
     }
 }

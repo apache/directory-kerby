@@ -25,6 +25,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdminReq;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessage;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageType;
+import org.apache.kerby.xdr.type.XdrString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,12 +54,7 @@ public abstract class AdminHandler {
     public void handleRequest(AdminRequest adminRequest) throws KrbException {
         adminRequest.process();
         AdminReq adminReq = adminRequest.getAdminReq();
-
-        //encode the message
-
-
-
-
+        //ByteBuffer requestMessage = adminReq.getMessageBuffer();
         ByteBuffer requestMessage = KadminCode.encodeMessage(adminReq);
         requestMessage.flip();
 
@@ -79,20 +75,24 @@ public abstract class AdminHandler {
      */
     public void onResponseMessage(AdminRequest adminRequest,
                                   ByteBuffer responseMessage) throws KrbException {
-        AdminMessage replyMessage = null;
+        //AdminMessage replyMessage = null;
         try {
-            replyMessage = KadminCode.decodeMessage(responseMessage);
+            XdrString decoded = new XdrString();
+            decoded.decode(responseMessage);
+            String reply = decoded.getValue();
+            System.out.println(reply);
+            //replyMessage = KadminCode.decodeMessage(responseMessage);
         } catch (IOException e) {
             throw new KrbException("Kadmin decoding message failed", e);
         }
-        AdminMessageType messageType = replyMessage.getAdminMessageType();
+        /*AdminMessageType messageType = replyMessage.getAdminMessageType();
         if (messageType == AdminMessageType.AD_REP &&
                 adminRequest.getAdminReq().getAdminMessageType() == AdminMessageType.AD_REQ) {
             String receiveMsg = new String(replyMessage.getMessageBuffer().array());
             System.out.println("Admin receive message success: " + receiveMsg);
         } else {
             throw new RuntimeException("Receive wrong reply");
-        }
+        }*/
     }
 
     /**

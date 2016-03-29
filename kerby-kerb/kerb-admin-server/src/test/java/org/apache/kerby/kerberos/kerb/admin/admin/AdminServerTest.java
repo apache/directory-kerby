@@ -22,16 +22,6 @@ package org.apache.kerby.kerberos.kerb.admin.admin;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServer;
-import org.apache.kerby.util.NetworkUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 
 public class AdminServerTest {
     public static void main(String[] args) throws KrbException {

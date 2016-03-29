@@ -52,5 +52,10 @@
       <artifactId>kerb-admin-server</artifactId>
       <version>1.0.0-RC2-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerby-xdr</artifactId>
+      <version>1.0.0-RC2-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

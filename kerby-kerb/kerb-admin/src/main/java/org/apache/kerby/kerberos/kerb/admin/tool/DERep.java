@@ -24,8 +24,8 @@ import java.nio.ByteBuffer;
 /**
  * Delete principal reply, to general admin message
  */
-public class DERep extends AdminRep {
-    public DERep(ByteBuffer messageBuffer) {
-        super(AdminMessageType.DE_REP, messageBuffer);
+public class DeRep extends AdminRep {
+    public DeRep() {
+        super(AdminMessageType.DE_REP);
     }
 }

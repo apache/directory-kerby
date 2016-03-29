@@ -28,9 +28,10 @@ import java.nio.ByteBuffer;
 public class KadminCode {
     public static ByteBuffer encodeMessage(AdminMessage adminMessage) {
         int length = adminMessage.encodingLength();
+        System.out.println("length:" + length);
         ByteBuffer buffer = ByteBuffer.allocate(length + 4); // 4 is the head to go through network
         buffer.putInt(length); // head in network
-        buffer.putInt(adminMessage.getAdminMessageType().getValue()); // type
+        //buffer.putInt(adminMessage.getAdminMessageType().getValue()); // type has been encoded in the admin message
         buffer.put(adminMessage.getMessageBuffer());
         buffer.flip();
         return buffer;
@@ -39,6 +40,15 @@ public class KadminCode {
 
     public static AdminMessage decodeMessage(ByteBuffer buffer) throws IOException {
         //go through network, the total length has been removed.
+
+        //use a new class to decode? or use this class?
+        //but it has been a struct
+        //decode type
+        //decode para num
+        //decode principal name
+        //decode koptions
+        //decode password
+
         int type = buffer.getInt();
         System.out.println("type: " + type);
         AdminMessageType adminMessageType = AdminMessageType.findType(type);
@@ -46,10 +56,10 @@ public class KadminCode {
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
         if (adminMessageType == AdminMessageType.AD_REQ) {
-            adminMessage = new AdReq(ByteBuffer.wrap(bytes));
+            adminMessage = new AdReq();
             System.out.println("check if decoding right: " + new String(ByteBuffer.wrap(bytes).array()));
         } else if (adminMessageType == AdminMessageType.AD_REP) {
-            adminMessage = new AdRep(ByteBuffer.wrap(bytes));
+            adminMessage = new AdRep(); ////
             System.out.println("check if decoding right2: " + new String(ByteBuffer.wrap(bytes).array()));
         } else {
             throw new IOException("Unknown Admin Message Type: " + type);

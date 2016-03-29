@@ -19,9 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
-import org.apache.kerby.KOption;
-import org.apache.kerby.KOptions;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminContext;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdminReq;
 
@@ -70,8 +68,8 @@ public class AdminRequest {
         return adminReq;
     }
 
-    public void process() {
-        //
+    public void process() throws KrbException {
+        //encoding and set adminReq
 
     }
 

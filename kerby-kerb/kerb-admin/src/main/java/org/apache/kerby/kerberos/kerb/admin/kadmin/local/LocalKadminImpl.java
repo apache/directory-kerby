@@ -185,10 +185,12 @@ public class LocalKadminImpl implements LocalKadmin {
         principal = fixPrincipal(principal);
         KrbIdentity identity = AdminHelper.createIdentity(principal, kOptions);
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(
-                getKdcConfig().getEncryptionTypes());
+                getKdcConfig().getEncryptionTypes()); //null point. because KDC is not started. It's OK
+        // not getAdminServerConfig()?
+        // not. adminserver calls addPrincipal, and the local kadmin will interact with backend, which is KDC
         identity.addKeys(keys);
         backend.addIdentity(identity);
-        System.out.println("add backend success");
+        System.out.println("add backend success"); //delete
     }
 
     @Override

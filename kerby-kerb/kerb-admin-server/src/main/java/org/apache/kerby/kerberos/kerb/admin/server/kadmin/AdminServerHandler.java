@@ -21,10 +21,14 @@ package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageCode;
 import org.apache.kerby.kerberos.kerb.admin.tool.KadminCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdRep;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessage;
+import org.apache.kerby.xdr.XdrFieldInfo;
+import org.apache.kerby.xdr.type.XdrString;
+import org.apache.kerby.xdr.type.XdrStructType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,21 +62,45 @@ public class AdminServerHandler {
      */
     public ByteBuffer handleMessage(ByteBuffer receivedMessage,
                                     InetAddress remoteAddress) throws KrbException, IOException {
-        AdminMessage requestMessage = KadminCode.decodeMessage(receivedMessage);
+        XdrStructType decoded = new AdminMessageCode();
+        decoded.decode(receivedMessage);
+        XdrFieldInfo[] fieldInfos = decoded.getValue().getXdrFieldInfos();
+        System.out.println("receive message type: " + fieldInfos[0].getValue());
+        System.out.println("receive message paramNum: " + fieldInfos[1].getValue());
+        String receiveMsg = (String) fieldInfos[2].getValue();
+        System.out.println("server handleMessage: " + receiveMsg);
+        String[] principal = receiveMsg.split("@");
+        System.out.println("clientName: " + principal[0]);
+        System.out.println("realm: " + principal[1]);
+
+
+        /*AdminMessage requestMessage = KadminCode.decodeMessage(receivedMessage);
         System.out.println("receive message type: " + requestMessage.getAdminMessageType());
         String receiveMsg = new String (requestMessage.getMessageBuffer().array());
         System.out.println("server handleMessage: " + receiveMsg);
         String[] principal = receiveMsg.split("@");
         System.out.println("clientName: " + principal[0]);
         System.out.println("realm: " + principal[1]);
+        */
 
         /**Add principal to backend here*/
         LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting());
-        localKadmin.addPrincipal(principal[0]);
+        //localKadmin.addPrincipal(principal[0]);
 
         String message = "add principal of " + principal[0];
-        AdminMessage replyMeesage = new AdRep(ByteBuffer.wrap(message.getBytes()));
-        ByteBuffer responseMessage = KadminCode.encodeMessage(replyMeesage);
+        //content to reply remain to construct
+        AdminMessage adRep = new AdRep();
+        /** encode admin message:
+         *  encode type
+         *  encode paranum
+         *  encode principal name
+         *  (encode koptions)
+         *  (encode passsword)
+         */
+        XdrString value = new XdrString(message);
+        adRep.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+        System.out.println("value length:" + adRep.getMessageBuffer().capacity());
+        ByteBuffer responseMessage = KadminCode.encodeMessage(adRep);
 
         return responseMessage;
 

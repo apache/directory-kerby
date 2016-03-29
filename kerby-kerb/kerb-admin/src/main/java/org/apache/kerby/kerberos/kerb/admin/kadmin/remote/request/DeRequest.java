@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.tool.DeReq;
 
 import java.nio.ByteBuffer;
@@ -33,10 +34,10 @@ public class DeRequest extends AdminRequest {
     }
 
     @Override
-    public void process() {
+    public void process() throws KrbException {
         super.process();
         /**replace this with encode in handler*/
-        DeReq deReq = new DeReq(ByteBuffer.wrap(super.getPrincipal().getBytes()));
+        DeReq deReq = new DeReq(); ////
         setAdminReq(deReq);
 
     }
