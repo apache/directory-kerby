@@ -18,7 +18,7 @@
   <parent>
     <groupId>org.apache.kerby</groupId>
     <artifactId>kerby-kerb</artifactId>
-    <version>1.0.0-RC2-SNAPSHOT</version>
+    <version>1.0.0-RC3-SNAPSHOT</version>
   </parent>
 
   <artifactId>kerb-core</artifactId>
@@ -27,11 +27,6 @@
   <description>Kerby-kerb core facilities</description>
 
   <dependencies>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerby-asn1</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerby-pkix</artifactId>

@@ -222,7 +222,8 @@ public class PkinitCrypto {
     public static byte[] cmsSignedDataCreate(byte[] data, String oid, int version,
                                              DigestAlgorithmIdentifiers digestAlgorithmIdentifiers,
                                              CertificateSet certificateSet,
-                                             RevocationInfoChoices crls, SignerInfos signerInfos) throws KrbException {
+                                             RevocationInfoChoices crls, SignerInfos signerInfos)
+            throws KrbException {
         SignedContentInfo contentInfo = new SignedContentInfo();
         contentInfo.setContentType("1.2.840.113549.1.7.2");
         SignedData signedData = new SignedData();
@@ -245,6 +246,13 @@ public class PkinitCrypto {
         }
         contentInfo.setSignedData(signedData);
         return KrbCodec.encode(contentInfo);
+    }
+
+    public static byte[] eContentInfoCreate(byte[] data, String oid) throws KrbException {
+        EncapsulatedContentInfo eContentInfo = new EncapsulatedContentInfo();
+        eContentInfo.setContentType(oid);
+        eContentInfo.setContent(data);
+        return KrbCodec.encode(eContentInfo);
     }
 
     public static X509Certificate[] createCertChain(PkinitPlgCryptoContext cryptoContext)

@@ -170,6 +170,7 @@ public class CheckSum extends KrbSequenceType {
     }
 
     /**
+     * @param other The checksum to be compared
      * @return <tt>true</tt> if the given Checksum is equal to the instance
      */
     public boolean isEqual(CheckSum other) {
@@ -178,7 +179,8 @@ public class CheckSum extends KrbSequenceType {
 
     /**
      * Compare the checksum value of a given Checksum instance and this instance.
-     * 
+     *
+     * @param cksumBytes The checksum bytes to be compared
      * @return <tt>true</tt> if the given CheckSum's checksum is equal to the instance's checksum
      */
     public boolean isEqual(byte[] cksumBytes) {

@@ -120,7 +120,7 @@ public enum CheckSumType implements EnumType {
     /**
      * Get the CheckSumType associated with a name.
      * 
-     * @param value The name of the CheckSumType we are looking for
+     * @param name The name of the CheckSumType we are looking for
      * @return The associated CheckSumType, or NONE if not found or if name is null
      */
     public static CheckSumType fromName(String name) {

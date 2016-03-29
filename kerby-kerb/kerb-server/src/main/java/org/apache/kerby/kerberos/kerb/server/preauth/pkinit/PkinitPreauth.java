@@ -26,6 +26,7 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.cms.type.CertificateChoices;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.ContentInfo;
+import org.apache.kerby.cms.type.EncapsulatedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
@@ -132,37 +133,49 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             PaPkAsReq paPkAsReq = KrbCodec.decode(paData.getPaDataValue(), PaPkAsReq.class);
 
             byte[] signedAuthPack = paPkAsReq.getSignedAuthPack();
+            AuthPack authPack = null;
+            if (kdcRequest.isAnonymous()) {
+                EncapsulatedContentInfo eContentInfo = new EncapsulatedContentInfo();
+                try {
+                    eContentInfo.decode(signedAuthPack);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                authPack = KrbCodec.decode(eContentInfo.getContent(), AuthPack.class);
 
-            ContentInfo contentInfo = new ContentInfo();
-            try {
-                contentInfo.decode(signedAuthPack);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            SignedData signedData = contentInfo.getContentAs(SignedData.class);
-
-            PkinitCrypto.verifyCmsSignedData(CmsMessageType.CMS_SIGN_CLIENT, signedData);
-
-            Boolean isSigned = signedData.isSigned();
-            if (isSigned) {
-                //TODO
-                LOG.info("Signed data.");
             } else {
-                PrincipalName clientPrincial = kdcRequest.getClientEntry().getPrincipal();
-                PrincipalName anonymousPrincipal = KrbUtil.makeAnonymousPrincipal();
+
+                ContentInfo contentInfo = new ContentInfo();
+                try {
+                    contentInfo.decode(signedAuthPack);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                SignedData signedData = contentInfo.getContentAs(SignedData.class);
+
+                PkinitCrypto.verifyCmsSignedData(CmsMessageType.CMS_SIGN_CLIENT, signedData);
+
+                Boolean isSigned = signedData.isSigned();
+                if (isSigned) {
+                    //TODO
+                    LOG.info("Signed data.");
+                } else {
+                    PrincipalName clientPrincial = kdcRequest.getClientEntry().getPrincipal();
+                    PrincipalName anonymousPrincipal = KrbUtil.makeAnonymousPrincipal();
 
                 /* If anonymous requests are being used, adjust the realm of the client principal. */
-                if (kdcRequest.getKdcOptions().isFlagSet(KdcOption.REQUEST_ANONYMOUS)
-                        && !KrbUtil.pricipalCompareIgnoreRealm(clientPrincial, anonymousPrincipal)) {
-                    String errMsg = "Pkinit request not signed, but client not anonymous.";
-                    LOG.error(errMsg);
-                    throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED, errMsg);
+                    if (kdcRequest.getKdcOptions().isFlagSet(KdcOption.REQUEST_ANONYMOUS)
+                            && !KrbUtil.pricipalCompareIgnoreRealm(clientPrincial, anonymousPrincipal)) {
+                        String errMsg = "Pkinit request not signed, but client not anonymous.";
+                        LOG.error(errMsg);
+                        throw new KrbException(KrbErrorCode.KDC_ERR_PREAUTH_FAILED, errMsg);
+                    }
                 }
-            }
 
-            AuthPack authPack = KrbCodec.decode(
-                signedData.getEncapContentInfo().getContent(), AuthPack.class);
+                authPack = KrbCodec.decode(
+                        signedData.getEncapContentInfo().getContent(), AuthPack.class);
+            }
 
             PkAuthenticator pkAuthenticator = authPack.getPkAuthenticator();
 
@@ -244,7 +257,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
                 kdcRequest.getPreauthContext().getOutputPaData().add(paDataEntry);
             } else {
-                if (!isSigned) {
+                if (!kdcRequest.isAnonymous()) {
                     /*Anonymous pkinit requires DH*/
                     String errMessage = "Anonymous pkinit without DH public value not supported.";
                     LOG.error(errMessage);
