@@ -29,16 +29,6 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kerby-config</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-identity</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-server</artifactId>
       <version>${project.version}</version>
     </dependency>
