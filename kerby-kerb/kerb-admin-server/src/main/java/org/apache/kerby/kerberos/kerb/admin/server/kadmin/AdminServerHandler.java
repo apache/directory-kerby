@@ -73,16 +73,6 @@ public class AdminServerHandler {
         System.out.println("clientName: " + principal[0]);
         System.out.println("realm: " + principal[1]);
 
-
-        /*AdminMessage requestMessage = KadminCode.decodeMessage(receivedMessage);
-        System.out.println("receive message type: " + requestMessage.getAdminMessageType());
-        String receiveMsg = new String (requestMessage.getMessageBuffer().array());
-        System.out.println("server handleMessage: " + receiveMsg);
-        String[] principal = receiveMsg.split("@");
-        System.out.println("clientName: " + principal[0]);
-        System.out.println("realm: " + principal[1]);
-        */
-
         /**Add principal to backend here*/
         LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting());
         //localKadmin.addPrincipal(principal[0]);

@@ -41,14 +41,6 @@ public class KadminCode {
     public static AdminMessage decodeMessage(ByteBuffer buffer) throws IOException {
         //go through network, the total length has been removed.
 
-        //use a new class to decode? or use this class?
-        //but it has been a struct
-        //decode type
-        //decode para num
-        //decode principal name
-        //decode koptions
-        //decode password
-
         int type = buffer.getInt();
         System.out.println("type: " + type);
         AdminMessageType adminMessageType = AdminMessageType.findType(type);

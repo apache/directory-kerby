@@ -49,23 +49,12 @@ public class AdminMessageCode extends XdrStructType {
                 case INTEGER:
                     fields[i] = new XdrInteger((Integer) fieldInfos[i].getValue());
                     break;
-                //case UNSIGNED_INTEGER:
-                    //fields[i] = new XdrUnsignedInteger((Long) fieldInfos[i].getValue());
-                    //break;
-                //case BOOLEAN:
-                    //fields[i] = new XdrBoolean((Boolean) fieldInfos[i].getValue());
-                    //break;
                 case ENUM:
                     fields[i] = new AdminMessageEnum((AdminMessageType) fieldInfos[i].getValue());
                     break;
-                //case UNION:
-                    //fields[i] = (XdrUnion) fieldInfos[i].getValue();
-                    //break;
                 case STRING:
                     fields[i] = new XdrString((String) fieldInfos[i].getValue());
                     break;
-                //case STRUCT:
-                    //fields[i] = new XdrStructTypeInstance((XdrFieldInfo[]) fieldInfos[i].getValue());
                 default:
                     fields[i] = null;
             }
@@ -75,9 +64,6 @@ public class AdminMessageCode extends XdrStructType {
 
     @Override
     protected XdrStructType fieldsToValues(AbstractXdrType[] fields) {
-        //XdrFieldInfo[] fieldInfos = {new XdrFieldInfo(0, XdrDataType.STRING, fields[0].getValue()),
-                // XdrFieldInfo(1, XdrDataType.UNION,fields[1].getValue()),
-                //new XdrFieldInfo(2, XdrDataType.STRING, fields[2].getValue())};
         int paramNum = (int) fields[1].getValue();
         XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[paramNum + 2];
         xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, fields[0].getValue());
