@@ -46,6 +46,7 @@ public class NettyKdcHandler extends ChannelInboundHandlerAdapter {
         byte[] msgBytes = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(msgBytes);
         ByteBuffer requestMessage = ByteBuffer.wrap(msgBytes);
+        byteBuf.release();
 
         InetSocketAddress clientAddress =
                 (InetSocketAddress) ctx.channel().remoteAddress();
