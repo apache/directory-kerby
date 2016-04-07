@@ -28,13 +28,16 @@ public class AdminMessage {
     private AdminMessageType adminMessageType;
     private ByteBuffer messageBuffer;
 
-    public AdminMessage(AdminMessageType adminMessageType, ByteBuffer messageBuffer) {
+    public AdminMessage(AdminMessageType adminMessageType) {
         this.adminMessageType = adminMessageType;
-        this.messageBuffer = messageBuffer;
     }
 
     public AdminMessageType getAdminMessageType() {
         return adminMessageType;
+    }
+
+    public void setMessageBuffer(ByteBuffer messageBuffer) {
+        this.messageBuffer = messageBuffer;
     }
 
     public ByteBuffer getMessageBuffer() {
@@ -42,7 +45,7 @@ public class AdminMessage {
     }
 
     public int encodingLength() {
-        return messageBuffer.limit() + 4; // 4 is the length of type
+        return messageBuffer.limit(); // no + 4 is the length of whole message
     }
 
 

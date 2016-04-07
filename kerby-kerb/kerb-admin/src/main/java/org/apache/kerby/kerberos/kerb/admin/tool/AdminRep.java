@@ -28,7 +28,7 @@ import java.nio.ByteBuffer;
  * change password? -- chRep
  */
 public class AdminRep extends AdminMessage {
-    public AdminRep(AdminMessageType messageType, ByteBuffer messageBuffer) {
-        super(messageType, messageBuffer);
+    public AdminRep(AdminMessageType messageType) {
+      super(messageType);
     }
 }

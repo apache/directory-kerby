@@ -29,9 +29,9 @@ import java.nio.ByteBuffer;
  * change password? -- chReq
  */
 public class AdminReq extends AdminMessage {
-    public AdminReq(AdminMessageType messageType, ByteBuffer messageBuffer) {
-        super(messageType, messageBuffer);
-    }
+  public AdminReq(AdminMessageType messageType) {
+    super(messageType);
+  }
 
 
 }

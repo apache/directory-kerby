@@ -25,7 +25,7 @@ import java.nio.ByteBuffer;
  * Add principal request, to general admin message
  */
 public class AdReq extends AdminReq {
-    public AdReq(ByteBuffer messageBuffer) {
-        super(AdminMessageType.AD_REQ, messageBuffer);
+    public AdReq() {
+      super(AdminMessageType.AD_REQ);
     }
 }
