@@ -19,13 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.tool;
 
-import java.nio.ByteBuffer;
 
 /**
  * Delete principal reply, to general admin message
  */
-public class DeRep extends AdminRep {
-    public DeRep() {
+public class DeletePrincipalRep extends AdminRep {
+    public DeletePrincipalRep() {
         super(AdminMessageType.DE_REP);
     }
 }

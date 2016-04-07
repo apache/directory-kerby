@@ -19,29 +19,30 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminContext;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdReq;
+import org.apache.kerby.kerberos.kerb.admin.tool.AddPrincipalReq;
 
 import java.nio.ByteBuffer;
 
 /**
  * AddPrincipal request
  */
-public class AdRequest extends AdminRequest {
+public class AddPrincipalRequest extends AdminRequest {
 
-    public AdRequest(AdminContext context) {
+    public AddPrincipalRequest(AdminContext context) {
         super(context);
     }
 
-    public AdRequest(String principal) {
+    public AddPrincipalRequest(String principal) {
         super(principal);
     }
 
     @Override
-    public void process() {
+    public void process() throws KrbException {
         super.process();
-        AdReq adReq = new AdReq(ByteBuffer.wrap(super.getPrincipal().getBytes()));
-        setAdminReq(adReq);
+        AddPrincipalReq addPrincipalReq = new AddPrincipalReq();
+        setAdminReq(addPrincipalReq);
 
     }
 

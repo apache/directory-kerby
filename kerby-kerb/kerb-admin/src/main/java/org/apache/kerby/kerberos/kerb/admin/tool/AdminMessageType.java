@@ -26,6 +26,8 @@ import org.apache.kerby.xdr.EnumType;
  * NONE(-1)
  * AD_REQ(0) add principal request
  * AD_REP(1) add principal reply
+ * DE_REQ(2),
+ * DE_REP(3);
  */
 
 public enum AdminMessageType implements EnumType {

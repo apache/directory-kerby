@@ -19,13 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.tool;
 
-import java.nio.ByteBuffer;
 
 /**
  * Add principal request, to general admin message
  */
-public class AdReq extends AdminReq {
-    public AdReq() {
+public class AddPrincipalReq extends AdminReq {
+    public AddPrincipalReq() {
       super(AdminMessageType.AD_REQ);
     }
 }

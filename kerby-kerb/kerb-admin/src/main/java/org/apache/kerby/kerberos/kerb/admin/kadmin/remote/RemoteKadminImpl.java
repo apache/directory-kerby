@@ -24,7 +24,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.Kadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultAdminHandler;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdRequest;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AddPrincipalRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
@@ -78,7 +78,7 @@ public class RemoteKadminImpl implements Kadmin {
     @Override
     public void addPrincipal(String principal) throws KrbException {
         //generate an admin request
-        AdminRequest adRequest = new AdRequest(principal);
+        AdminRequest adRequest = new AddPrincipalRequest(principal);
         adRequest.setTransport(transport);
         //handle it
         AdminHandler adminHandler = new DefaultAdminHandler();

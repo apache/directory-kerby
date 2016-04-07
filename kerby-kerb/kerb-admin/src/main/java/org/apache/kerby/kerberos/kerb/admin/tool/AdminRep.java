@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.tool;
 
-import java.nio.ByteBuffer;
 
 /**
  * Use to construct Admin message.

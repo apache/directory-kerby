@@ -19,13 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.tool;
 
-import java.nio.ByteBuffer;
 
 /**
  * Add principal reply, to general admin message
  */
-public class AdRep extends AdminRep {
-    public AdRep() {
+public class AddPrincipalRep extends AdminRep {
+    public AddPrincipalRep() {
         super(AdminMessageType.AD_REP);
     }
 }

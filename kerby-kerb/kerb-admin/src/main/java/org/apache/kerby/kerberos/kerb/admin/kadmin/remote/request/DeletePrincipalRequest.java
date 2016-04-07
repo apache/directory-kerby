@@ -17,15 +17,26 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
-import java.nio.ByteBuffer;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.tool.DeletePrincipalReq;
 
 /**
- * Delete principal request, to general admin message
+ * DeletePrincipal request
  */
-public class DeReq extends AdminReq{
-    public DeReq() {
-        super(AdminMessageType.DE_REQ);
+public class DeletePrincipalRequest extends AdminRequest {
+
+    public DeletePrincipalRequest(String principal) {
+        super(principal);
+    }
+
+    @Override
+    public void process() throws KrbException {
+        super.process();
+        /**replace this with encode in handler*/
+        DeletePrincipalReq deletePrincipalReq = new DeletePrincipalReq();
+        setAdminReq(deletePrincipalReq);
+
     }
 }
