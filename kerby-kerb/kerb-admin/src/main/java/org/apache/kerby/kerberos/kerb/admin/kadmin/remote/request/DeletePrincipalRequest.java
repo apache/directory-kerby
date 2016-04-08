@@ -17,36 +17,26 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
-import java.nio.ByteBuffer;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.tool.DeletePrincipalReq;
 
 /**
- * Deal with messages sent and received between Kadmin and Kadmin Server.
+ * DeletePrincipal request
  */
-public class AdminMessage {
-    private AdminMessageType adminMessageType;
-    private ByteBuffer messageBuffer;
+public class DeletePrincipalRequest extends AdminRequest {
 
-    public AdminMessage(AdminMessageType adminMessageType) {
-        this.adminMessageType = adminMessageType;
+    public DeletePrincipalRequest(String principal) {
+        super(principal);
     }
 
-    public AdminMessageType getAdminMessageType() {
-        return adminMessageType;
+    @Override
+    public void process() throws KrbException {
+        super.process();
+        /**replace this with encode in handler*/
+        DeletePrincipalReq deletePrincipalReq = new DeletePrincipalReq();
+        setAdminReq(deletePrincipalReq);
+
     }
-
-    public void setMessageBuffer(ByteBuffer messageBuffer) {
-        this.messageBuffer = messageBuffer;
-    }
-
-    public ByteBuffer getMessageBuffer() {
-        return messageBuffer;
-    }
-
-    public int encodingLength() {
-        return messageBuffer.limit(); // no + 4 is the length of whole message
-    }
-
-
 }

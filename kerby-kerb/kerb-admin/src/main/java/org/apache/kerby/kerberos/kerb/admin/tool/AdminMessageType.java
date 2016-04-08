@@ -19,19 +19,23 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.tool;
 
-import org.apache.kerby.asn1.EnumType;
+import org.apache.kerby.xdr.EnumType;
 
 /**
  * Type of Admin Message:
  * NONE(-1)
  * AD_REQ(0) add principal request
  * AD_REP(1) add principal reply
+ * DE_REQ(2),
+ * DE_REP(3);
  */
 
 public enum AdminMessageType implements EnumType {
     NONE(-1),
     AD_REQ(0),
-    AD_REP(1);
+    AD_REP(1),
+    DE_REQ(2),
+    DE_REP(3);
 
     private int value;
 

@@ -19,11 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 
-import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
+import org.apache.kerby.kerberos.kerb.admin.tool.AddPrincipalRep;
 import org.apache.kerby.kerberos.kerb.admin.tool.KadminCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdRep;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +70,7 @@ public class AdminServerHandler {
         //localKadmin.addPrincipal(principal[0]);
 
         String message = "add principal of " + principal[0];
-        AdminMessage replyMeesage = new AdRep(ByteBuffer.wrap(message.getBytes()));
+        AdminMessage replyMeesage = new AddPrincipalRep(ByteBuffer.wrap(message.getBytes()));
         ByteBuffer responseMessage = KadminCode.encodeMessage(replyMeesage);
 
         return responseMessage;

@@ -30,7 +30,8 @@ public class KadminCode {
         int length = adminMessage.encodingLength();
         ByteBuffer buffer = ByteBuffer.allocate(length + 4); // 4 is the head to go through network
         buffer.putInt(length); // head in network
-        buffer.putInt(adminMessage.getAdminMessageType().getValue()); // type
+        //buffer.putInt(adminMessage.getAdminMessageType().getValue());
+        // type has been encoded in the admin message
         buffer.put(adminMessage.getMessageBuffer());
         buffer.flip();
         return buffer;
@@ -46,10 +47,10 @@ public class KadminCode {
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
         if (adminMessageType == AdminMessageType.AD_REQ) {
-            adminMessage = new AdReq(ByteBuffer.wrap(bytes));
+            adminMessage = new AddPrincipalReq();
             System.out.println("check if decoding right: " + new String(ByteBuffer.wrap(bytes).array()));
         } else if (adminMessageType == AdminMessageType.AD_REP) {
-            adminMessage = new AdRep(ByteBuffer.wrap(bytes));
+            adminMessage = new AddPrincipalRep();
             System.out.println("check if decoding right2: " + new String(ByteBuffer.wrap(bytes).array()));
         } else {
             throw new IOException("Unknown Admin Message Type: " + type);

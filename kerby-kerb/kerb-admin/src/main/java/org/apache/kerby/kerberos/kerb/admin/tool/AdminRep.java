@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.tool;
 
-import java.nio.ByteBuffer;
 
 /**
  * Use to construct Admin message.
@@ -28,7 +27,7 @@ import java.nio.ByteBuffer;
  * change password? -- chRep
  */
 public class AdminRep extends AdminMessage {
-    public AdminRep(AdminMessageType messageType, ByteBuffer messageBuffer) {
-        super(messageType, messageBuffer);
+    public AdminRep(AdminMessageType messageType) {
+      super(messageType);
     }
 }

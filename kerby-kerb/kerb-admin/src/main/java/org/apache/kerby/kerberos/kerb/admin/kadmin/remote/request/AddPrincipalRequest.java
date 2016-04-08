@@ -17,36 +17,33 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
+
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminContext;
+import org.apache.kerby.kerberos.kerb.admin.tool.AddPrincipalReq;
 
 import java.nio.ByteBuffer;
 
 /**
- * Deal with messages sent and received between Kadmin and Kadmin Server.
+ * AddPrincipal request
  */
-public class AdminMessage {
-    private AdminMessageType adminMessageType;
-    private ByteBuffer messageBuffer;
+public class AddPrincipalRequest extends AdminRequest {
 
-    public AdminMessage(AdminMessageType adminMessageType) {
-        this.adminMessageType = adminMessageType;
+    public AddPrincipalRequest(AdminContext context) {
+        super(context);
     }
 
-    public AdminMessageType getAdminMessageType() {
-        return adminMessageType;
+    public AddPrincipalRequest(String principal) {
+        super(principal);
     }
 
-    public void setMessageBuffer(ByteBuffer messageBuffer) {
-        this.messageBuffer = messageBuffer;
-    }
+    @Override
+    public void process() throws KrbException {
+        super.process();
+        AddPrincipalReq addPrincipalReq = new AddPrincipalReq();
+        setAdminReq(addPrincipalReq);
 
-    public ByteBuffer getMessageBuffer() {
-        return messageBuffer;
     }
-
-    public int encodingLength() {
-        return messageBuffer.limit(); // no + 4 is the length of whole message
-    }
-
 
 }
