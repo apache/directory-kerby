@@ -21,7 +21,6 @@ package org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl;
 
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerContext;
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerHandler;
-import org.apache.kerby.kerberos.kerb.transport.KrbTcpTransport;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,6 @@ public class DefaultAdminServerHandler extends AdminServerHandler implements Run
 
     protected void handleMessage(ByteBuffer message) {
         InetAddress clientAddress = transport.getRemoteAddress();
-        boolean isTcp = transport instanceof KrbTcpTransport;
 
         try {
             ByteBuffer adminResponse = handleMessage(message, clientAddress);

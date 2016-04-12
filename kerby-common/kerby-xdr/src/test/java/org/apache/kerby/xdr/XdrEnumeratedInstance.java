@@ -26,7 +26,7 @@ enum Color implements EnumType {
     YELLOW(3),
     BLUE(5);
     int value;
-    private Color(int value) {
+    Color(int value) {
         this.value = value;
     }
 

@@ -82,11 +82,9 @@ public class XdrBoolean extends XdrSimple<Boolean> {
         byte[] bytes = getBytes();
         if (Arrays.equals(bytes, TRUE_BYTE)) {
             setValue(true);
-        }
-        else if (Arrays.equals(bytes, FALSE_BYTE)) {
+        } else if (Arrays.equals(bytes, FALSE_BYTE)) {
             setValue(false);
-        }
-        else {
+        } else {
             throw new IOException("Fail to decode boolean type: " + bytes.toString());
         }
     }

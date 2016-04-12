@@ -40,6 +40,7 @@ public class PasswdServerHandler {
      */
     public PasswdServerHandler(PasswdServerContext passwdServerContext) {
         this.passwdServerContext = passwdServerContext;
+        LOG.info("Passwd contex realm:" + this.passwdServerContext.getPasswdRealm());
     }
 
     /**

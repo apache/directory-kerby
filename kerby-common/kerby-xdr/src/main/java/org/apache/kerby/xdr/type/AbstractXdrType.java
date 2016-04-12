@@ -36,8 +36,6 @@ public abstract class AbstractXdrType<T> implements XdrType {
     // The wrapped real value.
     private T value;
 
-    private int bodyLength = -1;
-
     /**
      * Default constructor.
      * @param dataType the dataType
@@ -94,5 +92,9 @@ public abstract class AbstractXdrType<T> implements XdrType {
 
     public void setValue(T value) {
         this.value = value;
+    }
+
+    public XdrDataType getDataType() {
+        return dataType;
     }
 }

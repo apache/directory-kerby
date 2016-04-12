@@ -21,7 +21,6 @@ package org.apache.kerby.xdr;
 
 import org.apache.kerby.xdr.type.AbstractXdrType;
 import org.apache.kerby.xdr.type.XdrBoolean;
-import org.apache.kerby.xdr.type.XdrEnumerated;
 import org.apache.kerby.xdr.type.XdrInteger;
 import org.apache.kerby.xdr.type.XdrString;
 import org.apache.kerby.xdr.type.XdrStructType;
@@ -34,7 +33,7 @@ class MyFile {
     UnionFileTypeSwitch fileType;
     String owner;
 
-    public MyFile(String name, UnionFileTypeSwitch fileType, String owner) {
+    MyFile(String name, UnionFileTypeSwitch fileType, String owner) {
         this.fileName = name;
         this.fileType = fileType;
         this.owner = owner;
@@ -96,7 +95,7 @@ public class XdrStructTypeInstance extends XdrStructType {
     @Override
     protected XdrStructType fieldsToValues(AbstractXdrType[] fields) {
         XdrFieldInfo[] fieldInfos = {new XdrFieldInfo(0, XdrDataType.STRING, fields[0].getValue()),
-                new XdrFieldInfo(1, XdrDataType.UNION,fields[1].getValue()),
+                new XdrFieldInfo(1, XdrDataType.UNION, fields[1].getValue()),
                 new XdrFieldInfo(2, XdrDataType.STRING, fields[2].getValue())};
         return new XdrStructTypeInstance(fieldInfos);
     }

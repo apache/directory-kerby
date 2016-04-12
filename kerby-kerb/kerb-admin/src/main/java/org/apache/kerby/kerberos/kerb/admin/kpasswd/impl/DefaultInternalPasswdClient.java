@@ -57,6 +57,8 @@ public class DefaultInternalPasswdClient extends AbstractInternalPasswdClient {
             transport = network.connect(tpair);
         } catch (IOException e) {
             throw new KrbException("Failed to create transport", e);
+        } finally {
+            transport.release();
         }
     }
 }

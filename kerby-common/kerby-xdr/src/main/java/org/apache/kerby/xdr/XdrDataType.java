@@ -42,7 +42,7 @@ public enum XdrDataType {
     /**
      * Create an instance of this class
      */
-    private XdrDataType(int value) {
+    XdrDataType(int value) {
         this.value = value;
     }
 

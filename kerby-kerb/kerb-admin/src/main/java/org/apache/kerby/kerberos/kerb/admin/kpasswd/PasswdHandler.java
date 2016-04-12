@@ -21,15 +21,11 @@ package org.apache.kerby.kerberos.kerb.admin.kpasswd;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kpasswd.request.PasswdRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public abstract class PasswdHandler {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PasswdHandler.class);
 
     /**
      * Init with krbcontext.

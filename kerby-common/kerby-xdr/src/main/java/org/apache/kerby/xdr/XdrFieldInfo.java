@@ -34,7 +34,8 @@ public class XdrFieldInfo {
      * @param dataType
      *
      */
-    public XdrFieldInfo(int index, XdrDataType dataType, Object value) {//Class<? extends XdrType> type
+    public XdrFieldInfo(int index, XdrDataType dataType, Object value) {
+        //Class<? extends XdrType> type
         this.index = index;
         //this.type = type;
         this.dataType = dataType;

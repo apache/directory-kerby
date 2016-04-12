@@ -49,7 +49,7 @@ public class XdrUnionTest {
     @Test
     public void testDecoding() throws IOException {
         UnionFileTypeSwitch fileType = new UnionFileTypeSwitch(FileKind.EXEC);
-        testEncodingWith(fileType, "0x00 00 00 02 00 00 00 04 6c 69 73 70");
+        testDecodingWith(fileType, "0x00 00 00 02 00 00 00 04 6c 69 73 70");
     }
 
     private void testDecodingWith(UnionFileTypeSwitch expectedValue, String content) throws IOException {

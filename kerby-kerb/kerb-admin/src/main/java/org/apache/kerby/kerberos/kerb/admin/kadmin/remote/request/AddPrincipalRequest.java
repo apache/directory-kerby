@@ -23,8 +23,6 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminContext;
 import org.apache.kerby.kerberos.kerb.admin.tool.AddPrincipalReq;
 
-import java.nio.ByteBuffer;
-
 /**
  * AddPrincipal request
  */

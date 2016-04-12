@@ -36,11 +36,11 @@ public enum PasswdServerConfigKey implements ConfigKey {
 
     private Object defaultValue;
 
-    private PasswdServerConfigKey() {
+    PasswdServerConfigKey() {
         this.defaultValue = null;
     }
 
-    private PasswdServerConfigKey(Object defaultValue) {
+    PasswdServerConfigKey(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 

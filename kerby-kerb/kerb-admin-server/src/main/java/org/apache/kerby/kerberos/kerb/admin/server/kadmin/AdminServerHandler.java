@@ -44,6 +44,7 @@ public class AdminServerHandler {
      */
     public AdminServerHandler(AdminServerContext adminServerContext) {
         this.adminServerContext = adminServerContext;
+        LOG.info("Admin realm: " + this.adminServerContext.getAdminRealm());
     }
 
     /**
@@ -58,20 +59,22 @@ public class AdminServerHandler {
                                     InetAddress remoteAddress) throws KrbException, IOException {
         AdminMessage requestMessage = KadminCode.decodeMessage(receivedMessage);
         System.out.println("receive message type: " + requestMessage.getAdminMessageType());
-        String receiveMsg = new String (requestMessage.getMessageBuffer().array());
+        String receiveMsg = new String(requestMessage.getMessageBuffer().array());
         System.out.println("server handleMessage: " + receiveMsg);
         String[] principal = receiveMsg.split("@");
         System.out.println("clientName: " + principal[0]);
         System.out.println("realm: " + principal[1]);
 
         /**Add principal to backend here*/
-        //LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting().getAdminServerConfig(),
+        //LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting()
+        // .getAdminServerConfig(),
          //       adminServerContext.getAdminServerSetting().getBackendConfig());
         //localKadmin.addPrincipal(principal[0]);
 
         String message = "add principal of " + principal[0];
-        AdminMessage replyMeesage = new AddPrincipalRep(ByteBuffer.wrap(message.getBytes()));
-        ByteBuffer responseMessage = KadminCode.encodeMessage(replyMeesage);
+        AdminMessage replyMessage = new AddPrincipalRep();
+        replyMessage.setMessageBuffer(ByteBuffer.wrap(message.getBytes()));
+        ByteBuffer responseMessage = KadminCode.encodeMessage(replyMessage);
 
         return responseMessage;
 

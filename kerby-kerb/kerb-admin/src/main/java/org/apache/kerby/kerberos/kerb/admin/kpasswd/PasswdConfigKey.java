@@ -35,11 +35,11 @@ public enum PasswdConfigKey implements ConfigKey {
 
     private Object defaultValue;
 
-    private PasswdConfigKey() {
+    PasswdConfigKey() {
         this.defaultValue = null;
     }
 
-    private PasswdConfigKey(Object defaultValue) {
+    PasswdConfigKey(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 

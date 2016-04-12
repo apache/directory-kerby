@@ -22,10 +22,8 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.Kadmin;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultInternalAdminClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
 
 import java.io.File;
 
@@ -33,7 +31,6 @@ import java.io.File;
  * A Krb client API for applications to interact with KDC
  */
 public class AdminClient {
-    private static final Logger LOG = LoggerFactory.getLogger(AdminClient.class);
 
     private final AdminConfig adminConfig;
     private final KOptions commonOptions;

@@ -23,7 +23,6 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminHandler;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminSetting;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminUtil;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;

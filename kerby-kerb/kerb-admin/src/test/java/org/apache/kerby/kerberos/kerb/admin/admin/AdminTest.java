@@ -21,26 +21,19 @@ package org.apache.kerby.kerberos.kerb.admin.admin;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
-import org.apache.kerby.util.NetworkUtil;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-
 public class AdminTest {
-    private final String KDC_REALM = "TEST.COM";
+    private final String kdcRealm = "TEST.COM";
     private final String clientPrincipalName = "alice";
     private final String clientPrincipal =
-            clientPrincipalName + "@" + KDC_REALM;
+            clientPrincipalName + "@" + kdcRealm;
     private AdminClient adminClient;
 
     @Test
     public void testAdminClient() throws KrbException {
         adminClient = new AdminClient();
-        adminClient.setAdminRealm(KDC_REALM);
+        adminClient.setAdminRealm(kdcRealm);
         adminClient.setAllowTcp(true);
         adminClient.setAllowUdp(false);
         adminClient.setAdminTcpPort(65417);

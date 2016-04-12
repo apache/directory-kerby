@@ -36,11 +36,11 @@ public enum AdminServerConfigKey implements ConfigKey {
 
     private Object defaultValue;
 
-    private AdminServerConfigKey() {
+    AdminServerConfigKey() {
         this.defaultValue = null;
     }
 
-    private AdminServerConfigKey(Object defaultValue) {
+    AdminServerConfigKey(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 

@@ -54,7 +54,8 @@ public class XdrString extends XdrSimple<String> {
     @Override
     protected void toBytes() {
         if (getValue() != null) {
-            byte[] bytes = new byte[encodingBodyLength()]; /**Default value of byte is 0. So we don't have to initialize it with 0*/
+            /**Default value of byte is 0. So we don't have to initialize it with 0*/
+            byte[] bytes = new byte[encodingBodyLength()];
             int length = bytes.length - padding - 4;
             bytes[0] = (byte) (length >> 24);
             bytes[1] = (byte) (length >> 16);
@@ -78,20 +79,20 @@ public class XdrString extends XdrSimple<String> {
         byte[] bytes = getBytes();
         byte[] header = new byte[4];
         System.arraycopy(bytes, 0, header, 0, 4);
-        int StringLen  = ByteBuffer.wrap(header).getInt();
-        int paddingBytes = (4 - (StringLen % 4)) % 4;
+        int stringLen  = ByteBuffer.wrap(header).getInt();
+        int paddingBytes = (4 - (stringLen % 4)) % 4;
         validatePaddingBytes(paddingBytes);
         setPadding(paddingBytes);
 
-        if (bytes.length != StringLen + 4 + paddingBytes) {
-            int totalLength = StringLen + paddingBytes + 4;
-            byte[] StringBytes = ByteBuffer.allocate(totalLength).put(getBytes(), 0, totalLength).array();
-            setBytes(StringBytes); /**reset bytes in case the enum type is in a struct or union*/
+        if (bytes.length != stringLen + 4 + paddingBytes) {
+            int totalLength = stringLen + paddingBytes + 4;
+            byte[] stringBytes = ByteBuffer.allocate(totalLength).put(getBytes(), 0, totalLength).array();
+            setBytes(stringBytes); /**reset bytes in case the enum type is in a struct or union*/
         }
 
-        byte[] content = new byte[StringLen];
+        byte[] content = new byte[stringLen];
         if (bytes.length > 1) {
-            System.arraycopy(bytes, 4, content, 0, StringLen);
+            System.arraycopy(bytes, 4, content, 0, stringLen);
         }
         setValue(new String(content, StandardCharsets.US_ASCII));
     }

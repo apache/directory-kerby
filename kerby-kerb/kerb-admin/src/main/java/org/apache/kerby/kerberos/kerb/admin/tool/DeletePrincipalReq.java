@@ -23,7 +23,7 @@ package org.apache.kerby.kerberos.kerb.admin.tool;
 /**
  * Delete principal request, to general admin message
  */
-public class DeletePrincipalReq extends AdminReq{
+public class DeletePrincipalReq extends AdminReq {
     public DeletePrincipalReq() {
         super(AdminMessageType.DE_REQ);
     }

@@ -19,21 +19,17 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote;
 
-import org.apache.kerby.kerberos.kerb.admin.tool.KadminCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdminReq;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessage;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminReq;
+import org.apache.kerby.kerberos.kerb.admin.tool.KadminCode;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public abstract class AdminHandler {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AdminHandler.class);
 
     /**
      * Init with krbcontext.
@@ -80,8 +76,8 @@ public abstract class AdminHandler {
             throw new KrbException("Kadmin decoding message failed", e);
         }
         AdminMessageType messageType = replyMessage.getAdminMessageType();
-        if (messageType == AdminMessageType.AD_REP &&
-                adminRequest.getAdminReq().getAdminMessageType() == AdminMessageType.AD_REQ) {
+        if (messageType == AdminMessageType.AD_REP
+                && adminRequest.getAdminReq().getAdminMessageType() == AdminMessageType.AD_REQ) {
             String receiveMsg = new String(replyMessage.getMessageBuffer().array());
             System.out.println("Admin receive message success: " + receiveMsg);
         } else {

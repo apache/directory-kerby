@@ -21,7 +21,6 @@ package org.apache.kerby.kerberos.kerb.admin.server.kpasswd.impl;
 
 import org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerContext;
 import org.apache.kerby.kerberos.kerb.admin.server.kpasswd.PasswdServerHandler;
-import org.apache.kerby.kerberos.kerb.transport.KrbTcpTransport;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,6 @@ public class DefaultPasswdServerHandler extends PasswdServerHandler implements R
 
     protected void handleMessage(ByteBuffer message) {
         InetAddress clientAddress = transport.getRemoteAddress();
-        boolean isTcp = transport instanceof KrbTcpTransport;
 
         try {
             ByteBuffer krbResponse = handleMessage(message, clientAddress);

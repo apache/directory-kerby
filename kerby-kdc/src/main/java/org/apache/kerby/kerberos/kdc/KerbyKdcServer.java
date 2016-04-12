@@ -22,7 +22,6 @@ package org.apache.kerby.kerberos.kdc;
 import org.apache.kerby.kerberos.kdc.impl.NettyKdcServerImpl;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.util.OSUtil;

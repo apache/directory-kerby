@@ -44,11 +44,11 @@ enum FileKind implements EnumType {
 
 class FileKindEnumeratedInstance extends XdrEnumerated<FileKind> {
 
-    public FileKindEnumeratedInstance() {
+    FileKindEnumeratedInstance() {
         super(null);
     }
 
-    public FileKindEnumeratedInstance(FileKind value) {
+    FileKindEnumeratedInstance(FileKind value) {
         super(value);
     }
     @Override
@@ -61,7 +61,7 @@ class FileKindEnumeratedInstance extends XdrEnumerated<FileKind> {
 class UnionFileTypeSwitch {
     FileKind fileKind;
     Object arm;
-    public UnionFileTypeSwitch(FileKind fileKind) {
+    UnionFileTypeSwitch(FileKind fileKind) {
         this.fileKind = fileKind;
         switch (fileKind) {
             case TEXT:
@@ -105,7 +105,7 @@ class UnionFileTypeSwitch {
     }
 }
 
-public class XdrUnionInstance extends XdrUnion{
+public class XdrUnionInstance extends XdrUnion {
 
     public XdrUnionInstance() {
         super(XdrDataType.UNION);
@@ -156,7 +156,7 @@ public class XdrUnionInstance extends XdrUnion{
     @Override
     protected XdrUnion fieldsToValues(AbstractXdrType[] fields) {
         XdrFieldInfo[] fieldInfos = {new XdrFieldInfo(0, XdrDataType.ENUM, fields[0].getValue()),
-                new XdrFieldInfo(1, XdrDataType.STRING,fields[1].getValue())};
+                new XdrFieldInfo(1, XdrDataType.STRING, fields[1].getValue())};
         return new XdrUnionInstance(fieldInfos);
     }
 

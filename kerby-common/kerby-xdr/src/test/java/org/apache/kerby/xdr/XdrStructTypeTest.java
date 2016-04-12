@@ -32,8 +32,8 @@ public class XdrStructTypeTest {
     @Test
     public void testEncoding() throws IOException {
         MyFile file = new MyFile("sillyprog", new UnionFileTypeSwitch(FileKind.EXEC), "john");
-        testEncodingWith(file, "0x00 00 00 09 73 69 6c 6c 79 70 72 6f 67 00 00 00 00 00 00 02 " +
-                "00 00 00 04 6c 69 73 70 00 00 00 04 6a 6f 68 6e");
+        testEncodingWith(file, "0x00 00 00 09 73 69 6c 6c 79 70 72 6f 67 00 00 00 00 00 00 02 "
+                + "00 00 00 04 6c 69 73 70 00 00 00 04 6a 6f 68 6e");
     }
 
     private void testEncodingWith(MyFile value, String expectedEncoding) throws IOException {
@@ -55,8 +55,8 @@ public class XdrStructTypeTest {
     @Test
     public void testDecoding() throws IOException {
         MyFile file = new MyFile("sillyprog", new UnionFileTypeSwitch(FileKind.EXEC), "john");
-        testDecodingWith(file, "0x00 00 00 09 73 69 6c 6c 79 70 72 6f 67 00 00 00 00 00 00 02 " +
-                "00 00 00 04 6c 69 73 70 00 00 00 04 6a 6f 68 6e");
+        testDecodingWith(file, "0x00 00 00 09 73 69 6c 6c 79 70 72 6f 67 00 00 00 00 00 00 02 "
+                + "00 00 00 04 6c 69 73 70 00 00 00 04 6a 6f 68 6e");
     }
 
     private void testDecodingWith(MyFile expectedValue, String content) throws IOException {

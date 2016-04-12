@@ -27,9 +27,9 @@ import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
  * LocalKadminImpl (KdcSetting or AdminServerSetting).
  */
 public interface ServerSetting {
-    public String getKdcRealm();
+    String getKdcRealm();
 
-    public KdcConfig getKdcConfig();
+    KdcConfig getKdcConfig();
 
-    public BackendConfig getBackendConfig();
+    BackendConfig getBackendConfig();
 }

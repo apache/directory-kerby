@@ -24,7 +24,6 @@ import org.apache.kerby.xdr.XdrDataType;
 import java.io.IOException;
 
 public class XdrBytes extends XdrSimple<byte[]> {
-    private int padding;
 
     public XdrBytes() {
         this(null);

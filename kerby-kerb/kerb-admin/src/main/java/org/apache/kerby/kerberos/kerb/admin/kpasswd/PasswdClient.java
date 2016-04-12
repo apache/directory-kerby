@@ -21,12 +21,9 @@ package org.apache.kerby.kerberos.kerb.admin.kpasswd;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminOption;
 import org.apache.kerby.kerberos.kerb.admin.kpasswd.impl.DefaultInternalPasswdClient;
 import org.apache.kerby.kerberos.kerb.admin.kpasswd.impl.InternalPasswdClient;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminOption;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -34,7 +31,6 @@ import java.io.File;
  * A Krb client API for applications to interact with KDC
  */
 public class PasswdClient {
-    private static final Logger LOG = LoggerFactory.getLogger(AdminClient.class);
 
     private final PasswdConfig passwdConfig;
     private final KOptions commonOptions;
