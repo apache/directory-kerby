@@ -118,6 +118,15 @@ public class KdcHandler {
             if (e instanceof KdcRecoverableException) {
                 krbResponse = handleRecoverableException(
                         (KdcRecoverableException) e, kdcRequest);
+            } else if (e.getMessage().equals(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY.getMessage())) {
+                KrbError krbError = new KrbError();
+                krbError.setStime(KerberosTime.now());
+                krbError.setErrorCode(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
+                krbError.setCname(kdcRequest.getClientEntry().getPrincipal());
+                krbError.setSname(kdcRequest.getServerPrincipal());
+                krbError.setRealm(kdcContext.getKdcRealm());
+                krbError.setEtext("PREAUTH_FAILED");
+                krbResponse = krbError;
             } else {
                 throw e;
             }
