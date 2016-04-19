@@ -135,9 +135,8 @@ public abstract class KrbHandler {
                 kdcRequest.resetPrequthContxt();
                 handleRequest(kdcRequest);
                 LOG.info("Retry with the new kdc request including pre-authentication.");
-            }
-            if (error.getErrorCode() == KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY) {
-                LOG.info(error.getEtext());
+            } else {
+                LOG.info(error.getErrorCode().getMessage());
                 throw new KrbException(error.getErrorCode(), error.getEtext());
             }
         }
