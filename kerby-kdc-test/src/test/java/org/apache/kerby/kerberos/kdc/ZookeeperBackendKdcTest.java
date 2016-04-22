@@ -49,8 +49,6 @@ public class ZookeeperBackendKdcTest extends KerbyKdcTest {
 
     @Override
     protected void prepareKdc() throws KrbException {
-        super.prepareKdc();
-
         BackendConfig backendConfig = getKdcServer().getBackendConfig();
 
         File testDir = new File(System.getProperty("test.dir", "target"));
@@ -64,6 +62,8 @@ public class ZookeeperBackendKdcTest extends KerbyKdcTest {
         backendConfig.setString(ZKConfKey.DATA_LOG_DIR.getPropertyKey(), dataLogDir.getAbsolutePath());
         backendConfig.setString(KdcConfigKey.KDC_IDENTITY_BACKEND,
             "org.apache.kerby.kerberos.kdc.identitybackend.ZookeeperIdentityBackend");
+
+        super.prepareKdc();
     }
 
     @Test

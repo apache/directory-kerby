@@ -33,7 +33,6 @@ public class JsonBackendKdcTest extends KerbyKdcTest {
 
     @Override
     protected void prepareKdc() throws KrbException {
-        super.prepareKdc();
 
         File testDir = new File(System.getProperty("test.dir", "target"));
         jsonBackendFile = new File(testDir, "json-backend-file");
@@ -44,6 +43,7 @@ public class JsonBackendKdcTest extends KerbyKdcTest {
                 JsonIdentityBackend.JSON_IDENTITY_BACKEND_DIR, jsonBackendFileString);
         backendConfig.setString(KdcConfigKey.KDC_IDENTITY_BACKEND,
             "org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend");
+        super.prepareKdc();
     }
 
     @Test
