@@ -25,10 +25,10 @@ import org.apache.kerby.config.ConfigKey;
  * Define all the ZK backend related configuration items with default values.
  */
 public enum ZKConfKey implements ConfigKey {
+    EMBEDDED_ZK(true),
     ZK_HOST("127.0.0.1"),
-    ZK_PORT(2181),
-    DATA_DIR,
-    DATA_LOG_DIR;
+    ZK_PORT(2180),
+    DATA_DIR("/tmp/kerby/zookeeper/data");
 
     private Object defaultValue;
 
