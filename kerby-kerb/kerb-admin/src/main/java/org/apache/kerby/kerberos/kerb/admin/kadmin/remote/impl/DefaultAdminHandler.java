@@ -30,11 +30,12 @@ import java.nio.ByteBuffer;
 public class DefaultAdminHandler extends AdminHandler {
 
     /**
-     * {@inheritDoc}
+     * Use super.handleRequest to send message
+     * and use this to receive message.
      */
     @Override
     public void handleRequest(AdminRequest adminRequest) throws KrbException {
-        //
+        /**super is used to send message*/
         super.handleRequest(adminRequest);
 
         KrbTransport transport = adminRequest.getTransport();

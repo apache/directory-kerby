@@ -19,38 +19,25 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.tool;
 
-import java.nio.ByteBuffer;
+import org.apache.kerby.xdr.EnumType;
+import org.apache.kerby.xdr.type.XdrEnumerated;
 
 /**
- * Deal with messages sent and received between Kadmin and Kadmin Server.
- *       (MSB)                   (LSB)
- *      +-------+-------+-------+-------+
- *      |msg_type |para_num |prin_name |...(koptions, password) |
- *      +-------+-------+-------+-------+
+ * An extend XdrEnumerate to encode and decode AdminMessageType.
  */
-public class AdminMessage {
-    private AdminMessageType adminMessageType;
-    private ByteBuffer messageBuffer;
-
-    public AdminMessage(AdminMessageType adminMessageType) {
-        this.adminMessageType = adminMessageType;
+public class AdminMessageEnum extends XdrEnumerated<AdminMessageType> {
+    public AdminMessageEnum() {
+        super(null);
     }
 
-    public AdminMessageType getAdminMessageType() {
-        return adminMessageType;
+    public AdminMessageEnum(AdminMessageType value) {
+        super(value);
+    }
+    @Override
+    protected EnumType[] getAllEnumValues() {
+        return AdminMessageType.values();
     }
 
-    public void setMessageBuffer(ByteBuffer messageBuffer) {
-        this.messageBuffer = messageBuffer;
-    }
-
-    public ByteBuffer getMessageBuffer() {
-        return messageBuffer;
-    }
-
-    public int encodingLength() {
-        return messageBuffer.limit(); // no + 4 is the length of whole message
-    }
 
 
 }
