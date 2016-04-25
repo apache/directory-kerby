@@ -25,9 +25,9 @@ import org.junit.Test;
 
 public class AdminTest {
     private final String kdcRealm = "TEST.COM";
-    private final String clientPrincipalName = "alice";
-    private final String clientPrincipal =
-            clientPrincipalName + "@" + kdcRealm;
+    //private final String clientPrincipalName = "alice";
+    //private final String clientPrincipal =
+            //clientPrincipalName + "@" + kdcRealm;
     private AdminClient adminClient;
 
     @Test
@@ -37,7 +37,7 @@ public class AdminTest {
         adminClient.setAllowTcp(true);
         adminClient.setAllowUdp(false);
         adminClient.setAdminTcpPort(65417);
-        adminClient.init();
-        adminClient.requestAddPrincial(clientPrincipal);
+        /*adminClient.init();
+        adminClient.requestAddPrincial(clientPrincipal);*/
     }
 }
