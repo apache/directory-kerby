@@ -23,6 +23,10 @@ import java.nio.ByteBuffer;
 
 /**
  * Deal with messages sent and received between Kadmin and Kadmin Server.
+ *       (MSB)                   (LSB)
+ *      +-------+-------+-------+-------+
+ *      |msg_type |para_num |prin_name |...(koptions, password) |
+ *      +-------+-------+-------+-------+
  */
 public class AdminMessage {
     private AdminMessageType adminMessageType;

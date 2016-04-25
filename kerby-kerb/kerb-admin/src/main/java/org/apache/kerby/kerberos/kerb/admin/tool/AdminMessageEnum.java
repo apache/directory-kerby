@@ -6,35 +6,38 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
-package org.apache.kerby.kerberos.kerb.admin.admin;
+package org.apache.kerby.kerberos.kerb.admin.tool;
 
+import org.apache.kerby.xdr.EnumType;
+import org.apache.kerby.xdr.type.XdrEnumerated;
 
-import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServer;
-
-public class AdminServerTest {
-    public static void main(String[] args) throws KrbException {
-        String serverHost = "localhost";
-        AdminServer adminServer;
-
-        adminServer = new AdminServer();
-        adminServer.setAdminHost(serverHost);
-        adminServer.setAllowUdp(false);
-        adminServer.setAllowTcp(true);
-        adminServer.setAdminTcpPort(65417);
-        /*adminServer.init();
-        adminServer.start();
-        System.out.println("Server started!");*/
+/**
+ * An extend XdrEnumerate to encode and decode AdminMessageType.
+ */
+public class AdminMessageEnum extends XdrEnumerated<AdminMessageType> {
+    public AdminMessageEnum() {
+        super(null);
     }
+
+    public AdminMessageEnum(AdminMessageType value) {
+        super(value);
+    }
+    @Override
+    protected EnumType[] getAllEnumValues() {
+        return AdminMessageType.values();
+    }
+
+
+
 }

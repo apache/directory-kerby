@@ -89,7 +89,11 @@ public class RemoteKadminImpl implements Kadmin {
     @Override
     public void addPrincipal(String principal,
                              KOptions kOptions) throws KrbException {
-
+        AdminRequest adRequest = new AddPrincipalRequest(principal, kOptions);
+        //wrap buffer problem
+        adRequest.setTransport(transport);
+        AdminHandler adminHandler = new DefaultAdminHandler();
+        adminHandler.handleRequest(adRequest);
     }
 
     @Override
