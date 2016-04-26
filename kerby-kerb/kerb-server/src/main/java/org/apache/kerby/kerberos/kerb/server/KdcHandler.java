@@ -121,12 +121,24 @@ public class KdcHandler {
             } else {
                 KrbError krbError = new KrbError();
                 krbError.setStime(KerberosTime.now());
+                krbError.setSusec(100);
                 krbError.setErrorCode(e.getKrbErrorCode());
-                krbError.setCname(kdcRequest.getClientEntry().getPrincipal());
-                krbError.setSname(kdcRequest.getServerPrincipal());
+                krbError.setCrealm(kdcContext.getKdcRealm());
+                if (kdcRequest.getClientPrincipal() != null) {
+                    krbError.setCname(kdcRequest.getClientPrincipal());
+                }
                 krbError.setRealm(kdcContext.getKdcRealm());
+                if (kdcRequest.getServerPrincipal() != null) {
+                    krbError.setSname(kdcRequest.getServerPrincipal());
+                } else {
+                    PrincipalName serverPrincipal = kdcRequest.getKdcReq().getReqBody().getSname();
+                    serverPrincipal.setRealm(kdcRequest.getKdcReq().getReqBody().getRealm());
+                    krbError.setSname(serverPrincipal);
+                }
                 if (e.getKrbErrorCode().equals(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY)) {
                     krbError.setEtext("PREAUTH_FAILED");
+                } else {
+                    krbError.setEtext(e.getMessage());
                 }
                 krbResponse = krbError;
             }

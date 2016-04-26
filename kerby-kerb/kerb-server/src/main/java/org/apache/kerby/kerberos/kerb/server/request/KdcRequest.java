@@ -90,6 +90,7 @@ public abstract class KdcRequest {
     private KrbIdentity tgsEntry;
     private PreauthContext preauthContext;
     private KdcFastContext fastContext;
+    private PrincipalName clientPrincipal;
     private PrincipalName serverPrincipal;
     private byte[] innerBodyout;
     private AuthToken token;
@@ -754,6 +755,22 @@ public abstract class KdcRequest {
      */
     protected void setArmorKey(EncryptionKey armorKey) {
         fastContext.setArmorKey(armorKey);
+    }
+
+    /**
+     * Get client principal.
+     * @return client principal
+     */
+    public PrincipalName getClientPrincipal() {
+        return clientPrincipal;
+    }
+
+    /**
+     * Set client principal.
+     * @param clientPrincipal client principal
+     */
+    public void setClientPrincipal(PrincipalName clientPrincipal) {
+        this.clientPrincipal = clientPrincipal;
     }
 
     /**

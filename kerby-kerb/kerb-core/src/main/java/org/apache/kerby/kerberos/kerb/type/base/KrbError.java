@@ -80,9 +80,9 @@ public class KrbError extends KrbMessage {
             new ExplicitField(KrbErrorField.STIME, KerberosTime.class),
             new ExplicitField(KrbErrorField.SUSEC, Asn1Integer.class),
             new ExplicitField(KrbErrorField.ERROR_CODE, Asn1Integer.class),
-            new ExplicitField(KrbErrorField.CREALM, KerberosString.class),
+            new ExplicitField(KrbErrorField.CREALM, Realm.class),
             new ExplicitField(KrbErrorField.CNAME, PrincipalName.class),
-            new ExplicitField(KrbErrorField.REALM, KerberosString.class),
+            new ExplicitField(KrbErrorField.REALM, Realm.class),
             new ExplicitField(KrbErrorField.SNAME, PrincipalName.class),
             new ExplicitField(KrbErrorField.ETEXT, KerberosString.class),
             new ExplicitField(KrbErrorField.EDATA, Asn1OctetString.class)
@@ -129,7 +129,7 @@ public class KrbError extends KrbMessage {
     }
 
     public void setErrorCode(KrbErrorCode errorCode) {
-        setField(KrbErrorField.ERROR_CODE, errorCode);
+        setFieldAsInt(KrbErrorField.ERROR_CODE, errorCode.getValue());
     }
 
     public String getCrealm() {
@@ -137,15 +137,15 @@ public class KrbError extends KrbMessage {
     }
 
     public void setCrealm(String realm) {
-        setFieldAs(KrbErrorField.CREALM, new KerberosString(realm));
+        setFieldAs(KrbErrorField.CREALM, new Realm(realm));
     }
 
     public PrincipalName getCname() {
         return getFieldAs(KrbErrorField.CNAME, PrincipalName.class);
     }
 
-    public void setCname(PrincipalName sname) {
-        setFieldAs(KrbErrorField.CNAME, sname);
+    public void setCname(PrincipalName cname) {
+        setFieldAs(KrbErrorField.CNAME, cname);
     }
 
     public PrincipalName getSname() {
@@ -161,15 +161,15 @@ public class KrbError extends KrbMessage {
     }
 
     public void setRealm(String realm) {
-        setFieldAs(KrbErrorField.REALM, new KerberosString(realm));
+        setFieldAs(KrbErrorField.REALM, new Realm(realm));
     }
 
     public String getEtext() {
         return getFieldAsString(KrbErrorField.ETEXT);
     }
 
-    public void setEtext(String realm) {
-        setFieldAs(KrbErrorField.ETEXT, new KerberosString(realm));
+    public void setEtext(String text) {
+        setFieldAs(KrbErrorField.ETEXT, new KerberosString(text));
     }
 
     public byte[] getEdata() {

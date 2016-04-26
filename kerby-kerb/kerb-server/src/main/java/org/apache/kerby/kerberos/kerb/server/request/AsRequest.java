@@ -73,6 +73,7 @@ public class AsRequest extends KdcRequest {
             clientRealm = getKdcContext().getKdcRealm();
         }
         clientPrincipal.setRealm(clientRealm);
+        setClientPrincipal(clientPrincipal);
 
         KrbIdentity clientEntry;
         if (isToken()) {
