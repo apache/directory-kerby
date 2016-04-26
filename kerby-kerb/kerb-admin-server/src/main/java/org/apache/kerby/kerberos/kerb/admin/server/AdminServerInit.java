@@ -17,13 +17,13 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.admin.admin;
+package org.apache.kerby.kerberos.kerb.admin.server;
 
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServer;
 
-public class AdminServerTest {
+public class AdminServerInit {
     public static void main(String[] args) throws KrbException {
         String serverHost = "localhost";
         AdminServer adminServer;
@@ -33,8 +33,8 @@ public class AdminServerTest {
         adminServer.setAllowUdp(false);
         adminServer.setAllowTcp(true);
         adminServer.setAdminTcpPort(65417);
-        /*adminServer.init();
+        adminServer.init();
         adminServer.start();
-        System.out.println("Server started!");*/
+        System.out.println("Server started!");
     }
 }
