@@ -31,6 +31,7 @@ import org.apache.kerby.kerberos.kerb.server.ServerSetting;
 public class AdminServerSetting implements ServerSetting {
     private final KOptions startupOptions;
     private final AdminServerConfig adminServerConfig;
+    private final KdcConfig kdcConfig;
     private final BackendConfig backendConfig;
 
     /**
@@ -40,16 +41,18 @@ public class AdminServerSetting implements ServerSetting {
      * @param backendConfig backend configuration
      */
     public AdminServerSetting(KOptions startupOptions,
-                              AdminServerConfig config, 
+                              AdminServerConfig config,
+                              KdcConfig kdcConfig,
                               BackendConfig backendConfig) {
         this.startupOptions = startupOptions;
         this.adminServerConfig = config;
+        this.kdcConfig = kdcConfig;
         this.backendConfig = backendConfig;
     }
 
     public AdminServerSetting(AdminServerConfig adminServerConfig, 
-                              BackendConfig backendConfig) {
-        this(new KOptions(), adminServerConfig, backendConfig);
+                              BackendConfig backendConfig, KdcConfig kdcConfig) {
+        this(new KOptions(), adminServerConfig, kdcConfig, backendConfig);
     }
 
     /**
@@ -67,7 +70,8 @@ public class AdminServerSetting implements ServerSetting {
 
   @Override
   public KdcConfig getKdcConfig() {
-    return null;
+      System.out.println("in adminserver to get kdcConfig!");
+      return kdcConfig;
   }
 
   /**

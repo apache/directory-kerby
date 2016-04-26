@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 
+import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
 import org.apache.kerby.kerberos.kerb.admin.tool.AddPrincipalRep;
 import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageCode;
 import org.apache.kerby.kerberos.kerb.admin.tool.KadminCode;
@@ -73,8 +75,8 @@ public class AdminServerHandler {
         System.out.println("realm: " + principal[1]);
 
         /**Add principal to backend here*/
-        //LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting());
-        //localKadmin.addPrincipal(principal[0]);
+        LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting());
+        localKadmin.addPrincipal(principal[0]);
 
         String message = "add principal of " + principal[0];
         //content to reply remain to construct

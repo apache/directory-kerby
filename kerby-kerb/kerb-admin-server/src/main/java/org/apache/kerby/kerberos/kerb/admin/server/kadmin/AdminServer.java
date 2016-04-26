@@ -25,6 +25,7 @@ import org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl.DefaultInternalAd
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl.InternalAdminServer;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 
 import java.io.File;
 
@@ -34,6 +35,7 @@ import java.io.File;
 public class AdminServer {
     private final AdminServerConfig adminServerConfig;
     private final BackendConfig backendConfig;
+    private final KdcConfig kdcConfig;
     private final AdminServerSetting adminServerSetting;
     private final KOptions startupOptions;
 
@@ -41,23 +43,25 @@ public class AdminServer {
 
     /**
      * Constructor passing both kdcConfig and backendConfig.
-     * @param kdcConfig The kdc config
+     * @param adminServerConfig The kdc config
      * @param backendConfig The backend config
      * @throws KrbException e
      */
-    public AdminServer(AdminServerConfig kdcConfig,
-                     BackendConfig backendConfig) throws KrbException {
-        this.adminServerConfig = kdcConfig;
+    public AdminServer(AdminServerConfig adminServerConfig,
+                     BackendConfig backendConfig, KdcConfig kdcConfig) throws KrbException {
+        this.adminServerConfig = adminServerConfig;
+        this.kdcConfig = kdcConfig;
         this.backendConfig = backendConfig;
         startupOptions = new KOptions();
         adminServerSetting = new AdminServerSetting(startupOptions,
-            kdcConfig, backendConfig);
+            adminServerConfig, kdcConfig, backendConfig);
     }
 
     /**
-     * Constructor given confDir where 'kdc.conf' and 'backend.conf' should be
-     * available.
-     * kdc.conf, that contains kdc admin related items.
+     * Constructor given confDir where 'adminServer.conf', 'kdc.conf' and
+     * 'backend.conf' should be available.
+     * adminServer.conf that contains adminServer related items.
+     * kdc.conf, that contains kdc related items.
      * backend.conf, that contains identity backend related items.
      *
      * @param confDir The conf dir
@@ -71,6 +75,12 @@ public class AdminServer {
         }
         this.adminServerConfig = tmpAdminServerConfig;
 
+        KdcConfig tmpKdcConfig = AdminServerUtil.getKdcConfig(confDir);
+        if (tmpKdcConfig == null) {
+            tmpKdcConfig = new KdcConfig();
+        }
+        this.kdcConfig = tmpKdcConfig;
+
         BackendConfig tmpBackendConfig = AdminServerUtil.getBackendConfig(confDir);
         if (tmpBackendConfig == null) {
             tmpBackendConfig = new BackendConfig();
@@ -80,7 +90,7 @@ public class AdminServer {
 
         startupOptions = new KOptions();
         adminServerSetting = new AdminServerSetting(startupOptions,
-            adminServerConfig, backendConfig);
+            adminServerConfig, kdcConfig, backendConfig);
     }
 
     /**
@@ -89,9 +99,10 @@ public class AdminServer {
     public AdminServer() {
         adminServerConfig = new AdminServerConfig();
         backendConfig = new BackendConfig();
+        kdcConfig = new KdcConfig();
         startupOptions = new KOptions();
         adminServerSetting = new AdminServerSetting(startupOptions,
-            adminServerConfig, backendConfig);
+            adminServerConfig, kdcConfig, backendConfig);
     }
 
     /**
