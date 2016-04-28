@@ -17,27 +17,41 @@
  *  under the License. 
  *  
  */
+/*
 package org.apache.kerby.kerberos.kerb.admin.admin;
 
-import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminConfig;
 import org.junit.Test;
 
+import java.io.File;
+import java.net.URL;
+
 public class AdminTest {
-    private final String kdcRealm = "TEST.COM";
-    //private final String clientPrincipalName = "alice";
-    //private final String clientPrincipal =
-            //clientPrincipalName + "@" + kdcRealm;
+    private final String clientPrincipalName = "alice";
     private AdminClient adminClient;
 
     @Test
-    public void testAdminClient() throws KrbException {
-        adminClient = new AdminClient();
-        adminClient.setAdminRealm(kdcRealm);
+    public void testAdminClient() throws Exception {
+
+        URL confFileUrl = AdminTest.class.getResource("/adminClient.conf");
+        File confFile = new File(confFileUrl.toURI());
+
+        AdminConfig adminConfig = new AdminConfig();
+        adminConfig.addKrb5Config(confFile);
+
+        adminClient = new AdminClient(adminConfig);
+
+        String adminRealm = adminConfig.getAdminRealm();
+        String clientPrincipal = clientPrincipalName + "@" + adminRealm;
+
+        adminClient.setAdminRealm(adminRealm);
         adminClient.setAllowTcp(true);
         adminClient.setAllowUdp(false);
-        adminClient.setAdminTcpPort(65417);
-        /*adminClient.init();
-        adminClient.requestAddPrincial(clientPrincipal);*/
+        adminClient.setAdminTcpPort(adminConfig.getAdminPort());
+
+        adminClient.init();
+        adminClient.requestAddPrincial(clientPrincipal);
     }
 }
+*/
