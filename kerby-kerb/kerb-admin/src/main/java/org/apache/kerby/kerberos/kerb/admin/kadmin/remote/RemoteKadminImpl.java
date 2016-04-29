@@ -71,8 +71,9 @@ public class RemoteKadminImpl implements Kadmin {
 
 
     @Override
-    public String getKadminPrincipal() {
-        return null;
+    public String getKadminPrincipal() { //think again. can be this easy?
+        String name = innerClient.getSetting().getAdminConfig().getAdminHost();
+        return name;
     }
 
     @Override
