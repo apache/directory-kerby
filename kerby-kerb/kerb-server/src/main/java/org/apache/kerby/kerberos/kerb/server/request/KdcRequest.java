@@ -167,7 +167,8 @@ public abstract class KdcRequest {
         checkVersion();
         checkTgsEntry();
         kdcFindFast();
-        authenticate();
+        checkEncryptionType();
+
         if (PreauthHandler.isToken(getKdcReq().getPaData())) {
             isToken = true;
             preauth();
@@ -181,6 +182,7 @@ public abstract class KdcRequest {
             checkServer();
             preauth();
         }
+        checkPolicy();
         issueTicket();
         makeReply();
     }

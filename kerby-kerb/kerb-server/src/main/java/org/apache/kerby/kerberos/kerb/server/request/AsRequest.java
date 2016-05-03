@@ -109,6 +109,9 @@ public class AsRequest extends KdcRequest {
     protected void issueTicket() throws KrbException {
         TicketIssuer issuer = new TgtTicketIssuer(this);
         Ticket newTicket = issuer.issueTicket();
+        LOG.info("AS_REQ ISSUE: authtime " + newTicket.getEncPart().getAuthTime().getTime() + ","
+                + newTicket.getEncPart().getCname() + " for "
+                + newTicket.getSname());
         setTicket(newTicket);
     }
 
