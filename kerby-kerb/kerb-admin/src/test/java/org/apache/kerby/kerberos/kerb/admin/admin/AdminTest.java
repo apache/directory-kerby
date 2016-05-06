@@ -17,7 +17,7 @@
  *  under the License. 
  *  
  */
-package org.apache.kerby.kerberos.kerb.admin.admin;
+/*package org.apache.kerby.kerberos.kerb.admin.admin;
 
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminConfig;
@@ -53,3 +53,4 @@ public class AdminTest {
         adminClient.requestAddPrincial(clientPrincipal);
     }
 }
+*/

@@ -36,7 +36,7 @@ public class AdminServerInit {
         + "\tExample:\n"
         + "\t\t"
         + (OSUtil.isWindows()
-        ? "bin\\kadmin.cmd" : "sh bin/kadmin.sh")
+        ? "bin\\adminServer.cmd" : "sh bin/adminServer.sh")
         + " conf\n";
 
     public static void main(String[] args) throws Exception {
