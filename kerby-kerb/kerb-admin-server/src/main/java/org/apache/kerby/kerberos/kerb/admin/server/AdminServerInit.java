@@ -23,8 +23,6 @@ package org.apache.kerby.kerberos.kerb.admin.server;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServer;
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerConfig;
-import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
-import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.util.OSUtil;
 
 import java.io.File;

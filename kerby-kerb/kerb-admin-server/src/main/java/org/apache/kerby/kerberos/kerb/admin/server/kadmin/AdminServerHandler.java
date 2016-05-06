@@ -76,7 +76,17 @@ public class AdminServerHandler {
 
         /**Add principal to backend here*/
         LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting());
-        localKadmin.addPrincipal(principal[0]);
+        try {
+            localKadmin.addPrincipal(principal[0]);
+        } catch (KrbException e) {
+            String error = "principal already exist!";
+            System.out.println(error);
+            AdminMessage errorMessage = new AddPrincipalRep();
+            XdrString xdrMessage = new XdrString(error);
+            errorMessage.setMessageBuffer(ByteBuffer.wrap(xdrMessage.encode()));
+            ByteBuffer response = KadminCode.encodeMessage(errorMessage);
+            return response;
+        }
 
         String message = "add principal of " + principal[0];
         //content to reply remain to construct
