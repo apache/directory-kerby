@@ -23,6 +23,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
+import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 
 import java.io.File;
@@ -37,22 +38,44 @@ public final class AdminServerUtil {
     private AdminServerUtil() { }
 
     /**
+     * Get adminServer configuration
+     * @param confDir configuration directory
+     * @return adminServer configuration
+     * @throws KrbException e.
+     */
+    public static AdminServerConfig getAdminServerConfig(File confDir) throws KrbException {
+        File adminServerConfFile = new File(confDir, "adminServer.conf");
+        if (adminServerConfFile.exists()) {
+            AdminServerConfig adminServerConfig = new AdminServerConfig();
+            try {
+                adminServerConfig.addKrb5Config(adminServerConfFile);
+            } catch (IOException e) {
+                throw new KrbException("Can not load the adminServer configuration file "
+                        + adminServerConfFile.getAbsolutePath());
+            }
+            return adminServerConfig;
+        }
+
+        return null;
+    }
+
+    /**
      * Get kdc configuration
      * @param confDir configuration directory
      * @return kdc configuration
      * @throws KrbException e.
      */
-    public static AdminServerConfig getAdminServerConfig(File confDir) throws KrbException {
+    public static KdcConfig getKdcConfig(File confDir) throws KrbException {
         File kdcConfFile = new File(confDir, "kdc.conf");
         if (kdcConfFile.exists()) {
-            AdminServerConfig adminServerConfig = new AdminServerConfig();
+            KdcConfig kdcConfig = new KdcConfig();
             try {
-                adminServerConfig.addKrb5Config(kdcConfFile);
+                kdcConfig.addKrb5Config(kdcConfFile);
             } catch (IOException e) {
                 throw new KrbException("Can not load the kdc configuration file "
-                        + kdcConfFile.getAbsolutePath());
+                    + kdcConfFile.getAbsolutePath());
             }
-            return adminServerConfig;
+            return kdcConfig;
         }
 
         return null;

@@ -31,25 +31,29 @@ import org.apache.kerby.kerberos.kerb.server.ServerSetting;
 public class AdminServerSetting implements ServerSetting {
     private final KOptions startupOptions;
     private final AdminServerConfig adminServerConfig;
+    private final KdcConfig kdcConfig;
     private final BackendConfig backendConfig;
 
     /**
      * AdminServerSetting constructor
      * @param startupOptions startup options
-     * @param config admin configuration
+     * @param adminServerConfig admin configuration
+     * @param kdcConfig kdc configuration
      * @param backendConfig backend configuration
      */
     public AdminServerSetting(KOptions startupOptions,
-                              AdminServerConfig config, 
+                              AdminServerConfig adminServerConfig,
+                              KdcConfig kdcConfig,
                               BackendConfig backendConfig) {
         this.startupOptions = startupOptions;
-        this.adminServerConfig = config;
+        this.adminServerConfig = adminServerConfig;
+        this.kdcConfig = kdcConfig;
         this.backendConfig = backendConfig;
     }
 
     public AdminServerSetting(AdminServerConfig adminServerConfig, 
-                              BackendConfig backendConfig) {
-        this(new KOptions(), adminServerConfig, backendConfig);
+                              BackendConfig backendConfig, KdcConfig kdcConfig) {
+        this(new KOptions(), adminServerConfig, kdcConfig, backendConfig);
     }
 
     /**
@@ -60,17 +64,25 @@ public class AdminServerSetting implements ServerSetting {
         return adminServerConfig;
     }
 
-  @Override
-  public String getKdcRealm() {
-    return null;
-  }
+    /**
+     * Get the realm of KDC of Admin Server.
+     * @return the realm of KDC
+     */
+    @Override
+    public String getKdcRealm() {
+         return kdcConfig.getKdcRealm();
+    }
 
-  @Override
-  public KdcConfig getKdcConfig() {
-    return null;
-  }
+    /**
+     * Get the KDC config of Admin server.
+     * @return the KDC configuration
+     */
+    @Override
+    public KdcConfig getKdcConfig() {
+        return kdcConfig;
+    }
 
-  /**
+    /**
      * Get the backend config.
      * @return backend configuration
      */

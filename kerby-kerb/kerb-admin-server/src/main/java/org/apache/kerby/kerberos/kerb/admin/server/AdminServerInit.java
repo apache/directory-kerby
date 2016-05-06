@@ -23,7 +23,6 @@ package org.apache.kerby.kerberos.kerb.admin.server;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServer;
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerConfig;
-import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.util.OSUtil;
 
 import java.io.File;
@@ -36,7 +35,7 @@ public class AdminServerInit {
         + "\t\t"
         + (OSUtil.isWindows()
         ? "bin\\adminServer.cmd" : "sh bin/adminServer.sh")
-        + " conf\\adminServer.conf\n";
+        + " conf\n";
 
     public static void main(String[] args) throws Exception {
 
@@ -46,25 +45,9 @@ public class AdminServerInit {
         }
 
         String confDirPath = args[0];
-        File serverConfFile = new File(confDirPath);
+        AdminServer adminServer = new AdminServer(new File(confDirPath));
+        AdminServerConfig adminServerConfig = adminServer.getAdminServerConfig();
 
-        if (!serverConfFile.exists()) {
-            System.err.println("Invalid or not exist conf");
-            System.exit(2);
-        }
-
-        /**
-         * Below two lines cannot be used in jar.
-         * Because url is not hierarchical
-         */
-        //URL serverConfFileUrl = AdminServerInit.class.getResource("/adminServer.conf");
-        //File serverConfFile = new File(serverConfFileUrl.toURI());
-        AdminServerConfig adminServerConfig = new AdminServerConfig();
-        adminServerConfig.addKrb5Config(serverConfFile);
-
-        BackendConfig backendConfig = new BackendConfig();
-
-        AdminServer adminServer = new AdminServer(adminServerConfig, backendConfig);
         adminServer.setAdminHost(adminServerConfig.getAdminHost());
         adminServer.setAllowTcp(true);
         adminServer.setAllowUdp(false);
@@ -74,7 +57,7 @@ public class AdminServerInit {
             adminServer.init();
         } catch (KrbException e) {
             System.err.println("Errors occurred when start admin server:  " + e.getMessage());
-            System.exit(3);
+            System.exit(2);
         }
         adminServer.start();
         System.out.println("Admin server started!");

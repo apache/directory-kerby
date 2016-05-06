@@ -25,6 +25,7 @@ import org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl.DefaultInternalAd
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.impl.InternalAdminServer;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcServerOption;
 import org.apache.kerby.kerberos.kerb.server.KdcUtil;
 
@@ -34,25 +35,30 @@ import java.io.File;
  * The implemented Kerberos Server API.
  */
 public class AdminServerImpl {
-    private final AdminServerConfig kdcConfig;
+    private final AdminServerConfig adminServerConfig;
+    private final KdcConfig kdcConfig;
     private final BackendConfig backendConfig;
-    private final AdminServerSetting kdcSetting;
+    private final AdminServerSetting adminServerSetting;
     private final KOptions startupOptions;
 
     private InternalAdminServer innerKdc;
 
     /**
-     * Constructor passing both kdcConfig and backendConfig.
+     * Constructor passing both adminServerConfig and backendConfig.
+     * @param adminServerConfig The adminServer config
      * @param kdcConfig The kdc config
      * @param backendConfig The backend config
      * @throws KrbException e
      */
-    public AdminServerImpl(AdminServerConfig kdcConfig,
+    public AdminServerImpl(AdminServerConfig adminServerConfig,
+                           KdcConfig kdcConfig,
                            BackendConfig backendConfig) throws KrbException {
+        this.adminServerConfig = adminServerConfig;
         this.kdcConfig = kdcConfig;
         this.backendConfig = backendConfig;
         startupOptions = new KOptions();
-        kdcSetting = new AdminServerSetting(startupOptions, kdcConfig, backendConfig);
+        adminServerSetting = new AdminServerSetting(startupOptions, adminServerConfig,
+            kdcConfig, backendConfig);
     }
 
     /**
@@ -69,7 +75,13 @@ public class AdminServerImpl {
         if (tmpAdminServerConfig == null) {
             tmpAdminServerConfig = new AdminServerConfig();
         }
-        this.kdcConfig = tmpAdminServerConfig;
+        this.adminServerConfig = tmpAdminServerConfig;
+
+        KdcConfig tmpKdcConfig = AdminServerUtil.getKdcConfig(confDir);
+        if (tmpKdcConfig == null) {
+            tmpKdcConfig = new KdcConfig();
+        }
+        this.kdcConfig = tmpKdcConfig;
 
         BackendConfig tmpBackendConfig = KdcUtil.getBackendConfig(confDir);
         if (tmpBackendConfig == null) {
@@ -79,17 +91,20 @@ public class AdminServerImpl {
         this.backendConfig = tmpBackendConfig;
 
         startupOptions = new KOptions();
-        kdcSetting = new AdminServerSetting(startupOptions, kdcConfig, backendConfig);
+        adminServerSetting = new AdminServerSetting(startupOptions, adminServerConfig,
+            kdcConfig, backendConfig);
     }
 
     /**
      * Default constructor.
      */
     public AdminServerImpl() {
-        kdcConfig = new AdminServerConfig();
+        adminServerConfig = new AdminServerConfig();
+        kdcConfig = new KdcConfig();
         backendConfig = new BackendConfig();
         startupOptions = new KOptions();
-        kdcSetting = new AdminServerSetting(startupOptions, kdcConfig, backendConfig);
+        adminServerSetting = new AdminServerSetting(startupOptions, adminServerConfig,
+            kdcConfig, backendConfig);
     }
 
     /**
@@ -176,7 +191,7 @@ public class AdminServerImpl {
      * @return setting
      */
     public AdminServerSetting getAdminServerSetting() {
-        return kdcSetting;
+        return adminServerSetting;
     }
 
     /**
@@ -184,7 +199,7 @@ public class AdminServerImpl {
      * @return AdminServerConfig
      */
     public AdminServerConfig getAdminServerConfig() {
-        return kdcConfig;
+        return adminServerConfig;
     }
 
     /**
@@ -217,7 +232,7 @@ public class AdminServerImpl {
             innerKdc = (InternalAdminServer) startupOptions.getOptionValue(
                     KdcServerOption.INNER_KDC_IMPL);
         } else {
-            innerKdc = new DefaultInternalAdminServerImpl(kdcSetting);
+            innerKdc = new DefaultInternalAdminServerImpl(adminServerSetting);
         }
 
         innerKdc.init();

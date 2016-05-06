@@ -76,7 +76,7 @@ public class RemoteAdminTool {
         try (Scanner scanner = new Scanner(System.in, "UTF-8")) {
             String input = scanner.nextLine();
 
-            while (!input.equals("quit") || !input.equals("exit") || !input.equals("q")) {
+            while (!(input.equals("quit") || input.equals("exit") || input.equals("q"))) {
                 excute(adminClient, input);
                 input = scanner.nextLine();
             }
@@ -98,7 +98,6 @@ public class RemoteAdminTool {
                 String adminRealm = adminClient.getAdminConfig().getAdminRealm();
                 String clientPrincipal = temp[1] + "@" + adminRealm;
                 adminClient.requestAddPrincial(clientPrincipal);
-                System.out.println("add remote principal success.");
             }
 
         } else {
