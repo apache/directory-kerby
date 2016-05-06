@@ -37,15 +37,16 @@ public class AdminServerSetting implements ServerSetting {
     /**
      * AdminServerSetting constructor
      * @param startupOptions startup options
-     * @param config admin configuration
+     * @param adminServerConfig admin configuration
+     * @param kdcConfig kdc configuration
      * @param backendConfig backend configuration
      */
     public AdminServerSetting(KOptions startupOptions,
-                              AdminServerConfig config,
+                              AdminServerConfig adminServerConfig,
                               KdcConfig kdcConfig,
                               BackendConfig backendConfig) {
         this.startupOptions = startupOptions;
-        this.adminServerConfig = config;
+        this.adminServerConfig = adminServerConfig;
         this.kdcConfig = kdcConfig;
         this.backendConfig = backendConfig;
     }
@@ -63,18 +64,25 @@ public class AdminServerSetting implements ServerSetting {
         return adminServerConfig;
     }
 
-  @Override
-  public String getKdcRealm() {
-    return null;
-  }
+    /**
+     * Get the realm of KDC of Admin Server.
+     * @return the realm of KDC
+     */
+    @Override
+    public String getKdcRealm() {
+         return kdcConfig.getKdcRealm();
+    }
 
-  @Override
-  public KdcConfig getKdcConfig() {
-      System.out.println("in adminserver to get kdcConfig!");
-      return kdcConfig;
-  }
+    /**
+     * Get the KDC config of Admin server.
+     * @return the KDC configuration
+     */
+    @Override
+    public KdcConfig getKdcConfig() {
+        return kdcConfig;
+    }
 
-  /**
+    /**
      * Get the backend config.
      * @return backend configuration
      */

@@ -47,38 +47,9 @@ public class AdminServerInit {
         }
 
         String confDirPath = args[0];
-        File adminServerConfFile = new File(confDirPath, "adminServer.conf");
-        File kdcConfFile = new File(confDirPath, "kdc.conf");
-        File backendConfFile = new File(confDirPath, "backend.conf");
+        AdminServer adminServer = new AdminServer(new File(confDirPath));
+        AdminServerConfig adminServerConfig = adminServer.getAdminServerConfig();
 
-        if (!adminServerConfFile.exists()) {
-            System.err.println("Invalid or not exist adminServer conf");
-            System.exit(2);
-        }
-        if (!kdcConfFile.exists()) {
-            System.err.println("Invalid or not exist kdc conf");
-            System.exit(3);
-        }
-        if (!backendConfFile.exists()) {
-            System.err.println("Invalid or not exist backend conf");
-            System.exit(4);
-        }
-
-        /**
-         * Below two lines cannot be used in jar.
-         * Because url is not hierarchical
-         */
-        //URL serverConfFileUrl = AdminServerInit.class.getResource("/adminServer.conf");
-        //File adminServerConfFile = new File(serverConfFileUrl.toURI());
-        AdminServerConfig adminServerConfig = new AdminServerConfig();
-        adminServerConfig.addKrb5Config(adminServerConfFile);
-
-        BackendConfig backendConfig = new BackendConfig();
-        backendConfig.addIniConfig(backendConfFile);
-        KdcConfig kdcConfig = new KdcConfig();
-        kdcConfig.addKrb5Config(kdcConfFile);
-
-        AdminServer adminServer = new AdminServer(adminServerConfig, backendConfig, kdcConfig);
         adminServer.setAdminHost(adminServerConfig.getAdminHost());
         adminServer.setAllowTcp(true);
         adminServer.setAllowUdp(false);
@@ -88,7 +59,7 @@ public class AdminServerInit {
             adminServer.init();
         } catch (KrbException e) {
             System.err.println("Errors occurred when start admin server:  " + e.getMessage());
-            System.exit(3);
+            System.exit(2);
         }
         adminServer.start();
         System.out.println("Admin server started!");

@@ -31,6 +31,9 @@ import java.io.File;
 
 /**
  * The implemented Kerberos admin admin API.
+ * We add the KdcConfig as a member variable to AdminServer,
+ * In order to make it easy to use LocalKadminImpl.
+ * The Kdc Config of corresponding KDC can be read from ConfDir.
  */
 public class AdminServer {
     private final AdminServerConfig adminServerConfig;
@@ -42,9 +45,10 @@ public class AdminServer {
     private InternalAdminServer innerAdminServer;
 
     /**
-     * Constructor passing both kdcConfig and backendConfig.
-     * @param adminServerConfig The kdc config
+     * Constructor passing adminServerConfig, kdcConfig and backendConfig.
+     * @param adminServerConfig The admin server config
      * @param backendConfig The backend config
+     * @param kdcConfig The kdc config
      * @throws KrbException e
      */
     public AdminServer(AdminServerConfig adminServerConfig,
