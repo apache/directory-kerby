@@ -87,7 +87,8 @@ public class KdcHandler {
             String realm = getRequestRealm(kdcReq);
             if (realm == null || !kdcContext.getKdcRealm().equals(realm)) {
                 LOG.error("Invalid realm from kdc request: " + realm);
-                throw new KrbException("Invalid realm from kdc request: " + realm);
+                throw new KrbException(KrbErrorCode.WRONG_REALM,
+                    "Invalid realm from kdc request: " + realm);
             }
 
             if (messageType == KrbMessageType.TGS_REQ) {
@@ -122,7 +123,11 @@ public class KdcHandler {
                 KrbError krbError = new KrbError();
                 krbError.setStime(KerberosTime.now());
                 krbError.setSusec(100);
-                krbError.setErrorCode(e.getKrbErrorCode());
+                if (e.getKrbErrorCode() != null) {
+                    krbError.setErrorCode(e.getKrbErrorCode());
+                } else {
+                    krbError.setErrorCode(KrbErrorCode.UNKNOWN_ERR);
+                }
                 krbError.setCrealm(kdcContext.getKdcRealm());
                 if (kdcRequest.getClientPrincipal() != null) {
                     krbError.setCname(kdcRequest.getClientPrincipal());
