@@ -59,6 +59,16 @@ public class SimpleKdcServer extends KdcServer {
         setKdcPort(NetworkUtil.getServerPort());
     }
 
+    public SimpleKdcServer(KrbConfig krbConfig) {
+        super();
+        this.krbClnt = new KrbClient(krbConfig);
+    }
+
+    public SimpleKdcServer(File confDir, KrbConfig krbConfig) throws KrbException {
+        super(confDir);
+        this.krbClnt = new KrbClient(krbConfig);
+    }
+
     public void setWorkDir(File workDir) {
         this.workDir = workDir;
     }

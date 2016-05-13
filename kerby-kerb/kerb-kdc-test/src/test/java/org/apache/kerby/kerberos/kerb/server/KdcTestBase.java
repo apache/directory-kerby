@@ -69,6 +69,10 @@ public abstract class KdcTestBase {
         return kdcServer;
     }
 
+    protected void setKdcServer(SimpleKdcServer kdcServer) {
+        this.kdcServer = kdcServer;
+    }
+
     protected KrbClient getKrbClient() {
         return kdcServer.getKrbClient();
     }

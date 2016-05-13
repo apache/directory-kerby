@@ -90,7 +90,9 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
                 throw new KrbException("Failed to create transport", first);
             }
         } finally {
-            transport.release();
+            if (transport != null) {
+                transport.release();
+            }
         }
 
     }

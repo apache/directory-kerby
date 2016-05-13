@@ -67,7 +67,7 @@ public abstract class KrbHandler {
      * @throws KrbException e
      */
     public void handleRequest(KdcRequest kdcRequest, boolean tryNextKdc) throws KrbException {
-        if (!tryNextKdc) {
+        if (!tryNextKdc || kdcRequest.getKdcReq() == null) {
             kdcRequest.process();
         }
         KdcReq kdcReq = kdcRequest.getKdcReq();
