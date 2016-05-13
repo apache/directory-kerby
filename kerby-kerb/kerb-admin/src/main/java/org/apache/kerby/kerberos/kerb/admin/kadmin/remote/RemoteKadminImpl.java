@@ -100,7 +100,10 @@ public class RemoteKadminImpl implements Kadmin {
     @Override
     public void addPrincipal(String principal,
                              String password) throws KrbException {
-
+        AdminRequest addPrincipalRequest = new AddPrincipalRequest(principal, password);
+        addPrincipalRequest.setTransport(transport);
+        AdminHandler adminHandler = new DefaultAdminHandler();
+        adminHandler.handleRequest(addPrincipalRequest);
     }
 
     @Override

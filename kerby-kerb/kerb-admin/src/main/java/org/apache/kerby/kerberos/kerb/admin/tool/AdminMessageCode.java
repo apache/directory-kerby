@@ -75,11 +75,12 @@ public class AdminMessageCode extends XdrStructType {
 
     @Override
     protected AbstractXdrType[] getAllFields() {
-        AbstractXdrType[] fields = new AbstractXdrType[3];
+        AbstractXdrType[] fields = new AbstractXdrType[5];
         fields[0] = new AdminMessageEnum();
         fields[1] = new XdrInteger();
         fields[2] = new XdrString();
-        //fields3,4
+        fields[3] = new XdrString(); //suppose it is string
+        fields[4] = null; // kOptions is not supported.
         return fields;
     }
 

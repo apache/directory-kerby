@@ -25,6 +25,6 @@ package org.apache.kerby.kerberos.kerb.admin.tool;
  */
 public class AddPrincipalRep extends AdminRep {
     public AddPrincipalRep() {
-        super(AdminMessageType.AD_REP);
+        super(AdminMessageType.ADD_PRINCIPAL_REP);
     }
 }

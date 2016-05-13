@@ -25,6 +25,6 @@ package org.apache.kerby.kerberos.kerb.admin.tool;
  */
 public class DeletePrincipalRep extends AdminRep {
     public DeletePrincipalRep() {
-        super(AdminMessageType.DE_REP);
+        super(AdminMessageType.DELETE_PRINCIPAL_REP);
     }
 }

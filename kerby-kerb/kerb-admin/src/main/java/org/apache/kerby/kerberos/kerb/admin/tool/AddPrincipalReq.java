@@ -25,6 +25,6 @@ package org.apache.kerby.kerberos.kerb.admin.tool;
  */
 public class AddPrincipalReq extends AdminReq {
     public AddPrincipalReq() {
-      super(AdminMessageType.AD_REQ);
+      super(AdminMessageType.ADD_PRINCIPAL_REQ);
     }
 }

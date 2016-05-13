@@ -46,10 +46,10 @@ public class KadminCode {
         AdminMessage adminMessage = null;
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
-        if (adminMessageType == AdminMessageType.AD_REQ) {
+        if (adminMessageType == AdminMessageType.ADD_PRINCIPAL_REQ) {
             adminMessage = new AddPrincipalReq();
             System.out.println("check if decoding right: " + new String(ByteBuffer.wrap(bytes).array()));
-        } else if (adminMessageType == AdminMessageType.AD_REP) {
+        } else if (adminMessageType == AdminMessageType.ADD_PRINCIPAL_REP) {
             adminMessage = new AddPrincipalRep();
             System.out.println("check if decoding right2: " + new String(ByteBuffer.wrap(bytes).array()));
         } else {

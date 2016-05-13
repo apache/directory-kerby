@@ -21,11 +21,9 @@ package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
-import org.apache.kerby.kerberos.kerb.admin.tool.AddPrincipalRep;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageCode;
-import org.apache.kerby.kerberos.kerb.admin.tool.KadminCode;
+import org.apache.kerby.kerberos.kerb.admin.tool.*;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessage;
+import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
 import org.apache.kerby.xdr.type.XdrString;
 import org.apache.kerby.xdr.type.XdrStructType;
@@ -68,27 +66,49 @@ public class AdminServerHandler {
         XdrFieldInfo[] fieldInfos = decoded.getValue().getXdrFieldInfos();
         System.out.println("receive message type: " + fieldInfos[0].getValue());
         System.out.println("receive message paramNum: " + fieldInfos[1].getValue());
-        String receiveMsg = (String) fieldInfos[2].getValue();
-        System.out.println("server handleMessage: " + receiveMsg);
-        String[] principal = receiveMsg.split("@");
-        System.out.println("clientName: " + principal[0]);
-        System.out.println("realm: " + principal[1]);
+        int paramNum = (int) fieldInfos[1].getValue();
+        //AdminMessageType type = (AdminMessageType) fieldInfos[0].getValue();
+        /** now only support add principal request*/
 
-        /**Add principal to backend here*/
+        /**Create LocalKadmin here*/
         LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting());
-        try {
-            localKadmin.addPrincipal(principal[0]);
-        } catch (KrbException e) {
-            String error = "principal already exist!";
-            System.out.println(error);
-            AdminMessage errorMessage = new AddPrincipalRep();
-            XdrString xdrMessage = new XdrString(error);
-            errorMessage.setMessageBuffer(ByteBuffer.wrap(xdrMessage.encode()));
-            ByteBuffer response = KadminCode.encodeMessage(errorMessage);
-            return response;
+
+        String principal = (String) fieldInfos[2].getValue();
+        if (paramNum == 1) {
+            /** Add principal with only principal name*/
+            System.out.println("handle nokey principal " + principal);
+            String[] temp = principal.split("@");
+            try {
+                localKadmin.addPrincipal(temp[0]);
+            } catch (KrbException e) {
+                String error = "principal already exist!";
+                System.out.println(error);
+                AdminMessage errorMessage = new AddPrincipalRep();
+                XdrString xdrMessage = new XdrString(error);
+                errorMessage.setMessageBuffer(ByteBuffer.wrap(xdrMessage.encode()));
+                ByteBuffer response = KadminCode.encodeMessage(errorMessage);
+                return response;
+            }
+        } else if (paramNum == 2 && fieldInfos[3].getDataType() == XdrDataType.STRING) {
+            /** Add principal with password*/
+            System.out.println("handle principal with password " + principal);
+            String[] temp = principal.split("@");
+            String password = (String) fieldInfos[3].getValue();
+            try {
+                localKadmin.addPrincipal(temp[0], password);
+            } catch (KrbException e) {
+                String error = "principal already exist.\n"
+                    + "Choose update password instead of add principal";
+                System.out.println(error);
+                AdminMessage errorMessage = new AddPrincipalRep();
+                XdrString xdrMessage = new XdrString(error);
+                errorMessage.setMessageBuffer(ByteBuffer.wrap(xdrMessage.encode()));
+                ByteBuffer response = KadminCode.encodeMessage(errorMessage);
+                return response;
+            }
         }
 
-        String message = "add principal of " + principal[0];
+        String message = "add principal of " + principal;
         //content to reply remain to construct
         AdminMessage addPrincipalRep = new AddPrincipalRep();
         /** encode admin message:
