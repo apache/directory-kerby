@@ -98,19 +98,16 @@ public class RemoteAdminTool {
 
         if (temp[0].startsWith("add_principal")) {
             String adminRealm = adminClient.getAdminConfig().getAdminRealm();
-            String clientPrincipal = null;
+            String clientPrincipal = temp[temp.length - 1] + "@" + adminRealm;
             if (!temp[1].startsWith("-")) {
-                clientPrincipal = temp[1] + "@" + adminRealm;
                 adminClient.requestAddPrincipal(clientPrincipal);
             } else if (temp[1].startsWith("-nokey")) {
-                clientPrincipal = temp[2] + "@" + adminRealm;
                 adminClient.requestAddPrincipal(clientPrincipal);
             } else if (temp[1].startsWith("-pw")) {
                 String password = temp[2];
-                clientPrincipal = temp[3] + "@" + adminRealm;
                 adminClient.requestAddPrincipal(clientPrincipal, password);
             } else {
-                System.out.println("add-principal command format error.\n"
+                System.out.println("add_principal command format error.\n"
                 + "Please input command for further reference.");
             }
 
