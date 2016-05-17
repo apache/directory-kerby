@@ -26,6 +26,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultAdminHandl
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AddPrincipalRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.DeletePrincipalRequest;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
@@ -149,7 +150,10 @@ public class RemoteKadminImpl implements Kadmin {
 
     @Override
     public void deletePrincipal(String principal) throws KrbException {
-
+        AdminRequest deletePrincipalRequest = new DeletePrincipalRequest(principal);
+        deletePrincipalRequest.setTransport(transport);
+        AdminHandler adminHandler = new DefaultAdminHandler();
+        adminHandler.handleRequest(deletePrincipalRequest);
     }
 
     @Override
