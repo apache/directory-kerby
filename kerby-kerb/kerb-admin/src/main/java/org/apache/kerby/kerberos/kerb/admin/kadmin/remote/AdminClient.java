@@ -174,4 +174,9 @@ public class AdminClient {
         Kadmin remote = new RemoteKadminImpl(innerClient);
         remote.addPrincipal(principal, password);
     }
+
+    public void requestDeletePrincipal(String principal) throws KrbException {
+        Kadmin remote = new RemoteKadminImpl(innerClient);
+        remote.deletePrincipal(principal);
+    }
 }

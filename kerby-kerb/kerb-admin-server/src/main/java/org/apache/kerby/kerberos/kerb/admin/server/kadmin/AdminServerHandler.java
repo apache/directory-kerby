@@ -74,6 +74,10 @@ public class AdminServerHandler {
                 System.out.println("message type: add principal req");
                 responseMessage = handleAddPrincipalReq(localKadmin, fieldInfos);
                 break;
+            case DELETE_PRINCIPAL_REQ:
+                System.out.println("message type: delete principal req");
+                responseMessage = handleDeletePrincipalReq(localKadmin, fieldInfos);
+                break;
             default:
                 throw new KrbException("AdminMessageType error, can not handle it.");
         }
@@ -142,6 +146,38 @@ public class AdminServerHandler {
         AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
         addPrincipalRep.setMessageBuffer(ByteBuffer.wrap(value.encode()));
         ByteBuffer responseMessage = KadminCode.encodeMessage(addPrincipalRep);
+        return responseMessage;
+    }
+
+    private ByteBuffer handleDeletePrincipalReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
+        /** message structure: msg_type, para_num(always equals 1), principal_name*/
+        String principal = (String) fieldInfos[2].getValue();
+        String[] temp = principal.split("@");
+        try {
+            localKadmin.deletePrincipal(temp[0]);
+        } catch (KrbException e) {
+            String error = "no such principal exist!";
+            System.err.println(error);
+            XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
+            xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.DELETE_PRINCIPAL_REP);
+            xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
+            xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, error);
+            AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
+            AdminMessage errorMessage = new DeletePrincipalRep();
+            errorMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+            ByteBuffer response = KadminCode.encodeMessage(errorMessage);
+            return response;
+        }
+
+        String message = "delete principal of " + principal;
+        AdminMessage deletePrincipalRep = new DeletePrincipalRep();
+        XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
+        xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.DELETE_PRINCIPAL_REP);
+        xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
+        xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, message);
+        AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
+        deletePrincipalRep.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+        ByteBuffer responseMessage = KadminCode.encodeMessage(deletePrincipalRep);
         return responseMessage;
     }
 
