@@ -22,9 +22,12 @@ package org.apache.kerby.kerberos.kerb.admin;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminConfig;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteAddPrincipalCommand;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteCommand;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteDeletePrincipalCommand;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteRenamePrincipalCommand;
 import org.apache.kerby.util.OSUtil;
 
-import java.io.Console;
 import java.io.File;
 import java.util.Scanner;
 
@@ -41,12 +44,12 @@ public class RemoteAdminTool {
         ? "bin\\remoteAdmin.cmd" : "sh bin/remoteAdmin.sh")
         + " conf\n";
 
-    private static final String COMMAND = "Usage: add_principal [options] <principal-name>\n"
-        + "\toptions are:\n"
-        + "\t\t[-randkey|-nokey]\n"
-        + "\t\t[-pw password]"
-        + "\tExample:\n"
-        + "\t\tadd_principal -pw mypassword alice\n";
+    private static final String LEGAL_COMMANDS = "Available commands are: "
+        + "\n"
+        + "add_principal, addprinc\n"
+        + "                         Add principal\n"
+        + "delete_principal, delprinc\n"
+        + "                         Delete principal\n";
 
     public static void main(String[] args) throws Exception {
         AdminClient adminClient;
@@ -91,62 +94,27 @@ public class RemoteAdminTool {
     private static void excute(AdminClient adminClient, String input) throws KrbException {
         input = input.trim();
         if (input.startsWith("command")) {
-            System.out.println(COMMAND);
+            System.out.println(LEGAL_COMMANDS);
             return;
         }
 
-        String[] temp = input.split("\\s+");
+        RemoteCommand executor = null;
 
-        if (temp[0].startsWith("add_principal")) {
-            String adminRealm = adminClient.getAdminConfig().getAdminRealm();
-            String clientPrincipal = temp[temp.length - 1] + "@" + adminRealm;
-            if (!temp[1].startsWith("-")) {
-                adminClient.requestAddPrincipal(clientPrincipal);
-            } else if (temp[1].startsWith("-nokey")) {
-                adminClient.requestAddPrincipal(clientPrincipal);
-            } else if (temp[1].startsWith("-pw")) {
-                String password = temp[2];
-                adminClient.requestAddPrincipal(clientPrincipal, password);
-            } else {
-                System.out.println("add_principal command format error.\n"
-                + "Please input command for further reference.");
-            }
-
-        } else if (temp[0].startsWith("delete_principal")) {
-            String principal = temp[1] + "@"
-                + adminClient.getAdminConfig().getAdminRealm();
-            String reply;
-            Console console = System.console();
-            String prompt = "Are you sure to delete the principal? (yes/no, YES/NO, y/n, Y/N) ";
-            if (console == null) {
-                System.out.println("Couldn't get Console instance, "
-                    + "maybe you're running this from within an IDE. "
-                    + "Use scanner to read password.");
-                Scanner scanner = new Scanner(System.in, "UTF-8");
-                reply = getReply(scanner, prompt);
-            } else {
-                reply = getReply(console, prompt);
-            }
-            if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
-                adminClient.requestDeletePrincipal(principal);
-            } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
-                System.out.println("Principal \"" + principal + "\"  not deleted.");
-            } else {
-                System.err.println("Unknown request, fail to delete the principal.");
-            }
+        if (input.startsWith("add_principal")
+            || input.startsWith("addprinc")) {
+            executor = new RemoteAddPrincipalCommand(adminClient);
+        } else if (input.startsWith("delete_principal")
+            || input.startsWith("delprinc")) {
+            executor = new RemoteDeletePrincipalCommand(adminClient);
+        } else if (input.startsWith("rename_principal")
+            || input.startsWith("modprinc")) {
+            executor = new RemoteRenamePrincipalCommand(adminClient);
         } else {
-            System.out.println("remain to be developed...");
+            System.out.println(LEGAL_COMMANDS);
+            return;
         }
+        executor.execute(input);
     }
 
-    private static String getReply(Scanner scanner, String prompt) {
-        System.out.println(prompt);
-        return scanner.nextLine().trim();
-    }
 
-    private static String getReply(Console console, String prompt) {
-        console.printf(prompt);
-        String line = console.readLine();
-        return line;
-    }
 }
