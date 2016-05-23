@@ -26,14 +26,18 @@ import org.apache.kerby.kerberos.kerb.server.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.transport.KdcNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A default KDC server implementation.
  */
 public class DefaultInternalKdcServerImpl extends AbstractInternalKdcServer {
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultInternalKdcServerImpl.class);
     private ExecutorService executor;
     private KdcContext kdcContext;
     private KdcNetwork network;
@@ -78,6 +82,19 @@ public class DefaultInternalKdcServerImpl extends AbstractInternalKdcServer {
 
         network.stop();
 
-        executor.shutdownNow();
+        executor.shutdown();
+
+        try {
+            boolean terminated = false;
+            do {
+                // wait until the pool has terminated
+                terminated = executor.awaitTermination(60, TimeUnit.SECONDS);
+            } while (!terminated);
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            LOG.warn("waitForTermination interrupted");
+        }
+
+        LOG.info("Default Internal kdc server stopped.");
     }
 }

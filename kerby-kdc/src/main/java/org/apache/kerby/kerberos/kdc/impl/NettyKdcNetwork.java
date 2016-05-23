@@ -126,5 +126,15 @@ public class NettyKdcNetwork {
         if (udpAddress != null) {
             group.shutdownGracefully();
         }
+
+        try {
+            bossGroup.terminationFuture().sync();
+            workerGroup.terminationFuture().sync();
+            if (udpAddress != null) {
+                group.terminationFuture().sync();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
