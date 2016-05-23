@@ -179,4 +179,9 @@ public class AdminClient {
         Kadmin remote = new RemoteKadminImpl(innerClient);
         remote.deletePrincipal(principal);
     }
+
+    public void requestRenamePrincipal(String oldPrincipal, String newPrincipal) throws KrbException {
+        Kadmin remote = new RemoteKadminImpl(innerClient);
+        remote.renamePrincipal(oldPrincipal, newPrincipal);
+    }
 }

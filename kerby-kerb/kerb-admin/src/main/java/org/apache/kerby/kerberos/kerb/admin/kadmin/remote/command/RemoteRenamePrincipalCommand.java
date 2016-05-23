@@ -46,8 +46,9 @@ public class RemoteRenamePrincipalCommand extends RemoteCommand {
             return;
         }
 
-        String oldPrincipalName = items[items.length - 2];
-        String newPrincipalName = items[items.length - 1];
+        String adminRealm = adminClient.getAdminConfig().getAdminRealm();
+        String oldPrincipalName = items[items.length - 2] + "@" + adminRealm;
+        String newPrincipalName = items[items.length - 1] + "@" + adminRealm;
 
         String reply;
         Console console = System.console();
@@ -62,8 +63,7 @@ public class RemoteRenamePrincipalCommand extends RemoteCommand {
             reply = getReply(console, prompt);
         }
         if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
-            //adminClient.requestRenamePrincipal(oldPrincipalName, newPrincipalName);
-            System.out.println("Rename \"" + oldPrincipalName + "\" to \"" + newPrincipalName + "\".");
+            adminClient.requestRenamePrincipal(oldPrincipalName, newPrincipalName);
         } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
             System.out.println("Principal \"" + oldPrincipalName + "\"  not renamed.");
         } else {

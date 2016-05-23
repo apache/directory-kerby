@@ -49,7 +49,9 @@ public class RemoteAdminTool {
         + "add_principal, addprinc\n"
         + "                         Add principal\n"
         + "delete_principal, delprinc\n"
-        + "                         Delete principal\n";
+        + "                         Delete principal\n"
+        + "rename_principal, renprinc\n"
+        + "                         Rename principal\n";
 
     public static void main(String[] args) throws Exception {
         AdminClient adminClient;
@@ -107,7 +109,7 @@ public class RemoteAdminTool {
             || input.startsWith("delprinc")) {
             executor = new RemoteDeletePrincipalCommand(adminClient);
         } else if (input.startsWith("rename_principal")
-            || input.startsWith("modprinc")) {
+            || input.startsWith("renprinc")) {
             executor = new RemoteRenamePrincipalCommand(adminClient);
         } else {
             System.out.println(LEGAL_COMMANDS);
