@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminConfig;
 import org.apache.kerby.util.OSUtil;
 
+import java.io.Console;
 import java.io.File;
 import java.util.Scanner;
 
@@ -41,11 +42,10 @@ public class RemoteAdminTool {
         + " conf\n";
 
     private static final String COMMAND = "Usage: add_principal [options] <principal-name>\n"
-        + "\toptions are:\n"
-        + "\t\t[-randkey|-nokey]\n"
-        + "\t\t[-pw password]"
+        + "delete_principal <principal_name>\n"
         + "\tExample:\n"
-        + "\t\tadd_principal -pw mypassword alice\n";
+        + "\t\tadd_principal -pw mypassword alice\n"
+        + "\t\tdelete_principal alice\n";
 
     public static void main(String[] args) throws Exception {
         AdminClient adminClient;
@@ -111,8 +111,41 @@ public class RemoteAdminTool {
                 + "Please input command for further reference.");
             }
 
+        } else if (temp[0].startsWith("delete_principal")) {
+            String principal = temp[1] + "@"
+                + adminClient.getAdminConfig().getAdminRealm();
+            String reply;
+            Console console = System.console();
+            String prompt = "Are you sure to delete the principal? (yes/no, YES/NO, y/n, Y/N) ";
+            if (console == null) {
+                System.out.println("Couldn't get Console instance, "
+                    + "maybe you're running this from within an IDE. "
+                    + "Use scanner to read password.");
+                Scanner scanner = new Scanner(System.in, "UTF-8");
+                reply = getReply(scanner, prompt);
+            } else {
+                reply = getReply(console, prompt);
+            }
+            if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
+                adminClient.requestDeletePrincipal(principal);
+            } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
+                System.out.println("Principal \"" + principal + "\"  not deleted.");
+            } else {
+                System.err.println("Unknown request, fail to delete the principal.");
+            }
         } else {
             System.out.println("remain to be developed...");
         }
+    }
+
+    private static String getReply(Scanner scanner, String prompt) {
+        System.out.println(prompt);
+        return scanner.nextLine().trim();
+    }
+
+    private static String getReply(Console console, String prompt) {
+        console.printf(prompt);
+        String line = console.readLine();
+        return line;
     }
 }

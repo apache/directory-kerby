@@ -20,12 +20,20 @@
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageCode;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageType;
 import org.apache.kerby.kerberos.kerb.admin.tool.DeletePrincipalReq;
+import org.apache.kerby.xdr.XdrDataType;
+import org.apache.kerby.xdr.XdrFieldInfo;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * DeletePrincipal request
  */
 public class DeletePrincipalRequest extends AdminRequest {
+    /** Admin delete principal do not need password or koptions. */
 
     public DeletePrincipalRequest(String principal) {
         super(principal);
@@ -34,8 +42,29 @@ public class DeletePrincipalRequest extends AdminRequest {
     @Override
     public void process() throws KrbException {
         super.process();
-        /**replace this with encode in handler*/
         DeletePrincipalReq deletePrincipalReq = new DeletePrincipalReq();
+        /** encode admin message:
+         *  encode type
+         *  encode paranum
+         *  encode principal name
+         *  (encode koptions)
+         *  (encode passsword)
+         */
+        XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
+        xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.DELETE_PRINCIPAL_REQ);
+        xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
+        xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, getPrincipal());
+
+        AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
+        byte[] encodeBytes;
+        try {
+            encodeBytes = value.encode();
+        } catch (IOException e) {
+            throw new KrbException("Xdr encode error when generate delete principal request.", e);
+        }
+        ByteBuffer messageBuffer = ByteBuffer.wrap(encodeBytes);
+        deletePrincipalReq.setMessageBuffer(messageBuffer);
+
         setAdminReq(deletePrincipalReq);
 
     }
