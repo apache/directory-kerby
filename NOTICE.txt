@@ -6,5 +6,13 @@ The Apache Software Foundation (http://www.apache.org/).
 
 
 This product includes/uses SLF4J (http://www.slf4j.org/)
+Copyright (c) 2004-2016 QOS.ch
 
-This product includes/uses JUnit (http://www.junit.org/
+This product includes/uses JUnit (http://www.junit.org/)
+Copyright (c) 2002-2016 JUnit.
+
+This product includes/uses Gson (https://github.com/google/gson)
+Copyright (c) 2008 Google Inc.
+
+This product includes/uses Netty (http://netty.io/)
+Copyright (c) 2016 The Netty project
