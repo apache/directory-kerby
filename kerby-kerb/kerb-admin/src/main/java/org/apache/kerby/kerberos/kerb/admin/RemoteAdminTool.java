@@ -42,11 +42,10 @@ public class RemoteAdminTool {
         + " conf\n";
 
     private static final String COMMAND = "Usage: add_principal [options] <principal-name>\n"
-        + "\toptions are:\n"
-        + "\t\t[-randkey|-nokey]\n"
-        + "\t\t[-pw password]"
+        + "delete_principal <principal_name>\n"
         + "\tExample:\n"
-        + "\t\tadd_principal -pw mypassword alice\n";
+        + "\t\tadd_principal -pw mypassword alice\n"
+        + "\t\tdelete_principal alice\n";
 
     public static void main(String[] args) throws Exception {
         AdminClient adminClient;

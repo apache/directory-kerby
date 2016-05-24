@@ -119,7 +119,6 @@ public class AdminServerHandler {
             } catch (KrbException e) {
                 String error = "principal already exist.\n"
                     + "Choose update password instead of add principal";
-                System.err.println(error);
                 LOG.error(error);
                 XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
                 xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.ADD_PRINCIPAL_REP);
@@ -159,7 +158,6 @@ public class AdminServerHandler {
             localKadmin.deletePrincipal(temp[0]);
         } catch (KrbException e) {
             String error = "no such principal exist!";
-            System.err.println(error);
             LOG.error(error);
             XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
             xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.DELETE_PRINCIPAL_REP);
