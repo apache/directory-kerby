@@ -91,12 +91,13 @@ public class AdminServerHandler {
 
         if (paramNum == 1) {
             /** Add principal with only principal name*/
-            System.out.println("handle nokey principal " + principal);
+            LOG.info("handle nokey principal " + principal);
             String[] temp = principal.split("@");
             try {
                 localKadmin.addPrincipal(temp[0]);
             } catch (KrbException e) {
                 String error = "principal already exist!";
+                LOG.error(error);
                 System.err.println(error);
                 XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
                 xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.ADD_PRINCIPAL_REP);
@@ -110,7 +111,7 @@ public class AdminServerHandler {
             }
         } else if (paramNum == 2 && fieldInfos[3].getDataType() == XdrDataType.STRING) {
             /** Add principal with password*/
-            System.out.println("handle principal with password " + principal);
+            LOG.info("handle principal with password " + principal);
             String[] temp = principal.split("@");
             String password = (String) fieldInfos[3].getValue();
             try {
@@ -119,7 +120,7 @@ public class AdminServerHandler {
                 String error = "principal already exist.\n"
                     + "Choose update password instead of add principal";
                 System.err.println(error);
-
+                LOG.error(error);
                 XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
                 xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.ADD_PRINCIPAL_REP);
                 xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
@@ -133,6 +134,7 @@ public class AdminServerHandler {
         }
 
         String message = "add principal of " + principal;
+        LOG.info(message);
         //content to reply remain to construct
         AdminMessage addPrincipalRep = new AddPrincipalRep();
         /** encode admin message:
@@ -158,6 +160,7 @@ public class AdminServerHandler {
         } catch (KrbException e) {
             String error = "no such principal exist!";
             System.err.println(error);
+            LOG.error(error);
             XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
             xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.DELETE_PRINCIPAL_REP);
             xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
@@ -170,6 +173,7 @@ public class AdminServerHandler {
         }
 
         String message = "delete principal of " + principal;
+        LOG.info(message);
         AdminMessage deletePrincipalRep = new DeletePrincipalRep();
         XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
         xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.DELETE_PRINCIPAL_REP);
