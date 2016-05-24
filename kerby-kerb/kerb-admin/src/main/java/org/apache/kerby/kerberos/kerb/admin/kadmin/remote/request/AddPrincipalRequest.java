@@ -47,6 +47,11 @@ public class AddPrincipalRequest extends AdminRequest {
         this.kOptions = kOptions;
     }
 
+    public AddPrincipalRequest(String principal, String password) {
+        super(principal);
+        this.password = password;
+    }
+
     public AddPrincipalRequest(String princial, KOptions kOptions, String password) {
         super(princial);
         this.kOptions = kOptions;
@@ -68,7 +73,7 @@ public class AddPrincipalRequest extends AdminRequest {
          */
         int paramNum = getParamNum();
         XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[paramNum + 2];
-        xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.AD_REQ);
+        xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.ADD_PRINCIPAL_REQ);
         xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, paramNum);
         xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, getPrincipal());
         if (paramNum == 2 && kOptions != null) {

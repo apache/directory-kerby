@@ -40,9 +40,12 @@ public class RemoteAdminTool {
         ? "bin\\remoteAdmin.cmd" : "sh bin/remoteAdmin.sh")
         + " conf\n";
 
-    private static final String COMMAND = "Usage: add_principal <client-name>\n"
+    private static final String COMMAND = "Usage: add_principal [options] <principal-name>\n"
+        + "\toptions are:\n"
+        + "\t\t[-randkey|-nokey]\n"
+        + "\t\t[-pw password]"
         + "\tExample:\n"
-        + "\t\tadd_princial alice\n";
+        + "\t\tadd_principal -pw mypassword alice\n";
 
     public static void main(String[] args) throws Exception {
         AdminClient adminClient;
@@ -91,13 +94,21 @@ public class RemoteAdminTool {
             return;
         }
 
-        String[] temp = input.split(" ");
+        String[] temp = input.split("\\s+");
 
         if (temp[0].startsWith("add_principal")) {
-            if (temp.length == 2) {
-                String adminRealm = adminClient.getAdminConfig().getAdminRealm();
-                String clientPrincipal = temp[1] + "@" + adminRealm;
-                adminClient.requestAddPrincial(clientPrincipal);
+            String adminRealm = adminClient.getAdminConfig().getAdminRealm();
+            String clientPrincipal = temp[temp.length - 1] + "@" + adminRealm;
+            if (!temp[1].startsWith("-")) {
+                adminClient.requestAddPrincipal(clientPrincipal);
+            } else if (temp[1].startsWith("-nokey")) {
+                adminClient.requestAddPrincipal(clientPrincipal);
+            } else if (temp[1].startsWith("-pw")) {
+                String password = temp[2];
+                adminClient.requestAddPrincipal(clientPrincipal, password);
+            } else {
+                System.out.println("add_principal command format error.\n"
+                + "Please input command for further reference.");
             }
 
         } else {

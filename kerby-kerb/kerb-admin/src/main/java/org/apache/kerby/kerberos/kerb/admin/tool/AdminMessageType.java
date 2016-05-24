@@ -32,10 +32,10 @@ import org.apache.kerby.xdr.EnumType;
 
 public enum AdminMessageType implements EnumType {
     NONE(-1),
-    AD_REQ(0),
-    AD_REP(1),
-    DE_REQ(2),
-    DE_REP(3);
+    ADD_PRINCIPAL_REQ(0),
+    ADD_PRINCIPAL_REP(1),
+    DELETE_PRINCIPAL_REQ(2),
+    DELETE_PRINCIPAL_REP(3);
 
     private int value;
 

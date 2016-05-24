@@ -165,8 +165,13 @@ public class AdminClient {
         return adminConfig;
     }
 
-    public void requestAddPrincial(String principal) throws KrbException {
+    public void requestAddPrincipal(String principal) throws KrbException {
         Kadmin remote = new RemoteKadminImpl(innerClient);
         remote.addPrincipal(principal);
+    }
+
+    public void requestAddPrincipal(String principal, String password) throws KrbException {
+        Kadmin remote = new RemoteKadminImpl(innerClient);
+        remote.addPrincipal(principal, password);
     }
 }

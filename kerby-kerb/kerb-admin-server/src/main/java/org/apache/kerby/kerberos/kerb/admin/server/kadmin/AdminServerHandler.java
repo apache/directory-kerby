@@ -21,13 +21,10 @@ package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
-import org.apache.kerby.kerberos.kerb.admin.tool.AddPrincipalRep;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageCode;
-import org.apache.kerby.kerberos.kerb.admin.tool.KadminCode;
+import org.apache.kerby.kerberos.kerb.admin.tool.*;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessage;
+import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
-import org.apache.kerby.xdr.type.XdrString;
 import org.apache.kerby.xdr.type.XdrStructType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,44 +63,89 @@ public class AdminServerHandler {
         XdrStructType decoded = new AdminMessageCode();
         decoded.decode(receivedMessage);
         XdrFieldInfo[] fieldInfos = decoded.getValue().getXdrFieldInfos();
-        System.out.println("receive message type: " + fieldInfos[0].getValue());
-        System.out.println("receive message paramNum: " + fieldInfos[1].getValue());
-        String receiveMsg = (String) fieldInfos[2].getValue();
-        System.out.println("server handleMessage: " + receiveMsg);
-        String[] principal = receiveMsg.split("@");
-        System.out.println("clientName: " + principal[0]);
-        System.out.println("realm: " + principal[1]);
+        AdminMessageType type = (AdminMessageType) fieldInfos[0].getValue();
 
-        /**Add principal to backend here*/
+        /**Create LocalKadmin here*/
         LocalKadmin localKadmin = new LocalKadminImpl(adminServerContext.getAdminServerSetting());
-        try {
-            localKadmin.addPrincipal(principal[0]);
-        } catch (KrbException e) {
-            String error = "principal already exist!";
-            System.out.println(error);
-            AdminMessage errorMessage = new AddPrincipalRep();
-            XdrString xdrMessage = new XdrString(error);
-            errorMessage.setMessageBuffer(ByteBuffer.wrap(xdrMessage.encode()));
-            ByteBuffer response = KadminCode.encodeMessage(errorMessage);
-            return response;
+        ByteBuffer responseMessage = null;
+
+        switch (type) {
+            case ADD_PRINCIPAL_REQ:
+                System.out.println("message type: add principal req");
+                responseMessage = handleAddPrincipalReq(localKadmin, fieldInfos);
+                break;
+            default:
+                throw new KrbException("AdminMessageType error, can not handle it.");
+        }
+        return responseMessage;
+
+    }
+
+    private ByteBuffer handleAddPrincipalReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
+        String principal = (String) fieldInfos[2].getValue();
+        int paramNum = (int) fieldInfos[1].getValue();
+
+        if (paramNum == 1) {
+            /** Add principal with only principal name*/
+            LOG.info("handle nokey principal " + principal);
+            String[] temp = principal.split("@");
+            try {
+                localKadmin.addPrincipal(temp[0]);
+            } catch (KrbException e) {
+                String error = "principal already exist!";
+                LOG.error(error);
+                System.err.println(error);
+                XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
+                xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.ADD_PRINCIPAL_REP);
+                xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
+                xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, error);
+                AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
+                AdminMessage errorMessage = new AddPrincipalRep();
+                errorMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+                ByteBuffer response = KadminCode.encodeMessage(errorMessage);
+                return response;
+            }
+        } else if (paramNum == 2 && fieldInfos[3].getDataType() == XdrDataType.STRING) {
+            /** Add principal with password*/
+            LOG.info("handle principal with password " + principal);
+            String[] temp = principal.split("@");
+            String password = (String) fieldInfos[3].getValue();
+            try {
+                localKadmin.addPrincipal(temp[0], password);
+            } catch (KrbException e) {
+                String error = "principal already exist.\n"
+                    + "Choose update password instead of add principal";
+                System.err.println(error);
+                LOG.error(error);
+
+                XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
+                xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.ADD_PRINCIPAL_REP);
+                xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
+                xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, error);
+                AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
+                AdminMessage errorMessage = new AddPrincipalRep();
+                errorMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+                ByteBuffer response = KadminCode.encodeMessage(errorMessage);
+                return response;
+            }
         }
 
-        String message = "add principal of " + principal[0];
+        String message = "add principal of " + principal;
+        LOG.info(message);
         //content to reply remain to construct
         AdminMessage addPrincipalRep = new AddPrincipalRep();
         /** encode admin message:
          *  encode type
-         *  encode paranum
-         *  encode principal name
-         *  (encode koptions)
-         *  (encode passsword)
+         *  encode message
          */
-        XdrString value = new XdrString(message);
+        XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
+        xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.ADD_PRINCIPAL_REP);
+        xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
+        xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, message);
+        AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
         addPrincipalRep.setMessageBuffer(ByteBuffer.wrap(value.encode()));
-        System.out.println("value length:" + addPrincipalRep.getMessageBuffer().capacity());
         ByteBuffer responseMessage = KadminCode.encodeMessage(addPrincipalRep);
-
         return responseMessage;
-
     }
+
 }
