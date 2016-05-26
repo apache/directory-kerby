@@ -28,7 +28,6 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteDeletePr
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteRenamePrincipalCommand;
 import org.apache.kerby.util.OSUtil;
 
-import java.io.Console;
 import java.io.File;
 import java.util.Scanner;
 
