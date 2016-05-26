@@ -101,6 +101,15 @@ public abstract class AdminHandler {
                     + AdminMessageType.DELETE_PRINCIPAL_REP);
                 }
                 break;
+            case RENAME_PRINCIPAL_REP:
+                if (adminRequest.getAdminReq().getAdminMessageType()
+                    == AdminMessageType.RENAME_PRINCIPAL_REQ) {
+                    System.out.println((String) fieldInfos[2].getValue());
+                } else {
+                    throw new KrbException("Response message type error: need "
+                    + AdminMessageType.RENAME_PRINCIPAL_REP);
+                }
+                break;
             default:
                 throw new KrbException("Response message type error: " + type);
         }

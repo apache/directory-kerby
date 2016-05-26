@@ -27,6 +27,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClie
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AddPrincipalRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.DeletePrincipalRequest;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.RenamePrincipalRequest;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
@@ -165,7 +166,10 @@ public class RemoteKadminImpl implements Kadmin {
     @Override
     public void renamePrincipal(String oldPrincipalName,
                                 String newPrincipalName) throws KrbException {
-
+        AdminRequest renamePrincipalRequest =  new RenamePrincipalRequest(oldPrincipalName, newPrincipalName);
+        renamePrincipalRequest.setTransport(transport);
+        AdminHandler adminHandler = new DefaultAdminHandler();
+        adminHandler.handleRequest(renamePrincipalRequest);
     }
 
     @Override

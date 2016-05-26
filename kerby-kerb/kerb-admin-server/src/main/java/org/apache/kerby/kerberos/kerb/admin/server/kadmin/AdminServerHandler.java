@@ -78,6 +78,10 @@ public class AdminServerHandler {
                 System.out.println("message type: delete principal req");
                 responseMessage = handleDeletePrincipalReq(localKadmin, fieldInfos);
                 break;
+            case RENAME_PRINCIPAL_REQ:
+                System.out.println("message type: rename principal req");
+                responseMessage = handleRenamePrincipalReq(localKadmin, fieldInfos);
+                break;
             default:
                 throw new KrbException("AdminMessageType error, can not handle it.");
         }
@@ -183,4 +187,38 @@ public class AdminServerHandler {
         return responseMessage;
     }
 
+    private ByteBuffer handleRenamePrincipalReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
+        /** message structure: msg_type, para_num(always equals 2), old name, new name*/
+
+        String[] oldPrincipalName = ((String) fieldInfos[2].getValue()).split("@");
+        String[] newPrincipalName = ((String) fieldInfos[3].getValue()).split("@");
+
+        try {
+            localKadmin.renamePrincipal(oldPrincipalName[0], newPrincipalName[0]);
+        } catch (KrbException e) {
+            String error = "the old principal name does not exist, or the new principal name"
+                + " already exists, rename failed.";
+            System.err.println(error);
+            XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
+            xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.RENAME_PRINCIPAL_REP);
+            xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
+            xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, error);
+            AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
+            AdminMessage errorMessage = new RenamePrincipalRep();
+            errorMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+            ByteBuffer response = KadminCode.encodeMessage(errorMessage);
+            return response;
+        }
+
+        String message = "rename " + oldPrincipalName[0] + " to " + newPrincipalName[0];
+        AdminMessage renamePrincipalRep = new RenamePrincipalRep();
+        XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
+        xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.RENAME_PRINCIPAL_REP);
+        xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
+        xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, message);
+        AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
+        renamePrincipalRep.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+        ByteBuffer responseMessage = KadminCode.encodeMessage(renamePrincipalRep);
+        return responseMessage;
+    }
 }
