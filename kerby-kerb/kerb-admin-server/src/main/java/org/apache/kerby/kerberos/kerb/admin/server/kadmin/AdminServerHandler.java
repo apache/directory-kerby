@@ -78,10 +78,13 @@ public class AdminServerHandler {
                 System.out.println("message type: delete principal req");
                 responseMessage = handleDeletePrincipalReq(localKadmin, fieldInfos);
                 break;
+<<<<<<< HEAD
             case RENAME_PRINCIPAL_REQ:
                 System.out.println("message type: rename principal req");
                 responseMessage = handleRenamePrincipalReq(localKadmin, fieldInfos);
                 break;
+=======
+>>>>>>> master
             default:
                 throw new KrbException("AdminMessageType error, can not handle it.");
         }
@@ -123,9 +126,7 @@ public class AdminServerHandler {
             } catch (KrbException e) {
                 String error = "principal already exist.\n"
                     + "Choose update password instead of add principal";
-                System.err.println(error);
                 LOG.error(error);
-
                 XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
                 xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.ADD_PRINCIPAL_REP);
                 xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
@@ -164,7 +165,11 @@ public class AdminServerHandler {
             localKadmin.deletePrincipal(temp[0]);
         } catch (KrbException e) {
             String error = "no such principal exist!";
+<<<<<<< HEAD
             System.err.println(error);
+=======
+            LOG.error(error);
+>>>>>>> master
             XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
             xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.DELETE_PRINCIPAL_REP);
             xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
@@ -177,6 +182,10 @@ public class AdminServerHandler {
         }
 
         String message = "delete principal of " + principal;
+<<<<<<< HEAD
+=======
+        LOG.info(message);
+>>>>>>> master
         AdminMessage deletePrincipalRep = new DeletePrincipalRep();
         XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
         xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.DELETE_PRINCIPAL_REP);
@@ -188,6 +197,7 @@ public class AdminServerHandler {
         return responseMessage;
     }
 
+<<<<<<< HEAD
     private ByteBuffer handleRenamePrincipalReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
         /** message structure: msg_type, para_num(always equals 2), old name, new name*/
 
@@ -222,4 +232,6 @@ public class AdminServerHandler {
         ByteBuffer responseMessage = KadminCode.encodeMessage(renamePrincipalRep);
         return responseMessage;
     }
+=======
+>>>>>>> master
 }
