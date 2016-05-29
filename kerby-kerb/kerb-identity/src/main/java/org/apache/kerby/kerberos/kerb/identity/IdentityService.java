@@ -20,6 +20,8 @@
 package org.apache.kerby.kerberos.kerb.identity;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
+import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 
 /**
  * Identity service for KDC backend to create, get and manage principal accounts.
@@ -53,6 +55,16 @@ public interface IdentityService {
      * @throws KrbException e
      */
     KrbIdentity getIdentity(String principalName) throws KrbException;
+
+    /**
+     * Get an identity's Authorization Data.
+     * @param kdcRequest The KdcRequest
+     * @param encTicketPart The EncTicketPart being built for the KrbIdentity
+     * @return The Authorization Data
+     * @throws KrbException e
+     */
+    AuthorizationData getIdentityAuthorizationData(Object kdcRequest,
+            EncTicketPart encTicketPart) throws KrbException;
 
     /**
      * Add an identity, and return the newly created result.

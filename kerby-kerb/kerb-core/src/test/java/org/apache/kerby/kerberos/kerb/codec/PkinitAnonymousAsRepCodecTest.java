@@ -117,7 +117,7 @@ public class PkinitAnonymousAsRepCodecTest {
         KdcDhKeyInfo kdcDhKeyInfo = new KdcDhKeyInfo();
         kdcDhKeyInfo.decode(eContentInfo);
         assertThat(kdcDhKeyInfo.getSubjectPublicKey()).isNotNull();
-        assertThat(kdcDhKeyInfo.getDHKeyExpiration()).isNotNull();
+        assertThat(kdcDhKeyInfo.getDHKeyExpiration()).isNull();
         assertThat(kdcDhKeyInfo.getNonce()).isNotNull();
     }
 }

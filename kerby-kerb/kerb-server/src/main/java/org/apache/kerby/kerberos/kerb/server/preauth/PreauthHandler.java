@@ -131,18 +131,22 @@ public class PreauthHandler {
     }
 
     public static boolean isToken(PaData paData) {
-        for (PaDataEntry paEntry : paData.getElements()) {
-            if (paEntry.getPaDataType() == PaDataType.TOKEN_REQUEST) {
-                return true;
+        if (paData != null) {
+            for (PaDataEntry paEntry : paData.getElements()) {
+                if (paEntry.getPaDataType() == PaDataType.TOKEN_REQUEST) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     public static boolean isPkinit(PaData paData) {
-        for (PaDataEntry paEntry : paData.getElements()) {
-            if (paEntry.getPaDataType() == PaDataType.PK_AS_REQ) {
-                return true;
+        if (paData != null) {
+            for (PaDataEntry paEntry : paData.getElements()) {
+                if (paEntry.getPaDataType() == PaDataType.PK_AS_REQ) {
+                    return true;
+                }
             }
         }
         return false;

@@ -61,10 +61,15 @@ public class Asn1Constructed
     }
 
     public void addItem(Asn1Type value) {
+        resetBodyLength();
         getValue().add(value);
+        if (value instanceof Asn1Encodeable) {
+            ((Asn1Encodeable) value).outerEncodeable = this;
+        }
     }
 
     public void clear() {
+        resetBodyLength();
         getValue().clear();
     }
 

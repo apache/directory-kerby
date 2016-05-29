@@ -37,7 +37,8 @@ import java.nio.ByteBuffer;
  */
 public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
 
-    private int bodyLength = -1;
+    protected int bodyLength = -1;
+    public Asn1Encodeable outerEncodeable = null;
 
     // encoding options
     private EncodingType encodingType = EncodingType.BER;
@@ -143,6 +144,15 @@ public abstract class Asn1Encodeable extends Asn1Object implements Asn1Type {
         int bodyLen = getBodyLength();
         Asn1Util.encodeLength(buffer, bodyLen);
         encodeBody(buffer);
+    }
+
+    public void resetBodyLength() {
+        if (bodyLength != -1) {
+            bodyLength = -1;
+            if (outerEncodeable != null) {
+                outerEncodeable.resetBodyLength();
+            }
+        }
     }
 
     protected void encodeBody(ByteBuffer buffer) throws IOException { }

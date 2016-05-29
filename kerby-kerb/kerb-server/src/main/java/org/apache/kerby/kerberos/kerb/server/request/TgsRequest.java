@@ -101,7 +101,7 @@ public class TgsRequest extends KdcRequest {
      *
      * @return The tgt ticket.
      */
-    protected Ticket getTgtTicket() {
+    public Ticket getTgtTicket() {
         return tgtTicket;
     }
 

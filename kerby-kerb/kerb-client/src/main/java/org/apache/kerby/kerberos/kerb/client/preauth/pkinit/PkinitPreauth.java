@@ -44,6 +44,7 @@ import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CmsMessageType;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitIdenity;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPlgCryptoContext;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
@@ -79,7 +80,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@SuppressWarnings("PMD.UnusedFormalParameter")
 public class PkinitPreauth extends AbstractPreauthPlugin {
     private static final Logger LOG = LoggerFactory.getLogger(PkinitPreauth.class);
 
@@ -213,6 +213,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 processingRequest = true;
                 break;
             case PK_AS_REP:
+            default:
                 break;
         }
 
@@ -226,14 +227,17 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         }
     }
 
+    @SuppressWarnings("unused")
     private void generateRequest(PkinitRequestContext reqCtx, KdcRequest kdcRequest,
                                  PaData outPadata) {
 
     }
 
+    @SuppressWarnings("unused")
     private PaPkAsReq makePaPkAsReq(KdcRequest kdcRequest,
                                     PkinitRequestContext reqCtx,
                                     int cusec, KerberosTime ctime, int nonce, CheckSum checkSum) throws KrbException {
+        KdcRequest kdc = kdcRequest;
 
         LOG.info("Making the PK_AS_REQ.");
         PaPkAsReq paPkAsReq = new PaPkAsReq();
@@ -291,30 +295,28 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             authPack.setClientPublicValue(pubInfo);
 
-//            DhNonce dhNonce = new DhNonce();
-//            authPack.setClientDhNonce(dhNonce);
+            // DhNonce dhNonce = new DhNonce();
+            // authPack.setClientDhNonce(dhNonce);
             byte[] signedAuthPack = signAuthPack(authPack);
             paPkAsReq.setSignedAuthPack(signedAuthPack);
 
         } else {
             LOG.info("RSA key transport algorithm");
-//            authPack.setClientPublicValue(null);
+            // authPack.setClientPublicValue(null);
         }
-
-
 
         TrustedCertifiers trustedCertifiers = pkinitContext.pluginOpts.createTrustedCertifiers();
         paPkAsReq.setTrustedCertifiers(trustedCertifiers);
 
-//        byte[] kdcPkId = pkinitContext.pluginOpts.createIssuerAndSerial();
-//        paPkAsReq.setKdcPkId(kdcPkId);
+        // byte[] kdcPkId = pkinitContext.pluginOpts.createIssuerAndSerial();
+        // paPkAsReq.setKdcPkId(kdcPkId);
 
         return paPkAsReq;
     }
 
     private byte[] signAuthPack(AuthPack authPack) throws KrbException {
 
-        String oid = pkinitContext.cryptoctx.getIdPkinitAuthDataOID();
+        String oid = PkinitPlgCryptoContext.getIdPkinitAuthDataOID();
 
         byte[] signedDataBytes = PkinitCrypto.eContentInfoCreate(
                 KrbCodec.encode(authPack), oid);
@@ -348,7 +350,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             PkinitCrypto.verifyCmsSignedData(
                     CmsMessageType.CMS_SIGN_SERVER, signedData);
 
-
             String anchorFileName = kdcRequest.getContext().getConfig().getPkinitAnchors().get(0);
 
             X509Certificate x509Certificate = null;
@@ -361,10 +362,12 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             Certificate archorCertificate = PkinitCrypto.changeToCertificate(x509Certificate);
 
             CertificateSet certificateSet = signedData.getCertificates();
-            List<CertificateChoices> certificateChoicesList = certificateSet.getElements();
             List<Certificate> certificates = new ArrayList<>();
-            for (CertificateChoices certificateChoices : certificateChoicesList) {
-                certificates.add(certificateChoices.getCertificate());
+            if (certificateSet != null) {
+                List<CertificateChoices> certificateChoicesList = certificateSet.getElements();
+                for (CertificateChoices certificateChoices : certificateChoicesList) {
+                    certificates.add(certificateChoices.getCertificate());
+                }
             }
             try {
                 PkinitCrypto.validateChain(certificates, archorCertificate);

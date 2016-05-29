@@ -205,29 +205,31 @@ public abstract class KdcRequest {
     private void kdcFindFast() throws KrbException {
 
         PaData paData = getKdcReq().getPaData();
-        for (PaDataEntry paEntry : paData.getElements()) {
-            if (paEntry.getPaDataType() == PaDataType.FX_FAST) {
-                LOG.info("Found fast padata and start to process it.");
-                KrbFastArmoredReq fastArmoredReq = KrbCodec.decode(paEntry.getPaDataValue(),
-                        KrbFastArmoredReq.class);
-                KrbFastArmor fastArmor = fastArmoredReq.getArmor();
-                armorApRequest(fastArmor);
+        if (paData != null) {
+            for (PaDataEntry paEntry : paData.getElements()) {
+                if (paEntry.getPaDataType() == PaDataType.FX_FAST) {
+                    LOG.info("Found fast padata and start to process it.");
+                    KrbFastArmoredReq fastArmoredReq = KrbCodec.decode(paEntry.getPaDataValue(),
+                            KrbFastArmoredReq.class);
+                    KrbFastArmor fastArmor = fastArmoredReq.getArmor();
+                    armorApRequest(fastArmor);
 
-                EncryptedData encryptedData = fastArmoredReq.getEncryptedFastReq();
-                KrbFastReq fastReq = KrbCodec.decode(
-                        EncryptionHandler.decrypt(encryptedData, getArmorKey(), KeyUsage.FAST_ENC),
-                        KrbFastReq.class);
-                innerBodyout = KrbCodec.encode(fastReq.getKdcReqBody());
+                    EncryptedData encryptedData = fastArmoredReq.getEncryptedFastReq();
+                    KrbFastReq fastReq = KrbCodec.decode(
+                            EncryptionHandler.decrypt(encryptedData, getArmorKey(), KeyUsage.FAST_ENC),
+                            KrbFastReq.class);
+                    innerBodyout = KrbCodec.encode(fastReq.getKdcReqBody());
 
-                // TODO: get checksumed data in stream
-                CheckSum checkSum = fastArmoredReq.getReqChecksum();
-                if (checkSum == null) {
-                    LOG.warn("Checksum is empty.");
-                    throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED);
+                    // TODO: get checksumed data in stream
+                    CheckSum checkSum = fastArmoredReq.getReqChecksum();
+                    if (checkSum == null) {
+                        LOG.warn("Checksum is empty.");
+                        throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED);
+                    }
+                    byte[] reqBody = KrbCodec.encode(getKdcReq().getReqBody());
+                        CheckSumHandler.verifyWithKey(checkSum, reqBody,
+                            getArmorKey().getKeyData(), KeyUsage.FAST_REQ_CHKSUM);
                 }
-                byte[] reqBody = KrbCodec.encode(getKdcReq().getReqBody());
-                    CheckSumHandler.verifyWithKey(checkSum, reqBody,
-                        getArmorKey().getKeyData(), KeyUsage.FAST_REQ_CHKSUM);
             }
         }
     }

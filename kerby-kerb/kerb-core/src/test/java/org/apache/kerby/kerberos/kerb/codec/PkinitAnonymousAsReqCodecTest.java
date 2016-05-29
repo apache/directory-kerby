@@ -20,8 +20,10 @@
 package org.apache.kerby.kerberos.kerb.codec;
 
 import org.apache.kerby.asn1.Asn1;
+import org.apache.kerby.cms.type.DigestAlgorithmIdentifiers;
 import org.apache.kerby.cms.type.SignedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
+import org.apache.kerby.cms.type.SignerInfos;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
@@ -45,7 +47,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PkinitAnonymousAsReqCodecTest {
     @Test
@@ -114,15 +116,23 @@ public class PkinitAnonymousAsReqCodecTest {
         SignedContentInfo contentInfo = new SignedContentInfo();
         Asn1.parseAndDump(paPkAsReq.getSignedAuthPack());
         contentInfo.decode(paPkAsReq.getSignedAuthPack());
-        assertThat(contentInfo.getContentType()).isEqualTo("1.2.840.113549.1.7.2");
+        assertThat(contentInfo.getContentType()) .isEqualTo("1.2.840.113549.1.7.2");
         Asn1.dump(contentInfo);
 
         SignedData signedData = contentInfo.getSignedData();
         assertThat(signedData.getVersion()).isEqualTo(3);
-        assertThat(signedData.getDigestAlgorithms().getElements().isEmpty()).isTrue();
-        assertThat(signedData.getCertificates().getElements().isEmpty()).isTrue();
-        assertThat(signedData.getCrls().getElements().isEmpty()).isTrue();
-        assertThat(signedData.getSignerInfos().getElements().isEmpty()).isTrue();
+        DigestAlgorithmIdentifiers dais = signedData.getDigestAlgorithms();
+        assertThat(dais).isNotNull();
+        if (dais != null) {
+            assertThat(dais.getElements()).isEmpty();
+        }
+        assertThat(signedData.getCertificates()).isNull();
+        assertThat(signedData.getCrls()).isNull();
+        SignerInfos signerInfos = signedData.getSignerInfos();
+        assertThat(signerInfos).isNotNull();
+        if (signerInfos != null) {
+            assertThat(signerInfos.getElements()).isEmpty();
+        }
         assertThat(signedData.getEncapContentInfo().getContentType())
                 .isEqualTo("1.3.6.1.5.2.3.1");
 

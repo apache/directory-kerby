@@ -24,7 +24,10 @@ import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
+import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+
+import java.io.IOException;
 
 /**
  * The AuthorizationData component as defined in RFC 4120 :
@@ -79,6 +82,23 @@ public class AuthorizationDataEntry extends KrbSequenceType {
     }
 
     /**
+     * Creates an AuthorizationDataEntry instance
+     */
+    public AuthorizationDataEntry(AuthorizationType type) {
+        super(fieldInfos);
+        setAuthzType(type);
+    }
+
+    /**
+     * Creates an AuthorizationDataEntry instance
+     */
+    public AuthorizationDataEntry(AuthorizationType type, byte[] authzData) {
+        super(fieldInfos);
+        setAuthzType(type);
+        setAuthzData(authzData);
+    }
+
+    /**
      * @return The AuthorizationType (AD_TYPE) field
      */
     public AuthorizationType getAuthzType() {
@@ -96,7 +116,7 @@ public class AuthorizationDataEntry extends KrbSequenceType {
     }
 
     /**
-     * @return The AuthorizationType (AD_DATA) field
+     * @return The AuthorizationData (AD_DATA) field
      */
     public byte[] getAuthzData() {
         return getFieldAsOctets(AuthorizationDataEntryField.AD_DATA);
@@ -108,5 +128,32 @@ public class AuthorizationDataEntry extends KrbSequenceType {
      */
     public void setAuthzData(byte[] authzData) {
         setFieldAsOctets(AuthorizationDataEntryField.AD_DATA, authzData);
+    }
+
+    /**
+     * @param <T>
+     * @return The AuthorizationData (AD_DATA) field
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    public <T extends Asn1Type> T getAuthzDataAs(Class<T> type) {
+        T result = null;
+        byte[] authzBytes = getFieldAsOctets(
+                AuthorizationDataEntryField.AD_DATA);
+        if (authzBytes != null) {
+            try {
+                result = type.newInstance();
+                result.decode(authzBytes);
+            } catch (InstantiationException | IllegalAccessException | IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return result;
+    }
+
+    public AuthorizationDataEntry clone() {
+        return new AuthorizationDataEntry(getAuthzType(),
+                getAuthzData().clone());
     }
 }

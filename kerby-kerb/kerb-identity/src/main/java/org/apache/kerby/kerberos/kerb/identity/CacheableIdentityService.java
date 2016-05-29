@@ -22,6 +22,8 @@ package org.apache.kerby.kerberos.kerb.identity;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.config.Configured;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
+import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -141,5 +143,16 @@ public class CacheableIdentityService
         }
 
         underlying.deleteIdentity(principalName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public AuthorizationData getIdentityAuthorizationData(Object kdcRequest,
+            EncTicketPart encTicketPart) throws KrbException {
+
+        return underlying.getIdentityAuthorizationData(kdcRequest,
+                encTicketPart);
     }
 }

@@ -23,6 +23,8 @@ import org.apache.kerby.config.Configured;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.BatchTrans;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
+import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -166,6 +168,38 @@ public abstract class AbstractIdentityBackend
     /**
      * {@inheritDoc}
      */
+    @Override
+    public AuthorizationData getIdentityAuthorizationData(Object kdcRequest,
+            EncTicketPart encTicketPart) throws KrbException {
+        if (kdcRequest == null) {
+            throw new IllegalArgumentException("Invalid identity");
+        }
+
+        logger.debug("getIdentityAuthorizationData called, krbIdentity = {}",
+                kdcRequest);
+
+        AuthorizationData authData = doGetIdentityAuthorizationData(kdcRequest,
+                encTicketPart);
+        logger.debug("getIdentityAuthorizationData {}, authData = {}",
+                (authData != null ? "successful" : "failed"), authData);
+
+        return authData;
+    }
+
+    /**
+     * Get an identity's Authorization Data, invoked by getIdentityAuthorizationData.
+     * @param krbIdentity The KrbIdentity
+     * @param encTicketPart The EncTicketPart being built for the KrbIdentity
+     * @return The Authorization Data
+     * @throws KrbException e
+     */
+    protected AuthorizationData doGetIdentityAuthorizationData(
+            Object kdcRequest, EncTicketPart encTicketPart)
+            throws KrbException {
+        return null;
+    }
+
+    /** {@inheritDoc} */
     @Override
     public KrbIdentity addIdentity(KrbIdentity identity) throws KrbException {
         if (identity == null) {

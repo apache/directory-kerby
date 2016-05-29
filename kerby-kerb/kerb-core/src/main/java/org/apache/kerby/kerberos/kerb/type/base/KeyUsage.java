@@ -100,7 +100,8 @@ public enum KeyUsage implements EnumType {
     ENC_CHALLENGE_KDC(55),
     AS_REQ(56),
     //PA-TOKEN padata,encrypted with the client key
-    PA_TOKEN(57);
+    PA_TOKEN(57),
+    AD_CAMMAC_VERIFIER_MAC(64);  //See RFC 7751
 
     private int value;
 

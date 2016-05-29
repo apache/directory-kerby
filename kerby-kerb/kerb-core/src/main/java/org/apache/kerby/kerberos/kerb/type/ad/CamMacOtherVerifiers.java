@@ -22,27 +22,9 @@ package org.apache.kerby.kerberos.kerb.type.ad;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceOfType;
 
 /**
- * The AuthorizationData  as defined in RFC 4120 :
- * <pre>
- * AuthorizationData       ::= SEQUENCE OF SEQUENCE {
- *         ad-type         [0] Int32,
- *         ad-data         [1] OCTET STRING
- * }
- * </pre>
+ * Contributed to the Apache Kerby Project by: Prodentity - Corrales, NM
  * 
- * This class is just empty, as the content is already stored in a SequenceOf.
- * 
- * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
+ * @author <a href="mailto:dev@directory.apache.org">Apache DirectoryProject</a>
  */
-public class AuthorizationData extends KrbSequenceOfType<AuthorizationDataEntry> {
-
-    public AuthorizationData clone() {
-        AuthorizationData result = new AuthorizationData();
-
-        for (AuthorizationDataEntry entry : super.getElements()) {
-            result.add(entry.clone());
-        }
-
-        return result;
-    }
+public class CamMacOtherVerifiers extends KrbSequenceOfType<CamMacVerifierChoice> {
 }
