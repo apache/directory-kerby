@@ -244,6 +244,7 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected Iterable<String> doGetIdentities() throws KrbException {
+        load();
         List<String> principals = new ArrayList<>(identities.keySet());
         Collections.sort(principals);
 

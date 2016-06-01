@@ -379,6 +379,14 @@ public class LocalKadminImpl implements LocalKadmin {
     }
 
     /**
+     * get size of principal
+     */
+    @Override
+    public int size() throws KrbException {
+        return this.getPrincipals().size();
+    }
+
+    /**
      * Fix principal name, making it complete.
      *
      * @param principal The principal name

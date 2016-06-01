@@ -82,4 +82,6 @@ public interface LocalKadmin extends Kadmin {
      * @throws KrbException e
      */
     KrbIdentity getPrincipal(String principalName) throws KrbException;
+
+    int size() throws KrbException;
 }
