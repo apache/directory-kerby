@@ -37,28 +37,29 @@ public abstract class PasswdHandler {
     }
 
     /**
-     * Handle the kdc request.
+     * Handle the password server request.
      *
-     * @param passwdRequest The kdc request
+     * @param passwdRequest The password server request
      * @throws KrbException e
      */
     public void handleRequest(PasswdRequest passwdRequest) throws KrbException {
         passwdRequest.process();
-        /*
-        ByteBuffer requestMessage;
 
-        requestMessage = ByteBuffer.allocate(bodyLen + 4);
-        requestMessage.putInt(bodyLen);
+        String request = "Client request change password.";
+        ByteBuffer requestMessage = ByteBuffer.allocate(request.length() + 4);
+        requestMessage.putInt(request.length());
+        requestMessage.put(request.getBytes());
+        requestMessage.flip();
 
         try {
             sendMessage(passwdRequest, requestMessage);
         } catch (IOException e) {
             throw new KrbException("sending message failed", e);
-        }*/
+        }
     }
 
     /**
-     * Process the response messabe from kdc.
+     * Process the response message from kdc.
      *
      * @param passwdRequest The kpasswd request
      * @param responseMessage The message from kdc
@@ -66,29 +67,16 @@ public abstract class PasswdHandler {
      */
     public void onResponseMessage(PasswdRequest passwdRequest,
                                   ByteBuffer responseMessage) throws KrbException {
-        /*
-        KrbMessage kdcRep = null;
-        try {
-            kdcRep = KrbCodec.decodeMessage(responseMessage);
-        } catch (IOException e) {
-            throw new KrbException("Krb decoding message failed", e);
-        }
-
-        KrbMessageType messageType = kdcRep.getMsgType();
-        if (messageType == KrbMessageType.AS_REP) {
-
-            kdcRequest.processResponse((KdcRep) kdcRep);
-        } else if (messageType == KrbMessageType.TGS_REP) {
-            kdcRequest.processResponse((KdcRep) kdcRep);
-        }
-        */
+        String message = new String(responseMessage.array());
+        System.out.println("client receive message: ");
+        System.out.println(message);
     }
 
     /**
-     * Send message to kdc.
+     * Send message to password server.
      *
-     * @param passwdRequest The kdc request
-     * @param requestMessage The request message to kdc
+     * @param passwdRequest The change password request
+     * @param requestMessage The request message to password server
      * @throws IOException e
      */
     protected abstract void sendMessage(PasswdRequest passwdRequest,

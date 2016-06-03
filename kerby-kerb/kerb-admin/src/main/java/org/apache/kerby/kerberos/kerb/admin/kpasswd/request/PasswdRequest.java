@@ -19,21 +19,21 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.kpasswd.request;
 
-import org.apache.kerby.kerberos.kerb.admin.kpasswd.PasswdContext;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
+/**
+ * There is only one kind of password request,
+ * that is the change password request.
+ */
 public class PasswdRequest {
-    private PasswdContext context;
+    private KrbTransport transport;
 
-    public PasswdRequest(PasswdContext context) {
-        this.context = context;
+    public void setTransport(KrbTransport transport) {
+        this.transport = transport;
     }
 
-    public PasswdContext getContext() {
-        return context;
-    }
-
-    public void setContext(PasswdContext context) {
-        this.context = context;
+    public KrbTransport getTransport() {
+        return transport;
     }
 
     public void process() {

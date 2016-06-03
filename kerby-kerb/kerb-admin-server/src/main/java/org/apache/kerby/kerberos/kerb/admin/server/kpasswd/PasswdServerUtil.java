@@ -43,7 +43,7 @@ public final class PasswdServerUtil {
      * @throws KrbException e.
      */
     public static PasswdServerConfig getPasswdServerConfig(File confDir) throws KrbException {
-        File passwdConfFile = new File(confDir, "passwd.conf");
+        File passwdConfFile = new File(confDir, "kpasswdServer.conf");
         if (passwdConfFile.exists()) {
             PasswdServerConfig passwdServerConfig = new PasswdServerConfig();
             try {
