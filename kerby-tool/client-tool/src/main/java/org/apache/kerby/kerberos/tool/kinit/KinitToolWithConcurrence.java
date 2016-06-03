@@ -234,7 +234,7 @@ public class KinitToolWithConcurrence {
             Long now = System.currentTimeMillis();
 
             for (int j = 0; j < threadNumbers; j++) {
-                delayNumbers[j] = reList[j * INTERVAL] - delayNumbers[j];
+                delayNumbers[j] = reList[j * INTERVAL] - tempDelayNumbers[j];
                 tempDelayNumbers[j] =  reList[j * INTERVAL];
             }
 
@@ -243,7 +243,8 @@ public class KinitToolWithConcurrence {
             }
             float res = (now - startTime) / 1000;
 
-            int totalDelay = 0;
+            double totalDelay = 0.0;
+            int cutThreads = 0;
             for (int j = 0; j < threadNumbers; j++) {
                 if (delayNumbers[j] != 0) {
                     if (delayNumbers[max] < delayNumbers[j]) {
@@ -252,12 +253,14 @@ public class KinitToolWithConcurrence {
                     if (delayNumbers[min] == 0 || delayNumbers[min] > delayNumbers[j]) {
                         min = j;
                     }
-                    totalDelay += (now - startTime) / delayNumbers[j];
+                    totalDelay += (now - startTime) * 1.0 / delayNumbers[j];
+                } else {
+                    cutThreads += 1;
                 }
             }
             if (delayNumbers[min] != 0 && delayNumbers[max] != 0) {
                 System.out.println((now - timeStamp) / 1000 + "," + (temp - tmpTotals) / res
-                        + "," + totalDelay / threadNumbers
+                        + "," + (int) (totalDelay / (threadNumbers - cutThreads))
                         + "," + (now - startTime) / delayNumbers[min] + "," + (now - startTime) / delayNumbers[max]);
             }
 
