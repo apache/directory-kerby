@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.admin.kpasswd.impl;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kpasswd.request.PasswdRequest;
 import org.apache.kerby.kerberos.kerb.admin.kpasswd.PasswdHandler;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -29,34 +30,32 @@ import java.nio.ByteBuffer;
 public class DefaultPasswdHandler extends PasswdHandler {
 
     /**
-     * {@inheritDoc}
+     * Client handle request.
+     * Use super.handleRequest to send message,
+     * and use this.handleRequest to receive message.
      */
     @Override
     public void handleRequest(PasswdRequest passwdRequest) throws KrbException {
-        /*
-        KrbTransport transport = (KrbTransport) passwdRequest.getSessionData();
-        transport.setAttachment(passwdRequest);
-
+        /** super is used to send messsage*/
         super.handleRequest(passwdRequest);
-        ByteBuffer receivedMessage = null;
+
+        KrbTransport transport = passwdRequest.getTransport();
+        ByteBuffer receiveMessage = null;
         try {
-            receivedMessage = transport.receiveMessage();
+            receiveMessage = transport.receiveMessage();
         } catch (IOException e) {
-            throw new KrbException("Receiving response message failed", e);
+            throw new KrbException("Client receives response message failed.");
         }
-        super.onResponseMessage(passwdRequest, receivedMessage);
-        */
+        super.onResponseMessage(passwdRequest, receiveMessage);
     }
 
     /**
-     * {@inheritDoc}
+     * Override super's sendMessage method.
      */
     @Override
     protected void sendMessage(PasswdRequest passwdRequest,
                                ByteBuffer requestMessage) throws IOException {
-        /*
-        KrbTransport transport = (KrbTransport) passwdRequest.getSessionData();
+        KrbTransport transport = passwdRequest.getTransport();
         transport.sendMessage(requestMessage);
-        */
     }
 }

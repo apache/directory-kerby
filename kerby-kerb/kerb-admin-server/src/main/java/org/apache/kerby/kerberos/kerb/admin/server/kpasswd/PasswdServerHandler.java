@@ -40,7 +40,7 @@ public class PasswdServerHandler {
      */
     public PasswdServerHandler(PasswdServerContext passwdServerContext) {
         this.passwdServerContext = passwdServerContext;
-        LOG.info("Passwd contex realm:" + this.passwdServerContext.getPasswdRealm());
+        LOG.info("Passwd context realm:" + this.passwdServerContext.getPasswdRealm());
     }
 
     /**
@@ -53,76 +53,13 @@ public class PasswdServerHandler {
      */
     public ByteBuffer handleMessage(ByteBuffer receivedMessage,
                                     InetAddress remoteAddress) throws KrbException {
-        return null;
-        /*
-        KrbMessage krbRequest;
-        KdcRequest passwdRequest = null;
-        KrbMessage krbResponse;
-
-        ByteBuffer message = receivedMessage.duplicate();
-
-        try {
-            krbRequest = KrbCodec.decodeMessage(receivedMessage);
-        } catch (IOException e) {
-            LOG.error("Krb decoding message failed", e);
-            throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE, "Krb decoding message failed");
-        }
-
-        KrbMessageType messageType = krbRequest.getMsgType();
-        if (messageType == KrbMessageType.TGS_REQ || messageType
-                == KrbMessageType.AS_REQ) {
-            KdcReq passwdReq = (KdcReq) krbRequest;
-            String realm = getRequestRealm(passwdReq);
-            if (realm == null || !passwdContext.getPasswdRealm().equals(realm)) {
-                LOG.error("Invalid realm from passwd request: " + realm);
-                throw new KrbException("Invalid realm from passwd request: " + realm);
-            }
-
-            if (messageType == KrbMessageType.TGS_REQ) {
-                passwdRequest = new TgsRequest((TgsReq) passwdReq, passwdContext);
-            } else if (messageType == KrbMessageType.AS_REQ) {
-                passwdRequest = new AsRequest((AsReq) passwdReq, passwdContext);
-            } else {
-                LOG.error("Invalid message type: " + messageType);
-                throw new KrbException(KrbErrorCode.KRB_AP_ERR_MSG_TYPE);
-            }
-        }
-
-        // For checksum
-        if (passwdRequest == null) {
-            throw new KrbException("Kdc request is null.");
-        }
-        passwdRequest.setReqPackage(message);
-        if (remoteAddress == null) {
-            throw new KrbException("Remote address is null, not available.");
-        }
-        passwdRequest.setClientAddress(remoteAddress);
-        passwdRequest.isTcp(isTcp);
-
-        try {
-            passwdRequest.process();
-            krbResponse = passwdRequest.getReply();
-        } catch (KrbException e) {
-            if (e instanceof KdcRecoverableException) {
-                krbResponse = handleRecoverableException(
-                        (KdcRecoverableException) e, passwdRequest);
-            } else {
-                throw e;
-            }
-        }
-
-        int bodyLen = krbResponse.encodingLength();
-        ByteBuffer responseMessage;
-        if (isTcp) {
-            responseMessage = ByteBuffer.allocate(bodyLen + 4);
-            responseMessage.putInt(bodyLen);
-        } else {
-            responseMessage = ByteBuffer.allocate(bodyLen);
-        }
-        KrbCodec.encode(krbResponse, responseMessage);
+        System.out.println("Password Server receive message: ");
+        System.out.println(new String(receivedMessage.array()));
+        String response = "Password server receive message.";
+        ByteBuffer responseMessage = ByteBuffer.allocate(response.length() + 4);
+        responseMessage.putInt(response.length());
+        responseMessage.put(response.getBytes());
         responseMessage.flip();
-
         return responseMessage;
-        */
     }
 }

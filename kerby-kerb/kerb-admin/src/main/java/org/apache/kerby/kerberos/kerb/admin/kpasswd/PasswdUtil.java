@@ -30,7 +30,7 @@ import java.util.Map;
 public final class PasswdUtil {
     private PasswdUtil() { }
 
-    private static final String KRB5_FILE_NAME = "krb5.conf";
+    private static final String KRB5_FILE_NAME = "kpasswdClient.conf";
     private static final String KRB5_ENV_NAME = "KRB5_CONFIG";
 
     /**
