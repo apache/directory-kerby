@@ -51,6 +51,7 @@ public class NettyKdcNetwork {
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private EventLoopGroup group;
+    private DefaultEventExecutorGroup executorGroup;
     private static final Logger LOG = LoggerFactory.getLogger(NettyKdcNetwork.class);
 
     public void init(KdcContext kdcContext) {
@@ -58,6 +59,7 @@ public class NettyKdcNetwork {
         // Configure the server.
         bossGroup = new NioEventLoopGroup(1);
         workerGroup = new NioEventLoopGroup();
+        executorGroup = new DefaultEventExecutorGroup(10); //TODO: to configure.
     }
 
     public void listen(InetSocketAddress tcpAddress,
@@ -110,7 +112,7 @@ public class NettyKdcNetwork {
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline p = ch.pipeline();
                 p.addLast(new KrbMessageDecoder());
-                p.addLast(new DefaultEventExecutorGroup(10), //TODO: to configure.
+                p.addLast(executorGroup,
                         "KDC_HANDLER",
                         new NettyKdcHandler(kdcContext));
             }
@@ -123,6 +125,16 @@ public class NettyKdcNetwork {
         workerGroup.shutdownGracefully();
         if (udpAddress != null) {
             group.shutdownGracefully();
+        }
+
+        try {
+            bossGroup.terminationFuture().sync();
+            workerGroup.terminationFuture().sync();
+            if (udpAddress != null) {
+                group.terminationFuture().sync();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

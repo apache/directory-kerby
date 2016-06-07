@@ -51,7 +51,6 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     private String zkHost;
     private int zkPort;
     private File dataDir;
-    private File dataLogDir;
     private ZooKeeper zooKeeper;
     private static final Logger LOG = LoggerFactory.getLogger(ZookeeperIdentityBackend.class);
 
@@ -111,19 +110,9 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
 
         LOG.info("Data dir: " + dataDir);
 
-        String dataLogDirString = getConfig().getString(ZKConfKey.DATA_LOG_DIR, true);
-        if (dataLogDirString == null || dataLogDirString.isEmpty()) {
-            File zooKeeperDir = new File(getBackendConfig().getConfDir(), "zookeeper");
-            dataLogDir = new File(zooKeeperDir, "datalog");
-        } else {
-            dataLogDir = new File(dataLogDirString);
+        if (getConfig().getBoolean(ZKConfKey.EMBEDDED_ZK, true)) {
+            startEmbeddedZookeeper();
         }
-
-        if (!dataLogDir.exists() && !dataLogDir.mkdirs()) {
-            throw new KrbException("could not create data log file dir " + dataLogDir);
-        }
-
-        startEmbeddedZookeeper();
         connectZK();
     }
 
@@ -132,7 +121,8 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
      */
     private void connectZK() throws KrbException {
         try {
-            zooKeeper = new ZooKeeper(zkHost, 10000, null);
+            String serverStr = zkHost + ":" + zkPort;
+            zooKeeper = new ZooKeeper(serverStr, 10000, new MyWatcher());
             while (true) {
                 if (!zooKeeper.getState().isConnected()) {
                     try {
@@ -158,7 +148,6 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     private void startEmbeddedZookeeper() throws KrbException {
         Properties startupProperties = new Properties();
         startupProperties.put("dataDir", dataDir.getAbsolutePath());
-        startupProperties.put("dataLogDir", dataLogDir.getAbsolutePath());
         startupProperties.put("clientPort", zkPort);
 
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();
@@ -185,14 +174,6 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
             zookeeperThread.start();
         }
         LOG.info("Embedded Zookeeper started.");
-    }
-
-    /**
-     * This will watch all the kdb update event so that it's timely synced.
-     * @param event The kdb update event ot watch.
-     */
-    private void process(WatchedEvent event) {
-        System.out.print("I got an event: " + event);
     }
 
     /**
@@ -323,9 +304,14 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     }
 
     class MyWatcher implements Watcher {
-        @Override
+
+        /**
+         * This will watch all the kdb update event so that it's timely synced.
+         * @param event The kdb update event ot watch.
+         */
         public void process(WatchedEvent event) {
-            ZookeeperIdentityBackend.this.process(event);
+//            System.out.println("I got an event: " + event.getPath());
         }
+
     }
 }

@@ -49,10 +49,13 @@ import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TicketFlag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 
 public class TgsRequest extends KdcRequest {
+    private static final Logger LOG = LoggerFactory.getLogger(TgsRequest.class);
 
     private EncryptionKey tgtSessionKey;
     private Ticket tgtTicket;
@@ -98,7 +101,7 @@ public class TgsRequest extends KdcRequest {
      *
      * @return The tgt ticket.
      */
-    protected Ticket getTgtTicket() {
+    public Ticket getTgtTicket() {
         return tgtTicket;
     }
 
@@ -109,6 +112,9 @@ public class TgsRequest extends KdcRequest {
     protected void issueTicket() throws KrbException {
         TicketIssuer issuer = new ServiceTicketIssuer(this);
         Ticket newTicket = issuer.issueTicket();
+        LOG.info("TGS_REQ ISSUE: authtime " + newTicket.getEncPart().getAuthTime().getTime() + ","
+                + newTicket.getEncPart().getCname() + " for "
+                + newTicket.getSname());
         setTicket(newTicket);
     }
 

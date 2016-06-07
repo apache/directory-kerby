@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
 import org.apache.kerby.kerberos.kerb.client.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
+import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
 import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
 import org.apache.kerby.util.NetworkUtil;
@@ -51,11 +52,21 @@ public class SimpleKdcServer extends KdcServer {
      */
     public SimpleKdcServer() throws KrbException {
         super();
-        this.krbClnt = new KrbClient();
+        this.krbClnt = new KrbClient(new KrbConfig());
 
         setKdcRealm("EXAMPLE.COM");
         setKdcHost("localhost");
         setKdcPort(NetworkUtil.getServerPort());
+    }
+
+    public SimpleKdcServer(KrbConfig krbConfig) {
+        super();
+        this.krbClnt = new KrbClient(krbConfig);
+    }
+
+    public SimpleKdcServer(File confDir, KrbConfig krbConfig) throws KrbException {
+        super(confDir);
+        this.krbClnt = new KrbClient(krbConfig);
     }
 
     public void setWorkDir(File workDir) {

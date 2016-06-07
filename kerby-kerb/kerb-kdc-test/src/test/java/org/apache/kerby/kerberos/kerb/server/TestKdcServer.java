@@ -25,13 +25,14 @@ import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbConfigKey;
 import org.apache.kerby.util.NetworkUtil;
 
+import java.io.File;
+
 public class TestKdcServer extends SimpleKdcServer {
     public static final String KDC_REALM = "TEST.COM";
     public static final String HOSTNAME = "localhost";
 
     public TestKdcServer(boolean allowTcp, boolean allowUdp) throws KrbException {
         super();
-
         setKdcRealm(KDC_REALM);
         setKdcHost(HOSTNAME);
         setAllowTcp(allowTcp);
@@ -43,11 +44,19 @@ public class TestKdcServer extends SimpleKdcServer {
         if (allowUdp) {
             setKdcUdpPort(NetworkUtil.getServerPort());
         }
+        setClient();
+    }
 
+    public TestKdcServer(File confDir, KrbConfig krbConfig) throws KrbException {
+        super(confDir, krbConfig);
+        setClient();
+    }
+
+    private void setClient() {
         KrbClient krbClnt = getKrbClient();
         KrbConfig krbConfig = krbClnt.getKrbConfig();
         krbConfig.setString(KrbConfigKey.PERMITTED_ENCTYPES,
-                "aes128-cts-hmac-sha1-96 des-cbc-crc des-cbc-md5 des3-cbc-sha1");
+            "aes128-cts-hmac-sha1-96 des-cbc-crc des-cbc-md5 des3-cbc-sha1");
 
         krbClnt.setTimeout(10 * 1000);
     }

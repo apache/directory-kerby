@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A Netty based KDC server implementation.
@@ -81,7 +82,18 @@ public class NettyKdcServerImpl extends AbstractInternalKdcServer {
 
         network.stop();
 
-        executor.shutdownNow();
+        executor.shutdown();
+
+        try {
+            boolean terminated = false;
+            do {
+                // wait until the pool has terminated
+                terminated = executor.awaitTermination(60, TimeUnit.SECONDS);
+            } while (!terminated);
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            LOG.warn("waitForTermination interrupted");
+        }
         LOG.info("Netty kdc server stopped.");
     }
 }

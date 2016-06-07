@@ -29,6 +29,7 @@ public class Asn1FieldInfo {
     private int tagNo = -1; // Indicate a non-tagged field
     private boolean isImplicit;
     private Class<? extends Asn1Type> type;
+    private Tag tag = null;
 
     /**
      * Constructor for a tagged field, the tagNo being the same of index.
@@ -101,7 +102,14 @@ public class Asn1FieldInfo {
     }
 
     public Tag getFieldTag() {
-        Asn1Type fieldValue = createFieldValue();
-        return fieldValue.tag();
+        if (tag == null) {
+            Asn1Type fieldValue = createFieldValue();
+            tag = fieldValue.tag();
+        }
+        return tag;
+    }
+
+    public Class<? extends Asn1Type> getType() {
+        return type;
     }
 }

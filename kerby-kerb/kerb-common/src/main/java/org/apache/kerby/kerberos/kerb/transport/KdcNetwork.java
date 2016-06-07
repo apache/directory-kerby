@@ -106,6 +106,12 @@ public abstract class KdcNetwork {
     //CHECKSTYLE:ON
 
     public synchronized void stop() {
+        // TODO: waiting the network closed.
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         isStopped = true;
     }
 

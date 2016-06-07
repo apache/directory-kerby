@@ -90,6 +90,7 @@ public abstract class KdcRequest {
     private KrbIdentity tgsEntry;
     private PreauthContext preauthContext;
     private KdcFastContext fastContext;
+    private PrincipalName clientPrincipal;
     private PrincipalName serverPrincipal;
     private byte[] innerBodyout;
     private AuthToken token;
@@ -166,7 +167,8 @@ public abstract class KdcRequest {
         checkVersion();
         checkTgsEntry();
         kdcFindFast();
-        authenticate();
+        checkEncryptionType();
+
         if (PreauthHandler.isToken(getKdcReq().getPaData())) {
             isToken = true;
             preauth();
@@ -180,6 +182,7 @@ public abstract class KdcRequest {
             checkServer();
             preauth();
         }
+        checkPolicy();
         issueTicket();
         makeReply();
     }
@@ -202,29 +205,31 @@ public abstract class KdcRequest {
     private void kdcFindFast() throws KrbException {
 
         PaData paData = getKdcReq().getPaData();
-        for (PaDataEntry paEntry : paData.getElements()) {
-            if (paEntry.getPaDataType() == PaDataType.FX_FAST) {
-                LOG.info("Found fast padata and start to process it.");
-                KrbFastArmoredReq fastArmoredReq = KrbCodec.decode(paEntry.getPaDataValue(),
-                        KrbFastArmoredReq.class);
-                KrbFastArmor fastArmor = fastArmoredReq.getArmor();
-                armorApRequest(fastArmor);
+        if (paData != null) {
+            for (PaDataEntry paEntry : paData.getElements()) {
+                if (paEntry.getPaDataType() == PaDataType.FX_FAST) {
+                    LOG.info("Found fast padata and start to process it.");
+                    KrbFastArmoredReq fastArmoredReq = KrbCodec.decode(paEntry.getPaDataValue(),
+                            KrbFastArmoredReq.class);
+                    KrbFastArmor fastArmor = fastArmoredReq.getArmor();
+                    armorApRequest(fastArmor);
 
-                EncryptedData encryptedData = fastArmoredReq.getEncryptedFastReq();
-                KrbFastReq fastReq = KrbCodec.decode(
-                        EncryptionHandler.decrypt(encryptedData, getArmorKey(), KeyUsage.FAST_ENC),
-                        KrbFastReq.class);
-                innerBodyout = KrbCodec.encode(fastReq.getKdcReqBody());
+                    EncryptedData encryptedData = fastArmoredReq.getEncryptedFastReq();
+                    KrbFastReq fastReq = KrbCodec.decode(
+                            EncryptionHandler.decrypt(encryptedData, getArmorKey(), KeyUsage.FAST_ENC),
+                            KrbFastReq.class);
+                    innerBodyout = KrbCodec.encode(fastReq.getKdcReqBody());
 
-                // TODO: get checksumed data in stream
-                CheckSum checkSum = fastArmoredReq.getReqChecksum();
-                if (checkSum == null) {
-                    LOG.warn("Checksum is empty.");
-                    throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED);
+                    // TODO: get checksumed data in stream
+                    CheckSum checkSum = fastArmoredReq.getReqChecksum();
+                    if (checkSum == null) {
+                        LOG.warn("Checksum is empty.");
+                        throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED);
+                    }
+                    byte[] reqBody = KrbCodec.encode(getKdcReq().getReqBody());
+                        CheckSumHandler.verifyWithKey(checkSum, reqBody,
+                            getArmorKey().getKeyData(), KeyUsage.FAST_REQ_CHKSUM);
                 }
-                byte[] reqBody = KrbCodec.encode(getKdcReq().getReqBody());
-                    CheckSumHandler.verifyWithKey(checkSum, reqBody,
-                        getArmorKey().getKeyData(), KeyUsage.FAST_REQ_CHKSUM);
             }
         }
     }
@@ -754,6 +759,22 @@ public abstract class KdcRequest {
      */
     protected void setArmorKey(EncryptionKey armorKey) {
         fastContext.setArmorKey(armorKey);
+    }
+
+    /**
+     * Get client principal.
+     * @return client principal
+     */
+    public PrincipalName getClientPrincipal() {
+        return clientPrincipal;
+    }
+
+    /**
+     * Set client principal.
+     * @param clientPrincipal client principal
+     */
+    public void setClientPrincipal(PrincipalName clientPrincipal) {
+        this.clientPrincipal = clientPrincipal;
     }
 
     /**

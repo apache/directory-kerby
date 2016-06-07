@@ -42,7 +42,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
-            <version>2.4.2</version>
+            <version>2.4.3</version>
             <executions>
               <execution>
                 <phase>package</phase>
@@ -54,7 +54,6 @@
                     <excludes>
                       <exclude>junit:junit</exclude>
                       <exclude>org.slf4j:slf4j-api</exclude>
-                      <exclude>org.slf4j:slf4j-log4j12</exclude>
                       <exclude>org.apache.kerby:kerby-asn1</exclude>
                       <exclude>org.bouncycastle:bcpkix-jdk15on</exclude>
                       <exclude>org.bouncycastle:bcprov-jdk15on</exclude>

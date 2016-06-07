@@ -58,6 +58,20 @@ public class NettyKdcHandler extends ChannelInboundHandlerAdapter {
         } catch (Exception e) {
             LOG.error("Error occurred while processing request:"
                     + e);
+            e.printStackTrace();
         }
+    }
+
+    /**
+     * Calls {@link ChannelHandlerContext#fireExceptionCaught(Throwable)} to
+     * forward to the next {@link ChannelHandler} in the {@link ChannelPipeline}
+     *
+     * Sub-classes may override this method to change behavior.
+     */
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
+            throws Exception {
+        cause.printStackTrace();
+        ctx.fireExceptionCaught(cause);
     }
 }

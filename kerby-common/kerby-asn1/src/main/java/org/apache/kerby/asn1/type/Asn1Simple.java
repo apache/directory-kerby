@@ -61,6 +61,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
     }
 
     protected void setBytes(byte[] bytes) {
+        resetBodyLength();
         this.bytes = bytes;
     }
 

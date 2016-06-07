@@ -26,6 +26,7 @@ import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
+import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
@@ -204,7 +205,19 @@ public abstract class TicketIssuer {
             encTicketPart.setClientAddresses(hostAddresses);
         }
 
+        AuthorizationData authData = makeAuthorizationData(kdcRequest,
+                encTicketPart);
+        if (authData != null) {
+            encTicketPart.setAuthorizationData(authData);
+        }
+
         return encTicketPart;
+    }
+
+    protected AuthorizationData makeAuthorizationData(KdcRequest kdcRequest,
+            EncTicketPart encTicketPart) throws KrbException {
+        return getKdcContext().getIdentityService()
+                .getIdentityAuthorizationData(kdcRequest, encTicketPart);
     }
 
     protected KdcContext getKdcContext() {

@@ -41,11 +41,12 @@ public class Krb5Conf extends Conf {
      * of config value(string list).
      */
     private static final String LIST_SPLITTER = " |,";
+    private Map<String, Object> krb5Map;
 
     public void addKrb5Config(File krb5File) throws IOException {
         Krb5Parser krb5Parser = new Krb5Parser(krb5File);
         krb5Parser.load();
-        Map<String, Object> krb5Map = krb5Parser.getItems();
+        krb5Map = krb5Parser.getItems();
         addResource(Resource.createMapResource(krb5Map));
     }
 
@@ -161,5 +162,16 @@ public class Krb5Conf extends Conf {
         String value = getString(key, useDefault, sections);
         String[] values = value.split(LIST_SPLITTER);
         return values;
+    }
+
+    protected Object getSection(String sectionName) {
+        if (krb5Map != null) {
+            for (Map.Entry<String, Object> entry : krb5Map.entrySet()) {
+                if (entry.getKey().equals(sectionName)) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return null;
     }
 }

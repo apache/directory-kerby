@@ -25,7 +25,7 @@ import org.junit.Test;
 import java.io.File;
 import java.net.URL;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test for loading configurations form krb5.conf.
@@ -61,5 +61,7 @@ public class KrbConfigLoadTest {
         assertThat(krbConfig.getPkinitAnchors()).hasSize(1);
         assertThat(krbConfig.getPkinitIdentities()).hasSize(2);
         assertThat(krbConfig.getPkinitKdcHostName()).isEqualTo("kdc-server.example.com");
+        assertThat(krbConfig.getRealmSection("ATHENA.MIT.EDU")).hasSize(3);
+        assertThat(krbConfig.getRealmSectionItems("ATHENA.MIT.EDU", "admin_server")).hasSize(1);
     }
 }

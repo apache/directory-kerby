@@ -57,6 +57,18 @@
       <artifactId>kerb-client</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerby-kdc</artifactId>
+      <version>1.0.0-RC3-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -73,5 +85,5 @@
         </executions>
       </plugin>
     </plugins>
-  </build>  
+  </build>
 </project>

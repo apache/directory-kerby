@@ -35,4 +35,14 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceOfType;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class AuthorizationData extends KrbSequenceOfType<AuthorizationDataEntry> {
+
+    public AuthorizationData clone() {
+        AuthorizationData result = new AuthorizationData();
+
+        for (AuthorizationDataEntry entry : super.getElements()) {
+            result.add(entry.clone());
+        }
+
+        return result;
+    }
 }

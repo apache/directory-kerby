@@ -63,10 +63,13 @@ public abstract class KrbHandler {
      * Handle the kdc request.
      *
      * @param kdcRequest The kdc request
+     * @param tryNextKdc try next kdc or not
      * @throws KrbException e
      */
-    public void handleRequest(KdcRequest kdcRequest) throws KrbException {
-        kdcRequest.process();
+    public void handleRequest(KdcRequest kdcRequest, boolean tryNextKdc) throws KrbException {
+        if (!tryNextKdc || kdcRequest.getKdcReq() == null) {
+            kdcRequest.process();
+        }
         KdcReq kdcReq = kdcRequest.getKdcReq();
         int bodyLen = kdcReq.encodingLength();
         KrbTransport transport = (KrbTransport) kdcRequest.getSessionData();
@@ -133,8 +136,11 @@ public abstract class KrbHandler {
                 kdcRequest.setEncryptionTypes(encryptionTypes);
                 kdcRequest.setPreauthRequired(true);
                 kdcRequest.resetPrequthContxt();
-                handleRequest(kdcRequest);
+                handleRequest(kdcRequest, false);
                 LOG.info("Retry with the new kdc request including pre-authentication.");
+            } else {
+                LOG.info(error.getErrorCode().getMessage());
+                throw new KrbException(error.getErrorCode(), error.getEtext());
             }
         }
     }

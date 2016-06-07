@@ -30,13 +30,18 @@ import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A default krb client implementation.
  */
 public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultInternalKrbClient.class);
 
     private DefaultKrbHandler krbHandler;
     private KrbTransport transport;
@@ -57,21 +62,51 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
     }
 
     private void doRequest(KdcRequest request) throws KrbException {
-        try {
-            TransportPair tpair = ClientUtil.getTransportPair(getSetting());
-            KrbNetwork network = new KrbNetwork();
 
-            network.setSocketTimeout(getSetting().getTimeout());
+        List<String> kdcList = ClientUtil.getKDCList(getSetting());
 
-            transport = network.connect(tpair);
-
-            request.setSessionData(transport);
-            krbHandler.handleRequest(request);
-        } catch (IOException e) {
-            throw new KrbException("Failed to create transport", e);
-        } finally {
-            transport.release();
+        // tempKdc may include the port number
+        Iterator<String> tempKdc = kdcList.iterator();
+        if (!tempKdc.hasNext()) {
+            throw new KrbException("Cannot get kdc for realm " + getSetting().getKdcRealm());
         }
+
+        try {
+            sendIfPossible(request, tempKdc.next(), getSetting(), false);
+            LOG.info("Send to kdc success.");
+        } catch (Exception first) {
+            boolean ok = false;
+            while (tempKdc.hasNext()) {
+                try {
+                    sendIfPossible(request, tempKdc.next(), getSetting(), true);
+                    ok = true;
+                    LOG.info("Send to kdc success.");
+                    break;
+                } catch (Exception ignore) {
+                    LOG.info("ignore this kdc");
+                }
+            }
+            if (!ok) {
+                throw new KrbException("Failed to create transport", first);
+            }
+        } finally {
+            if (transport != null) {
+                transport.release();
+            }
+        }
+
+    }
+
+    private void sendIfPossible(KdcRequest request, String kdcString, KrbSetting setting,
+                                boolean tryNextKdc)
+        throws KrbException, IOException {
+
+        TransportPair tpair = ClientUtil.getTransportPair(setting, kdcString);
+        KrbNetwork network = new KrbNetwork();
+        network.setSocketTimeout(setting.getTimeout());
+        transport = network.connect(tpair);
+        request.setSessionData(transport);
+        krbHandler.handleRequest(request, tryNextKdc);
     }
 
     /**

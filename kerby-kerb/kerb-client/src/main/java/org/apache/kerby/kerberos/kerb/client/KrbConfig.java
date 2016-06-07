@@ -22,14 +22,17 @@ package org.apache.kerby.kerberos.kerb.client;
 import org.apache.kerby.kerberos.kerb.common.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Kerb client side configuration API.
  */
 public class KrbConfig extends Krb5Conf {
     private static final String LIBDEFAULT = "libdefaults";
+    private static final String REALMS = "realms";
 
     public boolean enableDebug() {
         return getBoolean(KrbConfigKey.KRB_DEBUG, true, LIBDEFAULT);
@@ -311,5 +314,34 @@ public class KrbConfig extends Krb5Conf {
     public String getPkinitKdcHostName() {
         return getString(
                 KrbConfigKey.PKINIT_KDC_HOSTNAME, true, LIBDEFAULT);
+    }
+
+    public List<Object> getRealmSectionItems(String realm, String key) {
+        Map<String, Object> map = getRealmSection(realm);
+        List<Object> items = null;
+        if (map != null) {
+            items = new ArrayList<>();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (entry.getKey().equals(key)) {
+                    items.add(entry.getValue());
+                }
+            }
+        }
+        return items;
+    }
+
+    public Map<String, Object> getRealmSection(String realm) {
+        Object realms = getSection(REALMS);
+        if (realms != null) {
+            Map<String, Object> map = (Map) realms;
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (entry.getKey().equals(realm)) {
+                    return (Map) entry.getValue();
+                }
+            }
+            return null;
+        } else {
+            return null;
+        }
     }
 }

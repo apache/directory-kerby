@@ -73,7 +73,11 @@ public abstract class AbstractAsn1Type<T> extends Asn1Encodeable {
     }
 
     public void setValue(T value) {
+        resetBodyLength();
         this.value = value;
+        if (value instanceof Asn1Encodeable) {
+            ((Asn1Encodeable) value).outerEncodeable = this;
+        }
     }
 
     @Override

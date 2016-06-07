@@ -33,11 +33,11 @@ public class DefaultKrbHandler extends KrbHandler {
      * {@inheritDoc}
      */
     @Override
-    public void handleRequest(KdcRequest kdcRequest) throws KrbException {
+    public void handleRequest(KdcRequest kdcRequest, boolean tryNextKdc) throws KrbException {
         KrbTransport transport = (KrbTransport) kdcRequest.getSessionData();
         transport.setAttachment(kdcRequest);
 
-        super.handleRequest(kdcRequest);
+        super.handleRequest(kdcRequest, tryNextKdc);
         ByteBuffer receivedMessage = null;
         try {
             receivedMessage = transport.receiveMessage();

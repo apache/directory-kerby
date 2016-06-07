@@ -45,11 +45,9 @@ public class Krb5ParserTest {
         assertThat(k.getSections().size()).isEqualTo(4);
         assertThat(k.getSections().contains("libdefaults")).isTrue();
 
-        assertThat(k.getSection("libdefaults").get("dns_lookup_kdc")).isEqualTo("false");
-        assertThat(k.getSection("realms").get("ATHENA.MIT.EDU") instanceof Map).isTrue();
-        Map<String, Object> m1 = (Map) k.getSection("realms").get("ATHENA.MIT.EDU");
-        assertThat(m1.get("v4_instance_convert") instanceof  Map).isTrue();
-        Map<String, Object> m2 = (Map) m1.get("v4_instance_convert");
-        assertThat(m2.get("mit")).isEqualTo("mit.edu");
+        assertThat(k.getSection("libdefaults", "dns_lookup_kdc")).isEqualTo("false");
+        assertThat(k.getSection("realms", "ATHENA.MIT.EDU") instanceof Map).isTrue();
+        assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "v4_instance_convert") instanceof  Map).isTrue();
+        assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "v4_instance_convert", "mit").equals("mit.edu"));
     }
 }

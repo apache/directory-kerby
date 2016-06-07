@@ -23,6 +23,7 @@ import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.ZKConfKey;
 import org.apache.kerby.kerberos.kdc.identitybackend.ZookeeperIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import java.io.File;
@@ -31,22 +32,35 @@ import java.io.File;
  * Zookeeper backend test
  */
 public class ZookeeperBackendTest extends BackendTestBase {
+    private static File instanceDir;
+    private static File dataDir;
+
     @BeforeClass
     public static void setup() throws KrbException {
         Conf config = new Conf();
-
         File testdir = new File(System.getProperty("test.dir", "target"));
-        File instanceDir = new File(testdir, "zookeeper");
+        instanceDir = new File(testdir, "zookeeper");
         instanceDir.mkdirs();
-        File dataDir = new File(instanceDir, "data");
+        dataDir = new File(instanceDir, "data");
         dataDir.mkdirs();
         config.setString(ZKConfKey.DATA_DIR.getPropertyKey(), dataDir.getAbsolutePath());
-        File dataLogDir = new File(instanceDir, "log");
-        dataLogDir.mkdirs();
-        config.setString(ZKConfKey.DATA_LOG_DIR.getPropertyKey(), dataLogDir.getAbsolutePath());
 
         backend = new ZookeeperIdentityBackend(config);
         backend.initialize();
         backend.start();
+    }
+
+    @AfterClass
+    public static void tearDown() throws KrbException {
+        if (dataDir.exists()) {
+            dataDir.delete();
+        }
+        if (instanceDir.exists()) {
+            instanceDir.delete();
+        }
+        if (backend != null) {
+            backend.stop();
+            backend.release();
+        }
     }
 }

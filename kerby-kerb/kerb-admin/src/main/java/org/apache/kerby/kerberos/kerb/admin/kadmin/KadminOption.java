@@ -30,6 +30,7 @@ public enum KadminOption implements KOption {
     LOCKED(new KOptionInfo("-locked", "locked", KOptionType.BOOL)),
     FORCE(new KOptionInfo("-force", "force", KOptionType.NOV)),
     KVNO(new KOptionInfo("-kvno", "initial key version number", KOptionType.INT)),
+    SIZE(new KOptionInfo("-size", "principal's numbers", KOptionType.STR)),
     PW(new KOptionInfo("-pw", "password", KOptionType.STR)),
     RANDKEY(new KOptionInfo("-randkey", "random key", KOptionType.NOV)),
     KEEPOLD(new KOptionInfo("-keepold", "keep old passowrd", KOptionType.NOV)),

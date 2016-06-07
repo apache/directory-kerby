@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +57,7 @@ public class Krb5Parser {
     public void load() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(krb5conf),
                 StandardCharsets.UTF_8));
-        items = new HashMap<String, Object>();
+        items = new IdentityHashMap<>();
 
         String originLine = br.readLine();
         while (originLine != null) {
@@ -97,11 +97,32 @@ public class Krb5Parser {
     /**
      * Get the contents of a section given the section name.
      * @param sectionName the name of a section
+     * @param keys the keys list
      * @return a Map of section contents
      */
-    public Map<String, Object> getSection(String sectionName) {
-        Map<String, Object> sections = (HashMap) items.get(sectionName);
-        return sections;
+    public Object getSection(String sectionName, String ... keys) {
+        Object value = null;
+        for (Map.Entry<String, Object> item : items.entrySet()) {
+            if (item.getKey().equals(sectionName)) {
+                value = item.getValue();
+                Map<String, Object> map = (Map) item.getValue();
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (entry.getKey().equals(keys[0])) {
+                        value = entry.getValue();
+                    }
+                }
+            }
+        }
+
+        for (int i = 1; i < keys.length; i++) {
+            Map<String, Object> map = (Map) value;
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (entry.getKey().equals(keys[i])) {
+                    value = entry.getValue();
+                }
+            }
+        }
+        return value;
     }
 
     /**
@@ -118,7 +139,7 @@ public class Krb5Parser {
     private void insertSections(String line, BufferedReader br, Map<String, Object> items) throws IOException {
         while (line.startsWith("[")) {
             String sectionName = line.substring(1, line.length() - 1);
-            Map<String, Object> entries = new HashMap<String, Object>();
+            Map<String, Object> entries = new IdentityHashMap<>();
             line = br.readLine();
             if (line == null) {
                 break;
@@ -174,7 +195,7 @@ public class Krb5Parser {
         kv[1] = kv[1].trim();
 
         if (kv[1].startsWith("{")) {
-            Map<String, Object> meValue = new HashMap<String, Object>();
+            Map<String, Object> meValue = new IdentityHashMap<>();
             line = br.readLine();
             if (line != null) {
                 line = line.trim();

@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.server.preauth.token;
 
 import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
@@ -62,7 +63,8 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                           PaDataEntry paData) throws KrbException {
 
         if (!kdcRequest.getKdcContext().getConfig().isAllowTokenPreauth()) {
-            throw new KrbException("Token preauth is not allowed.");
+            throw new KrbException(KrbErrorCode.TOKEN_PREAUTH_NOT_ALLOWED,
+                "Token preauth is not allowed.");
         }
         if (paData.getPaDataType() == PaDataType.TOKEN_REQUEST) {
             EncryptedData encData = KrbCodec.decode(paData.getPaDataValue(), EncryptedData.class);

@@ -87,7 +87,6 @@ public class LdapBackendKdcTest extends AbstractLdapBackendKdcTest {
 
     @Override
     protected void prepareKdc() throws KrbException {
-        super.prepareKdc();
         BackendConfig backendConfig = getKdcServer().getBackendConfig();
         backendConfig.setString("host", "localhost");
         backendConfig.setString("admin_dn", ADMIN_DN);
@@ -96,6 +95,7 @@ public class LdapBackendKdcTest extends AbstractLdapBackendKdcTest {
         backendConfig.setInt("port", getLdapServer().getPort());
         backendConfig.setString(KdcConfigKey.KDC_IDENTITY_BACKEND,
                 "org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend");
+        super.prepareKdc();
     }
 
     @Test

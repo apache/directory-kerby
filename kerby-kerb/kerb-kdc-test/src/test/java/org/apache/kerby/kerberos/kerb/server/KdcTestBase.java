@@ -30,20 +30,31 @@ import org.junit.BeforeClass;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public abstract class KdcTestBase {
     private static File testDir;
 
     private final String clientPassword = "123456";
-    private final String hostname = "localhost";
+    private String hostname;
     private final String clientPrincipalName = "drankye";
     private final String clientPrincipal =
             clientPrincipalName + "@" + TestKdcServer.KDC_REALM;
     private final String serverPrincipalName = "test-service";
-    private final String serverPrincipal =
-            serverPrincipalName + "/" + hostname + "@" + TestKdcServer.KDC_REALM;
+    private final String serverPrincipal;
 
     private SimpleKdcServer kdcServer;
+
+    public KdcTestBase() {
+        try {
+            hostname = InetAddress.getByName("127.0.0.1").getHostName();
+        } catch (UnknownHostException e) {
+            hostname = "localhost";
+        }
+        serverPrincipal =
+                serverPrincipalName + "/" + hostname + "@" + TestKdcServer.KDC_REALM;
+    }
 
     @BeforeClass
     public static void createTestDir() throws IOException {
@@ -67,6 +78,10 @@ public abstract class KdcTestBase {
 
     protected SimpleKdcServer getKdcServer() {
         return kdcServer;
+    }
+
+    protected void setKdcServer(SimpleKdcServer kdcServer) {
+        this.kdcServer = kdcServer;
     }
 
     protected KrbClient getKrbClient() {

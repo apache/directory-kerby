@@ -41,13 +41,25 @@ public class KrbNetwork {
         if (tpair.tcpAddress != null) {
             try {
                 transport = tcpConnect();
-            } catch (IOException e) {
+            } catch (IOException e1) {
                 if (tpair.udpAddress != null) {
-                    transport = new KrbUdpTransport(tpair.udpAddress);
+                    try {
+                        transport = new KrbUdpTransport(tpair.udpAddress);
+                    } catch (Exception e2) {
+                        transport = null;
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } else {
-            transport = new KrbUdpTransport(tpair.udpAddress);
+            if (tpair.udpAddress != null) {
+                try {
+                    transport = new KrbUdpTransport(tpair.udpAddress);
+                } catch (Exception e3) {
+                    transport = null;
+                }
+            }
         }
 
         if (transport == null) {

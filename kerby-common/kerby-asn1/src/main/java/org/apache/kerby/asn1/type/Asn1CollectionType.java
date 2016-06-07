@@ -90,7 +90,6 @@ public abstract class Asn1CollectionType
 
     @Override
     protected void decodeBody(Asn1ParseResult parseResult) throws IOException {
-        checkAndInitFields();
         useDefinitiveLength(parseResult.isDefinitiveLength());
 
         Asn1Container container = (Asn1Container) parseResult;
@@ -115,8 +114,9 @@ public abstract class Asn1CollectionType
 
     private void attemptBinding(Asn1ParseResult parseItem,
                                 int foundPos) throws IOException {
-        Asn1Type fieldValue = fields[foundPos];
         Asn1FieldInfo fieldInfo = fieldInfos[foundPos];
+        checkAndInitField(foundPos);
+        Asn1Type fieldValue = fields[foundPos];
 
         if (fieldValue instanceof Asn1Any) {
             Asn1Any any = (Asn1Any) fieldValue;
@@ -146,28 +146,42 @@ public abstract class Asn1CollectionType
                     foundPos = i;
                     break;
                 }
-            } else if (fieldValue.tag().equals(parseItem.tag())) {
-                foundPos = i;
-                break;
-            } else if (fieldValue instanceof Asn1Choice) {
-                Asn1Choice aChoice = (Asn1Choice) fields[i];
-                if (aChoice.matchAndSetValue(parseItem.tag())) {
+            } else if (fieldValue != null) {
+                if (fieldValue.tag().equals(parseItem.tag())) {
+                    foundPos = i;
+                    break;
+                } else if (fieldValue instanceof Asn1Choice) {
+                    Asn1Choice aChoice = (Asn1Choice) fieldValue;
+                    if (aChoice.matchAndSetValue(parseItem.tag())) {
+                        foundPos = i;
+                        break;
+                    }
+                } else if (fieldValue instanceof Asn1Any) {
                     foundPos = i;
                     break;
                 }
-            } else if (fieldValue instanceof Asn1Any) {
-                foundPos = i;
-                break;
+            } else {
+                if (fieldInfo.getFieldTag().equals(parseItem.tag())) {
+                    foundPos = i;
+                    break;
+
+                } else if (Asn1Choice.class
+                        .isAssignableFrom(fieldInfo.getType())) {
+                    Asn1Choice aChoice = (Asn1Choice) (fields[i] = fieldInfo
+                            .createFieldValue());
+                    if (aChoice.matchAndSetValue(parseItem.tag())) {
+                        foundPos = i;
+                        break;
+                    }
+                } else if (Asn1Any.class
+                        .isAssignableFrom(fieldInfo.getType())) {
+                    foundPos = i;
+                    break;
+                }
             }
         }
 
         return foundPos;
-    }
-
-    private void checkAndInitFields() {
-        for (int i = 0; i < fieldInfos.length; ++i) {
-            checkAndInitField(i);
-        }
     }
 
     private void checkAndInitField(int index) {
@@ -178,6 +192,7 @@ public abstract class Asn1CollectionType
 
     protected abstract Asn1Collection createCollection();
 
+    @SuppressWarnings("unchecked")
     protected <T extends Asn1Type> T getFieldAs(EnumType index, Class<T> t) {
         Asn1Type value = fields[index.getValue()];
         if (value == null) {
@@ -187,6 +202,10 @@ public abstract class Asn1CollectionType
     }
 
     protected void setFieldAs(EnumType index, Asn1Type value) {
+        resetBodyLength(); // Reset the pre-computed body length
+        if (value instanceof Asn1Encodeable) {
+            ((Asn1Encodeable) value).outerEncodeable = this;
+        }
         fields[index.getValue()] = value;
     }
 

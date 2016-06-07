@@ -23,47 +23,26 @@ import org.apache.kerby.kerberos.kdc.identitybackend.ZKConfKey;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
-import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.io.File;
 
 public class ZookeeperBackendKdcTest extends KerbyKdcTest {
 
-    private static File instanceDir;
-    private static File dataDir;
-    private static File dataLogDir;
-
-    @AfterClass
-    public static void rmJsonBackendFile() {
-        if (instanceDir.exists()) {
-            instanceDir.delete();
-        }
-        if (dataDir.exists()) {
-            dataDir.delete();
-        }
-        if (dataLogDir.exists()) {
-            dataLogDir.delete();
-        }
-    }
-
     @Override
     protected void prepareKdc() throws KrbException {
-        super.prepareKdc();
-
         BackendConfig backendConfig = getKdcServer().getBackendConfig();
 
-        File testDir = new File(System.getProperty("test.dir", "target"));
-        instanceDir = new File(testDir, "zookeeper");
+        File testDir = getTestDir();
+        File instanceDir = new File(testDir, "zookeeper");
         instanceDir.mkdirs();
-        dataDir = new File(instanceDir, "data");
+        File dataDir = new File(instanceDir, "data");
         dataDir.mkdirs();
         backendConfig.setString(ZKConfKey.DATA_DIR.getPropertyKey(), dataDir.getAbsolutePath());
-        dataLogDir = new File(instanceDir, "log");
-        dataLogDir.mkdirs();
-        backendConfig.setString(ZKConfKey.DATA_LOG_DIR.getPropertyKey(), dataLogDir.getAbsolutePath());
         backendConfig.setString(KdcConfigKey.KDC_IDENTITY_BACKEND,
             "org.apache.kerby.kerberos.kdc.identitybackend.ZookeeperIdentityBackend");
+
+        super.prepareKdc();
     }
 
     @Test
