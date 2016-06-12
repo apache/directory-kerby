@@ -131,7 +131,7 @@ public enum EncryptionType implements EnumType {
         if (name != null) {
             for (EncryptionType e : values()) {
                 if (e.getName().equals(name)) {
-                    return (EncryptionType) e;
+                    return e;
                 }
             }
         }

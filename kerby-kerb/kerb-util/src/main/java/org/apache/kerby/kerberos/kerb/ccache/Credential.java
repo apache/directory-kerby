@@ -175,7 +175,6 @@ public class Credential {
         if (serverName.getRealm().equals(CONF_REALM)) {
             isConfEntry = true;
         }
-
         this.key = ccis.readKey(version);
 
         KerberosTime[] times = ccis.readTimes();
