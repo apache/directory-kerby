@@ -73,9 +73,7 @@ public abstract class KrbInputStream extends DataInputStream {
         }
 
         byte[] data = new byte[len];
-        if (read(data) == -1) {
-            throw new IOException("Unexpected end of stream");
-        }
+        readFully(data);
 
         return data;
     }
