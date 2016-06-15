@@ -160,8 +160,10 @@ public class Krb5Conf extends Conf {
     protected String[] getStringArray(ConfigKey key, boolean useDefault,
                                       String ... sections) {
         String value = getString(key, useDefault, sections);
-        String[] values = value.split(LIST_SPLITTER);
-        return values;
+        if (value != null) {
+            return value.split(LIST_SPLITTER);
+        }
+        return new String[]{};
     }
 
     protected Object getSection(String sectionName) {
