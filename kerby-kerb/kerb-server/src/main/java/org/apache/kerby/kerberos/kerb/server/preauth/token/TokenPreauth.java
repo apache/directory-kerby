@@ -48,6 +48,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.List;
@@ -123,39 +124,35 @@ public class TokenPreauth extends AbstractPreauthPlugin {
     private void configureKeys(TokenDecoder tokenDecoder, KdcRequest kdcRequest, String issuer) {
         String verifyKeyPath = kdcRequest.getKdcContext().getConfig().getVerifyKeyConfig();
         if (verifyKeyPath != null) {
-            File verifyKeyFile = getKeyFile(verifyKeyPath, issuer);
-            if (verifyKeyFile != null) {
-                PublicKey verifyKey = null;
-                try {
-                    FileInputStream fis = new FileInputStream(verifyKeyFile);
-                    verifyKey = PublicKeyReader.loadPublicKey(fis);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                InputStream verifyKeyFile = getKeyFileStream(verifyKeyPath, issuer);
+                if (verifyKeyFile != null) {
+                    PublicKey verifyKey = PublicKeyReader.loadPublicKey(verifyKeyFile);
+                    tokenDecoder.setVerifyKey(verifyKey);
                 }
-                tokenDecoder.setVerifyKey(verifyKey);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         String decryptionKeyPath = kdcRequest.getKdcContext().getConfig().getDecryptionKeyConfig();
         if (decryptionKeyPath != null) {
-            File decryptionKeyFile = getKeyFile(decryptionKeyPath, issuer);
-            if (decryptionKeyFile != null) {
-                PrivateKey decryptionKey = null;
-                try {
-                    FileInputStream fis = new FileInputStream(decryptionKeyFile);
-                    decryptionKey = PrivateKeyReader.loadPrivateKey(fis);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                InputStream decryptionKeyFile = getKeyFileStream(decryptionKeyPath, issuer);
+                if (decryptionKeyFile != null) {
+                    PrivateKey decryptionKey = PrivateKeyReader.loadPrivateKey(decryptionKeyFile);
+                    tokenDecoder.setDecryptionKey(decryptionKey);
                 }
-                tokenDecoder.setDecryptionKey(decryptionKey);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
-    private File getKeyFile(String path, String issuer) {
+    private InputStream getKeyFileStream(String path, String issuer) throws FileNotFoundException {
         File file = new File(path);
         if (file.isDirectory()) {
             File[] listOfFiles = file.listFiles();
@@ -170,11 +167,12 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                     break;
                 }
             }
-            return verifyKeyFile;
+            return new FileInputStream(verifyKeyFile);
         } else if (file.isFile()) {
-            return file;
+            return new FileInputStream(file);
         }
         
-        return null;
+        // Not a directory or a file...maybe it's a resource on the classpath
+        return this.getClass().getClassLoader().getResourceAsStream(path);
     }
 }
