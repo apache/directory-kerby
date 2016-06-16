@@ -23,7 +23,7 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
-import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
+import org.apache.kerby.kerberos.kerb.type.base.KrbTokenBase;
 
 /**
  PA-TOKEN-REQUEST ::= SEQUENCE {
@@ -49,18 +49,18 @@ public class PaTokenRequest extends KrbSequenceType {
 
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(PaTokenRequestField.TOKEN_INFO, TokenInfo.class),
-            new ExplicitField(PaTokenRequestField.TOKEN, KrbToken.class)
+            new ExplicitField(PaTokenRequestField.TOKEN, KrbTokenBase.class)
     };
 
     public PaTokenRequest() {
         super(fieldInfos);
     }
 
-    public KrbToken getToken() {
-        return getFieldAs(PaTokenRequestField.TOKEN, KrbToken.class);
+    public KrbTokenBase getToken() {
+        return getFieldAs(PaTokenRequestField.TOKEN, KrbTokenBase.class);
     }
 
-    public void setToken(KrbToken token) {
+    public void setToken(KrbTokenBase token) {
         setFieldAs(PaTokenRequestField.TOKEN, token);
     }
 

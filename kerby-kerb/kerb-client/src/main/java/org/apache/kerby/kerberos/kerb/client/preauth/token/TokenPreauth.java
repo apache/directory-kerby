@@ -36,7 +36,7 @@ import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
-import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
+import org.apache.kerby.kerberos.kerb.type.base.KrbTokenBase;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
@@ -187,7 +187,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         }
 
         PaTokenRequest tokenPa = new PaTokenRequest();
-        tokenPa.setToken((KrbToken) authToken);
+        tokenPa.setToken((KrbTokenBase) authToken);
         TokenInfo info = new TokenInfo();
         info.setTokenVendor(authToken.getIssuer());
         tokenPa.setTokenInfo(info);

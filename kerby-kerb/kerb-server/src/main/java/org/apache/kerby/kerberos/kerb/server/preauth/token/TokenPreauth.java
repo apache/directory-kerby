@@ -37,7 +37,7 @@ import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
-import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
+import org.apache.kerby.kerberos.kerb.type.base.KrbTokenBase;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
@@ -75,7 +75,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             PaTokenRequest paTokenRequest = EncryptionUtil.unseal(encData, clientKey,
                 KeyUsage.PA_TOKEN, PaTokenRequest.class);
 
-            KrbToken token = paTokenRequest.getToken();
+            KrbTokenBase token = paTokenRequest.getToken();
             List<String> issuers = kdcRequest.getKdcContext().getConfig().getIssuers();
             TokenInfo tokenInfo = paTokenRequest.getTokenInfo();
             String issuer = tokenInfo.getTokenVendor();
