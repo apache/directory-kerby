@@ -30,9 +30,7 @@ import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.preauth.token.TokenPreauthMeta;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.server.preauth.AbstractPreauthPlugin;
-import org.apache.kerby.kerberos.kerb.server.request.AsRequest;
 import org.apache.kerby.kerberos.kerb.server.request.KdcRequest;
-import org.apache.kerby.kerberos.kerb.server.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
@@ -108,13 +106,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             if (!audiences.contains(serverPrincipal.getName())) {
                 throw new KrbException("The token audience does not match with the target server principal!");
             }
-            if (kdcRequest instanceof AsRequest) {
-                AsRequest asRequest = (AsRequest) kdcRequest;
-                asRequest.setToken(authToken);
-            } else if (kdcRequest instanceof TgsRequest) {
-                TgsRequest tgsRequest = (TgsRequest) kdcRequest;
-                tgsRequest.setToken(authToken);
-            }
+            kdcRequest.setToken(authToken);
             return true;
         } else {
             return false;
