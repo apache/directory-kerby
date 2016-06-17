@@ -252,7 +252,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
                 String identity = pkinitContext.identityOpts.identity;
 
-                PaPkAsRep paPkAsRep = makePaPkAsRep(pkinitContext.cryptoctx, serverPubKey, identity);
+                PaPkAsRep paPkAsRep = makePaPkAsRep(serverPubKey, identity);
                 PaDataEntry paDataEntry = makeEntry(paPkAsRep);
 
                 kdcRequest.getPreauthContext().getOutputPaData().add(paDataEntry);
@@ -300,16 +300,14 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         return paDataEntry;
     }
 
-    private PaPkAsRep makePaPkAsRep(PkinitPlgCryptoContext cryptoContext,
-                                    DHPublicKey severPubKey, String identityString) throws KrbException {
+    private PaPkAsRep makePaPkAsRep(DHPublicKey severPubKey, String identityString) throws KrbException {
 
         List<String> identityList = Arrays.asList(identityString.split(","));
 
         List<X509Certificate> certificates = new ArrayList<>();
         for (String identity : identityList) {
             File file = new File(identity);
-            try {
-                Scanner scanner = new Scanner(file, "UTF-8");
+            try (Scanner scanner = new Scanner(file, "UTF-8")) {
                 String found = scanner.findInLine("CERTIFICATE");
 
                 if (found != null) {
@@ -353,7 +351,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             certificateSet.addElement(certificateChoices);
         }
 
-        String oid = cryptoContext.getIdPkinitDHKeyDataOID();
+        String oid = PkinitPlgCryptoContext.getIdPkinitDHKeyDataOID();
         signedDataBytes = PkinitCrypto.cmsSignedDataCreate(KrbCodec.encode(kdcDhKeyInfo), oid, 3, null,
                 null, null, null);
 
