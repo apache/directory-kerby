@@ -26,6 +26,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultInternalAd
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * A Krb client API for applications to interact with KDC
@@ -183,5 +184,17 @@ public class AdminClient {
     public void requestRenamePrincipal(String oldPrincipal, String newPrincipal) throws KrbException {
         Kadmin remote = new RemoteKadminImpl(innerClient);
         remote.renamePrincipal(oldPrincipal, newPrincipal);
+    }
+
+    public List<String> requestGetprincs() throws KrbException {
+        Kadmin remote = new RemoteKadminImpl(innerClient);
+        List<String> principalLists = remote.getPrincipals();
+        return principalLists;
+    }
+
+    public List<String> requestGetprincsWithExp(String exp) throws KrbException {
+        Kadmin remote = new RemoteKadminImpl(innerClient);
+        List<String> principalLists = remote.getPrincipals(exp);
+        return principalLists;
     }
 }

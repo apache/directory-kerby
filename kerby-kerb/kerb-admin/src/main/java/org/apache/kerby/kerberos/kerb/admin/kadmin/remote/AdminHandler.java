@@ -30,6 +30,8 @@ import org.apache.kerby.xdr.type.XdrStructType;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AdminHandler {
 
@@ -115,6 +117,37 @@ public abstract class AdminHandler {
         }
     }
 
+    public List<String> onResponseMessageForList(AdminRequest adminRequest,
+                                  ByteBuffer responseMessage) throws KrbException {
+        List<String> princalsList = null;
+
+        XdrStructType decoded = new AdminMessageCode();
+        try {
+            decoded.decode(responseMessage);
+        } catch (IOException e) {
+            throw new KrbException("On response message failed.", e);
+        }
+        XdrFieldInfo[] fieldInfos = decoded.getValue().getXdrFieldInfos();
+        AdminMessageType type = (AdminMessageType) fieldInfos[0].getValue();
+
+        switch (type) {
+            case GET_PRINCS_REP:
+                if (adminRequest.getAdminReq().getAdminMessageType()
+                        == AdminMessageType.GET_PRINCS_REQ) {
+                    String[] temp = ((String) fieldInfos[2].getValue()).trim().split(" ");
+                    princalsList = Arrays.asList(temp);
+                } else {
+                    throw new KrbException("Response message type error: need "
+                            + AdminMessageType.GET_PRINCS_REP);
+                }
+                break;
+            default:
+                throw new KrbException("Response message type error: " + type);
+        }
+
+        return princalsList;
+    }
+
     /**
      * Send message to kdc.
      *
@@ -124,4 +157,6 @@ public abstract class AdminHandler {
      */
     protected abstract void sendMessage(AdminRequest adminRequest,
                                         ByteBuffer requestMessage) throws IOException;
+
+    protected abstract List<String> handleRequestForList(AdminRequest adminRequest) throws KrbException;
 }

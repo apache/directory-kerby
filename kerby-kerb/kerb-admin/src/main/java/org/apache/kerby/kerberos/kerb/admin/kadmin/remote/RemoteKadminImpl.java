@@ -24,13 +24,14 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.Kadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultAdminHandler;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
+import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
+import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AddPrincipalRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.DeletePrincipalRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.RenamePrincipalRequest;
-import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
-import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
-import org.apache.kerby.kerberos.kerb.transport.TransportPair;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.GetprincsRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -174,12 +175,18 @@ public class RemoteKadminImpl implements Kadmin {
 
     @Override
     public List<String> getPrincipals() throws KrbException {
-        return null;
+        AdminRequest grtPrincsRequest = new GetprincsRequest();
+        grtPrincsRequest.setTransport(transport);
+        AdminHandler adminHandler = new DefaultAdminHandler();
+        return adminHandler.handleRequestForList(grtPrincsRequest);
     }
 
     @Override
     public List<String> getPrincipals(String globString) throws KrbException {
-        return null;
+        AdminRequest grtPrincsRequest = new GetprincsRequest(globString);
+        grtPrincsRequest.setTransport(transport);
+        AdminHandler adminHandler = new DefaultAdminHandler();
+        return adminHandler.handleRequestForList(grtPrincsRequest);
     }
 
     @Override
