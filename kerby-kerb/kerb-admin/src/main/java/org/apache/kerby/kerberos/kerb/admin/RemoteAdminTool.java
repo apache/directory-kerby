@@ -22,21 +22,40 @@ package org.apache.kerby.kerberos.kerb.admin;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminConfig;
-import org.apache.kerby.util.OSUtil;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminUtil;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteAddPrincipalCommand;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteCommand;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteDeletePrincipalCommand;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteRenamePrincipalCommand;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteGetprincsCommand;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemotePrintUsageCommand;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteRenamePrincipalCommand;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
+import org.apache.kerby.kerberos.kerb.server.KdcConfig;
+import org.apache.kerby.kerberos.kerb.server.KdcUtil;
+import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
+import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
+import org.apache.kerby.kerberos.kerb.transport.TransportPair;
+import org.apache.kerby.util.OSUtil;
 
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginException;
+import javax.security.sasl.Sasl;
+import javax.security.sasl.SaslClient;
+import javax.security.sasl.SaslException;
 import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.security.PrivilegedAction;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
  * Command use of remote admin
  */
 public class RemoteAdminTool {
+    private static final byte[] EMPTY = new byte[0];
+    private static KrbTransport transport;
     private static final String PROMPT = RemoteAdminTool.class.getSimpleName() + ".local:";
     private static final String USAGE = (OSUtil.isWindows()
         ? "Usage: bin\\remoteAdmin.cmd" : "Usage: sh bin/remoteAdmin.sh")
@@ -61,7 +80,7 @@ public class RemoteAdminTool {
     public static void main(String[] args) throws Exception {
         AdminClient adminClient;
 
-        if (args.length != 1) {
+        if (args.length < 1) {
             System.err.println(USAGE);
             System.exit(1);
         }
@@ -70,10 +89,28 @@ public class RemoteAdminTool {
 
         File confFile = new File(confDirPath, "adminClient.conf");
 
-        AdminConfig adminConfig = new AdminConfig();
+        final AdminConfig adminConfig = new AdminConfig();
         adminConfig.addKrb5Config(confFile);
 
+        KdcConfig tmpKdcConfig = KdcUtil.getKdcConfig(new File(confDirPath));
+        if (tmpKdcConfig == null) {
+            tmpKdcConfig = new KdcConfig();
+        }
+
+        try {
+            Krb5Conf krb5Conf = new Krb5Conf(new File(confDirPath), tmpKdcConfig);
+            krb5Conf.initKrb5conf();
+        } catch (IOException e) {
+            throw new KrbException("Failed to make krb5.conf", e);
+        }
+
         adminClient = new AdminClient(adminConfig);
+
+        File keytabFile = new File(adminConfig.getKeyTabFile());
+        if (keytabFile == null || !keytabFile.exists()) {
+            System.err.println("Need the valid keytab file value in conf file.");
+            return;
+        }
 
         String adminRealm = adminConfig.getAdminRealm();
 
@@ -84,6 +121,84 @@ public class RemoteAdminTool {
 
         adminClient.init();
         System.out.println("admin init successful");
+
+        TransportPair tpair = null;
+        try {
+            tpair = AdminUtil.getTransportPair(adminClient.getSetting());
+        } catch (KrbException e) {
+            e.printStackTrace();
+        }
+        KrbNetwork network = new KrbNetwork();
+        network.setSocketTimeout(adminClient.getSetting().getTimeout());
+
+        try {
+            transport = network.connect(tpair);
+        } catch (IOException e) {
+            throw new KrbException("Failed to create transport", e);
+        }
+
+        String adminPrincipal = KrbUtil.makeKadminPrincipal(
+            adminClient.getSetting().getKdcRealm()).getName();
+        Subject subject = null;
+        try {
+            subject = AuthUtil.loginUsingKeytab(adminPrincipal,
+                new File(adminConfig.getKeyTabFile()));
+        } catch (LoginException e) {
+            e.printStackTrace();
+        }
+        Subject.doAs(subject, new PrivilegedAction<Object>() {
+            @Override
+            public Object run() {
+                try {
+
+                    Map<String, String> props = new HashMap<String, String>();
+                    props.put(Sasl.QOP, "auth-conf");
+                    props.put(Sasl.SERVER_AUTH, "true");
+                    SaslClient saslClient = null;
+                    try {
+                        String protocol = adminConfig.getProtocol();
+                        String serverName = adminConfig.getServerName();
+                        saslClient = Sasl.createSaslClient(new String[]{"GSSAPI"}, null,
+                            protocol, serverName, props, null);
+                    } catch (SaslException e) {
+                        e.printStackTrace();
+                    }
+                    if (saslClient == null) {
+                        throw new KrbException("Unable to find client implementation for: GSSAPI");
+                    }
+                    byte[] response = new byte[0];
+                    try {
+                        response = saslClient.hasInitialResponse()
+                            ? saslClient.evaluateChallenge(EMPTY) : EMPTY;
+                    } catch (SaslException e) {
+                        e.printStackTrace();
+                    }
+
+                    sendMessage(response, saslClient);
+
+                    ByteBuffer message = transport.receiveMessage();
+
+                    while (!saslClient.isComplete()) {
+                        int ssComplete = message.getInt();
+                        if (ssComplete == 0) {
+                            System.out.println("Sasl Server completed");
+                        }
+                        byte[] arr = new byte[message.remaining()];
+                        message.get(arr);
+                        byte[] challenge = saslClient.evaluateChallenge(arr);
+
+                        sendMessage(challenge, saslClient);
+
+                        if (!saslClient.isComplete()) {
+                            message = transport.receiveMessage();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        });
 
         System.out.println("enter \"command\" to see legal commands.");
 
@@ -96,7 +211,25 @@ public class RemoteAdminTool {
                 input = scanner.nextLine();
             }
         }
+    }
 
+    private static void sendMessage(byte[] challenge, SaslClient saslClient)
+        throws SaslException {
+
+        // 4 is the head to go through network
+        ByteBuffer buffer = ByteBuffer.allocate(challenge.length + 8);
+        buffer.putInt(challenge.length + 4);
+        int scComplete = saslClient.isComplete() ? 0 : 1;
+
+        buffer.putInt(scComplete);
+        buffer.put(challenge);
+        buffer.flip();
+
+        try {
+            transport.sendMessage(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void excute(AdminClient adminClient, String input) throws KrbException {
@@ -127,6 +260,4 @@ public class RemoteAdminTool {
         }
         executor.execute(input);
     }
-
-
 }

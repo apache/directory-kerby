@@ -31,7 +31,10 @@ public enum AdminConfigKey implements ConfigKey {
     ADMIN_TCP_PORT(null),
     ADMIN_DOMAIN("example.com"),
     DEFAULT_REALM(null),
-    ADMIN_REALM("EXAMPLE.COM");
+    ADMIN_REALM("EXAMPLE.COM"),
+    KEYTAB_FILE,
+    PROTOCOL,
+    SERVER_NAME("localhost");
 
     private Object defaultValue;
 

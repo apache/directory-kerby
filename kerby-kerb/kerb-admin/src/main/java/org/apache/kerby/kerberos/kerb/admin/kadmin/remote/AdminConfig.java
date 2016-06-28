@@ -117,4 +117,16 @@ public class AdminConfig extends Krb5Conf {
 
         return realm;
     }
+
+    public String getKeyTabFile() {
+        return getString(AdminConfigKey.KEYTAB_FILE, true, LIBDEFAULT);
+    }
+
+    public String getProtocol() {
+        return getString(AdminConfigKey.PROTOCOL, true, LIBDEFAULT);
+    }
+
+    public String getServerName() {
+        return getString(AdminConfigKey.SERVER_NAME, true, LIBDEFAULT);
+    }
 }
