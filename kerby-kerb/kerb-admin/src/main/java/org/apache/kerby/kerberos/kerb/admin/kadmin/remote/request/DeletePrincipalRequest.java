@@ -66,6 +66,5 @@ public class DeletePrincipalRequest extends AdminRequest {
         deletePrincipalReq.setMessageBuffer(messageBuffer);
 
         setAdminReq(deletePrincipalReq);
-
     }
 }

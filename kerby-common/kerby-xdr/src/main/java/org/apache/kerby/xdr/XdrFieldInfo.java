@@ -24,7 +24,6 @@ package org.apache.kerby.xdr;
  */
 public class XdrFieldInfo {
     private int index;
-    //private Class<? extends XdrType> type;
     private XdrDataType dataType;
     private Object value;
 
@@ -35,9 +34,7 @@ public class XdrFieldInfo {
      *
      */
     public XdrFieldInfo(int index, XdrDataType dataType, Object value) {
-        //Class<? extends XdrType> type
         this.index = index;
-        //this.type = type;
         this.dataType = dataType;
         this.value = value;
     }
@@ -45,10 +42,6 @@ public class XdrFieldInfo {
     public int getIndex() {
         return index;
     }
-
-    //public Class<? extends XdrType> getTypeClass() {
-        //return type;
-    //}
 
     public XdrDataType getDataType() {
         return dataType;

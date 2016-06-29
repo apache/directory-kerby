@@ -75,7 +75,8 @@ public class XdrInteger extends XdrSimple<Integer> {
     protected void toValue() {
         if (getBytes().length != 4) {
             byte[] intBytes = ByteBuffer.allocate(4).put(getBytes(), 0, 4).array();
-            setBytes(intBytes); /**reset bytes in case the enum type is in a struct or union*/
+            /**reset bytes in case the enum type is in a struct or union*/
+            setBytes(intBytes);
         }
         ByteBuffer buffer = ByteBuffer.wrap(getBytes());
         setValue(buffer.getInt());

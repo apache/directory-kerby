@@ -30,8 +30,10 @@ import java.util.Arrays;
  * Boolean type has the same representation as signed integers.
  */
 public class XdrBoolean extends XdrSimple<Boolean> {
-    private static final byte[] TRUE_BYTE = new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01};
-    private static final byte[] FALSE_BYTE = new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
+    private static final byte[] TRUE_BYTE = new byte[]
+        {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01};
+    private static final byte[] FALSE_BYTE = new byte[]
+        {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
 
     public static final XdrBoolean TRUE = new XdrBoolean(true);
     public static final XdrBoolean FALSE = new XdrBoolean(false);
@@ -76,7 +78,8 @@ public class XdrBoolean extends XdrSimple<Boolean> {
     protected void toValue() throws IOException {
         if (getBytes().length != 4) {
             byte[] boolBytes = ByteBuffer.allocate(4).put(getBytes(), 0, 4).array();
-            setBytes(boolBytes); /**reset bytes in case the enum type is in a struct or union*/
+            /**reset bytes in case the enum type is in a struct or union*/
+            setBytes(boolBytes);
         }
 
         byte[] bytes = getBytes();

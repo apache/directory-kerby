@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * Created by root on 6/3/16.
+ * GetprincsRequest request.
  */
 public class GetprincsRequest extends AdminRequest {
     private String globString = null;
@@ -66,7 +66,5 @@ public class GetprincsRequest extends AdminRequest {
         getprincsReq.setMessageBuffer(messageBuffer);
 
         setAdminReq(getprincsReq);
-
     }
-
 }

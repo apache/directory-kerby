@@ -25,25 +25,12 @@ import org.apache.kerby.kerberos.kerb.admin.tool.AdminReq;
 
 public class AdminRequest {
     private String principal;
-    //private KOptions kOptions;
     private KrbTransport transport;
     private AdminReq adminReq;
-
-    //private AdminContext context;
-
-    //public AdminRequest(AdminContext context) {
-        //this.context = context;
-    //}
 
     public AdminRequest(String principal) {
         this.principal = principal;
     }
-
-    //public AdminRequest(String principal, KOptions kOptions) {
-        // this.principal = principal;
-        //this.kOptions = kOptions;
-    //}
-
 
     public String getPrincipal() {
         return principal;
@@ -63,7 +50,6 @@ public class AdminRequest {
 
     public void process() throws KrbException {
         //encoding and set adminReq
-
     }
 
 

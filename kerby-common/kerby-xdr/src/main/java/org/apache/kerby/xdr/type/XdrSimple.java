@@ -59,7 +59,8 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
 
     protected byte[] encodeBody() throws IOException {
         if (bytes == null) {
-            toBytes();  /**Terminal step for encoding all the simple type to bytes.*/
+            /**Terminal step for encoding all the simple type to bytes.*/
+            toBytes();
         }
         return bytes;
     }
@@ -86,7 +87,8 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
             return 0;
         }
         if (bytes == null) {
-            toBytes(); /**Terminal step for decoding all the simple type to bytes.*/
+            /**Terminal step for decoding all the simple type to bytes.*/
+            toBytes();
         }
         return bytes.length;
     }
@@ -100,7 +102,8 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
         byte[] result = body.array();
         if (result.length > 0) {
             setBytes(result);
-            toValue(); /**Terminal step for decoding all the bytes into simple types.*/
+            /**Terminal step for decoding all the bytes into simple types.*/
+            toValue();
         }
     }
 

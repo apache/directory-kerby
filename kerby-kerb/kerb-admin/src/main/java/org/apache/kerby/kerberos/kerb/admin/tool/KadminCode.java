@@ -28,7 +28,8 @@ import java.nio.ByteBuffer;
 public class KadminCode {
     public static ByteBuffer encodeMessage(AdminMessage adminMessage) {
         int length = adminMessage.encodingLength();
-        ByteBuffer buffer = ByteBuffer.allocate(length + 4); // 4 is the head to go through network
+        // 4 is the head to go through network
+        ByteBuffer buffer = ByteBuffer.allocate(length + 4);
         buffer.putInt(length); // head in network
         //buffer.putInt(adminMessage.getAdminMessageType().getValue());
         // type has been encoded in the admin message
@@ -48,10 +49,12 @@ public class KadminCode {
         buffer.get(bytes);
         if (adminMessageType == AdminMessageType.ADD_PRINCIPAL_REQ) {
             adminMessage = new AddPrincipalReq();
-            System.out.println("check if decoding right: " + new String(ByteBuffer.wrap(bytes).array()));
+            System.out.println("check if decoding right: "
+                + new String(ByteBuffer.wrap(bytes).array()));
         } else if (adminMessageType == AdminMessageType.ADD_PRINCIPAL_REP) {
             adminMessage = new AddPrincipalRep();
-            System.out.println("check if decoding right2: " + new String(ByteBuffer.wrap(bytes).array()));
+            System.out.println("check if decoding right2: "
+                + new String(ByteBuffer.wrap(bytes).array()));
         } else {
             throw new IOException("Unknown Admin Message Type: " + type);
         }

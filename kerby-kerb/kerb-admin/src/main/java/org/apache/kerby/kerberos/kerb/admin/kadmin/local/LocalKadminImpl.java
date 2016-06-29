@@ -188,7 +188,6 @@ public class LocalKadminImpl implements LocalKadmin {
                 getKdcConfig().getEncryptionTypes());
         identity.addKeys(keys);
         backend.addIdentity(identity);
-        System.out.println("add backend success"); //delete
     }
 
     @Override

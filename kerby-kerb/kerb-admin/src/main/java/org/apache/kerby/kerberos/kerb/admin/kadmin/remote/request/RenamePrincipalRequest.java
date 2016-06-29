@@ -70,6 +70,5 @@ public class RenamePrincipalRequest extends AdminRequest {
         renamePrincipalReq.setMessageBuffer(messageBuffer);
 
         setAdminReq(renamePrincipalReq);
-
     }
 }

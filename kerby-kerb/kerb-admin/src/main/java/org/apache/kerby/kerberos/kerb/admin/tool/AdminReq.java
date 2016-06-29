@@ -31,5 +31,4 @@ public class AdminReq extends AdminMessage {
     super(messageType);
   }
 
-
 }

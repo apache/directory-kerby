@@ -86,8 +86,10 @@ public class XdrString extends XdrSimple<String> {
 
         if (bytes.length != stringLen + 4 + paddingBytes) {
             int totalLength = stringLen + paddingBytes + 4;
-            byte[] stringBytes = ByteBuffer.allocate(totalLength).put(getBytes(), 0, totalLength).array();
-            setBytes(stringBytes); /**reset bytes in case the enum type is in a struct or union*/
+            byte[] stringBytes = ByteBuffer.allocate(totalLength).put(getBytes(),
+                0, totalLength).array();
+            /**reset bytes in case the enum type is in a struct or union*/
+            setBytes(stringBytes);
         }
 
         byte[] content = new byte[stringLen];

@@ -94,11 +94,7 @@ public class AddPrincipalRequest extends AdminRequest {
         ByteBuffer messageBuffer = ByteBuffer.wrap(encodeBytes);
         addPrincipalReq.setMessageBuffer(messageBuffer);
 
-
-
-
         setAdminReq(addPrincipalReq);
-
     }
 
     public int getParamNum() {
@@ -115,5 +111,4 @@ public class AddPrincipalRequest extends AdminRequest {
         }
         return paramNum;
     }
-
 }
