@@ -38,6 +38,4 @@ public class AdminMessageEnum extends XdrEnumerated<AdminMessageType> {
         return AdminMessageType.values();
     }
 
-
-
 }

@@ -22,7 +22,11 @@ package org.apache.kerby.kerberos.kerb.admin.tool;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
-import org.apache.kerby.xdr.type.*;
+import org.apache.kerby.xdr.type.AbstractXdrType;
+import org.apache.kerby.xdr.type.XdrInteger;
+import org.apache.kerby.xdr.type.XdrString;
+import org.apache.kerby.xdr.type.XdrStructType;
+import org.apache.kerby.xdr.type.XdrType;
 
 /**
  * An extend XdrStructType to encode and decode AdminMessage.
@@ -83,10 +87,4 @@ public class AdminMessageCode extends XdrStructType {
         fields[4] = null; // kOptions is not supported.
         return fields;
     }
-
-
-
-
-
-
 }

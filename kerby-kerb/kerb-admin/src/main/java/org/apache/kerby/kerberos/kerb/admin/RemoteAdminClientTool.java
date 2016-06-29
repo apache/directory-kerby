@@ -53,10 +53,10 @@ import java.util.Scanner;
 /**
  * Command use of remote admin
  */
-public class RemoteAdminTool {
+public class RemoteAdminClientTool {
     private static final byte[] EMPTY = new byte[0];
     private static KrbTransport transport;
-    private static final String PROMPT = RemoteAdminTool.class.getSimpleName() + ".local:";
+    private static final String PROMPT = RemoteAdminClientTool.class.getSimpleName() + ".local:";
     private static final String USAGE = (OSUtil.isWindows()
         ? "Usage: bin\\remoteAdmin.cmd" : "Usage: sh bin/remoteAdmin.sh")
         + " <conf-file>\n"

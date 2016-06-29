@@ -28,5 +28,5 @@ for %%a in (%*) do (
 
 java %DEBUG% ^
 -classpath target\lib\* ^
--DKERBY_LOGFILE=adminServer ^
-org.apache.kerby.kerberos.kerb.admin.server.AdminServerInit %args%
+-DKERBY_LOGFILE=admin-server ^
+org.apache.kerby.kerberos.kerb.admin.server.KerbyAdminServer %args%

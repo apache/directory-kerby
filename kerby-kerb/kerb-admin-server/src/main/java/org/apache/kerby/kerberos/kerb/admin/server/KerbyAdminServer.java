@@ -31,7 +31,7 @@ import org.apache.kerby.util.OSUtil;
 import java.io.File;
 import java.io.IOException;
 
-public class AdminServerInit {
+public class KerbyAdminServer {
     private static final String USAGE = (OSUtil.isWindows()
         ? "Usage: bin\\adminServer.cmd" : "Usage: sh bin/adminServer.sh")
         + " <conf-file>\n"

@@ -19,10 +19,17 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
-import org.apache.kerby.kerberos.kerb.admin.tool.*;
-import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.admin.tool.AddPrincipalRep;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessage;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageCode;
+import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageType;
+import org.apache.kerby.kerberos.kerb.admin.tool.DeletePrincipalRep;
+import org.apache.kerby.kerberos.kerb.admin.tool.GetprincsRep;
+import org.apache.kerby.kerberos.kerb.admin.tool.KadminCode;
+import org.apache.kerby.kerberos.kerb.admin.tool.RenamePrincipalRep;
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
 import org.apache.kerby.xdr.type.XdrStructType;

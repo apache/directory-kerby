@@ -38,7 +38,6 @@ public class KadminCode {
         return buffer;
     }
 
-
     public static AdminMessage decodeMessage(ByteBuffer buffer) throws IOException {
         //go through network, the total length has been removed.
         int type = buffer.getInt();
