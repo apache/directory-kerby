@@ -1,4 +1,4 @@
-package org.apache.kerby.kerberos.kerb.gssapi.krb5;
+package org.apache.kerby.kerberos.kerb.gss.impl;
 
 import org.ietf.jgss.GSSException;
 import sun.security.jgss.GSSCaller;

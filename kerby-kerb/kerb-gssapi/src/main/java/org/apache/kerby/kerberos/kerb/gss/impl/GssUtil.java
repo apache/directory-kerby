@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gssapi.krb5;
+package org.apache.kerby.kerberos.kerb.gss.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClientBase;
@@ -57,7 +57,7 @@ import java.util.List;
 /**
  * Some utility functions to translate types between GSS and Kerby
  */
-public class KerbyUtil {
+public class GssUtil {
     private static final int KERBEROS_TICKET_NUM_FLAGS = 32;  // KerberosTicket.NUM_LENGTH
 
     /**

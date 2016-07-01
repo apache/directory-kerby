@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gssapi.krb5;
+package org.apache.kerby.kerberos.kerb.gss.impl;
 
 
 import org.ietf.jgss.GSSException;
@@ -27,12 +27,12 @@ import javax.security.auth.kerberos.KerberosKey;
 import javax.security.auth.kerberos.KerberosPrincipal;
 import javax.security.auth.kerberos.KeyTab;
 
-public final class KerbyAcceptCred extends KerbyCredElement {
+public final class GssAcceptCred extends GssCredElement {
 
     private final KeyTab keyTab;
 
-    public static KerbyAcceptCred getInstance(final GSSCaller caller,
-                                              KerbyNameElement name, int lifeTime) throws GSSException {
+    public static GssAcceptCred getInstance(final GSSCaller caller,
+                                            GssNameElement name, int lifeTime) throws GSSException {
 
         KerberosPrincipal princ = new KerberosPrincipal(name.getPrincipalName().getName(),
                 name.getPrincipalName().getNameType().getValue());
@@ -43,10 +43,10 @@ public final class KerbyAcceptCred extends KerbyCredElement {
                     "Failed to find any Kerberos credential for " + name.getPrincipalName().getName());
         }
 
-        return new KerbyAcceptCred(caller, name, keyTab, lifeTime);
+        return new GssAcceptCred(caller, name, keyTab, lifeTime);
     }
 
-    private KerbyAcceptCred(GSSCaller caller, KerbyNameElement name, KeyTab keyTab, int lifeTime) {
+    private GssAcceptCred(GSSCaller caller, GssNameElement name, KeyTab keyTab, int lifeTime) {
         super(caller, name);
         this.keyTab = keyTab;
         this.accLifeTime = lifeTime;

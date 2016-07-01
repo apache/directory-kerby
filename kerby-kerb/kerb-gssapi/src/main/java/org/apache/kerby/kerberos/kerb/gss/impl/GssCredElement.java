@@ -17,8 +17,9 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gssapi.krb5;
+package org.apache.kerby.kerberos.kerb.gss.impl;
 
+import org.apache.kerby.kerberos.kerb.gss.KerbyGssProvider;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 import sun.security.jgss.GSSCaller;
@@ -27,22 +28,22 @@ import sun.security.jgss.spi.GSSNameSpi;
 
 import java.security.Provider;
 
-public abstract class KerbyCredElement implements GSSCredentialSpi {
+public abstract class GssCredElement implements GSSCredentialSpi {
 
     static final Oid KRB5_OID = createOid("1.2.840.113554.1.2.2");
 
     protected GSSCaller caller;
-    protected KerbyNameElement name;
+    protected GssNameElement name;
     protected int initLifeTime;
     protected int accLifeTime;
 
-    KerbyCredElement(GSSCaller caller, KerbyNameElement name) {
+    GssCredElement(GSSCaller caller, GssNameElement name) {
         this.caller = caller;
         this.name = name;
     }
 
     public Provider getProvider() {
-        return new org.apache.kerby.kerberos.kerb.gssapi.Provider();
+        return new KerbyGssProvider();
     }
 
     public void dispose() throws GSSException {

@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gssapi.krb5;
+package org.apache.kerby.kerberos.kerb.gss.impl;
 
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
@@ -31,7 +31,7 @@ import java.security.MessageDigest;
 /**
  * This class implements the token formats defined in RFC 4121.
  */
-abstract class KerbyGssTokenV2 extends KerbyGssTokenBase {
+abstract class GssTokenV2 extends GssTokenBase {
     public static final int CONFOUNDER_SIZE = 16;
     public static final int TOKEN_HEADER_SIZE = 16;
     private static final int OFFSET_EC = 4;
@@ -62,18 +62,18 @@ abstract class KerbyGssTokenV2 extends KerbyGssTokenBase {
     private static final int FLAG_SEALED = 2;
     private static final int FLAG_ACCEPTOR_SUBKEY = 4;
 
-    protected KerbyGssEncryptor encryptor;
+    protected GssEncryptor encryptor;
 
 
     // Create a new token
-    KerbyGssTokenV2(int tokenType, KerbyContext context) throws GSSException {
+    GssTokenV2(int tokenType, GssContext context) throws GSSException {
         initialize(tokenType, context, false);
     }
 
-    private void initialize(int tokenType, KerbyContext context, boolean reconstruct) throws GSSException {
+    private void initialize(int tokenType, GssContext context, boolean reconstruct) throws GSSException {
         this.tokenType = tokenType;
         this.isInitiator = context.isInitiator();
-        this.acceptorSubKey = context.getKeyComesFrom() == KerbyContext.ACCEPTOR_SUBKEY;
+        this.acceptorSubKey = context.getKeyComesFrom() == GssContext.ACCEPTOR_SUBKEY;
         this.confState = context.getConfState();
 
         boolean usageFlag = reconstruct ? !this.isInitiator : this.isInitiator;
@@ -91,14 +91,14 @@ abstract class KerbyGssTokenV2 extends KerbyGssTokenBase {
     }
 
     // Reconstruct token from bytes received
-    KerbyGssTokenV2(int tokenType, KerbyContext context,
-                         MessageProp prop, byte[] token, int offset, int len) throws GSSException {
+    GssTokenV2(int tokenType, GssContext context,
+               MessageProp prop, byte[] token, int offset, int len) throws GSSException {
         this(tokenType, context, prop, new ByteArrayInputStream(token, offset, len));
     }
 
     // Reconstruct token from input stream
-    KerbyGssTokenV2(int tokenType, KerbyContext context,
-                         MessageProp prop, InputStream is) throws GSSException {
+    GssTokenV2(int tokenType, GssContext context,
+               MessageProp prop, InputStream is) throws GSSException {
         initialize(tokenType, context, true);
 
         if (!confState) {

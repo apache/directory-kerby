@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gssapi;
+package org.apache.kerby.kerberos.kerb.gss;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -25,13 +25,13 @@ import java.security.PrivilegedAction;
 /**
  * Proivder is used to register the implementation of gssapi mechanism into the system
  */
-public final class Provider extends java.security.Provider {
+public final class KerbyGssProvider extends java.security.Provider {
     private static final long serialVersionUID = 3787378212107821987L;
-    private static final String INFO = "Kerby GssApi Provider";
+    private static final String INFO = "Kerby Gssapi Provider";
     private static final String MECHANISM_GSSAPI = "GssApiMechanism.1.2.840.113554.1.2.2";
-    private static final String MECHANISM_GSSAPI_CLASS = "org.apache.kerby.kerberos.kerb.gssapi.KerbyMechFactory";
+    private static final String MECHANISM_GSSAPI_CLASS = "org.apache.kerby.kerberos.kerb.gss.GssMechFactory";
 
-    public Provider() {
+    public KerbyGssProvider() {
         super("KerbyGssApi", 0.01d, INFO);
 
         AccessController.doPrivileged(new PrivilegedAction<Void>() {

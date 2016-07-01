@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gssapi.krb5;
+package org.apache.kerby.kerberos.kerb.gss.impl;
 
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
@@ -27,8 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class MicTokenV1 extends KerbyGssTokenV1 {
-    public MicTokenV1(KerbyContext context,
+public class MicTokenV1 extends GssTokenV1 {
+    public MicTokenV1(GssContext context,
                        byte[] inMsg,
                        int msgOffset,
                        int msgLength,
@@ -38,7 +38,7 @@ public class MicTokenV1 extends KerbyGssTokenV1 {
     }
 
     // This is called to construct MicToken from MicToken bytes
-    MicTokenV1(KerbyContext context,
+    MicTokenV1(GssContext context,
                MessageProp messageProp,
                byte[] inToken,
                int tokenOffset,

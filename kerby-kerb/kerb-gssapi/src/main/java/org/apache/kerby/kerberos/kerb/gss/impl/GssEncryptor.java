@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gssapi.krb5;
+package org.apache.kerby.kerberos.kerb.gss.impl;
 
 
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -40,7 +40,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * This class implements encryption related function used in GSS tokens
  */
-public class KerbyGssEncryptor {
+public class GssEncryptor {
 
     private final EncryptionKey encKey;
     private final EncryptionType encKeyType; // The following two variables used for convenience
@@ -56,7 +56,7 @@ public class KerbyGssEncryptor {
 
     private static final byte[] IV_ZEROR_8B = new byte[8];
 
-    public KerbyGssEncryptor(EncryptionKey key) throws GSSException {
+    public GssEncryptor(EncryptionKey key) throws GSSException {
         encKey = key;
         encKeyBytes = encKey.getKeyData();
         encKeyType = key.getKeyType();
@@ -70,16 +70,16 @@ public class KerbyGssEncryptor {
             checkSumTypeDef = CheckSumType.HMAC_SHA1_96_AES256;
             isV2 = true;
         } else if (encKeyType == EncryptionType.DES_CBC_CRC || encKeyType == EncryptionType.DES_CBC_MD5) {
-            sgnAlg = KerbyGssTokenV1.SGN_ALG_DES_MAC_MD5;
-            sealAlg = KerbyGssTokenV1.SEAL_ALG_DES;
+            sgnAlg = GssTokenV1.SGN_ALG_DES_MAC_MD5;
+            sealAlg = GssTokenV1.SEAL_ALG_DES;
             checkSumSize = 8;
         } else if (encKeyType == EncryptionType.DES3_CBC_SHA1) {
-            sgnAlg = KerbyGssTokenV1.SGN_ALG_HMAC_SHA1_DES3_KD;
-            sealAlg = KerbyGssTokenV1.SEAL_ALG_DES3_KD;
+            sgnAlg = GssTokenV1.SGN_ALG_HMAC_SHA1_DES3_KD;
+            sealAlg = GssTokenV1.SEAL_ALG_DES3_KD;
             checkSumSize = 20;
         } else if (encKeyType == EncryptionType.ARCFOUR_HMAC) {
-            sgnAlg = KerbyGssTokenV1.SGN_ALG_RC4_HMAC;
-            sealAlg = KerbyGssTokenV1.SEAL_ALG_RC4_HMAC;
+            sgnAlg = GssTokenV1.SGN_ALG_RC4_HMAC;
+            sealAlg = GssTokenV1.SEAL_ALG_RC4_HMAC;
             checkSumSize = 16;
             isArcFourHmac = true;
         } else {
@@ -192,7 +192,7 @@ public class KerbyGssEncryptor {
                                     byte[] data, int offset, int len, int paddingLen, boolean isMic)
             throws GSSException {
         byte[] ret;
-        int keyUsage = KerbyGssTokenV1.KG_USAGE_SIGN;
+        int keyUsage = GssTokenV1.KG_USAGE_SIGN;
         CheckSumTypeHandler handler;
 
         int keySize;
@@ -226,25 +226,25 @@ public class KerbyGssEncryptor {
         CheckSumType chksumType;
         try {
             switch (sgnAlg) {
-                case KerbyGssTokenV1.SGN_ALG_DES_MAC_MD5:
+                case GssTokenV1.SGN_ALG_DES_MAC_MD5:
                     Md5Provider md5Provider = new Md5Provider();
                     md5Provider.hash(toProc);
                     toProc = md5Provider.output();
 
-                case KerbyGssTokenV1.SGN_ALG_DES_MAC:
+                case GssTokenV1.SGN_ALG_DES_MAC:
                     DesProvider desProvider = new DesProvider();
                     return desProvider.cbcMac(encKeyBytes, IV_ZEROR_8B, toProc);
 
-                case KerbyGssTokenV1.SGN_ALG_HMAC_SHA1_DES3_KD:
+                case GssTokenV1.SGN_ALG_HMAC_SHA1_DES3_KD:
                     chksumType = CheckSumType.HMAC_SHA1_DES3_KD;
                     break;
-                case KerbyGssTokenV1.SGN_ALG_RC4_HMAC:
+                case GssTokenV1.SGN_ALG_RC4_HMAC:
                     chksumType = CheckSumType.MD5_HMAC_ARCFOUR;
                     if (isMic) {
-                        keyUsage = KerbyGssTokenV1.KG_USAGE_MS_SIGN;
+                        keyUsage = GssTokenV1.KG_USAGE_MS_SIGN;
                     }
                     break;
-                case KerbyGssTokenV1.SGN_ALG_MD25:
+                case GssTokenV1.SGN_ALG_MD25:
                     throw new GSSException(GSSException.FAILURE, -1, "CheckSum not implemented for SGN_ALG_MD25");
                 default:
                     throw new GSSException(GSSException.FAILURE, -1, "CheckSum not implemented for sgnAlg=" + sgnAlg);
@@ -265,8 +265,8 @@ public class KerbyGssEncryptor {
         EncTypeHandler handler;
         try {
             switch (sgnAlg) {
-                case KerbyGssTokenV1.SGN_ALG_DES_MAC_MD5:
-                case KerbyGssTokenV1.SGN_ALG_DES_MAC:
+                case GssTokenV1.SGN_ALG_DES_MAC_MD5:
+                case GssTokenV1.SGN_ALG_DES_MAC:
                     DesProvider desProvider = new DesProvider();
                     byte[] data = seqBytes.clone();
                     if (encrypt) {
@@ -275,12 +275,12 @@ public class KerbyGssEncryptor {
                         desProvider.decrypt(encKeyBytes, ivSrc, data);
                     }
                     return data;
-                case KerbyGssTokenV1.SGN_ALG_HMAC_SHA1_DES3_KD:
+                case GssTokenV1.SGN_ALG_HMAC_SHA1_DES3_KD:
                     handler = EncryptionHandler.getEncHandler(EncryptionType.DES3_CBC_SHA1_KD);
                     break;
-                case KerbyGssTokenV1.SGN_ALG_RC4_HMAC:
+                case GssTokenV1.SGN_ALG_RC4_HMAC:
                     return encryptArcFourHmac(seqBytes, getKeyBytesWithLength(16), getFirstBytes(ivSrc, 8), encrypt);
-                case KerbyGssTokenV1.SGN_ALG_MD25:
+                case GssTokenV1.SGN_ALG_MD25:
                     throw new GSSException(GSSException.FAILURE, -1, "EncSeq not implemented for SGN_ALG_MD25");
                 default:
                     throw new GSSException(GSSException.FAILURE, -1, "EncSeq not implemented for sgnAlg=" + sgnAlg);
@@ -290,9 +290,9 @@ public class KerbyGssEncryptor {
             int ivLen = handler.encProvider().blockSize();
             byte[] iv = getFirstBytes(ivSrc, ivLen);
             if (encrypt) {
-                return handler.encryptRaw(seqBytes, key, iv, KerbyGssTokenV1.KG_USAGE_SEQ);
+                return handler.encryptRaw(seqBytes, key, iv, GssTokenV1.KG_USAGE_SEQ);
             } else {
-                return handler.decryptRaw(seqBytes, key, iv, KerbyGssTokenV1.KG_USAGE_SEQ);
+                return handler.decryptRaw(seqBytes, key, iv, GssTokenV1.KG_USAGE_SEQ);
             }
         } catch (KrbException e) {
             throw new GSSException(GSSException.FAILURE, -1,
@@ -361,13 +361,13 @@ public class KerbyGssEncryptor {
         EncTypeHandler handler;
         try {
             switch (sealAlg) {
-                case KerbyGssTokenV1.SEAL_ALG_DES:
+                case GssTokenV1.SEAL_ALG_DES:
                     handler = EncryptionHandler.getEncHandler(EncryptionType.DES_CBC_MD5);
                     break;
-                case KerbyGssTokenV1.SEAL_ALG_DES3_KD:
+                case GssTokenV1.SEAL_ALG_DES3_KD:
                     handler = EncryptionHandler.getEncHandler(EncryptionType.DES3_CBC_SHA1_KD);
                     break;
-                case KerbyGssTokenV1.SEAL_ALG_RC4_HMAC:
+                case GssTokenV1.SEAL_ALG_RC4_HMAC:
                     return encryptDataArcFourHmac(toProc, getKeyBytesWithLength(16), seqNumber, encrypt);
                 default:
                     throw new GSSException(GSSException.FAILURE, -1, "Unknown encryption type sealAlg = " + sealAlg);
@@ -376,9 +376,9 @@ public class KerbyGssEncryptor {
             int keySize = handler.keySize();
             byte[] key = getKeyBytesWithLength(keySize);
             if (encrypt) {
-                return handler.encryptRaw(toProc, key, KerbyGssTokenV1.KG_USAGE_SEAL);
+                return handler.encryptRaw(toProc, key, GssTokenV1.KG_USAGE_SEAL);
             } else {
-                return handler.decryptRaw(toProc, key, KerbyGssTokenV1.KG_USAGE_SEAL);
+                return handler.decryptRaw(toProc, key, GssTokenV1.KG_USAGE_SEAL);
             }
         } catch (KrbException e) {
             throw new GSSException(GSSException.FAILURE, -1,

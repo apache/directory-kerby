@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gssapi.krb5;
+package org.apache.kerby.kerberos.kerb.gss.impl;
 
 import org.apache.kerby.kerberos.kerb.crypto.util.Random;
 import org.ietf.jgss.GSSException;
@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class WrapTokenV1 extends KerbyGssTokenV1 {
+public class WrapTokenV1 extends GssTokenV1 {
     public static final int CONFOUNDER_SIZE = 8;
 
     private boolean privacy;
@@ -53,7 +53,7 @@ public class WrapTokenV1 extends KerbyGssTokenV1 {
 
 
     // Generate wrap token according user data
-    public WrapTokenV1(KerbyContext context,
+    public WrapTokenV1(GssContext context,
                        byte[] inMsg,
                        int msgOffset,
                        int msgLength,
@@ -76,7 +76,7 @@ public class WrapTokenV1 extends KerbyGssTokenV1 {
     }
 
     // Reconstruct a token from token bytes
-    public WrapTokenV1(KerbyContext context, MessageProp prop,
+    public WrapTokenV1(GssContext context, MessageProp prop,
                        byte[] token, int offset, int len) throws GSSException {
         super(TOKEN_WRAP_V1, context, prop, token, offset, len);
         // adjust the offset to the beginning of the body
@@ -87,7 +87,7 @@ public class WrapTokenV1 extends KerbyGssTokenV1 {
     }
 
     // Reconstruct a token from token bytes stream
-    public WrapTokenV1(KerbyContext context, MessageProp prop, InputStream is) throws GSSException {
+    public WrapTokenV1(GssContext context, MessageProp prop, InputStream is) throws GSSException {
         super(TOKEN_WRAP_V1, context, prop, is);
         byte[] token;
         int len;
@@ -186,7 +186,7 @@ public class WrapTokenV1 extends KerbyGssTokenV1 {
         return ret;
     }
 
-    public static int getMsgSizeLimit(int qop, boolean confReq, int maxTokSize, KerbyGssEncryptor encryptor)
+    public static int getMsgSizeLimit(int qop, boolean confReq, int maxTokSize, GssEncryptor encryptor)
             throws GSSException {
         return GSSHeader.getMaxMechTokenSize(objId, maxTokSize)
                 - encryptor.getCheckSumSize()
