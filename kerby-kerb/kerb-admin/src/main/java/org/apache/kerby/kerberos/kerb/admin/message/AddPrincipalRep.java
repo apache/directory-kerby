@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.admin.message;
 
 
 /**
- * Delete principal reply, to general admin message
+ * Add principal reply, to general admin message
  */
-public class DeletePrincipalRep extends AdminRep {
-    public DeletePrincipalRep() {
-        super(AdminMessageType.DELETE_PRINCIPAL_REP);
+public class AddPrincipalRep extends AdminRep {
+    public AddPrincipalRep() {
+        super(AdminMessageType.ADD_PRINCIPAL_REP);
     }
 }

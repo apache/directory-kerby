@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.admin.message;
 
 public class GetprincsReq extends AdminReq {
     public GetprincsReq() {

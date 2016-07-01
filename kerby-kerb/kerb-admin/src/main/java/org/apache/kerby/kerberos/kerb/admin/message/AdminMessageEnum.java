@@ -17,14 +17,25 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.admin.message;
 
+import org.apache.kerby.xdr.EnumType;
+import org.apache.kerby.xdr.type.XdrEnumerated;
 
 /**
- * Delete principal request, to general admin message
+ * An extend XdrEnumerate to encode and decode AdminMessageType.
  */
-public class DeletePrincipalReq extends AdminReq {
-    public DeletePrincipalReq() {
-        super(AdminMessageType.DELETE_PRINCIPAL_REQ);
+public class AdminMessageEnum extends XdrEnumerated<AdminMessageType> {
+    public AdminMessageEnum() {
+        super(null);
     }
+
+    public AdminMessageEnum(AdminMessageType value) {
+        super(value);
+    }
+    @Override
+    protected EnumType[] getAllEnumValues() {
+        return AdminMessageType.values();
+    }
+
 }

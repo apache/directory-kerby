@@ -33,12 +33,12 @@ import java.io.IOException;
 
 public class KerbyAdminServer {
     private static final String USAGE = (OSUtil.isWindows()
-        ? "Usage: bin\\adminServer.cmd" : "Usage: sh bin/adminServer.sh")
+        ? "Usage: bin\\admin-server.cmd" : "Usage: sh bin/admin-server.sh")
         + " <conf-file>\n"
         + "\tExample:\n"
         + "\t\t"
         + (OSUtil.isWindows()
-        ? "bin\\adminServer.cmd" : "sh bin/adminServer.sh")
+        ? "bin\\admin-server.cmd" : "sh bin/admin-server.sh")
         + " conf\n";
 
     public static void main(String[] args) throws Exception {

@@ -17,13 +17,14 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.admin.message;
+
 
 /**
- * Rename principal request, to general admin message
+ * Delete principal request, to general admin message
  */
-public class RenamePrincipalReq extends AdminReq {
-    public RenamePrincipalReq() {
-        super(AdminMessageType.RENAME_PRINCIPAL_REQ);
+public class DeletePrincipalReq extends AdminReq {
+    public DeletePrincipalReq() {
+        super(AdminMessageType.DELETE_PRINCIPAL_REQ);
     }
 }

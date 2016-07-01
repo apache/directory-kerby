@@ -17,25 +17,13 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
-
-import org.apache.kerby.xdr.EnumType;
-import org.apache.kerby.xdr.type.XdrEnumerated;
+package org.apache.kerby.kerberos.kerb.admin.message;
 
 /**
- * An extend XdrEnumerate to encode and decode AdminMessageType.
+ * Rename principal reply, to general admin message
  */
-public class AdminMessageEnum extends XdrEnumerated<AdminMessageType> {
-    public AdminMessageEnum() {
-        super(null);
+public class RenamePrincipalRep extends AdminRep {
+    public RenamePrincipalRep() {
+        super(AdminMessageType.RENAME_PRINCIPAL_REP);
     }
-
-    public AdminMessageEnum(AdminMessageType value) {
-        super(value);
-    }
-    @Override
-    protected EnumType[] getAllEnumValues() {
-        return AdminMessageType.values();
-    }
-
 }

@@ -17,10 +17,18 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.admin.message;
 
-public class GetprincsRep extends AdminRep {
-    public GetprincsRep() {
-        super(AdminMessageType.GET_PRINCS_REP);
-    }
+
+/**
+ * Use to construct Admin message.
+ * Probably two kinds of request.
+ * add principal -- AdReq
+ * change password? -- chReq
+ */
+public class AdminReq extends AdminMessage {
+  public AdminReq(AdminMessageType messageType) {
+    super(messageType);
+  }
+
 }

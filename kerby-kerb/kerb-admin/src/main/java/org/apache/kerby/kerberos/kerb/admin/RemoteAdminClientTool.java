@@ -58,12 +58,12 @@ public class RemoteAdminClientTool {
     private static KrbTransport transport;
     private static final String PROMPT = RemoteAdminClientTool.class.getSimpleName() + ".local:";
     private static final String USAGE = (OSUtil.isWindows()
-        ? "Usage: bin\\remoteAdmin.cmd" : "Usage: sh bin/remoteAdmin.sh")
+        ? "Usage: bin\\remote-admin-client.cmd" : "Usage: sh bin/remote-admin-client.sh")
         + " <conf-file>\n"
         + "\tExample:\n"
         + "\t\t"
         + (OSUtil.isWindows()
-        ? "bin\\remoteAdmin.cmd" : "sh bin/remoteAdmin.sh")
+        ? "bin\\remote-admin-client.cmd" : "sh bin/remote-admin-client.sh")
         + " conf\n";
 
     private static final String LEGAL_COMMANDS = "Available commands are: "

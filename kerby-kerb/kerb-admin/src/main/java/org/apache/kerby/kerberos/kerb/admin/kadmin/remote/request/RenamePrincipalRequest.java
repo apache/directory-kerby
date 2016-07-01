@@ -20,9 +20,9 @@
 package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageCode;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdminMessageType;
-import org.apache.kerby.kerberos.kerb.admin.tool.RenamePrincipalReq;
+import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageCode;
+import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageType;
+import org.apache.kerby.kerberos.kerb.admin.message.RenamePrincipalReq;
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
 

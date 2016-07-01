@@ -17,18 +17,14 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.admin.message;
 
 
 /**
- * Use to construct Admin message.
- * Probably two kinds of request.
- * add principal -- AdReq
- * change password? -- chReq
+ * Delete principal reply, to general admin message
  */
-public class AdminReq extends AdminMessage {
-  public AdminReq(AdminMessageType messageType) {
-    super(messageType);
-  }
-
+public class DeletePrincipalRep extends AdminRep {
+    public DeletePrincipalRep() {
+        super(AdminMessageType.DELETE_PRINCIPAL_REP);
+    }
 }

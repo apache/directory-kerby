@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
-import org.apache.kerby.kerberos.kerb.admin.tool.AdminReq;
+import org.apache.kerby.kerberos.kerb.admin.message.AdminReq;
 
 public class AdminRequest {
     private String principal;

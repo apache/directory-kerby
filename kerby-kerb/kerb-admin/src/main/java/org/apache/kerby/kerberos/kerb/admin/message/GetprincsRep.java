@@ -17,14 +17,10 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.admin.tool;
+package org.apache.kerby.kerberos.kerb.admin.message;
 
-
-/**
- * Add principal reply, to general admin message
- */
-public class AddPrincipalRep extends AdminRep {
-    public AddPrincipalRep() {
-        super(AdminMessageType.ADD_PRINCIPAL_REP);
+public class GetprincsRep extends AdminRep {
+    public GetprincsRep() {
+        super(AdminMessageType.GET_PRINCS_REP);
     }
 }
