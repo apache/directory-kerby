@@ -19,12 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.integration.test;
 
-import java.security.Principal;
-import java.security.PrivilegedExceptionAction;
-import java.util.Set;
-
-import javax.security.auth.Subject;
-
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
@@ -33,6 +27,11 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.Oid;
 import org.junit.Assert;
 import org.junit.Test;
+
+import javax.security.auth.Subject;
+import java.security.Principal;
+import java.security.PrivilegedExceptionAction;
+import java.util.Set;
 
 /**
  * Test login with token when token preauth is allowed by kdc.
@@ -55,7 +54,6 @@ public class TokenLoginWithTokenPreauthEnabledTest extends TokenLoginTestBase {
     }
     
     @Test
-    @org.junit.Ignore
     public void testLoginWithTokenCacheGSS() throws Exception {
         Subject subject = super.testLoginWithTokenCacheAndRetSubject();
         Set<Principal> clientPrincipals = subject.getPrincipals();

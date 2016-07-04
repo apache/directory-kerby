@@ -31,6 +31,7 @@ import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 import org.apache.kerby.kerberos.kerb.type.base.TokenFormat;
+import org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenEncoder;
 import org.slf4j.Logger;
@@ -38,6 +39,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.kerberos.KerberosPrincipal;
+import javax.security.auth.kerberos.KerberosTicket;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import java.io.File;
@@ -47,6 +50,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateKey;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -82,6 +86,8 @@ public class TokenAuthLoginModule implements LoginModule {
     public static final String ARMOR_CACHE = "armorCache";
     public static final String CREDENTIAL_CACHE = "credentialCache";
     public static final String SIGN_KEY_FILE = "signKeyFile";
+
+    private TgtTicket tgtTicket;
 
     /**
      * {@inheritDoc}
@@ -120,7 +126,35 @@ public class TokenAuthLoginModule implements LoginModule {
         if (succeeded == false) {
             return false;
         } else {
-            subject.getPublicCredentials().add(krbToken);
+            KerberosTicket ticket = null;
+            try {
+                EncKdcRepPart encKdcRepPart = tgtTicket.getEncKdcRepPart();
+                boolean[] flags = new boolean[7];
+                int flag = encKdcRepPart.getFlags().getFlags();
+                for (int i = 6; i >= 0; i--) {
+                    flags[i] = (flag & (1 << i)) != 0;
+                }
+                Date startTime = null;
+                if (encKdcRepPart.getStartTime() != null) {
+                    startTime = encKdcRepPart.getStartTime().getValue();
+                }
+
+                ticket = new KerberosTicket(tgtTicket.getTicket().encode(),
+                    new KerberosPrincipal(tgtTicket.getClientPrincipal().getName()),
+                    new KerberosPrincipal(tgtTicket.getEncKdcRepPart().getSname().getName()),
+                    encKdcRepPart.getKey().getKeyData(),
+                    encKdcRepPart.getKey().getKeyType().getValue(),
+                    flags,
+                    encKdcRepPart.getAuthTime().getValue(),
+                    startTime,
+                    encKdcRepPart.getEndTime().getValue(),
+                    encKdcRepPart.getRenewTill().getValue(),
+                    null
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            subject.getPrivateCredentials().add(ticket);
         }
         commitSucceeded = true;
         LOG.info("Commit Succeeded \n");
@@ -245,7 +279,6 @@ public class TokenAuthLoginModule implements LoginModule {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        TgtTicket tgtTicket;
         KrbTokenClient tokenClient = new KrbTokenClient(krbClient);
         try {
             tgtTicket = tokenClient.requestTgt(krbToken,
