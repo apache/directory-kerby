@@ -232,7 +232,8 @@ public class TokenAuthLoginModule implements LoginModule {
         }
         
         if (cCache == null) {
-            throw new LoginException("A credential cache must be specified via the credentialCache configuration option");
+            throw new LoginException("A credential cache must be specified via the credentialCache"
+            + " configuration option");
         }
 
         String error = "";
