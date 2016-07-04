@@ -29,7 +29,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * A Krb client API for applications to interact with KDC
+ * A Admin client API for applications to interact with Admin Server
  */
 public class AdminClient {
 

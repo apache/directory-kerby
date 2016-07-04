@@ -30,7 +30,7 @@ import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import java.io.File;
 
 /**
- * The implemented Kerberos admin admin API.
+ * The implemented Kerberos remote admin server API.
  * We add the KdcConfig as a member variable to AdminServer,
  * In order to make it easy to use LocalKadminImpl.
  * The Kdc Config of corresponding KDC can be read from ConfDir.
@@ -119,26 +119,26 @@ public class AdminServer {
 
     /**
      * Set Admin host.
-     * @param kdcHost The kdc host
+     * @param adminHost The kdc host
      */
-    public void setAdminHost(String kdcHost) {
-        startupOptions.add(AdminServerOption.ADMIN_HOST, kdcHost);
+    public void setAdminHost(String adminHost) {
+        startupOptions.add(AdminServerOption.ADMIN_HOST, adminHost);
     }
 
     /**
      * Set Admin port.
-     * @param kdcPort The kdc port
+     * @param adminPort The admin port
      */
-    public void setAdminServerPort(int kdcPort) {
-        startupOptions.add(AdminServerOption.ADMIN_PORT, kdcPort);
+    public void setAdminServerPort(int adminPort) {
+        startupOptions.add(AdminServerOption.ADMIN_PORT, adminPort);
     }
 
     /**
      * Set Admin tcp port.
-     * @param kdcTcpPort The kdc tcp port
+     * @param adminTcpPort The admin tcp port
      */
-    public void setAdminTcpPort(int kdcTcpPort) {
-        startupOptions.add(AdminServerOption.ADMIN_TCP_PORT, kdcTcpPort);
+    public void setAdminTcpPort(int adminTcpPort) {
+        startupOptions.add(AdminServerOption.ADMIN_TCP_PORT, adminTcpPort);
     }
 
     /**
@@ -158,10 +158,10 @@ public class AdminServer {
     }
     /**
      * Set Admin udp port. Only makes sense when allowUdp is set.
-     * @param kdcUdpPort The kdc udp port
+     * @param adminUdpPort The admin udp port
      */
-    public void setAdminUdpPort(int kdcUdpPort) {
-        startupOptions.add(AdminServerOption.ADMIN_UDP_PORT, kdcUdpPort);
+    public void setAdminUdpPort(int adminUdpPort) {
+        startupOptions.add(AdminServerOption.ADMIN_UDP_PORT, adminUdpPort);
     }
 
     /**
@@ -180,9 +180,9 @@ public class AdminServer {
     }
 
     /**
-     * Allow to hook customized kdc implementation.
+     * Allow to hook customized admin implementation.
      *
-     * @param innerAdminServerImpl The inner kdc implementation
+     * @param innerAdminServerImpl The inner admin implementation
      */
     public void setInnerAdminServerImpl(InternalAdminServer innerAdminServerImpl) {
         startupOptions.add(AdminServerOption.INNER_ADMIN_IMPL, innerAdminServerImpl);

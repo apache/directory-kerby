@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 /**
- * KDC side utilities.
+ * Admin Server utilities.
  */
 public final class AdminServerUtil {
 

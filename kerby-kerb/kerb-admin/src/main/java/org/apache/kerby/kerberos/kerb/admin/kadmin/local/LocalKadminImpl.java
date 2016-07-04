@@ -112,7 +112,6 @@ public class LocalKadminImpl implements LocalKadmin {
         return KrbUtil.makeTgsPrincipal(serverSetting.getKdcRealm()).getName();
     }
 
-    // TODO: 2016/3/14 check whether it is possible to return getAdminServerRealm
     @Override
     public String getKadminPrincipal() {
         return KrbUtil.makeKadminPrincipal(serverSetting.getKdcRealm()).getName();

@@ -42,16 +42,16 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 /**
- * KDC handler to process client requests. Currently only one realm is supported.
+ * admin server handler to process client acmin requests.
  */
 public class AdminServerHandler {
     private static final Logger LOG = LoggerFactory.getLogger(AdminServerHandler.class);
     private final AdminServerContext adminServerContext;
 
     /**
-     * Constructor with kdc context.
+     * Constructor with admin server context.
      *
-     * @param adminServerContext admin admin context
+     * @param adminServerContext admin admin server context
      */
     public AdminServerHandler(AdminServerContext adminServerContext) {
         this.adminServerContext = adminServerContext;

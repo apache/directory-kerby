@@ -22,7 +22,7 @@ package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 import org.apache.kerby.kerberos.kerb.common.Krb5Conf;
 
 /**
- * Kerb KDC side configuration API.
+ * Kerb admin server side configuration API.
  */
 public class AdminServerConfig extends Krb5Conf {
     private static final String KDCDEFAULT = "kdcdefaults";
