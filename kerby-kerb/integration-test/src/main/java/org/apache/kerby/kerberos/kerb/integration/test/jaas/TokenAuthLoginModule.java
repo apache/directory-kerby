@@ -61,6 +61,13 @@ import java.util.Map;
  * armorCache: armor-cache-file
  */
 public class TokenAuthLoginModule implements LoginModule {
+    public static final String PRINCIPAL = "principal";
+    public static final String TOKEN = "token";
+    public static final String TOKEN_CACHE = "tokenCache";
+    public static final String ARMOR_CACHE = "armorCache";
+    public static final String CREDENTIAL_CACHE = "credentialCache";
+    public static final String SIGN_KEY_FILE = "signKeyFile";
+    
     private static final Logger LOG = LoggerFactory.getLogger(TokenAuthLoginModule.class);
 
     /** initial state*/
@@ -76,16 +83,10 @@ public class TokenAuthLoginModule implements LoginModule {
     private String princName = null;
     private String tokenStr = null;
     private AuthToken authToken = null;
-    KrbToken krbToken = null;
+    private KrbToken krbToken = null;
     private File armorCache;
     private File cCache;
     private File signKeyFile;
-    public static final String PRINCIPAL = "principal";
-    public static final String TOKEN = "token";
-    public static final String TOKEN_CACHE = "tokenCache";
-    public static final String ARMOR_CACHE = "armorCache";
-    public static final String CREDENTIAL_CACHE = "credentialCache";
-    public static final String SIGN_KEY_FILE = "signKeyFile";
 
     private TgtTicket tgtTicket;
 
