@@ -102,9 +102,15 @@ public class TokenAuthLoginModule implements LoginModule {
         princName = (String) options.get(PRINCIPAL);
         tokenStr = (String) options.get(TOKEN);
         tokenCacheName = (String) options.get(TOKEN_CACHE);
-        armorCache = new File((String) options.get(ARMOR_CACHE));
-        cCache = new File((String) options.get(CREDENTIAL_CACHE));
-        signKeyFile = new File((String) options.get(SIGN_KEY_FILE));
+        if ((String) options.get(ARMOR_CACHE) != null) {
+            armorCache = new File((String) options.get(ARMOR_CACHE));
+        }
+        if ((String) options.get(CREDENTIAL_CACHE) != null) {
+            cCache = new File((String) options.get(CREDENTIAL_CACHE));
+        }
+        if ((String) options.get(SIGN_KEY_FILE) != null) {
+            signKeyFile = new File((String) options.get(SIGN_KEY_FILE));
+        }
     }
 
     /**
@@ -215,6 +221,10 @@ public class TokenAuthLoginModule implements LoginModule {
     }
 
     private void validateConfiguration() throws LoginException {
+        
+        if (armorCache == null) {
+            throw new LoginException("An armor cache must be specified via the armorCache configuration option");
+        }
 
         String error = "";
         if (tokenStr == null && tokenCacheName == null) {
@@ -244,7 +254,7 @@ public class TokenAuthLoginModule implements LoginModule {
         krbToken = new KrbToken(authToken, TokenFormat.JWT);
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
 
-        if (tokenEncoder instanceof JwtTokenEncoder) {
+        if (tokenEncoder instanceof JwtTokenEncoder && signKeyFile != null) {
             PrivateKey signKey = null;
             try {
                 FileInputStream fis = new FileInputStream(signKeyFile);
