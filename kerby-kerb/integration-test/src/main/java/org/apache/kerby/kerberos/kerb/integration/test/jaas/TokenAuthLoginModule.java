@@ -112,7 +112,7 @@ public class TokenAuthLoginModule implements LoginModule {
         }
         if ((String) options.get(CREDENTIAL_CACHE) != null) {
             cCache = new File((String) options.get(CREDENTIAL_CACHE));
-        }
+        } 
         if ((String) options.get(SIGN_KEY_FILE) != null) {
             signKeyFile = new File((String) options.get(SIGN_KEY_FILE));
         }
@@ -229,6 +229,10 @@ public class TokenAuthLoginModule implements LoginModule {
         
         if (armorCache == null) {
             throw new LoginException("An armor cache must be specified via the armorCache configuration option");
+        }
+        
+        if (cCache == null) {
+            throw new LoginException("A credential cache must be specified via the credentialCache configuration option");
         }
 
         String error = "";
