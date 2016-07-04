@@ -40,15 +40,15 @@ public class JwtAuthToken implements AuthToken {
     private Boolean isIdToken = true;
     private Boolean isAcToken = false;
 
-    protected JwtAuthToken() {
+    public JwtAuthToken() {
         this(new JWTClaimsSet());
     }
 
-    protected JwtAuthToken(JWTClaimsSet jwtClaims) {
+    public JwtAuthToken(JWTClaimsSet jwtClaims) {
         this.jwtClaims = jwtClaims;
     }
 
-    protected JwtAuthToken(ReadOnlyJWTClaimsSet jwtClaims) {
+    public JwtAuthToken(ReadOnlyJWTClaimsSet jwtClaims) {
         this.jwtClaims = JwtUtil.from(jwtClaims);
     }
 

@@ -33,9 +33,13 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 import org.apache.kerby.kerberos.kerb.type.base.TokenFormat;
 import org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
+import org.apache.kerby.kerberos.provider.token.JwtAuthToken;
 import org.apache.kerby.kerberos.provider.token.JwtTokenEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
@@ -50,6 +54,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateKey;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -245,38 +250,55 @@ public class TokenAuthLoginModule implements LoginModule {
                 throw new LoginException("No valid token was found in token cache: " + tokenCacheName);
             }
         }
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
-        try {
-            authToken = tokenDecoder.decodeFromString(tokenStr);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        krbToken = new KrbToken(authToken, TokenFormat.JWT);
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-
-        if (tokenEncoder instanceof JwtTokenEncoder && signKeyFile != null) {
-            PrivateKey signKey = null;
-            try {
-                FileInputStream fis = new FileInputStream(signKeyFile);
-                signKey = PrivateKeyReader.loadPrivateKey(fis);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            ((JwtTokenEncoder) tokenEncoder).setSignKey((RSAPrivateKey) signKey);
-        }
 
         krbToken = new KrbToken();
+        
+        // Sign the token.
+        if (signKeyFile != null) {
+            try {
+                TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+                try {
+                    authToken = tokenDecoder.decodeFromString(tokenStr);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                krbToken = new KrbToken(authToken, TokenFormat.JWT);
+                TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+    
+                if (tokenEncoder instanceof JwtTokenEncoder) {
+                    PrivateKey signKey = null;
+                    try {
+                        FileInputStream fis = new FileInputStream(signKeyFile);
+                        signKey = PrivateKeyReader.loadPrivateKey(fis);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+    
+                    ((JwtTokenEncoder) tokenEncoder).setSignKey((RSAPrivateKey) signKey);
+                }
+                
+                krbToken.setTokenValue(tokenEncoder.encodeAsBytes(authToken));
+            } catch (KrbException e) {
+                throw new RuntimeException("Failed to encode AuthToken", e);
+            }
+        } else {
+            // Otherwise just write out the token (which could be already signed)
+            krbToken.setTokenValue(tokenStr.getBytes());
+            
+            try {
+                JWT jwt = JWTParser.parse(tokenStr);
+                authToken = new JwtAuthToken(jwt.getJWTClaimsSet());
+            } catch (ParseException e) {
+                // Invalid JWT encoding
+                throw new RuntimeException("Failed to parse JWT token string", e);
+            }
+        }
+        
         krbToken.setInnerToken(authToken);
         krbToken.setTokenType();
         krbToken.setTokenFormat(TokenFormat.JWT);
-        try {
-            krbToken.setTokenValue(tokenEncoder.encodeAsBytes(authToken));
-        } catch (KrbException e) {
-            throw new RuntimeException("Failed to encode AuthToken", e);
-        }
 
         KrbClient krbClient = null;
         try {
@@ -290,6 +312,7 @@ public class TokenAuthLoginModule implements LoginModule {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
         KrbTokenClient tokenClient = new KrbTokenClient(krbClient);
         try {
             tgtTicket = tokenClient.requestTgt(krbToken,
