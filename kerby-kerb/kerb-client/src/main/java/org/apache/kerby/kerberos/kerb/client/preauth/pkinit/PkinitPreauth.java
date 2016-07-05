@@ -372,8 +372,6 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 throw new KrbException("Failed to load PKINIT anchor");
             }
             
-            Certificate archorCertificate = PkinitCrypto.changeToCertificate(x509Certificate);
-
             CertificateSet certificateSet = signedData.getCertificates();
             List<Certificate> certificates = new ArrayList<>();
             if (certificateSet != null) {
@@ -383,7 +381,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 }
             }
             try {
-                PkinitCrypto.validateChain(certificates, archorCertificate);
+                PkinitCrypto.validateChain(certificates, x509Certificate);
             } catch (Exception e) {
                 throw new KrbException(KrbErrorCode.KDC_ERR_INVALID_CERTIFICATE, e);
             }
