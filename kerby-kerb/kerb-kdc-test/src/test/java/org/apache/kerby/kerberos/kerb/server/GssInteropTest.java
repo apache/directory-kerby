@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import java.io.ByteArrayOutputStream;
 import java.security.Principal;
 import java.security.PrivilegedExceptionAction;
 import java.util.Set;
@@ -27,12 +26,6 @@ import java.util.Set;
 import javax.security.auth.Subject;
 import javax.security.auth.kerberos.KerberosTicket;
 
-import org.apache.kerby.kerberos.kerb.ccache.CredCacheOutputStream;
-import org.apache.kerby.kerberos.kerb.ccache.Credential;
-import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
-import org.apache.kerby.kerberos.kerb.client.KrbClient;
-import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
-import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
@@ -71,38 +64,6 @@ public class GssInteropTest extends LoginTestBase {
         validateServiceTicket(kerberosToken);
     }
     
-    @Test
-    @org.junit.Ignore
-    public void testKerbyClientAndGssService() throws Exception {
-        KrbClient client = getKrbClient();
-        client.init();
-
-        try {
-            // Get a service ticket using Kerby APIs
-            TgtTicket tgt = client.requestTgt(getClientPrincipal(), getClientPassword());
-            Assert.assertTrue(tgt != null);
-
-            SgtTicket tkt = client.requestSgt(tgt, getServerPrincipal());
-            Assert.assertTrue(tkt != null);
-            
-            Credential credential = new Credential(tkt, tgt.getClientPrincipal());
-            CredentialCache cCache = new CredentialCache();
-            cCache.addCredential(credential);
-            cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
-            
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            CredCacheOutputStream os = new CredCacheOutputStream(bout);
-            cCache.store(bout);
-            os.close();
-            
-            // Now validate the ticket using GSS
-            validateServiceTicket(bout.toByteArray());
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
-        }
-    }
-
     private void validateServiceTicket(byte[] ticket) throws Exception {
         Subject serviceSubject = loginServiceUsingKeytab();
         Set<Principal> servicePrincipals = serviceSubject.getPrincipals();
