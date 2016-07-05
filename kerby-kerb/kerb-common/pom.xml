@@ -36,5 +36,11 @@
       <artifactId>kerb-crypto</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 </project>

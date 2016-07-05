@@ -208,8 +208,8 @@ public class TokenTest {
        Assertions.assertThat(token2).isNull();
     }
 
-    @SuppressWarnings("PMD")
-    //@Test
+    @Test
+    @org.junit.Ignore
     // TODO: building error with openjdk8: NoSuchAlgorithm EC KeyPairGenerato..
     public void testTokenWithECDSASignedJWT() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();

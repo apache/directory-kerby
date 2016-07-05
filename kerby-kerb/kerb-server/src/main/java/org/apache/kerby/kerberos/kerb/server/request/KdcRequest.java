@@ -208,7 +208,7 @@ public abstract class KdcRequest {
         if (paData != null) {
             for (PaDataEntry paEntry : paData.getElements()) {
                 if (paEntry.getPaDataType() == PaDataType.FX_FAST) {
-                    LOG.info("Found fast padata and start to process it.");
+                    LOG.info("Found fast padata and starting to process it.");
                     KrbFastArmoredReq fastArmoredReq = KrbCodec.decode(paEntry.getPaDataValue(),
                             KrbFastArmoredReq.class);
                     KrbFastArmor fastArmor = fastArmoredReq.getArmor();

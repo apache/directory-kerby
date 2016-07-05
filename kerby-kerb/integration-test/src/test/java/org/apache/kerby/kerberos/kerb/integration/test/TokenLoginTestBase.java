@@ -141,11 +141,19 @@ public class TokenLoginTestBase extends LoginTestBase {
 
     protected void testLoginWithTokenStr() throws Exception {
         String tokenStr = createTokenAndArmorCache();
-        checkSubject(loginClientUsingTokenStr(tokenStr, armorCache, tgtCache, signKeyFile));
+        Subject subj = loginClientUsingTokenStr(tokenStr, armorCache, tgtCache, signKeyFile);
+        checkSubject(subj);
     }
 
     protected void testLoginWithTokenCache() throws Exception {
         createTokenAndArmorCache();
         checkSubject(loginClientUsingTokenCache(tokenCache, armorCache, tgtCache, signKeyFile));
+    }
+    
+    protected Subject testLoginWithTokenCacheAndRetSubject() throws Exception {
+        createTokenAndArmorCache();
+        Subject subj = loginClientUsingTokenCache(tokenCache, armorCache, tgtCache, signKeyFile);
+        checkSubject(subj);
+        return subj;
     }
 }

@@ -30,7 +30,7 @@ public enum HostAddrType implements EnumType {
     /**
      * Constant for the "null" host address type.
      */
-    NULL(0),
+    NONE(0),
 
     /**
      * Constant for the "Internet" host address type.
@@ -120,6 +120,6 @@ public enum HostAddrType implements EnumType {
             }
         }
 
-        return NULL;
+        return HostAddrType.NONE;
     }
 }

@@ -98,7 +98,7 @@ public enum KrbErrorCode implements EnumType {
     TOKEN_PREAUTH_NOT_ALLOWED(82, "Token preauth is not allowed"),
 
     KRB_TIMEOUT(5000, "Network timeout"),
-    UNKNOWN_ERR(5001, "Unknow error");
+    UNKNOWN_ERR(5001, "Unknown error");
 
     private final int value;
     private final String message;

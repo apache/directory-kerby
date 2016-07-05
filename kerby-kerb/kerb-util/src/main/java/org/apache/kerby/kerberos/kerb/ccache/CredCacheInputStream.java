@@ -73,10 +73,10 @@ public class CredCacheInputStream extends KrbInputStream {
 
     public EncryptionKey readKey(int version) throws IOException {
         if (version == CredentialCache.FCC_FVNO_3) {
-            readShort(); //  ignore keytype
+            readShort(); // ignore keytype
         }
 
-        return super.readKey(version);
+        return super.readKey();
     }
 
     public KerberosTime[] readTimes() throws IOException {
@@ -113,8 +113,13 @@ public class CredCacheInputStream extends KrbInputStream {
     public HostAddress readAddress() throws IOException {
         int typeValue = readShort();
         HostAddrType addrType = HostAddrType.fromValue(typeValue);
+        if (addrType == HostAddrType.NONE) {
+            throw new IOException("Invalid host address type");
+        }
         byte[] addrData = readCountedOctets();
-
+        if (addrData == null) {
+            throw new IOException("Invalid host address data");
+        }
         HostAddress addr = new HostAddress();
         addr.setAddrType(addrType);
         addr.setAddress(addrData);
@@ -141,7 +146,13 @@ public class CredCacheInputStream extends KrbInputStream {
     public AuthorizationDataEntry readAuthzDataEntry() throws IOException {
         int typeValue = readShort();
         AuthorizationType authzType = AuthorizationType.fromValue(typeValue);
+        if (authzType == AuthorizationType.NONE) {
+            throw new IOException("Invalid authorization data type");
+        }
         byte[] authzData = readCountedOctets();
+        if (authzData == null) {
+            throw new IOException("Invalid authorization data");
+        }
 
         AuthorizationDataEntry authzEntry = new AuthorizationDataEntry();
         authzEntry.setAuthzType(authzType);

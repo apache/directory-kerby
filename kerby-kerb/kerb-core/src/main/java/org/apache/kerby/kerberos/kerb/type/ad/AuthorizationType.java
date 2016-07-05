@@ -21,9 +21,6 @@ package org.apache.kerby.kerberos.kerb.type.ad;
 
 import org.apache.kerby.asn1.EnumType;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * The various AuthorizationType values, as defined in RFC 4120 and RFC 1510.
  * 
@@ -33,7 +30,7 @@ public enum AuthorizationType implements EnumType {
     /**
      * Constant for the "null" authorization type.
      */
-    NULL(0),
+    NONE(0),
 
     /**
      * Constant for the "if relevant" authorization type.
@@ -315,8 +312,6 @@ public enum AuthorizationType implements EnumType {
     /** The internal value */
     private final int value;
 
-    private static Map<Integer, AuthorizationType> valueMap;
-
     /**
      * Create a new enum 
      */
@@ -348,15 +343,13 @@ public enum AuthorizationType implements EnumType {
      */
     public static AuthorizationType fromValue(Integer value) {
         if (value != null) {
-            if (valueMap == null) {
-                valueMap = new HashMap<Integer, AuthorizationType>(32);
-                for (EnumType e : values()) {
-                    valueMap.put(e.getValue(), (AuthorizationType) e);
+            for (EnumType e : values()) {
+                if (e.getValue() == value) {
+                    return (AuthorizationType) e;
                 }
             }
-            return valueMap.get(value);
         }
 
-        return NULL;
+        return NONE;
     }
 }

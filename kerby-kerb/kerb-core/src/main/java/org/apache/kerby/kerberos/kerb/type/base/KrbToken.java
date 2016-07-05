@@ -23,17 +23,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.kerby.asn1.Asn1FieldInfo;
-import org.apache.kerby.asn1.EnumType;
-import org.apache.kerby.asn1.ExplicitField;
-import org.apache.kerby.asn1.type.Asn1Integer;
-import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
-import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
 
 /**
  * KRB-TOKEN_VALUE ::= SEQUENCE {
@@ -41,38 +35,17 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  * token-value  [1] OCTET STRING,
  * }
  */
-public class KrbToken extends KrbSequenceType implements AuthToken {
+public class KrbToken extends KrbTokenBase implements AuthToken {
     private static TokenEncoder tokenEncoder;
     private static TokenDecoder tokenDecoder;
 
-    protected enum KrbTokenField implements EnumType {
-        TOKEN_FORMAT,
-        TOKEN_VALUE;
-
-        @Override
-        public int getValue() {
-            return ordinal();
-        }
-
-        @Override
-        public String getName() {
-            return name();
-        }
-    }
-
     private AuthToken innerToken = null;
-
-    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[]{
-            new ExplicitField(KrbTokenField.TOKEN_FORMAT, Asn1Integer.class),
-            new ExplicitField(KrbTokenField.TOKEN_VALUE, Asn1OctetString.class)
-    };
-
 
     /**
      * Default constructor.
      */
     public KrbToken() {
-        super(fieldInfos);
+        super();
     }
 
     /**
@@ -146,39 +119,6 @@ public class KrbToken extends KrbSequenceType implements AuthToken {
             tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
         }
         return tokenDecoder;
-    }
-
-    /**
-     * Get token format.
-     * @return The token format
-     */
-    public TokenFormat getTokenFormat() {
-        Integer value = getFieldAsInteger(KrbTokenField.TOKEN_FORMAT);
-        return TokenFormat.fromValue(value);
-    }
-
-    /**
-     * Set token format.
-     * @param tokenFormat The token format
-     */
-    public void setTokenFormat(TokenFormat tokenFormat) {
-        setFieldAsInt(KrbTokenField.TOKEN_FORMAT, tokenFormat.getValue());
-    }
-
-    /**
-     * Get token value.
-     * @return The token value
-     */
-    public byte[] getTokenValue() {
-        return getFieldAsOctets(KrbTokenField.TOKEN_VALUE);
-    }
-
-    /**
-     * Set token value.
-     * @param tokenValue The token value
-     */
-    public void setTokenValue(byte[] tokenValue) {
-        setFieldAsOctets(KrbTokenField.TOKEN_VALUE, tokenValue);
     }
 
     /**

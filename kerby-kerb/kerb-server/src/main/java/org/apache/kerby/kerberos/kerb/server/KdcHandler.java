@@ -140,7 +140,7 @@ public class KdcHandler {
                     serverPrincipal.setRealm(kdcRequest.getKdcReq().getReqBody().getRealm());
                     krbError.setSname(serverPrincipal);
                 }
-                if (e.getKrbErrorCode().equals(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY)) {
+                if (KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY.equals(e.getKrbErrorCode())) {
                     krbError.setEtext("PREAUTH_FAILED");
                 } else {
                     krbError.setEtext(e.getMessage());

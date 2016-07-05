@@ -269,17 +269,19 @@ public class JwtTokenDecoder implements TokenDecoder {
     }
 
     private boolean verifyExpiration(JWT jwtToken) throws IOException {
-        boolean valid = false;
         try {
             Date expire = jwtToken.getJWTClaimsSet().getExpirationTime();
+            if (expire != null && new Date().after(expire)) {
+                return false;
+            }
             Date notBefore = jwtToken.getJWTClaimsSet().getNotBeforeTime();
-            if (expire != null && new Date().before(expire) && new Date().after(notBefore)) {
-                valid = true;
+            if (notBefore != null && new Date().before(notBefore)) {
+                return false;
             }
         } catch (ParseException e) {
             throw new IOException("Failed to get JWT claims set", e);
         }
-        return valid;
+        return true;
     }
 
     /**

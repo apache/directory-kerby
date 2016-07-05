@@ -37,7 +37,7 @@ public class KrbRuntime {
      */
     public static synchronized TokenProvider getTokenProvider() {
         if (tokenProvider == null) {
-            throw new RuntimeException("No token provider is hooked into yet");
+            throw new RuntimeException("No token provider is available");
         }
         return tokenProvider;
     }

@@ -21,8 +21,6 @@ package org.apache.kerby.kerberos.kerb.keytab;
 
 import org.apache.kerby.kerberos.kerb.KrbInputStream;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
-import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
@@ -62,22 +60,6 @@ public class KeytabInputStream extends KrbInputStream {
         principal.setRealm(realm);
 
         return principal;
-    }
-
-    public EncryptionKey readKey() throws IOException {
-        int eType = readShort();
-        EncryptionType encryptionType = EncryptionType.fromValue(eType);
-
-        byte[] keyData = readCountedOctets();
-        EncryptionKey key = new EncryptionKey(encryptionType, keyData);
-
-        return key;
-    }
-
-    public String readCountedString() throws IOException {
-        byte[] countedOctets = readCountedOctets();
-        // ASCII
-        return new String(countedOctets, "ASCII");
     }
 
     @Override

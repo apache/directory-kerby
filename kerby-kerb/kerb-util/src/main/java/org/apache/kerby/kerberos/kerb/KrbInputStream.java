@@ -42,20 +42,25 @@ public abstract class KrbInputStream extends DataInputStream {
 
     public abstract PrincipalName readPrincipal(int version) throws IOException;
 
-    public EncryptionKey readKey(int version) throws IOException {
+    public EncryptionKey readKey() throws IOException {
         int eType = readShort();
-        EncryptionType encryptionType = EncryptionType.fromValue(eType);
-
+        EncryptionType encType = EncryptionType.fromValue(eType);
         byte[] keyData = readCountedOctets();
-        EncryptionKey key = new EncryptionKey(encryptionType, keyData);
+        if (encType == EncryptionType.NONE || keyData == null) {
+            return null;
+        }
 
+        EncryptionKey key = new EncryptionKey(encType, keyData);
         return key;
     }
 
     public String readCountedString() throws IOException {
         byte[] countedOctets = readCountedOctets();
-        // ASCII
-        return new String(countedOctets, StandardCharsets.UTF_8);
+        if (countedOctets != null) {
+            // ASCII
+            return new String(countedOctets, StandardCharsets.UTF_8);
+        }
+        return null;
     }
 
     public byte[] readCountedOctets() throws IOException {
@@ -63,11 +68,12 @@ public abstract class KrbInputStream extends DataInputStream {
         if (len == 0) {
             return null;
         }
+        if (len < 0 || len > available()) {
+            throw new IOException("Unexpected octets len: " + len);
+        }
 
         byte[] data = new byte[len];
-        if (read(data) == -1) {
-            throw new IOException();
-        }
+        readFully(data);
 
         return data;
     }
