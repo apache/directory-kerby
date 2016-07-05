@@ -363,6 +363,12 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             } catch (KrbException e) {
                 e.printStackTrace();
             }
+            
+            if (x509Certificate == null) {
+                LOG.error("Failed to load PKINIT anchor");
+                throw new KrbException("Failed to load PKINIT anchor");
+            }
+            
             Certificate archorCertificate = PkinitCrypto.changeToCertificate(x509Certificate);
 
             CertificateSet certificateSet = signedData.getCertificates();
