@@ -350,6 +350,10 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             PkinitCrypto.verifyCmsSignedData(
                     CmsMessageType.CMS_SIGN_SERVER, signedData);
 
+            if (kdcRequest.getContext().getConfig().getPkinitAnchors().isEmpty()) {
+                LOG.error("No PKINIT anchors specified");
+                throw new KrbException("No PKINIT anchors specified");
+            }
             String anchorFileName = kdcRequest.getContext().getConfig().getPkinitAnchors().get(0);
 
             X509Certificate x509Certificate = null;
