@@ -19,6 +19,18 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth.pkinit;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.crypto.interfaces.DHPublicKey;
+
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.parse.Asn1Container;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
@@ -62,22 +74,6 @@ import org.apache.kerby.x509.type.DhParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.crypto.interfaces.DHPublicKey;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
 public class PkinitPreauth extends AbstractPreauthPlugin {
 
@@ -306,28 +302,13 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         if (identityString != null) {
             List<String> identityList = Arrays.asList(identityString.split(","));
             for (String identity : identityList) {
-                File file = new File(identity);
-                try (Scanner scanner = new Scanner(file, "UTF-8")) {
-                    String found = scanner.findInLine("CERTIFICATE");
-    
-                    if (found != null) {
-                        InputStream res = null;
-                        try {
-                            res = new FileInputStream(identity);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        X509Certificate certificate = null;
-                        try {
-                            certificate = (X509Certificate) CertificateHelper.loadCerts(res).iterator().next();
-                        } catch (KrbException e) {
-                            e.printStackTrace();
-                        }
-                        certificates.add(certificate);
-                        res.close();
+                try {
+                    List<java.security.cert.Certificate> loadedCerts = CertificateHelper.loadCerts(identity);
+                    if (!loadedCerts.isEmpty()) {
+                        certificates.add((X509Certificate)loadedCerts.iterator().next());
                     }
-                } catch (IOException e) {
-                    e.getMessage();
+                } catch (KrbException e) {
+                    LOG.warn("Error loading X.509 Certificate", e);
                 }
             }
         } else {
