@@ -305,7 +305,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 try {
                     List<java.security.cert.Certificate> loadedCerts = CertificateHelper.loadCerts(identity);
                     if (!loadedCerts.isEmpty()) {
-                        certificates.add((X509Certificate)loadedCerts.iterator().next());
+                        certificates.add((X509Certificate) loadedCerts.iterator().next());
                     }
                 } catch (KrbException e) {
                     LOG.warn("Error loading X.509 Certificate", e);
