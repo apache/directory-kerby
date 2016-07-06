@@ -51,6 +51,12 @@
         <artifactId>kerb-admin</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.kerby</groupId>
+        <artifactId>kerb-admin-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
     </dependencies>
 
 </project>

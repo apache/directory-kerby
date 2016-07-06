@@ -29,5 +29,6 @@
     <module>kerby-asn1</module>
     <module>kerby-config</module>
     <module>kerby-util</module>
+    <module>kerby-xdr</module>
   </modules>
 </project>

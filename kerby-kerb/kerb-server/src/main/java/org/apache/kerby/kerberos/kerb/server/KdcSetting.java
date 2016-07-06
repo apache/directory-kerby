@@ -26,7 +26,7 @@ import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 /**
  * KDC setting that combines startup options and kdc config.
  */
-public class KdcSetting {
+public class KdcSetting implements ServerSetting {
     private final KOptions startupOptions;
     private final KdcConfig kdcConfig;
     private final BackendConfig backendConfig;

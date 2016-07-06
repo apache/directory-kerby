@@ -20,7 +20,7 @@
 package org.apache.kerby.asn1;
 
 /**
- * A helper interface used by Asn1Enumerated.
+ * A helper interface for enum types.
  * 
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */

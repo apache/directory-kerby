@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
-import org.apache.kerby.kerberos.kerb.admin.LocalKadminImpl;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
 import org.apache.kerby.kerberos.kerb.client.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbConfig;
