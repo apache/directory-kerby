@@ -350,17 +350,28 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             PkinitCrypto.verifyCmsSignedData(
                     CmsMessageType.CMS_SIGN_SERVER, signedData);
 
+            if (kdcRequest.getContext().getConfig().getPkinitAnchors().isEmpty()) {
+                LOG.error("No PKINIT anchors specified");
+                throw new KrbException("No PKINIT anchors specified");
+            }
             String anchorFileName = kdcRequest.getContext().getConfig().getPkinitAnchors().get(0);
 
             X509Certificate x509Certificate = null;
             try {
-                x509Certificate = (X509Certificate) CertificateHelper.loadCerts(
-                        anchorFileName).iterator().next();
+                List<java.security.cert.Certificate> certs = 
+                    CertificateHelper.loadCerts(anchorFileName);
+                if (certs != null && !certs.isEmpty()) {
+                    x509Certificate = (X509Certificate) certs.iterator().next();
+                }
             } catch (KrbException e) {
                 e.printStackTrace();
             }
-            Certificate archorCertificate = PkinitCrypto.changeToCertificate(x509Certificate);
-
+            
+            if (x509Certificate == null) {
+                LOG.error("Failed to load PKINIT anchor");
+                throw new KrbException("Failed to load PKINIT anchor");
+            }
+            
             CertificateSet certificateSet = signedData.getCertificates();
             List<Certificate> certificates = new ArrayList<>();
             if (certificateSet != null) {
@@ -370,7 +381,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 }
             }
             try {
-                PkinitCrypto.validateChain(certificates, archorCertificate);
+                PkinitCrypto.validateChain(certificates, x509Certificate);
             } catch (Exception e) {
                 throw new KrbException(KrbErrorCode.KDC_ERR_INVALID_CERTIFICATE, e);
             }

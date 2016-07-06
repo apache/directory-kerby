@@ -302,32 +302,36 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     private PaPkAsRep makePaPkAsRep(DHPublicKey severPubKey, String identityString) throws KrbException {
 
-        List<String> identityList = Arrays.asList(identityString.split(","));
-
         List<X509Certificate> certificates = new ArrayList<>();
-        for (String identity : identityList) {
-            File file = new File(identity);
-            try (Scanner scanner = new Scanner(file, "UTF-8")) {
-                String found = scanner.findInLine("CERTIFICATE");
-
-                if (found != null) {
-                    InputStream res = null;
-                    try {
-                        res = new FileInputStream(identity);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+        if (identityString != null) {
+            List<String> identityList = Arrays.asList(identityString.split(","));
+            for (String identity : identityList) {
+                File file = new File(identity);
+                try (Scanner scanner = new Scanner(file, "UTF-8")) {
+                    String found = scanner.findInLine("CERTIFICATE");
+    
+                    if (found != null) {
+                        InputStream res = null;
+                        try {
+                            res = new FileInputStream(identity);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        X509Certificate certificate = null;
+                        try {
+                            certificate = (X509Certificate) CertificateHelper.loadCerts(res).iterator().next();
+                        } catch (KrbException e) {
+                            e.printStackTrace();
+                        }
+                        certificates.add(certificate);
+                        res.close();
                     }
-                    X509Certificate certificate = null;
-                    try {
-                        certificate = (X509Certificate) CertificateHelper.loadCerts(res).iterator().next();
-                    } catch (KrbException e) {
-                        e.printStackTrace();
-                    }
-                    certificates.add(certificate);
+                } catch (IOException e) {
+                    e.getMessage();
                 }
-            } catch (FileNotFoundException e) {
-                e.getMessage();
             }
+        } else {
+            LOG.warn("No PKINIT identity keys specified");
         }
 
         PaPkAsRep paPkAsRep = new PaPkAsRep();

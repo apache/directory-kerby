@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -35,12 +36,19 @@ public class CertificateHelper {
 
 
     public static List<Certificate> loadCerts(String filename) throws KrbException {
+        
+        File file = new File(filename);
         InputStream res = null;
-        try {
-            res = new FileInputStream(filename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if (file.isFile()) {
+            try {
+                res = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            res = CertificateHelper.class.getClassLoader().getResourceAsStream(filename);
         }
+        
         return loadCerts(res);
     }
 

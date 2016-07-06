@@ -82,13 +82,13 @@ public class AsRequest extends KdcRequest {
         } else {
             clientEntry = getEntry(clientPrincipal.getName());
         }
-        if (isAnonymous()) {
-            clientEntry.setPrincipal(new PrincipalName(clientPrincipal.getName(), NameType.NT_WELLKNOWN));
-        }
-
         if (clientEntry == null) {
             LOG.warn("Can't get the client entry.");
             throw new KrbException(KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN);
+        }
+
+        if (isAnonymous()) {
+            clientEntry.setPrincipal(new PrincipalName(clientPrincipal.getName(), NameType.NT_WELLKNOWN));
         }
 
         setClientEntry(clientEntry);
