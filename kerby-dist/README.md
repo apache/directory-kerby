@@ -168,3 +168,53 @@ The resulting tickets will have the client name WELLKNOWN/ANONYMOUS@WELLKNOWN:AN
 [2]http://k5wiki.kerberos.org/wiki/Pkinit_configuration
 
 
+## 3. Run remote kadmin steps
+#### 1. Generate libraries for distribution:
+```
+mvn package -Pdist
+```
+
+#### 2. Run kdcinit:
+```
+cd kerby-dist/kdc-dist
+sh bin/kdcinit.sh [server-conf-dir] [keytab]
+```
+The admin principal will be exported into [keytab], it will be used by kadmin tool for the authentication. 
+
+#### 3. Start kerby-kdc-server:
+```
+cd kerby-dist/kdc-dist
+sh bin/start-kdc.sh [server-conf-dir] [work-dir]
+```
+
+#### 4. Run kadmin server
+```
+cd kerby-dist/kdc-dist
+sh bin/admin-server.sh [admin-server-conf-dir]
+```
+An example of adminClient.conf:
+```
+[libdefaults]
+    default_realm = EXAMPLE.COM
+    admin_port = 65417
+    keytab_file = admin.keytab
+    protocol = adminprotocol
+    server_name = localhost
+```
+The keytab_file is the keytab file path created by the kdcinit.
+
+#### 5. Run remote kadmin client to add or delete principals:
+```
+cd kerby-dist/kdc-dist
+sh bin/remote-admin-client.sh [admin-client-conf-dir]
+```
+An example of adminServer.conf:
+```
+[libdefaults]
+    default_realm = EXAMPLE.COM
+    admin_port = 65417
+    keytab_file = protocol.keytab
+    protocol = adminprotocol
+    server_name = localhost
+```
+The keytab_file is the keytab file path created by the kdcinit.
