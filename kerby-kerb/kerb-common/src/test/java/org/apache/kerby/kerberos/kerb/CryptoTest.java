@@ -62,16 +62,16 @@ public class CryptoTest {
         // Now validate the certificate chain
         
         List<X509Certificate> certsPathList = new ArrayList<>(2);
-        certsPathList.add((X509Certificate)certs2.get(0));
+        certsPathList.add((X509Certificate) certs2.get(0));
         List<Certificate> cacerts = CertificateHelper.loadCerts("cacerttest.pem");
-        certsPathList.add((X509Certificate)cacerts.get(0));
+        certsPathList.add((X509Certificate) cacerts.get(0));
         
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
         CertPath certPath = certificateFactory.generateCertPath(certsPathList);
         
         CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
 
-        TrustAnchor trustAnchor = new TrustAnchor((X509Certificate)cacerts.get(0), null);
+        TrustAnchor trustAnchor = new TrustAnchor((X509Certificate) cacerts.get(0), null);
 
         PKIXParameters parameters = new PKIXParameters(Collections.singleton(trustAnchor));
         parameters.setRevocationEnabled(false);
