@@ -19,9 +19,15 @@
  */
 package org.apache.kerby.kerberos.kerb;
 
-import java.io.IOException;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.PKIXParameters;
+import java.security.cert.TrustAnchor;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
@@ -32,7 +38,7 @@ public class CryptoTest {
 
     @Test
     @org.junit.Ignore
-    public void testCertificateLoading() throws IOException, KrbException, CertificateEncodingException {
+    public void testCertificateLoading() throws Exception {
         // Load cert
         List<Certificate> certs = CertificateHelper.loadCerts("kdccerttest.pem");
         Assert.assertEquals(1, certs.size());
@@ -48,5 +54,28 @@ public class CryptoTest {
         
         // Test for equality
         Assert.assertArrayEquals(certBytes, encodedBytes);
+        
+        // Convert back into an X.509 Certificate
+        List<Certificate> certs2 = CertificateHelper.loadCerts(new java.io.ByteArrayInputStream(certBytes));
+        Assert.assertEquals(1, certs2.size());
+        
+        // Now validate the certificate chain
+        
+        List<X509Certificate> certsPathList = new ArrayList<>(2);
+        certsPathList.add((X509Certificate)certs2.get(0));
+        List<Certificate> cacerts = CertificateHelper.loadCerts("cacerttest.pem");
+        certsPathList.add((X509Certificate)cacerts.get(0));
+        
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        CertPath certPath = certificateFactory.generateCertPath(certsPathList);
+        
+        CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
+
+        TrustAnchor trustAnchor = new TrustAnchor((X509Certificate)cacerts.get(0), null);
+
+        PKIXParameters parameters = new PKIXParameters(Collections.singleton(trustAnchor));
+        parameters.setRevocationEnabled(false);
+
+        cpv.validate(certPath, parameters);
     }
 }
