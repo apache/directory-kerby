@@ -343,6 +343,8 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             e.printStackTrace();
         } catch (CursorException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return identityNames;
     }

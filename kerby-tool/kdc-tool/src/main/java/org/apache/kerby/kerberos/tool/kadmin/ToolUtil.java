@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.tool.kadmin;
 
 import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
-import org.apache.kerby.kerberos.kerb.admin.KadminOption;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.KadminOption;
 
 import java.util.Scanner;
 

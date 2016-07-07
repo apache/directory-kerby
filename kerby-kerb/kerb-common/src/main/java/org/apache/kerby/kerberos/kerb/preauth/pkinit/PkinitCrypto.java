@@ -18,6 +18,33 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.CertificateNotYetValidException;
+import java.security.cert.PKIXParameters;
+import java.security.cert.TrustAnchor;
+import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.crypto.interfaces.DHPublicKey;
+import javax.crypto.spec.DHParameterSpec;
+import javax.crypto.spec.DHPublicKeySpec;
+
 import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
 import org.apache.kerby.cms.type.CertificateSet;
 import org.apache.kerby.cms.type.DigestAlgorithmIdentifiers;
@@ -35,25 +62,6 @@ import org.apache.kerby.x509.type.Certificate;
 import org.apache.kerby.x509.type.DhParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.crypto.interfaces.DHPublicKey;
-import javax.crypto.spec.DHParameterSpec;
-import javax.crypto.spec.DHPublicKeySpec;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.cert.CertPathValidatorException;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.X509Certificate;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
   * Ref. pkinit_crypto_openssl.c in MIT krb5 project.
@@ -329,16 +337,25 @@ public class PkinitCrypto {
      * @throws NoSuchAlgorithmException e
      * @throws InvalidAlgorithmParameterException e
      * @throws CertPathValidatorException e
+     * @throws IOException 
      */
-    public static void validateChain(List<Certificate> certificateList, Certificate anchor)
+    public static void validateChain(List<Certificate> certificateList, X509Certificate anchor)
             throws CertificateException, NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CertPathValidatorException {
+            InvalidAlgorithmParameterException, CertPathValidatorException, IOException {
 
-        //TODO
-        /*
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-        CertPath certPath = certificateFactory.generatertPath(certificateList);
-
+        
+        // Convert into a list of X509Certificates
+        List<X509Certificate> certsList = new ArrayList<>(certificateList.size());
+        for (Certificate cert : certificateList) {
+            X509Certificate parsedCert = 
+                (X509Certificate) certificateFactory.generateCertificate(
+                    new ByteArrayInputStream(cert.encode()));
+            certsList.add(parsedCert);
+        }
+        
+        CertPath certPath = certificateFactory.generateCertPath(certsList);
+        
         CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
 
         TrustAnchor trustAnchor = new TrustAnchor(anchor, null);
@@ -347,7 +364,6 @@ public class PkinitCrypto {
         parameters.setRevocationEnabled(false);
 
         cpv.validate(certPath, parameters);
-        */
     }
 
     /**

@@ -19,6 +19,13 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import java.security.Principal;
+import java.security.PrivilegedExceptionAction;
+import java.util.Set;
+
+import javax.security.auth.Subject;
+import javax.security.auth.kerberos.KerberosTicket;
+
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
@@ -27,12 +34,6 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.Oid;
 import org.junit.Assert;
 import org.junit.Test;
-
-import javax.security.auth.Subject;
-import javax.security.auth.kerberos.KerberosTicket;
-import java.security.Principal;
-import java.security.PrivilegedExceptionAction;
-import java.util.Set;
 
 /**
  * This is an interop test using the Java GSS APIs against the Kerby KDC
@@ -62,7 +63,7 @@ public class GssInteropTest extends LoginTestBase {
 
         validateServiceTicket(kerberosToken);
     }
-
+    
     private void validateServiceTicket(byte[] ticket) throws Exception {
         Subject serviceSubject = loginServiceUsingKeytab();
         Set<Principal> servicePrincipals = serviceSubject.getPrincipals();

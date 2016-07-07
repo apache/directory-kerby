@@ -20,8 +20,10 @@
 package org.apache.kerby.kerberos.tool.kdcinit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
-import org.apache.kerby.kerberos.kerb.admin.LocalKadminImpl;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServer;
+import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerConfig;
 import org.apache.kerby.util.OSUtil;
 
 import java.io.File;
@@ -53,6 +55,19 @@ public class KdcInitTool {
                     + " has been exported to the specified file "
                     + keytabFile.getAbsolutePath() + ", please safely keep it, "
                     + "in order to use kadmin tool later");
+
+            // Export protocol keytab file for remote admin tool
+            AdminServer adminServer = new AdminServer(confDir);
+            AdminServerConfig adminServerConfig = adminServer.getAdminServerConfig();
+            String principal = adminServerConfig.getProtocol() + "/"
+                + adminServerConfig.getAdminHost() + "@" + adminServerConfig.getAdminRealm();
+            kadmin.addPrincipal(principal);
+            File protocolFile = new File("protocol.keytab");
+            kadmin.exportKeytab(protocolFile, principal);
+            System.out.println("The keytab for protocol principal "
+                    + " has been exported to the specified file "
+                    + protocolFile.getAbsolutePath() + ", please safely keep it, "
+                    + "in order to use remote kadmin tool later");
         } finally {
             kadmin.release();
         }

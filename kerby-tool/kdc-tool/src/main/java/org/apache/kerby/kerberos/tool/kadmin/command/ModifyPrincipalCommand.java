@@ -22,8 +22,8 @@ package org.apache.kerby.kerberos.tool.kadmin.command;
 import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.LocalKadmin;
-import org.apache.kerby.kerberos.kerb.admin.KadminOption;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.KadminOption;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
 public class ModifyPrincipalCommand extends KadminCommand {
