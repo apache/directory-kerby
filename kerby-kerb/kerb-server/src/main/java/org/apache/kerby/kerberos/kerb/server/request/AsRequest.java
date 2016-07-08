@@ -59,7 +59,7 @@ public class AsRequest extends KdcRequest {
         KdcReq request = getKdcReq();
         PrincipalName clientPrincipal;
         if (isToken()) {
-            LOG.info("The request is with token.");
+            LOG.info("The request has a token with subject: " + getToken().getSubject());
             clientPrincipal = new PrincipalName(getToken().getSubject());
         } else {
             clientPrincipal = request.getReqBody().getCname();
