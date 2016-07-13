@@ -71,12 +71,17 @@ public abstract class XdrUnion extends AbstractXdrType<XdrUnion> {
     }
 
     public XdrUnion(XdrDataType xdrDataType,
-                         final XdrFieldInfo[] fieldInfos) {
+                    final XdrFieldInfo[] fieldInfos) {
         super(xdrDataType);
-        this.fieldInfos = fieldInfos;
-        this.fields = new XdrType[fieldInfos.length];
+        if (fieldInfos != null) {
+            this.fieldInfos = fieldInfos.clone();
+            this.fields = new XdrType[fieldInfos.length];
 
-        getUnionInstance(this.fields, fieldInfos);
+            getUnionInstance(this.fields, fieldInfos);
+        } else {
+            this.fieldInfos = null;
+            this.fields = null;
+        }
     }
 
     protected abstract void getUnionInstance(final XdrType[] fields, final XdrFieldInfo[] fieldInfos);

@@ -41,10 +41,15 @@ public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
     public XdrStructType(XdrDataType xdrDataType,
                          final XdrFieldInfo[] fieldInfos) {
         super(xdrDataType);
-        this.fieldInfos = fieldInfos;
-        this.fields = new XdrType[fieldInfos.length];
+        if (fieldInfos != null) {
+            this.fieldInfos = fieldInfos.clone();
+            this.fields = new XdrType[fieldInfos.length];
 
-        getStructTypeInstance(this.fields, fieldInfos);
+            getStructTypeInstance(this.fields, fieldInfos);
+        } else {
+            this.fieldInfos = null;
+            this.fields = null;
+        }
     }
 
     protected abstract void getStructTypeInstance(final XdrType[] fields, final XdrFieldInfo[] fieldInfos);

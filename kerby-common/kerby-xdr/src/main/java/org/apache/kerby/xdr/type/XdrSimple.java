@@ -54,7 +54,11 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
     }
 
     protected void setBytes(byte[] bytes) {
-        this.bytes = bytes;
+        if (bytes != null) {
+            this.bytes = bytes.clone();
+        } else {
+            this.bytes = null;
+        }
     }
 
     protected byte[] encodeBody() throws IOException {
