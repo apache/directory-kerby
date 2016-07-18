@@ -167,6 +167,9 @@ public class TokenAuthLoginModule implements LoginModule {
                 e.printStackTrace();
             }
             subject.getPrivateCredentials().add(ticket);
+            if (princName != null) {
+                subject.getPrincipals().add(new KerberosPrincipal(princName));
+            }
         }
         commitSucceeded = true;
         LOG.info("Commit Succeeded \n");

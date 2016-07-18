@@ -50,10 +50,7 @@ public class TokenJaasKrbUtil {
     public static Subject loginUsingToken(
             String principal, File tokenCache, File armorCache, File ccache, File signKeyFile)
             throws LoginException {
-        Set<Principal> principals = new HashSet<Principal>();
-        principals.add(new KerberosPrincipal(principal));
-
-        Subject subject = new Subject(false, principals,
+        Subject subject = new Subject(false, new HashSet<Principal>(),
                 new HashSet<Object>(), new HashSet<Object>());
         Configuration conf = useTokenCache(principal, tokenCache, armorCache, ccache, signKeyFile);
         String confName = "TokenCacheConf";
