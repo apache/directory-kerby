@@ -131,7 +131,7 @@ public class DefaultAdminServerHandler extends AdminServerHandler implements Run
                     while (!ss.isComplete()) {
                         int scComplete = message.getInt();
                         if (scComplete == 0) {
-                            System.out.println("success!!!");
+                            logger.info("sasl negotiation success!!!");
                             sasl = true;
                             break;
                         }
@@ -164,6 +164,7 @@ public class DefaultAdminServerHandler extends AdminServerHandler implements Run
         buffer.put(challenge);
         buffer.flip();
         transport.sendMessage(buffer);
+        logger.info("Send message to admin client.");
     }
 
     private static class SaslGssCallbackHandler implements CallbackHandler {
@@ -189,8 +190,6 @@ public class DefaultAdminServerHandler extends AdminServerHandler implements Run
                     ac.setAuthorized(false);
                 }
                 if (ac.isAuthorized()) {
-                    // System.out.println("SASL server GSSAPI callback: setting "
-                    //+ "canonicalized client ID: " + authzid);
                     ac.setAuthorizedID(authzid);
                 }
             }

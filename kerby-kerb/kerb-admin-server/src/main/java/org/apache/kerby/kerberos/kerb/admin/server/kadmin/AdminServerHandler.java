@@ -134,6 +134,7 @@ public class AdminServerHandler {
             }
         }
         String message = "add principal of " + principal;
+        System.out.println(message);
         LOG.info(message);
         ByteBuffer responseMessage = infoPackageTool(message, "addPrincipal");
         return responseMessage;
@@ -152,6 +153,7 @@ public class AdminServerHandler {
             return response;
         }
         String message = "delete principal of " + principal;
+        System.out.println(message);
         LOG.info(message);
         ByteBuffer responseMessage = infoPackageTool(message, "deletePrincipal");
         return responseMessage;
@@ -159,7 +161,6 @@ public class AdminServerHandler {
 
     private ByteBuffer handleRenamePrincipalReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
         /** message structure: msg_type, para_num(always equals 2), old name, new name*/
-
         String[] oldPrincipalName = ((String) fieldInfos[2].getValue()).split("@");
         String[] newPrincipalName = ((String) fieldInfos[3].getValue()).split("@");
         try {
@@ -173,6 +174,8 @@ public class AdminServerHandler {
         }
 
         String message = "rename " + oldPrincipalName[0] + " to " + newPrincipalName[0];
+        System.out.println(message);
+        LOG.info(message);
         ByteBuffer responseMessage = infoPackageTool(message, "renamePrincipal");
         return responseMessage;
     }
@@ -191,6 +194,7 @@ public class AdminServerHandler {
             return responseMessage;
         } catch (KrbException e) {
             String error = "principal do not exist.";
+            LOG.error(error + e);
             ByteBuffer responseError = infoPackageTool(error, "getPrincs");
             return responseError;
         }

@@ -21,8 +21,6 @@ package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
-import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
-import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 
@@ -34,8 +32,6 @@ import java.net.InetSocketAddress;
  * Admin Server utilities.
  */
 public final class AdminServerUtil {
-
-    private AdminServerUtil() { }
 
     /**
      * Get adminServer configuration
@@ -55,7 +51,6 @@ public final class AdminServerUtil {
             }
             return adminServerConfig;
         }
-
         return null;
     }
 
@@ -77,7 +72,6 @@ public final class AdminServerUtil {
             }
             return kdcConfig;
         }
-
         return null;
     }
 
@@ -99,44 +93,7 @@ public final class AdminServerUtil {
             }
             return backendConfig;
         }
-
         return null;
-    }
-
-    /**
-     * Init the identity backend from backend configuration.
-     *
-     * @throws KrbException e.
-     * @param backendConfig backend configuration information
-     * @return backend
-     */
-    public static IdentityBackend getBackend(
-            BackendConfig backendConfig) throws KrbException {
-        String backendClassName = backendConfig.getString(
-                AdminServerConfigKey.KDC_IDENTITY_BACKEND, true);
-        if (backendClassName == null) {
-            backendClassName = MemoryIdentityBackend.class.getCanonicalName();
-        }
-
-        Class<?> backendClass;
-        try {
-            backendClass = Class.forName(backendClassName);
-        } catch (ClassNotFoundException e) {
-            throw new KrbException("Failed to load backend class: "
-                    + backendClassName);
-        }
-
-        IdentityBackend backend;
-        try {
-            backend = (IdentityBackend) backendClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new KrbException("Failed to create backend: "
-                    + backendClassName);
-        }
-
-        backend.setConfig(backendConfig);
-        backend.initialize();
-        return backend;
     }
 
     /**
