@@ -338,7 +338,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         String oid = PkinitPlgCryptoContext.getIdPkinitDHKeyDataOID();
         signedDataBytes = PkinitCrypto.cmsSignedDataCreate(KrbCodec.encode(kdcDhKeyInfo), oid, 3, null,
-                null, null, null);
+                                                           certificateSet, null, null);
 
         dhRepInfo.setDHSignedData(signedDataBytes);
 

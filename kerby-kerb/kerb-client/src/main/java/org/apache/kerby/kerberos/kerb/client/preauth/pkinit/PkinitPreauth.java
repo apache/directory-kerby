@@ -373,13 +373,15 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             }
             
             CertificateSet certificateSet = signedData.getCertificates();
-            List<Certificate> certificates = new ArrayList<>();
-            if (certificateSet != null) {
-                List<CertificateChoices> certificateChoicesList = certificateSet.getElements();
-                for (CertificateChoices certificateChoices : certificateChoicesList) {
-                    certificates.add(certificateChoices.getCertificate());
-                }
+            if (certificateSet == null || certificateSet.getElements().isEmpty()) {
+                throw new KrbException("No PKINIT Certs");
             }
+            List<Certificate> certificates = new ArrayList<>();
+            List<CertificateChoices> certificateChoicesList = certificateSet.getElements();
+            for (CertificateChoices certificateChoices : certificateChoicesList) {
+                certificates.add(certificateChoices.getCertificate());
+            }
+            
             try {
                 PkinitCrypto.validateChain(certificates, x509Certificate);
             } catch (Exception e) {
