@@ -83,7 +83,6 @@ public class ToolUtil {
         Scanner scanner = new Scanner(System.in, "UTF-8");
         System.out.println(prompt);
         String str = scanner.nextLine().trim();
-        scanner.close();
         return str;
     }
 }
