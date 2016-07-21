@@ -34,6 +34,7 @@ public class ExtensionTest {
         Extension extension = new Extension();
         extension.setExtnId(new Asn1ObjectIdentifier("1.3.6.1.5.2.3.1"));
         extension.setExtnValue("value".getBytes());
+        extension.setCritical(false);
         byte[] encodedBytes = extension.encode();
         Extension decodedExtension = new Extension();
         decodedExtension.decode(encodedBytes);

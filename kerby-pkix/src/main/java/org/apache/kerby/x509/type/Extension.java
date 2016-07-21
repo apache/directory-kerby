@@ -54,8 +54,6 @@ public class Extension extends Asn1SequenceType {
         }
     }
 
-    private final boolean critical = false;
-
     static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
         new Asn1FieldInfo(ExtensionField.EXTN_ID, Asn1ObjectIdentifier.class),
         new Asn1FieldInfo(ExtensionField.CRITICAL, Asn1Boolean.class),
@@ -64,7 +62,6 @@ public class Extension extends Asn1SequenceType {
 
     public Extension() {
         super(fieldInfos);
-        setCritical(critical);
     }
 
     public Asn1ObjectIdentifier getExtnId() {

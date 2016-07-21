@@ -37,7 +37,6 @@ import org.junit.Test;
 public class CryptoTest {
 
     @Test
-    @org.junit.Ignore
     public void testCertificateLoading() throws Exception {
         // Load cert
         List<Certificate> certs = CertificateHelper.loadCerts("kdccerttest.pem");
