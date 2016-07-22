@@ -145,13 +145,13 @@ public class KadminTool {
         } else if (command.startsWith("change_password")
                 || command.startsWith("cpw")) {
             executor = new ChangePasswordCommand(kadmin);
-        } else if (command.startsWith("get_principal") || command.startsWith("getprinc")
-                || command.startsWith("Get principal")) {
-            executor = new GetPrincipalCommand(kadmin);
         } else if (command.startsWith("list_principals")
                 || command.startsWith("listprincs") || command.startsWith("get_principals")
                 || command.startsWith("getprincs") || command.startsWith("List principals")) {
             executor = new ListPrincipalCommand(kadmin);
+        } else if (command.startsWith("get_principal") || command.startsWith("getprinc")
+                || command.startsWith("Get principal")) {
+            executor = new GetPrincipalCommand(kadmin);
         }
         if (executor == null) {
             System.out.println("Unknown request \"" + command + "\". Type \"?\" for a request list.");
