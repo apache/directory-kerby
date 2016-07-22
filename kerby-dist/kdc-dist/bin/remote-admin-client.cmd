@@ -21,7 +21,7 @@ set DEBUG=
 set args=%*
 for %%a in (%*) do (
   if -D == %%a (
-    set DEBUG=-Xdebug -Xrunjdwp:transport=dt_socket,address=8009,server=y,suspend=n
+    set DEBUG=-Xdebug -Xrunjdwp:transport=dt_socket,address=8009,server=y,suspend=y
     set args=%args:-D=%
   )
 )
