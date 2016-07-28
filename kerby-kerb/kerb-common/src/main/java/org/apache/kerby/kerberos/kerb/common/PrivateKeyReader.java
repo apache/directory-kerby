@@ -50,8 +50,6 @@ public class PrivateKeyReader {
             return loadPrivateKey(sb.toString());
         } catch (IOException e) {
             throw e;
-        } catch (NullPointerException e) {
-            throw e;
         }
     }
 
@@ -65,8 +63,6 @@ public class PrivateKeyReader {
         } catch (NoSuchAlgorithmException e) {
             throw e;
         } catch (InvalidKeySpecException e) {
-            throw e;
-        } catch (NullPointerException e) {
             throw e;
         }
     }
