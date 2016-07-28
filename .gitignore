@@ -16,4 +16,3 @@ dependency-reduced-pom.xml
 .checkstyle
 kerby-dist/kdc-dist/logs/
 kerby-dist/tool-dist/logs/
-kerby-dist/kdc-dist/conf/krb5.conf
