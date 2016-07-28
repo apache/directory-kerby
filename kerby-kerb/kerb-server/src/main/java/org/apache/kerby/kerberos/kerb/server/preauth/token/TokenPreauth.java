@@ -118,7 +118,6 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         if (verifyKeyPath != null) {
             try {
                 InputStream verifyKeyFile = getKeyFileStream(verifyKeyPath, issuer);
-                System.out.println("VER: " + (verifyKeyFile != null));
                 if (verifyKeyFile != null) {
                     PublicKey verifyKey = PublicKeyReader.loadPublicKey(verifyKeyFile);
                     tokenDecoder.setVerifyKey(verifyKey);
