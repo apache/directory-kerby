@@ -70,7 +70,8 @@ An example of kdc.conf:
 [kdcdefaults]
     kdc_host = localhost
     kdc_tcp_port = 8015
-    kdc_realm = TEST.COM
+    kdc_udp_port = 8015
+    kdc_realm = EXAMPLE.COM
 ```
 An example of json backend backend.conf:
 ```
@@ -86,8 +87,9 @@ data_log_dir = /tmp/kerby/zookeeper/datalog
 An example of krb5.conf:
 ```
 [libdefaults]
-    kdc_realm=TEST.COM
+    kdc_realm=EXAMPLE.COM
     kdc_tcp_port = 8015
+    kdc_udp_port = 8015
 ```
 
 ## 2. Anonymous PKINIT configuration
@@ -177,14 +179,14 @@ mvn package -Pdist
 #### 2. Run kdcinit:
 ```
 cd kerby-dist/kdc-dist
-sh bin/kdcinit.sh [server-conf-dir] [keytab]
+sh bin/kdcinit.sh [kdc-server-conf-dir] [keytab]
 ```
 The admin principal will be exported into [keytab], it will be used by kadmin tool for the authentication. 
 
 #### 3. Start kerby-kdc-server:
 ```
 cd kerby-dist/kdc-dist
-sh bin/start-kdc.sh [server-conf-dir] [work-dir]
+sh bin/start-kdc.sh [kdc-server-conf-dir] [work-dir]
 ```
 
 #### 4. Run kadmin server
@@ -212,9 +214,11 @@ An example of adminServer.conf:
 ```
 [libdefaults]
     default_realm = EXAMPLE.COM
+    admin_realm = EXAMPLE.COM
     admin_port = 65417
     keytab_file = protocol.keytab
     protocol = adminprotocol
     server_name = localhost
 ```
 The keytab_file is the keytab file path created by the kdcinit.
+The kdc-server-conf-dir, admin-client-conf-dir, admin-server-conf-dir are the same dir.
