@@ -77,7 +77,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             List<String> issuers = kdcRequest.getKdcContext().getConfig().getIssuers();
             TokenInfo tokenInfo = paTokenRequest.getTokenInfo();
             String issuer = tokenInfo.getTokenVendor();
-            if (!(issuers.contains(issuer))) {
+            if (!issuers.contains(issuer)) {
                 throw new KrbException("Unconfigured issuer: " + issuer);
             }
             
@@ -118,6 +118,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         if (verifyKeyPath != null) {
             try {
                 InputStream verifyKeyFile = getKeyFileStream(verifyKeyPath, issuer);
+                System.out.println("VER: " + (verifyKeyFile != null));
                 if (verifyKeyFile != null) {
                     PublicKey verifyKey = PublicKeyReader.loadPublicKey(verifyKeyFile);
                     tokenDecoder.setVerifyKey(verifyKey);
@@ -151,13 +152,16 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             File verifyKeyFile = null;
 
             if (listOfFiles == null) {
-                throw new RuntimeException("List of files is null.");
+                throw new FileNotFoundException("The key path is incorrect");
             }
             for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile() && listOfFiles[i].getName().contains(issuer)) {
                     verifyKeyFile = listOfFiles[i];
                     break;
                 }
+            }
+            if (verifyKeyFile == null) {
+                throw new FileNotFoundException("No key found that matches the issuer name");
             }
             return new FileInputStream(verifyKeyFile);
         } else if (file.isFile()) {
