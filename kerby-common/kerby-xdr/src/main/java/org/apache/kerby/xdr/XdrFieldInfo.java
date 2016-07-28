@@ -29,8 +29,9 @@ public class XdrFieldInfo {
 
     /**
      * Constructor.
-     * @param index
-     * @param dataType
+     * @param index The index
+     * @param dataType The data type
+     * @param value The value
      *
      */
     public XdrFieldInfo(int index, XdrDataType dataType, Object value) {

@@ -66,7 +66,7 @@ public class NettyKdcUdpServerHandler extends SimpleChannelInboundHandler<Datagr
 
     /**
      * Calls {@link ChannelHandlerContext#fireExceptionCaught(Throwable)} to
-     * forward to the next {@link ChannelHandler} in the {@link ChannelPipeline}
+     * forward to the next {ChannelHandler} in the {ChannelPipeline}
      *
      * Sub-classes may override this method to change behavior.
      */

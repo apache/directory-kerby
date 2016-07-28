@@ -36,8 +36,8 @@ import java.util.List;
  *        +-----+-----+-----+-----+-----+-----+...+-----+-----+...+-----+
  *        |        length n       |byte0|byte1|...| n-1 |  0  |...|  0  |
  *        +-----+-----+-----+-----+-----+-----+...+-----+-----+...+-----+
- *        |<-------4 bytes------->|<------n bytes------>|<---r bytes--->|
- *                                |<----n+r (where (n+r) mod 4 = 0)---->|
+ *        |--------4 bytes--------|-------n bytes-------|----r bytes----|
+ *                                |-----n+r (where (n+r) mod 4 = 0)-----|
  *                                                                 STRING
  */
 public class XdrString extends XdrSimple<String> {

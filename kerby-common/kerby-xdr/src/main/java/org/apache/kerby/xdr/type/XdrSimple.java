@@ -83,7 +83,7 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
 
     /**
      * Length including null bytes to maintain an multiple of 4.
-     * @return
+     * @return The encoding body length
      */
     @Override
     protected int encodingBodyLength() throws IOException {
@@ -118,6 +118,7 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
 
     /**
      * Encode simple type to bytes.
+     * @throws IOException e
      */
     protected abstract void toBytes() throws IOException;
 

@@ -53,7 +53,7 @@ import java.nio.ByteBuffer;
  *                  +---+---+---+---+---+---+---+---+
  *                  |  discriminant |  implied arm  |
  *                  +---+---+---+---+---+---+---+---+
- *                  |<---4 bytes--->|
+ *                  |----4 bytes----|
  */
 public abstract class XdrUnion extends AbstractXdrType<XdrUnion> {
     /**

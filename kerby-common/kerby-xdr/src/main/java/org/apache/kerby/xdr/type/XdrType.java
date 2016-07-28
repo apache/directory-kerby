@@ -31,18 +31,21 @@ public interface XdrType {
      * Get length of encoding bytes by just calculating without real encoding.
      * Generally it's called to prepare for the encoding buffer.
      * @return length of encoding bytes
+     * @throws IOException e
      */
     int encodingLength() throws IOException;
 
     /**
      * Encode the type, by recursively.
      * @return encoded bytes
+     * @throws IOException e
      */
     byte[] encode() throws IOException;
 
     /**
      * Encode the type, by recursively, using the provided buffer.
      * @param buffer The byte buffer
+     * @throws IOException e
      */
     void encode(ByteBuffer buffer) throws IOException;
 

@@ -83,6 +83,7 @@ public class AuthorizationDataEntry extends KrbSequenceType {
 
     /**
      * Creates an AuthorizationDataEntry instance
+     * @param type The authorization type
      */
     public AuthorizationDataEntry(AuthorizationType type) {
         super(fieldInfos);
@@ -91,6 +92,8 @@ public class AuthorizationDataEntry extends KrbSequenceType {
 
     /**
      * Creates an AuthorizationDataEntry instance
+     * @param type The authorization type
+     * @param authzData The authorization data
      */
     public AuthorizationDataEntry(AuthorizationType type, byte[] authzData) {
         super(fieldInfos);
@@ -131,10 +134,8 @@ public class AuthorizationDataEntry extends KrbSequenceType {
     }
 
     /**
-     * @param <T>
+     * @param <T> type The type
      * @return The AuthorizationData (AD_DATA) field
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      */
     public <T extends Asn1Type> T getAuthzDataAs(Class<T> type) {
         T result = null;

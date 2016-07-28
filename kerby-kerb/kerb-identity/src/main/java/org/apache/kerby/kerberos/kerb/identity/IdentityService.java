@@ -36,7 +36,8 @@ public interface IdentityService {
 
     /**
      * Start a transaction.
-     * @return xtrans
+     * @return xtrans The batch trans
+     * @throws KrbException e
      */
     BatchTrans startBatchTrans() throws KrbException;
 

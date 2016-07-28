@@ -188,7 +188,7 @@ public abstract class AbstractIdentityBackend
 
     /**
      * Get an identity's Authorization Data, invoked by getIdentityAuthorizationData.
-     * @param krbIdentity The KrbIdentity
+     * @param kdcRequest The kdc request
      * @param encTicketPart The EncTicketPart being built for the KrbIdentity
      * @return The Authorization Data
      * @throws KrbException e

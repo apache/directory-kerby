@@ -30,6 +30,7 @@ public class HexUtil {
     /**
      * Convert bytes into friendly format as:
      * 0x02 02 00 80
+     * @param bytes The bytes to be converted
      */
     public static String bytesToHexFriendly(byte[] bytes) {
         int len = bytes.length * 2;

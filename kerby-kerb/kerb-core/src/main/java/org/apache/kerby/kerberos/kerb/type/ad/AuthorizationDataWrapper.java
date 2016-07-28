@@ -19,10 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.type.ad;
 
-import java.io.IOException;
-
 import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.EnumType;
+
+import java.io.IOException;
 
 /**
  * Contributed to the Apache Kerby Project by: Prodentity - Corrales, NM
@@ -81,7 +81,7 @@ public class AuthorizationDataWrapper extends AuthorizationDataEntry {
 
     /**
      * @return The AuthorizationType (AD_DATA) field
-     * @throws IOException
+     * @throws IOException e
      */
     public AuthorizationData getAuthorizationData() throws IOException {
         AuthorizationData result;
@@ -98,7 +98,7 @@ public class AuthorizationDataWrapper extends AuthorizationDataEntry {
      * Sets the AuthorizationData (AD_DATA) field
      * 
      * @param authzData The AuthorizationData to set
-     * @throws IOException
+     * @throws IOException e
      */
     public void setAuthorizationData(AuthorizationData authzData) throws IOException {
         setAuthzData(authzData.encode());

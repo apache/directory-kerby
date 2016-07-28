@@ -37,7 +37,7 @@ import java.nio.ByteBuffer;
  *      +-------+-------+-------+-------+
  *      |byte 0 |byte 1 |byte 2 |byte 3 |
  *      +-------+-------+-------+-------+
- *      <------------32 bits------------>
+ *      |------------32 bits------------|
  */
 public class XdrUnsignedInteger extends XdrSimple<Long> {
     public XdrUnsignedInteger() {
