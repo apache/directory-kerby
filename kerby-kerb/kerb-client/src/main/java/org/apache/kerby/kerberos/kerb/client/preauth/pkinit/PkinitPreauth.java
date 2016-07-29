@@ -269,7 +269,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             try {
                 clientPubKey = client.init(DhGroup.MODP_GROUP2);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("DiffieHellmanClient init with failure. " + e);
             }
 
             reqCtx.setDhClient(client);
@@ -278,7 +278,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             try {
                 type = clientPubKey.getParams();
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Fail to get params from client public key. " + e);
             }
             BigInteger q = type.getP().shiftRight(1);
             DhParameter dhParameter = new DhParameter();
@@ -342,7 +342,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             try {
                 contentInfo.decode(dhSignedData);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Fail to decode dhSignedData. " + e);
             }
 
             SignedData signedData = contentInfo.getContentAs(SignedData.class);
@@ -364,7 +364,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                     x509Certificate = (X509Certificate) certs.iterator().next();
                 }
             } catch (KrbException e) {
-                e.printStackTrace();
+                LOG.error("Fail to load certs from archor file. " + e);
             }
             
             if (x509Certificate == null) {
@@ -426,7 +426,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 client.doPhase(dhPublicKey.getEncoded());
                 secretKey = client.generateKey(null, null, encType);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("DiffieHellmanClient do parse failed. " + e);
             }
             // Set the DH shared key as the client key
             if (secretKey == null) {

@@ -24,8 +24,11 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.KadminOption;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AddPrincipalsCommand extends KadminCommand {
+    private static final Logger LOG = LoggerFactory.getLogger(AddPrincipalsCommand.class);
     private static final String USAGE = "Usage: add_principals [options]\n"
             + "\toptions are:\n"
             + "[-pwexpire pwexpdate] [-maxlife maxtixlife]\n"
@@ -86,7 +89,8 @@ public class AddPrincipalsCommand extends KadminCommand {
         try {
             existNumbers = getKadmin().size();
         } catch (KrbException e) {
-            e.printStackTrace();
+            LOG.info("Fail to get the principal size. " + e);
+            System.out.println("Fail to get the principal size.");
             return;
         }
 
@@ -102,7 +106,7 @@ public class AddPrincipalsCommand extends KadminCommand {
                 String password = "12";
                 getKadmin().addPrincipal(principalName, password, kOptions);
             } catch (KrbException e) {
-                e.printStackTrace();
+                LOG.error("Fail to add principal. " + e);
             }
             i++;
         }

@@ -148,7 +148,6 @@ public class AuthorizationDataEntry extends KrbSequenceType {
             } catch (InstantiationException | IllegalAccessException | IOException e) {
                 e.printStackTrace();
             }
-
         }
         return result;
     }

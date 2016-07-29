@@ -18,6 +18,27 @@
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
+import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
+import org.apache.kerby.cms.type.CertificateSet;
+import org.apache.kerby.cms.type.DigestAlgorithmIdentifiers;
+import org.apache.kerby.cms.type.EncapsulatedContentInfo;
+import org.apache.kerby.cms.type.RevocationInfoChoices;
+import org.apache.kerby.cms.type.SignedContentInfo;
+import org.apache.kerby.cms.type.SignedData;
+import org.apache.kerby.cms.type.SignerInfos;
+import org.apache.kerby.kerberos.kerb.KrbCodec;
+import org.apache.kerby.kerberos.kerb.KrbErrorCode;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.util.HexUtil;
+import org.apache.kerby.x509.type.Certificate;
+import org.apache.kerby.x509.type.DhParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.crypto.interfaces.DHPublicKey;
+import javax.crypto.spec.DHParameterSpec;
+import javax.crypto.spec.DHPublicKeySpec;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -40,28 +61,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import javax.crypto.interfaces.DHPublicKey;
-import javax.crypto.spec.DHParameterSpec;
-import javax.crypto.spec.DHPublicKeySpec;
-
-import org.apache.kerby.asn1.type.Asn1ObjectIdentifier;
-import org.apache.kerby.cms.type.CertificateSet;
-import org.apache.kerby.cms.type.DigestAlgorithmIdentifiers;
-import org.apache.kerby.cms.type.EncapsulatedContentInfo;
-import org.apache.kerby.cms.type.RevocationInfoChoices;
-import org.apache.kerby.cms.type.SignedContentInfo;
-import org.apache.kerby.cms.type.SignedData;
-import org.apache.kerby.cms.type.SignerInfos;
-import org.apache.kerby.kerberos.kerb.KrbCodec;
-import org.apache.kerby.kerberos.kerb.KrbErrorCode;
-import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
-import org.apache.kerby.util.HexUtil;
-import org.apache.kerby.x509.type.Certificate;
-import org.apache.kerby.x509.type.DhParameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
   * Ref. pkinit_crypto_openssl.c in MIT krb5 project.
@@ -195,7 +194,7 @@ public class PkinitCrypto {
         try {
             keyFactory = KeyFactory.getInstance("DH");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            LOG.error("Fail to get dh instance. " + e);
         }
         DHPublicKey dhPublicKey = null;
         try {
@@ -203,7 +202,7 @@ public class PkinitCrypto {
                 dhPublicKey = (DHPublicKey) keyFactory.generatePublic(dhPublicKeySpec);
             }
         } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
+            LOG.error("Fail to generate public key. " + e);
         }
         return dhPublicKey;
     }
@@ -392,9 +391,9 @@ public class PkinitCrypto {
         try {
             certificate.decode(x509Certificate.getEncoded());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Fail to decode certificate. " + e);
         } catch (CertificateEncodingException e) {
-            e.printStackTrace();
+            LOG.error("Fail to encode x509 certificate. " + e);
         }
         return certificate;
     }

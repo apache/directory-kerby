@@ -33,6 +33,8 @@ import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +50,7 @@ import java.util.List;
  * TO BE IMPLEMENTED.
  */
 public class RemoteKadminImpl implements Kadmin {
-
+    private static final Logger LOG = LoggerFactory.getLogger(RemoteKadminImpl.class);
     private InternalAdminClient innerClient;
     private KrbTransport transport;
 
@@ -58,7 +60,7 @@ public class RemoteKadminImpl implements Kadmin {
         try {
             tpair = AdminUtil.getTransportPair(innerClient.getSetting());
         } catch (KrbException e) {
-            e.printStackTrace();
+            LOG.error("Fail to get transport pair. " + e);
         }
         KrbNetwork network = new KrbNetwork();
         network.setSocketTimeout(innerClient.getSetting().getTimeout());

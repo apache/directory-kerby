@@ -19,6 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.transport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -34,6 +37,7 @@ import java.util.Map;
  */
 @SuppressWarnings("PMD")
 public abstract class KdcNetwork {
+    private static final Logger LOG = LoggerFactory.getLogger(KdcNetwork.class);
     protected static final int MAX_MESSAGE_SIZE = 65507;
     private static final int KDC_TCP_TRANSPORT_TIMEOUT = 3 * 1000;
     private static final int KDC_TCP_SERVER_TIMEOUT = 100;
@@ -110,7 +114,7 @@ public abstract class KdcNetwork {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.warn("Interrupted when thread sleeping. " + e);
         }
         isStopped = true;
     }

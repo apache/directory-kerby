@@ -26,7 +26,8 @@ import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Warmup;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class KrbCodecBenchmark {
+    private static final Logger LOG = LoggerFactory.getLogger(KrbCodecBenchmark.class);
 
     private static ByteBuffer apreqToken;
 
@@ -45,7 +47,7 @@ public class KrbCodecBenchmark {
             is.read(bytes);
             apreqToken = ByteBuffer.wrap(bytes);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Fail to read bytes from input stream. " + e);
         }
     }
 

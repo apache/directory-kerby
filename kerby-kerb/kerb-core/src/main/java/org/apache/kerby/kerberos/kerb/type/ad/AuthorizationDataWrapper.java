@@ -21,6 +21,8 @@ package org.apache.kerby.kerberos.kerb.type.ad;
 
 import org.apache.kerby.asn1.Asn1Dumper;
 import org.apache.kerby.asn1.EnumType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -30,6 +32,7 @@ import java.io.IOException;
  * @author <a href="mailto:dev@directory.apache.org">Apache DirectoryProject</a>
  */
 public class AuthorizationDataWrapper extends AuthorizationDataEntry {
+    private static final Logger LOG = LoggerFactory.getLogger(AuthorizationDataWrapper.class);
 
     private AuthorizationData authorizationData;
 
@@ -111,7 +114,7 @@ public class AuthorizationDataWrapper extends AuthorizationDataEntry {
         try {
             getAuthorizationData().dumpWith(dumper, indents + 8);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Fail to get authorization data. " + e);
         }
     }
 

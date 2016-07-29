@@ -32,6 +32,7 @@ import org.apache.kerby.kerberos.kerb.client.KrbOptionGroup;
 import org.apache.kerby.kerberos.kerb.client.PkinitOption;
 import org.apache.kerby.kerberos.kerb.client.TokenOption;
 import org.apache.kerby.util.OSUtil;
+
 import java.io.File;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -96,7 +97,7 @@ public class KinitToolWithConcurrence {
     }
 
     private static void requestTicket(String principal,
-                                      KOptions ktOptions, int flag) throws KrbException {
+                                      KOptions ktOptions, int flag) {
         ktOptions.add(KinitOption.CLIENT_PRINCIPAL, principal);
 
         File confDir = null;
@@ -273,25 +274,16 @@ public class KinitToolWithConcurrence {
     public static class PreThread implements Runnable {
         @Override
         public void run() {
-            try {
-                request();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            request();
         }
     }
 
-    public static void request() throws Exception {
+    public static void request() {
         int tempFlag = 0;
         lock.lock();
-        try {
-            tempFlag = thFlag;
-            thFlag++;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            lock.unlock();
-        }
+        tempFlag = thFlag;
+        thFlag++;
+        lock.unlock();
         requestTicket(prList[tempFlag], ktOptions, tempFlag);
     }
 

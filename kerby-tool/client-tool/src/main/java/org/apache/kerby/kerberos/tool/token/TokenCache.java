@@ -22,16 +22,20 @@ package org.apache.kerby.kerberos.tool.token;
 
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
 public class TokenCache {
+    private static final Logger LOG = LoggerFactory.getLogger(TokenCache.class);
     private static final String DEFAULT_TOKEN_CACHE_PATH = ".tokenauth";
     private static final String TOKEN_CACHE_FILE = ".tokenauth.token";
 
@@ -51,22 +55,32 @@ public class TokenCache {
         }
 
         String token = null;
+        BufferedReader reader = null;
         try {
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(new FileInputStream(cacheFile), StandardCharsets.UTF_8));
-            String line = reader.readLine();
+            reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(cacheFile), StandardCharsets.UTF_8));
+        } catch (FileNotFoundException e) {
+            LOG.error("Can't find the cache file. " + e);
+        }
+        String line = null;
+        try {
+            line = reader.readLine();
+        } catch (IOException e) {
+            LOG.error("I/O error occurs. " + e);
+        }
+        try {
             reader.close();
-            if (line != null) {
-                token = line;
-            }
-        } catch (IOException ex) { //NOPMD
-            ex.printStackTrace();
+        } catch (IOException e) {
+            LOG.warn("Fail to close reader. " + e);
+        }
+        if (line != null) {
+            token = line;
         }
 
         return token;
     }
 
-    public static void writeToken(String token) {
+    public static void writeToken(String token) throws KrbException {
         File cacheFile = getDefaultTokenCache();
 
         try {
@@ -87,8 +101,6 @@ public class TokenCache {
             if (cacheFile.delete()) {
                 System.err.println("Cache file is deleted.");
             }
-        } catch (KrbException e) {
-            e.printStackTrace();
         }
     }
 

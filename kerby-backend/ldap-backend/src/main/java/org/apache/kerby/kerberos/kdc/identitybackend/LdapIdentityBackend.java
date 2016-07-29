@@ -340,11 +340,11 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             cursor.close();
             Collections.sort(identityNames);
         } catch (LdapException e) {
-            e.printStackTrace();
+            LOG.error("With LdapException when LdapConnection searching. " + e);
         } catch (CursorException e) {
-            e.printStackTrace();
+            LOG.error("With CursorException when EntryCursor getting. " + e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("With IOException when closing EntryCursor. " + e);
         }
         return identityNames;
     }

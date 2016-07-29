@@ -28,6 +28,8 @@ import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
 import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
 import org.apache.kerby.util.NetworkUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +39,7 @@ import java.io.IOException;
  * kadmin sides for convenience.
  */
 public class SimpleKdcServer extends KdcServer {
+    private static final Logger LOG = LoggerFactory.getLogger(SimpleKdcServer.class);
     private final KrbClient krbClnt;
     private LocalKadmin kadmin;
     private Krb5Conf krb5Conf;
@@ -297,7 +300,7 @@ public class SimpleKdcServer extends KdcServer {
         try {
             krb5Conf.deleteKrb5conf();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.info("Fail to delete krb5 conf. " + e);
         }
     }
 }

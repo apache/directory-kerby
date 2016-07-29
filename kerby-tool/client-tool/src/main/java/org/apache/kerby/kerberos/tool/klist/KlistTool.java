@@ -28,6 +28,8 @@ import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.util.HexUtil;
 import org.apache.kerby.util.OSUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,9 +46,10 @@ import java.util.List;
  * Ref. MIT klist command tool usage.
  */
 public class KlistTool {
+    private static final Logger LOG = LoggerFactory.getLogger(KlistTool.class);
 
-    private static  final String USAGE = (OSUtil.isWindows()
-            ? "Usage: bin\\klist.cmd" : "Usage: sh bin/klist.sh")
+    private static final String USAGE = (OSUtil.isWindows()
+        ? "Usage: bin\\klist.cmd" : "Usage: sh bin/klist.sh")
             + " [-e] [-V] [[-c] [-l] [-A] [-d] [-f] [-s] "
             + "[-a [-n]]] [-k [-t] [-K]] [name]\n"
             + "\t-c specifies credentials cache\n"
@@ -100,7 +103,7 @@ public class KlistTool {
                         cis.close();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.warn("Fail to close input stream. " + e);
                 }
             }
 

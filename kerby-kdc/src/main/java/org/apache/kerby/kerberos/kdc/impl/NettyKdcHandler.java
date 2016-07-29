@@ -58,7 +58,6 @@ public class NettyKdcHandler extends ChannelInboundHandlerAdapter {
         } catch (Exception e) {
             LOG.error("Error occurred while processing request:"
                     + e);
-            e.printStackTrace();
         }
     }
 

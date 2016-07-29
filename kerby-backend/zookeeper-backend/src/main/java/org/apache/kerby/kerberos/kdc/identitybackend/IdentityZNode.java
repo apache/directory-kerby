@@ -315,7 +315,7 @@ public class IdentityZNode {
             try {
                 encryptionKey.decode(key);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Fail to decode the encryption key. " + e);
             }
             encryptionKey.setKvno(getEncryptionKeyNo(typeName));
             keys.add(encryptionKey);

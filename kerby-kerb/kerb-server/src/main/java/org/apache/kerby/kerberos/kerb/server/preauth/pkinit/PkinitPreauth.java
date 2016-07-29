@@ -19,18 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.server.preauth.pkinit;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.crypto.interfaces.DHPublicKey;
-
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.parse.Asn1Container;
 import org.apache.kerby.asn1.parse.Asn1ParseResult;
@@ -74,6 +62,17 @@ import org.apache.kerby.x509.type.DhParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.crypto.interfaces.DHPublicKey;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PkinitPreauth extends AbstractPreauthPlugin {
 
@@ -135,7 +134,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 try {
                     eContentInfo.decode(signedAuthPack);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.error("Fail to decode signedAuthPack. " + e);
                 }
                 authPack = KrbCodec.decode(eContentInfo.getContent(), AuthPack.class);
 
@@ -145,7 +144,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 try {
                     contentInfo.decode(signedAuthPack);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.error("Fail to decode signedAuthPack");
                 }
 
                 SignedData signedData = contentInfo.getContentAs(SignedData.class);
@@ -186,7 +185,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 try {
                     parseResult = Asn1.parse(kdcRequest.getReqPackage());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.error("Fail to parse reqPackage. " + e);
                 }
                 /**Get REQ_BODY in KDC_REQ for checksum*/
                 Asn1Container container = (Asn1Container) parseResult;
@@ -290,7 +289,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         try {
             paDataEntry.setPaDataValue(paPkAsRep.encode());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Fail to encode PaDataEntry. " + e);
         }
 
         return paDataEntry;

@@ -41,6 +41,8 @@ import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
 import org.apache.kerby.kerberos.kerb.type.pa.token.PaTokenRequest;
 import org.apache.kerby.kerberos.kerb.type.pa.token.TokenInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,6 +54,7 @@ import java.security.PublicKey;
 import java.util.List;
 
 public class TokenPreauth extends AbstractPreauthPlugin {
+    private static final Logger LOG = LoggerFactory.getLogger(TokenPreauth.class);
 
     public TokenPreauth() {
         super(new TokenPreauthMeta());
@@ -123,9 +126,9 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                     tokenDecoder.setVerifyKey(verifyKey);
                 }
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                LOG.error("The verify key path is wrong. " + e);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Fail to load public key. " + e);
             }
         }
         String decryptionKeyPath = kdcRequest.getKdcContext().getConfig().getDecryptionKeyConfig();
@@ -137,9 +140,9 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                     tokenDecoder.setDecryptionKey(decryptionKey);
                 }
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                LOG.error("The decryption key path is wrong. " + e);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Fail to load private key. " + e);
             }
         }
     }

@@ -36,6 +36,8 @@ import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 import org.apache.kerby.util.OSUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
@@ -54,6 +56,7 @@ import java.util.Scanner;
  * Command use of remote admin
  */
 public class RemoteAdminClientTool {
+    private static final Logger LOG = LoggerFactory.getLogger(RemoteAdminClientTool.class);
     private static final byte[] EMPTY = new byte[0];
     private static KrbTransport transport;
     private static final String PROMPT = RemoteAdminClientTool.class.getSimpleName() + ".local:";
@@ -126,7 +129,7 @@ public class RemoteAdminClientTool {
         try {
             tpair = AdminUtil.getTransportPair(adminClient.getSetting());
         } catch (KrbException e) {
-            e.printStackTrace();
+            LOG.error("Fail to get transport pair. " + e);
         }
         KrbNetwork network = new KrbNetwork();
         network.setSocketTimeout(adminClient.getSetting().getTimeout());
@@ -144,7 +147,7 @@ public class RemoteAdminClientTool {
             subject = AuthUtil.loginUsingKeytab(adminPrincipal,
                 new File(adminConfig.getKeyTabFile()));
         } catch (LoginException e) {
-            e.printStackTrace();
+            LOG.error("Fail to login using keytab. " + e);
         }
         Subject.doAs(subject, new PrivilegedAction<Object>() {
             @Override
@@ -161,7 +164,7 @@ public class RemoteAdminClientTool {
                         saslClient = Sasl.createSaslClient(new String[]{"GSSAPI"}, null,
                             protocol, serverName, props, null);
                     } catch (SaslException e) {
-                        e.printStackTrace();
+                        LOG.error("Fail to create sasl client. " + e);
                     }
                     if (saslClient == null) {
                         throw new KrbException("Unable to find client implementation for: GSSAPI");
@@ -171,7 +174,7 @@ public class RemoteAdminClientTool {
                         response = saslClient.hasInitialResponse()
                             ? saslClient.evaluateChallenge(EMPTY) : EMPTY;
                     } catch (SaslException e) {
-                        e.printStackTrace();
+                        LOG.error("Sasl client evaluate challenge failed." + e);
                     }
 
                     sendMessage(response, saslClient);

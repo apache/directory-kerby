@@ -20,6 +20,8 @@
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +35,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class CertificateHelper {
-
+    private static final Logger LOG = LoggerFactory.getLogger(CertificateHelper.class);
 
     public static List<Certificate> loadCerts(String filename) throws KrbException {
         
@@ -43,7 +45,7 @@ public class CertificateHelper {
             try {
                 res = new FileInputStream(file);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                LOG.error("Can't load cert, file not found. " + e);
             }
         } else {
             res = CertificateHelper.class.getClassLoader().getResourceAsStream(filename);

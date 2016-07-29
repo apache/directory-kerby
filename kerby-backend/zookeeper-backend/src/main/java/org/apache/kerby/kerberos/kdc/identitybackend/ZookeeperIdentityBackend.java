@@ -84,7 +84,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         try {
             zooKeeper.close();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("Closing zookeeper interrupted." + e);
         }
         LOG.info("Zookeeper session closed.");
     }
@@ -128,7 +128,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        LOG.error("Some thread has interrupted the current thread" + e);
                     }
                 } else {
                     LOG.info("Success connect to zookeeper server.");

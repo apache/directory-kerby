@@ -30,12 +30,15 @@ import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.util.HexUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 
 public class EncryptionKeyAdapter implements JsonSerializer<EncryptionKey>,
         JsonDeserializer<EncryptionKey> {
+    private static final Logger LOG = LoggerFactory.getLogger(EncryptionKeyAdapter.class);
 
     @Override
     public EncryptionKey deserialize(JsonElement jsonElement, Type type,
@@ -47,7 +50,7 @@ public class EncryptionKeyAdapter implements JsonSerializer<EncryptionKey>,
         try {
             encryptionKey.decode(HexUtil.hex2bytes(jsonObject.get("key").getAsString()));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Fail to decode encryption key. " + e);
         }
         encryptionKey.setKvno(jsonObject.get("kvno").getAsInt());
         return encryptionKey;

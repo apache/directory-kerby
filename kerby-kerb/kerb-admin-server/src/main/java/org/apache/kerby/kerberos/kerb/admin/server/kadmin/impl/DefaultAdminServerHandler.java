@@ -63,7 +63,7 @@ public class DefaultAdminServerHandler extends AdminServerHandler implements Run
                     try {
                         saslNegotiation();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error("With exception when sasl negotiation." + e);
                     }
                 } else {
                     ByteBuffer message = transport.receiveMessage();
@@ -142,7 +142,7 @@ public class DefaultAdminServerHandler extends AdminServerHandler implements Run
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("With exception when sasl negotiation. " + e);
                 }
                 return null;
             }

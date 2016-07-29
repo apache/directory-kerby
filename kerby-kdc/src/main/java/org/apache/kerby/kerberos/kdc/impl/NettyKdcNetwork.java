@@ -134,7 +134,7 @@ public class NettyKdcNetwork {
                 group.terminationFuture().sync();
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("Interrupted when sync. " + e);
         }
     }
 }
