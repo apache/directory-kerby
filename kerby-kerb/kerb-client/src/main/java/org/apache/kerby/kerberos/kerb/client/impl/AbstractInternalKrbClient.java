@@ -44,124 +44,121 @@ import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
  * A krb client API for applications to interact with KDC
  */
 public abstract class AbstractInternalKrbClient implements InternalKrbClient {
-    private KrbContext context;
-    private final KrbSetting krbSetting;
+	private KrbContext context;
+	private final KrbSetting krbSetting;
 
-    public AbstractInternalKrbClient(KrbSetting krbSetting) {
-        this.krbSetting = krbSetting;
-    }
+	public AbstractInternalKrbClient(KrbSetting krbSetting) {
+		this.krbSetting = krbSetting;
+	}
 
-    protected KrbContext getContext() {
-        return context;
-    }
+	protected KrbContext getContext() {
+		return context;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public KrbSetting getSetting() {
-        return krbSetting;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public KrbSetting getSetting() {
+		return krbSetting;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init() throws KrbException {
-        context = new KrbContext();
-        context.init(krbSetting);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void init() throws KrbException {
+		context = new KrbContext();
+		context.init(krbSetting);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public TgtTicket requestTgt(KOptions requestOptions) throws KrbException {
-        AsRequest asRequest = null;
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public TgtTicket requestTgt(KOptions requestOptions) throws KrbException {
+		AsRequest asRequest = null;
 
-        if (requestOptions.contains(KrbOption.USE_PASSWD)) {
-            asRequest = new AsRequestWithPasswd(context);
-        } else if (requestOptions.contains(KrbOption.USE_KEYTAB)) {
-            asRequest = new AsRequestWithKeytab(context);
-        } else if (requestOptions.contains(PkinitOption.USE_ANONYMOUS)) {
-            asRequest = new AsRequestWithCert(context);
-        } else if (requestOptions.contains(PkinitOption.USE_PKINIT)) {
-            asRequest = new AsRequestWithCert(context);
-        } else if (requestOptions.contains(TokenOption.USE_TOKEN)) {
-            asRequest = new AsRequestWithToken(context);
-        } else if (requestOptions.contains(TokenOption.USER_ID_TOKEN)) {
-            asRequest = new AsRequestWithToken(context);
-        }
+		if (requestOptions.contains(KrbOption.USE_PASSWD)) {
+			asRequest = new AsRequestWithPasswd(context);
+		} else if (requestOptions.contains(KrbOption.USE_KEYTAB)) {
+			asRequest = new AsRequestWithKeytab(context);
+		} else if (requestOptions.contains(PkinitOption.USE_ANONYMOUS)) {
+			asRequest = new AsRequestWithCert(context);
+		} else if (requestOptions.contains(PkinitOption.USE_PKINIT)) {
+			asRequest = new AsRequestWithCert(context);
+		} else if (requestOptions.contains(TokenOption.USE_TOKEN)) {
+			asRequest = new AsRequestWithToken(context);
+		} else if (requestOptions.contains(TokenOption.USER_ID_TOKEN)) {
+			asRequest = new AsRequestWithToken(context);
+		}
 
-        if (asRequest == null) {
-            throw new IllegalArgumentException(
-                    "No valid krb client request option found");
-        }
-        if (requestOptions.contains(KrbOption.CLIENT_PRINCIPAL)) {
-            String principal = requestOptions.getStringOption(
-                    KrbOption.CLIENT_PRINCIPAL);
-            principal = fixPrincipal(principal);
-            PrincipalName principalName = new PrincipalName(principal);
-            if (requestOptions.contains(PkinitOption.USE_ANONYMOUS)) {
-                principalName.setNameType(NameType.NT_WELLKNOWN);
-            }
-            asRequest.setClientPrincipal(principalName);
-        }
-        if (requestOptions.contains(KrbOption.SERVER_PRINCIPAL)) {
-            String serverPrincipalName = requestOptions.getStringOption(KrbOption.SERVER_PRINCIPAL);
-            serverPrincipalName = fixPrincipal(serverPrincipalName);
-            PrincipalName serverPrincipal = new PrincipalName(serverPrincipalName, NameType.NT_PRINCIPAL);
-            asRequest.setServerPrincipal(serverPrincipal);
-        }
+		if (asRequest == null) {
+			throw new IllegalArgumentException("No valid krb client request option found");
+		}
+		if (requestOptions.contains(KrbOption.CLIENT_PRINCIPAL)) {
+			String principal = requestOptions.getStringOption(KrbOption.CLIENT_PRINCIPAL);
+			principal = fixPrincipal(principal);
+			PrincipalName principalName = new PrincipalName(principal);
+			if (requestOptions.contains(PkinitOption.USE_ANONYMOUS)) {
+				principalName.setNameType(NameType.NT_WELLKNOWN);
+			}
+			asRequest.setClientPrincipal(principalName);
+		}
+		if (requestOptions.contains(KrbOption.SERVER_PRINCIPAL)) {
+			String serverPrincipalName = requestOptions.getStringOption(KrbOption.SERVER_PRINCIPAL);
+			serverPrincipalName = fixPrincipal(serverPrincipalName);
+			PrincipalName serverPrincipal = new PrincipalName(serverPrincipalName, NameType.NT_PRINCIPAL);
+			asRequest.setServerPrincipal(serverPrincipal);
+		}
 
-        asRequest.setRequestOptions(requestOptions);
+		asRequest.setRequestOptions(requestOptions);
 
-        return doRequestTgt(asRequest);
-    }
+		return doRequestTgt(asRequest);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public SgtTicket requestSgt(KOptions requestOptions) throws KrbException {
-        TgsRequest tgsRequest = null;
-        if (requestOptions.contains(TokenOption.USER_AC_TOKEN)) {
-            tgsRequest = new TgsRequestWithToken(context);
-        } else if (requestOptions.contains(KrbOption.USE_TGT)) {
-            KOption kOpt = requestOptions.getOption(KrbOption.USE_TGT);
-            tgsRequest = new TgsRequestWithTgt(context,
-                (TgtTicket) kOpt.getOptionInfo().getValue());
-        }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SgtTicket requestSgt(KOptions requestOptions) throws KrbException {
+		TgsRequest tgsRequest = null;
+		if (requestOptions.contains(TokenOption.USER_AC_TOKEN)) {
+			tgsRequest = new TgsRequestWithToken(context);
+		} else if (requestOptions.contains(KrbOption.USE_TGT)) {
+			KOption kOpt = requestOptions.getOption(KrbOption.USE_TGT);
+			tgsRequest = new TgsRequestWithTgt(context, (TgtTicket) kOpt.getOptionInfo().getValue());
+		} else if (requestOptions.contains(KrbOption.USE_KEYTAB)) {
+			tgsRequest = new TgsRequestWithKeytab(context, requestOptions.getOption(KrbOption.CLIENT_PRINCIPAL));
 
-        if (tgsRequest == null) {
-            throw new IllegalArgumentException(
-                    "No valid krb client request option found");
-        }
+		}
 
-        String serverPrincipal = fixPrincipal(requestOptions.
-                getStringOption(KrbOption.SERVER_PRINCIPAL));
-        tgsRequest.setServerPrincipal(new PrincipalName(serverPrincipal));
-        tgsRequest.setRequestOptions(requestOptions);
+		if (tgsRequest == null) {
+			throw new IllegalArgumentException("No valid krb client request option found");
+		}
 
-        return doRequestSgt(tgsRequest);
-    }
+		String serverPrincipal = fixPrincipal(requestOptions.getStringOption(KrbOption.SERVER_PRINCIPAL));
+		tgsRequest.setServerPrincipal(new PrincipalName(serverPrincipal));
+		tgsRequest.setRequestOptions(requestOptions);
 
-    protected abstract TgtTicket doRequestTgt(
-        AsRequest tgtTktReq) throws KrbException;
+		return doRequestSgt(tgsRequest);
+	}
 
-    protected abstract SgtTicket doRequestSgt(
-        TgsRequest tgsRequest) throws KrbException;
+	protected abstract TgtTicket doRequestTgt(AsRequest tgtTktReq) throws KrbException;
 
-    /**
-     * Fix principal name.
-     *
-     * @param principal The principal name
-     * @return The fixed principal
-     */
-    protected String fixPrincipal(String principal) {
-        if (!principal.contains("@")) {
-            principal += "@" + krbSetting.getKdcRealm();
-        }
-        return principal;
-    }
+	protected abstract SgtTicket doRequestSgt(TgsRequest tgsRequest) throws KrbException;
+
+	/**
+	 * Fix principal name.
+	 *
+	 * @param principal
+	 *            The principal name
+	 * @return The fixed principal
+	 */
+	protected String fixPrincipal(String principal) {
+		if (!principal.contains("@")) {
+			principal += "@" + krbSetting.getKdcRealm();
+		}
+		return principal;
+	}
 }

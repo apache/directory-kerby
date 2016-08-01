@@ -51,6 +51,17 @@ public class KrbUtil {
         String nameString = "kadmin/" + realm + "@" + realm;
         return new PrincipalName(nameString, NameType.NT_PRINCIPAL);
     }
+    
+    /**
+     * Construct the kadmin prinicipal
+     * @param princ1
+     * @param realm
+     * @return principal
+     */
+    public static PrincipalName makeKadminPrincipal(String principal, String realm) {
+      String nameString = principal + "@" + realm;
+      return new PrincipalName(nameString, NameType.NT_PRINCIPAL);
+    }
 
     public static boolean pricipalCompareIgnoreRealm(PrincipalName princ1, PrincipalName princ2)
             throws KrbException {
