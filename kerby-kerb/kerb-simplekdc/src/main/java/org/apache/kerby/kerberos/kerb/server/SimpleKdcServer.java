@@ -39,7 +39,8 @@ import java.io.IOException;
  * kadmin sides for convenience.
  */
 public class SimpleKdcServer extends KdcServer {
-    private static final Logger LOG = LoggerFactory.getLogger(SimpleKdcServer.class);
+    private static final Logger LOG =
+        LoggerFactory.getLogger(SimpleKdcServer.class);
     private final KrbClient krbClnt;
     private LocalKadmin kadmin;
     private Krb5Conf krb5Conf;
@@ -72,11 +73,11 @@ public class SimpleKdcServer extends KdcServer {
         this.krbClnt = new KrbClient(krbConfig);
     }
 
-    public void setWorkDir(File workDir) {
+    public synchronized void setWorkDir(File workDir) {
         this.workDir = workDir;
     }
 
-    public File getWorkDir() {
+    public synchronized File getWorkDir() {
         return workDir;
     }
 
@@ -84,7 +85,7 @@ public class SimpleKdcServer extends KdcServer {
      * {@inheritDoc}
      */
     @Override
-    public void setKdcRealm(String realm) {
+    public synchronized void setKdcRealm(String realm) {
         super.setKdcRealm(realm);
         krbClnt.setKdcRealm(realm);
     }
@@ -93,7 +94,7 @@ public class SimpleKdcServer extends KdcServer {
      * {@inheritDoc}
      */
     @Override
-    public void setKdcHost(String kdcHost) {
+    public synchronized void setKdcHost(String kdcHost) {
         super.setKdcHost(kdcHost);
         krbClnt.setKdcHost(kdcHost);
     }
@@ -102,7 +103,7 @@ public class SimpleKdcServer extends KdcServer {
      * {@inheritDoc}
      */
     @Override
-    public void setKdcTcpPort(int kdcTcpPort) {
+    public synchronized void setKdcTcpPort(int kdcTcpPort) {
         super.setKdcTcpPort(kdcTcpPort);
         krbClnt.setKdcTcpPort(kdcTcpPort);
         setAllowTcp(true);
@@ -112,7 +113,7 @@ public class SimpleKdcServer extends KdcServer {
      * {@inheritDoc}
      */
     @Override
-    public void setAllowUdp(boolean allowUdp) {
+    public synchronized void setAllowUdp(boolean allowUdp) {
         super.setAllowUdp(allowUdp);
         krbClnt.setAllowUdp(allowUdp);
     }
@@ -121,7 +122,7 @@ public class SimpleKdcServer extends KdcServer {
      * {@inheritDoc}
      */
     @Override
-    public void setAllowTcp(boolean allowTcp) {
+    public synchronized void setAllowTcp(boolean allowTcp) {
         super.setAllowTcp(allowTcp);
         krbClnt.setAllowTcp(allowTcp);
     }
@@ -130,7 +131,7 @@ public class SimpleKdcServer extends KdcServer {
      * {@inheritDoc}
      */
     @Override
-    public void setKdcUdpPort(int kdcUdpPort) {
+    public synchronized void setKdcUdpPort(int kdcUdpPort) {
         super.setKdcUdpPort(kdcUdpPort);
         krbClnt.setKdcUdpPort(kdcUdpPort);
         setAllowUdp(true);
@@ -140,7 +141,7 @@ public class SimpleKdcServer extends KdcServer {
      * {@inheritDoc}
      */
     @Override
-    public void init() throws KrbException {
+    public synchronized void init() throws KrbException {
         super.init();
 
         kadmin = new LocalKadminImpl(getKdcSetting(), getIdentityService());
@@ -159,7 +160,7 @@ public class SimpleKdcServer extends KdcServer {
      * {@inheritDoc}
      */
     @Override
-    public void start() throws KrbException {
+    public synchronized void start() throws KrbException {
         super.start();
 
         krbClnt.init();
@@ -169,14 +170,14 @@ public class SimpleKdcServer extends KdcServer {
      * Get krb client.
      * @return KrbClient
      */
-    public KrbClient getKrbClient() {
+    public synchronized KrbClient getKrbClient() {
         return krbClnt;
     }
 
     /**
      * @return PKINIT client
      */
-    public KrbPkinitClient getPkinitClient() {
+    public synchronized KrbPkinitClient getPkinitClient() {
         if (pkinitClient == null) {
             pkinitClient = new KrbPkinitClient(krbClnt);
         }
@@ -186,7 +187,7 @@ public class SimpleKdcServer extends KdcServer {
     /**
      * @return Token client
      */
-    public KrbTokenClient getTokenClient() {
+    public synchronized KrbTokenClient getTokenClient() {
         if (tokenClient == null) {
             tokenClient = new KrbTokenClient(krbClnt);
         }
@@ -197,7 +198,7 @@ public class SimpleKdcServer extends KdcServer {
      * Get Kadmin operation interface.
      * @return Kadmin
      */
-    public LocalKadmin getKadmin() {
+    public synchronized LocalKadmin getKadmin() {
         return kadmin;
     }
 
@@ -208,7 +209,7 @@ public class SimpleKdcServer extends KdcServer {
      * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principal The principal name
      */
-    public void createPrincipal(String principal) throws KrbException {
+    public synchronized void createPrincipal(String principal) throws KrbException {
         kadmin.addPrincipal(principal);
     }
 
@@ -219,7 +220,7 @@ public class SimpleKdcServer extends KdcServer {
      * @param principal The principal name
      * @param password The password to create keys
      */
-    public void createPrincipal(String principal,
+    public synchronized void createPrincipal(String principal,
                                 String password) throws KrbException {
         kadmin.addPrincipal(principal, password);
     }
@@ -230,7 +231,7 @@ public class SimpleKdcServer extends KdcServer {
      * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principals The principal list
      */
-    public void createPrincipals(String ... principals) throws KrbException {
+    public synchronized void createPrincipals(String ... principals) throws KrbException {
         for (String principal : principals) {
             kadmin.addPrincipal(principal);
         }
@@ -243,7 +244,7 @@ public class SimpleKdcServer extends KdcServer {
      * @param keytabFile The keytab file to store principal keys
      * @param principals The principals to be create
      */
-    public void createAndExportPrincipals(File keytabFile,
+    public synchronized void createAndExportPrincipals(File keytabFile,
                                 String ... principals) throws KrbException {
         createPrincipals(principals);
         exportPrincipals(keytabFile);
@@ -255,7 +256,7 @@ public class SimpleKdcServer extends KdcServer {
      * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principals The principals to be delete
      */
-    public void deletePrincipals(String ... principals) throws KrbException {
+    public synchronized void deletePrincipals(String ... principals) throws KrbException {
         for (String principal : principals) {
             deletePrincipal(principal);
         }
@@ -267,7 +268,7 @@ public class SimpleKdcServer extends KdcServer {
      * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principal The principal to be delete
      */
-    public void deletePrincipal(String principal) throws KrbException {
+    public synchronized void deletePrincipal(String principal) throws KrbException {
         kadmin.deletePrincipal(principal);
     }
 
@@ -277,7 +278,7 @@ public class SimpleKdcServer extends KdcServer {
      * @param keytabFile The keytab file
      * @throws KrbException e
      */
-    public void exportPrincipals(File keytabFile) throws KrbException {
+    public synchronized void exportPrincipals(File keytabFile) throws KrbException {
         kadmin.exportKeytab(keytabFile);
     }
 
@@ -287,7 +288,7 @@ public class SimpleKdcServer extends KdcServer {
      * @param keytabFile keytab file
      * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
-    public void exportPrincipal(String principal, File keytabFile) throws KrbException {
+    public synchronized void exportPrincipal(String principal, File keytabFile) throws KrbException {
         kadmin.exportKeytab(keytabFile, principal);
     }
 
@@ -295,7 +296,7 @@ public class SimpleKdcServer extends KdcServer {
      * @throws KrbException e
      */
     @Override
-    public void stop() throws KrbException {
+    public synchronized void stop() throws KrbException {
         super.stop();
         try {
             krb5Conf.deleteKrb5conf();
