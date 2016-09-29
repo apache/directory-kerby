@@ -139,7 +139,7 @@ princ2=GeneralString:${ENV::REALM}
 ```
 Then:
 ```
-openssl x509 -req -in kdc.req -CAkey cakey.pem -CA cacert.pem -out kdc.pem -extfile pkinit_extensions -extensions kdc_cert -CAcreateserial
+openssl x509 -req -in kdc.req -CAkey cakey.pem -CA cacert.pem -out kdc.pem -extfile pkinit_extensions -extensions kdc_cert -CAcreateserial -days 3650
 ```
 
 #### 6 . On the KDC, you must set the pkinit_identity variable to provide the KDC certificate.
