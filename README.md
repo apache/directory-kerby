@@ -182,7 +182,7 @@ Apache License V2.0
 - [Release 1.0.0-RC1](https://directory.apache.org/kerby/download/download-sources.html)
 
 ### News
-- Sep 23, the first release 1.0.0-RC1 of Kerby was released.
+- Sep 23 2015, the first release 1.0.0-RC1 of Kerby was released.
 
 ### Apache Kerby 1.0.0-RC2 Release Note
 
