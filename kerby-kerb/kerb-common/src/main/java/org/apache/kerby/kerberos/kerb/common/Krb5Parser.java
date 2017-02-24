@@ -68,7 +68,15 @@ public class Krb5Parser {
             }   else if (line.startsWith("[")) {
                 insertSections(line, br, items);
                 originLine = br.readLine();
-            }   else {
+            } else if (line.startsWith("include")) {
+                String[] splited = line.trim().split("\\s+");
+                if (splited.length == 2) {
+                    items.put(splited[0], splited[1]);
+                } else {
+                    throw new RuntimeException("Unable to parse:" + originLine);
+                }
+                originLine = br.readLine();
+            } else {
                 throw new RuntimeException("Unable to parse:" + originLine);
             }
         }
@@ -105,6 +113,9 @@ public class Krb5Parser {
         for (Map.Entry<String, Object> item : items.entrySet()) {
             if (item.getKey().equals(sectionName)) {
                 value = item.getValue();
+                if (keys.length == 0) {
+                    return value;
+                }
                 Map<String, Object> map = (Map) item.getValue();
                 for (Map.Entry<String, Object> entry : map.entrySet()) {
                     if (entry.getKey().equals(keys[0])) {

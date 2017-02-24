@@ -42,8 +42,10 @@ public class Krb5ParserTest {
         Krb5Parser k = new Krb5Parser(new File(url.getFile()));
         k.load();
 
-        assertThat(k.getSections().size()).isEqualTo(4);
+        assertThat(k.getSections().size()).isEqualTo(5);
         assertThat(k.getSections().contains("libdefaults")).isTrue();
+        assertThat(k.getSections().contains("include")).isTrue();
+        assertThat(k.getSection("include")).isEqualTo("/etc");
 
         assertThat(k.getSection("libdefaults", "dns_lookup_kdc")).isEqualTo("false");
         assertThat(k.getSection("realms", "ATHENA.MIT.EDU") instanceof Map).isTrue();
