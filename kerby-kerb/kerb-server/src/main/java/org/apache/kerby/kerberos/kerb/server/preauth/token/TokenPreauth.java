@@ -69,12 +69,18 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                 "Token preauth is not allowed.");
         }
         if (paData.getPaDataType() == PaDataType.TOKEN_REQUEST) {
-            EncryptedData encData = KrbCodec.decode(paData.getPaDataValue(), EncryptedData.class);
-            EncryptionKey clientKey = kdcRequest.getArmorKey();
-            kdcRequest.setClientKey(clientKey);
+            PaTokenRequest paTokenRequest;
+            if (kdcRequest.isHttps()) {
+                paTokenRequest = KrbCodec.decode(paData.getPaDataValue(),
+                    PaTokenRequest.class);
+            } else {
+                EncryptedData encData = KrbCodec.decode(paData.getPaDataValue(), EncryptedData.class);
+                EncryptionKey clientKey = kdcRequest.getArmorKey();
+                kdcRequest.setClientKey(clientKey);
 
-            PaTokenRequest paTokenRequest = EncryptionUtil.unseal(encData, clientKey,
-                KeyUsage.PA_TOKEN, PaTokenRequest.class);
+                paTokenRequest = EncryptionUtil.unseal(encData, clientKey,
+                    KeyUsage.PA_TOKEN, PaTokenRequest.class);
+            }
 
             KrbTokenBase token = paTokenRequest.getToken();
             List<String> issuers = kdcRequest.getKdcContext().getConfig().getIssuers();
@@ -83,21 +89,21 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             if (!issuers.contains(issuer)) {
                 throw new KrbException("Unconfigured issuer: " + issuer);
             }
-            
+
             // Configure keys
             TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
             configureKeys(tokenDecoder, kdcRequest, issuer);
-            
+
             AuthToken authToken = null;
             try {
                 authToken = tokenDecoder.decodeFromBytes(token.getTokenValue());
-                if (!tokenDecoder.isSigned()) {
+                if (!tokenDecoder.isSigned() && !kdcRequest.isHttps()) {
                     throw new KrbException("Token should be signed.");
                 }
             } catch (IOException e) {
                 throw new KrbException("Decoding failed", e);
             }
-            
+
             if (authToken == null) {
                 throw new KrbException("Token Decoding failed");
             }

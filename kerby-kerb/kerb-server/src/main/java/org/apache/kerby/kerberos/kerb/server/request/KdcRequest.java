@@ -99,6 +99,7 @@ public abstract class KdcRequest {
     private boolean isAnonymous = false;
     private EncryptionKey sessionKey;
     private ByteBuffer reqPackage;
+    private boolean isHttps = false;
 
     /**
      * Get session key.
@@ -807,6 +808,14 @@ public abstract class KdcRequest {
      */
     protected boolean isToken() {
         return isToken;
+    }
+
+    public boolean isHttps() {
+        return isHttps;
+    }
+
+    public void setHttps(boolean https) {
+        isHttps = https;
     }
 
     /**

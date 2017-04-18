@@ -133,9 +133,13 @@ public class AsRequest extends KdcRequest {
         reply.setEncPart(encKdcRepPart);
 
         EncryptionKey clientKey = getClientKey();
-        EncryptedData encryptedData = EncryptionUtil.seal(encKdcRepPart,
-            clientKey, KeyUsage.AS_REP_ENCPART);
-        reply.setEncryptedEncPart(encryptedData);
+        if (clientKey != null) {
+            EncryptedData encryptedData = EncryptionUtil.seal(encKdcRepPart,
+                clientKey, KeyUsage.AS_REP_ENCPART);
+            reply.setEncryptedEncPart(encryptedData);
+        } else {
+            throw new KrbException("Cant't get the client key to encrypt the kdc rep part.");
+        }
 
         if (isPkinit()) {
             reply.setPaData(getPreauthContext().getOutputPaData());
