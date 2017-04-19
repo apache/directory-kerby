@@ -73,6 +73,11 @@
       <artifactId>json-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>zookeeper-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
  <profiles>

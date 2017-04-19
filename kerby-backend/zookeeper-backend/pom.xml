@@ -17,14 +17,18 @@
 
   <parent>
     <groupId>org.apache.kerby</groupId>
-    <artifactId>kerby-all</artifactId>
+    <artifactId>kerby-backend</artifactId>
     <version>1.0.0-RC3-SNAPSHOT</version>
   </parent>
 
-  <artifactId>kerby-kdc-test</artifactId>
+  <artifactId>zookeeper-backend</artifactId>
+  <name>Zookeeper identity backend</name>
+  <description>Zookeeper identity backend</description>
+  <packaging>jar</packaging>
 
-  <name>Kerby Kdc Test</name>
-  <description>Kerby Kdc Test</description>
+  <properties>
+    <zookeeper.version>3.4.6</zookeeper.version>
+  </properties>
 
   <dependencies>
     <dependency>
@@ -34,49 +38,23 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-core</artifactId>
+      <artifactId>kerb-identity</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-util</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>${zookeeper.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>kerby-kdc</artifactId>
+      <artifactId>kerb-identity-test</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-client</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>kerb-kdc-test</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>json-backend</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>zookeeper-backend</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>ldap-backend</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>token-provider</artifactId>
+      <artifactId>kerb-crypto</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
