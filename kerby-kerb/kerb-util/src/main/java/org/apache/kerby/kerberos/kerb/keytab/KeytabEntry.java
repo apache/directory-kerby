@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.kerb.keytab;
 
@@ -44,7 +44,8 @@ public class KeytabEntry {
 
     }
 
-    public void load(KeytabInputStream kis, int version) throws IOException {
+    void load(KeytabInputStream kis, int version, int entrySize) throws IOException {
+        int bytesLeft = kis.available();
         this.principal = kis.readPrincipal(version);
 
         this.timestamp = kis.readTime();
@@ -52,9 +53,26 @@ public class KeytabEntry {
         this.kvno = kis.readByte();
 
         this.key = kis.readKey();
+
+        int entryBytesRead = bytesLeft - kis.available();
+
+        // Some implementations of Kerberos recognize a 32-bit key version at the end of an entry, if record length is
+        // at least 4 bytes longer than the entry and the value of those 32 bits is not 0. If present, this key version
+        // supersedes the 8-bit key version.
+        if (entryBytesRead + 4 <= entrySize) {
+            int tmp = kis.readInt();
+
+            if (tmp != 0) {
+                this.kvno = tmp;
+            }
+        } else if (entryBytesRead != entrySize) {
+            throw new IOException(
+                    String.format("Bad input stream with less data read [%d] than expected [%d] for keytab entry.",
+                            entryBytesRead, entrySize));
+        }
     }
 
-    public void store(KeytabOutputStream kos) throws IOException {
+    void store(KeytabOutputStream kos) throws IOException {
         byte[] body = null;
 
         // compute entry body content first so that to get and write the size
@@ -84,7 +102,7 @@ public class KeytabEntry {
         return timestamp;
     }
 
-    public void writeBody(KeytabOutputStream kos, int version) throws IOException {
+    void writeBody(KeytabOutputStream kos, int version) throws IOException {
         kos.writePrincipal(principal, version);
 
         kos.writeTime(timestamp);
