@@ -48,7 +48,6 @@
 
   <properties>
     <apacheds.version>2.0.0-M23</apacheds.version>
-    <bouncycastle.version>1.55</bouncycastle.version>
     <commons-io.version>2.5</commons-io.version>
     <gson.version>2.6.2</gson.version>
     <ldap.api.version>1.0.0-RC2</ldap.api.version>
