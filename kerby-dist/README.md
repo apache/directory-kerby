@@ -78,12 +78,6 @@ An example of json backend backend.conf:
 kdc_identity_backend = org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend
 backend.json.dir = /tmp/kerby/jsonbackend
 ```
-An example of zookeeper backend backend.conf:
-```
-kdc_identity_backend = org.apache.kerby.kerberos.kdc.identitybackend.ZookeeperIdentityBackend
-data_dir = /tmp/kerby/zookeeper/data
-data_log_dir = /tmp/kerby/zookeeper/datalog
-```
 An example of krb5.conf:
 ```
 [libdefaults]

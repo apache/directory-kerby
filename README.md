@@ -27,7 +27,7 @@ Apache Kerby, as an [Apache Directory](http://directory.staging.apache.org/) sub
 ### The Initiatives/Goals 
 - Aims as a Java Kerberos binding, with rich and integrated facilities that integrate Kerberos, PKI and token (OAuth2) for both client and server sides.
 - Provides client APIs at the Kerberos protocol level to interact with a KDC server through AS and TGS exchanges.
-- Provides a standalone KDC server that supports various identity backends including memory based, Json file based, LDAP based and even Zookeeper based.
+- Provides a standalone KDC server that supports various identity backends including memory based, Json file based.
 - Provides an embedded KDC server that applications can easily integrate into products, unit tests or integration tests.
 - Supports FAST/Preauthentication framework to allow popular and useful authentication mechanisms.
 - Supports PKINIT mechanism to allow clients to request tickets using x509 certificate credentials.
@@ -91,13 +91,6 @@ A standalone KDC server that can integrate various identity backends including:
   - It is default Identity Backend, and no cofiguration is needed. This backend is for no permanent storage requirements.
 - JsonIdentityBackend.
   - It implemented by Gson which is used to convert Java Objects into their JSON representation and convert a JSON string to an equivalent Java object. A json file will be created in "backend.json.dir". This backend is for small, easy, development and test environment.
-- ZookeeperIdentityBackend.
-  - Currently it uses an embedded Zookeeper. In follow up it will be enhanced to support standalone Zookeeper cluster for
-  replication and reliability. Zookeeper backend would be a good choice for high reliability, high performance and high scalability requirement and scenarios. 
-- LdapIdentityBackend.
-  - The Ldap server can be standalone or embedded using ApacheDS server as the backend. It is used when there is exist ldap server.
-- MavibotBackend.
-  - A backend based on Apache Mavibot(an MVCC BTree library).
 
 ### Network Support
 - Include UDP and TCP transport.
@@ -126,7 +119,6 @@ A standalone KDC server that can integrate various identity backends including:
 - The core part is ensured to only depend on the JRE and SLF4J. Every external dependency is taken carefully and maintained separately.
 - [Nimbus JOSE + JWT](http://connect2id.com/products/nimbus-jose-jwt), needed by token-provider and TokenPreauth mechanism.
 - [Netty](http://netty.io/), needed by netty based KDC server.
-- [Zookeeper](https://zookeeper.apache.org/), needed by zookeeper identity backend.
 
 ### How to use library
 The Apache Kerby is also available as a Maven dependency.
