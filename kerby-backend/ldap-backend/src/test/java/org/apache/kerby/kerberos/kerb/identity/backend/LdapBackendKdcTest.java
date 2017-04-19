@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kdc;
+package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.directory.server.annotations.CreateLdapServer;
 import org.apache.directory.server.annotations.CreateTransport;
@@ -28,12 +28,16 @@ import org.apache.directory.server.core.integ.FrameworkRunner;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(FrameworkRunner.class)
 @CreateDS(name = "KerberosKRBProtocolTest-class",
@@ -73,7 +77,7 @@ public class LdapBackendKdcTest extends AbstractLdapBackendKdcTest {
         config.setString("admin_dn", ADMIN_DN);
         config.setString("admin_pw", ADMIN_PW);
         config.setString("base_dn", BASE_DN);
-        config.setInt("port", getLdapServer().getPort());
+        config.setInt("port", AbstractLdapBackendKdcTest.getLdapServer().getPort());
         this.backend = new LdapIdentityBackend(config);
         backend.initialize();
         backend.start();
@@ -92,7 +96,7 @@ public class LdapBackendKdcTest extends AbstractLdapBackendKdcTest {
         backendConfig.setString("admin_dn", ADMIN_DN);
         backendConfig.setString("admin_pw", ADMIN_PW);
         backendConfig.setString("base_dn", BASE_DN);
-        backendConfig.setInt("port", getLdapServer().getPort());
+        backendConfig.setInt("port", AbstractLdapBackendKdcTest.getLdapServer().getPort());
         backendConfig.setString(KdcConfigKey.KDC_IDENTITY_BACKEND,
                 "org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend");
         super.prepareKdc();
@@ -100,6 +104,20 @@ public class LdapBackendKdcTest extends AbstractLdapBackendKdcTest {
 
     @Test
     public void testKdc() throws Exception {
-        performKdcTest();
+        TgtTicket tgt;
+        SgtTicket tkt;
+
+        try {
+            tgt = getKrbClient().requestTgt(
+                getClientPrincipal(), getClientPassword());
+            assertThat(tgt).isNotNull();
+
+            tkt = getKrbClient().requestSgt(tgt, getServerPrincipal());
+            assertThat(tkt).isNotNull();
+        } catch (Exception e) {
+            System.out.println("Exception occurred with good password");
+            e.printStackTrace();
+            Assert.fail();
+        }
     }
 }

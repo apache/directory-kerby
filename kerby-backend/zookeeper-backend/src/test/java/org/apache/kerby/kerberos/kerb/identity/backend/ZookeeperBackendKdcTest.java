@@ -17,17 +17,22 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kdc;
+package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.kerby.kerberos.kdc.identitybackend.ZKConfKey;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
+import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 
-public class ZookeeperBackendKdcTest extends KerbyKdcTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class ZookeeperBackendKdcTest extends KdcTestBase {
 
     @Override
     protected void prepareKdc() throws KrbException {
@@ -47,6 +52,20 @@ public class ZookeeperBackendKdcTest extends KerbyKdcTest {
 
     @Test
     public void testKdc() throws Exception {
-        performKdcTest();
+        TgtTicket tgt;
+        SgtTicket tkt;
+
+        try {
+            tgt = getKrbClient().requestTgt(
+                getClientPrincipal(), getClientPassword());
+            assertThat(tgt).isNotNull();
+
+            tkt = getKrbClient().requestSgt(tgt, getServerPrincipal());
+            assertThat(tkt).isNotNull();
+        } catch (Exception e) {
+            System.out.println("Exception occurred with good password");
+            e.printStackTrace();
+            Assert.fail();
+        }
     }
 }

@@ -17,12 +17,13 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kdc;
+package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.directory.server.core.api.DirectoryService;
 import org.apache.directory.server.ldap.LdapServer;
+import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 
-public class AbstractLdapBackendKdcTest extends KerbyKdcTest {
+public class AbstractLdapBackendKdcTest extends KdcTestBase {
 
     /** The used DirectoryService instance */
     private static DirectoryService service;
