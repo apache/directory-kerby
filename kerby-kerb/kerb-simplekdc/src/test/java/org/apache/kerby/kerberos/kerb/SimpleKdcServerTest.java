@@ -52,12 +52,11 @@ public class SimpleKdcServerTest {
 
     @Test
     public void testKdc() throws IOException, InterruptedException {
-        Thread.sleep(15);
-
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(true);
         SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
         socketChannel.connect(sa);
+
 
         String badKrbMessage = "Hello World!";
         ByteBuffer writeBuffer = ByteBuffer.allocate(4 + badKrbMessage.getBytes().length);

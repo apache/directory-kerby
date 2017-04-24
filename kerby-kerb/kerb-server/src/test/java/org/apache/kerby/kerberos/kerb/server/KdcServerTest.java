@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.util.NetworkUtil;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,13 +58,7 @@ public class KdcServerTest {
         SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
         socketChannel.connect(sa);
 
-        String badKrbMessage = "Hello World!";
-        ByteBuffer writeBuffer = ByteBuffer.allocate(4 + badKrbMessage.getBytes().length);
-        writeBuffer.putInt(badKrbMessage.getBytes().length);
-        writeBuffer.put(badKrbMessage.getBytes());
-        writeBuffer.flip();
-
-        socketChannel.write(writeBuffer);
+        Assert.assertTrue(socketChannel.isConnected());
     }
 
     @After
