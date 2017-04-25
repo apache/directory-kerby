@@ -24,6 +24,7 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbKdcOption;
+import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.client.KrbOptionGroup;
 import org.apache.kerby.kerberos.kerb.client.preauth.KrbFastRequestState;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthContext;
@@ -188,6 +189,15 @@ public abstract class KdcRequest {
         body.setSname(sName);
 
         body.setTill(new KerberosTime(startTime + getTicketValidTime()));
+
+        long renewLifetime;
+        if (getRequestOptions().contains(KrbOption.RENEWABLE_TIME)) {
+            renewLifetime = getRequestOptions().getIntegerOption(KrbOption.RENEWABLE_TIME);
+        } else {
+            renewLifetime = getContext().getKrbSetting().getKrbConfig().getRenewLifetime();
+        }
+        KerberosTime rtime = new KerberosTime(startTime + renewLifetime * 1000);
+        body.setRtime(rtime);
 
         int nonce = generateNonce();
         body.setNonce(nonce);

@@ -96,7 +96,7 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!-- For Zookeeper backend -->
+    <!-- For Zookeeper backend
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>zookeeper-backend</artifactId>
@@ -112,6 +112,8 @@
       <artifactId>netty</artifactId>
       <version>3.7.0.Final</version>
     </dependency>
+    -->
+
 
     <!-- For json backend -->
     <dependency>
