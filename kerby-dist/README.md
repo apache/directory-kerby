@@ -32,9 +32,9 @@ mvn package -Pdist
 #### 2. Run kdcinit:
 ```
 cd kerby-dist/kdc-dist
-sh bin/kdcinit.sh [server-conf-dir] [keytab]
+sh bin/kdcinit.sh [server-conf-dir] [keytab-dir]
 ```
-The admin principal will be exported into [keytab], it will be used by kadmin tool for the authentication. 
+The admin principal will be exported into keytab-dir/admin.keytab, it will be used by kadmin tool for the authentication. 
 
 #### 3. Start kerby-kdc-server:
 ```
