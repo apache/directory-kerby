@@ -54,7 +54,7 @@ public class KeytabEntryTest {
                          return 20;
                      }
                  }).when(mockKeytabInputStream).available();
-        doReturn(120).when(mockKeytabInputStream).readOctetsCount();
+        //doReturn(120).when(mockKeytabInputStream).readOctetsCount();
         doReturn(new byte[]{}).when(mockKeytabInputStream).readCountedOctets();
         doReturn(null).when(mockKeytabInputStream).readPrincipal(Matchers.any(Integer.class));
         doReturn(new KerberosTime()).when(mockKeytabInputStream).readTime();
