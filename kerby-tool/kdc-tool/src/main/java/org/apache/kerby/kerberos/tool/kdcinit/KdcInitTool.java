@@ -33,27 +33,28 @@ import java.io.File;
  */
 public class KdcInitTool {
     private LocalKadmin kadmin;
-    private static File keytabFile;
+    private static File adminKeytabFile;
+    private static File protocolKeytabFile;
 
     private static  final String USAGE = (OSUtil.isWindows()
             ? "Usage: bin\\kdcinit.cmd" : "Usage: sh bin/kdcinit.sh")
-            + " <conf-dir> <output-keytab>\n"
+            + " <conf-dir> <keytab-dir>\n"
             + "\tThis tool initializes KDC backend and should only be performed the first time,\n"
-            + "\tand the output keytab should be carefully kept to administrate/kadmin KDC later.\n"
+            + "\tand the output keytabs should be carefully kept to administrate/kadmin KDC later.\n"
             + "\tExample:\n"
             + "\t\t"
             + (OSUtil.isWindows()
             ? "bin\\kdcinit.cmd" : "sh bin/kdcinit.sh")
-            + " conf admin.keytab\n";
+            + " conf keytabfolder\n";
 
     void initKdc(File confDir) throws KrbException {
         kadmin = new LocalKadminImpl(confDir);
         try {
             kadmin.createBuiltinPrincipals();
-            kadmin.exportKeytab(keytabFile, kadmin.getKadminPrincipal());
+            kadmin.exportKeytab(adminKeytabFile, kadmin.getKadminPrincipal());
             System.out.println("The keytab for kadmin principal "
                     + " has been exported to the specified file "
-                    + keytabFile.getAbsolutePath() + ", please safely keep it, "
+                    + adminKeytabFile.getAbsolutePath() + ", please safely keep it, "
                     + "in order to use kadmin tool later");
 
             // Export protocol keytab file for remote admin tool
@@ -62,11 +63,10 @@ public class KdcInitTool {
             String principal = adminServerConfig.getProtocol() + "/"
                 + adminServerConfig.getAdminHost() + "@" + adminServerConfig.getAdminRealm();
             kadmin.addPrincipal(principal);
-            File protocolFile = new File("protocol.keytab");
-            kadmin.exportKeytab(protocolFile, principal);
+            kadmin.exportKeytab(protocolKeytabFile, principal);
             System.out.println("The keytab for protocol principal "
                     + " has been exported to the specified file "
-                    + protocolFile.getAbsolutePath() + ", please safely keep it, "
+                    + protocolKeytabFile.getAbsolutePath() + ", please safely keep it, "
                     + "in order to use remote kadmin tool later");
         } finally {
             kadmin.release();
@@ -82,20 +82,26 @@ public class KdcInitTool {
         String confDirPath = args[0];
         String keyTabPath = args[1];
         File confDir = new File(confDirPath);
-        keytabFile = new File(keyTabPath);
+        File keytabDir = new File(keyTabPath);
+        adminKeytabFile = new File(keytabDir, "admin.keytab");
+        protocolKeytabFile = new File(keytabDir, "protocol.keytab");
         if (!confDir.exists()) {
             System.err.println("Invalid or not exist conf-dir.");
             System.exit(2);
         }
-        File keytabFilePath = keytabFile.getParentFile();
-        if (keytabFilePath != null && !keytabFilePath.exists() && !keytabFilePath.mkdirs()) {
-            System.err.println("Could not create keytab path." + keytabFilePath);
+        if (keytabDir != null && !keytabDir.exists() && !keytabDir.mkdirs()) {
+            System.err.println("Could not create keytab path." + keytabDir);
             System.exit(3);
         }
 
-        if (keytabFile.exists()) {
-            System.err.println("The kadmin keytab already exists in " + keyTabPath
+        if (adminKeytabFile.exists()) {
+            System.err.println("The kadmin keytab already exists in " + adminKeytabFile
                     + ", this tool maybe have been executed already.");
+            return;
+        }
+        if (protocolKeytabFile.exists()) {
+            System.err.println("The protocol keytab already exists in " + protocolKeytabFile
+                + ", this tool maybe have been executed already.");
             return;
         }
 
