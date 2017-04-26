@@ -20,8 +20,6 @@
 package org.apache.kerby.kerberos.kerb.crypto.random;
 
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,8 +36,8 @@ public class NativeRandom implements RandomProvider {
     @Override
     public void init() {
         try {
-            input = new FileInputStream(randFile);
-        } catch (FileNotFoundException e) {
+            input = Files.newInputStream(Paths.get(randFile));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

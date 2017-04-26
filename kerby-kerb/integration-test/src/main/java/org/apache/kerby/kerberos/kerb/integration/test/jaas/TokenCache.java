@@ -25,11 +25,11 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 /**
  * This class provides APIs for converting token cache file with token string.
@@ -62,7 +62,7 @@ public class TokenCache {
         String token = null;
         try {
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(new FileInputStream(cacheFile), StandardCharsets.UTF_8));
+                    new InputStreamReader(Files.newInputStream(cacheFile.toPath()), StandardCharsets.UTF_8));
             String line = reader.readLine();
             reader.close();
             if (line != null) {

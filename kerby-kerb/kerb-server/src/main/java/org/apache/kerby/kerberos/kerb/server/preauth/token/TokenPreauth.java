@@ -45,10 +45,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.List;
@@ -153,7 +153,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
         }
     }
 
-    private InputStream getKeyFileStream(String path, String issuer) throws FileNotFoundException {
+    private InputStream getKeyFileStream(String path, String issuer) throws IOException {
         File file = new File(path);
         if (file.isDirectory()) {
             File[] listOfFiles = file.listFiles();
@@ -171,9 +171,9 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             if (verifyKeyFile == null) {
                 throw new FileNotFoundException("No key found that matches the issuer name");
             }
-            return new FileInputStream(verifyKeyFile);
+            return Files.newInputStream(verifyKeyFile.toPath());
         } else if (file.isFile()) {
-            return new FileInputStream(file);
+            return Files.newInputStream(file.toPath());
         }
         
         // Not a directory or a file...maybe it's a resource on the classpath

@@ -24,9 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -43,8 +43,8 @@ public class CertificateHelper {
         InputStream res = null;
         if (file.isFile()) {
             try {
-                res = new FileInputStream(file);
-            } catch (FileNotFoundException e) {
+                res = Files.newInputStream(file.toPath());
+            } catch (IOException e) {
                 LOG.error("Can't load cert, file not found. " + e);
             }
         } else {
