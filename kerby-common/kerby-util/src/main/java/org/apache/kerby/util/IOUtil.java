@@ -21,12 +21,13 @@ package org.apache.kerby.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
+import java.nio.channels.Channels;
+import java.nio.channels.WritableByteChannel;
+import java.nio.file.Files;
 
 /**
  * Some IO and file related utilities.
@@ -35,14 +36,15 @@ public final class IOUtil {
     private IOUtil() { }
 
     public static byte[] readInputStream(InputStream in) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length = 0;
-        while ((length = in.read(buffer)) != -1) {
-            baos.write(buffer, 0, length);
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int length = 0;
+            while ((length = in.read(buffer)) != -1) {
+                baos.write(buffer, 0, length);
+            }
+            in.close();
+            return baos.toByteArray();
         }
-        in.close();
-        return baos.toByteArray();
     }
 
     public static void readInputStream(InputStream in,
@@ -87,7 +89,7 @@ public final class IOUtil {
         }
         byte[] buf = new byte[(int) len];
 
-        InputStream is = new FileInputStream(file);
+        InputStream is = Files.newInputStream(file.toPath());
         readInputStream(is, buf);
 
         return Utf8.toString(buf);
@@ -100,11 +102,11 @@ public final class IOUtil {
      * @throws IOException e
      */
     public static void writeFile(String content, File file) throws IOException {
-        FileOutputStream outputStream = new FileOutputStream(file);
-        FileChannel fc = outputStream.getChannel();
+        OutputStream outputStream = Files.newOutputStream(file.toPath());
+        WritableByteChannel channel = Channels.newChannel(outputStream);
 
         ByteBuffer buffer = ByteBuffer.wrap(Utf8.toBytes(content));
-        fc.write(buffer);
+        channel.write(buffer);
         outputStream.close();
     }
 }
