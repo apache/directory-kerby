@@ -648,6 +648,11 @@ public abstract class KdcRequest {
         principal.setRealm(serverRealm);
 
         KrbIdentity serverEntry = getEntry(principal.getName());
+        if (serverEntry == null) {
+            LOG.error("Principal: " + principal.getName() + " is not known");
+            throw new KrbException(KrbErrorCode.KDC_ERR_S_PRINCIPAL_UNKNOWN);
+        }
+
         setServerEntry(serverEntry);
         for (EncryptionType encType : request.getReqBody().getEtypes()) {
             if (serverEntry.getKeys().containsKey(encType)) {
