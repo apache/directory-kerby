@@ -185,7 +185,7 @@ public abstract class TicketIssuer {
             ticketFlags.setFlag(TicketFlag.RENEWABLE);
 
             if (krbRtime == null || krbRtime.getTime() == 0) {
-                krbRtime = KerberosTime.NEVER;
+                krbRtime = krbEndTime;
             }
             KerberosTime allowedMaximumRenewableTime = krbStartTime;
             allowedMaximumRenewableTime = allowedMaximumRenewableTime
