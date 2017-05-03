@@ -20,10 +20,9 @@
 package org.apache.kerby.config;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Properties;
 
@@ -87,9 +86,9 @@ public final class Resource {
         return new Resource("propConfig", propertiesConfig, Format.PROPERTIES);
     }
 
-    private Resource(String name, File resourceFile, Format format) throws FileNotFoundException {
+    private Resource(String name, File resourceFile, Format format) throws IOException {
         this.name = name;
-        this.resource = new FileInputStream(resourceFile);
+        this.resource = Files.newInputStream(resourceFile.toPath());
         this.format = format;
     }
 

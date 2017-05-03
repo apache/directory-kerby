@@ -86,7 +86,7 @@ public final class TaggingOption {
      * @return tag
      */
     public Tag getTag(boolean isTaggedConstructed) {
-        boolean isConstructed = isImplicit ? isTaggedConstructed : true;
+        boolean isConstructed = !isImplicit || isTaggedConstructed;
         TagClass tagClass = isAppSpecific ? TagClass.APPLICATION : TagClass.CONTEXT_SPECIFIC;
         int flags = tagClass.getValue() | (isConstructed ? 0x20 : 0x00);
 

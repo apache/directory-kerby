@@ -48,9 +48,9 @@ import javax.security.auth.kerberos.KerberosTicket;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateKey;
@@ -276,9 +276,9 @@ public class TokenAuthLoginModule implements LoginModule {
                 if (tokenEncoder instanceof JwtTokenEncoder) {
                     PrivateKey signKey = null;
                     try {
-                        FileInputStream fis = new FileInputStream(signKeyFile);
-                        signKey = PrivateKeyReader.loadPrivateKey(fis);
-                    } catch (FileNotFoundException e) {
+                        InputStream is = Files.newInputStream(signKeyFile.toPath());
+                        signKey = PrivateKeyReader.loadPrivateKey(is);
+                    } catch (IOException e) {
                         e.printStackTrace();
                     } catch (Exception e) {
                         e.printStackTrace();

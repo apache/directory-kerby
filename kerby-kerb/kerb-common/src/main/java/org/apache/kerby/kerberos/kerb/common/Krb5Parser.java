@@ -21,10 +21,10 @@ package org.apache.kerby.kerberos.kerb.common;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -55,7 +55,7 @@ public class Krb5Parser {
      * @throws IOException e
      */
     public void load() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(krb5conf),
+        BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(krb5conf.toPath()),
                 StandardCharsets.UTF_8));
         items = new IdentityHashMap<>();
 

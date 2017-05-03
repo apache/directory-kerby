@@ -33,13 +33,13 @@ package org.apache.kerby.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
@@ -190,7 +190,7 @@ public class Util {
     }
 
     public static byte[] fileToBytes(final File f) throws IOException {
-        return streamToBytes(new FileInputStream(f));
+        return streamToBytes(Files.newInputStream(f.toPath()));
     }
 
     public static byte[] streamToBytes(final ByteArrayInputStream in,

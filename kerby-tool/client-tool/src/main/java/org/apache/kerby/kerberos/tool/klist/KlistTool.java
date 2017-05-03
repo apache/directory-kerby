@@ -32,9 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -92,7 +93,7 @@ public class KlistTool {
         } else {
             fileName = klOptions.getStringOption(KlistOption.CREDENTIALS_CACHE);
             try {
-                cis = new FileInputStream(fileName);
+                cis = Files.newInputStream(Paths.get(fileName));
                 cc.load(cis);
             } catch (IOException e) {
                 System.err.println("Failed to open CredentialCache from file: " + fileName);

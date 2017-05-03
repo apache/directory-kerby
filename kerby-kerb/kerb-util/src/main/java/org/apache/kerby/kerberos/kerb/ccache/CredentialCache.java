@@ -24,11 +24,10 @@ import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +80,7 @@ public class CredentialCache implements KrbCredentialCache {
 
     @Override
     public void store(File ccacheFile) throws IOException {
-        try (OutputStream outputStream = new FileOutputStream(ccacheFile)) {
+        try (OutputStream outputStream = Files.newOutputStream(ccacheFile.toPath())) {
             store(outputStream);
         }
     }
@@ -190,7 +189,7 @@ public class CredentialCache implements KrbCredentialCache {
                     + ccacheFile.getAbsolutePath());
         }
 
-        try (InputStream inputStream = new FileInputStream(ccacheFile)) {
+        try (InputStream inputStream = Files.newInputStream(ccacheFile.toPath())) {
             load(inputStream);
         }
     }

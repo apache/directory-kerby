@@ -24,11 +24,10 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -140,7 +139,7 @@ public final class Keytab implements KrbKeytab {
             throw new IllegalArgumentException("Invalid keytab file: " + keytabFile.getAbsolutePath());
         }
 
-        try (InputStream is = new FileInputStream(keytabFile)) {
+        try (InputStream is = Files.newInputStream(keytabFile.toPath())) {
             load(is);
         }
     }
@@ -207,7 +206,7 @@ public final class Keytab implements KrbKeytab {
 
     @Override
     public void store(File keytabFile) throws IOException {
-        try (OutputStream outputStream = new FileOutputStream(keytabFile)) {
+        try (OutputStream outputStream = Files.newOutputStream(keytabFile.toPath())) {
             store(outputStream);
         }
     }

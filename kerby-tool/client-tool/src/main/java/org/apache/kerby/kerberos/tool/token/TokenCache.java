@@ -27,12 +27,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class TokenCache {
     private static final Logger LOG = LoggerFactory.getLogger(TokenCache.class);
@@ -58,8 +57,8 @@ public class TokenCache {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(cacheFile), StandardCharsets.UTF_8));
-        } catch (FileNotFoundException e) {
+                new InputStreamReader(Files.newInputStream(cacheFile.toPath()), StandardCharsets.UTF_8));
+        } catch (IOException e) {
             LOG.error("Can't find the cache file. " + e);
         }
         String line = null;
