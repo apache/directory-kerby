@@ -242,7 +242,7 @@ public class KinitToolWithConcurrence {
             for (int j = 0; j < threadNumbers; j++) {
                 temp += reList[j * INTERVAL];
             }
-            float res = (now - startTime) / 1000;
+            float res = (now - startTime) / (float) 1000;
 
             double totalDelay = 0.0;
             int cutThreads = 0;

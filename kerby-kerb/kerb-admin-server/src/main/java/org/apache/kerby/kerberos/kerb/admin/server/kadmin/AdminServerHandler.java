@@ -14,7 +14,7 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
@@ -95,7 +95,7 @@ public class AdminServerHandler {
                 responseMessage = handleGetprincsReq(localKadmin, fieldInfos);
                 break;
             default:
-                throw new KrbException("AdminMessageType error, can not handle it.");
+                throw new KrbException("AdminMessageType error, can not handle the type: " + type);
         }
         return responseMessage;
 
@@ -112,7 +112,7 @@ public class AdminServerHandler {
             try {
                 localKadmin.addPrincipal(temp[0]);
             } catch (KrbException e) {
-                String error = "principal already exist!";
+                String error = "The principal already exists!";
                 LOG.error(error);
                 System.err.println(error);
                 ByteBuffer response = infoPackageTool(error, "addPrincipal");
@@ -126,14 +126,14 @@ public class AdminServerHandler {
             try {
                 localKadmin.addPrincipal(temp[0], password);
             } catch (KrbException e) {
-                String error = "principal already exist.\n"
+                String error = " The principal already exists.\n"
                         + "Choose update password instead of add principal";
                 LOG.error(error);
                 ByteBuffer response = infoPackageTool(error, "addPrincipal");
                 return response;
             }
         }
-        String message = "add principal of " + principal;
+        String message = "Add principal:" + principal;
         System.out.println(message);
         LOG.info(message);
         ByteBuffer responseMessage = infoPackageTool(message, "addPrincipal");
@@ -147,12 +147,12 @@ public class AdminServerHandler {
         try {
             localKadmin.deletePrincipal(temp[0]);
         } catch (KrbException e) {
-            String error = "no such principal exist!";
+            String error = "No such principal exists!";
             LOG.error(error);
             ByteBuffer response = infoPackageTool(error, "deletePrincipal");
             return response;
         }
-        String message = "delete principal of " + principal;
+        String message = "Delete principal of " + principal;
         System.out.println(message);
         LOG.info(message);
         ByteBuffer responseMessage = infoPackageTool(message, "deletePrincipal");
@@ -166,14 +166,14 @@ public class AdminServerHandler {
         try {
             localKadmin.renamePrincipal(oldPrincipalName[0], newPrincipalName[0]);
         } catch (KrbException e) {
-            String error = "the old principal name does not exist, or the new principal name"
+            String error = "The old principal name does not exist, or the new principal name"
                     + " already exists, rename failed.";
             System.err.println(error);
             ByteBuffer response = infoPackageTool(error, "renamePrincipal");
             return response;
         }
 
-        String message = "rename " + oldPrincipalName[0] + " to " + newPrincipalName[0];
+        String message = "Rename " + oldPrincipalName[0] + " to " + newPrincipalName[0];
         System.out.println(message);
         LOG.info(message);
         ByteBuffer responseMessage = infoPackageTool(message, "renamePrincipal");
@@ -193,7 +193,7 @@ public class AdminServerHandler {
             ByteBuffer responseMessage = infoPackageTool(listToString(princsList), "getPrincs");
             return responseMessage;
         } catch (KrbException e) {
-            String error = "principal do not exist.";
+            String error = "The principal does not exist.";
             LOG.error(error + e);
             ByteBuffer responseError = infoPackageTool(error, "getPrincs");
             return responseError;

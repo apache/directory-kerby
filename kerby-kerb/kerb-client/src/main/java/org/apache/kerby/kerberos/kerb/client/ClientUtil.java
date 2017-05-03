@@ -212,8 +212,8 @@ public final class ClientUtil {
                 }
             }
 
-            if (kdcList == null) {
-                LOG.info("Cannot get kdc for realm " + realm);
+            if (kdcList.isEmpty()) {
+                LOG.error("Cannot get kdc for realm " + realm);
             }
         } else {
             throw new KrbException("Can't get the realm");
