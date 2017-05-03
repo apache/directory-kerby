@@ -122,7 +122,8 @@ public final class AdminHelper {
                 keytab = Keytab.loadKeytab(keytabFile);
             }
         } catch (IOException e) {
-            throw new KrbException("Failed to load or create keytab", e);
+            throw new KrbException("Failed to load or create keytab "
+                + keytabFile.getAbsolutePath(), e);
         }
 
         return keytab;
