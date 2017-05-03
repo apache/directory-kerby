@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.kerb.admin.kadmin.local;
 
@@ -52,7 +52,7 @@ public final class AdminHelper {
      * @param identity  The identity
      * @throws KrbException
      */
-    static void exportKeytab(File keytabFile, KrbIdentity identity)
+    public static void exportKeytab(File keytabFile, KrbIdentity identity)
             throws KrbException {
 
         Keytab keytab = createOrLoadKeytab(keytabFile);
@@ -70,7 +70,7 @@ public final class AdminHelper {
      * @param identities  Identities to export to keytabFile
      * @throws KrbException
      */
-    static void exportKeytab(File keytabFile, List<KrbIdentity> identities)
+    public static void exportKeytab(File keytabFile, List<KrbIdentity> identities)
             throws KrbException {
 
         Keytab keytab = createOrLoadKeytab(keytabFile);
@@ -89,7 +89,7 @@ public final class AdminHelper {
      * @return The keytab load from keytab file
      * @throws KrbException
      */
-    static Keytab loadKeytab(File keytabFile) throws KrbException {
+    public static Keytab loadKeytab(File keytabFile) throws KrbException {
         Keytab keytab;
         try {
             keytab = Keytab.loadKeytab(keytabFile);
@@ -108,7 +108,7 @@ public final class AdminHelper {
      * @return The keytab load from keytab file
      * @throws KrbException
      */
-    static Keytab createOrLoadKeytab(File keytabFile) throws KrbException {
+    public static Keytab createOrLoadKeytab(File keytabFile) throws KrbException {
 
         Keytab keytab;
         try {
@@ -135,7 +135,7 @@ public final class AdminHelper {
      * @param identity  The identity
      * @throws KrbException
      */
-    static void exportToKeytab(Keytab keytab, KrbIdentity identity)
+    public static void exportToKeytab(Keytab keytab, KrbIdentity identity)
         throws KrbException {
 
         //Add principal to keytab.
@@ -155,7 +155,7 @@ public final class AdminHelper {
      * @param keytabFile The keytab file
      * @throws KrbException
      */
-    static void storeKeytab(Keytab keytab, File keytabFile) throws KrbException {
+    public static void storeKeytab(Keytab keytab, File keytabFile) throws KrbException {
         try {
             keytab.store(keytabFile);
         } catch (IOException e) {
@@ -171,7 +171,7 @@ public final class AdminHelper {
      * @param principalName  The principal name
      * @throws KrbException
      */
-    static void removeKeytabEntriesOf(File keytabFile,
+    public static void removeKeytabEntriesOf(File keytabFile,
                                              String principalName) throws KrbException {
         Keytab keytab = loadKeytab(keytabFile);
 
@@ -206,7 +206,7 @@ public final class AdminHelper {
      * @param principalName  The principal name
      * @throws KrbException
      */
-    static void removeOldKeytabEntriesOf(File keytabFile,
+    public static void removeOldKeytabEntriesOf(File keytabFile,
                                                 String principalName) throws KrbException {
         Keytab keytab = loadKeytab(keytabFile);
 
@@ -235,7 +235,7 @@ public final class AdminHelper {
      * @param principal The principal name to be created
      * @param kOptions  The KOptions with principal info
      */
-    static KrbIdentity createIdentity(String principal, KOptions kOptions)
+    public static KrbIdentity createIdentity(String principal, KOptions kOptions)
         throws KrbException {
         KrbIdentity kid = new KrbIdentity(principal);
         kid.setCreatedTime(KerberosTime.now());
@@ -263,7 +263,7 @@ public final class AdminHelper {
      * @param kOptions  The KOptions with changed principal info
      * @throws KrbException
      */
-    static void updateIdentity(KrbIdentity identity, KOptions kOptions) {
+    public static void updateIdentity(KrbIdentity identity, KOptions kOptions) {
         if (kOptions.contains(KadminOption.EXPIRE)) {
             Date date = kOptions.getDateOption(KadminOption.EXPIRE);
             identity.setExpireTime(new KerberosTime(date.getTime()));
@@ -284,7 +284,7 @@ public final class AdminHelper {
      * @return pattern
      * @throws KrbException
      */
-    static Pattern getPatternFromGlobPatternString(String globString) throws KrbException {
+    public static Pattern getPatternFromGlobPatternString(String globString) throws KrbException {
         if (globString == null || globString.equals("")) {
             return null;
         }
