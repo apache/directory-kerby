@@ -14,11 +14,12 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import org.apache.kerby.KOption;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
@@ -115,11 +116,33 @@ public class KdcServer {
     }
 
     /**
+     * Get the KDC port, if it has been set.
+     */
+    public int getKdcPort() {
+        KOption option = startupOptions.getOption(KdcServerOption.KDC_PORT);
+        if (option != null) {
+            return (Integer) option.getOptionInfo().getValue();
+        }
+        return 0;
+    }
+
+    /**
      * Set KDC tcp port.
      * @param kdcTcpPort The kdc tcp port
      */
     public void setKdcTcpPort(int kdcTcpPort) {
         startupOptions.add(KdcServerOption.KDC_TCP_PORT, kdcTcpPort);
+    }
+
+    /**
+     * Get the KDC Tcp port, if it has been set.
+     */
+    public int getKdcTcpPort() {
+        KOption option = startupOptions.getOption(KdcServerOption.KDC_TCP_PORT);
+        if (option != null) {
+            return (Integer) option.getOptionInfo().getValue();
+        }
+        return 0;
     }
 
     /**
@@ -137,12 +160,24 @@ public class KdcServer {
     public void setAllowTcp(boolean allowTcp) {
         startupOptions.add(KdcServerOption.ALLOW_TCP, allowTcp);
     }
+
     /**
      * Set KDC udp port. Only makes sense when allowUdp is set.
      * @param kdcUdpPort The kdc udp port
      */
     public void setKdcUdpPort(int kdcUdpPort) {
         startupOptions.add(KdcServerOption.KDC_UDP_PORT, kdcUdpPort);
+    }
+
+    /**
+     * Get the KDC udp port, if it has been set.
+     */
+    public int getKdcUdpPort() {
+        KOption option = startupOptions.getOption(KdcServerOption.KDC_UDP_PORT);
+        if (option != null) {
+            return (Integer) option.getOptionInfo().getValue();
+        }
+        return 0;
     }
 
     /**
