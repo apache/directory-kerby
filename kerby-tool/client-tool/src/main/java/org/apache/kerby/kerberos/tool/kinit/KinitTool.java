@@ -235,6 +235,10 @@ public class KinitTool {
             }
         }
 
+        if (!ktOptions.contains(KinitOption.CONF_DIR)) {
+            printUsage("No conf dir given. ");
+        }
+
         if (principal == null) {
             if (ktOptions.contains(KinitOption.ANONYMOUS)) {
                 principal = KrbConstant.ANONYMOUS_PRINCIPAL;
