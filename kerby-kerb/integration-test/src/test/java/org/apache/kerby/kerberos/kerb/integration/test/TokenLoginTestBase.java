@@ -30,6 +30,8 @@ import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Before;
 
 import javax.security.auth.Subject;
@@ -39,7 +41,8 @@ import java.util.Date;
 import java.util.List;
 
 public class TokenLoginTestBase extends LoginTestBase {
-
+    private static final Logger LOG = LoggerFactory
+            .getLogger(TokenLoginTestBase.class);
     private File tokenCache;
     private File armorCache;
     private File tgtCache;
@@ -81,7 +84,7 @@ public class TokenLoginTestBase extends LoginTestBase {
         try {
             tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Failed to create token. " + e.toString());
         }
         AuthToken token = issueToken(getClientPrincipal());
         String tokenStr = tokenEncoder.encodeAsString(token);

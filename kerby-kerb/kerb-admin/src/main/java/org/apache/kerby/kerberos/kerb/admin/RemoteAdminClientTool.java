@@ -197,7 +197,7 @@ public class RemoteAdminClientTool {
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOG.error("Failed to run. " + e.toString());
                 }
                 return null;
             }
@@ -231,7 +231,7 @@ public class RemoteAdminClientTool {
         try {
             transport.sendMessage(buffer);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Failed to send Kerberos message. " + e.toString());
         }
     }
 

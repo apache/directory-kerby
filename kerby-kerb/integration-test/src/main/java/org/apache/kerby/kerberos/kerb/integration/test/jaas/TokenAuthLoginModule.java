@@ -164,7 +164,7 @@ public class TokenAuthLoginModule implements LoginModule {
                     null
                 );
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Commit Failed. " + e.toString());
             }
             subject.getPrivateCredentials().add(ticket);
             if (princName != null) {
@@ -268,7 +268,7 @@ public class TokenAuthLoginModule implements LoginModule {
                 try {
                     authToken = tokenDecoder.decodeFromString(tokenStr);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.error("Token decode failed. " + e.toString());
                 }
                 krbToken = new KrbToken(authToken, TokenFormat.JWT);
                 TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
@@ -279,9 +279,10 @@ public class TokenAuthLoginModule implements LoginModule {
                         InputStream is = Files.newInputStream(signKeyFile.toPath());
                         signKey = PrivateKeyReader.loadPrivateKey(is);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        LOG.error("Failed to load private key from file: "
+                                + signKeyFile.getName());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LOG.error(e.toString());
                     }
     
                     ((JwtTokenEncoder) tokenEncoder).setSignKey((RSAPrivateKey) signKey);
@@ -315,10 +316,8 @@ public class TokenAuthLoginModule implements LoginModule {
             krbConfig.addKrb5Config(confFile);
             krbClient = new KrbClient(krbConfig);
             krbClient.init();
-        } catch (KrbException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (KrbException | IOException e) {
+            LOG.error("KrbClient init failed. " + e.toString());
         }
         
         KrbTokenClient tokenClient = new KrbTokenClient(krbClient);
@@ -333,14 +332,14 @@ public class TokenAuthLoginModule implements LoginModule {
         try {
             cCache = makeTgtCache();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Failed to make tgtCache. " + e.toString());
         }
         try {
             if (krbClient != null) {
                 krbClient.storeTicket(tgtTicket, cCache);
             }
         } catch (KrbException e) {
-            e.printStackTrace();
+            LOG.error("Failed to store tgtTicket to " + cCache.getName());
         }
         return true;
     }

@@ -45,8 +45,8 @@ public class CompressedDataTest extends CmsTestBase {
             CompressedData compressedData = contentInfo.getCompressedData();
             Asn1.dump(compressedData);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Failed to dump the compressed data from file: "
+                    + "compressed-data.txt. " + e.toString());
         }
     }
 }

@@ -30,9 +30,7 @@ import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.DHPublicKeySpec;
 import java.math.BigInteger;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
 
@@ -131,25 +129,11 @@ public class DhKeyAgreementTest {
         BigInteger g = spec.getG();
         DHPublicKeySpec dhPublicKeySpec = new DHPublicKeySpec(y, p, g);
 
-        KeyFactory keyFactory = null;
-        try {
-            keyFactory = KeyFactory.getInstance("DH");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        DHPublicKey dhPublicKey = null;
-        try {
-            dhPublicKey = (DHPublicKey) keyFactory.generatePublic(dhPublicKeySpec);
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
+        KeyFactory keyFactory = KeyFactory.getInstance("DH");
+        DHPublicKey dhPublicKey =
+            (DHPublicKey) keyFactory.generatePublic(dhPublicKeySpec);
 
-        byte[] serverPubKeyEnc = null;
-        try {
-            serverPubKeyEnc = server.initAndDoPhase(dhPublicKey.getEncoded()).getEncoded();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        byte[] serverPubKeyEnc = server.initAndDoPhase(dhPublicKey.getEncoded()).getEncoded();
         server.generateKey(null, null, EncryptionType.AES128_CTS_HMAC_SHA1_96);
 
         client.doPhase(serverPubKeyEnc);

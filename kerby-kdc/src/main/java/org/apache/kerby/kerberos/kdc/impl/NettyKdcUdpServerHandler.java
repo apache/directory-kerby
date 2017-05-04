@@ -58,9 +58,8 @@ public class NettyKdcUdpServerHandler extends SimpleChannelInboundHandler<Datagr
             channelHandlerContext.writeAndFlush(
                     new DatagramPacket(Unpooled.wrappedBuffer(responseMessage), clientAddress));
         } catch (Exception e) {
-            LOG.error("Error occurred while processing request:"
-                    + e.getMessage());
-            e.printStackTrace();
+            LOG.error("Error occurred while processing request: "
+                    + e.toString());
         }
     }
 

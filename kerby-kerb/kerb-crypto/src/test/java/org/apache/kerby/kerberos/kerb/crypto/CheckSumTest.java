@@ -65,13 +65,9 @@ public class CheckSumTest {
             (byte) 0x19, (byte) 0x1a, (byte) 0x3d};
 
     @Test
-    public void testCheckSums() {
+    public void testCheckSums() throws Exception {
         for (CksumTest tc : testCases) {
-            try {
-                testWith(tc);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            testWith(tc);
         }
     }
 

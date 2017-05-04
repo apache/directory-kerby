@@ -39,9 +39,8 @@ public abstract class KdcTest extends KdcTestBase {
             tkt = getKrbClient().requestSgt(tgt, getServerPrincipal());
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
-            System.out.println("Exception occurred with good password");
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Exception occurred with good password. "
+                    + e.toString());
         }
     }
 }

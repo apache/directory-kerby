@@ -46,8 +46,7 @@ public class GeneralNameTest {
             // "10.9.8.0"
             assertThat(addressBytes).isEqualTo(new byte[] {0x0a, 0x09, 0x08, 0x00});
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Failed to test IpAddress. " + e.toString());
         }
     }
 }

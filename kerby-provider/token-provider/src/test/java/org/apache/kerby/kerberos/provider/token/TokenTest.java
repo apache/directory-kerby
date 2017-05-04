@@ -303,23 +303,18 @@ public class TokenTest {
         Assertions.assertThat(token2).isNull();
     }
 
-    private void setEncryptKey(JwtTokenEncoder encoder, JwtTokenDecoder decoder) {
+    private void setEncryptKey(JwtTokenEncoder encoder, JwtTokenDecoder decoder) throws NoSuchAlgorithmException {
         KeyPair encryptionKeyPair = getKeyPair();
         encoder.setEncryptionKey((RSAPublicKey) encryptionKeyPair.getPublic());
         decoder.setDecryptionKey((RSAPrivateKey) encryptionKeyPair.getPrivate());
     }
 
-    private KeyPair getKeyPair() {
-        KeyPairGenerator kpg = null;
-        try {
-            kpg = KeyPairGenerator.getInstance("RSA");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+    private KeyPair getKeyPair() throws NoSuchAlgorithmException {
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
         return kpg.generateKeyPair();
     }
 
-    private void setSignKey(JwtTokenEncoder encoder, JwtTokenDecoder decoder) {
+    private void setSignKey(JwtTokenEncoder encoder, JwtTokenDecoder decoder) throws NoSuchAlgorithmException {
         KeyPair signKeyPair = getKeyPair();
         encoder.setSignKey((RSAPrivateKey) signKeyPair.getPrivate());
         decoder.setVerifyKey((RSAPublicKey) signKeyPair.getPublic());

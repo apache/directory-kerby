@@ -37,8 +37,8 @@ public class Asn1DumpTest {
             Asn1.parseAndDump(data);
             Asn1.decodeAndDump(data);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Test dump with personnel record failed. "
+                    + e.toString());
         }
     }
 
@@ -50,8 +50,8 @@ public class Asn1DumpTest {
             Asn1.parseAndDump(hexStr);
             Asn1.decodeAndDump(hexStr);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Test dump with compressed data failed. "
+                    + e.toString());
         }
     }
 
@@ -63,8 +63,8 @@ public class Asn1DumpTest {
             Asn1.parseAndDump(hexStr);
             Asn1.decodeAndDump(hexStr);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("test dump with signed data from file: "
+                    + "signed-data.txt failed. " + e.toString());
         }
     }
 
@@ -76,8 +76,8 @@ public class Asn1DumpTest {
             Asn1.parseAndDump(data);
             Asn1.decodeAndDump(data);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("test dump with derData from file: "
+                    + "der-data.dat failed. " + e.toString());
         }
     }
 
@@ -88,8 +88,8 @@ public class Asn1DumpTest {
             Asn1.parseAndDump(data);
             Asn1.decodeAndDump(data);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("test dump with empty container from file: "
+                    + "empty-container.txt failed. " + e.toString());
         }
     }
 }

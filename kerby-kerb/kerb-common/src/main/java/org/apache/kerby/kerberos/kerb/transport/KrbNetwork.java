@@ -19,6 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.transport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.Socket;
 
@@ -27,6 +30,8 @@ import java.net.Socket;
  */
 @SuppressWarnings("PMD")
 public class KrbNetwork {
+    private static final Logger LOG = LoggerFactory
+            .getLogger(KrbNetwork.class);
 
     private int socketTimeout = 10 * 1000;
     private TransportPair tpair;
@@ -50,7 +55,7 @@ public class KrbNetwork {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("TCP connect Failed. " + e.toString());
             }
         } else {
             if (tpair.udpAddress != null) {

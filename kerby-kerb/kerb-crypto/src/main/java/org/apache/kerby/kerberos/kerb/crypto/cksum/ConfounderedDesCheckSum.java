@@ -22,11 +22,15 @@ package org.apache.kerby.kerberos.kerb.crypto.cksum;
 import org.apache.kerby.kerberos.kerb.crypto.util.Confounder;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.DesProvider;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.spec.DESKeySpec;
 import java.security.InvalidKeyException;
 
 public abstract class ConfounderedDesCheckSum extends AbstractKeyedCheckSumTypeHandler {
+    private static final Logger LOG = LoggerFactory
+            .getLogger(ConfounderedDesCheckSum.class);
 
     public ConfounderedDesCheckSum(HashProvider hashProvider,
                                    int computeSize, int outputSize) {
@@ -84,7 +88,7 @@ public abstract class ConfounderedDesCheckSum extends AbstractKeyedCheckSumTypeH
         try {
             isWeak = DESKeySpec.isWeak(key, 0);
         } catch (InvalidKeyException e) {
-            e.printStackTrace();
+            LOG.error("Invalid key found. ");
         }
         if (isWeak) {
             key[7] = (byte) (key[7] ^ 0xF0);

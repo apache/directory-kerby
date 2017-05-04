@@ -96,8 +96,7 @@ public class KlistTool {
                 cis = Files.newInputStream(Paths.get(fileName));
                 cc.load(cis);
             } catch (IOException e) {
-                System.err.println("Failed to open CredentialCache from file: " + fileName);
-                e.printStackTrace();
+                LOG.error("Failed to open CredentialCache from file: " + fileName + ". " + e.toString());
             } finally {
                 try {
                     if (cis != null) {

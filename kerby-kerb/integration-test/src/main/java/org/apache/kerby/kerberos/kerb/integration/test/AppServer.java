@@ -73,12 +73,13 @@ public abstract class AppServer implements Runnable {
         try {
             onConnection(conn);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Failed to set onConnection. " + e.toString());
         } finally {
             try {
                 conn.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Failed to close connection. "
+                        + e.toString());
             }
         }
     }

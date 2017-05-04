@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +32,9 @@ import java.nio.file.Paths;
  * use "/dev/urandom", which is on linux, to implement RandomProvider, so it should be used on linux.
  */
 public class NativeRandom implements RandomProvider {
+    private static final Logger LOG = LoggerFactory
+            .getLogger(NativeRandom.class);
+
     private InputStream input;
     private String randFile = "/dev/urandom";
 
@@ -38,7 +43,7 @@ public class NativeRandom implements RandomProvider {
         try {
             input = Files.newInputStream(Paths.get(randFile));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Failed to init from file: " + randFile + ". " + e.toString());
         }
     }
 
@@ -50,13 +55,13 @@ public class NativeRandom implements RandomProvider {
             output.write(seed);
             output.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Failed to write seed to the file: " + randFile + ". " + e.toString());
         } finally {
             if (output != null) {
                 try {
                     output.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.error("Failed to close output stream. " + e.toString());
                 }
             }
         }
@@ -69,7 +74,7 @@ public class NativeRandom implements RandomProvider {
                 throw new IOException();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Failed to read nextBytes. " + e.toString());
         }
     }
 
@@ -78,7 +83,7 @@ public class NativeRandom implements RandomProvider {
         try {
             input.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Failed to close input stream. " + e.toString());
         }
     }
 }

@@ -48,12 +48,13 @@ public abstract class AppClient {
         try {
             withConnection(conn);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Failed to connect. " + e.toString());
         } finally {
             try {
                 conn.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Failed to close connection. "
+                        + e.toString());
             }
         }
     }

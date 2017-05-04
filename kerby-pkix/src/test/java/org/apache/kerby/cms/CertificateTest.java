@@ -38,8 +38,8 @@ public class CertificateTest extends CmsTestBase {
             Asn1.dump(certificate);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Failed to decode certificate from file:"
+                    + " certificate1.txt. " + e.toString());
         }
     }
 
@@ -55,8 +55,8 @@ public class CertificateTest extends CmsTestBase {
             Asn1.parseAndDump(encodedData);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Failed to encode certificate from file:"
+                    + " certificate1.txt. " + e.toString());
         }
     }
 
@@ -69,8 +69,8 @@ public class CertificateTest extends CmsTestBase {
             name.decode(data);
             Asn1.dump(name.getName());
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Failed to decode name from file:"
+                    + " name.txt. " + e.toString());
         }
     }
 }

@@ -26,6 +26,8 @@ import org.apache.kerby.asn1.type.Asn1Integer;
 import org.apache.kerby.asn1.type.Asn1OctetString;
 import org.apache.kerby.asn1.type.Asn1Type;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -44,6 +46,9 @@ import java.io.IOException;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public class AuthorizationDataEntry extends KrbSequenceType {
+    private static final Logger LOG = LoggerFactory
+            .getLogger(AuthorizationDataEntry.class);
+
     /**
      * The possible fields
      */
@@ -146,7 +151,7 @@ public class AuthorizationDataEntry extends KrbSequenceType {
                 result = type.newInstance();
                 result.decode(authzBytes);
             } catch (InstantiationException | IllegalAccessException | IOException e) {
-                e.printStackTrace();
+                LOG.error("Failed to get the AD_DATA field. " + e.toString());
             }
         }
         return result;

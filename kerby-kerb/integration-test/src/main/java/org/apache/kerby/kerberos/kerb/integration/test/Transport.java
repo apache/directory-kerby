@@ -19,6 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.integration.test;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -27,6 +30,8 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class Transport {
+    private static final Logger LOG = LoggerFactory
+            .getLogger(Transport.class);
 
     public static class Acceptor {
         ServerSocket serverSocket;
@@ -48,7 +53,7 @@ public class Transport {
             try {
                 serverSocket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Failed to close acceptor. " + e.toString());
             }
         }
     }

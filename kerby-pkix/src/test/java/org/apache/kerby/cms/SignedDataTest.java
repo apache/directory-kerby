@@ -55,8 +55,8 @@ public class SignedDataTest extends CmsTestBase {
             byte[] encodedData = contentInfo.encode();
             Asn1.parseAndDump(encodedData);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Failed to test decode from file: signed-data.txt. "
+                    + e.toString());
         }
     }
 
@@ -107,8 +107,8 @@ public class SignedDataTest extends CmsTestBase {
                     contentInfo.getContentAs(SignedData.class);
             Asn1.dump(signedData);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Failed to test content info from file: anonymous.txt. "
+                    + e.toString());
         }
     }
 }

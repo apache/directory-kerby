@@ -24,10 +24,14 @@ import org.apache.kerby.util.NetworkUtil;
 import org.junit.Assert;
 import org.junit.Before;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.security.auth.Subject;
 import java.security.PrivilegedAction;
 
 public abstract class AppTest extends LoginTestBase {
+    private static final Logger LOG = LoggerFactory.getLogger(AppTest.class);
     private int serverPort;
     protected AppClient appClient;
     protected AppServer appServer;
@@ -54,9 +58,10 @@ public abstract class AppTest extends LoginTestBase {
                 try {
                     appServer = createAppServer();
                     appServer.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception ex) { 
+                    LOG.error(ex.toString());
                 }
+
                 return null;
             }
         });
@@ -72,8 +77,8 @@ public abstract class AppTest extends LoginTestBase {
                 try {
                     appClient = createAppClient();
                     appClient.run();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception ex) { 
+                    LOG.error(ex.toString());
                 }
                 return null;
             }

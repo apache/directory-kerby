@@ -26,6 +26,8 @@ import org.apache.kerby.asn1.Asn1FieldInfo;
 import org.apache.kerby.asn1.EnumType;
 import org.apache.kerby.asn1.ExplicitField;
 import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <pre>
@@ -43,6 +45,8 @@ import org.apache.kerby.kerberos.kerb.type.KrbSequenceType;
  * @author <a href="mailto:dev@directory.apache.org">Apache DirectoryProject</a>
  */
 public class ADCamMac extends AuthorizationDataEntry {
+    private static final Logger LOG = LoggerFactory
+            .getLogger(ADCamMac.class);
 
     private CamMac myCamMac;
 
@@ -177,7 +181,7 @@ public class ADCamMac extends AuthorizationDataEntry {
         try {
             setAuthzData(myCamMac.encode());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Failed to set the AD_DATA field. " + e.toString());
         }
         super.dumpWith(dumper, indents);
         dumper.newLine();

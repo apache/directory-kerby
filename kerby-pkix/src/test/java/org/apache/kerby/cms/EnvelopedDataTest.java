@@ -45,8 +45,8 @@ public class EnvelopedDataTest extends CmsTestBase {
             EnvelopedData envelopedData = contentInfo.getEnvelopedData();
             Asn1.dump(envelopedData);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Failed to decode keyTrn from file:"
+                    + " enveloped-keytrns.txt. " + e.toString());
         }
     }
 
@@ -63,8 +63,8 @@ public class EnvelopedDataTest extends CmsTestBase {
             EnvelopedData envelopedData = contentInfo.getEnvelopedData();
             Asn1.dump(envelopedData);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Failed to decode kek from file: enveloped-kek.txt. "
+                    + e.toString());
         }
     }
 
@@ -81,8 +81,8 @@ public class EnvelopedDataTest extends CmsTestBase {
             EnvelopedData envelopedData = contentInfo.getEnvelopedData();
             Asn1.dump(envelopedData);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Failed to decode nestedNDEF from file:"
+                    + " enveloped-nested-ndef.txt. " + e.toString());
         }
     }
 

@@ -43,9 +43,8 @@ public class MultiRequestsKdcTest extends KdcTestBase {
             tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
-            System.out.println("Exception occurred with good password");
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Exception occurred with good password. "
+                    + e.toString());
         }
 
         // With bad password
@@ -64,9 +63,8 @@ public class MultiRequestsKdcTest extends KdcTestBase {
             tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
-            System.out.println("Exception occurred with good password again");
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail("Exception occurred with good password again. "
+                    + e.toString());
         }
     }
 }

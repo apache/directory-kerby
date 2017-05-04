@@ -22,6 +22,8 @@ package org.apache.kerby.kerberos.kerb.integration.test.jaas;
 
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,6 +37,9 @@ import java.nio.file.Files;
  * This class provides APIs for converting token cache file with token string.
  */
 public class TokenCache {
+    private static final Logger LOG = LoggerFactory
+            .getLogger(TokenCache.class);
+
     private static final String DEFAULT_TOKEN_CACHE_PATH = ".tokenauth";
     private static final String TOKEN_CACHE_FILE = ".tokenauth.token";
 
@@ -69,7 +74,7 @@ public class TokenCache {
                 token = line;
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            LOG.error("Failed to read file: " + cacheFile.getName());
         }
 
         return token;
@@ -102,7 +107,7 @@ public class TokenCache {
                 System.err.println("Cache file is deleted.");
             }
         } catch (KrbException e) {
-            e.printStackTrace();
+            LOG.error("Failed to write token to cache File. " + e.toString());
         }
     }
 
