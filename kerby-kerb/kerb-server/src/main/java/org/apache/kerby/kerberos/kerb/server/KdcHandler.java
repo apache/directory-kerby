@@ -14,7 +14,7 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.kerb.server;
@@ -115,7 +115,7 @@ public class KdcHandler {
         try {
             kdcRequest.process();
             krbResponse = kdcRequest.getReply();
-        } catch (KrbException e) {
+        } catch (Throwable e) {
             if (e instanceof KdcRecoverableException) {
                 krbResponse = handleRecoverableException(
                         (KdcRecoverableException) e, kdcRequest);
@@ -123,11 +123,12 @@ public class KdcHandler {
                 KrbError krbError = new KrbError();
                 krbError.setStime(KerberosTime.now());
                 krbError.setSusec(100);
-                if (e.getKrbErrorCode() != null) {
-                    krbError.setErrorCode(e.getKrbErrorCode());
-                } else {
-                    krbError.setErrorCode(KrbErrorCode.UNKNOWN_ERR);
+
+                KrbErrorCode errorCode = KrbErrorCode.UNKNOWN_ERR;
+                if (e instanceof KrbException && ((KrbException) e).getKrbErrorCode() != null) {
+                    errorCode = ((KrbException) e).getKrbErrorCode();
                 }
+                krbError.setErrorCode(errorCode);
                 krbError.setCrealm(kdcContext.getKdcRealm());
                 if (kdcRequest.getClientPrincipal() != null) {
                     krbError.setCname(kdcRequest.getClientPrincipal());
@@ -140,7 +141,7 @@ public class KdcHandler {
                     serverPrincipal.setRealm(kdcRequest.getKdcReq().getReqBody().getRealm());
                     krbError.setSname(serverPrincipal);
                 }
-                if (KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY.equals(e.getKrbErrorCode())) {
+                if (KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY.equals(errorCode)) {
                     krbError.setEtext("PREAUTH_FAILED");
                 } else {
                     krbError.setEtext(e.getMessage());
