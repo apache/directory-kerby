@@ -20,7 +20,7 @@
 Apache Kerby
 ============
 
-Apache Kerby, as an [Apache Directory](http://directory.staging.apache.org/) sub project, is a Java Kerberos binding. It provides a rich, intuitive and interoperable implementation, library, KDC and various facilities that integrates PKI, OTP and token (OAuth2) as desired in modern environments such as cloud, Hadoop and mobile.
+Apache Kerby, as an [Apache Directory](http://directory.apache.org) sub project, is a Java Kerberos binding. It provides a rich, intuitive and interoperable implementation, library, KDC and various facilities that integrates PKI, OTP and token (OAuth2) as desired in modern environments such as cloud, Hadoop and mobile.
 
 ![](https://github.com/apache/directory-kerby/blob/trunk/docs/logo.png)
 
