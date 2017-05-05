@@ -17,7 +17,6 @@
   <parent>
     <artifactId>kerby-all</artifactId>
     <groupId>org.apache.kerby</groupId>
-    <relativePath>../pom.xml</relativePath>
     <version>1.0.0-RC3-SNAPSHOT</version>
   </parent>
 
