@@ -26,10 +26,10 @@
   <packaging>pom</packaging>
 
   <modules>
-    <!--module>ldap-backend</module-->
-    <!--module>mavibot-backend</module-->
+    <module>ldap-backend</module>
+    <module>mavibot-backend</module>
     <module>json-backend</module>
-    <!--module>zookeeper-backend</module-->
+    <module>zookeeper-backend</module>
   </modules>
 
   <dependencies>
