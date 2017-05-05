@@ -179,12 +179,50 @@ Apache License V2.0
 - Kerby Developers List: kerby@directory.apache.org [Subscribe](kerby-subscribe@directory.apache.org)
 
 ### Downloads
-- [Release 1.0.0-RC1](https://directory.apache.org/kerby/download/download-sources.html)
+- [Release 1.0.0](https://directory.apache.org/kerby/download/download-sources.html)
 
 ### News
-- Sep 23, the first release 1.0.0-RC1 of Kerby was released.
+- March 14th 2016, Apache Kerby 1.0.0-RC2 is released.
+- Sep 23 2015, the first release 1.0.0-RC1 of Kerby was released.
 
-### Apache Kerby 1.0.0-RC2 Release Note
+### Apache Kerby 1.0.0 Release Notes
+
+Sub-task
+
+    [DIRKRB-247] - Kerby's KDC supports MIT's kinit
+    [DIRKRB-421] - Define transaction API for identity backend
+    [DIRKRB-422] - Enhance json backend to support transaction for reasonable efficiency
+    [DIRKRB-478] - Refine and enhance the client side library
+    [DIRKRB-524] - XDR (RFC 4506) support
+
+Bug
+
+    [DIRKRB-583] - Validate payload length declared in keytab
+    [DIRKRB-584] - NPE if the token issuers value is not specified
+    [DIRKRB-585] - Allow for optional expiry + NotBefore claims when processing a JWT token
+    [DIRKRB-586] - NPE in KdcHandler on an Exception
+    [DIRKRB-613] - Tests fails on systems with includedir in /etc/krb5.conf
+    [DIRKRB-621] - 0x502 version keytab with multiple entries are not read properly
+    [DIRKRB-624] - KdcServerTest failed with exception
+    [DIRKRB-626] - Some improvement work for exception handling
+    [DIRKRB-627] - Kerby hangs when the service principal is not known
+
+Improvement
+
+    [DIRKRB-416] - Allow to support transaction for backend
+    [DIRKRB-459] - Enhance the support for MIT krb5.conf configuration format
+    [DIRKRB-482] - Break down KrbOption
+    [DIRKRB-587] - Load JWT verification key from classpath as well
+    [DIRKRB-588] - Support validation keys in different formats
+    [DIRKRB-607] - Improve Simple KDC Server to be thread safe
+    [DIRKRB-623] - Move the backend releated tests to backend modules
+
+Task
+
+    [DIRKRB-155] - Add the missing Javadoc for kerby-asn1 module
+    [DIRKRB-532] - Encode and decode XDR: Union and Struct
+
+### Apache Kerby 1.0.0-RC2 Release Notes
 
 105 JIRA issues were resolved and with the following Features and important changes since 1.0.0-RC1:
 - 1. Anonymous PKINIT support(BETA): allows a client to obtain anonymous credentials without authenticating as any particular principal.
