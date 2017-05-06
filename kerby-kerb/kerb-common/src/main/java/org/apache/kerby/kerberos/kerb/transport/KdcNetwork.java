@@ -23,11 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
+import java.net.*;
 import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,16 +47,18 @@ public abstract class KdcNetwork {
             new HashMap<InetSocketAddress, KdcUdpTransport>();
     private ByteBuffer recvBuffer;
 
-    public void init() {
+    public synchronized void init() {
         isStopped = false;
     }
 
-    public void listen(TransportPair tpair) throws IOException {
+    public synchronized void listen(TransportPair tpair) throws IOException {
         this.tpair = tpair;
 
-        tcpServer = new ServerSocket();
-        tcpServer.setSoTimeout(KDC_TCP_SERVER_TIMEOUT);
-        tcpServer.bind(tpair.tcpAddress);
+        if (tpair.tcpAddress != null) {
+            tcpServer = new ServerSocket();
+            tcpServer.setSoTimeout(KDC_TCP_SERVER_TIMEOUT);
+            tcpServer.bind(tpair.tcpAddress);
+        }
 
         if (tpair.udpAddress != null) {
             udpServer = DatagramChannel.open();
@@ -68,7 +68,7 @@ public abstract class KdcNetwork {
         }
     }
 
-    public void start() {
+    public synchronized void start() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -89,7 +89,7 @@ public abstract class KdcNetwork {
             if (tpair.tcpAddress != null) {
                 try {
                     checkAndAccept();
-                } catch (SocketTimeoutException e) { //NOPMD
+                } catch (SocketTimeoutException | ClosedChannelException | SocketException e) { //NOPMD
                     //NOOP as normal
                 } catch (IOException e) {
                     throw new RuntimeException("Error occured while checking tcp connections", e);
@@ -99,7 +99,7 @@ public abstract class KdcNetwork {
             if (tpair.udpAddress != null) {
                 try {
                     checkUdpMessage();
-                } catch (SocketTimeoutException e) { //NOPMD
+                } catch (SocketTimeoutException | ClosedChannelException | SocketException e) { //NOPMD
                     //NOOP as normal
                 } catch (IOException e) {
                     throw new RuntimeException("Error occured while checking udp connections", e);
@@ -110,16 +110,26 @@ public abstract class KdcNetwork {
     //CHECKSTYLE:ON
 
     public synchronized void stop() {
-        // TODO: waiting the network closed.
         try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            LOG.warn("Interrupted when thread sleeping. " + e);
+            if (tcpServer != null) {
+                tcpServer.close();
+            }
+
+            if (udpServer != null) {
+                udpServer.close();
+            }
+        } catch (IOException e) {
+            LOG.warn("KDC network stopping error " + e);
         }
+
         isStopped = true;
     }
 
     private void checkAndAccept() throws IOException {
+        if (tcpServer.isClosed()) {
+            return;
+        }
+
         Socket socket;
         if ((socket = tcpServer.accept()) != null) {
             socket.setSoTimeout(KDC_TCP_TRANSPORT_TIMEOUT);
@@ -129,6 +139,10 @@ public abstract class KdcNetwork {
     }
 
     private void checkUdpMessage() throws IOException {
+        if (!udpServer.isOpen()) {
+            return;
+        }
+
         InetSocketAddress fromAddress = (InetSocketAddress) udpServer.receive(recvBuffer);
         if (fromAddress != null) {
             recvBuffer.flip();

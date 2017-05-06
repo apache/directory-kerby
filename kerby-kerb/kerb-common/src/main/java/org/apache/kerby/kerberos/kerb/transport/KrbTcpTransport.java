@@ -40,7 +40,7 @@ public class KrbTcpTransport
         this.socket = socket;
         this.outputStream = new DataOutputStream(socket.getOutputStream());
         this.inputStream = new DataInputStream(socket.getInputStream());
-        this.messageBuffer = new byte[1024 * 1024]; // TODO.
+        this.messageBuffer = new byte[4 * 1024 * 1024]; // TODO.
     }
 
 
@@ -53,6 +53,9 @@ public class KrbTcpTransport
     public ByteBuffer receiveMessage() throws IOException {
         int msgLen = inputStream.readInt();
         if (msgLen > 0) {
+            if (msgLen > messageBuffer.length) {
+                throw new IOException("Recv buffer overflowed, too large message?");
+            }
             inputStream.readFully(messageBuffer, 0, msgLen);
             return ByteBuffer.wrap(messageBuffer, 0, msgLen);
         }
@@ -75,7 +78,7 @@ public class KrbTcpTransport
         try {
             socket.close();
         } catch (IOException e) { //NOPMD
-            System.err.println(e); // NOOP
+            // System.err.println(e); // NOOP
         }
     }
 }

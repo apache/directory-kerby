@@ -77,7 +77,7 @@ public class KrbUdpTransport
         try {
             channel.close();
         } catch (IOException e) { //NOPMD
-            System.err.println(e); //NOOP
+            // System.err.println(e); //NOOP
         }
     }
 }
