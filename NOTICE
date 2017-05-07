@@ -7,7 +7,7 @@ The Apache Software Foundation (http://www.apache.org/).
 This product includes/uses SLF4J (http://www.slf4j.org/),
 Copyright (c) 2004-2010 QOS.ch
 
-This product includes/uses Apache log4j
+This product includes/uses Apache log4j(http://logging.apache.org/log4j/)
 Copyright 2007 The Apache Software Foundation
 
 This product includes/uses Netty (http://netty.io/)
