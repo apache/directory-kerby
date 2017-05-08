@@ -10,14 +10,39 @@ Copyright (c) 2004-2010 QOS.ch
 This product includes/uses Apache log4j(http://logging.apache.org/log4j/)
 Copyright 2007 The Apache Software Foundation
 
-This product includes/uses Netty (http://netty.io/)
-Copyright 2014 The Netty Project
-
 This product includes/uses mockito(http://mockito.org/),
 Copyright (c) 2007 Mockito contributors, MIT.
 
 This product includes/uses Java Hamcrest (http://hamcrest.org/JavaHamcrest/).
 Copyright (c) 2000-2015, BSD.
 
-This product includes/uses JUnit (http://junit.org)
-Copyright (c) 2002-2017 JUnit, ECL.
+This product includes/uses Netty
+                            The Netty Project
+                            =================
+
+Please visit the Netty web site for more information:
+
+  * http://netty.io/
+
+Copyright 2011 The Netty Project
+
+The Netty Project licenses this file to you under the Apache License,
+version 2.0 (the "License"); you may not use this file except in compliance
+with the License. You may obtain a copy of the License at:
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
+
+Also, please refer to each LICENSE.<component>.txt file, which is located in
+the 'license' directory of the distribution file, for the license terms of the
+components that this product depends on.
+
+-------------------------------------------------------------------------------
+
+This product includes/uses nimbus-jose-jwt, the nimbus-jose-jwt uses bouncycastle(http://www.bouncycastle.org/).
+Copyright (c) 2000 - 2017
