@@ -218,11 +218,7 @@ See license/LICENSE-Mockito.txt (MIT License)
 
 ===============================================================================
 For the org.hamcrest library:
-LICENSE-hamcrest.txt (BSD License)
-
-============================================================================================
-For the org.log4j library
-See license/LICENSE-log4j.txt
+See license/LICENSE-hamcrest.txt (BSD License)
 
 =============================================================================
 For the org.bouncycastle library:
