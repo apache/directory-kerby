@@ -43,3 +43,6 @@ components that this product depends on.
 
 This product includes/uses nimbus-jose-jwt, the nimbus-jose-jwt uses bouncycastle(http://www.bouncycastle.org/).
 Copyright (c) 2000 - 2017
+
+This product includes/uses JLine (http://jline.sourceforge.net/),
+Copyright (c) 2002-2006, Marc Prud'hommeaux <mwp1@cornell.edu>.
