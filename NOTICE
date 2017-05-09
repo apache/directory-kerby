@@ -7,9 +7,6 @@ The Apache Software Foundation (http://www.apache.org/).
 This product includes/uses SLF4J (http://www.slf4j.org/),
 Copyright (c) 2004-2010 QOS.ch
 
-This product includes/uses Java Hamcrest (http://hamcrest.org/JavaHamcrest/).
-Copyright (c) 2000-2015, BSD.
-
 This product includes/uses Netty
                             The Netty Project
                             =================
