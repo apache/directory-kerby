@@ -169,6 +169,7 @@
               <exclude>docs/kerby-ip-clearance.xml</exclude>
               <!-- The resources files -->
               <exclude>**/src/test/resources/**/*</exclude>
+              <exclude>**/licenses/**</exclude>
             </excludes>
           </configuration>
         </plugin>
