@@ -209,7 +209,7 @@ subcomponents is subject to the terms and conditions of the following
 licenses. 
 
 ===============================================================================
-For the SLF4J library (MIT license):
+This project bundles the SLF4J library (MIT license):
 
 See license/LICENSE-slf4j.txt
 
