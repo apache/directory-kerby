@@ -209,21 +209,7 @@ subcomponents is subject to the terms and conditions of the following
 licenses. 
 
 ===============================================================================
-For the SLF4J library:
+For the SLF4J library (MIT license):
+
 See license/LICENSE-slf4j.txt
 
-===========================================================================
-For the Mockito library:
-See license/LICENSE-Mockito.txt (MIT License)
-
-===============================================================================
-For the org.hamcrest library:
-See license/LICENSE-hamcrest.txt (BSD License)
-
-=============================================================================
-For the org.bouncycastle library:
-see license/LICENSE.bouncycastle.txt (MIT License)
-
-=============================================================================
-For the jline library:
-see license/LICENSE.jline.txt (BSD License)
