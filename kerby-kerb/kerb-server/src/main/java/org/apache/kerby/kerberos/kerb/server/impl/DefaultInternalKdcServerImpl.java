@@ -80,19 +80,23 @@ public class DefaultInternalKdcServerImpl extends AbstractInternalKdcServer {
     protected void doStop() throws Exception {
         super.doStop();
 
-        network.stop();
+        if (network != null) {
+            network.stop();
+        }
 
-        executor.shutdown();
+        if (executor != null) {
+            executor.shutdown();
 
-        try {
-            boolean terminated = false;
-            do {
-                // wait until the pool has terminated
-                terminated = executor.awaitTermination(60, TimeUnit.SECONDS);
-            } while (!terminated);
-        } catch (InterruptedException e) {
-            executor.shutdownNow();
-            LOG.warn("waitForTermination interrupted");
+            try {
+                boolean terminated = false;
+                do {
+                    // wait until the pool has terminated
+                    terminated = executor.awaitTermination(60, TimeUnit.SECONDS);
+                } while (!terminated);
+            } catch (InterruptedException e) {
+                executor.shutdownNow();
+                LOG.warn("waitForTermination interrupted");
+            }
         }
 
         LOG.info("Default Internal kdc server stopped.");
