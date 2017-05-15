@@ -224,7 +224,7 @@ public class LocalKadminImpl implements LocalKadmin {
         for (String principal : principals) {
             KrbIdentity identity = backend.getIdentity(principal);
             if (identity == null) {
-                throw new KrbException("Can not find the identity for pincipal "
+                throw new KrbException("Can not find the identity for principal "
                         + principal);
             }
             identities.add(identity);
