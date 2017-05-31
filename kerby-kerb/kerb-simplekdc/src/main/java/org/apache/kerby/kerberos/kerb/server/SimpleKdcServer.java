@@ -55,8 +55,7 @@ public class SimpleKdcServer extends KdcServer {
      * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     public SimpleKdcServer() throws KrbException {
-        super();
-        this.krbClnt = new KrbClient(new KrbConfig());
+        this(new KrbConfig());
 
         setKdcRealm("EXAMPLE.COM");
         setKdcHost("localhost");
