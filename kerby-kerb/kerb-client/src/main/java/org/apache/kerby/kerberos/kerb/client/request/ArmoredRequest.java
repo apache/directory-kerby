@@ -44,6 +44,7 @@ import org.apache.kerby.kerberos.kerb.type.fast.ArmorType;
 import org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmor;
 import org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq;
 import org.apache.kerby.kerberos.kerb.type.fast.KrbFastReq;
+import org.apache.kerby.kerberos.kerb.type.fast.PaFxFastRequest;
 import org.apache.kerby.kerberos.kerb.type.kdc.AsReq;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcReq;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
@@ -155,16 +156,19 @@ public class ArmoredRequest {
         fastReq.setKdcReqBody(kdcReq.getReqBody());
         fastReq.setFastOptions(state.getFastOptions());
 
+        PaFxFastRequest paFxFastRequest = new PaFxFastRequest();
+
         KrbFastArmoredReq armoredReq = new KrbFastArmoredReq();
         armoredReq.setArmor(state.getFastArmor());
         CheckSum reqCheckSum = CheckSumUtil.makeCheckSumWithKey(CheckSumType.NONE,
             outerRequestBody, state.getArmorKey(), KeyUsage.FAST_REQ_CHKSUM);
         armoredReq.setReqChecksum(reqCheckSum);
         armoredReq.setEncryptedFastReq(EncryptionUtil.seal(fastReq, state.getArmorKey(), KeyUsage.FAST_ENC));
+        paFxFastRequest.setFastArmoredReq(armoredReq);
 
         PaDataEntry paDataEntry = new PaDataEntry();
         paDataEntry.setPaDataType(PaDataType.FX_FAST);
-        paDataEntry.setPaDataValue(KrbCodec.encode(armoredReq));
+        paDataEntry.setPaDataValue(KrbCodec.encode(paFxFastRequest));
 
         return paDataEntry;
     }

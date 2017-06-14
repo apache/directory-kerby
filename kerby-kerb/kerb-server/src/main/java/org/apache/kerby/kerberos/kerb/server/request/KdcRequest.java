@@ -54,6 +54,7 @@ import org.apache.kerby.kerberos.kerb.type.fast.ArmorType;
 import org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmor;
 import org.apache.kerby.kerberos.kerb.type.fast.KrbFastArmoredReq;
 import org.apache.kerby.kerberos.kerb.type.fast.KrbFastReq;
+import org.apache.kerby.kerberos.kerb.type.fast.PaFxFastRequest;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcRep;
@@ -168,11 +169,16 @@ public abstract class KdcRequest {
         checkVersion();
         checkTgsEntry();
         kdcFindFast();
+        if (isPreauthRequired()) {
+            kdcFindFast();
+        }
         checkEncryptionType();
 
         if (PreauthHandler.isToken(getKdcReq().getPaData())) {
             isToken = true;
-            preauth();
+            if (isPreauthRequired()) {
+                preauth();
+            }
             checkClient();
             checkServer();
         } else {
@@ -181,7 +187,9 @@ public abstract class KdcRequest {
             }
             checkClient();
             checkServer();
-            preauth();
+            if (isPreauthRequired()) {
+                preauth();
+                    }
         }
         checkPolicy();
         issueTicket();
@@ -210,16 +218,53 @@ public abstract class KdcRequest {
             for (PaDataEntry paEntry : paData.getElements()) {
                 if (paEntry.getPaDataType() == PaDataType.FX_FAST) {
                     LOG.info("Found fast padata and starting to process it.");
-                    KrbFastArmoredReq fastArmoredReq = KrbCodec.decode(paEntry.getPaDataValue(),
-                            KrbFastArmoredReq.class);
-                    KrbFastArmor fastArmor = fastArmoredReq.getArmor();
-                    armorApRequest(fastArmor);
 
+                    PaFxFastRequest paFxFastRequest = new PaFxFastRequest();
+                    KrbFastArmoredReq fastArmoredReq = null;
+                    try {
+                        paFxFastRequest = KrbCodec.decode(paEntry.getPaDataValue(),
+                            PaFxFastRequest.class);
+                    } catch (KrbException e) {
+                        String errMessage = "Decode PaFxFastRequest failed. " + e.getMessage();
+                        LOG.error(errMessage);
+                        throw new KrbException(errMessage);
+                    }
+                    fastArmoredReq = paFxFastRequest.getFastArmoredReq();
+
+                    KrbFastArmor fastArmor = fastArmoredReq.getArmor();
+                    if (fastArmor == null) {
+                        return;
+                    }
+                    try {
+                        armorApRequest(fastArmor);
+                    } catch (KrbException e) {
+                        String errMessage = "Get armor key failed. " + e.getMessage();
+                        LOG.error(errMessage);
+                        throw new KrbException(errMessage);
+                    }
+
+                    if (getArmorKey() == null) {
+                        return;
+                    }
                     EncryptedData encryptedData = fastArmoredReq.getEncryptedFastReq();
-                    KrbFastReq fastReq = KrbCodec.decode(
+                    KrbFastReq fastReq;
+                    try {
+                        fastReq = KrbCodec.decode(
                             EncryptionHandler.decrypt(encryptedData, getArmorKey(), KeyUsage.FAST_ENC),
                             KrbFastReq.class);
-                    innerBodyout = KrbCodec.encode(fastReq.getKdcReqBody());
+                    } catch (KrbException e) {
+                        String errMessage = "Decode KrbFastReq failed. " + e.getMessage();
+                        LOG.error(errMessage);
+                        throw new KrbException(errMessage);
+                    }
+                    try {
+                        innerBodyout = KrbCodec.encode(fastReq.getKdcReqBody());
+                    } catch (KrbException e) {
+                        String errMessage = "Encode KdcReqBody failed. " + e.getMessage();
+                        LOG.error(errMessage);
+                        throw new KrbException(errMessage);
+                    }
+
 
                     // TODO: get checksumed data in stream
                     CheckSum checkSum = fastArmoredReq.getReqChecksum();
@@ -227,9 +272,23 @@ public abstract class KdcRequest {
                         LOG.warn("Checksum is empty.");
                         throw new KrbException(KrbErrorCode.KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED);
                     }
-                    byte[] reqBody = KrbCodec.encode(getKdcReq().getReqBody());
+
+                    byte[] reqBody;
+                    try {
+                        reqBody = KrbCodec.encode(getKdcReq().getReqBody());
+                    } catch (KrbException e) {
+                        String errMessage = "Encode the ReqBody failed. " + e.getMessage();
+                        LOG.error(errMessage);
+                        throw new KrbException(errMessage);
+                    }
+                    try {
                         CheckSumHandler.verifyWithKey(checkSum, reqBody,
                             getArmorKey().getKeyData(), KeyUsage.FAST_REQ_CHKSUM);
+                    } catch (KrbException e) {
+                        String errMessage = "Verify the ReqBody failed. " + e.getMessage();
+                        LOG.error(errMessage);
+                        throw new KrbException(errMessage);
+                    }
                 }
             }
         }
@@ -243,7 +302,14 @@ public abstract class KdcRequest {
      */
     private void armorApRequest(KrbFastArmor fastArmor) throws KrbException {
         if (fastArmor.getArmorType() == ArmorType.ARMOR_AP_REQUEST) {
-            ApReq apReq = KrbCodec.decode(fastArmor.getArmorValue(), ApReq.class);
+            ApReq apReq;
+            try {
+                apReq = KrbCodec.decode(fastArmor.getArmorValue(), ApReq.class);
+            } catch (KrbException e) {
+                String errMessage = "Decode ApReq failed. " + e.getMessage();
+                LOG.error(errMessage);
+                throw new KrbException(errMessage);
+            }
 
             Ticket ticket = apReq.getTicket();
             EncryptionType encType = ticket.getEncryptedEncPart().getEType();
@@ -252,18 +318,40 @@ public abstract class KdcRequest {
                 throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
             }
 
-            EncTicketPart encPart = EncryptionUtil.unseal(ticket.getEncryptedEncPart(),
+            EncTicketPart encPart = null;
+            try {
+                encPart = EncryptionUtil.unseal(ticket.getEncryptedEncPart(),
                     tgsKey, KeyUsage.KDC_REP_TICKET, EncTicketPart.class);
+            } catch (KrbException e) {
+                String errMessage = "Unseal EncTicketPart failed. " + e.getMessage();
+                LOG.error(errMessage);
+                throw new KrbException(errMessage);
+            }
             ticket.setEncPart(encPart);
 
             EncryptionKey encKey = ticket.getEncPart().getKey();
             setSessionKey(encKey);
 
-            Authenticator authenticator = EncryptionUtil.unseal(apReq.getEncryptedAuthenticator(),
+            Authenticator authenticator = null;
+            try {
+                authenticator = EncryptionUtil.unseal(apReq.getEncryptedAuthenticator(),
                     encKey, KeyUsage.AP_REQ_AUTH, Authenticator.class);
+            } catch (KrbException e) {
+                String errMessage = "Unseal Authenticator failed. " + e.getMessage();
+                LOG.error(errMessage);
+                throw new KrbException(errMessage);
+            }
 
-            EncryptionKey armorKey = FastUtil.cf2(authenticator.getSubKey(), "subkeyarmor",
+            EncryptionKey armorKey = null;
+            try {
+                armorKey = FastUtil.cf2(authenticator.getSubKey(), "subkeyarmor",
                     encKey, "ticketarmor");
+            } catch (KrbException e) {
+                String errMessage = "Create armor key failed. " + e.getMessage();
+                LOG.error(errMessage);
+                throw new KrbException(errMessage);
+            }
+
             setArmorKey(armorKey);
         }
     }
@@ -544,6 +632,7 @@ public abstract class KdcRequest {
 
     /**
      * Do the preatuh.
+     *
      * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     protected void preauth() throws KrbException {
@@ -551,22 +640,20 @@ public abstract class KdcRequest {
 
         PaData preAuthData = request.getPaData();
 
-        if (isPreauthRequired()) {
-            if (isAnonymous && !isPkinit) {
-                LOG.info("Need PKINIT.");
-                KrbError krbError = makePreAuthenticationError(kdcContext, request,
-                        KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, true);
-                throw new KdcRecoverableException(krbError);
-            }
+        if (isAnonymous && !isPkinit) {
+            LOG.info("Need PKINIT.");
+            KrbError krbError = makePreAuthenticationError(kdcContext, request,
+                KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, true);
+            throw new KdcRecoverableException(krbError);
+        }
 
-            if (preAuthData == null || preAuthData.isEmpty()) {
-                LOG.info("The preauth data is empty.");
-                KrbError krbError = makePreAuthenticationError(kdcContext, request,
-                        KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, false);
-                throw new KdcRecoverableException(krbError);
-            } else {
-                getPreauthHandler().verify(this, preAuthData);
-            }
+        if (preAuthData == null || preAuthData.isEmpty()) {
+            LOG.info("The preauth data is empty.");
+            KrbError krbError = makePreAuthenticationError(kdcContext, request,
+                KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, false);
+            throw new KdcRecoverableException(krbError);
+        } else {
+            getPreauthHandler().verify(this, preAuthData);
         }
 
         setPreAuthenticated(true);
