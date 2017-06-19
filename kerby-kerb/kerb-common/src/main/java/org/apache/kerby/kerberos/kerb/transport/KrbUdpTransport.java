@@ -75,7 +75,7 @@ public class KrbUdpTransport
     @Override
     public void release() {
         try {
-            channel.close();
+            channel.disconnect();
         } catch (IOException e) { //NOPMD
             // System.err.println(e); //NOOP
         }
