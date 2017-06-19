@@ -72,7 +72,7 @@ public class TokenAuthLoginModule implements LoginModule {
     public static final String ARMOR_CACHE = "armorCache";
     public static final String CREDENTIAL_CACHE = "credentialCache";
     public static final String SIGN_KEY_FILE = "signKeyFile";
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(TokenAuthLoginModule.class);
 
     /** initial state*/
@@ -112,7 +112,7 @@ public class TokenAuthLoginModule implements LoginModule {
         }
         if ((String) options.get(CREDENTIAL_CACHE) != null) {
             cCache = new File((String) options.get(CREDENTIAL_CACHE));
-        } 
+        }
         if ((String) options.get(SIGN_KEY_FILE) != null) {
             signKeyFile = new File((String) options.get(SIGN_KEY_FILE));
         }
@@ -135,7 +135,7 @@ public class TokenAuthLoginModule implements LoginModule {
     @Override
     public boolean commit() throws LoginException {
 
-        if (succeeded == false) {
+        if (!succeeded) {
             return false;
         } else {
             KerberosTicket ticket = null;
@@ -229,11 +229,11 @@ public class TokenAuthLoginModule implements LoginModule {
     }
 
     private void validateConfiguration() throws LoginException {
-        
+
         if (armorCache == null) {
             throw new LoginException("An armor cache must be specified via the armorCache configuration option");
         }
-        
+
         if (cCache == null) {
             throw new LoginException("A credential cache must be specified via the credentialCache"
             + " configuration option");
@@ -260,7 +260,7 @@ public class TokenAuthLoginModule implements LoginModule {
         }
 
         krbToken = new KrbToken();
-        
+
         // Sign the token.
         if (signKeyFile != null) {
             try {
@@ -272,7 +272,7 @@ public class TokenAuthLoginModule implements LoginModule {
                 }
                 krbToken = new KrbToken(authToken, TokenFormat.JWT);
                 TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-    
+
                 if (tokenEncoder instanceof JwtTokenEncoder) {
                     PrivateKey signKey = null;
                     try {
@@ -284,10 +284,10 @@ public class TokenAuthLoginModule implements LoginModule {
                     } catch (Exception e) {
                         LOG.error(e.toString());
                     }
-    
+
                     ((JwtTokenEncoder) tokenEncoder).setSignKey((RSAPrivateKey) signKey);
                 }
-                
+
                 krbToken.setTokenValue(tokenEncoder.encodeAsBytes(authToken));
             } catch (KrbException e) {
                 throw new RuntimeException("Failed to encode AuthToken", e);
@@ -295,7 +295,7 @@ public class TokenAuthLoginModule implements LoginModule {
         } else {
             // Otherwise just write out the token (which could be already signed)
             krbToken.setTokenValue(tokenStr.getBytes());
-            
+
             try {
                 JWT jwt = JWTParser.parse(tokenStr);
                 authToken = new JwtAuthToken(jwt.getJWTClaimsSet());
@@ -304,7 +304,7 @@ public class TokenAuthLoginModule implements LoginModule {
                 throw new RuntimeException("Failed to parse JWT token string", e);
             }
         }
-        
+
         krbToken.setInnerToken(authToken);
         krbToken.setTokenType();
         krbToken.setTokenFormat(TokenFormat.JWT);
@@ -319,7 +319,7 @@ public class TokenAuthLoginModule implements LoginModule {
         } catch (KrbException | IOException e) {
             LOG.error("KrbClient init failed. " + e.toString());
         }
-        
+
         KrbTokenClient tokenClient = new KrbTokenClient(krbClient);
         try {
             tgtTicket = tokenClient.requestTgt(krbToken,

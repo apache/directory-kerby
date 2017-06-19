@@ -25,13 +25,12 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
 
 /**
  * This class provides APIs for converting token cache file with token string.
@@ -66,12 +65,9 @@ public class TokenCache {
 
         String token = null;
         try {
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(Files.newInputStream(cacheFile.toPath()), StandardCharsets.UTF_8));
-            String line = reader.readLine();
-            reader.close();
-            if (line != null) {
-                token = line;
+            List<String> lines = Files.readAllLines(cacheFile.toPath());
+            if (lines != null && !lines.isEmpty()) {
+                token = lines.get(0);
             }
         } catch (IOException ex) {
             LOG.error("Failed to read file: " + cacheFile.getName());
@@ -85,8 +81,8 @@ public class TokenCache {
      *
      * @param token The token string
      */
-    public static void writeToken(String token) {
-        File cacheFile = getDefaultTokenCache();
+    public static void writeToken(String token, String tokenCacheFile) {
+        File cacheFile = new File(tokenCacheFile);
 
         try {
             Writer writer = new FileWriterWithEncoding(cacheFile, StandardCharsets.UTF_8);

@@ -32,6 +32,7 @@ import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.junit.After;
 import org.junit.Before;
 
 import javax.security.auth.Subject;
@@ -62,6 +63,12 @@ public class TokenLoginTestBase extends LoginTestBase {
         armorCache = new File(getTestDir(), "armorcache.cc");
         tgtCache = new File(getTestDir(), "tgtcache.cc");
         signKeyFile = new File(this.getClass().getResource("/private_key.pem").getPath());
+        tokenCache = File.createTempFile("tokencache", null);
+    }
+
+    @After
+    public void cleanup() throws Exception {
+        tokenCache.delete();
     }
 
     @Override
@@ -88,9 +95,9 @@ public class TokenLoginTestBase extends LoginTestBase {
         }
         AuthToken token = issueToken(getClientPrincipal());
         String tokenStr = tokenEncoder.encodeAsString(token);
-        TokenCache.writeToken(tokenStr);
+
+        TokenCache.writeToken(tokenStr, tokenCache.getPath());
         // System.out.println("Issued token: " + tokenStr);
-        tokenCache = TokenCache.getDefaultTokenCache();
 
         TgtTicket tgt = getKrbClient().requestTgt(getClientPrincipal(),
             getClientPassword());
@@ -152,7 +159,7 @@ public class TokenLoginTestBase extends LoginTestBase {
         createTokenAndArmorCache();
         checkSubject(loginClientUsingTokenCache(tokenCache, armorCache, tgtCache, signKeyFile));
     }
-    
+
     protected Subject testLoginWithTokenCacheAndRetSubject() throws Exception {
         createTokenAndArmorCache();
         Subject subj = loginClientUsingTokenCache(tokenCache, armorCache, tgtCache, signKeyFile);
