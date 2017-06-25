@@ -65,7 +65,7 @@ public class TokenCache {
 
         String token = null;
         try {
-            List<String> lines = Files.readAllLines(cacheFile.toPath());
+            List<String> lines = Files.readAllLines(cacheFile.toPath(), StandardCharsets.UTF_8);
             if (lines != null && !lines.isEmpty()) {
                 token = lines.get(0);
             }
