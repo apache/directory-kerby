@@ -52,5 +52,10 @@
       <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>token-provider</artifactId>
+      <version>1.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

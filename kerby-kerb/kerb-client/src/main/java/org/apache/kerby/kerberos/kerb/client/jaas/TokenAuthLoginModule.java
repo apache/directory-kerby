@@ -17,11 +17,10 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.integration.test.jaas;
+package org.apache.kerby.kerberos.kerb.client.jaas;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
-import org.apache.kerby.kerberos.kerb.client.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
@@ -311,7 +310,7 @@ public class TokenAuthLoginModule implements LoginModule {
 
         KrbClient krbClient = null;
         try {
-            File confFile = new File(System.getProperty(Krb5Conf.KRB5_CONF));
+            File confFile = new File(System.getProperty("java.security.krb5.conf"));
             KrbConfig krbConfig = new KrbConfig();
             krbConfig.addKrb5Config(confFile);
             krbClient = new KrbClient(krbConfig);

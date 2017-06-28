@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.integration.test.jaas;
+package org.apache.kerby.kerberos.kerb.client.jaas;
 
 import javax.security.auth.Subject;
 import javax.security.auth.kerberos.KerberosPrincipal;
@@ -138,7 +138,7 @@ public class TokenJaasKrbUtil {
 
             return new AppConfigurationEntry[]{
                     new AppConfigurationEntry(
-                            "org.apache.kerby.kerberos.kerb.integration.test.jaas.TokenAuthLoginModule",
+                            "org.apache.kerby.kerberos.kerb.client.jaas.TokenAuthLoginModule",
                             AppConfigurationEntry.LoginModuleControlFlag.REQUIRED,
                             options)};
         }

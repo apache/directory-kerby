@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.integration.test;
 
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
-import org.apache.kerby.kerberos.kerb.integration.test.jaas.TokenCache;
-import org.apache.kerby.kerberos.kerb.integration.test.jaas.TokenJaasKrbUtil;
+import org.apache.kerby.kerberos.kerb.client.jaas.TokenCache;
+import org.apache.kerby.kerberos.kerb.client.jaas.TokenJaasKrbUtil;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.LoginTestBase;
