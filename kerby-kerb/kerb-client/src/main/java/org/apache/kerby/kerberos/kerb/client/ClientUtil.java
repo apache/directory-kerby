@@ -206,7 +206,7 @@ public final class ClientUtil {
         if (realm != null) {
             KrbConfig krbConfig = krbSetting.getKrbConfig();
             List<Object> kdcs = krbConfig.getRealmSectionItems(realm, "kdc");
-            if (kdcs != null) {
+            if (!kdcs.isEmpty()) {
                 for (Object object : kdcs) {
                     kdcList.add(object != null ? object.toString() : null);
                 }

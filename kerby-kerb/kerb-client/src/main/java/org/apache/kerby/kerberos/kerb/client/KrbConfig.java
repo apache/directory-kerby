@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -318,13 +319,14 @@ public class KrbConfig extends Krb5Conf {
 
     public List<Object> getRealmSectionItems(String realm, String key) {
         Map<String, Object> map = getRealmSection(realm);
-        List<Object> items = null;
-        if (map != null) {
-            items = new ArrayList<>();
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                if (entry.getKey().equals(key)) {
-                    items.add(entry.getValue());
-                }
+        if (map.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Object> items = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getKey().equals(key)) {
+                items.add(entry.getValue());
             }
         }
         return items;
@@ -339,9 +341,7 @@ public class KrbConfig extends Krb5Conf {
                     return (Map) entry.getValue();
                 }
             }
-            return null;
-        } else {
-            return null;
         }
+        return Collections.emptyMap();
     }
 }
