@@ -234,8 +234,8 @@ public class TokenAuthLoginModule implements LoginModule {
         }
 
         if (cCache == null) {
-            throw new LoginException("A credential cache must be specified via the credentialCache"
-            + " configuration option");
+            LOG.info("No credential cache was specified via 'credentialCache'. "
+                     + "The TGT will be stored internally instead");
         }
 
         String error = "";
@@ -328,17 +328,20 @@ public class TokenAuthLoginModule implements LoginModule {
             return false;
         }
 
-        try {
-            cCache = makeTgtCache();
-        } catch (IOException e) {
-            LOG.error("Failed to make tgtCache. " + e.toString());
-        }
-        try {
-            if (krbClient != null) {
-                krbClient.storeTicket(tgtTicket, cCache);
+        // Write the TGT out to the credential cache if it is specified in the configuration
+        if (cCache != null) {
+            try {
+                cCache = makeTgtCache();
+            } catch (IOException e) {
+                LOG.error("Failed to make tgtCache. " + e.toString());
             }
-        } catch (KrbException e) {
-            LOG.error("Failed to store tgtTicket to " + cCache.getName());
+            try {
+                if (krbClient != null) {
+                    krbClient.storeTicket(tgtTicket, cCache);
+                }
+            } catch (KrbException e) {
+                LOG.error("Failed to store tgtTicket to " + cCache.getName());
+            }
         }
         return true;
     }
