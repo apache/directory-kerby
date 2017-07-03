@@ -14,15 +14,17 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.kerb.type.base;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.kerby.asn1.parse.Asn1ParseResult;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
@@ -86,6 +88,15 @@ public class KrbToken extends KrbTokenBase implements AuthToken {
         this.innerToken = getTokenDecoder().decodeFromBytes(getTokenValue());
         setTokenType();
     }*/
+
+    @Override
+    public void decode(Asn1ParseResult parseResult) throws IOException {
+        super.decode(parseResult);
+        if (getTokenValue() != null) {
+            this.innerToken = getTokenDecoder().decodeFromBytes(getTokenValue());
+            setTokenType();
+        }
+    }
 
     /**
      * Set token type.
