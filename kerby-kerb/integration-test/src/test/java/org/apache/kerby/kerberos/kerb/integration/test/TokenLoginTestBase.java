@@ -85,7 +85,7 @@ public class TokenLoginTestBase extends LoginTestBase {
         return true;
     }
 
-    private String createTokenAndArmorCache() throws Exception {
+    protected String createTokenAndArmorCache() throws Exception {
 
         TokenEncoder tokenEncoder = null;
         try {
@@ -137,7 +137,7 @@ public class TokenLoginTestBase extends LoginTestBase {
         return authToken;
     }
 
-    private Subject loginClientUsingTokenStr(String tokenStr, File armorCache, File tgtCache,
+    protected Subject loginClientUsingTokenStr(String tokenStr, File armorCache, File tgtCache,
                                              File signKeyFile) throws Exception {
         return TokenJaasKrbUtil.loginUsingToken(getClientPrincipal(), tokenStr, armorCache,
             tgtCache, signKeyFile);
@@ -165,5 +165,13 @@ public class TokenLoginTestBase extends LoginTestBase {
         Subject subj = loginClientUsingTokenCache(tokenCache, armorCache, tgtCache, signKeyFile);
         checkSubject(subj);
         return subj;
+    }
+
+    protected File getArmorCache() {
+        return armorCache;
+    }
+
+    protected File getTGTCache() {
+        return tgtCache;
     }
 }

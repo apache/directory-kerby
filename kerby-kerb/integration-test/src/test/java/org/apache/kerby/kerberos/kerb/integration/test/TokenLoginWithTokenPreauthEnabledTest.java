@@ -24,6 +24,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.security.auth.Subject;
+import javax.security.auth.login.LoginException;
+
+import java.io.File;
 import java.security.Principal;
 import java.util.Set;
 
@@ -61,4 +64,26 @@ public class TokenLoginWithTokenPreauthEnabledTest extends TokenLoginTestBase {
         Assert.assertNotNull(kerberosToken);
     }
 
+    @Test
+    public void testUntrustedSignature() throws Exception {
+        String tokenStr = createTokenAndArmorCache();
+        File signKeyFile = new File(this.getClass().getResource("/kdckeytest.pem").getPath());
+        try {
+            loginClientUsingTokenStr(tokenStr, getArmorCache(), getTGTCache(), signKeyFile);
+            Assert.fail("Failure expected on a signature that is not trusted");
+        } catch (LoginException ex) { //NOPMD
+            // expected
+        }
+    }
+
+    @Test
+    public void testUnsignedToken() throws Exception {
+        String tokenStr = createTokenAndArmorCache();
+        try {
+            loginClientUsingTokenStr(tokenStr, getArmorCache(), getTGTCache(), null);
+            Assert.fail("Failure expected on an unsigned token");
+        } catch (LoginException ex) { //NOPMD
+            // expected
+        }
+    }
 }
