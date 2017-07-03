@@ -295,12 +295,14 @@ public class TokenAuthLoginModule implements LoginModule {
             // Otherwise just write out the token (which could be already signed)
             krbToken.setTokenValue(tokenStr.getBytes());
 
-            try {
-                JWT jwt = JWTParser.parse(tokenStr);
-                authToken = new JwtAuthToken(jwt.getJWTClaimsSet());
-            } catch (ParseException e) {
-                // Invalid JWT encoding
-                throw new RuntimeException("Failed to parse JWT token string", e);
+            if (authToken == null) {
+                try {
+                    JWT jwt = JWTParser.parse(tokenStr);
+                    authToken = new JwtAuthToken(jwt.getJWTClaimsSet());
+                } catch (ParseException e) {
+                    // Invalid JWT encoding
+                    throw new RuntimeException("Failed to parse JWT token string", e);
+                }
             }
         }
 

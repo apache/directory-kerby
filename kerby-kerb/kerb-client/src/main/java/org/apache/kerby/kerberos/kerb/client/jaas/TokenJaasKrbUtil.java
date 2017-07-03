@@ -133,7 +133,9 @@ public class TokenJaasKrbUtil {
                 options.put(TokenAuthLoginModule.TOKEN, tokenStr);
             }
             options.put(TokenAuthLoginModule.ARMOR_CACHE, armorCache.getAbsolutePath());
-            options.put(TokenAuthLoginModule.CREDENTIAL_CACHE, ccache.getAbsolutePath());
+            if (ccache != null) {
+                options.put(TokenAuthLoginModule.CREDENTIAL_CACHE, ccache.getAbsolutePath());
+            }
             options.put(TokenAuthLoginModule.SIGN_KEY_FILE, signKeyFile.getAbsolutePath());
 
             return new AppConfigurationEntry[]{
