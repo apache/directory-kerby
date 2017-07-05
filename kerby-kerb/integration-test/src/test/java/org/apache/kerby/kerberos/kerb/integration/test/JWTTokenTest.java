@@ -24,6 +24,8 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Collections;
@@ -89,7 +91,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.isIdToken(false);
         authToken.setAudiences(Collections.singletonList(getServerPrincipal()));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
-        krbToken.setTokenValue(signToken(authToken, getSignKeyFile()));
+
+        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
+        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a SGT using the JWT
         SgtTicket tkt = tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
@@ -148,7 +153,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.isIdToken(false);
         authToken.setAudiences(Collections.singletonList(getServerPrincipal() + "_"));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
-        krbToken.setTokenValue(signToken(authToken, getSignKeyFile()));
+
+        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
+        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a SGT using the JWT
         try {
@@ -162,7 +170,6 @@ public class JWTTokenTest extends TokenLoginTestBase {
     }
 
     @org.junit.Test
-    @org.junit.Ignore
     public void accessTokenInvalidSignature() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -194,8 +201,9 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.isIdToken(false);
         authToken.setAudiences(Collections.singletonList(getServerPrincipal()));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
-        File signKeyFile = new File(this.getClass().getResource("/kdckeytest.pem").getPath());
-        krbToken.setTokenValue(signToken(authToken, signKeyFile));
+
+        KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
+        krbToken.setTokenValue(signToken(authToken, keyPair.getPrivate()));
 
         // Now get a SGT using the JWT
         try {
@@ -241,7 +249,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.setAudiences(Collections.singletonList(getServerPrincipal()));
         authToken.setIssuer("unknown-issuer");
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
-        krbToken.setTokenValue(signToken(authToken, getSignKeyFile()));
+
+        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
+        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a SGT using the JWT
         try {
@@ -283,7 +294,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         // Create a JWT token
         AuthToken authToken = issueToken(getClientPrincipal());
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
-        krbToken.setTokenValue(signToken(authToken, getSignKeyFile()));
+
+        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
+        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a TGT using the JWT token
         tgt = tokenClient.requestTgt(krbToken, cCacheFile.getPath());
@@ -338,12 +352,60 @@ public class JWTTokenTest extends TokenLoginTestBase {
         AuthToken authToken = issueToken(getClientPrincipal());
         authToken.setAudiences(Collections.singletonList(authToken.getAudiences().get(0) + "_"));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
-        krbToken.setTokenValue(signToken(authToken, getSignKeyFile()));
+
+        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
+        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a TGT using the JWT token
         try {
             tokenClient.requestTgt(krbToken, cCacheFile.getPath());
             fail("Failure expected on an invalid audience");
+        } catch (KrbException ex) { //NOPMD
+            // expected
+        }
+
+        cCacheFile.delete();
+    }
+
+    @org.junit.Test
+    public void identityTokenInvalidSignature() throws Exception {
+
+        KrbClient client = getKrbClient();
+
+        // Get a TGT
+        TgtTicket tgt = client.requestTgt(getClientPrincipal(), getClientPassword());
+        assertNotNull(tgt);
+
+        // Write to cache
+        Credential credential = new Credential(tgt);
+        CredentialCache cCache = new CredentialCache();
+        cCache.addCredential(credential);
+        cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
+
+        File cCacheFile = File.createTempFile("krb5_" + getClientPrincipal(), "cc");
+        cCache.store(cCacheFile);
+
+        KrbTokenClient tokenClient = new KrbTokenClient(client);
+
+        tokenClient.setKdcHost(client.getSetting().getKdcHost());
+        tokenClient.setKdcTcpPort(client.getSetting().getKdcTcpPort());
+
+        tokenClient.setKdcRealm(client.getSetting().getKdcRealm());
+        tokenClient.init();
+
+        // Create a JWT token
+        AuthToken authToken = issueToken(getClientPrincipal());
+        authToken.setAudiences(Collections.singletonList(authToken.getAudiences().get(0) + "_"));
+        KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
+
+        KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
+        krbToken.setTokenValue(signToken(authToken, keyPair.getPrivate()));
+
+        // Now get a TGT using the JWT token
+        try {
+            tokenClient.requestTgt(krbToken, cCacheFile.getPath());
+            fail("Failure expected on an invalid signature");
         } catch (KrbException ex) { //NOPMD
             // expected
         }
@@ -381,7 +443,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         AuthToken authToken = issueToken(getClientPrincipal());
         authToken.setIssuer("unknown-issuer");
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
-        krbToken.setTokenValue(signToken(authToken, getSignKeyFile()));
+
+        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
+        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a TGT using the JWT token
         try {
@@ -394,12 +459,9 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCacheFile.delete();
     }
 
-    private byte[] signToken(AuthToken authToken, File signKeyFile) throws Exception {
+    private byte[] signToken(AuthToken authToken, PrivateKey signKey) throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
         assertTrue(tokenEncoder instanceof JwtTokenEncoder);
-
-        InputStream is = Files.newInputStream(signKeyFile.toPath());
-        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
 
         ((JwtTokenEncoder) tokenEncoder).setSignKey((RSAPrivateKey) signKey);
         return tokenEncoder.encodeAsBytes(authToken);
