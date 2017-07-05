@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.kerb.server;
 
@@ -41,6 +41,7 @@ public abstract class KdcTestBase {
     private final String clientPrincipalName = "drankye";
     private final String clientPrincipal =
             clientPrincipalName + "@" + TestKdcServer.KDC_REALM;
+    private final String serverPassword = "654321";
     private final String serverPrincipalName = "test-service";
     private final String serverPrincipal;
 
@@ -112,6 +113,10 @@ public abstract class KdcTestBase {
         return clientPassword;
     }
 
+    protected String getServerPassword() {
+        return serverPassword;
+    }
+
     protected String getServerPrincipal() {
         return serverPrincipal;
     }
@@ -127,7 +132,7 @@ public abstract class KdcTestBase {
     protected boolean allowTcp() {
         return true;
     }
-    
+
     @Before
     public void setUp() throws Exception {
         setUpKdcServer();
@@ -159,7 +164,7 @@ public abstract class KdcTestBase {
     }
 
     protected void createPrincipals() throws KrbException {
-        kdcServer.createPrincipals(serverPrincipal);
+        kdcServer.createPrincipal(serverPrincipal, serverPassword);
         kdcServer.createPrincipal(clientPrincipal, clientPassword);
     }
 

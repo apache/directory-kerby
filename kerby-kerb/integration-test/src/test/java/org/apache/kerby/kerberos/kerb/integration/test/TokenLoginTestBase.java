@@ -106,7 +106,7 @@ public class TokenLoginTestBase extends LoginTestBase {
         return tokenStr;
     }
 
-    private AuthToken issueToken(String principal) {
+    protected AuthToken issueToken(String principal) {
         AuthToken authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();
 
         String iss = "token-service";
@@ -173,5 +173,9 @@ public class TokenLoginTestBase extends LoginTestBase {
 
     protected File getTGTCache() {
         return tgtCache;
+    }
+
+    protected File getSignKeyFile() {
+        return signKeyFile;
     }
 }
