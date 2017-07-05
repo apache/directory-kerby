@@ -14,7 +14,7 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.kerb.identity;
@@ -23,6 +23,7 @@ import org.apache.kerby.config.Config;
 import org.apache.kerby.config.Configured;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcClientRequest;
 import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 
 import java.util.LinkedHashMap;
@@ -149,10 +150,10 @@ public class CacheableIdentityService
      * {@inheritDoc}
      */
     @Override
-    public AuthorizationData getIdentityAuthorizationData(Object kdcRequest,
+    public AuthorizationData getIdentityAuthorizationData(KdcClientRequest kdcClientRequest,
             EncTicketPart encTicketPart) throws KrbException {
 
-        return underlying.getIdentityAuthorizationData(kdcRequest,
+        return underlying.getIdentityAuthorizationData(kdcClientRequest,
                 encTicketPart);
     }
 }

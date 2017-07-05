@@ -36,6 +36,7 @@ import org.apache.kerby.kerberos.kerb.type.base.NameType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding;
 import org.apache.kerby.kerberos.kerb.type.base.TransitedEncodingType;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcClientRequest;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcReq;
@@ -216,8 +217,20 @@ public abstract class TicketIssuer {
 
     protected AuthorizationData makeAuthorizationData(KdcRequest kdcRequest,
             EncTicketPart encTicketPart) throws KrbException {
+        // Convert KdcRequest into KdcClientRequest
+        KdcClientRequest clientRequest = new KdcClientRequest();
+        clientRequest.setAnonymous(kdcRequest.isAnonymous());
+        clientRequest.setClientAddress(kdcRequest.getClientAddress());
+        clientRequest.setClientKey(kdcRequest.getClientKey());
+        clientRequest.setClientPrincipal(kdcRequest.getClientPrincipal());
+        clientRequest.setEncryptionType(kdcRequest.getEncryptionType());
+        clientRequest.setPkinit(kdcRequest.isPkinit());
+        clientRequest.setPreAuthenticated(kdcRequest.isPreAuthenticated());
+        clientRequest.setToken(kdcRequest.getToken());
+        clientRequest.setToken(kdcRequest.isToken());
+
         return getKdcContext().getIdentityService()
-                .getIdentityAuthorizationData(kdcRequest, encTicketPart);
+                .getIdentityAuthorizationData(clientRequest, encTicketPart);
     }
 
     protected KdcContext getKdcContext() {

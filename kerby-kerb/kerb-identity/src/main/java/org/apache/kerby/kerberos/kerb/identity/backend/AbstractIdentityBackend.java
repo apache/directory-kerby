@@ -14,7 +14,7 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.kerb.identity.backend;
@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.BatchTrans;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
+import org.apache.kerby.kerberos.kerb.type.kdc.KdcClientRequest;
 import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,16 +170,16 @@ public abstract class AbstractIdentityBackend
      * {@inheritDoc}
      */
     @Override
-    public AuthorizationData getIdentityAuthorizationData(Object kdcRequest,
+    public AuthorizationData getIdentityAuthorizationData(KdcClientRequest kdcClientRequest,
             EncTicketPart encTicketPart) throws KrbException {
-        if (kdcRequest == null) {
+        if (kdcClientRequest == null) {
             throw new IllegalArgumentException("Invalid identity");
         }
 
         logger.debug("getIdentityAuthorizationData called, krbIdentity = {}",
-                kdcRequest);
+                     kdcClientRequest.getClientPrincipal());
 
-        AuthorizationData authData = doGetIdentityAuthorizationData(kdcRequest,
+        AuthorizationData authData = doGetIdentityAuthorizationData(kdcClientRequest,
                 encTicketPart);
         logger.debug("getIdentityAuthorizationData {}, authData = {}",
                 (authData != null ? "successful" : "failed"), authData);
@@ -188,13 +189,13 @@ public abstract class AbstractIdentityBackend
 
     /**
      * Get an identity's Authorization Data, invoked by getIdentityAuthorizationData.
-     * @param kdcRequest The kdc request
+     * @param kdcClientRequest The KdcClientRequest
      * @param encTicketPart The EncTicketPart being built for the KrbIdentity
      * @return The Authorization Data
      * @throws KrbException e
      */
     protected AuthorizationData doGetIdentityAuthorizationData(
-            Object kdcRequest, EncTicketPart encTicketPart)
+            KdcClientRequest kdcClientRequest, EncTicketPart encTicketPart)
             throws KrbException {
         return null;
     }

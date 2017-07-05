@@ -189,7 +189,7 @@ public abstract class KdcRequest {
             checkServer();
             if (isPreauthRequired()) {
                 preauth();
-                    }
+            }
         }
         checkPolicy();
         issueTicket();
