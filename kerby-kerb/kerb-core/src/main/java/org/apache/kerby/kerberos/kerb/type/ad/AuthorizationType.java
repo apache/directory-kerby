@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.kerb.type.ad;
 
@@ -23,7 +23,7 @@ import org.apache.kerby.asn1.EnumType;
 
 /**
  * The various AuthorizationType values, as defined in RFC 4120 and RFC 1510.
- * 
+ *
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  */
 public enum AuthorizationType implements EnumType {
@@ -36,7 +36,7 @@ public enum AuthorizationType implements EnumType {
      * Constant for the "if relevant" authorization type.
      *
      * RFC 4120
-     * 
+     *
      * AD elements encapsulated within the if-relevant element are intended for
      * interpretation only by application servers that understand the particular
      * ad-type of the embedded element. Application servers that do not
@@ -51,16 +51,16 @@ public enum AuthorizationType implements EnumType {
      * Constant for the "intended for server" authorization type.
      *
      * RFC 4120
-     * 
+     *
      * AD-INTENDED-FOR-SERVER SEQUENCE { intended-server[0] SEQUENCE OF
      * PrincipalName elements[1] AuthorizationData }
-     * 
+     *
      * AD elements encapsulated within the intended-for-server element may be
      * ignored if the application server is not in the list of principal names
      * of intended servers. Further, a KDC issuing a ticket for an application
      * server can remove this element if the application server is not in the
      * list of intended servers.
-     * 
+     *
      * Application servers should check for their principal name in the
      * intended-server field of this element. If their principal name is not
      * found, this element should be ignored. If found, then the encapsulated
@@ -75,16 +75,16 @@ public enum AuthorizationType implements EnumType {
      * Constant for the  "intended for application class" authorization type.
      *
      * RFC 4120
-     * 
+     *
      * AD-INTENDED-FOR-APPLICATION-CLASS SEQUENCE {
      * intended-application-class[0] SEQUENCE OF GeneralString elements[1]
      * AuthorizationData } AD elements
-     * 
+     *
      * encapsulated within the intended-for-application-class element may be
      * ignored if the application server is not in one of the named classes of
      * application servers. Examples of application server classes include
      * "FILESYSTEM", and other kinds of servers.
-     * 
+     *
      * This element and the elements it encapsulates may be safely ignored by
      * applications, application servers, and KDCs that do not implement this
      * element.
@@ -95,11 +95,11 @@ public enum AuthorizationType implements EnumType {
      * Constant for the "kdc issued" authorization type.
      *
      * RFC 4120
-     * 
+     *
      * AD-KDCIssued SEQUENCE { ad-checksum[0] Checksum, i-realm[1] Realm
      * OPTIONAL, i-sname[2] PrincipalName OPTIONAL, elements[3]
      * AuthorizationData. }
-     * 
+     *
      * ad-checksum A checksum over the elements field using a cryptographic
      * checksum method that is identical to the checksum used to protect the
      * ticket itself (i.e. using the same hash function and the same encryption
@@ -110,13 +110,13 @@ public enum AuthorizationType implements EnumType {
      * issuing principal and it allows this KDC to notify the application server
      * of the validity of those elements. elements A sequence of authorization
      * data elements issued by the KDC.
-     * 
+     *
      * The KDC-issued ad-data field is intended to provide a means for Kerberos
      * principal credentials to embed within themselves privilege attributes and
      * other mechanisms for positive authorization, amplifying the privileges of
      * the principal beyond what can be done using a credentials without such an
      * a-data element.
-     * 
+     *
      * This can not be provided without this element because the definition of
      * the authorization-data field allows elements to be added at will by the
      * bearer of a TGT at the time that they request service tickets and
@@ -129,7 +129,7 @@ public enum AuthorizationType implements EnumType {
      * Constant for the "and/or" authorization type.
      *
      * RFC 4120
-     * 
+     *
      * When restrictive AD elements encapsulated within the and-or element are
      * encountered, only the number specified in condition-count of the
      * encapsulated conditions must be met in order to satisfy this element.
@@ -145,9 +145,9 @@ public enum AuthorizationType implements EnumType {
      * Constant for the "mandatory ticket extensions" authorization type.
      *
      * RFC 4120
-     * 
+     *
      * AD-Mandatory-Ticket-Extensions Checksum
-     * 
+     *
      * An authorization data element of type mandatory-ticket-extensions
      * specifies a collision-proof checksum using the same hash algorithm used
      * to protect the integrity of the ticket itself. This checksum will be
@@ -164,9 +164,9 @@ public enum AuthorizationType implements EnumType {
      * Constant for the "in ticket extensions" authorization type.
      *
      * RFC 4120
-     * 
+     *
      * AD-IN-Ticket-Extensions Checksum
-     * 
+     *
      * An authorization data element of type in-ticket-extensions specifies a
      * collision-proof checksum using the same hash algorithm used to protect
      * the integrity of the ticket itself. This checksum is calculated over a
@@ -187,9 +187,9 @@ public enum AuthorizationType implements EnumType {
      * Constant for the "mandatory-for-kdc" authorization type.
      *
      * RFC 4120
-     * 
+     *
      * AD-MANDATORY-FOR-KDC ::= AuthorizationData
-     * 
+     *
      * AD elements encapsulated within the mandatory-for-kdc element are to be
      * interpreted by the KDC. KDCs that do not understand the type of an
      * element embedded within the mandatory-for-kdc element MUST reject the
@@ -201,22 +201,22 @@ public enum AuthorizationType implements EnumType {
      * Constant for the "initial-verified-cas" authorization type.
      *
      * RFC 4556
-     * 
+     *
      * AD-INITIAL-VERIFIED-CAS ::= SEQUENCE OF ExternalPrincipalIdentifier --
      * Identifies the certification path with which -- the client certificate
      * was validated. -- Each ExternalPrincipalIdentifier identifies a CA -- or
      * a CA certificate (thereby its public key).
-     * 
+     *
      * The AD-INITIAL-VERIFIED-CAS structure identifies the certification path
      * with which the client certificate was validated. Each
      * ExternalPrincipalIdentifier (as defined in Section 3.2.1) in the AD-
      * INITIAL-VERIFIED-CAS structure identifies a CA or a CA certificate
      * (thereby its public key).
-     * 
+     *
      * Note that the syntax for the AD-INITIAL-VERIFIED-CAS authorization data
      * does permit empty SEQUENCEs to be encoded. Such empty sequences may only
      * be used if the KDC itself vouches for the user's certificate.
-     * 
+     *
      * The AS wraps any AD-INITIAL-VERIFIED-CAS data in AD-IF-RELEVANT
      * containers if the list of CAs satisfies the AS' realm's local policy
      * (this corresponds to the TRANSITED-POLICY-CHECKED ticket flag [RFC4120]).
@@ -225,7 +225,7 @@ public enum AuthorizationType implements EnumType {
      * of CAs satisfies the local KDC's realm's policy, the TGS MAY wrap the
      * data into the AD-IF-RELEVANT container; otherwise, it MAY unwrap the
      * authorization data out of the AD-IF-RELEVANT container.
-     * 
+     *
      * Application servers that understand this authorization data type SHOULD
      * apply local policy to determine whether a given ticket bearing such a
      * type *not* contained within an AD-IF-RELEVANT container is acceptable.
@@ -234,7 +234,7 @@ public enum AuthorizationType implements EnumType {
      * data type is contained within an AD-IF- RELEVANT container, AP servers
      * MAY apply local policy to determine whether the authorization data is
      * acceptable.
-     * 
+     *
      * ExternalPrincipalIdentifier ::= SEQUENCE { subjectName [0] IMPLICIT OCTET
      * STRING OPTIONAL, -- Contains a PKIX type Name encoded according to --
      * [RFC3280]. -- Identifies the certificate subject by the -- distinguished
@@ -287,7 +287,7 @@ public enum AuthorizationType implements EnumType {
      * authorization type.
      *
      * RFC 4120
-     * 
+     *
      * See: Microsoft standard documents MS-PAC and MS-KILE.
      */
     AD_WIN2K_PAC(128),
@@ -300,8 +300,15 @@ public enum AuthorizationType implements EnumType {
     AD_ETYPE_NEGOTIATION(129),
 
     /**
+     * Constant for the Authorization Data Type. Note that this is not a standard Type as of yet.
+     *
+     * See the draft spec "Token Pre-Authentication for Kerberos".
+     */
+    AD_TOKEN(256),
+
+    /**
      * Constant for the "Authentication-Indicator" authorization type.
-     * 
+     *
      * RFC 6711 An IANA Registry for Level of Assurance (LoA) Profiles provides
      * the syntax and semantics of LoA profiles.
      *
@@ -313,7 +320,7 @@ public enum AuthorizationType implements EnumType {
     private final int value;
 
     /**
-     * Create a new enum 
+     * Create a new enum
      */
     AuthorizationType(int value) {
         this.value = value;
@@ -337,7 +344,7 @@ public enum AuthorizationType implements EnumType {
 
     /**
      * Get the AuthorizationType associated with a value.
-     * 
+     *
      * @param value The integer value of the AuthorizationType we are looking for
      * @return The associated AuthorizationType, or NULL if not found or if value is null
      */

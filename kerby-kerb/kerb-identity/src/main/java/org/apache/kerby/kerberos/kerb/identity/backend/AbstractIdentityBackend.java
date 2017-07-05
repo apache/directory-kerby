@@ -19,11 +19,19 @@
  */
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
+import java.io.IOException;
+import java.util.Collections;
+
 import org.apache.kerby.config.Configured;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.BatchTrans;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.type.ad.AdToken;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
+import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry;
+import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationType;
+import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
+import org.apache.kerby.kerberos.kerb.type.base.TokenFormat;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcClientRequest;
 import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 import org.slf4j.Logger;
@@ -196,7 +204,24 @@ public abstract class AbstractIdentityBackend
      */
     protected AuthorizationData doGetIdentityAuthorizationData(
             KdcClientRequest kdcClientRequest, EncTicketPart encTicketPart)
-            throws KrbException {
+                throws KrbException {
+        if (kdcClientRequest.isToken()) {
+            KrbToken krbToken = new KrbToken(kdcClientRequest.getToken(), TokenFormat.JWT);
+            AdToken adToken = new AdToken();
+            adToken.setToken(krbToken);
+
+            AuthorizationData authzData = new AuthorizationData();
+            AuthorizationDataEntry authzDataEntry = new AuthorizationDataEntry();
+            try {
+                authzDataEntry.setAuthzData(adToken.encode());
+            } catch (IOException e) {
+                throw new KrbException("Error encoding AdToken", e);
+            }
+
+            authzDataEntry.setAuthzType(AuthorizationType.AD_TOKEN);
+            authzData.setElements(Collections.singletonList(authzDataEntry));
+            return authzData;
+        }
         return null;
     }
 
