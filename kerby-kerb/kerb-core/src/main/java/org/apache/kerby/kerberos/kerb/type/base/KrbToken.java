@@ -103,7 +103,7 @@ public class KrbToken extends KrbTokenBase implements AuthToken {
      */
     public void setTokenType() {
         List<String> audiences = this.innerToken.getAudiences();
-        if (audiences.size() == 1 && audiences.get(0).startsWith(KrbConstant.TGS_PRINCIPAL)) {
+        if (audiences != null && audiences.size() == 1 && audiences.get(0).startsWith(KrbConstant.TGS_PRINCIPAL)) {
             isIdToken(true);
         } else {
             isAcToken(true);
