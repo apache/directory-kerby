@@ -79,9 +79,16 @@ public class TgsRequest extends KdcRequest {
         setKdcRep(kdcRep);
 
         TgsRep tgsRep = (TgsRep) getKdcRep();
-        EncTgsRepPart encTgsRepPart = EncryptionUtil.unseal(tgsRep.getEncryptedEncPart(),
+        EncTgsRepPart encTgsRepPart = null;
+        try {
+            encTgsRepPart = EncryptionUtil.unseal(tgsRep.getEncryptedEncPart(),
                 getSessionKey(),
                 KeyUsage.TGS_REP_ENCPART_SESSKEY, EncTgsRepPart.class);
+        } catch (KrbException e) {
+            encTgsRepPart = EncryptionUtil.unseal(tgsRep.getEncryptedEncPart(),
+                getSessionKey(),
+                KeyUsage.TGS_REP_ENCPART_SUBKEY, EncTgsRepPart.class);
+        }
 
         tgsRep.setEncPart(encTgsRepPart);
 
