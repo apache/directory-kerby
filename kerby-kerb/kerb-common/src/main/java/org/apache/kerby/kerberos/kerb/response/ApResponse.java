@@ -19,12 +19,13 @@
  */
 package org.apache.kerby.kerberos.kerb.response;
 
+import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.request.ApRequest;
-import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.ap.ApRep;
 import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
+import org.apache.kerby.kerberos.kerb.type.ap.Authenticator;
 import org.apache.kerby.kerberos.kerb.type.ap.EncAPRepPart;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
@@ -43,8 +44,14 @@ public class ApResponse {
         this.encryptionKey = encryptionKey;
     }
 
+    public ApResponse(ApReq apReq) {
+        this.apReq = apReq;
+    }
+
     public ApRep getApRep() throws KrbException {
-        ApRequest.validate(encryptionKey, apReq);
+        if (encryptionKey != null) {
+            ApRequest.validate(encryptionKey, apReq);
+        }
 
         if (apRep == null) {
             apRep = makeApRep();
@@ -64,17 +71,38 @@ public class ApResponse {
 
         ApRep apRep = new ApRep();
         EncAPRepPart encAPRepPart = new EncAPRepPart();
+
+        Authenticator auth = apReq.getAuthenticator();
         // This field contains the current time on the client's host.
-        encAPRepPart.setCtime(KerberosTime.now());
+        encAPRepPart.setCtime(auth.getCtime());
         // This field contains the microsecond part of the client's timestamp.
-        encAPRepPart.setCusec((int) KerberosTime.now().getTimeInSeconds());
-        encAPRepPart.setSubkey(apReq.getAuthenticator().getSubKey());
+        encAPRepPart.setCusec(auth.getCusec());
+        encAPRepPart.setSubkey(auth.getSubKey());
         encAPRepPart.setSeqNumber(0);
         apRep.setEncRepPart(encAPRepPart);
-        EncryptedData encPart = EncryptionUtil.seal(encAPRepPart,
-                apReq.getAuthenticator().getSubKey(), KeyUsage.AP_REP_ENCPART);
+        EncryptedData encPart = EncryptionUtil.seal(encAPRepPart, auth.getSubKey(), KeyUsage.AP_REP_ENCPART);
         apRep.setEncryptedEncPart(encPart);
 
         return apRep;
+    }
+
+    /**
+     * Validation for KRB_AP_REP message
+     * @param encKey key used to encrypt encrypted part of KRB_AP_REP message
+     * @param apRep KRB_AP_REP message received
+     * @param apReqSent the KRB_AP_REQ message that caused the KRB_AP_REP message from server
+     * @throws KrbException
+     */
+    public static void validate(EncryptionKey encKey, ApRep apRep, ApReq apReqSent) throws KrbException {
+        EncAPRepPart encPart = EncryptionUtil.unseal(apRep.getEncryptedEncPart(),
+                encKey, KeyUsage.AP_REP_ENCPART, EncAPRepPart.class);
+        apRep.setEncRepPart(encPart);
+        if (apReqSent != null) {
+            Authenticator auth = apReqSent.getAuthenticator();
+            if (!encPart.getCtime().equals(auth.getCtime())
+                    || encPart.getCusec() != auth.getCusec()) {
+                throw new KrbException(KrbErrorCode.KRB_AP_ERR_MUT_FAIL);
+            }
+        }
     }
 }
