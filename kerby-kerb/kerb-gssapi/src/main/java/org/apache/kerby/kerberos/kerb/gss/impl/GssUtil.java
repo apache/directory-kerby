@@ -304,11 +304,16 @@ public class GssUtil {
     public static KrbClientBase getKrbClient() {
         KrbClientBase client;
         try {
-            File confSpecified = new File(getSystemProperty("java.security.krb5.conf"));
-            if (confSpecified != null) {
-                client = new KrbClientBase(confSpecified);
+            String systemProperty = getSystemProperty("java.security.krb5.conf");
+            if (systemProperty != null) {
+                File confSpecified = new File(systemProperty);
+                if (confSpecified.exists()) {
+                    client = new KrbClientBase(confSpecified);
+                } else {
+                    client = new KrbClientBase();   // get configure file from environment variable or default path
+                }
             } else {
-                client = new KrbClientBase();   // get configure file from environment variable or default path
+                client = new KrbClientBase();
             }
 
             return client;
