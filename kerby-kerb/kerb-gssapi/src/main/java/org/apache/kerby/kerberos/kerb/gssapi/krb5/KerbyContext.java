@@ -468,7 +468,11 @@ public class KerbyContext implements GSSContextSpi {
 
     public int getWrapSizeLimit(int qop, boolean confReq, int maxTokSize)
             throws GSSException {
-        return 65536;   // TODO: to be implemented
+        if (gssEncryptor.isV2()) {
+            return WrapTokenV2.getMsgSizeLimit(qop, confReq, maxTokSize, gssEncryptor);
+        } else {
+            return WrapTokenV1.getMsgSizeLimit(qop, confReq, maxTokSize, gssEncryptor);
+        }
     }
 
     public void wrap(InputStream is, OutputStream os, MessageProp msgProp)
@@ -476,7 +480,13 @@ public class KerbyContext implements GSSContextSpi {
         if (ctxState != STATE_ESTABLISHED) {
             throw new GSSException(GSSException.NO_CONTEXT, -1, "Context invalid for wrap");
         }
-        throw new GSSException(GSSException.UNAVAILABLE, -1, "Unsupported method");  // TODO: to be implemented
+        if (gssEncryptor.isV2()) {
+             WrapTokenV2 token = new WrapTokenV2(this, inBuf, 0, len, msgProp);
+             token.wrap(os);
+        } else {
+             WrapTokenV1 token = new WrapTokenV1(this, inBuf, 0, len, msgProp);
+             token.wrap(os);
+        }
     }
 
     public byte[] wrap(byte[] inBuf, int offset, int len,
@@ -484,12 +494,26 @@ public class KerbyContext implements GSSContextSpi {
         if (ctxState != STATE_ESTABLISHED) {
             throw new GSSException(GSSException.NO_CONTEXT, -1, "Context invalid for wrap");
         }
-        return null; // TODO: to be implemented
+        byte[] ret;
+        if (gssEncryptor.isV2()) {
+             WrapTokenV2 token = new WrapTokenV2(this, inBuf, offset, len, msgProp);
+             ret = token.wrap();
+        } else {
+             WrapTokenV1 token = new WrapTokenV1(this, inBuf, offset, len, msgProp);
+             ret = token.wrap();
+        }
+        return ret;
     }
 
     public void unwrap(InputStream is, OutputStream os,
                        MessageProp msgProp) throws GSSException {
-        throw new GSSException(GSSException.UNAVAILABLE, -1, "Unsupported method");  // TODO: to be implemented
+        if (gssEncryptor.isV2()) {
+            WrapTokenV2 token = new WrapTokenV2(this, msgProp, is);
+            token.unwrap(os);
+        } else {
+            WrapTokenV1 token = new WrapTokenV1(this, msgProp, is);
+            token.unwrap(os);
+        }
     }
 
     public byte[] unwrap(byte[] inBuf, int offset, int len,
@@ -497,7 +521,15 @@ public class KerbyContext implements GSSContextSpi {
         if (ctxState != STATE_ESTABLISHED) {
             throw new GSSException(GSSException.NO_CONTEXT, -1, "Context invalid for unwrap");
         }
-        return null; // TODO: to be implemented
+        byte[] ret;
+        if (gssEncryptor.isV2()) {
+             WrapTokenV2 token = new WrapTokenV2(this, msgProp, inBuf, offset, len);
+             ret = token.unwrap();
+        } else {
+            WrapTokenV1 token = new WrapTokenV1(this, msgProp, inBuf, offset, len);
+            ret = token.unwrap();
+        }
+        return ret;
     }
 
     public void getMIC(InputStream is, OutputStream os,
