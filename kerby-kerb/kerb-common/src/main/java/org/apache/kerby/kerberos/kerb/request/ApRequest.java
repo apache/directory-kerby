@@ -89,8 +89,11 @@ public class ApRequest {
         authenticator.setAuthenticatorVno(5);
         authenticator.setCname(clientPrincipal);
         authenticator.setCrealm(sgtTicket.getRealm());
-        authenticator.setCtime(KerberosTime.now());
-        authenticator.setCusec(0);
+        long millis = System.currentTimeMillis();
+        int usec = (int) (millis % 1000) * 1000;
+        millis -= millis % 1000;
+        authenticator.setCtime(new KerberosTime(millis));
+        authenticator.setCusec(usec);
         authenticator.setSubKey(sgtTicket.getSessionKey());
 
         return authenticator;
@@ -138,13 +141,13 @@ public class ApRequest {
         }
 
         if (timeSkew != 0) {
-            if (authenticator.getCtime().isInClockSkew(timeSkew)) {
+            if (!authenticator.getCtime().isInClockSkew(timeSkew)) {
                 throw new KrbException(KrbErrorCode.KRB_AP_ERR_SKEW);
             }
 
             KerberosTime now = KerberosTime.now();
             KerberosTime startTime = tktEncPart.getStartTime();
-            if (startTime != null && startTime.greaterThanWithSkew(now, timeSkew)) {
+            if (startTime != null && !startTime.lessThanWithSkew(now, timeSkew)) {
                 throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_NYV);
             }
 

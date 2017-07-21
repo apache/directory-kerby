@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.gssapi;
 
 import org.apache.kerby.kerberos.kerb.gssapi.krb5.KerbyAcceptCred;
+import org.apache.kerby.kerberos.kerb.gssapi.krb5.KerbyContext;
 import org.apache.kerby.kerberos.kerb.gssapi.krb5.KerbyCredElement;
 import org.apache.kerby.kerberos.kerb.gssapi.krb5.KerbyInitCred;
 import org.apache.kerby.kerberos.kerb.gssapi.krb5.KerbyNameElement;
@@ -90,9 +91,7 @@ public class KerbyMechFactory implements MechanismFactory {
         if (myInitiatorCred == null) {
             myInitiatorCred = getCredentialElement(null, lifetime, 0, GSSCredential.INITIATE_ONLY);
         }
-        return null;
-        //For convenience of making patch, return null instead of introduce in KerbyContext
-        //return new KerbyContext(caller, (KerbyNameElement)peer, (KerbyInitCred)myInitiatorCred, lifetime);
+        return new KerbyContext(caller, (KerbyNameElement) peer, (KerbyInitCred) myInitiatorCred, lifetime);
     }
 
     public GSSContextSpi getMechanismContext(GSSCredentialSpi myAcceptorCred)
@@ -101,13 +100,13 @@ public class KerbyMechFactory implements MechanismFactory {
             myAcceptorCred = getCredentialElement(null, 0,
                     GSSCredential.INDEFINITE_LIFETIME, GSSCredential.ACCEPT_ONLY);
         }
-        return null; //return new KerbyContext(caller, (KerbyAcceptCred)myAcceptorCred);
+        return new KerbyContext(caller, (KerbyAcceptCred) myAcceptorCred);
     }
 
     // Reconstruct from previously exported context
     public GSSContextSpi getMechanismContext(byte[] exportedContext)
             throws GSSException {
-        return null; //return new KerbyContext(caller, exportedContext);
+       return new KerbyContext(caller, exportedContext);
     }
 
     public GSSCredentialSpi getCredentialElement(GSSNameSpi name,
