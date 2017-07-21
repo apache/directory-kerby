@@ -48,6 +48,7 @@ import javax.security.auth.kerberos.KerberosTicket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.security.Provider;
 
 @SuppressWarnings("PMD")
@@ -57,6 +58,9 @@ public class KerbyContext implements GSSContextSpi {
     private static final int STATE_ESTABLISHING = 1;
     private static final int STATE_ESTABLISHED = 2;
     private static final int STATE_DESTROYED = 3;
+
+    private static final byte[] MSG_AP_REQ = {(byte) 0x1, (byte) 0};
+    private static final byte[] MSG_AP_REP = {(byte) 0x2, (byte) 0};
 
     private int ctxState = STATE_NONE;
 
@@ -289,7 +293,11 @@ public class KerbyContext implements GSSContextSpi {
             }
             setupInitiatorContext(sgtTicket, apRequest);
             try {
-                ret = outApReq.encode();
+                ByteBuffer outBuffer = ByteBuffer.allocate(outApReq.encodingLength() + 2);
+                outBuffer.put(MSG_AP_REQ);
+                outApReq.encode(outBuffer);
+                outBuffer.flip();
+                ret = outBuffer.array();
             } catch (IOException e) {
                 throw new GSSException(GSSException.FAILURE, -1, "Generate ApReq bytes failed: " + e.getMessage());
             }
@@ -346,9 +354,13 @@ public class KerbyContext implements GSSContextSpi {
      */
     private void verifyServerToken(InputStream is, int mechTokenSize)
             throws GSSException {
-        byte[] token = new byte[mechTokenSize];
+        byte[] token;
         ApRep apRep;
         try {
+            if (!(is.read() == MSG_AP_REP[0] && is.read() == MSG_AP_REP[1])) {
+                throw new GSSException(GSSException.FAILURE, -1, "Invalid ApRep message ID");
+            }
+            token = new byte[mechTokenSize - MSG_AP_REP.length];
             is.read(token);
             apRep = new ApRep();
             apRep.decode(token);
@@ -404,14 +416,19 @@ public class KerbyContext implements GSSContextSpi {
 
     private byte[] verifyClientToken(KerbyAcceptCred acceptCred, InputStream is, int mechTokenSize)
             throws GSSException {
-        byte[] token = new byte[mechTokenSize];
+        byte[] token;
         ApReq apReq;
         try {
+            if (!(is.read() == MSG_AP_REQ[0] && is.read() == MSG_AP_REQ[1])) {
+                throw new GSSException(GSSException.FAILURE, -1, "Invalid ApReq message ID");
+            }
+
+            token = new byte[mechTokenSize - MSG_AP_REQ.length];
             is.read(token);
             apReq = new ApReq();
             apReq.decode(token);
         } catch (IOException e) {
-            throw new GSSException(GSSException.UNAUTHORIZED, -1, "ApReq invalid" + e.getMessage());
+            throw new GSSException(GSSException.UNAUTHORIZED, -1, "ApReq invalid:" + e.getMessage());
         }
 
         int kvno = apReq.getTicket().getEncryptedEncPart().getKvno();
@@ -459,7 +476,11 @@ public class KerbyContext implements GSSContextSpi {
 
         byte[] ret = null;
         try {
-            ret = apRep.encode();
+            ByteBuffer outBuffer = ByteBuffer.allocate(apRep.encodingLength() + 2);
+            outBuffer.put(MSG_AP_REP);
+            apRep.encode(outBuffer);
+            outBuffer.flip();
+            ret = outBuffer.array();
         } catch (IOException e) {
             throw new GSSException(GSSException.FAILURE, -1, "Generate ApRep bytes failed:" + e.getMessage());
         }
