@@ -80,8 +80,13 @@ public class Rc4HmacEnc extends AbstractEncTypeHandler {
         return CheckSumType.HMAC_MD5_ARCFOUR;
     }
 
+    @Override
     protected void encryptWith(byte[] workBuffer, int[] workLens,
-                               byte[] key, byte[] iv, int usage) throws KrbException {
+                               byte[] key, byte[] iv, int usage, boolean raw) throws KrbException {
+        if (raw) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP,
+                    "Raw mode not supported for this encryption type");
+        }
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
         int dataLen = workLens[2];
@@ -133,7 +138,11 @@ public class Rc4HmacEnc extends AbstractEncTypeHandler {
 
     @Override
     protected byte[] decryptWith(byte[] workBuffer, int[] workLens,
-                                 byte[] key, byte[] iv, int usage) throws KrbException {
+                                 byte[] key, byte[] iv, int usage, boolean raw) throws KrbException {
+        if (raw) {
+            throw new KrbException(KrbErrorCode.KDC_ERR_ETYPE_NOSUPP,
+                    "Raw mode not supported for this encryption type");
+        }
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
         int dataLen = workLens[2];

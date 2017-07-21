@@ -52,7 +52,7 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
 
     @Override
     protected void encryptWith(byte[] workBuffer, int[] workLens,
-                               byte[] key, byte[] iv, int usage) throws KrbException {
+                               byte[] key, byte[] iv, int usage, boolean raw) throws KrbException {
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
         int inputLen = workLens[2];
@@ -75,31 +75,35 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
          * so need to adjust the workBuffer arrangement
          */
 
-        byte[] tmpEnc = new byte[confounderLen + inputLen + paddingLen];
-        // confounder
-        byte[] confounder = Confounder.makeBytes(confounderLen);
-        System.arraycopy(confounder, 0, tmpEnc, 0, confounderLen);
+        if (!raw) {
+            byte[] tmpEnc = new byte[confounderLen + inputLen + paddingLen];
+            // confounder
+            byte[] confounder = Confounder.makeBytes(confounderLen);
+            System.arraycopy(confounder, 0, tmpEnc, 0, confounderLen);
 
-        // data
-        System.arraycopy(workBuffer, confounderLen + checksumLen,
-                tmpEnc, confounderLen, inputLen);
+            // data
+            System.arraycopy(workBuffer, confounderLen + checksumLen,
+                    tmpEnc, confounderLen, inputLen);
 
-        // padding
-        for (int i = confounderLen + inputLen; i < paddingLen; ++i) {
-            tmpEnc[i] = 0;
+            // padding
+            for (int i = confounderLen + inputLen; i < paddingLen; ++i) {
+                tmpEnc[i] = 0;
+            }
+
+            // checksum & encrypt
+            byte[] checksum = makeChecksum(ki, tmpEnc, checksumLen);
+            encProvider().encrypt(ke, iv, tmpEnc);
+
+            System.arraycopy(tmpEnc, 0, workBuffer, 0, tmpEnc.length);
+            System.arraycopy(checksum, 0, workBuffer, tmpEnc.length, checksum.length);
+        } else {
+            encProvider().encrypt(ke, iv, workBuffer);
         }
-
-        // checksum & encrypt
-        byte[] checksum = makeChecksum(ki, tmpEnc, checksumLen);
-        encProvider().encrypt(ke, iv, tmpEnc);
-
-        System.arraycopy(tmpEnc, 0, workBuffer, 0, tmpEnc.length);
-        System.arraycopy(checksum, 0, workBuffer, tmpEnc.length, checksum.length);
     }
 
     @Override
     protected byte[] decryptWith(byte[] workBuffer, int[] workLens,
-                                 byte[] key, byte[] iv, int usage) throws KrbException {
+                                 byte[] key, byte[] iv, int usage, boolean raw) throws KrbException {
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
         int dataLen = workLens[2];
@@ -116,20 +120,25 @@ public abstract class KeKiEnc extends AbstractEncTypeHandler {
         byte[] tmpEnc = new byte[confounderLen + dataLen];
         System.arraycopy(workBuffer, 0,
                 tmpEnc, 0, confounderLen + dataLen);
-        byte[] checksum = new byte[checksumLen];
-        System.arraycopy(workBuffer, confounderLen + dataLen,
-                checksum, 0, checksumLen);
+        if (!raw) {
+            byte[] checksum = new byte[checksumLen];
+            System.arraycopy(workBuffer, confounderLen + dataLen,
+                    checksum, 0, checksumLen);
 
-        encProvider().decrypt(ke, iv, tmpEnc);
-        byte[] newChecksum = makeChecksum(ki, tmpEnc, checksumLen);
+            encProvider().decrypt(ke, iv, tmpEnc);
+            byte[] newChecksum = makeChecksum(ki, tmpEnc, checksumLen);
 
-        if (!checksumEqual(checksum, newChecksum)) {
-            throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
+            if (!checksumEqual(checksum, newChecksum)) {
+                throw new KrbException(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY);
+            }
+
+            byte[] data = new byte[dataLen];
+            System.arraycopy(tmpEnc, confounderLen, data, 0, dataLen);
+            return data;
+        } else {
+            encProvider().decrypt(ke, iv, tmpEnc);
+            return tmpEnc;
         }
-
-        byte[] data = new byte[dataLen];
-        System.arraycopy(tmpEnc, confounderLen, data, 0, dataLen);
-        return data;
     }
 
     protected abstract byte[] makeChecksum(byte[] key, byte[] data, int hashSize)
