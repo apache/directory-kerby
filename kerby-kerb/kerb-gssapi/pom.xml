@@ -17,30 +17,25 @@
 
   <parent>
     <groupId>org.apache.kerby</groupId>
-    <artifactId>kerby-all</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <artifactId>kerby-kerb</artifactId>
+    <version>1.0.0-RC3-SNAPSHOT</version>
   </parent>
-  
-  <artifactId>kerby-kerb</artifactId>
-  <name>Kerby-kerb Project</name>
-  <packaging>pom</packaging>
 
-  <modules>
-    <module>kerb-core</module>
-    <module>kerb-common</module>
-    <module>kerb-util</module>
-    <module>kerb-crypto</module>
-    <module>kerb-identity</module>
-    <module>kerb-identity-test</module>
-    <module>kerb-client</module>
-    <module>kerb-server</module>
-    <module>kerb-kdc-test</module>
-    <module>integration-test</module>
-    <module>kerb-admin</module>
-    <module>kerb-admin-server</module>
-    <module>kerb-simplekdc</module>
-    <module>kerb-client-api-all</module>
-    <module>kerb-server-api-all</module>
-    <module>kerb-gssapi</module>
-  </modules>
+  <artifactId>kerb-gssapi</artifactId>
+
+  <name>Kerby-kerb GssAPI</name>
+  <description>Kerby-kerb GSSAPI Implementation</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-crypto</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-client</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 </project>

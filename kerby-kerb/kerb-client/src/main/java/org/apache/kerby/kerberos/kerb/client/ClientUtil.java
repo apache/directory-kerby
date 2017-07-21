@@ -40,12 +40,15 @@ public final class ClientUtil {
 
     /**
      * Load krb5.conf from specified conf dir.
-     * @param confDir The conf dir
+     * @param conf The conf file or dir, default file name 'krb5.conf' is used if dir
      * @return KrbConfig
      * @throws KrbException e
      */
-    public static KrbConfig getConfig(File confDir) throws KrbException {
-        File confFile = new File(confDir, KRB5_FILE_NAME);
+    public static KrbConfig getConfig(File conf) throws KrbException {
+        if (!conf.exists()) {
+            throw new KrbException(conf + " not found");
+        }
+        File confFile = conf.isDirectory() ? new File(conf, KRB5_FILE_NAME) : conf;
         if (!confFile.exists()) {
             throw new KrbException(KRB5_FILE_NAME + " not found");
         }
