@@ -86,8 +86,6 @@ public class KerbyContext implements GSSContextSpi {
     private TicketFlags ticketFlags;
     private ApReq outApReq;
 
-    private KerbyGssEncryptor gssEncryptor;
-
     // Called on initiator's side.
     public KerbyContext(GSSCaller caller, KerbyNameElement peerName, KerbyCredElement myCred,
                         int lifeTime)
@@ -296,13 +294,11 @@ public class KerbyContext implements GSSContextSpi {
 
             ctxState = STATE_ESTABLISHING;
             if (!getMutualAuthState()) {
-                gssEncryptor = new KerbyGssEncryptor(getSessionKey());
                 ctxState = STATE_ESTABLISHED;
             }
 
         } else if (ctxState == STATE_ESTABLISHING) {
             verifyServerToken(is, mechTokenSize);
-            gssEncryptor = new KerbyGssEncryptor(getSessionKey());
             outApReq = null;
             ctxState = STATE_ESTABLISHED;
         }
@@ -392,8 +388,6 @@ public class KerbyContext implements GSSContextSpi {
             if (getMutualAuthState()) {
                 ret = verifyClientToken(acceptCred, is, mechTokenSize);
             }
-
-            gssEncryptor = new KerbyGssEncryptor(getSessionKey());
 
             myCred = null;
             ctxState = STATE_ESTABLISHED;
@@ -612,9 +606,5 @@ public class KerbyContext implements GSSContextSpi {
         synchronized (peerSequenceNumberLock) {
             return peerSequenceNumber++;
         }
-    }
-
-    public KerbyGssEncryptor getGssEncryptor() {
-        return gssEncryptor;
     }
 }

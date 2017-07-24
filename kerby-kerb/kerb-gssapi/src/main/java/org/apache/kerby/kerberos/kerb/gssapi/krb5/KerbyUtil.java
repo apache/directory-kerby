@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.gssapi.krb5;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClientBase;
+import org.apache.kerby.kerberos.kerb.request.ApRequest;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry;
