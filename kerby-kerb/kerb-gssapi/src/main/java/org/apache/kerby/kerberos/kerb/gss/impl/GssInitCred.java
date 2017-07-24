@@ -20,8 +20,6 @@
 package org.apache.kerby.kerberos.kerb.gss.impl;
 
 import org.ietf.jgss.GSSException;
-import org.ietf.jgss.GSSName;
-
 import sun.security.jgss.GSSCaller;
 
 import javax.security.auth.kerberos.KerberosTicket;
@@ -37,12 +35,6 @@ public final class GssInitCred extends GssCredElement {
     }
 
     public static GssInitCred getInstance(GSSCaller caller, GssNameElement name, int lifeTime) throws GSSException {
-        if (name == null) {
-            KerberosTicket ticket = CredUtils.getKerberosTicketFromContext(caller, null, null);
-            GssNameElement clientName = GssNameElement.getInstance(ticket.getClient().getName(), GSSName.NT_USER_NAME);
-            return new GssInitCred(caller, clientName, ticket, lifeTime);
-        }
-
         KerberosTicket ticket = CredUtils.getKerberosTicketFromContext(caller, name.getPrincipalName().getName(), null);
         return new GssInitCred(caller, name, ticket, lifeTime);
     }

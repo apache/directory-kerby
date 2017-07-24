@@ -41,6 +41,7 @@ public class KerbyGssAppTest extends GssAppTest {
     }
 
     @Test
+    @org.junit.Ignore
     public void testJAAS() throws Exception {
         super.testJAAS();
     }
