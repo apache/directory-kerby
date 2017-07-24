@@ -58,16 +58,7 @@ abstract class DesCbcEnc extends AbstractEncTypeHandler {
 
     @Override
     protected void encryptWith(byte[] workBuffer, int[] workLens,
-                               byte[] key, byte[] iv, int usage, boolean raw) throws KrbException {
-        if (!raw) {
-            doEncryptWith(workBuffer, workLens, key, iv);
-        } else {
-            encProvider().encrypt(key, iv, workBuffer);
-        }
-    }
-
-    private void doEncryptWith(byte[] workBuffer, int[] workLens,
-                                 byte[] key, byte[] iv) throws KrbException {
+                                 byte[] key, byte[] iv, int usage) throws KrbException {
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
         int dataLen = workLens[2];
@@ -92,19 +83,7 @@ abstract class DesCbcEnc extends AbstractEncTypeHandler {
 
     @Override
     protected byte[] decryptWith(byte[] workBuffer, int[] workLens,
-                                 byte[] key, byte[] iv, int usage, boolean raw) throws KrbException {
-        if (!raw) {
-            return doDecryptWith(workBuffer, workLens, key, iv);
-        } else {
-            encProvider().decrypt(key, iv, workBuffer);
-            byte[] data = new byte[workBuffer.length];
-            System.arraycopy(workBuffer, 0, data, 0, data.length);
-            return data;
-        }
-    }
-
-    private byte[] doDecryptWith(byte[] workBuffer, int[] workLens,
-                                 byte[] key, byte[] iv) throws KrbException {
+                                 byte[] key, byte[] iv, int usage) throws KrbException {
         int confounderLen = workLens[0];
         int checksumLen = workLens[1];
         int dataLen = workLens[2];

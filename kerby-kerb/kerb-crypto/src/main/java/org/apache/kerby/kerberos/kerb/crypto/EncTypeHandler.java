@@ -54,21 +54,9 @@ public interface EncTypeHandler extends CryptoTypeHandler {
     byte[] encrypt(byte[] data, byte[] key, byte[] ivec,
         int usage) throws KrbException;
 
-    byte[] encryptRaw(byte[] data, byte[] key, int usage)
-            throws KrbException;
-
-    byte[] encryptRaw(byte[] data, byte[] key, byte[] ivec,
-        int usage) throws KrbException;
-
     byte[] decrypt(byte[] cipher, byte[] key, int usage)
         throws KrbException;
 
     byte[] decrypt(byte[] cipher, byte[] key, byte[] ivec,
         int usage) throws KrbException;
-
-    byte[] decryptRaw(byte[] data, byte[] key, int usage)
-            throws KrbException;
-
-    byte[] decryptRaw(byte[] cipher, byte[] key, byte[] ivec,
-                   int usage) throws KrbException;
 }

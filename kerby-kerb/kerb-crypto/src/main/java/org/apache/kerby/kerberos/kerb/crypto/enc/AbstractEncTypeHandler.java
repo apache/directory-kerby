@@ -123,29 +123,12 @@ public abstract class AbstractEncTypeHandler
         int[] workLens = new int[] {confounderLen, checksumLen,
                 inputLen, paddingLen};
 
-        encryptWith(workBuffer, workLens, key, iv, usage, false);
-        return workBuffer;
-    }
-
-    @Override
-    public byte[] encryptRaw(byte[] data, byte[] key, int usage) throws KrbException {
-        byte[] iv = new byte[encProvider().blockSize()];
-        return encryptRaw(data, key, iv, usage);
-    }
-
-    @Override
-    public byte[] encryptRaw(byte[] data, byte[] key, byte[] iv, int usage) throws KrbException {
-        int checksumLen = checksumSize();
-        int[] workLens = new int[] {0, checksumLen, data.length, 0};
-        byte[] workBuffer = new byte[data.length];
-        System.arraycopy(data, 0, workBuffer, 0, data.length);
-
-        encryptWith(workBuffer, workLens, key, iv, usage, true);
+        encryptWith(workBuffer, workLens, key, iv, usage);
         return workBuffer;
     }
 
     protected void encryptWith(byte[] workBuffer, int[] workLens,
-                          byte[] key, byte[] iv, int usage, boolean raw) throws KrbException {
+                          byte[] key, byte[] iv, int usage) throws KrbException {
 
     }
 
@@ -164,26 +147,11 @@ public abstract class AbstractEncTypeHandler
         int dataLen = totalLen - (confounderLen + checksumLen);
 
         int[] workLens = new int[] {confounderLen, checksumLen, dataLen};
-        return decryptWith(cipher, workLens, key, iv, usage, false);
-    }
-
-    @Override
-    public byte[] decryptRaw(byte[] cipher, byte[] key, int usage)
-            throws KrbException {
-        byte[] iv = new byte[encProvider().blockSize()];
-        return decryptRaw(cipher, key, iv, usage);
-    }
-
-    @Override
-    public byte[] decryptRaw(byte[] cipher, byte[] key, byte[] iv, int usage)
-            throws KrbException {
-        int checksumLen = checksumSize();
-        int[] workLens = new int[] {0, checksumLen, cipher.length};
-        return decryptWith(cipher, workLens, key, iv, usage, true);
+        return decryptWith(cipher, workLens, key, iv, usage);
     }
 
     protected byte[] decryptWith(byte[] workBuffer, int[] workLens,
-                               byte[] key, byte[] iv, int usage, boolean raw) throws KrbException {
+                               byte[] key, byte[] iv, int usage) throws KrbException {
         return null;
     }
 }
