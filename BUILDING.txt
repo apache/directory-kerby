@@ -24,8 +24,10 @@ It should be run at the top directory of Kerby.
 ###Build options:
 
 * To run findbugs without running tests : mvn clean package -DskipTests findbugs:findbugs [site]
-* Building distributions  without running tests : mvn package -Pdist -DskipTests
+* Building distributions without running tests : mvn package -Pdist -DskipTests
   (tar package in /kerby/kerby-dist/kdc-dist/target/ & /kerby/kerby-dist/tool-dist/target/)
 * Generate javadoc without running tests: mvn clean package -DskipTests javadoc:javadoc
 * Checkstyle & PMD checks are run by default. To build quickly and prevent them from running,
   add option [-Pnochecks], for example, mvn package -Pnochecks
+* All backends are built by default. To skip most of the backends, and just build the json backend,
+  add option [-PskipBackends], for example, mvn package -PskipBackends.

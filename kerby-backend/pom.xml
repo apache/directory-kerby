@@ -25,13 +25,6 @@
   <name>Kerby Backend</name>
   <packaging>pom</packaging>
 
-  <modules>
-    <module>ldap-backend</module>
-    <module>mavibot-backend</module>
-    <module>json-backend</module>
-    <module>zookeeper-backend</module>
-  </modules>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>
@@ -39,4 +32,28 @@
       <version>${project.version}</version>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>skipBackends</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>json-backend</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>allBackends</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>json-backend</module>
+        <module>ldap-backend</module>
+        <module>mavibot-backend</module>
+        <module>zookeeper-backend</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>
