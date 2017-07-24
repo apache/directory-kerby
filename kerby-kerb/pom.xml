@@ -41,6 +41,5 @@
     <module>kerb-simplekdc</module>
     <module>kerb-client-api-all</module>
     <module>kerb-server-api-all</module>
-    <module>kerb-gssapi</module>
   </modules>
 </project>
