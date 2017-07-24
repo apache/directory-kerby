@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.gss.impl;
 
+import org.apache.kerby.kerberos.kerb.Message;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 
