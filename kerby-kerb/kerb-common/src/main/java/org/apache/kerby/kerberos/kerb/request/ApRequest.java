@@ -29,14 +29,11 @@ import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.type.ap.Authenticator;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
-import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
-
-import java.net.InetAddress;
 
 /**
  * A wrapper for ApReq request
@@ -117,40 +114,6 @@ public class ApRequest {
         }
         if (!authenticator.getCrealm().equals(ticket.getEncPart().getCrealm())) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADMATCH);
-        }
-    }
-
-    /*
-     * Validate the ApReq with channel binding and time
-     */
-    public static void validate(EncryptionKey encKey, ApReq apReq,
-                                InetAddress initiator,
-                                long timeSkew) throws KrbException {
-        validate(encKey, apReq);
-        Ticket ticket = apReq.getTicket();
-        EncTicketPart tktEncPart = ticket.getEncPart();
-        Authenticator authenticator = apReq.getAuthenticator();
-        if (initiator != null) {
-            HostAddresses clientAddrs = tktEncPart.getClientAddresses();
-            if (clientAddrs != null && !clientAddrs.contains(initiator)) {
-                throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADADDR);
-            }
-        }
-
-        if (timeSkew != 0) {
-            if (authenticator.getCtime().isInClockSkew(timeSkew)) {
-                throw new KrbException(KrbErrorCode.KRB_AP_ERR_SKEW);
-            }
-
-            KerberosTime now = KerberosTime.now();
-            KerberosTime startTime = tktEncPart.getStartTime();
-            if (startTime != null && startTime.greaterThanWithSkew(now, timeSkew)) {
-                throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_NYV);
-            }
-
-            if (tktEncPart.getEndTime().lessThanWithSkew(now, timeSkew)) {
-                throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_EXPIRED);
-            }
         }
     }
 

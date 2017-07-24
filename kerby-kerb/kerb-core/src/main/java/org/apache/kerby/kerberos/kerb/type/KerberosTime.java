@@ -107,17 +107,6 @@ public class KerberosTime extends Asn1GeneralizedTime {
 
     /**
      * Compare the KerberosTime with another one, and return <tt>true</tt>
-     * if it's lesser than the provided one with time skew
-     * @param ktime
-     * @param skew Maximum time skew in milliseconds
-     * @return <tt>true</tt> if less
-     */
-    public boolean lessThanWithSkew(KerberosTime ktime, long skew) {
-        return diff(ktime) - skew <= 0;
-    }
-
-    /**
-     * Compare the KerberosTime with another one, and return <tt>true</tt>
      * if it's greater than the provided one
      * 
      * @param ktime compare with milliseconds
@@ -125,17 +114,6 @@ public class KerberosTime extends Asn1GeneralizedTime {
      */
     public boolean greaterThan(KerberosTime ktime) {
         return getValue().compareTo(ktime.getValue()) > 0;
-    }
-
-    /**
-     * Compare the KerberosTime with another one, and return <tt>true</tt>
-     * if it's greater than the provided one with time skew
-     * @param ktime
-     * @param skew Maximum time skew in milliseconds
-     * @return <tt>true</tt> if greater
-     */
-    public boolean greaterThanWithSkew(KerberosTime ktime, long skew) {
-        return diff(ktime) + skew >= 0;
     }
 
     /**
