@@ -38,7 +38,6 @@ import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TicketFlags;
 import org.ietf.jgss.GSSException;
-import sun.security.jgss.GSSCaller;
 
 import javax.crypto.SecretKey;
 import javax.security.auth.kerberos.KerberosKey;
@@ -184,18 +183,6 @@ public class KerbyUtil {
     }
 
     /**
-     * Scan current context for SgtTicket
-     * @param client
-     * @param service
-     * @return
-     */
-    public static SgtTicket getSgtCredentialFromContext(GSSCaller caller, String client, String service)
-            throws GSSException {
-        KerberosTicket ticket = CredUtils.getKerberosTicketFromContext(caller, client, service);
-        return getSgtTicketFromKerberosTicket(ticket);
-    }
-
-    /**
      * Construct a SgtTicket from KerberosTicket
      * @param kerberosTicket
      * @return
@@ -295,6 +282,15 @@ public class KerbyUtil {
                 clientAddresses
         );
         return ticket;
+    }
+
+    public static byte[] getAPRequest(PrincipalName clientPricipal, SgtTicket sgt) throws GSSException {
+        ApRequest apRequest = new ApRequest(clientPricipal, sgt);
+        try {
+            return apRequest.getApReq().encode();
+        } catch (Exception e) {  // IOExcetpion, KrbException
+            throw new GSSException(GSSException.FAILURE, -1, "Generate ApReq failed: " + e.getMessage());
+        }
     }
 
     public static KrbClientBase getKrbClient() {
