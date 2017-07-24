@@ -25,66 +25,29 @@ import org.apache.kerby.kerberos.kerb.crypto.CheckSumHandler;
 import org.apache.kerby.kerberos.kerb.crypto.CheckSumTypeHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncTypeHandler;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
-import org.apache.kerby.kerberos.kerb.crypto.cksum.provider.Md5Provider;
-import org.apache.kerby.kerberos.kerb.crypto.enc.provider.DesProvider;
-import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Rc4Provider;
 import org.apache.kerby.kerberos.kerb.type.base.CheckSumType;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.ietf.jgss.GSSException;
-
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * This class implements encryption related function used in GSS tokens
  */
 public class KerbyGssEncryptor {
 
-    private final EncryptionKey encKey;
-    private final EncryptionType encKeyType; // The following two variables used for convenience
-    private final byte[] encKeyBytes;
-
-    private CheckSumType checkSumTypeDef;
-    private int checkSumSize;
-
+    private EncryptionKey encKey;
     private boolean isV2 = false;
-    private int sgnAlg = 0xFFFF;
-    private int sealAlg = 0xFFFF;
-    private boolean isArcFourHmac = false;
-
-    private static final byte[] IV_ZEROR_8B = new byte[8];
 
     public KerbyGssEncryptor(EncryptionKey key) throws GSSException {
         encKey = key;
-        encKeyBytes = encKey.getKeyData();
-        encKeyType = key.getKeyType();
-
-        if (encKeyType == EncryptionType.AES128_CTS_HMAC_SHA1_96) {
-            checkSumSize = 12;
-            checkSumTypeDef = CheckSumType.HMAC_SHA1_96_AES128;
+        EncryptionType keyType = key.getKeyType();
+        // TODO: add support for other algorithms
+        if (keyType == EncryptionType.AES128_CTS_HMAC_SHA1_96
+                || keyType == EncryptionType.AES256_CTS_HMAC_SHA1_96) {
             isV2 = true;
-        } else if (encKeyType == EncryptionType.AES256_CTS_HMAC_SHA1_96) {
-            checkSumSize = 12;
-            checkSumTypeDef = CheckSumType.HMAC_SHA1_96_AES256;
-            isV2 = true;
-        } else if (encKeyType == EncryptionType.DES_CBC_CRC || encKeyType == EncryptionType.DES_CBC_MD5) {
-            sgnAlg = KerbyGssTokenV1.SGN_ALG_DES_MAC_MD5;
-            sealAlg = KerbyGssTokenV1.SEAL_ALG_DES;
-            checkSumSize = 8;
-        } else if (encKeyType == EncryptionType.DES3_CBC_SHA1) {
-            sgnAlg = KerbyGssTokenV1.SGN_ALG_HMAC_SHA1_DES3_KD;
-            sealAlg = KerbyGssTokenV1.SEAL_ALG_DES3_KD;
-            checkSumSize = 20;
-        } else if (encKeyType == EncryptionType.ARCFOUR_HMAC) {
-            sgnAlg = KerbyGssTokenV1.SGN_ALG_RC4_HMAC;
-            sealAlg = KerbyGssTokenV1.SEAL_ALG_RC4_HMAC;
-            checkSumSize = 16;
-            isArcFourHmac = true;
         } else {
             throw new GSSException(GSSException.FAILURE, -1,
-                    "Invalid encryption type: " + encKeyType.getDisplayName());
+                    "Invalid encryption type: " + key.getKeyType().getDisplayName());
         }
     }
 
@@ -94,18 +57,6 @@ public class KerbyGssEncryptor {
      */
     public boolean isV2() {
         return isV2;
-    }
-
-    public int getSgnAlg() {
-        return sgnAlg;
-    }
-
-    public int getSealAlg() {
-        return sealAlg;
-    }
-
-    public boolean isArcFourHmac() {
-        return isArcFourHmac;
     }
 
     public byte[] encryptData(byte[] tokenHeader, byte[] data,
@@ -151,11 +102,28 @@ public class KerbyGssEncryptor {
         }
 
         try {
-            return CheckSumHandler.getCheckSumHandler(checkSumTypeDef)
-                    .checksumWithKey(buffer, encKey.getKeyData(), keyUsage);
+            return getCheckSumHandler().checksumWithKey(buffer, encKey.getKeyData(), keyUsage);
         } catch (KrbException e) {
             throw new GSSException(GSSException.FAILURE, -1,
-                    "Exception in checksum calculation:" + e.getMessage());
+                    "Exception in checksum calculation:" + encKey.getKeyType().getName());
+        }
+    }
+
+    private CheckSumTypeHandler getCheckSumHandler() throws GSSException {
+        CheckSumType checkSumType;
+        if (encKey.getKeyType() == EncryptionType.AES128_CTS_HMAC_SHA1_96) {
+            checkSumType = CheckSumType.HMAC_SHA1_96_AES128;
+        } else if (encKey.getKeyType() == EncryptionType.AES256_CTS_HMAC_SHA1_96) {
+            checkSumType = CheckSumType.HMAC_SHA1_96_AES256;
+        } else {
+            throw new GSSException(GSSException.FAILURE, -1,
+                    "Unsupported checksum encryption type:" + encKey.getKeyType().getName());
+        }
+        try {
+            return CheckSumHandler.getCheckSumHandler(checkSumType);
+        } catch (KrbException e) {
+            throw new GSSException(GSSException.FAILURE, -1,
+                    "Unsupported checksum type:" + checkSumType.getName());
         }
     }
 
@@ -165,224 +133,6 @@ public class KerbyGssEncryptor {
      * @throws GSSException
      */
     public int getCheckSumSize() throws GSSException {
-        return checkSumSize;
-    }
-
-
-    private void addPadding(int paddingLen, byte[] outBuf, int offset) {
-        for (int i = 0; i < paddingLen; i++) {
-            outBuf[offset + i] = (byte) paddingLen;
-        }
-    }
-
-    private byte[] getFirstBytes(byte[] src, int len) {
-        if (len < src.length) {
-            byte[] ret = new byte[len];
-            System.arraycopy(src, 0, ret, 0, len);
-            return ret;
-        }
-        return src;
-    }
-
-    private byte[] getKeyBytesWithLength(int len) {
-        return getFirstBytes(encKeyBytes, len);
-    }
-
-    public byte[] calculateCheckSum(byte[] confounder, byte[] header,
-                                    byte[] data, int offset, int len, int paddingLen, boolean isMic)
-            throws GSSException {
-        byte[] ret;
-        int keyUsage = KerbyGssTokenV1.KG_USAGE_SIGN;
-        CheckSumTypeHandler handler;
-
-        int keySize;
-        byte[] key;
-        byte[] toProc;
-        int toOffset;
-        int toLen = (confounder == null ? 0 : confounder.length)
-                + (header == null ? 0 : header.length) + len + paddingLen;
-        if (toLen == len) {
-            toProc = data;
-            toOffset = offset;
-        } else {
-            toOffset = 0;
-            int idx = 0;
-            toProc = new byte[toLen];
-
-            if (header != null) {
-                System.arraycopy(header, 0, toProc, idx, header.length);
-                idx += header.length;
-            }
-
-            if (confounder != null) {
-                System.arraycopy(confounder, 0, toProc, idx, confounder.length);
-                idx += confounder.length;
-            }
-
-            System.arraycopy(data, offset, toProc, idx, len);
-            addPadding(paddingLen, toProc, len + idx);
-        }
-
-        CheckSumType chksumType;
-        try {
-            switch (sgnAlg) {
-                case KerbyGssTokenV1.SGN_ALG_DES_MAC_MD5:
-                    Md5Provider md5Provider = new Md5Provider();
-                    md5Provider.hash(toProc);
-                    toProc = md5Provider.output();
-
-                case KerbyGssTokenV1.SGN_ALG_DES_MAC:
-                    DesProvider desProvider = new DesProvider();
-                    return desProvider.cbcMac(encKeyBytes, IV_ZEROR_8B, toProc);
-
-                case KerbyGssTokenV1.SGN_ALG_HMAC_SHA1_DES3_KD:
-                    chksumType = CheckSumType.HMAC_SHA1_DES3_KD;
-                    break;
-                case KerbyGssTokenV1.SGN_ALG_RC4_HMAC:
-                    chksumType = CheckSumType.MD5_HMAC_ARCFOUR;
-                    if (isMic) {
-                        keyUsage = KerbyGssTokenV1.KG_USAGE_MS_SIGN;
-                    }
-                    break;
-                case KerbyGssTokenV1.SGN_ALG_MD25:
-                    throw new GSSException(GSSException.FAILURE, -1, "CheckSum not implemented for SGN_ALG_MD25");
-                default:
-                    throw new GSSException(GSSException.FAILURE, -1, "CheckSum not implemented for sgnAlg=" + sgnAlg);
-            }
-            handler = CheckSumHandler.getCheckSumHandler(chksumType);
-            keySize = handler.keySize();
-            key = getKeyBytesWithLength(keySize);
-            ret = handler.checksumWithKey(toProc, toOffset, toLen, key, keyUsage);
-        } catch (KrbException e) {
-            throw new GSSException(GSSException.FAILURE, -1,
-                    "Exception in checksum calculation sgnAlg = " + sgnAlg + " : " + e.getMessage());
-        }
-        return ret;
-    }
-
-    public byte[] encryptSequenceNumber(byte[] seqBytes, byte[] ivSrc, boolean encrypt)
-            throws GSSException {
-        EncTypeHandler handler;
-        try {
-            switch (sgnAlg) {
-                case KerbyGssTokenV1.SGN_ALG_DES_MAC_MD5:
-                case KerbyGssTokenV1.SGN_ALG_DES_MAC:
-                    DesProvider desProvider = new DesProvider();
-                    byte[] data = seqBytes.clone();
-                    if (encrypt) {
-                        desProvider.encrypt(encKeyBytes, ivSrc, data);
-                    } else {
-                        desProvider.decrypt(encKeyBytes, ivSrc, data);
-                    }
-                    return data;
-                case KerbyGssTokenV1.SGN_ALG_HMAC_SHA1_DES3_KD:
-                    handler = EncryptionHandler.getEncHandler(EncryptionType.DES3_CBC_SHA1_KD);
-                    break;
-                case KerbyGssTokenV1.SGN_ALG_RC4_HMAC:
-                    return encryptArcFourHmac(seqBytes, getKeyBytesWithLength(16), getFirstBytes(ivSrc, 8), encrypt);
-                case KerbyGssTokenV1.SGN_ALG_MD25:
-                    throw new GSSException(GSSException.FAILURE, -1, "EncSeq not implemented for SGN_ALG_MD25");
-                default:
-                    throw new GSSException(GSSException.FAILURE, -1, "EncSeq not implemented for sgnAlg=" + sgnAlg);
-            }
-            int keySize = handler.keySize();
-            byte[] key = getKeyBytesWithLength(keySize);
-            int ivLen = handler.encProvider().blockSize();
-            byte[] iv = getFirstBytes(ivSrc, ivLen);
-            if (encrypt) {
-                return handler.encryptRaw(seqBytes, key, iv, KerbyGssTokenV1.KG_USAGE_SEQ);
-            } else {
-                return handler.decryptRaw(seqBytes, key, iv, KerbyGssTokenV1.KG_USAGE_SEQ);
-            }
-        } catch (KrbException e) {
-            throw new GSSException(GSSException.FAILURE, -1,
-                    "Exception in encrypt seq number sgnAlg = " + sgnAlg + " : " + e.getMessage());
-        }
-    }
-
-    private byte[] getHmacMd5(byte[] key, byte[] salt) throws GSSException {
-        try {
-            SecretKey secretKey = new SecretKeySpec(key, "HmacMD5");
-            Mac mac = Mac.getInstance("HmacMD5");
-            mac.init(secretKey);
-            return mac.doFinal(salt);
-        } catch (Exception e) {
-            throw new GSSException(GSSException.FAILURE, -1, "Get HmacMD5 failed: " + e.getMessage());
-        }
-    }
-
-    private byte[] encryptArcFourHmac(byte[] data, byte[] key, byte[] iv, boolean encrypt)
-            throws GSSException {
-        byte[] sk1 = getHmacMd5(key, new byte[4]);
-        byte[] sk2 = getHmacMd5(sk1, iv);
-        Rc4Provider provider = new Rc4Provider();
-        try {
-            byte[] ret = data.clone();
-            if (encrypt) {
-                provider.encrypt(sk2, ret);
-            } else {
-                provider.decrypt(sk2, ret);
-            }
-            return ret;
-        } catch (KrbException e) {
-            throw new GSSException(GSSException.FAILURE, -1,
-                    "En/Decrypt sequence failed for ArcFourHmac: " + e.getMessage());
-        }
-    }
-
-    private byte[] encryptDataArcFourHmac(byte[] data, byte[] key, byte[] seqNum, boolean encrypt) throws GSSException {
-        byte[] dataKey = new byte[key.length];
-        for (int i = 0; i <= 15; i++) {
-            dataKey[i] = (byte) (key[i] ^ 0xF0);
-        }
-        return encryptArcFourHmac(data, dataKey, seqNum, encrypt);
-    }
-
-    public byte[] encryptTokenV1(byte[] confounder, byte[] data, int offset, int len,
-                            int paddingLen, byte[] seqNumber, boolean encrypt) throws GSSException {
-        byte[] toProc;
-        if (encrypt) {
-            int toLen = (confounder == null ? 0 : confounder.length) + len + paddingLen;
-            int index = 0;
-            toProc = new byte[toLen];
-            if (confounder != null) {
-                System.arraycopy(confounder, 0, toProc, 0, confounder.length);
-                index += confounder.length;
-            }
-            System.arraycopy(data, offset, toProc, index, len);
-            addPadding(paddingLen, toProc, index + len);
-        } else {
-            toProc = data;
-            if (data.length != len) {
-                toProc = new byte[len];
-                System.arraycopy(data, offset, toProc, 0, len);
-            }
-        }
-        EncTypeHandler handler;
-        try {
-            switch (sealAlg) {
-                case KerbyGssTokenV1.SEAL_ALG_DES:
-                    handler = EncryptionHandler.getEncHandler(EncryptionType.DES_CBC_MD5);
-                    break;
-                case KerbyGssTokenV1.SEAL_ALG_DES3_KD:
-                    handler = EncryptionHandler.getEncHandler(EncryptionType.DES3_CBC_SHA1_KD);
-                    break;
-                case KerbyGssTokenV1.SEAL_ALG_RC4_HMAC:
-                    return encryptDataArcFourHmac(toProc, getKeyBytesWithLength(16), seqNumber, encrypt);
-                default:
-                    throw new GSSException(GSSException.FAILURE, -1, "Unknown encryption type sealAlg = " + sealAlg);
-            }
-
-            int keySize = handler.keySize();
-            byte[] key = getKeyBytesWithLength(keySize);
-            if (encrypt) {
-                return handler.encryptRaw(toProc, key, KerbyGssTokenV1.KG_USAGE_SEAL);
-            } else {
-                return handler.decryptRaw(toProc, key, KerbyGssTokenV1.KG_USAGE_SEAL);
-            }
-        } catch (KrbException e) {
-            throw new GSSException(GSSException.FAILURE, -1,
-                    "Exception in encrypt data sealAlg = " + sealAlg + " : " + e.getMessage());
-        }
+        return getCheckSumHandler().cksumSize();
     }
 }

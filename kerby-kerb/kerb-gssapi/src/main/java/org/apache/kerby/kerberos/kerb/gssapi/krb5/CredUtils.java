@@ -4,7 +4,10 @@ import org.ietf.jgss.GSSException;
 import sun.security.jgss.GSSCaller;
 
 import javax.security.auth.Subject;
-import javax.security.auth.kerberos.*;
+import javax.security.auth.kerberos.KerberosPrincipal;
+import javax.security.auth.kerberos.KerberosTicket;
+import javax.security.auth.kerberos.KeyTab;
+import javax.security.auth.kerberos.ServicePermission;
 import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -52,8 +55,7 @@ public class CredUtils {
     public static KeyTab getKeyTabFromContext(KerberosPrincipal principal) throws GSSException {
         Set<KeyTab> tabs = getContextCredentials(KeyTab.class);
         for (KeyTab tab : tabs) {
-            KerberosKey[] keys = tab.getKeys(principal);
-            if (keys != null && keys.length > 0) {
+            if (tab.getPrincipal().equals(principal)) {
                 return tab;
             }
         }

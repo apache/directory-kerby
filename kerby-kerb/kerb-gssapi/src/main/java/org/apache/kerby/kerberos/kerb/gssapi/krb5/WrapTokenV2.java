@@ -148,12 +148,7 @@ public class WrapTokenV2 extends KerbyGssTokenV2 {
         }
     }
 
-    public static int getMsgSizeLimit(int qop, boolean confReq, int maxTokSize, KerbyGssEncryptor encryptor)
-            throws GSSException {
-        if (confReq) {
-            return maxTokSize - encryptor.getCheckSumSize() - TOKEN_HEADER_SIZE * 2 - CONFOUNDER_SIZE;
-        } else {
-            return maxTokSize - encryptor.getCheckSumSize() - TOKEN_HEADER_SIZE;
-        }
+    static int getSizeLimit(int qop, boolean confReq, int maxTokSize) {
+        return maxTokSize; // TODO: to be implemented
     }
 }
