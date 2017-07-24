@@ -261,26 +261,21 @@ public class GssUtil {
         boolean[] flags = ticketFlagsToBooleans(ticketFlags);
 
         Date authTime = new Date(encKdcRepPart.getAuthTime().getTime());
-        Date startTime = null;
-        if (encKdcRepPart.getStartTime() != null) {
-            startTime = new Date(encKdcRepPart.getStartTime().getTime());
-        }
+        Date startTime = new Date(encKdcRepPart.getStartTime().getTime());
         Date endTime = new Date(encKdcRepPart.getEndTime().getTime());
         Date renewTill = new Date(encKdcRepPart.getRenewTill().getTime());
 
         InetAddress[] clientAddresses = null;
-        if (encKdcRepPart.getCaddr() != null) {
-            List<HostAddress> hostAddresses = encKdcRepPart.getCaddr().getElements();
-            if (hostAddresses != null) {
-                int i = 0;
-                clientAddresses = new InetAddress[hostAddresses.size()];
-                for (HostAddress hostAddr : hostAddresses) {
-                    try {
-                        InetAddress iAddr = InetAddress.getByAddress(hostAddr.getAddress());
-                        clientAddresses[i++] = iAddr;
-                    } catch (UnknownHostException e) {
-                        throw new GSSException(GSSException.FAILURE, -1, "Bad client address");
-                    }
+        List<HostAddress> hostAddresses = encKdcRepPart.getCaddr().getElements();
+        if (hostAddresses != null) {
+            int i = 0;
+            clientAddresses = new InetAddress[hostAddresses.size()];
+            for (HostAddress hostAddr : hostAddresses) {
+                try {
+                    InetAddress iAddr = InetAddress.getByAddress(hostAddr.getAddress());
+                    clientAddresses[i++] = iAddr;
+                } catch (UnknownHostException e) {
+                    throw new GSSException(GSSException.FAILURE, -1, "Bad client address");
                 }
             }
         }
