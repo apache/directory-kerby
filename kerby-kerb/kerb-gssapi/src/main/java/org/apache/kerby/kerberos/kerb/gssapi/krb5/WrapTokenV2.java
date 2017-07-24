@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gss.impl;
+package org.apache.kerby.kerberos.kerb.gssapi.krb5;
 
 import org.apache.kerby.kerberos.kerb.Message;
 import org.ietf.jgss.GSSException;
@@ -28,11 +28,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 
-public class WrapTokenV2 extends GssTokenV2 {
+public class WrapTokenV2 extends KerbyGssTokenV2 {
     private MessageProp prop;
 
     // Generate a token from user input data
-    WrapTokenV2(GssContext context,
+    WrapTokenV2(KerbyContext context,
               byte[] data,
               int dataOffset,
               int dataLength,
@@ -92,13 +92,13 @@ public class WrapTokenV2 extends GssTokenV2 {
     }
 
     // Reconstruct a token from token bytes
-    public WrapTokenV2(GssContext context, MessageProp prop, byte[] token, int offset, int len) throws GSSException {
+    public WrapTokenV2(KerbyContext context, MessageProp prop, byte[] token, int offset, int len) throws GSSException {
         super(TOKEN_WRAP_V2, context, prop, token, offset, len);
         this.prop = prop;
     }
 
     // Reconstruct a token from token bytes stream
-    public WrapTokenV2(GssContext context, MessageProp prop, InputStream is) throws GSSException {
+    public WrapTokenV2(KerbyContext context, MessageProp prop, InputStream is) throws GSSException {
         super(TOKEN_WRAP_V2, context, prop, is);
         this.prop = prop;
     }
@@ -148,7 +148,7 @@ public class WrapTokenV2 extends GssTokenV2 {
         }
     }
 
-    public static int getMsgSizeLimit(int qop, boolean confReq, int maxTokSize, GssEncryptor encryptor)
+    public static int getMsgSizeLimit(int qop, boolean confReq, int maxTokSize, KerbyGssEncryptor encryptor)
             throws GSSException {
         if (confReq) {
             return maxTokSize - encryptor.getCheckSumSize() - TOKEN_HEADER_SIZE * 2 - CONFOUNDER_SIZE;

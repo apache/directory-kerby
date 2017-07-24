@@ -17,13 +17,13 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gss;
+package org.apache.kerby.kerberos.kerb.gssapi;
 
-import org.apache.kerby.kerberos.kerb.gss.impl.GssAcceptCred;
-import org.apache.kerby.kerberos.kerb.gss.impl.GssContext;
-import org.apache.kerby.kerberos.kerb.gss.impl.GssCredElement;
-import org.apache.kerby.kerberos.kerb.gss.impl.GssInitCred;
-import org.apache.kerby.kerberos.kerb.gss.impl.GssNameElement;
+import org.apache.kerby.kerberos.kerb.gssapi.krb5.KerbyAcceptCred;
+import org.apache.kerby.kerberos.kerb.gssapi.krb5.KerbyContext;
+import org.apache.kerby.kerberos.kerb.gssapi.krb5.KerbyCredElement;
+import org.apache.kerby.kerberos.kerb.gssapi.krb5.KerbyInitCred;
+import org.apache.kerby.kerberos.kerb.gssapi.krb5.KerbyNameElement;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSName;
@@ -39,9 +39,9 @@ import java.security.Provider;
 /**
  * Kerby Kerberos V5 plugin for JGSS
  */
-public class GssMechFactory implements MechanismFactory {
+public class KerbyMechFactory implements MechanismFactory {
     private static final Provider PROVIDER =
-            new KerbyGssProvider();
+            new org.apache.kerby.kerberos.kerb.gssapi.Provider();
 
     private static final String KRB5_OID_STRING = "1.2.840.113554.1.2.2";
     private static final Oid KRB5_OID = createOid(KRB5_OID_STRING);
@@ -67,31 +67,31 @@ public class GssMechFactory implements MechanismFactory {
         return nameTypes;
     }
 
-    public GssMechFactory(GSSCaller caller) {
+    public KerbyMechFactory(GSSCaller caller) {
         this.caller = caller;
     }
 
     public GSSNameSpi getNameElement(String nameStr, Oid nameType)
             throws GSSException {
-        return GssNameElement.getInstance(nameStr, nameType);
+        return KerbyNameElement.getInstance(nameStr, nameType);
     }
 
     public GSSNameSpi getNameElement(byte[] name, Oid nameType)
             throws GSSException {
-        return GssNameElement.getInstance(name.toString(), nameType);
+        return KerbyNameElement.getInstance(name.toString(), nameType);
     }
 
     // Used by initiator
     public GSSContextSpi getMechanismContext(GSSNameSpi peer,
                                              GSSCredentialSpi myInitiatorCred,
                                              int lifetime) throws GSSException {
-        if (peer != null && !(peer instanceof GssNameElement)) {
-            peer = GssNameElement.getInstance(peer.toString(), peer.getStringNameType());
+        if (peer != null && !(peer instanceof KerbyNameElement)) {
+            peer = KerbyNameElement.getInstance(peer.toString(), peer.getStringNameType());
         }
         if (myInitiatorCred == null) {
             myInitiatorCred = getCredentialElement(null, lifetime, 0, GSSCredential.INITIATE_ONLY);
         }
-        return new GssContext(caller, (GssNameElement) peer, (GssInitCred) myInitiatorCred, lifetime);
+        return new KerbyContext(caller, (KerbyNameElement) peer, (KerbyInitCred) myInitiatorCred, lifetime);
     }
 
     public GSSContextSpi getMechanismContext(GSSCredentialSpi myAcceptorCred)
@@ -100,13 +100,13 @@ public class GssMechFactory implements MechanismFactory {
             myAcceptorCred = getCredentialElement(null, 0,
                     GSSCredential.INDEFINITE_LIFETIME, GSSCredential.ACCEPT_ONLY);
         }
-        return new GssContext(caller, (GssAcceptCred) myAcceptorCred);
+        return new KerbyContext(caller, (KerbyAcceptCred) myAcceptorCred);
     }
 
     // Reconstruct from previously exported context
     public GSSContextSpi getMechanismContext(byte[] exportedContext)
             throws GSSException {
-       return new GssContext(caller, exportedContext);
+       return new KerbyContext(caller, exportedContext);
     }
 
     public GSSCredentialSpi getCredentialElement(GSSNameSpi name,
@@ -114,16 +114,16 @@ public class GssMechFactory implements MechanismFactory {
                                                  int acceptLifetime,
                                                  int usage)
             throws GSSException {
-        if (name != null && !(name instanceof GssNameElement)) {
-            name = GssNameElement.getInstance(name.toString(), name.getStringNameType());
+        if (name != null && !(name instanceof KerbyNameElement)) {
+            name = KerbyNameElement.getInstance(name.toString(), name.getStringNameType());
         }
 
-        GssCredElement credElement;
+        KerbyCredElement credElement;
 
         if (usage == GSSCredential.INITIATE_ONLY) {
-            credElement = GssInitCred.getInstance(caller, (GssNameElement) name, initLifetime);
+            credElement = KerbyInitCred.getInstance(caller, (KerbyNameElement) name, initLifetime);
         } else if (usage == GSSCredential.ACCEPT_ONLY) {
-            credElement = GssAcceptCred.getInstance(caller, (GssNameElement) name, acceptLifetime);
+            credElement = KerbyAcceptCred.getInstance(caller, (KerbyNameElement) name, acceptLifetime);
         } else if (usage == GSSCredential.INITIATE_AND_ACCEPT) {
             throw new GSSException(GSSException.FAILURE, -1, "Unsupported usage mode: INITIATE_AND_ACCEPT");
         } else {

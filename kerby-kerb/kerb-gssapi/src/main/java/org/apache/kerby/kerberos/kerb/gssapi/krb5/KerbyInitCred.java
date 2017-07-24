@@ -17,26 +17,26 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gss.impl;
+package org.apache.kerby.kerberos.kerb.gssapi.krb5;
 
 import org.ietf.jgss.GSSException;
 import sun.security.jgss.GSSCaller;
 
 import javax.security.auth.kerberos.KerberosTicket;
 
-public final class GssInitCred extends GssCredElement {
+public final class KerbyInitCred extends KerbyCredElement {
 
     public KerberosTicket ticket;
 
-    private GssInitCred(GSSCaller caller, GssNameElement name, KerberosTicket ticket, int lifeTime) {
+    private KerbyInitCred(GSSCaller caller, KerbyNameElement name, KerberosTicket ticket, int lifeTime) {
         super(caller, name);
         this.ticket = ticket;
         this.initLifeTime = lifeTime;
     }
 
-    public static GssInitCred getInstance(GSSCaller caller, GssNameElement name, int lifeTime) throws GSSException {
+    public static KerbyInitCred getInstance(GSSCaller caller, KerbyNameElement name, int lifeTime) throws GSSException {
         KerberosTicket ticket = CredUtils.getKerberosTicketFromContext(caller, name.getPrincipalName().getName(), null);
-        return new GssInitCred(caller, name, ticket, lifeTime);
+        return new KerbyInitCred(caller, name, ticket, lifeTime);
     }
 
     public boolean isInitiatorCredential() throws GSSException {

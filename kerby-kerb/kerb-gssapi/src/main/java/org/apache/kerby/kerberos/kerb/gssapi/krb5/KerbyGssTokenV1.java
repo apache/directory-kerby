@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gss.impl;
+package org.apache.kerby.kerberos.kerb.gssapi.krb5;
 
 
 import org.ietf.jgss.GSSException;
@@ -70,7 +70,7 @@ import java.security.MessageDigest;
  *                                specified in SGN_ALG field.
  *
  */
-abstract class GssTokenV1 extends GssTokenBase {
+abstract class KerbyGssTokenV1 extends KerbyGssTokenBase {
     // SGN ALG
     public static final int SGN_ALG_DES_MAC_MD5 = 0;
     public static final int SGN_ALG_MD25 = 0x0100;
@@ -93,7 +93,7 @@ abstract class GssTokenV1 extends GssTokenBase {
     private boolean confState;
     private int sequenceNumber;
 
-    protected GssEncryptor encryptor;
+    protected KerbyGssEncryptor encryptor;
 
     private GSSHeader gssHeader;
 
@@ -136,14 +136,14 @@ abstract class GssTokenV1 extends GssTokenBase {
     }
 
     // Generate a new token
-    GssTokenV1(int tokenType, GssContext context) throws GSSException {
+    KerbyGssTokenV1(int tokenType, KerbyContext context) throws GSSException {
         initialize(tokenType, context, false);
         createTokenHeader();
     }
 
     // Reconstruct a token
-    GssTokenV1(int tokenType, GssContext context, MessageProp prop,
-               byte[] token, int offset, int size) throws GSSException {
+    KerbyGssTokenV1(int tokenType, KerbyContext context, MessageProp prop,
+                    byte[] token, int offset, int size) throws GSSException {
         int proxLen = size > 64 ? 64 : size;
         InputStream is = new ByteArrayInputStream(token, offset, proxLen);
         reconstructInitializaion(tokenType, context, prop, is);
@@ -151,11 +151,11 @@ abstract class GssTokenV1 extends GssTokenBase {
     }
 
     // Reconstruct a token
-    GssTokenV1(int tokenType, GssContext context, MessageProp prop, InputStream is) throws GSSException {
+    KerbyGssTokenV1(int tokenType, KerbyContext context, MessageProp prop, InputStream is) throws GSSException {
         reconstructInitializaion(tokenType, context, prop, is);
     }
 
-    private void reconstructInitializaion(int tokenType, GssContext context, MessageProp prop, InputStream is)
+    private void reconstructInitializaion(int tokenType, KerbyContext context, MessageProp prop, InputStream is)
             throws GSSException {
         initialize(tokenType, context, true);
         if (!confState) {
@@ -176,7 +176,7 @@ abstract class GssTokenV1 extends GssTokenBase {
     }
 
     private void initialize(int tokenType,
-                            GssContext context,
+                            KerbyContext context,
                             boolean reconstruct) throws GSSException {
         this.tokenType = tokenType;
         this.isInitiator = context.isInitiator();

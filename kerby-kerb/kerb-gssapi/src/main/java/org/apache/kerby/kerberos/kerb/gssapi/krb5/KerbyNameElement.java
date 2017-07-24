@@ -17,10 +17,9 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gss.impl;
+package org.apache.kerby.kerberos.kerb.gssapi.krb5;
 
-import org.apache.kerby.kerberos.kerb.gss.GssMechFactory;
-import org.apache.kerby.kerberos.kerb.gss.KerbyGssProvider;
+import org.apache.kerby.kerberos.kerb.gssapi.KerbyMechFactory;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.ietf.jgss.GSSException;
@@ -30,13 +29,13 @@ import sun.security.jgss.spi.GSSNameSpi;
 import java.io.UnsupportedEncodingException;
 import java.security.Provider;
 
-public class GssNameElement implements GSSNameSpi {
+public class KerbyNameElement implements GSSNameSpi {
 
     private PrincipalName principalName;
     private Oid nameType = null;
 
-    GssNameElement(PrincipalName principalName,
-                   Oid nameType) {
+    KerbyNameElement(PrincipalName principalName,
+                     Oid nameType) {
         this.principalName = principalName;
         this.nameType = nameType;
     }
@@ -66,14 +65,14 @@ public class GssNameElement implements GSSNameSpi {
         return kerbyNameType;
     }
 
-    public static GssNameElement getInstance(String name, Oid oidNameType)
+    public static KerbyNameElement getInstance(String name, Oid oidNameType)
             throws GSSException {
         PrincipalName principalName = new PrincipalName(name, toKerbyNameType(oidNameType));
-        return new GssNameElement(principalName, oidNameType);
+        return new KerbyNameElement(principalName, oidNameType);
     }
 
     public Provider getProvider() {
-        return new KerbyGssProvider();
+        return new org.apache.kerby.kerberos.kerb.gssapi.Provider();
     }
 
     public boolean equals(GSSNameSpi name) throws GSSException {
@@ -118,7 +117,7 @@ public class GssNameElement implements GSSNameSpi {
     }
 
     public Oid getMechanism() {
-        return GssMechFactory.getOid();
+        return KerbyMechFactory.getOid();
     }
 
     public String toString() {

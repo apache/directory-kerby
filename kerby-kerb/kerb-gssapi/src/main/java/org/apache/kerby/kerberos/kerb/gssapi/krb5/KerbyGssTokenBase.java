@@ -17,10 +17,10 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gss.impl;
+package org.apache.kerby.kerberos.kerb.gssapi.krb5;
 
 
-public abstract class GssTokenBase {
+public abstract class KerbyGssTokenBase {
     public static final int TOKEN_WRAP_V1 = 0x201;
     public static final int TOKEN_MIC_V1 = 0x101;
     public static final int TOKEN_WRAP_V2 = 0x504;

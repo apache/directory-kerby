@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.gss.impl;
+package org.apache.kerby.kerberos.kerb.gssapi.krb5;
 
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
@@ -25,11 +25,11 @@ import org.ietf.jgss.MessageProp;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class MicTokenV2 extends GssTokenV2 {
+public class MicTokenV2 extends KerbyGssTokenV2 {
     private MessageProp prop;
 
     // This is called to construct MicToken from user input
-    MicTokenV2(GssContext context,
+    MicTokenV2(KerbyContext context,
              byte[] inMsg,
              int msgOffset,
              int msgLength,
@@ -45,7 +45,7 @@ public class MicTokenV2 extends GssTokenV2 {
     }
 
     // This is called to construct MicToken from MicToken bytes
-    MicTokenV2(GssContext context,
+    MicTokenV2(KerbyContext context,
              MessageProp messageProp,
              byte[] inToken,
              int tokenOffset,

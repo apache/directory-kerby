@@ -19,7 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.integration.test;
 
-import org.apache.kerby.kerberos.kerb.gss.KerbyGssProvider;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +29,7 @@ public class KerbyGssAppTest extends GssAppTest {
     @Before
     @Override
     public void setUp() throws Exception {
-        Provider provider = new KerbyGssProvider();
+        Provider provider = new org.apache.kerby.kerberos.kerb.gssapi.Provider();
         java.security.Security.insertProviderAt(provider, 1);
         super.setUp();
     }
