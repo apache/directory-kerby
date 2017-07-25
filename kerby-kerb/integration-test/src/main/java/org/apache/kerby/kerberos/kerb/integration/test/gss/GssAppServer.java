@@ -33,6 +33,7 @@ public class GssAppServer extends AppServer {
     private String serverPrincipal;
     private GSSManager manager;
     private GSSContext context;
+    private boolean createContextWithCred = true;
 
     public GssAppServer(String[] args) throws Exception {
         super(args);
@@ -42,12 +43,6 @@ public class GssAppServer extends AppServer {
         this.serverPrincipal = args[1];
 
         this.manager = GSSManager.getInstance();
-        GSSName gssService = manager.createName(
-                serverPrincipal, GSSName.NT_USER_NAME);
-        Oid oid = new Oid(AppUtil.JGSS_KERBEROS_OID);
-        GSSCredential credentials = manager.createCredential(gssService,
-                GSSCredential.DEFAULT_LIFETIME, oid, GSSCredential.ACCEPT_ONLY);
-        this.context = manager.createContext(credentials);
     }
 
     public static void main(String[] args) throws Exception {
@@ -63,6 +58,18 @@ public class GssAppServer extends AppServer {
 
     @Override
     protected void onConnection(Transport.Connection conn) throws Exception {
+        GSSName gssService = manager.createName(serverPrincipal, GSSName.NT_USER_NAME);
+        Oid oid = new Oid(AppUtil.JGSS_KERBEROS_OID);
+
+        if (createContextWithCred) {
+            GSSCredential credentials =
+                manager.createCredential(gssService, GSSCredential.DEFAULT_LIFETIME, oid, GSSCredential.ACCEPT_ONLY);
+            this.context = manager.createContext(credentials);
+        } else {
+            this.context = manager.createContext(gssService.canonicalize(oid),
+                                                 oid, null, GSSContext.DEFAULT_LIFETIME);
+        }
+
         byte[] token;
 
         // System.out.print("Starting negotiating security context");
@@ -104,5 +111,9 @@ public class GssAppServer extends AppServer {
         //System.out.println("Will send MIC token of size "
                 //+ token.length);
         conn.sendToken(token);
+    }
+
+    public void setCreateContextWithCred(boolean createContextWithCred) {
+        this.createContextWithCred = createContextWithCred;
     }
 }

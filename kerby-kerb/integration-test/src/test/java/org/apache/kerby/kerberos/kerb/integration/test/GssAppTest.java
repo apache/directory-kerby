@@ -19,11 +19,34 @@
  */
 package org.apache.kerby.kerberos.kerb.integration.test;
 
+import java.security.PrivilegedAction;
+
+import javax.security.auth.Subject;
+
 import org.apache.kerby.kerberos.kerb.integration.test.gss.GssAppClient;
 import org.apache.kerby.kerberos.kerb.integration.test.gss.GssAppServer;
+import org.apache.kerby.util.NetworkUtil;
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GssAppTest extends AppTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GssAppTest.class);
+
+    private int serverPort2;
+    private AppServer appServer2;
+
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+
+        serverPort2 = NetworkUtil.getServerPort();
+
+        setupAppServer2();
+    }
 
     @Override
     protected AppServer createAppServer() throws Exception {
@@ -45,12 +68,46 @@ public class GssAppTest extends AppTest {
         runAppClient(appClient);
     }
 
+    @Test
+    public void testServerWithoutInitialCredential() throws Exception {
+        AppClient appClient =
+            new GssAppClient(new String[] {
+                                           getHostname(),
+                                           String.valueOf(serverPort2),
+                                           getClientPrincipal(),
+                                           getServerPrincipal()
+            });
+        runAppClient(appClient);
+    }
+
     private AppClient createAppClient() throws Exception {
         return new GssAppClient(new String[] {
             getHostname(),
             String.valueOf(getServerPort()),
                 getClientPrincipal(),
                 getServerPrincipal()
+        });
+    }
+
+    private void setupAppServer2() throws Exception {
+        Subject subject = loginServiceUsingKeytab();
+        Subject.doAs(subject, new PrivilegedAction<Object>() {
+            @Override
+            public Object run() {
+                try {
+                    appServer2 =
+                        new GssAppServer(new String[] {
+                                                       String.valueOf(serverPort2),
+                                                       getServerPrincipal()
+                        });
+                    ((GssAppServer) appServer2).setCreateContextWithCred(false);
+                    appServer2.start();
+                } catch (Exception ex) {
+                    LOG.error(ex.toString());
+                }
+
+                return null;
+            }
         });
     }
 

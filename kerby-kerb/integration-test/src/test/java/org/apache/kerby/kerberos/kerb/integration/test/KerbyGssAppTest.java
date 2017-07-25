@@ -36,12 +36,8 @@ public class KerbyGssAppTest extends GssAppTest {
     }
 
     @Test
-    public void test() throws Exception {
-        super.test();
-    }
-
-    @Test
-    public void testWithoutInitialCredential() throws Exception {
-        super.testWithoutInitialCredential();
+    @org.junit.Ignore
+    public void testServerWithoutInitialCredential() throws Exception {
+        super.testServerWithoutInitialCredential();
     }
 }
