@@ -41,7 +41,7 @@ public class KerbyGssAppTest extends GssAppTest {
     }
 
     @Test
-    public void testJAAS() throws Exception {
-        super.testJAAS();
+    public void testWithoutInitialCredential() throws Exception {
+        super.testWithoutInitialCredential();
     }
 }

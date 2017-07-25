@@ -35,6 +35,7 @@ public class GssAppClient extends AppClient {
     private String clientPrincipal;
     private String serverPrincipal;
     private GSSManager manager;
+    private boolean createContextWithCred = true;
 
     public GssAppClient(String[] args) throws Exception {
         super(args);
@@ -67,10 +68,15 @@ public class GssAppClient extends AppClient {
         Oid oid = new Oid(AppUtil.JGSS_KERBEROS_OID);
         GSSName clientName = manager.createName(clientPrincipal,
                 GSSName.NT_USER_NAME);
-        GSSCredential myCred = manager.createCredential(clientName,
+
+        GSSCredential myCred = null;
+        if (createContextWithCred) {
+            myCred = manager.createCredential(clientName,
                 GSSCredential.DEFAULT_LIFETIME, oid, GSSCredential.INITIATE_ONLY);
+        }
         GSSContext context = manager.createContext(serverName,
                 krb5Oid, myCred, GSSContext.DEFAULT_LIFETIME);
+
         context.requestMutualAuth(true);
         context.requestConf(true);
         context.requestInteg(true);
@@ -107,5 +113,9 @@ public class GssAppClient extends AppClient {
 
         //System.out.println("Verified received MIC for message.");
         context.dispose();
+    }
+
+    public void setCreateContextWithCred(boolean createContextWithCred) {
+        this.createContextWithCred = createContextWithCred;
     }
 }

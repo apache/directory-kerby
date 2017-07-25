@@ -19,11 +19,8 @@
  */
 package org.apache.kerby.kerberos.kerb.integration.test;
 
-import java.io.File;
-
 import org.apache.kerby.kerberos.kerb.integration.test.gss.GssAppClient;
 import org.apache.kerby.kerberos.kerb.integration.test.gss.GssAppServer;
-import org.apache.kerby.kerberos.kerb.integration.test.gss.GssJAASAppClient;
 import org.junit.Test;
 
 public class GssAppTest extends AppTest {
@@ -42,18 +39,10 @@ public class GssAppTest extends AppTest {
     }
 
     @Test
-    public void testJAAS() throws Exception {
-        String basedir = System.getProperty("basedir");
-        if (basedir == null) {
-            basedir = new File(".").getCanonicalPath();
-        }
-
-        try {
-            System.setProperty("java.security.auth.login.config", basedir + "/target/test-classes/kerberos.jaas");
-            runAppClient(createAppJAASClient());
-        } finally {
-            System.clearProperty("java.security.auth.login.config");
-        }
+    public void testWithoutInitialCredential() throws Exception {
+        AppClient appClient = createAppClient();
+        ((GssAppClient) appClient).setCreateContextWithCred(false);
+        runAppClient(appClient);
     }
 
     private AppClient createAppClient() throws Exception {
@@ -65,12 +54,4 @@ public class GssAppTest extends AppTest {
         });
     }
 
-    private AppClient createAppJAASClient() throws Exception {
-        return new GssJAASAppClient(new String[] {
-            getHostname(),
-            String.valueOf(getServerPort()),
-            getServerPrincipal(),
-            "drankye"
-        }, new NamePasswordCallbackHandler(super.getClientPrincipalName(), super.getClientPassword()));
-    }
 }
