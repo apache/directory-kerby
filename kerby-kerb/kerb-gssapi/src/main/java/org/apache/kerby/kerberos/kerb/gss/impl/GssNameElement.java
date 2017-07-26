@@ -68,6 +68,10 @@ public class GssNameElement implements GSSNameSpi {
 
     public static GssNameElement getInstance(String name, Oid oidNameType)
             throws GSSException {
+        if (oidNameType == null) {
+            PrincipalName principalName = new PrincipalName(name);
+            return new GssNameElement(principalName, null);
+        }
         PrincipalName principalName = new PrincipalName(name, toKerbyNameType(oidNameType));
         return new GssNameElement(principalName, oidNameType);
     }

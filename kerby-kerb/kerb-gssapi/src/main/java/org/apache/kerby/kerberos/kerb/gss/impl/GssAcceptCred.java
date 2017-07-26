@@ -21,6 +21,8 @@ package org.apache.kerby.kerberos.kerb.gss.impl;
 
 
 import org.ietf.jgss.GSSException;
+import org.ietf.jgss.GSSName;
+
 import sun.security.jgss.GSSCaller;
 
 import javax.security.auth.kerberos.KerberosKey;
@@ -34,13 +36,22 @@ public final class GssAcceptCred extends GssCredElement {
     public static GssAcceptCred getInstance(final GSSCaller caller,
                                             GssNameElement name, int lifeTime) throws GSSException {
 
-        KerberosPrincipal princ = new KerberosPrincipal(name.getPrincipalName().getName(),
-                name.getPrincipalName().getNameType().getValue());
-        KeyTab keyTab = CredUtils.getKeyTabFromContext(princ);
+        KeyTab keyTab = null;
+        if (name == null) {
+            keyTab = CredUtils.getKeyTabFromContext(null);
+        } else {
+            KerberosPrincipal princ = new KerberosPrincipal(name.getPrincipalName().getName(),
+                                                            name.getPrincipalName().getNameType().getValue());
+            keyTab = CredUtils.getKeyTabFromContext(princ);
+        }
 
         if (keyTab == null) {
             throw new GSSException(GSSException.NO_CRED, -1,
                     "Failed to find any Kerberos credential for " + name.getPrincipalName().getName());
+        }
+
+        if (name == null) {
+            name = GssNameElement.getInstance(keyTab.getPrincipal().getName(), GSSName.NT_HOSTBASED_SERVICE);
         }
 
         return new GssAcceptCred(caller, name, keyTab, lifeTime);

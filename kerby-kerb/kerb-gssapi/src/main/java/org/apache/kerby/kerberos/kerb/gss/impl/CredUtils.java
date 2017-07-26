@@ -52,7 +52,13 @@ public class CredUtils {
     public static KeyTab getKeyTabFromContext(KerberosPrincipal principal) throws GSSException {
         Set<KeyTab> tabs = getContextCredentials(KeyTab.class);
         for (KeyTab tab : tabs) {
-            KerberosKey[] keys = tab.getKeys(principal);
+            // Use the supplied principal, fall back to the principal of the KeyTab if none is supplied
+            KerberosPrincipal princ = principal;
+            if (princ == null) {
+                princ = tab.getPrincipal();
+            }
+
+            KerberosKey[] keys = tab.getKeys(princ);
             if (keys != null && keys.length > 0) {
                 return tab;
             }

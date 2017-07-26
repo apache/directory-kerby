@@ -21,7 +21,6 @@ package org.apache.kerby.kerberos.kerb.integration.test;
 
 import org.apache.kerby.kerberos.kerb.gss.KerbyGssProvider;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.security.Provider;
 
@@ -35,9 +34,4 @@ public class KerbyGssAppTest extends GssAppTest {
         super.setUp();
     }
 
-    @Test
-    @org.junit.Ignore
-    public void testServerWithoutInitialCredential() throws Exception {
-        super.testServerWithoutInitialCredential();
-    }
 }
