@@ -66,7 +66,7 @@ public class KrbContext {
      * @return The ticket valid time
      */
     public long getTicketValidTime() {
-        return 8 * 60 * 60 * 1000;
+        return getConfig().getTicketLifetime() * 1000;
     }
 
     /**
