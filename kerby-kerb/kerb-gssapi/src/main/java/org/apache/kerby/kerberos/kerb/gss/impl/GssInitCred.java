@@ -28,7 +28,7 @@ import javax.security.auth.kerberos.KerberosTicket;
 
 public final class GssInitCred extends GssCredElement {
 
-    public KerberosTicket ticket;
+    private KerberosTicket ticket;
 
     private GssInitCred(GSSCaller caller, GssNameElement name, KerberosTicket ticket, int lifeTime) {
         super(caller, name);
