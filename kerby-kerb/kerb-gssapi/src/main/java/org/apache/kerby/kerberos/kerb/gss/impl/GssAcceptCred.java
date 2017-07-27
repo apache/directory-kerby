@@ -46,8 +46,11 @@ public final class GssAcceptCred extends GssCredElement {
         }
 
         if (keyTab == null) {
-            throw new GSSException(GSSException.NO_CRED, -1,
-                    "Failed to find any Kerberos credential for " + name.getPrincipalName().getName());
+            String error = "Failed to find any Kerberos credential";
+            if (name != null) {
+                error +=  " for " + name.getPrincipalName().getName();
+            }
+            throw new GSSException(GSSException.NO_CRED, -1, error);
         }
 
         if (name == null) {
