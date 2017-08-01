@@ -19,13 +19,24 @@
  */
 package org.apache.kerby.kerberos.kerb.type.ticket;
 
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.kdc.EncTgsRepPart;
 
 /**
  * Service granting ticket.
  */
 public class SgtTicket extends KrbTicket {
+    private PrincipalName clientPrincipal;
+
     public SgtTicket(Ticket ticket, EncTgsRepPart encKdcRepPart) {
         super(ticket, encKdcRepPart);
+    }
+
+    public PrincipalName getClientPrincipal() {
+        return clientPrincipal;
+    }
+
+    public void setClientPrincipal(PrincipalName clientPrincipal) {
+        this.clientPrincipal = clientPrincipal;
     }
 }

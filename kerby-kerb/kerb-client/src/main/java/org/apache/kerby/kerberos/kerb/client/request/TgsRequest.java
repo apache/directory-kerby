@@ -67,7 +67,7 @@ public class TgsRequest extends KdcRequest {
 
         TgsReq tgsReq = new TgsReq();
 
-        KdcReqBody tgsReqBody = getReqBody();
+        KdcReqBody tgsReqBody = getReqBody(null);
         tgsReq.setReqBody(tgsReqBody);
         tgsReq.setPaData(getPreauthContext().getOutputPaData());
 
@@ -79,7 +79,7 @@ public class TgsRequest extends KdcRequest {
         setKdcRep(kdcRep);
 
         TgsRep tgsRep = (TgsRep) getKdcRep();
-        EncTgsRepPart encTgsRepPart = null;
+        EncTgsRepPart encTgsRepPart;
         try {
             encTgsRepPart = EncryptionUtil.unseal(tgsRep.getEncryptedEncPart(),
                 getSessionKey(),

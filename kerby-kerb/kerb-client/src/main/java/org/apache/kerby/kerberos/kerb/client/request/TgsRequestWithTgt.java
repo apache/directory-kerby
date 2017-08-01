@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.client.request;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
+import org.apache.kerby.kerberos.kerb.client.KrbKdcOption;
 import org.apache.kerby.kerberos.kerb.common.CheckSumUtil;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
@@ -92,8 +93,13 @@ public class TgsRequestWithTgt extends TgsRequest {
         authenticator.setCtime(KerberosTime.now());
         authenticator.setCusec(0);
         authenticator.setSubKey(tgt.getSessionKey());
+        KerberosTime renewTill = null;
 
-        KdcReqBody reqBody = getReqBody();
+        if (getRequestOptions().contains(KrbKdcOption.RENEW)) {
+            renewTill = tgt.getEncKdcRepPart().getRenewTill();
+        }
+        KdcReqBody reqBody = getReqBody(renewTill);
+
         CheckSum checksum = CheckSumUtil.seal(reqBody, null,
             tgt.getSessionKey(), KeyUsage.TGS_REQ_AUTH_CKSUM);
         authenticator.setCksum(checksum);

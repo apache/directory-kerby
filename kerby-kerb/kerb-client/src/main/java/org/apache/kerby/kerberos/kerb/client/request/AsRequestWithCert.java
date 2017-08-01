@@ -43,7 +43,7 @@ public class AsRequestWithCert extends AsRequest {
 
     @Override
     public void process() throws KrbException {
-        KdcReqBody body = getReqBody();
+        KdcReqBody body = getReqBody(null);
         AsReq asReq = new AsReq();
         asReq.setReqBody(body);
         setKdcReq(asReq);
