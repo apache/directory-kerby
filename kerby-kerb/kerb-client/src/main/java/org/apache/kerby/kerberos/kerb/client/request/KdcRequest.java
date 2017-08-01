@@ -158,9 +158,9 @@ public abstract class KdcRequest {
         this.kdcReq = kdcReq;
     }
 
-    protected KdcReqBody getReqBody() throws KrbException {
+    protected KdcReqBody getReqBody(KerberosTime renewTill) throws KrbException {
         if (reqBody == null) {
-            reqBody = makeReqBody();
+            reqBody = makeReqBody(renewTill);
         }
 
         return reqBody;
@@ -174,7 +174,7 @@ public abstract class KdcRequest {
         this.kdcRep = kdcRep;
     }
 
-    protected KdcReqBody makeReqBody() throws KrbException {
+    protected KdcReqBody makeReqBody(KerberosTime renewTill) throws KrbException {
         KdcReqBody body = new KdcReqBody();
 
         long startTime = System.currentTimeMillis();
@@ -190,13 +190,18 @@ public abstract class KdcRequest {
 
         body.setTill(new KerberosTime(startTime + getTicketValidTime()));
 
-        long renewLifetime;
-        if (getRequestOptions().contains(KrbOption.RENEWABLE_TIME)) {
-            renewLifetime = getRequestOptions().getIntegerOption(KrbOption.RENEWABLE_TIME);
+        KerberosTime rtime;
+        if (renewTill != null) {
+            rtime = renewTill;
         } else {
-            renewLifetime = getContext().getKrbSetting().getKrbConfig().getRenewLifetime();
+            long renewLifetime;
+            if (getRequestOptions().contains(KrbOption.RENEWABLE_TIME)) {
+                renewLifetime = getRequestOptions().getIntegerOption(KrbOption.RENEWABLE_TIME);
+            } else {
+                renewLifetime = getContext().getKrbSetting().getKrbConfig().getRenewLifetime();
+            }
+            rtime = new KerberosTime(startTime + renewLifetime * 1000);
         }
-        KerberosTime rtime = new KerberosTime(startTime + renewLifetime * 1000);
         body.setRtime(rtime);
 
         int nonce = generateNonce();

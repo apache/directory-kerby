@@ -21,9 +21,11 @@ package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.impl.DefaultInternalKrbClient;
 import org.apache.kerby.kerberos.kerb.client.impl.InternalKrbClient;
+import org.apache.kerby.kerberos.kerb.type.kdc.EncAsRepPart;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.slf4j.Logger;
@@ -211,6 +213,27 @@ public class KrbClientBase {
     }
 
     /**
+     * Request a service ticket
+     * @param ccFile The credential cache file
+     * @return service ticket
+     * @throws KrbException e
+     */
+    public SgtTicket requestSgt(File ccFile) throws KrbException {
+        Credential credential = getCredentialFromFile(ccFile);
+        String servicePrincipal = credential.getServicePrincipal().getName();
+        TgtTicket tgt = getTgtTicketFromCredential(credential);
+
+        KOptions requestOptions = new KOptions();
+        requestOptions.add(KrbKdcOption.RENEW);
+        requestOptions.add(KrbOption.USE_TGT, tgt);
+        requestOptions.add(KrbOption.SERVER_PRINCIPAL, servicePrincipal);
+        SgtTicket sgtTicket = innerClient.requestSgt(requestOptions);
+        sgtTicket.setClientPrincipal(tgt.getClientPrincipal());
+        return sgtTicket;
+    }
+
+
+    /**
      * Store tgt into the specified credential cache file.
      * @param tgtTicket The tgt ticket
      * @param ccacheFile The credential cache file
@@ -247,5 +270,78 @@ public class KrbClientBase {
             throw new IllegalArgumentException("Invalid ccache file, "
                     + "not exist or writable: " + ccacheFile.getAbsolutePath());
         }
+    }
+
+    /**
+     * Store sgt into the specified credential cache file.
+     * @param sgtTicket The sgt ticket
+     * @param ccacheFile The credential cache file
+     * @throws KrbException e
+     */
+    public void storeTicket(SgtTicket sgtTicket, File ccacheFile) throws KrbException {
+        LOG.info("Storing the sgt to the credential cache file.");
+        if (!ccacheFile.exists()) {
+            try {
+                if (!ccacheFile.createNewFile()) {
+                    throw new KrbException("Failed to create ccache file "
+                        + ccacheFile.getAbsolutePath());
+                }
+                // sets read-write permissions to owner only
+                ccacheFile.setReadable(false, false);
+                ccacheFile.setReadable(true, true);
+                if (!ccacheFile.setWritable(true, true)) {
+                    throw new KrbException("Cache file is not readable.");
+                }
+            } catch (IOException e) {
+                throw new KrbException("Failed to create ccache file "
+                    + ccacheFile.getAbsolutePath(), e);
+            }
+        }
+        if (ccacheFile.exists() && ccacheFile.canWrite()) {
+            CredentialCache cCache = new CredentialCache(sgtTicket);
+            try {
+                cCache.store(ccacheFile);
+            } catch (IOException e) {
+                throw new KrbException("Failed to store tgt", e);
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid ccache file, "
+                    + "not exist or writable: " + ccacheFile.getAbsolutePath());
+        }
+    }
+
+    public TgtTicket getTgtTicketFromCredential(Credential cc) {
+        EncAsRepPart encAsRepPart = new EncAsRepPart();
+        encAsRepPart.setAuthTime(cc.getAuthTime());
+        encAsRepPart.setCaddr(cc.getClientAddresses());
+        encAsRepPart.setEndTime(cc.getEndTime());
+        encAsRepPart.setFlags(cc.getTicketFlags());
+        encAsRepPart.setKey(cc.getKey());
+//        encAsRepPart.setKeyExpiration();
+//        encAsRepPart.setLastReq();
+//        encAsRepPart.setNonce();
+        encAsRepPart.setRenewTill(cc.getRenewTill());
+        encAsRepPart.setSname(cc.getServerName());
+        encAsRepPart.setSrealm(cc.getServerName().getRealm());
+        encAsRepPart.setStartTime(cc.getStartTime());
+        TgtTicket tgtTicket = new TgtTicket(cc.getTicket(), encAsRepPart, cc.getClientName());
+        return tgtTicket;
+    }
+
+    public Credential getCredentialFromFile(File ccFile) throws KrbException {
+        CredentialCache cc;
+        try {
+            cc = resolveCredCache(ccFile);
+        } catch (IOException e) {
+            throw new KrbException("Failed to load armor cache file");
+        }
+        return cc.getCredentials().iterator().next();
+    }
+
+    public CredentialCache resolveCredCache(File ccacheFile) throws IOException {
+        CredentialCache cc = new CredentialCache();
+        cc.load(ccacheFile);
+
+        return cc;
     }
 }

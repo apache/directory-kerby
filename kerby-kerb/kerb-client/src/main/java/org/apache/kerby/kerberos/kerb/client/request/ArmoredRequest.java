@@ -233,7 +233,7 @@ public class ArmoredRequest {
         authenticator.setCusec(0);
         authenticator.setSubKey(subKey);
 
-        KdcReqBody reqBody = kdcRequest.getReqBody();
+        KdcReqBody reqBody = kdcRequest.getReqBody(null);
         CheckSum checksum = CheckSumUtil.seal(reqBody, null,
             subKey, KeyUsage.TGS_REQ_AUTH_CKSUM);
         authenticator.setCksum(checksum);

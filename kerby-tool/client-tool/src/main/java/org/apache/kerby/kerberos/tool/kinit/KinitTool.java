@@ -61,7 +61,7 @@ public class KinitTool {
             + "\tOPTIONS:\n"
             + "\t\t-V verbose\n"
             + "\t\t-l lifetime\n"
-            + "\t\t--s start time\n"
+            + "\t\t-s start time\n"
             + "\t\t-r renewable lifetime\n"
             + "\t\t-f forwardable\n"
             + "\t\t-F not forwardable\n"
@@ -112,14 +112,45 @@ public class KinitTool {
         return password;
     }
 
-    private static void requestTicket(String principal,
-                                      KOptions ktOptions) throws KrbException {
+    private static void requestTicket(String principal, KOptions ktOptions) {
         ktOptions.add(KinitOption.CLIENT_PRINCIPAL, principal);
 
         File confDir = null;
         if (ktOptions.contains(KinitOption.CONF_DIR)) {
             confDir = ktOptions.getDirOption(KinitOption.CONF_DIR);
         }
+
+        KrbClient krbClient = null;
+        try {
+            krbClient = getClient(confDir);
+        } catch (KrbException e) {
+            System.err.println("Create krbClient failed: " + e.getMessage());
+            System.exit(1);
+        }
+
+        if (ktOptions.contains(KinitOption.RENEW)) {
+            if (ktOptions.contains(KinitOption.KRB5_CACHE)) {
+                String ccName = ktOptions.getStringOption(KinitOption.KRB5_CACHE);
+                File ccFile = new File(ccName);
+
+                SgtTicket sgtTicket = null;
+                try {
+                    sgtTicket = krbClient.requestSgt(ccFile);
+                } catch (KrbException e) {
+                    System.err.println("kinit: " + e.getKrbErrorCode().getMessage());
+                }
+
+                try {
+                    krbClient.storeTicket(sgtTicket, ccFile);
+                } catch (KrbException e) {
+                    System.err.println("kinit: " + e.getKrbErrorCode().getMessage());
+                }
+
+                System.out.println("Successfully renewed.");
+            }
+            return;
+        }
+
 
         if (ktOptions.contains(KinitOption.ANONYMOUS)) {
             ktOptions.add(PkinitOption.USE_ANONYMOUS);
@@ -129,14 +160,6 @@ public class KinitTool {
             ktOptions.add(KinitOption.USE_PASSWD);
             String password = getPassword(principal);
             ktOptions.add(KinitOption.USER_PASSWD, password);
-        }
-
-        KrbClient krbClient = null;
-        try {
-            krbClient = getClient(confDir);
-        } catch (KrbException e) {
-            System.err.println("Create krbClient failed: " + e.getMessage());
-            System.exit(1);
         }
 
         TgtTicket tgt = null;
@@ -168,8 +191,13 @@ public class KinitTool {
             + ccacheFile.getAbsolutePath());
         if (ktOptions.contains(KinitOption.SERVICE)) {
             String servicePrincipal = ktOptions.getStringOption(KinitOption.SERVICE);
-            SgtTicket sgtTicket =
-                    krbClient.requestSgt(tgt, servicePrincipal);
+            SgtTicket sgtTicket;
+            try {
+                sgtTicket = krbClient.requestSgt(tgt, servicePrincipal);
+            } catch (KrbException e) {
+                System.err.println("kinit: " + e.getKrbErrorCode().getMessage());
+                return;
+            }
             System.out.println("Successfully requested the service ticket for " + servicePrincipal
             + "\nKey version: " + sgtTicket.getTicket().getTktvno());
         }
@@ -191,7 +219,7 @@ public class KinitTool {
         return krbClient;
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         KOptions ktOptions = new KOptions();
         KinitOption kto;
         String principal = null;
@@ -242,7 +270,7 @@ public class KinitTool {
         if (principal == null) {
             if (ktOptions.contains(KinitOption.ANONYMOUS)) {
                 principal = KrbConstant.ANONYMOUS_PRINCIPAL;
-            } else {
+            } else if (!ktOptions.contains(KinitOption.KRB5_CACHE)) {
                 printUsage("No principal is specified");
             }
         }

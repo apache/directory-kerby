@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.ccache;
 
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
@@ -51,6 +52,12 @@ public class CredentialCache implements KrbCredentialCache {
         this();
         addCredential(new Credential(tgt));
         setPrimaryPrincipal(tgt.getClientPrincipal());
+    }
+
+    public CredentialCache(SgtTicket sgt) {
+        this();
+        addCredential(new Credential(sgt, sgt.getClientPrincipal()));
+        setPrimaryPrincipal(sgt.getClientPrincipal());
     }
 
     public CredentialCache(Credential credential) {
