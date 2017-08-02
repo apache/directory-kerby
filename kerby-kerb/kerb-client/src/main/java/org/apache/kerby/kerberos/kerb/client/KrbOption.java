@@ -61,7 +61,7 @@ public enum KrbOption implements KOption {
     USER_PASSWD(new KOptionInfo("user-passwd", "User plain password")),
 
     USE_KEYTAB(new KOptionInfo("-k", "use keytab")),
-    USE_DFT_KEYTAB(new KOptionInfo("use-dft-keytab", "use default client keytab (with -k)")),
+    USE_DFT_KEYTAB(new KOptionInfo("-i", "use default client keytab (with -k)")),
     KEYTAB_FILE(new KOptionInfo("-t", "filename of keytab to use",
         KOptionType.FILE)),
 

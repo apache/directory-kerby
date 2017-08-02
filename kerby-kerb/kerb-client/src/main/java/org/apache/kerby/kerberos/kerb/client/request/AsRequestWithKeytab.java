@@ -46,6 +46,19 @@ public class AsRequestWithKeytab extends AsRequest {
             keytabFile = kOptions.getFileOption(KrbOption.KEYTAB_FILE);
         }
 
+        if (kOptions.contains(KrbOption.USE_DFT_KEYTAB)) {
+            final String clientKeytabEnv = System.getenv("KRB5_CLIENT_KTNAME");
+            final String clientKeytabDft = getContext().getConfig().getString(
+                "default_client_keytab_name");
+            if (clientKeytabEnv != null) {
+                keytabFile = new File(clientKeytabEnv);
+            } else if (clientKeytabDft != null) {
+                keytabFile = new File(clientKeytabDft);
+            } else {
+                System.err.println("Default client keytab file not found.");
+            }
+        }
+
         Keytab keytab = null;
         try {
             keytab =  Keytab.loadKeytab(keytabFile);
