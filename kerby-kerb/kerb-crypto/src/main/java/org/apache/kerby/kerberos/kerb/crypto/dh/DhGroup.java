@@ -46,7 +46,7 @@ public class DhGroup {
     public static final DHParameterSpec MODP_GROUP2;
 
     static {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1");
         sb.append("29024E088A67CC74020BBEA63B139B22514A08798E3404DD");
         sb.append("EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245");
@@ -73,7 +73,7 @@ public class DhGroup {
     public static final DHParameterSpec MODP_GROUP14;
 
     static {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1");
         sb.append("29024E088A67CC74020BBEA63B139B22514A08798E3404DD");
         sb.append("EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245");
@@ -105,7 +105,7 @@ public class DhGroup {
     public static final DHParameterSpec MODP_GROUP16;
 
     static {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1");
         sb.append("29024E088A67CC74020BBEA63B139B22514A08798E3404DD");
         sb.append("EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245");

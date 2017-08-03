@@ -335,6 +335,24 @@
         <artifactId>maven-source-plugin</artifactId>
       </plugin>
 
+      <plugin>
+        <groupId>org.gaul</groupId>
+        <artifactId>modernizer-maven-plugin</artifactId>
+        <version>1.5.0</version>
+        <configuration>
+          <javaVersion>1.7</javaVersion>
+        </configuration>
+        <executions>
+          <execution>
+            <id>modernizer-check</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>modernizer</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 

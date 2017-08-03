@@ -27,7 +27,7 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSName;
 import org.ietf.jgss.Oid;
 import sun.security.jgss.spi.GSSNameSpi;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.Provider;
 
 public class GssNameElement implements GSSNameSpi {
@@ -112,13 +112,7 @@ public class GssNameElement implements GSSNameSpi {
     }
 
     public byte[] export() throws GSSException {
-        byte[] retVal;
-        try {
-            retVal = principalName.getName().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new GSSException(GSSException.BAD_NAME, -1, e.getMessage());
-        }
-        return retVal;
+        return principalName.getName().getBytes(StandardCharsets.UTF_8);
     }
 
     public Oid getMechanism() {

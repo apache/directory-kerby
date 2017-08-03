@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.kerb.crypto.key;
 
@@ -23,7 +23,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.crypto.util.Md4;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 public class Rc4KeyMaker extends AbstractKeyMaker {
@@ -39,14 +39,10 @@ public class Rc4KeyMaker extends AbstractKeyMaker {
             throw new RuntimeException("Invalid param to str2Key");
         }
 
-        try {
-            byte[] passwd = string.getBytes("UTF-16LE"); // to unicode
-            MessageDigest md = new Md4();
-            md.update(passwd);
-            return md.digest();
-        } catch (UnsupportedEncodingException e) {
-            throw new KrbException("str2key failed", e);
-        }
+        byte[] passwd = string.getBytes(StandardCharsets.UTF_16LE); // to unicode
+        MessageDigest md = new Md4();
+        md.update(passwd);
+        return md.digest();
     }
 
     @Override
