@@ -232,8 +232,8 @@ public class AdminServerHandler {
         if (list.size() <= 0) {
             return null;
         }
-        //Both speed and safety,so use StringBuffer
-        StringBuffer result = new StringBuffer();
+        //Both speed and safety,so use StringBuilder
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
             result.append(list.get(i)).append(" ");
         }

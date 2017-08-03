@@ -59,7 +59,7 @@ public class Hex {
     }
 
     public static String encode(byte[] b, int offset, int length) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int len = Math.min(offset + length, b.length);
         for (int i = offset; i < len; i++) {
             int c = (int) b[i];

@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
@@ -35,12 +36,12 @@ public class PublicKeyReader {
 
     public static PublicKey loadPublicKey(InputStream in) throws Exception {
         byte[] keyBytes = IOUtils.toByteArray(in);
-        
+
         try {
             return loadPublicKey(keyBytes);
         } catch (InvalidKeySpecException ex) {
             // It might be a Certificate and not a PublicKey...
-            Certificate cert = 
+            Certificate cert =
                 CertificateFactory.getInstance("X.509").generateCertificate(new ByteArrayInputStream(keyBytes));
             return cert.getPublicKey();
         }
@@ -48,15 +49,15 @@ public class PublicKeyReader {
 
 
     public static PublicKey loadPublicKey(byte[] publicKeyBytes) throws Exception {
-        String pubKey = new String(publicKeyBytes, "UTF-8");
+        String pubKey = new String(publicKeyBytes, StandardCharsets.UTF_8);
         if (pubKey.startsWith("-----BEGIN PUBLIC KEY-----")) {
             // PEM format
             pubKey = pubKey.replace("-----BEGIN PUBLIC KEY-----", "");
             pubKey = pubKey.replace("-----END PUBLIC KEY-----", "");
-            
+
             Base64 base64 = new Base64();
             byte[] buffer = base64.decode(pubKey.trim());
-            
+
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(buffer);
             return keyFactory.generatePublic(keySpec);

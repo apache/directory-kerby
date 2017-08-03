@@ -46,7 +46,7 @@ public class PkinitPlgCryptoContext {
      * The prime is 2^1024 - 2^960 - 1 + 2^64 * { [2^894 pi] + 129093 }.
      */
     public BigInteger getPkinit1024Prime() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1");
         sb.append("29024E088A67CC74020BBEA63B139B22514A08798E3404DD");
         sb.append("EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245");
@@ -64,7 +64,7 @@ public class PkinitPlgCryptoContext {
      * This prime is: 2^2048 - 2^1984 - 1 + 2^64 * { [2^1918 pi] + 124476 }
      */
     public BigInteger getPkinit2048Prime() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1");
         sb.append("29024E088A67CC74020BBEA63B139B22514A08798E3404DD");
         sb.append("EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245");
@@ -87,7 +87,7 @@ public class PkinitPlgCryptoContext {
      * This prime is: 2^4096 - 2^4032 - 1 + 2^64 * { [2^3966 pi] + 240904 }
      */
     public BigInteger getPkinit4096Prime() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1");
         sb.append("29024E088A67CC74020BBEA63B139B22514A08798E3404DD");
         sb.append("EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245");

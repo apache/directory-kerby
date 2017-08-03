@@ -45,7 +45,7 @@ public class ReadLine {
         if (lines < 1) {
             lines = 1;
         }
-        StringBuffer buf = new StringBuffer(128 * lines);
+        StringBuilder buf = new StringBuilder(128 * lines);
         if (avail <= 0 || pos >= avail) {
             pos = 0;
             avail = in.read(bytes);
