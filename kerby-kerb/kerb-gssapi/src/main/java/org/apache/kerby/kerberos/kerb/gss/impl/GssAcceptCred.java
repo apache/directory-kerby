@@ -20,7 +20,6 @@
 package org.apache.kerby.kerberos.kerb.gss.impl;
 
 
-import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSName;
 
@@ -28,14 +27,12 @@ import sun.security.jgss.GSSCaller;
 
 import javax.security.auth.kerberos.KerberosKey;
 import javax.security.auth.kerberos.KerberosPrincipal;
-import javax.security.auth.kerberos.KerberosTicket;
 import javax.security.auth.kerberos.KeyTab;
 import java.util.Set;
 
 public final class GssAcceptCred extends GssCredElement {
 
     private final KeyTab keyTab;
-    private final KerberosTicket ticket;
     private final Set<KerberosKey> kerberosKeySet;
 
     public static GssAcceptCred getInstance(final GSSCaller caller,
@@ -43,20 +40,17 @@ public final class GssAcceptCred extends GssCredElement {
 
         // Try to get a keytab first
         KeyTab keyTab = getKeyTab(name);
-        KerberosTicket ticket = null;
         Set<KerberosKey> kerberosKeySet = null;
         if (keyTab == null) {
-            // Otherwise try to get a kerberos ticket
+            // Otherwise try to get a kerberos key
             if (name == null) {
-                ticket = CredUtils.getKerberosTicketFromContext(caller, null, null);
                 kerberosKeySet = CredUtils.getKerberosKeysFromContext(caller, null, null);
             } else {
-                ticket = CredUtils.getKerberosTicketFromContext(caller, name.getPrincipalName().getName(), null);
                 kerberosKeySet = CredUtils.getKerberosKeysFromContext(caller, name.getPrincipalName().getName(), null);
             }
         }
 
-        if (keyTab == null && ticket == null && kerberosKeySet == null) {
+        if (keyTab == null && kerberosKeySet == null) {
             String error = "Failed to find any Kerberos credential";
             if (name != null) {
                 error +=  " for " + name.getPrincipalName().getName();
@@ -68,9 +62,6 @@ public final class GssAcceptCred extends GssCredElement {
             if (keyTab != null) {
                 name = GssNameElement.getInstance(keyTab.getPrincipal().getName(),
                     GSSName.NT_HOSTBASED_SERVICE);
-            } else if (ticket != null) {
-                name = GssNameElement.getInstance(ticket.getClient().getName(),
-                    GSSName.NT_HOSTBASED_SERVICE);
             } else if (kerberosKeySet != null) {
                 name = GssNameElement.getInstance(
                     kerberosKeySet.iterator().next().getPrincipal().getName(),
@@ -78,7 +69,7 @@ public final class GssAcceptCred extends GssCredElement {
             }
         }
 
-        return new GssAcceptCred(caller, name, keyTab, ticket, lifeTime, kerberosKeySet);
+        return new GssAcceptCred(caller, name, keyTab, lifeTime, kerberosKeySet);
     }
 
     private static KeyTab getKeyTab(GssNameElement name) throws GSSException {
@@ -92,10 +83,9 @@ public final class GssAcceptCred extends GssCredElement {
     }
 
     private GssAcceptCred(GSSCaller caller, GssNameElement name, KeyTab keyTab,
-                          KerberosTicket ticket, int lifeTime, Set<KerberosKey> kerberosKeySet) {
+                          int lifeTime, Set<KerberosKey> kerberosKeySet) {
         super(caller, name);
         this.keyTab = keyTab;
-        this.ticket = ticket;
         this.accLifeTime = lifeTime;
         this.kerberosKeySet = kerberosKeySet;
     }
@@ -112,10 +102,6 @@ public final class GssAcceptCred extends GssCredElement {
         return this.keyTab;
     }
 
-    public KerberosTicket getKerberosTicket() {
-        return ticket;
-    }
-
     public KerberosKey[] getKeys() {
         KerberosPrincipal princ = new KerberosPrincipal(name.getPrincipalName().getName(),
             name.getPrincipalName().getNameType().getValue());
@@ -123,13 +109,6 @@ public final class GssAcceptCred extends GssCredElement {
             return keyTab.getKeys(princ);
         }
 
-        return null;
-    }
-
-    public EncryptionKey getKeyFromTicket() {
-        if (ticket != null) {
-            return new EncryptionKey(ticket.getSessionKeyType(), ticket.getSessionKey().getEncoded());
-        }
         return null;
     }
 
