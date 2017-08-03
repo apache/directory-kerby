@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.gss.impl;
 
 
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSName;
 
@@ -62,7 +63,7 @@ public final class GssAcceptCred extends GssCredElement {
             if (keyTab != null) {
                 name = GssNameElement.getInstance(keyTab.getPrincipal().getName(),
                     GSSName.NT_HOSTBASED_SERVICE);
-            } else if (kerberosKeySet != null) {
+            } else {
                 name = GssNameElement.getInstance(
                     kerberosKeySet.iterator().next().getPrincipal().getName(),
                     GSSName.NT_HOSTBASED_SERVICE);
@@ -102,21 +103,18 @@ public final class GssAcceptCred extends GssCredElement {
         return this.keyTab;
     }
 
-    public KerberosKey[] getKeys() {
-        KerberosPrincipal princ = new KerberosPrincipal(name.getPrincipalName().getName(),
-            name.getPrincipalName().getNameType().getValue());
-        if (keyTab != null) {
-            return keyTab.getKeys(princ);
-        }
+    public EncryptionKey getEncryptionKey(int encryptType, int kvno) {
 
-        return null;
-    }
-
-    public KerberosKey[] getKerberosKeys() {
         if (kerberosKeySet != null) {
-            return kerberosKeySet.toArray(new KerberosKey[kerberosKeySet.size()]);
+            KerberosKey[] keys = kerberosKeySet.toArray(new KerberosKey[kerberosKeySet.size()]);
+            // We don't check the kvno here - see DIRKRB-638
+            return GssUtil.getEncryptionKey(keys, encryptType);
         }
-        return null;
-    }
 
+        // Otherwise get it from the keytab
+        KerberosPrincipal princ = new KerberosPrincipal(name.getPrincipalName().getName(),
+                                                        name.getPrincipalName().getNameType().getValue());
+        KerberosKey[] keys = keyTab.getKeys(princ);
+        return GssUtil.getEncryptionKey(keys, encryptType, kvno);
+    }
 }

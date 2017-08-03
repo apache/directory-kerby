@@ -348,6 +348,18 @@ public class GssUtil {
             return null;
         }
         for (KerberosKey krbKey : krbKeys) {
+            if (krbKey.getKeyType() == encType && krbKey.getVersionNumber() == kvno && !krbKey.isDestroyed()) {
+                return new EncryptionKey(krbKey.getKeyType(), krbKey.getEncoded());
+            }
+        }
+        return null;
+    }
+
+    public static EncryptionKey getEncryptionKey(KerberosKey[] krbKeys, int encType) {
+        if (krbKeys == null) {
+            return null;
+        }
+        for (KerberosKey krbKey : krbKeys) {
             if (krbKey.getKeyType() == encType && !krbKey.isDestroyed()) {
                 return new EncryptionKey(krbKey.getKeyType(), krbKey.getEncoded());
             }
