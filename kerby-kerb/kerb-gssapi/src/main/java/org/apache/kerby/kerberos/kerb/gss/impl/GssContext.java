@@ -439,6 +439,7 @@ public class GssContext implements GSSContextSpi {
         if (serverKey == null) {
             throw new GSSException(GSSException.FAILURE, -1, "Server key not found");
         }
+        peerName = (GssNameElement) acceptCred.getName();
 
         try {
             ApRequest.validate(serverKey, apReq,
