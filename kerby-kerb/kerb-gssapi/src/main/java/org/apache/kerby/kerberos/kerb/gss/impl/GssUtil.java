@@ -348,7 +348,7 @@ public class GssUtil {
             return null;
         }
         for (KerberosKey krbKey : krbKeys) {
-            if (krbKey.getKeyType() == encType && krbKey.getVersionNumber() == kvno && !krbKey.isDestroyed()) {
+            if (krbKey.getKeyType() == encType && !krbKey.isDestroyed()) {
                 return new EncryptionKey(krbKey.getKeyType(), krbKey.getEncoded());
             }
         }

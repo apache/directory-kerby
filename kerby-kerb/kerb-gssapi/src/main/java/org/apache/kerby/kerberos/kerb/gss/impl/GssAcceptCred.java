@@ -30,11 +30,13 @@ import javax.security.auth.kerberos.KerberosKey;
 import javax.security.auth.kerberos.KerberosPrincipal;
 import javax.security.auth.kerberos.KerberosTicket;
 import javax.security.auth.kerberos.KeyTab;
+import java.util.Set;
 
 public final class GssAcceptCred extends GssCredElement {
 
     private final KeyTab keyTab;
     private final KerberosTicket ticket;
+    private final Set<KerberosKey> kerberosKeySet;
 
     public static GssAcceptCred getInstance(final GSSCaller caller,
                                             GssNameElement name, int lifeTime) throws GSSException {
@@ -42,16 +44,19 @@ public final class GssAcceptCred extends GssCredElement {
         // Try to get a keytab first
         KeyTab keyTab = getKeyTab(name);
         KerberosTicket ticket = null;
+        Set<KerberosKey> kerberosKeySet = null;
         if (keyTab == null) {
             // Otherwise try to get a kerberos ticket
             if (name == null) {
                 ticket = CredUtils.getKerberosTicketFromContext(caller, null, null);
+                kerberosKeySet = CredUtils.getKerberosKeysFromContext(caller, null, null);
             } else {
                 ticket = CredUtils.getKerberosTicketFromContext(caller, name.getPrincipalName().getName(), null);
+                kerberosKeySet = CredUtils.getKerberosKeysFromContext(caller, name.getPrincipalName().getName(), null);
             }
         }
 
-        if (keyTab == null && ticket == null) {
+        if (keyTab == null && ticket == null && kerberosKeySet == null) {
             String error = "Failed to find any Kerberos credential";
             if (name != null) {
                 error +=  " for " + name.getPrincipalName().getName();
@@ -61,13 +66,19 @@ public final class GssAcceptCred extends GssCredElement {
 
         if (name == null) {
             if (keyTab != null) {
-                name = GssNameElement.getInstance(keyTab.getPrincipal().getName(), GSSName.NT_HOSTBASED_SERVICE);
-            } else {
-                name = GssNameElement.getInstance(ticket.getClient().getName(), GSSName.NT_HOSTBASED_SERVICE);
+                name = GssNameElement.getInstance(keyTab.getPrincipal().getName(),
+                    GSSName.NT_HOSTBASED_SERVICE);
+            } else if (ticket != null) {
+                name = GssNameElement.getInstance(ticket.getClient().getName(),
+                    GSSName.NT_HOSTBASED_SERVICE);
+            } else if (kerberosKeySet != null) {
+                name = GssNameElement.getInstance(
+                    kerberosKeySet.iterator().next().getPrincipal().getName(),
+                    GSSName.NT_HOSTBASED_SERVICE);
             }
         }
 
-        return new GssAcceptCred(caller, name, keyTab, ticket, lifeTime);
+        return new GssAcceptCred(caller, name, keyTab, ticket, lifeTime, kerberosKeySet);
     }
 
     private static KeyTab getKeyTab(GssNameElement name) throws GSSException {
@@ -80,11 +91,13 @@ public final class GssAcceptCred extends GssCredElement {
         }
     }
 
-    private GssAcceptCred(GSSCaller caller, GssNameElement name, KeyTab keyTab, KerberosTicket ticket, int lifeTime) {
+    private GssAcceptCred(GSSCaller caller, GssNameElement name, KeyTab keyTab,
+                          KerberosTicket ticket, int lifeTime, Set<KerberosKey> kerberosKeySet) {
         super(caller, name);
         this.keyTab = keyTab;
         this.ticket = ticket;
         this.accLifeTime = lifeTime;
+        this.kerberosKeySet = kerberosKeySet;
     }
 
     public boolean isInitiatorCredential() throws GSSException {
@@ -105,7 +118,7 @@ public final class GssAcceptCred extends GssCredElement {
 
     public KerberosKey[] getKeys() {
         KerberosPrincipal princ = new KerberosPrincipal(name.getPrincipalName().getName(),
-                name.getPrincipalName().getNameType().getValue());
+            name.getPrincipalName().getNameType().getValue());
         if (keyTab != null) {
             return keyTab.getKeys(princ);
         }
@@ -119,4 +132,12 @@ public final class GssAcceptCred extends GssCredElement {
         }
         return null;
     }
+
+    public KerberosKey[] getKerberosKeys() {
+        if (kerberosKeySet != null) {
+            return kerberosKeySet.toArray(new KerberosKey[kerberosKeySet.size()]);
+        }
+        return null;
+    }
+
 }

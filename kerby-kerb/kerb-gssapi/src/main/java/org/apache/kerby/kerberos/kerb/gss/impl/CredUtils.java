@@ -36,6 +36,13 @@ public class CredUtils {
         }
     }
 
+    public static Set<KerberosKey> getKerberosKeysFromContext(GSSCaller caller,
+                                                              final String clientName,
+                                                              final String serverName) throws GSSException {
+        Set<KerberosKey> kerberosKeys = getContextCredentials(KerberosKey.class);
+        return kerberosKeys;
+    }
+
     public static KerberosTicket getKerberosTicketFromContext(GSSCaller caller,
                                                               final String clientName,
                                                               final String serverName) throws GSSException {

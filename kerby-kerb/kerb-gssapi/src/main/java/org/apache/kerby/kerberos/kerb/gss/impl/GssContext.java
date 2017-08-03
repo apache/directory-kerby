@@ -435,8 +435,12 @@ public class GssContext implements GSSContextSpi {
         int kvno = apReq.getTicket().getEncryptedEncPart().getKvno();
         int encryptType = apReq.getTicket().getEncryptedEncPart().getEType().getValue();
 
-        // Get server key from ticket
-        EncryptionKey serverKey = acceptCred.getKeyFromTicket();
+        EncryptionKey serverKey = GssUtil.getEncryptionKey(acceptCred.getKerberosKeys(), encryptType, kvno);
+
+        if (serverKey == null) {
+            // Get server key from ticket
+            serverKey = acceptCred.getKeyFromTicket();
+        }
         if (serverKey == null) {
             // Otherwise get it from the keytab
             serverKey = GssUtil.getEncryptionKey(acceptCred.getKeys(), encryptType, kvno);
