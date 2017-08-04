@@ -304,7 +304,11 @@ public abstract class KdcRequest {
     public abstract EncryptionKey getClientKey() throws KrbException;
 
     public long getTicketValidTime() {
-        return context.getTicketValidTime();
+        if (getRequestOptions().contains(KrbOption.LIFE_TIME)) {
+            return getRequestOptions().getIntegerOption(KrbOption.LIFE_TIME) * 1000;
+        } else {
+            return context.getTicketValidTime();
+        }
     }
 
     public KerberosTime getTicketTillTime() {
