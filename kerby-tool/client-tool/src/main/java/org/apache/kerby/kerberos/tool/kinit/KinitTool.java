@@ -171,8 +171,8 @@ public class KinitTool {
         }
 
         File ccacheFile;
-        if (ktOptions.contains(KrbOption.KRB5_CACHE)) {
-            String ccacheName = ktOptions.getStringOption(KrbOption.KRB5_CACHE);
+        if (ktOptions.contains(KinitOption.KRB5_CACHE)) {
+            String ccacheName = ktOptions.getStringOption(KinitOption.KRB5_CACHE);
             ccacheFile = new File(ccacheName);
         } else {
             String ccacheName = principal.replaceAll("/", "_");
