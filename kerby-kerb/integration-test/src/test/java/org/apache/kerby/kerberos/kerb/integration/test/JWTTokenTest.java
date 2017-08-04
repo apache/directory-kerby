@@ -265,6 +265,58 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCacheFile.delete();
     }
 
+    // Use the TGT here instead of an armor cache
+    @org.junit.Test
+    public void accessTokenUsingTicket() throws Exception {
+
+        KrbClient client = getKrbClient();
+
+        // Get a TGT
+        TgtTicket tgt = client.requestTgt(getClientPrincipal(), getClientPassword());
+        assertNotNull(tgt);
+
+        KrbTokenClient tokenClient = new KrbTokenClient(client);
+
+        tokenClient.setKdcHost(client.getSetting().getKdcHost());
+        tokenClient.setKdcTcpPort(client.getSetting().getKdcTcpPort());
+
+        tokenClient.setKdcRealm(client.getSetting().getKdcRealm());
+        tokenClient.init();
+
+        // Create a JWT token
+        AuthToken authToken = issueToken(getClientPrincipal());
+        authToken.isAcToken(true);
+        authToken.isIdToken(false);
+        authToken.setAudiences(Collections.singletonList(getServerPrincipal()));
+        KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
+
+        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
+        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        krbToken.setTokenValue(signToken(authToken, signKey));
+
+        // Now get a SGT using the JWT
+        SgtTicket tkt = tokenClient.requestSgt(krbToken, getServerPrincipal(), tgt);
+        assertTrue(tkt != null);
+
+        // Decrypt the ticket
+        Ticket ticket = tkt.getTicket();
+        EncryptionKey key = EncryptionHandler.string2Key(getServerPrincipal(), getServerPassword(),
+                                                         ticket.getEncryptedEncPart().getEType());
+
+        EncTicketPart encPart =
+            EncryptionUtil.unseal(ticket.getEncryptedEncPart(),
+                                  key, KeyUsage.KDC_REP_TICKET, EncTicketPart.class);
+
+        // Examine the authorization data
+        AuthorizationData authzData = encPart.getAuthorizationData();
+        assertEquals(1, authzData.getElements().size());
+        AuthorizationDataEntry dataEntry = authzData.getElements().iterator().next();
+        AdToken token = dataEntry.getAuthzDataAs(AdToken.class);
+        KrbToken decodedKrbToken = token.getToken();
+        assertEquals(getClientPrincipal(), decodedKrbToken.getSubject());
+        assertEquals(getServerPrincipal(), decodedKrbToken.getAudiences().get(0));
+    }
+
     @org.junit.Test
     public void identityToken() throws Exception {
 
