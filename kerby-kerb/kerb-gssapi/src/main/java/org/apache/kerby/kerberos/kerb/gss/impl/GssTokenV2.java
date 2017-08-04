@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.gss.impl;
 
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
+import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -221,7 +222,7 @@ abstract class GssTokenV2 extends GssTokenBase {
             header[6] = (byte) 0xFF;
             header[7] = (byte) 0xFF;
         }
-        writeBigEndian(header, 12, sequenceNumber);
+        BytesUtil.int2bytes(sequenceNumber, header, 12, true);
     }
 
     // Reconstruct a token header
@@ -253,9 +254,8 @@ abstract class GssTokenV2 extends GssTokenBase {
                 if (header[3] != (byte) 0xFF) {
                     throw new GSSException(GSSException.DEFECTIVE_TOKEN, -1, "Invalid token filler");
                 }
-
-                ec = readBigEndian(header, OFFSET_EC, 2);
-                rrc = readBigEndian(header, OFFSET_RRC, 2);
+                ec = BytesUtil.bytes2short(header, OFFSET_EC, true);
+                rrc = BytesUtil.bytes2short(header, OFFSET_RRC, true);
             } else if (tokenType == TOKEN_MIC_V2) {
                 for (int i = 3; i < 8; i++) {
                     if ((header[i] & 0xFF) != 0xFF) {
@@ -265,7 +265,7 @@ abstract class GssTokenV2 extends GssTokenBase {
             }
 
             prop.setQOP(0);
-            sequenceNumber = readBigEndian(header, 0, 8);
+            sequenceNumber = (int) BytesUtil.bytes2long(header, 0, true);
         } catch (IOException e) {
             throw new GSSException(GSSException.FAILURE, -1, "Phrase token header failed");
         }

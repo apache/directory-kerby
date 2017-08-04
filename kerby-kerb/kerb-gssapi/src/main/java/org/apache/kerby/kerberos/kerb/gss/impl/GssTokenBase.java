@@ -25,35 +25,4 @@ public abstract class GssTokenBase {
     public static final int TOKEN_MIC_V1 = 0x101;
     public static final int TOKEN_WRAP_V2 = 0x504;
     public static final int TOKEN_MIC_V2 = 0x404;
-
-    public void writeBigEndian(byte[] buf, int offset, int value) {
-        buf[offset] = (byte) (value >>> 24);
-        buf[offset + 1] = (byte) (value >>> 16);
-        buf[offset + 2] = (byte) (value >>> 8);
-        buf[offset + 3] = (byte) (value);
-    }
-
-    public int readBigEndian(byte[] buf, int offset) {
-        int value = 0;
-        value += (buf[offset] & 0xFF) << 24;
-        value += (buf[offset + 1] & 0xFF) << 16;
-        value += (buf[offset + 2] & 0xFF) << 8;
-        value += buf[offset + 3] & 0xFF;
-        return value;
-    }
-
-    /**
-     *
-     * @param buf
-     * @param offset
-     * @param len should not be larger than sizeof(int)
-     * @return
-     */
-    public int readBigEndian(byte[] buf, int offset, int len) {
-        int value = 0;
-        for (int i = 0; i < len; i++) {
-            value += (buf[offset + i] & 0xFF) << 8;
-        }
-        return value;
-    }
 }

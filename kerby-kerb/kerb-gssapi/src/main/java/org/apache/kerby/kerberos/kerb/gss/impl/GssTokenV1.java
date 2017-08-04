@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.kerberos.kerb.gss.impl;
 
-
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
+import org.apache.kerby.kerberos.kerb.crypto.util.BytesUtil;
 import sun.security.jgss.GSSHeader;
 import sun.security.util.ObjectIdentifier;
 
@@ -219,12 +219,9 @@ abstract class GssTokenV1 extends GssTokenBase {
     private void encryptSequenceNumber() throws GSSException {
         plainSequenceBytes = new byte[8];
         if (encryptor.isArcFourHmac()) {
-            writeBigEndian(plainSequenceBytes, 0, sequenceNumber);
+            BytesUtil.int2bytes(sequenceNumber, plainSequenceBytes, 0, true);
         } else {
-            plainSequenceBytes[0] = (byte) sequenceNumber;
-            plainSequenceBytes[1] = (byte) (sequenceNumber >>> 8);
-            plainSequenceBytes[2] = (byte) (sequenceNumber >>> 16);
-            plainSequenceBytes[3] = (byte) (sequenceNumber >>> 24);
+            BytesUtil.int2bytes(sequenceNumber, plainSequenceBytes, 0, false);
         }
 
         // Hex 0 - sender is the context initiator, Hex FF - sender is the context acceptor
