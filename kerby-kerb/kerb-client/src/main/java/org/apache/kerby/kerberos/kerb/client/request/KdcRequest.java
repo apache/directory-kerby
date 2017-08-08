@@ -429,8 +429,12 @@ public abstract class KdcRequest {
         for (KOption kOpt: requestOptions.getOptions()) {
             if (kOpt.getOptionInfo().getGroup() == KrbOptionGroup.KDC_FLAGS) {
                 KrbKdcOption krbKdcOption = (KrbKdcOption) kOpt;
-                KdcOption kdcOption = KdcOption.valueOf(krbKdcOption.name());
                 boolean flagValue = requestOptions.getBooleanOption(kOpt, true);
+                if (kOpt.equals(KrbKdcOption.NOT_FORWARDABLE)) {
+                    krbKdcOption = KrbKdcOption.FORWARDABLE;
+                    flagValue = !flagValue;
+                }
+                KdcOption kdcOption = KdcOption.valueOf(krbKdcOption.name());
                 kdcOptions.setFlag(kdcOption, flagValue);
             }
         }
