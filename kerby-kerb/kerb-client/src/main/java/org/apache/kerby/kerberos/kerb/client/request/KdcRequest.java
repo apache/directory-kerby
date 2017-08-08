@@ -434,6 +434,10 @@ public abstract class KdcRequest {
                     krbKdcOption = KrbKdcOption.FORWARDABLE;
                     flagValue = !flagValue;
                 }
+                if (kOpt.equals(KrbKdcOption.NOT_PROXIABLE)) {
+                    krbKdcOption = KrbKdcOption.PROXIABLE;
+                    flagValue = !flagValue;
+                }
                 KdcOption kdcOption = KdcOption.valueOf(krbKdcOption.name());
                 kdcOptions.setFlag(kdcOption, flagValue);
             }

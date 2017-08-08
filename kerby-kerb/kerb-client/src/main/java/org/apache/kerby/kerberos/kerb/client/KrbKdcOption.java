@@ -35,6 +35,8 @@ public enum KrbKdcOption implements KOption {
         KrbOptionGroup.KDC_FLAGS)),
     PROXIABLE(new KOptionInfo("-p", "proxiable",
         KrbOptionGroup.KDC_FLAGS)),
+    NOT_PROXIABLE(new KOptionInfo("-P", "not proxiable",
+        KrbOptionGroup.KDC_FLAGS)),
     REQUEST_ANONYMOUS(new KOptionInfo("-n",
         "request anonymous", KrbOptionGroup.KDC_FLAGS)),
     VALIDATE(new KOptionInfo("-v", "validate",
