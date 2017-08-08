@@ -31,6 +31,8 @@ public enum KrbKdcOption implements KOption {
     /* KDC flags */
     FORWARDABLE(new KOptionInfo("-f", "forwardable",
         KrbOptionGroup.KDC_FLAGS)),
+    NOT_FORWARDABLE(new KOptionInfo("-F", "not forwardable",
+        KrbOptionGroup.KDC_FLAGS)),
     PROXIABLE(new KOptionInfo("-p", "proxiable",
         KrbOptionGroup.KDC_FLAGS)),
     REQUEST_ANONYMOUS(new KOptionInfo("-n",
