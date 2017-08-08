@@ -34,6 +34,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,11 +69,12 @@ public class NettyKdcNetwork {
         this.udpAddress = udpAddress;
     }
 
-    public void start() {
+    public void start() throws Exception {
         try {
             doStart();
         } catch (Exception e) {
-            LOG.error("Error occurred while starting the netty kdc network.");
+            LOG.error("Error occurred while starting the netty kdc network. " + e.toString());
+            throw new KrbException("Error occurred while starting the netty kdc network. ", e);
         }
     }
 
@@ -85,19 +87,19 @@ public class NettyKdcNetwork {
                 .childHandler(createChannelInitializer());
 
         // Start the server.
-        b.bind(tcpAddress.getPort());
+        b.bind(tcpAddress.getPort()).sync();
         if (udpAddress != null) {
             startUDPServer();
         }
     }
 
-    private void startUDPServer() {
+    private void startUDPServer() throws InterruptedException {
         this.group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
         b.group(group).channel(NioDatagramChannel.class)
                 .option(ChannelOption.SO_BROADCAST, true)
                 .handler((ChannelHandler) new NettyKdcUdpServerHandler(kdcContext));
-        b.bind(udpAddress.getPort());
+        b.bind(udpAddress.getPort()).sync();
     }
 
     static class KrbMessageDecoder extends LengthFieldBasedFrameDecoder {
