@@ -87,7 +87,12 @@ public class KerbyKdcServer extends KdcServer {
             System.exit(4);
         }
 
-        server.start();
-        System.out.println("KDC started.");
+        try {
+            server.start();
+            System.out.println("KDC started.");
+        } catch (KrbException e) {
+            System.err.println("Errors occurred when start kdc server:  " + e.getMessage());
+            System.exit(5);
+        }
     }
 }
