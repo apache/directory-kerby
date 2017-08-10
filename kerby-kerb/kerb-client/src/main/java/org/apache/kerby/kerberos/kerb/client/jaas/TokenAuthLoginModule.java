@@ -269,13 +269,11 @@ public class TokenAuthLoginModule implements LoginModule {
                 } catch (IOException e) {
                     LOG.error("Token decode failed. " + e.toString());
                 }
-                krbToken = new KrbToken(authToken, TokenFormat.JWT);
                 TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
 
                 if (tokenEncoder instanceof JwtTokenEncoder) {
                     PrivateKey signKey = null;
-                    try {
-                        InputStream is = Files.newInputStream(signKeyFile.toPath());
+                    try (InputStream is = Files.newInputStream(signKeyFile.toPath())) {
                         signKey = PrivateKeyReader.loadPrivateKey(is);
                     } catch (IOException e) {
                         LOG.error("Failed to load private key from file: "
