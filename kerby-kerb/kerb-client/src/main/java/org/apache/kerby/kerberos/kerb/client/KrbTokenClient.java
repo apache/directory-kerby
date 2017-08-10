@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.client;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
+import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
@@ -67,12 +67,12 @@ public class KrbTokenClient extends KrbClientBase {
 
     /**
      * Request a TGT with user token credential and armor cache
-     * @param token The auth token
+     * @param token The KrbToken
      * @param armorCache The armor cache
      * @return TGT
      * @throws KrbException e
      */
-    public TgtTicket requestTgt(AuthToken token, String armorCache) throws KrbException {
+    public TgtTicket requestTgt(KrbToken token, String armorCache) throws KrbException {
         if (!token.isIdToken()) {
             throw new IllegalArgumentException("Identity token is expected");
         }
@@ -85,12 +85,12 @@ public class KrbTokenClient extends KrbClientBase {
 
     /**
      * Request a TGT with user token credential and tgt
-     * @param token The auth token
+     * @param token The KrbToken
      * @param tgt The tgt ticket
      * @return TGT
      * @throws KrbException e
      */
-    public TgtTicket requestTgt(AuthToken token, TgtTicket tgt) throws KrbException {
+    public TgtTicket requestTgt(KrbToken token, TgtTicket tgt) throws KrbException {
         if (!token.isIdToken()) {
             throw new IllegalArgumentException("Identity token is expected");
         }
@@ -103,14 +103,14 @@ public class KrbTokenClient extends KrbClientBase {
 
     /**
      * Request a service ticket using an Access Token.
-     * @param token The auth token
+     * @param token The KrbToken
      * @param serverPrincipal The server principal
      * @param armorCache The armor cache
      * @return service ticket
      * @throws KrbException e
      */
     public SgtTicket requestSgt(
-        AuthToken token, String serverPrincipal, String armorCache) throws KrbException {
+        KrbToken token, String serverPrincipal, String armorCache) throws KrbException {
         if (!token.isAcToken()) {
             throw new IllegalArgumentException("Access token is expected");
         }
@@ -123,7 +123,7 @@ public class KrbTokenClient extends KrbClientBase {
         return requestSgt(requestOptions);
     }
 
-    public SgtTicket requestSgt(AuthToken token, String serverPrincipal, TgtTicket tgt) throws KrbException {
+    public SgtTicket requestSgt(KrbToken token, String serverPrincipal, TgtTicket tgt) throws KrbException {
         if (!token.isAcToken()) {
             throw new IllegalArgumentException("Access token is expected");
         }
