@@ -31,5 +31,6 @@ public enum KOptionType {
     FILE, // file path value
     DIR, // dir path value
     OBJ,  // arbitrary object
-    DATE // date value
+    DATE, // date value
+    DURATION // date duration value
 }

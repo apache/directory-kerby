@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A KOption container.
@@ -77,6 +79,35 @@ public class KOptions {
                 kopt.setValue(date);
             } catch (ParseException e) {
                 throw new IllegalArgumentException("Fail to parse the date: " + strValue);
+            }
+        } else if (kt == KOptionType.DURATION) {
+            int duration;
+            Matcher matcherColon = Pattern.compile("\\d+(?::\\d+){0,2}").matcher(strValue);
+            Matcher matcherWord = Pattern.compile("(?:(\\d+)D)?(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?",
+                Pattern.CASE_INSENSITIVE).matcher(strValue);
+            if (matcherColon.matches()) {
+                String[] durations = strValue.split(":");
+                if (durations.length == 1) {
+                    duration = Integer.valueOf(durations[0]);
+                } else if (durations.length == 2) {
+                    duration = Integer.valueOf(durations[0]) * 3600 + Integer.valueOf(durations[1]) * 60;
+                } else {
+                    duration = Integer.valueOf(durations[0]) * 3600 + Integer.valueOf(durations[1]) * 60;
+                    duration += Integer.valueOf(durations[2]);
+                }
+                kopt.setValue(duration);
+            } else if (matcherWord.matches()) {
+                int[] durations = new int[4];
+                for (int i = 0; i < 4; i++) {
+                    String durationMatch = matcherWord.group(i + 1);
+                    if (durationMatch != null) {
+                        durations[i] = Integer.valueOf(durationMatch);
+                    }
+                }
+                duration = durations[0] * 86400 + durations[1] * 3600 + durations[2] * 60 + durations[3];
+                kopt.setValue(duration);
+            } else {
+                throw new IllegalArgumentException("Text can't be parsed to a Duration: " + strValue);
             }
         } else if (kt == KOptionType.BOOL) {
             kopt.setValue(Boolean.valueOf(strValue));
