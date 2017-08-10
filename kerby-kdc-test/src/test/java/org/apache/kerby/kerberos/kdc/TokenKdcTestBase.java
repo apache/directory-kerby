@@ -67,27 +67,27 @@ public class TokenKdcTestBase extends KdcTestBase {
         super.configKdcSeverAndClient();
         String verifyKeyPath = this.getClass().getResource("/").getPath();
         getKdcServer().getKdcConfig().setString(KdcConfigKey.TOKEN_VERIFY_KEYS, verifyKeyPath);
-        
+
         URL privateKeyPath = TokenKdcTestBase.class.getResource("/private_key.pem");
         getKdcServer().getKdcConfig().setString(KdcConfigKey.TOKEN_DECRYPTION_KEYS, privateKeyPath.getPath());
         getKdcServer().getKdcConfig().setString(KdcConfigKey.TOKEN_ISSUERS, ISSUER);
     }
 
-    protected AuthToken getKrbToken() {
+    protected KrbToken getKrbToken() {
         return krbToken;
     }
 
     protected File getcCacheFile() {
         return cCacheFile;
     }
-    
+
     protected AuthToken prepareToken(String audience) throws Exception {
         InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
         PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
 
         return prepareToken(audience, ISSUER, privateKey, null);
     }
-    
+
     protected AuthToken prepareToken(String audience, String issuer,
                                      PrivateKey signingKey, PublicKey encryptionKey) {
         AuthToken authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();

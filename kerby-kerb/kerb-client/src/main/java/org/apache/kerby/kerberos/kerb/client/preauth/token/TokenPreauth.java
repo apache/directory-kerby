@@ -14,7 +14,7 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.token;
@@ -36,7 +36,7 @@ import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
-import org.apache.kerby.kerberos.kerb.type.base.KrbTokenBase;
+import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 import org.apache.kerby.kerberos.kerb.type.pa.PaData;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataEntry;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
@@ -177,19 +177,19 @@ public class TokenPreauth extends AbstractPreauthPlugin {
 
         KOption idToken = options.getOption(TokenOption.USER_ID_TOKEN);
         KOption acToken = options.getOption(TokenOption.USER_AC_TOKEN);
-        AuthToken authToken;
+        KrbToken krbToken;
         if (idToken != null) {
-            authToken = (AuthToken) idToken.getOptionInfo().getValue();
+            krbToken = (KrbToken) idToken.getOptionInfo().getValue();
         } else if (acToken != null) {
-            authToken = (AuthToken) acToken.getOptionInfo().getValue();
+            krbToken = (KrbToken) acToken.getOptionInfo().getValue();
         } else {
             throw new KrbException("missing token.");
         }
 
         PaTokenRequest tokenPa = new PaTokenRequest();
-        tokenPa.setToken((KrbTokenBase) authToken);
+        tokenPa.setToken(krbToken);
         TokenInfo info = new TokenInfo();
-        info.setTokenVendor(authToken.getIssuer());
+        info.setTokenVendor(krbToken.getIssuer());
         tokenPa.setTokenInfo(info);
 
         EncryptedData paDataValue = EncryptionUtil.seal(tokenPa,
