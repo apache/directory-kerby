@@ -24,7 +24,7 @@
 
   <groupId>org.apache.kerby</groupId>
   <artifactId>kerby-all</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Apache Kerby Project</name>
@@ -36,7 +36,7 @@
     <connection>scm:git:https://git-wip-us.apache.org/repos/asf/directory-kerby.git</connection>
     <url>https://github.com/apache/directory-kerby</url>
     <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/directory-kerby.git</developerConnection>
-    <tag>kerby-all-1.0.1</tag>
+    <tag>kerby-all-1.0.1-SNAPSHOT</tag>
   </scm>
 
   <distributionManagement>
