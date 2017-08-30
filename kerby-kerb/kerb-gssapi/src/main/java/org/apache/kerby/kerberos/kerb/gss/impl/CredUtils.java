@@ -1,10 +1,16 @@
 package org.apache.kerby.kerberos.kerb.gss.impl;
 
 import org.ietf.jgss.GSSException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sun.security.jgss.GSSCaller;
 
 import javax.security.auth.Subject;
 import javax.security.auth.kerberos.*;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -15,6 +21,8 @@ import java.util.Set;
  * Utility functions to deal with credentials in Context
  */
 public class CredUtils {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CredUtils.class);
 
     public static <T> Set<T> getContextPrivateCredentials(Class<T> credentialType, AccessControlContext acc) {
         Subject subject = Subject.getSubject(acc);
@@ -58,15 +66,24 @@ public class CredUtils {
     public static KeyTab getKeyTabFromContext(KerberosPrincipal principal) throws GSSException {
         Set<KeyTab> tabs = getContextCredentials(KeyTab.class);
         for (KeyTab tab : tabs) {
-            // Use the supplied principal, fall back to the principal of the KeyTab if none is supplied
+            // Use the supplied principal
             KerberosPrincipal princ = principal;
             if (princ == null) {
-                princ = tab.getPrincipal();
+                // fall back to the principal of the KeyTab (if JDK 1.8) if none is supplied
+                try {
+                    Method m = tab.getClass().getDeclaredMethod("getPrincipal");
+                    princ = (KerberosPrincipal) m.invoke(tab);
+                } catch (NoSuchMethodException | SecurityException | IllegalAccessException
+                    | IllegalArgumentException | InvocationTargetException e) {
+                    LOG.info("Can't get a principal from the keytab", e);
+                }
             }
 
-            KerberosKey[] keys = tab.getKeys(princ);
-            if (keys != null && keys.length > 0) {
-                return tab;
+            if (princ != null) {
+                KerberosKey[] keys = tab.getKeys(princ);
+                if (keys != null && keys.length > 0) {
+                    return tab;
+                }
             }
         }
         return null;

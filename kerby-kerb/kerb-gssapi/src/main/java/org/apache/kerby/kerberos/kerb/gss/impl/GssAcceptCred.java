@@ -23,15 +23,22 @@ package org.apache.kerby.kerberos.kerb.gss.impl;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sun.security.jgss.GSSCaller;
 
 import javax.security.auth.kerberos.KerberosKey;
 import javax.security.auth.kerberos.KerberosPrincipal;
 import javax.security.auth.kerberos.KeyTab;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Set;
 
 public final class GssAcceptCred extends GssCredElement {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GssAcceptCred.class);
 
     private final KeyTab keyTab;
     private final Set<KerberosKey> kerberosKeySet;
@@ -61,8 +68,17 @@ public final class GssAcceptCred extends GssCredElement {
 
         if (name == null) {
             if (keyTab != null) {
-                name = GssNameElement.getInstance(keyTab.getPrincipal().getName(),
-                    GSSName.NT_HOSTBASED_SERVICE);
+                try {
+                    Method m = keyTab.getClass().getDeclaredMethod("getPrincipal");
+                    KerberosPrincipal princ = (KerberosPrincipal) m.invoke(keyTab);
+                    name = GssNameElement.getInstance(princ.getName(),
+                                                      GSSName.NT_HOSTBASED_SERVICE);
+                } catch (NoSuchMethodException | SecurityException | IllegalAccessException
+                    | IllegalArgumentException | InvocationTargetException e) {
+                    String error = "Can't get a principal from the keytab";
+                    LOG.info(error, e);
+                    throw new GSSException(GSSException.NO_CRED, -1, error);
+                }
             } else {
                 name = GssNameElement.getInstance(
                     kerberosKeySet.iterator().next().getPrincipal().getName(),

@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.integration.test;
 
 import org.apache.kerby.kerberos.kerb.gss.KerbyGssProvider;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.security.Provider;
 
@@ -32,6 +33,15 @@ public class KerbyGssAppTest extends GssAppTest {
         Provider provider = new KerbyGssProvider();
         java.security.Security.insertProviderAt(provider, 1);
         super.setUp();
+    }
+
+    @Test
+    public void testServerWithoutInitialCredential() throws Exception {
+        String version = System.getProperty("java.version");
+        // See DIRKRB-647
+        if (!version.startsWith("1.7")) {
+            super.testServerWithoutInitialCredential();
+        }
     }
 
 }
