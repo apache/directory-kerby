@@ -21,12 +21,14 @@ package org.apache.kerby.kerberos.kerb.gss.impl;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClientBase;
+import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddress;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
+import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.kdc.EncAsRepPart;
 import org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart;
@@ -217,22 +219,37 @@ public class GssUtil {
     /**
      *  Apply SgtTicket by sending TGS_REQ to KDC
      * @param ticket
+     * @param krbToken
      * @param service
      * @return
      */
-    public static SgtTicket applySgtCredential(KerberosTicket ticket, String service) throws GSSException {
+    public static SgtTicket applySgtCredential(KerberosTicket ticket, KrbToken krbToken,
+                                               String service) throws GSSException {
         TgtTicket tgt = getTgtTicketFromKerberosTicket(ticket);
-        return applySgtCredential(tgt, service);
+        if (krbToken == null) {
+            return applySgtCredential(tgt, service);
+        }
+
+        return applySgtCredential(tgt, krbToken, service);
     }
 
     public static SgtTicket applySgtCredential(TgtTicket tgt, String server) throws GSSException {
         KrbClientBase client = getKrbClient();
 
-        SgtTicket sgt = null;
         try {
             client.init();
-            sgt = client.requestSgt(tgt, server);
-            return sgt;
+            return client.requestSgt(tgt, server);
+        } catch (KrbException e) {
+            throw new GSSException(GSSException.FAILURE, -1, e.getMessage());
+        }
+    }
+
+    public static SgtTicket applySgtCredential(TgtTicket tgt, KrbToken krbToken, String server) throws GSSException {
+        KrbTokenClient client = getKrbTokenClient();
+
+        try {
+            client.init();
+            return client.requestSgt(krbToken, server, tgt);
         } catch (KrbException e) {
             throw new GSSException(GSSException.FAILURE, -1, e.getMessage());
         }
@@ -302,21 +319,34 @@ public class GssUtil {
     }
 
     public static KrbClientBase getKrbClient() {
-        KrbClientBase client;
         try {
             String systemProperty = getSystemProperty("java.security.krb5.conf");
             if (systemProperty != null) {
                 File confSpecified = new File(systemProperty);
                 if (confSpecified.exists()) {
-                    client = new KrbClientBase(confSpecified);
-                } else {
-                    client = new KrbClientBase();   // get configure file from environment variable or default path
+                    return new KrbClientBase(confSpecified);
                 }
-            } else {
-                client = new KrbClientBase();
             }
 
-            return client;
+            // get configuration file from environment variable or default path
+            return new KrbClientBase();
+        } catch (KrbException e) {
+            return null;
+        }
+    }
+
+    public static KrbTokenClient getKrbTokenClient() {
+        try {
+            String systemProperty = getSystemProperty("java.security.krb5.conf");
+            if (systemProperty != null) {
+                File confSpecified = new File(systemProperty);
+                if (confSpecified.exists()) {
+                    return new KrbTokenClient(confSpecified);
+                }
+            }
+
+            // get configuration file from environment variable or default path
+            return new KrbTokenClient();
         } catch (KrbException e) {
             return null;
         }

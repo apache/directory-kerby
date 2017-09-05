@@ -278,7 +278,9 @@ public class GssContext implements GSSContextSpi {
             sgtTicket = GssUtil.getSgtCredentialFromContext(caller, clientPrincipal.getName(), serviceName);
 
             if (sgtTicket == null) {
-                sgtTicket = GssUtil.applySgtCredential(((GssInitCred) myCred).getKerberosTicket(), serviceName);
+                sgtTicket = GssUtil.applySgtCredential(((GssInitCred) myCred).getKerberosTicket(),
+                                                       ((GssInitCred) myCred).getKrbToken(),
+                                                       serviceName);
 
                 // add this service credential to context
                 final KerberosTicket ticket =
