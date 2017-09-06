@@ -263,13 +263,13 @@ public class TokenAuthLoginModule implements LoginModule {
         // Sign the token.
         if (signKeyFile != null) {
             try {
-                TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+                TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
                 try {
                     authToken = tokenDecoder.decodeFromString(tokenStr);
                 } catch (IOException e) {
                     LOG.error("Token decode failed. " + e.toString());
                 }
-                TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+                TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
 
                 if (tokenEncoder instanceof JwtTokenEncoder) {
                     PrivateKey signKey = null;

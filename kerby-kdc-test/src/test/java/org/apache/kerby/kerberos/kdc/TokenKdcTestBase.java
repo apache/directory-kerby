@@ -33,8 +33,6 @@ import org.apache.kerby.kerberos.kerb.type.base.TokenFormat;
 import org.apache.kerby.kerberos.kerb.type.ticket.KrbTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenEncoder;
-import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
-import org.junit.Before;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,12 +53,6 @@ public class TokenKdcTestBase extends KdcTestBase {
     static final String ROLE = "ADMIN";
     private File cCacheFile;
     private KrbToken krbToken;
-
-    @Before
-    public void setUp() throws Exception {
-        KrbRuntime.setTokenProvider(new JwtTokenProvider());
-        super.setUp();
-    }
 
     @Override
     protected void configKdcSeverAndClient() {
@@ -90,7 +82,7 @@ public class TokenKdcTestBase extends KdcTestBase {
 
     protected AuthToken prepareToken(String audience, String issuer,
                                      PrivateKey signingKey, PublicKey encryptionKey) {
-        AuthToken authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();
+        AuthToken authToken = KrbRuntime.getTokenProvider("JWT").createTokenFactory().createToken();
         authToken.setIssuer(issuer);
         authToken.setSubject(SUBJECT);
 
@@ -112,7 +104,7 @@ public class TokenKdcTestBase extends KdcTestBase {
         Date iat = now;
         authToken.setIssueTime(iat);
 
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
 
         if (tokenEncoder instanceof JwtTokenEncoder && signingKey != null) {
             tokenEncoder.setSignKey(signingKey);

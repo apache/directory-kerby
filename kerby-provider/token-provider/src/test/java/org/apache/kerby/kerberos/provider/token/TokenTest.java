@@ -19,6 +19,8 @@
  */
 package org.apache.kerby.kerberos.provider.token;
 
+import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWSAlgorithm;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
@@ -27,9 +29,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nimbusds.jose.JWEAlgorithm;
-import com.nimbusds.jose.JWSAlgorithm;
-
+import javax.crypto.KeyGenerator;
 import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -40,13 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.crypto.KeyGenerator;
-
 public class TokenTest {
-
-    static {
-        KrbRuntime.setTokenProvider(new JwtTokenProvider());
-    }
 
     static final String SUBJECT = "test-sub";
     static final String AUDIENCE = "krbtgt@EXAMPLE.COM";
@@ -59,7 +53,7 @@ public class TokenTest {
 
     @Before
     public void setUp() {
-        authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();
+        authToken = KrbRuntime.getTokenProvider("JWT").createTokenFactory().createToken();
 
         authToken.setIssuer(ISSUER);
         authToken.setSubject(SUBJECT);
@@ -84,11 +78,11 @@ public class TokenTest {
 
     @Test
     public void testToken() throws Exception {
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
         String tokenStr = tokenEncoder.encodeAsString(authToken);
         Assertions.assertThat(tokenStr).isNotNull();
 
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
@@ -99,11 +93,11 @@ public class TokenTest {
 
     @Test
     public void testDecodeFromBytes() throws Exception {
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
         byte[] tokenStr = tokenEncoder.encodeAsBytes(authToken);
         Assertions.assertThat(tokenStr).isNotNull();
 
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         setAudience((JwtTokenDecoder) tokenDecoder, auds);
 
@@ -114,8 +108,8 @@ public class TokenTest {
 
     @Test
     public void testTokenWithEncryptedJWT() throws Exception {
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setAudience((JwtTokenDecoder) tokenDecoder, auds);
@@ -130,8 +124,8 @@ public class TokenTest {
     
     @Test
     public void testTokenWithDirectEncryptedJWT() throws Exception {
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
         keyGenerator.init(128);
@@ -165,8 +159,8 @@ public class TokenTest {
 
     @Test
     public void testTokenWithSignedJWT() throws Exception {
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setAudience((JwtTokenDecoder) tokenDecoder, auds);
@@ -181,8 +175,8 @@ public class TokenTest {
     
     @Test
     public void testTokenWithHMACSignedJWT() throws Exception {
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
         keyGenerator.init(256);
@@ -212,8 +206,8 @@ public class TokenTest {
     @org.junit.Ignore
     // TODO: building error with openjdk8: NoSuchAlgorithm EC KeyPairGenerato..
     public void testTokenWithECDSASignedJWT() throws Exception {
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC");
         KeyPair keyPair = kpg.generateKeyPair();
@@ -233,8 +227,8 @@ public class TokenTest {
     
     @Test
     public void testTokenWithSignedAndEncryptedJWT() throws Exception {
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
@@ -253,8 +247,8 @@ public class TokenTest {
         List<String> audiences = new ArrayList<String>();
         audiences.add("invalid@EXAMPLE.COM");
 
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
@@ -271,8 +265,8 @@ public class TokenTest {
     public void testExpiredJWT() throws Exception {
         authToken.setExpirationTime(new Date(new Date().getTime() - 100));
 
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
@@ -289,8 +283,8 @@ public class TokenTest {
     public void testNotBeforeTime() throws Exception {
         authToken.setNotBeforeTime(new Date(new Date().getTime() + 1000 * 60));
 
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
 
         setSignKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);
         setEncryptKey((JwtTokenEncoder) tokenEncoder, (JwtTokenDecoder) tokenDecoder);

@@ -27,6 +27,13 @@ package org.apache.kerby.kerberos.kerb.provider;
 public interface TokenProvider extends KrbProvider {
 
     /**
+     * Get the token type
+     *
+     * @return login type
+     */
+    String getTokenType();
+
+    /**
      * Create a token encoder.
      * @return token encoder
      */

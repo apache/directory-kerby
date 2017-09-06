@@ -20,20 +20,19 @@
 package org.apache.kerby.kerberos.kerb.integration.test;
 
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
-import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.client.jaas.TokenCache;
 import org.apache.kerby.kerberos.kerb.client.jaas.TokenJaasKrbUtil;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.LoginTestBase;
 import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import java.io.File;
@@ -51,10 +50,6 @@ public class TokenLoginTestBase extends LoginTestBase {
 
     static final String GROUP = "sales-group";
     static final String ROLE = "ADMIN";
-
-    static {
-        KrbRuntime.setTokenProvider(new JwtTokenProvider());
-    }
 
     @Before
     @Override
@@ -89,7 +84,7 @@ public class TokenLoginTestBase extends LoginTestBase {
 
         TokenEncoder tokenEncoder = null;
         try {
-            tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+            tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
         } catch (Exception e) {
             LOG.error("Failed to create token. " + e.toString());
         }
@@ -107,7 +102,7 @@ public class TokenLoginTestBase extends LoginTestBase {
     }
 
     protected AuthToken issueToken(String principal) {
-        AuthToken authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();
+        AuthToken authToken = KrbRuntime.getTokenProvider("JWT").createTokenFactory().createToken();
 
         String iss = "token-service";
         authToken.setIssuer(iss);

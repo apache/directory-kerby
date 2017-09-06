@@ -34,6 +34,14 @@ public class JwtTokenProvider implements TokenProvider {
      * {@inheritDoc}
      */
     @Override
+    public String getTokenType() {
+        return "JWT";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public TokenEncoder createTokenEncoder() {
         return new JwtTokenEncoder();
     }

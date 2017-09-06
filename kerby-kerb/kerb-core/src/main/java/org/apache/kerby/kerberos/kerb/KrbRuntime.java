@@ -35,7 +35,10 @@ public class KrbRuntime {
      * Set up token provider, should be done at very initial time
      * @return token provider
      */
-    public static synchronized TokenProvider getTokenProvider() {
+    public static synchronized TokenProvider getTokenProvider(String tokenType) {
+        if (tokenProvider == null || !tokenType.equals(tokenProvider.getTokenType())) {
+            tokenProvider = TokenProviderRegistry.createProvider(tokenType);
+        }
         if (tokenProvider == null) {
             throw new RuntimeException("No token provider is available");
         }

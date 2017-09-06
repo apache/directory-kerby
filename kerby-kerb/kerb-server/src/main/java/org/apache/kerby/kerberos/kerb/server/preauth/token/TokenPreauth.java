@@ -91,7 +91,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             }
 
             // Configure keys
-            TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+            TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
             configureKeys(tokenDecoder, kdcRequest, issuer);
 
             AuthToken authToken = null;

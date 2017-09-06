@@ -23,7 +23,6 @@ import org.apache.kerby.kerberos.kerb.KrbRuntime;
 import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
-import org.apache.kerby.kerberos.provider.token.JwtTokenProvider;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,12 +34,8 @@ import java.util.List;
  */
 public class TokenInit {
 
-    static {
-        KrbRuntime.setTokenProvider(new JwtTokenProvider());
-    }
-
     public static AuthToken issueToken(String principal, String group, String role) {
-        AuthToken authToken = KrbRuntime.getTokenProvider().createTokenFactory().createToken();
+        AuthToken authToken = KrbRuntime.getTokenProvider("JWT").createTokenFactory().createToken();
 
         String iss = "token-service";
         authToken.setIssuer(iss);
@@ -86,13 +81,13 @@ public class TokenInit {
             role = args[2];
         }
 
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
         AuthToken token = issueToken(principal, group, role);
         String tokenStr = tokenEncoder.encodeAsString(token);
         TokenCache.writeToken(tokenStr);
         System.out.println("Issued token: " + tokenStr);
 
-        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+        TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         System.out.println("Decoded token's subject: " + token2.getSubject());
     }

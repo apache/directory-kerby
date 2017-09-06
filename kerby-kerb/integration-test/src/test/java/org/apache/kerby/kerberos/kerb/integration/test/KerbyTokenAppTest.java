@@ -100,7 +100,7 @@ public class KerbyTokenAppTest extends TokenAppTest {
     }
 
     private byte[] signToken(AuthToken authToken, PrivateKey signKey) throws Exception {
-        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
         assertTrue(tokenEncoder instanceof JwtTokenEncoder);
 
         ((JwtTokenEncoder) tokenEncoder).setSignKey((RSAPrivateKey) signKey);

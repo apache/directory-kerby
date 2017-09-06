@@ -63,7 +63,7 @@ public class KrbToken extends KrbTokenBase implements AuthToken {
         setTokenType();
         setTokenFormat(format);
         try {
-            setTokenValue(getTokenEncoder().encodeAsBytes(innerToken));
+            setTokenValue(getTokenEncoder(format).encodeAsBytes(innerToken));
         } catch (KrbException e) {
             throw new RuntimeException("Failed to encode AuthToken", e);
         }
@@ -93,7 +93,7 @@ public class KrbToken extends KrbTokenBase implements AuthToken {
     public void decode(Asn1ParseResult parseResult) throws IOException {
         super.decode(parseResult);
         if (getTokenValue() != null) {
-            this.innerToken = getTokenDecoder().decodeFromBytes(getTokenValue());
+            this.innerToken = getTokenDecoder(getTokenFormat()).decodeFromBytes(getTokenValue());
             setTokenType();
         }
     }
@@ -114,9 +114,9 @@ public class KrbToken extends KrbTokenBase implements AuthToken {
      * Get token encoder.
      * @return The token encoder
      */
-    protected static TokenEncoder getTokenEncoder() {
+    protected static TokenEncoder getTokenEncoder(TokenFormat format) {
         if (tokenEncoder == null) {
-            tokenEncoder = KrbRuntime.getTokenProvider().createTokenEncoder();
+            tokenEncoder = KrbRuntime.getTokenProvider(format.getName()).createTokenEncoder();
         }
         return tokenEncoder;
     }
@@ -125,9 +125,9 @@ public class KrbToken extends KrbTokenBase implements AuthToken {
      * Get token decoder.
      * @return The token decoder
      */
-    protected static TokenDecoder getTokenDecoder() {
+    protected static TokenDecoder getTokenDecoder(TokenFormat format) {
         if (tokenDecoder == null) {
-            tokenDecoder = KrbRuntime.getTokenProvider().createTokenDecoder();
+            tokenDecoder = KrbRuntime.getTokenProvider(format.getName()).createTokenDecoder();
         }
         return tokenDecoder;
     }
