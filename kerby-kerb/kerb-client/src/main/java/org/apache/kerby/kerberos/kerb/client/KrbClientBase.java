@@ -215,13 +215,16 @@ public class KrbClientBase {
     /**
      * Request a service ticket
      * @param ccFile The credential cache file
+     * @param servicePrincipal The service principal
      * @return service ticket
      * @throws KrbException e
      */
-    public SgtTicket requestSgt(File ccFile) throws KrbException {
+    public SgtTicket requestSgt(File ccFile, String servicePrincipal) throws KrbException {
         Credential credential = getCredentialFromFile(ccFile);
-        String servicePrincipal = credential.getServicePrincipal().getName();
         TgtTicket tgt = getTgtTicketFromCredential(credential);
+        if (servicePrincipal == null) {
+            servicePrincipal = credential.getServicePrincipal().getName();
+        }
 
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbKdcOption.RENEW);
@@ -243,21 +246,7 @@ public class KrbClientBase {
                             File ccacheFile) throws KrbException {
         LOG.info("Storing the tgt to the credential cache file.");
         if (!ccacheFile.exists()) {
-            try {
-                if (!ccacheFile.createNewFile()) {
-                    throw new KrbException("Failed to create ccache file "
-                        + ccacheFile.getAbsolutePath());
-                }
-                // sets read-write permissions to owner only
-                ccacheFile.setReadable(false, false);
-                ccacheFile.setReadable(true, true);
-                if (!ccacheFile.setWritable(true, true)) {
-                    throw new KrbException("Cache file is not readable.");
-                }
-            } catch (IOException e) {
-                throw new KrbException("Failed to create ccache file "
-                    + ccacheFile.getAbsolutePath(), e);
-            }
+            createCacheFile(ccacheFile);
         }
         if (ccacheFile.exists() && ccacheFile.canWrite()) {
             CredentialCache cCache = new CredentialCache(tgtTicket);
@@ -281,32 +270,65 @@ public class KrbClientBase {
     public void storeTicket(SgtTicket sgtTicket, File ccacheFile) throws KrbException {
         LOG.info("Storing the sgt to the credential cache file.");
         if (!ccacheFile.exists()) {
+            createCacheFile(ccacheFile);
+        }
+        if (ccacheFile.exists() && ccacheFile.canWrite()) {
+            CredentialCache cCache = new CredentialCache();
             try {
-                if (!ccacheFile.createNewFile()) {
-                    throw new KrbException("Failed to create ccache file "
-                        + ccacheFile.getAbsolutePath());
-                }
-                // sets read-write permissions to owner only
-                ccacheFile.setReadable(false, false);
-                ccacheFile.setReadable(true, true);
-                if (!ccacheFile.setWritable(true, true)) {
-                    throw new KrbException("Cache file is not readable.");
-                }
+                cCache.load(ccacheFile);
+                cCache.addCredential(new Credential(sgtTicket, sgtTicket.getClientPrincipal()));
+                cCache.setPrimaryPrincipal(sgtTicket.getClientPrincipal());
+                cCache.store(ccacheFile);
             } catch (IOException e) {
-                throw new KrbException("Failed to create ccache file "
-                    + ccacheFile.getAbsolutePath(), e);
+                throw new KrbException("Failed to store sgt", e);
             }
+        } else {
+            throw new IllegalArgumentException("Invalid ccache file, "
+                    + "not exist or writable: " + ccacheFile.getAbsolutePath());
+        }
+    }
+
+    /**
+     * Store sgt into the specified credential cache file.
+     * @param sgtTicket The sgt ticket
+     * @param ccacheFile The credential cache file
+     * @throws KrbException e
+     */
+    public void renewTicket(SgtTicket sgtTicket, File ccacheFile) throws KrbException {
+        LOG.info("Renewing the ticket to the credential cache file.");
+        if (!ccacheFile.exists()) {
+            createCacheFile(ccacheFile);
         }
         if (ccacheFile.exists() && ccacheFile.canWrite()) {
             CredentialCache cCache = new CredentialCache(sgtTicket);
             try {
                 cCache.store(ccacheFile);
             } catch (IOException e) {
-                throw new KrbException("Failed to store tgt", e);
+                throw new KrbException("Failed to renew ticket", e);
             }
         } else {
             throw new IllegalArgumentException("Invalid ccache file, "
-                    + "not exist or writable: " + ccacheFile.getAbsolutePath());
+                + "not exist or writable: " + ccacheFile.getAbsolutePath());
+        }
+    }
+
+    /**
+     * Create the specified credential cache file.
+     */
+    private void createCacheFile(File ccacheFile) throws KrbException {
+        try {
+            if (!ccacheFile.createNewFile()) {
+                throw new KrbException("Failed to create ccache file "
+                    + ccacheFile.getAbsolutePath());
+            }
+            // sets read-write permissions to owner only
+            ccacheFile.setReadable(true, true);
+            if (!ccacheFile.setWritable(true, true)) {
+                throw new KrbException("Cache file is not readable.");
+            }
+        } catch (IOException e) {
+            throw new KrbException("Failed to create ccache file "
+                + ccacheFile.getAbsolutePath(), e);
         }
     }
 

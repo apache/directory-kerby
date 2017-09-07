@@ -157,6 +157,11 @@ public class CredentialCache implements KrbCredentialCache {
     @Override
     public void addCredential(Credential credential) {
         if (credential != null) {
+            for (Credential cred : this.credentials) {
+                if (cred.getServerName().getName().equals(credential.getServerName().getName())) {
+                    return;
+                }
+            }
             this.credentials.add(credential);
         }
     }

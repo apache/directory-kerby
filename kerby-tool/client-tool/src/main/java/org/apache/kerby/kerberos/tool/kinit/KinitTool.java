@@ -83,10 +83,22 @@ public class KinitTool {
             + "\t\t-X <attribute>[=<value>]\n"
             + "\n";
 
-
     private static void printUsage(String error) {
         System.err.println(error + "\n");
         System.err.println(USAGE);
+        System.exit(-1);
+    }
+
+    private static final String KVNO_USAGE = (OSUtil.isWindows()
+        ? "Usage: bin\\kinit.cmd" : "Usage: sh bin/kinit.sh")
+        + " <-conf conf_dir> <-c cachename> <-S service_name>\n\n"
+        + "\tDESCRIPTION:\n"
+        + "\t\tkinit obtains a service ticket for the specified principal and prints out the key version number.\n"
+        + "\n";
+
+    private static void printKvnoUsage(String error) {
+        System.err.println(error + "\n");
+        System.err.println(KVNO_USAGE);
         System.exit(-1);
     }
 
@@ -135,7 +147,31 @@ public class KinitTool {
 
                 SgtTicket sgtTicket = null;
                 try {
-                    sgtTicket = krbClient.requestSgt(ccFile);
+                    sgtTicket = krbClient.requestSgt(ccFile, null);
+                } catch (KrbException e) {
+                    System.err.println("kinit: " + e.getKrbErrorCode().getMessage());
+                }
+
+                try {
+                    krbClient.renewTicket(sgtTicket, ccFile);
+                } catch (KrbException e) {
+                    System.err.println("kinit: " + e.getKrbErrorCode().getMessage());
+                }
+
+                System.out.println("Successfully renewed.");
+            }
+            return;
+        }
+
+        if (ktOptions.contains(KinitOption.SERVICE) && ktOptions.contains(KinitOption.KRB5_CACHE)) {
+            String ccName = ktOptions.getStringOption(KinitOption.KRB5_CACHE);
+            File ccFile = new File(ccName);
+            if (ccFile.exists()) {
+                System.out.println("Use credential cache to request a service ticket.");
+                String servicePrincipal = ktOptions.getStringOption(KinitOption.SERVICE);
+                SgtTicket sgtTicket = null;
+                try {
+                    sgtTicket = krbClient.requestSgt(ccFile, servicePrincipal);
                 } catch (KrbException e) {
                     System.err.println("kinit: " + e.getKrbErrorCode().getMessage());
                 }
@@ -146,11 +182,11 @@ public class KinitTool {
                     System.err.println("kinit: " + e.getKrbErrorCode().getMessage());
                 }
 
-                System.out.println("Successfully renewed.");
+                System.out.println(sgtTicket.getEncKdcRepPart().getSname().getName() + ": knvo = "
+                    + sgtTicket.getTicket().getEncryptedEncPart().getKvno());
+                return;
             }
-            return;
         }
-
 
         if (ktOptions.contains(KinitOption.ANONYMOUS)) {
             ktOptions.add(PkinitOption.USE_ANONYMOUS);
@@ -189,7 +225,9 @@ public class KinitTool {
 
         System.out.println("Successfully requested and stored ticket in "
             + ccacheFile.getAbsolutePath());
+
         if (ktOptions.contains(KinitOption.SERVICE)) {
+            System.out.println("Use tgt to request a service ticket.");
             String servicePrincipal = ktOptions.getStringOption(KinitOption.SERVICE);
             SgtTicket sgtTicket;
             try {
@@ -198,8 +236,9 @@ public class KinitTool {
                 System.err.println("kinit: " + e.getKrbErrorCode().getMessage());
                 return;
             }
-            System.out.println("Successfully requested the service ticket for " + servicePrincipal
-            + "\nKey version: " + sgtTicket.getTicket().getTktvno());
+
+            System.out.println(sgtTicket.getEncKdcRepPart().getSname().getName() + ": knvo = "
+                + sgtTicket.getTicket().getEncryptedEncPart().getKvno());
         }
     }
 
@@ -270,8 +309,10 @@ public class KinitTool {
         if (principal == null) {
             if (ktOptions.contains(KinitOption.ANONYMOUS)) {
                 principal = KrbConstant.ANONYMOUS_PRINCIPAL;
-            } else if (!ktOptions.contains(KinitOption.KRB5_CACHE)) {
+            } else if (!ktOptions.contains(KinitOption.SERVICE) && !ktOptions.contains(KinitOption.KRB5_CACHE)) {
                 printUsage("No principal is specified");
+            } else if (ktOptions.contains(KinitOption.SERVICE) && !ktOptions.contains(KinitOption.KRB5_CACHE)) {
+                printKvnoUsage("No credential cache file given.");
             }
         }
 
