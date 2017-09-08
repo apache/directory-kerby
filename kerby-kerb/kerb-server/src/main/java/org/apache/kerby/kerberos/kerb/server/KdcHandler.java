@@ -174,7 +174,7 @@ public class KdcHandler {
     private KrbMessage handleRecoverableException(KdcRecoverableException e,
                                                   KdcRequest kdcRequest)
             throws KrbException {
-        LOG.info("KRB error occurred while processing request:"
+        LOG.info("KRB error occurred while processing request: "
                 + e.getMessage());
 
         KrbError error = e.getKrbError();
