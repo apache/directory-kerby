@@ -43,6 +43,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class KerbyTokenAppTest extends TokenAppTest {
@@ -62,6 +64,11 @@ public class KerbyTokenAppTest extends TokenAppTest {
     @Test
     public void testJwtAccessToken() throws Exception {
         runAppClientWithToken(createAppClient());
+
+        KrbToken receivedToken = ((GssAppServer) appServer).getReceivedAccessToken();
+        assertNotNull(receivedToken);
+        assertEquals(getClientPrincipal(), receivedToken.getSubject());
+        assertEquals(getServerPrincipal(), receivedToken.getAudiences().get(0));
     }
 
     private void runAppClientWithToken(final AppClient appClient) throws Exception {

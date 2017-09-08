@@ -22,6 +22,8 @@ package org.apache.kerby.kerberos.kerb.integration.test.gss;
 import org.apache.kerby.kerberos.kerb.integration.test.AppServer;
 import org.apache.kerby.kerberos.kerb.integration.test.AppUtil;
 import org.apache.kerby.kerberos.kerb.integration.test.Transport;
+import org.apache.kerby.kerberos.kerb.type.ad.AdToken;
+import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSManager;
@@ -29,11 +31,16 @@ import org.ietf.jgss.GSSName;
 import org.ietf.jgss.MessageProp;
 import org.ietf.jgss.Oid;
 
+import com.sun.security.jgss.AuthorizationDataEntry;
+import com.sun.security.jgss.ExtendedGSSContext;
+import com.sun.security.jgss.InquireType;
+
 public class GssAppServer extends AppServer {
     private String serverPrincipal;
     private GSSManager manager;
     private GSSContext context;
     private boolean createContextWithCred = true;
+    private KrbToken receivedAccessToken;
 
     public GssAppServer(String[] args) throws Exception {
         super(args);
@@ -87,6 +94,17 @@ public class GssAppServer extends AppServer {
 
         doWith(context, conn);
 
+        // Store any received access token for later retrieval
+        ExtendedGSSContext extendedContext = (ExtendedGSSContext) context;
+        AuthorizationDataEntry[] authzDataEntries =
+            (AuthorizationDataEntry[]) extendedContext.inquireSecContext(InquireType.KRB5_GET_AUTHZ_DATA);
+        if (authzDataEntries != null && authzDataEntries.length > 0) {
+            byte[] data = authzDataEntries[0].getData();
+            AdToken adToken = new AdToken();
+            adToken.decode(data);
+            receivedAccessToken = adToken.getToken();
+        }
+
         context.dispose();
     }
 
@@ -115,5 +133,9 @@ public class GssAppServer extends AppServer {
 
     public void setCreateContextWithCred(boolean createContextWithCred) {
         this.createContextWithCred = createContextWithCred;
+    }
+
+    public KrbToken getReceivedAccessToken() {
+        return receivedAccessToken;
     }
 }
