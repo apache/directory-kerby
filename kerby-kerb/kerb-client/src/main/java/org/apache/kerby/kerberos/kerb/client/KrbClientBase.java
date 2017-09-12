@@ -222,12 +222,14 @@ public class KrbClientBase {
     public SgtTicket requestSgt(File ccFile, String servicePrincipal) throws KrbException {
         Credential credential = getCredentialFromFile(ccFile);
         TgtTicket tgt = getTgtTicketFromCredential(credential);
+        KOptions requestOptions = new KOptions();
+
+        // Renew ticket if argument named servicePrincipal is null
         if (servicePrincipal == null) {
+            requestOptions.add(KrbKdcOption.RENEW);
             servicePrincipal = credential.getServicePrincipal().getName();
         }
 
-        KOptions requestOptions = new KOptions();
-        requestOptions.add(KrbKdcOption.RENEW);
         requestOptions.add(KrbOption.USE_TGT, tgt);
         requestOptions.add(KrbOption.SERVER_PRINCIPAL, servicePrincipal);
         SgtTicket sgtTicket = innerClient.requestSgt(requestOptions);

@@ -93,7 +93,7 @@ public abstract class KrbHandler {
     }
 
     /**
-     * Process the response messabe from kdc.
+     * Process the response message from kdc.
      *
      * @param kdcRequest The kdc request
      * @param responseMessage The message from kdc
