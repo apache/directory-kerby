@@ -200,12 +200,9 @@ public final class ClientUtil {
      * @throws KrbException if there's no way to find KDC for the realm
      * @return the list of KDC, always non null
      */
-    public static List<String> getKDCList(KrbSetting krbSetting) throws KrbException {
+    public static List<String> getKDCList(String realm, KrbSetting krbSetting) throws KrbException {
 
         List<String> kdcList = new ArrayList<>();
-        kdcList.add(krbSetting.getKdcHost());
-        /*get the kdc realm */
-        String realm = krbSetting.getKdcRealm();
         if (realm != null) {
             KrbConfig krbConfig = krbSetting.getKrbConfig();
             List<Object> kdcs = krbConfig.getRealmSectionItems(realm, "kdc");

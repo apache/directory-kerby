@@ -63,7 +63,11 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
 
     private void doRequest(KdcRequest request) throws KrbException {
 
-        List<String> kdcList = ClientUtil.getKDCList(getSetting());
+        String realm = request.getClientPrincipal().getRealm();
+        if (realm == null || realm.isEmpty()) {
+            realm = getSetting().getKdcRealm();
+        }
+        List<String> kdcList = ClientUtil.getKDCList(realm, getSetting());
 
         // tempKdc may include the port number
         Iterator<String> tempKdc = kdcList.iterator();
