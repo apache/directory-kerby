@@ -35,6 +35,7 @@ import org.apache.kerby.kerberos.kerb.client.request.AsRequestWithToken;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithTgt;
 import org.apache.kerby.kerberos.kerb.client.request.TgsRequestWithToken;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
@@ -78,6 +79,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     @Override
     public TgtTicket requestTgt(KOptions requestOptions) throws KrbException {
         AsRequest asRequest = null;
+        PrincipalName clientPrincipal = null;
 
         if (requestOptions.contains(KrbOption.USE_PASSWD)) {
             asRequest = new AsRequestWithPasswd(context);
@@ -97,20 +99,25 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             throw new IllegalArgumentException(
                     "No valid krb client request option found");
         }
+
         if (requestOptions.contains(KrbOption.CLIENT_PRINCIPAL)) {
-            String principal = requestOptions.getStringOption(
-                    KrbOption.CLIENT_PRINCIPAL);
-            principal = fixPrincipal(principal);
-            PrincipalName principalName = new PrincipalName(principal);
+            String clientPrincipalName = requestOptions.getStringOption(KrbOption.CLIENT_PRINCIPAL);
+            clientPrincipalName = fixPrincipal(clientPrincipalName);
+            clientPrincipal = new PrincipalName(clientPrincipalName);
             if (requestOptions.contains(PkinitOption.USE_ANONYMOUS)) {
-                principalName.setNameType(NameType.NT_WELLKNOWN);
+                clientPrincipal.setNameType(NameType.NT_WELLKNOWN);
             }
-            asRequest.setClientPrincipal(principalName);
+            asRequest.setClientPrincipal(clientPrincipal);
         }
+
         if (requestOptions.contains(KrbOption.SERVER_PRINCIPAL)) {
             String serverPrincipalName = requestOptions.getStringOption(KrbOption.SERVER_PRINCIPAL);
             serverPrincipalName = fixPrincipal(serverPrincipalName);
             PrincipalName serverPrincipal = new PrincipalName(serverPrincipalName, NameType.NT_PRINCIPAL);
+            asRequest.setServerPrincipal(serverPrincipal);
+        } else if (clientPrincipal != null) {
+            String realm = clientPrincipal.getRealm();
+            PrincipalName serverPrincipal = KrbUtil.makeTgsPrincipal(realm);
             asRequest.setServerPrincipal(serverPrincipal);
         }
 
