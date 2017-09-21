@@ -63,5 +63,6 @@ public class KrbConfigLoadTest {
         assertThat(krbConfig.getPkinitKdcHostName()).isEqualTo("kdc-server.example.com");
         assertThat(krbConfig.getRealmSection("ATHENA.MIT.EDU")).hasSize(3);
         assertThat(krbConfig.getRealmSectionItems("ATHENA.MIT.EDU", "admin_server")).hasSize(1);
+        assertThat(krbConfig.getCapath("ATHENA.MIT.EDU", "ANDREW.CMU.EDU")).hasSize(3);
     }
 }

@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.Krb5Conf;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +36,7 @@ import java.util.Map;
 public class KrbConfig extends Krb5Conf {
     private static final String LIBDEFAULT = "libdefaults";
     private static final String REALMS = "realms";
+    private static final String CAPATHS = "capaths";
 
     public boolean enableDebug() {
         return getBoolean(KrbConfigKey.KRB_DEBUG, true, LIBDEFAULT);
@@ -342,6 +345,59 @@ public class KrbConfig extends Krb5Conf {
                 }
             }
         }
+        return Collections.emptyMap();
+    }
+
+    /**
+     * Get capath of specified realms.
+     * @param sourceRealm source realm
+     * @param destRealm dest realm
+     * @return The capath from sourceRealm to destRealm
+     */
+    public LinkedList<String> getCapath(String sourceRealm, String destRealm) throws KrbException {
+        Map<String, Object> capathsMap = getCapaths(sourceRealm);
+        if (capathsMap.isEmpty()) {
+            throw new KrbException("Capaths of " + sourceRealm + " is not given in conf file.");
+        }
+
+        LinkedList<String> items = new LinkedList<>();
+        boolean valid = false;
+
+        items.addFirst(destRealm);
+        for (Map.Entry<String, Object> entry : capathsMap.entrySet()) {
+            if (entry.getKey().equals(destRealm)) {
+                valid = true;
+                String value = (String) entry.getValue();
+                if (value.equals(".")) {
+                    break;
+                } else if (!value.equals(sourceRealm) && !value.equals(destRealm) && !items.contains(value)
+                    && !value.isEmpty()) {
+                    items.addFirst(value);
+                }
+            }
+        }
+
+        if (!valid) {
+            throw new KrbException("Capaths from " + sourceRealm + " to " + destRealm + " is not given in conf file.");
+        }
+
+        items.addFirst(sourceRealm);
+        return items;
+    }
+
+    /**
+     * Get capaths of specified realm.
+     */
+    private Map<String, Object> getCapaths(String realm) {
+        Map<String, Object> caPaths = (Map) getSection(CAPATHS);
+        if (caPaths != null) {
+            for (Map.Entry<String, Object> entry : caPaths.entrySet()) {
+                if (entry.getKey().equals(realm)) {
+                    return (Map) entry.getValue();
+                }
+            }
+        }
+
         return Collections.emptyMap();
     }
 }
