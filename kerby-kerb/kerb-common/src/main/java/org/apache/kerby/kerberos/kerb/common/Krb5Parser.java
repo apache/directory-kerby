@@ -65,7 +65,7 @@ public class Krb5Parser {
             /*parse through comments*/
             if (line.startsWith("#") || line.length() == 0) {
                 originLine = br.readLine();
-            }   else if (line.startsWith("[")) {
+            } else if (line.startsWith("[")) {
                 insertSections(line, br, items);
                 originLine = br.readLine();
             } else if (line.startsWith("include")) {
