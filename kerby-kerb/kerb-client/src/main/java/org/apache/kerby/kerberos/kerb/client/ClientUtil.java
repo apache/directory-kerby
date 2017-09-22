@@ -213,7 +213,8 @@ public final class ClientUtil {
             }
 
             if (kdcList.isEmpty()) {
-                LOG.error("Cannot get kdc for realm " + realm);
+                LOG.warn("Cannot get kdc for realm " + realm);
+                kdcList.add(krbSetting.getKdcHost());
             }
         } else {
             throw new KrbException("Can't get the realm");

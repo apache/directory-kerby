@@ -25,6 +25,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
+import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.PkinitOption;
 import org.apache.kerby.kerberos.kerb.client.TokenOption;
 import org.apache.kerby.kerberos.kerb.client.request.AsRequest;
@@ -40,6 +41,8 @@ import org.apache.kerby.kerberos.kerb.type.base.NameType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
+
+import java.util.LinkedList;
 
 /**
  * A krb client API for applications to interact with KDC
@@ -79,7 +82,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     @Override
     public TgtTicket requestTgt(KOptions requestOptions) throws KrbException {
         AsRequest asRequest = null;
-        PrincipalName clientPrincipal = null;
+        PrincipalName clientPrincipalName = null;
 
         if (requestOptions.contains(KrbOption.USE_PASSWD)) {
             asRequest = new AsRequestWithPasswd(context);
@@ -101,24 +104,24 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         }
 
         if (requestOptions.contains(KrbOption.CLIENT_PRINCIPAL)) {
-            String clientPrincipalName = requestOptions.getStringOption(KrbOption.CLIENT_PRINCIPAL);
-            clientPrincipalName = fixPrincipal(clientPrincipalName);
-            clientPrincipal = new PrincipalName(clientPrincipalName);
+            String clientPrincipalString = requestOptions.getStringOption(KrbOption.CLIENT_PRINCIPAL);
+            clientPrincipalString = fixPrincipal(clientPrincipalString);
+            clientPrincipalName = new PrincipalName(clientPrincipalString);
             if (requestOptions.contains(PkinitOption.USE_ANONYMOUS)) {
-                clientPrincipal.setNameType(NameType.NT_WELLKNOWN);
+                clientPrincipalName.setNameType(NameType.NT_WELLKNOWN);
             }
-            asRequest.setClientPrincipal(clientPrincipal);
+            asRequest.setClientPrincipal(clientPrincipalName);
         }
 
         if (requestOptions.contains(KrbOption.SERVER_PRINCIPAL)) {
-            String serverPrincipalName = requestOptions.getStringOption(KrbOption.SERVER_PRINCIPAL);
-            serverPrincipalName = fixPrincipal(serverPrincipalName);
-            PrincipalName serverPrincipal = new PrincipalName(serverPrincipalName, NameType.NT_PRINCIPAL);
-            asRequest.setServerPrincipal(serverPrincipal);
-        } else if (clientPrincipal != null) {
-            String realm = clientPrincipal.getRealm();
-            PrincipalName serverPrincipal = KrbUtil.makeTgsPrincipal(realm);
-            asRequest.setServerPrincipal(serverPrincipal);
+            String serverPrincipalString = requestOptions.getStringOption(KrbOption.SERVER_PRINCIPAL);
+            serverPrincipalString = fixPrincipal(serverPrincipalString);
+            PrincipalName serverPrincipalName = new PrincipalName(serverPrincipalString, NameType.NT_PRINCIPAL);
+            asRequest.setServerPrincipal(serverPrincipalName);
+        } else if (clientPrincipalName != null) {
+            String realm = clientPrincipalName.getRealm();
+            PrincipalName serverPrincipalName = KrbUtil.makeTgsPrincipal(realm);
+            asRequest.setServerPrincipal(serverPrincipalName);
         }
 
         asRequest.setRequestOptions(requestOptions);
@@ -132,12 +135,13 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
     @Override
     public SgtTicket requestSgt(KOptions requestOptions) throws KrbException {
         TgsRequest tgsRequest = null;
+        TgtTicket tgtTicket = null;
         if (requestOptions.contains(TokenOption.USER_AC_TOKEN)) {
             tgsRequest = new TgsRequestWithToken(context);
         } else if (requestOptions.contains(KrbOption.USE_TGT)) {
             KOption kOpt = requestOptions.getOption(KrbOption.USE_TGT);
-            tgsRequest = new TgsRequestWithTgt(context,
-                (TgtTicket) kOpt.getOptionInfo().getValue());
+            tgtTicket = (TgtTicket) kOpt.getOptionInfo().getValue();
+            tgsRequest = new TgsRequestWithTgt(context, tgtTicket);
         }
 
         if (tgsRequest == null) {
@@ -145,11 +149,31 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
                     "No valid krb client request option found");
         }
 
-        String serverPrincipal = fixPrincipal(requestOptions.
+        String serverPrincipalString = fixPrincipal(requestOptions.
                 getStringOption(KrbOption.SERVER_PRINCIPAL));
-        tgsRequest.setServerPrincipal(new PrincipalName(serverPrincipal));
-        tgsRequest.setRequestOptions(requestOptions);
+        PrincipalName serverPrincipalName = new PrincipalName(serverPrincipalString);
 
+        if (tgtTicket != null) {
+            String sourceRealm = tgtTicket.getRealm();
+            String destRealm = serverPrincipalName.getRealm();
+            if (!sourceRealm.equals(destRealm)) {
+                KrbConfig krbConfig = krbSetting.getKrbConfig();
+                LinkedList<String> capath = krbConfig.getCapath(sourceRealm, destRealm);
+                PrincipalName clientPrincipalName = tgtTicket.getClientPrincipal();
+                for (int i = 0; i < capath.size() - 1; i++) {
+                    PrincipalName tgsPrincipalName = KrbUtil.makeTgsPrincipal(
+                        capath.get(i), capath.get(i + 1));
+                    tgsRequest.setServerPrincipal(tgsPrincipalName);
+                    tgsRequest.setRequestOptions(requestOptions);
+                    SgtTicket sgtTicket = doRequestSgt(tgsRequest);
+                    sgtTicket.setClientPrincipal(clientPrincipalName);
+                    tgsRequest = new TgsRequestWithTgt(context, sgtTicket);
+                }
+            }
+        }
+
+        tgsRequest.setServerPrincipal(serverPrincipalName);
+        tgsRequest.setRequestOptions(requestOptions);
         return doRequestSgt(tgsRequest);
     }
 
