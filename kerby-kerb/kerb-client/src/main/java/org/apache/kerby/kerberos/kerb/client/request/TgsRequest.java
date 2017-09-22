@@ -58,11 +58,13 @@ public class TgsRequest extends KdcRequest {
 
     @Override
     public void process() throws KrbException {
-        String serverPrincipal = getRequestOptions().getStringOption(KrbOption.SERVER_PRINCIPAL);
-        if (serverPrincipal == null) {
-            LOG.warn("Server principal is null.");
+        if (getServerPrincipal() == null) {
+            String serverPrincipalString = getRequestOptions().getStringOption(KrbOption.SERVER_PRINCIPAL);
+            if (serverPrincipalString == null) {
+                LOG.warn("Server principal is null.");
+            }
+            setServerPrincipal(new PrincipalName(serverPrincipalString));
         }
-        setServerPrincipal(new PrincipalName(serverPrincipal));
         super.process();
 
         TgsReq tgsReq = new TgsReq();

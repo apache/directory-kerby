@@ -35,21 +35,32 @@ import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcReqBody;
 import org.apache.kerby.kerberos.kerb.type.pa.PaDataType;
+import org.apache.kerby.kerberos.kerb.type.ticket.KrbTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 
 public class TgsRequestWithTgt extends TgsRequest {
 
-    private TgtTicket tgt;
     private ApReq apReq;
+    private KrbTicket ticket;
+    private PrincipalName clientPrincipal;
 
-     public TgsRequestWithTgt(KrbContext context, TgtTicket tgt) {
+    public TgsRequestWithTgt(KrbContext context, TgtTicket tgt) {
         super(context);
-        this.tgt = tgt;
         setAllowedPreauth(PaDataType.TGS_REQ);
+        ticket = tgt;
+        clientPrincipal = tgt.getClientPrincipal();
+    }
+
+    public TgsRequestWithTgt(KrbContext context, SgtTicket sgt) {
+        super(context);
+        setAllowedPreauth(PaDataType.TGS_REQ);
+        ticket = sgt;
+        clientPrincipal = sgt.getClientPrincipal();
     }
 
     public PrincipalName getClientPrincipal() {
-        return tgt.getClientPrincipal();
+        return clientPrincipal;
     }
 
     @Override
@@ -59,19 +70,19 @@ public class TgsRequestWithTgt extends TgsRequest {
 
     @Override
     public EncryptionKey getSessionKey() {
-        return tgt.getSessionKey();
+        return ticket.getSessionKey();
     }
 
     private ApReq makeApReq() throws KrbException {
         ApReq apReq = new ApReq();
 
         Authenticator authenticator = makeAuthenticator();
-        EncryptionKey sessionKey = tgt.getSessionKey();
+        EncryptionKey sessionKey = ticket.getSessionKey();
         EncryptedData authnData = EncryptionUtil.seal(authenticator,
             sessionKey, KeyUsage.TGS_REQ_AUTH);
         apReq.setEncryptedAuthenticator(authnData);
         apReq.setAuthenticator(authenticator);
-        apReq.setTicket(tgt.getTicket());
+        apReq.setTicket(ticket.getTicket());
         ApOptions apOptions = new ApOptions();
         apReq.setApOptions(apOptions);
 
@@ -88,20 +99,20 @@ public class TgsRequestWithTgt extends TgsRequest {
     private Authenticator makeAuthenticator() throws KrbException {
         Authenticator authenticator = new Authenticator();
         authenticator.setAuthenticatorVno(5);
-        authenticator.setCname(tgt.getClientPrincipal());
-        authenticator.setCrealm(tgt.getRealm());
+        authenticator.setCname(clientPrincipal);
+        authenticator.setCrealm(clientPrincipal.getRealm());
         authenticator.setCtime(KerberosTime.now());
         authenticator.setCusec(0);
-        authenticator.setSubKey(tgt.getSessionKey());
+        authenticator.setSubKey(ticket.getSessionKey());
         KerberosTime renewTill = null;
 
         if (getRequestOptions().contains(KrbKdcOption.RENEW)) {
-            renewTill = tgt.getEncKdcRepPart().getRenewTill();
+            renewTill = ticket.getEncKdcRepPart().getRenewTill();
         }
         KdcReqBody reqBody = getReqBody(renewTill);
 
         CheckSum checksum = CheckSumUtil.seal(reqBody, null,
-            tgt.getSessionKey(), KeyUsage.TGS_REQ_AUTH_CKSUM);
+            ticket.getSessionKey(), KeyUsage.TGS_REQ_AUTH_CKSUM);
         authenticator.setCksum(checksum);
 
         return authenticator;

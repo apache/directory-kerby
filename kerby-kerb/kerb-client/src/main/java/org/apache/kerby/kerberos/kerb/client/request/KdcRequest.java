@@ -183,14 +183,14 @@ public abstract class KdcRequest {
         PrincipalName cName = getClientPrincipal();
         body.setCname(cName);
 
-        String realm = cName.getRealm();
-        if (realm == null || realm.isEmpty()) {
-            realm = getContext().getKrbSetting().getKdcRealm();
-        }
-        body.setRealm(realm);
-
         PrincipalName sName = getServerPrincipal();
         body.setSname(sName);
+
+        String realm = getContext().getKrbSetting().getKdcRealm();
+        if (sName != null && sName.getRealm() != null) {
+            realm = sName.getRealm();
+        }
+        body.setRealm(realm);
 
         long tillTime = startTime + getTicketValidTime();
         body.setTill(new KerberosTime(tillTime));

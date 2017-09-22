@@ -173,13 +173,15 @@ public class KinitTool {
                 try {
                     sgtTicket = krbClient.requestSgt(ccFile, servicePrincipal);
                 } catch (KrbException e) {
-                    System.err.println("kinit: " + e.getKrbErrorCode().getMessage());
+                    System.err.println("Kinit: get service ticket failed: " + e.getMessage());
+                    System.exit(1);
                 }
 
                 try {
                     krbClient.storeTicket(sgtTicket, ccFile);
                 } catch (KrbException e) {
-                    System.err.println("kinit: " + e.getKrbErrorCode().getMessage());
+                    System.err.println("Kinit: store ticket failed: " + e.getMessage());
+                    System.exit(1);
                 }
 
                 System.out.println(sgtTicket.getEncKdcRepPart().getSname().getName() + ": knvo = "

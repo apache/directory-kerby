@@ -28,6 +28,7 @@ import org.apache.kerby.kerberos.kerb.client.request.TgsRequest;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.slf4j.Logger;
@@ -63,9 +64,10 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
 
     private void doRequest(KdcRequest request) throws KrbException {
 
-        String realm = request.getClientPrincipal().getRealm();
-        if (realm == null || realm.isEmpty()) {
-            realm = getSetting().getKdcRealm();
+        String realm = getSetting().getKdcRealm();
+        PrincipalName serverPrincipalName = request.getServerPrincipal();
+        if (serverPrincipalName != null && serverPrincipalName.getRealm() != null) {
+            realm = serverPrincipalName.getRealm();
         }
         List<String> kdcList = ClientUtil.getKDCList(realm, getSetting());
 

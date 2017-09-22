@@ -43,6 +43,17 @@ public class KrbUtil {
     }
 
     /**
+     * Construct TGS principal name for cross-realm.
+     * @param sourceRealm The source realm
+     * @param destRealm The dest realm
+     * @return principal
+     */
+    public static PrincipalName makeTgsPrincipal(String sourceRealm, String destRealm) {
+        String nameString = KrbConstant.TGS_PRINCIPAL + "/" + destRealm + "@" + sourceRealm;
+        return new PrincipalName(nameString, NameType.NT_SRV_INST);
+    }
+
+    /**
      * Construct kadmin principal name.
      * @param realm The realm
      * @return principal
