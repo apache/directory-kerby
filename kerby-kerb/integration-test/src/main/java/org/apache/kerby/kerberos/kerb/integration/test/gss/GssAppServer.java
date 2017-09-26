@@ -92,8 +92,6 @@ public class GssAppServer extends AppServer {
         // System.out.println("Client is " + context.getSrcName());
         // System.out.println("Server is " + context.getTargName());
 
-        doWith(context, conn);
-
         // Store any received access token for later retrieval
         ExtendedGSSContext extendedContext = (ExtendedGSSContext) context;
         AuthorizationDataEntry[] authzDataEntries =
@@ -104,6 +102,8 @@ public class GssAppServer extends AppServer {
             adToken.decode(data);
             receivedAccessToken = adToken.getToken();
         }
+
+        doWith(context, conn);
 
         context.dispose();
     }
