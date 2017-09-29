@@ -53,6 +53,11 @@ public class KrbUtil {
         return new PrincipalName(nameString, NameType.NT_SRV_INST);
     }
 
+    public static PrincipalName makeCrossRealmPrincipal(String localRealm, String remoteRealm) {
+        String nameString = KrbConstant.TGS_PRINCIPAL + "/" + localRealm + "@" + remoteRealm;
+        return new PrincipalName(nameString, NameType.NT_SRV_INST);
+    }
+
     /**
      * Construct kadmin principal name.
      * @param realm The realm

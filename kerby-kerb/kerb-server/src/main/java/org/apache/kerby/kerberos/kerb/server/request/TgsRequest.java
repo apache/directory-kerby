@@ -135,8 +135,23 @@ public class TgsRequest extends KdcRequest {
         }
 
         tgtTicket = apReq.getTicket();
+        EncryptionKey tgsKey;
         EncryptionType encType = tgtTicket.getEncryptedEncPart().getEType();
-        EncryptionKey tgsKey = getTgsEntry().getKeys().get(encType);
+        String remoteRealm = tgtTicket.getRealm();
+        if (checkCrossRealm(remoteRealm)) {
+            KrbIdentity tgs = getCrossRealmTgsEntry(remoteRealm);
+            if (tgs != null) {
+                tgsKey = tgs.getKey(encType);
+            } else {
+                throw new KrbException("Fail to get the tgs entry for remote realm: " + remoteRealm);
+            }
+        } else {
+            tgsKey = getTgsEntry().getKeys().get(encType);
+        }
+        if (tgsKey == null) {
+            throw new KrbException("Fail to get the tgs key for the type: " + encType);
+        }
+
         if (tgtTicket.getTktvno() != KrbConstant.KRB_V5) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
         }
@@ -211,10 +226,12 @@ public class TgsRequest extends KdcRequest {
 
         if (getClientEntry() == null) {
             reply.setCname(ticket.getEncPart().getCname());
+            reply.setCrealm(ticket.getEncPart().getCrealm());
         } else {
             reply.setCname(getClientEntry().getPrincipal());
+            reply.setCrealm(getKdcContext().getKdcRealm());
         }
-        reply.setCrealm(getKdcContext().getKdcRealm());
+
         reply.setTicket(ticket);
 
         EncKdcRepPart encKdcRepPart = makeEncKdcRepPart();

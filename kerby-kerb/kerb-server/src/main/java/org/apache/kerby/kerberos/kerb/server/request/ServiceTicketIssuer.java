@@ -43,10 +43,14 @@ public class ServiceTicketIssuer extends TicketIssuer {
 
     @Override
     protected PrincipalName getclientPrincipal() {
+        PrincipalName clientPrincipal;
         if (token != null) {
-            return new PrincipalName(token.getSubject());
+            clientPrincipal = new PrincipalName(token.getSubject());
+        } else {
+            clientPrincipal = tgtTicket.getEncPart().getCname();
+            clientPrincipal.setRealm(tgtTicket.getEncPart().getCrealm());
         }
-        return tgtTicket.getEncPart().getCname();
+        return clientPrincipal;
     }
 
     @Override

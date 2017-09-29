@@ -101,6 +101,8 @@ public abstract class KdcRequest {
     private EncryptionKey sessionKey;
     private ByteBuffer reqPackage;
     private boolean isHttps = false;
+    private boolean isCrossRealm = false;
+    private String remoteRealm = null;
 
     /**
      * Get session key.
@@ -570,8 +572,34 @@ public abstract class KdcRequest {
      * @return principal name
      */
     public PrincipalName getTgsPrincipal() {
-        PrincipalName result = KrbUtil.makeTgsPrincipal(kdcContext.getKdcRealm());
-        return result;
+        return KrbUtil.makeTgsPrincipal(kdcContext.getKdcRealm());
+    }
+
+    public PrincipalName getCrossRealmTgsPrincipal(String remoteRealm) {
+        return KrbUtil.makeCrossRealmPrincipal(kdcContext.getKdcRealm(), remoteRealm);
+    }
+
+    public KrbIdentity getCrossRealmTgsEntry(String remoteRealm) throws KrbException {
+        PrincipalName tgsPrincipal = getCrossRealmTgsPrincipal(remoteRealm);
+        KrbIdentity tgsEntry = null;
+        if (tgsPrincipal != null) {
+            tgsEntry = getEntry(tgsPrincipal.getName());
+        }
+        return tgsEntry;
+    }
+
+    public boolean checkCrossRealm(String remoteRealm) {
+        isCrossRealm = !(kdcContext.getKdcRealm().equals(remoteRealm));
+        this.remoteRealm = remoteRealm;
+        return isCrossRealm;
+    }
+
+    public boolean isCrossRealm() {
+        return isCrossRealm;
+    }
+
+    public String getRemoteRealm() {
+        return this.remoteRealm;
     }
 
     /**
