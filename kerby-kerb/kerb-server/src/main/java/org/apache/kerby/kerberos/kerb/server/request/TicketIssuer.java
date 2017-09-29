@@ -130,8 +130,14 @@ public abstract class TicketIssuer {
                 kdcRequest.getEncryptionType());
         encTicketPart.setKey(sessionKey);
 
+        PrincipalName clientPrincipal = getclientPrincipal();
         encTicketPart.setCname(getclientPrincipal());
-        encTicketPart.setCrealm(request.getReqBody().getRealm());
+
+        if (clientPrincipal.getRealm() != null) {
+            encTicketPart.setCrealm(clientPrincipal.getRealm());
+        } else {
+            encTicketPart.setCrealm(request.getReqBody().getRealm());
+        }
 
         TransitedEncoding transEnc = getTransitedEncoding();
         encTicketPart.setTransited(transEnc);
