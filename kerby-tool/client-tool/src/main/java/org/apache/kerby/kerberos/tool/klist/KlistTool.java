@@ -21,13 +21,16 @@ package org.apache.kerby.kerberos.tool.klist;
 
 import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
+import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.util.HexUtil;
 import org.apache.kerby.util.OSUtil;
+import org.apache.kerby.util.SysUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,29 +87,26 @@ public class KlistTool {
         CredentialCache cc = new CredentialCache();
         List<Credential> credentials;
         InputStream cis = null;
-        String error;
-        String fileName = null;
+        String fileName;
 
         if (!klOptions.contains(KlistOption.CREDENTIALS_CACHE)) {
-            error = "No credential cache path given.";
-            printUsage(error);
+            fileName = getCcacheName();
         } else {
             fileName = klOptions.getStringOption(KlistOption.CREDENTIALS_CACHE);
+        }
+        try {
+            cis = Files.newInputStream(Paths.get(fileName));
+            cc.load(cis);
+        } catch (IOException e) {
+            LOG.error("Failed to open CredentialCache from file: " + fileName + ". " + e.toString());
+        } finally {
             try {
-                cis = Files.newInputStream(Paths.get(fileName));
-                cc.load(cis);
-            } catch (IOException e) {
-                LOG.error("Failed to open CredentialCache from file: " + fileName + ". " + e.toString());
-            } finally {
-                try {
-                    if (cis != null) {
-                        cis.close();
-                    }
-                } catch (IOException e) {
-                    LOG.warn("Fail to close input stream. " + e);
+                if (cis != null) {
+                    cis.close();
                 }
+            } catch (IOException e) {
+                LOG.warn("Fail to close input stream. " + e);
             }
-
         }
 
         if (cc != null) {
@@ -118,20 +118,62 @@ public class KlistTool {
             if (credentials.isEmpty()) {
                 System.out.println("No credential has been cached.");
             } else {
-                DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                 System.out.println("Valid starting\t\tExpires\t\t\tService principal");
 
                 for (Credential crd : credentials) {
                     System.out.println(df.format(crd.getStartTime().getTime()) + "\t"
-                            + df.format(crd.getEndTime().getTime()) + "\t"
-                            + crd.getServerName());
+                        + df.format(crd.getEndTime().getTime()) + "\t"
+                        + crd.getServerName() + "\n"
+                        + "\t" + "renew until" + "\t" + df.format(crd.getRenewTill().getTime()));
                 }
             }
-
         }
 
         return 0;
+    }
+
+    /**
+     * Get credential cache file name if not specified.
+     */
+    private static String getCcacheName() {
+        String ccacheName;
+        String ccacheNameEnv = System.getenv("KRB5CCNAME");
+        String ccacheNameConf = null;
+        File confDir = new File("/etc");
+        try {
+            KrbClient krbClient = new KrbClient(confDir);
+            ccacheNameConf = krbClient.getSetting().getKrbConfig().getString("default_ccache_name");
+        } catch (KrbException e) {
+            System.err.println("Create krbClient failed: " + e.getMessage());
+            System.exit(1);
+        }
+        if (ccacheNameEnv != null) {
+            ccacheName = ccacheNameEnv;
+        } else if (ccacheNameConf != null) {
+            ccacheName = ccacheNameConf;
+        } else {
+            StringBuilder uid = new StringBuilder();
+            try {
+                //Get UID through "id -u" command
+                String command = "id -u";
+                Process child = Runtime.getRuntime().exec(command);
+                InputStream in = child.getInputStream();
+                int c;
+                while ((c = in.read()) != -1) {
+                    uid.append((char) c);
+                }
+                in.close();
+            } catch (IOException e) {
+                System.err.println("Failed to get UID.");
+                System.exit(1);
+            }
+            ccacheName = "krb5cc_" + uid.toString().trim();
+            ccacheName = SysUtil.getTempDir().toString() + "/" + ccacheName;
+        }
+
+        return ccacheName;
     }
 
     private static int printKeytabInfo(KOptions klOptions) {
