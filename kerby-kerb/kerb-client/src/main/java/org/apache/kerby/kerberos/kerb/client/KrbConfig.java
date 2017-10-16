@@ -277,16 +277,24 @@ public class KrbConfig extends Krb5Conf {
      * Get ticket life time.
      * @return The ticket life time
      */
-    public long getTicketLifetime() {
-        return getLong(KrbConfigKey.TICKET_LIFETIME, true, LIBDEFAULT);
+    public String getTicketLifetime() {
+        try {
+            return Long.toString(getLong(KrbConfigKey.TICKET_LIFETIME, true, LIBDEFAULT));
+        } catch (Exception e) {
+            return getString(KrbConfigKey.TICKET_LIFETIME, true, LIBDEFAULT);
+        }
     }
 
     /**
      * Get renew life time.
      * @return The renew life time
      */
-    public long getRenewLifetime() {
-        return getLong(KrbConfigKey.RENEW_LIFETIME, true, LIBDEFAULT);
+    public String getRenewLifetime() {
+        try {
+            return Long.toString(getLong(KrbConfigKey.RENEW_LIFETIME, true, LIBDEFAULT));
+        } catch (Exception e) {
+            return getString(KrbConfigKey.RENEW_LIFETIME, true, LIBDEFAULT);
+        }
     }
 
     /**

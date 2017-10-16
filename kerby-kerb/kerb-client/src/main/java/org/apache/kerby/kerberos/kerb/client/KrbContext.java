@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.client;
 
+import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.client.preauth.PreauthHandler;
 import org.apache.kerby.kerberos.kerb.crypto.util.Nonce;
 
@@ -66,7 +67,9 @@ public class KrbContext {
      * @return The ticket valid time
      */
     public long getTicketValidTime() {
-        return getConfig().getTicketLifetime() * 1000;
+        String ticketValidTimeStr = getConfig().getTicketLifetime();
+        long ticketValidTime = KOptions.parseDuration(ticketValidTimeStr);
+        return ticketValidTime * 1000;
     }
 
     /**
