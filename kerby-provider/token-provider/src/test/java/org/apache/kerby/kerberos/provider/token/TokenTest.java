@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.provider.token;
 
@@ -121,7 +121,7 @@ public class TokenTest {
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
-    
+
     @Test
     public void testTokenWithDirectEncryptedJWT() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
@@ -130,7 +130,7 @@ public class TokenTest {
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
         keyGenerator.init(128);
         byte[] secretKey = keyGenerator.generateKey().getEncoded();
-        
+
         ((JwtTokenEncoder) tokenEncoder).setEncryptionKey(secretKey);
         ((JwtTokenEncoder) tokenEncoder).setJweAlgorithm(JWEAlgorithm.DIR);
         ((JwtTokenDecoder) tokenDecoder).setDecryptionKey(secretKey);
@@ -142,17 +142,17 @@ public class TokenTest {
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
-        
+
         // Now try with a different secret key
         secretKey = keyGenerator.generateKey().getEncoded();
         ((JwtTokenDecoder) tokenDecoder).setDecryptionKey(secretKey);
-        
+
         try {
             tokenDecoder.decodeFromString(tokenStr);
             Assertions.fail("Failure expected on a bad secret key");
         } catch (IOException ex) {
             String expectedError = "Failed to decrypt the encrypted JWT";
-            Assertions.assertThat(ex.getMessage().contains(expectedError));
+            Assertions.assertThat(ex.getMessage()).contains(expectedError);
             // expected
         }
     }
@@ -172,7 +172,7 @@ public class TokenTest {
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
-    
+
     @Test
     public void testTokenWithHMACSignedJWT() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
@@ -181,7 +181,7 @@ public class TokenTest {
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
         keyGenerator.init(256);
         byte[] secretKey = keyGenerator.generateKey().getEncoded();
-        
+
         ((JwtTokenEncoder) tokenEncoder).setSignKey(secretKey);
         ((JwtTokenEncoder) tokenEncoder).setJwsAlgorithm(JWSAlgorithm.HS256);
         ((JwtTokenDecoder) tokenDecoder).setVerifyKey(secretKey);
@@ -193,11 +193,11 @@ public class TokenTest {
         AuthToken token2 = tokenDecoder.decodeFromString(tokenStr);
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
-        
+
         // Now try with a different secret key
         secretKey = keyGenerator.generateKey().getEncoded();
         ((JwtTokenDecoder) tokenDecoder).setVerifyKey(secretKey);
-        
+
        token2 = tokenDecoder.decodeFromString(tokenStr);
        Assertions.assertThat(token2).isNull();
     }
@@ -211,7 +211,7 @@ public class TokenTest {
 
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC");
         KeyPair keyPair = kpg.generateKeyPair();
-        
+
         ((JwtTokenEncoder) tokenEncoder).setSignKey(keyPair.getPrivate());
         ((JwtTokenEncoder) tokenEncoder).setJwsAlgorithm(JWSAlgorithm.ES256);
         ((JwtTokenDecoder) tokenDecoder).setVerifyKey(keyPair.getPublic());
@@ -224,7 +224,7 @@ public class TokenTest {
         Assertions.assertThat(token2.getSubject()).isEqualTo(SUBJECT);
         Assertions.assertThat(token2.getIssuer()).isEqualTo(ISSUER);
     }
-    
+
     @Test
     public void testTokenWithSignedAndEncryptedJWT() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();

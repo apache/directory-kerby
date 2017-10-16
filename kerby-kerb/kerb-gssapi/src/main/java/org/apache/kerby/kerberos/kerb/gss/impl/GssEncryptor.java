@@ -230,7 +230,7 @@ public class GssEncryptor {
                     Md5Provider md5Provider = new Md5Provider();
                     md5Provider.hash(toProc);
                     toProc = md5Provider.output();
-
+                    // fall through
                 case GssTokenV1.SGN_ALG_DES_MAC:
                     DesProvider desProvider = new DesProvider();
                     return desProvider.cbcMac(encKeyBytes, IV_ZEROR_8B, toProc);

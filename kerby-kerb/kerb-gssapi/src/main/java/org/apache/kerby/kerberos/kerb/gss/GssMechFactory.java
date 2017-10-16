@@ -35,6 +35,7 @@ import sun.security.jgss.spi.GSSNameSpi;
 import sun.security.jgss.spi.MechanismFactory;
 
 import java.security.Provider;
+import java.util.Arrays;
 
 /**
  * Kerby Kerberos V5 plugin for JGSS
@@ -78,7 +79,7 @@ public class GssMechFactory implements MechanismFactory {
 
     public GSSNameSpi getNameElement(byte[] name, Oid nameType)
             throws GSSException {
-        return GssNameElement.getInstance(name.toString(), nameType);
+        return GssNameElement.getInstance(Arrays.toString(name), nameType);
     }
 
     // Used by initiator
