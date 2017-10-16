@@ -50,6 +50,6 @@ public class Krb5ParserTest {
         assertThat(k.getSection("libdefaults", "dns_lookup_kdc")).isEqualTo("false");
         assertThat(k.getSection("realms", "ATHENA.MIT.EDU") instanceof Map).isTrue();
         assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "v4_instance_convert") instanceof  Map).isTrue();
-        assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "v4_instance_convert", "mit").equals("mit.edu"));
+        assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "v4_instance_convert", "mit")).isEqualTo("mit.edu");
     }
 }
