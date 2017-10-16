@@ -39,6 +39,8 @@ import org.apache.kerby.util.SysUtil;
 
 import java.io.Console;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -213,9 +215,8 @@ public class KinitTool {
             String ccacheName = ktOptions.getStringOption(KinitOption.KRB5_CACHE);
             ccacheFile = new File(ccacheName);
         } else {
-            String ccacheName = principal.replaceAll("/", "_");
-            ccacheName = "krb5_" + ccacheName + ".cc";
-            ccacheFile = new File(SysUtil.getTempDir(), ccacheName);
+            String ccacheName = getCcacheName(krbClient);
+            ccacheFile = new File(ccacheName);
         }
 
         try {
@@ -258,6 +259,40 @@ public class KinitTool {
 
         krbClient.init();
         return krbClient;
+    }
+
+    /**
+     * Get credential cache file name if not specified.
+     */
+    private static String getCcacheName(KrbClient krbClient) {
+        final String ccacheNameEnv = System.getenv("KRB5CCNAME");
+        final String ccacheNameConf = krbClient.getSetting().getKrbConfig().getString("default_ccache_name");
+        String ccacheName;
+        if (ccacheNameEnv != null) {
+            ccacheName = ccacheNameEnv;
+        } else if (ccacheNameConf != null) {
+            ccacheName = ccacheNameConf;
+        } else {
+            StringBuilder uid = new StringBuilder();
+            try {
+                //Get UID through "id -u" command
+                String command = "id -u";
+                Process child = Runtime.getRuntime().exec(command);
+                InputStream in = child.getInputStream();
+                int c;
+                while ((c = in.read()) != -1) {
+                    uid.append((char) c);
+                }
+                in.close();
+            } catch (IOException e) {
+                System.err.println("Failed to get UID.");
+                System.exit(1);
+            }
+            ccacheName = "krb5cc_" + uid.toString().trim();
+            ccacheName = SysUtil.getTempDir().toString() + "/" + ccacheName;
+        }
+
+        return ccacheName;
     }
 
     public static void main(String[] args) {
@@ -305,7 +340,7 @@ public class KinitTool {
         }
 
         if (!ktOptions.contains(KinitOption.CONF_DIR)) {
-            printUsage("No conf dir given. ");
+            printUsage("No conf dir given.");
         }
 
         if (principal == null) {
