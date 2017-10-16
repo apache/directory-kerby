@@ -46,8 +46,8 @@ public class KrbConfigLoadTest {
         assertThat(krbConfig.getDnsLookUpKdc()).isFalse();
         assertThat(krbConfig.getDnsLookUpRealm()).isFalse();
         assertThat(krbConfig.getAllowWeakCrypto()).isTrue();
-        assertThat(krbConfig.getTicketLifetime()).isEqualTo(24 * 3600);
-        assertThat(krbConfig.getRenewLifetime()).isEqualTo(7 * 24 * 3600);
+        assertThat(krbConfig.getTicketLifetime()).isEqualTo("86400");
+        assertThat(krbConfig.getRenewLifetime()).isEqualTo("604800");
         assertThat(krbConfig.isForwardableAllowed()).isTrue();
         assertThat(krbConfig.getEncryptionTypes()).hasSize(2)
                 .contains(EncryptionType.DES_CBC_CRC,

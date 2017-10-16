@@ -203,7 +203,8 @@ public abstract class KdcRequest {
             if (getRequestOptions().contains(KrbOption.RENEWABLE_TIME)) {
                 renewLifetime = getRequestOptions().getIntegerOption(KrbOption.RENEWABLE_TIME);
             } else {
-                renewLifetime = getContext().getKrbSetting().getKrbConfig().getRenewLifetime();
+                String renewLifetimeStr = getContext().getKrbSetting().getKrbConfig().getRenewLifetime();
+                renewLifetime = KOptions.parseDuration(renewLifetimeStr);
             }
             rtime = new KerberosTime(startTime + renewLifetime * 1000);
         }
