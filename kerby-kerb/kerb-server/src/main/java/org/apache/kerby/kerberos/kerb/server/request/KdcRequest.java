@@ -588,10 +588,14 @@ public abstract class KdcRequest {
         return tgsEntry;
     }
 
-    public boolean checkCrossRealm(String remoteRealm) {
-        isCrossRealm = !(kdcContext.getKdcRealm().equals(remoteRealm));
-        this.remoteRealm = remoteRealm;
-        return isCrossRealm;
+    public boolean checkCrossRealm(String remoteRealm) throws KrbException {
+        if (remoteRealm != null && kdcContext.getKdcRealm() != null) {
+            isCrossRealm = !(kdcContext.getKdcRealm().equals(remoteRealm));
+            this.remoteRealm = remoteRealm;
+            return isCrossRealm;
+        } else {
+            throw new KrbException("Missing the realm.");
+        }
     }
 
     public boolean isCrossRealm() {
@@ -647,7 +651,7 @@ public abstract class KdcRequest {
                 throw new KrbException(KrbErrorCode.KDC_ERR_CLIENT_REVOKED);
             }
         } else {
-            LOG.info("Client entry is empty.");
+            LOG.info("Client entry is empty, token preauth or cross realm.");
         }
     }
 
