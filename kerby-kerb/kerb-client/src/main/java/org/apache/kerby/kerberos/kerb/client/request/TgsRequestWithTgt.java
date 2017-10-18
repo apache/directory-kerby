@@ -50,6 +50,9 @@ public class TgsRequestWithTgt extends TgsRequest {
         setAllowedPreauth(PaDataType.TGS_REQ);
         ticket = tgt;
         clientPrincipal = tgt.getClientPrincipal();
+        if (clientPrincipal.getRealm() == null) {
+            clientPrincipal.setRealm(tgt.getRealm());
+        }
     }
 
     public TgsRequestWithTgt(KrbContext context, SgtTicket sgt) {
@@ -57,6 +60,9 @@ public class TgsRequestWithTgt extends TgsRequest {
         setAllowedPreauth(PaDataType.TGS_REQ);
         ticket = sgt;
         clientPrincipal = sgt.getClientPrincipal();
+        if (clientPrincipal.getRealm() == null) {
+            clientPrincipal.setRealm(sgt.getRealm());
+        }
     }
 
     public PrincipalName getClientPrincipal() {

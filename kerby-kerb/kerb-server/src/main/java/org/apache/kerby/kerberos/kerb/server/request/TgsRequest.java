@@ -186,10 +186,15 @@ public class TgsRequest extends KdcRequest {
 
         PrincipalName serverPrincipal = tgtTicket.getSname();
         serverPrincipal.setRealm(tgtTicket.getRealm());
-        PrincipalName clientPrincipal = authenticator.getCname();
-        clientPrincipal.setRealm(authenticator.getCrealm());
-        KrbIdentity clientEntry = getEntry(clientPrincipal.getName());
-        setClientEntry(clientEntry);
+
+        /* The client principal does not exist in backend when it's a cross realm request */
+        if (authenticator.getCrealm() != null
+            && authenticator.getCrealm().equals(getKdcContext().getKdcRealm())) {
+            PrincipalName clientPrincipal = authenticator.getCname();
+            clientPrincipal.setRealm(authenticator.getCrealm());
+            KrbIdentity clientEntry = getEntry(clientPrincipal.getName());
+            setClientEntry(clientEntry);
+        }
 
         if (!authenticator.getCtime().isInClockSkew(
             getKdcContext().getConfig().getAllowableClockSkew() * 1000)) {
