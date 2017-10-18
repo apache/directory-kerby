@@ -85,6 +85,7 @@ public class XdrStructTypeInstance extends XdrStructType {
                     break;
                 case STRUCT:
                     fields[i] = new XdrStructTypeInstance((XdrFieldInfo[]) fieldInfos[i].getValue());
+                    break;
                 default:
                     fields[i] = null;
             }

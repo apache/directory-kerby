@@ -69,7 +69,7 @@ public class LoginTestBase extends KdcTestBase {
 
     protected void checkSubject(Subject subject) {
         Set<Principal> clientPrincipals = subject.getPrincipals();
-        assertThat(clientPrincipals);
+        assertThat(clientPrincipals).isNotEmpty();
     }
 
     @After
