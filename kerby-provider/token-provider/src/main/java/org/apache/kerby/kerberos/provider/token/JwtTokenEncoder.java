@@ -14,7 +14,7 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.provider.token;
@@ -28,6 +28,7 @@ import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.KeyLengthException;
 import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.crypto.ECDSASigner;
@@ -53,7 +54,7 @@ import java.text.ParseException;
  * JWT token encoder, implemented using Nimbus JWT library.
  */
 public class JwtTokenEncoder implements TokenEncoder {
-    private JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP;
+    private JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP_256;
     private EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM;
     private JWSAlgorithm jwsAlgorithm = JWSAlgorithm.RS256;
 
@@ -131,7 +132,7 @@ public class JwtTokenEncoder implements TokenEncoder {
         }
         return tokenStr;
     }
-    
+
     private JWSSigner createSigner() throws KrbException {
         // Create signer with the private key
         if (RSASSASigner.SUPPORTED_ALGORITHMS.contains(jwsAlgorithm)) {
@@ -143,17 +144,25 @@ public class JwtTokenEncoder implements TokenEncoder {
             if (!(signKey instanceof ECPrivateKey)) {
                 throw new KrbException("A ECPrivateKey key must be specified for signature");
             }
-            return new ECDSASigner(((ECPrivateKey) signKey).getS());
+            try {
+                return new ECDSASigner((ECPrivateKey) signKey);
+            } catch (JOSEException e) {
+                throw new KrbException(e.getMessage(), e);
+            }
         } else if (MACSigner.SUPPORTED_ALGORITHMS.contains(jwsAlgorithm)) {
             if (!(signKey instanceof byte[])) {
                 throw new KrbException("A byte[] key must be specified for signature");
             }
-            return new MACSigner((byte[]) signKey);
+            try {
+                return new MACSigner((byte[]) signKey);
+            } catch (KeyLengthException e) {
+                throw new KrbException(e.getMessage(), e);
+            }
         }
 
         throw new KrbException("An unknown signature algorithm was specified");
     }
-    
+
     private JWEEncrypter createEncryptor() throws KrbException, JOSEException {
         if (RSAEncrypter.SUPPORTED_ALGORITHMS.contains(jweAlgorithm)) {
             if (!(encryptionKey instanceof RSAPublicKey)) {
@@ -166,7 +175,7 @@ public class JwtTokenEncoder implements TokenEncoder {
             }
             return new DirectEncrypter((byte[]) encryptionKey);
         }
-        
+
         throw new KrbException("An unknown encryption algorithm was specified");
     }
 
@@ -209,7 +218,7 @@ public class JwtTokenEncoder implements TokenEncoder {
             signKey = key.clone();
         }
     }
-    
+
     public JWEAlgorithm getJweAlgorithm() {
         return jweAlgorithm;
     }
@@ -225,7 +234,7 @@ public class JwtTokenEncoder implements TokenEncoder {
     public void setJwsAlgorithm(JWSAlgorithm jwsAlgorithm) {
         this.jwsAlgorithm = jwsAlgorithm;
     }
-    
+
     public EncryptionMethod getEncryptionMethod() {
         return encryptionMethod;
     }

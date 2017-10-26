@@ -34,6 +34,8 @@ import org.apache.kerby.kerberos.kerb.type.ticket.KrbTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenEncoder;
 
+import com.nimbusds.jose.EncryptionMethod;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -106,6 +108,9 @@ public class TokenKdcTestBase extends KdcTestBase {
 
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
 
+        if (tokenEncoder instanceof JwtTokenEncoder) {
+            ((JwtTokenEncoder) tokenEncoder).setEncryptionMethod(EncryptionMethod.A128CBC_HS256);
+        }
         if (tokenEncoder instanceof JwtTokenEncoder && signingKey != null) {
             tokenEncoder.setSignKey(signingKey);
         }
