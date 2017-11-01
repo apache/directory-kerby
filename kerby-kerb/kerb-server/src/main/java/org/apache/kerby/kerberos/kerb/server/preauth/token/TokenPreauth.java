@@ -113,7 +113,9 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             serverPrincipal.setRealm(kdcRequest.getKdcReq().getReqBody().getRealm());
             kdcRequest.setServerPrincipal(serverPrincipal);
             if (audiences == null || !audiences.contains(serverPrincipal.getName())) {
-                throw new KrbException("The token audience does not match with the target server principal!");
+                throw new KrbException(
+                    "The token audience does not match with the target server principal!"
+                        + "Server principal is: " + serverPrincipal);
             }
             kdcRequest.setToken(authToken);
             return true;
