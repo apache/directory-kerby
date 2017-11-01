@@ -14,7 +14,7 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.provider.token;
@@ -23,10 +23,11 @@ import com.nimbusds.jose.PlainHeader;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -36,31 +37,41 @@ import java.util.UUID;
  */
 public class JwtAuthToken implements AuthToken {
 
-    private JWTClaimsSet jwtClaims;
+    private static final String SUBJECT_CLAIM = "sub";
+    private static final String ISSUER_CLAIM = "iss";
+    private static final String AUDIENCE_CLAIM = "aud";
+    private static final String EXPIRY_CLAIM = "exp";
+    private static final String NOT_BEFORE_CLAIM = "nbf";
+    private static final String ISSUED_AT_CLAIM = "iat";
+    private static final String ID_CLAIM = "jti";
+
     private Boolean isIdToken = true;
     private Boolean isAcToken = false;
+    private final Map<String, Object> claims = new HashMap<>();
 
     public JwtAuthToken() {
-        this(new JWTClaimsSet());
+        // complete
     }
 
     public JwtAuthToken(JWTClaimsSet jwtClaims) {
-        this.jwtClaims = jwtClaims;
-    }
-
-    public JwtAuthToken(ReadOnlyJWTClaimsSet jwtClaims) {
-        this.jwtClaims = JwtUtil.from(jwtClaims);
+        if (jwtClaims != null) {
+            claims.putAll(jwtClaims.getClaims());
+        }
     }
 
     protected JWT getJwt() {
-        String jti = jwtClaims.getJWTID();
+        String jti = (String) claims.get(ID_CLAIM);
         if (jti == null || jti.isEmpty()) {
             jti = UUID.randomUUID().toString();
-            jwtClaims.setJWTID(jti);
+            claims.put(ID_CLAIM, jti);
         }
 
+        JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
+        for (Map.Entry<String, Object> entry : claims.entrySet()) {
+            builder = builder.claim(entry.getKey(), entry.getValue());
+        }
         PlainHeader header = new PlainHeader();
-        PlainJWT jwt = new PlainJWT(header, jwtClaims);
+        PlainJWT jwt = new PlainJWT(header, builder.build());
         return jwt;
     }
 
@@ -69,7 +80,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public String getSubject() {
-        return jwtClaims.getSubject();
+        return (String) claims.get(SUBJECT_CLAIM);
     }
 
     /**
@@ -77,7 +88,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public void setSubject(String sub) {
-        jwtClaims.setSubject(sub);
+        claims.put(SUBJECT_CLAIM, sub);
     }
 
     /**
@@ -85,7 +96,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public String getIssuer() {
-        return jwtClaims.getIssuer();
+        return (String) claims.get(ISSUER_CLAIM);
     }
 
     /**
@@ -93,7 +104,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public void setIssuer(String issuer) {
-        jwtClaims.setIssuer(issuer);
+        claims.put(ISSUER_CLAIM, issuer);
     }
 
     /**
@@ -101,7 +112,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public List<String> getAudiences() {
-        return jwtClaims.getAudience();
+        return (List<String>) claims.get(AUDIENCE_CLAIM);
     }
 
     /**
@@ -109,7 +120,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public void setAudiences(List<String> audiences) {
-        jwtClaims.setAudience(audiences);
+        claims.put(AUDIENCE_CLAIM, audiences);
     }
 
     /**
@@ -165,7 +176,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public Date getExpiredTime() {
-        return jwtClaims.getExpirationTime();
+        return (Date) claims.get(EXPIRY_CLAIM);
     }
 
     /**
@@ -173,7 +184,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public void setExpirationTime(Date exp) {
-        jwtClaims.setExpirationTime(exp);
+        claims.put(EXPIRY_CLAIM, exp);
     }
 
     /**
@@ -181,7 +192,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public Date getNotBeforeTime() {
-        return jwtClaims.getNotBeforeTime();
+        return (Date) claims.get(NOT_BEFORE_CLAIM);
     }
 
     /**
@@ -189,7 +200,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public void setNotBeforeTime(Date nbt) {
-        jwtClaims.setNotBeforeTime(nbt);
+        claims.put(NOT_BEFORE_CLAIM, nbt);
     }
 
     /**
@@ -197,7 +208,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public Date getIssueTime() {
-        return jwtClaims.getIssueTime();
+        return (Date) claims.get(ISSUED_AT_CLAIM);
     }
 
     /**
@@ -205,7 +216,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public void setIssueTime(Date iat) {
-        jwtClaims.setIssueTime(iat);
+        claims.put(ISSUED_AT_CLAIM, iat);
     }
 
     /**
@@ -213,7 +224,7 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public Map<String, Object> getAttributes() {
-        return jwtClaims.getAllClaims();
+        return Collections.unmodifiableMap(claims);
     }
 
     /**
@@ -221,6 +232,6 @@ public class JwtAuthToken implements AuthToken {
      */
     @Override
     public void addAttribute(String name, Object value) {
-        jwtClaims.setCustomClaim(name, value);
+        claims.put(name, value);
     }
 }

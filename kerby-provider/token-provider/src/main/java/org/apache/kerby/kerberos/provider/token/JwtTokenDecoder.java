@@ -152,14 +152,14 @@ public class JwtTokenDecoder implements TokenDecoder {
             throw new IOException("Failed to decrypt the encrypted JWT", e);
         }
     }
-    
+
     private JWEDecrypter getDecrypter() throws JOSEException, KrbException {
         if (decryptionKey instanceof RSAPrivateKey) {
             return new RSADecrypter((RSAPrivateKey) decryptionKey);
         } else if (decryptionKey instanceof byte[]) {
             return new DirectDecrypter((byte[]) decryptionKey);
         }
-        
+
         throw new KrbException("An unknown decryption key was specified");
     }
 
@@ -198,18 +198,17 @@ public class JwtTokenDecoder implements TokenDecoder {
             throw new IOException("Failed to verify the signed JWT", e);
         }
     }
-    
+
     private JWSVerifier getVerifier() throws JOSEException, KrbException {
         if (verifyKey instanceof RSAPublicKey) {
             return new RSASSAVerifier((RSAPublicKey) verifyKey);
         } else if (verifyKey instanceof ECPublicKey) {
             ECPublicKey ecPublicKey = (ECPublicKey) verifyKey;
-            return new ECDSAVerifier(ecPublicKey.getW().getAffineX(),
-                                     ecPublicKey.getW().getAffineY());
+            return new ECDSAVerifier(ecPublicKey);
         } else if (verifyKey instanceof byte[]) {
             return new MACVerifier((byte[]) verifyKey);
         }
-        
+
         throw new KrbException("An unknown verify key was specified");
     }
 
