@@ -224,7 +224,7 @@ public class KadminTool {
                 AuthUtil.loginUsingTicketCache(kadminPrincipal, ccFile);
             } catch (LoginException e) {
                 System.err.println("Could not login with: " + kadminPrincipal
-                        + e.getMessage());
+                        + " " + e.getMessage());
                 return;
             }
         } else if (kOptions.contains(KadminOption.K)) {
@@ -237,7 +237,7 @@ public class KadminTool {
                 AuthUtil.loginUsingKeytab(kadminPrincipal, keyTabFile);
             } catch (LoginException e) {
                 System.err.println("Could not login with: " + kadminPrincipal
-                        + e.getMessage());
+                        + " " + e.getMessage());
                 return;
             }
         } else {

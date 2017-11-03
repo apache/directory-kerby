@@ -82,7 +82,6 @@ public class KlistTool {
 
     private static int printCredentialCacheInfo(KOptions klOptions) {
         CredentialCache cc = new CredentialCache();
-        List<Credential> credentials;
         InputStream cis = null;
         String error;
         String fileName = null;
@@ -109,26 +108,25 @@ public class KlistTool {
 
         }
 
-        if (cc != null) {
-            credentials = cc.getCredentials();
+        List<Credential> credentials = cc.getCredentials();
 
-            System.out.println("Ticket cache: " + fileName);
+        System.out.println("Ticket cache: " + fileName);
+        if (cc.getPrimaryPrincipal() != null) {
             System.out.println("Default principal: " + cc.getPrimaryPrincipal().getName());
+        }
 
-            if (credentials.isEmpty()) {
-                System.out.println("No credential has been cached.");
-            } else {
-                DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+        if (credentials.isEmpty()) {
+            System.out.println("No credential has been cached.");
+        } else {
+            DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 
-                System.out.println("Valid starting\t\tExpires\t\t\tService principal");
+            System.out.println("Valid starting\t\tExpires\t\t\tService principal");
 
-                for (Credential crd : credentials) {
-                    System.out.println(df.format(crd.getStartTime().getTime()) + "\t"
-                            + df.format(crd.getEndTime().getTime()) + "\t"
-                            + crd.getServerName());
-                }
+            for (Credential crd : credentials) {
+                System.out.println(df.format(crd.getStartTime().getTime()) + "\t"
+                        + df.format(crd.getEndTime().getTime()) + "\t"
+                        + crd.getServerName());
             }
-
         }
 
         return 0;
