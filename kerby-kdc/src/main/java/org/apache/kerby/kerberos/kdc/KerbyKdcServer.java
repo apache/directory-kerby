@@ -83,7 +83,7 @@ public class KerbyKdcServer extends KdcServer {
         try {
             server.init();
         } catch (KrbException e) {
-            System.err.println("Errors occurred when start kdc server:  " + e.getMessage());
+            System.err.println("Errors occurred when starting the kdc server:  " + e.getMessage());
             System.exit(4);
         }
 
@@ -91,7 +91,7 @@ public class KerbyKdcServer extends KdcServer {
             server.start();
             System.out.println("KDC started.");
         } catch (KrbException e) {
-            System.err.println("Errors occurred when start kdc server:  " + e.getMessage());
+            System.err.println("Errors occurred when starting the kdc server:  " + e.getMessage());
             System.exit(5);
         }
     }
