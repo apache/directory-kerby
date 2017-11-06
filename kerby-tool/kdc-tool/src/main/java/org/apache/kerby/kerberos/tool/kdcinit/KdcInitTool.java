@@ -86,7 +86,7 @@ public class KdcInitTool {
         adminKeytabFile = new File(keytabDir, "admin.keytab");
         protocolKeytabFile = new File(keytabDir, "protocol.keytab");
         if (!confDir.exists()) {
-            System.err.println("Invalid or not exist conf-dir.");
+            System.err.println("The conf-dir is invalid or does not exist.");
             System.exit(2);
         }
         if (keytabDir != null && !keytabDir.exists() && !keytabDir.mkdirs()) {
@@ -110,7 +110,7 @@ public class KdcInitTool {
         try {
             kdcInitTool.initKdc(confDir);
         } catch (KrbException e) {
-            System.err.println("Errors occurred when init the kdc " + e.getMessage());
+            System.err.println("Errors occurred when initializing the kdc " + e.getMessage());
             System.exit(1);
         }
 
