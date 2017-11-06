@@ -26,4 +26,15 @@
   <name>Kerby ASN1 Project</name>
   <description>Kerby ASN1 Project</description>
 
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
+  </dependencies>
+
 </project>

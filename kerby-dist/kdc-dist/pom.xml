@@ -162,7 +162,6 @@
                 <configuration>
                   <outputDirectory>target/lib</outputDirectory>
                   <excludeTransitive>true</excludeTransitive>
-                  <excludeGroupIds>junit, org.assertj</excludeGroupIds>
                 </configuration>
               </execution>
             </executions>
