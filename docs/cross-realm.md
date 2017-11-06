@@ -32,6 +32,8 @@ KadminTool.local: addprinc -pw [same-password] krbtgt/B.EXAMPLE.COM@A.EXAMPLE.CO
 // Make sure that both principals have matching key version numbers and encryption types
 KadminTool.local: getprinc krbtgt/B.EXAMPLE.COM@A.EXAMPLE.COM
 ```
+Note that the same "krbtgt/B.EXAMPLE.COM@A.EXAMPLE.COM" principal (with the
+same password) must exist in both the A.EXAMPLE.COM and B.EXAMPLE.COM KDCs.
 
 ### Configure krb5.conf of realms
 
@@ -39,7 +41,8 @@ KadminTool.local: getprinc krbtgt/B.EXAMPLE.COM@A.EXAMPLE.COM
 
 * config capaths section, which contains the realm chain.
 
-An example of krb5.conf:
+An example of krb5.conf - this is required for both the A.EXAMPLE.COM and 
+B.EXAMPLE.com KDCs, as well as for the Tool dist below:
 ```
 [realms]
   A.EXAMPLE.COM = {
@@ -68,4 +71,10 @@ An example of krb5.conf:
 ```
 cd kerby-dist/tool-dist
 sh bin/kinit.sh -conf [client-conf-dir] -c [credential-cache-of-local-realm] -S [principal-name-of-remote-realm]
+```
+Example:
+```
+cd kerby-dist/tool-dist
+sh bin/kinit.sh -conf [client-conf-dir] alice@A.EXAMPLE.COM
+sh bin/kinit.sh -conf [client-conf-dir] -c /tmp/krb5cc_1000 -S service@B.EXAMPLE.COM
 ```
