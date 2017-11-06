@@ -143,13 +143,13 @@ public class TgsRequest extends KdcRequest {
             if (tgs != null) {
                 tgsKey = tgs.getKey(encType);
             } else {
-                throw new KrbException("Fail to get the tgs entry for remote realm: " + remoteRealm);
+                throw new KrbException("Failed to get the tgs entry for remote realm: " + remoteRealm);
             }
         } else {
             tgsKey = getTgsEntry().getKeys().get(encType);
         }
         if (tgsKey == null) {
-            throw new KrbException("Fail to get the tgs key for the type: " + encType);
+            throw new KrbException("Failed to get the tgs key for the type: " + encType);
         }
 
         if (tgtTicket.getTktvno() != KrbConstant.KRB_V5) {
