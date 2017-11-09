@@ -14,7 +14,7 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.kerb.client.preauth.pkinit;
@@ -43,7 +43,7 @@ import org.apache.kerby.kerberos.kerb.preauth.PluginRequestContext;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CmsMessageType;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitCrypto;
-import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitIdenity;
+import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitIdentity;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPlgCryptoContext;
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.PkinitPreauthMeta;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
@@ -105,7 +105,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     public PluginRequestContext initRequestContext(KdcRequest kdcRequest) {
         PkinitRequestContext reqCtx = new PkinitRequestContext();
 
-        reqCtx.updateRequestOpts(pkinitContext.pluginOpts);
+        reqCtx.updateRequestOpts(pkinitContext.getPluginOpts());
 
         return reqCtx;
     }
@@ -118,8 +118,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                                   PluginRequestContext requestContext,
                                   KOptions options) {
         if (options.contains(PkinitOption.X509_IDENTITY)) {
-            pkinitContext.identityOpts.identity =
-                    options.getStringOption(PkinitOption.X509_IDENTITY);
+            pkinitContext.getIdentityOpts().setIdentity(options.getStringOption(PkinitOption.X509_IDENTITY));
         }
 
         if (options.contains(PkinitOption.X509_ANCHORS)) {
@@ -131,12 +130,11 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             } else {
                 anchors = Arrays.asList(anchorsString);
             }
-            pkinitContext.identityOpts.anchors.addAll(anchors);
+            pkinitContext.getIdentityOpts().getAnchors().addAll(anchors);
         }
 
         if (options.contains(PkinitOption.USING_RSA)) {
-            pkinitContext.pluginOpts.usingRsa =
-                    options.getBooleanOption(PkinitOption.USING_RSA, true);
+            pkinitContext.getPluginOpts().setUsingRsa(options.getBooleanOption(PkinitOption.USING_RSA, true));
         }
     }
 
@@ -149,9 +147,9 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
 
-        if (!reqCtx.identityInitialized) {
-            PkinitIdenity.initialize(reqCtx.identityOpts, kdcRequest.getClientPrincipal());
-            reqCtx.identityInitialized = true;
+        if (!reqCtx.isIdentityInitialized()) {
+            PkinitIdentity.initialize(reqCtx.getIdentityOpts(), kdcRequest.getClientPrincipal());
+            reqCtx.setIdentityInitialized(true);
         }
 
         // Might have questions asking for password to access the private key
@@ -237,22 +235,20 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     private PaPkAsReq makePaPkAsReq(KdcRequest kdcRequest,
                                     PkinitRequestContext reqCtx,
                                     int cusec, KerberosTime ctime, int nonce, CheckSum checkSum) throws KrbException {
-        KdcRequest kdc = kdcRequest;
-
         LOG.info("Making the PK_AS_REQ.");
         PaPkAsReq paPkAsReq = new PaPkAsReq();
         AuthPack authPack = new AuthPack();
         PkAuthenticator pkAuthen = new PkAuthenticator();
 
-        boolean usingRsa = pkinitContext.pluginOpts.usingRsa;
-        reqCtx.paType = PaDataType.PK_AS_REQ;
+        boolean usingRsa = pkinitContext.getPluginOpts().isUsingRsa();
+        reqCtx.setPaType(PaDataType.PK_AS_REQ);
 
         pkAuthen.setCusec(cusec);
         pkAuthen.setCtime(ctime);
         pkAuthen.setNonce(nonce);
         pkAuthen.setPaChecksum(checkSum.getChecksum());
         authPack.setPkAuthenticator(pkAuthen);
-        authPack.setsupportedCmsTypes(pkinitContext.pluginOpts.createSupportedCMSTypes());
+        authPack.setsupportedCmsTypes(pkinitContext.getPluginOpts().createSupportedCMSTypes());
 
         if (!usingRsa) {
             // DH case
@@ -305,7 +301,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             // authPack.setClientPublicValue(null);
         }
 
-        TrustedCertifiers trustedCertifiers = pkinitContext.pluginOpts.createTrustedCertifiers();
+        TrustedCertifiers trustedCertifiers = pkinitContext.getPluginOpts().createTrustedCertifiers();
         paPkAsReq.setTrustedCertifiers(trustedCertifiers);
 
         // byte[] kdcPkId = pkinitContext.pluginOpts.createIssuerAndSerial();
@@ -358,7 +354,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
             X509Certificate x509Certificate = null;
             try {
-                List<java.security.cert.Certificate> certs = 
+                List<java.security.cert.Certificate> certs =
                     CertificateHelper.loadCerts(anchorFileName);
                 if (certs != null && !certs.isEmpty()) {
                     x509Certificate = (X509Certificate) certs.iterator().next();
@@ -366,12 +362,12 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             } catch (KrbException e) {
                 LOG.error("Fail to load certs from archor file. " + e);
             }
-            
+
             if (x509Certificate == null) {
                 LOG.error("Failed to load PKINIT anchor");
                 throw new KrbException("Failed to load PKINIT anchor");
             }
-            
+
             CertificateSet certificateSet = signedData.getCertificates();
             if (certificateSet == null || certificateSet.getElements().isEmpty()) {
                 throw new KrbException("No PKINIT Certs");
@@ -381,7 +377,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
             for (CertificateChoices certificateChoices : certificateChoicesList) {
                 certificates.add(certificateChoices.getCertificate());
             }
-            
+
             try {
                 PkinitCrypto.validateChain(certificates, x509Certificate);
             } catch (Exception e) {
@@ -448,7 +444,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                             PaData outPadata) {
 
         PkinitRequestContext reqCtx = (PkinitRequestContext) requestContext;
-        if (reqCtx.paType != preauthType && errPadata == null) {
+        if (reqCtx.getPaType() != preauthType && errPadata == null) {
             return false;
         }
 

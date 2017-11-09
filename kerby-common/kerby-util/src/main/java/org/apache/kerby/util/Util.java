@@ -39,6 +39,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -408,7 +409,7 @@ public class Util {
         System.out.println("--------- test 2 ----------");
 
         s = "line1\n\rline2\n\rline3\n\r\n\r";
-        in = new ByteArrayInputStream(s.getBytes());
+        in = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
         readLine = new ByteArrayReadLine(in);
         line = readLine.next();
         while (line != null) {

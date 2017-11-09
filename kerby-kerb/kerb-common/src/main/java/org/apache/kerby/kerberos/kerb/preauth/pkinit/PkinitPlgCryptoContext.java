@@ -22,7 +22,6 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 
 import javax.crypto.spec.DHParameterSpec;
 import java.math.BigInteger;
-import java.security.cert.X509Certificate;
 
 /*
  * Ref. _pkinit_plg_crypto_context in
@@ -32,13 +31,13 @@ public class PkinitPlgCryptoContext {
     private static final String ID_PKINIT_DHKEYDATA = "1.3.6.1.5.2.3.2";
     private static final String ID_PKINIT_RKEYDATA = "1.3.6.1.5.2.3.3";
 
-    /* available trusted ca certs */
-    public X509Certificate trustedCAs;
-    /* available intermediate ca certs */
-    public X509Certificate intermediateCAs;
-    /* available crls */
-    public X509Certificate revoked;
-
+    /* available trusted ca certs
+    private X509Certificate trustedCAs;
+    /* available intermediate ca certs
+    private X509Certificate intermediateCAs;
+    /* available crls
+    private X509Certificate revoked;
+    */
 
     /*
      * http://www.ietf.org/rfc/rfc2409.txt

@@ -122,9 +122,9 @@ public class PkinitCrypto {
                                      DhParameter dhParameter) throws KrbException {
          /* KDC SHOULD check to see if the key parameters satisfy its policy */
         int dhPrimeBits = dhParameter.getP().bitLength();
-        if (dhPrimeBits < pluginOpts.dhMinBits) {
+        if (dhPrimeBits < pluginOpts.getDhMinBits()) {
             String errMsg = "client sent dh params with " + dhPrimeBits
-                    + "bits, we require " + pluginOpts.dhMinBits;
+                    + "bits, we require " + pluginOpts.getDhMinBits();
             LOG.error(errMsg);
             throw new KrbException(KrbErrorCode.KDC_ERR_DH_KEY_PARAMETERS_NOT_ACCEPTED, errMsg);
         }
@@ -336,25 +336,25 @@ public class PkinitCrypto {
      * @throws NoSuchAlgorithmException e
      * @throws InvalidAlgorithmParameterException e
      * @throws CertPathValidatorException e
-     * @throws IOException 
+     * @throws IOException
      */
     public static void validateChain(List<Certificate> certificateList, X509Certificate anchor)
             throws CertificateException, NoSuchAlgorithmException, NoSuchProviderException,
             InvalidAlgorithmParameterException, CertPathValidatorException, IOException {
 
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-        
+
         // Convert into a list of X509Certificates
         List<X509Certificate> certsList = new ArrayList<>(certificateList.size());
         for (Certificate cert : certificateList) {
-            X509Certificate parsedCert = 
+            X509Certificate parsedCert =
                 (X509Certificate) certificateFactory.generateCertificate(
                     new ByteArrayInputStream(cert.encode()));
             certsList.add(parsedCert);
         }
-        
+
         CertPath certPath = certificateFactory.generateCertPath(certsList);
-        
+
         CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
 
         TrustAnchor trustAnchor = new TrustAnchor(anchor, null);

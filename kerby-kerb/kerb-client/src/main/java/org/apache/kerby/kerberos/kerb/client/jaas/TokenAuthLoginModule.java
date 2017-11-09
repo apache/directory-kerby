@@ -317,6 +317,7 @@ public class TokenAuthLoginModule implements LoginModule {
             krbClient.init();
         } catch (KrbException | IOException e) {
             LOG.error("KrbClient init failed. " + e.toString());
+            throw new RuntimeException("KrbClient init failed", e);
         }
 
         KrbTokenClient tokenClient = new KrbTokenClient(krbClient);
@@ -336,9 +337,7 @@ public class TokenAuthLoginModule implements LoginModule {
                 LOG.error("Failed to make tgtCache. " + e.toString());
             }
             try {
-                if (krbClient != null) {
-                    krbClient.storeTicket(tgtTicket, cCache);
-                }
+                krbClient.storeTicket(tgtTicket, cCache);
             } catch (KrbException e) {
                 LOG.error("Failed to store tgtTicket to " + cCache.getName());
             }

@@ -6,23 +6,23 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
 @SuppressWarnings("PMD")
-public class PkinitIdenity {
+public class PkinitIdentity {
 
     public static void processIdentityOption(IdentityOpts identityOpts, String value) {
         IdentityType idType = IdentityType.NONE;
@@ -46,7 +46,7 @@ public class PkinitIdenity {
             idType = IdentityType.FILE;
         }
 
-        identityOpts.idType = idType;
+        identityOpts.setIdType(idType);
         switch (idType) {
             case ENVVAR:
                 processIdentityOption(identityOpts, System.getenv(residual));
@@ -61,7 +61,7 @@ public class PkinitIdenity {
                 parsePkcs12Option(identityOpts, residual);
                 break;
             case DIR:
-                identityOpts.certFile = residual;
+                identityOpts.setCertFile(residual);
                 break;
             default:
                 break;
@@ -77,13 +77,13 @@ public class PkinitIdenity {
             keyName = parts[1];
         }
 
-        identityOpts.certFile = certName;
-        identityOpts.keyFile = keyName;
+        identityOpts.setCertFile(certName);
+        identityOpts.setKeyFile(keyName);
     }
 
     public static void parsePkcs12Option(IdentityOpts identityOpts, String residual) {
-        identityOpts.certFile = residual;
-        identityOpts.keyFile = residual;
+        identityOpts.setCertFile(residual);
+        identityOpts.setKeyFile(residual);
     }
 
     public static void parsePkcs11Option(IdentityOpts identityOpts, String residual) {
@@ -91,7 +91,7 @@ public class PkinitIdenity {
     }
 
     public static void loadCerts(IdentityOpts identityOpts, PrincipalName principal) {
-        switch (identityOpts.idType) {
+        switch (identityOpts.getIdType()) {
             case FILE:
                 loadCertsFromFile(identityOpts, principal);
                 break;

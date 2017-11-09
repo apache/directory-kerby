@@ -93,7 +93,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
         tmp.realm = kdcContext.getKdcRealm();
 
         String pkinitIdentity = kdcContext.getConfig().getPkinitIdentity();
-        tmp.identityOpts.identity = pkinitIdentity;
+        tmp.identityOpts.setIdentity(pkinitIdentity);
 
         pkinitContexts.put(kdcContext.getKdcRealm(), tmp);
     }
@@ -245,7 +245,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 // Set the DH shared key as the client key
                 kdcRequest.setClientKey(secretKey);
 
-                String identity = pkinitContext.identityOpts.identity;
+                String identity = pkinitContext.identityOpts.getIdentity();
 
                 PaPkAsRep paPkAsRep = makePaPkAsRep(serverPubKey, identity);
                 PaDataEntry paDataEntry = makeEntry(paPkAsRep);

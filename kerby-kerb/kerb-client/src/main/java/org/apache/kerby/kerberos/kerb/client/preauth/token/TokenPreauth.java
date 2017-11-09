@@ -99,16 +99,14 @@ public class TokenPreauth extends AbstractPreauthPlugin {
                                   PluginRequestContext requestContext,
                                   KOptions options) {
 
-        tokenContext.usingIdToken = options.getBooleanOption(TokenOption.USE_TOKEN, false);
-        if (tokenContext.usingIdToken) {
+        tokenContext.setUsingIdToken(options.getBooleanOption(TokenOption.USE_TOKEN, false));
+        if (tokenContext.isUsingIdToken()) {
             if (options.contains(TokenOption.USER_ID_TOKEN)) {
-                tokenContext.token =
-                        (AuthToken) options.getOptionValue(TokenOption.USER_ID_TOKEN);
+                tokenContext.setToken((AuthToken) options.getOptionValue(TokenOption.USER_ID_TOKEN));
             }
         } else {
             if (options.contains(TokenOption.USER_AC_TOKEN)) {
-                tokenContext.token =
-                        (AuthToken) options.getOptionValue(TokenOption.USER_AC_TOKEN);
+                tokenContext.setToken((AuthToken) options.getOptionValue(TokenOption.USER_AC_TOKEN));
             }
         }
 

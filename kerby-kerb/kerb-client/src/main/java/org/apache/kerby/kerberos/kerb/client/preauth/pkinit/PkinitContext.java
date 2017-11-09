@@ -28,7 +28,28 @@ import org.apache.kerby.kerberos.kerb.preauth.pkinit.PluginOpts;
  */
 public class PkinitContext {
 
-    public PkinitPlgCryptoContext cryptoctx = new PkinitPlgCryptoContext();
-    public PluginOpts pluginOpts = new PluginOpts();
-    public IdentityOpts identityOpts = new IdentityOpts();
+    private PkinitPlgCryptoContext cryptoctx = new PkinitPlgCryptoContext();
+    private PluginOpts pluginOpts = new PluginOpts();
+    private IdentityOpts identityOpts = new IdentityOpts();
+
+    public PkinitPlgCryptoContext getCryptoctx() {
+        return cryptoctx;
+    }
+    public void setCryptoctx(PkinitPlgCryptoContext cryptoctx) {
+        this.cryptoctx = cryptoctx;
+    }
+    public PluginOpts getPluginOpts() {
+        return pluginOpts;
+    }
+    public void setPluginOpts(PluginOpts pluginOpts) {
+        this.pluginOpts = pluginOpts;
+    }
+    public IdentityOpts getIdentityOpts() {
+        return identityOpts;
+    }
+    public void setIdentityOpts(IdentityOpts identityOpts) {
+        this.identityOpts = identityOpts;
+    }
+
+
 }

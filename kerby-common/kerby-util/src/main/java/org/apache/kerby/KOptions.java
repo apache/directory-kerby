@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby;
 
@@ -98,19 +98,19 @@ public class KOptions {
     if (matcherColon.matches()) {
       String[] durations = strValue.split(":");
       if (durations.length == 1) {
-          duration = Integer.valueOf(durations[0]);
+          duration = Integer.parseInt(durations[0]);
       } else if (durations.length == 2) {
-          duration = Integer.valueOf(durations[0]) * 3600 + Integer.valueOf(durations[1]) * 60;
+          duration = Integer.parseInt(durations[0]) * 3600 + Integer.parseInt(durations[1]) * 60;
       } else {
-          duration = Integer.valueOf(durations[0]) * 3600 + Integer.valueOf(durations[1]) * 60;
-          duration += Integer.valueOf(durations[2]);
+          duration = Integer.parseInt(durations[0]) * 3600 + Integer.parseInt(durations[1]) * 60;
+          duration += Integer.parseInt(durations[2]);
       }
     } else if (matcherWord.matches()) {
         int[] durations = new int[4];
         for (int i = 0; i < 4; i++) {
           String durationMatch = matcherWord.group(i + 1);
           if (durationMatch != null) {
-            durations[i] = Integer.valueOf(durationMatch);
+            durations[i] = Integer.parseInt(durationMatch);
           }
         }
         duration = durations[0] * 86400 + durations[1] * 3600 + durations[2] * 60 + durations[3];

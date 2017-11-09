@@ -6,16 +6,16 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
 package org.apache.kerby.kerberos.kerb.preauth.pkinit;
 
@@ -31,18 +31,18 @@ import org.apache.kerby.x509.type.AlgorithmIdentifier;
 public class PluginOpts {
 
     // require EKU checking (default is true)
-    public boolean requireEku = true;
+    private boolean requireEku = true;
     // accept secondary EKU (default is false)
-    public boolean acceptSecondaryEku = false;
+    private boolean acceptSecondaryEku = false;
     // allow UPN-SAN instead of pkinit-SAN
-    public boolean allowUpn = true;
+    private boolean allowUpn = true;
     // selects DH or RSA based pkinit
-    public boolean usingRsa = false;
+    private boolean usingRsa = false;
     // require CRL for a CA (default is false)
-    public boolean requireCrlChecking = false;
+    private boolean requireCrlChecking = false;
     // the size of the Diffie-Hellman key the client will attempt to use.
     // The acceptable values are 1024, 2048, and 4096. The default is 1024.
-    public int dhMinBits = 1024;
+    private int dhMinBits = 1024;
 
     public AlgorithmIdentifiers createSupportedCMSTypes() throws KrbException {
         AlgorithmIdentifiers cmsAlgorithms = new AlgorithmIdentifiers();
@@ -66,5 +66,53 @@ public class PluginOpts {
 
     public byte[] createIssuerAndSerial() {
         return null;
+    }
+
+    public boolean isRequireEku() {
+        return requireEku;
+    }
+
+    public void setRequireEku(boolean requireEku) {
+        this.requireEku = requireEku;
+    }
+
+    public boolean isAcceptSecondaryEku() {
+        return acceptSecondaryEku;
+    }
+
+    public void setAcceptSecondaryEku(boolean acceptSecondaryEku) {
+        this.acceptSecondaryEku = acceptSecondaryEku;
+    }
+
+    public boolean isAllowUpn() {
+        return allowUpn;
+    }
+
+    public void setAllowUpn(boolean allowUpn) {
+        this.allowUpn = allowUpn;
+    }
+
+    public boolean isUsingRsa() {
+        return usingRsa;
+    }
+
+    public void setUsingRsa(boolean usingRsa) {
+        this.usingRsa = usingRsa;
+    }
+
+    public boolean isRequireCrlChecking() {
+        return requireCrlChecking;
+    }
+
+    public void setRequireCrlChecking(boolean requireCrlChecking) {
+        this.requireCrlChecking = requireCrlChecking;
+    }
+
+    public int getDhMinBits() {
+        return dhMinBits;
+    }
+
+    public void setDhMinBits(int dhMinBits) {
+        this.dhMinBits = dhMinBits;
     }
 }
