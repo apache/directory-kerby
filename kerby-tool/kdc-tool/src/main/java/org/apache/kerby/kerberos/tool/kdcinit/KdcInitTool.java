@@ -96,12 +96,12 @@ public class KdcInitTool {
 
         if (adminKeytabFile.exists()) {
             System.err.println("The kadmin keytab already exists in " + adminKeytabFile
-                    + ", this tool maybe have been executed already.");
+                    + ", this tool may have been executed already.");
             return;
         }
         if (protocolKeytabFile.exists()) {
             System.err.println("The protocol keytab already exists in " + protocolKeytabFile
-                + ", this tool maybe have been executed already.");
+                + ", this tool may have been executed already.");
             return;
         }
 
