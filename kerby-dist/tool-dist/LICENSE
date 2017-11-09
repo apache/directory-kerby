@@ -209,3 +209,8 @@ to the terms and conditions of the following licenses.
 This project bundles the SLF4J library (MIT license):
 
 See licenses/LICENSE-slf4j.txt
+
+This project bundles the ASM library:
+
+See licenses/LICENSE-asm.txt
+
