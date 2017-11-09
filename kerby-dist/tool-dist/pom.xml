@@ -43,11 +43,6 @@
       <artifactId>kerb-client-api-all</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>token-provider</artifactId>
-      <version>${project.version}</version>
-    </dependency>
 
     <!-- For common and misc -->
     <dependency>
@@ -83,7 +78,6 @@
                 </goals>
                 <configuration>
                   <outputDirectory>target/lib</outputDirectory>
-                  <excludeTransitive>true</excludeTransitive>
                 </configuration>
               </execution>
             </executions>
