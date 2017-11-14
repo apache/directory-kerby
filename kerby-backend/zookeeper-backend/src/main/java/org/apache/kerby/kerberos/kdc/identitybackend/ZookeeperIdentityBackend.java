@@ -44,12 +44,14 @@ import java.util.Properties;
  * A Zookeeper based backend implementation. Currently it uses an embedded
  * Zookeeper. In follow up it will be enhanced to support standalone Zookeeper
  * cluster for replication and reliability.
+ * 
  */
 public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
     private static Thread zookeeperThread;
     private final ZooKeeperServerMain zooKeeperServer = new ZooKeeperServerMain();
-    private String zkHost;
+    private String zkHosts;
     private int zkPort;
+    private String serverStr;
     private File dataDir;
     private ZooKeeper zooKeeper;
     private static final Logger LOG = LoggerFactory.getLogger(ZookeeperIdentityBackend.class);
@@ -93,24 +95,30 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
      * Init Zookeeper Server and connection service, used to initialize the backend.
      */
     private void init() throws KrbException {
-        zkHost = getConfig().getString(ZKConfKey.ZK_HOST, true);
+        zkHosts = getConfig().getString(ZKConfKey.ZK_HOST, true);
         zkPort = getConfig().getInt(ZKConfKey.ZK_PORT, true);
-
-        String dataDirString = getConfig().getString(ZKConfKey.DATA_DIR, true);
-        if (dataDirString == null || dataDirString.isEmpty()) {
-            File zooKeeperDir = new File(getBackendConfig().getConfDir(), "zookeeper");
-            dataDir = new File(zooKeeperDir, "data");
+        String[] array = zkHosts.split(",");
+        if (array.length == 1) {
+            serverStr = array[0] + ":" + zkPort;
         } else {
-            dataDir = new File(dataDirString);
+            serverStr = zkHosts;
+            for (int i = 0; i != array.length; ++i) {
+                serverStr = serverStr.replaceAll(array[i], array[i] + ":" + zkPort);
+            }
         }
-
+        if (getConfig().getBoolean(ZKConfKey.EMBEDDED_ZK, true)) {
+            String dataDirString = getConfig().getString(ZKConfKey.DATA_DIR, true);
+            if (dataDirString == null || dataDirString.isEmpty()) {
+                File zooKeeperDir = new File(getBackendConfig().getConfDir(), "zookeeper");
+                dataDir = new File(zooKeeperDir, "data");
+            } else {
+                dataDir = new File(dataDirString);
+            }
         if (!dataDir.exists() && !dataDir.mkdirs()) {
             throw new KrbException("could not create data file dir " + dataDir);
         }
-
-        LOG.info("Data dir: " + dataDir);
-
-        if (getConfig().getBoolean(ZKConfKey.EMBEDDED_ZK, true)) {
+       
+            LOG.info("Data dir: " + dataDir);
             startEmbeddedZookeeper();
         }
         connectZK();
@@ -120,8 +128,8 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
      * Prepare connection to Zookeeper server.
      */
     private void connectZK() throws KrbException {
+        assert !serverStr.isEmpty() : " zkHosts may be empty ";
         try {
-            String serverStr = zkHost + ":" + zkPort;
             zooKeeper = new ZooKeeper(serverStr, 10000, new MyWatcher());
             while (true) {
                 if (!zooKeeper.getState().isConnected()) {
@@ -135,31 +143,28 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
                     break;
                 }
             }
-
         } catch (IOException e) {
             LOG.error("Error occurred while connecting to zookeeper.");
             throw new KrbException("Failed to prepare Zookeeper connection");
         }
     }
-
+    
     /**
      * Start the Zookeeper server
      */
     private void startEmbeddedZookeeper() throws KrbException {
+        assert dataDir != null : "data dir of embedded zk is null";
         Properties startupProperties = new Properties();
         startupProperties.put("dataDir", dataDir.getAbsolutePath());
         startupProperties.put("clientPort", zkPort);
-
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();
         try {
             quorumConfiguration.parseProperties(startupProperties);
         } catch (Exception e) {
             throw new KrbException("Loading quorum configuraiton failed", e);
         }
-
         final ServerConfig configuration = new ServerConfig();
         configuration.readFrom(quorumConfiguration);
-
         if (zookeeperThread == null) {
             zookeeperThread = new Thread() {
                 public void run() {
@@ -169,11 +174,11 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
                         LOG.warn(e.getMessage());
                     }
                 }
-            };
-            zookeeperThread.setDaemon(true);
-            zookeeperThread.start();
-        }
-        LOG.info("Embedded Zookeeper started.");
+        };
+        zookeeperThread.setDaemon(true);
+        zookeeperThread.start();
+    }
+    LOG.info("Embedded Zookeeper started.");
     }
 
     /**
