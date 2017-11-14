@@ -72,7 +72,7 @@ public class ArmoredRequest {
         KrbFastRequestState state = kdcRequest.getFastRequestState();
         fastAsArmor(state, kdcRequest.getArmorKey(), subKey, credential, kdcReq);
         kdcRequest.setFastRequestState(state);
-        kdcRequest.setOuterRequestBody(KrbCodec.encode(state.getFastOuterRequest()));
+        kdcRequest.setOuterRequestBody(KrbCodec.encode(state.getFastOuterRequest().getReqBody()));
         kdcReq.getPaData().addElement(makeFastEntry(state, kdcReq,
             kdcRequest.getOuterRequestBody()));
     }

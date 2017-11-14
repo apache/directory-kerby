@@ -24,12 +24,14 @@ import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
+import org.apache.kerby.kerberos.kerb.crypto.CheckSumHandler;
 import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.ap.ApOption;
 import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.type.ap.Authenticator;
+import org.apache.kerby.kerberos.kerb.type.base.CheckSum;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
@@ -218,6 +220,35 @@ public class TgsRequest extends KdcRequest {
         apReq.getApOptions().setFlag(ApOption.MUTUAL_REQUIRED);
 
         setTgtSessionKey(tgtTicket.getEncPart().getKey());
+
+        CheckSum checkSum = authenticator.getCksum();
+        if (checkSum != null) {
+            byte[] reqBody;
+            try {
+                reqBody = KrbCodec.encode(getKdcReq().getReqBody());
+            } catch (KrbException e) {
+                String errMessage = "Encode the ReqBody failed. " + e.getMessage();
+                LOG.error(errMessage);
+                throw new KrbException(errMessage);
+            }
+            boolean success;
+            try {
+                if (authenticator.getSubKey() != null) {
+                    success = CheckSumHandler.verifyWithKey(checkSum, reqBody,
+                    authenticator.getSubKey().getKeyData(), KeyUsage.TGS_REQ_AUTH_CKSUM);
+                } else {
+                    success = CheckSumHandler.verify(checkSum, reqBody);
+                }
+
+            } catch (KrbException e) {
+                String errMessage = "Verify the KdcReqBody failed. " + e.getMessage();
+                LOG.error(errMessage);
+                throw new KrbException(errMessage);
+            }
+            if (!success) {
+                throw new KrbException("Verify the KdcReqBody failed. ");
+            }
+        }
     }
 
     /**

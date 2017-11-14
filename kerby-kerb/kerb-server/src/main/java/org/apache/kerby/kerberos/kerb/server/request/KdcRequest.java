@@ -283,13 +283,17 @@ public abstract class KdcRequest {
                         LOG.error(errMessage);
                         throw new KrbException(errMessage);
                     }
+                    boolean success;
                     try {
-                        CheckSumHandler.verifyWithKey(checkSum, reqBody,
+                        success = CheckSumHandler.verifyWithKey(checkSum, reqBody,
                             getArmorKey().getKeyData(), KeyUsage.FAST_REQ_CHKSUM);
                     } catch (KrbException e) {
-                        String errMessage = "Verify the ReqBody failed. " + e.getMessage();
+                        String errMessage = "Verify the KdcReqBody failed. " + e.getMessage();
                         LOG.error(errMessage);
                         throw new KrbException(errMessage);
+                    }
+                    if (!success) {
+                        throw new KrbException("Verify the KdcReqBody failed. ");
                     }
                 }
             }
