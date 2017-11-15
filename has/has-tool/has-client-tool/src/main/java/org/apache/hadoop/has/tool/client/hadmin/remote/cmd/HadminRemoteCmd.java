@@ -1,0 +1,49 @@
+/**
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+package org.apache.hadoop.has.tool.client.hadmin.remote.cmd;
+
+import org.apache.hadoop.has.client.HasAdminClient;
+import org.apache.hadoop.has.client.HasAuthAdminClient;
+import org.apache.hadoop.has.common.HasException;
+
+public abstract class HadminRemoteCmd {
+
+    private HasAdminClient hadmin;
+    private HasAuthAdminClient authHadmin;
+
+    public HadminRemoteCmd(HasAdminClient hadmin, HasAuthAdminClient authHadminClient) {
+        this.hadmin = hadmin;
+        this.authHadmin = authHadminClient;
+    }
+
+    protected HasAdminClient getHadmin() {
+        return hadmin;
+    }
+
+    protected HasAuthAdminClient getAuthHadmin() {
+        return authHadmin;
+    }
+
+    /**
+     * Execute the hadmin cmd.
+     * @param input Input cmd to execute
+     */
+    public abstract void execute(String[] input) throws HasException;
+}

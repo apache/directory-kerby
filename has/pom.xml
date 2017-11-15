@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>18</version>
+    <relativePath/>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.hadoop</groupId>
+  <artifactId>has-project</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <description>Hadoop Authentication Server</description>
+  <name>Hadoop Authentication Server</name>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>has-common</module>
+    <module>has-plugins</module>
+    <module>has-server</module>
+    <module>has-client</module>
+    <module>has-dist</module>
+    <module>has-tool</module>
+  </modules>
+
+  <properties>
+    <commons-codec.version>1.4</commons-codec.version>
+    <kerby.version>1.1.0-SNAPSHOT</kerby.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <buildtools.dir>${basedir}/build-tools</buildtools.dir>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.17</version>
+        <configuration>
+          <configLocation>${buildtools.dir}/has-checkstyle.xml</configLocation>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <encoding>UTF-8</encoding>
+          <failOnViolation>true</failOnViolation>
+        </configuration>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.17</version>
+        <configuration>
+          <runOrder>alphabetical</runOrder>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>nochecks</id>
+      <properties>
+        <pmd.skip>true</pmd.skip>
+        <checkstyle.skip>true</checkstyle.skip>
+      </properties>
+    </profile>
+    <profile>
+      <id>activate-buildtools-in-module</id>
+      <activation>
+        <file>
+          <exists>${basedir}/../build-tools/has-checkstyle.xml</exists>
+        </file>
+      </activation>
+      <properties>
+        <buildtools.dir>${basedir}/../build-tools</buildtools.dir>
+      </properties>
+    </profile>
+    <profile>
+      <id>activate-buildtools-in-submodule</id>
+      <activation>
+        <file>
+          <exists>${basedir}/../../build-tools/has-checkstyle.xml</exists>
+        </file>
+      </activation>
+      <properties>
+        <buildtools.dir>${basedir}/../../build-tools</buildtools.dir>
+      </properties>
+    </profile>
+  </profiles>
+
+</project>
+
+
