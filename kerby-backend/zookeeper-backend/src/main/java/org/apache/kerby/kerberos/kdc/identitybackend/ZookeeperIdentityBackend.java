@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;

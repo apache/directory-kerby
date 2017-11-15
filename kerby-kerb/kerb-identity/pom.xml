@@ -34,6 +34,11 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-core</artifactId>
       <version>${project.version}</version>
     </dependency>

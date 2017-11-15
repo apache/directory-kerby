@@ -6,27 +6,28 @@
  *  to you under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
- *  
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
- *  
+ *  under the License.
+ *
  */
-package org.apache.kerby.kerberos.kerb.identity;
+package org.apache.kerby.kerberos.kerb.request;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -39,10 +40,10 @@ public class KrbIdentity {
     private PrincipalName principal;
 
     /** the key version */
-    private int keyVersion = 1;
+    private int keyVersion  = 1;
 
     /** KDC flags */
-    private int kdcFlags = 0;
+    private int kdcFlags    = 0;
 
     /** flag to indicate if this identity was disabled */
     private boolean disabled;
@@ -51,17 +52,20 @@ public class KrbIdentity {
     private boolean locked;
 
     /** the expiration time of the identity, default set to never expire */
-    private KerberosTime expireTime = KerberosTime.NEVER;
+    private KerberosTime expireTime  = KerberosTime.NEVER;
 
     /** the creation time of the identity */
     private KerberosTime createdTime = KerberosTime.now();
 
     /** the keys associated with this identity */
-    private Map<EncryptionType, EncryptionKey> keys =
-            new HashMap<EncryptionType, EncryptionKey>();
+    private final Map<EncryptionType, EncryptionKey> keys = new HashMap<>();
 
     public KrbIdentity(String principalName) {
         this.principal = new PrincipalName(principalName);
+    }
+
+    public KrbIdentity(PrincipalName principalName) {
+        this.principal = principalName;
     }
 
     public String getPrincipalName() {
@@ -70,6 +74,10 @@ public class KrbIdentity {
 
     public void setPrincipalName(String newPrincipalName) {
         principal = new PrincipalName(newPrincipalName);
+    }
+
+    public void setPrincipalName(PrincipalName newPrincipalName) {
+        principal = newPrincipalName;
     }
 
     public PrincipalName getPrincipal() {
@@ -117,7 +125,7 @@ public class KrbIdentity {
     }
 
     public void addKeys(List<EncryptionKey> encKeys) {
-        for (EncryptionKey key : encKeys) {
+        for (final EncryptionKey key : encKeys) {
             keys.put(key.getKeyType(), key);
         }
     }
@@ -157,7 +165,7 @@ public class KrbIdentity {
         }
 
         if (obj instanceof KrbIdentity) {
-            KrbIdentity other = (KrbIdentity) obj;
+            final KrbIdentity other = (KrbIdentity) obj;
             if (principal == null) {
                 if (other.principal != null) {
                     return false;
@@ -174,8 +182,7 @@ public class KrbIdentity {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((principal == null) ? 0
-                : principal.hashCode());
+        result = prime * result + ((principal == null) ? 0 : principal.hashCode());
         return result;
     }
 }
