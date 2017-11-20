@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.identity;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 
 /**
  * Batch operations support to create/update/delete principal accounts

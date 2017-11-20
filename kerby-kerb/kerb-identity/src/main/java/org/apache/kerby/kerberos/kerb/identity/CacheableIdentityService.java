@@ -22,8 +22,9 @@ package org.apache.kerby.kerberos.kerb.identity;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.config.Configured;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.request.KdcClientRequest;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
-import org.apache.kerby.kerberos.kerb.type.kdc.KdcClientRequest;
 import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 
 import java.util.LinkedHashMap;

@@ -23,6 +23,7 @@ import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
+import org.apache.kerby.kerberos.kerb.request.KdcClientRequest;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
@@ -32,11 +33,11 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
+import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.base.TransitedEncoding;
 import org.apache.kerby.kerberos.kerb.type.base.TransitedEncodingType;
-import org.apache.kerby.kerberos.kerb.type.kdc.KdcClientRequest;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcOption;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcOptions;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcReq;
@@ -229,11 +230,26 @@ public abstract class TicketIssuer {
         clientRequest.setClientAddress(kdcRequest.getClientAddress());
         clientRequest.setClientKey(kdcRequest.getClientKey());
         clientRequest.setClientPrincipal(kdcRequest.getClientPrincipal());
+        clientRequest.setClientEntry(kdcRequest.getClientEntry());
+        clientRequest.setServerPrincipal(kdcRequest.getServerPrincipal());
+        clientRequest.setServerEntry(kdcRequest.getServerEntry());
+        clientRequest.setKdcRealm(kdcRequest.getKdcContext().getKdcRealm());
         clientRequest.setEncryptionType(kdcRequest.getEncryptionType());
         clientRequest.setPkinit(kdcRequest.isPkinit());
         clientRequest.setPreAuthenticated(kdcRequest.isPreAuthenticated());
         clientRequest.setToken(kdcRequest.getToken());
-        clientRequest.setToken(kdcRequest.isToken());
+        clientRequest.setIsToken(kdcRequest.isToken());
+        KrbMessageType msgType = kdcRequest.getKdcReq().getMsgType();
+        clientRequest.setMsgType(msgType);
+        if (msgType == KrbMessageType.TGS_REQ) {
+            TgsRequest tgsRequest = (TgsRequest) kdcRequest;
+            clientRequest.setTgt(tgsRequest.getTgtTicket());
+            clientRequest.setTgsName(tgsRequest.getTgsPrincipal());
+            clientRequest.setTgsKeyType(tgsRequest.getEncryptionType());
+            clientRequest.setTgsKey(tgsRequest.getTgsEntry().getKey(tgsRequest.getEncryptionType()));
+            clientRequest.setTgsSessionKey(tgsRequest.getTgtSessionKey());
+            clientRequest.setTgsServerKey(tgsRequest.getServerKey());
+        }
 
         return getKdcContext().getIdentityService()
                 .getIdentityAuthorizationData(clientRequest, encTicketPart);

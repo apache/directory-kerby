@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 
 import java.util.ArrayList;
 import java.util.Collections;

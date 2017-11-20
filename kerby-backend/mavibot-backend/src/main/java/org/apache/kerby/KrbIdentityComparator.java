@@ -21,7 +21,7 @@ package org.apache.kerby;
 
 import java.util.Comparator;
 
-import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 
 /**
  * Comparator for KrbIdentity

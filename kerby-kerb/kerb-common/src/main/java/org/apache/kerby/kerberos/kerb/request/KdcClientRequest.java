@@ -17,14 +17,16 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.kerb.type.kdc;
+package org.apache.kerby.kerberos.kerb.request;
 
 import java.net.InetAddress;
 
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
+import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
 /**
  * This class holds details of the client request which is passed through to the IdentityService
@@ -32,15 +34,107 @@ import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
  */
 public class KdcClientRequest {
 
+    private KrbMessageType msgType;
+    private Ticket tgt;
+    private PrincipalName tgsName;
+    private EncryptionType tgsKeyType;
+    private EncryptionKey tgsKey;
+    private EncryptionKey tgsSessionKey;
+    private EncryptionKey tgsServerKey;
+    
     private boolean isPreAuthenticated;
     private InetAddress clientAddress;
     private EncryptionType encryptionType;
     private EncryptionKey clientKey;
     private PrincipalName clientPrincipal;
+    private KrbIdentity clientEntry;
+    private PrincipalName serverPrincipal;
+    private KrbIdentity serverEntry;
+    private String kdcRealm;
     private AuthToken token;
     private boolean isToken;
     private boolean isPkinit;
     private boolean isAnonymous;
+
+    public KrbMessageType getMsgType() {
+        return msgType;
+    }
+
+    public void setMsgType(KrbMessageType msgType) {
+        this.msgType = msgType;
+    }
+
+    public Ticket getTgt() {
+        return tgt;
+    }
+
+    public void setTgt(Ticket tgt) {
+        this.tgt = tgt;
+    }
+
+    public PrincipalName getTgsName() {
+        return tgsName;
+    }
+
+    public void setTgsName(PrincipalName tgsName) {
+        this.tgsName = tgsName;
+    }
+
+    public EncryptionType getTgsKeyType() {
+        return tgsKeyType;
+    }
+
+    public void setTgsKeyType(EncryptionType tgsKeyType) {
+        this.tgsKeyType = tgsKeyType;
+    }
+
+    public EncryptionKey getTgsKey() {
+        return tgsKey;
+    }
+
+    public void setTgsKey(EncryptionKey tgsKey) {
+        this.tgsKey = tgsKey;
+    }
+
+    public String getKdcRealm() {
+        return kdcRealm;
+    }
+
+    public void setKdcRealm(String kdcRealm) {
+        this.kdcRealm = kdcRealm;
+    }
+
+    public EncryptionKey getTgsSessionKey() {
+        return tgsSessionKey;
+    }
+
+    public void setTgsSessionKey(EncryptionKey tgsSessionKey) {
+        this.tgsSessionKey = tgsSessionKey;
+    }
+
+    public EncryptionKey getTgsServerKey() {
+        return tgsServerKey;
+    }
+
+    public void setTgsServerKey(EncryptionKey tgsServerKey) {
+        this.tgsServerKey = tgsServerKey;
+    }
+
+    public KrbIdentity getClientEntry() {
+        return clientEntry;
+    }
+
+    public void setClientEntry(KrbIdentity clientEntry) {
+        this.clientEntry = clientEntry;
+    }
+
+    public KrbIdentity getServerEntry() {
+        return serverEntry;
+    }
+
+    public void setServerEntry(KrbIdentity serverEntry) {
+        this.serverEntry = serverEntry;
+    }
 
     public boolean isPreAuthenticated() {
         return isPreAuthenticated;
@@ -82,6 +176,14 @@ public class KdcClientRequest {
         this.clientPrincipal = clientPrincipal;
     }
 
+    public PrincipalName getServerPrincipal() {
+        return serverPrincipal;
+    }
+
+    public void setServerPrincipal(PrincipalName serverPrincipal) {
+        this.serverPrincipal = serverPrincipal;
+    }
+
     public AuthToken getToken() {
         return token;
     }
@@ -94,7 +196,7 @@ public class KdcClientRequest {
         return isToken;
     }
 
-    public void setToken(boolean isToken) {
+    public void setIsToken(boolean isToken) {
         this.isToken = isToken;
     }
 
