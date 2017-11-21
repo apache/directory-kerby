@@ -167,7 +167,7 @@ The Apache Kerby is also available as a Maven dependency.
 </dependency>
 ```
 - please replace the ${kerby-version} with the release version.
-- Apache Kerby 1.0.0-RC1 is the latest release and recommended version for all users.
+- Apache Kerby 1.0.1 is the latest release and recommended version for all users.
 
 ### License
 Apache License V2.0
@@ -179,12 +179,37 @@ Apache License V2.0
 - Kerby Developers List: kerby@directory.apache.org [Subscribe](kerby-subscribe@directory.apache.org)
 
 ### Downloads
-- [Release 1.0.0](https://directory.apache.org/kerby/download/download-sources.html)
+- [Release 1.0.1](https://directory.apache.org/kerby/download/download-sources.html)
 
 ### News
+- September 4th 2017, Apache Kerby 1.0.1 is released.
 - May 13th 2017, Apache Kerby 1.0.0 is released.
 - March 14th 2016, Apache Kerby 1.0.0-RC2 is released.
 - Sep 23 2015, the first release 1.0.0-RC1 of Kerby was released.
+
+### Apache Kerby 1.0.1 Release Notes
+
+Bug
+
+    [DIRKRB-614] - Kerby (simplekdc) fails to handle unknown PADATA
+    [DIRKRB-629] - ICMP Port Unreachable error message with GSS + default transport
+    [DIRKRB-631] - Not compatible with MIT Kerberos 1.11+
+    [DIRKRB-633] - "Invalid signature file digest for Manifest main attributes" exception after running kinit tool
+    [DIRKRB-634] - Failed to get service granting ticket from MIT KDC using Kerby client
+    [DIRKRB-644] - ClassCastException in TokenPreauth
+    [DIRKRB-645] - Start KerbyKdcServer should be failed if kdc_port already in use
+
+Improvement
+
+    [DIRKRB-635] - Backends should be optional when building kerby
+    [DIRKRB-641] - Implement kinit -k -i
+    [DIRKRB-643] - Implement kinit -l -r
+    [DIRKRB-646] - Add the feature of parsing time duration for kinit tool
+
+New Feature
+
+    [DIRKRB-632] - Put claims from the JWT access token into the authorization data of the ticket
+
 
 ### Apache Kerby 1.0.0 Release Notes
 
