@@ -179,13 +179,71 @@ Apache License V2.0
 - Kerby Developers List: kerby@directory.apache.org [Subscribe](kerby-subscribe@directory.apache.org)
 
 ### Downloads
-- [Release 1.0.1](https://directory.apache.org/kerby/download/download-sources.html)
+- [Release 1.1.0](https://directory.apache.org/kerby/download/download-sources.html)
 
 ### News
+- November 2017, Apache Kerby 1.1.0 is released.
 - September 4th 2017, Apache Kerby 1.0.1 is released.
 - May 13th 2017, Apache Kerby 1.0.0 is released.
 - March 14th 2016, Apache Kerby 1.0.0-RC2 is released.
 - Sep 23 2015, the first release 1.0.0-RC1 of Kerby was released.
+
+### Apache Kerby 1.1.0 Release Notes
+
+Sub-task
+
+    [DIRKRB-123] - Implementing cross-realm support
+    [DIRKRB-551] - Data type conversion between GSSAPI interface and Kerby
+    [DIRKRB-555] - Implement GSSNameSpi interface
+    [DIRKRB-559] - Validataion of ApReq and ApRep message in peer node
+    [DIRKRB-560] - Implement GSSContextSpi interface
+    [DIRKRB-565] - Implement Gss tokens defined in RFC 4121
+    [DIRKRB-566] - Implement Gss tokens defined in RFC 1964
+    [DIRKRB-568] - Using RFC 4121 tokens in KerbyContext
+    [DIRKRB-571] - Add encryptRaw interface for GssToken encryption
+    [DIRKRB-576] - Add test for client-server based on Kerby GssApi
+    [DIRKRB-581] - Imcompatible token header in init context against JDK GssApi
+
+Bug
+
+    [DIRKRB-520] - Fix findbugs issuse in Kerby ASN1, Kerby Config and Kerby PKIX
+    [DIRKRB-636] - NPE in GssInitCred when no initial GSSCredential is passed to manager.createContext
+    [DIRKRB-637] - NPE in GssAcceptCred when no initial GSSCredential is passed to manager.createContext
+    [DIRKRB-638] - KerbyGssAppTest fails when there is no keytab on the service side
+    [DIRKRB-642] - Remove the bytes util functions in GssTokenBase
+    [DIRKRB-647] - Compilation error with java7 in gss module
+    [DIRKRB-652] - Support dynamic load token provider
+    [DIRKRB-656] - Compatibility problem with Kerberos when getting service ticket
+    [DIRKRB-658] - KerbyTokenAppTest failed on Mac
+    [DIRKRB-660] - Compatibility problem with hadoop when getting default credential cache
+    [DIRKRB-664] - Upgrade Nimbus dependency
+    [DIRKRB-666] - NPE if klist.sh is called on an empty cache
+    [DIRKRB-667] - Kerby and Tool distributions are lacking required jars
+    [DIRKRB-670] - Add checksum verification in TgsRequest
+
+Improvement
+
+    [DIRKRB-651] - Add support to send a JWT AccessToken via the GSS API
+    [DIRKRB-653] - Implement kinit -c -S to get service ticket
+    [DIRKRB-657] - Implement kinit tool to get tgt ticket from remote realm
+    [DIRKRB-661] - Add duration time parse support when parsing krb5.conf
+    [DIRKRB-668] - Enable KDC backend connect to the HA Zookeeper Cluster
+    [DIRKRB-669] - Authorization data needed by backend code create a circular project reference
+
+New Feature
+
+    [DIRKRB-535] - Implementing GSSAPI module based on Kerby Kerberos library
+    [DIRKRB-649] - Cross realm server side implementation
+
+Task
+
+    [DIRKRB-654] - Add support to receive a JWT AccessToken via the GSS API
+    [DIRKRB-655] - Add setting up cross realm authentication guide
+
+Test
+
+    [DIRKRB-663] - Add some unit tests for cross realm
+
 
 ### Apache Kerby 1.0.1 Release Notes
 
