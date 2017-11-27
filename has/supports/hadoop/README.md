@@ -18,7 +18,7 @@ mvn package -Pdist,native -Dtar -DskipTests -Dmaven.javadoc.skip=true -Dcontaine
 ## 2. Distribute and configure Keytab files
 
 ### Create keytab and deploy krb5.conf and has-client.conf
-Please look at [How to start HAS](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/has-start.md) for details.
+Please look at [How to start HAS](https://github.com/apache/directory-kerby/blob/has-project/has/doc/has-start.md) for details.
 
 ### Distribute keytab files to the corresponding nodes.
 
@@ -240,7 +240,7 @@ cp etc/hadoop/ssl-server.xml.example etc/hadoop/ssl-server.xml
 ```
 
 Configure ssl-server.xml:
-Please look at [How to deploy https](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/deploy-https.md).
+Please look at [How to deploy https](https://github.com/apache/directory-kerby/blob/has-project/has/doc/deploy-https.md).
 
 ## 4. Configure container-executor
 
@@ -275,7 +275,7 @@ container-executor --checksetup
 ## 5. Setting up cross-realm for distcp
 
 ### Setup cross realm trust between realms
-Please look at [How to setup cross-realm](https://github.com/intel-bigdata/has/blob/cross-realm/doc/cross-realm.md).
+Please look at [How to setup cross-realm](https://github.com/apache/directory-kerby/blob/has-project/has/doc/cross-realm.md).
 
 ### Update core-site.xml
 

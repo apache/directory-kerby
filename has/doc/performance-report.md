@@ -33,7 +33,7 @@ The test use Alibaba Cloud Elastic Compute Service, detailed test environment li
 
 ## 3. Test Method
 
-By using [login-test](https://github.com/Intel-bigdata/HAS/blob/master/has-dist/bin/login-test.sh) scripting tool, the test can be broadly divided into four steps:
+By using [login-test](https://github.com/apache/directory-kerby/blob/has-project/has/has-dist/bin/login-test.sh) scripting tool, the test can be broadly divided into four steps:
 
 1. Add principals to HAS server
 2. Export keytab files to HAS Client  

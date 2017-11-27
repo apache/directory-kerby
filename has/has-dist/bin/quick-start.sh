@@ -31,7 +31,7 @@ sleep 2s
 
 # 3. Set Realm
 echo "Set Realm..."
-curl -X PUT "http://localhost:8091/has/v1/conf/setKdcRealm?realm=ALIYUN.COM"
+curl -X PUT "http://localhost:8091/has/v1/conf/setKdcRealm?realm=EXAMPLE.COM"
 sleep 2s
 
 # 4. Start HAS

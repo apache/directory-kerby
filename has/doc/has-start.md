@@ -5,19 +5,19 @@ How to start
 
 ### Download HAS source code:
 ```
-git clone https://github.com/Intel-bigdata/HAS.git
+git clone https://github.com/apache/directory-kerby.git -b has-project
 ```
 
 ### Install HAS:
 ```
-cd HAS
+cd directory-kerby/has
 mvn clean install
 ```
 
 ## 2. Start and configure HAS server
 
 ### Deploy https
-Please look at [How to deploy https](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/deploy-https.md) for details.
+Please look at [How to deploy https](https://github.com/apache/directory-kerby/blob/has-project/has/doc/deploy-https.md) for details.
 
 ### Configure has-server.conf in <conf_dir>:
 An example of has-server.conf:
@@ -71,7 +71,7 @@ KdcInitTool: config_kdcBackend json /tmp/has/jsonbackend
 KdcInitTool: config_kdcBackend mysql jdbc:mysql://127.0.0.1:3306/mysqlbackend root passwd
 KdcInitTool: exit
 ```
-For mysql backend, please refer to [How to use mysql backend](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/mysql-backend.md) for details.
+For mysql backend, please refer to [How to use mysql backend](https://github.com/apache/directory-kerby/blob/has-project/has/doc/mysql-backend.md) for details.
 
 ### Configure HAS KDC:
 ```
@@ -104,7 +104,7 @@ KdcInitTool: exit
 ```
 
 ### Deploy http spnego
-Please look at [How to deploy http spnego](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/deploy-spnego.md) for details.
+Please look at [How to deploy http spnego](https://github.com/apache/directory-kerby/blob/has-project/has/doc/deploy-spnego.md) for details.
 Please restart the HAS server
 
 ```

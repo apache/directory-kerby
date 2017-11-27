@@ -21,7 +21,7 @@ package org.apache.hadoop.has.tool.server.hadmin.local.cmd;
 
 import org.apache.hadoop.has.common.HasException;
 import org.apache.hadoop.has.server.admin.LocalHasAdmin;
-import org.apache.kerby.kerberos.kerb.identity.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 

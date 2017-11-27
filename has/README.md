@@ -8,11 +8,11 @@ A dedicated Hadoop Authentication Server to support various authentication mecha
 * New authentication mechanism can be customized and plugined.
 
 # Architecture
-![](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/has-overall.png)
+![](https://github.com/apache/directory-kerby/blob/has-project/has/doc/has-overall.png)
 
 # Design
 Assuming existing users are stored in a SQL database (like MySQL), the detailed design and workflow may go like the following:
-![](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/has-design.png)
+![](https://github.com/apache/directory-kerby/blob/has-project/has/doc/has-design.png)
 
 
 # New mechanism plugin API
@@ -42,36 +42,36 @@ AuthToken authenticate(AuthToken userToken) throws HasAuthenException
 ```
 
 ## REST API
-Please look at [REST API](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/rest-api.md) for details.
+Please look at [REST API](https://github.com/apache/directory-kerby/blob/has-project/has/doc/rest-api.md) for details.
 
 ## How to start
-Please look at [How to start](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/has-start.md) for details.
+Please look at [How to start](https://github.com/apache/directory-kerby/blob/has-project/has/doc/has-start.md) for details.
 
 ## High Availability
-Please look at [High Availability](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/has-ha.md) for details.
+Please look at [High Availability](https://github.com/apache/directory-kerby/blob/has-project/has/doc/has-ha.md) for details.
 
 ## Cross Realm
-Please look at [How to setup cross-realm](https://github.com/intel-bigdata/has/blob/cross-realm/doc/cross-realm.md) for details.
+Please look at [How to setup cross-realm](https://github.com/apache/directory-kerby/blob/has-project/has/doc/cross-realm.md) for details.
 
 ## Enable Hadoop ecosystem components
 
-* [Enable Hadoop](https://github.com/Intel-bigdata/HAS/blob/release-1.0.0/supports/hadoop/README.md)
+* [Enable Hadoop](https://github.com/apache/directory-kerby/blob/has-project/has/supports/hadoop/README.md)
 
-* [Enable Zookeeper](https://github.com/Intel-bigdata/HAS/blob/release-1.0.0/supports/zookeeper/README.md)
+* [Enable Zookeeper](https://github.com/apache/directory-kerby/blob/has-project/has/supports/zookeeper/README.md)
 
-* [Enable HBase](https://github.com/Intel-bigdata/HAS/blob/release-1.0.0/supports/hbase/README.md)
+* [Enable HBase](https://github.com/apache/directory-kerby/blob/has-project/has/supports/hbase/README.md)
 
-* [Enable Hive](https://github.com/Intel-bigdata/HAS/blob/release-1.0.0/supports/hive/README.md)
+* [Enable Hive](https://github.com/apache/directory-kerby/blob/has-project/has/supports/hive/README.md)
 
-* [Enable Phoenix](https://github.com/Intel-bigdata/HAS/blob/release-1.0.0/supports/phoenix/README.md)
+* [Enable Phoenix](https://github.com/apache/directory-kerby/blob/has-project/has/supports/phoenix/README.md)
 
-* [Enable Thrift](https://github.com/Intel-bigdata/HAS/blob/release-1.0.0/supports/thrift/README.md)
+* [Enable Thrift](https://github.com/apache/directory-kerby/blob/has-project/has/supports/thrift/README.md)
 
-* [Enable Spark](https://github.com/Intel-bigdata/HAS/blob/release-1.0.0/supports/spark/README.md)
+* [Enable Spark](https://github.com/apache/directory-kerby/blob/has-project/has/supports/spark/README.md)
 
-* [Enable Oozie](https://github.com/Intel-bigdata/HAS/blob/release-1.0.0/supports/oozie/README.md)
+* [Enable Oozie](https://github.com/apache/directory-kerby/blob/has-project/has/supports/oozie/README.md)
 
-* [Enable Presto](https://github.com/Intel-bigdata/HAS/blob/release-1.0.0/supports/presto/README.md)
+* [Enable Presto](https://github.com/apache/directory-kerby/blob/has-project/has/supports/presto/README.md)
 
 ## List of supported Hadoop ecosystem components
 
@@ -90,4 +90,4 @@ Please look at [How to setup cross-realm](https://github.com/intel-bigdata/has/b
 | Sqoop                   | Yes                         | No                   | No                       |
 
 ## Performance test report
-Please look at [Performance test report](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/performance-report.md) for details.
+Please look at [Performance test report](https://github.com/apache/directory-kerby/blob/has-project/has/doc/performance-report.md) for details.

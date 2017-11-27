@@ -39,7 +39,7 @@ The two redundant HAS servers must have same https ports. Below are examples:
 
 The two redundant HAS servers must use **mysql** backend, and have same *mysql_url*, *mysql_user* and *mysql_password*.
 
-Please look at [How to use mysql backend](https://github.com/intel-bigdata/has/blob/release-1.0.0/doc/mysql-backend.md) for mysql backend configuration.
+Please look at [How to use mysql backend](https://github.com/apache/directory-kerby/blob/has-project/has/doc/mysql-backend.md) for mysql backend configuration.
 
 ### 4. Configure HAS KDC
 
