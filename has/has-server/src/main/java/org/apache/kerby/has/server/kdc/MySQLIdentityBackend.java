@@ -130,7 +130,8 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
                 + "DEFAULT 1, kdc_flags INTEGER DEFAULT 0, disabled bool "
                 + "DEFAULT NULL, locked bool DEFAULT NULL, expire_time "
                 + "VARCHAR(255) DEFAULT NULL, created_time VARCHAR(255) "
-                + "DEFAULT NULL, PRIMARY KEY (principal) ) ENGINE=INNODB;";
+                + "DEFAULT NULL, PRIMARY KEY (principal) ) ENGINE=INNODB "
+                + "DEFAULT CHARSET=utf8;";
             preIdentity = connection.prepareStatement(stmIdentity);
             preIdentity.executeUpdate();
 
@@ -141,7 +142,7 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
                 + "key_value BLOB DEFAULT NULL, principal VARCHAR(255) NOT NULL,"
                 + "PRIMARY KEY (key_id), INDEX (principal), FOREIGN KEY "
                 + "(principal) REFERENCES " + identityTable + "(principal) "
-                + ") ENGINE=INNODB;";
+                + ") ENGINE=INNODB DEFAULT CHARSET=utf8;";
             preKey = connection.prepareStatement(stmKey);
             preKey.executeUpdate();
 

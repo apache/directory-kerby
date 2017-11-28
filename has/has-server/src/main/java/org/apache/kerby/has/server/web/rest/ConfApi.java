@@ -107,8 +107,8 @@ public class ConfApi {
     public Response configKdcBackend(
         @QueryParam("backendType") final String backendType,
         @QueryParam("dir") @DefaultValue("/tmp/has/jsonbackend") final String dir,
-        @QueryParam("driver") @DefaultValue("com.mysql.jdbc.Driver") final String driver,
-        @QueryParam("url") @DefaultValue("jdbc:mysql://127.0.0.1:3306/mysqlbackend") final String url,
+        @QueryParam("driver") @DefaultValue("org.drizzle.jdbc.DrizzleDriver") final String driver,
+        @QueryParam("url") @DefaultValue("jdbc:mysql:thin://127.0.0.1:3306/mysqlbackend") final String url,
         @QueryParam("user") @DefaultValue("root") final String user,
         @QueryParam("password") @DefaultValue("passwd") final String password) {
 
@@ -131,7 +131,8 @@ public class ConfApi {
             } else if ("mysql".equals(backendType)) {
                 WebServer.LOG.info("Set MySQL backend...");
                 try {
-                    String mysqlConfig = "mysql_driver = " + driver + "\nmysql_url = " + url
+                    String drizzleUrl = url.replace("jdbc:mysql:", "jdbc:mysql:thin:");
+                    String mysqlConfig = "mysql_driver = " + driver + "\nmysql_url = " + drizzleUrl
                         + "\nmysql_user = " + user + "\nmysql_password = " + password;
                     Map<String, String> values = new HashMap<>();
                     values.put("_JAR_", "org.apache.kerby.has.server.kdc.MySQLIdentityBackend");

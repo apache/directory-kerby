@@ -25,8 +25,8 @@ import org.apache.kerby.config.ConfigKey;
  * Define all the MySQL backend related configuration items with default values.
  */
 public enum MySQLConfKey implements ConfigKey {
-    MYSQL_DRIVER("com.mysql.jdbc.Driver"),
-    MYSQL_URL("jdbc:mysql://127.0.0.1:3306/mysqlbackend"),
+    MYSQL_DRIVER("org.drizzle.jdbc.DrizzleDriver"),
+    MYSQL_URL("jdbc:mysql:thin://127.0.0.1:3306/mysqlbackend"),
     MYSQL_USER("root"),
     MYSQL_PASSWORD("passwd");
 
