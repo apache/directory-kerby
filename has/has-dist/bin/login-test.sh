@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-APP_MAIN=org.apache.hadoop.has.tool.client.hclient.HasClientLoginTool
+APP_MAIN=org.apache.kerby.has.tool.client.hclient.HasClientLoginTool
 
 # Get HAS_HOME directory
 bin=`dirname "$0"`

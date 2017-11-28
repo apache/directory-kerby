@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-APP_MAIN=org.apache.hadoop.has.tool.client.klist.KlistTool
+APP_MAIN=org.apache.kerby.has.tool.client.klist.KlistTool
 
 # Get HAS_HOME directory
 bin=`dirname "$0"`

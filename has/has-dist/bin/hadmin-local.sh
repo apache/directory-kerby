@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-APP_MAIN=org.apache.hadoop.has.tool.server.hadmin.local.HadminLocalTool
+APP_MAIN=org.apache.kerby.has.tool.server.hadmin.local.HadminLocalTool
 
 # Reset HAS_CONF_DIR if CONF_DIR not null
 if [ X"$1" = X"-k" ]; then

@@ -27,7 +27,7 @@ usage()
 CONF_DIR=$1
 WORK_DIR=$2
 pid=/tmp/has.pid # Pid file to save pid numbers
-APP_MAIN=org.apache.hadoop.has.server.HasServer
+APP_MAIN=org.apache.kerby.has.server.HasServer
 
 # Reset HAS_CONF_DIR and HAS_WORK_DIR if CONF_DIR or WORK_DIR not null
 if [ "$CONF_DIR" != "" ]; then

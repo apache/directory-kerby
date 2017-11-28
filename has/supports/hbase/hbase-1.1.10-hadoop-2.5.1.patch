@@ -8,7 +8,7 @@ index ca0fce2..b43476d 100644
        ? "com.ibm.security.auth.module.Krb5LoginModule"
 -      : "com.sun.security.auth.module.Krb5LoginModule";
 +//      : "com.sun.security.auth.module.Krb5LoginModule";
-+      :"org.apache.hadoop.has.client.HasLoginModule";
++      :"org.apache.kerby.has.client.HasLoginModule";
    }
    
    public static Oid getOidInstance(String oidName) 

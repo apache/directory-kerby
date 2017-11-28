@@ -17,7 +17,7 @@
 # limitations under the License.
 
 CONF_DIR=$1
-APP_MAIN=org.apache.hadoop.has.tool.client.hadmin.remote.HadminRemoteTool
+APP_MAIN=org.apache.kerby.has.tool.client.hadmin.remote.HadminRemoteTool
 
 # Reset HAS_CONF_DIR if CONF_DIR not null
 if [ "$CONF_DIR" != "" ]; then
