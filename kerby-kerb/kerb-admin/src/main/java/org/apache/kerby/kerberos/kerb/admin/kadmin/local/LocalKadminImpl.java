@@ -123,7 +123,7 @@ public class LocalKadminImpl implements LocalKadmin {
         String kadminPrincipal = getKadminPrincipal();
         if (backend.getIdentity(tgsPrincipal) == null
             || backend.getIdentity(kadminPrincipal) == null) {
-            String errorMsg = "The built-in principals do not exist in backend,"
+            String errorMsg = "The built-in principals do not exist in the backend,"
                 + " please run the kdcinit tool.";
             LOG.error(errorMsg);
             throw new KrbException(errorMsg);
