@@ -69,6 +69,13 @@
     </dependency>
     -->
 
+    <!-- For LDAP backend
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>ldap-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    -->
 
     <!-- For json backend -->
     <dependency>
