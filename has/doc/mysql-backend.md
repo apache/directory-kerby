@@ -10,7 +10,7 @@ Please refer to [install mysql](https://dev.mysql.com/doc/refman/5.7/en/linux-in
 // Url: jdbc url of mysql database; mysqlbackend: name of has mysql backend database; username: mysql user name; password: mysql password
 cd HAS/has-dist
 sh bin/kdcinit.sh conf
-KdcInitTool: config_kdcBackend mysql jdbc:mysql://127.0.0.1:3306/mysqlbackend?createDatabaseIfNotExist=true root passwd
+KdcInitTool: config_kdcBackend mysql jdbc:mysql://127.0.0.1:3306/mysqlbackend?createDB=true root passwd
 KdcInitTool: exit
 ```
 

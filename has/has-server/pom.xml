@@ -32,9 +32,9 @@
       <version>1.6</version>
     </dependency>
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.42</version>
+      <groupId>org.drizzle.jdbc</groupId>
+      <artifactId>drizzle-jdbc</artifactId>
+      <version>1.4</version>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
