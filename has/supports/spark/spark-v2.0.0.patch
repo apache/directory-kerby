@@ -1,8 +1,8 @@
 diff --git a/core/src/main/scala/org/apache/spark/deploy/SparkSubmit.scala b/core/src/main/scala/org/apache/spark/deploy/SparkSubmit.scala
-index 443f1f5..1fc66f0 100644
+index 9feafc9..5501721 100644
 --- a/core/src/main/scala/org/apache/spark/deploy/SparkSubmit.scala
 +++ b/core/src/main/scala/org/apache/spark/deploy/SparkSubmit.scala
-@@ -553,7 +553,9 @@ object SparkSubmit {
+@@ -549,7 +549,9 @@ object SparkSubmit {
  
      // assure a keytab is available from any place in a JVM
      if (clusterManager == YARN || clusterManager == LOCAL) {
@@ -14,7 +14,7 @@ index 443f1f5..1fc66f0 100644
          if (!new File(args.keytab).exists()) {
            throw new SparkException(s"Keytab file: ${args.keytab} does not exist")
 diff --git a/core/src/main/scala/org/apache/spark/deploy/SparkSubmitArguments.scala b/core/src/main/scala/org/apache/spark/deploy/SparkSubmitArguments.scala
-index f1761e7..5e48419 100644
+index f1761e7..835f4c1 100644
 --- a/core/src/main/scala/org/apache/spark/deploy/SparkSubmitArguments.scala
 +++ b/core/src/main/scala/org/apache/spark/deploy/SparkSubmitArguments.scala
 @@ -78,6 +78,8 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
@@ -26,18 +26,18 @@ index f1761e7..5e48419 100644
    /** Default properties present in the currently defined defaults file. */
    lazy val defaultSparkProperties: HashMap[String, String] = {
      val defaultProperties = new HashMap[String, String]()
-@@ -438,6 +440,9 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
-       case USAGE_ERROR =>
-         printUsageAndExit(1)
+@@ -435,6 +437,9 @@ private[deploy] class SparkSubmitArguments(args: Seq[String], env: Map[String, S
+       case VERSION =>
+         SparkSubmit.printVersionAndExit()
  
 +      case USE_HAS =>
 +        useHas = true
 +
-       case _ =>
-         throw new IllegalArgumentException(s"Unexpected argument '$opt'.")
-     }
+       case USAGE_ERROR =>
+         printUsageAndExit(1)
+ 
 diff --git a/launcher/src/main/java/org/apache/spark/launcher/SparkSubmitOptionParser.java b/launcher/src/main/java/org/apache/spark/launcher/SparkSubmitOptionParser.java
-index 6767cc5..49a7678 100644
+index 6767cc5..ec42de5 100644
 --- a/launcher/src/main/java/org/apache/spark/launcher/SparkSubmitOptionParser.java
 +++ b/launcher/src/main/java/org/apache/spark/launcher/SparkSubmitOptionParser.java
 @@ -76,6 +76,8 @@ class SparkSubmitOptionParser {
@@ -49,3 +49,11 @@ index 6767cc5..49a7678 100644
    /**
     * This is the canonical list of spark-submit options. Each entry in the array contains the
     * different aliases for the same option; the first element of each entry is the "official"
+@@ -115,6 +117,7 @@ class SparkSubmitOptionParser {
+     { REPOSITORIES },
+     { STATUS },
+     { TOTAL_EXECUTOR_CORES },
++    { USE_HAS },
+   };
+ 
+   /**
