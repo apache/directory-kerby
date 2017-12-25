@@ -39,7 +39,7 @@ keytool -list -v -keystore {trustAll}
 ```
 
 ## 7. Edit the Configuration files
-> Deploy {keystore} and {trustAll} files and config /etc/has/ssl-server.conf for HAS server
+> Deploy {keystore} and {trustAll} files and config /<conf-dir>/ssl-server.conf for HAS server
 ```
 ssl.server.keystore.location = {path to keystore}
 ssl.server.keystore.password = {keystore password set in step 1}
@@ -49,7 +49,8 @@ ssl.server.truststore.location = {path to trustAll}
 ssl.server.truststore.password = {trustAll password set in step 2}
 ```
 
-> Config /etc/has/ssl-client.conf for HAS client
+> Config /etc/has/<https_host>/ssl-client.conf for HAS client, the <https_host>
+is the has server address, the same as the value configured in has-client.conf
 ```
 ssl.client.truststore.location = {path to trustAll}
 ssl.client.truststore.password = {trustAll password}
