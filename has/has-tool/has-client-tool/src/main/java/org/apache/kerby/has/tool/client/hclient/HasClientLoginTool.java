@@ -119,6 +119,7 @@ public class HasClientLoginTool {
             }
             String host = hasConfig.getHttpsHost();
             String port = hasConfig.getHttpsPort();
+            String type = hasConfig.getPluginName();
 
             HasClient hasClient = new HasClient();
             TgtTicket tgtTicket;
@@ -135,7 +136,7 @@ public class HasClientLoginTool {
             Subject subject = null;
             try {
                 subject = HasJaasLoginUtil.loginUserFromTgtTicket(
-                    "https://" + host + ":" + port + "/has/v1?auth_type=RAM");
+                    "https://" + host + ":" + port + "/has/v1?auth_type=" + type);
             } catch (IOException e) {
                 System.err.println("Errors occurred when login user with TGT. " + e.getMessage());
                 return;

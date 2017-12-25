@@ -8,6 +8,9 @@ How to start
 git clone https://github.com/apache/directory-kerby.git -b has-project
 ```
 
+### Apply the example plugin patch
+Download from https://github.com/plusplusjiajia/HAS-plugins/blob/master/AWS.patch
+
 ### Install HAS:
 ```
 cd directory-kerby/has
