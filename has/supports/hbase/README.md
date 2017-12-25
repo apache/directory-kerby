@@ -1,9 +1,11 @@
 Enable HBase
 ===============
 
+The Hadoop version in HBase should be checked, from 1.0.0 to 1.3.1 the dependency of hadoop version is 2.5.1.
+
 ## 1. Apply the patch to hadoop-2.5.1 source code
 ```
-git apply hbase-1.1.10-hadoop-2.5.1.patch
+git apply hbase-hadoop-2.5.1.patch
 ```
 
 ## 2. Build
