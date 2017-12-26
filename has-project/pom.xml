@@ -17,6 +17,7 @@
   <modules>
     <module>has-common</module>
     <module>has-server</module>
+    <module>has-client</module>
   </modules>
 
 
