@@ -232,21 +232,33 @@ public class TgsRequest extends KdcRequest {
                 throw new KrbException(errMessage);
             }
             boolean success;
-            try {
-                if (authenticator.getSubKey() != null) {
-                    success = CheckSumHandler.verifyWithKey(checkSum, reqBody,
-                    authenticator.getSubKey().getKeyData(), KeyUsage.TGS_REQ_AUTH_CKSUM);
-                } else {
-                    success = CheckSumHandler.verify(checkSum, reqBody);
-                }
 
-            } catch (KrbException e) {
-                String errMessage = "Verify the KdcReqBody failed. " + e.getMessage();
-                LOG.error(errMessage);
-                throw new KrbException(errMessage);
+            switch (checkSum.getCksumtype()) {
+                case RSA_MD5_DES:
+                case RSA_MD4_DES:
+                case DES_MAC:
+                case DES_CBC:
+                case HMAC_SHA1_DES3:
+                case HMAC_SHA1_96_AES256:
+                case HMAC_SHA1_96_AES128:
+                case CMAC_CAMELLIA128:
+                case CMAC_CAMELLIA256:
+                case MD5_HMAC_ARCFOUR:
+                case HMAC_MD5_ARCFOUR:
+                    success = CheckSumHandler.verifyWithKey(checkSum, reqBody,
+                        getTgtSessionKey().getKeyData(), KeyUsage.TGS_REQ_AUTH_CKSUM);
+                    break;
+                case RSA_MD5:
+                case NIST_SHA:
+                case CRC32:
+                case RSA_MD4:
+                default:
+                    success = CheckSumHandler.verify(checkSum, reqBody);
             }
+
             if (!success) {
-                throw new KrbException("Verify the KdcReqBody failed. ");
+                LOG.error("Verify the KdcReqBody failed.");
+                throw new KrbException("Verify the KdcReqBody failed.");
             }
         }
     }

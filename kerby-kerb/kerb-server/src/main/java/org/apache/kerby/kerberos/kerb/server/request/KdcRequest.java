@@ -170,7 +170,6 @@ public abstract class KdcRequest {
     public void process() throws KrbException {
         checkVersion();
         checkTgsEntry();
-        kdcFindFast();
         if (isPreauthRequired()) {
             kdcFindFast();
         }
@@ -232,11 +231,15 @@ public abstract class KdcRequest {
                         throw new KrbException(errMessage);
                     }
                     fastArmoredReq = paFxFastRequest.getFastArmoredReq();
+                    if (fastArmoredReq == null) {
+                        return;
+                    }
 
                     KrbFastArmor fastArmor = fastArmoredReq.getArmor();
                     if (fastArmor == null) {
                         return;
                     }
+
                     try {
                         armorApRequest(fastArmor);
                     } catch (KrbException e) {
@@ -293,6 +296,7 @@ public abstract class KdcRequest {
                         throw new KrbException(errMessage);
                     }
                     if (!success) {
+                        LOG.error("Verify the KdcReqBody failed.");
                         throw new KrbException("Verify the KdcReqBody failed. ");
                     }
                 }
@@ -321,6 +325,7 @@ public abstract class KdcRequest {
             EncryptionType encType = ticket.getEncryptedEncPart().getEType();
             EncryptionKey tgsKey = getTgsEntry().getKeys().get(encType);
             if (ticket.getTktvno() != KrbConstant.KRB_V5) {
+                LOG.error(KrbErrorCode.KRB_AP_ERR_BADVERSION.getMessage());
                 throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADVERSION);
             }
 
