@@ -65,6 +65,9 @@
     <netty.version>4.0.52.Final</netty.version>
     <hadoop.version>3.0.0</hadoop.version>
     <bouncycastle.version>1.58</bouncycastle.version>
+    <jersey.container.version>2.17</jersey.container.version>
+    <jersey.version>1.19</jersey.version>
+    <commons-text.version>1.1</commons-text.version>
   </properties>
 
   <prerequisites>

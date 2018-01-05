@@ -19,6 +19,10 @@ package org.apache.kerby.has.common.util;
 
 import org.apache.kerby.has.common.HasConfig;
 import org.apache.kerby.has.common.HasException;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -78,4 +82,12 @@ public class HasUtil {
                     + hasConfFile.getAbsolutePath());
         }
     }
+
+    public static EncryptionKey getClientKey(String userName, String passPhrase,
+                                             EncryptionType type) throws KrbException {
+        EncryptionKey clientKey = EncryptionHandler.string2Key(userName,
+            passPhrase, type);
+        return clientKey;
+    }
+
 }
