@@ -17,16 +17,13 @@
 # limitations under the License.
 
 DEBUG=
-args=
 for var in $*; do
   if [ X"$var" = X"-D" ]; then
     DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y"
-  else
-    args="$args $var"
   fi
 done
 
 java $DEBUG \
 -classpath target/lib/*:. \
 -DKERBY_LOGFILE=kadmin \
-org.apache.kerby.kerberos.tool.kadmin.KadminTool $args
+org.apache.kerby.kerberos.tool.kadmin.KadminTool "$@"
