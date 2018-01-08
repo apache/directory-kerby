@@ -244,16 +244,22 @@ public class KadminTool {
             printUsage("No credentials cache file or keytab file for authentication.");
         }
 
-        System.out.print(PROMPT + ": ");
+        // Execute any query that was specified and exit
+        if (kOptions.contains(KadminOption.QUERY)) {
+            String query = kOptions.getStringOption(KadminOption.QUERY);
+            execute(kadmin, query);
+        } else {
+            System.out.print(PROMPT + ": ");
 
-        try (Scanner scanner = new Scanner(System.in, "UTF-8")) {
-            String input = scanner.nextLine();
+            try (Scanner scanner = new Scanner(System.in, "UTF-8")) {
+                String input = scanner.nextLine();
 
-            while (!(input.equals("quit") || input.equals("exit")
-                    || input.equals("q"))) {
-                execute(kadmin, input);
-                System.out.print(PROMPT + ": ");
-                input = scanner.nextLine();
+                while (!(input.equals("quit") || input.equals("exit")
+                        || input.equals("q"))) {
+                    execute(kadmin, input);
+                    System.out.print(PROMPT + ": ");
+                    input = scanner.nextLine();
+                }
             }
         }
     }

@@ -37,6 +37,7 @@ public enum KadminOption implements KOption {
     KEYSALTLIST(new KOptionInfo("-e", "key saltlist", KOptionType.STR)),
     K(new KOptionInfo("-k", "keytab file path", KOptionType.STR)),
     KEYTAB(new KOptionInfo("-keytab", "keytab file path", KOptionType.STR)),
+    QUERY(new KOptionInfo("-q", "query", KOptionType.STR)),
     CCACHE(new KOptionInfo("-c", "credentials cache", KOptionType.FILE));
 
     private final KOptionInfo optionInfo;
