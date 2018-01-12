@@ -72,9 +72,13 @@ public class KerbyKdcServer extends KdcServer {
         String confDirPath = args[1];
         String workDirPath = args[2];
         File confDir = new File(confDirPath);
+        if (!confDir.exists()) {
+            System.err.println("The conf-dir is invalid or does not exist");
+            System.exit(3);
+        }
         File workDir = new File(workDirPath);
-        if (!confDir.exists() || !workDir.exists()) {
-            System.err.println("Invalid or not exist conf-dir or work-dir");
+        if (!workDir.exists()) {
+            System.err.println("The work-dir is invalid or does not exist");
             System.exit(3);
         }
 
