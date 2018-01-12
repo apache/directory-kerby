@@ -280,11 +280,16 @@ public class HasServer {
             String confDirPath = args[1];
             String workDirPath = args[2];
             File confDir = new File(confDirPath);
-            File workDir = new File(workDirPath);
-            if (!confDir.exists() || !workDir.exists()) {
-                LOG.error("Invalid or not exist conf-dir or work-dir");
+            if (!confDir.exists()) {
+                System.err.println("The conf-dir is invalid or does not exist");
                 System.exit(3);
             }
+            File workDir = new File(workDirPath);
+            if (!workDir.exists()) {
+                System.err.println("The work-dir is invalid or does not exist");
+                System.exit(3);
+            }
+
             try {
                 server = new HasServer(confDir);
             } catch (KrbException e) {
