@@ -53,6 +53,7 @@
         <module>ldap-backend</module>
         <module>mavibot-backend</module>
         <module>zookeeper-backend</module>
+        <module>mysql-backend</module>
       </modules>
     </profile>
   </profiles>

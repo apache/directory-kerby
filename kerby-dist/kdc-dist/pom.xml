@@ -89,6 +89,13 @@
       <version>${gson.version}</version>
     </dependency>
 
+    <!-- For mysql backend -->
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>mysql-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- For common and misc -->
     <dependency>
       <groupId>org.slf4j</groupId>
