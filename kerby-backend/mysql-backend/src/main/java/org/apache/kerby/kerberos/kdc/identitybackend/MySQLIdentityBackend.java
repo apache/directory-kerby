@@ -20,7 +20,6 @@
 package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import org.apache.commons.dbutils.DbUtils;
-import org.apache.directory.api.util.GeneralizedTime;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.backend.AbstractIdentityBackend;
@@ -36,7 +35,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +49,9 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
     private String url;
     private String user;
     private String password;
-    private static final Logger LOG = LoggerFactory.getLogger(MySQLIdentityBackend.class);
     private String identityTable;
     private String keyInfoTable;
+    private static final Logger LOG = LoggerFactory.getLogger(MySQLIdentityBackend.class);
 
     /**
      * Constructing an instance using specified config that contains anything
@@ -136,8 +134,8 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
                 + " (principal varchar(255) NOT NULL, key_version INTEGER "
                 + "DEFAULT 1, kdc_flags INTEGER DEFAULT 0, disabled bool "
                 + "DEFAULT NULL, locked bool DEFAULT NULL, created_time "
-                + "VARCHAR(255) DEFAULT NULL, expire_time VARCHAR(255) "
-                + "DEFAULT NULL, PRIMARY KEY (principal) ) ENGINE=INNODB "
+                + "BIGINT DEFAULT 0, expire_time BIGINT DEFAULT 0, "
+                + "PRIMARY KEY (principal) ) ENGINE=INNODB "
                 + "DEFAULT CHARSET=utf8;";
             preIdentity = connection.prepareStatement(stmIdentity);
             preIdentity.executeUpdate();
@@ -194,15 +192,6 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
     }
 
     /**
-     * Convert a KerberosTime type object to a generalized time form of String.
-     * @param kerberosTime The kerberos time to convert
-     */
-    private String toGeneralizedTime(final KerberosTime kerberosTime) {
-        GeneralizedTime generalizedTime = new GeneralizedTime(kerberosTime.getValue());
-        return generalizedTime.toString();
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -212,8 +201,8 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
         int kdcFlags = identity.getKdcFlags();
         boolean disabled = identity.isDisabled();
         boolean locked = identity.isLocked();
-        String createdTime = toGeneralizedTime(identity.getCreatedTime());
-        String expireTime = toGeneralizedTime(identity.getExpireTime());
+        long createdTime = identity.getCreatedTime().getTime();
+        long expireTime = identity.getExpireTime().getTime();
         Map<EncryptionType, EncryptionKey> keys = identity.getKeys();
 
         PreparedStatement preIdentity = null;
@@ -239,8 +228,8 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
                 preIdentity.setInt(3, kdcFlags);
                 preIdentity.setBoolean(4, disabled);
                 preIdentity.setBoolean(5, locked);
-                preIdentity.setString(6, createdTime);
-                preIdentity.setString(7, expireTime);
+                preIdentity.setLong(6, createdTime);
+                preIdentity.setLong(7, expireTime);
                 preIdentity.executeUpdate();
 
                 // Insert keys to key table
@@ -275,16 +264,6 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
     }
 
     /**
-     * Create kerberos time.
-     * @param generalizedTime generalized time
-     * @throws ParseException parse exception
-     */
-    private KerberosTime createKerberosTime(final String generalizedTime) throws ParseException {
-        long time = new GeneralizedTime(generalizedTime).getTime();
-        return new KerberosTime(time);
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -313,8 +292,8 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
                 krbIdentity.setKdcFlags(resIdentity.getInt("kdc_flags"));
                 krbIdentity.setDisabled(resIdentity.getBoolean("disabled"));
                 krbIdentity.setLocked(resIdentity.getBoolean("locked"));
-                krbIdentity.setCreatedTime(createKerberosTime(resIdentity.getString("created_time")));
-                krbIdentity.setExpireTime(createKerberosTime(resIdentity.getString("expire_time")));
+                krbIdentity.setCreatedTime(new KerberosTime(resIdentity.getLong("created_time")));
+                krbIdentity.setExpireTime(new KerberosTime(resIdentity.getLong("expire_time")));
             }
 
             // Get keys from key table
@@ -336,8 +315,6 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
             return krbIdentity;
         } catch (SQLException e) {
             LOG.error("Error occurred while getting identity.");
-            throw new KrbException("Failed to get identity. ", e);
-        } catch (ParseException e) {
             throw new KrbException("Failed to get identity. ", e);
         } finally {
             DbUtils.closeQuietly(preIdentity);

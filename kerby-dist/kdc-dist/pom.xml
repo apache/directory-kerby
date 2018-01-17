@@ -77,6 +77,14 @@
     </dependency>
     -->
 
+    <!-- For mysql backend
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>mysql-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    -->
+
     <!-- For json backend -->
     <dependency>
       <groupId>org.apache.kerby</groupId>
@@ -87,13 +95,6 @@
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>${gson.version}</version>
-    </dependency>
-
-    <!-- For mysql backend -->
-    <dependency>
-      <groupId>org.apache.kerby</groupId>
-      <artifactId>mysql-backend</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <!-- For common and misc -->
