@@ -19,10 +19,12 @@
  */
 package org.apache.kerby.has.tool.server.hadmin.local;
 
+import org.apache.kerby.KOptions;
 import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.server.admin.LocalHasAdmin;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.AddPrincipalCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.AddPrincipalsCmd;
+import org.apache.kerby.has.tool.server.hadmin.local.cmd.ChangePasswordCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.DeletePrincipalCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.DisableConfigureCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.EnableConfigureCmd;
@@ -33,7 +35,6 @@ import org.apache.kerby.has.tool.server.hadmin.local.cmd.HadminCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.KeytabAddCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.ListPrincipalsCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.RenamePrincipalCmd;
-import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.KadminOption;
 import org.apache.kerby.kerberos.tool.kadmin.AuthUtil;
@@ -82,6 +83,8 @@ public class HadminLocalTool {
         + "                         Delete principal\n"
         + "rename_principal, renprinc\n"
         + "                         Rename principal\n"
+        + "change_password, cpw\n"
+        + "                         Change password\n"
         + "get_principal, getprinc\n"
         + "                         Get principal\n"
         + "list_principals, listprincs\n"
@@ -119,6 +122,9 @@ public class HadminLocalTool {
         } else if (cmd.startsWith("rename_principal")
             || cmd.startsWith("renprinc")) {
             executor = new RenamePrincipalCmd(hadmin);
+        } else if (cmd.startsWith("change_password")
+                || cmd.startsWith("cpw")) {
+            executor = new ChangePasswordCmd(hadmin);
         } else if (cmd.startsWith("list_principals")
             || cmd.startsWith("listprincs")) {
             executor = new ListPrincipalsCmd(hadmin);

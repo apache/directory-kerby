@@ -165,6 +165,37 @@ public class LocalHasAdmin implements HasAdmin {
     }
 
     @Override
+    public void changePassword(String principal,
+                               String newPassword) throws HasException {
+        LocalKadmin kadmin;
+        try {
+            kadmin = new LocalKadminImpl(serverSetting);
+        } catch (KrbException e) {
+            throw new HasException(e);
+        }
+        try {
+            kadmin.changePassword(principal, newPassword);
+        } catch (KrbException e) {
+            throw new HasException(e);
+        }
+    }
+
+    @Override
+    public void updateKeys(String principal) throws HasException {
+        LocalKadmin kadmin;
+        try {
+            kadmin = new LocalKadminImpl(serverSetting);
+        } catch (KrbException e) {
+            throw new HasException(e);
+        }
+        try {
+            kadmin.updateKeys(principal);
+        } catch (KrbException e) {
+            throw new HasException(e);
+        }
+    }
+
+    @Override
     public String addPrincByRole(String host, String role) throws HasException {
         String result = "";
         LocalKadmin kadmin = null;

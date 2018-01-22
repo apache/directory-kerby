@@ -113,7 +113,7 @@ public interface HasAdmin {
      * @param newPassword The new password
      * @throws HasException e
      */
-//    void changePassword(String principal, String newPassword) throws HasException;
+    void changePassword(String principal, String newPassword) throws HasException;
 
     /**
      * Update the random keys of specified principal.
@@ -121,7 +121,7 @@ public interface HasAdmin {
      * @param principal The principal to be updated keys
      * @throws HasException e
      */
-//    void updateKeys(String principal) throws HasException;
+    void updateKeys(String principal) throws HasException;
 
     /**
      * Release any resources associated.

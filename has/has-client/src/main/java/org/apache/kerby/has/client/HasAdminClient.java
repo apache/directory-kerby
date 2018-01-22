@@ -259,6 +259,17 @@ public class HasAdminClient implements HasAdmin {
     }
 
     @Override
+    public void changePassword(String principal,
+                               String newPassword) throws HasException {
+        throw new HasException("Unsupported feature");
+    }
+
+    @Override
+    public void updateKeys(String principal) throws HasException {
+        throw new HasException("Unsupported feature");
+    }
+
+    @Override
     public List<String> getPrincipals() throws HasException {
         WebResource webResource = getWebResource("admin/getprincipals");
 
