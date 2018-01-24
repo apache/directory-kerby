@@ -90,6 +90,7 @@ import org.apache.kerby.asn1.EnumType;
  *    PA-EPAK-AS-REP             146  (sshock@gmail.com) [RFC6113]
  *    PA_PKINIT_KX               147  [RFC6112]
  *    PA_PKU2U_NAME              148  [PKU2U]
+ *    PA_PAC_OPTIONS             167  [Microsoft MS-KILE]
  * </pre>
  * 
  * 
@@ -162,7 +163,8 @@ public enum PaDataType implements EnumType {
     PKINIT_KX                   (147), // RFC 6112 : PKINIT Client Contribution to the Ticket Session Key
     TOKEN_REQUEST               (148), // [PKU2U]
     ENCPADATA_REQ_ENC_PA_REP    (149), // RFC 6806 : Negotiation of FAST and Detecting Modified Requests
-    TOKEN_CHALLENGE             (149); // ???
+    TOKEN_CHALLENGE             (149), // ???
+    PAC_OPTIONS                 (167); // Microsoft MS-KILE
 
     /** The inner value */
     private final int value;
