@@ -78,7 +78,7 @@ public class HasLoginModule implements LoginModule {
     private PrincipalName principal = null;
     private KerberosPrincipal kerbClientPrinc = null;
     private KerberosTicket kerbTicket = null;
-    private StringBuffer krb5PrincName = null;
+    private StringBuilder krb5PrincName = null;
     private boolean unboundServer = false;
 
     /**
@@ -157,10 +157,10 @@ public class HasLoginModule implements LoginModule {
             }
             String principalProperty = System.getProperty("sun.security.krb5.principal");
             if (principalProperty != null) {
-                krb5PrincName = new StringBuffer(principalProperty);
+                krb5PrincName = new StringBuilder(principalProperty);
             } else {
                 if (princName != null) {
-                    krb5PrincName = new StringBuffer(princName);
+                    krb5PrincName = new StringBuilder(princName);
                 }
             }
 
