@@ -19,7 +19,7 @@ package org.apache.kerby.has.server.web.rest;
 
 import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.server.HasServer;
-import org.apache.kerby.has.server.admin.LocalHasAdmin;
+import org.apache.kerby.has.server.admin.LocalHadmin;
 import org.apache.kerby.has.server.web.HostRoleType;
 import org.apache.kerby.has.server.web.WebServer;
 import org.apache.kerby.has.server.web.rest.param.HostParam;
@@ -88,9 +88,9 @@ public class HadminApi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addprincipalsbyrole(@Context HttpServletRequest request) {
         if (httpRequest.isSecure()) {
-            LocalHasAdmin hasAdmin = null;
+            LocalHadmin hasAdmin = null;
             try {
-                hasAdmin = new LocalHasAdmin(WebServer.getHasServerFromContext(context));
+                hasAdmin = new LocalHadmin(WebServer.getHasServerFromContext(context));
             } catch (KrbException e) {
                 WebServer.LOG.info("Failed to create local hadmin." + e.getMessage());
             }
@@ -139,11 +139,11 @@ public class HadminApi {
         if (httpRequest.isSecure()) {
             WebServer.LOG.info("Request to export keytabs.");
             String msg;
-            LocalHasAdmin hasAdmin;
+            LocalHadmin hasAdmin;
             HasServer hasServer;
             try {
                 hasServer = WebServer.getHasServerFromContext(context);
-                hasAdmin = new LocalHasAdmin(hasServer);
+                hasAdmin = new LocalHadmin(hasServer);
             } catch (KrbException e) {
                 msg = "Failed to create local hadmin." + e.getMessage();
                 WebServer.LOG.error(msg);

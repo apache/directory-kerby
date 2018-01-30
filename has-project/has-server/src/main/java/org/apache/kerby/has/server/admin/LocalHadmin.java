@@ -36,13 +36,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public class LocalHasAdmin implements Hadmin {
-    public static final Logger LOG = LoggerFactory.getLogger(LocalHasAdmin.class);
+public class LocalHadmin implements Hadmin {
+    public static final Logger LOG = LoggerFactory.getLogger(LocalHadmin.class);
 
     private final ServerSetting serverSetting;
     private LocalKadmin kadmin;
 
-    public LocalHasAdmin(HasServer hasServer) throws KrbException {
+    public LocalHadmin(HasServer hasServer) throws KrbException {
         if (hasServer.getKdcServer() == null) {
             throw new RuntimeException("Could not get HAS KDC server, please start KDC first.");
         }
@@ -57,7 +57,7 @@ public class LocalHasAdmin implements Hadmin {
      * @param confDir The path of conf dir
      * @throws KrbException e
      */
-    public LocalHasAdmin(File confDir) throws KrbException {
+    public LocalHadmin(File confDir) throws KrbException {
         KdcConfig tmpKdcConfig = KdcUtil.getKdcConfig(confDir);
         if (tmpKdcConfig == null) {
             tmpKdcConfig = new KdcConfig();
