@@ -29,6 +29,7 @@
   <modules>
     <module>kdc-dist</module>
     <module>tool-dist</module>
+    <module>has-dist</module>
   </modules>
 
   <build>
