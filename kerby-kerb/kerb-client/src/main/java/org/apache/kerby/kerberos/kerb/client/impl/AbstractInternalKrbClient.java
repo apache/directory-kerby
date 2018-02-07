@@ -153,13 +153,14 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
                 getStringOption(KrbOption.SERVER_PRINCIPAL));
         PrincipalName serverPrincipalName = new PrincipalName(serverPrincipalString);
 
+        PrincipalName clientPrincipalName = null;
         if (tgtTicket != null) {
             String sourceRealm = tgtTicket.getRealm();
             String destRealm = serverPrincipalName.getRealm();
             if (!sourceRealm.equals(destRealm)) {
                 KrbConfig krbConfig = krbSetting.getKrbConfig();
                 LinkedList<String> capath = krbConfig.getCapath(sourceRealm, destRealm);
-                PrincipalName clientPrincipalName = tgtTicket.getClientPrincipal();
+                clientPrincipalName = tgtTicket.getClientPrincipal();
                 for (int i = 0; i < capath.size() - 1; i++) {
                     PrincipalName tgsPrincipalName = KrbUtil.makeTgsPrincipal(
                         capath.get(i), capath.get(i + 1));
@@ -170,11 +171,19 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
                     tgsRequest = new TgsRequestWithTgt(context, sgtTicket);
                 }
             }
+        } else {
+            //This code is for the no-tgt case but should be double-checked
+            String clientPrincipalString = (String) requestOptions.getOptionValue(KrbOption.CLIENT_PRINCIPAL);
+            if (clientPrincipalString != null) {
+                clientPrincipalName = new PrincipalName(clientPrincipalString);
+            }
         }
-
+        
         tgsRequest.setServerPrincipal(serverPrincipalName);
         tgsRequest.setRequestOptions(requestOptions);
-        return doRequestSgt(tgsRequest);
+        SgtTicket sgtTicket = doRequestSgt(tgsRequest);
+        sgtTicket.setClientPrincipal(clientPrincipalName);
+        return sgtTicket;
     }
 
     protected abstract TgtTicket doRequestTgt(
