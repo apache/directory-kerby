@@ -271,15 +271,23 @@ public class KrbClientBase {
      */
     public void storeTicket(SgtTicket sgtTicket, File ccacheFile) throws KrbException {
         LOG.info("Storing the sgt to the credential cache file.");
-        if (!ccacheFile.exists()) {
+        boolean isFreshNew = !ccacheFile.exists();
+        if (isFreshNew) {
             createCacheFile(ccacheFile);
         }
         if (ccacheFile.exists() && ccacheFile.canWrite()) {
-            CredentialCache cCache = new CredentialCache();
+            
             try {
-                cCache.load(ccacheFile);
-                cCache.addCredential(new Credential(sgtTicket, sgtTicket.getClientPrincipal()));
-                cCache.setPrimaryPrincipal(sgtTicket.getClientPrincipal());
+                CredentialCache cCache;
+                if(!isFreshNew){
+                    //Remind, contructor sets the cCache client principal from the sgtTicket one
+                    cCache = new CredentialCache(sgtTicket); 
+                    cCache.load(ccacheFile);
+                    cCache.addCredential(new Credential(sgtTicket, sgtTicket.getClientPrincipal()));
+                    cCache.setPrimaryPrincipal(sgtTicket.getClientPrincipal());
+                } else {
+                    cCache = new CredentialCache(sgtTicket);
+                }
                 cCache.store(ccacheFile);
             } catch (IOException e) {
                 throw new KrbException("Failed to store sgt", e);
