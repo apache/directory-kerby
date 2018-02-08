@@ -183,7 +183,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         tgsRequest.setServerPrincipal(serverPrincipalName);
         tgsRequest.setRequestOptions(requestOptions);
         SgtTicket sgtTicket = doRequestSgt(tgsRequest);
-        if(clientPrincipalName!=null){
+        if (clientPrincipalName!=null) {
             sgtTicket.setClientPrincipal(clientPrincipalName);
         }
         return sgtTicket;
