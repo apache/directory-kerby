@@ -152,12 +152,12 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         String serverPrincipalString = fixPrincipal(requestOptions.
                 getStringOption(KrbOption.SERVER_PRINCIPAL));
         PrincipalName serverPrincipalName = new PrincipalName(serverPrincipalString);
-
-        PrincipalName clientPrincipalName = null;
+        PrincipalName clientPrincipalName = null;    
+        
         if (tgtTicket != null) {
             String sourceRealm = tgtTicket.getRealm();
             String destRealm = serverPrincipalName.getRealm();
-            clientPrincipalName = tgtTicket.getClientPrincipal();
+            clientPrincipalName = tgtTicket.getClientPrincipal();          
             if (!sourceRealm.equals(destRealm)) {
                 KrbConfig krbConfig = krbSetting.getKrbConfig();
                 LinkedList<String> capath = krbConfig.getCapath(sourceRealm, destRealm);              
@@ -170,19 +170,19 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
                     sgtTicket.setClientPrincipal(clientPrincipalName);
                     tgsRequest = new TgsRequestWithTgt(context, sgtTicket);
                 }
-            }
+            }            
         } else {
             //This code is for the no-tgt case but works only with CLIENT_PRINCIPAL option
             //Should be expanded later to encompass more use-cases
-            String clientPrincipalString = (String) requestOptions.getOptionValue(KrbOption.CLIENT_PRINCIPAL);
+            String clientPrincipalString = (String) requestOptions.getOptionValue(KrbOption.CLIENT_PRINCIPAL);          
             if (clientPrincipalString != null) {
                 clientPrincipalName = new PrincipalName(clientPrincipalString);
-            }
-        }
+            }         
+        }    
         
         tgsRequest.setServerPrincipal(serverPrincipalName);
         tgsRequest.setRequestOptions(requestOptions);
-        SgtTicket sgtTicket = doRequestSgt(tgsRequest);
+        SgtTicket sgtTicket = doRequestSgt(tgsRequest);       
         if (clientPrincipalName!=null) {
             sgtTicket.setClientPrincipal(clientPrincipalName);
         }
