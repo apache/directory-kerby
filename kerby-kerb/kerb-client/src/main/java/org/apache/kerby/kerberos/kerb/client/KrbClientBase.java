@@ -272,20 +272,24 @@ public class KrbClientBase {
     public void storeTicket(SgtTicket sgtTicket, File ccacheFile) throws KrbException {
         LOG.info("Storing the sgt to the credential cache file.");
         boolean createCache = !ccacheFile.exists() || (ccacheFile.length() == 0);
+        
         if (createCache) {
             createCacheFile(ccacheFile);
-        }      
-        if (ccacheFile.exists() && ccacheFile.canWrite()) {    
+        }
+        
+        if (ccacheFile.exists() && ccacheFile.canWrite()) {
             try {
-                CredentialCache cCache;             
+                CredentialCache cCache;
+                
                 if (!createCache) {
-                    cCache = new CredentialCache(); 
+                    cCache = new CredentialCache();
                     cCache.load(ccacheFile);
                     cCache.addCredential(new Credential(sgtTicket, sgtTicket.getClientPrincipal()));
                 } else {
                     //Remind: contructor sets the cCache client principal from the sgtTicket one
                     cCache = new CredentialCache(sgtTicket);
-                }            
+                }
+                
                 cCache.store(ccacheFile);
             } catch (IOException e) {
                 throw new KrbException("Failed to store sgt", e);
@@ -294,6 +298,7 @@ public class KrbClientBase {
             throw new IllegalArgumentException("Invalid ccache file, "
                     + "not exist or writable: " + ccacheFile.getAbsolutePath());
         }
+        
     }
 
     /**
