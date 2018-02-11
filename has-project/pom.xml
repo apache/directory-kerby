@@ -18,7 +18,7 @@
     <module>has-common</module>
     <module>has-server</module>
     <module>has-client</module>
+    <module>has-plugins</module>
   </modules>
-
 
 </project>
