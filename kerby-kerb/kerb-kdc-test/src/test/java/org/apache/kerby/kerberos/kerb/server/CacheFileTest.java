@@ -27,7 +27,6 @@ import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.junit.Test;
 
-@org.junit.Ignore("See DIRKRB-692")
 public class CacheFileTest extends KdcTestBase {
 
     @Test
