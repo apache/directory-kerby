@@ -59,6 +59,7 @@
     <findbugs.version>3.0.4</findbugs.version>
     <buildtools.dir>${basedir}/build-tools</buildtools.dir>
     <skipTests>false</skipTests>
+    <jline.version>3.6.0</jline.version>
     <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
     <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
     <mockito.version>2.7.22</mockito.version>

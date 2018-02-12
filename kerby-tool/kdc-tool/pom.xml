@@ -56,6 +56,11 @@
         <artifactId>kerb-admin-server</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline</artifactId>
+        <version>${jline.version}</version>
+      </dependency>
 
     </dependencies>
 
