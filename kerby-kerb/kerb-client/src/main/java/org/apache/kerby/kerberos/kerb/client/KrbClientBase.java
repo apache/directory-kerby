@@ -276,7 +276,7 @@ public class KrbClientBase {
         if (createCache) {
             createCacheFile(ccacheFile);
         }
-        
+
         if (ccacheFile.exists() && ccacheFile.canWrite()) {
             try {
                 CredentialCache cCache;
@@ -298,7 +298,7 @@ public class KrbClientBase {
             throw new IllegalArgumentException("Invalid ccache file, "
                     + "not exist or writable: " + ccacheFile.getAbsolutePath());
         }
-        
+
     }
 
     /**
