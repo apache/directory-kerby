@@ -271,7 +271,7 @@ public class KrbClientBase {
      */
     public void storeTicket(SgtTicket sgtTicket, File ccacheFile) throws KrbException {
         LOG.info("Storing the sgt to the credential cache file.");
-        boolean createCache = !ccacheFile.exists() || (ccacheFile.length() == 0);
+        boolean createCache = !ccacheFile.exists() || ccacheFile.length() == 0;
 
         if (createCache) {
             createCacheFile(ccacheFile);

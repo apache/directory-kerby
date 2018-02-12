@@ -158,7 +158,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
             String sourceRealm = tgtTicket.getRealm();
             String destRealm = serverPrincipalName.getRealm();
             clientPrincipalName = tgtTicket.getClientPrincipal();
-            
+
             if (!sourceRealm.equals(destRealm)) {
                 KrbConfig krbConfig = krbSetting.getKrbConfig();
                 LinkedList<String> capath = krbConfig.getCapath(sourceRealm, destRealm);
@@ -172,7 +172,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
                     tgsRequest = new TgsRequestWithTgt(context, sgtTicket);
                 }
             }
-            
+
         } else {
             //This code is for the no-tgt case but works only with CLIENT_PRINCIPAL option
             //Should be expanded later to encompass more use-cases
@@ -186,7 +186,7 @@ public abstract class AbstractInternalKrbClient implements InternalKrbClient {
         tgsRequest.setRequestOptions(requestOptions);
         SgtTicket sgtTicket = doRequestSgt(tgsRequest);
 
-        if (clientPrincipalName!=null) {
+        if (clientPrincipalName != null) {
             sgtTicket.setClientPrincipal(clientPrincipalName);
         }
 
