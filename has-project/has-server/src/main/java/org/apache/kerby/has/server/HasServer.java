@@ -141,6 +141,23 @@ public class HasServer {
         setHttpFilter();
     }
 
+    public File initKdcServer() throws KrbException {
+        File adminKeytabFile = new File(workDir, "admin.keytab");
+        LocalKadmin kadmin = new LocalKadminImpl(kdcServer.getKdcSetting(),
+            kdcServer.getIdentityService());
+        if (adminKeytabFile.exists()) {
+            throw new KrbException("KDC Server is already inited.");
+        }
+        kadmin.createBuiltinPrincipals();
+        kadmin.exportKeytab(adminKeytabFile, kadmin.getKadminPrincipal());
+        System.out.println("The keytab for kadmin principal "
+            + " has been exported to the specified file "
+            + adminKeytabFile.getAbsolutePath() + ", please safely keep it, "
+            + "in order to use kadmin tool later");
+
+        return adminKeytabFile;
+    }
+
     private void setHttpFilter() throws HasException {
         File httpKeytabFile = new File(workDir, "http.keytab");
         LocalKadmin kadmin = new LocalKadminImpl(kdcServer.getKdcSetting(),

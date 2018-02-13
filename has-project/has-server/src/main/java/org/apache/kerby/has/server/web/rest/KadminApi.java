@@ -45,6 +45,7 @@ import java.util.List;
 /**
  * Kadmin web methods implementation.
  */
+@Path("/kadmin")
 public class KadminApi {
     @Context
     private ServletContext context;

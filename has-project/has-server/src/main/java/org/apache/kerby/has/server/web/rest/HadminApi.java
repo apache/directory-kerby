@@ -54,7 +54,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * HAS Admin web methods implementation.
  */
-@Path("/admin")
+@Path("/hadmin")
 public class HadminApi {
 
     @Context

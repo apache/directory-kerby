@@ -53,7 +53,7 @@ import java.util.TreeMap;
  * HAS web methods implementation.
  */
 @Path("")
-public class HasApi {
+public class AsRequestApi {
 
     @Context
     private ServletContext context;
@@ -146,6 +146,6 @@ public class HasApi {
             }
             return Response.ok(js).type(MediaType.APPLICATION_JSON).build();
         }
-        return Response.status(403).entity("HTTPS required.\n").build();
+        return Response.status(Response.Status.FORBIDDEN).entity("HTTPS required.\n").build();
     }
 }
