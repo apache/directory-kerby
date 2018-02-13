@@ -294,7 +294,7 @@ public abstract class AbstractIdentityBackend
 
         if (doGetIdentity(principalName) == null) {
             logger.error("Error occurred while deleting identity, principal "
-                    + principalName + " does not exists.");
+                    + principalName + " does not exist.");
             throw new KrbException("Principal does not exist.");
         }
 

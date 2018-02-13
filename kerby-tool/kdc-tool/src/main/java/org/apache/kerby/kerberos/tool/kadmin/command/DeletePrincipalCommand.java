@@ -68,7 +68,7 @@ public class DeletePrincipalCommand extends KadminCommand {
             if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
                 deletePrincipal(getKadmin(), principal);
             } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
-                System.out.println("Pincipal \"" + principal + "\"  not deleted.");
+                System.out.println("Principal \"" + principal + "\"  not deleted.");
             } else {
                 System.err.println("Unknow request, fail to delete the principal.");
             }
