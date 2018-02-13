@@ -861,9 +861,7 @@ public abstract class KdcRequest {
      * @return krb identity entry
      */
     protected KrbIdentity getEntry(String principal) throws KrbException {
-        KrbIdentity entry;
-        entry = kdcContext.getIdentityService().getIdentity(principal);
-        return entry;
+        return kdcContext.getIdentityService().getIdentity(principal);
     }
 
     /**
