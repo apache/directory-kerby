@@ -36,6 +36,14 @@ import org.apache.kerby.kerberos.tool.kadmin.command.ModifyPrincipalCommand;
 import org.apache.kerby.kerberos.tool.kadmin.command.RenamePrincipalCommand;
 import org.apache.kerby.kerberos.tool.kadmin.command.AddPrincipalsCommand;
 import org.apache.kerby.util.OSUtil;
+import org.jline.reader.Completer;
+import org.jline.reader.EndOfFileException;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +51,6 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * Ref. MIT kadmin command tool usage.
@@ -185,7 +192,7 @@ public class KadminTool {
         return confDir;
     }
 
-    public static void main(String[] args) throws KrbException {
+    public static void main(String[] args) throws KrbException, IOException {
 
         if (args.length < 2) {
             System.err.println(USAGE);
@@ -249,16 +256,23 @@ public class KadminTool {
             String query = kOptions.getStringOption(KadminOption.QUERY);
             execute(kadmin, query);
         } else {
-            System.out.print(PROMPT + ": ");
 
-            try (Scanner scanner = new Scanner(System.in, "UTF-8")) {
-                String input = scanner.nextLine();
+            Completer completer = new StringsCompleter("add_principal", "batch_anks", "ktadd", "ktremove",
+                                                       "delete_principal", "modify_principal", "rename_principal",
+                                                       "change_password", "list_principals", "get_principal");
 
-                while (!(input.equals("quit") || input.equals("exit")
-                        || input.equals("q"))) {
-                    execute(kadmin, input);
-                    System.out.print(PROMPT + ": ");
-                    input = scanner.nextLine();
+            Terminal terminal = TerminalBuilder.terminal();
+            LineReader lineReader = LineReaderBuilder.builder().completer(completer).terminal(terminal).build();
+
+            while (true) {
+                try {
+                    String line = lineReader.readLine(PROMPT + ": ");
+                    if ("quit".equals(line) || "exit".equals(line) || "q".equals(line)) {
+                        break;
+                    }
+                    execute(kadmin, line);
+                } catch (UserInterruptException | EndOfFileException ex) {
+                    break;
                 }
             }
         }
