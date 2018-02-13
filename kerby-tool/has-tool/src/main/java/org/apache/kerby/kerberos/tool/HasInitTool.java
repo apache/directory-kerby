@@ -24,9 +24,9 @@ import org.apache.kerby.has.common.HasConfig;
 import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.common.util.HasUtil;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.tool.cmd.InitCmd;
 import org.apache.kerby.kerberos.tool.cmd.InitKdcCmd;
 import org.apache.kerby.kerberos.tool.cmd.StartKdcCmd;
-import org.apache.kerby.kerberos.tool.cmd.InitCmd;
 import org.apache.kerby.util.OSUtil;
 
 import java.io.File;
