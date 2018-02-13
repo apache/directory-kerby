@@ -29,6 +29,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.util.Date;
 
 public class MySQLHasServerPlugin extends AbstractHasServerPlugin {
     private static final Logger LOG = LoggerFactory.getLogger(MySQLHasServerPlugin.class);
@@ -47,6 +48,15 @@ public class MySQLHasServerPlugin extends AbstractHasServerPlugin {
     @Override
     public void doAuthenticate(AuthToken userToken, AuthToken authToken)
         throws HasAuthenException {
+
+        // Check if the token is expired.
+        Date expiredTime = userToken.getExpiredTime();
+        Date now = new Date();
+        if (now.after(expiredTime)) {
+            LOG.error("Authentication failed: token is expired.");
+            throw new HasAuthenException("Authentication failed: token is expired.");
+        }
+
         String user = (String) userToken.getAttributes().get("user");
         String secret = (String) userToken.getAttributes().get("secret");
 
