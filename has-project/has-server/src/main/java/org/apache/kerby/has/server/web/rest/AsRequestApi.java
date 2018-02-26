@@ -87,7 +87,7 @@ public class AsRequestApi {
 
             if (hasServer.getKdcServer() == null) {
                 errMessage = "Please start the has KDC server.";
-            } else if (!tokenStr.isEmpty() && tokenStr != null) {
+            } else if (tokenStr != null && !tokenStr.isEmpty()) {
                 HasKdcHandler kdcHandler = new HasKdcHandler(hasServer);
 
                 TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();

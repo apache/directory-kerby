@@ -117,7 +117,7 @@ public class SSLFactory implements ConnectionConfigurator {
     if (mode == Mode.CLIENT) {
       sslConfResource = conf.getString(SSLFactory.SSL_CLIENT_CONF_KEY);
     } else {
-      sslConfResource = conf.getString(SSLFactory.SSL_CLIENT_CONF_KEY);
+      sslConfResource = conf.getString(SSLFactory.SSL_SERVER_CONF_KEY);
     }
     try {
       sslConf.addIniConfig(new File(sslConfResource));

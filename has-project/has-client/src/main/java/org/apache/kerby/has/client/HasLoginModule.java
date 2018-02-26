@@ -255,14 +255,11 @@ public class HasLoginModule implements LoginModule {
                     null);
 
                 // get the principal name from the ticket cache
-                if (cred != null && principal == null) {
+                if (principal == null) {
                     principal = cred.getClient();
                 }
                 if (debug) {
                     System.out.println("Principal is " + principal);
-                    if (cred == null) {
-                        System.out.println("null credentials from TGT Ticket");
-                    }
                 }
             }
         } catch (KrbException e) {

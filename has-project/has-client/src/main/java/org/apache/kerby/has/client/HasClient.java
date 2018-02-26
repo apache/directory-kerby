@@ -56,7 +56,6 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -127,14 +126,14 @@ public class HasClient {
         } else {
             config = new HasConfig();
             String[] urls = hadoopSecurityHas.split(";");
-            String host = "";
+            StringBuilder host = new StringBuilder();
             int port = 0;
             try {
                 for (String url : urls) {
                     URI uri = new URI(url.trim());
 
                     // parse host
-                    host = host + uri.getHost() + ",";
+                    host.append(uri.getHost()).append(",");
 
                     // parse port
                     if (port == 0) {
@@ -157,11 +156,10 @@ public class HasClient {
                         }
                     }
                 }
-                if (host == null || port == 0) {
+                if (host.length() == 0 || port == 0) {
                     throw new HasException("host is null.");
                 } else {
-                    host = host.substring(0, host.length() - 1);
-                    config.setString(HasConfigKey.HTTPS_HOST, host);
+                    config.setString(HasConfigKey.HTTPS_HOST,  host.subSequence(0, host.length() - 1).toString());
                     config.setInt(HasConfigKey.HTTPS_PORT, port);
                     config.setString(HasConfigKey.AUTH_TYPE, type);
                 }
@@ -215,9 +213,6 @@ public class HasClient {
             clientPlugin = HasClientPluginRegistry.createPlugin(pluginName);
         } else {
             throw new HasException("Please set the plugin name in has client conf");
-        }
-        if (clientPlugin == null) {
-            throw new HasException("Failed to create client plugin: " + pluginName);
         }
         LOG.info("The plugin class is: " + clientPlugin);
 
@@ -559,9 +554,10 @@ public class HasClient {
             }
 
             CertificateFactory factory = CertificateFactory.getInstance("X.509");
-            FileInputStream in = new FileInputStream(caRootFile);
-            caRoot = (X509Certificate) factory.generateCertificate(in);
-        } catch (CertificateException | FileNotFoundException e) {
+            try (FileInputStream in = new FileInputStream(caRootFile)) {
+                caRoot = (X509Certificate) factory.generateCertificate(in);
+            }
+        } catch (CertificateException | IOException e) {
             throw new HasException("Failed to get certificate from ca root file", e);
         }
 

@@ -74,9 +74,10 @@ public class HasUtil {
                 }
                 sb.append(tempString + "\n");
             }
-            PrintStream ps = new PrintStream(new FileOutputStream(hasConfFile));
-            ps.print(sb.toString());
-            bf.close();
+            try (PrintStream ps = new PrintStream(new FileOutputStream(hasConfFile))) {
+                ps.print(sb.toString());
+                bf.close();
+            }
         } catch (FileNotFoundException e) {
             throw new HasException("Can not load the has configuration file "
                     + hasConfFile.getAbsolutePath());

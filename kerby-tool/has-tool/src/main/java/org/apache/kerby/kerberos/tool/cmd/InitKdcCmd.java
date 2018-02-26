@@ -65,20 +65,16 @@ public class InitKdcCmd extends InitCmd {
             return;
         }
 
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(adminKeytab);
-        } catch (FileNotFoundException e) {
-            System.err.println("the admin keytab file not found. " + e.getMessage());
-        }
-        byte[] buffer = new byte[4 * 1024];
-        int read;
-        try {
+        try (FileOutputStream fos = new FileOutputStream(adminKeytab)) {
+            byte[] buffer = new byte[4 * 1024];
+            int read;
             while ((read = content.read(buffer)) > 0) {
                 fos.write(buffer, 0, read);
             }
             fos.close();
             content.close();
+        } catch (FileNotFoundException e) {
+            System.err.println("the admin keytab file not found. " + e.getMessage());
         } catch (IOException e) {
             System.err.println("Errors occurred when getting the admin.keytab. " + e.getMessage());
         }

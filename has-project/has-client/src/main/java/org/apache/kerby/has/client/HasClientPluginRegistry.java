@@ -53,8 +53,7 @@ public class HasClientPluginRegistry {
             throw new HasException("Unregistered plugin " + name);
         }
         try {
-            HasClientPlugin clientPlugin = (HasClientPlugin) allPlugins.get(name).newInstance();
-            return clientPlugin;
+            return (HasClientPlugin) allPlugins.get(name).newInstance();
         } catch (Exception e) {
             LOG.error("Create {} plugin failed", name, e);
             throw new HasException(e.getMessage());

@@ -224,12 +224,11 @@ public class AdminServerHandler {
         AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
         adminMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
 
-        ByteBuffer responseMessage = KadminCode.encodeMessage(adminMessage);
-        return responseMessage;
+        return KadminCode.encodeMessage(adminMessage);
     }
 
     private String listToString(List<String> list) {
-        if (list.size() <= 0) {
+        if (list.isEmpty()) {
             return null;
         }
         //Both speed and safety,so use StringBuilder

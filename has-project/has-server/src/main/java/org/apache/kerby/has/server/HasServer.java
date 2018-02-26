@@ -121,7 +121,7 @@ public class HasServer {
         try {
             krbConfig = ClientUtil.getConfig(confDir);
         } catch (KrbException e) {
-            new HasException("Errors occurred when getting the config from conf dir. "
+            throw new HasException("Errors occurred when getting the config from conf dir. "
                 + e.getMessage());
         }
         if (krbConfig == null) {
