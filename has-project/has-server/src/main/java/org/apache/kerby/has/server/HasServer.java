@@ -106,7 +106,7 @@ public class HasServer {
         try {
             kdcServer = new KdcServer(confDir);
         } catch (KrbException e) {
-            throw new HasException("Failed to create KdcServer. " + e);
+            throw new HasException("Failed to create KdcServer. " + e.getMessage());
         }
         kdcServer.setWorkDir(workDir);
         kdcServer.setInnerKdcImpl(new NettyKdcServerImpl(kdcServer.getKdcSetting()));
@@ -117,7 +117,7 @@ public class HasServer {
             throw new HasException("Errors occurred when init has kdc server:  " + e.getMessage());
         }
 
-        KrbConfig krbConfig = null;
+        KrbConfig krbConfig;
         try {
             krbConfig = ClientUtil.getConfig(confDir);
         } catch (KrbException e) {
@@ -131,12 +131,12 @@ public class HasServer {
         try {
             kdcServer.start();
         } catch (KrbException e) {
-            throw new HasException("Failed to start kdc server. " + e);
+            throw new HasException("Failed to start kdc server. " + e.getMessage());
         }
         try {
             HasUtil.setEnableConf(new File(confDir, "has-server.conf"), "false");
         } catch (Exception e) {
-            throw new HasException("Failed to enable conf. " + e);
+            throw new HasException("Failed to enable conf. " + e.getMessage());
         }
         setHttpFilter();
     }

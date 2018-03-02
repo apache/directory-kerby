@@ -24,8 +24,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 import org.apache.kerby.has.common.HasConfig;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import org.apache.kerby.has.common.HasException;
 import org.glassfish.jersey.SslConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,15 +95,16 @@ public class HasInitClient {
     public void startKdc() {
         WebResource webResource = getWebResource("init/kdcstart");
         ClientResponse response = webResource.get(ClientResponse.class);
+        String message = null;
         try {
-            JSONObject result = new JSONObject(response.getEntity(String.class));
-            if (result.getString("result").equals("success")) {
-                System.out.println(result.getString("msg"));
-            } else {
-                System.err.println(result.getString("msg"));
-            }
-        } catch (JSONException e) {
+            message = getResponse(response);
+        } catch (HasException e) {
             System.err.println(e.getMessage());
+        }
+        if (response.getStatus() == 200) {
+            System.out.println(message);
+        } else {
+            System.err.println(message);
         }
     }
 
@@ -113,7 +113,28 @@ public class HasInitClient {
         ClientResponse response = webResource.get(ClientResponse.class);
         if (response.getStatus() == 200) {
             return response.getEntityInputStream();
+        } else {
+            try {
+                System.err.println(getResponse(response));
+            } catch (HasException e) {
+                System.err.println(e.getMessage());
+            }
+            return null;
         }
-        return null;
+    }
+
+    private String getResponse(ClientResponse response) throws HasException {
+        InputStream is = response.getEntityInputStream();
+        final byte[] b = new byte[1024];
+        int read;
+        final StringBuilder msg = new StringBuilder();
+        try {
+            while ((read = is.read(b)) > 0) {
+                msg.append(new String(b, 0, read));
+            }
+        } catch (IOException e) {
+            throw new HasException(e.getMessage());
+        }
+        return msg.toString();
     }
 }

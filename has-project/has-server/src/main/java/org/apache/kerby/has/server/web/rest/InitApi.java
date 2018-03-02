@@ -21,7 +21,6 @@ import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.server.HasServer;
 import org.apache.kerby.has.server.web.WebServer;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.codehaus.jettison.json.JSONObject;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -71,21 +70,13 @@ public class InitApi {
     public Response kdcStart() {
         if (httpRequest.isSecure()) {
             final HasServer hasServer = WebServer.getHasServerFromContext(context);
-            JSONObject result = new JSONObject();
             String msg;
             try {
                 hasServer.startKdcServer();
-            } catch (HasException e) {
-                msg = "Failed to start kdc server, because: " + e.getMessage();
-                WebServer.LOG.error(msg);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
-            }
-            try {
                 msg = "Succeed in starting KDC server.";
-                result.put("result", "success");
-                result.put("msg", msg);
-                return Response.ok(result.toString()).build();
-            } catch (Exception e) {
+                WebServer.LOG.info(msg);
+                return Response.ok(msg).build();
+            } catch (HasException e) {
                 msg = "Failed to start kdc server, because: " + e.getMessage();
                 WebServer.LOG.error(msg);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();

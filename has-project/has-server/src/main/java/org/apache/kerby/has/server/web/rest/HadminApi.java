@@ -94,7 +94,6 @@ public class HadminApi {
             } catch (KrbException e) {
                 WebServer.LOG.info("Failed to create local hadmin." + e.getMessage());
             }
-            JSONObject result = new JSONObject();
             StringBuilder msg = new StringBuilder();
             try {
                 StringBuilder data = new StringBuilder();
@@ -112,9 +111,7 @@ public class HadminApi {
                         msg.append(hasAdmin.addPrincByRole(host.getString("name"), role.toUpperCase()));
                     }
                 }
-                result.put("result", "success");
-                result.put("msg", msg.toString());
-                return Response.ok(result.toString()).build();
+                return Response.ok(msg).build();
             } catch (Exception e) {
                 WebServer.LOG.error("Failed to create principals,because : " + e.getMessage());
                 String error = "Failed to create principals,because : " + e.getMessage();

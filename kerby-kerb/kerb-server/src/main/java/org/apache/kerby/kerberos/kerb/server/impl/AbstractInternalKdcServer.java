@@ -81,7 +81,7 @@ public class AbstractInternalKdcServer implements InternalKdcServer {
         try {
             doStart();
         } catch (Exception e) {
-            throw new KrbException("Failed to start " + getServiceName(), e);
+            throw new KrbException("Failed to start " + getServiceName() + ". " + e.getMessage());
         }
 
         started = true;
