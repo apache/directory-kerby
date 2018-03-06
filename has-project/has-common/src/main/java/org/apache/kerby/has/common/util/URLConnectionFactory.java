@@ -165,7 +165,6 @@ public class URLConnectionFactory {
       throws IOException, AuthenticationException {
     if (isSpnego && hasConfig != null) {
       LOG.debug("open AuthenticatedURL connection {}", url);
-//      UserGroupInformation.getCurrentUser().checkTGTAndReloginFromKeytab();
       final AuthenticatedURL.Token authToken = new AuthenticatedURL.Token();
       return new AuthenticatedURL(new KerberosHasAuthenticator(hasConfig.getAdminKeytab(),
           hasConfig.getAdminKeytabPrincipal()),
