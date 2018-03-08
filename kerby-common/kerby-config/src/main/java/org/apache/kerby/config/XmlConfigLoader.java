@@ -29,6 +29,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
@@ -46,6 +47,8 @@ public class XmlConfigLoader extends ConfigLoader {
 
     private Element loadResourceDocument(Resource resource) throws Exception {
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        docBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+        docBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 
         docBuilderFactory.setIgnoringComments(true);
         docBuilderFactory.setNamespaceAware(true);
