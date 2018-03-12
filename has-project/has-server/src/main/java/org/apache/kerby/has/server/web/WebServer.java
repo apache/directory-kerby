@@ -81,9 +81,10 @@ public class WebServer {
 
             Map<String, String> params = getAuthFilterParams(conf);
 
-            String adminPathSpec = "/has/v1/admin/*";
+            String kadminPathSpec = "/has/v1/kadmin/*";
+            String hadminPathSpec = "/has/v1/hadmin/*";
             HttpServer2.defineFilter(httpServer.getWebAppContext(), name, className,
-                params, new String[]{adminPathSpec});
+                params, new String[]{kadminPathSpec, hadminPathSpec});
             HttpServer2.LOG.info("Added filter '" + name + "' (class=" + className
                 + ")");
         }

@@ -50,9 +50,10 @@ public class HasUtil {
                     + hasConfFile.getAbsolutePath());
             }
             return hasConfig;
+        } else {
+            throw new HasException(hasConfFile.getName() + "not found in "
+                + hasConfFile.getParent() + ". ");
         }
-
-        return null;
     }
 
     public static void setEnableConf(File hasConfFile, String value)

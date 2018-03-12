@@ -143,6 +143,9 @@ public class HasServer {
 
     public File initKdcServer() throws KrbException {
         File adminKeytabFile = new File(workDir, "admin.keytab");
+        if (kdcServer == null) {
+            throw new KrbException("Please start KDC server first.");
+        }
         LocalKadmin kadmin = new LocalKadminImpl(kdcServer.getKdcSetting(),
             kdcServer.getIdentityService());
         if (adminKeytabFile.exists()) {
@@ -220,54 +223,50 @@ public class HasServer {
             // Parse has-server.conf to get http_host and http_port
             File confFile = new File(confDir, "has-server.conf");
             hasConfig = HasUtil.getHasConfig(confFile);
-            if (hasConfig != null) {
-                try {
-                    String httpHost;
-                    String httpPort;
-                    String httpsHost;
-                    String httpsPort;
-                    if (hasConfig.getHttpHost() != null) {
-                        httpHost = hasConfig.getHttpHost();
-                    } else {
-                        LOG.info("Cannot get the http_host from has-server.conf, using the default http host.");
-                        httpHost = WebConfigKey.HAS_HTTP_HOST_DEFAULT;
-                    }
-                    if (hasConfig.getHttpPort() != null) {
-                        httpPort = hasConfig.getHttpPort();
-                    } else {
-                        LOG.info("Cannot get the http_port from has-server.conf, using the default http port.");
-                        httpPort = String.valueOf(WebConfigKey.HAS_HTTP_PORT_DEFAULT);
-                    }
-                    if (hasConfig.getHttpsHost() != null) {
-                        httpsHost = hasConfig.getHttpsHost();
-                    } else {
-                        LOG.info("Cannot get the https_host from has-server.conf, using the default https host.");
-                        httpsHost = WebConfigKey.HAS_HTTPS_HOST_DEFAULT;
-                    }
-                    if (hasConfig.getHttpsPort() != null) {
-                        httpsPort = hasConfig.getHttpsPort();
-                    } else {
-                        LOG.info("Cannot get the https_port from has-server.conf , using the default https port.");
-                        httpsPort = String.valueOf(WebConfigKey.HAS_HTTPS_PORT_DEFAULT);
-                    }
-                    String hasHttpAddress = httpHost + ":" + httpPort;
-                    String hasHttpsAddress = httpsHost + ":" + httpsPort;
-                    LOG.info("The web server http address: " + hasHttpAddress);
-                    LOG.info("The web server https address: " + hasHttpsAddress);
-
-                    conf.setString(WebConfigKey.HAS_HTTP_ADDRESS_KEY, hasHttpAddress);
-                    conf.setString(WebConfigKey.HAS_HTTPS_ADDRESS_KEY, hasHttpsAddress);
-                    conf.setString(WebConfigKey.HAS_HTTP_POLICY_KEY,
-                        HttpConfig.Policy.HTTP_AND_HTTPS.name());
-                    conf.setString(WebConfigKey.HAS_SERVER_HTTPS_KEYSTORE_RESOURCE_KEY,
-                        hasConfig.getSslServerConf());
-                    webServer = new WebServer(conf);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("https_port should be a number. "
-                        + e.getMessage());
+            try {
+                String httpHost;
+                String httpPort;
+                String httpsHost;
+                String httpsPort;
+                if (hasConfig.getHttpHost() != null) {
+                    httpHost = hasConfig.getHttpHost();
+                } else {
+                    LOG.info("Cannot get the http_host from has-server.conf, using the default http host.");
+                    httpHost = WebConfigKey.HAS_HTTP_HOST_DEFAULT;
                 }
-            } else {
-                throw new HasException("has-server.conf not found in " + confDir + ". ");
+                if (hasConfig.getHttpPort() != null) {
+                    httpPort = hasConfig.getHttpPort();
+                } else {
+                    LOG.info("Cannot get the http_port from has-server.conf, using the default http port.");
+                    httpPort = String.valueOf(WebConfigKey.HAS_HTTP_PORT_DEFAULT);
+                }
+                if (hasConfig.getHttpsHost() != null) {
+                    httpsHost = hasConfig.getHttpsHost();
+                } else {
+                    LOG.info("Cannot get the https_host from has-server.conf, using the default https host.");
+                    httpsHost = WebConfigKey.HAS_HTTPS_HOST_DEFAULT;
+                }
+                if (hasConfig.getHttpsPort() != null) {
+                    httpsPort = hasConfig.getHttpsPort();
+                } else {
+                    LOG.info("Cannot get the https_port from has-server.conf , using the default https port.");
+                    httpsPort = String.valueOf(WebConfigKey.HAS_HTTPS_PORT_DEFAULT);
+                }
+                String hasHttpAddress = httpHost + ":" + httpPort;
+                String hasHttpsAddress = httpsHost + ":" + httpsPort;
+                LOG.info("The web server http address: " + hasHttpAddress);
+                LOG.info("The web server https address: " + hasHttpsAddress);
+
+                conf.setString(WebConfigKey.HAS_HTTP_ADDRESS_KEY, hasHttpAddress);
+                conf.setString(WebConfigKey.HAS_HTTPS_ADDRESS_KEY, hasHttpsAddress);
+                conf.setString(WebConfigKey.HAS_HTTP_POLICY_KEY,
+                    HttpConfig.Policy.HTTP_AND_HTTPS.name());
+                conf.setString(WebConfigKey.HAS_SERVER_HTTPS_KEYSTORE_RESOURCE_KEY,
+                    hasConfig.getSslServerConf());
+                webServer = new WebServer(conf);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("https_port should be a number. "
+                    + e.getMessage());
             }
         } else {
             hasConfig = webServer.getConf();

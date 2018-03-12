@@ -87,7 +87,7 @@ public class HasAuthAdminClient implements Kadmin {
             try {
                 conn = getHttpsConnection(url, true);
             } catch (Exception e) {
-                throw new RuntimeException("Error occurred when creating https connection.");
+                throw new RuntimeException("Error occurred when creating https connection. " + e.getMessage());
             }
         }
         if (method.equals("POST") || method.equals("PUT")) {
@@ -96,11 +96,11 @@ public class HasAuthAdminClient implements Kadmin {
         return conn;
     }
 
-    private String getBaseURL() {
+    private String getKadminBaseURL() {
         String url = null;
         if (hasConfig.getHttpsPort() != null && hasConfig.getHttpsHost() != null) {
             url = "https://" + hasConfig.getHttpsHost() + ":" + hasConfig.getHttpsPort()
-                + "/has/v1/admin/";
+                + "/has/v1/kadmin/";
         }
         if (url == null) {
             throw new RuntimeException("Please set the https address and port.");
@@ -114,7 +114,7 @@ public class HasAuthAdminClient implements Kadmin {
 
         URL url;
         try {
-            url = new URL(getBaseURL() + "addprincipal?principal=" + principal);
+            url = new URL(getKadminBaseURL() + "addprincipal?principal=" + principal);
         } catch (MalformedURLException e) {
             throw new KrbException("Failed to create a URL object.", e);
         }
@@ -150,7 +150,7 @@ public class HasAuthAdminClient implements Kadmin {
 
         URL url;
         try {
-            url = new URL(getBaseURL() + "addprincipal?principal=" + principal
+            url = new URL(getKadminBaseURL() + "addprincipal?principal=" + principal
                 + "&password=" + password);
         } catch (MalformedURLException e) {
             throw new KrbException("Failed to create a URL object.", e);
@@ -191,7 +191,7 @@ public class HasAuthAdminClient implements Kadmin {
 
         URL url;
         try {
-            url = new URL(getBaseURL() + "deleteprincipal?principal=" + principal);
+            url = new URL(getKadminBaseURL() + "deleteprincipal?principal=" + principal);
         } catch (MalformedURLException e) {
             throw new KrbException("Failed to create a URL object.", e);
         }
@@ -231,7 +231,7 @@ public class HasAuthAdminClient implements Kadmin {
 
         URL url;
         try {
-            url = new URL(getBaseURL() + "renameprincipal?oldprincipal=" + oldPrincipal
+            url = new URL(getKadminBaseURL() + "renameprincipal?oldprincipal=" + oldPrincipal
                 + "&newprincipal=" + newPrincipal);
         } catch (MalformedURLException e) {
             throw new KrbException("Failed to create a URL object.", e);
@@ -267,7 +267,7 @@ public class HasAuthAdminClient implements Kadmin {
 
         URL url;
         try {
-            url = new URL(getBaseURL() + "getprincipals");
+            url = new URL(getKadminBaseURL() + "listprincipals");
         } catch (MalformedURLException e) {
             throw new KrbException("Failed to create a URL object.", e);
         }
@@ -304,7 +304,7 @@ public class HasAuthAdminClient implements Kadmin {
 
         URL url;
         try {
-            url = new URL(getBaseURL() + "getprincipals?exp=" + exp);
+            url = new URL(getKadminBaseURL() + "getprincipals?exp=" + exp);
         } catch (MalformedURLException e) {
             throw new KrbException("Failed to create a URL object. ", e);
         }
@@ -360,7 +360,7 @@ public class HasAuthAdminClient implements Kadmin {
     public void exportKeytab(File keytab, String principal) throws KrbException {
         URL url;
         try {
-            url = new URL(getBaseURL() + "exportkeytab?principal=" + principal);
+            url = new URL(getKadminBaseURL() + "exportkeytab?principal=" + principal);
         } catch (MalformedURLException e) {
             LOG.error("Failed to create a URL object." + e.getMessage());
             throw new KrbException("Failed to create a URL object.", e);
@@ -399,7 +399,7 @@ public class HasAuthAdminClient implements Kadmin {
     public void exportKeytab(File keytabFile, List<String> principals) throws KrbException {
         HttpURLConnection httpConn;
         for (String principal : principals) {
-            String request = getBaseURL() + "exportkeytab?principal=" + principal;
+            String request = getKadminBaseURL() + "exportkeytab?principal=" + principal;
             URL url;
             try {
                 url = new URL(request);

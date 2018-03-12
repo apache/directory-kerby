@@ -17,7 +17,7 @@
 # limitations under the License.
 
 CONF_DIR=$1
-APP_MAIN=org.apache.kerby.kerberos.tool.init.HasInitTool
+APP_MAIN=org.apache.kerby.kerberos.tool.admin.AdminRemoteTool
 
 # Reset HAS_CONF_DIR if CONF_DIR not null
 if [ "$CONF_DIR" != "" ]; then
@@ -46,11 +46,11 @@ cd ${HAS_HOME}
 
 for var in $*; do
   if [ X"$var" = X"-D" ]; then
-    DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8011,server=y,suspend=y"
+    DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8012,server=y,suspend=y"
   fi
 done
 
 echo "[INFO] conf_dir=$CONF_DIR"
-HAS_OPTS="-DHAS_LOGFILE=has-init"
+HAS_OPTS="-DHAS_LOGFILE=admin-remote"
 
 java ${DEBUG} -classpath target/lib/*:. ${HAS_OPTS} ${APP_MAIN} ${CONF_DIR}

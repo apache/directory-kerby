@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.cmd;
+package org.apache.kerby.kerberos.tool.init.cmd;
 
 import org.apache.kerby.has.client.HasInitClient;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -61,7 +61,6 @@ public class InitKdcCmd extends InitCmd {
         InputStream content = client.initKdc();
 
         if (content == null) {
-            System.err.println("Failed to init kdc.");
             return;
         }
 

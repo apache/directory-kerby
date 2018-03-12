@@ -121,7 +121,7 @@ public class HasClient {
                 config = HasUtil.getHasConfig(confFile);
             } catch (HasException e) {
                 LOG.error("Failed to get has client config: " + e.getMessage());
-                throw new HasException("Failed to get has client config: " + e);
+                throw new HasException("Failed to get has client config: " + e.getMessage());
             }
         } else {
             config = new HasConfig();

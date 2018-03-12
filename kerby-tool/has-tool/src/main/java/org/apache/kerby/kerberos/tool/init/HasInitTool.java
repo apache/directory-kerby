@@ -17,16 +17,16 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool;
+package org.apache.kerby.kerberos.tool.init;
 
 import org.apache.kerby.has.client.HasInitClient;
 import org.apache.kerby.has.common.HasConfig;
 import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.common.util.HasUtil;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.tool.cmd.InitCmd;
-import org.apache.kerby.kerberos.tool.cmd.InitKdcCmd;
-import org.apache.kerby.kerberos.tool.cmd.StartKdcCmd;
+import org.apache.kerby.kerberos.tool.init.cmd.InitCmd;
+import org.apache.kerby.kerberos.tool.init.cmd.InitKdcCmd;
+import org.apache.kerby.kerberos.tool.init.cmd.StartKdcCmd;
 import org.apache.kerby.util.OSUtil;
 
 import java.io.File;
@@ -56,7 +56,7 @@ public class HasInitTool {
             System.exit(1);
         }
         String confDirPath = args[0];
-        File confFile = new File(confDirPath, "hadmin.conf");
+        File confFile = new File(confDirPath, "admin.conf");
         HasConfig hasConfig;
         try {
             hasConfig = HasUtil.getHasConfig(confFile);
