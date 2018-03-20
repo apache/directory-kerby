@@ -8,11 +8,11 @@ A dedicated Hadoop Authentication Server to support various authentication mecha
 * New authentication mechanism can be customized and plugined.
 
 # Architecture
-![](https://github.com/apache/directory-kerby/tree/trunk/has-project/docs/has-overall.png)
+![](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/has-overall.png)
 
 # Design
 Assuming existing users are stored in a SQL database (like MySQL), the detailed design and workflow may go like the following:
-![](https://github.com/apache/directory-kerby/tree/trunk/has-project/docs/has-design.png)
+![](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/has-design.png)
 
 # New mechanism plugin API
 
@@ -41,4 +41,4 @@ AuthToken authenticate(AuthToken userToken) throws HasAuthenException
 ```
 
 ## Getting Started
-Please look at [Getting Started](https://github.com/apache/directory-kerby/blob/has-project/has/doc/has-start.md) for details.
+Please look at [Getting Started](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/has-start.md) for details.

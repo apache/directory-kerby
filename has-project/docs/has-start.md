@@ -17,7 +17,7 @@ mvn clean install -Pdist -DskipTests
 ## 2. Start and configure HAS server
 
 ### Deploy https
-Please look at [How to deploy https](https://github.com/apache/directory-kerby/tree/trunk/has-project/docs/deploy-https.md) for details.
+Please look at [How to deploy https](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/deploy-https.md) for details.
 
 ### Configure has-server.conf in <conf_dir>:
 An example of has-server.conf:
@@ -71,7 +71,7 @@ HasInitTool: exit
 ```
 
 ### Deploy http spnego
-Please look at [How to deploy http spnego](https://github.com/apache/directory-kerby/tree/trunk/has-project/docs/deploy-spnego.md) for details.
+Please look at [How to deploy http spnego](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/deploy-spnego.md) for details.
 Please restart the HAS server
 
 ```
