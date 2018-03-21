@@ -281,6 +281,16 @@ public enum AuthorizationType implements EnumType {
      * RFC 7751 for details.
      */
     AD_CAMMAC(96),
+    
+    /**
+     * Constant for the "Authentication-Indicator" authorization type.
+     *
+     * RFC 6711 An IANA Registry for Level of Assurance (LoA) Profiles provides
+     * the syntax and semantics of LoA profiles.
+     *
+     * RFC-8129 "Authentication Indicator in Kerberos Tickets" for details.
+     */
+    AD_AUTHENTICATION_INDICATOR(97),
 
     /**
      * Constant for the "Windows 2K Privilege Attribute Certificate (PAC)"
@@ -300,21 +310,12 @@ public enum AuthorizationType implements EnumType {
     AD_ETYPE_NEGOTIATION(129),
 
     /**
-     * Constant for the Authorization Data Type. Note that this is not a standard Type as of yet.
+     * Constant for the Authorization Data Type. Note that this is not a
+     * standard Type as of yet.
      *
      * See the draft spec "Token Pre-Authentication for Kerberos".
      */
-    AD_TOKEN(256),
-
-    /**
-     * Constant for the "Authentication-Indicator" authorization type.
-     *
-     * RFC 6711 An IANA Registry for Level of Assurance (LoA) Profiles provides
-     * the syntax and semantics of LoA profiles.
-     *
-     * See: Internet draft "draft-jain-kitten-krb-auth-indicator-01"
-     */
-    AD_AUTHENTICAION_INDICATOR(-1); // Not yet assigned an IANA registry number.
+    AD_TOKEN(256);
 
     /** The internal value */
     private final int value;

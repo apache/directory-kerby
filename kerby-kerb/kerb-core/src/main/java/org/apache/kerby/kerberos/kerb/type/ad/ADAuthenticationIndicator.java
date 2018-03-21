@@ -39,7 +39,7 @@ public class ADAuthenticationIndicator extends AuthorizationDataEntry {
     }
 
     public ADAuthenticationIndicator() {
-        super(AuthorizationType.AD_AUTHENTICAION_INDICATOR);
+        super(AuthorizationType.AD_AUTHENTICATION_INDICATOR);
         myAuthIndicator = new AuthIndicator();
         myAuthIndicator.outerEncodeable = this;
     }
