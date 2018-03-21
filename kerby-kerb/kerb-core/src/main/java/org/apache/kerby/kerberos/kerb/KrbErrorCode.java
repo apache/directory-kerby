@@ -95,7 +95,8 @@ public enum KrbErrorCode implements EnumType {
     KDC_ERR_PA_CHECKSUM_MUST_BE_INCLUDED(79, "PA checksum must be included"),
     KDC_ERR_DIGEST_IN_SIGNED_DATA_NOT_ACCEPTED(80, "Digest in signed data not accepted"),
     KDC_ERR_PUBLIC_KEY_ENCRYPTION_NOT_SUPPORTED(81, "Public key encryption not supported"),
-    TOKEN_PREAUTH_NOT_ALLOWED(82, "Token preauth is not allowed"),
+    KRB_AP_ERR_PRINCIPAL_UNKNOWN(82, "A well-known Kerberos principal name is used but not supported"),
+    TOKEN_PREAUTH_NOT_ALLOWED(83, "Token preauth is not allowed"),
 
     KRB_TIMEOUT(5000, "Network timeout"),
     UNKNOWN_ERR(5001, "Unknown error");
