@@ -1,0 +1,136 @@
+diff --git a/hadoop-common-project/hadoop-auth/src/main/java/org/apache/hadoop/security/authentication/util/KerberosUtil.java b/hadoop-common-project/hadoop-auth/src/main/java/org/apache/hadoop/security/authentication/util/KerberosUtil.java
+index ca0fce2..b43476d 100644
+--- a/hadoop-common-project/hadoop-auth/src/main/java/org/apache/hadoop/security/authentication/util/KerberosUtil.java
++++ b/hadoop-common-project/hadoop-auth/src/main/java/org/apache/hadoop/security/authentication/util/KerberosUtil.java
+@@ -44,7 +44,8 @@
+   public static String getKrb5LoginModuleName() {
+     return System.getProperty("java.vendor").contains("IBM")
+       ? "com.ibm.security.auth.module.Krb5LoginModule"
+-      : "com.sun.security.auth.module.Krb5LoginModule";
++//      : "com.sun.security.auth.module.Krb5LoginModule";
++      :"org.apache.kerby.has.client.HasLoginModule";
+   }
+   
+   public static Oid getOidInstance(String oidName) 
+diff --git a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/security/UserGroupInformation.java b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/security/UserGroupInformation.java
+index 4f117fd..7a8fc43 100644
+--- a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/security/UserGroupInformation.java
++++ b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/security/UserGroupInformation.java
+@@ -88,8 +88,10 @@
+   private static final float TICKET_RENEW_WINDOW = 0.80f;
+   static final String HADOOP_USER_NAME = "HADOOP_USER_NAME";
+   static final String HADOOP_PROXY_USER = "HADOOP_PROXY_USER";
+-  
+-  /** 
++  public static final String HADOOP_SECURITY_AUTHENTICATION_USE_HAS
++    = "hadoop.security.authentication.use.has";
++
++  /**
+    * UgiMetrics maintains UGI activity statistics
+    * and publishes them through the metrics interfaces.
+    */
+@@ -434,6 +436,8 @@ public String toString() {
+       "hadoop-user-kerberos";
+     private static final String KEYTAB_KERBEROS_CONFIG_NAME = 
+       "hadoop-keytab-kerberos";
++     private static final String HAS_KERBEROS_CONFIG_NAME =
++      "hadoop-has-kerberos";
+ 
+     private static final Map<String, String> BASIC_JAAS_OPTIONS =
+       new HashMap<String,String>();
+@@ -490,6 +494,29 @@ public String toString() {
+       KEYTAB_KERBEROS_OPTIONS.put("refreshKrb5Config", "true");
+       KEYTAB_KERBEROS_OPTIONS.putAll(BASIC_JAAS_OPTIONS);      
+     }
++
++    private static final Map<String, String> HAS_KERBEROS_OPTIONS =
++        new HashMap<String, String>();
++
++    static {
++      if (IBM_JAVA) {
++        HAS_KERBEROS_OPTIONS.put("useDefaultCcache", "true");
++      } else {
++        HAS_KERBEROS_OPTIONS.put("doNotPrompt", "true");
++        HAS_KERBEROS_OPTIONS.put("useTgtTicket", "true");
++        HAS_KERBEROS_OPTIONS.put("hadoopSecurityHas", conf.get("hadoop.security.has"));
++      }
++      HAS_KERBEROS_OPTIONS.putAll(BASIC_JAAS_OPTIONS);
++    }
++
++    private static final AppConfigurationEntry HAS_KERBEROS_LOGIN =
++      new AppConfigurationEntry(KerberosUtil.getKrb5LoginModuleName(),
++                                LoginModuleControlFlag.OPTIONAL,
++                                HAS_KERBEROS_OPTIONS);
++    private static final AppConfigurationEntry[] HAS_KERBEROS_CONF =
++      new AppConfigurationEntry[]{OS_SPECIFIC_LOGIN, HAS_KERBEROS_LOGIN,
++                                  HADOOP_LOGIN};
++
+     private static final AppConfigurationEntry KEYTAB_KERBEROS_LOGIN =
+       new AppConfigurationEntry(KerberosUtil.getKrb5LoginModuleName(),
+                                 LoginModuleControlFlag.REQUIRED,
+@@ -520,11 +547,45 @@ public String toString() {
+         }
+         KEYTAB_KERBEROS_OPTIONS.put("principal", keytabPrincipal);
+         return KEYTAB_KERBEROS_CONF;
++      } else if(HAS_KERBEROS_CONFIG_NAME.equals(appName)) {
++        return HAS_KERBEROS_CONF;
+       }
+       return null;
+     }
+   }
+ 
++  /**
++   * Log a user in from a tgt ticket.
++   * @throws IOException
++   */
++  @InterfaceAudience.Public
++  @InterfaceStability.Evolving
++  public synchronized
++  static void loginUserFromHas() throws IOException {
++    if (!isSecurityEnabled())
++      return;
++
++    Subject subject = new Subject();
++    LoginContext login;
++    long start = 0;
++    try {
++      login = newLoginContext(HadoopConfiguration.HAS_KERBEROS_CONFIG_NAME,
++            subject, new HadoopConfiguration());
++      start = Time.now();
++      login.login();
++      metrics.loginSuccess.add(Time.now() - start);
++      loginUser = new UserGroupInformation(subject);
++      loginUser.setLogin(login);
++      loginUser.setAuthenticationMethod(AuthenticationMethod.KERBEROS);
++    } catch (LoginException le) {
++      if (start > 0) {
++        metrics.loginFailure.add(Time.now() - start);
++      }
++      throw new IOException("Login failure for " + le, le);
++    }
++    LOG.info("Login successful for user " + loginUser.getUserName());
++  }
++
+   private static String prependFileAuthority(String keytabPath) {
+     return keytabPath.startsWith("file://") ? keytabPath
+         : "file://" + keytabPath;
+@@ -751,9 +812,16 @@ static void loginUserFromSubject(Subject subject) throws IOException {
+       if (subject == null) {
+         subject = new Subject();
+       }
+-      LoginContext login =
+-          newLoginContext(authenticationMethod.getLoginAppName(), 
+-                          subject, new HadoopConfiguration());
++      LoginContext login = null;
++      if (authenticationMethod.equals(AuthenticationMethod.KERBEROS)
++        && conf.getBoolean(HADOOP_SECURITY_AUTHENTICATION_USE_HAS, false)) {
++        login = newLoginContext(HadoopConfiguration.HAS_KERBEROS_CONFIG_NAME,
++          subject, new HadoopConfiguration());
++      } else {
++        login = newLoginContext(authenticationMethod.getLoginAppName(),
++          subject, new HadoopConfiguration());
++      }
++
+       login.login();
+       UserGroupInformation realUser = new UserGroupInformation(subject);
+       realUser.setLogin(login);
