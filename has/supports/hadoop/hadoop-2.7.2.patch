@@ -1,31 +1,31 @@
 diff --git a/hadoop-common-project/hadoop-auth/pom.xml b/hadoop-common-project/hadoop-auth/pom.xml
-index aa3c2c7..e4f1fd2 100644
+index aa3c2c7..96073d1 100644
 --- a/hadoop-common-project/hadoop-auth/pom.xml
 +++ b/hadoop-common-project/hadoop-auth/pom.xml
-@@ -143,6 +143,11 @@
+@@ -143,6 +143,21 @@
        <artifactId>curator-test</artifactId>
        <scope>test</scope>
      </dependency>
 +    <dependency>
 +      <groupId>org.apache.kerby</groupId>
 +      <artifactId>has-client</artifactId>
-+     <version>1.0.0-SNAPSHOT</version>
-+    </dependency>
-+    <dependency>
-+      <groupId>org.drizzle.jdbc</groupId>
-+      <artifactId>drizzle-jdbc</artifactId>
-+      <version>1.4</version>
++      <version>1.0.0-SNAPSHOT</version>
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.kerby</groupId>
 +      <artifactId>has-plugins</artifactId>
 +      <version>1.0.0-SNAPSHOT</version>
 +    </dependency>
++    <dependency>
++      <groupId>org.drizzle.jdbc</groupId>
++      <artifactId>drizzle-jdbc</artifactId>
++      <version>1.4</version>
++    </dependency>
    </dependencies>
  
    <build>
 diff --git a/hadoop-common-project/hadoop-auth/src/main/java/org/apache/hadoop/security/authentication/util/KerberosUtil.java b/hadoop-common-project/hadoop-auth/src/main/java/org/apache/hadoop/security/authentication/util/KerberosUtil.java
-index f7f5f63..80b7aca 100644
+index f7f5f63..05f2d8f 100644
 --- a/hadoop-common-project/hadoop-auth/src/main/java/org/apache/hadoop/security/authentication/util/KerberosUtil.java
 +++ b/hadoop-common-project/hadoop-auth/src/main/java/org/apache/hadoop/security/authentication/util/KerberosUtil.java
 @@ -44,7 +44,8 @@

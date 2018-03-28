@@ -50,10 +50,10 @@ public class MySQLHasServerPlugin extends AbstractHasServerPlugin {
         String user = (String) userToken.getAttributes().get("user");
         String secret = (String) userToken.getAttributes().get("secret");
 
-        String mysqlUrl = (String) userToken.getAttributes().get("mysqlUrl");
+        String mysqlUrl = System.getenv("mysqlUrl");
         mysqlUrl = mysqlUrl.replace("jdbc:mysql:", "jdbc:mysql:thin:");
-        String mysqlUser = (String) userToken.getAttributes().get("mysqlUser");
-        String mysqlPasswd = (String) userToken.getAttributes().get("mysqlPasswd");
+        String mysqlUser = System.getenv("mysqlUser");
+        String mysqlPasswd = System.getenv("mysqlPasswd");
         Connection connection = startConnection(mysqlUrl, mysqlUser, mysqlPasswd);
 
         ResultSet res = null;

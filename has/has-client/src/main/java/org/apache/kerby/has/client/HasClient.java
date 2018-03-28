@@ -205,7 +205,7 @@ public class HasClient {
         }
         type = plugin.getLoginType();
 
-        LOG.info("The plugin type is: " + type);
+        LOG.debug("The plugin type is: " + type);
 
         return requestTgt(authToken, type, config);
     }
@@ -222,7 +222,7 @@ public class HasClient {
             try {
                 PrintStream ps = new PrintStream(new FileOutputStream(krb5Conf));
                 ps.println(content);
-                LOG.info("krb5.conf has saved in : " + krb5Conf.getAbsolutePath());
+                LOG.debug("krb5.conf has saved in : " + krb5Conf.getAbsolutePath());
             } catch (FileNotFoundException e) {
                 LOG.error(e.getMessage());
                 throw new HasException(e);
@@ -234,7 +234,7 @@ public class HasClient {
 
     private HasClientPlugin getClientTokenPlugin(HasConfig config) throws HasException {
         String pluginName = config.getPluginName();
-        LOG.info("The plugin name getting from config is: " + pluginName);
+        LOG.debug("The plugin name getting from config is: " + pluginName);
         HasClientPlugin clientPlugin;
         if (pluginName != null) {
             clientPlugin = HasClientPluginRegistry.createPlugin(pluginName);
@@ -244,7 +244,7 @@ public class HasClient {
         if (clientPlugin == null) {
             throw new HasException("Failed to create client plugin: " + pluginName);
         }
-        LOG.info("The plugin class is: " + clientPlugin);
+        LOG.debug("The plugin class is: " + clientPlugin);
 
         return clientPlugin;
     }
@@ -390,11 +390,11 @@ public class HasClient {
             String httpHost = config.getHttpHost();
             String httpPort = config.getHttpPort();
             if (httpHost == null) {
-                LOG.info("Can't find the http host in config, the https host will be used.");
+                LOG.warn("Can't find the http host in config, the https host will be used.");
                 httpHost = config.getHttpsHost();
             }
             if (httpPort == null) {
-                LOG.info("Can't find the http port in config, the default http port will be used.");
+                LOG.warn("Can't find the http port in config, the default http port will be used.");
                 httpPort = HAS_HTTP_PORT_DEFAULT;
             }
             X509Certificate certificate = getCertificate(httpHost, httpPort);
@@ -528,7 +528,7 @@ public class HasClient {
 //        }
 
         TgtTicket tgtTicket = getTicket(kdcRep);
-        LOG.info("Ticket expire time: " + tgtTicket.getEncKdcRepPart().getEndTime());
+        LOG.debug("Ticket expire time: " + tgtTicket.getEncKdcRepPart().getEndTime());
         return tgtTicket;
 
     }

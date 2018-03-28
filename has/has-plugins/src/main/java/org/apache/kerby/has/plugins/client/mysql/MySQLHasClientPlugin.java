@@ -38,30 +38,24 @@ public class MySQLHasClientPlugin extends AbstractHasClientPlugin {
     @Override
     protected void doLogin(AuthToken authToken) {
 
-        //Get the ak info from env
+        // Get the user info from env
         String userName = System.getenv("userName");
         String password = System.getenv("password");
 
-        String mysqlUrl = System.getenv("mysqlUrl");
-        String mysqlUser = System.getenv("mysqlUser");
-        String mysqlPasswd = System.getenv("mysqlPasswd");
-
-        LOG.debug("Get the mysql login info successfully.");
+        LOG.debug("Get the user info successfully.");
 
         authToken.setIssuer("has");
         authToken.setSubject(userName);
 
         final Date now = new Date(new Date().getTime() / 1000 * 1000);
         authToken.setIssueTime(now);
+
         // Set expiration in 60 minutes
         Date exp = new Date(now.getTime() + 1000 * 60 * 60);
         authToken.setExpirationTime(exp);
 
         authToken.addAttribute("user", userName);
         authToken.addAttribute("secret", password);
-        authToken.addAttribute("mysqlUrl", mysqlUrl);
-        authToken.addAttribute("mysqlUser", mysqlUser);
-        authToken.addAttribute("mysqlPasswd", mysqlPasswd);
 
         authToken.addAttribute("passPhrase", userName + password);
     }
