@@ -145,7 +145,9 @@ KdcInitTool: exit
 
 ## 3. Prepare for Hadoop
 
-### Create service principals:
+### Step by Step
+
+#### Create service principals:
 ```
 cd HAS/has-dist
 echo { \
@@ -166,7 +168,7 @@ HadminLocalTool.local: exit
 ```
 The admin.keytab file is created by the kdcinit. In local and remote hadmin tool, you can type "?" for help.
 
-### Get hostRoles list:
+#### Get hostRoles list:
 ```
 cd HAS/has-dist
 // Start local or remote hadmin tool
@@ -175,7 +177,7 @@ HadminLocalTool.local: hostroles
 HadminLocalTool.local: exit
 ```
 
-### Export service keytabs:
+#### Export service keytabs:
 ```
 cd HAS/has-dist
 // Start local or remote hadmin tool
@@ -184,3 +186,28 @@ sh bin/hadmin-local.sh(bin/hadmin-remote.sh) <conf_dir> -k <keytab>
 HadminLocalTool.local: expkeytabs localhost
 HadminLocalTool.local: exit
 ```
+
+### One step to create service principals, export keytabs and deploy keytabs:
+```
+cd HAS/has-dist
+echo { \
+    HOSTS: [ \
+       {"name":"<host>","hostRoles":"<role>,..., <role>"\}, \
+       ...
+       {"name":"<host>","hostRoles":"<role>,...,<role>"\} \
+    ] \
+\} > hosts.txt
+
+// Start local hadmin tool
+sh bin/hadmin-local.sh <conf_dir> -k <keytab>
+
+// deploy_keytabs [HostRoles-File] [Where-to-Deploy] [UserName] [Password]
+// Where-to-Deploy: The place to store the keytabs
+// UserName: The host user name
+// Password: The host password
+// All the hosts with the same user and password
+HadminLocalTool.local: deploy_keytabs hosts.txt /etc/has/ username password
+HadminLocalTool.local: exit
+```
+Note: The admin.keytab file is created by the kdcinit. In local hadmin tool, you can type "?" for help.
+

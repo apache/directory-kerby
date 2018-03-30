@@ -23,6 +23,7 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.server.admin.LocalHasAdmin;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.AddPrincipalCmd;
+import org.apache.kerby.has.tool.server.hadmin.local.cmd.AddPrincipalsAndDeployKeytabsCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.AddPrincipalsCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.ChangePasswordCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.DeletePrincipalCmd;
@@ -100,7 +101,9 @@ public class HadminLocalTool {
         + "enable_configure, enable\n"
         + "                         Enable configure\n"
         + "disable_configure, disable\n"
-        + "                         Disable configure\n";
+        + "                         Disable configure\n"
+        + "deploy_keytabs, depkeytabs\n"
+        + "                         Deploy keytabs\n";
 
     private static void execute(LocalHasAdmin hadmin, String input) throws HasException {
         // Omit the leading and trailing whitespace.
@@ -146,9 +149,12 @@ public class HadminLocalTool {
         } else if (cmd.startsWith("disable_configure")
             || cmd.startsWith("disable")) {
             executor = new DisableConfigureCmd(hadmin);
-        }  else if (cmd.startsWith("get_principal")
+        } else if (cmd.startsWith("get_principal")
             || cmd.startsWith("getprinc")) {
             executor = new GetPrincipalCmd(hadmin);
+        } else if (cmd.startsWith("deploy_keytabs")
+            || cmd.startsWith("depkeytabs")) {
+            executor = new AddPrincipalsAndDeployKeytabsCmd(hadmin);
         } else {
             System.out.println(LEGAL_COMMANDS);
             return;

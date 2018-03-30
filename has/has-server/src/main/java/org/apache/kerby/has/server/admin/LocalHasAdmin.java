@@ -204,7 +204,7 @@ public class LocalHasAdmin implements HasAdmin {
         } catch (KrbException e) {
             throw new HasException(e);
         }
-        String releam = "/" + host + "@" + kadmin.getKdcConfig().getKdcRealm();
+        String realm = "/" + host + "@" + kadmin.getKdcConfig().getKdcRealm();
         String[] princs = HostRoleType.valueOf(role).getPrincs();
         if (princs == null) {
             LOG.error("Cannot find the role of : " + role);
@@ -212,9 +212,9 @@ public class LocalHasAdmin implements HasAdmin {
         }
         for (String princ : princs) {
             try {
-                kadmin.addPrincipal(princ + releam);
-                LOG.info("Success to add princ :" + princ + releam);
-                result = result + "Success to add princ :" + princ + releam + "\n";
+                kadmin.addPrincipal(princ + realm);
+                LOG.info("Success to add princ :" + princ + realm);
+                result = result + "Success to add princ :" + princ + realm + "\n";
             } catch (KrbException e) {
                 LOG.info(e.getMessage());
                 result = e.getMessage() + "\n";
