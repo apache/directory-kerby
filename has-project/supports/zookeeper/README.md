@@ -3,18 +3,18 @@ Enable ZooKeeper
 
 ## 1. Create the dependency jars
 ```
-cd HAS/supports/zookeeper
+cd directroy-kerby/has-project/supports/zookeeper
 mvn clean package
 ```
 
 ## 2. Copy the jars to ZooKeeper lib directory
 ```
-cp HAS/supports/zookeeper/lib/* $ZOOKEEPER_HOME/lib/
+cp directroy-kerby/has-project/supports/zookeeper/lib/* $ZOOKEEPER_HOME/lib/
 ```
 
 ## 3. Copy the conf file to ZooKeeper conf directory
 ```
-cp HAS/supports/zookeeper/conf/* $ZOOKEEPER_HOME/conf/
+cp directroy-kerby/has-project/supports/zookeeper/conf/* $ZOOKEEPER_HOME/conf/
 ```
 
 ## 4. Update Zookeeper security configuration files
