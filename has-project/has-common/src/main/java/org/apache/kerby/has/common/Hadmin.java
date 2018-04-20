@@ -20,6 +20,7 @@
 package org.apache.kerby.has.common;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Server side admin facilities from remote, similar to MIT kadmin remote mode.
@@ -27,7 +28,7 @@ import java.io.File;
 public interface Hadmin {
 
 
-    String addPrincByRole(String host, String role) throws HasException;
+    List<String> addPrincByRole(String host, String role) throws HasException;
 
     File getKeytabByHostAndRole(String host, String role) throws HasException;
 

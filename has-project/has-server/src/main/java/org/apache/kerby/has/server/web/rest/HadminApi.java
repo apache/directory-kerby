@@ -17,7 +17,9 @@
  */
 package org.apache.kerby.has.server.web.rest;
 
+import org.apache.hadoop.http.JettyUtils;
 import org.apache.kerby.has.common.HasException;
+import org.apache.kerby.has.common.util.HasUtil;
 import org.apache.kerby.has.server.HasServer;
 import org.apache.kerby.has.server.admin.LocalHadmin;
 import org.apache.kerby.has.server.web.HostRoleType;
@@ -94,7 +96,7 @@ public class HadminApi {
             } catch (KrbException e) {
                 WebServer.LOG.info("Failed to create local hadmin." + e.getMessage());
             }
-            StringBuilder msg = new StringBuilder();
+            JSONArray results = new JSONArray();
             try {
                 StringBuilder data = new StringBuilder();
                 BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
@@ -108,10 +110,13 @@ public class HadminApi {
                     JSONObject host = (JSONObject) hostArray.get(i);
                     String[] roles = host.getString("hostRoles").split(",");
                     for (String role : roles) {
-                        msg.append(hasAdmin.addPrincByRole(host.getString("name"), role.toUpperCase()));
+                        List<String> strs = hasAdmin.addPrincByRole(host.getString("name"), role.toUpperCase());
+                        for (String str : strs) {
+                            results.put(str);
+                        }
                     }
                 }
-                return Response.ok(msg).build();
+                return Response.ok(results.toString()).build();
             } catch (Exception e) {
                 WebServer.LOG.error("Failed to create principals,because : " + e.getMessage());
                 String error = "Failed to create principals,because : " + e.getMessage();
@@ -206,6 +211,69 @@ public class HadminApi {
                 WebServer.LOG.error(msg);
                 return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
             }
+        }
+        return Response.status(Response.Status.FORBIDDEN).entity("HTTPS required.\n").build();
+    }
+
+    @GET
+    @Path("/hostroles")
+    @Produces(MediaType.APPLICATION_JSON + ";" + JettyUtils.UTF_8)
+    public Response getRoles() {
+        if (httpRequest.isSecure()) {
+            JSONArray result = new JSONArray();
+            try {
+                for (HostRoleType role : HostRoleType.values()) {
+                    JSONObject json = new JSONObject();
+                    json.put("HostRole", role.getName());
+                    JSONArray jsa = new JSONArray();
+                    String[] princs = role.getPrincs();
+                    for (String princ : princs) {
+                        jsa.put(princ);
+                    }
+                    json.put("PrincipalNames", jsa);
+                    result.put(json);
+                }
+                return Response.ok(result.toString() + "\n").build();
+            } catch (Exception e) {
+                String msg = "Failed to get host roles." + e.getMessage();
+                WebServer.LOG.error(msg);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+            }
+        }
+        return Response.status(Response.Status.FORBIDDEN).entity("HTTPS required.\n").build();
+    }
+
+    @PUT
+    @Path("/setconf")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response setConf(@QueryParam("isEnable") String isEnable) {
+        if (httpRequest.isSecure()) {
+            WebServer.LOG.info("Request to admin/setconf.");
+            final HasServer hasServer = WebServer.getHasServerFromContext(
+                context);
+            File hasConf = new File(hasServer.getConfDir(), "has-server.conf");
+            if (!hasConf.exists()) {
+                WebServer.LOG.error("has-server.conf is not exists.");
+                return Response.serverError().entity("has-server.conf is not exists.")
+                    .build();
+            }
+            String result = "";
+            if (isEnable.equals("true")) {
+                result = "enable";
+            } else if (isEnable.equals("false")) {
+                result = "disable";
+            } else {
+                WebServer.LOG.error("Value of isEnable is error.");
+                return Response.serverError().entity("Value of isEnable is error.")
+                    .build();
+            }
+            try {
+                HasUtil.setEnableConf(hasConf, isEnable);
+            } catch (Exception e) {
+                WebServer.LOG.error(e.getMessage());
+                return Response.serverError().entity(e.getMessage()).build();
+            }
+            return Response.ok("Set conf to " + result).build();
         }
         return Response.status(Response.Status.FORBIDDEN).entity("HTTPS required.\n").build();
     }

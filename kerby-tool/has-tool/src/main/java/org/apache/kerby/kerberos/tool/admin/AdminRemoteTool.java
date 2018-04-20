@@ -25,8 +25,13 @@ import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.common.util.HasUtil;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.tool.admin.cmd.AddPrincipalRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.cmd.AddPrincipalsRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.cmd.AdminRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.cmd.DeletePrincipalRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.cmd.DisableConfRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.cmd.EnableConfRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.cmd.ExportKeytabsRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.cmd.GetHostRolesRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.cmd.ListPrincipalsRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.cmd.RenamePrincipalRemoteCmd;
 import org.apache.kerby.util.OSUtil;
@@ -55,7 +60,17 @@ public class AdminRemoteTool {
         + "rename_principal, renprinc\n"
         + "                         Rename principal\n"
         + "list_principals, listprincs\n"
-        + "                         List principals\n";
+        + "                         List principals\n"
+        + "get_hostroles, hostroles\n"
+        + "                         Get hostRoles\n"
+        + "export_keytabs, expkeytabs\n"
+        + "                         Export keytabs\n"
+        + "add_principals, addprincs\n"
+        + "                         Add principals\n"
+        + "enable_configure, enable\n"
+        + "                         Enable configure\n"
+        + "disable_configure, disable\n"
+        + "                         Disable configure\n";
 
     public static void main(String[] args) {
 
@@ -122,6 +137,21 @@ public class AdminRemoteTool {
         } else if (cmd.equals("list_principals")
             || cmd.equals("listprincs")) {
             executor = new ListPrincipalsRemoteCmd(hasAuthAdminClient);
+        } else if (cmd.equals("get_hostroles")
+            || cmd.equals("hostroles")) {
+            executor = new GetHostRolesRemoteCmd(hasAuthAdminClient);
+        } else if (cmd.equals("add_principals")
+            || cmd.equals("addprincs")) {
+            executor = new AddPrincipalsRemoteCmd(hasAuthAdminClient);
+        } else if (cmd.equals("export_keytabs")
+            || cmd.equals("expkeytabs")) {
+            executor = new ExportKeytabsRemoteCmd(hasAuthAdminClient);
+        } else if (cmd.equals("enable_configure")
+            || cmd.equals("enable")) {
+            executor = new EnableConfRemoteCmd(hasAuthAdminClient);
+        } else if (cmd.equals("disable_configure")
+            || cmd.equals("disable")) {
+            executor = new DisableConfRemoteCmd(hasAuthAdminClient);
         } else {
             System.out.println(LEGAL_COMMANDS);
             return;

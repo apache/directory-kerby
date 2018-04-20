@@ -20,23 +20,30 @@
 package org.apache.kerby.kerberos.tool.admin.cmd;
 
 import org.apache.kerby.has.client.HasAuthAdminClient;
+import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
-public abstract class AdminRemoteCmd {
+/**
+ * Remote add principal cmd
+ */
+public class EnableConfRemoteCmd extends AdminRemoteCmd {
 
-    private HasAuthAdminClient client;
+    public static final String USAGE = "Usage: enable_configure\n"
+            + "\tExample:\n"
+            + "\t\tenable\n";
 
-    public AdminRemoteCmd(HasAuthAdminClient authHadminClient) {
-        this.client = authHadminClient;
+    public EnableConfRemoteCmd(HasAuthAdminClient authHadmin) {
+        super(authHadmin);
     }
 
-    protected HasAuthAdminClient getAuthAdminClient() {
-        return client;
-    }
+    @Override
+    public void execute(String[] items) throws KrbException {
 
-    /**
-     * Execute the admin cmd.
-     * @param items Input cmd to execute
-     */
-    public abstract void execute(String[] items) throws KrbException;
+        HasAuthAdminClient client = getAuthAdminClient();
+        try {
+            client.setEnableOfConf("true");
+        } catch (HasException e) {
+            throw new KrbException(e.getMessage());
+        }
+    }
 }

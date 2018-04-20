@@ -35,6 +35,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LocalHadmin implements Hadmin {
     public static final Logger LOG = LoggerFactory.getLogger(LocalHadmin.class);
@@ -73,22 +75,24 @@ public class LocalHadmin implements Hadmin {
     }
 
     @Override
-    public String addPrincByRole(String host, String role) throws HasException {
-        String result = "";
+    public List<String> addPrincByRole(String host, String role) throws HasException {
+        List<String> result = new ArrayList<>();
         String realm = "/" + host + "@" + kadmin.getKdcConfig().getKdcRealm();
         String[] princs = HostRoleType.valueOf(role).getPrincs();
         if (princs == null) {
             LOG.error("Cannot find the role of : " + role);
-            return "Cannot find the role of : " + role;
+            result.add("Cannot find the role of : " + role);
+            return result;
         }
         for (String princ : princs) {
             try {
                 kadmin.addPrincipal(princ + realm);
-                LOG.info("Success to add princ :" + princ + realm);
-                result = result + "Success to add princ :" + princ + realm + "\n";
+                LOG.info("Success to add princ: " + princ + realm);
+                result.add("Success to add princ: " + princ + realm);
             } catch (KrbException e) {
-                LOG.info(e.getMessage());
-                result = e.getMessage() + "\n";
+                String message = e.getMessage();
+                LOG.info(message);
+                result.add(message);
             }
         }
         return result;

@@ -20,23 +20,38 @@
 package org.apache.kerby.kerberos.tool.admin.cmd;
 
 import org.apache.kerby.has.client.HasAuthAdminClient;
+import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
-public abstract class AdminRemoteCmd {
+public class ExportKeytabsRemoteCmd extends AdminRemoteCmd {
+    private static final String USAGE = "\nUsage: export_keytabs <host> [role]\n"
+            + "\tExample:\n"
+            + "\t\texport_keytabs host1 HDFS\n";
 
-    private HasAuthAdminClient client;
-
-    public AdminRemoteCmd(HasAuthAdminClient authHadminClient) {
-        this.client = authHadminClient;
+    public ExportKeytabsRemoteCmd(HasAuthAdminClient authHadmin) {
+        super(authHadmin);
     }
 
-    protected HasAuthAdminClient getAuthAdminClient() {
-        return client;
-    }
+    @Override
+    public void execute(String[] items) throws KrbException {
+        //TODO add save path option
+        //String param = items[0];
+        if (items.length < 2) {
+            System.err.println(USAGE);
+            return;
+        }
 
-    /**
-     * Execute the admin cmd.
-     * @param items Input cmd to execute
-     */
-    public abstract void execute(String[] items) throws KrbException;
+        HasAuthAdminClient client = getAuthAdminClient();
+
+        String host = items[1];
+        String role = "";
+        if (items.length >= 3) {
+            role = items[2];
+        }
+        try {
+            client.getKeytabByHostAndRole(host, role);
+        } catch (HasException e) {
+            throw new KrbException(e.getMessage());
+        }
+    }
 }

@@ -21,6 +21,7 @@ package org.apache.kerby.has.client;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.has.common.HasConfig;
+import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.common.ssl.SSLFactory;
 import org.apache.kerby.has.common.util.URLConnectionFactory;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -36,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -97,10 +99,18 @@ public class HasAuthAdminClient implements Kadmin {
     }
 
     private String getKadminBaseURL() {
+        return getBaseUrl("kadmin");
+    }
+
+    private String getHadminBaseURL() {
+        return getBaseUrl("hadmin");
+    }
+
+    private String getBaseUrl(String input) {
         String url = null;
         if (hasConfig.getHttpsPort() != null && hasConfig.getHttpsHost() != null) {
             url = "https://" + hasConfig.getHttpsHost() + ":" + hasConfig.getHttpsPort()
-                + "/has/v1/kadmin/";
+                + "/has/v1/" + input + "/";
         }
         if (url == null) {
             throw new RuntimeException("Please set the https address and port.");
@@ -295,7 +305,7 @@ public class HasAuthAdminClient implements Kadmin {
             LOG.error("IO error occurred." + e.getMessage());
             throw new KrbException("IO error occurred.", e);
         }
-        return getPrincsList(response);
+        return stringtoList(response);
     }
 
     @Override
@@ -333,22 +343,22 @@ public class HasAuthAdminClient implements Kadmin {
         } catch (IOException e) {
             throw new KrbException("IO error occurred.", e);
         }
-        return getPrincsList(response);
+        return stringtoList(response);
     }
 
     /**
-     * Change principals JSON string to a List.
+     * Change JSON string to a List.
      *
-     * @param princs principals JSON string which like
+     * @param result principals JSON string which like
      *               "["HTTP\/host1@HADOOP.COM","HTTP\/host2@HADOOP.COM"]"
      * @return principalLists.
      */
-    private List<String> getPrincsList(String princs) throws KrbException {
+    private List<String> stringtoList(String result) throws KrbException {
         List<String> principalLists = new ArrayList<>();
         try {
-            JSONArray principals = new JSONArray(princs);
-            for (int i = 0; i < principals.length(); i++) {
-                principalLists.add("\t" + principals.getString(i));
+            JSONArray jsonArray = new JSONArray(result);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                principalLists.add("\t" + jsonArray.getString(i));
             }
         } catch (JSONException e) {
             throw new KrbException("JSON Exception occurred. ", e);
@@ -497,5 +507,174 @@ public class HasAuthAdminClient implements Kadmin {
             data.append(s);
         }
         return data.toString();
+    }
+
+    public List<String> addPrincipalsByRole(String hostRoles) throws KrbException {
+        HttpURLConnection httpConn;
+
+        URL url;
+        try {
+            url = new URL(getHadminBaseURL() + "addprincipalsbyrole");
+        } catch (MalformedURLException e) {
+            throw new KrbException(e.getMessage());
+        }
+
+        httpConn = createConnection(url, "POST");
+
+        httpConn.setRequestProperty("Content-Type",
+                "application/json; charset=UTF-8");
+        try {
+            httpConn.setRequestMethod("PUT");
+        } catch (ProtocolException e) {
+            throw new KrbException(e.getMessage());
+        }
+        httpConn.setDoOutput(true);
+        httpConn.setDoInput(true);
+        String response;
+        try {
+            httpConn.connect();
+            OutputStream out = httpConn.getOutputStream();
+            out.write(hostRoles.toString().getBytes());
+            out.flush();
+            out.close();
+            if (httpConn.getResponseCode() == 200) {
+                response = getResponse(httpConn);
+            } else {
+                throw new KrbException(getResponse(httpConn));
+            }
+        } catch (Exception e) {
+            throw new KrbException(e.getMessage());
+        }
+        return stringtoList(response);
+    }
+
+    public void setEnableOfConf(String isEnable) throws HasException {
+        HttpURLConnection httpConn;
+
+        URL url;
+        try {
+            url = new URL(getHadminBaseURL() + "setconf?isEnable=" + isEnable);
+        } catch (MalformedURLException e) {
+            throw new HasException(e);
+        }
+
+        httpConn = createConnection(url, "PUT");
+
+        httpConn.setRequestProperty("Content-Type",
+                "application/json; charset=UTF-8");
+        try {
+            httpConn.setRequestMethod("PUT");
+        } catch (ProtocolException e) {
+            throw new HasException(e);
+        }
+        try {
+            httpConn.setDoOutput(true);
+            httpConn.setDoInput(true);
+            httpConn.connect();
+            InputStream inputStream = httpConn.getResponseCode() == 200
+                    ? httpConn.getInputStream() : httpConn.getErrorStream();
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(inputStream));
+            String s;
+            StringBuilder result = new StringBuilder();
+            while ((s = reader.readLine()) != null) {
+                result.append(s);
+            }
+            if (httpConn.getResponseCode() == 200) {
+                System.out.println(result);
+            } else {
+                System.err.println(result);
+            }
+        } catch (Exception e) {
+            LOG.error("Fail to connect to server. " + e);
+            throw new HasException(e);
+        }
+    }
+
+    public File getKeytabByHostAndRole(String host, String role) throws HasException {
+        String keytabName = host + ".zip";
+        HttpURLConnection httpConn;
+        String request = getHadminBaseURL() + "exportKeytabsbyrole?host=" + host;
+        if (!role.equals("")) {
+            request = request + "&role=" + role;
+            keytabName = role + "-" + host + ".keytab";
+        }
+
+        URL url;
+        try {
+            url = new URL(request);
+        } catch (MalformedURLException e) {
+            throw new HasException(e);
+        }
+
+        httpConn = createConnection(url, "GET");
+
+        httpConn.setRequestProperty("Content-Type",
+            "application/json; charset=UTF-8");
+        try {
+            httpConn.setRequestMethod("GET");
+        } catch (ProtocolException e) {
+            throw new HasException(e);
+        }
+        httpConn.setDoOutput(true);
+        httpConn.setDoInput(true);
+        try {
+            httpConn.connect();
+
+            if (httpConn.getResponseCode() != 200) {
+                System.err.println("Error : connection denied.");
+                return null;
+            }
+            FileOutputStream fos = new FileOutputStream(new File(keytabName));
+            InputStream in = httpConn.getInputStream();
+            byte[] buffer = new byte[4 * 1024];
+            int read;
+            while ((read = in.read(buffer)) > 0) {
+                fos.write(buffer, 0, read);
+            }
+            fos.close();
+            in.close();
+        } catch (IOException e) {
+            throw new HasException(e);
+        }
+        System.out.println("Accept keytab file \"" + keytabName + "\" from server.");
+
+        return new File(keytabName);
+    }
+
+    public String getHostRoles() throws KrbException {
+        HttpURLConnection httpConn;
+
+        URL url;
+        try {
+            url = new URL(getHadminBaseURL() + "hostroles");
+        } catch (MalformedURLException e) {
+            throw new KrbException("Failed to create a URL object.", e);
+        }
+
+        httpConn = createConnection(url, "GET");
+
+        httpConn.setRequestProperty("Content-Type",
+            "application/json; charset=UTF-8");
+        try {
+            httpConn.setRequestMethod("GET");
+        } catch (ProtocolException e) {
+            throw new KrbException("Failed to set the method for URL request.", e);
+        }
+        String response;
+        try {
+            httpConn.setDoInput(true);
+            httpConn.connect();
+
+            if (httpConn.getResponseCode() == 200) {
+                response = getResponse(httpConn);
+            } else {
+                throw new KrbException(getResponse(httpConn));
+            }
+        } catch (IOException e) {
+            LOG.error("IO error occurred." + e.getMessage());
+            throw new KrbException("IO error occurred.", e);
+        }
+        return response;
     }
 }
