@@ -14,7 +14,7 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.kerb.admin.kadmin.local;
@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -211,9 +211,7 @@ public class LocalKadminImpl implements LocalKadmin {
     public void exportKeytab(File keytabFile, String principal)
             throws KrbException {
         principal = fixPrincipal(principal);
-        List<String> principals = new ArrayList<>(1);
-        principals.add(principal);
-        exportKeytab(keytabFile, principals);
+        exportKeytab(keytabFile, Collections.singletonList(principal));
     }
 
     @Override

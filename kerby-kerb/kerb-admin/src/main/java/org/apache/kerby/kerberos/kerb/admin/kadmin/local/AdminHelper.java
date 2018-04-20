@@ -299,12 +299,10 @@ public final class AdminHelper {
         patternString = patternString.replaceAll("\\*", ".*");
         patternString = "^" + patternString + "$";
 
-        Pattern pt;
         try {
-            pt = Pattern.compile(patternString);
+            return Pattern.compile(patternString);
         } catch (PatternSyntaxException e) {
             throw new KrbException("Invalid glob pattern string");
         }
-        return pt;
     }
 }

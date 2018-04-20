@@ -27,6 +27,7 @@ import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
 import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
+import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.util.NetworkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,16 @@ public class SimpleKdcServer extends KdcServer {
      */
     public SimpleKdcServer() throws KrbException {
         this(new KrbConfig());
+
+        setKdcRealm("EXAMPLE.COM");
+        setKdcHost("localhost");
+        setKdcPort(NetworkUtil.getServerPort());
+    }
+
+    public SimpleKdcServer(KdcConfig kdcConfig,
+                           BackendConfig backendConfig) throws KrbException {
+        super(kdcConfig, backendConfig);
+        this.krbClnt = new KrbClient(new KrbConfig());
 
         setKdcRealm("EXAMPLE.COM");
         setKdcHost("localhost");

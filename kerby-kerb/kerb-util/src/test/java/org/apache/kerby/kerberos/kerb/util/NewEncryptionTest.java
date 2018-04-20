@@ -88,6 +88,11 @@ public class NewEncryptionTest {
         testEncWith(EncryptionType.RC4_HMAC_EXP);
     }
 
+    @Test
+    public void testArcfourHmacMd5() throws IOException, KrbException {
+        testEncWith(EncryptionType.ARCFOUR_HMAC_MD5);
+    }
+
     /**
      * Decryption can leave a little trailing cruft. For the current cryptosystems, this can be up to 7 bytes.
      * @param inData
@@ -101,11 +106,7 @@ public class NewEncryptionTest {
 
         byte[] resultData = Arrays.copyOf(outData, inData.length);
 
-        if (Arrays.equals(inData, resultData)) {
-            return true;
-        } else {
-            return false;
-        }
+        return Arrays.equals(inData, resultData);
     }
 
     private void testEncWith(EncryptionType eType) throws KrbException {
