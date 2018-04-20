@@ -14,7 +14,7 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
 package org.apache.kerby.kerberos.kerb.crypto;
@@ -52,8 +52,7 @@ public class EncryptionHandler {
      * @throws KrbException e
      */
     public static EncryptionType getEncryptionType(String eType) throws KrbException {
-        EncryptionType result = EncryptionType.fromName(eType);
-        return result;
+        return EncryptionType.fromName(eType);
     }
 
     /**
@@ -208,8 +207,7 @@ public class EncryptionHandler {
                                  KeyUsage usage) throws KrbException {
         EncTypeHandler handler = getEncHandler(key.getKeyType());
 
-        byte[] plainData = handler.decrypt(data, key.getKeyData(), usage.getValue());
-        return plainData;
+        return handler.decrypt(data, key.getKeyData(), usage.getValue());
     }
 
     /**
@@ -225,9 +223,8 @@ public class EncryptionHandler {
                                  KeyUsage usage) throws KrbException {
         EncTypeHandler handler = getEncHandler(key.getKeyType());
 
-        byte[] plainData = handler.decrypt(data.getCipher(),
+        return handler.decrypt(data.getCipher(),
                 key.getKeyData(), usage.getValue());
-        return plainData;
     }
 
     /**
@@ -243,7 +240,7 @@ public class EncryptionHandler {
         } catch (KrbException e) {
             return false;
         }
-        return  handler != null;
+        return handler != null;
     }
 
     /**
@@ -291,8 +288,7 @@ public class EncryptionHandler {
 
         byte[] randomBytes = Random.makeBytes(handler.keyInputSize());
         byte[] keyBytes = handler.random2Key(randomBytes);
-        EncryptionKey encKey = new EncryptionKey(eType, keyBytes);
-        return encKey;
+        return new EncryptionKey(eType, keyBytes);
     }
 
     /**
@@ -308,8 +304,7 @@ public class EncryptionHandler {
 
         byte[] randomBytes1 = randomBytes;
         byte[] keyBytes = handler.random2Key(randomBytes1);
-        EncryptionKey encKey = new EncryptionKey(eType, keyBytes);
-        return encKey;
+        return new EncryptionKey(eType, keyBytes);
     }
 
     /**
