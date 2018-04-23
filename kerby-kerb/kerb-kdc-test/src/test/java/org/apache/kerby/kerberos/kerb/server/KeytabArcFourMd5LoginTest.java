@@ -19,7 +19,17 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.File;
+
+import org.apache.kerby.KOptions;
+import org.apache.kerby.kerberos.kerb.client.KrbClient;
+import org.apache.kerby.kerberos.kerb.client.KrbConfigKey;
+import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.junit.Test;
 
 public class KeytabArcFourMd5LoginTest extends LoginTestBase {
@@ -40,6 +50,25 @@ public class KeytabArcFourMd5LoginTest extends LoginTestBase {
 
     @Test
     public void testLogin() throws Exception {
-        checkSubject(super.loginServiceUsingKeytab());
+        KrbClient client = super.getKrbClient();
+        client.getKrbConfig().setString(KrbConfigKey.PERMITTED_ENCTYPES, "arcfour-hmac");
+
+        KOptions requestOptions = new KOptions();
+        requestOptions.add(KrbOption.CLIENT_PRINCIPAL, getClientPrincipal());
+        requestOptions.add(KrbOption.USE_KEYTAB, true);
+
+        File keytab = new File(getTestDir(), "test-client.keytab");
+        requestOptions.add(KrbOption.KEYTAB_FILE, keytab);
+
+        getKdcServer().exportPrincipal(getClientPrincipal(), keytab);
+
+        TgtTicket tgt = client.requestTgt(requestOptions);
+        assertThat(tgt).isNotNull();
+
+        SgtTicket tkt = client.requestSgt(tgt, getServerPrincipal());
+        assertThat(tkt).isNotNull();
+
+        keytab.delete();
+
     }
 }
