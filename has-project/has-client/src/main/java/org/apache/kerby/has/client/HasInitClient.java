@@ -23,8 +23,10 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.apache.kerby.has.common.HasConfig;
 import org.apache.kerby.has.common.HasException;
+import org.apache.kerby.kerberos.kerb.KrbException;
 import org.glassfish.jersey.SslConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -136,5 +139,100 @@ public class HasInitClient {
             throw new HasException(e.getMessage());
         }
         return msg.toString();
+    }
+
+    public String getKrb5conf() throws KrbException {
+        WebResource webResource = getWebResource("conf/getkrb5conf");
+        ClientResponse response = webResource.get(ClientResponse.class);
+        String message;
+        try {
+            message = getResponse(response);
+        } catch (HasException e) {
+            throw new KrbException(e.getMessage());
+        }
+        if (response.getStatus() == 200) {
+            return message;
+        } else {
+            throw new KrbException(message);
+        }
+    }
+
+    public String getHasClientConf() throws KrbException {
+        WebResource webResource = getWebResource("conf/gethasclientconf");
+        ClientResponse response = webResource.get(ClientResponse.class);
+        String message;
+        try {
+            message = getResponse(response);
+        } catch (HasException e) {
+            throw new KrbException(e.getMessage());
+        }
+        if (response.getStatus() == 200) {
+            return message;
+        } else {
+            throw new KrbException(message);
+        }
+    }
+
+    public String setPlugin(String plugin) throws KrbException {
+        WebResource webResource = getWebResource("conf/setplugin");
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("plugin", plugin);
+        ClientResponse response = webResource.queryParams(params).put(ClientResponse.class);
+        String message;
+        try {
+            message = getResponse(response);
+        } catch (HasException e) {
+            throw new KrbException(e.getMessage());
+        }
+        if (response.getStatus() == 200) {
+            return message;
+        } else {
+            throw new KrbException(message);
+        }
+    }
+
+    public String configKdc(String port, String realm, String host) throws KrbException {
+        WebResource webResource = getWebResource("conf/configkdc");
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("port", port);
+        params.add("realm", realm);
+        params.add("host", host);
+        ClientResponse response = webResource.queryParams(params).put(ClientResponse.class);
+        String message;
+        try {
+            message = getResponse(response);
+        } catch (HasException e) {
+            throw new KrbException(e.getMessage());
+        }
+        if (response.getStatus() == 200) {
+            return message;
+        } else {
+            throw new KrbException(message);
+        }
+    }
+    public String configBackend(String backendType, String dir, String url, String user,
+                              String password) throws KrbException {
+        WebResource webResource = getWebResource("conf/configbackend");
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("backendType", backendType);
+        if (backendType.equals("json")) {
+            params.add("dir", dir);
+        } else if (backendType.equals("mysql")) {
+            params.add("url", url);
+            params.add("user", user);
+            params.add("password", password);
+        }
+        ClientResponse response = webResource.queryParams(params).put(ClientResponse.class);
+        String message;
+        try {
+            message = getResponse(response);
+        } catch (HasException e) {
+            throw new KrbException(e.getMessage());
+        }
+        if (response.getStatus() == 200) {
+            return message;
+        } else {
+            throw new KrbException(message);
+        }
     }
 }

@@ -24,8 +24,13 @@ import org.apache.kerby.has.common.HasConfig;
 import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.common.util.HasUtil;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.tool.init.cmd.ConfigBackendCmd;
+import org.apache.kerby.kerberos.tool.init.cmd.ConfigKdcCmd;
+import org.apache.kerby.kerberos.tool.init.cmd.GetHasClientConfCmd;
+import org.apache.kerby.kerberos.tool.init.cmd.GetKrb5ConfCmd;
 import org.apache.kerby.kerberos.tool.init.cmd.InitCmd;
 import org.apache.kerby.kerberos.tool.init.cmd.InitKdcCmd;
+import org.apache.kerby.kerberos.tool.init.cmd.SetPluginCmd;
 import org.apache.kerby.kerberos.tool.init.cmd.StartKdcCmd;
 import org.apache.kerby.util.OSUtil;
 
@@ -45,6 +50,16 @@ public class HasInitTool {
 
     private static final String LEGAL_COMMANDS = "Available commands are: "
             + "\n"
+            + "get_krb5conf, getkrb5\n"
+            + "                         Get krb5.conf\n"
+            + "get_hasConf, gethas\n"
+            + "                         Get has-client.conf\n"
+            + "set_plugin, setplugin\n"
+            + "                         Set plugin\n"
+            + "config_kdcBackend, confbackend\n"
+            + "                         Config kdc backend\n"
+            + "config_kdc, confkdc\n"
+            + "                         Config kdc\n"
             + "start_kdc, start\n"
             + "                         Start kdc\n"
             + "init_kdc, init\n"
@@ -93,7 +108,22 @@ public class HasInitTool {
         String cmd = items[0];
 
         InitCmd executor;
-        if (cmd.equals("start_kdc")
+        if (cmd.equals("get_krb5conf")
+            || cmd.equals("getkrb5")) {
+            executor = new GetKrb5ConfCmd(hasInitClient);
+        } else if (cmd.equals("get_hasConf")
+            || cmd.equals("gethas")) {
+            executor = new GetHasClientConfCmd(hasInitClient);
+        } else if (cmd.equals("set_plugin")
+            || cmd.equals("setplugin")) {
+            executor = new SetPluginCmd(hasInitClient);
+        } else if (cmd.equals("config_backend")
+            || cmd.equals("confbackend")) {
+            executor = new ConfigBackendCmd(hasInitClient);
+        } else if (cmd.equals("config_kdc")
+            || cmd.equals("confkdc")) {
+            executor = new ConfigKdcCmd(hasInitClient);
+        } else if (cmd.equals("start_kdc")
             || cmd.equals("start")) {
             executor = new StartKdcCmd(hasInitClient);
         } else if (cmd.equals("init_kdc")
@@ -103,6 +133,7 @@ public class HasInitTool {
             System.out.println(LEGAL_COMMANDS);
             return;
         }
+
         executor.execute(items);
     }
 }
