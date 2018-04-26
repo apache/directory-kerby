@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.has.server;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.hadoop.http.HttpConfig;
 import org.apache.kerby.has.common.HasConfig;
 import org.apache.kerby.has.common.HasException;
@@ -32,15 +33,31 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
 import org.apache.kerby.kerberos.kerb.client.ClientUtil;
 import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
+import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
+import org.apache.kerby.kerberos.kerb.server.KdcUtil;
+import org.apache.kerby.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * The HAS KDC server implementation.
@@ -103,6 +120,16 @@ public class HasServer {
     }
 
     public void startKdcServer() throws HasException {
+        BackendConfig backendConfig;
+        try {
+            backendConfig = KdcUtil.getBackendConfig(getConfDir());
+        } catch (KrbException e) {
+            throw new HasException("Failed to get backend config. " + e);
+        }
+        String backendJar = backendConfig.getString("kdc_identity_backend");
+        if (backendJar.equals("org.apache.kerby.has.server.kdc.MySQLIdentityBackend")) {
+            updateKdcConf();
+        }
         try {
             kdcServer = new KdcServer(confDir);
         } catch (KrbException e) {
@@ -206,6 +233,340 @@ public class HasServer {
         }
         LOG.info("The http principal name is: " + nameString);
         return nameString;
+    }
+
+     /**
+     * Update conf file.
+     *
+     * @param confName  conf file name
+     * @param values    customized values
+     * @throws IOException throw IOException
+     * @throws KrbException e
+     */
+    public void updateConfFile(String confName, Map<String, String> values)
+        throws IOException, HasException {
+        File confFile = new File(getConfDir().getAbsolutePath(), confName);
+        if (confFile.exists()) {
+            // Update conf file content
+            InputStream templateResource;
+            if (confName.equals("has-server.conf")) {
+                templateResource = new FileInputStream(confFile);
+            } else {
+                String resourcePath = "/" + confName + ".template";
+                templateResource = getClass().getResourceAsStream(resourcePath);
+            }
+            String content = IOUtil.readInput(templateResource);
+            for (Map.Entry<String, String> entry : values.entrySet()) {
+                content = content.replaceAll(Pattern.quote(entry.getKey()), entry.getValue());
+            }
+
+            // Delete the original conf file
+            boolean delete = confFile.delete();
+            if (!delete) {
+                throw new HasException("Failed to delete conf file: " + confName);
+            }
+
+            // Save the updated conf file
+            IOUtil.writeFile(content, confFile);
+        } else {
+            throw new HasException("Conf file: " + confName + " not found.");
+        }
+    }
+
+    /**
+     * Get KDC Config from MySQL.
+     *
+     * @return Kdc config
+     * @throws KrbException e
+     */
+    private Map<String, String> getKdcConf() throws HasException {
+        PreparedStatement preStm = null;
+        ResultSet result = null;
+        Map<String, String> kdcConf = new HashMap<>();
+        BackendConfig backendConfig;
+        try {
+            backendConfig = KdcUtil.getBackendConfig(getConfDir());
+        } catch (KrbException e) {
+            throw new HasException("Getting backend config failed." + e.getMessage());
+        }
+        String driver = backendConfig.getString("mysql_driver");
+        String url = backendConfig.getString("mysql_url");
+        String user = backendConfig.getString("mysql_user");
+        String password = backendConfig.getString("mysql_password");
+        Connection connection = startConnection(driver, url, user, password);
+        try {
+
+            // Get Kdc configuration from kdc_config table
+            String stmKdc = "SELECT * FROM `kdc_config` WHERE id = 1";
+            preStm = connection.prepareStatement(stmKdc);
+            result = preStm.executeQuery();
+            while (result.next()) {
+                String realm = result.getString("realm");
+                String servers = result.getString("servers");
+                String port = String.valueOf(result.getInt("port"));
+                kdcConf.put("servers", servers);
+                kdcConf.put("_PORT_", port);
+                kdcConf.put("_REALM_", realm);
+            }
+
+        } catch (SQLException e) {
+            LOG.error("Error occurred while getting kdc config.");
+            throw new HasException("Failed to get kdc config. ", e);
+        } finally {
+            DbUtils.closeQuietly(preStm);
+            DbUtils.closeQuietly(result);
+            DbUtils.closeQuietly(connection);
+        }
+
+        return kdcConf;
+    }
+
+    /**
+     * Update KDC conf file.
+     *
+     * @throws KrbException e
+     */
+    private void updateKdcConf() throws HasException {
+        try {
+            Map<String, String> values = getKdcConf();
+            String host = getKdcHost();
+            if (host == null) {
+                host = getWebServer().getBindAddress().getHostName();
+            }
+            values.remove("servers");
+            values.put("_HOST_", host);
+            updateConfFile("kdc.conf", values);
+        } catch (IOException e) {
+            throw new HasException("Failed to update kdc config. ", e);
+        }
+    }
+
+      /**
+     * Start the MySQL connection.
+     *
+     * @param url url of connection
+     * @param user username of connection
+     * @param password password of connection
+     * @throws KrbException e
+     * @return MySQL JDBC connection
+     */
+    private Connection startConnection(String driver, String url, String user,
+                                       String password) throws HasException {
+        Connection connection;
+        try {
+            Class.forName(driver);
+            connection = DriverManager.getConnection(url, user, password);
+            if (!connection.isClosed()) {
+                LOG.info("Succeeded in connecting to MySQL.");
+            }
+        } catch (ClassNotFoundException e) {
+            throw new HasException("JDBC Driver Class not found. ", e);
+        } catch (SQLException e) {
+            throw new HasException("Failed to connecting to MySQL. ", e);
+        }
+
+        return connection;
+    }
+
+    /**
+     * Config HAS server KDC which have MySQL backend.
+     * @param backendConfig MySQL backend config
+     * @param realm KDC realm to set
+     * @param host KDC host to set
+     * @param hasServer has server to get param
+     * @throws HasException e
+     */
+    public void configMySQLKdc(BackendConfig backendConfig, String realm, int port,
+                               String host, HasServer hasServer) throws HasException {
+
+        // Start mysql connection
+        String driver = backendConfig.getString("mysql_driver");
+        String url = backendConfig.getString("mysql_url");
+        String user = backendConfig.getString("mysql_user");
+        String password = backendConfig.getString("mysql_password");
+        Connection connection = startConnection(driver, url, user, password);
+
+        ResultSet resConfig = null;
+        PreparedStatement preStm = null;
+        try {
+            createKdcTable(connection); // Create kdc_config table if not exists
+            String stm = "SELECT * FROM `kdc_config` WHERE id = 1";
+            preStm = connection.prepareStatement(stm);
+            resConfig = preStm.executeQuery();
+            if (!resConfig.next()) {
+                addKdcConfig(connection, realm, port, host);
+            } else {
+                String oldHost = hasServer.getKdcHost();
+                String servers = resConfig.getString("servers");
+                String[] serverArray = servers.split(",");
+                List<String> serverList = new ArrayList<>();
+                Collections.addAll(serverList, serverArray);
+                if (serverList.contains(oldHost)) {
+                    servers = servers.replaceAll(oldHost, host);
+                } else {
+                    servers = servers + "," + host;
+                }
+                boolean initialized = resConfig.getBoolean("initialized");
+                updateKdcConfig(connection, initialized, port, realm, servers);
+            }
+            hasServer.setKdcHost(host);
+        } catch (SQLException e) {
+            throw new HasException("Failed to config HAS KDC. ", e);
+        } finally {
+            DbUtils.closeQuietly(preStm);
+            DbUtils.closeQuietly(resConfig);
+            DbUtils.closeQuietly(connection);
+        }
+    }
+
+    /**
+     * Create kdc_config table in database.
+     * @param conn database connection
+     * @throws KrbException e
+     */
+    private void createKdcTable(final Connection conn) throws HasException {
+        PreparedStatement preStm = null;
+        try {
+            String stm = "CREATE TABLE IF NOT EXISTS `kdc_config` ("
+                + "port INTEGER DEFAULT 88, servers VARCHAR(255) NOT NULL, "
+                + "initialized bool DEFAULT FALSE, realm VARCHAR(255) "
+                + "DEFAULT NULL, id INTEGER DEFAULT 1, CHECK (id=1), PRIMARY KEY (id)) "
+                + "ENGINE=INNODB;";
+            preStm = conn.prepareStatement(stm);
+            preStm.executeUpdate();
+        } catch (SQLException e) {
+            throw new HasException("Failed to create kdc_config table. ", e);
+        } finally {
+            DbUtils.closeQuietly(preStm);
+        }
+    }
+
+    /**
+     * Add KDC Config information in database.
+     * @param conn database connection
+     * @param realm realm to add
+     * @param port port to add
+     * @param host host to add
+     */
+    private void addKdcConfig(Connection conn, String realm, int port, String host)
+        throws HasException {
+        PreparedStatement preStm = null;
+        try {
+            String stm = "INSERT INTO `kdc_config` (port, servers, realm)" + " VALUES(?, ?, ?)";
+            preStm = conn.prepareStatement(stm);
+            preStm.setInt(1, port);
+            preStm.setString(2, host);
+            preStm.setString(3, realm);
+            preStm.executeUpdate();
+        } catch (SQLException e) {
+            throw new HasException("Failed to insert into kdc_config table. ", e);
+        } finally {
+            DbUtils.closeQuietly(preStm);
+        }
+    }
+
+    /**
+     * Update KDC Config record in database.
+     * @param conn database connection
+     * @param realm realm to update
+     * @param port port to update
+     * @param servers servers to update
+     * @param initialized initial state of KDC Config
+     */
+    private void updateKdcConfig(Connection conn, boolean initialized, int port,
+                                 String realm, String servers) throws HasException {
+        PreparedStatement preStm = null;
+        try {
+            if (initialized) {
+                String stmUpdate = "UPDATE `kdc_config` SET servers = ? WHERE id = 1";
+                preStm = conn.prepareStatement(stmUpdate);
+                preStm.setString(1, servers);
+                preStm.executeUpdate();
+            } else {
+                String stmUpdate = "UPDATE `kdc_config` SET port = ?, realm = ?, servers = ? WHERE id = 1";
+                preStm = conn.prepareStatement(stmUpdate);
+                preStm.setInt(1, port);
+                preStm.setString(2, realm);
+                preStm.setString(3, servers);
+                preStm.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new HasException("Failed to update KDC Config. ", e);
+        } finally {
+            DbUtils.closeQuietly(preStm);
+        }
+    }
+
+    /**
+     * Read in krb5-template.conf and substitute in the correct port.
+     *
+     * @return krb5 conf file
+     * @throws IOException e
+     * @throws KrbException e
+     */
+    public File generateKrb5Conf() throws HasException {
+        Map<String, String> kdcConf = getKdcConf();
+        String[] servers = kdcConf.get("servers").split(",");
+        int kdcPort = Integer.parseInt(kdcConf.get("_PORT_"));
+        String kdcRealm = kdcConf.get("_REALM_");
+        StringBuilder kdcBuilder = new StringBuilder();
+        for (String server : servers) {
+            String append = "\t\tkdc = " + server.trim() + ":" + kdcPort + "\n";
+            kdcBuilder.append(append);
+        }
+        String kdc = kdcBuilder.toString();
+        kdc = kdc.substring(0, kdc.length() - 1);
+        String resourcePath = "/krb5.conf.template";
+        InputStream templateResource = getClass().getResourceAsStream(resourcePath);
+        String content = null;
+        try {
+            content = IOUtil.readInput(templateResource);
+        } catch (IOException e) {
+            throw new HasException("Read template resource failed. " + e);
+        }
+        content = content.replaceAll("_REALM_", kdcRealm);
+        content = content.replaceAll("_PORT_", String.valueOf(kdcPort));
+        content = content.replaceAll("_UDP_LIMIT_", "4096");
+        content = content.replaceAll("_KDCS_", kdc);
+        File confFile = new File(confDir, "krb5.conf");
+        if (confFile.exists()) {
+            boolean delete = confFile.delete();
+            if (!delete) {
+                throw new HasException("File delete error!");
+            }
+        }
+        try {
+            IOUtil.writeFile(content, confFile);
+        } catch (IOException e) {
+            throw new HasException("Write content to conf file failed. " + e);
+        }
+
+        return confFile;
+    }
+
+    /**
+     * Read in has-server.conf and create has-client.conf.
+     *
+     * @return has conf file
+     * @throws IOException e
+     * @throws HasException e
+     */
+    public File generateHasConf() throws HasException, IOException {
+        Map<String, String> kdcConf = getKdcConf();
+        String servers = kdcConf.get("servers");
+        File confFile = new File(getConfDir().getAbsolutePath(), "has-server.conf");
+        HasConfig hasConfig = HasUtil.getHasConfig(confFile);
+        if (hasConfig != null) {
+            String defaultValue = hasConfig.getHttpsHost();
+            InputStream templateResource = new FileInputStream(confFile);
+            String content = IOUtil.readInput(templateResource);
+            content = content.replaceFirst(Pattern.quote(defaultValue), servers);
+            File hasFile = new File(confDir, "has-client.conf");
+            IOUtil.writeFile(content, hasFile);
+            return hasFile;
+        } else {
+            throw new HasException("has-server.conf not found. ");
+        }
     }
 
     public void stopKdcServer() {

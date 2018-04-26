@@ -64,6 +64,16 @@
       <version>${bouncycastle.version}</version>
     </dependency>
     <dependency>
+      <groupId>commons-dbutils</groupId>
+      <artifactId>commons-dbutils</artifactId>
+      <version>${commons-dbutils.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.drizzle.jdbc</groupId>
+      <artifactId>drizzle-jdbc</artifactId>
+      <version>${drizzle-jdbc.version}</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>

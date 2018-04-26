@@ -16,11 +16,8 @@
 # limitations under the License.
 #
 
-[HAS]
-  https_host = plusplus-desktop
-  https_port = 8092
-  filter_auth_type = kerberos
-  enable_conf = true
-
-[PLUGIN]
-  auth_type = RAM
+[kdcdefaults]
+  kdc_host = _HOST_
+  kdc_udp_port = _PORT_
+  kdc_tcp_port = _PORT_
+  kdc_realm = _REALM_

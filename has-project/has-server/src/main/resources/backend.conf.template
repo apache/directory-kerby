@@ -16,11 +16,6 @@
 # limitations under the License.
 #
 
-[HAS]
-  https_host = plusplus-desktop
-  https_port = 8092
-  filter_auth_type = kerberos
-  enable_conf = true
-
-[PLUGIN]
-  auth_type = RAM
+kdc_identity_backend = _JAR_
+#_JSON_DIR_
+#_MYSQL_

@@ -40,7 +40,7 @@ public class ConfFilter implements Filter {
                     new File(hasServer.getConfDir(), "has-server.conf"));
             String isEnableConf = hasConfig.getEnableConf();
             if (!isEnableConf.equals("true")) {
-                throw new RuntimeException("The kdc has started.");
+                throw new RuntimeException("The KDC has started, please stop KDC before setting.");
             }
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (HasException e) {

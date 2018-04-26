@@ -16,11 +16,14 @@
 # limitations under the License.
 #
 
-[HAS]
-  https_host = plusplus-desktop
-  https_port = 8092
-  filter_auth_type = kerberos
-  enable_conf = true
+[libdefaults]
+    kdc_realm = _REALM_
+    default_realm = _REALM_
+    udp_preference_limit = _UDP_LIMIT_
+    kdc_tcp_port = _PORT_
+    kdc_udp_port = _PORT_
 
-[PLUGIN]
-  auth_type = RAM
+[realms]
+    _REALM_ = {
+_KDCS_
+    }

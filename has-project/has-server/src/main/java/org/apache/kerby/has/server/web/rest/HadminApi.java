@@ -257,7 +257,7 @@ public class HadminApi {
                 return Response.serverError().entity("has-server.conf is not exists.")
                     .build();
             }
-            String result = "";
+            String result;
             if (isEnable.equals("true")) {
                 result = "enable";
             } else if (isEnable.equals("false")) {
