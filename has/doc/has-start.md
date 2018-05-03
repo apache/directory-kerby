@@ -201,12 +201,12 @@ echo { \
 // Start local hadmin tool
 sh bin/hadmin-local.sh <conf_dir> -k <keytab>
 
-// deploy_keytabs [HostRoles-File] [Where-to-Deploy] [UserName] [Password]
+// deploy_keytabs [HostRoles-File] [Where-to-Deploy] [SSH-Port] [UserName] [Password]
 // Where-to-Deploy: The place to store the keytabs
 // UserName: The host user name
 // Password: The host password
 // All the hosts with the same user and password
-HadminLocalTool.local: deploy_keytabs hosts.txt /etc/has/ username password
+HadminLocalTool.local: deploy_keytabs hosts.txt 22 /etc/has/ username password
 HadminLocalTool.local: exit
 ```
 Note: The admin.keytab file is created by the kdcinit. In local hadmin tool, you can type "?" for help.

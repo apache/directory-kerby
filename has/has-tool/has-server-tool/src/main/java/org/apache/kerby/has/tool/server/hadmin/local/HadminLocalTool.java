@@ -27,6 +27,7 @@ import org.apache.kerby.has.tool.server.hadmin.local.cmd.AddPrincipalsAndDeployK
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.AddPrincipalsCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.ChangePasswordCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.DeletePrincipalCmd;
+import org.apache.kerby.has.tool.server.hadmin.local.cmd.DeployHTTPSCertsCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.DisableConfigureCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.EnableConfigureCmd;
 import org.apache.kerby.has.tool.server.hadmin.local.cmd.ExportKeytabsCmd;
@@ -103,7 +104,9 @@ public class HadminLocalTool {
         + "disable_configure, disable\n"
         + "                         Disable configure\n"
         + "deploy_keytabs, depkeytabs\n"
-        + "                         Deploy keytabs\n";
+        + "                         Deploy keytabs\n"
+        + "deploy_https, dephttps\n"
+        + "                         Deploy https\n";
 
     private static void execute(LocalHasAdmin hadmin, String input) throws HasException {
         // Omit the leading and trailing whitespace.
@@ -155,6 +158,9 @@ public class HadminLocalTool {
         } else if (cmd.startsWith("deploy_keytabs")
             || cmd.startsWith("depkeytabs")) {
             executor = new AddPrincipalsAndDeployKeytabsCmd(hadmin);
+        } else if (cmd.startsWith("deploy_https")
+            || cmd.startsWith("dephttps")) {
+            executor = new DeployHTTPSCertsCmd(hadmin);
         } else {
             System.out.println(LEGAL_COMMANDS);
             return;
