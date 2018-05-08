@@ -144,7 +144,7 @@ public class ConfigApi {
                     String mysqlConfig = "mysql_driver = " + driver + "\nmysql_url = " + drizzleUrl
                         + "\nmysql_user = " + user + "\nmysql_password = " + password;
                     Map<String, String> values = new HashMap<>();
-                    values.put("_JAR_", "org.apache.kerby.has.server.kdc.MySQLIdentityBackend");
+                    values.put("_JAR_", "org.apache.kerby.kerberos.kdc.identitybackend.MySQLIdentityBackend");
                     values.put("#_JSON_DIR_\n", "");
                     values.put("#_MYSQL_", mysqlConfig);
                     hasServer.updateConfFile("backend.conf", values);
@@ -187,7 +187,7 @@ public class ConfigApi {
             try {
                 BackendConfig backendConfig = KdcUtil.getBackendConfig(hasServer.getConfDir());
                 String backendJar = backendConfig.getString("kdc_identity_backend");
-                if (backendJar.equals("org.apache.kerby.has.server.kdc.MySQLIdentityBackend")) {
+                if (backendJar.equals("org.apache.kerby.kerberos.kdc.identitybackend.MySQLIdentityBackend")) {
                     hasServer.configMySQLKdc(backendConfig, realm, port, host, hasServer);
                 } else {
                     Map<String, String> values = new HashMap<>();
@@ -228,7 +228,7 @@ public class ConfigApi {
                 BackendConfig backendConfig = KdcUtil.getBackendConfig(hasServer.getConfDir());
                 String backendJar = backendConfig.getString("kdc_identity_backend");
                 File conf;
-                if (backendJar.equals("org.apache.kerby.has.server.kdc.MySQLIdentityBackend")) {
+                if (backendJar.equals("org.apache.kerby.kerberos.kdc.identitybackend.MySQLIdentityBackend")) {
                     conf = hasServer.generateKrb5Conf();
                 } else {
                     File confDir = hasServer.getConfDir();
@@ -260,7 +260,7 @@ public class ConfigApi {
                 BackendConfig backendConfig = KdcUtil.getBackendConfig(hasServer.getConfDir());
                 String backendJar = backendConfig.getString("kdc_identity_backend");
                 File conf;
-                if (backendJar.equals("org.apache.kerby.has.server.kdc.MySQLIdentityBackend")) {
+                if (backendJar.equals("org.apache.kerby.kerberos.kdc.identitybackend.MySQLIdentityBackend")) {
                     conf = hasServer.generateHasConf();
                 } else {
                     File confDir = hasServer.getConfDir();

@@ -127,7 +127,7 @@ public class HasServer {
             throw new HasException("Failed to get backend config. " + e);
         }
         String backendJar = backendConfig.getString("kdc_identity_backend");
-        if (backendJar.equals("org.apache.kerby.has.server.kdc.MySQLIdentityBackend")) {
+        if (backendJar.equals("org.apache.kerby.kerberos.kdc.identitybackend.MySQLIdentityBackend")) {
             updateKdcConf();
         }
         try {
