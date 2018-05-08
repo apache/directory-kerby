@@ -24,6 +24,16 @@
       <artifactId>has-tool</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>json-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>mysql-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
    <build>
