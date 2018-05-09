@@ -12,17 +12,21 @@
     <artifactId>has-tool</artifactId>
 
     <dependencies>
-      <dependency>
-        <groupId>org.apache.kerby</groupId>
-        <artifactId>has-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.kerby</groupId>
-        <artifactId>has-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+        <dependency>
+            <groupId>org.apache.kerby</groupId>
+            <artifactId>has-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kerby</groupId>
+            <artifactId>has-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>${jline.version}</version>
+        </dependency>
     </dependencies>
-
 
 </project>

@@ -33,9 +33,17 @@ import org.apache.kerby.kerberos.tool.init.cmd.InitKdcCmd;
 import org.apache.kerby.kerberos.tool.init.cmd.SetPluginCmd;
 import org.apache.kerby.kerberos.tool.init.cmd.StartKdcCmd;
 import org.apache.kerby.util.OSUtil;
+import org.jline.reader.Completer;
+import org.jline.reader.EndOfFileException;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import java.io.File;
-import java.util.Scanner;
+import java.io.IOException;
 
 public class HasInitTool {
     private static final String PROMPT = HasInitTool.class.getSimpleName();
@@ -82,19 +90,33 @@ public class HasInitTool {
 
         System.out.println(LEGAL_COMMANDS);
         System.out.println("enter \"<cmd> [?][-help]\" to get cmd help.");
-        Scanner scanner = new Scanner(System.in, "UTF-8");
-        System.out.print(PROMPT + ": ");
-        String input = scanner.nextLine();
 
         HasInitClient hasInitClient = new HasInitClient(hasConfig, new File(confDirPath));
-        while (!(input.equals("quit") || input.equals("exit") || input.equals("q"))) {
+
+        Completer completer = new StringsCompleter("get_krb5conf",
+                "get_hasConf", "set_plugin", "config_kdcBackend",
+                "config_kdc", "start_kdc", "init_kdc");
+
+        Terminal terminal = null;
+        try {
+            terminal = TerminalBuilder.terminal();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LineReader lineReader = LineReaderBuilder.builder().completer(completer).terminal(terminal).build();
+
+        while (true) {
             try {
-                execute(hasInitClient, input);
+                String line = lineReader.readLine(PROMPT + ": ");
+                if ("quit".equals(line) || "exit".equals(line) || "q".equals(line)) {
+                    break;
+                }
+                execute(hasInitClient, line);
+            } catch (UserInterruptException | EndOfFileException ex) {
+                break;
             } catch (KrbException e) {
                 System.err.println(e.getMessage());
             }
-            System.out.print(PROMPT + ": ");
-            input = scanner.nextLine();
         }
     }
 

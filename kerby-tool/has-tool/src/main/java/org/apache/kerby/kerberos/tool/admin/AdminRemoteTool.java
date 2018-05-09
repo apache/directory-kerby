@@ -35,9 +35,17 @@ import org.apache.kerby.kerberos.tool.admin.cmd.GetHostRolesRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.cmd.ListPrincipalsRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.cmd.RenamePrincipalRemoteCmd;
 import org.apache.kerby.util.OSUtil;
+import org.jline.reader.Completer;
+import org.jline.reader.EndOfFileException;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import java.io.File;
-import java.util.Scanner;
+import java.io.IOException;
 
 public class AdminRemoteTool {
 
@@ -96,19 +104,31 @@ public class AdminRemoteTool {
         }
 
         System.out.println("enter \"cmd\" to see legal commands.");
-        System.out.print(PROMPT + ": ");
 
-        try (Scanner scanner = new Scanner(System.in, "UTF-8")) {
-            String input = scanner.nextLine();
+        Completer completer = new StringsCompleter("add_principal",
+                "delete_principal", "rename_principal", "list_principals",
+                "get_hostroles", "export_keytabs", "add_principals", "enable_configure",
+                "disable_configure");
 
-            while (!(input.equals("quit") || input.equals("exit") || input.equals("q"))) {
-                try {
-                    execute(authHasAdminClient, input);
-                } catch (KrbException e) {
-                    System.err.println(e.getMessage());
+        Terminal terminal = null;
+        try {
+            terminal = TerminalBuilder.terminal();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LineReader lineReader = LineReaderBuilder.builder().completer(completer).terminal(terminal).build();
+
+        while (true) {
+            try {
+                String line = lineReader.readLine(PROMPT + ": ");
+                if ("quit".equals(line) || "exit".equals(line) || "q".equals(line)) {
+                    break;
                 }
-                System.out.print(PROMPT + ": ");
-                input = scanner.nextLine();
+                execute(authHasAdminClient, line);
+            } catch (UserInterruptException | EndOfFileException ex) {
+                break;
+            } catch (KrbException e) {
+                System.err.println(e.getMessage());
             }
         }
     }

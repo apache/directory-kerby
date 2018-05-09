@@ -343,6 +343,9 @@ public class HasAuthAdminClient implements Kadmin {
         } catch (IOException e) {
             throw new KrbException("IO error occurred.", e);
         }
+        if (response == null) {
+            throw new KrbException("Please initial KDC first.");
+        }
         return stringtoList(response);
     }
 
