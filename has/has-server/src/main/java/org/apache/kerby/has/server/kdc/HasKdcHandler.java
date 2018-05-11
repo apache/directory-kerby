@@ -27,6 +27,10 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbContext;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
+import org.apache.kerby.kerberos.kerb.identity.CacheableIdentityService;
+import org.apache.kerby.kerberos.kerb.identity.IdentityService;
+import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.identity.backend.MemoryIdentityBackend;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcContext;
 import org.apache.kerby.kerberos.kerb.server.KdcRecoverableException;
@@ -93,7 +97,17 @@ public class HasKdcHandler {
 
     private void prepareHandler(KdcServer kdcServer) {
         this.kdcContext = new KdcContext(kdcServer.getKdcSetting());
-        this.kdcContext.setIdentityService(kdcServer.getIdentityService());
+
+        IdentityBackend backend = kdcServer.getIdentityService();
+        IdentityService identityService;
+        if (backend instanceof MemoryIdentityBackend) {
+            identityService = backend;
+        } else {
+            identityService = new CacheableIdentityService(
+                    kdcServer.getBackendConfig(), backend);
+        }
+
+        this.kdcContext.setIdentityService(identityService);
         PreauthHandler preauthHandler = new PreauthHandler();
         preauthHandler.init();
         this.kdcContext.setPreauthHandler(preauthHandler);
