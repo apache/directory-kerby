@@ -18,3 +18,4 @@
 
 ssl.client.truststore.location = _location_
 ssl.client.truststore.password = _password_
+ssl.server.keystore.password = _keyPassword_

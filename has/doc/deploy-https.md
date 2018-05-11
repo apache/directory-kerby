@@ -38,7 +38,33 @@ When you finish, the {trustAll} file will have the certificates from all nodes.
 keytool -list -v -keystore {trustAll}
 ```
 
-## 7. Edit the Configuration files
+## 7. Use Hadmin tool to create new certificate files when adding machines of cluster
+When adding machines of cluster, we also provide shell tool to create keystore files and update the truststore file.
+With this tool, user just need one operation, and the certificate and configuration files will be generated and deployed.
+
+```
+cd HAS/has-dist
+echo node1,node2,node3 > hosts.txt
+
+// Start local hadmin tool
+sh bin/hadmin-local.sh <conf_dir> -k <keytab>
+
+// deploy_certs [Hosts-File] [truststore_file] [truststore_password] [Where-to-Deploy] [SSH-Port] [UserName] [Password]
+// truststore_file: The absolute path of the above trustAll file
+// truststore_password: Password of the truststore file
+// Where-to-Deploy: The place to store the keystore, truststore, ssl-client.conf
+// SSH-Port: The port of SSH
+// UserName: The host user name
+// Password: The host password
+// All the hosts with the same user and password
+HadminLocalTool.local: deploy_https hosts.txt /etc/has/truststore.jks 123456 /etc/has 22 username password
+HadminLocalTool.local: exit
+```
+
+> Note that the same keypassword and password of keystore is given in the generated ssl-client.conf.
+
+
+## 8. Edit the Configuration files
 > Deploy {keystore} and {trustAll} files and config /<conf-dir>/ssl-server.conf for HAS server
 ```
 ssl.server.keystore.location = {path to keystore}

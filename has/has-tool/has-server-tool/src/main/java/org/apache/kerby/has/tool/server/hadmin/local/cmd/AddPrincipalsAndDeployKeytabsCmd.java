@@ -41,9 +41,9 @@ import java.util.List;
 
 public class AddPrincipalsAndDeployKeytabsCmd extends HadminCmd {
     private static final String USAGE
-        = "\nUsage: deploy_keytabs [HostRoles-File] [Where-to-Deploy] [UserName] [Password]\n"
+        = "\nUsage: deploy_keytabs [HostRoles-File] [Where-to-Deploy] [SSH-Port] [UserName] [Password]\n"
         + "\tExample:\n"
-        + "\t\tdeploy_keytabs hostroles.txt /etc/has/ username password\n";
+        + "\t\tdeploy_keytabs hostroles.txt /etc/has/ 22 username password\n";
 
     public AddPrincipalsAndDeployKeytabsCmd(LocalHasAdmin hadmin) {
         super(hadmin);
@@ -52,7 +52,7 @@ public class AddPrincipalsAndDeployKeytabsCmd extends HadminCmd {
     @Override
     public void execute(String[] items) throws HasException {
 
-        if (items.length < 4 || items.length > 5) {
+        if (items.length < 5 || items.length > 6) {
             System.err.println(USAGE);
             return;
         }
@@ -62,10 +62,11 @@ public class AddPrincipalsAndDeployKeytabsCmd extends HadminCmd {
             throw new HasException("HostRoles file is not exists.");
         }
         String pathToDeploy = items[2];
-        String username = items[3];
+        int port = Integer.valueOf(items[3]);
+        String username = items[4];
         String password = "";
-        if (items.length == 5) {
-            password = items[4];
+        if (items.length == 6) {
+            password = items[5];
         }
 
         BufferedReader reader;
@@ -123,7 +124,7 @@ public class AddPrincipalsAndDeployKeytabsCmd extends HadminCmd {
             JSch jsch = new JSch();
             Session session;
             try {
-                session = jsch.getSession(username, hostname);
+                session = jsch.getSession(username, hostname, port);
             } catch (JSchException e) {
                 throw new HasException(e.getMessage());
             }
