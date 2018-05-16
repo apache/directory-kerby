@@ -80,7 +80,7 @@ public class URLConnectionFactory {
    * try to load SSL certificates when it is specified.
    */
   public static URLConnectionFactory newDefaultURLConnectionFactory(HasConfig conf) {
-    ConnectionConfigurator conn = null;
+    ConnectionConfigurator conn;
     try {
       conn = newSslConnConfigurator(DEFAULT_SOCKET_TIMEOUT, conf);
     } catch (Exception e) {

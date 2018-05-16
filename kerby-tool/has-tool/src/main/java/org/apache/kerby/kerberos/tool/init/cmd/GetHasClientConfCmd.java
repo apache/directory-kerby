@@ -23,9 +23,6 @@ import org.apache.kerby.has.client.HasInitClient;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 
 /**
  * Remote get has-client.conf cmd
@@ -56,17 +53,7 @@ public class GetHasClientConfCmd extends InitCmd {
             }
         }
         File hasConf = new File(path, "has-client.conf");
-        String content = client.getHasClientConf();
-        if (content == null) {
-            System.err.println("Failed to get has.conf.");
-            return;
-        }
-        try {
-            PrintStream ps = new PrintStream(new FileOutputStream(hasConf));
-            ps.println(content);
-            System.out.println("has-client.conf has saved in : " + hasConf.getAbsolutePath());
-        } catch (FileNotFoundException e) {
-            System.err.println(e.getMessage());
-        }
+        client.getHasClientConf(hasConf);
+        System.out.println("has-client.conf has saved in : " + hasConf.getAbsolutePath());
     }
 }

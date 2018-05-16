@@ -63,7 +63,7 @@ public class ConfigApi {
      */
     @PUT
     @Path("/setplugin")
-    @Consumes({MediaType.TEXT_PLAIN})
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.TEXT_PLAIN})
     public Response setPlugin(@QueryParam("plugin") final String plugin) {
         if (httpRequest.isSecure()) {
@@ -174,7 +174,7 @@ public class ConfigApi {
      */
     @PUT
     @Path("/configkdc")
-    @Consumes({MediaType.TEXT_PLAIN})
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.TEXT_PLAIN})
     public Response configKdc(
         @QueryParam("port") final int port,

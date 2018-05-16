@@ -17,10 +17,6 @@
  */
 package org.apache.kerby.has.client;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.text.CharacterPredicates;
 import org.apache.commons.text.RandomStringGenerator;
@@ -312,35 +308,7 @@ public class HasClient {
                     + responseStatus);
             }
         } else {
-            WebResource webResource;
-            Client client = Client.create();
-            String[] hosts = config.getHttpHost().split(",");
-            for (String host : hosts) {
-                webResource = client
-                    .resource("http://" + host.trim() + ":" + config.getHttpPort()
-                        + "/has/v1?type=" + type + "&authToken="
-                        + tokenString);
-                try {
-                    ClientResponse response = webResource.accept("application/json")
-                        .put(ClientResponse.class);
-
-                    if (response.getStatus() != 200) {
-                        LOG.warn("WARN! " + response.getEntity(String.class));
-                        responseStatus = response.getStatus();
-                        continue;
-                    }
-                    json = response.getEntity(JSONObject.class);
-                    success = true;
-                    break;
-                } catch (ClientHandlerException e) {
-                    LOG.warn("WARN! " + e.toString());
-                    continue;
-                }
-            }
-            if (!success) {
-                throw new HasException("Failed : HTTP error code : "
-                    + responseStatus);
-            }
+            throw new HasException("Please set https host and port.");
         }
 
         LOG.debug("Return from Server .... \n");
@@ -506,18 +474,43 @@ public class HasClient {
      */
     private X509Certificate getCertificate(String host, String port) throws HasException {
         X509Certificate certificate;
-        Client client = Client.create();
-        WebResource webResource = client.resource("http://" + host + ":" + port + "/has/v1/getcert");
-        ClientResponse response = webResource.get(ClientResponse.class);
-        if (response.getStatus() != 200) {
-            throw new HasException(response.getEntity(String.class));
+
+        HttpURLConnection httpConn = null;
+
+        URL url;
+        try {
+            url = new URL("http://" + host + ":" + port + "/has/v1/getcert");
+        } catch (MalformedURLException e) {
+            throw new HasException("Failed to create a URL object.", e);
         }
         try {
-            CertificateFactory factory = CertificateFactory.getInstance("X.509");
-            InputStream in = response.getEntityInputStream();
-            certificate = (X509Certificate) factory.generateCertificate(in);
-        } catch (CertificateException e) {
-            throw new HasException("Failed to get certificate from HAS server", e);
+            httpConn = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        httpConn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        try {
+            httpConn.setRequestMethod("GET");
+        } catch (ProtocolException e) {
+            LOG.error("Fail to add principal. " + e);
+            throw new HasException("Failed to set the method for URL request.", e);
+        }
+
+        try {
+            httpConn.connect();
+            if (httpConn.getResponseCode() != 200) {
+                throw new HasException(HasClientUtil.getResponse(httpConn));
+            }
+            try {
+                CertificateFactory factory = CertificateFactory.getInstance("X.509");
+                InputStream in = HasClientUtil.getInputStream(httpConn);
+                certificate = (X509Certificate) factory.generateCertificate(in);
+            } catch (CertificateException e) {
+                throw new HasException("Failed to get certificate from HAS server", e);
+            }
+
+        } catch (IOException e) {
+            throw new HasException("IO error occurred.", e);
         }
 
         return certificate;

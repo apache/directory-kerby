@@ -25,6 +25,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -64,7 +65,7 @@ public class InitApi {
         return Response.status(Response.Status.FORBIDDEN).entity("HTTPS required.\n").build();
     }
 
-    @GET
+    @PUT
     @Path("/kdcstart")
     @Produces(MediaType.TEXT_PLAIN)
     public Response kdcStart() {

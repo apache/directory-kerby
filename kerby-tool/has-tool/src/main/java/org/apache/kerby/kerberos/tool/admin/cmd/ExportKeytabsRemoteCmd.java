@@ -20,7 +20,6 @@
 package org.apache.kerby.kerberos.tool.admin.cmd;
 
 import org.apache.kerby.has.client.HasAuthAdminClient;
-import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 public class ExportKeytabsRemoteCmd extends AdminRemoteCmd {
@@ -48,10 +47,6 @@ public class ExportKeytabsRemoteCmd extends AdminRemoteCmd {
         if (items.length >= 3) {
             role = items[2];
         }
-        try {
-            client.getKeytabByHostAndRole(host, role);
-        } catch (HasException e) {
-            throw new KrbException(e.getMessage());
-        }
+        client.getKeytabByHostAndRole(host, role);
     }
 }

@@ -23,10 +23,6 @@ import org.apache.kerby.has.client.HasInitClient;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Remote init kdc cmd
@@ -58,25 +54,8 @@ public class InitKdcCmd extends InitCmd {
         File adminKeytab = new File(path, "admin.keytab");
 
         HasInitClient client = getClient();
-        InputStream content = client.initKdc();
 
-        if (content == null) {
-            return;
-        }
-
-        try (FileOutputStream fos = new FileOutputStream(adminKeytab)) {
-            byte[] buffer = new byte[4 * 1024];
-            int read;
-            while ((read = content.read(buffer)) > 0) {
-                fos.write(buffer, 0, read);
-            }
-            fos.close();
-            content.close();
-        } catch (FileNotFoundException e) {
-            System.err.println("the admin keytab file not found. " + e.getMessage());
-        } catch (IOException e) {
-            System.err.println("Errors occurred when getting the admin.keytab. " + e.getMessage());
-        }
+        client.initKdc(adminKeytab);
 
         System.out.println("admin.keytab has saved in : " + adminKeytab.getAbsolutePath()
             + ",\nplease safely save it to use kadmin.");

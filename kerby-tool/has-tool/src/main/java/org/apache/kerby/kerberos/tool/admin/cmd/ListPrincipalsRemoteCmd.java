@@ -57,7 +57,8 @@ public class ListPrincipalsRemoteCmd extends AdminRemoteCmd {
             principalLists = client.getPrincipals(exp);
         }
 
-        if (principalLists.size() == 0 || principalLists.size() == 1 && principalLists.get(0).isEmpty()) {
+        if (principalLists == null || principalLists.size() == 0
+                || principalLists.size() == 1 && principalLists.get(0).isEmpty()) {
             return;
         } else {
             System.out.println("Principals are listed:");

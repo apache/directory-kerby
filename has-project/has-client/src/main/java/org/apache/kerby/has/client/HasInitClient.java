@@ -17,27 +17,18 @@
  */
 package org.apache.kerby.has.client;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.client.urlconnection.HTTPSProperties;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.apache.kerby.has.common.HasConfig;
-import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.glassfish.jersey.SslConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * HAS client API for applications to interact with HAS server
@@ -58,181 +49,231 @@ public class HasInitClient {
         return confDir;
     }
 
-    private WebResource getWebResource(String restName) {
-        Client client;
-        String server = null;
-        if (hasConfig.getHttpsPort() != null && hasConfig.getHttpsHost() != null) {
-            server = "https://" + hasConfig.getHttpsHost() + ":" + hasConfig.getHttpsPort()
-                    + "/has/v1/" + restName;
-            LOG.info("Admin request url: " + server);
-            HasConfig conf = new HasConfig();
-            try {
-                conf.addIniConfig(new File(hasConfig.getSslClientConf()));
-            } catch (IOException e) {
-                throw new RuntimeException("Errors occurred when adding ssl conf. "
-                    + e.getMessage());
-            }
-            SslConfigurator sslConfigurator = SslConfigurator.newInstance()
-                    .trustStoreFile(conf.getString("ssl.client.truststore.location"))
-                    .trustStorePassword(conf.getString("ssl.client.truststore.password"));
-            sslConfigurator.securityProtocol("SSL");
-            SSLContext sslContext = sslConfigurator.createSSLContext();
-            ClientConfig clientConfig = new DefaultClientConfig();
-            clientConfig.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
-                    new HTTPSProperties(new HostnameVerifier() {
-                        @Override
-                        public boolean verify(String s, SSLSession sslSession) {
-                            return false;
-                        }
-                    }, sslContext));
-            client = Client.create(clientConfig);
-        } else {
-            client = Client.create();
-        }
-        if (server == null) {
-            throw new RuntimeException("Please set the https address and port.");
-        }
-        return client.resource(server);
+    private String getInitBaseURL() throws KrbException {
+        return HasClientUtil.getBaseUrl(hasConfig, "init");
     }
 
-    public void startKdc() {
-        WebResource webResource = getWebResource("init/kdcstart");
-        ClientResponse response = webResource.get(ClientResponse.class);
-        String message = null;
+    private String getConfigBaseURL() throws KrbException {
+        return HasClientUtil.getBaseUrl(hasConfig, "conf");
+    }
+
+    public String startKdc() throws KrbException {
+        HttpURLConnection httpConn;
+
+        URL url;
         try {
-            message = getResponse(response);
-        } catch (HasException e) {
-            System.err.println(e.getMessage());
+            url = new URL(getInitBaseURL() + "kdcstart");
+        } catch (MalformedURLException e) {
+            throw new KrbException("Failed to create a URL object.", e);
         }
-        if (response.getStatus() == 200) {
-            System.out.println(message);
-        } else {
-            System.err.println(message);
-        }
-    }
 
-    public InputStream initKdc() {
-        WebResource webResource = getWebResource("init/kdcinit");
-        ClientResponse response = webResource.get(ClientResponse.class);
-        if (response.getStatus() == 200) {
-            return response.getEntityInputStream();
-        } else {
-            try {
-                System.err.println(getResponse(response));
-            } catch (HasException e) {
-                System.err.println(e.getMessage());
-            }
-            return null;
-        }
-    }
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "PUT", false);
 
-    private String getResponse(ClientResponse response) throws HasException {
-        InputStream is = response.getEntityInputStream();
-        final byte[] b = new byte[1024];
-        int read;
-        final StringBuilder msg = new StringBuilder();
         try {
-            while ((read = is.read(b)) > 0) {
-                msg.append(new String(b, 0, read));
+            httpConn.connect();
+
+            if (httpConn.getResponseCode() == 200) {
+                String response = HasClientUtil.getResponse(httpConn);
+                LOG.info(response);
+                return response;
+            } else {
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
         } catch (IOException e) {
-            throw new HasException(e.getMessage());
-        }
-        return msg.toString();
-    }
-
-    public String getKrb5conf() throws KrbException {
-        WebResource webResource = getWebResource("conf/getkrb5conf");
-        ClientResponse response = webResource.get(ClientResponse.class);
-        String message;
-        try {
-            message = getResponse(response);
-        } catch (HasException e) {
-            throw new KrbException(e.getMessage());
-        }
-        if (response.getStatus() == 200) {
-            return message;
-        } else {
-            throw new KrbException(message);
+            throw new KrbException("IO error occurred. " + e.getMessage());
         }
     }
 
-    public String getHasClientConf() throws KrbException {
-        WebResource webResource = getWebResource("conf/gethasclientconf");
-        ClientResponse response = webResource.get(ClientResponse.class);
-        String message;
+    public void initKdc(File keytab) throws KrbException {
+        HttpURLConnection httpConn;
+
+        URL url;
         try {
-            message = getResponse(response);
-        } catch (HasException e) {
-            throw new KrbException(e.getMessage());
+            url = new URL(getInitBaseURL() + "kdcinit");
+        } catch (MalformedURLException e) {
+            throw new KrbException("Failed to create a URL object.", e);
         }
-        if (response.getStatus() == 200) {
-            return message;
-        } else {
-            throw new KrbException(message);
+
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "GET", false);
+
+        try {
+            httpConn.connect();
+            if (httpConn.getResponseCode() != 200) {
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
+            }
+            FileOutputStream fos = new FileOutputStream(keytab);
+            InputStream in = httpConn.getInputStream();
+            byte[] buffer = new byte[3 * 1024];
+            int read;
+            while ((read = in.read(buffer)) > 0) {
+                fos.write(buffer, 0, read);
+            }
+            fos.close();
+            in.close();
+        } catch (IOException e) {
+            throw new KrbException("IO error occurred. " + e.getMessage());
+        }
+    }
+
+    public void getKrb5conf(File file) throws KrbException {
+
+        HttpURLConnection httpConn;
+
+        URL url;
+        try {
+            url = new URL(getConfigBaseURL() + "getkrb5conf");
+        } catch (MalformedURLException e) {
+            throw new KrbException("Failed to create a URL object.", e);
+        }
+
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "GET", false);
+
+        try {
+            httpConn.connect();
+            if (httpConn.getResponseCode() != 200) {
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
+            }
+            FileOutputStream fos = new FileOutputStream(file);
+            InputStream in = httpConn.getInputStream();
+            byte[] buffer = new byte[3 * 1024];
+            int read;
+            while ((read = in.read(buffer)) > 0) {
+                fos.write(buffer, 0, read);
+            }
+            fos.close();
+            in.close();
+        } catch (IOException e) {
+            throw new KrbException("IO error occurred. " + e.getMessage());
+        }
+    }
+
+    public void getHasClientConf(File file) throws KrbException {
+
+        HttpURLConnection httpConn;
+
+        URL url;
+        try {
+            url = new URL(getConfigBaseURL() + "gethasclientconf");
+        } catch (MalformedURLException e) {
+            throw new KrbException("Failed to create a URL object.", e);
+        }
+
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "GET", false);
+
+        try {
+            httpConn.connect();
+            if (httpConn.getResponseCode() != 200) {
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
+            }
+            FileOutputStream fos = new FileOutputStream(file);
+            InputStream in = httpConn.getInputStream();
+            byte[] buffer = new byte[3 * 1024];
+            int read;
+            while ((read = in.read(buffer)) > 0) {
+                fos.write(buffer, 0, read);
+            }
+            fos.close();
+            in.close();
+        } catch (IOException e) {
+            throw new KrbException("IO error occurred. " + e.getMessage());
         }
     }
 
     public String setPlugin(String plugin) throws KrbException {
-        WebResource webResource = getWebResource("conf/setplugin");
-        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-        params.add("plugin", plugin);
-        ClientResponse response = webResource.queryParams(params).put(ClientResponse.class);
-        String message;
+
+        HttpURLConnection httpConn;
+
+        URL url;
         try {
-            message = getResponse(response);
-        } catch (HasException e) {
-            throw new KrbException(e.getMessage());
+            url = new URL(getConfigBaseURL() + "setplugin?plugin=" + plugin);
+        } catch (MalformedURLException e) {
+            throw new KrbException("Failed to create a URL object.", e);
         }
-        if (response.getStatus() == 200) {
-            return message;
-        } else {
-            throw new KrbException(message);
+
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "PUT", false);
+
+        try {
+            httpConn.connect();
+
+            if (httpConn.getResponseCode() == 200) {
+                String response = HasClientUtil.getResponse(httpConn);
+                LOG.info(response);
+                return response;
+            } else {
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
+            }
+        } catch (IOException e) {
+            throw new KrbException("IO error occurred. " + e.getMessage());
         }
     }
 
     public String configKdc(String port, String realm, String host) throws KrbException {
-        WebResource webResource = getWebResource("conf/configkdc");
-        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-        params.add("port", port);
-        params.add("realm", realm);
-        params.add("host", host);
-        ClientResponse response = webResource.queryParams(params).put(ClientResponse.class);
-        String message;
+
+        HttpURLConnection httpConn;
+
+        URL url;
         try {
-            message = getResponse(response);
-        } catch (HasException e) {
-            throw new KrbException(e.getMessage());
+            url = new URL(getConfigBaseURL() + "configkdc?port=" + port + "&realm="
+                    + realm + "&host=" + host);
+        } catch (MalformedURLException e) {
+            throw new KrbException("Failed to create a URL object.", e);
         }
-        if (response.getStatus() == 200) {
-            return message;
-        } else {
-            throw new KrbException(message);
+
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "PUT", false);
+
+        try {
+            httpConn.connect();
+
+            if (httpConn.getResponseCode() == 200) {
+                String response = HasClientUtil.getResponse(httpConn);
+                LOG.info(response);
+                return response;
+            } else {
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
+            }
+        } catch (IOException e) {
+            throw new KrbException("IO error occurred. " + e.getMessage());
         }
     }
-    public String configBackend(String backendType, String dir, String url, String user,
+
+    public String configBackend(String backendType, String dir, String mysqlUrl, String user,
                               String password) throws KrbException {
-        WebResource webResource = getWebResource("conf/configbackend");
-        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-        params.add("backendType", backendType);
+
+        HttpURLConnection httpConn;
+
+        URL url;
         if (backendType.equals("json")) {
-            params.add("dir", dir);
+            try {
+                url = new URL(getConfigBaseURL() + "configbackend?backendType=" + backendType
+                        + "&dir=" + dir);
+            } catch (MalformedURLException e) {
+                throw new KrbException("Failed to create a URL object.", e);
+            }
         } else if (backendType.equals("mysql")) {
-            params.add("url", url);
-            params.add("user", user);
-            params.add("password", password);
-        }
-        ClientResponse response = webResource.queryParams(params).put(ClientResponse.class);
-        String message;
-        try {
-            message = getResponse(response);
-        } catch (HasException e) {
-            throw new KrbException(e.getMessage());
-        }
-        if (response.getStatus() == 200) {
-            return message;
+            try {
+                url = new URL(getConfigBaseURL() + "configbackend?backendType=" + backendType
+                        + "&url=" + mysqlUrl + "&user=" + user + "&password=" + password);
+            } catch (MalformedURLException e) {
+                throw new KrbException("Failed to create a URL object.", e);
+            }
         } else {
-            throw new KrbException(message);
+            throw new KrbException("Unsupported backend: " + backendType);
+        }
+
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "PUT", false);
+
+        try {
+            httpConn.connect();
+
+            if (httpConn.getResponseCode() == 200) {
+                String response = HasClientUtil.getResponse(httpConn);
+                LOG.info(response);
+                return response;
+            } else {
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
+            }
+        } catch (IOException e) {
+            throw new KrbException("IO error occurred. " + e.getMessage());
         }
     }
 }

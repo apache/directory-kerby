@@ -20,7 +20,6 @@
 package org.apache.kerby.kerberos.tool.admin.cmd;
 
 import org.apache.kerby.has.client.HasAuthAdminClient;
-import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 /**
@@ -40,10 +39,6 @@ public class EnableConfRemoteCmd extends AdminRemoteCmd {
     public void execute(String[] items) throws KrbException {
 
         HasAuthAdminClient client = getAuthAdminClient();
-        try {
-            client.setEnableOfConf("true");
-        } catch (HasException e) {
-            throw new KrbException(e.getMessage());
-        }
+        client.setEnableOfConf("true");
     }
 }

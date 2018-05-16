@@ -21,9 +21,6 @@ package org.apache.kerby.has.client;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.has.common.HasConfig;
-import org.apache.kerby.has.common.HasException;
-import org.apache.kerby.has.common.ssl.SSLFactory;
-import org.apache.kerby.has.common.util.URLConnectionFactory;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.Kadmin;
 import org.codehaus.jettison.json.JSONArray;
@@ -40,7 +37,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,63 +55,12 @@ public class HasAuthAdminClient implements Kadmin {
         this.hasConfig = hasConfig;
     }
 
-    protected HttpURLConnection getHttpsConnection(URL url, boolean isSpnego) throws Exception {
-        HasConfig conf = new HasConfig();
-
-        conf.setString(SSLFactory.SSL_HOSTNAME_VERIFIER_KEY, "ALLOW_ALL");
-        String sslClientConf = hasConfig.getSslClientConf();
-        conf.setString(SSLFactory.SSL_CLIENT_CONF_KEY, sslClientConf);
-        conf.setBoolean(SSLFactory.SSL_REQUIRE_CLIENT_CERT_KEY, false);
-
-        URLConnectionFactory connectionFactory = URLConnectionFactory
-            .newDefaultURLConnectionFactory(conf);
-        return (HttpURLConnection) connectionFactory.openConnection(url, isSpnego, hasConfig);
+    private String getKadminBaseURL() throws KrbException {
+        return HasClientUtil.getBaseUrl(hasConfig, "kadmin");
     }
 
-    /**
-     * Create an authenticated connection to the Has server.
-     * <p>
-     * It uses Hadoop-auth client authentication which by default supports
-     * Kerberos HTTP SPNEGO, Pseudo/Simple and anonymous.
-     *
-     * @param url    the URL to open a HTTP connection to.
-     * @param method the HTTP method for the HTTP connection.
-     * @return an authenticated connection to the has server.
-     * @throws IOException if an IO error occurred.
-     */
-    protected HttpURLConnection createConnection(URL url, String method) {
-        HttpURLConnection conn = null;
-        if (hasConfig.getHttpsPort() != null && hasConfig.getHttpsHost() != null) {
-            try {
-                conn = getHttpsConnection(url, true);
-            } catch (Exception e) {
-                throw new RuntimeException("Error occurred when creating https connection. " + e.getMessage());
-            }
-        }
-        if (method.equals("POST") || method.equals("PUT")) {
-            conn.setDoOutput(true);
-        }
-        return conn;
-    }
-
-    private String getKadminBaseURL() {
-        return getBaseUrl("kadmin");
-    }
-
-    private String getHadminBaseURL() {
-        return getBaseUrl("hadmin");
-    }
-
-    private String getBaseUrl(String input) {
-        String url = null;
-        if (hasConfig.getHttpsPort() != null && hasConfig.getHttpsHost() != null) {
-            url = "https://" + hasConfig.getHttpsHost() + ":" + hasConfig.getHttpsPort()
-                + "/has/v1/" + input + "/";
-        }
-        if (url == null) {
-            throw new RuntimeException("Please set the https address and port.");
-        }
-        return url;
+    private String getHadminBaseURL() throws KrbException {
+        return HasClientUtil.getBaseUrl(hasConfig, "hadmin");
     }
 
     @Override
@@ -129,25 +74,15 @@ public class HasAuthAdminClient implements Kadmin {
             throw new KrbException("Failed to create a URL object.", e);
         }
 
-        httpConn = createConnection(url, "POST");
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "POST", true);
 
-        httpConn.setRequestProperty("Content-Type",
-            "application/json; charset=UTF-8");
         try {
-            httpConn.setRequestMethod("POST");
-        } catch (ProtocolException e) {
-            LOG.error("Fail to add principal. " + e);
-            throw new KrbException("Failed to set the method for URL request.", e);
-        }
-        try {
-            httpConn.setDoOutput(true);
-            httpConn.setDoInput(true);
             httpConn.connect();
 
             if (httpConn.getResponseCode() == 200) {
-                LOG.info(getResponse(httpConn));
+                LOG.info(HasClientUtil.getResponse(httpConn));
             } else {
-                throw new KrbException(getResponse(httpConn));
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
         } catch (IOException e) {
             throw new KrbException("IO error occurred.", e);
@@ -166,24 +101,15 @@ public class HasAuthAdminClient implements Kadmin {
             throw new KrbException("Failed to create a URL object.", e);
         }
 
-        httpConn = createConnection(url, "POST");
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "POST", true);
 
-        httpConn.setRequestProperty("Content-Type",
-            "application/json; charset=UTF-8");
         try {
-            httpConn.setRequestMethod("POST");
-        } catch (ProtocolException e) {
-            throw new KrbException("Failed to set the method for URL request.", e);
-        }
-        try {
-            httpConn.setDoOutput(true);
-            httpConn.setDoInput(true);
             httpConn.connect();
 
             if (httpConn.getResponseCode() == 200) {
-                LOG.info(getResponse(httpConn));
+                LOG.info(HasClientUtil.getResponse(httpConn));
             } else {
-                throw new KrbException(getResponse(httpConn));
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
         } catch (IOException e) {
             throw new KrbException("IO error occurred.", e);
@@ -192,7 +118,7 @@ public class HasAuthAdminClient implements Kadmin {
 
     @Override
     public void addPrincipal(String principal, String password, KOptions kOptions) throws KrbException {
-
+        throw new KrbException("Unsupported feature");
     }
 
     @Override
@@ -206,22 +132,13 @@ public class HasAuthAdminClient implements Kadmin {
             throw new KrbException("Failed to create a URL object.", e);
         }
 
-        httpConn = createConnection(url, "DELETE");
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "DELETE", true);
 
-        httpConn.setRequestProperty("Content-Type",
-            "application/json; charset=UTF-8");
         try {
-            httpConn.setRequestMethod("DELETE");
-        } catch (ProtocolException e) {
-            throw new KrbException("Failed to set the method for URL request.", e);
-        }
-        try {
-            httpConn.setDoOutput(true);
-            httpConn.setDoInput(true);
             httpConn.connect();
 
             if (httpConn.getResponseCode() == 200) {
-                LOG.info(getResponse(httpConn));
+                LOG.info(HasClientUtil.getResponse(httpConn));
             } else {
                 throw new KrbException("Connection deined.");
             }
@@ -232,7 +149,7 @@ public class HasAuthAdminClient implements Kadmin {
 
     @Override
     public void modifyPrincipal(String principal, KOptions kOptions) throws KrbException {
-
+        throw new KrbException("Unsupported feature");
     }
 
     @Override
@@ -247,24 +164,15 @@ public class HasAuthAdminClient implements Kadmin {
             throw new KrbException("Failed to create a URL object.", e);
         }
 
-        httpConn = createConnection(url, "POST");
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "POST", true);
 
-        httpConn.setRequestProperty("Content-Type",
-            "application/json; charset=UTF-8");
         try {
-            httpConn.setRequestMethod("POST");
-        } catch (ProtocolException e) {
-            throw new KrbException("Failed to set the method for URL request.", e);
-        }
-        try {
-            httpConn.setDoOutput(true);
-            httpConn.setDoInput(true);
             httpConn.connect();
 
             if (httpConn.getResponseCode() == 200) {
-                LOG.info(getResponse(httpConn));
+                LOG.info(HasClientUtil.getResponse(httpConn));
             } else {
-                throw new KrbException(getResponse(httpConn));
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
         } catch (IOException e) {
             throw new KrbException("IO error occurred.", e);
@@ -281,25 +189,19 @@ public class HasAuthAdminClient implements Kadmin {
         } catch (MalformedURLException e) {
             throw new KrbException("Failed to create a URL object.", e);
         }
+        LOG.info("Remote Admin Url: " + url);
 
-        httpConn = createConnection(url, "GET");
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "GET", true);
 
-        httpConn.setRequestProperty("Content-Type",
-            "application/json; charset=UTF-8");
-        try {
-            httpConn.setRequestMethod("GET");
-        } catch (ProtocolException e) {
-            throw new KrbException("Failed to set the method for URL request.", e);
-        }
         String response;
         try {
             httpConn.setDoInput(true);
             httpConn.connect();
 
             if (httpConn.getResponseCode() == 200) {
-                response = getResponse(httpConn);
+                response = HasClientUtil.getResponse(httpConn);
             } else {
-                throw new KrbException(getResponse(httpConn));
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
         } catch (IOException e) {
             LOG.error("IO error occurred." + e.getMessage());
@@ -319,26 +221,16 @@ public class HasAuthAdminClient implements Kadmin {
             throw new KrbException("Failed to create a URL object. ", e);
         }
 
-        httpConn = createConnection(url, "GET");
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "GET", true);
 
-        httpConn.setRequestProperty("Content-Type",
-            "application/json; charset=UTF-8");
-        try {
-            httpConn.setRequestMethod("GET");
-        } catch (ProtocolException e) {
-            LOG.error("Failed to set the method for URL request." + e.getMessage());
-            throw new KrbException("Failed to set the method for URL request.", e);
-        }
         String response;
         try {
-            httpConn.setDoOutput(true);
-            httpConn.setDoInput(true);
             httpConn.connect();
 
             if (httpConn.getResponseCode() == 200) {
-                response = getResponse(httpConn);
+                response = HasClientUtil.getResponse(httpConn);
             } else {
-                throw new KrbException(getResponse(httpConn));
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
         } catch (IOException e) {
             throw new KrbException("IO error occurred.", e);
@@ -379,19 +271,12 @@ public class HasAuthAdminClient implements Kadmin {
             throw new KrbException("Failed to create a URL object.", e);
         }
 
-        HttpURLConnection httpConn = createConnection(url, "GET");
-        httpConn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-        try {
-            httpConn.setRequestMethod("GET");
-        } catch (ProtocolException e) {
-            throw new KrbException("Failed to set the method for URL request.", e);
-        }
-        httpConn.setDoOutput(true);
-        httpConn.setDoInput(true);
+        HttpURLConnection httpConn = HasClientUtil.createConnection(hasConfig, url, "GET", true);
+
         try {
             httpConn.connect();
             if (httpConn.getResponseCode() != 200) {
-                throw new KrbException(getResponse(httpConn));
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
             FileOutputStream fos = new FileOutputStream(keytab);
             InputStream in = httpConn.getInputStream();
@@ -419,19 +304,12 @@ public class HasAuthAdminClient implements Kadmin {
             } catch (MalformedURLException e) {
                 throw new KrbException("Failed to create a URL object.");
             }
-            httpConn = createConnection(url, "GET");
-            httpConn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            try {
-                httpConn.setRequestMethod("GET");
-            } catch (ProtocolException e) {
-                throw new KrbException("Failed to set the method for URL request.", e);
-            }
-            httpConn.setDoOutput(true);
-            httpConn.setDoInput(true);
+            httpConn = HasClientUtil.createConnection(hasConfig, url, "GET", true);
+
             try {
                 httpConn.connect();
                 if (httpConn.getResponseCode() != 200) {
-                    throw new KrbException(getResponse(httpConn));
+                    throw new KrbException(HasClientUtil.getResponse(httpConn));
                 }
                 FileOutputStream fos = new FileOutputStream(keytabFile);
                 InputStream in = httpConn.getInputStream();
@@ -495,23 +373,6 @@ public class HasAuthAdminClient implements Kadmin {
 
     }
 
-    private String getResponse(HttpURLConnection httpConn) throws IOException {
-        StringBuilder data = new StringBuilder();
-        InputStream inputStream;
-        if (httpConn.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
-            inputStream = httpConn.getInputStream();
-        } else {
-            /* Error from server */
-            inputStream = httpConn.getErrorStream();
-        }
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        String s;
-        while ((s = br.readLine()) != null) {
-            data.append(s);
-        }
-        return data.toString();
-    }
-
     public List<String> addPrincipalsByRole(String hostRoles) throws KrbException {
         HttpURLConnection httpConn;
 
@@ -522,17 +383,8 @@ public class HasAuthAdminClient implements Kadmin {
             throw new KrbException(e.getMessage());
         }
 
-        httpConn = createConnection(url, "POST");
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "PUT", true);
 
-        httpConn.setRequestProperty("Content-Type",
-                "application/json; charset=UTF-8");
-        try {
-            httpConn.setRequestMethod("PUT");
-        } catch (ProtocolException e) {
-            throw new KrbException(e.getMessage());
-        }
-        httpConn.setDoOutput(true);
-        httpConn.setDoInput(true);
         String response;
         try {
             httpConn.connect();
@@ -541,9 +393,9 @@ public class HasAuthAdminClient implements Kadmin {
             out.flush();
             out.close();
             if (httpConn.getResponseCode() == 200) {
-                response = getResponse(httpConn);
+                response = HasClientUtil.getResponse(httpConn);
             } else {
-                throw new KrbException(getResponse(httpConn));
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
         } catch (Exception e) {
             throw new KrbException(e.getMessage());
@@ -551,28 +403,19 @@ public class HasAuthAdminClient implements Kadmin {
         return stringtoList(response);
     }
 
-    public void setEnableOfConf(String isEnable) throws HasException {
+    public void setEnableOfConf(String isEnable) throws KrbException {
         HttpURLConnection httpConn;
 
         URL url;
         try {
             url = new URL(getHadminBaseURL() + "setconf?isEnable=" + isEnable);
         } catch (MalformedURLException e) {
-            throw new HasException(e);
+            throw new KrbException(e.getMessage());
         }
 
-        httpConn = createConnection(url, "PUT");
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "PUT", true);
 
-        httpConn.setRequestProperty("Content-Type",
-                "application/json; charset=UTF-8");
         try {
-            httpConn.setRequestMethod("PUT");
-        } catch (ProtocolException e) {
-            throw new HasException(e);
-        }
-        try {
-            httpConn.setDoOutput(true);
-            httpConn.setDoInput(true);
             httpConn.connect();
             InputStream inputStream = httpConn.getResponseCode() == 200
                     ? httpConn.getInputStream() : httpConn.getErrorStream();
@@ -590,11 +433,11 @@ public class HasAuthAdminClient implements Kadmin {
             }
         } catch (Exception e) {
             LOG.error("Fail to connect to server. " + e);
-            throw new HasException(e);
+            throw new KrbException(e.getMessage());
         }
     }
 
-    public File getKeytabByHostAndRole(String host, String role) throws HasException {
+    public File getKeytabByHostAndRole(String host, String role) throws KrbException {
         String keytabName = host + ".zip";
         HttpURLConnection httpConn;
         String request = getHadminBaseURL() + "exportKeytabsbyrole?host=" + host;
@@ -607,20 +450,11 @@ public class HasAuthAdminClient implements Kadmin {
         try {
             url = new URL(request);
         } catch (MalformedURLException e) {
-            throw new HasException(e);
+            throw new KrbException(e.getMessage());
         }
 
-        httpConn = createConnection(url, "GET");
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "GET", true);
 
-        httpConn.setRequestProperty("Content-Type",
-            "application/json; charset=UTF-8");
-        try {
-            httpConn.setRequestMethod("GET");
-        } catch (ProtocolException e) {
-            throw new HasException(e);
-        }
-        httpConn.setDoOutput(true);
-        httpConn.setDoInput(true);
         try {
             httpConn.connect();
 
@@ -638,7 +472,7 @@ public class HasAuthAdminClient implements Kadmin {
             fos.close();
             in.close();
         } catch (IOException e) {
-            throw new HasException(e);
+            throw new KrbException(e.getMessage());
         }
         System.out.println("Accept keytab file \"" + keytabName + "\" from server.");
 
@@ -655,24 +489,17 @@ public class HasAuthAdminClient implements Kadmin {
             throw new KrbException("Failed to create a URL object.", e);
         }
 
-        httpConn = createConnection(url, "GET");
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "GET", true);
 
-        httpConn.setRequestProperty("Content-Type",
-            "application/json; charset=UTF-8");
-        try {
-            httpConn.setRequestMethod("GET");
-        } catch (ProtocolException e) {
-            throw new KrbException("Failed to set the method for URL request.", e);
-        }
         String response;
         try {
             httpConn.setDoInput(true);
             httpConn.connect();
 
             if (httpConn.getResponseCode() == 200) {
-                response = getResponse(httpConn);
+                response = HasClientUtil.getResponse(httpConn);
             } else {
-                throw new KrbException(getResponse(httpConn));
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
         } catch (IOException e) {
             LOG.error("IO error occurred." + e.getMessage());

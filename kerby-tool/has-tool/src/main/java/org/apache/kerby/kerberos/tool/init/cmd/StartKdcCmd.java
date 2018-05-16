@@ -47,6 +47,6 @@ public class StartKdcCmd extends InitCmd {
             return;
         }
         HasInitClient client = getClient();
-        client.startKdc();
+        System.out.println(client.startKdc());
     }
 }

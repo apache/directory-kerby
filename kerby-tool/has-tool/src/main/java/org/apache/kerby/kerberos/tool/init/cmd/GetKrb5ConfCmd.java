@@ -23,9 +23,6 @@ import org.apache.kerby.has.client.HasInitClient;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 
 /**
  * Remote get krb5.conf cmd
@@ -56,17 +53,7 @@ public class GetKrb5ConfCmd extends InitCmd {
             }
         }
         File krb5Conf = new File(path, "krb5.conf");
-        String content = client.getKrb5conf();
-        if (content == null) {
-            System.err.println("Failed to get krb5.conf.");
-            return;
-        }
-        try {
-            PrintStream ps = new PrintStream(new FileOutputStream(krb5Conf));
-            ps.println(content);
-            System.out.println("krb5.conf has saved in : " + krb5Conf.getAbsolutePath());
-        } catch (FileNotFoundException e) {
-            System.err.println(e.getMessage());
-        }
+        client.getKrb5conf(krb5Conf);
+        System.out.println("krb5.conf has saved in : " + krb5Conf.getAbsolutePath());
     }
 }
