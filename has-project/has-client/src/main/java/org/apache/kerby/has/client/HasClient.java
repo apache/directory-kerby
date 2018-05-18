@@ -29,6 +29,7 @@ import org.apache.kerby.has.common.util.URLConnectionFactory;
 import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.KrbRuntime;
+import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.crypto.EncryptionHandler;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
@@ -44,6 +45,7 @@ import org.apache.kerby.kerberos.kerb.type.kdc.EncKdcRepPart;
 import org.apache.kerby.kerberos.kerb.type.kdc.KdcRep;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.util.IOUtil;
+import org.apache.kerby.util.SysUtil;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
@@ -440,8 +442,82 @@ public class HasClient {
 
         TgtTicket tgtTicket = getTicket(kdcRep);
         LOG.debug("Ticket expire time: " + tgtTicket.getEncKdcRepPart().getEndTime());
+
+        storeTgtTicket(tgtTicket);
+
         return tgtTicket;
 
+    }
+
+    private void storeTgtTicket(TgtTicket tgtTicket) throws HasException {
+        String ccacheName = getCcacheName();
+        File ccacheFile = new File(ccacheName);
+        LOG.info("Storing the tgt to the credential cache file.");
+        if (!ccacheFile.exists()) {
+            createCacheFile(ccacheFile);
+        }
+        if (ccacheFile.exists() && ccacheFile.canWrite()) {
+            CredentialCache cCache = new CredentialCache(tgtTicket);
+            try {
+                cCache.store(ccacheFile);
+            } catch (IOException e) {
+                throw new HasException("Failed to store tgt", e);
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid ccache file, "
+                    + "not exist or writable: " + ccacheFile.getAbsolutePath());
+        }
+    }
+
+    /**
+     * Create the specified credential cache file.
+     */
+    private void createCacheFile(File ccacheFile) throws HasException {
+        try {
+            if (!ccacheFile.createNewFile()) {
+                throw new HasException("Failed to create ccache file "
+                        + ccacheFile.getAbsolutePath());
+            }
+            // sets read-write permissions to owner only
+            ccacheFile.setReadable(true, true);
+            if (!ccacheFile.setWritable(true, true)) {
+                throw new HasException("Cache file is not readable.");
+            }
+        } catch (IOException e) {
+            throw new HasException("Failed to create ccache file "
+                    + ccacheFile.getAbsolutePath(), e);
+        }
+    }
+
+    /**
+     * Get credential cache file name.
+     */
+    private String getCcacheName() {
+        final String ccacheNameEnv = System.getenv("KRB5CCNAME");
+        String ccacheName;
+        if (ccacheNameEnv != null) {
+            ccacheName = ccacheNameEnv;
+        } else {
+            StringBuilder uid = new StringBuilder();
+            try {
+                //Get UID through "id -u" command
+                String command = "id -u";
+                Process child = Runtime.getRuntime().exec(command);
+                InputStream in = child.getInputStream();
+                int c;
+                while ((c = in.read()) != -1) {
+                    uid.append((char) c);
+                }
+                in.close();
+            } catch (IOException e) {
+                System.err.println("Failed to get UID.");
+                System.exit(1);
+            }
+            ccacheName = "krb5cc_" + uid.toString().trim();
+            ccacheName = SysUtil.getTempDir().toString() + "/" + ccacheName;
+        }
+
+        return ccacheName;
     }
 
     protected byte[] decryptWithClientKey(EncryptedData data,
