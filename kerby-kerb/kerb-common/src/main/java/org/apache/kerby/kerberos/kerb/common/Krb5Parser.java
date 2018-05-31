@@ -63,7 +63,7 @@ public class Krb5Parser {
         while (originLine != null) {
             String line = originLine.trim();
             /*parse through comments*/
-            if (line.startsWith("#") || line.length() == 0) {
+            if (line.isEmpty() || isComment(line)) {
                 originLine = br.readLine();
             }   else if (line.startsWith("[")) {
                 insertSections(line, br, items);
@@ -155,7 +155,7 @@ public class Krb5Parser {
             if (line == null) {
                 break;
             }
-            while (line.startsWith("#")) {
+            while (!line.isEmpty() && isComment(line)) {
                 line = br.readLine();
                 if (line == null) {
                     break;
@@ -192,7 +192,7 @@ public class Krb5Parser {
             }
             return line;
         }
-        if (line.length() == 0 || line.startsWith("#")) {
+        if (line.isEmpty() || isComment(line)) {
             line = br.readLine();
             if (line != null) {
                 line = line.trim();
@@ -263,5 +263,9 @@ public class Krb5Parser {
                 System.out.println("}");
             }
         }
+    }
+
+    private boolean isComment(String line) {
+        return line.charAt(0) == '#' || line.charAt(0) == ';';
     }
 }
