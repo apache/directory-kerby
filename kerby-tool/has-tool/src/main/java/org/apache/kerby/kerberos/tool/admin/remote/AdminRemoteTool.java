@@ -17,23 +17,23 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.admin;
+package org.apache.kerby.kerberos.tool.admin.remote;
 
 import org.apache.kerby.has.client.HasAuthAdminClient;
 import org.apache.kerby.has.common.HasConfig;
 import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.common.util.HasUtil;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.tool.admin.cmd.AddPrincipalRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.cmd.AddPrincipalsRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.cmd.AdminRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.cmd.DeletePrincipalRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.cmd.DisableConfRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.cmd.EnableConfRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.cmd.ExportKeytabsRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.cmd.GetHostRolesRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.cmd.ListPrincipalsRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.cmd.RenamePrincipalRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.AddPrincipalRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.AddPrincipalsRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.AdminRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.DeletePrincipalRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.DisableConfRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.EnableConfRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.ExportKeytabsRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.GetHostRolesRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.ListPrincipalsRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.RenamePrincipalRemoteCmd;
 import org.apache.kerby.util.OSUtil;
 import org.jline.reader.Completer;
 import org.jline.reader.EndOfFileException;

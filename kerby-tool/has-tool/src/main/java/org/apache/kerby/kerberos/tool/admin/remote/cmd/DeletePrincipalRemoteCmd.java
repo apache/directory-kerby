@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.admin.cmd;
+package org.apache.kerby.kerberos.tool.admin.remote.cmd;
 
 import org.apache.kerby.has.client.HasAuthAdminClient;
 import org.apache.kerby.kerberos.kerb.KrbException;

@@ -21,6 +21,7 @@ package org.apache.kerby.has.server.admin;
 
 import org.apache.kerby.has.common.Hadmin;
 import org.apache.kerby.has.common.HasException;
+import org.apache.kerby.has.common.util.HasUtil;
 import org.apache.kerby.has.server.HasServer;
 import org.apache.kerby.has.server.web.HostRoleType;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -35,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class LocalHadmin implements Hadmin {
 
     private final ServerSetting serverSetting;
     private LocalKadmin kadmin;
+    private File confDir;
 
     public LocalHadmin(HasServer hasServer) throws KrbException {
         if (hasServer.getKdcServer() == null) {
@@ -60,6 +63,7 @@ public class LocalHadmin implements Hadmin {
      * @throws KrbException e
      */
     public LocalHadmin(File confDir) throws KrbException {
+        this.confDir = confDir;
         KdcConfig tmpKdcConfig = KdcUtil.getKdcConfig(confDir);
         if (tmpKdcConfig == null) {
             tmpKdcConfig = new KdcConfig();
@@ -139,6 +143,21 @@ public class LocalHadmin implements Hadmin {
                     System.out.print(", ");
                 }
             }
+        }
+    }
+
+    @Override
+    public void setEnableOfConf(String isEnable) throws HasException {
+        File hasConf = new File(confDir, "has-server.conf");
+        if (!hasConf.exists()) {
+            System.err.println("has-server.conf is not exists.");
+            return;
+        }
+        try {
+            HasUtil.setEnableConf(hasConf, isEnable);
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            return;
         }
     }
 }

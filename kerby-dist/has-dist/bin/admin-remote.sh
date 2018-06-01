@@ -17,7 +17,7 @@
 # limitations under the License.
 
 CONF_DIR=$1
-APP_MAIN=org.apache.kerby.kerberos.tool.admin.AdminRemoteTool
+APP_MAIN=org.apache.kerby.kerberos.tool.admin.remote.AdminRemoteTool
 
 # Reset HAS_CONF_DIR if CONF_DIR not null
 if [ "$CONF_DIR" != "" ]; then

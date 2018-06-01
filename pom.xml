@@ -71,6 +71,7 @@
     <commons-text.version>1.1</commons-text.version>
     <commons-dbutils.version>1.6</commons-dbutils.version>
     <drizzle-jdbc.version>1.4</drizzle-jdbc.version>
+    <jsch.version>0.1.54</jsch.version>
   </properties>
 
   <prerequisites>
@@ -82,13 +83,13 @@
     <module>kerby-pkix</module>
     <module>kerby-kerb</module>
     <module>kerby-kdc</module>
-    <module>kerby-tool</module>
     <module>kerby-kdc-test</module>
     <module>kerby-backend</module>
-    <module>kerby-dist</module>
     <module>benchmark</module>
     <module>kerby-provider</module>
     <module>has-project</module>
+    <module>kerby-tool</module>
+    <module>kerby-dist</module>
   </modules>
 
   <dependencyManagement>

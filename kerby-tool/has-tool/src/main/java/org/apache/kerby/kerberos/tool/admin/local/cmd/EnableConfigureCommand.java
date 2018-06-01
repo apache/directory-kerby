@@ -17,27 +17,24 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.admin.cmd;
+package org.apache.kerby.kerberos.tool.admin.local.cmd;
 
-import org.apache.kerby.has.client.HasAuthAdminClient;
-import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.has.common.HasException;
+import org.apache.kerby.has.server.admin.LocalHadmin;
 
-/**
- * Remote add principal cmd
- */
-public class DisableConfRemoteCmd extends AdminRemoteCmd {
+public class EnableConfigureCommand extends HadminCommand {
 
-    public static final String USAGE = "Usage: disable_configure\n"
+    public static final String USAGE = "Usage: enable_configure\n"
             + "\tExample:\n"
-            + "\t\tdisable\n";
+            + "\t\tenable\n";
 
-    public DisableConfRemoteCmd(HasAuthAdminClient authHadmin) {
-        super(authHadmin);
+    public EnableConfigureCommand(LocalHadmin hadmin) {
+        super(hadmin);
     }
 
     @Override
-    public void execute(String[] items) throws KrbException {
-        HasAuthAdminClient client = getAuthAdminClient();
-        client.setEnableOfConf("false");
+    public void execute(String[] items) throws HasException {
+        getHadmin().setEnableOfConf("true");
+        System.out.println("Set conf enable.");
     }
 }

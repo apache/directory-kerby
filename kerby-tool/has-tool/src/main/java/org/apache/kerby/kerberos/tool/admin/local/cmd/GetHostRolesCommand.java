@@ -14,25 +14,25 @@
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
- *  under the License. 
+ *  under the License.
  *
  */
-package org.apache.kerby.has.common;
+package org.apache.kerby.kerberos.tool.admin.local.cmd;
 
-import java.io.File;
-import java.util.List;
+import org.apache.kerby.has.server.admin.LocalHadmin;
 
-/**
- * Server side admin facilities from remote, similar to MIT kadmin remote mode.
- */
-public interface Hadmin {
+public class GetHostRolesCommand extends HadminCommand {
 
+    public static final String USAGE = "Usage: get_hostroles\n"
+            + "\tExample:\n"
+            + "\t\tget_hostroles\n";
 
-    List<String> addPrincByRole(String host, String role) throws HasException;
+    public GetHostRolesCommand(LocalHadmin hadmin) {
+        super(hadmin);
+    }
 
-    File getKeytabByHostAndRole(String host, String role) throws HasException;
-
-    void getHostRoles();
-
-    void setEnableOfConf(String isEnable) throws HasException;
+    @Override
+    public void execute(String[] items) {
+        getHadmin().getHostRoles();
+    }
 }
