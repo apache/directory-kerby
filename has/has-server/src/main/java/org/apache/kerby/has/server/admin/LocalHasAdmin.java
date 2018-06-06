@@ -197,30 +197,34 @@ public class LocalHasAdmin implements HasAdmin {
 
     @Override
     public String addPrincByRole(String host, String role) throws HasException {
-        String result = "";
-        LocalKadmin kadmin = null;
+        StringBuilder result = new StringBuilder();
+        LocalKadmin kAdmin;
         try {
-            kadmin = new LocalKadminImpl(serverSetting);
+            kAdmin = new LocalKadminImpl(serverSetting);
         } catch (KrbException e) {
             throw new HasException(e);
         }
-        String realm = "/" + host + "@" + kadmin.getKdcConfig().getKdcRealm();
-        String[] princs = HostRoleType.valueOf(role).getPrincs();
-        if (princs == null) {
-            LOG.error("Cannot find the role of : " + role);
-            return "Cannot find the role of : " + role;
+        String realm = "/" + host + "@" + kAdmin.getKdcConfig().getKdcRealm();
+        String[] principalArray = HostRoleType.valueOf(role).getPrincs();
+        if (principalArray == null) {
+            LOG.error("Cannot find the role: " + role);
+            return "Cannot find the role: " + role;
         }
-        for (String princ : princs) {
+        for (String principal : principalArray) {
             try {
-                kadmin.addPrincipal(princ + realm);
-                LOG.info("Success to add princ :" + princ + realm);
-                result = result + "Success to add princ :" + princ + realm + "\n";
+                kAdmin.addPrincipal(principal + realm);
+                LOG.info("Added principal: " + principal + realm);
+                result.append("Added principal: ");
+                result.append(principal);
+                result.append(realm);
+                result.append("\n");
             } catch (KrbException e) {
-                LOG.info(e.getMessage());
-                result = e.getMessage() + "\n";
+                LOG.info(e.toString());
+                result.append(e.toString());
+                result.append("\n");
             }
         }
-        return result;
+        return result.toString();
     }
 
     @Override

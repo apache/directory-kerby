@@ -59,13 +59,14 @@ public class MySQLHasServerPlugin extends AbstractHasServerPlugin {
         ResultSet res = null;
         PreparedStatement preStm = null;
         try {
+            LOG.debug("UserName: {}", user);
             String stm = "SELECT COUNT(*) FROM `has_user` WHERE user_name = ? AND pass_word = ?";
             preStm = connection.prepareStatement(stm);
             preStm.setString(1, user);
             preStm.setString(2, secret);
             res = preStm.executeQuery();
             if (res.next() && res.getInt(1) > 0) {
-              LOG.debug("UserName: " + user);
+              LOG.debug("UserName: {}", user);
             } else {
                 LOG.error("Authentication failed.");
                 throw new HasAuthenException("Authentication failed.");

@@ -321,7 +321,7 @@ public class HasServer {
     /**
      * Update KDC conf file.
      *
-     * @throws KrbException e
+     * @throws HasException e
      */
     private void updateKdcConf() throws HasException {
         try {
@@ -344,7 +344,7 @@ public class HasServer {
      * @param url url of connection
      * @param user username of connection
      * @param password password of connection
-     * @throws KrbException e
+     * @throws HasException e
      * @return MySQL JDBC connection
      */
     private Connection startConnection(String driver, String url, String user,

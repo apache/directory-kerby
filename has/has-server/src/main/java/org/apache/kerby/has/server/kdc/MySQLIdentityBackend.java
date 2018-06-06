@@ -19,6 +19,7 @@
  */
 package org.apache.kerby.has.server.kdc;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.directory.api.util.GeneralizedTime;
 import org.apache.kerby.config.Config;
@@ -34,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import javax.sql.rowset.serial.SerialBlob;
 import java.util.Map;
@@ -46,41 +46,54 @@ import java.text.ParseException;
  * A MySQL based backend implementation.
  */
 public class MySQLIdentityBackend extends AbstractIdentityBackend {
-    private Connection connection;
-    private String driver;
-    private String url;
-    private String user;
-    private String password;
-    private static final Logger LOG = LoggerFactory.getLogger(MySQLIdentityBackend.class);
-    private String identityTable;
     private String keyInfoTable;
+    private String identityTable;
+    private static DruidDataSource dataSource = null;
+    private static final Logger LOG = LoggerFactory.getLogger(MySQLIdentityBackend.class);
 
     /**
      * Constructing an instance using specified config that contains anything
      * to be used to initialize an MySQL Backend.
-     * @param config . The config is used to config the backend.
+     *
+     * @param config used to config the backend
      */
     public MySQLIdentityBackend(final Config config) {
         setConfig(config);
     }
 
-    public MySQLIdentityBackend() { }
+    public MySQLIdentityBackend() {
+    }
 
     /**
-     * Start the MySQL connection.
+     * Create data base connection pool.
+     * @throws SQLException e
      */
-    private void startConnection() throws KrbException {
-        try {
-            Class.forName(driver);
-            connection = DriverManager.getConnection(url, user, password);
-            if (!connection.isClosed()) {
-                LOG.info("Succeeded in connecting to MySQL.");
-            }
-        } catch (ClassNotFoundException e) {
-            throw new KrbException("JDBC Driver Class not found. ", e);
-        } catch (SQLException e) {
-            throw new KrbException("Failed to connecting to MySQL. ", e);
-        }
+    private void initializeDataSource(
+        String driver, String url, String user, String password) throws SQLException {
+        dataSource = new DruidDataSource();
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
+        dataSource.setUsername(user);
+        dataSource.setPassword(password);
+
+        dataSource.setInitialSize(10);
+        dataSource.setMinIdle(3);
+        dataSource.setMaxActive(80);
+        dataSource.setMaxWait(6000);
+        dataSource.setTestWhileIdle(true);
+        dataSource.setValidationQuery("SELECT 1");
+        dataSource.setTestOnBorrow(false);
+        dataSource.setTestOnReturn(false);
+        dataSource.setRemoveAbandoned(true);
+        dataSource.setRemoveAbandonedTimeout(180);
+        dataSource.setLogAbandoned(true);
+        dataSource.setMinEvictableIdleTimeMillis(300000);
+        dataSource.setTimeBetweenEvictionRunsMillis(90000);
+        dataSource.setPoolPreparedStatements(true);
+        dataSource.setMaxOpenPreparedStatements(20);
+        dataSource.setMaxPoolPreparedStatementPerConnectionSize(30);
+        dataSource.setAsyncInit(true);
+        dataSource.setFilters("stat");
     }
 
     /**
@@ -89,23 +102,34 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected void doInitialize() throws KrbException {
         LOG.info("Initializing the MySQL identity backend.");
-        driver = getConfig().getString(MySQLConfKey.MYSQL_DRIVER, true);
-        user = getConfig().getString(MySQLConfKey.MYSQL_USER, true);
-        password = getConfig().getString(MySQLConfKey.MYSQL_PASSWORD, true);
 
-        String urlString = getConfig().getString(MySQLConfKey.MYSQL_URL, true);
-        if (urlString == null || urlString.isEmpty()) {
-            urlString = getBackendConfig().getString(MySQLConfKey.MYSQL_URL, true);
+        // Initialize data base connection pool
+        if (MySQLIdentityBackend.dataSource == null) {
+            String driver = getConfig().getString(MySQLConfKey.MYSQL_DRIVER, true);
+            String user = getConfig().getString(MySQLConfKey.MYSQL_USER, true);
+            String password = getConfig().getString(MySQLConfKey.MYSQL_PASSWORD, true);
+
+            String urlString = getConfig().getString(MySQLConfKey.MYSQL_URL, true);
+            if (urlString == null || urlString.isEmpty()) {
+                urlString = getBackendConfig().getString(MySQLConfKey.MYSQL_URL, true);
+            }
+
+            try {
+                initializeDataSource(driver, urlString, user, password);
+            } catch (SQLException e) {
+                LOG.error("Failed to initialize data source. " + e.toString());
+                throw new KrbException("Failed to initialize data source.", e);
+            }
         }
-        url = urlString;
 
+        Connection connection = null;
         PreparedStatement preInitialize = null;
         PreparedStatement preKdcRealm = null;
-        ResultSet resKdcRelam = null;
+        ResultSet resKdcRealm = null;
         PreparedStatement preIdentity = null;
         PreparedStatement preKey = null;
         try {
-            startConnection();
+            connection = dataSource.getConnection();
 
             // Set initialized for kdc config
             String stmInitialize = "UPDATE `kdc_config` SET initialized = true WHERE id = 1";
@@ -115,9 +139,9 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
             // Get identity table name according to realm of kdc
             String stmKdcRealm = "SELECT realm FROM `kdc_config`";
             preKdcRealm = connection.prepareStatement(stmKdcRealm);
-            resKdcRelam = preKdcRealm.executeQuery();
-            if (resKdcRelam.next()) {
-                String realm = resKdcRelam.getString("realm").toLowerCase();
+            resKdcRealm = preKdcRealm.executeQuery();
+            if (resKdcRealm.next()) {
+                String realm = resKdcRealm.getString("realm").toLowerCase();
                 identityTable = "`" + realm + "_identity" + "`";
                 keyInfoTable = "`" + realm + "_key" + "`";
             } else {
@@ -147,12 +171,12 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
             preKey.executeUpdate();
 
         } catch (SQLException e) {
-            LOG.error("Error occurred while initialize MySQL backend." + e.toString());
+            LOG.error("Error occurred while initialize MySQL backend.", e);
             throw new KrbException("Failed to create table in database. ", e);
         } finally {
             DbUtils.closeQuietly(preInitialize);
             DbUtils.closeQuietly(preKdcRealm);
-            DbUtils.closeQuietly(resKdcRelam);
+            DbUtils.closeQuietly(resKdcRealm);
             DbUtils.closeQuietly(preIdentity);
             DbUtils.closeQuietly(preKey);
             DbUtils.closeQuietly(connection);
@@ -164,24 +188,14 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected void doStop() throws KrbException {
-        try {
-            closeConnection();
-            if (connection.isClosed()) {
-                LOG.info("Succeeded in closing connection with MySQL.");
-            }
-        } catch (SQLException e) {
-            LOG.error("Failed to close connection with MySQL.");
-            throw new KrbException("Failed to close connection with MySQL. ", e);
+        if (dataSource == null) {
+            return;
         }
-    }
-
-    /**
-     * Close the connection for stop().
-     * @throws SQLException if SQLException handled
-     */
-    private void closeConnection() throws SQLException {
-        if (!connection.isClosed()) {
-            connection.close();
+        dataSource.close();
+        if (dataSource.isClosed()) {
+            LOG.info("Succeeded in closing connection with MySQL.");
+        } else {
+            throw new KrbException("Failed to close connection with MySQL.");
         }
     }
 
@@ -208,6 +222,7 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
         String expireTime = toGeneralizedTime(identity.getExpireTime());
         Map<EncryptionType, EncryptionKey> keys = identity.getKeys();
 
+        Connection connection = null;
         PreparedStatement preIdentity = null;
         PreparedStatement preKey = null;
 
@@ -218,11 +233,13 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
             return duplicateIdentity;
         } else {
             try {
-                startConnection();
+                connection = dataSource.getConnection();
                 connection.setAutoCommit(false);
 
                 // Insert identity to identity table
-                String stmIdentity = "insert into " + identityTable + " values(?, ?, ?, ?, ?, ?, ?)";
+                String stmIdentity = "insert into " + identityTable
+                    + " (principal, key_version, kdc_flags, disabled, locked,"
+                    + " created_time, expire_time) values(?, ?, ?, ?, ?, ?, ?)";
                 preIdentity = connection.prepareStatement(stmIdentity);
                 preIdentity.setString(1, principalName);
                 preIdentity.setInt(2, keyVersion);
@@ -235,8 +252,8 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
 
                 // Insert keys to key table
                 for (Map.Entry<EncryptionType, EncryptionKey> entry : keys.entrySet()) {
-                    String stmKey = "insert into " + keyInfoTable + " (key_type, kvno, key_value, principal)"
-                        + " values(?, ?, ?, ?)";
+                    String stmKey = "insert into " + keyInfoTable
+                        + " (key_type, kvno, key_value, principal) values(?, ?, ?, ?)";
                     preKey = connection.prepareStatement(stmKey);
                     preKey.setString(1, entry.getKey().getName());
                     preKey.setInt(2, entry.getValue().getKvno());
@@ -250,7 +267,9 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
             } catch (SQLException e) {
                 try {
                     LOG.info("Transaction is being rolled back.");
-                    connection.rollback();
+                    if (connection != null) {
+                        connection.rollback();
+                    }
                 } catch (SQLException ex) {
                     throw new KrbException("Transaction roll back failed. ", ex);
                 }
@@ -259,7 +278,7 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
             } finally {
                 DbUtils.closeQuietly(preIdentity);
                 DbUtils.closeQuietly(preKey);
-                doStop();
+                DbUtils.closeQuietly(connection);
             }
         }
     }
@@ -279,62 +298,59 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected KrbIdentity doGetIdentity(final String principalName) throws KrbException {
-        KrbIdentity krbIdentity = new KrbIdentity(principalName);
+        KrbIdentity krbIdentity = null;
 
+        Connection connection = null;
         PreparedStatement preIdentity = null;
         ResultSet resIdentity = null;
-        PreparedStatement preKey = null;
-        ResultSet resKey = null;
         try {
-            startConnection();
+            connection = dataSource.getConnection();
 
-            // Get identity from identity table
-            String stmIdentity = "SELECT * FROM " + identityTable + " where principal = ?";
+            // Get identity from identity and key table
+            String stmIdentity = String.format("SELECT * FROM %s a left join %s b on "
+                + "a.principal = b.principal where a.principal = ?", identityTable, keyInfoTable);
             preIdentity = connection.prepareStatement(stmIdentity);
             preIdentity.setString(1, principalName);
             resIdentity = preIdentity.executeQuery();
+            List<EncryptionKey> keys = new ArrayList<>();
 
-            if (!resIdentity.next()) {
+            if (resIdentity.isBeforeFirst()) {
+                while (resIdentity.next()) {
+                    if (krbIdentity == null) {
+                        krbIdentity = new KrbIdentity(principalName);
+                        krbIdentity.setKeyVersion(resIdentity.getInt("key_version"));
+                        krbIdentity.setKdcFlags(resIdentity.getInt("kdc_flags"));
+                        krbIdentity.setDisabled(resIdentity.getBoolean("disabled"));
+                        krbIdentity.setLocked(resIdentity.getBoolean("locked"));
+                        krbIdentity.setCreatedTime(createKerberosTime(resIdentity.getString("created_time")));
+                        krbIdentity.setExpireTime(createKerberosTime(resIdentity.getString("expire_time")));
+                    }
+
+                    // Get key info
+                    int kvno = resIdentity.getInt("kvno");
+                    String keyType = resIdentity.getString("key_type");
+                    EncryptionType eType = EncryptionType.fromName(keyType);
+                    byte[] keyValue = resIdentity.getBytes("key_value");
+                    EncryptionKey key = new EncryptionKey(eType, keyValue, kvno);
+                    keys.add(key);
+                }
+                if (krbIdentity != null && keys.size() > 0) {
+                    krbIdentity.addKeys(keys);
+                }
+                return krbIdentity;
+            } else {
                 return null;
             }
-
-            while (resIdentity.next()) {
-                krbIdentity.setKeyVersion(resIdentity.getInt("key_version"));
-                krbIdentity.setKdcFlags(resIdentity.getInt("kdc_flags"));
-                krbIdentity.setDisabled(resIdentity.getBoolean("disabled"));
-                krbIdentity.setLocked(resIdentity.getBoolean("locked"));
-                krbIdentity.setCreatedTime(createKerberosTime(resIdentity.getString("created_time")));
-                krbIdentity.setExpireTime(createKerberosTime(resIdentity.getString("expire_time")));
-            }
-
-            // Get keys from key table
-            List<EncryptionKey> keys = new ArrayList<>();
-            String stmKey = "SELECT * FROM " + keyInfoTable + " where principal = ?";
-            preKey = connection.prepareStatement(stmKey);
-            preKey.setString(1, principalName);
-            resKey = preKey.executeQuery();
-            while (resKey.next()) {
-                int kvno = resKey.getInt("kvno");
-                String keyType = resKey.getString("key_type");
-                EncryptionType eType = EncryptionType.fromName(keyType);
-                byte[] keyValue = resKey.getBytes("key_value");
-                EncryptionKey key = new EncryptionKey(eType, keyValue, kvno);
-                keys.add(key);
-            }
-
-            krbIdentity.addKeys(keys);
-            return krbIdentity;
         } catch (SQLException e) {
-            LOG.error("Error occurred while getting identity.");
+            LOG.error("Error occurred while getting identity. " + e.toString());
             throw new KrbException("Failed to get identity. ", e);
         } catch (ParseException e) {
+            LOG.error("Failed to get identity. " + e.toString());
             throw new KrbException("Failed to get identity. ", e);
         } finally {
             DbUtils.closeQuietly(preIdentity);
             DbUtils.closeQuietly(resIdentity);
-            DbUtils.closeQuietly(preKey);
-            DbUtils.closeQuietly(resKey);
-            doStop();
+            DbUtils.closeQuietly(connection);
         }
     }
 
@@ -345,8 +361,10 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
     protected KrbIdentity doUpdateIdentity(KrbIdentity identity) throws KrbException {
         String principalName = identity.getPrincipalName();
         try {
-            doDeleteIdentity(principalName); // Delete former identity
-            doAddIdentity(identity); // Insert new identity
+            // Delete old identity
+            doDeleteIdentity(principalName);
+            // Insert new identity
+            doAddIdentity(identity);
         } catch (KrbException e) {
             LOG.error("Error occurred while updating identity: " + principalName);
             throw new KrbException("Failed to update identity. ", e);
@@ -360,10 +378,11 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
      */
     @Override
     protected void doDeleteIdentity(String principalName) throws KrbException {
+        Connection connection = null;
         PreparedStatement preKey = null;
         PreparedStatement preIdentity = null;
         try {
-            startConnection();
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
 
             // Delete keys from key table
@@ -372,7 +391,7 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
             preKey.setString(1, principalName);
             preKey.executeUpdate();
 
-            // Dlete identity from identity table
+            // Delete identity from identity table
             String stmIdentity = "DELETE FROM " + identityTable + " where principal = ? ";
             preIdentity = connection.prepareStatement(stmIdentity);
             preIdentity.setString(1, principalName);
@@ -381,8 +400,10 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
             connection.commit();
         } catch (SQLException e) {
             try {
-                LOG.info("Transaction is being rolled back.");
-                connection.rollback();
+                LOG.warn("Transaction is being rolled back.");
+                if (connection != null) {
+                    connection.rollback();
+                }
             } catch (SQLException ex) {
                 throw new KrbException("Transaction roll back failed. ", ex);
             }
@@ -391,7 +412,7 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
         } finally {
             DbUtils.closeQuietly(preIdentity);
             DbUtils.closeQuietly(preKey);
-            doStop();
+            DbUtils.closeQuietly(connection);
         }
     }
 
@@ -401,10 +422,11 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected Iterable<String> doGetIdentities() throws KrbException {
         List<String> identityNames = new ArrayList<>();
+        Connection connection = null;
         PreparedStatement preSmt = null;
         ResultSet result = null;
         try {
-            startConnection();
+            connection = dataSource.getConnection();
             String statement = "SELECT * FROM " + identityTable;
             preSmt = connection.prepareStatement(statement);
             result = preSmt.executeQuery();
@@ -414,12 +436,12 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
             result.close();
             preSmt.close();
         } catch (SQLException e) {
-            LOG.error("Error occurred while getting identities.");
+            LOG.error("Error occurred while getting identities.", e);
             throw new KrbException("Failed to get identities. ", e);
         } finally {
             DbUtils.closeQuietly(preSmt);
             DbUtils.closeQuietly(result);
-            doStop();
+            DbUtils.closeQuietly(connection);
         }
 
         return identityNames;
