@@ -34,7 +34,7 @@ import java.util.Date;
 public class MySQLHasServerPlugin extends AbstractHasServerPlugin {
     private static final Logger LOG = LoggerFactory.getLogger(MySQLHasServerPlugin.class);
 
-     /**
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -75,7 +75,7 @@ public class MySQLHasServerPlugin extends AbstractHasServerPlugin {
             preStm.setString(2, secret);
             res = preStm.executeQuery();
             if (res.next() && res.getInt(1) > 0) {
-              LOG.debug("UserName: " + user);
+                LOG.debug("UserName: {}", user);
             } else {
                 LOG.error("Authentication failed.");
                 throw new HasAuthenException("Authentication failed.");
@@ -103,7 +103,7 @@ public class MySQLHasServerPlugin extends AbstractHasServerPlugin {
      * Start the MySQL connection.
      */
     private Connection startConnection(String url, String user,
-                                       String password) throws HasAuthenException {
+        String password) throws HasAuthenException {
         Connection connection;
         try {
             Class.forName("org.drizzle.jdbc.DrizzleDriver");

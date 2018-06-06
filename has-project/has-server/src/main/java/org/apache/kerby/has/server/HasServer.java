@@ -241,7 +241,7 @@ public class HasServer {
      * @param confName  conf file name
      * @param values    customized values
      * @throws IOException throw IOException
-     * @throws KrbException e
+     * @throws HasException e
      */
     public void updateConfFile(String confName, Map<String, String> values)
         throws IOException, HasException {
@@ -277,7 +277,7 @@ public class HasServer {
      * Get KDC Config from MySQL.
      *
      * @return Kdc config
-     * @throws KrbException e
+     * @throws HasException e
      */
     private Map<String, String> getKdcConf() throws HasException {
         PreparedStatement preStm = null;
@@ -324,7 +324,7 @@ public class HasServer {
     /**
      * Update KDC conf file.
      *
-     * @throws KrbException e
+     * @throws HasException e
      */
     private void updateKdcConf() throws HasException {
         try {
@@ -347,7 +347,7 @@ public class HasServer {
      * @param url url of connection
      * @param user username of connection
      * @param password password of connection
-     * @throws KrbException e
+     * @throws HasException e
      * @return MySQL JDBC connection
      */
     private Connection startConnection(String driver, String url, String user,
@@ -422,7 +422,7 @@ public class HasServer {
     /**
      * Create kdc_config table in database.
      * @param conn database connection
-     * @throws KrbException e
+     * @throws HasException e
      */
     private void createKdcTable(final Connection conn) throws HasException {
         PreparedStatement preStm = null;
@@ -501,8 +501,7 @@ public class HasServer {
      * Read in krb5-template.conf and substitute in the correct port.
      *
      * @return krb5 conf file
-     * @throws IOException e
-     * @throws KrbException e
+     * @throws HasException e
      */
     public File generateKrb5Conf() throws HasException {
         Map<String, String> kdcConf = getKdcConf();
