@@ -54,7 +54,7 @@ public class KdcInitTool {
             kadmin.exportKeytab(adminKeytabFile, kadmin.getKadminPrincipal());
             System.out.println("The keytab for kadmin principal "
                     + "has been exported to the specified file "
-                    + adminKeytabFile.getAbsolutePath() + ", please safely keep it, "
+                    + adminKeytabFile.getAbsolutePath() + ", please keep it safe, "
                     + "in order to use kadmin tool later");
 
             // Export protocol keytab file for remote admin tool
@@ -65,8 +65,8 @@ public class KdcInitTool {
             kadmin.addPrincipal(principal);
             kadmin.exportKeytab(protocolKeytabFile, principal);
             System.out.println("The keytab for protocol principal "
-                    + " has been exported to the specified file "
-                    + protocolKeytabFile.getAbsolutePath() + ", please safely keep it, "
+                    + "has been exported to the specified file "
+                    + protocolKeytabFile.getAbsolutePath() + ", please keep it safe, "
                     + "in order to use remote kadmin tool later");
         } finally {
             kadmin.release();

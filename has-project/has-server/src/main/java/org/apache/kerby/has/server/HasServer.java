@@ -181,8 +181,8 @@ public class HasServer {
         kadmin.createBuiltinPrincipals();
         kadmin.exportKeytab(adminKeytabFile, kadmin.getKadminPrincipal());
         System.out.println("The keytab for kadmin principal "
-            + " has been exported to the specified file "
-            + adminKeytabFile.getAbsolutePath() + ", please safely keep it, "
+            + "has been exported to the specified file "
+            + adminKeytabFile.getAbsolutePath() + ", please keep it safe, "
             + "in order to use kadmin tool later");
 
         return adminKeytabFile;
