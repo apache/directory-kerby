@@ -235,7 +235,7 @@ public class HasLoginModule implements LoginModule {
                 }
 
                 HasClient hasClient = new HasClient(hadoopSecurityHas);
-                TgtTicket tgtTicket = null;
+                TgtTicket tgtTicket;
                 try {
                     tgtTicket = hasClient.requestTgt();
                 } catch (HasException e) {

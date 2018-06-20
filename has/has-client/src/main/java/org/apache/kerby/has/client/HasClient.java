@@ -113,9 +113,9 @@ public class HasClient {
             if (hasClientConf == null) {
                 hasClientConf = HAS_CONFIG_DEFAULT;
             }
-            LOG.debug("has-client conf path: " + hasClientConf);
             File confFile = new File(hasClientConf);
             if (!confFile.exists()) {
+                LOG.warn("The HAS client config file: " + hasClientConf + " does not exist.");
                 throw new HasException("The HAS client config file: " + hasClientConf
                     + " does not exist.");
             }
@@ -199,13 +199,10 @@ public class HasClient {
         try {
             authToken = plugin.login(config);
         } catch (HasLoginException e) {
-            LOG.error("Plugin login failed: " + e.getMessage());
-            throw new HasException(
-                "Plugin login failed: " + e.getMessage());
+            LOG.warn(e.getMessage());
+            throw new HasException(e.getMessage());
         }
         type = plugin.getLoginType();
-
-        LOG.debug("The plugin type is: " + type);
 
         return requestTgt(authToken, type, config);
     }
@@ -222,9 +219,8 @@ public class HasClient {
             try {
                 PrintStream ps = new PrintStream(new FileOutputStream(krb5Conf));
                 ps.println(content);
-                LOG.debug("krb5.conf has saved in : " + krb5Conf.getAbsolutePath());
             } catch (FileNotFoundException e) {
-                LOG.error(e.getMessage());
+                LOG.error("Failed to write krb5.conf to " + e.getMessage());
                 throw new HasException(e);
             }
         }
@@ -234,7 +230,6 @@ public class HasClient {
 
     private HasClientPlugin getClientTokenPlugin(HasConfig config) throws HasException {
         String pluginName = config.getPluginName();
-        LOG.debug("The plugin name getting from config is: " + pluginName);
         HasClientPlugin clientPlugin;
         if (pluginName != null) {
             clientPlugin = HasClientPluginRegistry.createPlugin(pluginName);
@@ -244,7 +239,6 @@ public class HasClient {
         if (clientPlugin == null) {
             throw new HasException("Failed to create client plugin: " + pluginName);
         }
-        LOG.debug("The plugin class is: " + clientPlugin);
 
         return clientPlugin;
     }
@@ -265,7 +259,7 @@ public class HasClient {
         try {
             tokenString = tokenEncoder.encodeAsString(authToken);
         } catch (KrbException e) {
-            LOG.debug("Failed to decode the auth token.");
+            LOG.error("Failed to decode the auth token.");
             throw new HasException("Failed to decode the auth token." + e.getMessage());
         }
 
@@ -373,15 +367,7 @@ public class HasClient {
             }
         }
 
-        LOG.debug("Return from Server .... \n");
-
-        try {
-            return handleResponse(json, (String) authToken.getAttributes().get("passPhrase"));
-        } catch (HasException e) {
-            LOG.debug("Failed to handle response when requesting tgt ticket in client."
-                + e.getMessage());
-            throw new HasException(e);
-        }
+        return handleResponse(json, (String) authToken.getAttributes().get("passPhrase"));
     }
 
     private File loadSslClientConf(HasConfig config, String sslClientConfPath) throws HasException {
@@ -390,11 +376,11 @@ public class HasClient {
             String httpHost = config.getHttpHost();
             String httpPort = config.getHttpPort();
             if (httpHost == null) {
-                LOG.warn("Can't find the http host in config, the https host will be used.");
+                // Can't find the http host in config, the https host will be used.
                 httpHost = config.getHttpsHost();
             }
             if (httpPort == null) {
-                LOG.warn("Can't find the http port in config, the default http port will be used.");
+                // Can't find the http port in config, the default http port will be used.;
                 httpPort = HAS_HTTP_PORT_DEFAULT;
             }
             X509Certificate certificate = getCertificate(httpHost, httpPort);
@@ -410,15 +396,14 @@ public class HasClient {
 
     public KrbMessage getKrbMessage(JSONObject json) throws HasException {
 
-        LOG.debug("Starting to get the message from has server.");
-
         try {
             boolean success = json.getBoolean("success");
             if (!success) {
-                throw new HasException("Failed: " + json.getString("krbMessage"));
+                LOG.error(json.getString("krbMessage"));
+                throw new HasException(json.getString("krbMessage"));
             }
         } catch (JSONException e) {
-            LOG.debug("Failed to get message." + e);
+            LOG.error("Failed to get message." + e);
             throw new HasException("Failed to get message." + e);
         }
 
@@ -426,17 +411,16 @@ public class HasClient {
         try {
             typeString = json.getString("type");
         } catch (JSONException e) {
-            LOG.debug("Failed to get message." + e);
+            LOG.error("Failed to get message." + e);
             throw new HasException("Failed to get message." + e);
         }
 
         if (typeString != null && typeString.equals(type)) {
-            LOG.debug("The message type is " + type);
             String krbMessageString = null;
             try {
                 krbMessageString = json.getString("krbMessage");
             } catch (JSONException e) {
-                LOG.debug("Failed to get the krbMessage. " + e);
+                LOG.error("Failed to get the krbMessage. " + e);
             }
             Base64 base64 = new Base64(0);
             byte[] krbMessage = base64.decode(krbMessageString);
@@ -462,7 +446,7 @@ public class HasClient {
             return processResponse((KdcRep) kdcRep, passPhrase);
         } else if (messageType == KrbMessageType.KRB_ERROR) {
             KrbError error = (KrbError) kdcRep;
-            LOG.error("KDC server response with message: "
+            LOG.error("HAS server response with message: "
                 + error.getErrorCode().getMessage());
 
             throw new HasException(error.getEtext());
@@ -528,7 +512,6 @@ public class HasClient {
 //        }
 
         TgtTicket tgtTicket = getTicket(kdcRep);
-        LOG.debug("Ticket expire time: " + tgtTicket.getEncKdcRepPart().getEndTime());
         return tgtTicket;
 
     }
