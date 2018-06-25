@@ -91,6 +91,8 @@ A standalone KDC server that can integrate various identity backends including:
   - It is default Identity Backend, and no cofiguration is needed. This backend is for no permanent storage requirements.
 - JsonIdentityBackend.
   - It implemented by Gson which is used to convert Java Objects into their JSON representation and convert a JSON string to an equivalent Java object. A json file will be created in "backend.json.dir". This backend is for small, easy, development and test environment.
+- MySQLIdentityBackend.
+  - A backend based on MySQL.
 - ZookeeperIdentityBackend.
   - Currently it uses an embedded Zookeeper. In follow up it will be enhanced to support standalone Zookeeper cluster for
   replication and reliability. Zookeeper backend would be a good choice for high reliability, high performance and high scalability requirement and scenarios. 
@@ -179,9 +181,10 @@ Apache License V2.0
 - Kerby Developers List: kerby@directory.apache.org [Subscribe](kerby-subscribe@directory.apache.org)
 
 ### Downloads
-- [Release 1.1.0](https://directory.apache.org/kerby/download/download-sources.html)
+- [Release 1.1.1](https://directory.apache.org/kerby/download/download-sources.html)
 
 ### News
+- May 2018, Apache Kerby 1.1.1 is released.
 - November 2017, Apache Kerby 1.1.0 is released.
 - September 4th 2017, Apache Kerby 1.0.1 is released.
 - May 13th 2017, Apache Kerby 1.0.0 is released.

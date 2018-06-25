@@ -12,7 +12,7 @@ A dedicated Hadoop Authentication Server to support various authentication mecha
 
 # Design
 Assuming existing users are stored in a SQL database (like MySQL), the detailed design and workflow may go like the following:
-![](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/has-design.png)
+![](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/has-protocol-flow.png)
 
 # New mechanism plugin API
 
