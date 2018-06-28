@@ -13,13 +13,13 @@ git apply hbase-hadoop-2.5.1.patch
 mvn clean package -DskipTests
 ```
 
-## 3. Copy the hadoop-auth jar and hadoop-common jar to hbase lib
+## 3. Copy the hadoop-auth jar and hadoop-common jar to HBase lib
 ```
 cp hadoop/hadoop-common-project/hadoop-auth/target/hadoop-auth-2.5.1.jar $HBASE_HOME/lib/
 cp hadoop/hadoop-common-project/hadoop-common/target/hadoop-common-2.5.1.jar $HBASE_HOME/lib/
 ```
 
-## 4. Update hbase security configuration
+## 4. Update HBase security configuration
 
 ### Update conf/hbase-site.xml
 ```
