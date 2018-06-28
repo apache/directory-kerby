@@ -27,6 +27,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.AddPrincipalRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.AddPrincipalsRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.AdminRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.ChangePasswordRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.DeletePrincipalRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.DisableConfRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.EnableConfRemoteCmd;
@@ -67,6 +68,8 @@ public class AdminRemoteTool {
         + "                         Delete principal\n"
         + "rename_principal, renprinc\n"
         + "                         Rename principal\n"
+        + "change_password, cpw\n"
+        + "                         Change password\n"
         + "list_principals, listprincs\n"
         + "                         List principals\n"
         + "get_hostroles, hostroles\n"
@@ -106,7 +109,7 @@ public class AdminRemoteTool {
         System.out.println("enter \"cmd\" to see legal commands.");
 
         Completer completer = new StringsCompleter("add_principal",
-                "delete_principal", "rename_principal", "list_principals",
+                "delete_principal", "rename_principal", "change_password", "list_principals",
                 "get_hostroles", "export_keytabs", "add_principals", "enable_configure",
                 "disable_configure");
 
@@ -154,6 +157,9 @@ public class AdminRemoteTool {
         } else if (cmd.equals("rename_principal")
             || cmd.equals("renprinc")) {
             executor = new RenamePrincipalRemoteCmd(hasAuthAdminClient);
+        } else if (cmd.equals("change_password")
+            || cmd.startsWith("cpw")) {
+            executor = new ChangePasswordRemoteCmd(hasAuthAdminClient);
         } else if (cmd.equals("list_principals")
             || cmd.equals("listprincs")) {
             executor = new ListPrincipalsRemoteCmd(hasAuthAdminClient);

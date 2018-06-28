@@ -360,7 +360,29 @@ public class HasAuthAdminClient implements Kadmin {
     @Override
     public void changePassword(String principal,
                                String newPassword) throws KrbException {
-        throw new KrbException("Unsupported feature");
+        HttpURLConnection httpConn;
+
+        URL url;
+        try {
+            url = new URL(getKadminBaseURL() + "changepassword?principal=" + principal
+                    + "&password=" + newPassword);
+        } catch (MalformedURLException e) {
+            throw new KrbException("Failed to create a URL object.", e);
+        }
+
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "POST", true);
+
+        try {
+            httpConn.connect();
+
+            if (httpConn.getResponseCode() == 200) {
+                LOG.info(HasClientUtil.getResponse(httpConn));
+            } else {
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
+            }
+        } catch (IOException e) {
+            throw new KrbException("IO error occurred.", e);
+        }
     }
 
     @Override

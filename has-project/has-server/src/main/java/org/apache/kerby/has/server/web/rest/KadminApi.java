@@ -52,7 +52,7 @@ public class KadminApi {
     @Context
     private HttpServletRequest httpRequest;
 
-        /**
+    /**
      * export single keytab file
      *
      * @param principal principal name to export keytab file
@@ -83,7 +83,7 @@ public class KadminApi {
                     try {
                         localKadmin.exportKeytab(keytabFile, principal);
                         return Response.ok(keytabFile).header("Content-Disposition", "attachment; filename="
-                            + keytabFile.getName()).build();
+                                + keytabFile.getName()).build();
                     } catch (KrbException e) {
                         msg = "Failed to export keytab. " + e.toString();
                         WebServer.LOG.error(msg);
@@ -213,7 +213,7 @@ public class KadminApi {
                     return Response.ok(msg).build();
                 } catch (Exception e) {
                     msg = "Failed to rename principal " + oldPrincipal + " to "
-                        + newPrincipal + ",because: " + e.getMessage();
+                            + newPrincipal + ",because: " + e.getMessage();
                     WebServer.LOG.error(msg);
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
                 }
@@ -257,7 +257,58 @@ public class KadminApi {
                 return Response.ok(msg).build();
             } catch (Exception e) {
                 msg = "Failed to delete the principal named " + principal.getValue()
-                    + ",because : " + e.getMessage();
+                        + ",because : " + e.getMessage();
+                WebServer.LOG.error(msg);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+            }
+        }
+        return Response.status(Response.Status.FORBIDDEN).entity("HTTPS required.\n").build();
+    }
+
+    /**
+     * Add principal by name and password.
+     *
+     * @param principal principal name.
+     * @param password  principal password
+     * @return Response
+     */
+    @POST
+    @Path("/changepassword")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response changePassword(@QueryParam(PrincipalParam.NAME) @DefaultValue(PrincipalParam.DEFAULT)
+                                   final PrincipalParam principal,
+                                   @QueryParam(PasswordParam.NAME) @DefaultValue(PasswordParam.DEFAULT)
+                                   final PasswordParam newPassword) {
+        if (httpRequest.isSecure()) {
+            WebServer.LOG.info("Request to add the principal named " + principal.getValue());
+            String msg;
+            LocalKadminImpl localKadmin;
+            HasServer hasServer = WebServer.getHasServerFromContext(context);
+            KdcSetting serverSetting = hasServer.getKdcServer().getKdcSetting();
+            try {
+                localKadmin = new LocalKadminImpl(serverSetting);
+            } catch (KrbException e) {
+                msg = "Failed to create local kadmin." + e.getMessage();
+                WebServer.LOG.error(msg);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+            }
+            if (principal.getValue() == null || principal.getValue().isEmpty()) {
+                msg = "Value of principal is null.";
+                WebServer.LOG.error(msg);
+                return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+            }
+            if (newPassword.getValue() == null || newPassword.getValue().isEmpty()) {
+                msg = "Value of new password is null.";
+                WebServer.LOG.error(msg);
+                return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+            }
+            try {
+                localKadmin.changePassword(principal.getValue(), newPassword.getValue());
+                msg = "Change password successfully.";
+                return Response.ok(msg).build();
+            } catch (KrbException e) {
+                msg = "Failed to change the password of " + principal.getValue()
+                        + " , because: " + e.getMessage();
                 WebServer.LOG.error(msg);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
             }
@@ -265,3 +316,4 @@ public class KadminApi {
         return Response.status(Response.Status.FORBIDDEN).entity("HTTPS required.\n").build();
     }
 }
+

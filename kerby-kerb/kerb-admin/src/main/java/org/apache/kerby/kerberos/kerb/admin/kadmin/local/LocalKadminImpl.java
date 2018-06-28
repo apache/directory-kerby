@@ -353,7 +353,7 @@ public class LocalKadminImpl implements LocalKadmin {
         KrbIdentity identity = backend.getIdentity(principal);
         if (identity == null) {
             throw new KrbException("Principal " + principal
-                    + "was not found. Please check the input and try again");
+                    + " was not found. Please check the input and try again");
         }
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(principal, newPassword,
                 getKdcConfig().getEncryptionTypes());
