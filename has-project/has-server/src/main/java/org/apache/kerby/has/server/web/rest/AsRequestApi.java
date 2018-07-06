@@ -103,14 +103,14 @@ public class AsRequestApi {
                 try {
                     tokenPlugin = HasServerPluginRegistry.createPlugin(type);
                 } catch (HasException e) {
-                    errMessage = "Fail to get the plugin: " + type + ". " + e.getMessage();
+                    errMessage = "Failed to get the plugin: " + type + ". " + e.getMessage();
                     WebServer.LOG.error(errMessage);
                 }
                 AuthToken verifiedAuthToken;
                 try {
                     verifiedAuthToken = tokenPlugin.authenticate(authToken);
                 } catch (HasAuthenException e) {
-                    errMessage = "Failed to verify auth token: " + e.getMessage();
+                    errMessage = "Failed to verify auth token. " + e.getMessage();
                     WebServer.LOG.error(errMessage);
                     verifiedAuthToken = null;
                 }

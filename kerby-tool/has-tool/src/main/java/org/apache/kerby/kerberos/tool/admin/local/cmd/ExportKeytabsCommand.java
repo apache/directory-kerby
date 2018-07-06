@@ -23,6 +23,8 @@ import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.server.admin.LocalHadmin;
 import org.apache.kerby.has.server.web.HostRoleType;
 
+import java.io.File;
+
 public class ExportKeytabsCommand extends HadminCommand {
     private static final String USAGE = "\nUsage: export_keytabs <host> [role]\n"
             + "\tExample:\n"
@@ -39,16 +41,30 @@ public class ExportKeytabsCommand extends HadminCommand {
             return;
         }
         String host = items[1];
+        boolean find = false;
         if (items.length >= 3) {
-            exportKeytab(host, items[2]);
-            return;
+            if (exportKeytab(host, items[2])) {
+                find = true;
+            }
+        } else {
+            for (HostRoleType r : HostRoleType.values()) {
+                if (exportKeytab(host, r.getName())) {
+                    find = true;
+                }
+            }
         }
-        for (HostRoleType r : HostRoleType.values()) {
-            exportKeytab(host, r.getName());
+        if (!find) {
+            System.out.println("Failed to get the keytab from backend, cannot find matching keytab.");
         }
     }
 
-    public void exportKeytab(String host, String role) throws HasException {
-        getHadmin().getKeytabByHostAndRole(host, role);
+    public boolean exportKeytab(String host, String role) throws HasException {
+        File keytab = getHadmin().getKeytabByHostAndRole(host, role);
+        if (keytab.length() > 0) {
+            System.out.println("Keytabs exported in " + keytab.getPath());
+            return true;
+        } else {
+            return false;
+        }
     }
 }

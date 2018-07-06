@@ -266,10 +266,10 @@ public class KadminApi {
     }
 
     /**
-     * Add principal by name and password.
+     * change password.
      *
      * @param principal principal name.
-     * @param password  principal password
+     * @param newPassword  principal new password
      * @return Response
      */
     @POST

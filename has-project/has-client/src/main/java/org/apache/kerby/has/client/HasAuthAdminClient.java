@@ -481,8 +481,7 @@ public class HasAuthAdminClient implements Kadmin {
             httpConn.connect();
 
             if (httpConn.getResponseCode() != 200) {
-                System.err.println("Error : connection denied.");
-                return null;
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
             FileOutputStream fos = new FileOutputStream(new File(keytabName));
             InputStream in = httpConn.getInputStream();

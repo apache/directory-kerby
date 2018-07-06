@@ -64,6 +64,8 @@ public class RenamePrincipalRemoteCmd extends AdminRemoteCmd {
         }
         if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
             client.renamePrincipal(oldPrincipalName, newPrincipalName);
+            System.out.println("Principal \"" + oldPrincipalName + "\" renamed to \""
+                    + newPrincipalName + "\".");
         } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
             System.out.println("Principal \"" + oldPrincipalName + "\"  not renamed.");
         } else {

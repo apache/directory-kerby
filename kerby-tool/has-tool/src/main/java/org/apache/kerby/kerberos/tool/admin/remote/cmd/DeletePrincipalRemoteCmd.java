@@ -62,6 +62,7 @@ public class DeletePrincipalRemoteCmd extends AdminRemoteCmd {
         }
         if (reply.equals("yes") || reply.equals("YES") || reply.equals("y") || reply.equals("Y")) {
             client.deletePrincipal(principal);
+            System.out.println("Principal \"" + principal + "\" deleted.");
         } else if (reply.equals("no") || reply.equals("NO") || reply.equals("n") || reply.equals("N")) {
             System.out.println("Principal \"" + principal + "\"  not deleted.");
         } else {

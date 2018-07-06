@@ -46,6 +46,7 @@ public class ChangePasswordRemoteCmd extends AdminRemoteCmd {
         if (items[1].startsWith("-pw")) {
             String newPassword = items[2];
             client.changePassword(clientPrincipal, newPassword);
+            System.out.println("Password updated successfully.");
         } else {
             System.err.println("change_password command error.");
             System.err.println(USAGE);

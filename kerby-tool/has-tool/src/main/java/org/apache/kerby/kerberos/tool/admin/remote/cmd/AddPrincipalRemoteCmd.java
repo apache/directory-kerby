@@ -54,9 +54,11 @@ public class AddPrincipalRemoteCmd extends AdminRemoteCmd {
             client.addPrincipal(clientPrincipal);
         } else if (items[1].startsWith("-randkey")) {
             client.addPrincipal(clientPrincipal);
+            System.out.println("Principal \"" + clientPrincipal + "\" created.");
         } else if (items[1].startsWith("-pw")) {
             String password = items[2];
             client.addPrincipal(clientPrincipal, password);
+            System.out.println("Principal \"" + clientPrincipal + "\" created.");
         } else {
             System.err.println("add_principal cmd format error.");
             System.err.println(USAGE);

@@ -205,14 +205,12 @@ public class HasClient {
 
     private HasClientPlugin getClientTokenPlugin(HasConfig config) throws HasException {
         String pluginName = config.getPluginName();
-        LOG.debug("The plugin name getting from config is: " + pluginName);
         HasClientPlugin clientPlugin;
         if (pluginName != null) {
             clientPlugin = HasClientPluginRegistry.createPlugin(pluginName);
         } else {
             throw new HasException("Please set the plugin name in has client conf");
         }
-        LOG.debug("The plugin class is: " + clientPlugin);
 
         return clientPlugin;
     }
@@ -355,7 +353,7 @@ public class HasClient {
         try {
             boolean success = json.getBoolean("success");
             if (!success) {
-                throw new HasException("Failed: " + json.getString("krbMessage"));
+                throw new HasException(json.getString("krbMessage"));
             }
         } catch (JSONException e) {
             LOG.debug("Failed to get message." + e);
@@ -402,7 +400,7 @@ public class HasClient {
             return processResponse((KdcRep) kdcRep, passPhrase);
         } else if (messageType == KrbMessageType.KRB_ERROR) {
             KrbError error = (KrbError) kdcRep;
-            LOG.error("KDC server response with message: "
+            LOG.error("HAS server response with message: "
                 + error.getErrorCode().getMessage());
 
             throw new HasException(error.getEtext());

@@ -34,7 +34,6 @@ public class ExportKeytabsRemoteCmd extends AdminRemoteCmd {
     @Override
     public void execute(String[] items) throws KrbException {
         //TODO add save path option
-        //String param = items[0];
         if (items.length < 2) {
             System.err.println(USAGE);
             return;

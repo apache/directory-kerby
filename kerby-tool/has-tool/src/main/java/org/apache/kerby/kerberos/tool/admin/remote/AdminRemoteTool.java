@@ -29,8 +29,8 @@ import org.apache.kerby.kerberos.tool.admin.remote.cmd.AddPrincipalsRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.AdminRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.ChangePasswordRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.DeletePrincipalRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.remote.cmd.DisableConfRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.remote.cmd.EnableConfRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.DisableConfigureRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.EnableConfigureRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.ExportKeytabsRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.GetHostRolesRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.ListPrincipalsRemoteCmd;
@@ -174,10 +174,10 @@ public class AdminRemoteTool {
             executor = new ExportKeytabsRemoteCmd(hasAuthAdminClient);
         } else if (cmd.equals("enable_configure")
             || cmd.equals("enable")) {
-            executor = new EnableConfRemoteCmd(hasAuthAdminClient);
+            executor = new EnableConfigureRemoteCmd(hasAuthAdminClient);
         } else if (cmd.equals("disable_configure")
             || cmd.equals("disable")) {
-            executor = new DisableConfRemoteCmd(hasAuthAdminClient);
+            executor = new DisableConfigureRemoteCmd(hasAuthAdminClient);
         } else {
             System.out.println(LEGAL_COMMANDS);
             return;

@@ -24,9 +24,9 @@ import org.apache.kerby.has.server.admin.LocalHadmin;
 
 public class DisableConfigureCommand extends HadminCommand {
 
-    public static final String USAGE = "Usage: enable_configure\n"
+    public static final String USAGE = "Usage: disable_configure\n"
             + "\tExample:\n"
-            + "\t\tenable\n";
+            + "\t\tdisable\n";
 
     public DisableConfigureCommand(LocalHadmin hadmin) {
         super(hadmin);
@@ -35,6 +35,6 @@ public class DisableConfigureCommand extends HadminCommand {
     @Override
     public void execute(String[] items) throws HasException {
         getHadmin().setEnableOfConf("false");
-        System.out.println("Set conf disable.");
+        System.out.println("Disable configure HAS.");
     }
 }

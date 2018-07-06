@@ -155,11 +155,17 @@ public class HadminApi {
                 if (role.getValue() != null) {
                     try {
                         File file = hasAdmin.getKeytabByHostAndRole(host.getValue(), role.getValue());
+                        if (file.length() == 0) {
+                            msg = "Failed to get the keytab from backend, cannot find matching keytab, "
+                                    + "please check hostname and role.";
+                            WebServer.LOG.error(msg);
+                            return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+                        }
                         WebServer.LOG.info("Create keytab file for the " + role.getValue()
-                            + " for " + host.getValue());
+                                + " for " + host.getValue());
                         return Response.ok(file).header("Content-Disposition",
-                            "attachment; filename=" + role.getValue() + "-"
-                                + host.getValue() + ".keytab").build();
+                                "attachment; filename=" + role.getValue() + "-"
+                                        + host.getValue() + ".keytab").build();
                     } catch (HasException e) {
                         msg = "Failed to export keytab File because : " + e.getMessage();
                         WebServer.LOG.error(msg);
@@ -170,9 +176,12 @@ public class HadminApi {
                     List<File> keytabs = new ArrayList<>();
                     for (HostRoleType r : HostRoleType.values()) {
                         try {
-                            keytabs.add(hasAdmin.getKeytabByHostAndRole(host.getValue(), r.getName()));
-                            WebServer.LOG.info("Create keytab file for the " + r.getName()
-                                + " for " + host.getValue());
+                            File keytab = hasAdmin.getKeytabByHostAndRole(host.getValue(), r.getName());
+                            if (keytab.length() > 0) {
+                                keytabs.add(hasAdmin.getKeytabByHostAndRole(host.getValue(), r.getName()));
+                                WebServer.LOG.info("Create keytab file for the " + r.getName()
+                                        + " for " + host.getValue());
+                            }
                         } catch (HasException e) {
                             msg = "Failed to export keytab File because : " + e.getMessage();
                             WebServer.LOG.error(msg);
@@ -180,9 +189,10 @@ public class HadminApi {
                         }
                     }
                     if (keytabs.size() < 1) {
-                        msg = "Failed to get the keytab from backend.";
+                        msg = "Failed to get the keytab from backend, cannot find matching keytab, "
+                                + "please check hostname.";
                         WebServer.LOG.error(msg);
-                        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+                        return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
                     }
                     File path = new File(hasServer.getWorkDir(), "tmp/zip/"
                         + System.currentTimeMillis());
@@ -201,7 +211,7 @@ public class HadminApi {
                         return Response.ok(keytabZip).header("Content-Disposition",
                             "attachment; filename=keytab.zip").build();
                     } catch (Exception e) {
-                        msg = "Failed to create the keytab.zip,because : " + e.getMessage();
+                        msg = "Failed to create the keytab.zip, because : " + e.getMessage();
                         WebServer.LOG.error(msg);
                         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
                     }

@@ -25,13 +25,13 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 /**
  * Remote add principal cmd
  */
-public class EnableConfRemoteCmd extends AdminRemoteCmd {
+public class EnableConfigureRemoteCmd extends AdminRemoteCmd {
 
     public static final String USAGE = "Usage: enable_configure\n"
             + "\tExample:\n"
             + "\t\tenable\n";
 
-    public EnableConfRemoteCmd(HasAuthAdminClient authHadmin) {
+    public EnableConfigureRemoteCmd(HasAuthAdminClient authHadmin) {
         super(authHadmin);
     }
 
@@ -40,5 +40,6 @@ public class EnableConfRemoteCmd extends AdminRemoteCmd {
 
         HasAuthAdminClient client = getAuthAdminClient();
         client.setEnableOfConf("true");
+        System.out.println("Disable configure HAS.");
     }
 }

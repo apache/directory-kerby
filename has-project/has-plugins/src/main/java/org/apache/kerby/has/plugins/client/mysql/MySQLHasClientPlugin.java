@@ -18,6 +18,7 @@
 package org.apache.kerby.has.plugins.client.mysql;
 
 import org.apache.kerby.has.client.AbstractHasClientPlugin;
+import org.apache.kerby.has.client.HasLoginException;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +37,17 @@ public class MySQLHasClientPlugin extends AbstractHasClientPlugin {
     }
 
     @Override
-    protected void doLogin(AuthToken authToken) {
+    protected void doLogin(AuthToken authToken) throws HasLoginException {
 
         //Get the user info from env
         String userName = System.getenv("userName");
+        if (userName == null || userName.isEmpty()) {
+            throw new HasLoginException("Please set the userName.");
+        }
         String password = System.getenv("password");
+        if (password == null || password.isEmpty()) {
+            throw new HasLoginException("Please set the password.");
+        }
         LOG.debug("Get the user info successfully.");
 
         authToken.setIssuer("has");

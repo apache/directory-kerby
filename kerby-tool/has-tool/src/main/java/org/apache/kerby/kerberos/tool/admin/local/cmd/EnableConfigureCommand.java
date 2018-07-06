@@ -35,6 +35,6 @@ public class EnableConfigureCommand extends HadminCommand {
     @Override
     public void execute(String[] items) throws HasException {
         getHadmin().setEnableOfConf("true");
-        System.out.println("Set conf enable.");
+        System.out.println("Enable configure HAS.");
     }
 }
