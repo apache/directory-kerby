@@ -26,7 +26,8 @@ import java.util.List;
 
 public class ListPrincipalsRemoteCmd extends AdminRemoteCmd {
     private static final String USAGE = "Usage: list_principals [expression]\n"
-            + "\t'expression' is a shell-style glob expression that can contain the wild-card characters ?, *, and []."
+            + "\t'expression' is a shell-style glob expression "
+            + "that can contain the wild-card characters ?, *, and [].\n"
             + "\tExample:\n"
             + "\t\tlist_principals [expression]\n";
 

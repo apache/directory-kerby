@@ -29,7 +29,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-public class AddPrincipalsRemoteCmd extends AdminRemoteCmd {
+public class CreatePrincipalsRemoteCmd extends AdminRemoteCmd {
     private static final String USAGE = "\nUsage: add_principals [hostRoles-file]\n"
             + "\t'hostRoles-file' is a file with a hostRoles json string like:\n"
             + "\t\t{HOSTS: [ {\"name\":\"host1\",\"hostRoles\":\"HDFS\"}, "
@@ -37,7 +37,7 @@ public class AddPrincipalsRemoteCmd extends AdminRemoteCmd {
             + "\tExample:\n"
             + "\t\tadd_principals hostroles.txt\n";
 
-    public AddPrincipalsRemoteCmd(HasAuthAdminClient authHadmin) {
+    public CreatePrincipalsRemoteCmd(HasAuthAdminClient authHadmin) {
         super(authHadmin);
     }
 

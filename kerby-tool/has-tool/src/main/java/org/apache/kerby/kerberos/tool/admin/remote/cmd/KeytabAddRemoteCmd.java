@@ -17,44 +17,48 @@
  *  under the License.
  *
  */
-package org.apache.kerby.kerberos.tool.kadmin.command;
+package org.apache.kerby.kerberos.tool.admin.remote.cmd;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
+import org.apache.kerby.has.client.HasAuthAdminClient;
 
 import java.io.File;
-import java.util.List;
 
-public class KeytabAddCommand extends KadminCommand {
-    private static final String USAGE =
-        "Usage: ktadd [-k[eytab] keytab] [-q] [-e keysaltlist] [-norandkey] [principal | -glob princ-exp] [...]";
-
+/**
+ * Remote get principal cmd
+ */
+public class KeytabAddRemoteCmd extends AdminRemoteCmd {
+    private static final String USAGE = "Usage: ktadd [-k[eytab] keytab] "
+                                      + "[principal | -glob princ-exp] [...]\n"
+                                      + "\tExample:\n"
+                                      + "\t\tktadd hello@TEST.COM -k /keytab/location\n";
     private static final String DEFAULT_KEYTAB_FILE_LOCATION = "/etc/krb5.keytab";
 
-    public KeytabAddCommand(LocalKadmin kadmin) {
-        super(kadmin);
+    public KeytabAddRemoteCmd(HasAuthAdminClient authHadmin) {
+        super(authHadmin);
     }
 
     @Override
-    public void execute(String input) {
-        String[] commands = input.split(" ");
+    public void execute(String[] items) throws KrbException {
+        if (items.length < 2) {
+            System.err.println(USAGE);
+            return;
+        }
 
         String principal = null;
         String keytabFileLocation = null;
         Boolean glob = false;
 
-        //Since commands[0] is ktadd, the initial index is 1.
         int index = 1;
-        while (index < commands.length) {
-            String command = commands[index];
+        while (index < items.length) {
+            String command = items[index];
             if (command.equals("-k")) {
                 index++;
-                if (index >= commands.length) {
+                if (index >= items.length) {
                     System.err.println(USAGE);
                     return;
                 }
-                keytabFileLocation = commands[index].trim();
-
+                keytabFileLocation = items[index].trim();
             } else if (command.equals("-glob")) {
                 glob = true;
             } else if (!command.startsWith("-")) {
@@ -74,19 +78,17 @@ public class KeytabAddCommand extends KadminCommand {
             return;
         }
 
+        HasAuthAdminClient client = getAuthAdminClient();
         try {
             if (glob) {
-                List<String> principals = getKadmin().getPrincipals(principal);
-                if (principals.size() != 0) {
-                    getKadmin().exportKeytab(keytabFile, principals);
-                }
+                client.exportKeytabWithGlob(keytabFile, principal);
             } else {
-                getKadmin().exportKeytab(keytabFile, principal);
+                client.exportKeytab(keytabFile, principal);
             }
             System.out.println("Export Keytab to " + keytabFileLocation);
         } catch (KrbException e) {
             System.err.println("Principal \"" + principal + "\" fail to add entry to keytab."
-                    + e.getMessage());
+                    + e.toString());
         }
     }
 }

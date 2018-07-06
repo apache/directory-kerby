@@ -42,6 +42,11 @@
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>LATEST</version>
+        </dependency>
     </dependencies>
 
 </project>

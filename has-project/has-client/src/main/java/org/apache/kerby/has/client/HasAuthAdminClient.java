@@ -207,7 +207,7 @@ public class HasAuthAdminClient implements Kadmin {
             LOG.error("IO error occurred." + e.getMessage());
             throw new KrbException("IO error occurred.", e);
         }
-        return stringtoList(response);
+        return convertJsonStringToList(response);
     }
 
     @Override
@@ -216,7 +216,7 @@ public class HasAuthAdminClient implements Kadmin {
 
         URL url;
         try {
-            url = new URL(getKadminBaseURL() + "getprincipals?exp=" + exp);
+            url = new URL(getKadminBaseURL() + "listprincipals?exp=" + exp);
         } catch (MalformedURLException e) {
             throw new KrbException("Failed to create a URL object. ", e);
         }
@@ -238,17 +238,17 @@ public class HasAuthAdminClient implements Kadmin {
         if (response == null) {
             throw new KrbException("Please initial KDC first.");
         }
-        return stringtoList(response);
+        return convertJsonStringToList(response);
     }
 
     /**
-     * Change JSON string to a List.
+     * Convert JSON string to a List.
      *
      * @param result principals JSON string which like
      *               "["HTTP\/host1@HADOOP.COM","HTTP\/host2@HADOOP.COM"]"
-     * @return principalLists.
+     * @return principal lists.
      */
-    private List<String> stringtoList(String result) throws KrbException {
+    private List<String> convertJsonStringToList(String result) throws KrbException {
         List<String> principalLists = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(result);
@@ -262,7 +262,7 @@ public class HasAuthAdminClient implements Kadmin {
     }
 
     @Override
-    public void exportKeytab(File keytab, String principal) throws KrbException {
+    public void exportKeytab(File keytabFile, String principal) throws KrbException {
         URL url;
         try {
             url = new URL(getKadminBaseURL() + "exportkeytab?principal=" + principal);
@@ -278,7 +278,18 @@ public class HasAuthAdminClient implements Kadmin {
             if (httpConn.getResponseCode() != 200) {
                 throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
-            FileOutputStream fos = new FileOutputStream(keytab);
+
+            try {
+                if (!keytabFile.exists() && !keytabFile.createNewFile()) {
+                    throw new KrbException("Failed to create keytab file "
+                            + keytabFile.getAbsolutePath());
+                }
+            } catch (IOException e) {
+                throw new KrbException("Failed to load or create keytab "
+                        + keytabFile.getAbsolutePath(), e);
+            }
+
+            FileOutputStream fos = new FileOutputStream(keytabFile);
             InputStream in = httpConn.getInputStream();
             byte[] buffer = new byte[3 * 1024];
             int read;
@@ -290,7 +301,49 @@ public class HasAuthAdminClient implements Kadmin {
         } catch (IOException e) {
             throw new KrbException("IO error occurred.", e);
         }
-        LOG.info("Receive keytab file \"" + keytab.getName() + "\" from server successfully.");
+        LOG.info("Receive keytab file \"" + keytabFile.getName() + "\" from server successfully.");
+    }
+
+    public void exportKeytabWithGlob(File keytabFile, String principal) throws KrbException {
+        URL url;
+        try {
+            url = new URL(getKadminBaseURL() + "exportkeytab?principal=" + principal + "&global=true");
+        } catch (MalformedURLException e) {
+            LOG.error("Failed to create a URL object.", e);
+            throw new KrbException("Failed to create a URL object.", e);
+        }
+
+        HttpURLConnection httpConn = HasClientUtil.createConnection(hasConfig, url, "GET", true);
+        try {
+            httpConn.connect();
+            if (httpConn.getResponseCode() != 200) {
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
+            }
+
+            try {
+                if (!keytabFile.exists() && !keytabFile.createNewFile()) {
+                    throw new KrbException("Failed to create keytab file "
+                            + keytabFile.getAbsolutePath());
+                }
+            } catch (IOException e) {
+                throw new KrbException("Failed to load or create keytab "
+                        + keytabFile.getAbsolutePath(), e);
+            }
+
+            FileOutputStream fos = new FileOutputStream(keytabFile);
+            InputStream in = httpConn.getInputStream();
+            byte[] buffer = new byte[3 * 1024];
+            int read;
+            while ((read = in.read(buffer)) > 0) {
+                fos.write(buffer, 0, read);
+            }
+            fos.close();
+            in.close();
+        } catch (IOException e) {
+            LOG.error("IO error occurred.", e);
+            throw new KrbException("IO error occurred.", e);
+        }
+        LOG.info("Receive keytab file " + keytabFile.getName() + " from server successfully.");
     }
 
     @Override
@@ -422,7 +475,7 @@ public class HasAuthAdminClient implements Kadmin {
         } catch (Exception e) {
             throw new KrbException(e.getMessage());
         }
-        return stringtoList(response);
+        return convertJsonStringToList(response);
     }
 
     public void setEnableOfConf(String isEnable) throws KrbException {
@@ -526,6 +579,43 @@ public class HasAuthAdminClient implements Kadmin {
             LOG.error("IO error occurred." + e.getMessage());
             throw new KrbException("IO error occurred.", e);
         }
+        return response;
+    }
+
+    public String getPrincipal(String principalName) throws KrbException {
+        HttpURLConnection httpConn;
+
+        URL url;
+        try {
+            url = new URL(getKadminBaseURL() + "getprincipal?principal=" + principalName);
+        } catch (MalformedURLException e) {
+            throw new KrbException("Failed to create a URL object.", e);
+        }
+
+        httpConn = HasClientUtil.createConnection(hasConfig, url, "POST", true);
+
+        String response;
+        try {
+            httpConn.setDoInput(true);
+            httpConn.connect();
+
+            OutputStream out = httpConn.getOutputStream();
+            out.write(principalName.getBytes());
+            out.flush();
+            out.close();
+
+            if (httpConn.getResponseCode() == 200) {
+                response = HasClientUtil.getResponse(httpConn);
+                LOG.info(response);
+            } else {
+                LOG.info(HasClientUtil.getResponse(httpConn));
+                throw new KrbException(HasClientUtil.getResponse(httpConn));
+            }
+        } catch (IOException e) {
+            LOG.error("IO error occurred.", e);
+            throw new KrbException("IO error occurred.", e);
+        }
+
         return response;
     }
 }

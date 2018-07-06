@@ -25,7 +25,7 @@ import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.common.util.HasUtil;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.AddPrincipalRemoteCmd;
-import org.apache.kerby.kerberos.tool.admin.remote.cmd.AddPrincipalsRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.CreatePrincipalsRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.AdminRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.ChangePasswordRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.DeletePrincipalRemoteCmd;
@@ -35,6 +35,8 @@ import org.apache.kerby.kerberos.tool.admin.remote.cmd.ExportKeytabsRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.GetHostRolesRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.ListPrincipalsRemoteCmd;
 import org.apache.kerby.kerberos.tool.admin.remote.cmd.RenamePrincipalRemoteCmd;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.GetPrincipalRemoteCommand;
+import org.apache.kerby.kerberos.tool.admin.remote.cmd.KeytabAddRemoteCmd;
 import org.apache.kerby.util.OSUtil;
 import org.jline.reader.Completer;
 import org.jline.reader.EndOfFileException;
@@ -70,14 +72,18 @@ public class AdminRemoteTool {
         + "                         Rename principal\n"
         + "change_password, cpw\n"
         + "                         Change password\n"
+        + "get_principal, getprinc\n"
+        + "                         Get principal\n"
         + "list_principals, listprincs\n"
         + "                         List principals\n"
+        + "ktadd, xst\n"
+        + "                         Add entry(s) to a keytab\n"
         + "get_hostroles, hostroles\n"
         + "                         Get hostRoles\n"
         + "export_keytabs, expkeytabs\n"
         + "                         Export keytabs\n"
-        + "add_principals, addprincs\n"
-        + "                         Add principals\n"
+        + "create_principals, creprincs\n"
+        + "                         Create principals\n"
         + "enable_configure, enable\n"
         + "                         Enable configure\n"
         + "disable_configure, disable\n"
@@ -108,10 +114,9 @@ public class AdminRemoteTool {
 
         System.out.println("enter \"cmd\" to see legal commands.");
 
-        Completer completer = new StringsCompleter("add_principal",
-                "delete_principal", "rename_principal", "change_password", "list_principals",
-                "get_hostroles", "export_keytabs", "add_principals", "enable_configure",
-                "disable_configure");
+        Completer completer = new StringsCompleter("add_principal", "delete_principal", "rename_principal",
+                "change_password", "get_principal", "list_principals", "ktadd", "get_hostroles", "export_keytabs",
+                "create_principals", "enable_configure", "disable_configure");
 
         Terminal terminal = null;
         try {
@@ -160,15 +165,21 @@ public class AdminRemoteTool {
         } else if (cmd.equals("change_password")
             || cmd.startsWith("cpw")) {
             executor = new ChangePasswordRemoteCmd(hasAuthAdminClient);
+        } else if (cmd.equals("get_principal")
+                || cmd.equals("getprinc")) {
+            executor = new GetPrincipalRemoteCommand(hasAuthAdminClient);
         } else if (cmd.equals("list_principals")
             || cmd.equals("listprincs")) {
             executor = new ListPrincipalsRemoteCmd(hasAuthAdminClient);
+        }  else if (cmd.startsWith("ktadd")
+                || cmd.startsWith("xst")) {
+            executor = new KeytabAddRemoteCmd(hasAuthAdminClient);
         } else if (cmd.equals("get_hostroles")
             || cmd.equals("hostroles")) {
             executor = new GetHostRolesRemoteCmd(hasAuthAdminClient);
-        } else if (cmd.equals("add_principals")
-            || cmd.equals("addprincs")) {
-            executor = new AddPrincipalsRemoteCmd(hasAuthAdminClient);
+        } else if (cmd.equals("create_principals")
+            || cmd.equals("creprincs")) {
+            executor = new CreatePrincipalsRemoteCmd(hasAuthAdminClient);
         } else if (cmd.equals("export_keytabs")
             || cmd.equals("expkeytabs")) {
             executor = new ExportKeytabsRemoteCmd(hasAuthAdminClient);
