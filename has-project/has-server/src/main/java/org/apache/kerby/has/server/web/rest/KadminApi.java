@@ -186,7 +186,7 @@ public class KadminApi {
      * Add principal by name and password.
      *
      * @param principal principal name.
-     * @param newPassword principal password
+     * @param password principal password
      * @return Response
      */
     @POST
