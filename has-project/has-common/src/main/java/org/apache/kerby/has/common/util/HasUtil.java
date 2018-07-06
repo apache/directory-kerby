@@ -51,7 +51,7 @@ public class HasUtil {
             }
             return hasConfig;
         } else {
-            throw new HasException(hasConfFile.getName() + "not found in "
+            throw new HasException(hasConfFile.getName() + " not found in "
                 + hasConfFile.getParent() + ". ");
         }
     }

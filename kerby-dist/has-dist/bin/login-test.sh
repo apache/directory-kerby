@@ -16,24 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-APP_MAIN=org.apache.kerby.kerberos.tool.admin.local.AdminLocalTool
-
-# Reset HAS_CONF_DIR if CONF_DIR not null
-if [ X"$1" = X"-k" ]; then
-  if [ "$HAS_CONF_DIR" != "" ] && [ -d "$HAS_CONF_DIR" ]; then
-    CONF_DIR=${HAS_CONF_DIR}
-  else
-    echo "[ERROR] HAS_CONF_DIR is null or not a directory"
-    exit
-  fi
-else
-  CONF_DIR=$1
-  if [ "$CONF_DIR" != "" ]; then
-    if [ ! -d "$CONF_DIR" ]; then
-      echo "[ERROR] ${CONF_DIR} is not a directory"
-    fi
-  fi
-fi
+APP_MAIN=org.apache.kerby.kerberos.tool.hclient.HasClientLoginTool
 
 # Get HAS_HOME directory
 bin=`dirname "$0"`
@@ -42,13 +25,10 @@ cd ${HAS_HOME}
 
 for var in $*; do
   if [ X"$var" = X"-D" ]; then
-    DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8013,server=y,suspend=n"
-  elif [ ! -d "$var" ]; then
+    DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8014,server=y,suspend=y"
+  else
     args="$args $var"
   fi
 done
 
-echo "[INFO] conf_dir=$CONF_DIR"
-HAS_OPTS="-DHAS_LOGFILE=admin-local"
-
-java ${DEBUG} -classpath target/lib/*:. ${HAS_OPTS} ${APP_MAIN} ${CONF_DIR} ${args}
+java ${DEBUG} -classpath target/lib/*:. ${APP_MAIN} ${args}

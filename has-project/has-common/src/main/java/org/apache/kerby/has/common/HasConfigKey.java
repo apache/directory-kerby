@@ -26,7 +26,7 @@ public enum HasConfigKey implements ConfigKey {
     HTTP_PORT,
     HTTPS_HOST,
     HTTPS_PORT,
-    AUTH_TYPE("RAM"),
+    AUTH_TYPE("MySQL"),
     REALM,
     ENABLE_CONF,
     SSL_SERVER_CONF("/etc/has/ssl-server.conf"),
