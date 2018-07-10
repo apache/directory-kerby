@@ -55,6 +55,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 
@@ -251,9 +252,9 @@ public class TestRestApiBase {
             BufferedReader reader = httpConn.getResponseCode()
                 == HttpURLConnection.HTTP_OK ? new BufferedReader(
                 new InputStreamReader(httpConn.getInputStream(),
-                    "UTF-8")) : new BufferedReader(
+                    StandardCharsets.UTF_8)) : new BufferedReader(
                 new InputStreamReader(httpConn.getErrorStream(),
-                    "UTF-8"));
+                    StandardCharsets.UTF_8));
 
             System.out.println(reader.readLine());
         } catch (IOException | AuthenticationException e) {
