@@ -29,7 +29,7 @@ public class SetPluginCmd extends InitCmd {
 
     public static final String USAGE = "Usage: set_plugin <plugin>\n"
         + "\tExample:\n"
-        + "\t\tset_plugin RAM\n";
+        + "\t\tset_plugin MySQL\n";
 
     public SetPluginCmd(HasInitClient client) {
         super(client);

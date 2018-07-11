@@ -37,7 +37,7 @@ public class TestConfApi extends TestRestApiBase {
     public void testSetPlugin() {
         WebResource webResource = getWebResource("conf/setplugin");
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-        params.add("plugin", "RAM");
+        params.add("plugin", "MySQL");
         String response = webResource.queryParams(params).put(String.class);
         assertEquals("HAS plugin set successfully.", response);
     }
