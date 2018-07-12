@@ -14,3 +14,4 @@
 # limitations under the License.
 
 org.apache.kerby.has.plugins.client.mysql.MySQLHasClientPlugin
+org.apache.kerby.has.plugins.client.ldap.LDAPClientPlugin
