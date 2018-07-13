@@ -274,8 +274,13 @@ public class WebServer {
             WebConfigKey.HAS_SERVER_HTTPS_KEYSTORE_RESOURCE_KEY,
             WebConfigKey.HAS_SERVER_HTTPS_KEYSTORE_RESOURCE_DEFAULT);
         LOG.info("Get the ssl config file: " + sslConfigString);
+        File sslConfig = new File(sslConfigString);
+        if (!sslConfig.exists()) {
+            throw new HasException("The ssl server config file "
+                + sslConfigString + " does not exist.");
+        }
         try {
-            sslConf.addIniConfig(new File(sslConfigString));
+            sslConf.addIniConfig(sslConfig);
         } catch (IOException e) {
             throw new HasException("Errors occurred when adding config. " + e.getMessage());
         }

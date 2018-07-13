@@ -84,7 +84,6 @@ public class AsRequestApi {
             String js = null;
             ObjectMapper mapper = new ObjectMapper();
             final Map<String, Object> m = new TreeMap<String, Object>();
-
             if (hasServer.getKdcServer() == null) {
                 errMessage = "Please start the has KDC server.";
             } else if (tokenStr != null && !tokenStr.isEmpty()) {

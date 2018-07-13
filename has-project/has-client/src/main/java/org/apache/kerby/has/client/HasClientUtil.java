@@ -20,11 +20,13 @@
 package org.apache.kerby.has.client;
 
 import org.apache.kerby.has.common.HasConfig;
+import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.common.ssl.SSLFactory;
 import org.apache.kerby.has.common.util.URLConnectionFactory;
 import org.apache.kerby.kerberos.kerb.KrbException;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,6 +42,11 @@ public class HasClientUtil {
 
         conf.setString(SSLFactory.SSL_HOSTNAME_VERIFIER_KEY, "ALLOW_ALL");
         String sslClientConf = hasConfig.getSslClientConf();
+        File sslClientConfFile = new File(sslClientConf);
+        if (!sslClientConfFile.exists()) {
+            throw new HasException("The ssl client config file "
+                + sslClientConf + " does not exist.");
+        }
         conf.setString(SSLFactory.SSL_CLIENT_CONF_KEY, sslClientConf);
         conf.setBoolean(SSLFactory.SSL_REQUIRE_CLIENT_CERT_KEY, false);
 

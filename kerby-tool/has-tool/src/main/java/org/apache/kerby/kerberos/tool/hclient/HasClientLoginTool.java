@@ -53,7 +53,7 @@ public class HasClientLoginTool {
 
     private static final String TGT_USAGE = (OSUtil.isWindows()
         ? "Usage: bin\\k=login-test.cmd" : "Usage: sh bin/login-test.sh")
-        + " tgt [conf_dir]\n"
+        + " tgt [conf_dir] [plugin_type]\n"
         + "\n";
 
     private static void printKeytabUsage(String error) {
@@ -91,7 +91,7 @@ public class HasClientLoginTool {
 
     public static void main(String[] args) {
 
-        if (args.length < 2) {
+        if (args.length < 3) {
             System.err.println(TGT_USAGE);
             System.err.println(KEYTAB_USAGE);
             return;
@@ -102,8 +102,8 @@ public class HasClientLoginTool {
         File workDir;
 
         if (cmd.equals("tgt")) {
-            if (args.length != 2) {
-                printTgtUsage("Need 2 args.");
+            if (args.length != 3) {
+                printTgtUsage("Need 3 args.");
                 return;
             }
 
@@ -126,7 +126,7 @@ public class HasClientLoginTool {
             }
             String host = hasConfig.getHttpsHost();
             String port = hasConfig.getHttpsPort();
-            String type = hasConfig.getPluginName();
+            String type = args[2];
 
             HasClient hasClient = new HasClient();
             TgtTicket tgtTicket;

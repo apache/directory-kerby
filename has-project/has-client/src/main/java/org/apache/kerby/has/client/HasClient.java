@@ -274,7 +274,6 @@ public class HasClient {
                 }
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
-
                 try {
                     conn.connect();
 
@@ -304,7 +303,7 @@ public class HasClient {
                 }
             }
             if (!success) {
-                throw new HasException("Failed : HTTP error code : "
+                throw new HasException("Failed: HTTP error code : "
                     + responseStatus);
             }
         } else {
