@@ -317,7 +317,7 @@ public class HasClient {
         } catch (HasException e) {
             LOG.debug("Failed to handle response when requesting tgt ticket in client."
                 + e.getMessage());
-            throw new HasException(e);
+            throw new HasException(e.getMessage());
         }
     }
 

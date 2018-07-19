@@ -17,6 +17,7 @@
  */
 package org.apache.kerby.has.plugins.server.ldap;
 
+import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.server.AbstractHasServerPlugin;
 import org.apache.kerby.has.server.HasAuthenException;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
@@ -55,10 +56,10 @@ public class LDAPServerPlugin extends AbstractHasServerPlugin {
                 authToken.setExpirationTime(userToken.getExpiredTime());
                 authToken.addAttribute("passPhrase", pwd);
             } else {
-                throw new HasAuthenException("LDAP do user auth failed");
+                throw new HasAuthenException("LDAP user auth failed");
             }
-        } catch (Exception e) {
-            throw new HasAuthenException("LDAP do user auth failed", e);
+        } catch (HasException e) {
+            throw new HasAuthenException("LDAP user auth failed. " + e.getMessage());
         }
     }
 }

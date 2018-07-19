@@ -23,12 +23,12 @@ import java.io.File;
 
 public class LDAPServerConf {
 
-    private String userFilter = "objectclass=*";
     private String userNameAttr = "sn";
-    private String ldapUrl = null;
     private String baseDN = null;
     private String bindDN = null;
     private String bindPwd = null;
+    private String host;
+    private String port;
 
     public LDAPServerConf(String confDir) throws Exception {
         if (confDir == null) {
@@ -37,20 +37,28 @@ public class LDAPServerConf {
 
         String confFile = confDir + "/ldap-server.ini";
         Wini ini = new Wini(new File(confFile));
-        userFilter = ini.get("users", "user_filter");
+        host = ini.get("ldap", "host");
+        port = ini.get("ldap", "port");
         userNameAttr = ini.get("users", "user_name_attr");
-        ldapUrl = ini.get("ldap", "ldap_url");
         baseDN = ini.get("ldap", "base_dn");
         bindDN = ini.get("ldap", "bind_dn");
         bindPwd = ini.get("ldap", "bind_password");
     }
 
-    public String getUserFilter() {
-        return userFilter;
+    public String getHost() {
+        return host;
     }
 
-    public void setUserFilter(String userFilter) {
-        this.userFilter = userFilter;
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
     }
 
     public String getUserNameAttr() {
@@ -59,14 +67,6 @@ public class LDAPServerConf {
 
     public void setUserNameAttr(String userNameAttr) {
         this.userNameAttr = userNameAttr;
-    }
-
-    public String getLdapUrl() {
-        return ldapUrl;
-    }
-
-    public void setLdapUrl(String ldapUrl) {
-        this.ldapUrl = ldapUrl;
     }
 
     public String getBaseDN() {
