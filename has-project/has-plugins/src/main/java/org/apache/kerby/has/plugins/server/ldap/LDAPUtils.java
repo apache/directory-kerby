@@ -17,20 +17,18 @@
  */
 package org.apache.kerby.has.plugins.server.ldap;
 
+import org.apache.directory.api.ldap.model.entry.Entry;
+import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.api.ldap.model.exception.LdapInvalidAttributeValueException;
+import org.apache.directory.api.ldap.model.exception.LdapInvalidDnException;
+import org.apache.directory.api.ldap.model.name.Dn;
+import org.apache.directory.api.ldap.model.name.Rdn;
+import org.apache.directory.api.ldap.model.password.PasswordUtil;
+import org.apache.directory.ldap.client.api.LdapNetworkConnection;
+import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.plugins.server.ldap.conf.LDAPServerConf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
 
 public class LDAPUtils {
     public static final Logger LOG = LoggerFactory.getLogger(LDAPUtils.class);
@@ -45,48 +43,38 @@ public class LDAPUtils {
         }
     }
 
-    public static boolean doUserAuth(String user, String pwd) throws NamingException {
-        Map env = new HashMap<>();
-        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, ldapServerConf.getLdapUrl());
-        env.put(Context.SECURITY_AUTHENTICATION, "simple");
-        env.put(Context.SECURITY_PRINCIPAL, ldapServerConf.getBindDN());
-        env.put(Context.SECURITY_CREDENTIALS, ldapServerConf.getBindPwd());
-        DirContext ctx = null;
-
-        boolean ret = false;
+    public static boolean doUserAuth(String user, String pwd) throws HasException {
+        LdapNetworkConnection connection = new LdapNetworkConnection(
+            ldapServerConf.getHost(), Integer.parseInt(ldapServerConf.getPort()));
         try {
-            ctx = new InitialDirContext(new Hashtable<>(env));
-            SearchControls ctls = new SearchControls();
-            ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            ctls.setReturningAttributes(new String[0]);
-            ctls.setReturningObjFlag(true);
-
-            String filter = String.format("(&(%s)(%s={0}))",
-                    ldapServerConf.getUserFilter(), ldapServerConf.getUserNameAttr());
-            NamingEnumeration enm = ctx.search(
-                    ldapServerConf.getBaseDN(), filter, new String[]{user}, ctls);
-            String dn = null;
-            if (enm.hasMore()) {
-                SearchResult result = (SearchResult) enm.next();
-                dn = result.getNameInNamespace();
-                System.out.println("dn: " + dn);
-            }
-            if (dn == null || enm.hasMore()) {
-                throw new NamingException("Duplication user, Authentication failed");
-            }
-            ctx.addToEnvironment(Context.SECURITY_PRINCIPAL, dn);
-            ctx.addToEnvironment(Context.SECURITY_CREDENTIALS, pwd);
-            ctx.lookup(dn);
-            enm.close();
-
-            ret = true;
-        } catch (NamingException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            ctx.close();
+            connection.bind(ldapServerConf.getBindDN(), ldapServerConf.getBindPwd());
+        } catch (LdapException e) {
+            throw new HasException("Failed to bind. " + e.getMessage());
         }
-
-        return ret;
+        Dn dn;
+        try {
+            dn = new Dn(new Rdn(ldapServerConf.getUserNameAttr(), user),
+                new Dn(ldapServerConf.getBaseDN()));
+        } catch (LdapInvalidDnException e) {
+            throw new HasException(e.getMessage());
+        }
+        Entry entry;
+        try {
+            entry = connection.lookup(dn);
+        } catch (LdapException e) {
+            throw new HasException(e.getMessage());
+        }
+        if (entry == null) {
+            throw new HasException("Please check your user name: " + user);
+        }
+        try {
+            if (PasswordUtil.compareCredentials(pwd.getBytes(), entry.get("userpassword").getBytes())) {
+                return true;
+            } else {
+                throw new HasException("Wrong user password.");
+            }
+        } catch (LdapInvalidAttributeValueException e) {
+            throw new HasException(e.getMessage());
+        }
     }
 }
