@@ -42,6 +42,7 @@ public class KrbPriv extends KrbMessage {
     protected enum KrbPrivField implements EnumType {
         PVNO,
         MSG_TYPE,
+        UNUSED,
         ENC_PART;
 
         /**
@@ -63,6 +64,7 @@ public class KrbPriv extends KrbMessage {
    static Asn1FieldInfo[] fieldInfos = new Asn1FieldInfo[] {
             new ExplicitField(KrbPriv.KrbPrivField.PVNO, Asn1Integer.class),
             new ExplicitField(KrbPriv.KrbPrivField.MSG_TYPE, Asn1Integer.class),
+            new ExplicitField(KrbPriv.KrbPrivField.UNUSED, null),
             new ExplicitField(KrbPriv.KrbPrivField.ENC_PART, EncryptedData.class)
     };
 
