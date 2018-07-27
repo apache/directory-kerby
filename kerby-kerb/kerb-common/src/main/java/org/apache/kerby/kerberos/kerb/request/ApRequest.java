@@ -37,6 +37,7 @@ import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 
 import java.net.InetAddress;
+import java.util.EnumSet;
 
 /**
  * A wrapper for ApReq request
@@ -47,10 +48,16 @@ public class ApRequest {
     private PrincipalName clientPrincipal;
     private SgtTicket sgtTicket;
     private ApReq apReq;
+    private EnumSet<ApOption> flags;
 
     public ApRequest(PrincipalName clientPrincipal, SgtTicket sgtTicket) {
+        this(clientPrincipal, sgtTicket, EnumSet.of(ApOption.USE_SESSION_KEY));
+    }
+
+    public ApRequest(PrincipalName clientPrincipal, SgtTicket sgtTicket, EnumSet<ApOption> flags) {
         this.clientPrincipal = clientPrincipal;
         this.sgtTicket = sgtTicket;
+        this.flags = flags;
     }
 
     public ApReq getApReq() throws KrbException {
@@ -75,7 +82,9 @@ public class ApRequest {
         apReq.setAuthenticator(authenticator);
         apReq.setTicket(sgtTicket.getTicket());
         ApOptions apOptions = new ApOptions();
-        apOptions.setFlag(ApOption.USE_SESSION_KEY);
+        for (ApOption flag : flags) {
+            apOptions.setFlag(flag);
+        }
         apReq.setApOptions(apOptions);
 
         return apReq;
@@ -94,7 +103,9 @@ public class ApRequest {
         millis -= millis % 1000;
         authenticator.setCtime(new KerberosTime(millis));
         authenticator.setCusec(usec);
-        authenticator.setSubKey(sgtTicket.getSessionKey());
+        if (flags.contains(ApOption.USE_SESSION_KEY)) {
+            authenticator.setSubKey(sgtTicket.getSessionKey());
+        }
 
         return authenticator;
     }
