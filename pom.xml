@@ -65,7 +65,7 @@
     <mockito.version>2.7.22</mockito.version>
     <netty.version>4.0.52.Final</netty.version>
     <hadoop.version>3.0.0</hadoop.version>
-    <bouncycastle.version>1.59</bouncycastle.version>
+    <bouncycastle.version>1.60</bouncycastle.version>
     <jersey.container.version>2.17</jersey.container.version>
     <jersey.version>1.19</jersey.version>
     <commons-text.version>1.1</commons-text.version>
