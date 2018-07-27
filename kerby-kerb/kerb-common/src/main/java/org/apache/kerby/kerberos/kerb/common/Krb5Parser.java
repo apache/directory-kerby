@@ -98,8 +98,7 @@ public class Krb5Parser {
      * @return a list of section names.
      */
     public List<String> getSections() {
-        List<String> al = new ArrayList<String>(items.keySet());
-        return al;
+        return new ArrayList<String>(items.keySet());
     }
 
     /**
