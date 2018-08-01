@@ -552,7 +552,7 @@ public class HasClient {
 
         URL url;
         try {
-            url = new URL("http://" + host + ":" + port + "/has/v1/getcert");
+            url = new URL("http://" + host + ":" + port + "/has/v1/conf/getcert");
         } catch (MalformedURLException e) {
             throw new HasException("Failed to create a URL object." + e.getMessage());
         }
