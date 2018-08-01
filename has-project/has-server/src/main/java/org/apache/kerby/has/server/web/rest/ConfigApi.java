@@ -275,4 +275,42 @@ public class ConfigApi {
         }
         return Response.status(Response.Status.FORBIDDEN).entity("HTTPS required.\n").build();
     }
+
+    /**
+     * Get CA file.
+     *
+     * @return Response
+     */
+    @GET
+    @Path("/getcert")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getCert() {
+        final HasServer hasServer = WebServer.getHasServerFromContext(context);
+        String errMessage = null;
+        File cert = null;
+        try {
+            HasConfig hasConfig = HasUtil.getHasConfig(
+                new File(hasServer.getConfDir(), "has-server.conf"));
+            if (hasConfig != null) {
+                String certPath = hasConfig.getSslClientCert();
+                cert = new File(certPath);
+                if (!cert.exists()) {
+                    errMessage = "Cert file not found in HAS server.";
+                    WebServer.LOG.error("Cert file not found in HAS server.");
+                }
+            } else {
+                errMessage = "has-server.conf not found.";
+                WebServer.LOG.error("has-server.conf not found.");
+            }
+        } catch (HasException e) {
+            errMessage = "Failed to get cert file" + e.getMessage();
+            WebServer.LOG.error("Failed to get cert file" + e.getMessage());
+        }
+        if (errMessage == null) {
+            return Response.ok(cert).header("Content-Disposition",
+                "attachment;filename=" + cert.getName()).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).entity(errMessage).build();
+        }
+    }
 }

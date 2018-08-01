@@ -382,7 +382,7 @@ public class HasClient {
             try {
                 kdcRep = KrbCodec.decodeMessage(byteBuffer);
             } catch (IOException e) {
-                throw new HasException("Krb decoding message failed", e);
+                throw new HasException("Krb decoding message failed. " + e.getMessage());
             }
             return kdcRep;
         } else {
@@ -433,7 +433,7 @@ public class HasClient {
         try {
             encKdcRepPart.decode(decryptedData);
         } catch (IOException e) {
-            throw new HasException("Failed to decode EncAsRepPart", e);
+            throw new HasException("Failed to decode EncAsRepPart. " + e.getMessage());
         }
         kdcRep.setEncPart(encKdcRepPart);
 
@@ -458,7 +458,7 @@ public class HasClient {
             try {
                 cCache.store(ccacheFile);
             } catch (IOException e) {
-                throw new HasException("Failed to store tgt", e);
+                throw new HasException("Failed to store tgt. " + e.getMessage());
             }
         } else {
             throw new IllegalArgumentException("Invalid ccache file, "
@@ -482,7 +482,7 @@ public class HasClient {
             }
         } catch (IOException e) {
             throw new HasException("Failed to create ccache file "
-                    + ccacheFile.getAbsolutePath(), e);
+                    + ccacheFile.getAbsolutePath() + ". " + e.getMessage());
         }
     }
 
@@ -554,7 +554,7 @@ public class HasClient {
         try {
             url = new URL("http://" + host + ":" + port + "/has/v1/getcert");
         } catch (MalformedURLException e) {
-            throw new HasException("Failed to create a URL object.", e);
+            throw new HasException("Failed to create a URL object." + e.getMessage());
         }
         try {
             httpConn = (HttpURLConnection) url.openConnection();
@@ -566,7 +566,7 @@ public class HasClient {
             httpConn.setRequestMethod("GET");
         } catch (ProtocolException e) {
             LOG.error("Fail to add principal. " + e);
-            throw new HasException("Failed to set the method for URL request.", e);
+            throw new HasException("Failed to set the method for URL request. " + e.getMessage());
         }
 
         try {
@@ -579,11 +579,12 @@ public class HasClient {
                 InputStream in = HasClientUtil.getInputStream(httpConn);
                 certificate = (X509Certificate) factory.generateCertificate(in);
             } catch (CertificateException e) {
-                throw new HasException("Failed to get certificate from HAS server", e);
+                throw new HasException("Failed to get certificate from HAS server. "
+                    + e.getMessage());
             }
 
         } catch (IOException e) {
-            throw new HasException("IO error occurred.", e);
+            throw new HasException("IO error occurred. " + e.getMessage());
         }
 
         return certificate;
@@ -624,7 +625,8 @@ public class HasClient {
                 caRoot = (X509Certificate) factory.generateCertificate(in);
             }
         } catch (CertificateException | IOException e) {
-            throw new HasException("Failed to get certificate from ca root file", e);
+            throw new HasException("Failed to get certificate from ca root file. "
+                + e.getMessage());
         }
 
         // Verify certificate with root certificate
@@ -661,7 +663,8 @@ public class HasClient {
             trustStore.store(out, password.toCharArray());
             out.close();
         } catch (IOException | GeneralSecurityException e) {
-            throw new HasException("Failed to create and save truststore file", e);
+            throw new HasException("Failed to create and save truststore file. "
+                + e.getMessage());
         }
         return password;
     }
@@ -681,7 +684,8 @@ public class HasClient {
 
             IOUtil.writeFile(content, new File(clientConfigFolder + "/ssl-client.conf"));
         } catch (IOException e) {
-            throw new HasException("Failed to create client ssl configuration file", e);
+            throw new HasException("Failed to create client ssl configuration file. "
+                + e.getMessage());
         }
     }
 }
