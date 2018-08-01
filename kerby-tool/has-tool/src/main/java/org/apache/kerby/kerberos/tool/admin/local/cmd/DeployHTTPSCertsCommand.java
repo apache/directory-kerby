@@ -186,7 +186,7 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
                 sb.append(tempString);
             }
         } catch (IOException e1) {
-            throw new HasException("Failed to read file: " + e1.getMessage());
+            throw new HasException("Failed to read file. " + e1.getMessage());
         }
         String[] hostArray = sb.toString().replace(" ", "").split(",");
 
@@ -199,7 +199,7 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
             trustStore.load(in, truststoreSecret.toCharArray());
         } catch (Exception e2) {
             throw new HasException("Failed to get truststore from the file: "
-                + truststoreFile, e2);
+                + truststoreFile + ". " + e2.getMessage());
         }
         RandomStringGenerator generator = new RandomStringGenerator.Builder()
             .withinRange('a', 'z')
@@ -215,7 +215,7 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
                     continue;
                 }
             } catch (UnknownHostException e3) {
-                throw new HasException("Failed to get local hostname.", e3);
+                throw new HasException("Failed to get local hostname. " + e3.getMessage());
             }
 
             KeyStore ks;
@@ -231,7 +231,7 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
                 keyStoreInfoMap.put(hostname, keyStoreInfo);
                 trustStore.setCertificateEntry(hostname, cert);
             } catch (Exception e4) {
-                throw new HasException("Failed to generate keystore.", e4);
+                throw new HasException("Failed to generate keystore. " + e4.getMessage());
             }
         }
 
@@ -239,7 +239,7 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
         try {
             finalTrustStoreFile = saveKeyStore(truststoreFile, trustStore, password);
         } catch (Exception e5) {
-            throw new HasException("Failed to generate trust store files.", e5);
+            throw new HasException("Failed to generate trust store files. " + e5.getMessage());
         }
 
         // Generate keystore, truststore, ssl config files and transfer them to destination
@@ -254,7 +254,7 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
                 files.add(createClientSSLConfig(pathToDeploy + "/truststore.jks",
                     truststoreSecret, keyStoreInfo.getKeyPasswd()));
             } catch (Exception e6) {
-                throw new HasException("Failed to generate key store files.", e6);
+                throw new HasException("Failed to generate key store files. " + e6.getMessage());
             }
 
             JSch jsch = new JSch();
@@ -294,14 +294,15 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
                     }
                 }
             } catch (SftpException e10) {
-                throw new HasException("Failed to mkdir path: " + e10);
+                throw new HasException("Failed to mkdir path: " + e10.getMessage());
             }
 
             for (File file : files) {
                 try {
                     channel.put(file.getAbsolutePath(), file.getName());
-                } catch (SftpException e10) {
-                    throw new HasException("Failed to send the https cert files.", e10);
+                } catch (SftpException e11) {
+                    throw new HasException("Failed to send the https cert files. "
+                        + e11.getMessage());
                 }
             }
             channel.disconnect();

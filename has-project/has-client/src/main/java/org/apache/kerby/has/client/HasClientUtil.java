@@ -116,6 +116,7 @@ public class HasClientUtil {
         String s;
         while ((s = br.readLine()) != null) {
             data.append(s);
+            data.append(System.getProperty("line.separator"));
         }
         return data.toString();
     }
