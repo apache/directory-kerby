@@ -334,7 +334,7 @@ public class HasLoginModule implements LoginModule {
                 }
 
                 // add the TGT
-                if (kerbTicket != null && privCredSet.contains(kerbTicket)) {
+                if (kerbTicket != null && !privCredSet.contains(kerbTicket)) {
                     privCredSet.add(kerbTicket);
                 }
             }

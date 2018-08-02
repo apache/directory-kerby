@@ -449,7 +449,7 @@ public class HasClient {
     private void storeTgtTicket(TgtTicket tgtTicket) throws HasException {
         String ccacheName = getCcacheName();
         File ccacheFile = new File(ccacheName);
-        LOG.info("Storing the tgt to the credential cache file.");
+        LOG.debug("Storing the tgt to the credential cache file.");
         if (!ccacheFile.exists()) {
             createCacheFile(ccacheFile);
         }
