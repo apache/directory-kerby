@@ -8,7 +8,7 @@ Please refer to [install ApacheDS](https://directory.apache.org/apacheds/basic-u
 ## Prepare user infomation in ApacheDS
 
 ### Add user partition
-Please refer to [Add Partition](https://directory.apache.org/apacheds/basic-ug/1.4.3-adding-partition.html)
+Please refer to [Add Partition](https://directory.apache.org/apacheds/basic-ug/1.4.3-adding-partition.html) .
 Example:
 ```
 Partition Type: JDBM
