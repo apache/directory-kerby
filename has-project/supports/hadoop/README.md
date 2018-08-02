@@ -240,6 +240,10 @@ Please look at [How to deploy https](https://github.com/apache/directory-kerby/b
 ## 4. Configure container-executor
 
 ### Create and configure container-executor.cfg
+`container-executor.cfg` locates in the path specified in the `mvn` build command. According to the example
+`mvn package -Pdist,native -Dtar -DskipTests -Dmaven.javadoc.skip=true -Dcontainer-executor.conf.dir=/etc/hadoop/conf`
+build command in this document, the path is `/etc/hadoop/conf/`.
+Note that `container-executor.cfg` should be deployed to each node of cluster.
 
 Example of container-executor.cfg:
 ```
@@ -266,8 +270,44 @@ chmod 6050 container-executor
 // Test whether configuration is correct
 container-executor --checksetup
 ```
+> Note that `container-executor` is in `$HADOOP_HOME/bin`.
 
-## 5. Setting up cross-realm for DistCp
+## 5. Configure for Hadoop Client
+There are two ways to enable HAS authentication for Hadoop client.
+
+### a. Use HAS Plugin (MySQL plugin as example)
+
+#### Make sure the plugin type is MySQL
+Check `auth_type` value of `has-server.conf` and `has-client.conf`.
+
+#### Create `has_user` table in MySQL Database
+On HAS sever, create a table named `has_user`.
+This table contains column named `user_name` and `pass_word` with type `VARCHAR`.
+
+All the authenticate information of users stored in this table.
+
+#### Configure environmental variables of HAS server
+Add following environmental variables in the HAS sever:
+```
+mysqlUrl=jdbc:mysql://127.0.0.1:3306/NameOfHasDatabase
+mysqlUser=MySQLUserNameForHas
+mysqlPasswd=PasswordForDBUser
+```
+
+#### Configure environmental variables of Hadoop client
+Add following environmental variables in the Hadoop client:
+```
+userName=HAS Client Name in has_user table
+pass_word=HAS Client Password in has_user table
+```
+
+### b. Use legacy credential cache
+Use `kinit` command to get credential cache.
+```
+knit -k -t path/to/any/keytab/file <pricipal_of_the_specified_keytab>
+```
+
+## 6. Setting up cross-realm for DistCp
 
 ### Setup cross realm trust between realms
 Please look at [How to setup cross-realm](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/cross-realm.md).

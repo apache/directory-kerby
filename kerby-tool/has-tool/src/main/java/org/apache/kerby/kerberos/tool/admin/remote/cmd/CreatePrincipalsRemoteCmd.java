@@ -30,12 +30,12 @@ import java.io.IOException;
 import java.util.List;
 
 public class CreatePrincipalsRemoteCmd extends AdminRemoteCmd {
-    private static final String USAGE = "\nUsage: add_principals [hostRoles-file]\n"
+    private static final String USAGE = "\nUsage: create_principals [hostRoles-file]\n"
             + "\t'hostRoles-file' is a file with a hostRoles json string like:\n"
             + "\t\t{HOSTS: [ {\"name\":\"host1\",\"hostRoles\":\"HDFS\"}, "
             + "{\"name\":\"host2\",\"hostRoles\":\"HDFS,HBASE\"} ] }\n"
             + "\tExample:\n"
-            + "\t\tadd_principals hostroles.txt\n";
+            + "\t\tcreate_principals hostroles.txt\n";
 
     public CreatePrincipalsRemoteCmd(HasAuthAdminClient authHadmin) {
         super(authHadmin);

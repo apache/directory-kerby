@@ -40,6 +40,6 @@ public class EnableConfigureRemoteCmd extends AdminRemoteCmd {
 
         HasAuthAdminClient client = getAuthAdminClient();
         client.setEnableOfConf("true");
-        System.out.println("Disable configure HAS.");
+        System.out.println("Enable configure HAS.");
     }
 }
