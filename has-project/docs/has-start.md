@@ -59,6 +59,12 @@ sh bin/has-init.sh <conf_dir>
 HasInitTool: set_plugin <plugin_name>
 HasInitTool: exit
 ```
+#### Enable MySQL plugin
+Please refer to [MySQL plugin](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/mysql-plugin.md).
+
+#### Enable LDAP plugin
+Please refer to [LDAP plugin](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/ldap-plugin.md).
+
 
 ### Configure HAS backend:
 ```
@@ -159,8 +165,8 @@ sh bin/admin-local.sh <conf_dir> -k <keytab>
 // Also you can use remote admin tool, admin.keytab file needed to be placed in /etc/has
 sh bin/admin-remote.sh <conf_dir>
 // Also: sh bin/admin-remote.sh, if HAS_CONF_DIR environment variable has been set.
-HadminLocalTool.local: creprincs hosts.txt
-HadminLocalTool.local: exit
+admin.local: creprincs hosts.txt
+admin.local: exit
 ```
 The admin.keytab file is created by the kdcinit. In local and remote hadmin tool, you can type "?" for help.
 
@@ -169,8 +175,8 @@ The admin.keytab file is created by the kdcinit. In local and remote hadmin tool
 cd kerby-dist/has-dist
 // Start local or remote hadmin tool
 sh bin/admin-local.sh(bin/admin-remote.sh) <conf_dir> -k <keytab>
-HadminLocalTool.local: hostroles
-HadminLocalTool.local: exit
+admin.local: hostroles
+admin.local: exit
 ```
 
 #### Export service keytabs:
@@ -179,8 +185,8 @@ cd kerby-dist/has-dist
 // Start local or remote hadmin tool
 sh bin/admin-local.sh(bin/admin-remote.sh) <conf_dir> -k <keytab>
 // An example of exporting keytabs of localhost(hostname):
-HadminLocalTool.local: expkeytabs localhost
-HadminLocalTool.local: exit
+admin.local: expkeytabs localhost
+admin.local: exit
 ```
 
 ### b. One step to create service principals, export keytabs and deploy keytabs:
@@ -194,7 +200,7 @@ echo { \
     ] \
 \} > hosts.txt
 
-// Start local hadmin tool
+// Start local admin tool
 sh bin/admin-local.sh <conf_dir> -k <keytab>
 
 // deploy_keytabs [HostRoles-File] [Where-to-Deploy] [SSH-Port] [UserName] [Password]
@@ -202,7 +208,7 @@ sh bin/admin-local.sh <conf_dir> -k <keytab>
 // UserName: The host user name
 // Password: The host password
 // All the hosts with the same user and password
-HadminLocalTool.local: deploy_keytabs hosts.txt 22 /etc/has/ username password
-HadminLocalTool.local: exit
+admin.local: deploy_keytabs hosts.txt 22 /etc/has/ username password
+admin.local: exit
 ```
-Note: The admin.keytab file is created by the `has-init`. In local hadmin tool, you can type "?" for help.
+Note: The admin.keytab file is created by the `has-init`. In local admin tool, you can type "?" for help.
