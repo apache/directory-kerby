@@ -583,6 +583,7 @@ public class HasServer {
             // Parse has-server.conf to get http_host and http_port
             File confFile = new File(confDir, "has-server.conf");
             hasConfig = HasUtil.getHasConfig(confFile);
+            hasConfig.setConfDir(getConfDir().getAbsoluteFile());
             try {
                 String httpHost;
                 String httpPort;
