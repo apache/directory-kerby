@@ -62,6 +62,16 @@ public class HasConfig extends Krb5Conf {
     }
 
     public String getSslServerConf() {
+        String value = getString(HasConfigKey.SSL_SERVER_CONF, false, "HAS");
+        if (value != null) {
+            return value;
+        }
+        if (getConfDir() != null) {
+            File sslSrvConf = new File(getConfDir(), "ssl-server.conf");
+            if (sslSrvConf.exists() && sslSrvConf.isFile()) {
+                return sslSrvConf.getAbsolutePath();
+            }
+        }
         return getString(HasConfigKey.SSL_SERVER_CONF, true, "HAS");
     }
 
