@@ -212,3 +212,22 @@ admin.local: deploy_keytabs hosts.txt 22 /etc/has/ username password
 admin.local: exit
 ```
 Note: The admin.keytab file is created by the `has-init`. In local admin tool, you can type "?" for help.
+
+### Enable Hadoop ecosystem components
+* [Enable Hadoop](../supports/hadoop/README.md)
+
+* [Enable Zookeeper](../supports/zookeeper/README.md)
+
+* [Enable HBase](../supports/hbase/README.md)
+
+* [Enable Hive](../supports/hive/README.md)
+
+* [Enable Phoenix](../supports/phoenix/README.md)
+
+* [Enable Thrift](../supports/thrift/README.md)
+
+* [Enable Spark](../supports/spark/README.md)
+
+* [Enable Oozie](../supports/oozie/README.md)
+
+* [Enable Presto](../supports/presto/README.md)
