@@ -187,7 +187,7 @@ sh bin/admin-remote.sh <conf_dir>
 admin.local: creprincs hosts.txt
 admin.local: exit
 ```
-The admin.keytab file is created by the kdcinit. In local and remote hadmin tool, you can type "?" for help.
+The admin.keytab file is created by the has-init. In local and remote admin tool, you can type "?" for help.
 
 #### Get hostRoles list:
 ```

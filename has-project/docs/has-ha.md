@@ -58,7 +58,7 @@ The two redundant HAS servers must have same https ports. Below are examples:
 
 The two redundant HAS servers must use **mysql** backend, and have same *mysql_url*, *mysql_user* and *mysql_password*.
 
-Please look at [How to use mysql backend](docs/mysql-backend.md) for mysql backend configuration.
+Please look at [How to use mysql backend](mysql-backend.md) for mysql backend configuration.
 
 ### 4. Configure HAS KDC
 
@@ -73,12 +73,12 @@ The two redundant HAS servers must have same ports and realms.
 ### 6. Reexport has-client.conf for HAS web server HA
 
 ```
-cd HAS/has-dist
+cd kerby-dist/has-dist
 // Start KDC init tool
 sh bin/kdcinit.sh <conf_dir>
 // Get has-client.conf, and put it to /etc/has:
-KdcInitTool: gethas -p /etc/has
-KdcInitTool: exit
+HasInitTool: gethas -p /etc/has
+HasInitTool: exit
 ```
 
 You will get has-client.conf like the following:
@@ -105,12 +105,12 @@ add the following properties:
 ### 7. Reexport krb5.conf for HAS KDC HA
 
 ```
-cd HAS/has-dist
+cd kerby-dist/has-dist
 // Start KDC init tool:
-sh bin/kdcinit.sh <conf_dir>
+sh bin/has-init.sh <conf_dir>
 // Get krb5.conf, and put it to /etc:
-KdcInitTool: getkrb5 -p /etc
-KdcInitTool: exit
+HasInitTool: getkrb5 -p /etc
+HasInitTool: exit
 ```
 
 You will get krb5.conf like the following:
@@ -137,7 +137,7 @@ You can use login-test tool to verify:
 
 ### 2. Run login-test tool
 ```
-cd HAS/has-dist
+cd kerby-dist/has-dist
 // Use tgt to login
 sh bin/login-test.sh tgt <conf_dir> MySQL
 ```
