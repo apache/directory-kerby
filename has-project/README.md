@@ -8,11 +8,11 @@ A dedicated Hadoop Authentication Server to support various authentication mecha
 * New authentication mechanism can be customized and plugined.
 
 # Architecture
-![](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/has-overall.png)
+![](docs/has-overall.png)
 
 # Design
 Assuming existing users are stored in a SQL database (like MySQL), the detailed design and workflow may go like the following:
-![](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/has-protocol-flow.png)
+![](docs/has-protocol-flow.png)
 
 # New mechanism plugin API
 
@@ -39,6 +39,30 @@ String getLoginType()
 // will be used to exchange a Kerberos ticket.
 AuthToken authenticate(AuthToken userToken) throws HasAuthenException
 ```
+## High Availability
+Please look at [High Availability](docs/has-ha.md) for details.
+
+## Cross Realm
+Please look at [How to setup cross-realm](docs/cross-realm.md) for details.
+
+## Performance test report
+Please look at [docs/performance-report.md) for details.
+
+## List of supported Hadoop ecosystem components
+
+|   Big Data Components   |           Supported         |   Rebuild Required   |
+|:-----------------------:|:---------------------------:|:--------------------:|
+| Hadoop                  | Yes                         | Yes                  |
+| Zookeeper               | Yes                         | Yes                  |
+| HBase                   | Yes                         | Yes                  |
+| Hive                    | Yes                         | No                   |
+| Phoenix                 | Yes                         | No                   |
+| Thrift                  | Yes                         | No                   |
+| Spark                   | Yes                         | No                   |
+| Oozie                   | Yes                         | No                   |
+| Presto                  | Yes (0.148 and later)       | No                   |
+| Pig                     | Yes                         | No                   |
+| Sqoop                   | Yes                         | No                   |
 
 ## Getting Started
-Please look at [Getting Started](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/has-start.md) for details.
+Please look at [Getting Started](docs/has-start.md) for details.

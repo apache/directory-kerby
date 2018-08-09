@@ -17,7 +17,7 @@ mvn clean install -Pdist -DskipTests
 ## 2. Start and configure HAS server
 
 ### Deploy https
-Please look at [How to deploy https](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/deploy-https.md) for details.
+Please look at [How to deploy https](deploy-https.md) for details.
 
 ### Configure has-server.conf in <conf_dir>:
 An example of has-server.conf:
@@ -60,10 +60,10 @@ HasInitTool: set_plugin <plugin_name>
 HasInitTool: exit
 ```
 #### Enable MySQL plugin
-Please refer to [MySQL plugin](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/mysql-plugin.md).
+Please refer to [MySQL plugin](mysql-plugin.md).
 
 #### Enable LDAP plugin
-Please refer to [LDAP plugin](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/ldap-plugin.md).
+Please refer to [LDAP plugin](ldap-plugin.md).
 
 
 ### Configure HAS backend:
@@ -109,7 +109,7 @@ HasInitTool: exit
 ```
 
 ### Deploy http spnego
-Please look at [How to deploy http spnego](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/deploy-spnego.md) for details.
+Please look at [How to deploy http spnego](deploy-spnego.md) for details.
 Please restart the HAS server
 
 ```
