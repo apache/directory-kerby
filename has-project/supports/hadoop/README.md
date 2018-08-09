@@ -17,11 +17,11 @@ mvn package -Pdist,native -Dtar -DskipTests -Dmaven.javadoc.skip=true -Dcontaine
 
 ## 2. Distribute and configure Keytab files
 
-### Create keytab and deploy krb5.conf and has-client.conf
+a.  Deploy krb5.conf and has-client.conf
 
-### Distribute keytab files to the corresponding nodes.
+b. Create and distribute keytab files to the corresponding nodes.
 
-### Set permission of keytab files
+c. Set permission of keytab files, restrict access permissions for any keytab files you create.
 
 ## 3. Update hadoop configuration files
  
@@ -235,7 +235,7 @@ cp etc/hadoop/ssl-server.xml.example etc/hadoop/ssl-server.xml
 ```
 
 Configure ssl-server.xml:
-Please look at [How to deploy https](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/deploy-https.md).
+Please look at [How to deploy https](../../docs/deploy-https.md).
 
 ## 4. Configure container-executor
 
@@ -310,7 +310,7 @@ knit -k -t path/to/any/keytab/file <pricipal_of_the_specified_keytab>
 ## 6. Setting up cross-realm for DistCp
 
 ### Setup cross realm trust between realms
-Please look at [How to setup cross-realm](https://github.com/apache/directory-kerby/blob/trunk/has-project/docs/cross-realm.md).
+Please look at [How to setup cross-realm](../../docs/cross-realm.md).
 
 ### Update core-site.xml
 
