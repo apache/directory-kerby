@@ -72,6 +72,7 @@
     <commons-dbutils.version>1.6</commons-dbutils.version>
     <drizzle-jdbc.version>1.4</drizzle-jdbc.version>
     <jsch.version>0.1.54</jsch.version>
+    <maven-owasp-plugin-version>3.3.1</maven-owasp-plugin-version>
   </properties>
 
   <prerequisites>
@@ -322,6 +323,20 @@
             </configuration>
         </plugin>
 
+        <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>${maven-owasp-plugin-version}</version>
+            <executions>
+                <execution>
+                    <phase>validate</phase>
+                    <goals>
+                        <goal>check</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -434,6 +449,18 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>dependencycheck</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
   <repositories>
@@ -472,6 +499,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
         <version>${maven-jxr-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>${maven-owasp-plugin-version}</version>
       </plugin>
     </plugins>
   </reporting>
