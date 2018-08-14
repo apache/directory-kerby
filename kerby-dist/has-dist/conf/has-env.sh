@@ -16,20 +16,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-APP_MAIN=org.apache.kerby.kerberos.tool.hclient.HasClientLoginTool
+# Set HAS environment variables here.
 
-# Get HAS_HOME directory
-bin=`dirname "$0"`
-HAS_HOME=`cd ${bin}/..; pwd`
-cd ${HAS_HOME}
+###
+# Specify the JVM options to be used when starting HAS server.
+# These options will be appended to the options specified as HAS_OPTS
+#
+# export HAS_JVM_OPTS=""
 
-for var in $*; do
-  if [ X"$var" = X"-D" ]; then
-    DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8014,server=y,suspend=y"
-  else
-    args="$args $var"
-  fi
-done
-
-HAS_OPTS="-DHAS_LOGFILE=login-test"
-java ${DEBUG} -classpath target/lib/*:. ${HAS_OPTS} ${APP_MAIN} ${args}
+# HAS work directory
+#
+# export HAS_WORK_DIR=""
