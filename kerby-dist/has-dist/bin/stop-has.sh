@@ -17,7 +17,7 @@
 # limitations under the License.
 
 OPERATION=$1
-pid=/tmp/has.pid # Pid file
+pid=/var/run/has.pid # Pid file
 
 stop()
 {
