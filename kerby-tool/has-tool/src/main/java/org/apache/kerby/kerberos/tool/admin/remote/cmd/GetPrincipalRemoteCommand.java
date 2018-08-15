@@ -19,9 +19,10 @@
  */
 package org.apache.kerby.kerberos.tool.admin.remote.cmd;
 
-import org.json.JSONObject;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.has.client.HasAuthAdminClient;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Remote get principal cmd
@@ -55,20 +56,38 @@ public class GetPrincipalRemoteCommand extends AdminRemoteCmd {
             return;
         } else {
             System.out.println("Principal is listed:");
-            JSONObject principle = new JSONObject(principalData);
-            System.out.println(
-                    "Principal: " + principle.getString("Name") + "\n"
-                            + "Expiration date: " + principle.getString("Expiration date") + "\n"
-                            + "Created time: "
-                            + principle.getString("Created time") + "\n"
-                            + "KDC flags: " + String.valueOf(principle.getInt("KDC flags")) + "\n"
-                            + "Key version: " + String.valueOf(principle.getInt("Key version")) + "\n"
-                            + "Number of keys: " + String.valueOf(principle.getInt("Number of keys"))
-            );
+            JSONObject principle;
+            try {
+                principle = new JSONObject(principalData);
+            } catch (JSONException e) {
+                throw new KrbException(e.getMessage());
+            }
+            try {
+                System.out.println(
+                        "Principal: " + principle.getString("Name") + "\n"
+                                + "Expiration date: " + principle.getString("Expiration date") + "\n"
+                                + "Created time: "
+                                + principle.getString("Created time") + "\n"
+                                + "KDC flags: " + String.valueOf(principle.getInt("KDC flags")) + "\n"
+                                + "Key version: " + String.valueOf(principle.getInt("Key version")) + "\n"
+                                + "Number of keys: " + String.valueOf(principle.getInt("Number of keys"))
+                );
+            } catch (JSONException e) {
+                throw new KrbException(e.getMessage());
+            }
 
-            JSONObject keySet = principle.getJSONObject("Keys");
-            for (int keyCount = 0; keyCount < principle.getInt("Number of keys"); keyCount++) {
-                System.out.println("key: " + keySet.getString(String.valueOf(keyCount)));
+            JSONObject keySet;
+            try {
+                keySet = principle.getJSONObject("Keys");
+            } catch (JSONException e) {
+                throw new KrbException(e.getMessage());
+            }
+            try {
+                for (int keyCount = 0; keyCount < principle.getInt("Number of keys"); keyCount++) {
+                    System.out.println("key: " + keySet.getString(String.valueOf(keyCount)));
+                }
+            } catch (JSONException e) {
+                throw new KrbException(e.getMessage());
             }
         }
     }
