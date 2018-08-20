@@ -64,7 +64,7 @@
     <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
     <mockito.version>2.7.22</mockito.version>
     <netty.version>4.0.52.Final</netty.version>
-    <hadoop.version>3.0.0</hadoop.version>
+    <hadoop.version>3.0.3</hadoop.version>
     <bouncycastle.version>1.60</bouncycastle.version>
     <jersey.container.version>2.17</jersey.container.version>
     <jersey.version>1.19</jersey.version>
@@ -73,6 +73,9 @@
     <drizzle-jdbc.version>1.4</drizzle-jdbc.version>
     <jsch.version>0.1.54</jsch.version>
     <maven-owasp-plugin-version>3.3.1</maven-owasp-plugin-version>
+    <commons-codec.version>1.4</commons-codec.version>
+    <commons-logging.version>1.2</commons-logging.version>
+    <ini4j.version>0.5.4</ini4j.version>
   </properties>
 
   <prerequisites>
