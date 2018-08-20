@@ -31,7 +31,7 @@
         <dependency>
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
-            <version>1.6</version>
+            <version>${commons-dbutils.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.ini4j</groupId>
             <artifactId>ini4j</artifactId>
-            <version>0.5.4</version>
+            <version>${ini4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.directory.api</groupId>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.apache.directory.api</groupId>
             <artifactId>api-ldap-codec-standalone</artifactId>
-            <version>1.0.0</version>
+            <version>${ldap.api.version}</version>
         </dependency>
 
 
