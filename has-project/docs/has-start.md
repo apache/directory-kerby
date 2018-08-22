@@ -78,11 +78,9 @@ sh bin/has-init.sh <conf_dir>
 HasInitTool: set_plugin <plugin_name>
 HasInitTool: exit
 ```
-#### Enable MySQL plugin
-Please refer to [MySQL plugin](mysql-plugin.md).
+For MySQL plugin, please refer to [MySQL plugin](mysql-plugin.md) for details.
 
-#### Enable LDAP plugin
-Please refer to [LDAP plugin](ldap-plugin.md).
+For LDAP plugin, please refer to [LDAP plugin](ldap-plugin.md) for details.
 
 
 ### Configure HAS backend:
@@ -96,6 +94,7 @@ HasInitTool: config_kdcBackend json /tmp/has/jsonbackend
 HasInitTool: config_kdcBackend mysql jdbc:mysql://127.0.0.1:3306/mysqlbackend root passwd
 HasInitTool: exit
 ```
+For mysql backend, please refer to [How to use mysql backend](mysql-backend.md) for details.
 
 ### Configure HAS KDC:
 ```
@@ -107,7 +106,11 @@ HasInitTool: config_kdc localhost 88 HADOOP.COM
 HasInitTool: exit
 ```
 Please make sure the following configuration files exist in the conf directory:
-has-server.conf backend.conf kdc.conf
+```
+has-server.conf
+backend.conf
+kdc.conf
+```
 
 ### Start HAS KDC server:
 ```
