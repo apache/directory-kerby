@@ -112,6 +112,7 @@ public class HasClient {
             LOG.debug("has-client conf path: " + hasClientConf);
             File confFile = new File(hasClientConf);
             if (!confFile.exists()) {
+                LOG.warn("The HAS client config file: " + hasClientConf + " does not exist.");
                 throw new HasException("The HAS client config file: " + hasClientConf
                     + " does not exist.");
             }
@@ -192,13 +193,10 @@ public class HasClient {
         try {
             authToken = plugin.login(config);
         } catch (HasLoginException e) {
-            LOG.error("Plugin login failed: " + e.getMessage());
-            throw new HasException(
-                "Plugin login failed: " + e.getMessage());
+            LOG.error(e.getMessage());
+            throw new HasException(e.getMessage());
         }
         type = plugin.getLoginType();
-
-        LOG.debug("The plugin type is: " + type);
 
         return requestTgt(authToken, type, config);
     }
@@ -209,6 +207,7 @@ public class HasClient {
         if (pluginName != null) {
             clientPlugin = HasClientPluginRegistry.createPlugin(pluginName);
         } else {
+            LOG.debug("Please set the plugin name in has client conf");
             throw new HasException("Please set the plugin name in has client conf");
         }
 
@@ -231,8 +230,8 @@ public class HasClient {
         try {
             tokenString = tokenEncoder.encodeAsString(authToken);
         } catch (KrbException e) {
-            LOG.debug("Failed to decode the auth token.");
-            throw new HasException("Failed to decode the auth token." + e.getMessage());
+            LOG.debug("Failed to decode the auth token. " + e.getMessage());
+            throw new HasException("Failed to decode the auth token. " + e.getMessage());
         }
 
         JSONObject json = null;
@@ -310,8 +309,6 @@ public class HasClient {
             throw new HasException("Please set https host and port.");
         }
 
-        LOG.debug("Return from Server .... \n");
-
         try {
             return handleResponse(json, (String) authToken.getAttributes().get("passPhrase"));
         } catch (HasException e) {
@@ -327,11 +324,11 @@ public class HasClient {
             String httpHost = config.getHttpHost();
             String httpPort = config.getHttpPort();
             if (httpHost == null) {
-                LOG.warn("Can't find the http host in config, the https host will be used.");
+                // Can't find the http host in config, the https host will be used.
                 httpHost = config.getHttpsHost();
             }
             if (httpPort == null) {
-                LOG.warn("Can't find the http port in config, the default http port will be used.");
+                // Can't find the http port in config, the default http port will be used.
                 httpPort = HAS_HTTP_PORT_DEFAULT;
             }
             X509Certificate certificate = getCertificate(httpHost, httpPort);
@@ -347,33 +344,32 @@ public class HasClient {
 
     public KrbMessage getKrbMessage(JSONObject json) throws HasException {
 
-        LOG.debug("Starting to get the message from has server.");
-
         try {
             boolean success = json.getBoolean("success");
             if (!success) {
+                LOG.debug(json.getString("KrbMessage"));
                 throw new HasException(json.getString("krbMessage"));
             }
         } catch (JSONException e) {
-            LOG.debug("Failed to get message." + e);
-            throw new HasException("Failed to get message." + e);
+            LOG.debug("Failed to get message. " + e.getMessage());
+            throw new HasException("Failed to get message." + e.getMessage());
         }
 
         String typeString;
         try {
             typeString = json.getString("type");
         } catch (JSONException e) {
-            LOG.debug("Failed to get message." + e);
-            throw new HasException("Failed to get message." + e);
+            LOG.debug("Failed to get message." + e.getMessage());
+            throw new HasException("Failed to get message." + e.getMessage());
         }
 
         if (typeString != null && typeString.equals(type)) {
-            LOG.debug("The message type is " + type);
-            String krbMessageString = null;
+            String krbMessageString;
             try {
                 krbMessageString = json.getString("krbMessage");
             } catch (JSONException e) {
-                LOG.debug("Failed to get the krbMessage. " + e);
+                LOG.debug("Failed to get the krbMessage. " + e.getMessage());
+                throw new HasException("Failed to get the krbMessage. " + e.getMessage());
             }
             Base64 base64 = new Base64(0);
             byte[] krbMessage = base64.decode(krbMessageString);
@@ -382,6 +378,7 @@ public class HasClient {
             try {
                 kdcRep = KrbCodec.decodeMessage(byteBuffer);
             } catch (IOException e) {
+                LOG.debug("Krb decoding message failed. " + e.getMessage());
                 throw new HasException("Krb decoding message failed. " + e.getMessage());
             }
             return kdcRep;
@@ -565,7 +562,7 @@ public class HasClient {
         try {
             httpConn.setRequestMethod("GET");
         } catch (ProtocolException e) {
-            LOG.error("Fail to add principal. " + e);
+            LOG.error("Failed to add principal. " + e);
             throw new HasException("Failed to set the method for URL request. " + e.getMessage());
         }
 
@@ -614,6 +611,7 @@ public class HasClient {
             if (caRootPath != null) {
                 caRootFile = new File(caRootPath);
                 if (!caRootFile.exists()) {
+                    LOG.debug("CA_ROOT: " + caRootPath + " not exist.");
                     throw new HasException("CA_ROOT: " + caRootPath + " not exist.");
                 }
             } else {
