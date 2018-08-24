@@ -26,7 +26,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.KadminOption;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
-import org.apache.kerby.kerberos.tool.admin.local.cmd.AddPrincipalsAndDeployKeytabsCommand;
+import org.apache.kerby.kerberos.tool.admin.local.cmd.KeytabCommand;
 import org.apache.kerby.kerberos.tool.admin.local.cmd.AddPrincipalsCommand;
 import org.apache.kerby.kerberos.tool.admin.local.cmd.DeployHTTPSCertsCommand;
 import org.apache.kerby.kerberos.tool.admin.local.cmd.DisableConfigureCommand;
@@ -110,8 +110,8 @@ public class AdminLocalTool {
         + "                         Enable configure\n"
         + "disable_configure, disable\n"
         + "                         Disable configure\n"
-        + "deploy_keytabs, depkeytabs\n"
-        + "                         Deploy keytabs\n"
+        + "keytab\n"
+        + "                         Add principals, export keytabs, and deploy keytabs\n"
         + "deploy_https, dephttps\n"
         + "                         Deploy https\n";
 
@@ -163,9 +163,8 @@ public class AdminLocalTool {
         } else if (cmd.startsWith("disable_configure")
             || cmd.startsWith("disable")) {
             hadminExecutor = new DisableConfigureCommand(hadmin);
-        } else if (cmd.startsWith("deploy_keytabs")
-            || cmd.startsWith("depkeytabs")) {
-            hadminExecutor = new AddPrincipalsAndDeployKeytabsCommand(hadmin);
+        } else if (cmd.startsWith("keytab")) {
+            hadminExecutor = new KeytabCommand(hadmin);
         } else if (cmd.startsWith("deploy_https")
             || cmd.startsWith("dephttps")) {
             hadminExecutor = new DeployHTTPSCertsCommand(hadmin);
@@ -297,7 +296,7 @@ public class AdminLocalTool {
         Completer completer = new StringsCompleter("add_principal",
                 "delete_principal", "rename_principal", "change_password", "list_principals",
                 "get_principal", "ktadd", "get_hostroles", "export_keytabs", "add_principals",
-                "enable_configure", "disable_configure", "deploy_keytabs", "deploy_https");
+                "enable_configure", "disable_configure", "keytab", "deploy_https");
 
         Terminal terminal = null;
         try {

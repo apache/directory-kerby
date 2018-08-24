@@ -82,7 +82,7 @@ public class HasClientLoginTool {
                 subject = JaasKrbUtil.loginUsingKeytab(principalList.get(index),
                     keytabList.get(index));
             } catch (LoginException e) {
-                System.err.println("Fail to login using keytab. " + e);
+                System.err.println("Failed to login using keytab. " + e);
             }
             System.out.println("Login succeeded for user: "
                 + subject.getPrincipals().iterator().next());
@@ -179,7 +179,7 @@ public class HasClientLoginTool {
 
             HasAuthAdminClient authHasAdminClient = null;
             File confFile = new File(confDir, "admin.conf");
-            HasConfig hasConfig = null;
+            HasConfig hasConfig;
             try {
                 hasConfig = HasUtil.getHasConfig(confFile);
             } catch (HasException e) {
