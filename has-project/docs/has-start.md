@@ -192,22 +192,17 @@ admin.local: exit
 ```
 The admin.keytab file is created by the has-init. In local and remote admin tool, you can type "?" for help.
 
-#### Get hostRoles list:
+#### Export and deploy keytabs:
 ```
-cd kerby-dist/has-dist
-// Start local or remote hadmin tool
-sh bin/admin-local.sh(bin/admin-remote.sh) <conf_dir> -k <keytab>
-admin.local: hostroles
-admin.local: exit
-```
+// Start local admin tool
+sh bin/admin-local.sh <conf_dir> -k <keytab>
 
-#### Export service keytabs:
-```
-cd kerby-dist/has-dist
-// Start local or remote hadmin tool
-sh bin/admin-local.sh(bin/admin-remote.sh) <conf_dir> -k <keytab>
-// An example of exporting keytabs of localhost(hostname):
-admin.local: expkeytabs localhost
+// keytab deploy [HostRoles-File] [Where-to-Deploy] [SSH-Port] [UserName] [Password]
+// Where-to-Deploy: The place to store the keytabs
+// UserName: The host user name
+// Password: The host password
+// All the hosts with the same user and password
+admin.local: keytab deploy hosts.txt 22 /etc/has/ username password
 admin.local: exit
 ```
 
@@ -225,12 +220,12 @@ echo { \
 // Start local admin tool
 sh bin/admin-local.sh <conf_dir> -k <keytab>
 
-// deploy_keytabs [HostRoles-File] [Where-to-Deploy] [SSH-Port] [UserName] [Password]
+// keytab create_deploy [HostRoles-File] [Where-to-Deploy] [SSH-Port] [UserName] [Password]
 // Where-to-Deploy: The place to store the keytabs
 // UserName: The host user name
 // Password: The host password
 // All the hosts with the same user and password
-admin.local: deploy_keytabs hosts.txt 22 /etc/has/ username password
+admin.local: keytab create_deploy hosts.txt 22 /etc/has/ username password
 admin.local: exit
 ```
 Note: The admin.keytab file is created by the `has-init`. In local admin tool, you can type "?" for help.
