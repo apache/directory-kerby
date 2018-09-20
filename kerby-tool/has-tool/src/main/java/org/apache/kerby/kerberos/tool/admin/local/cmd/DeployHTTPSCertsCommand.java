@@ -102,23 +102,29 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
     }
 
     private static File saveKeyStore(String fileName, KeyStore ks, String password)
-            throws GeneralSecurityException, IOException {
+        throws GeneralSecurityException, IOException {
         File keystoreFile = new File(fileName);
         if (keystoreFile.exists() && !keystoreFile.delete()) {
             throw new IOException("Failed to delete original file: " + fileName);
         }
-        FileOutputStream out = new FileOutputStream(keystoreFile);
-        ks.store(out, password.toCharArray());
-        out.close();
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(keystoreFile);
+            ks.store(out, password.toCharArray());
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+
         return keystoreFile;
     }
 
     private File createClientSSLConfig(String trustStorePath, String trustStorePassword,
                                        String keyStorePassword) throws HasException {
         String resourcePath = "/ssl-client.conf.template";
-        InputStream templateResource = getClass().getResourceAsStream(resourcePath);
-        File sslConfigFile = new File("ssl-client.conf");
-        try {
+        try (InputStream templateResource = getClass().getResourceAsStream(resourcePath)) {
+            File sslConfigFile = new File("ssl-client.conf");
             String content = IOUtil.readInput(templateResource);
             content = content.replaceAll("_location_", trustStorePath);
             content = content.replaceAll("_password_", trustStorePassword);
@@ -187,19 +193,34 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
             }
         } catch (IOException e1) {
             throw new HasException("Failed to read file. " + e1.getMessage());
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new HasException(e.getMessage());
+            }
         }
         String[] hostArray = sb.toString().replace(" ", "").split(",");
 
         // Get truststore from truststore file
         Map<String, KeyStoreInfo> keyStoreInfoMap = new HashMap<>(16);
         KeyStore trustStore;
+        FileInputStream in = null;
         try {
             trustStore = KeyStore.getInstance("JKS");
-            FileInputStream in = new FileInputStream(truststoreFile);
+            in = new FileInputStream(truststoreFile);
             trustStore.load(in, truststoreSecret.toCharArray());
         } catch (Exception e2) {
             throw new HasException("Failed to get truststore from the file: "
                 + truststoreFile + ". " + e2.getMessage());
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    throw new HasException(e.getMessage());
+                }
+            }
         }
         RandomStringGenerator generator = new RandomStringGenerator.Builder()
             .withinRange('a', 'z')

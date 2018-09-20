@@ -64,8 +64,9 @@ public class EncryptionTest {
 
     @Before
     public void setUp() throws IOException {
-        InputStream kis = EncryptionTest.class.getResourceAsStream("/krbtgt.keytab");
-        keytab = Keytab.loadKeytab(kis);
+        try (InputStream kis = EncryptionTest.class.getResourceAsStream("/krbtgt.keytab")) {
+            keytab = Keytab.loadKeytab(kis);
+        }
     }
 
     @Test

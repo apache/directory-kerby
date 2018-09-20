@@ -48,8 +48,10 @@ KVNO Principal
    1 test@SH.INTEL.COM (camellia256-cts-cmac)
    1 test@SH.INTEL.COM (camellia128-cts-cmac)
  */
-        InputStream kis = KeytabTest.class.getResourceAsStream("/test.keytab");
-        Keytab keytab = Keytab.loadKeytab(kis);
+        Keytab keytab;
+        try (InputStream kis = KeytabTest.class.getResourceAsStream("/test.keytab")) {
+            keytab = Keytab.loadKeytab(kis);
+        }
         assertThat(keytab).isNotNull();
 
         List<PrincipalName> principals = keytab.getPrincipals();
@@ -86,8 +88,10 @@ KVNO Timestamp         Principal
    3 04/11/17 14:16:52 HTTP/examples.com@EXAMPLE.COM (des-hmac-sha1)
    3 04/11/17 14:16:52 HTTP/examples.com@EXAMPLE.COM (des-cbc-md5)
  */
-        InputStream kis = KeytabTest.class.getResourceAsStream("/test_multiple_principles.keytab");
-        Keytab keytab = Keytab.loadKeytab(kis);
+        Keytab keytab;
+        try (InputStream kis = KeytabTest.class.getResourceAsStream("/test_multiple_principles.keytab")) {
+            keytab = Keytab.loadKeytab(kis);
+        }
         assertThat(keytab).isNotNull();
 
         List<PrincipalName> principals = keytab.getPrincipals();
@@ -100,10 +104,10 @@ KVNO Timestamp         Principal
 
     @Test
     public void testSKeytab() throws IOException {
-
-        InputStream kis = KeytabTest.class.getResourceAsStream("/test_multiple_principles.keytab");
-
-        Keytab keytab = Keytab.loadKeytab(kis);
+        Keytab keytab;
+        try (InputStream kis = KeytabTest.class.getResourceAsStream("/test_multiple_principles.keytab")) {
+            keytab = Keytab.loadKeytab(kis);
+        }
         assertThat(keytab).isNotNull();
 
         List<PrincipalName> principals = keytab.getPrincipals();
@@ -115,8 +119,9 @@ KVNO Timestamp         Principal
     }
 
     public static void main(String[] args) throws IOException {
-        InputStream kis = KeytabTest.class.getResourceAsStream("test.keytab");
-        Keytab keytab = Keytab.loadKeytab(kis);
-        System.out.println("Principals:" + keytab.getPrincipals().size());
+        try (InputStream kis = KeytabTest.class.getResourceAsStream("test.keytab")) {
+            Keytab keytab = Keytab.loadKeytab(kis);
+            System.out.println("Principals:" + keytab.getPrincipals().size());
+        }
     }
 }

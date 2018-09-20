@@ -94,12 +94,21 @@ public class KeytabCommand extends HadminCommand {
             }
         } catch (IOException e) {
             throw new HasException("Failed to read file: " + e.getMessage());
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new HasException(e.getMessage());
+            }
         }
         JSONArray hostArray;
         try {
             hostArray = new JSONObject(sb.toString()).optJSONArray("HOSTS");
         } catch (JSONException e) {
             throw new HasException(e.getMessage());
+        }
+        if (hostArray == null) {
+            throw new HasException("Failed to get HOSTS");
         }
 
         for (int i = 0; i < hostArray.length(); i++) {

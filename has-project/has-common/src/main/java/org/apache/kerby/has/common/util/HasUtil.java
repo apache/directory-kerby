@@ -66,18 +66,18 @@ public class HasUtil {
             return;
         }
         try {
-            BufferedReader bf = new BufferedReader(new FileReader(hasConfFile));
             StringBuilder sb = new StringBuilder();
-            String tempString;
-            while ((tempString = bf.readLine()) != null) {
-                if (tempString.trim().startsWith("enable_conf")) {
-                    tempString = tempString.replace(oldValue, value);
+            try (BufferedReader bf = new BufferedReader(new FileReader(hasConfFile))) {
+                String tempString;
+                while ((tempString = bf.readLine()) != null) {
+                    if (tempString.trim().startsWith("enable_conf")) {
+                        tempString = tempString.replace(oldValue, value);
+                    }
+                    sb.append(tempString + "\n");
                 }
-                sb.append(tempString + "\n");
             }
             try (PrintStream ps = new PrintStream(new FileOutputStream(hasConfFile))) {
                 ps.print(sb.toString());
-                bf.close();
             }
         } catch (FileNotFoundException e) {
             throw new HasException("Can not load the has configuration file "

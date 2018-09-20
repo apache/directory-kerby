@@ -105,26 +105,33 @@ public class AsRequestApi {
                     errMessage = "Failed to get the plugin: " + type + ". " + e.getMessage();
                     WebServer.LOG.error(errMessage);
                 }
-                AuthToken verifiedAuthToken;
-                try {
-                    verifiedAuthToken = tokenPlugin.authenticate(authToken);
-                } catch (HasAuthenException e) {
-                    errMessage = "Failed to verify auth token. " + e.getMessage();
-                    WebServer.LOG.error(errMessage);
-                    verifiedAuthToken = null;
+                AuthToken verifiedAuthToken = null;
+                if (tokenPlugin != null) {
+                    try {
+                        verifiedAuthToken = tokenPlugin.authenticate(authToken);
+                    } catch (HasAuthenException e) {
+                        errMessage = "Failed to verify auth token. " + e.getMessage();
+                        WebServer.LOG.error(errMessage);
+                        verifiedAuthToken = null;
+                    }
                 }
 
                 if (verifiedAuthToken != null) {
                     KrbMessage asRep = kdcHandler.getResponse(verifiedAuthToken,
                         (String) verifiedAuthToken.getAttributes().get("passPhrase"));
 
-                    Base64 base64 = new Base64(0);
-                    try {
-                        m.put("type", tokenPlugin.getLoginType());
-                        m.put("success", "true");
-                        m.put("krbMessage", base64.encodeToString(asRep.encode()));
-                    } catch (IOException e) {
-                        errMessage = "Failed to encode KrbMessage." + e.getMessage();
+                    if (asRep != null) {
+                        Base64 base64 = new Base64(0);
+                        try {
+                            m.put("type", tokenPlugin.getLoginType());
+                            m.put("success", "true");
+                            m.put("krbMessage", base64.encodeToString(asRep.encode()));
+                        } catch (IOException e) {
+                            errMessage = "Failed to encode KrbMessage. " + e.getMessage();
+                            WebServer.LOG.error(errMessage);
+                        }
+                    } else {
+                        errMessage = "Failed to get KrbMessage.";
                         WebServer.LOG.error(errMessage);
                     }
 

@@ -50,8 +50,10 @@ public class Krb5Conf {
         KdcSetting setting = kdcServer.getKdcSetting();
 
         String resourcePath = setting.allowUdp() ? "/krb5_udp-template.conf" : "/krb5-template.conf";
-        InputStream templateResource = getClass().getResourceAsStream(resourcePath);
-        String templateContent = IOUtil.readInput(templateResource);
+        String templateContent;
+        try (InputStream templateResource = getClass().getResourceAsStream(resourcePath)) {
+            templateContent = IOUtil.readInput(templateResource);
+        }
 
         String content = templateContent;
 

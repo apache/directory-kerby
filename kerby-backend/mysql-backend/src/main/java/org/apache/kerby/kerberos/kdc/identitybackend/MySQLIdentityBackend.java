@@ -220,8 +220,6 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
         Map<EncryptionType, EncryptionKey> keys = identity.getKeys();
 
         Connection connection = null;
-        PreparedStatement preIdentity = null;
-        PreparedStatement preKey = null;
 
         KrbIdentity duplicateIdentity = doGetIdentity(principalName);
         if (duplicateIdentity != null) {
@@ -237,26 +235,28 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
                 String stmIdentity = "INSERT INTO " + identityTable
                     + " (principal, key_version, kdc_flags, disabled, locked,"
                     + " created_time, expire_time) VALUES(?, ?, ?, ?, ?, ?, ?)";
-                preIdentity = connection.prepareStatement(stmIdentity);
-                preIdentity.setString(1, principalName);
-                preIdentity.setInt(2, keyVersion);
-                preIdentity.setInt(3, kdcFlags);
-                preIdentity.setBoolean(4, disabled);
-                preIdentity.setBoolean(5, locked);
-                preIdentity.setLong(6, createdTime);
-                preIdentity.setLong(7, expireTime);
-                preIdentity.executeUpdate();
+                try (PreparedStatement preIdentity = connection.prepareStatement(stmIdentity)) {
+                    preIdentity.setString(1, principalName);
+                    preIdentity.setInt(2, keyVersion);
+                    preIdentity.setInt(3, kdcFlags);
+                    preIdentity.setBoolean(4, disabled);
+                    preIdentity.setBoolean(5, locked);
+                    preIdentity.setLong(6, createdTime);
+                    preIdentity.setLong(7, expireTime);
+                    preIdentity.executeUpdate();
+                }
 
                 // Insert keys to key table
                 for (Map.Entry<EncryptionType, EncryptionKey> entry : keys.entrySet()) {
                     String stmKey = "INSERT INTO " + keyInfoTable
                         + " (key_type, kvno, key_value, principal) VALUES(?, ?, ?, ?)";
-                    preKey = connection.prepareStatement(stmKey);
-                    preKey.setString(1, entry.getKey().getName());
-                    preKey.setInt(2, entry.getValue().getKvno());
-                    preKey.setBlob(3, new SerialBlob(entry.getValue().getKeyData()));
-                    preKey.setString(4, principalName);
-                    preKey.executeUpdate();
+                    try (PreparedStatement preKey = connection.prepareStatement(stmKey)) {
+                        preKey.setString(1, entry.getKey().getName());
+                        preKey.setInt(2, entry.getValue().getKvno());
+                        preKey.setBlob(3, new SerialBlob(entry.getValue().getKeyData()));
+                        preKey.setString(4, principalName);
+                        preKey.executeUpdate();
+                    }
                 }
 
                 connection.commit();
@@ -273,8 +273,6 @@ public class MySQLIdentityBackend extends AbstractIdentityBackend {
                 LOG.error("Error occurred while adding identity.");
                 throw new KrbException("Failed to add identity. ", e);
             } finally {
-                DbUtils.closeQuietly(preIdentity);
-                DbUtils.closeQuietly(preKey);
                 DbUtils.closeQuietly(connection);
             }
         }

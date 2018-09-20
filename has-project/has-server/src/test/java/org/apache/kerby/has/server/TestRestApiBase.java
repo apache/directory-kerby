@@ -232,7 +232,8 @@ public class TestRestApiBase {
             try {
                 url = new URL(webServerUrl + "hadmin/addprincipalsbyrole");
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                System.err.println("Failed to create URL. " + e.getMessage());
+                System.exit(7);
             }
 
             URLConnectionFactory connectionFactory = URLConnectionFactory.newDefaultURLConnectionFactory(httpsConf);

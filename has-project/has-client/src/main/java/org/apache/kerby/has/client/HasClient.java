@@ -630,7 +630,11 @@ public class HasClient {
         // Verify certificate with root certificate
         try {
             PublicKey publicKey = caRoot.getPublicKey();
-            certificate.verify(publicKey);
+            if (publicKey != null) {
+                certificate.verify(publicKey);
+            } else {
+                throw new HasException("Failed to get public key in ca root.");
+            }
         } catch (GeneralSecurityException e) {
             return false;
         }
@@ -657,9 +661,9 @@ public class HasClient {
             trustStore = KeyStore.getInstance("jks");
             trustStore.load(null, null);
             trustStore.setCertificateEntry(host, certificate);
-            FileOutputStream out = new FileOutputStream(trustStoreFile);
-            trustStore.store(out, password.toCharArray());
-            out.close();
+            try (FileOutputStream out = new FileOutputStream(trustStoreFile)) {
+                trustStore.store(out, password.toCharArray());
+            }
         } catch (IOException | GeneralSecurityException e) {
             throw new HasException("Failed to create and save truststore file. "
                 + e.getMessage());
@@ -673,8 +677,7 @@ public class HasClient {
      */
     private void createClientSSLConfig(String password) throws HasException {
         String resourcePath = "/ssl-client.conf.template";
-        InputStream templateResource = getClass().getResourceAsStream(resourcePath);
-        try {
+        try (InputStream templateResource = getClass().getResourceAsStream(resourcePath)) {
             String content = IOUtil.readInput(templateResource);
             content = content.replaceAll("_location_", clientConfigFolder.getAbsolutePath()
                 + "/truststore.jks");

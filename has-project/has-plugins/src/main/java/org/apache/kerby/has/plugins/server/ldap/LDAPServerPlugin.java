@@ -24,6 +24,8 @@ import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class LDAPServerPlugin extends AbstractHasServerPlugin {
     public static final Logger LOG = LoggerFactory.getLogger(LDAPServerPlugin.class);
 
@@ -58,7 +60,7 @@ public class LDAPServerPlugin extends AbstractHasServerPlugin {
             } else {
                 throw new HasAuthenException("LDAP user auth failed");
             }
-        } catch (HasException e) {
+        } catch (HasException | IOException e) {
             throw new HasAuthenException("LDAP user auth failed. " + e.getMessage());
         }
     }

@@ -94,7 +94,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             TokenDecoder tokenDecoder = KrbRuntime.getTokenProvider("JWT").createTokenDecoder();
             configureKeys(tokenDecoder, kdcRequest, issuer);
 
-            AuthToken authToken = null;
+            AuthToken authToken;
             try {
                 authToken = tokenDecoder.decodeFromBytes(token.getTokenValue());
                 if (!tokenDecoder.isSigned() && !kdcRequest.isHttps()) {
@@ -127,22 +127,20 @@ public class TokenPreauth extends AbstractPreauthPlugin {
     private void configureKeys(TokenDecoder tokenDecoder, KdcRequest kdcRequest, String issuer) {
         String verifyKeyPath = kdcRequest.getKdcContext().getConfig().getVerifyKeyConfig();
         if (verifyKeyPath != null) {
-            try {
-                InputStream verifyKeyFile = getKeyFileStream(verifyKeyPath, issuer);
+            try (InputStream verifyKeyFile = getKeyFileStream(verifyKeyPath, issuer)) {
                 if (verifyKeyFile != null) {
                     PublicKey verifyKey = PublicKeyReader.loadPublicKey(verifyKeyFile);
                     tokenDecoder.setVerifyKey(verifyKey);
                 }
             } catch (FileNotFoundException e) {
-                LOG.error("The verify key path is wrong. " + e);
+                LOG.error("The verify key path is wrong. " + e.getMessage());
             } catch (Exception e) {
-                LOG.error("Fail to load public key. " + e);
+                LOG.error("Failed to load public key. " + e.getMessage());
             }
         }
         String decryptionKeyPath = kdcRequest.getKdcContext().getConfig().getDecryptionKeyConfig();
         if (decryptionKeyPath != null) {
-            try {
-                InputStream decryptionKeyFile = getKeyFileStream(decryptionKeyPath, issuer);
+            try (InputStream decryptionKeyFile = getKeyFileStream(decryptionKeyPath, issuer)) {
                 if (decryptionKeyFile != null) {
                     PrivateKey decryptionKey = PrivateKeyReader.loadPrivateKey(decryptionKeyFile);
                     tokenDecoder.setDecryptionKey(decryptionKey);

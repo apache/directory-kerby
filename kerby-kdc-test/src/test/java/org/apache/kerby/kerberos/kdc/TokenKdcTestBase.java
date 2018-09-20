@@ -76,9 +76,10 @@ public class TokenKdcTestBase extends KdcTestBase {
     }
 
     protected AuthToken prepareToken(String audience) throws Exception {
-        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
-        PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
-
+        PrivateKey privateKey;
+        try (InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");) {
+            privateKey = PrivateKeyReader.loadPrivateKey(is);
+        }
         return prepareToken(audience, ISSUER, privateKey, null);
     }
 

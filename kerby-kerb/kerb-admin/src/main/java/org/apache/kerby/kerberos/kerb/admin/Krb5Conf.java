@@ -49,9 +49,10 @@ public class Krb5Conf {
     private File generateConfFile() throws IOException {
 
         String resourcePath = kdcConfig.allowUdp() ? "/krb5_udp.conf" : "/krb5.conf";
-        InputStream templateResource = getClass().getResourceAsStream(resourcePath);
-
-        String templateContent = IOUtil.readInput(templateResource);
+        String templateContent;
+        try (InputStream templateResource = getClass().getResourceAsStream(resourcePath)) {
+            templateContent = IOUtil.readInput(templateResource);
+        }
 
         String content = templateContent;
 

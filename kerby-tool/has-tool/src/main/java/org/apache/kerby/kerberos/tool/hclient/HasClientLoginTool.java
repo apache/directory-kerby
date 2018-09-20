@@ -84,8 +84,10 @@ public class HasClientLoginTool {
             } catch (LoginException e) {
                 System.err.println("Failed to login using keytab. " + e);
             }
-            System.out.println("Login succeeded for user: "
-                + subject.getPrincipals().iterator().next());
+            if (subject != null) {
+                System.out.println("Login succeeded for user: "
+                    + subject.getPrincipals().iterator().next());
+            }
         }
     }
 
@@ -199,6 +201,9 @@ public class HasClientLoginTool {
             String realm = null;
             try {
                 KdcConfig kdcConfig = KdcUtil.getKdcConfig(confDir);
+                if (kdcConfig == null) {
+                    printKeytabUsage("Please set the right conf dir.");
+                }
                 realm = kdcConfig.getKdcRealm();
             } catch (KrbException e) {
                 printKeytabUsage(e.getMessage());

@@ -53,13 +53,18 @@ public class AddPrincipalsCommand extends HadminCommand {
             throw new HasException("HostRoles file is not exists.");
         }
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(hostRoles));
-            StringBuilder sb = new StringBuilder();
-            String tempString;
-            while ((tempString = reader.readLine()) != null) {
-                sb.append(tempString);
+            StringBuilder sb;
+            try (BufferedReader reader = new BufferedReader(new FileReader(hostRoles))) {
+                sb = new StringBuilder();
+                String tempString;
+                while ((tempString = reader.readLine()) != null) {
+                    sb.append(tempString);
+                }
             }
             JSONArray hostArray = new JSONObject(sb.toString()).optJSONArray("HOSTS");
+            if (hostArray == null) {
+                throw new HasException("Failed to get HOSTS.");
+            }
             for (int i = 0; i < hostArray.length(); i++) {
                 JSONObject host = (JSONObject) hostArray.get(i);
                 String[] roles = host.getString("hostRoles").split(",");

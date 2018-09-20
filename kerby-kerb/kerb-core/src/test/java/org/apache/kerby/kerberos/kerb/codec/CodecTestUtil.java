@@ -28,15 +28,17 @@ import java.io.InputStream;
 public class CodecTestUtil {
 
     static byte[] readBinaryFile(String path) throws IOException {
-        InputStream is = CodecTestUtil.class.getResourceAsStream(path);
-        byte[] bytes = new byte[is.available()];
-        is.read(bytes);
-        return bytes;
+        try (InputStream is = CodecTestUtil.class.getResourceAsStream(path)) {
+            byte[] bytes = new byte[is.available()];
+            is.read(bytes);
+            return bytes;
+        }
     }
 
     static byte[] readDataFile(String resource) throws IOException {
-        InputStream is = CodecTestUtil.class.getResourceAsStream(resource);
-        String hexStr = IOUtil.readInput(is);
-        return HexUtil.hex2bytes(hexStr);
+        try (InputStream is = CodecTestUtil.class.getResourceAsStream(resource)) {
+            String hexStr = IOUtil.readInput(is);
+            return HexUtil.hex2bytes(hexStr);
+        }
     }
 }

@@ -71,6 +71,12 @@ public class CreatePrincipalsRemoteCmd extends AdminRemoteCmd {
             }
         } catch (IOException e) {
             throw new KrbException("Errors occurred when read line. ", e);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new KrbException(e.getMessage());
+            }
         }
         List<String> results = client.addPrincipalsByRole(sb.toString());
         if (results != null) {

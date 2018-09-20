@@ -55,8 +55,9 @@ public class KeysTest {
 
     @Before
     public void setUp() throws IOException {
-        InputStream kis = KeysTest.class.getResourceAsStream("/test.keytab");
-        keytab = Keytab.loadKeytab(kis);
+        try (InputStream kis = KeysTest.class.getResourceAsStream("/test.keytab")) {
+            keytab = Keytab.loadKeytab(kis);
+        }
     }
 
     @Test

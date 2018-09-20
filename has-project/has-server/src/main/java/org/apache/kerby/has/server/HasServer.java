@@ -46,6 +46,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -255,7 +256,12 @@ public class HasServer {
                 String resourcePath = "/" + confName + ".template";
                 templateResource = getClass().getResourceAsStream(resourcePath);
             }
-            String content = IOUtil.readInput(templateResource);
+            String content;
+            try {
+                content = IOUtil.readInput(templateResource);
+            } finally {
+                templateResource.close();
+            }
             for (Map.Entry<String, String> entry : values.entrySet()) {
                 content = content.replaceAll(Pattern.quote(entry.getKey()), entry.getValue());
             }
@@ -331,7 +337,10 @@ public class HasServer {
             Map<String, String> values = getKdcConf();
             String host = getKdcHost();
             if (host == null) {
-                host = getWebServer().getBindAddress().getHostName();
+                InetSocketAddress bind = getWebServer().getBindAddress();
+                if (bind != null) {
+                    host = bind.getHostName();
+                }
             }
             values.remove("servers");
             values.put("_HOST_", host);
@@ -516,12 +525,11 @@ public class HasServer {
         String kdc = kdcBuilder.toString();
         kdc = kdc.substring(0, kdc.length() - 1);
         String resourcePath = "/krb5.conf.template";
-        InputStream templateResource = getClass().getResourceAsStream(resourcePath);
-        String content = null;
-        try {
+        String content;
+        try (InputStream templateResource = getClass().getResourceAsStream(resourcePath)) {
             content = IOUtil.readInput(templateResource);
         } catch (IOException e) {
-            throw new HasException("Read template resource failed. " + e);
+            throw new HasException("Read template resource failed. " + e.getMessage());
         }
         content = content.replaceAll("_REALM_", kdcRealm);
         content = content.replaceAll("_PORT_", String.valueOf(kdcPort));
@@ -537,7 +545,7 @@ public class HasServer {
         try {
             IOUtil.writeFile(content, confFile);
         } catch (IOException e) {
-            throw new HasException("Write content to conf file failed. " + e);
+            throw new HasException("Write content to conf file failed. " + e.getMessage());
         }
 
         return confFile;
@@ -557,8 +565,10 @@ public class HasServer {
         HasConfig hasConfig = HasUtil.getHasConfig(confFile);
         if (hasConfig != null) {
             String defaultValue = hasConfig.getHttpsHost();
-            InputStream templateResource = new FileInputStream(confFile);
-            String content = IOUtil.readInput(templateResource);
+            String content;
+            try (InputStream templateResource = new FileInputStream(confFile)) {
+                content = IOUtil.readInput(templateResource);
+            }
             content = content.replaceFirst(Pattern.quote(defaultValue), servers);
             File hasFile = new File(confDir, "has-client.conf");
             IOUtil.writeFile(content, hasFile);

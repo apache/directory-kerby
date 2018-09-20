@@ -44,8 +44,11 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
 
     @Test
     public void testBadIssuer() throws Exception {
-        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
-        PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
+        PrivateKey privateKey;
+        try (InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");) {
+            privateKey = PrivateKeyReader.loadPrivateKey(is);
+        }
+
         prepareToken(getServerPrincipal(), "oauth1.com", privateKey, null);
         
         try {
@@ -59,8 +62,11 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
 
     @Test
     public void testBadAudienceRestriction() throws Exception {
-        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
-        PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
+        PrivateKey privateKey;
+        try (InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");) {
+            privateKey = PrivateKeyReader.loadPrivateKey(is);
+        }
+
         prepareToken("bad-service" + "/" + getHostname() + "@" + TestKdcServer.KDC_REALM,
                 ISSUER, privateKey, null);
         
@@ -103,11 +109,14 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
     
     @Test
     public void testSignedEncryptedToken() throws Exception {
-        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");
-        PrivateKey privateKey = PrivateKeyReader.loadPrivateKey(is);
-        
-        is = TokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
-        PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
+        PrivateKey privateKey;
+        try (InputStream is = TokenKdcTestBase.class.getResourceAsStream("/private_key.pem");) {
+            privateKey = PrivateKeyReader.loadPrivateKey(is);
+        }
+        PublicKey publicKey;
+        try (InputStream is = TokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem")) {
+            publicKey = PublicKeyReader.loadPublicKey(is);
+        }
         
         prepareToken(getServerPrincipal(), ISSUER, privateKey, publicKey);
         
@@ -118,10 +127,12 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
     public void testSignedEncryptedTokenBadSigningKey() throws Exception {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         KeyPair keyPair = keyGen.generateKeyPair();
-        
-        InputStream is = TokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem");
-        PublicKey publicKey = PublicKeyReader.loadPublicKey(is);
-        
+
+        PublicKey publicKey;
+        try (InputStream is = TokenKdcTestBase.class.getResourceAsStream("/oauth2.com_public_key.pem")) {
+            publicKey = PublicKeyReader.loadPublicKey(is);
+        }
+
         prepareToken(getServerPrincipal(), ISSUER, keyPair.getPrivate(), publicKey);
         
         try {

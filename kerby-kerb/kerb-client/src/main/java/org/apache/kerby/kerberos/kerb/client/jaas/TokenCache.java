@@ -81,14 +81,12 @@ public class TokenCache {
      *
      * @param token The token string
      */
-    public static void writeToken(String token, String tokenCacheFile) {
+    public static void writeToken(String token, String tokenCacheFile) throws IOException {
         File cacheFile = new File(tokenCacheFile);
 
-        try {
-            Writer writer = new FileWriterWithEncoding(cacheFile, StandardCharsets.UTF_8);
+        try (Writer writer = new FileWriterWithEncoding(cacheFile, StandardCharsets.UTF_8)) {
             writer.write(token);
             writer.flush();
-            writer.close();
             // sets read-write permissions to owner only
             cacheFile.setReadable(false, false);
             cacheFile.setReadable(true, true);

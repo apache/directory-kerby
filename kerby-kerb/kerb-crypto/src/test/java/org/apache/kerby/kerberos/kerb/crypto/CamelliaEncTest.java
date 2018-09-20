@@ -48,18 +48,18 @@ public class CamelliaEncTest {
     private EncryptProvider encProvider;
 
     private List<String> getExpectedLines() throws IOException {
-        InputStream res = getClass().getResourceAsStream("/camellia-expect-vt.txt");
-        BufferedReader br = new BufferedReader(new InputStreamReader(res));
-
-        List<String> results = new ArrayList<String>();
-        String line;
-        while ((line = br.readLine()) != null) {
-            line = line.trim();
-            if (!line.isEmpty()) {
-                results.add(line);
+        try (InputStream res = getClass().getResourceAsStream("/camellia-expect-vt.txt");
+             BufferedReader br = new BufferedReader(new InputStreamReader(res))) {
+            List<String> results = new ArrayList<String>();
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (!line.isEmpty()) {
+                    results.add(line);
+                }
             }
+            return results;
         }
-        return results;
     }
 
     @Test

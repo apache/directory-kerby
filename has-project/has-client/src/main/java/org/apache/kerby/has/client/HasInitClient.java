@@ -101,15 +101,14 @@ public class HasInitClient {
             if (httpConn.getResponseCode() != 200) {
                 throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
-            FileOutputStream fos = new FileOutputStream(keytab);
-            InputStream in = httpConn.getInputStream();
-            byte[] buffer = new byte[3 * 1024];
-            int read;
-            while ((read = in.read(buffer)) > 0) {
-                fos.write(buffer, 0, read);
+            try (FileOutputStream fos = new FileOutputStream(keytab);
+                 InputStream in = httpConn.getInputStream()) {
+                byte[] buffer = new byte[3 * 1024];
+                int read;
+                while ((read = in.read(buffer)) > 0) {
+                    fos.write(buffer, 0, read);
+                }
             }
-            fos.close();
-            in.close();
         } catch (IOException e) {
             throw new KrbException("IO error occurred. " + e.getMessage());
         }
@@ -133,15 +132,14 @@ public class HasInitClient {
             if (httpConn.getResponseCode() != 200) {
                 throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
-            FileOutputStream fos = new FileOutputStream(file);
-            InputStream in = httpConn.getInputStream();
-            byte[] buffer = new byte[3 * 1024];
-            int read;
-            while ((read = in.read(buffer)) > 0) {
-                fos.write(buffer, 0, read);
+            try (FileOutputStream fos = new FileOutputStream(file);
+                 InputStream in = httpConn.getInputStream()) {
+                byte[] buffer = new byte[3 * 1024];
+                int read;
+                while ((read = in.read(buffer)) > 0) {
+                    fos.write(buffer, 0, read);
+                }
             }
-            fos.close();
-            in.close();
         } catch (IOException e) {
             throw new KrbException("IO error occurred. " + e.getMessage());
         }
@@ -165,15 +163,14 @@ public class HasInitClient {
             if (httpConn.getResponseCode() != 200) {
                 throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
-            FileOutputStream fos = new FileOutputStream(file);
-            InputStream in = httpConn.getInputStream();
-            byte[] buffer = new byte[3 * 1024];
-            int read;
-            while ((read = in.read(buffer)) > 0) {
-                fos.write(buffer, 0, read);
+            try (FileOutputStream fos = new FileOutputStream(file);
+                 InputStream in = httpConn.getInputStream()) {
+                byte[] buffer = new byte[3 * 1024];
+                int read;
+                while ((read = in.read(buffer)) > 0) {
+                    fos.write(buffer, 0, read);
+                }
             }
-            fos.close();
-            in.close();
         } catch (IOException e) {
             throw new KrbException("IO error occurred. " + e.getMessage());
         }

@@ -65,12 +65,11 @@ public class HadminApi {
     @Context
     private HttpServletRequest httpRequest;
 
-    private void compressFile(File file, ZipOutputStream out, String basedir) {
+    private void compressFile(File file, ZipOutputStream out, String basedir) throws HasException {
         if (!file.exists()) {
             return;
         }
-        try {
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
             ZipEntry entry = new ZipEntry(basedir + file.getName());
             out.putNextEntry(entry);
             int count;
@@ -80,7 +79,7 @@ public class HadminApi {
             }
             bis.close();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new HasException(e.getMessage());
         }
     }
 
@@ -94,8 +93,11 @@ public class HadminApi {
             try {
                 hasAdmin = new LocalHadmin(WebServer.getHasServerFromContext(context));
             } catch (KrbException e) {
-                WebServer.LOG.info("Failed to create local hadmin." + e.getMessage());
+                String error = "Failed to create local hadmin." + e.getMessage();
+                WebServer.LOG.error(error);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
             }
+
             JSONArray results = new JSONArray();
             try {
                 StringBuilder data = new StringBuilder();
@@ -118,8 +120,8 @@ public class HadminApi {
                 }
                 return Response.ok(results.toString()).build();
             } catch (Exception e) {
-                WebServer.LOG.error("Failed to create principals,because : " + e.getMessage());
-                String error = "Failed to create principals,because : " + e.getMessage();
+                WebServer.LOG.error("Failed to create principals, because : " + e.getMessage());
+                String error = "Failed to create principals, because : " + e.getMessage();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
             }
         }
@@ -201,8 +203,7 @@ public class HadminApi {
                     if (keytabZip.exists()) {
                         keytabZip.delete();
                     }
-                    try {
-                        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(keytabZip));
+                    try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(keytabZip))) {
                         for (File keytab : keytabs) {
                             compressFile(keytab, zos, "");
                         }

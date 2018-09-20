@@ -42,9 +42,10 @@ public class CcacheTest {
 
     @Before
     public void setUp() throws IOException {
-        InputStream cis = CcacheTest.class.getResourceAsStream("/test.cc");
-        cc = new CredentialCache();
-        cc.load(cis);
+        try (InputStream cis = CcacheTest.class.getResourceAsStream("/test.cc")) {
+            cc = new CredentialCache();
+            cc.load(cis);
+        }
     }
 
     @Test

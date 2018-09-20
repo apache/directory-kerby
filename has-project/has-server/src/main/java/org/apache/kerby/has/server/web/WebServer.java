@@ -192,14 +192,18 @@ public class WebServer {
         int connIdx = 0;
         if (policy.isHttpEnabled()) {
             httpAddress = httpServer.getConnectorAddress(connIdx++);
-            conf.setString(WebConfigKey.HAS_HTTP_ADDRESS_KEY,
-                NetUtils.getHostPortString(httpAddress));
+            if (httpAddress != null) {
+                conf.setString(WebConfigKey.HAS_HTTP_ADDRESS_KEY,
+                    NetUtils.getHostPortString(httpAddress));
+            }
         }
 
         if (policy.isHttpsEnabled()) {
             httpsAddress = httpServer.getConnectorAddress(connIdx);
-            conf.setString(WebConfigKey.HAS_HTTPS_ADDRESS_KEY,
-                NetUtils.getHostPortString(httpsAddress));
+            if (httpsAddress != null) {
+                conf.setString(WebConfigKey.HAS_HTTPS_ADDRESS_KEY,
+                    NetUtils.getHostPortString(httpsAddress));
+            }
         }
     }
 
@@ -228,7 +232,7 @@ public class WebServer {
     }
 
     /**
-     * Return a HttpServer.Builder that the ssm can use to
+     * Return a HttpServer.Builder that the HAS can use to
      * initialize their HTTP / HTTPS server.
      */
     public HttpServer2.Builder httpServerTemplateForHAS(
@@ -239,7 +243,7 @@ public class WebServer {
         HttpServer2.Builder builder = new HttpServer2.Builder().setName(name);
 
         if (policy.isHttpEnabled()) {
-            if (httpAddr.getPort() == 0) {
+            if (httpAddr != null && httpAddr.getPort() == 0) {
                 builder.setFindPort(true);
             }
 
@@ -252,7 +256,7 @@ public class WebServer {
             HasConfig sslConf = loadSslConfiguration(conf);
             loadSslConfToHttpServerBuilder(builder, sslConf);
 
-            if (httpsAddr.getPort() == 0) {
+            if (httpsAddr != null && httpsAddr.getPort() == 0) {
                 builder.setFindPort(true);
             }
 

@@ -101,11 +101,11 @@ public final class IOUtil {
      * @throws IOException e
      */
     public static void writeFile(String content, File file) throws IOException {
-        OutputStream outputStream = Files.newOutputStream(file.toPath());
-        WritableByteChannel channel = Channels.newChannel(outputStream);
+        try (OutputStream outputStream = Files.newOutputStream(file.toPath());
+             WritableByteChannel channel = Channels.newChannel(outputStream)) {
 
-        ByteBuffer buffer = ByteBuffer.wrap(Utf8.toBytes(content));
-        channel.write(buffer);
-        outputStream.close();
+            ByteBuffer buffer = ByteBuffer.wrap(Utf8.toBytes(content));
+            channel.write(buffer);
+        }
     }
 }

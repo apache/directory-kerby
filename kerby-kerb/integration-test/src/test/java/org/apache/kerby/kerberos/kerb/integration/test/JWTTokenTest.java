@@ -92,8 +92,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.setAudiences(Collections.singletonList(getServerPrincipal()));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
 
-        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
-        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        PrivateKey signKey;
+        try (InputStream is = Files.newInputStream(getSignKeyFile().toPath())) {
+            signKey = PrivateKeyReader.loadPrivateKey(is);
+        }
         krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a SGT using the JWT
@@ -154,8 +156,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.setAudiences(Collections.singletonList(getServerPrincipal() + "_"));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
 
-        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
-        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        PrivateKey signKey;
+        try (InputStream is = Files.newInputStream(getSignKeyFile().toPath())) {
+            signKey = PrivateKeyReader.loadPrivateKey(is);
+        }
         krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a SGT using the JWT
@@ -250,8 +254,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.setIssuer("unknown-issuer");
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
 
-        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
-        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        PrivateKey signKey;
+        try (InputStream is = Files.newInputStream(getSignKeyFile().toPath())) {
+            signKey = PrivateKeyReader.loadPrivateKey(is);
+        }
         krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a SGT using the JWT
@@ -290,8 +296,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.setAudiences(Collections.singletonList(getServerPrincipal()));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
 
-        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
-        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        PrivateKey signKey;
+        try (InputStream is = Files.newInputStream(getSignKeyFile().toPath())) {
+            signKey = PrivateKeyReader.loadPrivateKey(is);
+        }
         krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a SGT using the JWT
@@ -347,8 +355,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         AuthToken authToken = issueToken(getClientPrincipal());
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
 
-        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
-        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        PrivateKey signKey;
+        try (InputStream is = Files.newInputStream(getSignKeyFile().toPath())) {
+            signKey = PrivateKeyReader.loadPrivateKey(is);
+        }
         krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a TGT using the JWT token
@@ -405,8 +415,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.setAudiences(Collections.singletonList(authToken.getAudiences().get(0) + "_"));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
 
-        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
-        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        PrivateKey signKey;
+        try (InputStream is = Files.newInputStream(getSignKeyFile().toPath())) {
+            signKey = PrivateKeyReader.loadPrivateKey(is);
+        }
         krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a TGT using the JWT token
@@ -496,8 +508,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.setIssuer("unknown-issuer");
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
 
-        InputStream is = Files.newInputStream(getSignKeyFile().toPath());
-        PrivateKey signKey = PrivateKeyReader.loadPrivateKey(is);
+        PrivateKey signKey;
+        try (InputStream is = Files.newInputStream(getSignKeyFile().toPath())) {
+            signKey = PrivateKeyReader.loadPrivateKey(is);
+        }
         krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a TGT using the JWT token

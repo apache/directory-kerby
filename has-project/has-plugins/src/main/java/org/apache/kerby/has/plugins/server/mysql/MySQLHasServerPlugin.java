@@ -76,29 +76,32 @@ public class MySQLHasServerPlugin extends AbstractHasServerPlugin {
         Connection connection = startConnection(mysqlUrl, mysqlUser, mysqlPasswd);
 
         ResultSet res = null;
-        PreparedStatement preStm = null;
         try {
             String stm = "SELECT COUNT(*) FROM `has_user` WHERE user_name = ? AND pass_word = ?";
-            preStm = connection.prepareStatement(stm);
-            preStm.setString(1, user);
-            preStm.setString(2, secret);
-            res = preStm.executeQuery();
+            try (PreparedStatement preStm = connection.prepareStatement(stm)) {
+                preStm.setString(1, user);
+                preStm.setString(2, secret);
+                res = preStm.executeQuery();
+
+            }
             if (res.next() && res.getInt(1) > 0) {
                 LOG.debug("UserName: {}", user);
             } else {
                 String sql = "SELECT COUNT(*) FROM `has_user` WHERE user_name = ?";
-                preStm = connection.prepareStatement(sql);
-                preStm.setString(1, user);
-                res = preStm.executeQuery();
-                if (res.next() && res.getInt(1) > 0) {
-                    throw new HasAuthenException("Authentication failed. "
+                try (PreparedStatement preStm = connection.prepareStatement(sql)) {
+                    preStm.setString(1, user);
+                    res = preStm.executeQuery();
+                    preStm.close();
+                    if (res.next() && res.getInt(1) > 0) {
+                        throw new HasAuthenException("Authentication failed. "
                             + "Incorrect password.");
-                } else if (!res.next()) {
-                    throw new HasAuthenException("Authentication failed. "
+                    } else if (!res.next()) {
+                        throw new HasAuthenException("Authentication failed. "
                             + "Incorrect userName.");
-                } else {
-                    throw new HasAuthenException("Authentication failed. "
+                    } else {
+                        throw new HasAuthenException("Authentication failed. "
                             + "Please check your userName and password.");
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -107,7 +110,6 @@ public class MySQLHasServerPlugin extends AbstractHasServerPlugin {
             LOG.error("Error message: " + e.getMessage());
             throw new HasAuthenException("Authentication failed." + e.getMessage());
         } finally {
-            DbUtils.closeQuietly(preStm);
             DbUtils.closeQuietly(res);
             DbUtils.closeQuietly(connection);
         }

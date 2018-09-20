@@ -52,19 +52,21 @@ public class SimpleKdcServerTest {
 
     @Test
     public void testKdc() throws IOException, InterruptedException {
-        SocketChannel socketChannel = SocketChannel.open();
-        socketChannel.configureBlocking(true);
-        SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
-        socketChannel.connect(sa);
+        try (SocketChannel socketChannel = SocketChannel.open()) {
+            socketChannel.configureBlocking(true);
+            SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
+            socketChannel.connect(sa);
 
 
-        String badKrbMessage = "Hello World!";
-        ByteBuffer writeBuffer = ByteBuffer.allocate(4 + badKrbMessage.getBytes().length);
-        writeBuffer.putInt(badKrbMessage.getBytes().length);
-        writeBuffer.put(badKrbMessage.getBytes());
-        writeBuffer.flip();
+            String badKrbMessage = "Hello World!";
+            ByteBuffer writeBuffer = ByteBuffer.allocate(4 + badKrbMessage.getBytes().length);
+            writeBuffer.putInt(badKrbMessage.getBytes().length);
+            writeBuffer.put(badKrbMessage.getBytes());
+            writeBuffer.flip();
 
-        socketChannel.write(writeBuffer);
+            socketChannel.write(writeBuffer);
+            socketChannel.close();
+        }
     }
 
     @After

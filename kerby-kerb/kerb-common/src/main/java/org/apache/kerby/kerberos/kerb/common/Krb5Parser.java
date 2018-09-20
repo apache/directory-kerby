@@ -55,32 +55,32 @@ public class Krb5Parser {
      * @throws IOException e
      */
     public void load() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(krb5conf.toPath()),
-                StandardCharsets.UTF_8));
-        items = new IdentityHashMap<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(krb5conf.toPath()),
+            StandardCharsets.UTF_8))) {
+            items = new IdentityHashMap<>();
 
-        String originLine = br.readLine();
-        while (originLine != null) {
-            String line = originLine.trim();
+            String originLine = br.readLine();
+            while (originLine != null) {
+                String line = originLine.trim();
             /*parse through comments*/
-            if (line.isEmpty() || isComment(line)) {
-                originLine = br.readLine();
-            } else if (line.startsWith("[")) {
-                insertSections(line, br, items);
-                originLine = br.readLine();
-            } else if (line.startsWith("include")) {
-                String[] splited = line.trim().split("\\s+");
-                if (splited.length == 2) {
-                    items.put(splited[0], splited[1]);
+                if (line.isEmpty() || isComment(line)) {
+                    originLine = br.readLine();
+                } else if (line.startsWith("[")) {
+                    insertSections(line, br, items);
+                    originLine = br.readLine();
+                } else if (line.startsWith("include")) {
+                    String[] splited = line.trim().split("\\s+");
+                    if (splited.length == 2) {
+                        items.put(splited[0], splited[1]);
+                    } else {
+                        throw new RuntimeException("Unable to parse:" + originLine);
+                    }
+                    originLine = br.readLine();
                 } else {
                     throw new RuntimeException("Unable to parse:" + originLine);
                 }
-                originLine = br.readLine();
-            } else {
-                throw new RuntimeException("Unable to parse:" + originLine);
             }
         }
-        br.close();
     }
 
     /**

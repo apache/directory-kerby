@@ -66,11 +66,12 @@ public class TokenCache {
     public static void writeToken(String token) throws KrbException {
         File cacheFile = getDefaultTokenCache();
 
+        Writer writer = null;
         try {
-            Writer writer = new FileWriterWithEncoding(cacheFile, StandardCharsets.UTF_8);
+            writer = new FileWriterWithEncoding(cacheFile, StandardCharsets.UTF_8);
             writer.write(token);
             writer.flush();
-            writer.close();
+
             // sets read-write permissions to owner only
             cacheFile.setReadable(false, false);
             cacheFile.setReadable(true, true);
@@ -83,6 +84,14 @@ public class TokenCache {
             // is thrown and the file will be deleted.
             if (cacheFile.delete()) {
                 System.err.println("Cache file is deleted.");
+            }
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    throw new KrbException(e.getMessage());
+                }
             }
         }
     }

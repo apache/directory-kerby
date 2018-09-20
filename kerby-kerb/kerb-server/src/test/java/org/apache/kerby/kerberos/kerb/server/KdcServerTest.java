@@ -52,12 +52,13 @@ public class KdcServerTest {
     public void testKdc() throws IOException, InterruptedException {
         Thread.sleep(15);
 
-        SocketChannel socketChannel = SocketChannel.open();
-        socketChannel.configureBlocking(true);
-        SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
-        socketChannel.connect(sa);
+        try (SocketChannel socketChannel = SocketChannel.open()) {
+            socketChannel.configureBlocking(true);
+            SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
+            socketChannel.connect(sa);
 
-        Assert.assertTrue(socketChannel.isConnected());
+            Assert.assertTrue(socketChannel.isConnected());
+        }
     }
 
     @After

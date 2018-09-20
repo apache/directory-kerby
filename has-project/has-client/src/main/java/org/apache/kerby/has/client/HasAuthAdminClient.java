@@ -289,15 +289,14 @@ public class HasAuthAdminClient implements Kadmin {
                         + keytabFile.getAbsolutePath(), e);
             }
 
-            FileOutputStream fos = new FileOutputStream(keytabFile);
-            InputStream in = httpConn.getInputStream();
-            byte[] buffer = new byte[3 * 1024];
-            int read;
-            while ((read = in.read(buffer)) > 0) {
-                fos.write(buffer, 0, read);
+            try (FileOutputStream fos = new FileOutputStream(keytabFile);
+                 InputStream in = httpConn.getInputStream()) {
+                byte[] buffer = new byte[3 * 1024];
+                int read;
+                while ((read = in.read(buffer)) > 0) {
+                    fos.write(buffer, 0, read);
+                }
             }
-            fos.close();
-            in.close();
         } catch (IOException e) {
             throw new KrbException("IO error occurred.", e);
         }
@@ -330,15 +329,14 @@ public class HasAuthAdminClient implements Kadmin {
                         + keytabFile.getAbsolutePath(), e);
             }
 
-            FileOutputStream fos = new FileOutputStream(keytabFile);
-            InputStream in = httpConn.getInputStream();
-            byte[] buffer = new byte[3 * 1024];
-            int read;
-            while ((read = in.read(buffer)) > 0) {
-                fos.write(buffer, 0, read);
+            try (FileOutputStream fos = new FileOutputStream(keytabFile);
+                 InputStream in = httpConn.getInputStream()) {
+                byte[] buffer = new byte[3 * 1024];
+                int read;
+                while ((read = in.read(buffer)) > 0) {
+                    fos.write(buffer, 0, read);
+                }
             }
-            fos.close();
-            in.close();
         } catch (IOException e) {
             LOG.error("IO error occurred.", e);
             throw new KrbException("IO error occurred.", e);
@@ -364,15 +362,14 @@ public class HasAuthAdminClient implements Kadmin {
                 if (httpConn.getResponseCode() != 200) {
                     throw new KrbException(HasClientUtil.getResponse(httpConn));
                 }
-                FileOutputStream fos = new FileOutputStream(keytabFile);
-                InputStream in = httpConn.getInputStream();
-                byte[] buffer = new byte[4 * 1024];
-                int read;
-                while ((read = in.read(buffer)) > 0) {
-                    fos.write(buffer, 0, read);
+                try (FileOutputStream fos = new FileOutputStream(keytabFile);
+                     InputStream in = httpConn.getInputStream()) {
+                    byte[] buffer = new byte[4 * 1024];
+                    int read;
+                    while ((read = in.read(buffer)) > 0) {
+                        fos.write(buffer, 0, read);
+                    }
                 }
-                fos.close();
-                in.close();
             } catch (IOException e) {
                 throw new KrbException("IO error occurred.", e);
             }
@@ -536,15 +533,14 @@ public class HasAuthAdminClient implements Kadmin {
             if (httpConn.getResponseCode() != 200) {
                 throw new KrbException(HasClientUtil.getResponse(httpConn));
             }
-            FileOutputStream fos = new FileOutputStream(new File(keytabName));
-            InputStream in = httpConn.getInputStream();
-            byte[] buffer = new byte[4 * 1024];
-            int read;
-            while ((read = in.read(buffer)) > 0) {
-                fos.write(buffer, 0, read);
+            try (FileOutputStream fos = new FileOutputStream(new File(keytabName));
+                 InputStream in = httpConn.getInputStream()) {
+                byte[] buffer = new byte[4 * 1024];
+                int read;
+                while ((read = in.read(buffer)) > 0) {
+                    fos.write(buffer, 0, read);
+                }
             }
-            fos.close();
-            in.close();
         } catch (IOException e) {
             throw new KrbException(e.getMessage());
         }

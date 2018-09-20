@@ -28,8 +28,9 @@ import java.io.InputStream;
 public class CmsTestBase {
 
     static byte[] readDataFile(String resource) throws IOException {
-        InputStream is = CmsTestBase.class.getResourceAsStream(resource);
-        String hexStr = IOUtil.readInput(is);
-        return HexUtil.hex2bytes(hexStr);
+        try (InputStream is = CmsTestBase.class.getResourceAsStream(resource)) {
+            String hexStr = IOUtil.readInput(is);
+            return HexUtil.hex2bytes(hexStr);
+        }
     }
 }

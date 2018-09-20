@@ -138,9 +138,9 @@ class TestUtil {
 
   private static void saveKeyStore(KeyStore ks, String filename, String password)
       throws GeneralSecurityException, IOException {
-    FileOutputStream out = new FileOutputStream(filename);
-    ks.store(out, password.toCharArray());
-    out.close();
+    try (FileOutputStream out = new FileOutputStream(filename)) {
+      ks.store(out, password.toCharArray());
+    }
   }
 
   private static void createKeyStore(String filename, String password, String alias, Key privateKey, Certificate cert)
@@ -358,7 +358,6 @@ class TestUtil {
    * @throws IOException if there is an I/O error saving the file
    */
   private static void saveConfig(File file, HasConfig conf) throws IOException {
-    OutputStream output = new FileOutputStream(file);
     Properties prop = new Properties();
 
     // set the properties value
@@ -366,7 +365,9 @@ class TestUtil {
       prop.setProperty(name, conf.getString(name));
     }
 
-    // save properties to project root folder
-    prop.store(output, null);
+    try (OutputStream output = new FileOutputStream(file)) {
+      // save properties to project root folder
+      prop.store(output, null);
+    }
   }
 }

@@ -79,6 +79,9 @@ public class HasClientUtil {
                         + e.getMessage());
             }
         }
+        if (conn == null) {
+            throw new KrbException("Error occurred when creating https connection.");
+        }
         try {
             conn.setRequestMethod(method);
         } catch (ProtocolException e) {

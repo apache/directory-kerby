@@ -30,6 +30,8 @@ import org.apache.kerby.has.plugins.server.ldap.conf.LDAPServerConf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class LDAPUtils {
     public static final Logger LOG = LoggerFactory.getLogger(LDAPUtils.class);
 
@@ -43,12 +45,13 @@ public class LDAPUtils {
         }
     }
 
-    public static boolean doUserAuth(String user, String pwd) throws HasException {
+    public static boolean doUserAuth(String user, String pwd) throws HasException, IOException {
         LdapNetworkConnection connection = new LdapNetworkConnection(
             ldapServerConf.getHost(), Integer.parseInt(ldapServerConf.getPort()));
         try {
             connection.bind(ldapServerConf.getBindDN(), ldapServerConf.getBindPwd());
         } catch (LdapException e) {
+            connection.close();
             throw new HasException("Failed to bind. " + e.getMessage());
         }
         Dn dn;
@@ -56,6 +59,7 @@ public class LDAPUtils {
             dn = new Dn(new Rdn(ldapServerConf.getUserNameAttr(), user),
                 new Dn(ldapServerConf.getBaseDN()));
         } catch (LdapInvalidDnException e) {
+            connection.close();
             throw new HasException(e.getMessage());
         }
         Entry entry;
@@ -63,7 +67,10 @@ public class LDAPUtils {
             entry = connection.lookup(dn);
         } catch (LdapException e) {
             throw new HasException(e.getMessage());
+        } finally {
+            connection.close();
         }
+
         if (entry == null) {
             throw new HasException("Please check your user name: " + user);
         }

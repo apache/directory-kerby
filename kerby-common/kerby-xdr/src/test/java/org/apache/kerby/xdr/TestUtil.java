@@ -36,12 +36,14 @@ public final class TestUtil {
     }
 
     static String readStringFromTxtFile(String resource) throws IOException {
-        InputStream is = TestUtil.class.getResourceAsStream(resource);
-        return IOUtil.readInput(is);
+        try (InputStream is = TestUtil.class.getResourceAsStream(resource)) {
+            return IOUtil.readInput(is);
+        }
     }
 
     static byte[] readBytesFromBinFile(String resource) throws IOException {
-        InputStream is = TestUtil.class.getResourceAsStream(resource);
-        return IOUtil.readInputStream(is);
+        try (InputStream is = TestUtil.class.getResourceAsStream(resource)) {
+            return IOUtil.readInputStream(is);
+        }
     }
 }
