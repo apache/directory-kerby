@@ -29,7 +29,7 @@
       <outputDirectory>conf</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>lib</directory>
+      <directory>target/lib</directory>
       <outputDirectory>lib</outputDirectory>
     </fileSet>
     <fileSet>
