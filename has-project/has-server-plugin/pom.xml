@@ -3,19 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>kerby-tool</artifactId>
+        <artifactId>has-project</artifactId>
         <groupId>org.apache.kerby</groupId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>has-tool</artifactId>
-    <name>HAS Tool</name>
+    <artifactId>has-server-plugin</artifactId>
+    <name>HAS Server Plugin</name>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.kerby</groupId>
-            <artifactId>has-client</artifactId>
+            <artifactId>has-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -24,24 +24,29 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.kerby</groupId>
-            <artifactId>has-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>commons-dbutils</groupId>
+            <artifactId>commons-dbutils</artifactId>
+            <version>${commons-dbutils.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.kerby</groupId>
-            <artifactId>kdc-tool</artifactId>
-            <version>${project.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jline</groupId>
-            <artifactId>jline</artifactId>
-            <version>${jline.version}</version>
+            <groupId>org.ini4j</groupId>
+            <artifactId>ini4j</artifactId>
+            <version>${ini4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
+            <groupId>org.apache.directory.api</groupId>
+            <artifactId>api-ldap-client-api</artifactId>
+            <version>${ldap.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.directory.api</groupId>
+            <artifactId>api-ldap-codec-standalone</artifactId>
+            <version>${ldap.api.version}</version>
         </dependency>
     </dependencies>
 

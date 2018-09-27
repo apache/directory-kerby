@@ -11,14 +11,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>has-project</artifactId>
-  <name>HAS project</name>
+  <name>HAS Project</name>
   <packaging>pom</packaging>
 
   <modules>
     <module>has-common</module>
     <module>has-server</module>
     <module>has-client</module>
-    <module>has-plugins</module>
+    <module>has-client-plugin</module>
+    <module>has-server-plugin</module>
   </modules>
 
 </project>

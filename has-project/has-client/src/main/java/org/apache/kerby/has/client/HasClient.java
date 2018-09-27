@@ -347,8 +347,9 @@ public class HasClient {
         try {
             boolean success = json.getBoolean("success");
             if (!success) {
-                LOG.debug(json.getString("KrbMessage"));
-                throw new HasException(json.getString("krbMessage"));
+                String message = json.getString("krbMessage");
+                LOG.debug(message);
+                throw new HasException(message);
             }
         } catch (JSONException e) {
             LOG.debug("Failed to get message. " + e.getMessage());

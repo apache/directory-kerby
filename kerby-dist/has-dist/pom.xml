@@ -10,8 +10,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>has-dist</artifactId>
-  <description>HAS dist</description>
-  <name>HAS dist</name>
+  <name>HAS Dist</name>
+  <packaging>pom</packaging>
 
   <dependencies>
     <dependency>
@@ -21,7 +21,12 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>has-plugins</artifactId>
+      <artifactId>has-client-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>has-server-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
