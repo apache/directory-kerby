@@ -1,5 +1,5 @@
 diff --git a/hadoop-common-project/hadoop-auth/pom.xml b/hadoop-common-project/hadoop-auth/pom.xml
-index aa3c2c761a5..abdcdf388a9 100644
+index aa3c2c761a5..a4de0d57b0c 100644
 --- a/hadoop-common-project/hadoop-auth/pom.xml
 +++ b/hadoop-common-project/hadoop-auth/pom.xml
 @@ -143,6 +143,21 @@
@@ -13,7 +13,7 @@ index aa3c2c761a5..abdcdf388a9 100644
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.kerby</groupId>
-+      <artifactId>has-plugins</artifactId>
++      <artifactId>has-client-plugin</artifactId>
 +      <version>2.0.0-SNAPSHOT</version>
 +    </dependency>
 +    <dependency>
