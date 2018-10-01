@@ -664,6 +664,29 @@ public class GssContext implements GSSContextSpi {
         this.authTime = authTime;
     }
 
+    public Object inquireSecContext(String type) throws GSSException {
+        if (ctxState != STATE_ESTABLISHED) {
+            throw new GSSException(GSSException.NO_CONTEXT, -1, "Invalid context");
+        }
+
+        switch (type) {
+            case "KRB5_GET_SESSION_KEY":
+                return getSessionKey();
+            case "KRB5_GET_TKT_FLAGS":
+                return GssUtil.ticketFlagsToBooleans(ticketFlags);
+            case "KRB5_GET_AUTHZ_DATA":
+                if (isInitiator()) {
+                    throw new GSSException(GSSException.UNAVAILABLE, -1,
+                            "Authorization data not available for initiator");
+                } else {
+                    return GssUtil.kerbyAuthorizationDataToJgssAuthorizationDataEntries(authData);
+                }
+            case "KRB5_GET_AUTHTIME":
+                return authTime;
+        }
+        throw new GSSException(GSSException.UNAVAILABLE, -1, "Unsupported inquire type");
+    }
+
     public Object inquireSecContext(InquireType type) throws GSSException {
         if (ctxState != STATE_ESTABLISHED) {
             throw new GSSException(GSSException.NO_CONTEXT, -1, "Invalid context");
