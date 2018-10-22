@@ -107,7 +107,7 @@ public final class Keytab implements KrbKeytab {
 
     @Override
     public List<KeytabEntry> getKeytabEntries(PrincipalName principal) {
-        List<KeytabEntry> results = new ArrayList<KeytabEntry>();
+        List<KeytabEntry> results = new ArrayList<>();
 
         List<KeytabEntry> internal = principalEntries.get(principal);
         if (internal == null) {
@@ -167,7 +167,7 @@ public final class Keytab implements KrbKeytab {
         PrincipalName principal = entry.getPrincipal();
         List<KeytabEntry> entries = principalEntries.get(principal);
         if (entries == null) {
-            entries = new ArrayList<KeytabEntry>();
+            entries = new ArrayList<>();
             principalEntries.put(principal, entries);
         }
         entries.add(entry);
@@ -178,7 +178,7 @@ public final class Keytab implements KrbKeytab {
     }
 
     private List<KeytabEntry> readEntries(KeytabInputStream kis) throws IOException {
-        List<KeytabEntry> entries = new ArrayList<KeytabEntry>();
+        List<KeytabEntry> entries = new ArrayList<>();
 
         int bytesLeft = kis.available();
         while (bytesLeft > 0) {

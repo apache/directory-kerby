@@ -81,7 +81,7 @@ public final class ReloadingX509TrustManager
     this.type = type;
     file = new File(location);
     this.password = password;
-    trustManagerRef = new AtomicReference<X509TrustManager>();
+    trustManagerRef = new AtomicReference<>();
     trustManagerRef.set(loadTrustManager());
     this.reloadInterval = reloadInterval;
   }

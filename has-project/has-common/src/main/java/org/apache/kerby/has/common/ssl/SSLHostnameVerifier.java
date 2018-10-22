@@ -393,7 +393,7 @@ public interface SSLHostnameVerifier extends javax.net.ssl.HostnameVerifier {
             // STRICT implementations of the HostnameVerifier only use the
             // first CN provided.  All other CNs are ignored.
             // (Firefox, wget, curl, Sun Java 1.4, 5, 6 all work this way).
-            final Set<String> names = new TreeSet<String>();
+            final Set<String> names = new TreeSet<>();
             if (cns != null && cns.length > 0 && cns[0] != null) {
                 names.add(cns[0]);
                 if (ie6) {
@@ -525,7 +525,7 @@ public interface SSLHostnameVerifier extends javax.net.ssl.HostnameVerifier {
 
     class Certificates {
       public static String[] getCNs(X509Certificate cert) {
-        final List<String> cnList = new LinkedList<String>();
+        final List<String> cnList = new LinkedList<>();
         /*
           Sebastian Hauer's original StrictSSLProtocolSocketFactory used
           getName() and had the following comment:
@@ -582,7 +582,7 @@ public interface SSLHostnameVerifier extends javax.net.ssl.HostnameVerifier {
        * @return Array of SubjectALT DNS names stored in the certificate.
        */
       public static String[] getDNSSubjectAlts(X509Certificate cert) {
-          final List<String> subjectAltList = new LinkedList<String>();
+          final List<String> subjectAltList = new LinkedList<>();
           Collection<List<?>> c = null;
           try {
               c = cert.getSubjectAlternativeNames();

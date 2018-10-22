@@ -45,7 +45,7 @@ public class PreauthHandler {
     }
 
     private void loadPreauthPlugins() {
-        preauths = new ArrayList<KdcPreauth>();
+        preauths = new ArrayList<>();
 
         KdcPreauth preauth = new EncTsPreauth();
         preauths.add(preauth);

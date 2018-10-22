@@ -44,7 +44,7 @@ public class PreauthHandler {
     }
 
     private void loadPreauthPlugins(KrbContext context) {
-        preauths = new ArrayList<KrbPreauth>();
+        preauths = new ArrayList<>();
 
         KrbPreauth preauth = new EncTsPreauth();
         preauth.init(context);

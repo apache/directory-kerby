@@ -101,7 +101,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
      */
     @Override
     protected Iterable<String> doGetIdentities() throws KrbException {
-        List<String> keys = new ArrayList<String>();
+        List<String> keys = new ArrayList<>();
         KeyCursor<String> cursor = null;
 
         try {

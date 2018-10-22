@@ -37,7 +37,7 @@ public class ADEnctypeNegotiation extends AuthorizationDataEntry {
 
     public ADEnctypeNegotiation() {
         super(AuthorizationType.AD_ETYPE_NEGOTIATION);
-        myEnctypeNeg = new KrbSequenceOfType<Asn1Integer>();
+        myEnctypeNeg = new KrbSequenceOfType<>();
         myEnctypeNeg.outerEncodeable = this;
     }
 

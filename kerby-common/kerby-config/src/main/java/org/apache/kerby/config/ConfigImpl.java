@@ -41,7 +41,7 @@ public class ConfigImpl implements Config {
     protected ConfigImpl(String resource) {
         this.resource = resource;
         this.properties = new HashMap<String, ConfigObject>();
-        this.configs = new ArrayList<Config>(0);
+        this.configs = new ArrayList<>(0);
     }
 
     protected void reset() {
@@ -56,7 +56,7 @@ public class ConfigImpl implements Config {
 
     @Override
     public Set<String> getNames() {
-        Set<String>propNames = new HashSet<String>(properties.keySet());
+        Set<String>propNames = new HashSet<>(properties.keySet());
         for (Config config : configs) {
             propNames.addAll(config.getNames());
         }

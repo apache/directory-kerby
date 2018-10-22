@@ -104,7 +104,7 @@ public class Util {
     }
 
     private static Set<String> aliases(KeyStore ks) throws KeyStoreException {
-        Set<String> aliases = new TreeSet<String>();
+        Set<String> aliases = new TreeSet<>();
         Enumeration<String> en = ks.aliases();
         while (en.hasMoreElements()) {
             aliases.add(en.nextElement());

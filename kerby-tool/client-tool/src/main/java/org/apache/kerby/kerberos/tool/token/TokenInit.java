@@ -48,7 +48,7 @@ public class TokenInit {
             authToken.addAttribute("role", role);
         }
 
-        List<String> aud = new ArrayList<String>();
+        List<String> aud = new ArrayList<>();
         aud.add("krb5kdc-with-token-extension");
         authToken.setAudiences(aud);
 

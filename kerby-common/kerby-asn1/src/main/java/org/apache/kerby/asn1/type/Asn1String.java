@@ -270,7 +270,7 @@ public abstract class Asn1String extends Asn1Simple<String> {
     }
 
     public static String[] split(String input, char delimiter) {
-        List<String> v = new ArrayList<String>();
+        List<String> v = new ArrayList<>();
         boolean moreTokens = true;
         String subString;
 

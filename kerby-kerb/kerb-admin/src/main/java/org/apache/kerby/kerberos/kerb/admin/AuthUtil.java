@@ -44,7 +44,7 @@ public class AuthUtil {
 
     public static Subject loginUsingTicketCache(
         String principal, File cacheFile) throws LoginException {
-        Set<Principal> principals = new HashSet<Principal>();
+        Set<Principal> principals = new HashSet<>();
         principals.add(new KerberosPrincipal(principal));
 
         Subject subject = new Subject(false, principals,
@@ -59,7 +59,7 @@ public class AuthUtil {
 
     public static Subject loginUsingKeytab(
         String principal, File keytabFile) throws LoginException {
-        Set<Principal> principals = new HashSet<Principal>();
+        Set<Principal> principals = new HashSet<>();
         principals.add(new KerberosPrincipal(principal));
 
         Subject subject = new Subject(false, principals,

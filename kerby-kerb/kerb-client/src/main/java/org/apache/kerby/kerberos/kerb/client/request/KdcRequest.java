@@ -62,7 +62,7 @@ public abstract class KdcRequest {
     private Object sessionData;
     private KOptions requestOptions;
     private PrincipalName serverPrincipal;
-    private List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
+    private List<HostAddress> hostAddresses = new ArrayList<>();
     private KdcOptions kdcOptions = new KdcOptions();
     private List<EncryptionType> encryptionTypes;
     private EncryptionType chosenEncryptionType;

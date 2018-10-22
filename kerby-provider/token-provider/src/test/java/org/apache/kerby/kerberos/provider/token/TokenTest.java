@@ -50,7 +50,7 @@ public class TokenTest {
     static final String ROLE = "ADMIN";
 
     private AuthToken authToken;
-    private List<String> auds = new ArrayList<String>();
+    private List<String> auds = new ArrayList<>();
     private EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM;
 
     @Before
@@ -263,7 +263,7 @@ public class TokenTest {
 
     @Test
     public void testInvalidAudienceJWT() throws Exception {
-        List<String> audiences = new ArrayList<String>();
+        List<String> audiences = new ArrayList<>();
         audiences.add("invalid@EXAMPLE.COM");
 
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();

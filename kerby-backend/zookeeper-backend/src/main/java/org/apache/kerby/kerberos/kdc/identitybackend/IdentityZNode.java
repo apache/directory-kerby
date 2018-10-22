@@ -308,7 +308,7 @@ public class IdentityZNode {
             throw new IllegalArgumentException("The znode " + znode + " is not found");
         }
         List<String> typeNames = ZKUtil.listChildrenNoWatch(this.zk, znode);
-        List<EncryptionKey> keys = new ArrayList<EncryptionKey>(typeNames.size());
+        List<EncryptionKey> keys = new ArrayList<>(typeNames.size());
         for (String typeName : typeNames) {
             byte[] key = getEncryptionKey(typeName);
             EncryptionKey encryptionKey = new EncryptionKey();
