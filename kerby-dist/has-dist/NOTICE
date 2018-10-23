@@ -40,29 +40,6 @@ Base64 Encoder and Decoder, which can be obtained at:
   * HOMEPAGE:
     * http://iharder.sourceforge.net/current/java/base64/
 
-This product contains a modified portion of 'bouncycastle', which can be obtained at:
-
-  * LICENSE:
-    * licenses/LICENSE-bouncycastle.txt (BSD  License)
-  * HOMEPAGE:
-    * https://www.bouncycastle.org/
-
-This product contains a modified portion of 'drizzle-jdbc', a JDBC driver for Drizzle and MySQL.
-which can be obtained at:
-
-  * LICENSE:
-    * licenses/LICENSE-drizzle.jdbc.txt (BSD License)
-  * HOMEPAGE:
-    * https://github.com/krummas/DrizzleJDBC
-
-This product contains a modified portion of 'jbzip2', a Java bzip2 compression
-and decompression library written by Matthew J. Francis. It can be obtained at:
-
-  * LICENSE:
-    * licenses/LICENSE-jbzip2.txt (MIT License)
-  * HOMEPAGE:
-    * https://code.google.com/p/jbzip2/
-
 This product contains  a modified portion of 'jersey', a RESTful web services in java.
 It can be obtained at:
 
@@ -112,5 +89,56 @@ WebSocket and HTTP server, which can be obtained at:
     * licenses/LICENSE-webbit.txt (BSD License)
   * HOMEPAGE:
     * https://github.com/joewalnes/webbit
+
+This product includes/uses software, RE2/J, Linear time regular expressions for Java,
+which can be obtained at:
+
+  * LICENSE:
+    * licenses/LICENSE-re2j.txt (Go License)
+  * HOMEPAGE:
+    * http://github.com/google/re2j
+
+This product includes/uses software, Stax2-API, which can be obtained at:
+
+  * LICENSE:
+    * licenses/LICENSE-stax2.api.txt (BSD 2-clause License)
+  * HOMEPAGE:
+    * http://wiki.fasterxml.com/WoodstoxStax2
+
+This product includes/uses software, XZ For Java, which can be obtained at:
+
+  * LICENSE:
+    * licenses/LICENSE-xz.txt (Public License)
+  * HOMEPAGE:
+    * http://tukaani.org/xz/java.html
+
+This product includes/uses software, JavaBeans(TM) Activation Framework, it's used by the
+JavaMail(TM) API to manage MIME data, which can be obtained at:
+
+  * LICENSE:
+    * licenses/LICENSE-activation.txt (CDDL 1.0 License)
+  * HOMEPAGE:
+    * http://java.sun.com/products/javabeans/jaf/index.jsp
+
+This product includes/uses software, JSR311 API, which can be obtained at:
+
+  * LICENSE:
+    * licenses/LICENSE-jsr311.txt (CDDL 1.0 License)
+  * HOMEPAGE:
+    * https://jsr311.dev.java.net
+
+This product includes/uses software, JAXB, which can be obtained at:
+
+  * LICENSE:
+    * licenses/LICENSE-jaxb.txt (CDDL 1.1 License)
+  * HOMEPAGE:
+    * https://jaxb.dev.java.net/
+
+This product includes/uses software, Java Servlet API, which can be obtained at:
+
+  * LICENSE:
+    * licenses/LICENSE-javax.servlet.api.txt (CDDL GPL GPL 2.0 License)
+  * HOMEPAGE:
+    * http://servlet-spec.java.net
 
 -------------------------------------------------------------------------------

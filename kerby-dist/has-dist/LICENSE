@@ -214,3 +214,28 @@ See licenses/LICENSE-slf4j.txt
 This project bundles the JLine library (BSD license):
 
 See licenses/LICENSE-jline.txt
+
+===============================================================================
+This product bundles JSch library(BSD License)
+
+See licenses/LICENSE-jsch.txt
+
+===============================================================================
+This product bundles ParaNamer Core library (BSD License)
+
+See licenses/LICENSE-paranamer.txt
+
+===============================================================================
+This product bundles jbzip2 library (MIT License)
+
+See licenses/LICENSE-jbzip2.txt
+
+===============================================================================
+This product bundles bouncycastle library (BSD  License)
+
+See licenses/LICENSE-bouncycastle.txt
+
+===============================================================================
+This product bundles drizzle-jdbc library (BSD License)
+
+See licenses/LICENSE-drizzle.jdbc.txt
