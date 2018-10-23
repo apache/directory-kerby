@@ -232,7 +232,7 @@ public class CredentialCache implements KrbCredentialCache {
 
     private List<Credential> readCredentials(CredCacheInputStream ccis)
             throws IOException {
-        List<Credential> results = new ArrayList<Credential>(2);
+        List<Credential> results = new ArrayList<>(2);
 
         Credential cred;
         while (ccis.available() > 0) {
@@ -252,7 +252,7 @@ public class CredentialCache implements KrbCredentialCache {
 
     private List<Tag> readTags(CredCacheInputStream ccis) throws IOException {
         int len = ccis.readShort();
-        List<Tag> tags = new ArrayList<Tag>();
+        List<Tag> tags = new ArrayList<>();
 
         int tag, tagLen, time, usec;
         while (len > 0) {

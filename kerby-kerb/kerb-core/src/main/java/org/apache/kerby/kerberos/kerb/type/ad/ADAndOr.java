@@ -36,7 +36,7 @@ public class ADAndOr extends AuthorizationDataEntry {
 
     public ADAndOr() {
         super(AuthorizationType.AD_AND_OR);
-        myAndOr = new KrbSequenceOfType<AndOr>();
+        myAndOr = new KrbSequenceOfType<>();
         myAndOr.outerEncodeable = this;
     }
 

@@ -145,7 +145,7 @@ public class KdcReqBody extends KrbSequenceType {
             return Collections.emptyList();
         }
 
-        List<EncryptionType> results = new ArrayList<EncryptionType>();
+        List<EncryptionType> results = new ArrayList<>();
         for (Integer value : values.getValues()) {
             results.add(EncryptionType.fromValue(value));
         }
@@ -153,7 +153,7 @@ public class KdcReqBody extends KrbSequenceType {
     }
 
     public void setEtypes(List<EncryptionType> etypes) {
-        List<Integer> values = new ArrayList<Integer>();
+        List<Integer> values = new ArrayList<>();
         for (EncryptionType etype: etypes) {
             values.add(etype.getValue());
         }

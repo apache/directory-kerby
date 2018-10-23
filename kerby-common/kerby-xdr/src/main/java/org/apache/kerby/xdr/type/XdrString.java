@@ -319,7 +319,7 @@ public class XdrString extends XdrSimple<String> {
     }
 
     public static String[] split(String input, char delimiter) {
-        List<String> v = new ArrayList<String>();
+        List<String> v = new ArrayList<>();
         boolean moreTokens = true;
         String subString;
 

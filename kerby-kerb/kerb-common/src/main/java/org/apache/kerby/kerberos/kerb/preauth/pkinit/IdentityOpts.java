@@ -28,10 +28,10 @@ import java.util.List;
 public class IdentityOpts {
 
     private String identity;
-    private List<String> altIdentities = new ArrayList<String>(1);
-    private List<String> anchors = new ArrayList<String>(4);
-    private List<String> intermediates = new ArrayList<String>(2);
-    private List<String> crls = new ArrayList<String>(2);
+    private List<String> altIdentities = new ArrayList<>(1);
+    private List<String> anchors = new ArrayList<>(4);
+    private List<String> intermediates = new ArrayList<>(2);
+    private List<String> crls = new ArrayList<>(2);
     private String ocsp;
     private IdentityType idType;
     private String certFile;

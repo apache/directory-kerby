@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * Default implementation of {@link KrbTransport} using UDP.
  */
 public class KdcUdpTransport extends KrbUdpTransport {
-    private BlockingQueue<ByteBuffer> bufferQueue = new ArrayBlockingQueue<ByteBuffer>(2);
+    private BlockingQueue<ByteBuffer> bufferQueue = new ArrayBlockingQueue<>(2);
 
     public KdcUdpTransport(DatagramChannel channel, InetSocketAddress remoteAddress) throws IOException {
         super(remoteAddress);

@@ -92,7 +92,7 @@ public class TokenKdcTestBase extends KdcTestBase {
         authToken.addAttribute("group", GROUP);
         authToken.addAttribute("role", ROLE);
 
-        List<String> aud = new ArrayList<String>();
+        List<String> aud = new ArrayList<>();
         aud.add(audience);
         authToken.setAudiences(aud);
 

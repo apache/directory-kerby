@@ -27,7 +27,7 @@ import java.util.List;
 
 public class PreauthContext {
     private boolean preauthRequired = true;
-    private List<PreauthHandle> handles = new ArrayList<PreauthHandle>(5);
+    private List<PreauthHandle> handles = new ArrayList<>(5);
     private PaData outputPaData;
 
     public PreauthContext() {

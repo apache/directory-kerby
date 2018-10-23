@@ -205,7 +205,7 @@ public class KerberosUtil {
    */
   static final String[] getPrincipalNames(String keytabFileName) throws IOException {
     Keytab keytab = Keytab.loadKeytab(new File(keytabFileName));
-    Set<String> principals = new HashSet<String>();
+    Set<String> principals = new HashSet<>();
     List<PrincipalName> entries = keytab.getPrincipals();
     for (PrincipalName entry : entries) {
       principals.add(entry.getName().replace("\\", "/"));
@@ -225,7 +225,7 @@ public class KerberosUtil {
                                                  Pattern pattern) throws IOException {
     String[] principals = getPrincipalNames(keytab);
     if (principals.length != 0) {
-      List<String> matchingPrincipals = new ArrayList<String>();
+      List<String> matchingPrincipals = new ArrayList<>();
       for (String principal : principals) {
         if (pattern.matcher(principal).matches()) {
           matchingPrincipals.add(principal);

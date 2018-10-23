@@ -26,7 +26,7 @@ public class SimpleCacheService implements CacheService {
     private final Set<RequestRecord> requests;
 
     public SimpleCacheService() {
-        requests = new HashSet<RequestRecord>();
+        requests = new HashSet<>();
     }
 
     @Override

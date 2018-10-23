@@ -118,7 +118,7 @@ public class XmlConfigLoader extends ConfigLoader {
         }
 
         NodeList nodes = ele.getChildNodes();
-        List<String> values = new ArrayList<String>(nodes.getLength());
+        List<String> values = new ArrayList<>(nodes.getLength());
         for (int i = 0; i < nodes.getLength(); i++) {
             String value = null;
             Node valueNode = nodes.item(i);

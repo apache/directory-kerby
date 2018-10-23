@@ -114,7 +114,7 @@ public class TokenLoginTestBase extends LoginTestBase {
 
         authToken.addAttribute("role", ROLE);
 
-        List<String> aud = new ArrayList<String>();
+        List<String> aud = new ArrayList<>();
         aud.add(KrbUtil.makeTgsPrincipal(TestKdcServer.KDC_REALM).getName());
         authToken.setAudiences(aud);
 

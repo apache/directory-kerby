@@ -41,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class CamelliaEncTest {
 
-    private List<String> outputs = new ArrayList<String>();
+    private List<String> outputs = new ArrayList<>();
 
     private byte[] plain = new byte[16];
     private byte[] cipher = new byte[16];
@@ -50,7 +50,7 @@ public class CamelliaEncTest {
     private List<String> getExpectedLines() throws IOException {
         try (InputStream res = getClass().getResourceAsStream("/camellia-expect-vt.txt");
              BufferedReader br = new BufferedReader(new InputStreamReader(res))) {
-            List<String> results = new ArrayList<String>();
+            List<String> results = new ArrayList<>();
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();

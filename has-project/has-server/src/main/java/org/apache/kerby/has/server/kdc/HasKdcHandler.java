@@ -119,7 +119,7 @@ public class HasKdcHandler {
     public KrbMessage handleMessage(AuthToken authToken, String passPhrase) throws KrbException {
 
         // set the audiences
-        List<String> auds = new ArrayList<String>();
+        List<String> auds = new ArrayList<>();
         String audience = getAudience("krbtgt");
         auds.add(audience);
         authToken.setAudiences(auds);
@@ -296,7 +296,7 @@ public class HasKdcHandler {
     }
 
     public HostAddresses getHostAddresses() {
-        List<HostAddress> hostAddresses = new ArrayList<HostAddress>();
+        List<HostAddress> hostAddresses = new ArrayList<>();
         HostAddresses addresses = null;
         //empty
         if (!hostAddresses.isEmpty()) {

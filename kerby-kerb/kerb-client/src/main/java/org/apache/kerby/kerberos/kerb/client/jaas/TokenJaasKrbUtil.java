@@ -72,7 +72,7 @@ public class TokenJaasKrbUtil {
     public static Subject loginUsingToken(
             String principal, String tokenStr, File armorCache, File ccache, File signKeyFile)
             throws LoginException {
-        Set<Principal> principals = new HashSet<Principal>();
+        Set<Principal> principals = new HashSet<>();
         principals.add(new KerberosPrincipal(principal));
 
         Subject subject = new Subject(false, principals,

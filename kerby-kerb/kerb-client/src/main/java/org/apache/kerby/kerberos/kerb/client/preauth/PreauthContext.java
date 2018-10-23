@@ -33,8 +33,8 @@ public class PreauthContext {
     private PaData errorPaData;
     private UserResponser userResponser = new UserResponser();
     private PaDataType allowedPaType;
-    private final List<PaDataType> triedPaTypes = new ArrayList<PaDataType>(1);
-    private final List<PreauthHandle> handles = new ArrayList<PreauthHandle>(5);
+    private final List<PaDataType> triedPaTypes = new ArrayList<>(1);
+    private final List<PreauthHandle> handles = new ArrayList<>(5);
 
     public PreauthContext() {
         this.allowedPaType = PaDataType.NONE;

@@ -49,7 +49,7 @@ public class KeytabInputStream extends KrbInputStream {
 
         String realm = readCountedString();
 
-        List<String> nameStrings = new ArrayList<String>();
+        List<String> nameStrings = new ArrayList<>();
         for (int i = 0; i < numComponents; i++) { // sub 1 if version 0x501
             String component = readCountedString();
             nameStrings.add(component);

@@ -104,7 +104,7 @@ public class EncryptionUtil {
     public static List<EncryptionKey> generateKeys(
             String principal, String passwd,
             List<EncryptionType> encryptionTypes) throws KrbException {
-        List<EncryptionKey> results = new ArrayList<EncryptionKey>(encryptionTypes.size());
+        List<EncryptionKey> results = new ArrayList<>(encryptionTypes.size());
         for (EncryptionType eType : encryptionTypes) {
             EncryptionKey encKey = EncryptionHandler.string2Key(
                 principal, passwd, eType);

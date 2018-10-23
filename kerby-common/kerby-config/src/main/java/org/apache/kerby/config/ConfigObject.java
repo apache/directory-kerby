@@ -34,7 +34,7 @@ public class ConfigObject {
     }
 
     public ConfigObject(String[] values) {
-        List<String> valuesList = new ArrayList<String>();
+        List<String> valuesList = new ArrayList<>();
         for (String v : values) {
             valuesList.add(v);
         }
@@ -45,9 +45,9 @@ public class ConfigObject {
 
     public ConfigObject(List<String> values) {
         if (values != null) {
-            this.value = new ArrayList<String>(values);
+            this.value = new ArrayList<>(values);
         } else {
-            this.value = new ArrayList<String>();
+            this.value = new ArrayList<>();
         }
         this.valueType = ValueType.LIST;
     }

@@ -53,7 +53,7 @@ public class KrbErrorUtil {
     private static List<EncryptionType> getEtypes(byte[] data) throws IOException {
         EtypeInfo info = new EtypeInfo();
         info.decode(data);
-        List<EncryptionType> results = new ArrayList<EncryptionType>();
+        List<EncryptionType> results = new ArrayList<>();
         for (EtypeInfoEntry entry : info.getElements()) {
             results.add(entry.getEtype());
         }
@@ -63,7 +63,7 @@ public class KrbErrorUtil {
     private static List<EncryptionType> getEtypes2(byte[] data) throws IOException {
         EtypeInfo2 info2 = new EtypeInfo2();
         info2.decode(data);
-        List<EncryptionType> results = new ArrayList<EncryptionType>();
+        List<EncryptionType> results = new ArrayList<>();
         for (EtypeInfo2Entry entry : info2.getElements()) {
             results.add(entry.getEtype());
         }

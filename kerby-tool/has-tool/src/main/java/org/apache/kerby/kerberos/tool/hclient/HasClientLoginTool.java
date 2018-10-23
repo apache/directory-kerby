@@ -43,8 +43,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class HasClientLoginTool {
-    private static List<String> principalList = new ArrayList<String>();
-    private static List<File>  keytabList = new ArrayList<File>();
+    private static List<String> principalList = new ArrayList<>();
+    private static List<File>  keytabList = new ArrayList<>();
 
     private static final String KEYTAB_USAGE = (OSUtil.isWindows()
         ? "Usage: bin\\k=login-test.cmd" : "Usage: sh bin/login-test.sh")

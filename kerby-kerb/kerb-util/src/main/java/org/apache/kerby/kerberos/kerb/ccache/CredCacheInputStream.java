@@ -58,7 +58,7 @@ public class CredCacheInputStream extends KrbInputStream {
 
         String realm = readCountedString();
 
-        List<String> nameStrings = new ArrayList<String>();
+        List<String> nameStrings = new ArrayList<>();
         String component;
         for (int i = 0; i < numComponents; i++) { // sub 1 if version 0x501
             component = readCountedString();

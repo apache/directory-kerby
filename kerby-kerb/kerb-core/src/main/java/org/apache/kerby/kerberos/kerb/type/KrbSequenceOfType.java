@@ -45,7 +45,7 @@ public class KrbSequenceOfType<T extends Asn1Type> extends Asn1SequenceOf<T> {
             return new ArrayList<String>();
         }
         
-        List<String> results = new ArrayList<String>(elements.size());
+        List<String> results = new ArrayList<>(elements.size());
         
         for (T ele : elements) {
             if (ele instanceof Asn1String) {

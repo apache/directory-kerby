@@ -40,7 +40,7 @@ public class Conf implements Config {
     private final ConfigImpl config;
 
     public Conf() {
-        this.resourceConfigs = new ArrayList<ConfigLoader>(1);
+        this.resourceConfigs = new ArrayList<>(1);
         this.config = new ConfigImpl("Conf");
     }
 
