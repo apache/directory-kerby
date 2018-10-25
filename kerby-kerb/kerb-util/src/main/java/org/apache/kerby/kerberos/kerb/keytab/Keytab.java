@@ -47,7 +47,7 @@ public final class Keytab implements KrbKeytab {
     private Map<PrincipalName, List<KeytabEntry>> principalEntries;
 
     public Keytab() {
-        this.principalEntries = new HashMap<PrincipalName, List<KeytabEntry>>();
+        this.principalEntries = new HashMap<>();
     }
 
     public static Keytab loadKeytab(File keytabFile) throws IOException {

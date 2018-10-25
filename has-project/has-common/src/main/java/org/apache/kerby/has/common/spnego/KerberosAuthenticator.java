@@ -115,7 +115,7 @@ public class KerberosAuthenticator implements Authenticator {
                                 new HashMap<String, String>());
 
     private static final Map<String, String> KEYTAB_KERBEROS_OPTIONS
-        = new HashMap<String, String>();
+        = new HashMap<>();
     static {
       if (IBM_JAVA) {
         KEYTAB_KERBEROS_OPTIONS.put("credsType", "both");

@@ -37,7 +37,7 @@ public class SaslAppClient extends AppClient {
 
         String protocol = args[2];
         String serverFqdn = args[3];
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         props.put(Sasl.QOP, "auth");
 
         this.saslClient = Sasl.createSaslClient(new String[]{"GSSAPI"}, null,

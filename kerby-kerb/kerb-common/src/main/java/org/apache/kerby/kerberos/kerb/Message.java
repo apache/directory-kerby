@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Message {
-    private static Map<MessageCode, String> entries = new HashMap<MessageCode, String>();
+    private static Map<MessageCode, String> entries = new HashMap<>();
 
     public static void init() {
 

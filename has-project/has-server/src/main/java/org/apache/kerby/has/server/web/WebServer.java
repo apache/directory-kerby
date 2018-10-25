@@ -100,7 +100,7 @@ public class WebServer {
     }
 
     private Map<String, String> getAuthFilterParams(HasConfig conf) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
 
         String authType = conf.getString(WebConfigKey.HAS_AUTHENTICATION_FILTER_AUTH_TYPE);
         if (authType != null && !authType.isEmpty()) {

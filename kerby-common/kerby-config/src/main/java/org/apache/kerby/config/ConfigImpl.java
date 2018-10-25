@@ -40,7 +40,7 @@ public class ConfigImpl implements Config {
 
     protected ConfigImpl(String resource) {
         this.resource = resource;
-        this.properties = new HashMap<String, ConfigObject>();
+        this.properties = new HashMap<>();
         this.configs = new ArrayList<>(0);
     }
 

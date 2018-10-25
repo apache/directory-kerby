@@ -83,7 +83,7 @@ public class AsRequestApi {
             String errMessage = null;
             String js = null;
             ObjectMapper mapper = new ObjectMapper();
-            final Map<String, Object> m = new TreeMap<String, Object>();
+            final Map<String, Object> m = new TreeMap<>();
             if (hasServer.getKdcServer() == null) {
                 errMessage = "Please start the has KDC server.";
             } else if (tokenStr != null && !tokenStr.isEmpty()) {

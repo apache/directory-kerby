@@ -203,7 +203,7 @@ class TestUtil {
     File sslClientConfFile = new File(sslConfDir, getClientSSLConfigFileName());
     File sslServerConfFile = new File(sslConfDir, getServerSSLConfigFileName());
 
-    Map<String, X509Certificate> certs = new HashMap<String, X509Certificate>();
+    Map<String, X509Certificate> certs = new HashMap<>();
 
     if (useClientCert) {
       KeyPair cKP = TestUtil.generateKeyPair("RSA");

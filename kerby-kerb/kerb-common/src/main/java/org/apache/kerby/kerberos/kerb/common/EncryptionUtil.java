@@ -41,7 +41,7 @@ public class EncryptionUtil {
      * an order preserved map containing cipher names to the corresponding algorithm
      * names in the descending order of strength
      */
-    private static final Map<String, String> CIPHER_ALGO_MAP = new LinkedHashMap<String, String>();
+    private static final Map<String, String> CIPHER_ALGO_MAP = new LinkedHashMap<>();
 
     static {
         CIPHER_ALGO_MAP.put("rc4", "ArcFourHmac");

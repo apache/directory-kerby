@@ -82,7 +82,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     public PkinitPreauth() {
         super(new PkinitPreauthMeta());
 
-        pkinitContexts = new HashMap<String, PkinitKdcContext>(1);
+        pkinitContexts = new HashMap<>(1);
     }
 
     @Override

@@ -80,7 +80,7 @@ public abstract class KdcRequest {
     public KdcRequest(KrbContext context) {
         this.context = context;
         this.isRetrying = false;
-        this.credCache = new HashMap<String, Object>();
+        this.credCache = new HashMap<>();
         this.preauthContext = context.getPreauthHandler()
                 .preparePreauthContext(this);
         this.fastRequestState = new KrbFastRequestState();

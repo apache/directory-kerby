@@ -199,7 +199,7 @@ public class AuthToken implements Principal {
    * attribute pairs.
    */
   private static Map<String, String> split(String tokenStr) throws AuthenticationException {
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<>();
     StringTokenizer st = new StringTokenizer(tokenStr, ATTR_SEPARATOR);
     while (st.hasMoreTokens()) {
       String part = st.nextToken();

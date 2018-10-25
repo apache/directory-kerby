@@ -122,7 +122,7 @@ public final class JaasKrbUtil {
 
         @Override
         public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
-            Map<String, String> options = new HashMap<String, String>();
+            Map<String, String> options = new HashMap<>();
             options.put("keyTab", keytabFile.getAbsolutePath());
             options.put("principal", principal);
             options.put("useKeyTab", "true");
@@ -151,7 +151,7 @@ public final class JaasKrbUtil {
 
         @Override
         public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
-            Map<String, String> options = new HashMap<String, String>();
+            Map<String, String> options = new HashMap<>();
             options.put("principal", principal);
             options.put("storeKey", "false");
             options.put("doNotPrompt", "false");

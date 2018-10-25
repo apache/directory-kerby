@@ -125,7 +125,7 @@ public class TokenJaasKrbUtil {
 
         @Override
         public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
-            Map<String, String> options = new HashMap<String, String>();
+            Map<String, String> options = new HashMap<>();
             options.put(TokenAuthLoginModule.PRINCIPAL, principal);
             if (tokenCache != null) {
                 options.put(TokenAuthLoginModule.TOKEN_CACHE, tokenCache.getAbsolutePath());

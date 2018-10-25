@@ -154,7 +154,7 @@ public class RemoteAdminClientTool {
             public Object run() {
                 try {
 
-                    Map<String, String> props = new HashMap<String, String>();
+                    Map<String, String> props = new HashMap<>();
                     props.put(Sasl.QOP, "auth-conf");
                     props.put(Sasl.SERVER_AUTH, "true");
                     SaslClient saslClient = null;

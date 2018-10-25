@@ -114,7 +114,7 @@ public class DefaultAdminServerHandler extends AdminServerHandler implements Run
                         return null;
                     }
 
-                    Map<String, Object> props = new HashMap<String, Object>();
+                    Map<String, Object> props = new HashMap<>();
                     props.put(Sasl.QOP, "auth-conf");
                     props.put(Sasl.SERVER_AUTH, "true");
 
