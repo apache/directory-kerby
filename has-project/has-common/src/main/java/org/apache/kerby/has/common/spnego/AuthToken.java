@@ -38,7 +38,7 @@ public class AuthToken implements Principal {
   private static final String TYPE = "t";
 
   private static final Set<String> ATTRIBUTES =
-    new HashSet<String>(Arrays.asList(USER_NAME, PRINCIPAL, EXPIRES, TYPE));
+    new HashSet<>(Arrays.asList(USER_NAME, PRINCIPAL, EXPIRES, TYPE));
 
   private String userName;
   private String principal;

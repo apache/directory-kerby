@@ -82,7 +82,7 @@ public class MavibotBackend extends AbstractIdentityBackend {
             database = rm.getManagedTree(DATA_TREE);
         } else {
             PersistedBTreeConfiguration<String, KrbIdentity> config =
-                    new PersistedBTreeConfiguration<String, KrbIdentity>();
+                    new PersistedBTreeConfiguration<>();
             // _no_ duplicates
             config.setAllowDuplicates(false);
             config.setBtreeType(BTreeTypeEnum.PERSISTED);

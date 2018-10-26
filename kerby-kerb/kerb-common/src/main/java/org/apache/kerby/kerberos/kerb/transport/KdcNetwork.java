@@ -48,7 +48,7 @@ public abstract class KdcNetwork {
     private ServerSocket tcpServer;
     private DatagramChannel udpServer;
     private Map<InetSocketAddress, KdcUdpTransport> transports =
-            new HashMap<InetSocketAddress, KdcUdpTransport>();
+            new HashMap<>();
     private ByteBuffer recvBuffer;
 
     public synchronized void init() {

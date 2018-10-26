@@ -85,7 +85,7 @@ public class HasJaasLoginUtil {
     }
 
     private static final Map<String, String> BASIC_JAAS_OPTIONS =
-        new HashMap<String, String>();
+        new HashMap<>();
 
     static {
         String jaasEnvVar = System.getenv("HADOOP_JAAS_DEBUG");
@@ -95,7 +95,7 @@ public class HasJaasLoginUtil {
     }
 
     private static final Map<String, String> TICKET_KERBEROS_OPTIONS =
-        new HashMap<String, String>();
+        new HashMap<>();
 
     static {
         TICKET_KERBEROS_OPTIONS.put("doNotPrompt", "true");
