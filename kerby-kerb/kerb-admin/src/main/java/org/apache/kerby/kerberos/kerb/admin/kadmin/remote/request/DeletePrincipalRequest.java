@@ -35,6 +35,9 @@ import java.nio.ByteBuffer;
 public class DeletePrincipalRequest extends AdminRequest {
     /** Admin delete principal do not need password or koptions. */
 
+    /**
+     * @param principal the principal to delete
+     */
     public DeletePrincipalRequest(String principal) {
         super(principal);
     }

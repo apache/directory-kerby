@@ -50,7 +50,7 @@ public final class AdminHelper {
      *
      * @param keytabFile The keytab file
      * @param identity  The identity
-     * @throws KrbException
+     * @throws KrbException If there is a problem exporting the keys of the specified principal
      */
     public static void exportKeytab(File keytabFile, KrbIdentity identity)
             throws KrbException {
@@ -68,7 +68,7 @@ public final class AdminHelper {
      *
      * @param keytabFile The keytab file
      * @param identities  Identities to export to keytabFile
-     * @throws KrbException
+     * @throws KrbException If there is a problem exporting the keys of the specified principal
      */
     public static void exportKeytab(File keytabFile, List<KrbIdentity> identities)
             throws KrbException {
@@ -87,7 +87,7 @@ public final class AdminHelper {
      *
      * @param keytabFile The keytab file
      * @return The keytab load from keytab file
-     * @throws KrbException
+     * @throws KrbException If there is a problem loading the keytab
      */
     public static Keytab loadKeytab(File keytabFile) throws KrbException {
         Keytab keytab;
@@ -106,7 +106,7 @@ public final class AdminHelper {
      *
      * @param keytabFile The keytab file
      * @return The keytab load from keytab file
-     * @throws KrbException
+     * @throws KrbException If there is a problem creating or loading the keytab
      */
     public static Keytab createOrLoadKeytab(File keytabFile) throws KrbException {
 
@@ -134,7 +134,7 @@ public final class AdminHelper {
      *
      * @param keytab The keytab
      * @param identity  The identity
-     * @throws KrbException
+     * @throws KrbException If there is a problem exporting the identity to the keytab
      */
     public static void exportToKeytab(Keytab keytab, KrbIdentity identity)
         throws KrbException {
@@ -154,7 +154,7 @@ public final class AdminHelper {
      *
      * @param keytab   The keytab
      * @param keytabFile The keytab file
-     * @throws KrbException
+     * @throws KrbException If there is a problem storing the keytab
      */
     public static void storeKeytab(Keytab keytab, File keytabFile) throws KrbException {
         try {
@@ -170,7 +170,7 @@ public final class AdminHelper {
      *
      * @param keytabFile The keytab file
      * @param principalName  The principal name
-     * @throws KrbException
+     * @throws KrbException If there is a problem removing the keys of the specified principal
      */
     public static void removeKeytabEntriesOf(File keytabFile,
                                              String principalName) throws KrbException {
@@ -188,7 +188,7 @@ public final class AdminHelper {
      * @param keytabFile The keytab file
      * @param principalName  The principal name
      * @param kvno The kvno
-     * @throws KrbException
+     * @throws KrbException If there is a problem removing the keys of the specified principal
      */
     static void removeKeytabEntriesOf(File keytabFile,
                                       String principalName, int kvno) throws KrbException {
@@ -205,7 +205,7 @@ public final class AdminHelper {
      *
      * @param keytabFile The keytab file
      * @param principalName  The principal name
-     * @throws KrbException
+     * @throws KrbException If there is a problem in removing the old keys of the specified principal
      */
     public static void removeOldKeytabEntriesOf(File keytabFile,
                                                 String principalName) throws KrbException {
@@ -235,6 +235,8 @@ public final class AdminHelper {
      *
      * @param principal The principal name to be created
      * @param kOptions  The KOptions with principal info
+     * @return the created principal identity
+     * @throws KrbException If there is a problem in creating the principal
      */
     public static KrbIdentity createIdentity(String principal, KOptions kOptions)
         throws KrbException {
@@ -262,7 +264,6 @@ public final class AdminHelper {
      *
      * @param identity The identity to be modified
      * @param kOptions  The KOptions with changed principal info
-     * @throws KrbException
      */
     public static void updateIdentity(KrbIdentity identity, KOptions kOptions) {
         if (kOptions.contains(KadminOption.EXPIRE)) {
@@ -283,7 +284,7 @@ public final class AdminHelper {
      *
      * @param globString The glob string for matching
      * @return pattern
-     * @throws KrbException
+     * @throws KrbException If there is a problem in compiling the pattern string
      */
     public static Pattern getPatternFromGlobPatternString(String globString) throws KrbException {
         if (globString == null || globString.equals("")) {

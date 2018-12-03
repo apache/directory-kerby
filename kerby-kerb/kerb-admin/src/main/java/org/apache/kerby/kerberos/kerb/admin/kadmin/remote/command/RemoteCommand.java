@@ -36,6 +36,7 @@ public abstract class RemoteCommand {
     /**
      * Execute the remote kadmin command
      * @param input String includes commands
+     * @throws KrbException If there is an a problem executing the remote command
      */
     public abstract void execute(String input) throws KrbException;
 }
