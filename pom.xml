@@ -181,6 +181,8 @@
               <!-- The resources files -->
               <exclude>**/src/test/resources/**/*</exclude>
               <exclude>**/licenses/**</exclude>
+              <!-- HAS patches -->
+              <exclude>**/*.patch</exclude>
             </excludes>
           </configuration>
         </plugin>
