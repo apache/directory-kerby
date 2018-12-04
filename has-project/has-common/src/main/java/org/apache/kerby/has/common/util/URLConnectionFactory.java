@@ -78,6 +78,8 @@ public class URLConnectionFactory {
   /**
    * Construct a new URLConnectionFactory based on the configuration. It will
    * try to load SSL certificates when it is specified.
+   * @param conf The has config
+   * @return URLConnectionFactory The URL connection factory.
    */
   public static URLConnectionFactory newDefaultURLConnectionFactory(HasConfig conf) {
     ConnectionConfigurator conn;
@@ -138,7 +140,7 @@ public class URLConnectionFactory {
    * @param url
    *          to open
    * @return URLConnection
-   * @throws IOException
+   * @throws IOException thrown if an IO error happened while opening connection
    */
   public URLConnection openConnection(URL url) throws IOException {
     try {
@@ -157,9 +159,12 @@ public class URLConnectionFactory {
    *          URL to open
    * @param isSpnego
    *          whether the url should be authenticated via SPNEGO
-   * @return URLConnection
-   * @throws IOException
-   * @throws AuthenticationException
+   * @param  hasConfig
+   *          has config to open
+   * @return URLConnection the url connection
+   * @throws IOException thrown if an IO error happened while opening connection
+   * @throws AuthenticationException thrown if an authentication error happened
+   * while opening connection
    */
   public URLConnection openConnection(URL url, boolean isSpnego, HasConfig hasConfig)
       throws IOException, AuthenticationException {
@@ -185,7 +190,9 @@ public class URLConnectionFactory {
    * @param connection
    *          URLConnection to set
    * @param connectTimeout
-   *          the connection and read timeout of the connection.
+   *          the connection timeout of the connection.
+   * @param  readTimeout
+   *          the read timeout of the connection
    */
   private static void setTimeouts(URLConnection connection,
                                   int connectTimeout,

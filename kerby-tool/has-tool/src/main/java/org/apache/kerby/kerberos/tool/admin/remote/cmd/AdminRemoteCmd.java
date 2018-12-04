@@ -37,6 +37,7 @@ public abstract class AdminRemoteCmd {
     /**
      * Execute the admin cmd.
      * @param items Input cmd to execute
+     * @exception  KrbException KRB exception when executing command
      */
     public abstract void execute(String[] items) throws KrbException;
 }

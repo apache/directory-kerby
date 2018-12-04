@@ -142,6 +142,8 @@ public class WebServer {
     /**
      * for information related to the different configuration options and
      * Http Policy is decided.
+     *
+     * @throws HasException HAS exception when starting web server
      */
     public void start() throws HasException {
 
@@ -217,6 +219,9 @@ public class WebServer {
 
     /**
      * Get http policy.
+     *
+     * @param conf the HAS config
+     * @return HttpConfig.Policy the policy
      */
     public HttpConfig.Policy getHttpPolicy(HasConfig conf) {
         String policyStr = conf.getString(WebConfigKey.HAS_HTTP_POLICY_KEY,
@@ -234,6 +239,13 @@ public class WebServer {
     /**
      * Return a HttpServer.Builder that the HAS can use to
      * initialize their HTTP / HTTPS server.
+     *
+     * @param conf the HAS config
+     * @param httpAddr the InetSocketAddress of http
+     * @param httpsAddr the InetSocketAddress of https
+     * @param name the host name
+     * @return HttpServer2.Builder the builder
+     * @throws HasException HAS exception
      */
     public HttpServer2.Builder httpServerTemplateForHAS(
         HasConfig conf, final InetSocketAddress httpAddr, final InetSocketAddress httpsAddr,
@@ -270,6 +282,10 @@ public class WebServer {
 
     /**
      * Load HTTPS-related configuration.
+     *
+     * @param conf HAS config
+     * @return HasConfig after loading ssl configuration
+     * @throws HasException HAS exception when loading HTTPS related configuration
      */
     public HasConfig loadSslConfiguration(HasConfig conf) throws HasException {
         HasConfig sslConf = new HasConfig();

@@ -381,6 +381,7 @@ public class HasServer {
      * Config HAS server KDC which have MySQL backend.
      * @param backendConfig MySQL backend config
      * @param realm KDC realm to set
+     * @param port has server port
      * @param host KDC host to set
      * @param hasServer has server to get param
      * @throws HasException e

@@ -66,7 +66,7 @@ public class HasClientUtil {
      * @param method the HTTP method for the HTTP connection.
      * @param  isSpnego  true or false.
      * @return an authenticated connection to the has server.
-     * @throws IOException if an IO error occurred.
+     * @throws KrbException if an IO error occurred.
      */
     public static HttpURLConnection createConnection(HasConfig hasConfig, URL url, String method, boolean isSpnego)
             throws KrbException {

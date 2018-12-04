@@ -37,6 +37,7 @@ public abstract class HadminCommand {
     /**
      * Execute the hadmin cmd.
      * @param input Input cmd to execute
+     * @throws HasException HAS exception when executing command
      */
     public abstract void execute(String[] input) throws HasException;
 }

@@ -115,6 +115,11 @@ public class HasKdcHandler {
 
     /**
      * Process the client request message.
+     *
+     * @param authToken the auth token
+     * @param passPhrase the password phrase
+     * @return KrbMessage KRB message
+     * @throws KrbException KRB exception when handling message
      */
     public KrbMessage handleMessage(AuthToken authToken, String passPhrase) throws KrbException {
 
@@ -201,8 +206,7 @@ public class HasKdcHandler {
      * @return The KrbError
      */
     private KrbMessage handleRecoverableException(KdcRecoverableException e,
-                                                  KdcRequest kdcRequest)
-            throws KrbException {
+                                                  KdcRequest kdcRequest) {
         LOG.info("KRB error occurred while processing request:"
                 + e.getMessage());
 
@@ -245,11 +249,9 @@ public class HasKdcHandler {
     /**
      * Create the KdcReqBody
      *
-     * @return KdcReqBody
-     *
-     * @throws KrbException e
+     * @return KdcReqBody the KDC req body
      */
-     protected KdcReqBody makeReqBody() throws KrbException {
+     protected KdcReqBody makeReqBody() {
         KdcReqBody body = new KdcReqBody();
 
         long startTime = System.currentTimeMillis();

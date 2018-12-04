@@ -38,6 +38,7 @@ public class HasUtil {
      * Get has configuration
      * @param hasConfFile configuration directory
      * @return has configuration
+     * @throws HasException the HAS exception
      */
     public static HasConfig getHasConfig(File hasConfFile) throws HasException {
 

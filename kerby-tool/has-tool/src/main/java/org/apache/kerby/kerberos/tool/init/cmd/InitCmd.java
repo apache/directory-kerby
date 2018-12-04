@@ -37,6 +37,7 @@ public abstract class InitCmd {
     /**
      * Execute the kdc init cmd.
      * @param input Input cmd to execute
+     * @exception KrbException KRB exception when executing command
      */
     public abstract void execute(String[] input) throws KrbException;
 }

@@ -64,6 +64,10 @@ public class AsRequestApi {
 
     /**
      * Handle HTTP PUT request.
+     *
+     * @param type the authentication type
+     * @param authToken the auth token
+     * @return Response the AS request response
      */
     @PUT
     @Produces({MediaType.APPLICATION_OCTET_STREAM + "; " + JettyUtils.UTF_8,

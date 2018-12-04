@@ -48,7 +48,9 @@ public class HasJaasLoginUtil {
     /**
      * Log a user in from a tgt ticket.
      *
-     * @throws IOException
+     * @param hadoopSecurityHas the params for authentication
+     * @return Subject the subject
+     * @throws IOException if an IO error occurred.
      */
     public static synchronized Subject loginUserFromTgtTicket(String hadoopSecurityHas) throws IOException {
 

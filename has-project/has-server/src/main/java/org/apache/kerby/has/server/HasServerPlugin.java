@@ -34,6 +34,7 @@ public interface HasServerPlugin {
          *
          * @param userToken user token
          * @return auth token
+         * @throws HasAuthenException HAS authentication error
          */
         AuthToken authenticate(AuthToken userToken) throws HasAuthenException;
 }

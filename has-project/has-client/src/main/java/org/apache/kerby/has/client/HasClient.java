@@ -216,10 +216,10 @@ public class HasClient {
 
     /**
      * Request a TGT with user token, plugin type and has config.
-     * @param authToken
-     * @param type
-     * @param config
-     * @return TGT
+     * @param authToken auth token
+     * @param type login type
+     * @param config HAS config
+     * @return TGT ticket grant ticket
      * @throws HasException e
      */
     public TgtTicket requestTgt(AuthToken authToken, String type, HasConfig config)
@@ -531,7 +531,8 @@ public class HasClient {
     /**
      * Get the tgt ticket from KdcRep
      *
-     * @param kdcRep
+     * @param kdcRep the KdcRep
+     * @return TgtTicket the ticket grant ticket
      */
     public TgtTicket getTicket(KdcRep kdcRep) {
         TgtTicket tgtTicket = new TgtTicket(kdcRep.getTicket(),
@@ -542,6 +543,9 @@ public class HasClient {
     /**
      * Get certificate from HAS server.
      *
+     * @param host the HAS server http host name
+     * @param port the HAS server http port
+     * @return X509Certificate the x509 certificate from HAS server
      */
     private X509Certificate getCertificate(String host, String port) throws HasException {
         X509Certificate certificate;
@@ -590,6 +594,10 @@ public class HasClient {
 
     /**
      * Verify certificate.
+     *
+     * @param certificate the x509 certificate
+     * @return boolean true if verify successfully
+     * @throws HasException HAS exception when verifying certificate
      */
     private boolean verifyCertificate(X509Certificate certificate) throws HasException {
         // Check if certificate is expired

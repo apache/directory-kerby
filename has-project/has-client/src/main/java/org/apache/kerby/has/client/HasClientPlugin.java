@@ -37,6 +37,7 @@ public interface HasClientPlugin {
      *
      * @param conf token plugin config
      * @return user auth token
+     * @throws HasLoginException HAS login exception
      */
     AuthToken login(HasConfig conf) throws HasLoginException;
 }

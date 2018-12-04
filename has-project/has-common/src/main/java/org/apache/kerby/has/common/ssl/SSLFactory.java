@@ -44,9 +44,9 @@ import static org.apache.kerby.has.common.util.PlatformName.IBM_JAVA;
 /**
  * Factory that creates SSLEngine and SSLSocketFactory instances using
  * Hadoop configuration information.
- * <p/>
+ *
  * which reloads public keys if the truststore file changes.
- * <p/>
+ *
  * This factory is used to configure HTTPS in Hadoop HTTP based endpoints, both
  * client and server.
  */
@@ -93,6 +93,7 @@ public class SSLFactory implements ConnectionConfigurator {
    * @param mode SSLFactory mode, client or server.
    * @param conf Hadoop configuration from where the SSLFactory configuration
    * will be read.
+   * @throws HasException thrown if an HAS error happened.
    */
   public SSLFactory(Mode mode, HasConfig conf) throws HasException {
     this.conf = conf;

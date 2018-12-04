@@ -47,9 +47,7 @@ import static org.apache.kerby.has.common.util.PlatformName.IBM_JAVA;
 
 /**
  * The {@link KerberosAuthenticator} implements the Kerberos SPNEGO authentication sequence.
- * <p>
  * It uses the default principal for the Kerberos cache (normally set via kinit).
- * <p>
  */
 @SuppressWarnings("PMD")
 public class KerberosAuthenticator implements Authenticator {

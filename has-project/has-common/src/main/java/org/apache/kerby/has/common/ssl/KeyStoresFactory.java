@@ -235,9 +235,9 @@ public class KeyStoresFactory extends KrbConfig {
     return trustManagers;
   }
 
-    /**
+  /**
    * Resolves a property name to its client/server version if applicable.
-   * <p/>
+   *
    * NOTE: This method is public for testing purposes.
    *
    * @param mode client/server mode.
