@@ -37,6 +37,8 @@
       <includes>
         <include>log4j.properties</include>
         <include>README.txt</include>
+        <include>LICENSE</include>
+        <include>NOTICE</include>
       </includes>
     </fileSet>
   </fileSets>
