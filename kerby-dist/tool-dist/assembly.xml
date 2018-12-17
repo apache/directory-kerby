@@ -41,5 +41,9 @@
         <include>NOTICE</include>
       </includes>
     </fileSet>
+    <fileSet>
+      <directory>licenses</directory>
+      <outputDirectory>licenses</outputDirectory>
+    </fileSet>
   </fileSets>
 </assembly>
