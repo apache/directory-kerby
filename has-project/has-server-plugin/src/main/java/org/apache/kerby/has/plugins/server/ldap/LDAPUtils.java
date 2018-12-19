@@ -45,7 +45,8 @@ public class LDAPUtils {
         }
     }
 
-    public static boolean doUserAuth(String user, String pwd) throws HasException, IOException {
+    public static boolean doUserAuth(String user, String pwd)
+        throws HasException, IOException, LdapInvalidAttributeValueException {
         LdapNetworkConnection connection = new LdapNetworkConnection(
             ldapServerConf.getHost(), Integer.parseInt(ldapServerConf.getPort()));
         try {

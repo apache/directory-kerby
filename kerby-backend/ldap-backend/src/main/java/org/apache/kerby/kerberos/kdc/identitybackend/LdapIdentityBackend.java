@@ -24,6 +24,7 @@ import org.apache.directory.api.ldap.model.cursor.EntryCursor;
 import org.apache.directory.api.ldap.model.entry.DefaultEntry;
 import org.apache.directory.api.ldap.model.entry.Entry;
 import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.api.ldap.model.exception.LdapInvalidAttributeValueException;
 import org.apache.directory.api.ldap.model.exception.LdapInvalidDnException;
 import org.apache.directory.api.ldap.model.message.ModifyRequest;
 import org.apache.directory.api.ldap.model.message.ModifyRequestImpl;
@@ -311,8 +312,9 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * @param principalName The principal name to be convert.
      * @return
      * @throws org.apache.directory.api.ldap.model.exception.LdapInvalidDnException if a remote exception occurs.
+     * @throws LdapInvalidAttributeValueException 
      */
-    private Dn toDn(String principalName) throws LdapInvalidDnException {
+    private Dn toDn(String principalName) throws LdapInvalidDnException, LdapInvalidAttributeValueException {
         String[] names = principalName.split("@");
         String uid = names[0];
         Dn dn = new Dn(new Rdn("uid", uid), new Dn(getConfig().getString("base_dn")));

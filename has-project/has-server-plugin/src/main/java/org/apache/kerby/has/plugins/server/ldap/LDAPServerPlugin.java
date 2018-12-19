@@ -17,6 +17,7 @@
  */
 package org.apache.kerby.has.plugins.server.ldap;
 
+import org.apache.directory.api.ldap.model.exception.LdapInvalidAttributeValueException;
 import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.server.AbstractHasServerPlugin;
 import org.apache.kerby.has.server.HasAuthenException;
@@ -60,7 +61,7 @@ public class LDAPServerPlugin extends AbstractHasServerPlugin {
             } else {
                 throw new HasAuthenException("LDAP user auth failed");
             }
-        } catch (HasException | IOException e) {
+        } catch (HasException | IOException | LdapInvalidAttributeValueException e) {
             throw new HasAuthenException("LDAP user auth failed. " + e.getMessage());
         }
     }
