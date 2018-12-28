@@ -68,7 +68,7 @@ public class LdapIdentityGetHelper {
      * @return keys
      */
     public List<EncryptionKey> getKeys() throws IOException {
-        Iterator<Value<?>> iterator1 = entry.get(KerberosAttribute.KRB5_KEY_AT).iterator();
+        Iterator<Value> iterator1 = entry.get(KerberosAttribute.KRB5_KEY_AT).iterator();
         List<EncryptionKey> keys = new ArrayList<>();
         while (iterator1.hasNext()) {
             byte[] encryKey = iterator1.next().getBytes();
