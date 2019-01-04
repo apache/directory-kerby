@@ -148,7 +148,11 @@ public class Krb5Parser {
 
     private void insertSections(String line, BufferedReader br, Map<String, Object> items) throws IOException {
         while (line.startsWith("[")) {
-            String sectionName = line.substring(1, line.length() - 1);
+            int pos = line.indexOf("]");
+            if (pos < 2 || pos < line.length() - 1) {
+                throw new IOException("Illegal section name: " + line);
+            }
+            String sectionName = line.substring(1, pos);
             Map<String, Object> entries = new IdentityHashMap<>();
             line = br.readLine();
             if (line == null) {
@@ -207,10 +211,30 @@ public class Krb5Parser {
         if (kv[1].startsWith("{")) {
             Map<String, Object> meValue = new IdentityHashMap<>();
             line = br.readLine();
+            while (line != null && (isComment(line.trim()) || line.trim().isEmpty())) {
+                line = br.readLine();
+            }
             if (line != null) {
                 line = line.trim();
-                line = insertEntries(line, br, meValue);
-                entries.put(kv[0], meValue);
+                if (!line.contains("=") && !isComment(line) && !line.isEmpty()) {
+                    // multi-line value
+                    List<String> values = new ArrayList<>();
+                    while (line != null && !line.contains("}")) {
+                        line = line.trim();
+                        if (!line.isEmpty() && !isComment(line)) {
+                            values.add(line.trim());
+                        }
+                        line = br.readLine();
+                    }
+                    entries.put(kv[0], values);
+                    line = br.readLine();
+                    if (line != null) {
+                        line = line.trim();
+                    }
+                } else {
+                    line = insertEntries(line, br, meValue);
+                    entries.put(kv[0], meValue);
+                }
                 line = insertEntries(line, br, entries);
             }
         }   else {

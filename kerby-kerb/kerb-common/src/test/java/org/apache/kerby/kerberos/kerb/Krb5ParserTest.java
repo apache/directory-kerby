@@ -25,6 +25,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,10 +61,12 @@ public class Krb5ParserTest {
         assertThat((Map<String, Object>) k.getSection("realms")).hasSize(3);
 
         assertThat(k.getSection("realms", "ATHENA.MIT.EDU")).isInstanceOf(Map.class);
-        assertThat((Map<String, Object>) k.getSection("realms", "ATHENA.MIT.EDU")).hasSize(3);
+        assertThat((Map<String, Object>) k.getSection("realms", "ATHENA.MIT.EDU")).hasSize(4);
         assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "admin_server")).isEqualTo("KERBEROS.MIT.EDU");
         assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "v4_instance_convert")).isInstanceOf(Map.class);
         assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "v4_instance_convert", "mit")).isEqualTo("mit.edu");
+        assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "auth_to_local")).isInstanceOf(List.class);
+        assertThat((List)k.getSection("realms", "ATHENA.MIT.EDU", "auth_to_local")).hasSize(4);
 
         assertThat(k.getSection("realms", "ANDREW.CMU.EDU")).isInstanceOf(Map.class);
         assertThat((Map<String, Object>) k.getSection("realms", "ANDREW.CMU.EDU")).hasSize(1);
@@ -83,5 +86,6 @@ public class Krb5ParserTest {
         assertThat(k.getSection("logging")).isInstanceOf(Map.class);
         assertThat((Map<String, Object>) k.getSection("logging")).hasSize(3);
         assertThat(k.getSection("logging", "default")).isEqualTo("FILE:/var/log/krb5libs.log");
+
     }
 }
