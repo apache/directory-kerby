@@ -66,7 +66,7 @@ public class Krb5ParserTest {
         assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "v4_instance_convert")).isInstanceOf(Map.class);
         assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "v4_instance_convert", "mit")).isEqualTo("mit.edu");
         assertThat(k.getSection("realms", "ATHENA.MIT.EDU", "auth_to_local")).isInstanceOf(List.class);
-        assertThat((List)k.getSection("realms", "ATHENA.MIT.EDU", "auth_to_local")).hasSize(4);
+        assertThat((List) k.getSection("realms", "ATHENA.MIT.EDU", "auth_to_local")).hasSize(4);
 
         assertThat(k.getSection("realms", "ANDREW.CMU.EDU")).isInstanceOf(Map.class);
         assertThat((Map<String, Object>) k.getSection("realms", "ANDREW.CMU.EDU")).hasSize(1);
