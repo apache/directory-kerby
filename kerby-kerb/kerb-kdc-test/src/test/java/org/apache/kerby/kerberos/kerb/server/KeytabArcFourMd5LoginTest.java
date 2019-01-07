@@ -37,7 +37,7 @@ public class KeytabArcFourMd5LoginTest extends LoginTestBase {
     @Override
     protected void setUpKdcServer() throws Exception {
         KdcConfig config = new KdcConfig();
-        config.setString(KdcConfigKey.ENCRYPTION_TYPES, "arcfour-hmac");
+        config.setString(KdcConfigKey.ENCRYPTION_TYPES, "arcfour-hmac rc4-hmac");
         SimpleKdcServer kdcServer = new TestKdcServer(allowTcp(), allowUdp(), config, new BackendConfig());
         super.setKdcServer(kdcServer);
 
@@ -49,9 +49,33 @@ public class KeytabArcFourMd5LoginTest extends LoginTestBase {
     }
 
     @Test
-    public void testLogin() throws Exception {
+    public void testLoginARCFOURHMAC() throws Exception {
         KrbClient client = super.getKrbClient();
         client.getKrbConfig().setString(KrbConfigKey.PERMITTED_ENCTYPES, "arcfour-hmac");
+
+        KOptions requestOptions = new KOptions();
+        requestOptions.add(KrbOption.CLIENT_PRINCIPAL, getClientPrincipal());
+        requestOptions.add(KrbOption.USE_KEYTAB, true);
+
+        File keytab = new File(getTestDir(), "test-client.keytab");
+        requestOptions.add(KrbOption.KEYTAB_FILE, keytab);
+
+        getKdcServer().exportPrincipal(getClientPrincipal(), keytab);
+
+        TgtTicket tgt = client.requestTgt(requestOptions);
+        assertThat(tgt).isNotNull();
+
+        SgtTicket tkt = client.requestSgt(tgt, getServerPrincipal());
+        assertThat(tkt).isNotNull();
+
+        keytab.delete();
+
+    }
+
+    @Test
+    public void testLoginRC4HMAC() throws Exception {
+        KrbClient client = super.getKrbClient();
+        client.getKrbConfig().setString(KrbConfigKey.PERMITTED_ENCTYPES, "rc4-hmac");
 
         KOptions requestOptions = new KOptions();
         requestOptions.add(KrbOption.CLIENT_PRINCIPAL, getClientPrincipal());
