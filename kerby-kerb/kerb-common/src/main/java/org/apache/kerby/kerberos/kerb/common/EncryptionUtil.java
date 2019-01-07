@@ -117,9 +117,19 @@ public class EncryptionUtil {
 
     public static EncryptionType getBestEncryptionType(List<EncryptionType> requestedTypes,
                                                        List<EncryptionType> configuredTypes) {
-        for (EncryptionType encryptionType : configuredTypes) {
-            if (requestedTypes.contains(encryptionType)) {
-                return encryptionType;
+        for (EncryptionType configuredType : configuredTypes) {
+            if (requestedTypes.contains(configuredType)) {
+                return configuredType;
+            }
+        }
+
+        // Maybe we have a different encryption name configured for the same type
+        for (EncryptionType configuredType : configuredTypes) {
+            int configuredTypeValue = configuredType.getValue();
+            for (EncryptionType requestedType : requestedTypes) {
+                if (configuredTypeValue == requestedType.getValue()) {
+                    return requestedType;
+                }
             }
         }
 
@@ -129,8 +139,7 @@ public class EncryptionUtil {
     public static EncryptedData seal(Asn1Encodeable asn1Type,
                                      EncryptionKey key, KeyUsage usage) throws KrbException {
         byte[] encoded = KrbCodec.encode(asn1Type);
-        EncryptedData encrypted = EncryptionHandler.encrypt(encoded, key, usage);
-        return encrypted;
+        return EncryptionHandler.encrypt(encoded, key, usage);
     }
 
     public static <T extends Asn1Type> T unseal(EncryptedData encrypted, EncryptionKey key,
@@ -142,14 +151,12 @@ public class EncryptionUtil {
     public static byte[] encrypt(EncryptionKey key,
           byte[] plaintext, KeyUsage usage) throws KrbException {
         EncTypeHandler encType = EncryptionHandler.getEncHandler(key.getKeyType());
-        byte[] cipherData = encType.encrypt(plaintext, key.getKeyData(), usage.getValue());
-        return cipherData;
+        return encType.encrypt(plaintext, key.getKeyData(), usage.getValue());
     }
 
     public static byte[] decrypt(EncryptionKey key,
            byte[] cipherData, KeyUsage usage) throws KrbException {
         EncTypeHandler encType = EncryptionHandler.getEncHandler(key.getKeyType());
-        byte[] plainData = encType.decrypt(cipherData, key.getKeyData(), usage.getValue());
-        return plainData;
+        return encType.decrypt(cipherData, key.getKeyData(), usage.getValue());
     }
 }

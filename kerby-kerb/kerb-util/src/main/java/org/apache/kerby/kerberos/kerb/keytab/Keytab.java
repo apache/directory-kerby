@@ -130,6 +130,14 @@ public final class Keytab implements KrbKeytab {
             }
         }
 
+        // Maybe we have a key stored under a different name for the same type
+        int keyTypeValue = keyType.getValue();
+        for (KeytabEntry ke : entries) {
+            if (keyTypeValue == ke.getKey().getKeyType().getValue()) {
+                return ke.getKey();
+            }
+        }
+
         return null;
     }
 
