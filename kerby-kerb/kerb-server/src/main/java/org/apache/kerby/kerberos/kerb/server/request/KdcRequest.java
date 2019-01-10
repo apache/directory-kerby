@@ -170,16 +170,12 @@ public abstract class KdcRequest {
     public void process() throws KrbException {
         checkVersion();
         checkTgsEntry();
-        if (isPreauthRequired()) {
-            kdcFindFast();
-        }
+        kdcFindFast();
         checkEncryptionType();
 
         if (PreauthHandler.isToken(getKdcReq().getPaData())) {
             isToken = true;
-            if (isPreauthRequired()) {
-                preauth();
-            }
+            preauth();
             checkClient();
             checkServer();
         } else {
@@ -188,9 +184,7 @@ public abstract class KdcRequest {
             }
             checkClient();
             checkServer();
-            if (isPreauthRequired()) {
-                preauth();
-            }
+            preauth();
         }
         checkPolicy();
         issueTicket();
@@ -670,15 +664,12 @@ public abstract class KdcRequest {
     protected abstract void checkClient() throws KrbException;
 
     /**
-     * Do the preatuh.
+     * Do the preauth.
      *
      * @throws org.apache.kerby.kerberos.kerb.KrbException e
      */
     protected void preauth() throws KrbException {
         KdcReq request = getKdcReq();
-
-        PaData preAuthData = request.getPaData();
-
         if (isAnonymous && !isPkinit) {
             LOG.info("Need PKINIT.");
             KrbError krbError = makePreAuthenticationError(kdcContext, request,
@@ -686,7 +677,8 @@ public abstract class KdcRequest {
             throw new KdcRecoverableException(krbError);
         }
 
-        if (preAuthData == null || preAuthData.isEmpty()) {
+        PaData preAuthData = request.getPaData();
+        if (isPreauthRequired() && (preAuthData == null || preAuthData.isEmpty())) {
             LOG.info("The preauth data is empty.");
             KrbError krbError = makePreAuthenticationError(kdcContext, request,
                 KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, false);
