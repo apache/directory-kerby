@@ -135,6 +135,7 @@ public class TokenAuthLoginModule implements LoginModule {
     public boolean commit() throws LoginException {
 
         if (!succeeded) {
+            cleanup();
             return false;
         } else {
             KerberosTicket ticket = null;
@@ -180,15 +181,14 @@ public class TokenAuthLoginModule implements LoginModule {
      */
     @Override
     public boolean abort() throws LoginException {
-        if (succeeded == false) {
+        if (!succeeded) {
             return false;
-        } else if (succeeded == true && commitSucceeded == false) {
-            // login succeeded but overall authentication failed
-            succeeded = false;
-        } else {
-            // overall authentication succeeded and commit succeeded,
-            // but someone else's commit failed
+        } else if (succeeded && commitSucceeded) {
+            // we succeeded, but another required module failed
             logout();
+        } else {
+            // our commit failed
+            succeeded = false;
         }
         return true;
     }
@@ -364,6 +364,8 @@ public class TokenAuthLoginModule implements LoginModule {
                 throw new RuntimeException("File delete error!");
             }
         }
+        tgtTicket = null;
+        krbToken = null;
     }
 
     private void throwWith(String error, Exception cause) throws LoginException {

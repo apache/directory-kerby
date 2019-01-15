@@ -303,7 +303,8 @@ public class HasLoginModule implements LoginModule {
         }
 
         if (useTgtTicket) {
-            if (succeeded == false) {
+            if (!succeeded) {
+                cleanKerberosCred();
                 return false;
             } else {
                 if (isInitiator && cred == null) {
@@ -359,16 +360,14 @@ public class HasLoginModule implements LoginModule {
 
     public boolean abort() throws LoginException {
         if (useTgtTicket) {
-            if (succeeded == false) {
+            if (!succeeded) {
                 return false;
-            } else if (succeeded == true && commitSucceeded == false) {
-                // login succeeded but overall authentication failed
-                succeeded = false;
-                cleanKerberosCred();
-            } else {
-                // overall authentication succeeded and commit succeeded,
-                // but someone else's commit failed
+            } else if (succeeded && commitSucceeded) {
+                // we succeeded, but another required module failed
                 logout();
+            } else {
+                // our commit failed
+                succeeded = false;
             }
             return true;
         } else {
