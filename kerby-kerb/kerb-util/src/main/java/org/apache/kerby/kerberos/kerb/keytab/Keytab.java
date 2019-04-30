@@ -191,6 +191,7 @@ public final class Keytab implements KrbKeytab {
         int bytesLeft = kis.available();
         while (bytesLeft > 0) {
             int entrySize = kis.readInt();
+            bytesLeft = bytesLeft - Integer.SIZE / 8;
             if (kis.available() < entrySize) {
                 throw new IOException("Bad input stream with less data than expected: " + entrySize);
             }
