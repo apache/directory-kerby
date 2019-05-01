@@ -114,6 +114,18 @@ KVNO Timestamp         Principal
         assertEquals(16, numEntries);
     }
 
+    @Test
+    public void testDIRKRB734() throws IOException  {
+        Keytab keytab;
+        try (InputStream kis = KeytabTest.class.getResourceAsStream("/sample.keytab")) {
+            keytab = Keytab.loadKeytab(kis);
+        }
+        assertThat(keytab).isNotNull();
+
+        List<PrincipalName> principals = keytab.getPrincipals();
+        assertEquals(2, principals.size());
+    }
+
     public static void main(String[] args) throws IOException {
         InputStream kis = KeytabTest.class.getResourceAsStream("test.keytab");
         Keytab keytab = Keytab.loadKeytab(kis);
