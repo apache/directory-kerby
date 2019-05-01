@@ -191,13 +191,12 @@ public final class Keytab implements KrbKeytab {
         int bytesLeft = kis.available();
         while (bytesLeft > 0) {
             int entrySize = kis.readInt();
-            bytesLeft = bytesLeft - Integer.SIZE / 8;
             if (kis.available() < entrySize) {
                 throw new IOException("Bad input stream with less data than expected: " + entrySize);
             }
             KeytabEntry entry = readEntry(kis, entrySize);
             entries.add(entry);
-            int bytesReadForEntry = bytesLeft - kis.available();
+            int bytesReadForEntry = bytesLeft - Integer.SIZE / 8 - kis.available();
             if (bytesReadForEntry != entrySize) {
                 kis.skipBytes(entrySize - bytesReadForEntry); // reposition to the next keytab entry
             }
