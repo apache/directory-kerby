@@ -26,10 +26,6 @@
   <description>Zookeeper identity backend</description>
   <packaging>jar</packaging>
 
-  <properties>
-    <zookeeper.version>3.4.13</zookeeper.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.kerby</groupId>

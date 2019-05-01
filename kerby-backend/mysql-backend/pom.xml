@@ -29,17 +29,17 @@
     <dependency>
       <groupId>commons-dbutils</groupId>
       <artifactId>commons-dbutils</artifactId>
-      <version>1.6</version>
+      <version>${commons-dbutils.version}</version>
     </dependency>
     <dependency>
       <groupId>com.alibaba</groupId>
       <artifactId>druid</artifactId>
-      <version>1.1.9</version>
+      <version>1.1.16</version>
     </dependency>
     <dependency>
       <groupId>org.drizzle.jdbc</groupId>
       <artifactId>drizzle-jdbc</artifactId>
-      <version>1.4</version>
+      <version>${drizzle-jdbc.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
@@ -64,7 +64,7 @@
     <dependency>
        <groupId>com.h2database</groupId>
        <artifactId>h2</artifactId>
-       <version>1.4.196</version>
+       <version>1.4.199</version>
        <scope>test</scope>
     </dependency>
     <dependency>
