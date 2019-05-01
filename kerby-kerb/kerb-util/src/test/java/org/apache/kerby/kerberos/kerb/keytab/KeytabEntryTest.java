@@ -22,9 +22,9 @@ package org.apache.kerby.kerberos.kerb.keytab;
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.io.ByteArrayInputStream;
@@ -56,7 +56,7 @@ public class KeytabEntryTest {
                  }).when(mockKeytabInputStream).available();
         //doReturn(120).when(mockKeytabInputStream).readOctetsCount();
         doReturn(new byte[]{}).when(mockKeytabInputStream).readCountedOctets();
-        doReturn(null).when(mockKeytabInputStream).readPrincipal(Matchers.any(Integer.class));
+        doReturn(null).when(mockKeytabInputStream).readPrincipal(ArgumentMatchers.any(Integer.class));
         doReturn(new KerberosTime()).when(mockKeytabInputStream).readTime();
 
         KeytabEntry keytabEntry = new KeytabEntry();
