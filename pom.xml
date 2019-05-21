@@ -29,7 +29,7 @@
 
   <name>Apache Kerby Project</name>
   <description>Apache Kerby project</description>
-  <url>http://directory.apache.org/kerby</url>
+  <url>https://directory.apache.org/kerby</url>
   <inceptionYear>2014</inceptionYear>
 
   <scm>
