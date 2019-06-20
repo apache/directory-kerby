@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -264,8 +265,8 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
     private void persistToFile() throws KrbException {
         String newJsonContent = gson.toJson(identities);
         try {
-            File newJsonKdbFile = File.createTempFile("kerby-kdb",
-                    ".json", jsonKdbFile.getParentFile());
+            File newJsonKdbFile = Files.createTempFile(jsonKdbFile.getParentFile().toPath(), "kerby-kdb",
+                    ".json").toFile();
             IOUtil.writeFile(newJsonContent, newJsonKdbFile);
             boolean delete = jsonKdbFile.delete();
             if (!delete) {
