@@ -73,7 +73,7 @@
     <drizzle-jdbc.version>1.4</drizzle-jdbc.version>
     <jsch.version>0.1.55</jsch.version>
     <maven-owasp-plugin-version>4.0.2</maven-owasp-plugin-version>
-    <commons-codec.version>1.12</commons-codec.version>
+    <commons-codec.version>1.13</commons-codec.version>
     <commons-logging.version>1.2</commons-logging.version>
     <ini4j.version>0.5.4</ini4j.version>
     <targetJdk.version>1.8</targetJdk.version>
