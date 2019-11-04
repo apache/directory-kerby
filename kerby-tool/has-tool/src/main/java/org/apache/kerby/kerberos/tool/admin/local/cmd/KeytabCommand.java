@@ -151,7 +151,7 @@ public class KeytabCommand extends HadminCommand {
                     return;
                 }
                 String pathToDeploy = items[3];
-                int port = Integer.valueOf(items[4]);
+                int port = Integer.parseInt(items[4]);
                 String username = items[5];
                 String password = "";
                 if (items.length == 7) {

@@ -110,18 +110,18 @@ public class HasClientUtil {
         StringBuilder data = new StringBuilder();
 
         InputStream inputStream = getInputStream(httpConn);
-        BufferedReader br;
-        if (inputStream != null) {
-          br = new BufferedReader(new InputStreamReader(inputStream));
-        } else {
+        if (inputStream == null) {
             throw new IOException("Failed to get the InputStream");
         }
-        String s;
-        while ((s = br.readLine()) != null) {
-            data.append(s);
-            data.append(System.getProperty("line.separator"));
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            String s;
+            while ((s = br.readLine()) != null) {
+                data.append(s);
+                data.append(System.getProperty("line.separator"));
+            }
+            return data.toString();
         }
-        return data.toString();
     }
 
     public static InputStream getInputStream(HttpURLConnection httpConn) throws IOException {

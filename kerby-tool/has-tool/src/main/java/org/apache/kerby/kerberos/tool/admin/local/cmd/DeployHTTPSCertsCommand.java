@@ -170,7 +170,7 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
         String truststoreFile = items[2];
         String truststoreSecret = items[3];
         String pathToDeploy = items[4];
-        int port = Integer.valueOf(items[5]);
+        int port = Integer.parseInt(items[5]);
         String username = items[6];
         String password = "";
         if (items.length == 8) {
