@@ -31,7 +31,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jmh.version>1.21</jmh.version>
+    <jmh.version>1.22</jmh.version>
     <javac.target>1.7</javac.target>
     <uberjar.name>benchmarks</uberjar.name>
   </properties>
@@ -90,7 +90,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.5.1</version>
+            <version>3.8.0</version>
             <configuration>
               <compilerVersion>${javac.target}</compilerVersion>
               <source>${javac.target}</source>
