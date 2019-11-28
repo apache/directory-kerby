@@ -76,7 +76,6 @@ public class SSLFactory implements ConnectionConfigurator {
 
   public static final String SSL_ENABLED_PROTOCOLS =
       "hadoop.ssl.enabled.protocols";
-  public static final String DEFAULT_SSL_ENABLED_PROTOCOLS = "TLSv1";
 
   private HasConfig conf;
   private Mode mode;
@@ -108,7 +107,7 @@ public class SSLFactory implements ConnectionConfigurator {
     keystoresFactory = new KeyStoresFactory();
     keystoresFactory.setConf(sslConf);
 
-    enabledProtocols = new String[] {DEFAULT_SSL_ENABLED_PROTOCOLS};
+    enabledProtocols = new String[] {"TLSv1", "TLSv1.1", "TLSv1.2"};
   }
 
   private HasConfig readSSLConfiguration(Mode mode) throws HasException {
