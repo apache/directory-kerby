@@ -16,6 +16,10 @@
   specific language governing permissions and limitations
   under the License.
 -->
+[![Build Status](https://builds.apache.org/view/A-D/view/Directory/job/dir-kerby/badge/icon?subject=Build)](https://builds.apache.org/view/A-D/view/Directory/job/dir-kerby/)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.kerby/kerby-all/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.kerby/kerby-all/)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/apache/directory-kerby)](https://lgtm.com/projects/g/apache/directory-kerby/alerts/)
+
 
 Apache Kerby
 ============
