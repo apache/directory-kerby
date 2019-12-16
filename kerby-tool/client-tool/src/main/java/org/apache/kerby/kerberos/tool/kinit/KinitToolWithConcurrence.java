@@ -221,7 +221,7 @@ public class KinitToolWithConcurrence {
         int[] tempDelayNumbers = new int[threadNumbers];
         int[] delayNumbers = new int[threadNumbers];
         startTime = System.currentTimeMillis();
-        Long timeStamp = System.currentTimeMillis();
+        long timeStamp = System.currentTimeMillis();
 
         int max = 0;
         int min = 0;
@@ -232,7 +232,7 @@ public class KinitToolWithConcurrence {
         while (true) {
             Thread.sleep(2000);
             int temp = 0;
-            Long now = System.currentTimeMillis();
+            long now = System.currentTimeMillis();
 
             for (int j = 0; j < threadNumbers; j++) {
                 delayNumbers[j] = reList[j * INTERVAL] - tempDelayNumbers[j];

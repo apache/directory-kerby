@@ -311,7 +311,7 @@ public abstract class KdcRequest {
 
     public long getTicketValidTime() {
         if (getRequestOptions().contains(KrbOption.LIFE_TIME)) {
-            return getRequestOptions().getIntegerOption(KrbOption.LIFE_TIME) * 1000;
+            return getRequestOptions().getIntegerOption(KrbOption.LIFE_TIME) * 1000L;
         } else {
             return context.getTicketValidTime();
         }

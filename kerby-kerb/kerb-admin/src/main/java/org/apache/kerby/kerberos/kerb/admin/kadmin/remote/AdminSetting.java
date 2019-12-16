@@ -100,15 +100,13 @@ public class AdminSetting {
     }
 
     public boolean allowUdp() {
-        Boolean allowUdp = commonOptions.getBooleanOption(
+        return commonOptions.getBooleanOption(
                 AdminOption.ALLOW_UDP, adminConfig.allowUdp());
-        return allowUdp;
     }
 
     public boolean allowTcp() {
-        Boolean allowTcp = commonOptions.getBooleanOption(
+        return commonOptions.getBooleanOption(
                 AdminOption.ALLOW_TCP, adminConfig.allowTcp());
-        return allowTcp;
     }
 
     public int getKdcUdpPort() {

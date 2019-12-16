@@ -166,9 +166,8 @@ public class AdminServerSetting implements ServerSetting {
      * @return tcp protocol is allowed or not
      */
     public boolean allowTcp() {
-        Boolean allowTcp = startupOptions.getBooleanOption(
+        return startupOptions.getBooleanOption(
                 AdminServerOption.ALLOW_TCP, adminServerConfig.allowTcp());
-        return allowTcp;
     }
 
     /**
@@ -176,9 +175,8 @@ public class AdminServerSetting implements ServerSetting {
      * @return udp protocol is allowed or not
      */
     public boolean allowUdp() {
-        Boolean allowUdp = startupOptions.getBooleanOption(
+        return startupOptions.getBooleanOption(
                 AdminServerOption.ALLOW_UDP, adminServerConfig.allowUdp());
-        return allowUdp;
     }
 
     /**

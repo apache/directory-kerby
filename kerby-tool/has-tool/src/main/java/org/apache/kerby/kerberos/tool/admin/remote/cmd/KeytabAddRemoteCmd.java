@@ -47,7 +47,7 @@ public class KeytabAddRemoteCmd extends AdminRemoteCmd {
 
         String principal = null;
         String keytabFileLocation = null;
-        Boolean glob = false;
+        boolean glob = false;
 
         int index = 1;
         while (index < items.length) {

@@ -139,7 +139,7 @@ public class Asn1ObjectIdentifier extends Asn1Simple<String> {
         for (int i = 1; i < parts.length; ++i) {
             coms[i - 1] = new BigInteger(parts[i]);
         }
-        coms[0] = coms[0].add(BigInteger.valueOf(Integer.parseInt(parts[0]) * 40));
+        coms[0] = coms[0].add(BigInteger.valueOf(Integer.parseInt(parts[0]) * 40L));
 
         byte[][] bytesGroups = new byte[coms.length][];
         for (int i = 0; i < coms.length; ++i) {

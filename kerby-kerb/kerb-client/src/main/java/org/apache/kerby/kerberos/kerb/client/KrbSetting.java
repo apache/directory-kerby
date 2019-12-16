@@ -100,15 +100,13 @@ public class KrbSetting {
     }
 
     public boolean allowUdp() {
-        Boolean allowUdp = commonOptions.getBooleanOption(
+        return commonOptions.getBooleanOption(
                 KrbOption.ALLOW_UDP, krbConfig.allowUdp());
-        return allowUdp;
     }
 
     public boolean allowTcp() {
-        Boolean allowTcp = commonOptions.getBooleanOption(
+        return commonOptions.getBooleanOption(
                 KrbOption.ALLOW_TCP, krbConfig.allowTcp());
-        return allowTcp;
     }
 
     public int getKdcUdpPort() {

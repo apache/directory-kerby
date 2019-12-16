@@ -89,7 +89,7 @@ public class KdcInitTool {
             System.err.println("The conf-dir is invalid or does not exist.");
             System.exit(2);
         }
-        if (keytabDir != null && !keytabDir.exists() && !keytabDir.mkdirs()) {
+        if (!keytabDir.exists() && !keytabDir.mkdirs()) {
             System.err.println("Could not create keytab path." + keytabDir);
             System.exit(3);
         }

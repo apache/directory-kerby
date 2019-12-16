@@ -238,7 +238,7 @@ public class HasClientLoginTool {
                     keytabList.add(i, file);
                 }
                 System.out.println("Start the login test.");
-                Long startTime = System.currentTimeMillis();
+                long startTime = System.currentTimeMillis();
                 exec = Executors.newFixedThreadPool(5);
                 for (int i = 0; i < taskNum; ++i) {
                     exec.submit(new Task(i));
@@ -250,7 +250,7 @@ public class HasClientLoginTool {
                     System.err.println(e.getMessage());
                     return;
                 }
-                Long endTime = System.currentTimeMillis();
+                long endTime = System.currentTimeMillis();
                 System.out.println("Finish the login test.");
                 System.out.println("Cost time: " + (endTime - startTime) + "ms");
             } else if (cmd.equals("delete")) {

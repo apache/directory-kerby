@@ -51,7 +51,7 @@ public class ConfigBackendCmd extends InitCmd {
         }
 
         HasInitClient client = getClient();
-        if (items.length >= 3 && items[1].equals("json")) {
+        if (items[1].equals("json")) {
             System.out.println(client.configBackend(items[1], items[2],
                     null, null, null));
         } else if (items.length >= 5 && items[1].equals("mysql")) {

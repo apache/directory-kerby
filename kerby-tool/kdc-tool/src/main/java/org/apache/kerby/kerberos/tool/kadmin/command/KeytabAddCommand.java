@@ -41,7 +41,7 @@ public class KeytabAddCommand extends KadminCommand {
 
         String principal = null;
         String keytabFileLocation = null;
-        Boolean glob = false;
+        boolean glob = false;
 
         //Since commands[0] is ktadd, the initial index is 1.
         int index = 1;

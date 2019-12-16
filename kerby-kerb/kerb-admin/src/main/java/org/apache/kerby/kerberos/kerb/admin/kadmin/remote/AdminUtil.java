@@ -45,18 +45,14 @@ public final class AdminUtil {
             throw new KrbException(KRB5_FILE_NAME + " not found");
         }
 
-        if (confFile != null && confFile.exists()) {
-            AdminConfig adminConfig = new AdminConfig();
-            try {
-                adminConfig.addKrb5Config(confFile);
-                return adminConfig;
-            } catch (IOException e) {
-                throw new KrbException("Failed to load krb config "
-                        + confFile.getAbsolutePath());
-            }
+        AdminConfig adminConfig = new AdminConfig();
+        try {
+            adminConfig.addKrb5Config(confFile);
+            return adminConfig;
+        } catch (IOException e) {
+            throw new KrbException("Failed to load krb config "
+                + confFile.getAbsolutePath());
         }
-
-        return null;
     }
 
     /**

@@ -182,7 +182,7 @@ public class AdminLocalTool {
     private static File getConfDir(String[] args) {
         String envDir;
         confDir = new File(args[0]);
-        if (confDir == null || !confDir.exists()) {
+        if (!confDir.exists()) {
             try {
                 Map<String, String> mapEnv = System.getenv();
                 envDir = mapEnv.get("KRB5_KDC_DIR");
@@ -259,7 +259,7 @@ public class AdminLocalTool {
             }
         } else if (kOptions.contains(KadminOption.K)) {
             File keyTabFile = new File(kOptions.getStringOption(KadminOption.K));
-            if (keyTabFile == null || !keyTabFile.exists()) {
+            if (!keyTabFile.exists()) {
                 printUsage("Need the valid keytab file.");
                 return;
             }

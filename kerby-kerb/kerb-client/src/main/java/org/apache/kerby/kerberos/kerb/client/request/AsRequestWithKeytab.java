@@ -61,9 +61,10 @@ public class AsRequestWithKeytab extends AsRequest {
 
         Keytab keytab = null;
         try {
-            keytab =  Keytab.loadKeytab(keytabFile);
+            keytab = Keytab.loadKeytab(keytabFile);
         } catch (IOException e) {
-            System.err.println("Can not load keytab from file" + keytabFile.getAbsolutePath());
+            String path = keytabFile != null ? keytabFile.getAbsolutePath() : "";
+            System.err.println("Can not load keytab from file" + path);
         }
         return keytab;
     }

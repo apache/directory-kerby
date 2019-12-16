@@ -110,7 +110,7 @@ public class RemoteAdminClientTool {
         adminClient = new AdminClient(adminConfig);
 
         File keytabFile = new File(adminConfig.getKeyTabFile());
-        if (keytabFile == null || !keytabFile.exists()) {
+        if (!keytabFile.exists()) {
             System.err.println("Need the valid keytab file value in conf file.");
             return;
         }

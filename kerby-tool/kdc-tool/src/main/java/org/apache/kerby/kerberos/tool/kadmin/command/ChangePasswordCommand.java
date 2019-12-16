@@ -62,7 +62,7 @@ public class ChangePasswordCommand extends KadminCommand {
             } catch (KrbException e) {
                 System.err.println("Fail to update password. " + e.getCause());
             }
-        } else if (commands.length > 2) {
+        } else {
             kOptions = ToolUtil.parseOptions(commands, 1, commands.length - 2);
             if (kOptions == null) {
                 System.err.println(USAGE);

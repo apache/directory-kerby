@@ -136,7 +136,7 @@ public class MySQLHasServerPlugin extends AbstractHasServerPlugin {
         } catch (ClassNotFoundException e) {
             throw new HasAuthenException("JDBC Driver Class not found. ", e);
         } catch (SQLException e) {
-            throw new HasAuthenException("Failed to connecting to MySQL."
+            throw new HasAuthenException("Failed to connect to MySQL. "
                     + "Please check MySQL URL, username and password. ", e);
         }
 

@@ -732,7 +732,7 @@ public class Base64 {
         if (pArray == null || pArray.length == 0) {
             return pArray;
         }
-        long len = (pArray.length * 3) / 4;
+        long len = (pArray.length * 3L) / 4;
         byte[] buf = new byte[(int) len];
         setInitialBuffer(buf, 0, buf.length);
         decode(pArray, 0, pArray.length);
@@ -957,7 +957,7 @@ public class Base64 {
         // base64 always encodes to multiples of 4.
         chunkSize = (chunkSize / 4) * 4;
 
-        long len = (pArray.length * 4) / 3;
+        long len = (pArray.length * 4L) / 3;
         long mod = len % 4;
         if (mod != 0) {
             len += 4 - mod;

@@ -202,7 +202,7 @@ public class Asn1Choice
             return null;
         }
 
-        if (chosenField != null && index != chosenField.getIndex()) {
+        if (index != chosenField.getIndex()) {
             throw new IllegalArgumentException("Incorrect chosen value requested");
         }
 

@@ -332,7 +332,7 @@ public class LocalKadminImpl implements LocalKadmin {
             return getPrincipals();
         }
 
-        Boolean containsAt = pt.pattern().indexOf('@') != -1;
+        boolean containsAt = pt.pattern().indexOf('@') != -1;
         List<String> result = new LinkedList<>();
 
         List<String> principalNames = getPrincipals();

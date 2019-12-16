@@ -151,7 +151,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
                 PkinitCrypto.verifyCmsSignedData(CmsMessageType.CMS_SIGN_CLIENT, signedData);
 
-                Boolean isSigned = signedData.isSigned();
+                boolean isSigned = signedData.isSigned();
                 if (isSigned) {
                     //TODO
                     LOG.info("Signed data.");
@@ -204,7 +204,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 expectedCheckSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
                         reqBodyBytes);
             } catch (KrbException e) {
-                LOG.error("Unable to calculate AS REQ checksum.", e.getMessage());
+                LOG.error("Unable to calculate AS REQ checksum. %s", e.getMessage());
             }
             byte[] receivedCheckSumByte = pkAuthenticator.getPaChecksum();
 

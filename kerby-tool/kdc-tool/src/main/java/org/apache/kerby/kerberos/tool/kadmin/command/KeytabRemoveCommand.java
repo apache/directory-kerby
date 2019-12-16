@@ -80,9 +80,9 @@ public class KeytabRemoveCommand extends KadminCommand {
         File keytabFile = new File(keytabFileLocation);
 
         try {
-            if (removeOption.equals("all")) {
+            if ("all".equals(removeOption)) {
                 getKadmin().removeKeytabEntriesOf(keytabFile, principal);
-            } else if (removeOption.equals("old")) {
+            } else if ("old".equals(removeOption)) {
                 getKadmin().removeOldKeytabEntriesOf(keytabFile, principal);
             } else {
                 int kvno = Integer.parseInt(removeOption);

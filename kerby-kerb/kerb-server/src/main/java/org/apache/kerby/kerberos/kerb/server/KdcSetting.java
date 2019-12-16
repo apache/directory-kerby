@@ -140,9 +140,8 @@ public class KdcSetting implements ServerSetting {
      * @return tcp protocol is allowed or not
      */
     public boolean allowTcp() {
-        Boolean allowTcp = startupOptions.getBooleanOption(
+        return startupOptions.getBooleanOption(
                 KdcServerOption.ALLOW_TCP, kdcConfig.allowTcp());
-        return allowTcp;
     }
 
     /**
@@ -150,9 +149,8 @@ public class KdcSetting implements ServerSetting {
      * @return udp protocol is allowed or not
      */
     public boolean allowUdp() {
-        Boolean allowUdp = startupOptions.getBooleanOption(
+        return startupOptions.getBooleanOption(
                 KdcServerOption.ALLOW_UDP, kdcConfig.allowUdp());
-        return allowUdp;
     }
 
     /**

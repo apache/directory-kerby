@@ -45,7 +45,7 @@ public final class ClientUtil {
      * @throws KrbException e
      */
     public static KrbConfig getConfig(File conf) throws KrbException {
-        if (!conf.exists()) {
+        if (conf == null || !conf.exists()) {
             throw new KrbException(conf + " not found");
         }
         File confFile = conf.isDirectory() ? new File(conf, KRB5_FILE_NAME) : conf;
