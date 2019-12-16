@@ -204,7 +204,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
                 expectedCheckSum = CheckSumUtil.makeCheckSum(CheckSumType.NIST_SHA,
                         reqBodyBytes);
             } catch (KrbException e) {
-                LOG.error("Unable to calculate AS REQ checksum. %s", e.getMessage());
+                LOG.error("Unable to calculate AS REQ checksum. {}", e.getMessage());
             }
             byte[] receivedCheckSumByte = pkAuthenticator.getPaChecksum();
 

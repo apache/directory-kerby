@@ -175,7 +175,7 @@ public class PkinitCrypto {
             LOG.error("bad g dhparameter");
             return false;
         }
-        LOG.info("Good dhparams %d", dh1.getP().bitLength());
+        LOG.info("Good dhparams {}", dh1.getP().bitLength());
         return true;
     }
 
