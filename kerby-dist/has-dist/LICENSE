@@ -239,3 +239,17 @@ See licenses/LICENSE-bouncycastle.txt
 This product bundles drizzle-jdbc library (BSD License)
 
 See licenses/LICENSE-drizzle.jdbc.txt
+
+===============================================================================
+This project incorporates portions of the JQuery project (MIT license)
+
+See licenses/LICENSE-jquery.txt
+
+===============================================================================
+
+This project bundles animal-sniffer-annotations (MIT license)
+
+See licenses/LICENSE-animal-sniffer.txt
+
+===============================================================================
+

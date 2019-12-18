@@ -74,6 +74,8 @@
                 </goals>
                 <configuration>
                   <excludeArtifactIds>jdk.tools</excludeArtifactIds>
+                  <excludeArtifactIds>error_prone_annotations</excludeArtifactIds>
+                  <excludeArtifactIds>checker-qual</excludeArtifactIds>
                   <outputDirectory>target/lib</outputDirectory>
                 </configuration>
               </execution>

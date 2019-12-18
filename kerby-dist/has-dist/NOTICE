@@ -142,3 +142,10 @@ This product includes/uses software, Java Servlet API, which can be obtained at:
     * http://servlet-spec.java.net
 
 -------------------------------------------------------------------------------
+
+This project incorporates portions of the JQuery project available under the
+MIT license:
+
+Copyright jQuery Foundation and other contributors, https://jquery.org/
+-------------------------------------------------------------------------------
+
