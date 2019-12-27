@@ -95,6 +95,7 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
     @Test
     public void testSignedTokenWithABadKey() throws Exception {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(2048);
         KeyPair keyPair = keyGen.generateKeyPair();
         prepareToken(getServerPrincipal(), ISSUER, keyPair.getPrivate(), null);
         
@@ -126,6 +127,7 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
     @Test
     public void testSignedEncryptedTokenBadSigningKey() throws Exception {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(2048);
         KeyPair keyPair = keyGen.generateKeyPair();
 
         PublicKey publicKey;

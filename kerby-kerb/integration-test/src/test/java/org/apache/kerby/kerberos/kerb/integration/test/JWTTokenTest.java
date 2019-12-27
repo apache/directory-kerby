@@ -206,7 +206,10 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.setAudiences(Collections.singletonList(getServerPrincipal()));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
 
-        KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+        kpg.initialize(2048);
+        KeyPair keyPair = kpg.generateKeyPair();
+
         krbToken.setTokenValue(signToken(authToken, keyPair.getPrivate()));
 
         // Now get a SGT using the JWT
@@ -463,7 +466,9 @@ public class JWTTokenTest extends TokenLoginTestBase {
         authToken.setAudiences(Collections.singletonList(authToken.getAudiences().get(0) + "_"));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
 
-        KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+        kpg.initialize(2048);
+        KeyPair keyPair = kpg.generateKeyPair();
         krbToken.setTokenValue(signToken(authToken, keyPair.getPrivate()));
 
         // Now get a TGT using the JWT token

@@ -327,6 +327,7 @@ public class TokenTest {
 
     private KeyPair getKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+        kpg.initialize(2048);
         return kpg.generateKeyPair();
     }
 

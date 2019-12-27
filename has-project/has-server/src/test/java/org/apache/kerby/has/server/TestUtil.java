@@ -126,7 +126,7 @@ class TestUtil {
 
   private static KeyPair generateKeyPair(String algorithm) throws NoSuchAlgorithmException {
     KeyPairGenerator keyGen = KeyPairGenerator.getInstance(algorithm);
-    keyGen.initialize(1024);
+    keyGen.initialize(2048);
     return keyGen.genKeyPair();
   }
 

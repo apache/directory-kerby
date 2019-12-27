@@ -76,7 +76,7 @@ public class DeployHTTPSCertsCommand extends HadminCommand {
 
     private static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-        keyGen.initialize(1024);
+        keyGen.initialize(2048);
         return keyGen.genKeyPair();
     }
 
