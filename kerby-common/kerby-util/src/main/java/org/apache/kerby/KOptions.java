@@ -90,36 +90,36 @@ public class KOptions {
         return true;
     }
 
-  public static int parseDuration(String strValue) {
-    int duration;
-    Matcher matcherColon = Pattern.compile("\\d+(?::\\d+){0,2}").matcher(strValue);
-    Matcher matcherWord = Pattern.compile("(?:(\\d+)D)?(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?",
-        Pattern.CASE_INSENSITIVE).matcher(strValue);
-    if (matcherColon.matches()) {
-      String[] durations = strValue.split(":");
-      if (durations.length == 1) {
-          duration = Integer.parseInt(durations[0]);
-      } else if (durations.length == 2) {
-          duration = Integer.parseInt(durations[0]) * 3600 + Integer.parseInt(durations[1]) * 60;
-      } else {
-          duration = Integer.parseInt(durations[0]) * 3600 + Integer.parseInt(durations[1]) * 60;
-          duration += Integer.parseInt(durations[2]);
-      }
-    } else if (matcherWord.matches()) {
-        int[] durations = new int[4];
-        for (int i = 0; i < 4; i++) {
-          String durationMatch = matcherWord.group(i + 1);
-          if (durationMatch != null) {
-            durations[i] = Integer.parseInt(durationMatch);
-          }
+    public static int parseDuration(String strValue) {
+        int duration;
+        Matcher matcherColon = Pattern.compile("\\d+(?::\\d+){0,2}").matcher(strValue);
+        Matcher matcherWord = Pattern.compile("(?:(\\d+)D)?(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?",
+                                              Pattern.CASE_INSENSITIVE).matcher(strValue);
+        if (matcherColon.matches()) {
+            String[] durations = strValue.split(":");
+            if (durations.length == 1) {
+                duration = Integer.parseInt(durations[0]);
+            } else if (durations.length == 2) {
+                duration = Integer.parseInt(durations[0]) * 3600 + Integer.parseInt(durations[1]) * 60;
+            } else {
+                duration = Integer.parseInt(durations[0]) * 3600 + Integer.parseInt(durations[1]) * 60;
+                duration += Integer.parseInt(durations[2]);
+            }
+        } else if (matcherWord.matches()) {
+            int[] durations = new int[4];
+            for (int i = 0; i < 4; i++) {
+                String durationMatch = matcherWord.group(i + 1);
+                if (durationMatch != null) {
+                    durations[i] = Integer.parseInt(durationMatch);
+                }
+            }
+            duration = durations[0] * 86400 + durations[1] * 3600 + durations[2] * 60 + durations[3];
+        } else {
+            throw new IllegalArgumentException("Text can't be parsed to a Duration: " + strValue);
         }
-        duration = durations[0] * 86400 + durations[1] * 3600 + durations[2] * 60 + durations[3];
-    } else {
-        throw new IllegalArgumentException("Text can't be parsed to a Duration: " + strValue);
-    }
 
-    return duration;
-  }
+        return duration;
+    }
 
     public void add(KOption option) {
         if (option != null) {
