@@ -268,7 +268,7 @@ public class WebServer {
             HasConfig sslConf = loadSslConfiguration(conf);
             loadSslConfToHttpServerBuilder(builder, sslConf);
 
-            if (httpsAddr != null && httpsAddr.getPort() == 0) {
+            if (httpsAddr.getPort() == 0) {
                 builder.setFindPort(true);
             }
 
