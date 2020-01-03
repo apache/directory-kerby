@@ -48,6 +48,7 @@ public class ApRequestTest extends KdcTestBase {
             tgt = getKrbClient().requestTgt(getClientPrincipal(),
                     getClientPassword());
             assertThat(tgt).isNotNull();
+            assertThat(tgt.getClientPrincipal().getName()).isEqualTo(getClientPrincipal());
 
             tkt = getKrbClient().requestSgt(tgt, getServerPrincipal());
             assertThat(tkt).isNotNull();
