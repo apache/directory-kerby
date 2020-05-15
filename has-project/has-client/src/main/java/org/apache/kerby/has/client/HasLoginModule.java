@@ -24,10 +24,10 @@ import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.security.jgss.krb5.Krb5Util;
-import sun.security.krb5.Credentials;
+
 import sun.security.krb5.KrbException;
 import sun.security.krb5.PrincipalName;
+import sun.security.krb5.RealmException;
 
 import javax.security.auth.DestroyFailedException;
 import javax.security.auth.Subject;
@@ -73,7 +73,7 @@ public class HasLoginModule implements LoginModule {
     private boolean succeeded = false;
     private boolean commitSucceeded = false;
 
-    private Credentials cred = null;
+    private Credential credential = null;
 
     private PrincipalName principal = null;
     private KerberosPrincipal kerbClientPrinc = null;
@@ -222,7 +222,6 @@ public class HasLoginModule implements LoginModule {
                 if (debug) {
                     System.out.println("use tgt ticket to login, acquire TGT TICKET...");
                 }
-
                 HasClient hasClient = new HasClient(hadoopSecurityHas);
                 TgtTicket tgtTicket;
                 try {
@@ -232,43 +231,18 @@ public class HasLoginModule implements LoginModule {
                     le.initCause(e);
                     throw le;
                 }
-                Credential credential = new Credential(tgtTicket);
-                boolean[] flags = new boolean[7];
-                int flag = credential.getTicketFlags().getFlags();
-                for (int i = 6; i >= 0; i--) {
-                    flags[i] = (flag & (1 << i)) != 0;
-                }
-                Date startTime = null;
-                if (credential.getStartTime() != null) {
-                    startTime = credential.getStartTime().getValue();
-                }
-                cred = new Credentials(credential.getTicket().encode(),
-                    credential.getClientName().getName(),
-                    credential.getServerName().getName(),
-                    credential.getKey().getKeyData(),
-                    credential.getKey().getKeyType().getValue(),
-                    flags,
-                    credential.getAuthTime().getValue(),
-                    startTime,
-                    credential.getEndTime().getValue(),
-                    credential.getRenewTill().getValue(),
-                    null);
-
+                credential = new Credential(tgtTicket);
                 // get the principal name from the ticket cache
                 if (principal == null) {
-                    principal = cred.getClient();
+                    principal = new PrincipalName(credential.getClientName().getName(), 1);
                 }
                 if (debug) {
                     System.out.println("Principal is " + principal);
                 }
             }
-        } catch (KrbException e) {
-            LoginException le = new LoginException(e.getMessage());
-            le.initCause(e);
-            throw le;
-        } catch (IOException ioe) {
-            LoginException ie = new LoginException(ioe.getMessage());
-            ie.initCause(ioe);
+        } catch (RealmException ee) {
+            LoginException ie = new LoginException(ee.getMessage());
+            ie.initCause(ee);
             throw ie;
         }
     }
@@ -307,7 +281,7 @@ public class HasLoginModule implements LoginModule {
                 cleanKerberosCred();
                 return false;
             } else {
-                if (isInitiator && cred == null) {
+                if (isInitiator &&  credential == null) {
                     succeeded = false;
                     throw new LoginException("Null Client Credential");
                 }
@@ -323,7 +297,33 @@ public class HasLoginModule implements LoginModule {
 
                 // create Kerberos Ticket
                 if (isInitiator) {
-                    kerbTicket = Krb5Util.credsToTicket(cred);
+                    boolean[] flags = new boolean[7];
+                    int flag = credential.getTicketFlags().getFlags();
+                    for (int i = 6; i >= 0; i--) {
+                        flags[i] = (flag & (1 << i)) != 0;
+                    }
+                    Date startTime = null;
+                    if (credential.getStartTime() != null) {
+                        startTime = credential.getStartTime().getValue();
+                    }
+                    try {
+                        kerbTicket = new KerberosTicket(
+                                credential.getTicket().encode(),
+                                new KerberosPrincipal(credential.getClientName().getName(), 1),
+                                new KerberosPrincipal(credential.getServerName().getName(), 2),
+                                credential.getKey().getKeyData(),
+                                credential.getKey().getKeyType().getValue(),
+                                flags,
+                                credential.getAuthTime().getValue(),
+                                startTime,
+                                credential.getEndTime().getValue(),
+                                credential.getRenewTill().getValue(),
+                                null);
+                    } catch (IOException e) {
+                        LoginException ie = new LoginException(e.getMessage());
+                        ie.initCause(e);
+                        throw ie;
+                    }
                 }
 
                 // Let us add the kerbClientPrinc,kerbTicket
