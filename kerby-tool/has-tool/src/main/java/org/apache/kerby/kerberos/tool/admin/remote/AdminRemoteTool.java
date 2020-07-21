@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.tool.admin.remote;
 
 import org.apache.kerby.has.client.HasAuthAdminClient;
 import org.apache.kerby.has.common.HasConfig;
+import org.apache.kerby.has.common.HasConfigKey;
 import org.apache.kerby.has.common.HasException;
 import org.apache.kerby.has.common.util.HasUtil;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -111,6 +112,9 @@ public class AdminRemoteTool {
         if (hasConfig.getFilterAuthType().equals("kerberos")) {
             authHasAdminClient = new HasAuthAdminClient(hasConfig);
         }
+
+        String adminPrincipal = authHasAdminClient.getKadminPrincipal();
+        hasConfig.setString(HasConfigKey.ADMIN_KEYTAB_PRINCIPAL, adminPrincipal);
 
         System.out.println("enter \"cmd\" to see legal commands.");
 
