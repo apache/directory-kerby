@@ -23,12 +23,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminConfig;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminUtil;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteAddPrincipalCommand;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteCommand;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteDeletePrincipalCommand;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteGetprincsCommand;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemotePrintUsageCommand;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteRenamePrincipalCommand;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.*;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcUtil;
@@ -36,6 +31,10 @@ import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 import org.apache.kerby.util.OSUtil;
+import org.jline.reader.*;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +49,6 @@ import java.nio.ByteBuffer;
 import java.security.PrivilegedAction;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * Command use of remote admin
@@ -59,7 +57,7 @@ public class RemoteAdminClientTool {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteAdminClientTool.class);
     private static final byte[] EMPTY = new byte[0];
     private static KrbTransport transport;
-    private static final String PROMPT = RemoteAdminClientTool.class.getSimpleName() + ".local:";
+    private static final String PROMPT = RemoteAdminClientTool.class.getSimpleName() + ".remote";
     private static final String USAGE = (OSUtil.isWindows()
         ? "Usage: bin\\remote-admin-client.cmd" : "Usage: sh bin/remote-admin-client.sh")
         + " <conf-file>\n"
@@ -77,8 +75,10 @@ public class RemoteAdminClientTool {
         + "                         Delete principal\n"
         + "rename_principal, renprinc\n"
         + "                         Rename principal\n"
-        + "listprincs\n"
-        + "          List principals\n";
+        + "list_principals, listprincs\n"
+        + "                         List principals\n"
+        + "ktadd, xst\n"
+        + "                         Add entry(s) to a keytab\n";
 
     public static void main(String[] args) throws Exception {
         AdminClient adminClient;
@@ -205,13 +205,28 @@ public class RemoteAdminClientTool {
 
         System.out.println("enter \"command\" to see legal commands.");
 
-        try (Scanner scanner = new Scanner(System.in, "UTF-8")) {
-            String input = scanner.nextLine();
+        Completer completer = new StringsCompleter("add_principal", "delete_principal", "rename_principal",
+                "list_principals", "ktadd");
 
-            while (!(input.equals("quit") || input.equals("exit") || input.equals("q"))) {
-                excute(adminClient, input);
-                System.out.print(PROMPT);
-                input = scanner.nextLine();
+        Terminal terminal = null;
+        try {
+            terminal = TerminalBuilder.terminal();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LineReader lineReader = LineReaderBuilder.builder().completer(completer).terminal(terminal).build();
+
+        while (true) {
+            try {
+                String line = lineReader.readLine(PROMPT + ": ");
+                if ("quit".equals(line) || "exit".equals(line) || "q".equals(line)) {
+                    break;
+                }
+                execute(adminClient, line);
+            } catch (UserInterruptException | EndOfFileException ex) {
+                break;
+            } catch (KrbException e) {
+                System.err.println(e.getMessage());
             }
         }
     }
@@ -235,7 +250,7 @@ public class RemoteAdminClientTool {
         }
     }
 
-    private static void excute(AdminClient adminClient, String input) throws KrbException {
+    private static void execute(AdminClient adminClient, String input) throws KrbException {
         input = input.trim();
         if (input.startsWith("command")) {
             System.out.println(LEGAL_COMMANDS);
@@ -253,10 +268,12 @@ public class RemoteAdminClientTool {
         } else if (input.startsWith("rename_principal")
             || input.startsWith("renprinc")) {
             executor = new RemoteRenamePrincipalCommand(adminClient);
-        } else if (input.startsWith("list_principals")) {
+        } else if (input.startsWith("list_principals")
+            || input.startsWith("listprincs")) {
             executor = new RemoteGetprincsCommand(adminClient);
-        } else if (input.startsWith("listprincs")) {
-            executor = new RemotePrintUsageCommand();
+        } else if (input.startsWith("ktadd")
+            || input.startsWith("xst")) {
+            executor = new RemoteKeytabAddCommand(adminClient);
         } else {
             System.out.println(LEGAL_COMMANDS);
             return;

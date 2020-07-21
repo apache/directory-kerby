@@ -22,23 +22,19 @@ package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
-import org.apache.kerby.kerberos.kerb.admin.message.AddPrincipalRep;
-import org.apache.kerby.kerberos.kerb.admin.message.AdminMessage;
-import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageCode;
-import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageType;
-import org.apache.kerby.kerberos.kerb.admin.message.DeletePrincipalRep;
-import org.apache.kerby.kerberos.kerb.admin.message.GetprincsRep;
-import org.apache.kerby.kerberos.kerb.admin.message.KadminCode;
-import org.apache.kerby.kerberos.kerb.admin.message.RenamePrincipalRep;
+import org.apache.kerby.kerberos.kerb.admin.message.*;
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
 import org.apache.kerby.xdr.type.XdrStructType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -91,8 +87,12 @@ public class AdminServerHandler {
                 responseMessage = handleRenamePrincipalReq(localKadmin, fieldInfos);
                 break;
             case GET_PRINCS_REQ:
-                System.out.println("message type getPrincs req");
+                System.out.println("message type: get principals req");
                 responseMessage = handleGetprincsReq(localKadmin, fieldInfos);
+                break;
+            case EXPORT_KEYTAB_REQ:
+                System.out.println("message type: export keytab req");
+                responseMessage = handleExportKeytabReq(localKadmin, fieldInfos);
                 break;
             default:
                 throw new KrbException("AdminMessageType error, can not handle the type: " + type);
@@ -199,6 +199,42 @@ public class AdminServerHandler {
             return responseError;
         }
     }
+    
+    private ByteBuffer handleExportKeytabReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
+        String principals = ((String) fieldInfos[2].getValue());
+        
+        if (principals != null) {
+            List<String> princList = stringToList(principals);
+            if (princList.size() != 0) {
+                LOG.info("Exporting keytab file for " + principals + "...");
+                File path = new File("/tmp/" + System.currentTimeMillis());
+                if (path.mkdirs()) {
+                    File keytabFile = new File(path, princList.get(0)
+                            .replace('/', '-')
+                            .replace('*', '-')
+                            .replace('?', '-')
+                            + ".keytab");
+                    try {
+                        localKadmin.exportKeytab(keytabFile, princList);
+                        LOG.info("Create keytab file for principals successfully.");
+                        ByteBuffer responseMessage = infoPackageTool(keytabFile, "exportKeytab");
+                        return responseMessage;
+                    } catch (KrbException e) {
+                        String error = "Failed to export keytab. " + e.toString();
+                        ByteBuffer responseError = infoPackageTool(error, "exportKeytab");
+                        return responseError;
+                    }
+                }
+            } else {
+                String error = "No matched principals.";
+                ByteBuffer responseError = infoPackageTool(error, "exportKeytab");
+                return responseError;
+            }
+        }
+        String error = "Failed to export keytab.";
+        ByteBuffer responseError = infoPackageTool(error, "exportKeytab");
+        return responseError;
+    }
 
     private ByteBuffer infoPackageTool(String message, String dealType) throws IOException {
         AdminMessage adminMessage = null;
@@ -226,6 +262,23 @@ public class AdminServerHandler {
 
         return KadminCode.encodeMessage(adminMessage);
     }
+    
+    private ByteBuffer infoPackageTool(File keytabFile, String dealType) throws IOException {
+        AdminMessage adminMessage = null;
+        XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
+        if ("exportKeytab".equals(dealType)) {
+            adminMessage = new ExportKeytabRep();
+            xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.EXPORT_KEYTAB_REP);
+        }
+        
+        xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
+        xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.BYTES, Files.readAllBytes(keytabFile.toPath()));
+
+        KeytabMessageCode value = new KeytabMessageCode(xdrFieldInfos);
+        adminMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+
+        return KadminCode.encodeMessage(adminMessage);
+    }
 
     private String listToString(List<String> list) {
         if (list.isEmpty()) {
@@ -237,5 +290,12 @@ public class AdminServerHandler {
             result.append(list.get(i)).append(" ");
         }
         return result.toString();
+    }
+    
+    private List<String> stringToList(String str) {
+        if (str == null || str.isEmpty()) {
+            return null;
+        }
+        return Arrays.asList(str.split(" "));
     }
 }

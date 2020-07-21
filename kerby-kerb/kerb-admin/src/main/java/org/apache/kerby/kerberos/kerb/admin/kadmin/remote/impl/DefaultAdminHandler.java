@@ -76,4 +76,20 @@ public class DefaultAdminHandler extends AdminHandler {
 
         return prinicalList;
     }
+
+    @Override
+    protected byte[] handleRequestForBytes(AdminRequest adminRequest) throws KrbException {
+        super.handleRequest(adminRequest);
+        
+        KrbTransport transport = adminRequest.getTransport();
+        ByteBuffer receiveMessage = null;
+        byte[] keytabFileBytes;
+        try {
+            receiveMessage = transport.receiveMessage();
+            keytabFileBytes = super.onResponseMessageForBytesArray(adminRequest, receiveMessage);
+        } catch (IOException e) {
+            throw new KrbException("Admin receives response message failed", e);
+        }
+        return keytabFileBytes;
+    }
 }
