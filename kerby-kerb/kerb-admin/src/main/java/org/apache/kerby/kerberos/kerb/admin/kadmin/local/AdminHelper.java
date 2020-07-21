@@ -32,6 +32,7 @@ import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -93,6 +94,24 @@ public final class AdminHelper {
         Keytab keytab;
         try {
             keytab = Keytab.loadKeytab(keytabFile);
+        } catch (IOException e) {
+            throw new KrbException("Failed to load keytab", e);
+        }
+
+        return keytab;
+    }
+
+    /**
+     * Load keytab from Input stream.
+     *
+     * @param keytabInputStream The Input stream
+     * @return The keytab load from keytab file
+     * @throws KrbException If there is a problem loading the Input stream
+     */
+    public static Keytab loadKeytab(InputStream keytabInputStream) throws KrbException {
+        Keytab keytab;
+        try {
+            keytab = Keytab.loadKeytab(keytabInputStream);
         } catch (IOException e) {
             throw new KrbException("Failed to load keytab", e);
         }

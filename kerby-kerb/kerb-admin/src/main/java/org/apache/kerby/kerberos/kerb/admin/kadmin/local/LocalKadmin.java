@@ -75,14 +75,5 @@ public interface LocalKadmin extends Kadmin {
      */
     IdentityBackend getIdentityBackend();
 
-    /**
-     * Get the identity from backend.
-     *
-     * @param principalName The principal name
-     * @return identity
-     * @throws KrbException e
-     */
-    KrbIdentity getPrincipal(String principalName) throws KrbException;
-
     int size() throws KrbException;
 }

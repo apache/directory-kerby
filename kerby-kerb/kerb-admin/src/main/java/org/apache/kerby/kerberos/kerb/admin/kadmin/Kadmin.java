@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin;
 
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 
 import java.io.File;
 import java.util.List;
@@ -180,6 +181,15 @@ public interface Kadmin {
      * @throws KrbException e
      */
     List<String> getPrincipals(String globString) throws KrbException;
+
+    /**
+     * Get the identity from backend.
+     *
+     * @param principalName The principal name
+     * @return identity
+     * @throws KrbException e
+     */
+    KrbIdentity getPrincipal(String principalName) throws KrbException;
 
     /**
      * Change the password of specified principal.

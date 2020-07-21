@@ -22,24 +22,25 @@ package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
-import org.apache.kerby.kerberos.kerb.admin.message.AddPrincipalRep;
-import org.apache.kerby.kerberos.kerb.admin.message.AdminMessage;
-import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageCode;
-import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageType;
-import org.apache.kerby.kerberos.kerb.admin.message.DeletePrincipalRep;
-import org.apache.kerby.kerberos.kerb.admin.message.GetprincsRep;
-import org.apache.kerby.kerberos.kerb.admin.message.KadminCode;
-import org.apache.kerby.kerberos.kerb.admin.message.RenamePrincipalRep;
+import org.apache.kerby.kerberos.kerb.admin.message.*;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
 import org.apache.kerby.xdr.type.XdrStructType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * admin server handler to process client acmin requests.
@@ -93,6 +94,18 @@ public class AdminServerHandler {
             case GET_PRINCS_REQ:
                 System.out.println("message type getPrincs req");
                 responseMessage = handleGetprincsReq(localKadmin, fieldInfos);
+                break;
+            case KEYTAB_ADD_REQ:
+                System.out.println("message type keytabAdd req");
+                responseMessage = handleKeytabAddReq(localKadmin, fieldInfos);
+                break;
+            case CHANGE_PWD_REQ:
+                System.out.println("message type changePwd req");
+                responseMessage = handleChangePwdReq(localKadmin, fieldInfos);
+                break;
+            case GET_PRINCIPAL_REQ:
+                System.out.println("message type getPrincipal req");
+                responseMessage = handleGetPrincipalRep(localKadmin, fieldInfos);
                 break;
             default:
                 throw new KrbException("AdminMessageType error, can not handle the type: " + type);
@@ -199,6 +212,82 @@ public class AdminServerHandler {
             return responseError;
         }
     }
+    
+    private ByteBuffer handleKeytabAddReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
+        String principals = ((String) fieldInfos[2].getValue());
+        
+        if (principals != null) {
+            List<String> princList = stringToList(principals);
+            if (princList.size() != 0) {
+                LOG.info("Exporting keytab file for " + principals + "...");
+                File path = new File("/tmp/" + System.currentTimeMillis());
+                if (path.mkdirs()) {
+                    File keytabFile = new File(path, princList.get(0)
+                            .replace('/', '-')
+                            .replace('*', '-')
+                            .replace('?', '-')
+                            + ".keytab");
+                    try {
+                        localKadmin.exportKeytab(keytabFile, princList);
+                        LOG.info("Create keytab file for principals successfully.");
+                        ByteBuffer responseMessage = infoPackageTool(keytabFile, "keytabAdd");
+                        return responseMessage;
+                    } catch (KrbException e) {
+                        String error = "Failed to export keytab. " + e.toString();
+                        ByteBuffer responseError = infoPackageTool(error, "keytabAdd");
+                        return responseError;
+                    }
+                }
+            } else {
+                String error = "No matched principals.";
+                ByteBuffer responseError = infoPackageTool(error, "keytabAdd");
+                return responseError;
+            }
+        }
+        String error = "Failed to export keytab.";
+        ByteBuffer responseError = infoPackageTool(error, "keytabAdd");
+        return responseError;
+    }
+    
+    private ByteBuffer handleChangePwdReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
+        String principal = ((String) fieldInfos[2].getValue());
+        String newPassword = ((String) fieldInfos[3].getValue());
+        
+        if (principal == null || principal.isEmpty() || newPassword == null || newPassword.isEmpty()) {
+            String error = "Value of principal or new password is null.";
+            ByteBuffer responseError = infoPackageTool(error, "changePwd");
+            return responseError;
+        }
+        
+        try {
+            localKadmin.changePassword(principal, newPassword);
+        } catch (KrbException e) {
+            String error = String.format("Failed to change password of principal %s. ", principal) + e.toString();
+            ByteBuffer responseError = infoPackageTool(error, "changePwd");
+            return responseError;
+        }
+
+        String message = String.format("Change password of principal %s.", principal);
+        System.out.println(message);
+        LOG.info(message);
+        ByteBuffer responseMessage = infoPackageTool(message, "changePwd");
+        return responseMessage;
+    }
+    
+    private ByteBuffer handleGetPrincipalRep(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
+        String principal = ((String) fieldInfos[2].getValue());
+        
+        try {
+            KrbIdentity identity = localKadmin.getPrincipal(principal);
+            
+            ByteBuffer responseMessage = infoPackageTool(identity, "getPrincipal");
+            return responseMessage;
+        } catch (KrbException e) {
+            String error = String.format("Failed to get principal %s. ", principal) + e.toString();
+            ByteBuffer responseError = infoPackageTool(error, "getPrincipal");
+            return responseError;
+        }
+    }
 
     private ByteBuffer infoPackageTool(String message, String dealType) throws IOException {
         AdminMessage adminMessage = null;
@@ -216,6 +305,12 @@ public class AdminServerHandler {
         } else if ("addPrincipal".equals(dealType)) {
             adminMessage = new AddPrincipalRep();
             xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.ADD_PRINCIPAL_REP);
+        } else if ("changePwd".equals(dealType)) {
+            adminMessage = new ChangePasswordRep();
+            xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.CHANGE_PWD_REP);
+        } else if ("getPrincipal".equals(dealType)) {
+            adminMessage = new GetPrincipalRep();
+            xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.GET_PRINCIPAL_REP);
         }
 
         xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
@@ -224,6 +319,50 @@ public class AdminServerHandler {
         AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
         adminMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
 
+        return KadminCode.encodeMessage(adminMessage);
+    }
+    
+    private ByteBuffer infoPackageTool(File keytabFile, String dealType) throws IOException {
+        AdminMessage adminMessage = null;
+        XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
+        if ("expKeytab".equals(dealType)) {
+            adminMessage = new KeytabAddRep();
+            xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.KEYTAB_ADD_REP);
+        }
+        
+        xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
+        xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.BYTES, Files.readAllBytes(keytabFile.toPath()));
+
+        KeytabMessageCode value = new KeytabMessageCode(xdrFieldInfos);
+        adminMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+
+        return KadminCode.encodeMessage(adminMessage);
+    }
+    
+    private ByteBuffer infoPackageTool(KrbIdentity identity, String dealType) throws IOException {
+        AdminMessage adminMessage = null;
+        XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[9];
+        if ("getPrincipal".equals(dealType)) {
+            adminMessage = new GetPrincipalRep();
+            xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.GET_PRINCIPAL_REP);
+        }
+        
+        Map<EncryptionType, EncryptionKey> key = identity.getKeys();
+        // Join key EncryptionType with comma delimiter
+        String keySet = key.keySet().stream().map(EncryptionType::getName).collect(Collectors.joining(","));
+        
+        xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 7);
+        xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, identity.getPrincipalName());
+        xdrFieldInfos[3] = new XdrFieldInfo(3, XdrDataType.LONG, identity.getExpireTime().getTime());
+        xdrFieldInfos[4] = new XdrFieldInfo(4, XdrDataType.LONG, identity.getCreatedTime().getTime());
+        xdrFieldInfos[5] = new XdrFieldInfo(5, XdrDataType.INTEGER, identity.getKdcFlags());
+        xdrFieldInfos[6] = new XdrFieldInfo(6, XdrDataType.INTEGER, identity.getKeyVersion());
+        xdrFieldInfos[7] = new XdrFieldInfo(7, XdrDataType.INTEGER, key.size());
+        xdrFieldInfos[8] = new XdrFieldInfo(8, XdrDataType.STRING, keySet.toString());
+        
+        IdentityInfoCode value = new IdentityInfoCode(xdrFieldInfos);
+        adminMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+        
         return KadminCode.encodeMessage(adminMessage);
     }
 
@@ -237,5 +376,12 @@ public class AdminServerHandler {
             result.append(list.get(i)).append(" ");
         }
         return result.toString();
+    }
+    
+    private List<String> stringToList(String str) {
+        if (str == null || str.isEmpty()) {
+            return null;
+        }
+        return Arrays.asList(str.split(" "));
     }
 }

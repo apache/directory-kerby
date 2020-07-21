@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminHandler;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 
 import java.io.IOException;
@@ -75,5 +76,37 @@ public class DefaultAdminHandler extends AdminHandler {
         }
 
         return prinicalList;
+    }
+
+    @Override
+    protected byte[] handleRequestForBytes(AdminRequest adminRequest) throws KrbException {
+        super.handleRequest(adminRequest);
+        
+        KrbTransport transport = adminRequest.getTransport();
+        ByteBuffer receiveMessage = null;
+        byte[] keytabFileBytes;
+        try {
+            receiveMessage = transport.receiveMessage();
+            keytabFileBytes = super.onResponseMessageForBytesArray(adminRequest, receiveMessage);
+        } catch (IOException e) {
+            throw new KrbException("Admin receives response message failed", e);
+        }
+        return keytabFileBytes;
+    }
+
+    @Override
+    protected KrbIdentity handleRequestForIdentity(AdminRequest adminRequest) throws KrbException {
+        super.handleRequest(adminRequest);
+
+        KrbTransport transport = adminRequest.getTransport();
+        ByteBuffer receiveMessage = null;
+        KrbIdentity identity;
+        try {
+            receiveMessage = transport.receiveMessage();
+            identity = super.onResponseMessageForIdentity(adminRequest, receiveMessage);
+        } catch (IOException e) {
+            throw new KrbException("Admin receives response message failed", e);
+        }
+        return identity;
     }
 }

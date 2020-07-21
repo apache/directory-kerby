@@ -129,6 +129,7 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
             case UNSIGNED_INTEGER:
             case ENUM:
             case STRING:
+            case LONG:
                 return true;
             default:
                 return false;
