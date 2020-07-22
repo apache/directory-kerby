@@ -33,6 +33,11 @@ import org.apache.kerby.kerberos.kerb.admin.message.RenamePrincipalRep;
 import org.apache.kerby.kerberos.kerb.admin.message.KeytabMessageCode;
 import org.apache.kerby.kerberos.kerb.admin.message.ExportKeytabRep;
 import org.apache.kerby.kerberos.kerb.admin.message.ChangePasswordRep;
+import org.apache.kerby.kerberos.kerb.admin.message.IdentityInfoCode;
+import org.apache.kerby.kerberos.kerb.admin.message.GetPrincipalRep;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
 import org.apache.kerby.xdr.type.XdrStructType;
@@ -46,6 +51,8 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * admin server handler to process client acmin requests.
@@ -107,6 +114,10 @@ public class AdminServerHandler {
             case CHANGE_PWD_REQ:
                 System.out.println("message type: change password req");
                 responseMessage = handleChangePwdReq(localKadmin, fieldInfos);
+                break;
+            case GET_PRINCIPAL_REQ:
+                System.out.println("message type: get principal req");
+                responseMessage = handleGetPrincipalRep(localKadmin, fieldInfos);
                 break;
             default:
                 throw new KrbException("AdminMessageType error, can not handle the type: " + type);
@@ -273,6 +284,21 @@ public class AdminServerHandler {
         return responseMessage;
     }
 
+    private ByteBuffer handleGetPrincipalRep(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
+        String principal = fixPrincipal((String) fieldInfos[2].getValue());
+
+        try {
+            KrbIdentity identity = localKadmin.getPrincipal(principal);
+
+            ByteBuffer responseMessage = infoPackageTool(identity, "getPrincipal");
+            return responseMessage;
+        } catch (KrbException e) {
+            String error = String.format("Failed to get principal %s. ", principal) + e.toString();
+            ByteBuffer responseError = infoPackageTool(error, "getPrincipal");
+            return responseError;
+        }
+    }
+
     private ByteBuffer infoPackageTool(String message, String dealType) throws IOException {
         AdminMessage adminMessage = null;
         XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
@@ -315,6 +341,33 @@ public class AdminServerHandler {
         xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.BYTES, Files.readAllBytes(keytabFile.toPath()));
 
         KeytabMessageCode value = new KeytabMessageCode(xdrFieldInfos);
+        adminMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
+
+        return KadminCode.encodeMessage(adminMessage);
+    }
+
+    private ByteBuffer infoPackageTool(KrbIdentity identity, String dealType) throws IOException {
+        AdminMessage adminMessage = null;
+        XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[9];
+        if ("getPrincipal".equals(dealType)) {
+            adminMessage = new GetPrincipalRep();
+            xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.GET_PRINCIPAL_REP);
+        }
+
+        Map<EncryptionType, EncryptionKey> key = identity.getKeys();
+        // Join key EncryptionType with comma delimiter
+        String keySet = key.keySet().stream().map(EncryptionType::getName).collect(Collectors.joining(","));
+
+        xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 7);
+        xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, identity.getPrincipalName());
+        xdrFieldInfos[3] = new XdrFieldInfo(3, XdrDataType.LONG, identity.getExpireTime().getTime());
+        xdrFieldInfos[4] = new XdrFieldInfo(4, XdrDataType.LONG, identity.getCreatedTime().getTime());
+        xdrFieldInfos[5] = new XdrFieldInfo(5, XdrDataType.INTEGER, identity.getKdcFlags());
+        xdrFieldInfos[6] = new XdrFieldInfo(6, XdrDataType.INTEGER, identity.getKeyVersion());
+        xdrFieldInfos[7] = new XdrFieldInfo(7, XdrDataType.INTEGER, key.size());
+        xdrFieldInfos[8] = new XdrFieldInfo(8, XdrDataType.STRING, keySet.toString());
+
+        IdentityInfoCode value = new IdentityInfoCode(xdrFieldInfos);
         adminMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
 
         return KadminCode.encodeMessage(adminMessage);

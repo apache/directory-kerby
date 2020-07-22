@@ -32,8 +32,10 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.DeletePrincipa
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.RenamePrincipalRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.GetprincsRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.ChangePasswordRequest;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.GetPrincipalRequest;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
@@ -197,18 +199,18 @@ public class RemoteKadminImpl implements Kadmin {
 
     @Override
     public List<String> getPrincipals() throws KrbException {
-        AdminRequest grtPrincsRequest = new GetprincsRequest();
-        grtPrincsRequest.setTransport(transport);
+        AdminRequest getPrincsRequest = new GetprincsRequest();
+        getPrincsRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        return adminHandler.handleRequestForList(grtPrincsRequest);
+        return adminHandler.handleRequestForList(getPrincsRequest);
     }
 
     @Override
     public List<String> getPrincipals(String globString) throws KrbException {
-        AdminRequest grtPrincsRequest = new GetprincsRequest(globString);
-        grtPrincsRequest.setTransport(transport);
+        AdminRequest getPrincsRequest = new GetprincsRequest(globString);
+        getPrincsRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        return adminHandler.handleRequestForList(grtPrincsRequest);
+        return adminHandler.handleRequestForList(getPrincsRequest);
     }
 
     @Override
@@ -228,6 +230,13 @@ public class RemoteKadminImpl implements Kadmin {
     @Override
     public void release() throws KrbException {
 
+    }
+    
+    public KrbIdentity getPrincipal(String principalName) throws KrbException {
+        AdminRequest getPrincipalRequest = new GetPrincipalRequest(principalName);
+        getPrincipalRequest.setTransport(transport);
+        AdminHandler adminHandler = new DefaultAdminHandler();
+        return adminHandler.handleRequestForIdentity(getPrincipalRequest);
     }
 
     private String listToString(List<String> list) {

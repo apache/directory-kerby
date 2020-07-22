@@ -23,13 +23,13 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
 import java.util.List;
 
-public class RemoteGetprincsCommand extends RemoteCommand {
+public class RemoteListPrincsCommand extends RemoteCommand {
     private static final String USAGE = "Usage: list_principals [expression]\n"
             + "\t'expression' is a shell-style glob expression that can contain the wild-card characters ?, *, and []."
             + "\tExample:\n"
             + "\t\tlist_principals [expression]\n";
 
-    public RemoteGetprincsCommand(AdminClient adminClient) {
+    public RemoteListPrincsCommand(AdminClient adminClient) {
         super(adminClient);
     }
 
