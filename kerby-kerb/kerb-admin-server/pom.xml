@@ -60,7 +60,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
-      <artifactId>json-backend</artifactId>
+      <artifactId>zookeeper-backend</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>

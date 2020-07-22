@@ -113,6 +113,15 @@ public abstract class AdminHandler {
                     + AdminMessageType.RENAME_PRINCIPAL_REP);
                 }
                 break;
+            case CHANGE_PWD_REP:
+                if (adminRequest.getAdminReq().getAdminMessageType()
+                        == AdminMessageType.CHANGE_PWD_REQ) {
+                    System.out.println((String) fieldInfos[2].getValue());
+                } else {
+                    throw new KrbException("Response message type error: need "
+                            + AdminMessageType.CHANGE_PWD_REP);
+                }
+                break;
             default:
                 throw new KrbException("Response message type error: " + type);
         }
