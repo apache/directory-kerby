@@ -93,48 +93,6 @@ pipeline {
             }
           }
         }
-        stage ('Linux Java 14') {
-          options {
-            timeout(time: 4, unit: 'HOURS')
-            retry(2)
-          }
-          agent {
-            docker {
-              label 'ubuntu'
-              image 'apachedirectory/maven-build:jdk-14'
-              args '-v $HOME/.m2:/home/hnelson/.m2'
-            }
-          }
-          steps {
-            sh 'mvn -V clean verify'
-          }
-          post {
-            always {
-              deleteDir()
-            }
-          }
-        }
-        stage ('Windows Java 8') {
-          options {
-            timeout(time: 4, unit: 'HOURS')
-            retry(2)
-          }
-          agent {
-            label 'Windows'
-          }
-          steps {
-            bat '''
-            set JAVA_HOME=F:\\jenkins\\tools\\java\\latest1.8
-            set MAVEN_OPTS="-Xmx512m"
-            F:\\jenkins\\tools\\maven\\latest3\\bin\\mvn -V clean verify
-            '''
-          }
-          post {
-            always {
-              deleteDir()
-            }
-          }
-        }
       }
     }
     stage ('Deploy') {
