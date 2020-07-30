@@ -111,10 +111,9 @@ public class AdminRemoteTool {
 
         if (hasConfig.getFilterAuthType().equals("kerberos")) {
             authHasAdminClient = new HasAuthAdminClient(hasConfig);
+            String adminPrincipal = authHasAdminClient.getKadminPrincipal();
+            hasConfig.setString(HasConfigKey.ADMIN_KEYTAB_PRINCIPAL, adminPrincipal);
         }
-
-        String adminPrincipal = authHasAdminClient.getKadminPrincipal();
-        hasConfig.setString(HasConfigKey.ADMIN_KEYTAB_PRINCIPAL, adminPrincipal);
 
         System.out.println("enter \"cmd\" to see legal commands.");
 
