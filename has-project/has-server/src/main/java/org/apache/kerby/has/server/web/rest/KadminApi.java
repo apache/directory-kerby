@@ -448,14 +448,19 @@ public class KadminApi {
     }
     
     private boolean isAdminPrincipal() {
+        HasServer hasServer = WebServer.getHasServerFromContext(context);
+        String serverFilterAuthType = hasServer.getWebServer().getConf().getFilterAuthType();
+        if (!serverFilterAuthType.equals("kerberos")) {
+            // When filter_auth_type is not kerberos, there is no need to check the admin principal
+            return true;
+        }
         Principal requestPrincipal = httpRequest.getUserPrincipal();
         if (requestPrincipal instanceof AuthenticationToken) {
-            HasServer hasServer = WebServer.getHasServerFromContext(context);
             KdcSetting serverSetting = hasServer.getKdcServer().getKdcSetting();
             String adminPrincipal = KrbUtil.makeKadminPrincipal(serverSetting.getKdcRealm()).getName();
             boolean check = adminPrincipal.equals(requestPrincipal.getName());
             if (!check) {
-                WebServer.LOG.warn("Client tries to pass the authentication using principal " 
+                WebServer.LOG.warn("Client tries to pass the authentication using principal "
                         + requestPrincipal.getName());
             }
             return check;
