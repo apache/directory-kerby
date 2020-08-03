@@ -23,6 +23,7 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.has.common.HasConfig;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.Kadmin;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.slf4j.Logger;
@@ -384,7 +385,7 @@ public class HasAuthAdminClient implements Kadmin {
 
     @Override
     public String getKadminPrincipal() {
-        return null;
+        return KrbUtil.makeKadminPrincipal(hasConfig.getRealm()).getName();
     }
 
     @Override

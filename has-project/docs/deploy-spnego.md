@@ -28,5 +28,5 @@ To use Kerberos SPNEGO as the authentication mechanism, the authentication filte
 ## 2. Client Side Configuration(in client side admin.conf)
 
 - filter_auth_type the keyword kerberos.  For example: filter_auth_type = kerberos
-- admin_keytab: The path to the keytab file containing the credential for the admin principal. For example: admin_keytab = /etc/has/admin.keytab
-- admin_keytab_principal: The admin principal. For example: admin_keytab_principal = kadmin/<YOUR-REALM.COM>@<YOUR-REALM.COM>
+- admin_keytab: The path to the keytab file containing the credential for the admin principal(kadmin/<YOUR-REALM.COM>@<YOUR-REALM.COM>). For example: admin_keytab = /etc/has/admin.keytab
+- realm: The realm of KDC. For example: realm = YOUR-REALM.COM

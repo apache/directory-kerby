@@ -17,12 +17,14 @@
  */
 package org.apache.kerby.has.server.web.rest;
 
+import org.apache.hadoop.security.authentication.server.AuthenticationToken;
 import org.apache.kerby.has.server.HasServer;
 import org.apache.kerby.has.server.web.WebServer;
 import org.apache.kerby.has.server.web.rest.param.PasswordParam;
 import org.apache.kerby.has.server.web.rest.param.PrincipalParam;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
+import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcSetting;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
@@ -44,6 +46,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +78,9 @@ public class KadminApi {
         String globalModeVlue = "true";
         if (globalModeVlue.equals(isGlobal)) {
             global = true;
+        }
+        if (!isAdminPrincipal()) {
+            return Response.status(Response.Status.FORBIDDEN).entity("kadmin principal required.\n").build();
         }
         if (httpRequest.isSecure()) {
             WebServer.LOG.info("Exporting keytab file for " + principal + "...");
@@ -152,6 +158,9 @@ public class KadminApi {
     @Path("/listprincipals")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listPrincipals(@QueryParam("exp") String exp) {
+        if (!isAdminPrincipal()) {
+            return Response.status(Response.Status.FORBIDDEN).entity("kadmin principal required.\n").build();
+        }
         if (httpRequest.isSecure()) {
             WebServer.LOG.info("Request to get principals.");
             String msg;
@@ -196,6 +205,9 @@ public class KadminApi {
                                  final PrincipalParam principal,
                                  @QueryParam(PasswordParam.NAME) @DefaultValue(PasswordParam.DEFAULT)
                                  final PasswordParam password) {
+        if (!isAdminPrincipal()) {
+            return Response.status(Response.Status.FORBIDDEN).entity("kadmin principal required.\n").build();
+        }
         if (httpRequest.isSecure()) {
             WebServer.LOG.info("Request to add the principal named " + principal.getValue());
             String msg;
@@ -244,6 +256,9 @@ public class KadminApi {
     @Produces(MediaType.TEXT_PLAIN)
     public Response renamePrincipal(@QueryParam("oldprincipal") String oldPrincipal,
                                     @QueryParam("newprincipal") String newPrincipal) {
+        if (!isAdminPrincipal()) {
+            return Response.status(Response.Status.FORBIDDEN).entity("kadmin principal required.\n").build();
+        }
         if (httpRequest.isSecure()) {
             WebServer.LOG.info("Request to rename " + oldPrincipal + " to " + newPrincipal);
             String msg;
@@ -289,6 +304,9 @@ public class KadminApi {
     @Produces(MediaType.TEXT_PLAIN)
     public Response deletePrincipal(@QueryParam(PrincipalParam.NAME) @DefaultValue(PrincipalParam.DEFAULT)
                                     final PrincipalParam principal) {
+        if (!isAdminPrincipal()) {
+            return Response.status(Response.Status.FORBIDDEN).entity("kadmin principal required.\n").build();
+        }
         if (httpRequest.isSecure()) {
             WebServer.LOG.info("Request to delete the principal named " + principal.getValue());
             String msg;
@@ -331,6 +349,9 @@ public class KadminApi {
                                    final PrincipalParam principal,
                                    @QueryParam(PasswordParam.NAME) @DefaultValue(PasswordParam.DEFAULT)
                                    final PasswordParam newPassword) {
+        if (!isAdminPrincipal()) {
+            return Response.status(Response.Status.FORBIDDEN).entity("kadmin principal required.\n").build();
+        }
         if (httpRequest.isSecure()) {
             WebServer.LOG.info("Request to add the principal named " + principal.getValue());
             String msg;
@@ -380,6 +401,9 @@ public class KadminApi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPrincipal(@QueryParam(PrincipalParam.NAME) @DefaultValue(PrincipalParam.DEFAULT)
                                  final PrincipalParam principal) {
+        if (!isAdminPrincipal()) {
+            return Response.status(Response.Status.FORBIDDEN).entity("kadmin principal required.\n").build();
+        }
         if (httpRequest.isSecure()) {
             WebServer.LOG.info("Request to get a principal named " + principal.getValue());
             String msg;
@@ -421,6 +445,33 @@ public class KadminApi {
             }
         }
         return Response.status(Response.Status.FORBIDDEN).entity("HTTPS required.\n").build();
+    }
+
+    private boolean isAdminPrincipal() {
+        HasServer hasServer = WebServer.getHasServerFromContext(context);
+        String serverFilterAuthType = hasServer.getWebServer().getConf().getFilterAuthType();
+        if (!serverFilterAuthType.equals("kerberos")) {
+            // When filter_auth_type is not kerberos, there is no need to check the admin principal
+            return true;
+        }
+        Principal requestPrincipal = httpRequest.getUserPrincipal();
+        if (requestPrincipal == null) {
+            WebServer.LOG.warn("Request principal is null.");
+            return false;
+        }
+        if (requestPrincipal instanceof AuthenticationToken) {
+            KdcSetting serverSetting = hasServer.getKdcServer().getKdcSetting();
+            String adminPrincipal = KrbUtil.makeKadminPrincipal(serverSetting.getKdcRealm()).getName();
+            boolean check = adminPrincipal.equals(requestPrincipal.getName());
+            if (!check) {
+                WebServer.LOG.warn("Client tries to pass the authentication using principal "
+                        + requestPrincipal.getName());
+            }
+            return check;
+        } else {
+            WebServer.LOG.warn("Abnormal authentication token " + requestPrincipal.getClass().getCanonicalName());
+            return false;
+        }
     }
 }
 
