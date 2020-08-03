@@ -455,6 +455,10 @@ public class KadminApi {
             return true;
         }
         Principal requestPrincipal = httpRequest.getUserPrincipal();
+        if (requestPrincipal == null) {
+            WebServer.LOG.warn("Request principal is null.");
+            return false;
+        }
         if (requestPrincipal instanceof AuthenticationToken) {
             KdcSetting serverSetting = hasServer.getKdcServer().getKdcSetting();
             String adminPrincipal = KrbUtil.makeKadminPrincipal(serverSetting.getKdcRealm()).getName();
