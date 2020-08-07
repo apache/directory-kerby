@@ -57,6 +57,7 @@ public class Krb5Conf {
         String content = templateContent;
 
         content = content.replaceAll("_REALM_", "" + kdcConfig.getKdcRealm());
+        content = content.replaceAll("_KDC_HOST_", "" + kdcConfig.getKdcHost());
 
         int kdcPort = kdcConfig.allowUdp() ? kdcConfig.getKdcUdpPort()
                 : kdcConfig.getKdcTcpPort();
