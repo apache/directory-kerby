@@ -22,7 +22,16 @@ package org.apache.kerby.kerberos.kerb.admin.server.kadmin;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
-import org.apache.kerby.kerberos.kerb.admin.message.*;
+import org.apache.kerby.kerberos.kerb.admin.message.AddPrincipalRep;
+import org.apache.kerby.kerberos.kerb.admin.message.AdminMessage;
+import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageCode;
+import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageType;
+import org.apache.kerby.kerberos.kerb.admin.message.DeletePrincipalRep;
+import org.apache.kerby.kerberos.kerb.admin.message.GetprincsRep;
+import org.apache.kerby.kerberos.kerb.admin.message.KadminCode;
+import org.apache.kerby.kerberos.kerb.admin.message.RenamePrincipalRep;
+import org.apache.kerby.kerberos.kerb.admin.message.KeytabMessageCode;
+import org.apache.kerby.kerberos.kerb.admin.message.ExportKeytabRep;
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
 import org.apache.kerby.xdr.type.XdrStructType;
@@ -207,23 +216,21 @@ public class AdminServerHandler {
             List<String> princList = stringToList(principals);
             if (princList.size() != 0) {
                 LOG.info("Exporting keytab file for " + principals + "...");
-                File path = new File("/tmp/" + System.currentTimeMillis());
-                if (path.mkdirs()) {
-                    File keytabFile = new File(path, princList.get(0)
-                            .replace('/', '-')
-                            .replace('*', '-')
-                            .replace('?', '-')
-                            + ".keytab");
-                    try {
-                        localKadmin.exportKeytab(keytabFile, princList);
-                        LOG.info("Create keytab file for principals successfully.");
-                        ByteBuffer responseMessage = infoPackageTool(keytabFile, "exportKeytab");
-                        return responseMessage;
-                    } catch (KrbException e) {
-                        String error = "Failed to export keytab. " + e.toString();
-                        ByteBuffer responseError = infoPackageTool(error, "exportKeytab");
-                        return responseError;
-                    }
+                File tempDir = Files.createTempDirectory("ktadd").toFile();
+                File keytabFile = new File(tempDir, princList.get(0)
+                        .replace('/', '-')
+                        .replace('*', '-')
+                        .replace('?', '-')
+                        + ".keytab");
+                try {
+                    localKadmin.exportKeytab(keytabFile, princList);
+                    LOG.info("Create keytab file for principals successfully.");
+                    ByteBuffer responseMessage = infoPackageTool(keytabFile, "exportKeytab");
+                    return responseMessage;
+                } catch (KrbException e) {
+                    String error = "Failed to export keytab. " + e.toString();
+                    ByteBuffer responseError = infoPackageTool(error, "exportKeytab");
+                    return responseError;
                 }
             } else {
                 String error = "No matched principals.";
@@ -296,6 +303,17 @@ public class AdminServerHandler {
         if (str == null || str.isEmpty()) {
             return null;
         }
-        return Arrays.asList(str.split(" "));
+        String[] principals = str.split(" ");
+        for (int i = 0; i < principals.length; i++) {
+            principals[i] = fixPrincipal(principals[i]);
+        }
+        return Arrays.asList(principals);
+    }
+
+    private String fixPrincipal(String principal) {
+        if (!principal.contains("@")) {
+            principal += "@" + adminServerContext.getAdminRealm();
+        }
+        return principal;
     }
 }
