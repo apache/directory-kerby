@@ -18,7 +18,9 @@ import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.util.NetworkUtil;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

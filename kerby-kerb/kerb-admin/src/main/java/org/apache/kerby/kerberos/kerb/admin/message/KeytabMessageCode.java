@@ -21,7 +21,12 @@ package org.apache.kerby.kerberos.kerb.admin.message;
 
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
-import org.apache.kerby.xdr.type.*;
+import org.apache.kerby.xdr.type.XdrStructType;
+import org.apache.kerby.xdr.type.XdrType;
+import org.apache.kerby.xdr.type.XdrInteger;
+import org.apache.kerby.xdr.type.XdrString;
+import org.apache.kerby.xdr.type.XdrBytes;
+import org.apache.kerby.xdr.type.AbstractXdrType;
 
 /**
  * An extend XdrStructType to encode and decode ExportKeytab message.
