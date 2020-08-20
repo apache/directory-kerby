@@ -22,22 +22,28 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.Kadmin;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.local.AdminHelper;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultAdminHandler;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AddPrincipalRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.ExportKeytabRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.DeletePrincipalRequest;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.GetprincsRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.RenamePrincipalRequest;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.GetprincsRequest;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
+import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -120,13 +126,26 @@ public class RemoteKadminImpl implements Kadmin {
     @Override
     public void exportKeytab(File keytabFile,
                              String principal) throws KrbException {
-
+        exportKeytab(keytabFile, Collections.singletonList(principal));
     }
 
     @Override
     public void exportKeytab(File keytabFile,
                              List<String> principals) throws KrbException {
-
+        String principalsStr = listToString(principals);
+        AdminRequest exportKeytabRequest = new ExportKeytabRequest(principalsStr);
+        exportKeytabRequest.setTransport(transport);
+        AdminHandler adminHandler = new DefaultAdminHandler();
+        byte[] keytabFileBytes = adminHandler.handleRequestForBytes(exportKeytabRequest);
+        
+        Keytab keytab = AdminHelper.loadKeytab(new ByteArrayInputStream(keytabFileBytes));
+        Keytab outputKeytab = AdminHelper.createOrLoadKeytab(keytabFile);
+        
+        // If original keytab file exists, we need to merge keytab entries 
+        for (PrincipalName principal: keytab.getPrincipals()) {
+            outputKeytab.addKeytabEntries(keytab.getKeytabEntries(principal));
+        }
+        AdminHelper.storeKeytab(outputKeytab, keytabFile);
     }
 
     @Override
@@ -205,5 +224,17 @@ public class RemoteKadminImpl implements Kadmin {
     @Override
     public void release() throws KrbException {
 
+    }
+
+    private String listToString(List<String> list) {
+        if (list.isEmpty()) {
+            return null;
+        }
+        //Both speed and safety,so use StringBuilder
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            result.append(list.get(i)).append(" ");
+        }
+        return result.toString();
     }
 }

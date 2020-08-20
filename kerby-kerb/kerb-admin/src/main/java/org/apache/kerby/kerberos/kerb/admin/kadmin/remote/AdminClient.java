@@ -201,4 +201,14 @@ public class AdminClient {
         List<String> principalLists = remote.getPrincipals(exp);
         return principalLists;
     }
+    
+    public void requestExportKeytab(File keytabFile, String principal) throws KrbException {
+        Kadmin remote = new RemoteKadminImpl(innerClient);
+        remote.exportKeytab(keytabFile, principal);
+    }
+
+    public void requestExportKeytab(File keytabFile, List<String> principals) throws KrbException {
+        Kadmin remote = new RemoteKadminImpl(innerClient);
+        remote.exportKeytab(keytabFile, principals);
+    }
 }

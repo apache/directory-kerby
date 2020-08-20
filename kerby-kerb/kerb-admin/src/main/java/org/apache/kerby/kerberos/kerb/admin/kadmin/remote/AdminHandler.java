@@ -21,10 +21,11 @@ package org.apache.kerby.kerberos.kerb.admin.kadmin.remote;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
-import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageCode;
-import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageType;
 import org.apache.kerby.kerberos.kerb.admin.message.AdminReq;
 import org.apache.kerby.kerberos.kerb.admin.message.KadminCode;
+import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageCode;
+import org.apache.kerby.kerberos.kerb.admin.message.AdminMessageType;
+import org.apache.kerby.kerberos.kerb.admin.message.KeytabMessageCode;
 import org.apache.kerby.xdr.XdrFieldInfo;
 import org.apache.kerby.xdr.type.XdrStructType;
 
@@ -147,6 +148,35 @@ public abstract class AdminHandler {
 
         return princalsList;
     }
+    
+    public byte[] onResponseMessageForBytesArray(AdminRequest adminRequest,
+                                 ByteBuffer responseMessage) throws KrbException {
+        byte[] keytabFileBytes = null;
+        
+        XdrStructType decoded = new KeytabMessageCode();
+        try {
+            decoded.decode(responseMessage);
+        } catch (IOException e) {
+            throw new KrbException("On response message failed.", e);
+        }
+        XdrFieldInfo[] fieldInfos = decoded.getValue().getXdrFieldInfos();
+        AdminMessageType type = (AdminMessageType) fieldInfos[0].getValue();
+        
+        switch (type) {
+            case EXPORT_KEYTAB_REP:
+                if (adminRequest.getAdminReq().getAdminMessageType() == AdminMessageType.EXPORT_KEYTAB_REQ) {
+                    keytabFileBytes = (byte[]) fieldInfos[2].getValue();
+                } else {
+                    throw new KrbException("Response message type error: need "
+                            + AdminMessageType.EXPORT_KEYTAB_REP);
+                }
+                break;
+            default:
+                throw new KrbException("Response message type error: " + type);
+        }
+        
+        return keytabFileBytes;
+    }
 
     /**
      * Send message to kdc.
@@ -159,4 +189,6 @@ public abstract class AdminHandler {
                                         ByteBuffer requestMessage) throws IOException;
 
     protected abstract List<String> handleRequestForList(AdminRequest adminRequest) throws KrbException;
+    
+    protected abstract byte[] handleRequestForBytes(AdminRequest adminRequest) throws KrbException;
 }
