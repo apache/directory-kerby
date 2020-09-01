@@ -59,7 +59,7 @@ public class ChangePasswordRequest extends AdminRequest {
         try {
             encodeBytes = value.encode();
         } catch (IOException e) {
-            throw new KrbException("Xdr encode error when generate get principals request.", e);
+            throw new KrbException("Xdr encode error when generate change password request.", e);
         }
         ByteBuffer messageBuffer = ByteBuffer.wrap(encodeBytes);
         changePwdReq.setMessageBuffer(messageBuffer);

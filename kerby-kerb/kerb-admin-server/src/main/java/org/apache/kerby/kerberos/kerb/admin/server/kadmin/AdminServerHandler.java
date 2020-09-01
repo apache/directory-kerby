@@ -105,7 +105,7 @@ public class AdminServerHandler {
                 responseMessage = handleExportKeytabReq(localKadmin, fieldInfos);
                 break;
             case CHANGE_PWD_REQ:
-                System.out.println("message type changePwd req");
+                System.out.println("message type: change password req");
                 responseMessage = handleChangePwdReq(localKadmin, fieldInfos);
                 break;
             default:
