@@ -33,7 +33,7 @@ public class RemoteChangePasswordCommand extends RemoteCommand {
     public void execute(String input) throws KrbException {
         String[] items = input.split("\\s+");
 
-        if (items.length < 4) {
+        if (items.length != 4) {
             System.err.println(USAGE);
             return;
         }
