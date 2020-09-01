@@ -211,4 +211,9 @@ public class AdminClient {
         Kadmin remote = new RemoteKadminImpl(innerClient);
         remote.exportKeytab(keytabFile, principals);
     }
+
+    public void requestChangePassword(String principal, String newPassword) throws KrbException {
+        Kadmin remote = new RemoteKadminImpl(innerClient);
+        remote.changePassword(principal, newPassword);
+    }
 }

@@ -20,6 +20,7 @@
 package org.apache.kerby.kerberos.kerb.admin;
 
 import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.kerberos.KerberosPrincipal;
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
@@ -72,6 +73,19 @@ public class AuthUtil {
         return loginContext.getSubject();
     }
 
+    public static Subject loginUsingPassword(String principal, CallbackHandler handler) throws LoginException {
+        Set<Principal> principals = new HashSet<>();
+        principals.add(new KerberosPrincipal(principal));
+
+        Subject subject = new Subject(false, principals, new HashSet<>(), new HashSet<>());
+
+        Configuration conf = usePassword(principal);
+        String confName = "PasswordConf";
+        LoginContext loginContext = new LoginContext(confName, subject, handler, conf);
+        loginContext.login();
+        return loginContext.getSubject();
+    }
+
     public static Configuration useTicketCache(String principal,
                                                File credentialFile) {
         return new TicketCacheJaasConf(principal, credentialFile);
@@ -79,6 +93,10 @@ public class AuthUtil {
 
     public static Configuration useKeytab(String principal, File keytabFile) {
         return new KeytabJaasConf(principal, keytabFile);
+    }
+
+    public static Configuration usePassword(String principal) {
+        return new PasswordJaasConf(principal);
     }
 
     static class TicketCacheJaasConf extends Configuration {
@@ -136,6 +154,27 @@ public class AuthUtil {
                 new AppConfigurationEntry(getKrb5LoginModuleName(),
                     AppConfigurationEntry.LoginModuleControlFlag.REQUIRED,
                     options)};
+        }
+    }
+
+    static class PasswordJaasConf extends Configuration {
+        private String principal;
+
+        PasswordJaasConf(String principal) {
+            this.principal = principal;
+        }
+
+        @Override
+        public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
+            Map<String, String> options = new HashMap<>();
+            options.put("principal", principal);
+            options.put("storeKey", "true");
+            options.put("doNotPrompt", "false");
+
+            return new AppConfigurationEntry[]{
+                    new AppConfigurationEntry(getKrb5LoginModuleName(),
+                            AppConfigurationEntry.LoginModuleControlFlag.REQUIRED,
+                            options)};
         }
     }
 }

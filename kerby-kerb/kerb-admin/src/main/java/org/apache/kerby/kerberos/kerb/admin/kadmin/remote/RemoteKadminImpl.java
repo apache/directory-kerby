@@ -31,6 +31,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.ExportKeytabRe
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.DeletePrincipalRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.RenamePrincipalRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.GetprincsRequest;
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.ChangePasswordRequest;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
@@ -213,7 +214,10 @@ public class RemoteKadminImpl implements Kadmin {
     @Override
     public void changePassword(String principal,
                                String newPassword) throws KrbException {
-
+        AdminRequest changePwdRequest = new ChangePasswordRequest(principal, newPassword);
+        changePwdRequest.setTransport(transport);
+        AdminHandler adminHandler = new DefaultAdminHandler();
+        adminHandler.handleRequest(changePwdRequest);
     }
 
     @Override

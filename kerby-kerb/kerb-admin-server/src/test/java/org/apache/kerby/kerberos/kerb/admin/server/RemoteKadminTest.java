@@ -38,12 +38,14 @@ import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.util.NetworkUtil;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
+import javax.security.auth.login.LoginException;
 import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslClient;
 import java.io.File;
@@ -189,6 +191,21 @@ public class RemoteKadminTest {
         List<String> principalNames = localKeytab.getPrincipals()
                 .stream().map(PrincipalName::getName).collect(Collectors.toList());
         assertTrue(principalNames.contains(testPrincipal + "@EXAMPLE.COM"));
+    }
+    
+    @Test
+    public void remoteChangePasswordTest() throws Exception {
+        AdminClient adminClient = buildKadminRemoteClient();
+        String testPrincipal = "cpw/EXAMPLE.COM";
+        String oldPassword = "old_pwd";
+        String newPassword = "new_pwd";
+        localKadmin.addPrincipal(testPrincipal, oldPassword);
+        adminClient.requestChangePassword(testPrincipal, newPassword);
+        try {
+            AuthUtil.loginUsingPassword(testPrincipal, new PasswordCallbackHandler(newPassword));
+        } catch (LoginException e) {
+            Assert.fail("Login using new password failed: " + e.toString());
+        }
     }
 
     private void doSaslHandShake(AdminClient adminClient, AdminConfig config) throws Exception {
