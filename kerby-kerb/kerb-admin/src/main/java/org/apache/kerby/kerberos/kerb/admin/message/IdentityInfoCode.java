@@ -21,7 +21,12 @@ package org.apache.kerby.kerberos.kerb.admin.message;
 
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
-import org.apache.kerby.xdr.type.*;
+import org.apache.kerby.xdr.type.AbstractXdrType;
+import org.apache.kerby.xdr.type.XdrInteger;
+import org.apache.kerby.xdr.type.XdrLong;
+import org.apache.kerby.xdr.type.XdrString;
+import org.apache.kerby.xdr.type.XdrStructType;
+import org.apache.kerby.xdr.type.XdrType;
 
 public class IdentityInfoCode extends XdrStructType {
     public IdentityInfoCode() {
