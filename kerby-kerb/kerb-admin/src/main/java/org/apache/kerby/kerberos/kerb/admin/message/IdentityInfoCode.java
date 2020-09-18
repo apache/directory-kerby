@@ -28,6 +28,18 @@ import org.apache.kerby.xdr.type.XdrString;
 import org.apache.kerby.xdr.type.XdrStructType;
 import org.apache.kerby.xdr.type.XdrType;
 
+/**
+ * An extend XdrStructType to encode and decode IdentityInfo.
+ * field[0]: reply message type
+ * field[1]: message size except the first two elements
+ * field[2]: identity principal name
+ * field[3]: identity expire time
+ * field[4]: identity created time
+ * field[5]: identity kdc flags
+ * field[6]: identity key version
+ * field[7]: the size of identity encryption keys
+ * field[8]: identity encryption type joined with coma delimiter
+ */
 public class IdentityInfoCode extends XdrStructType {
     public IdentityInfoCode() {
         super(XdrDataType.STRUCT);
