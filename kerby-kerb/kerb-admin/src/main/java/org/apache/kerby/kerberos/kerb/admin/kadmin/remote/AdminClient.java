@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.Kadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultInternalAdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 
 import java.io.File;
 import java.util.List;
@@ -192,14 +193,12 @@ public class AdminClient {
 
     public List<String> requestGetprincs() throws KrbException {
         Kadmin remote = new RemoteKadminImpl(innerClient);
-        List<String> principalLists = remote.getPrincipals();
-        return principalLists;
+        return remote.getPrincipals();
     }
 
     public List<String> requestGetprincsWithExp(String exp) throws KrbException {
         Kadmin remote = new RemoteKadminImpl(innerClient);
-        List<String> principalLists = remote.getPrincipals(exp);
-        return principalLists;
+        return remote.getPrincipals(exp);
     }
     
     public void requestExportKeytab(File keytabFile, String principal) throws KrbException {
@@ -215,5 +214,10 @@ public class AdminClient {
     public void requestChangePassword(String principal, String newPassword) throws KrbException {
         Kadmin remote = new RemoteKadminImpl(innerClient);
         remote.changePassword(principal, newPassword);
+    }
+
+    public KrbIdentity requestGetPrincipal(String principal) throws KrbException {
+        RemoteKadminImpl remote = new RemoteKadminImpl(innerClient);
+        return remote.getPrincipal(principal);
     }
 }

@@ -29,6 +29,7 @@ import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServer;
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerConfig;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
+import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
@@ -58,6 +59,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 
 public class RemoteKadminTest {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteKadminTest.class);
@@ -206,6 +208,14 @@ public class RemoteKadminTest {
         } catch (LoginException e) {
             Assert.fail("Login using new password failed: " + e.toString());
         }
+    }
+    
+    @Test
+    public void remoteGetPrincipalTest() throws Exception {
+        AdminClient adminClient = buildKadminRemoteClient();
+        KrbIdentity identity = adminClient.requestGetPrincipal("kadmin/EXAMPLE.COM");
+        KrbIdentity expectIdentity = new KrbIdentity("kadmin/EXAMPLE.COM@EXAMPLE.COM");
+        assertEquals(identity, expectIdentity);
     }
 
     private void doSaslHandShake(AdminClient adminClient, AdminConfig config) throws Exception {

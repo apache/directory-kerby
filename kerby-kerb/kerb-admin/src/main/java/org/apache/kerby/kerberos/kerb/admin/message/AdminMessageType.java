@@ -46,7 +46,9 @@ public enum AdminMessageType implements EnumType {
     EXPORT_KEYTAB_REQ(8),
     EXPORT_KEYTAB_REP(9),
     CHANGE_PWD_REQ(10),
-    CHANGE_PWD_REP(11);
+    CHANGE_PWD_REP(11),
+    GET_PRINCIPAL_REQ(12),
+    GET_PRINCIPAL_REP(13);
 
     private int value;
 
