@@ -113,7 +113,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             throw new IllegalArgumentException("Number of ldap hosts[" + hosts.length
                     + "] not equal to ldap connections[" + connections.size() + "].");
         }
-        this.connections = connections;
+        this.connections = new HashMap<>(connections);
         connection = connections.get(hosts[currentConnectionIndex]);
     }
 
