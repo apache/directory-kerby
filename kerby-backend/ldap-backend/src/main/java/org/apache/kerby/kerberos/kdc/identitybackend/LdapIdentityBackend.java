@@ -51,13 +51,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * An LDAP based backend implementation.
  */
 public class LdapIdentityBackend extends AbstractIdentityBackend {
+    private int currentConnectionIndex = 0;
+    private Map<String, LdapConnection> connections = new HashMap<>();
+
     //The LdapConnection, may be LdapNetworkConnection or LdapCoreSessionConnection
     private LdapConnection connection;
+    private String[] hosts;
     //This is used as a flag to represent the connection whether is
     // LdapNetworkConnection object or not
     private boolean isLdapNetworkConnection;
@@ -87,19 +92,54 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     public LdapIdentityBackend(Config config,
                                LdapConnection connection) {
         setConfig(config);
+        if (isHa()) {
+            throw new IllegalArgumentException("Only one ldap connection provided, but two needed "
+                    + "when set ha hosts[" + config.getString("host") + "]");
+        }
         this.connection = connection;
+        String hostConfig = getConfig().getString("host");
+        hosts = new String[]{hostConfig};
+        connections.put(hostConfig, connection);
+    }
+
+    public LdapIdentityBackend(Config config, Map<String, LdapConnection> connections) {
+        setConfig(config);
+        String hostConfig = getConfig().getString("host");
+        hosts = hostConfig.trim().split(",");
+        if (hosts.length > 2) {
+            throw new IllegalArgumentException("More than two ldap hosts is not supported.");
+        }
+        if (hosts.length != connections.size()) {
+            throw new IllegalArgumentException("Number of ldap hosts[" + hosts.length
+                    + "] not equal to ldap connections[" + connections.size() + "].");
+        }
+        this.connections = new HashMap<>(connections);
+        connection = connections.get(hosts[currentConnectionIndex]);
     }
 
     /**
      * Start the connection for the initialize()
      */
     private void startConnection() throws LdapException {
-        if (isLdapNetworkConnection == true) {
-            this.connection = new LdapNetworkConnection(getConfig().getString("host"),
-                    getConfig().getInt("port"));
+        if (isLdapNetworkConnection) {
+            String hostConfig = getConfig().getString("host");
+            hosts = hostConfig.trim().split(",");
+            if (hosts.length > 2) {
+                throw new IllegalArgumentException("More than two ldap hosts is not supported.");
+            }
+            for (String host: hosts) {
+                LdapConnection connection =
+                        new LdapNetworkConnection(host, getConfig().getInt("port"));
+                connections.put(host, connection);
+            }
+            String currentHost = hosts[currentConnectionIndex];
+            connection = connections.get(currentHost);
         }
-        connection.bind(getConfig().getString("admin_dn"),
-                getConfig().getString("admin_pw"));
+        for (LdapConnection connection: connections.values()) {
+            connection.bind(getConfig().getString("admin_dn"),
+                    getConfig().getString("admin_pw"));
+        }
+        LOG.info("Start connection with ldap host[" + getConfig().getString("host") + "]");
     }
 
     /**
@@ -134,8 +174,24 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
      * Close the connection for stop()
      */
     private void closeConnection() throws IOException {
-        if (connection.isConnected()) {
-            connection.close();
+        IOException cause = null;
+        for (Map.Entry<String, LdapConnection> entry: connections.entrySet()) {
+            LdapConnection connection = entry.getValue();
+            try {
+                if (connection.isConnected()) {
+                    connection.close();
+                }
+            } catch (IOException e) {
+                LOG.error("Catch exception when close connection with host[" + entry.getKey() + "].");
+                if (cause == null) {
+                    cause = e;
+                } else {
+                    cause.addSuppressed(e);
+                }
+            }
+        }
+        if (cause != null) {
+            throw cause;
         }
     }
 
@@ -217,7 +273,13 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
                     + identity.isLocked());
             entry.add(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT,
                     toGeneralizedTime(identity.getExpireTime()));
-            connection.add(entry);
+            new FailoverInvocationHandler<Void>() {
+                @Override
+                public Void execute() throws LdapException {
+                    connection.add(entry);
+                    return null;
+                }
+            }.run();
         } catch (LdapInvalidDnException e) {
             LOG.error("Error occurred while adding identity", e);
             throw new KrbException("Failed to add identity", e);
@@ -236,7 +298,12 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         KrbIdentity krbIdentity = new KrbIdentity(principalName);
         try {
             Dn dn = toDn(principalName);
-            Entry entry = connection.lookup(dn, "*", "+");
+            Entry entry = new FailoverInvocationHandler<Entry>() {
+                @Override
+                public Entry execute() throws LdapException {
+                    return connection.lookup(dn, "*", "+");
+                }
+            }.run();
             if (entry == null) {
                 return null;
             }
@@ -284,7 +351,13 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             modifyRequest.replace("krb5KDCFlags", "" + identity.getKdcFlags());
             modifyRequest.replace(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, ""
                     + identity.isLocked());
-            connection.modify(modifyRequest);
+            new FailoverInvocationHandler<Void>() {
+                @Override
+                public Void execute() throws LdapException {
+                    connection.modify(modifyRequest);
+                    return null;
+                }
+            }.run();
         } catch (LdapException e) {
             LOG.error("Error occurred while updating identity: " + principalName, e);
             throw new KrbException("Failed to update identity", e);
@@ -300,7 +373,13 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     protected void doDeleteIdentity(String principalName) throws KrbException {
         try {
             Dn dn = toDn(principalName);
-            connection.delete(dn);
+            new FailoverInvocationHandler<Void>() {
+                @Override
+                public Void execute() throws LdapException {
+                    connection.delete(dn);
+                    return null;
+                }
+            }.run();
         } catch (LdapException e) {
             LOG.error("Error occurred while deleting identity: " + principalName);
             throw new KrbException("Failed to remove identity", e);
@@ -330,8 +409,13 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
         EntryCursor cursor;
         Entry entry;
         try {
-            cursor = connection.search(getConfig().getString("base_dn"),
-                    "(objectclass=*)", SearchScope.ONELEVEL, KerberosAttribute.KRB5_PRINCIPAL_NAME_AT);
+            cursor = new FailoverInvocationHandler<EntryCursor>() {
+                @Override
+                public EntryCursor execute() throws LdapException {
+                    return connection.search(getConfig().getString("base_dn"), "(objectclass=*)",
+                            SearchScope.ONELEVEL, KerberosAttribute.KRB5_PRINCIPAL_NAME_AT);
+                }
+            }.run();
             if (cursor == null) {
                 return null;
             }
@@ -349,5 +433,39 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             LOG.error("With IOException when closing EntryCursor. " + e);
         }
         return identityNames;
+    }
+
+    private void performFailover() {
+        currentConnectionIndex = (currentConnectionIndex + 1) % hosts.length;
+        String host = hosts[currentConnectionIndex];
+        connection = connections.get(host);
+    }
+
+    private boolean isHa() {
+        String host = getConfig().getString("host");
+        if (host != null) {
+            return host.trim().split(",").length == 2;
+        }
+        return false;
+    }
+
+    abstract class FailoverInvocationHandler<T> {
+        public abstract T execute() throws LdapException;
+
+        public T run() throws LdapException {
+            try {
+                return execute();
+            } catch (LdapException e) {
+                if (!isHa()) {
+                    throw e;
+                }
+                String host = hosts[currentConnectionIndex];
+                LOG.error("Catch exception with ldap host[" + host + "].", e);
+                performFailover();
+                host = hosts[currentConnectionIndex];
+                LOG.info("Failover to ldap host:" + host + ".");
+                return execute();
+            }
+        }
     }
 }
