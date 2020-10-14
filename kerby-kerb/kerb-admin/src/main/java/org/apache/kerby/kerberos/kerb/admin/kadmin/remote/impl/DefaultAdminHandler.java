@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminHandler;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.AdminRequest;
 import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
+import org.xnio.sasl.SaslWrapper;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -36,18 +37,18 @@ public class DefaultAdminHandler extends AdminHandler {
      * and use this to receive message.
      */
     @Override
-    public void handleRequest(AdminRequest adminRequest) throws KrbException {
-        /**super is used to send message*/
-        super.handleRequest(adminRequest);
+    public void handleRequest(AdminRequest adminRequest, SaslWrapper sasl) throws KrbException {
+        // super is used to send message
+        super.handleRequest(adminRequest, sasl);
 
         KrbTransport transport = adminRequest.getTransport();
-        ByteBuffer receiveMessage = null;
         try {
-            receiveMessage = transport.receiveMessage();
+            ByteBuffer receiveMessage = transport.receiveMessage();
+            ByteBuffer unwrapMessage = ByteBuffer.wrap(sasl.unwrap(receiveMessage));
+            super.onResponseMessage(adminRequest, unwrapMessage);
         } catch (IOException e) {
             throw new KrbException("Admin receives response message failed", e);
         }
-        super.onResponseMessage(adminRequest, receiveMessage);
     }
 
     /**
@@ -61,16 +62,17 @@ public class DefaultAdminHandler extends AdminHandler {
     }
 
     @Override
-    public List<String> handleRequestForList(AdminRequest adminRequest) throws KrbException {
-        /**send message*/
-        super.handleRequest(adminRequest);
+    public List<String> handleRequestForList(AdminRequest adminRequest,
+                                             SaslWrapper sasl) throws KrbException {
+        // send message
+        super.handleRequest(adminRequest, sasl);
 
         KrbTransport transport = adminRequest.getTransport();
-        ByteBuffer receiveMessage = null;
-        List<String> prinicalList = null;
+        List<String> prinicalList;
         try {
-            receiveMessage = transport.receiveMessage();
-            prinicalList = super.onResponseMessageForList(adminRequest, receiveMessage);
+            ByteBuffer receiveMessage = transport.receiveMessage();
+            ByteBuffer unwrapMessage = ByteBuffer.wrap(sasl.unwrap(receiveMessage));
+            prinicalList = super.onResponseMessageForList(adminRequest, unwrapMessage);
         } catch (IOException e) {
             throw new KrbException("Admin receives response message failed", e);
         }
@@ -79,15 +81,16 @@ public class DefaultAdminHandler extends AdminHandler {
     }
 
     @Override
-    protected byte[] handleRequestForBytes(AdminRequest adminRequest) throws KrbException {
-        super.handleRequest(adminRequest);
+    protected byte[] handleRequestForBytes(AdminRequest adminRequest,
+                                           SaslWrapper sasl) throws KrbException {
+        super.handleRequest(adminRequest, sasl);
         
         KrbTransport transport = adminRequest.getTransport();
-        ByteBuffer receiveMessage = null;
         byte[] keytabFileBytes;
         try {
-            receiveMessage = transport.receiveMessage();
-            keytabFileBytes = super.onResponseMessageForBytesArray(adminRequest, receiveMessage);
+            ByteBuffer receiveMessage = transport.receiveMessage();
+            ByteBuffer unwrapMessage = ByteBuffer.wrap(sasl.unwrap(receiveMessage));
+            keytabFileBytes = super.onResponseMessageForBytesArray(adminRequest, unwrapMessage);
         } catch (IOException e) {
             throw new KrbException("Admin receives response message failed", e);
         }
@@ -95,15 +98,16 @@ public class DefaultAdminHandler extends AdminHandler {
     }
 
     @Override
-    protected KrbIdentity handleRequestForIdentity(AdminRequest adminRequest) throws KrbException {
-        super.handleRequest(adminRequest);
+    protected KrbIdentity handleRequestForIdentity(AdminRequest adminRequest,
+                                                   SaslWrapper sasl) throws KrbException {
+        super.handleRequest(adminRequest, sasl);
 
         KrbTransport transport = adminRequest.getTransport();
-        ByteBuffer receiveMessage = null;
         KrbIdentity identity;
         try {
-            receiveMessage = transport.receiveMessage();
-            identity = super.onResponseMessageForIdentity(adminRequest, receiveMessage);
+            ByteBuffer receiveMessage = transport.receiveMessage();
+            ByteBuffer unwrapMessage = ByteBuffer.wrap(sasl.unwrap(receiveMessage));
+            identity = super.onResponseMessageForIdentity(adminRequest, unwrapMessage);
         } catch (IOException e) {
             throw new KrbException("Admin receives response message failed", e);
         }

@@ -24,7 +24,6 @@ import org.apache.kerby.kerberos.kerb.admin.AuthUtil;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadminImpl;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminConfig;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminUtil;
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServer;
 import org.apache.kerby.kerberos.kerb.admin.server.kadmin.AdminServerConfig;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
@@ -33,9 +32,6 @@ import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
-import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
-import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
-import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.util.NetworkUtil;
 import org.junit.AfterClass;
@@ -47,14 +43,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
-import javax.security.sasl.Sasl;
-import javax.security.sasl.SaslClient;
 import java.io.File;
-import java.nio.ByteBuffer;
-import java.security.PrivilegedAction;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
@@ -219,64 +209,7 @@ public class RemoteKadminTest {
     }
 
     private void doSaslHandShake(AdminClient adminClient, AdminConfig config) throws Exception {
-        TransportPair tpair = AdminUtil.getTransportPair(adminClient.getSetting());
-        KrbNetwork network = new KrbNetwork();
-        network.setSocketTimeout(adminClient.getSetting().getTimeout());
-        KrbTransport transport = network.connect(tpair);
         Subject subject = AuthUtil.loginUsingKeytab(ADMIN_PRINCIPAL, new File(config.getKeyTabFile()));
-        Subject.doAs(subject, (PrivilegedAction<Object>) () -> {
-            try {
-                Map<String, String> props = new HashMap<>();
-                props.put(Sasl.QOP, "auth-conf");
-                props.put(Sasl.SERVER_AUTH, "true");
-                SaslClient saslClient = null;
-
-                String protocol = config.getProtocol();
-                String serverName = config.getServerName();
-                saslClient = Sasl.createSaslClient(new String[]{"GSSAPI"}, null,
-                        protocol, serverName, props, null);
-                if (saslClient == null) {
-                    System.out.println("Unable to find client implementation for: GSSAPI");
-                    return null;
-                }
-                byte[] response;
-                response = saslClient.hasInitialResponse()
-                        ? saslClient.evaluateChallenge(new byte[0]) : new byte[0];
-
-                sendMessage(response, saslClient, transport);
-
-                ByteBuffer message = transport.receiveMessage();
-
-                while (!saslClient.isComplete()) {
-                    int ssComplete = message.getInt();
-                    if (ssComplete == 0) {
-                        System.out.println("Sasl Server completed");
-                    }
-                    byte[] arr = new byte[message.remaining()];
-                    message.get(arr);
-                    byte[] challenge = saslClient.evaluateChallenge(arr);
-
-                    sendMessage(challenge, saslClient, transport);
-
-                    if (!saslClient.isComplete()) {
-                        message = transport.receiveMessage();
-                    }
-                }
-            } catch (Exception e) {
-                LOG.warn(e.getMessage());
-            }
-            return null;
-        });
-    }
-
-    private void sendMessage(byte[] challenge, SaslClient saslClient, KrbTransport transport) throws Exception {
-        ByteBuffer buffer = ByteBuffer.allocate(challenge.length + 8);
-        buffer.putInt(challenge.length + 4);
-        int scComplete = saslClient.isComplete() ? 0 : 1;
-
-        buffer.putInt(scComplete);
-        buffer.put(challenge);
-        buffer.flip();
-        transport.sendMessage(buffer);
+        adminClient.setSubject(subject);
     }
 }

@@ -162,5 +162,11 @@ public abstract class KdcNetwork {
         }
     }
 
+    public boolean isStopped() {
+        synchronized (this) {
+            return isStopped;
+        }
+    }
+
     protected abstract void onNewTransport(KrbTransport transport);
 }

@@ -26,6 +26,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.DefaultInternalAd
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.impl.InternalAdminClient;
 import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
 
+import javax.security.auth.Subject;
 import java.io.File;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class AdminClient {
     private final AdminSetting adminSetting;
 
     private InternalAdminClient innerClient;
+    private Subject subject = null;
 
     /**
      * Default constructor.
@@ -171,53 +173,57 @@ public class AdminClient {
         return adminConfig;
     }
 
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
     public void requestAddPrincipal(String principal) throws KrbException {
-        Kadmin remote = new RemoteKadminImpl(innerClient);
+        Kadmin remote = new RemoteKadminImpl(innerClient, subject);
         remote.addPrincipal(principal);
     }
 
     public void requestAddPrincipal(String principal, String password) throws KrbException {
-        Kadmin remote = new RemoteKadminImpl(innerClient);
+        Kadmin remote = new RemoteKadminImpl(innerClient, subject);
         remote.addPrincipal(principal, password);
     }
 
     public void requestDeletePrincipal(String principal) throws KrbException {
-        Kadmin remote = new RemoteKadminImpl(innerClient);
+        Kadmin remote = new RemoteKadminImpl(innerClient, subject);
         remote.deletePrincipal(principal);
     }
 
     public void requestRenamePrincipal(String oldPrincipal, String newPrincipal) throws KrbException {
-        Kadmin remote = new RemoteKadminImpl(innerClient);
+        Kadmin remote = new RemoteKadminImpl(innerClient, subject);
         remote.renamePrincipal(oldPrincipal, newPrincipal);
     }
 
     public List<String> requestGetprincs() throws KrbException {
-        Kadmin remote = new RemoteKadminImpl(innerClient);
+        Kadmin remote = new RemoteKadminImpl(innerClient, subject);
         return remote.getPrincipals();
     }
 
     public List<String> requestGetprincsWithExp(String exp) throws KrbException {
-        Kadmin remote = new RemoteKadminImpl(innerClient);
+        Kadmin remote = new RemoteKadminImpl(innerClient, subject);
         return remote.getPrincipals(exp);
     }
     
     public void requestExportKeytab(File keytabFile, String principal) throws KrbException {
-        Kadmin remote = new RemoteKadminImpl(innerClient);
+        Kadmin remote = new RemoteKadminImpl(innerClient, subject);
         remote.exportKeytab(keytabFile, principal);
     }
 
     public void requestExportKeytab(File keytabFile, List<String> principals) throws KrbException {
-        Kadmin remote = new RemoteKadminImpl(innerClient);
+        Kadmin remote = new RemoteKadminImpl(innerClient, subject);
         remote.exportKeytab(keytabFile, principals);
     }
 
     public void requestChangePassword(String principal, String newPassword) throws KrbException {
-        Kadmin remote = new RemoteKadminImpl(innerClient);
+        Kadmin remote = new RemoteKadminImpl(innerClient, subject);
         remote.changePassword(principal, newPassword);
     }
 
     public KrbIdentity requestGetPrincipal(String principal) throws KrbException {
-        RemoteKadminImpl remote = new RemoteKadminImpl(innerClient);
+        RemoteKadminImpl remote = new RemoteKadminImpl(innerClient, subject);
         return remote.getPrincipal(principal);
     }
 }

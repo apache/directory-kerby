@@ -41,6 +41,7 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.xdr.XdrDataType;
 import org.apache.kerby.xdr.XdrFieldInfo;
 import org.apache.kerby.xdr.type.XdrStructType;
+import org.xnio.sasl.SaslWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +61,7 @@ import java.util.stream.Collectors;
 public class AdminServerHandler {
     private static final Logger LOG = LoggerFactory.getLogger(AdminServerHandler.class);
     private final AdminServerContext adminServerContext;
+    private SaslWrapper saslServerWrapper;
 
     /**
      * Constructor with admin server context.
@@ -69,6 +71,14 @@ public class AdminServerHandler {
     public AdminServerHandler(AdminServerContext adminServerContext) {
         this.adminServerContext = adminServerContext;
         LOG.info("Admin realm: " + this.adminServerContext.getAdminRealm());
+    }
+
+    public void setSaslServerWrapper(SaslWrapper saslServerWrapper) {
+        this.saslServerWrapper = saslServerWrapper;
+    }
+
+    public SaslWrapper getSaslServerWrapper() {
+        return saslServerWrapper;
     }
 
     /**
@@ -206,7 +216,8 @@ public class AdminServerHandler {
     }
 
     private ByteBuffer handleGetprincsReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
-        String globString = ((String) fieldInfos[2].getValue());
+        int paramNum = ((int) fieldInfos[1].getValue());
+        String globString = paramNum != 0 ? ((String) fieldInfos[2].getValue()) : null;
         List<String> princsList = null;
 
         try {
@@ -326,7 +337,7 @@ public class AdminServerHandler {
         AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);
         adminMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
 
-        return KadminCode.encodeMessage(adminMessage);
+        return KadminCode.encodeWrapMessage(adminMessage, getSaslServerWrapper());
     }
     
     private ByteBuffer infoPackageTool(File keytabFile, String dealType) throws IOException {
@@ -343,7 +354,7 @@ public class AdminServerHandler {
         KeytabMessageCode value = new KeytabMessageCode(xdrFieldInfos);
         adminMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
 
-        return KadminCode.encodeMessage(adminMessage);
+        return KadminCode.encodeWrapMessage(adminMessage, getSaslServerWrapper());
     }
 
     private ByteBuffer infoPackageTool(KrbIdentity identity, String dealType) throws IOException {
@@ -370,7 +381,7 @@ public class AdminServerHandler {
         IdentityInfoCode value = new IdentityInfoCode(xdrFieldInfos);
         adminMessage.setMessageBuffer(ByteBuffer.wrap(value.encode()));
 
-        return KadminCode.encodeMessage(adminMessage);
+        return KadminCode.encodeWrapMessage(adminMessage, getSaslServerWrapper());
     }
 
     private String listToString(List<String> list) {

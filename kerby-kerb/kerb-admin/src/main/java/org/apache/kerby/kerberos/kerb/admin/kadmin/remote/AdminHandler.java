@@ -33,6 +33,7 @@ import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.xdr.XdrFieldInfo;
 import org.apache.kerby.xdr.type.XdrStructType;
+import org.xnio.sasl.SaslWrapper;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -54,15 +55,16 @@ public abstract class AdminHandler {
      * Handle the kdc request.
      *
      * @param adminRequest The admin request
+     * @param sasl The SASL client wrapper
      * @throws KrbException e
      */
-    public void handleRequest(AdminRequest adminRequest) throws KrbException {
+    public void handleRequest(AdminRequest adminRequest, SaslWrapper sasl) throws KrbException {
         adminRequest.process();
         AdminReq adminReq = adminRequest.getAdminReq();
-        ByteBuffer requestMessage = KadminCode.encodeMessage(adminReq);
-        requestMessage.flip();
 
         try {
+            ByteBuffer requestMessage = KadminCode.encodeWrapMessage(adminReq, sasl);
+            requestMessage.flip();
             sendMessage(adminRequest, requestMessage);
         } catch (IOException e) {
             throw new KrbException("Admin sends request message failed", e);
@@ -240,9 +242,12 @@ public abstract class AdminHandler {
     protected abstract void sendMessage(AdminRequest adminRequest,
                                         ByteBuffer requestMessage) throws IOException;
 
-    protected abstract List<String> handleRequestForList(AdminRequest adminRequest) throws KrbException;
-    
-    protected abstract byte[] handleRequestForBytes(AdminRequest adminRequest) throws KrbException;
+    protected abstract List<String> handleRequestForList(AdminRequest adminRequest,
+                                                         SaslWrapper sasl) throws KrbException;
 
-    protected abstract KrbIdentity handleRequestForIdentity(AdminRequest adminRequest) throws KrbException;
+    protected abstract byte[] handleRequestForBytes(AdminRequest adminRequest,
+                                                    SaslWrapper sasl) throws KrbException;
+
+    protected abstract KrbIdentity handleRequestForIdentity(AdminRequest adminRequest,
+                                                            SaslWrapper sasl) throws KrbException;
 }

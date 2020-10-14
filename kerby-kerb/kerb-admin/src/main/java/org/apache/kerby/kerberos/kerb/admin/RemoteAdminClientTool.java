@@ -22,7 +22,6 @@ package org.apache.kerby.kerberos.kerb.admin;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminClient;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminConfig;
-import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.AdminUtil;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteCommand;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteAddPrincipalCommand;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteDeletePrincipalCommand;
@@ -34,9 +33,6 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.command.RemoteGetPrinc
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.server.KdcConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcUtil;
-import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
-import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
-import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 import org.apache.kerby.util.OSUtil;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -51,23 +47,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
-import javax.security.sasl.Sasl;
-import javax.security.sasl.SaslClient;
-import javax.security.sasl.SaslException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.security.PrivilegedAction;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Command use of remote admin
  */
 public class RemoteAdminClientTool {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteAdminClientTool.class);
-    private static final byte[] EMPTY = new byte[0];
-    private static KrbTransport transport;
     private static final String PROMPT = RemoteAdminClientTool.class.getSimpleName() + ".remote";
     private static final String USAGE = (OSUtil.isWindows()
         ? "Usage: bin\\remote-admin-client.cmd" : "Usage: sh bin/remote-admin-client.sh")
@@ -140,21 +127,6 @@ public class RemoteAdminClientTool {
         adminClient.init();
         System.out.println("admin init successful");
 
-        TransportPair tpair = null;
-        try {
-            tpair = AdminUtil.getTransportPair(adminClient.getSetting());
-        } catch (KrbException e) {
-            LOG.error("Fail to get transport pair. " + e);
-        }
-        KrbNetwork network = new KrbNetwork();
-        network.setSocketTimeout(adminClient.getSetting().getTimeout());
-
-        try {
-            transport = network.connect(tpair);
-        } catch (IOException e) {
-            throw new KrbException("Failed to create transport", e);
-        }
-
         String adminPrincipal = KrbUtil.makeKadminPrincipal(
             adminClient.getSetting().getKdcRealm()).getName();
         Subject subject = null;
@@ -163,60 +135,11 @@ public class RemoteAdminClientTool {
                 new File(adminConfig.getKeyTabFile()));
         } catch (LoginException e) {
             LOG.error("Fail to login using keytab. " + e);
+            return;
         }
-        Subject.doAs(subject, new PrivilegedAction<Object>() {
-            @Override
-            public Object run() {
-                try {
 
-                    Map<String, String> props = new HashMap<>();
-                    props.put(Sasl.QOP, "auth-conf");
-                    props.put(Sasl.SERVER_AUTH, "true");
-                    SaslClient saslClient = null;
-                    try {
-                        String protocol = adminConfig.getProtocol();
-                        String serverName = adminConfig.getServerName();
-                        saslClient = Sasl.createSaslClient(new String[]{"GSSAPI"}, null,
-                            protocol, serverName, props, null);
-                    } catch (SaslException e) {
-                        LOG.error("Fail to create sasl client. " + e);
-                    }
-                    if (saslClient == null) {
-                        throw new KrbException("Unable to find client implementation for: GSSAPI");
-                    }
-                    byte[] response = new byte[0];
-                    try {
-                        response = saslClient.hasInitialResponse()
-                            ? saslClient.evaluateChallenge(EMPTY) : EMPTY;
-                    } catch (SaslException e) {
-                        LOG.error("Sasl client evaluate challenge failed." + e);
-                    }
-
-                    sendMessage(response, saslClient);
-
-                    ByteBuffer message = transport.receiveMessage();
-
-                    while (!saslClient.isComplete()) {
-                        int ssComplete = message.getInt();
-                        if (ssComplete == 0) {
-                            System.out.println("Sasl Server completed");
-                        }
-                        byte[] arr = new byte[message.remaining()];
-                        message.get(arr);
-                        byte[] challenge = saslClient.evaluateChallenge(arr);
-
-                        sendMessage(challenge, saslClient);
-
-                        if (!saslClient.isComplete()) {
-                            message = transport.receiveMessage();
-                        }
-                    }
-                } catch (Exception e) {
-                    LOG.error("Failed to run. " + e.toString());
-                }
-                return null;
-            }
-        });
+        // set login subject, used by SASL negotiation
+        adminClient.setSubject(subject);
 
         System.out.println("enter \"command\" to see legal commands.");
 
@@ -243,25 +166,6 @@ public class RemoteAdminClientTool {
             } catch (KrbException e) {
                 System.err.println(e.getMessage());
             }
-        }
-    }
-
-    private static void sendMessage(byte[] challenge, SaslClient saslClient)
-        throws SaslException {
-
-        // 4 is the head to go through network
-        ByteBuffer buffer = ByteBuffer.allocate(challenge.length + 8);
-        buffer.putInt(challenge.length + 4);
-        int scComplete = saslClient.isComplete() ? 0 : 1;
-
-        buffer.putInt(scComplete);
-        buffer.put(challenge);
-        buffer.flip();
-
-        try {
-            transport.sendMessage(buffer);
-        } catch (IOException e) {
-            LOG.error("Failed to send Kerberos message. " + e.toString());
         }
     }
 
