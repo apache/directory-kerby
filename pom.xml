@@ -118,6 +118,17 @@
         <version>${assertj.version}</version>
         <scope>test</scope>
       </dependency>
+      <!-- Overriding some transitive dependencies for security reasons -->
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.9.4</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.2</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
