@@ -119,4 +119,17 @@ public final class AdminServerUtil {
 
         return result;
     }
+
+    /**
+     * Fix principal name.
+     *
+     * @param principal The principal name
+     * @return The fixed principal
+     */
+    public static String fixPrincipal(String principal, AdminServerSetting setting) {
+        if (!principal.contains("@")) {
+            principal += "@" + setting.getKdcRealm();
+        }
+        return principal;
+    }
 }

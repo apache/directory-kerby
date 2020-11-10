@@ -35,7 +35,7 @@ import java.util.Set;
 
 public class AuthUtil {
 
-    public static final boolean ENABLE_DEBUG = true;
+    public static final boolean ENABLE_DEBUG = false;
 
     private static String getKrb5LoginModuleName() {
         return System.getProperty("java.vendor").contains("IBM")

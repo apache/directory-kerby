@@ -19,6 +19,11 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.message;
 
+
+import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.NegotiationStatus;
+import org.xnio.sasl.SaslWrapper;
+
+import javax.security.sasl.SaslException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -34,6 +39,31 @@ public class KadminCode {
         //buffer.putInt(adminMessage.getAdminMessageType().getValue());
         // type has been encoded in the admin message
         buffer.put(adminMessage.getMessageBuffer());
+        buffer.flip();
+        return buffer;
+    }
+    
+    public static ByteBuffer encodeSaslMessage(byte[] bytes, NegotiationStatus status) {
+        // NegotiationStatus occupies 4 bytes
+        int length = bytes.length + 4;
+        // 4 is the head to go through network
+        ByteBuffer buffer = ByteBuffer.allocate(length + 4);
+        buffer.putInt(length);
+        buffer.putInt(status.getValue());
+        buffer.put(bytes);
+        buffer.flip();
+        return buffer;
+    }
+
+    public static ByteBuffer encodeWrapMessage(AdminMessage adminMessage,
+                                               SaslWrapper sasl) throws SaslException {
+        // encode the data to be sent to the peer, in order to use SASL negotiated layer
+        byte[] wrapBytes = sasl.wrap(adminMessage.getMessageBuffer());
+        int length = wrapBytes.length;
+        // 4 is the head to go through network
+        ByteBuffer buffer = ByteBuffer.allocate(length + 4);
+        buffer.putInt(length); // head in network
+        buffer.put(wrapBytes);
         buffer.flip();
         return buffer;
     }

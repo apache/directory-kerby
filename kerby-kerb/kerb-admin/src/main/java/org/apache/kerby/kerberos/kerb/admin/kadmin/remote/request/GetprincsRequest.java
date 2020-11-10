@@ -52,7 +52,7 @@ public class GetprincsRequest extends AdminRequest {
 
         XdrFieldInfo[] xdrFieldInfos = new XdrFieldInfo[3];
         xdrFieldInfos[0] = new XdrFieldInfo(0, XdrDataType.ENUM, AdminMessageType.GET_PRINCS_REQ);
-        xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 2);
+        xdrFieldInfos[1] = new XdrFieldInfo(1, XdrDataType.INTEGER, 1);
         xdrFieldInfos[2] = new XdrFieldInfo(2, XdrDataType.STRING, globString);
 
         AdminMessageCode value = new AdminMessageCode(xdrFieldInfos);

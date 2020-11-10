@@ -33,6 +33,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.RenamePrincipa
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.GetprincsRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.ChangePasswordRequest;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.remote.request.GetPrincipalRequest;
+import org.apache.kerby.kerberos.kerb.admin.message.KadminCode;
 import org.apache.kerby.kerberos.kerb.common.KrbUtil;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
@@ -40,14 +41,24 @@ import org.apache.kerby.kerberos.kerb.transport.KrbNetwork;
 import org.apache.kerby.kerberos.kerb.transport.KrbTransport;
 import org.apache.kerby.kerberos.kerb.transport.TransportPair;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.xnio.sasl.SaslUtils;
+import org.xnio.sasl.SaslWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.security.auth.Subject;
+import javax.security.sasl.Sasl;
+import javax.security.sasl.SaslClient;
+import javax.security.sasl.SaslException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.security.PrivilegedExceptionAction;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Server side admin facilities from remote, similar to MIT Kadmin remote mode.
@@ -60,11 +71,17 @@ import java.util.List;
  */
 public class RemoteKadminImpl implements Kadmin {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteKadminImpl.class);
+    private static final String MECHANISM = "GSSAPI";
+    private static final byte[] EMPTY_BYTES = new byte[0];
     private InternalAdminClient innerClient;
     private KrbTransport transport;
+    private SaslClient saslClient = null;
+    private SaslWrapper saslClientWrapper = null;
+    private final Subject subject;
 
-    public RemoteKadminImpl(InternalAdminClient innerClient) throws KrbException {
+    public RemoteKadminImpl(InternalAdminClient innerClient, Subject subject) throws KrbException {
         this.innerClient = innerClient;
+        this.subject = subject;
         TransportPair tpair = null;
         try {
             tpair = AdminUtil.getTransportPair(innerClient.getSetting());
@@ -77,6 +94,11 @@ public class RemoteKadminImpl implements Kadmin {
             transport = network.connect(tpair);
         } catch (IOException e) {
             throw new KrbException("Failed to create transport", e);
+        }
+        try {
+            doSaslHandshake();
+        } catch (Exception e) {
+            throw new KrbException("Failed to do SASL handshake. " + e);
         }
     }
 
@@ -97,7 +119,7 @@ public class RemoteKadminImpl implements Kadmin {
         adRequest.setTransport(transport);
         //handle it
         AdminHandler adminHandler = new DefaultAdminHandler();
-        adminHandler.handleRequest(adRequest);
+        adminHandler.handleRequest(adRequest, saslClientWrapper);
 
     }
 
@@ -108,7 +130,7 @@ public class RemoteKadminImpl implements Kadmin {
         //wrap buffer problem
         adRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        adminHandler.handleRequest(adRequest);
+        adminHandler.handleRequest(adRequest, saslClientWrapper);
     }
 
     @Override
@@ -117,7 +139,7 @@ public class RemoteKadminImpl implements Kadmin {
         AdminRequest addPrincipalRequest = new AddPrincipalRequest(principal, password);
         addPrincipalRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        adminHandler.handleRequest(addPrincipalRequest);
+        adminHandler.handleRequest(addPrincipalRequest, saslClientWrapper);
     }
 
     @Override
@@ -139,7 +161,7 @@ public class RemoteKadminImpl implements Kadmin {
         AdminRequest exportKeytabRequest = new ExportKeytabRequest(principalsStr);
         exportKeytabRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        byte[] keytabFileBytes = adminHandler.handleRequestForBytes(exportKeytabRequest);
+        byte[] keytabFileBytes = adminHandler.handleRequestForBytes(exportKeytabRequest, saslClientWrapper);
         
         Keytab keytab = AdminHelper.loadKeytab(new ByteArrayInputStream(keytabFileBytes));
         Keytab outputKeytab = AdminHelper.createOrLoadKeytab(keytabFile);
@@ -179,7 +201,7 @@ public class RemoteKadminImpl implements Kadmin {
         AdminRequest deletePrincipalRequest = new DeletePrincipalRequest(principal);
         deletePrincipalRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        adminHandler.handleRequest(deletePrincipalRequest);
+        adminHandler.handleRequest(deletePrincipalRequest, saslClientWrapper);
     }
 
     @Override
@@ -194,7 +216,7 @@ public class RemoteKadminImpl implements Kadmin {
         AdminRequest renamePrincipalRequest =  new RenamePrincipalRequest(oldPrincipalName, newPrincipalName);
         renamePrincipalRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        adminHandler.handleRequest(renamePrincipalRequest);
+        adminHandler.handleRequest(renamePrincipalRequest, saslClientWrapper);
     }
 
     @Override
@@ -202,7 +224,7 @@ public class RemoteKadminImpl implements Kadmin {
         AdminRequest getPrincsRequest = new GetprincsRequest();
         getPrincsRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        return adminHandler.handleRequestForList(getPrincsRequest);
+        return adminHandler.handleRequestForList(getPrincsRequest, saslClientWrapper);
     }
 
     @Override
@@ -210,7 +232,7 @@ public class RemoteKadminImpl implements Kadmin {
         AdminRequest getPrincsRequest = new GetprincsRequest(globString);
         getPrincsRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        return adminHandler.handleRequestForList(getPrincsRequest);
+        return adminHandler.handleRequestForList(getPrincsRequest, saslClientWrapper);
     }
 
     @Override
@@ -219,7 +241,7 @@ public class RemoteKadminImpl implements Kadmin {
         AdminRequest changePwdRequest = new ChangePasswordRequest(principal, newPassword);
         changePwdRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        adminHandler.handleRequest(changePwdRequest);
+        adminHandler.handleRequest(changePwdRequest, saslClientWrapper);
     }
 
     @Override
@@ -236,7 +258,7 @@ public class RemoteKadminImpl implements Kadmin {
         AdminRequest getPrincipalRequest = new GetPrincipalRequest(principalName);
         getPrincipalRequest.setTransport(transport);
         AdminHandler adminHandler = new DefaultAdminHandler();
-        return adminHandler.handleRequestForIdentity(getPrincipalRequest);
+        return adminHandler.handleRequestForIdentity(getPrincipalRequest, saslClientWrapper);
     }
 
     private String listToString(List<String> list) {
@@ -249,5 +271,65 @@ public class RemoteKadminImpl implements Kadmin {
             result.append(list.get(i)).append(" ");
         }
         return result.toString();
+    }
+
+    private void doSaslHandshake() throws Exception {
+        Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> {
+            boolean success = false;
+            try {
+                Map<String, String> saslProps = new HashMap<>();
+                saslProps.put(Sasl.QOP, "auth-conf");
+                saslProps.put(Sasl.SERVER_AUTH, "true");
+                try {
+                    String protocol = innerClient.getSetting().getAdminConfig().getProtocol();
+                    String serverName = innerClient.getSetting().getAdminConfig().getServerName();
+                    saslClient = Sasl.createSaslClient(new String[]{MECHANISM}, null,
+                            protocol, serverName, saslProps, null);
+                    this.saslClientWrapper = SaslWrapper.create(saslClient);
+                } catch (SaslException e) {
+                    throw new KrbException("Fail to create SASL client. " + e);
+                }
+                if (saslClient == null) {
+                    throw new KrbException("Unable to find client implementation for: GSSAPI");
+                }
+                byte[] response;
+                try {
+                    response = saslClient.hasInitialResponse()
+                            ? saslClient.evaluateChallenge(EMPTY_BYTES) : EMPTY_BYTES;
+                } catch (SaslException e) {
+                    throw new KrbException("Sasl client evaluate challenge failed." + e);
+                }
+                sendSaslMessage(response);
+                ByteBuffer message = transport.receiveMessage();
+
+                while (!saslClient.isComplete()) {
+                    int ssComplete = message.getInt();
+                    if (ssComplete == NegotiationStatus.SUCCESS.getValue()) {
+                        LOG.info("Sasl Server completed");
+                    }
+                    sendSaslMessage(SaslUtils.evaluateChallenge(saslClient, message));
+                    if (!saslClient.isComplete()) {
+                        message = transport.receiveMessage();
+                    }
+
+                }
+                success = true;
+            } finally {
+                if (!success) {
+                    transport.release();
+                }
+            }
+            return null;
+        });
+    }
+    private void sendSaslMessage(byte[] response) {
+        NegotiationStatus status = saslClient.isComplete()
+                ? NegotiationStatus.SUCCESS : NegotiationStatus.CONTINUE;
+        ByteBuffer buffer = KadminCode.encodeSaslMessage(response, status);
+        try {
+            transport.sendMessage(buffer);
+        } catch (IOException e) {
+            LOG.error("Failed to send message to server. ", e);
+        }
     }
 }

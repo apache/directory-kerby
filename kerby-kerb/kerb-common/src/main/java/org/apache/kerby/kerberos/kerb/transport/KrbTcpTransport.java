@@ -81,4 +81,8 @@ public class KrbTcpTransport
             // System.err.println(e); // NOOP
         }
     }
+
+    public boolean isClosed() {
+        return socket.isClosed();
+    }
 }
