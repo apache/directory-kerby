@@ -35,8 +35,10 @@ import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbSetting;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
+import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.kerberos.kerb.server.KdcUtil;
+import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,10 +178,37 @@ public class HasServer {
         }
         LocalKadmin kadmin = new LocalKadminImpl(kdcServer.getKdcSetting(),
             kdcServer.getIdentityService());
+        String kadminPrincipalName = kadmin.getKadminPrincipal();
         if (adminKeytabFile.exists()) {
-            throw new KrbException("KDC Server is already inited.");
+            try {
+                Keytab keytab = Keytab.loadKeytab(adminKeytabFile);
+                boolean deleteFlag = false;
+                if (!keytab.getPrincipals().isEmpty()) {
+                    for (PrincipalName principal: keytab.getPrincipals()) {
+                        if (!principal.getName().equals(kadminPrincipalName)) {
+                            deleteFlag = true;
+                            break;
+                        }
+                    }
+                } else {
+                    deleteFlag = true;
+                }
+                if (deleteFlag) {
+                    if (!adminKeytabFile.delete()) {
+                        throw new KrbException("Failed to delete wrong admin keytab file.");
+                    } else {
+                        System.out.println("The old admin.keytab is wrong and will be regenerated.");
+                    }
+                } else {
+                    return adminKeytabFile;
+                }
+            } catch (IOException e) {
+                throw new KrbException("Failed to load existing admin keytab file.");
+            }
         }
-        kadmin.createBuiltinPrincipals();
+        if (kadmin.getPrincipal(kadminPrincipalName) == null) {
+            kadmin.createBuiltinPrincipals();
+        }
         kadmin.exportKeytab(adminKeytabFile, kadmin.getKadminPrincipal());
         System.out.println("The keytab for kadmin principal "
             + "has been exported to the specified file "
