@@ -52,7 +52,7 @@ public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
         }
     }
 
-    protected abstract void getStructTypeInstance(final XdrType[] fields, final XdrFieldInfo[] fieldInfos);
+    protected abstract void getStructTypeInstance(XdrType[] fields, XdrFieldInfo[] fieldInfos);
 
     public XdrFieldInfo[] getXdrFieldInfos() {
         return fieldInfos;

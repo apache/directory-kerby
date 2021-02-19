@@ -129,7 +129,7 @@ public enum KeyUsage implements EnumType {
         return UNKNOWN;
     }
 
-    public static final boolean isValid(int usage) {
+    public static boolean isValid(int usage) {
         return usage > -1;
     }
 }

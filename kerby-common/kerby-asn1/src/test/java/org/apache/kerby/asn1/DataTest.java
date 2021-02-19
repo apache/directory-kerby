@@ -54,7 +54,7 @@ public class DataTest {
         class BufferOutput {
             ByteBuffer buffer;
 
-            void put(byte ... bytes) {
+            void put(byte... bytes) {
                 buffer.put(bytes);
             }
 

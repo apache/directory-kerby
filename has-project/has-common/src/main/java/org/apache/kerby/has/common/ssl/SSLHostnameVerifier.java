@@ -133,14 +133,14 @@ public interface SSLHostnameVerifier extends javax.net.ssl.HostnameVerifier {
     SSLHostnameVerifier DEFAULT =
         new AbstractVerifier() {
             @Override
-            public final void check(final String[] hosts, final String[] cns,
+            public void check(final String[] hosts, final String[] cns,
                                     final String[] subjectAlts)
                 throws SSLException {
                 check(hosts, cns, subjectAlts, false, false);
             }
 
             @Override
-            public final String toString() {
+            public String toString() {
                 return "DEFAULT";
             }
         };
@@ -155,7 +155,7 @@ public interface SSLHostnameVerifier extends javax.net.ssl.HostnameVerifier {
     SSLHostnameVerifier DEFAULT_AND_LOCALHOST =
         new AbstractVerifier() {
             @Override
-            public final void check(final String[] hosts, final String[] cns,
+            public void check(final String[] hosts, final String[] cns,
                                     final String[] subjectAlts)
                 throws SSLException {
                 if (isLocalhost(hosts[0])) {
@@ -165,7 +165,7 @@ public interface SSLHostnameVerifier extends javax.net.ssl.HostnameVerifier {
             }
 
             @Override
-            public final String toString() {
+            public String toString() {
                 return "DEFAULT_AND_LOCALHOST";
             }
         };
@@ -189,14 +189,14 @@ public interface SSLHostnameVerifier extends javax.net.ssl.HostnameVerifier {
     SSLHostnameVerifier STRICT =
         new AbstractVerifier() {
             @Override
-            public final void check(final String[] host, final String[] cns,
+            public void check(final String[] host, final String[] cns,
                                     final String[] subjectAlts)
                 throws SSLException {
                 check(host, cns, subjectAlts, false, true);
             }
 
             @Override
-            public final String toString() {
+            public String toString() {
                 return "STRICT";
             }
         };
@@ -210,14 +210,14 @@ public interface SSLHostnameVerifier extends javax.net.ssl.HostnameVerifier {
     SSLHostnameVerifier STRICT_IE6 =
         new AbstractVerifier() {
             @Override
-            public final void check(final String[] host, final String[] cns,
+            public void check(final String[] host, final String[] cns,
                                     final String[] subjectAlts)
                 throws SSLException {
                 check(host, cns, subjectAlts, true, true);
             }
 
             @Override
-            public final String toString() {
+            public String toString() {
                 return "STRICT_IE6";
             }
         };
@@ -229,13 +229,13 @@ public interface SSLHostnameVerifier extends javax.net.ssl.HostnameVerifier {
     SSLHostnameVerifier ALLOW_ALL =
         new AbstractVerifier() {
             @Override
-            public final void check(final String[] host, final String[] cns,
+            public void check(final String[] host, final String[] cns,
                                     final String[] subjectAlts) {
                 // Allow everything - so never blowup.
             }
 
             @Override
-            public final String toString() {
+            public String toString() {
                 return "ALLOW_ALL";
             }
         };

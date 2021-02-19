@@ -59,7 +59,7 @@ public abstract class Asn1CollectionOf<T extends Asn1Type>
         }
     }
 
-    public void addElements(T ... elements) {
+    public void addElements(T... elements) {
         for (T ele : elements) {
             addElement(ele);
         }

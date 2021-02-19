@@ -241,7 +241,7 @@ public class SimpleKdcServer extends KdcServer {
      * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principals The principal list
      */
-    public synchronized void createPrincipals(String ... principals) throws KrbException {
+    public synchronized void createPrincipals(String... principals) throws KrbException {
         for (String principal : principals) {
             kadmin.addPrincipal(principal);
         }
@@ -255,7 +255,7 @@ public class SimpleKdcServer extends KdcServer {
      * @param principals The principals to be create
      */
     public synchronized void createAndExportPrincipals(File keytabFile,
-                                String ... principals) throws KrbException {
+                                String... principals) throws KrbException {
         createPrincipals(principals);
         exportPrincipals(keytabFile);
     }
@@ -266,7 +266,7 @@ public class SimpleKdcServer extends KdcServer {
      * @throws org.apache.kerby.kerberos.kerb.KrbException e
      * @param principals The principals to be delete
      */
-    public synchronized void deletePrincipals(String ... principals) throws KrbException {
+    public synchronized void deletePrincipals(String... principals) throws KrbException {
         for (String principal : principals) {
             deletePrincipal(principal);
         }

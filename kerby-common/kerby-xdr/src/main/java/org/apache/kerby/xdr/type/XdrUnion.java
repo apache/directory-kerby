@@ -84,7 +84,7 @@ public abstract class XdrUnion extends AbstractXdrType<XdrUnion> {
         }
     }
 
-    protected abstract void getUnionInstance(final XdrType[] fields, final XdrFieldInfo[] fieldInfos);
+    protected abstract void getUnionInstance(XdrType[] fields, XdrFieldInfo[] fieldInfos);
 
     public XdrFieldInfo[] getXdrFieldInfos() {
         return fieldInfos;

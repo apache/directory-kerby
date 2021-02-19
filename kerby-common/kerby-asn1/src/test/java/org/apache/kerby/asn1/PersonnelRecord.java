@@ -113,7 +113,7 @@ public class PersonnelRecord extends Asn1TaggingSet {
     }
 
     public static class Children extends Asn1SequenceOf<ChildInformation> {
-        public Children(ChildInformation ... children) {
+        public Children(ChildInformation... children) {
             super();
             for (ChildInformation child : children) {
                 addElement(child);

@@ -107,7 +107,7 @@ public class Krb5Parser {
      * @param keys the keys list
      * @return a Map of section contents
      */
-    public Object getSection(String sectionName, String ... keys) {
+    public Object getSection(String sectionName, String... keys) {
         Object value = null;
         for (Map.Entry<String, Object> item : items.entrySet()) {
             if (item.getKey().equals(sectionName)) {

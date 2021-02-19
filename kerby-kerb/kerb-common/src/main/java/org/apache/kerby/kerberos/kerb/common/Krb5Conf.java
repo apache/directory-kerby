@@ -51,7 +51,7 @@ public class Krb5Conf extends Conf {
     }
 
     protected String getString(ConfigKey key, boolean useDefault,
-                            String ... sections) {
+                            String... sections) {
         String value = getString(key, false);
         if (value == null) {
             for (String section : sections) {
@@ -72,7 +72,7 @@ public class Krb5Conf extends Conf {
     }
 
     protected Boolean getBoolean(ConfigKey key, boolean useDefault,
-                                 String ... sections) {
+                                 String... sections) {
         Boolean value = getBoolean(key, false);
         if (value == null) {
             for (String section : sections) {
@@ -93,7 +93,7 @@ public class Krb5Conf extends Conf {
     }
 
     protected Long getLong(ConfigKey key, boolean useDefault,
-                           String ... sections) {
+                           String... sections) {
         Long value = getLong(key, false);
         if (value == null) {
             for (String section : sections) {
@@ -114,7 +114,7 @@ public class Krb5Conf extends Conf {
     }
 
     protected Integer getInt(ConfigKey key, boolean useDefault,
-                             String ... sections) {
+                             String... sections) {
         Integer value = getInt(key, false);
         if (value == null) {
             for (String section : sections) {
@@ -135,7 +135,7 @@ public class Krb5Conf extends Conf {
     }
 
     protected List<EncryptionType> getEncTypes(ConfigKey key, boolean useDefault,
-                                               String ... sections) {
+                                               String... sections) {
         String[] encTypesNames = getStringArray(key, useDefault, sections);
         return getEncryptionTypes(encTypesNames);
     }
@@ -158,7 +158,7 @@ public class Krb5Conf extends Conf {
     }
 
     protected String[] getStringArray(ConfigKey key, boolean useDefault,
-                                      String ... sections) {
+                                      String... sections) {
         String value = getString(key, useDefault, sections);
         if (value != null) {
             return value.split(LIST_SPLITTER);
