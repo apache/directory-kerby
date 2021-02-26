@@ -61,7 +61,7 @@
     <buildtools.dir>${basedir}/build-tools</buildtools.dir>
     <skipTests>false</skipTests>
     <jline.version>3.19.0</jline.version>
-    <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+    <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
     <maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
     <mockito.version>3.8.0</mockito.version>
     <netty.version>4.1.59.Final</netty.version>
