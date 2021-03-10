@@ -64,7 +64,7 @@
     <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
     <maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
     <mockito.version>3.8.0</mockito.version>
-    <netty.version>4.1.59.Final</netty.version>
+    <netty.version>4.1.60.Final</netty.version>
     <hadoop.version>3.1.3</hadoop.version>
     <bouncycastle.version>1.68</bouncycastle.version>
     <jersey.container.version>2.17</jersey.container.version>
