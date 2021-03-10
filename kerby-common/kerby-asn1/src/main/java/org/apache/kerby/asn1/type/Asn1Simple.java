@@ -210,7 +210,7 @@ public abstract class Asn1Simple<T> extends AbstractAsn1Type<T> {
     public String toString() {
         String typeStr = simpleInfo();
         T theValue = getValue();
-        String valueStr = (theValue != null ? String.valueOf(theValue) : "null");
+        String valueStr = theValue != null ? String.valueOf(theValue) : "null";
         return typeStr + valueStr;
     }
 }

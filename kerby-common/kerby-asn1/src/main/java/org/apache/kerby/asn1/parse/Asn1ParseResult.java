@@ -90,8 +90,8 @@ public abstract class Asn1ParseResult extends Asn1Object {
     public int getHeaderLength() {
         int bodyLen = getBodyLength();
         int headerLen = Asn1Util.lengthOfTagLength(header.getTag().tagNo());
-        headerLen += (header.isDefinitiveLength()
-            ? Asn1Util.lengthOfBodyLength(bodyLen) : 1);
+        headerLen += header.isDefinitiveLength()
+            ? Asn1Util.lengthOfBodyLength(bodyLen) : 1;
         return headerLen;
     }
 

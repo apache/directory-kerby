@@ -123,7 +123,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCacheFile.delete();
     }
 
-    @org.junit.Test
+    @org.junit.Test(expected = KrbException.class)
     public void accessTokenInvalidAudience() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -165,15 +165,12 @@ public class JWTTokenTest extends TokenLoginTestBase {
         // Now get a SGT using the JWT
         try {
             tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
-            fail("Failure expected on an invalid audience");
-        } catch (KrbException ex) { //NOPMD
-            // expected
+        } finally {
+            cCacheFile.delete();
         }
-
-        cCacheFile.delete();
     }
 
-    @org.junit.Test
+    @org.junit.Test(expected = KrbException.class)
     public void accessTokenInvalidSignature() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -215,15 +212,12 @@ public class JWTTokenTest extends TokenLoginTestBase {
         // Now get a SGT using the JWT
         try {
             tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
-            fail("Failure expected on an invalid signature");
-        } catch (KrbException ex) { //NOPMD
-            // expected
+        } finally {
+            cCacheFile.delete();
         }
-
-        cCacheFile.delete();
     }
 
-    @org.junit.Test
+    @org.junit.Test(expected = KrbException.class)
     public void accessTokenUnknownIssuer() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -266,12 +260,9 @@ public class JWTTokenTest extends TokenLoginTestBase {
         // Now get a SGT using the JWT
         try {
             tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
-            fail("Failure expected on an unknown issuer");
-        } catch (KrbException ex) { //NOPMD
-            // expected
+        } finally {
+            cCacheFile.delete();
         }
-
-        cCacheFile.delete();
     }
 
     // Use the TGT here instead of an armor cache
@@ -387,7 +378,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCacheFile.delete();
     }
 
-    @org.junit.Test
+    @org.junit.Test(expected = KrbException.class)
     public void identityTokenInvalidAudience() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -428,14 +419,12 @@ public class JWTTokenTest extends TokenLoginTestBase {
         try {
             tokenClient.requestTgt(krbToken, cCacheFile.getPath());
             fail("Failure expected on an invalid audience");
-        } catch (KrbException ex) { //NOPMD
-            // expected
+        } finally {
+            cCacheFile.delete();
         }
-
-        cCacheFile.delete();
     }
 
-    @org.junit.Test
+    @org.junit.Test(expected = KrbException.class)
     public void identityTokenInvalidSignature() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -475,14 +464,12 @@ public class JWTTokenTest extends TokenLoginTestBase {
         try {
             tokenClient.requestTgt(krbToken, cCacheFile.getPath());
             fail("Failure expected on an invalid signature");
-        } catch (KrbException ex) { //NOPMD
-            // expected
+        } finally {
+            cCacheFile.delete();
         }
-
-        cCacheFile.delete();
     }
 
-    @org.junit.Test
+    @org.junit.Test(expected = KrbException.class)
     public void identityTokenUnknownIssuer() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -522,12 +509,9 @@ public class JWTTokenTest extends TokenLoginTestBase {
         // Now get a TGT using the JWT token
         try {
             tokenClient.requestTgt(krbToken, cCacheFile.getPath());
-            fail("Failure expected on an unknown issuer");
-        } catch (KrbException ex) { //NOPMD
-            // expected
+        } finally {
+            cCacheFile.delete();
         }
-
-        cCacheFile.delete();
     }
 
     private byte[] signToken(AuthToken authToken, PrivateKey signKey) throws Exception {

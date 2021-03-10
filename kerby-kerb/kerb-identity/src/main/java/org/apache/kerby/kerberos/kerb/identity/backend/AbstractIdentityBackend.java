@@ -161,7 +161,7 @@ public abstract class AbstractIdentityBackend
 
         KrbIdentity identity = doGetIdentity(principalName);
         logger.debug("getIdentity {}, principalName = {}",
-                (identity != null ? "successful" : "failed"), principalName);
+                identity != null ? "successful" : "failed", principalName);
 
         return identity;
     }
@@ -190,7 +190,7 @@ public abstract class AbstractIdentityBackend
         AuthorizationData authData = doGetIdentityAuthorizationData(kdcClientRequest,
                 encTicketPart);
         logger.debug("getIdentityAuthorizationData {}, authData = {}",
-                (authData != null ? "successful" : "failed"), authData);
+                authData != null ? "successful" : "failed", authData);
 
         return authData;
     }
@@ -238,7 +238,7 @@ public abstract class AbstractIdentityBackend
 
         KrbIdentity added = doAddIdentity(identity);
         logger.debug("addIdentity {}, principalName = {}",
-                (added != null ? "successful" : "failed"), identity.getPrincipalName());
+                added != null ? "successful" : "failed", identity.getPrincipalName());
 
         return added;
     }
@@ -268,7 +268,7 @@ public abstract class AbstractIdentityBackend
 
         KrbIdentity updated = doUpdateIdentity(identity);
         logger.debug("updateIdentity {}, principalName = {}",
-                (updated != null ? "successful" : "failed"), identity.getPrincipalName());
+                updated != null ? "successful" : "failed", identity.getPrincipalName());
 
         return updated;
     }

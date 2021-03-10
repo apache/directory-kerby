@@ -132,8 +132,7 @@ public class IPAddressParser {
 
         byte[] ip6 = new byte[16];
         int i = 0;
-        for (int j = 0; j < raw.length; j++) {
-            String tok = raw[j];
+        for (String tok : raw) {
             if (tok.length() > 4) {
                 return null;
             }

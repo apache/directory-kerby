@@ -62,7 +62,7 @@ public class DefaultInternalKrbClient extends AbstractInternalKrbClient {
         krbHandler.init(getContext());
     }
 
-    private void doRequest(KdcRequest request) throws KrbException {
+    private void doRequest(KdcRequest request) throws KrbException {    //NOPMD
 
         String realm = getSetting().getKdcRealm();
         PrincipalName serverPrincipalName = request.getServerPrincipal();

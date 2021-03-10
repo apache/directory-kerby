@@ -61,8 +61,7 @@ public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
     @Override
     protected int encodingBodyLength() throws IOException {
         int allLen = 0;
-        for (int i = 0; i < fields.length; ++i) {
-            AbstractXdrType field = (AbstractXdrType) fields[i];
+        for (XdrType field : fields) {
             if (field != null) {
                 allLen += field.encodingLength();
             }
@@ -72,8 +71,7 @@ public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
 
     @Override
     protected void encodeBody(ByteBuffer buffer) throws IOException {
-        for (int i = 0; i < fields.length; ++i) {
-            XdrType field = fields[i];
+        for (XdrType field : fields) {
             if (field != null) {
                 field.encode(buffer);
             }
@@ -84,10 +82,10 @@ public abstract class XdrStructType extends AbstractXdrType<XdrStructType> {
     public void decode(ByteBuffer content) throws IOException {
         AbstractXdrType[] fields = getAllFields();
         Object[] value;
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i] != null) {
-                fields[i].decode(content);
-                int length = fields[i].encodingLength();
+        for (XdrType field : fields) {
+            if (field != null) {
+                field.decode(content);
+                int length = field.encodingLength();
                 byte[] array = content.array();
                 byte[] newArray = new byte[array.length - length];
                 System.arraycopy(array, length, newArray, 0, array.length - length);

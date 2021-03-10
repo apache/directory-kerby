@@ -63,8 +63,8 @@ public class ListPrincipalsRemoteCmd extends AdminRemoteCmd {
             return;
         } else {
             System.out.println("Principals are listed:");
-            for (int i = 0; i < principalLists.size(); i++) {
-                System.out.println(principalLists.get(i));
+            for (String principal : principalLists) {
+                System.out.println(principal);
             }
         }
     }

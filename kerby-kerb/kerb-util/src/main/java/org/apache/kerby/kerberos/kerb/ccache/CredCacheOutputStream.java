@@ -71,8 +71,8 @@ public class CredCacheOutputStream extends KrbOutputStream {
     }
 
     public void writeTimes(KerberosTime[] times) throws IOException {
-        for (int i = 0; i < times.length; ++i) {
-            writeTime(times[i]);
+        for (KerberosTime time : times) {
+            writeTime(time);
         }
     }
 

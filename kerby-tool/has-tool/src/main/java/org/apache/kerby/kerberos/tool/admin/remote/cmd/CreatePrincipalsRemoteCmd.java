@@ -80,8 +80,8 @@ public class CreatePrincipalsRemoteCmd extends AdminRemoteCmd {
         }
         List<String> results = client.addPrincipalsByRole(sb.toString());
         if (results != null) {
-            for (int i = 0; i < results.size(); i++) {
-                System.out.println(results.get(i));
+            for (String result : results) {
+                System.out.println(result);
             }
         }
     }

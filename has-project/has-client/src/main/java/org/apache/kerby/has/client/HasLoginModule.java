@@ -113,7 +113,7 @@ public class HasLoginModule implements LoginModule {
                 "true".equalsIgnoreCase((String) options.get("refreshKrb5Config"));
 
             // check isInitiator value
-            String isInitiatorValue = ((String) options.get("isInitiator"));
+            String isInitiatorValue = (String) options.get("isInitiator");
             if (isInitiatorValue != null) {
                 // use default, if value not set
                 isInitiator = "true".equalsIgnoreCase(isInitiatorValue);

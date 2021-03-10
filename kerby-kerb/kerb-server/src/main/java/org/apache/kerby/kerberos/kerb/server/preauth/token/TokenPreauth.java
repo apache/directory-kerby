@@ -162,9 +162,9 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             if (listOfFiles == null) {
                 throw new FileNotFoundException("The key path is incorrect");
             }
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile() && listOfFiles[i].getName().contains(issuer)) {
-                    verifyKeyFile = listOfFiles[i];
+            for (File f : listOfFiles) {
+                if (f.isFile() && f.getName().contains(issuer)) {
+                    verifyKeyFile = f;
                     break;
                 }
             }

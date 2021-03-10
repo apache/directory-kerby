@@ -606,8 +606,8 @@ public class Base64 {
      *         false, otherwise
      */
     public static boolean isArrayByteBase64(byte[] arrayOctet) {
-        for (int i = 0; i < arrayOctet.length; i++) {
-            if (!isBase64(arrayOctet[i]) && !isWhiteSpace(arrayOctet[i])) {
+        for (byte b : arrayOctet) {
+            if (!isBase64(b) && !isWhiteSpace(b)) {
                 return false;
             }
         }
@@ -622,8 +622,8 @@ public class Base64 {
      * @return <code>true</code> if any byte is a valid character in the Base64 alphabet; false herwise
      */
     private static boolean containsBase64Byte(byte[] arrayOctet) {
-        for (int i = 0; i < arrayOctet.length; i++) {
-            if (isBase64(arrayOctet[i])) {
+        for (byte b : arrayOctet) {
+            if (isBase64(b)) {
                 return true;
             }
         }
@@ -847,15 +847,15 @@ public class Base64 {
     static byte[] discardWhitespace(byte[] data) {
         byte[] groomedData = new byte[data.length];
         int bytesCopied = 0;
-        for (int i = 0; i < data.length; i++) {
-            switch (data[i]) {
+        for (byte b : data) {
+            switch (b) {
                 case ' ' :
                 case '\n' :
                 case '\r' :
                 case '\t' :
                     break;
                 default :
-                    groomedData[bytesCopied++] = data[i];
+                    groomedData[bytesCopied++] = b;
             }
         }
         byte[] packedData = new byte[bytesCopied];

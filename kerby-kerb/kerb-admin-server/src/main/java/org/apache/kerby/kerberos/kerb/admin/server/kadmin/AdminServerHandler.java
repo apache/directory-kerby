@@ -216,8 +216,8 @@ public class AdminServerHandler {
     }
 
     private ByteBuffer handleGetprincsReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
-        int paramNum = ((int) fieldInfos[1].getValue());
-        String globString = paramNum != 0 ? ((String) fieldInfos[2].getValue()) : null;
+        int paramNum = (int) fieldInfos[1].getValue();
+        String globString = paramNum != 0 ? (String) fieldInfos[2].getValue() : null;
         List<String> princsList = null;
 
         try {
@@ -237,7 +237,7 @@ public class AdminServerHandler {
     }
     
     private ByteBuffer handleExportKeytabReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
-        String principals = ((String) fieldInfos[2].getValue());
+        String principals = (String) fieldInfos[2].getValue();
         
         if (principals != null) {
             List<String> princList = stringToList(principals);
@@ -271,8 +271,8 @@ public class AdminServerHandler {
     }
 
     private ByteBuffer handleChangePwdReq(LocalKadmin localKadmin, XdrFieldInfo[] fieldInfos) throws IOException {
-        String principal = ((String) fieldInfos[2].getValue());
-        String newPassword = ((String) fieldInfos[3].getValue());
+        String principal = (String) fieldInfos[2].getValue();
+        String newPassword = (String) fieldInfos[3].getValue();
 
         if (principal == null || principal.isEmpty() || newPassword == null || newPassword.isEmpty()) {
             String error = "Value of principal or new password is null.";
@@ -390,8 +390,8 @@ public class AdminServerHandler {
         }
         //Both speed and safety,so use StringBuilder
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            result.append(list.get(i)).append(" ");
+        for (String item : list) {
+            result.append(item).append(" ");
         }
         return result.toString();
     }

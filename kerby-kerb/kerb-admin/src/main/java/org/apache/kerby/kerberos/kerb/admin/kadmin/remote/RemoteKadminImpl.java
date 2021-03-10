@@ -267,8 +267,8 @@ public class RemoteKadminImpl implements Kadmin {
         }
         //Both speed and safety,so use StringBuilder
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            result.append(list.get(i)).append(" ");
+        for (String l : list) {
+            result.append(l).append(" ");
         }
         return result.toString();
     }

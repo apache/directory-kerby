@@ -37,13 +37,13 @@ public class PasswordCallbackHandler implements CallbackHandler {
     
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-        for (int i = 0; i < callbacks.length; i++) {
-            if (callbacks[i] instanceof PasswordCallback) {
-                PasswordCallback pc = (PasswordCallback) callbacks[i];
+        for (Callback callback : callbacks) {
+            if (callback instanceof PasswordCallback) {
+                PasswordCallback pc = (PasswordCallback) callback;
                 pc.setPassword(Password.readPassword(new ByteArrayInputStream(password.getBytes()), pc.isEchoOn()));
             } else {
                 throw new UnsupportedCallbackException(
-                        callbacks[i], "Only support PasswordCallback");
+                        callback, "Only support PasswordCallback");
             }
         }
     }
