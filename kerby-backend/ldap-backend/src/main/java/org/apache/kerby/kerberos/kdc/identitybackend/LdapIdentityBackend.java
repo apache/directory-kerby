@@ -257,6 +257,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             entry.setDn(dn);
             entry.add("objectClass", "top", "person", "inetOrgPerson",
                     "krb5principal", "krb5kdcentry");
+            entry.add("uid", names[0]);
             entry.add("cn", names[0]);
             entry.add("sn", names[0]);
             entry.add(KerberosAttribute.KRB5_KEY_AT, keysInfo.getKeys());
