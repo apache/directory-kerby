@@ -267,8 +267,6 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             entry.add("krb5KDCFlags", "" + identity.getKdcFlags());
             entry.add(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, ""
                     + identity.isDisabled());
-            entry.add("createTimestamp",
-                    toGeneralizedTime(identity.getCreatedTime()));
             entry.add(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, ""
                     + identity.isLocked());
             entry.add(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT,
