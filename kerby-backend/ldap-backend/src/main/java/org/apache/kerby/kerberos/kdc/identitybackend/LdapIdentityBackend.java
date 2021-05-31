@@ -257,6 +257,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             entry.setDn(dn);
             entry.add("objectClass", "top", "person", "inetOrgPerson",
                     "krb5principal", "krb5kdcentry");
+            entry.add("uid", names[0]);
             entry.add("cn", names[0]);
             entry.add("sn", names[0]);
             entry.add(KerberosAttribute.KRB5_KEY_AT, keysInfo.getKeys());
@@ -267,8 +268,6 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             entry.add("krb5KDCFlags", "" + identity.getKdcFlags());
             entry.add(KerberosAttribute.KRB5_ACCOUNT_DISABLED_AT, ""
                     + identity.isDisabled());
-            entry.add("createTimestamp",
-                    toGeneralizedTime(identity.getCreatedTime()));
             entry.add(KerberosAttribute.KRB5_ACCOUNT_LOCKEDOUT_AT, ""
                     + identity.isLocked());
             entry.add(KerberosAttribute.KRB5_ACCOUNT_EXPIRATION_TIME_AT,
@@ -296,8 +295,24 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected KrbIdentity doGetIdentity(String principalName) throws KrbException {
         KrbIdentity krbIdentity = new KrbIdentity(principalName);
+        String searchFilter =
+            String.format("(&(objectclass=krb5principal)(krb5PrincipalName=%s))", principalName);
         try {
-            Dn dn = toDn(principalName);
+            EntryCursor cursor = new FailoverInvocationHandler<EntryCursor>() {
+                @Override
+                public EntryCursor execute() throws LdapException {
+                    return connection.search(getConfig().getString("base_dn"), searchFilter,
+                        SearchScope.SUBTREE, "dn");
+                }
+            }.run();
+
+            // there should be at most one entry with this principal name
+            if (cursor == null || !cursor.next()) {
+                return null;
+            }
+            Dn dn = cursor.get().getDn();
+            cursor.close();
+
             Entry entry = new FailoverInvocationHandler<Entry>() {
                 @Override
                 public Entry execute() throws LdapException {
@@ -307,6 +322,7 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             if (entry == null) {
                 return null;
             }
+
             LdapIdentityGetHelper getHelper = new LdapIdentityGetHelper(entry);
             krbIdentity.setPrincipal(getHelper.getPrincipalName());
             krbIdentity.setKeyVersion(getHelper.getKeyVersion());
@@ -317,6 +333,8 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             krbIdentity.setKdcFlags(getHelper.getKdcFlags());
             krbIdentity.setLocked(getHelper.getLocked());
         } catch (LdapException e) {
+            throw new KrbException("Failed to retrieve identity", e);
+        } catch (CursorException e) {
             throw new KrbException("Failed to retrieve identity", e);
         } catch (ParseException e) {
             throw new KrbException("Failed to retrieve identity", e);
@@ -412,8 +430,8 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             cursor = new FailoverInvocationHandler<EntryCursor>() {
                 @Override
                 public EntryCursor execute() throws LdapException {
-                    return connection.search(getConfig().getString("base_dn"), "(objectclass=*)",
-                            SearchScope.ONELEVEL, KerberosAttribute.KRB5_PRINCIPAL_NAME_AT);
+                    return connection.search(getConfig().getString("base_dn"), "(objectclass=krb5principal)",
+                        SearchScope.SUBTREE, KerberosAttribute.KRB5_PRINCIPAL_NAME_AT);
                 }
             }.run();
             if (cursor == null) {
