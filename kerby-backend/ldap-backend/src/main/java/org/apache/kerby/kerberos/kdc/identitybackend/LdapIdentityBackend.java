@@ -21,6 +21,7 @@ package org.apache.kerby.kerberos.kdc.identitybackend;
 
 import org.apache.directory.api.ldap.model.cursor.CursorException;
 import org.apache.directory.api.ldap.model.cursor.EntryCursor;
+import org.apache.directory.api.ldap.model.entry.Attribute;
 import org.apache.directory.api.ldap.model.entry.DefaultEntry;
 import org.apache.directory.api.ldap.model.entry.Entry;
 import org.apache.directory.api.ldap.model.exception.LdapException;
@@ -439,7 +440,10 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
             }
             while (cursor.next()) {
                 entry = cursor.get();
-                identityNames.add(entry.get(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT).getString());
+                Attribute krb5PrincipalNameAt = entry.get(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT);
+                if (krb5PrincipalNameAt != null) {
+                    identityNames.add(krb5PrincipalNameAt.getString());
+                }
             }
             cursor.close();
             Collections.sort(identityNames);
