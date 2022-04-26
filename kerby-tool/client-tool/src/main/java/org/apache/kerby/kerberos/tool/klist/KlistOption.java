@@ -22,6 +22,7 @@ package org.apache.kerby.kerberos.tool.klist;
 import org.apache.kerby.KOption;
 import org.apache.kerby.KOptionInfo;
 import org.apache.kerby.KOptionType;
+import org.apache.kerby.kerberos.kerb.client.KrbOptionGroup;
 
 public enum KlistOption implements KOption {
     NONE(null),
@@ -39,7 +40,8 @@ public enum KlistOption implements KOption {
     DISPL_ADDRESS_LIST(new KOptionInfo("-a", "displays the address list")),
     NO_REVERSE_RESOLVE(new KOptionInfo("-n", "do not reverse resolve")),
     SHOW_KTAB_ENTRY_TS(new KOptionInfo("-t", "shows keytab entry timestamps")),
-    SHOW_KTAB_ENTRY_KEY(new KOptionInfo("-K", "show keytab entry keys"));
+    SHOW_KTAB_ENTRY_KEY(new KOptionInfo("-K", "show keytab entry keys")),
+    CONF_DIR(new KOptionInfo("-conf", "conf dir", KrbOptionGroup.KRB, KOptionType.DIR));
 
     private final KOptionInfo optionInfo;
 

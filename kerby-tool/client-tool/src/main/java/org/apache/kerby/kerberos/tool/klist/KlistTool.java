@@ -54,7 +54,7 @@ public class KlistTool {
 
     private static final String USAGE = (OSUtil.isWindows()
         ? "Usage: bin\\klist.cmd" : "Usage: sh bin/klist.sh")
-            + " [-e] [-V] [[-c] [-l] [-A] [-d] [-f] [-s] "
+            + " <-conf conf_dir> [-e] [-V] [[-c] [-l] [-A] [-d] [-f] [-s] "
             + "[-a [-n]]] [-k [-t] [-K]] [name]\n"
             + "\t-c specifies credentials cache\n"
             + "\t-k specifies keytab\n"
@@ -69,7 +69,7 @@ public class KlistTool {
             + "\t\t-f shows credentials flags\n"
             + "\t\t-s sets exit status based on valid tgt existence\n"
             + "\t\t-a displays the address list\n"
-            + "\t\t\t-n do not reverse-resolve\n"
+            + "\t\t-n do not reverse-resolve\n"
             + "\toptions for keytabs:\n"
             + "\t\t-t shows keytab entry timestamps\n"
             + "\t\t-K shows keytab entry keys\n";
@@ -89,7 +89,7 @@ public class KlistTool {
         String fileName;
 
         if (!klOptions.contains(KlistOption.CREDENTIALS_CACHE)) {
-            fileName = getCcacheName();
+            fileName = getCcacheName(klOptions);
         } else {
             fileName = klOptions.getStringOption(KlistOption.CREDENTIALS_CACHE);
         }
@@ -136,11 +136,16 @@ public class KlistTool {
     /**
      * Get credential cache file name if not specified.
      */
-    private static String getCcacheName() {
+    private static String getCcacheName(KOptions klOptions) {
         String ccacheName;
         String ccacheNameEnv = System.getenv("KRB5CCNAME");
         String ccacheNameConf = null;
+
         File confDir = new File("/etc");
+        if (klOptions.contains(KlistOption.CONF_DIR)) {
+            confDir = klOptions.getDirOption(KlistOption.CONF_DIR);
+        }
+
         try {
             KrbClient krbClient = new KrbClient(confDir);
             ccacheNameConf = krbClient.getSetting().getKrbConfig().getString("default_ccache_name");
