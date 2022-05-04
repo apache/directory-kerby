@@ -52,6 +52,7 @@ public class HexUtil {
     /**
      * Convert friendly hex string like follows into byte array
      * 0x02 02 00 80
+     * @param hexString
      */
     public static byte[] hex2bytesFriendly(String hexString) {
         hexString = hexString.toUpperCase();

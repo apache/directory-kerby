@@ -113,6 +113,7 @@ public abstract class XdrSimple<T> extends AbstractXdrType<T> {
 
     /**
      * Decode bytes to simple value.
+     * @throws IOException
      */
     protected abstract void toValue() throws IOException;
 
