@@ -50,12 +50,12 @@
     <apacheds.version>2.0.0.AM26</apacheds.version>
     <commons-io.version>2.11.0</commons-io.version>
     <gson.version>2.8.9</gson.version>
-    <h2.version>2.1.210</h2.version>
+    <h2.version>2.1.214</h2.version>
     <ldap.api.version>2.0.2</ldap.api.version>
     <junit.version>4.13.2</junit.version>
     <nimbus.jose.version>9.9.3</nimbus.jose.version>
     <slf4j.version>1.7.36</slf4j.version>
-    <assertj.version>3.22.0</assertj.version>
+    <assertj.version>3.23.1</assertj.version>
     <findbugs.version>3.0.5</findbugs.version>
     <buildtools.dir>${basedir}/build-tools</buildtools.dir>
     <skipTests>false</skipTests>
@@ -64,7 +64,7 @@
     <maven-jxr-plugin.version>3.2.0</maven-jxr-plugin.version>
     <mockito.version>4.5.1</mockito.version>
     <netty.version>4.1.73.Final</netty.version>
-    <hadoop.version>3.1.3</hadoop.version>
+    <hadoop.version>3.3.3</hadoop.version>
     <bouncycastle.version>1.70</bouncycastle.version>
     <jersey.container.version>2.17</jersey.container.version>
     <jersey.version>1.19.4</jersey.version>
