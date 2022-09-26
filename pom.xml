@@ -78,7 +78,7 @@
     <ini4j.version>0.5.4</ini4j.version>
     <targetJdk.version>1.8</targetJdk.version>
     <zookeeper.version>3.4.14</zookeeper.version>
-    <xnio-api.version>3.8.7.Final</xnio-api.version>
+    <xnio-api.version>3.8.8.Final</xnio-api.version>
   </properties>
 
   <prerequisites>
