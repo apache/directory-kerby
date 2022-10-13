@@ -68,7 +68,7 @@
     <bouncycastle.version>1.70</bouncycastle.version>
     <jersey.container.version>2.17</jersey.container.version>
     <jersey.version>1.19.4</jersey.version>
-    <commons-text.version>1.9</commons-text.version>
+    <commons-text.version>1.10.0</commons-text.version>
     <commons-dbutils.version>1.7</commons-dbutils.version>
     <drizzle-jdbc.version>1.4</drizzle-jdbc.version>
     <jsch.version>0.1.55</jsch.version>
