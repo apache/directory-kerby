@@ -32,4 +32,29 @@ public final class SysUtil {
         return new File(tmpDir);
     }
 
+  /**
+   * A public static variable to indicate the current java vendor is
+   * IBM and the type is Java Technology Edition which provides its
+   * own implementations of many security packages and Cipher suites.
+   * Note that these are not provided in Semeru runtimes:
+   * See https://developer.ibm.com/languages/java/semeru-runtimes/
+   * The class used is present in any supported IBM JTE Runtimes.
+   */
+  public static final boolean IBM_JAVA = shouldUseIbmSecurity();
+
+  private static boolean shouldUseIbmSecurity() {
+    if (!System.getProperty("java.vendor").contains("IBM")) {
+      return false;
+    }
+
+    try {
+      Class.forName("com.ibm.security.auth.module.JAASLoginModule",
+        false,
+        SysUtil.class.getClassLoader());
+      return true;
+    } catch (Exception ignored) { }
+
+    return false;
+  }
+
 }

@@ -49,9 +49,28 @@ public class PlatformName {
 
   /**
    * A public static variable to indicate the current java vendor is
-   * IBM java or not.
+   * IBM and the type is Java Technology Edition which provides its
+   * own implementations of many security packages and Cipher suites.
+   * Note that these are not provided in Semeru runtimes:
+   * See https://developer.ibm.com/languages/java/semeru-runtimes/
+   * The class used is present in any supported IBM JTE Runtimes.
    */
-  public static final boolean IBM_JAVA = JAVA_VENDOR_NAME.contains("IBM");
+  public static final boolean IBM_JAVA = shouldUseIbmSecurity();
+
+  private static boolean shouldUseIbmSecurity() {
+    if (!JAVA_VENDOR_NAME.contains("IBM")) {
+      return false;
+    }
+
+    try {
+      Class.forName("com.ibm.security.auth.module.JAASLoginModule",
+        false,
+        PlatformName.class.getClassLoader());
+      return true;
+    } catch (Exception ignored) { }
+
+    return false;
+  }
 
   public static void main(String[] args) {
     System.out.println(PLATFORM_NAME);
