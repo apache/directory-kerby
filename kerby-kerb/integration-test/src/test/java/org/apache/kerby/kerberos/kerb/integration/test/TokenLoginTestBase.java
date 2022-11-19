@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,7 +59,7 @@ public class TokenLoginTestBase extends LoginTestBase {
         armorCache = new File(getTestDir(), "armorcache.cc");
         tgtCache = new File(getTestDir(), "tgtcache.cc");
         signKeyFile = new File(this.getClass().getResource("/private_key.pem").getPath());
-        tokenCache = File.createTempFile("tokencache", null);
+        tokenCache = Files.createTempFile("tokencache", null).toFile();
     }
 
     @After
