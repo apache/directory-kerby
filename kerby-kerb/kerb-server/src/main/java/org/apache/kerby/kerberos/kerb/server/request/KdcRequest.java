@@ -678,11 +678,13 @@ public abstract class KdcRequest {
         }
 
         PaData preAuthData = request.getPaData();
-        if (isPreauthRequired() && (preAuthData == null || preAuthData.isEmpty())) {
-            LOG.info("The preauth data is empty.");
-            KrbError krbError = makePreAuthenticationError(kdcContext, request,
-                KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, false);
-            throw new KdcRecoverableException(krbError);
+        if (preAuthData == null || preAuthData.isEmpty()) {
+            if (isPreauthRequired()) {
+                LOG.info("The preauth data is empty.");
+                KrbError krbError = makePreAuthenticationError(kdcContext, request,
+                        KrbErrorCode.KDC_ERR_PREAUTH_REQUIRED, false);
+                throw new KdcRecoverableException(krbError);
+            }
         } else {
             getPreauthHandler().verify(this, preAuthData);
         }
