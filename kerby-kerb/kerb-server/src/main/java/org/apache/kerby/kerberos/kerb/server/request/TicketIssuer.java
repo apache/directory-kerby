@@ -169,8 +169,9 @@ public abstract class TicketIssuer {
         }
 
         KerberosTime krbEndTime = request.getReqBody().getTill();
-        if (krbEndTime == null || krbEndTime.getTime() == 0) {
-            krbEndTime = krbStartTime.extend(config.getMaximumTicketLifetime() * 1000);
+        KerberosTime maxEndTime = krbStartTime.extend(config.getMaximumTicketLifetime() * 1000);
+        if (krbEndTime == null || krbEndTime.getTime() == 0 || krbEndTime.greaterThan(maxEndTime)) {
+            krbEndTime = maxEndTime;
         } else if (krbStartTime.greaterThan(krbEndTime)) {
             throw new KrbException(KrbErrorCode.KDC_ERR_NEVER_VALID);
         }
