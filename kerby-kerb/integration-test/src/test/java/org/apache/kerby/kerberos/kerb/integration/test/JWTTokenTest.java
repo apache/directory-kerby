@@ -74,7 +74,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCache.addCredential(credential);
         cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
 
-        File cCacheFile = File.createTempFile("krb5_" + getClientPrincipal(), "cc");
+        File cCacheFile = Files.createTempFile("krb5_" + getClientPrincipal(), "cc").toFile();
         cCache.store(cCacheFile);
 
         KrbTokenClient tokenClient = new KrbTokenClient(client);
@@ -138,7 +138,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCache.addCredential(credential);
         cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
 
-        File cCacheFile = File.createTempFile("krb5_" + getClientPrincipal(), "cc");
+        File cCacheFile = Files.createTempFile("krb5_" + getClientPrincipal(), "cc").toFile();
         cCache.store(cCacheFile);
 
         KrbTokenClient tokenClient = new KrbTokenClient(client);
@@ -185,7 +185,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCache.addCredential(credential);
         cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
 
-        File cCacheFile = File.createTempFile("krb5_" + getClientPrincipal(), "cc");
+        File cCacheFile = Files.createTempFile("krb5_" + getClientPrincipal(), "cc").toFile();
         cCache.store(cCacheFile);
 
         KrbTokenClient tokenClient = new KrbTokenClient(client);
@@ -232,7 +232,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCache.addCredential(credential);
         cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
 
-        File cCacheFile = File.createTempFile("krb5_" + getClientPrincipal(), "cc");
+        File cCacheFile = Files.createTempFile("krb5_" + getClientPrincipal(), "cc").toFile();
         cCache.store(cCacheFile);
 
         KrbTokenClient tokenClient = new KrbTokenClient(client);
@@ -334,7 +334,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCache.addCredential(credential);
         cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
 
-        File cCacheFile = File.createTempFile("krb5_" + getClientPrincipal(), "cc");
+        File cCacheFile = Files.createTempFile("krb5_" + getClientPrincipal(), "cc").toFile();
         cCache.store(cCacheFile);
 
         KrbTokenClient tokenClient = new KrbTokenClient(client);
@@ -393,7 +393,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCache.addCredential(credential);
         cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
 
-        File cCacheFile = File.createTempFile("krb5_" + getClientPrincipal(), "cc");
+        File cCacheFile = Files.createTempFile("krb5_" + getClientPrincipal(), "cc").toFile();
         cCache.store(cCacheFile);
 
         KrbTokenClient tokenClient = new KrbTokenClient(client);
@@ -439,7 +439,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCache.addCredential(credential);
         cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
 
-        File cCacheFile = File.createTempFile("krb5_" + getClientPrincipal(), "cc");
+        File cCacheFile = Files.createTempFile("krb5_" + getClientPrincipal(), "cc").toFile();
         cCache.store(cCacheFile);
 
         KrbTokenClient tokenClient = new KrbTokenClient(client);
@@ -484,7 +484,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCache.addCredential(credential);
         cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
 
-        File cCacheFile = File.createTempFile("krb5_" + getClientPrincipal(), "cc");
+        File cCacheFile = Files.createTempFile("krb5_" + getClientPrincipal(), "cc").toFile();
         cCache.store(cCacheFile);
 
         KrbTokenClient tokenClient = new KrbTokenClient(client);
