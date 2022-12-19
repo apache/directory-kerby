@@ -26,6 +26,9 @@ import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
+
+import static org.apache.kerby.util.SysUtil.IBM_JAVA;
+
 import java.io.File;
 import java.security.Principal;
 import java.util.HashMap;
@@ -38,7 +41,7 @@ public class AuthUtil {
     public static final boolean ENABLE_DEBUG = false;
 
     private static String getKrb5LoginModuleName() {
-        return System.getProperty("java.vendor").contains("IBM")
+        return IBM_JAVA
             ? "com.ibm.security.auth.module.Krb5LoginModule"
             : "com.sun.security.auth.module.Krb5LoginModule";
     }

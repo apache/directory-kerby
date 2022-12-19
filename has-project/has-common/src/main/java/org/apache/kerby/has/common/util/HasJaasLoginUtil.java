@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.kerby.has.common.util.PlatformName.IBM_JAVA;
+
 /**
  * JAAS utilities for Has login.
  */
@@ -40,7 +42,7 @@ public class HasJaasLoginUtil {
     public static final boolean ENABLE_DEBUG = true;
 
     private static String getKrb5LoginModuleName() {
-        return System.getProperty("java.vendor").contains("IBM")
+        return IBM_JAVA
             ? "com.ibm.security.auth.module.Krb5LoginModule"
             : "org.apache.kerby.has.client.HasLoginModule";
     }
