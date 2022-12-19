@@ -35,6 +35,7 @@ import org.apache.directory.api.ldap.model.name.Rdn;
 import org.apache.directory.api.util.GeneralizedTime;
 import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
+import org.apache.directory.ldap.client.api.search.FilterBuilder;
 import org.apache.directory.shared.kerberos.KerberosAttribute;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kerb.KrbException;
@@ -296,8 +297,10 @@ public class LdapIdentityBackend extends AbstractIdentityBackend {
     @Override
     protected KrbIdentity doGetIdentity(String principalName) throws KrbException {
         KrbIdentity krbIdentity = new KrbIdentity(principalName);
-        String searchFilter =
-            String.format("(&(objectclass=krb5principal)(krb5PrincipalName=%s))", principalName);
+        String searchFilter = FilterBuilder.and(
+                FilterBuilder.equal("objectclass", "krb5principal"),
+                FilterBuilder.equal("krb5PrincipalName", principalName)
+        ).toString();
         try {
             EntryCursor cursor = new FailoverInvocationHandler<EntryCursor>() {
                 @Override
