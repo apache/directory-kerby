@@ -1,3 +1,6 @@
 jenkins:
   github_whitelist:
     - dependabot[bot]
+github:
+  dependabot_alerts:  true
+  dependabot_updates: true
