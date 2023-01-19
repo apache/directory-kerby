@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.SimpleTimeZone;
 
 /**
@@ -68,7 +69,7 @@ public class Asn1UtcTime extends Asn1Simple<Date> {
             throw new IllegalArgumentException("Bad utc time string " + dateStr);
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmssZ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmssZ", Locale.US);
         sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
         try {
             setValue(sdf.parse(fixedDateStr));
@@ -80,7 +81,7 @@ public class Asn1UtcTime extends Asn1Simple<Date> {
     @Override
     protected void toBytes() {
         Date date = getValue();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss'Z'");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss'Z'", Locale.US);
         sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
 
         String str = sdf.format(date);

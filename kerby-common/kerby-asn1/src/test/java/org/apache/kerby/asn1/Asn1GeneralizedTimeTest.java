@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.asn1;
 
-import org.apache.kerby.asn1.type.Asn1UtcTime;
+import org.apache.kerby.asn1.type.Asn1GeneralizedTime;
 import org.apache.kerby.asn1.util.HexUtil;
 import org.junit.Test;
 
@@ -31,38 +31,28 @@ import java.util.SimpleTimeZone;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Asn1UtcTimeTest {
+public class Asn1GeneralizedTimeTest {
 
     @Test
     public void testEncoding() throws Exception {
-        /**
-         * Cryptography for Developers -> ASN.1 UTCTIME Type
-         * the encoding of July 4, 2003 at 11:33 and 28 seconds would be
-         “030704113328Z” and be encoded as 0x17 0D 30 33 30 37 30 34 31 31 33 33 32 38 5A.
-         */
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
-        String dateInString = "2003-07-04 11:33:28";
+        String dateInString = "2003070113328000";
         Date date = sdf.parse(dateInString);
-        testEncodingWith(date, "0x17 0D 30 33 30 37 30 34 31 31 33 33 32 38 5A");
+        testEncodingWith(date, "0x18 0F 32 30 30 33 30 37 30 31 31 33 33 33 32 30 5A");
     }
 
     // https://issues.apache.org/jira/browse/DIRKRB-747
     @Test
     public void testEncodingNonASCIILocale() throws Exception {
-        /**
-         * Cryptography for Developers -> ASN.1 UTCTIME Type
-         * the encoding of July 4, 2003 at 11:33 and 28 seconds would be
-         “030704113328Z” and be encoded as 0x17 0D 30 33 30 37 30 34 31 31 33 33 32 38 5A.
-         */
         Locale existingLocale = Locale.getDefault();
         try {
             Locale.setDefault(new Locale("mni", "IN", "Beng"));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
             sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
-            String dateInString = "2003-07-04 11:33:28";
+            String dateInString = "2003070113328000";
             Date date = sdf.parse(dateInString);
-            testEncodingWith(date, "0x17 0D 30 33 30 37 30 34 31 31 33 33 32 38 5A");
+            testEncodingWith(date, "0x18 0F 32 30 30 33 30 37 30 31 31 33 33 33 32 30 5A");
         } finally {
             Locale.setDefault(existingLocale);
         }
@@ -70,25 +60,11 @@ public class Asn1UtcTimeTest {
 
     private void testEncodingWith(Date value, String expectedEncoding) throws IOException {
         byte[] expected = HexUtil.hex2bytesFriendly(expectedEncoding);
-        Asn1UtcTime aValue = new Asn1UtcTime(value);
+        Asn1GeneralizedTime aValue = new Asn1GeneralizedTime(value);
         aValue.useDER();
         byte[] encodingBytes = aValue.encode();
         assertThat(encodingBytes).isEqualTo(expected);
     }
 
-    @Test
-    public void testDecoding() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateInString = "2003-07-04 11:33:28";
-        sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
-        Date date = sdf.parse(dateInString);
-        testDecodingWith(date, "0x17 0D 30 33 30 37 30 34 31 31 33 33 32 38 5A");
-    }
 
-    private void testDecodingWith(Date expectedValue, String content) throws IOException {
-        Asn1UtcTime decoded = new Asn1UtcTime();
-        decoded.useDER();
-        decoded.decode(HexUtil.hex2bytesFriendly(content));
-        assertThat(decoded.getValue()).isEqualTo(expectedValue);
-    }
 }
