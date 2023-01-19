@@ -23,11 +23,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,7 +68,7 @@ public class KOptions {
         } else if (kt == KOptionType.STR) {
             kopt.setValue(strValue);
         } else if (kt == KOptionType.DATE) {
-            DateFormat df = new SimpleDateFormat("dd/MM/yy:HH:mm:ss");
+            DateFormat df = new SimpleDateFormat("dd/MM/yy:HH:mm:ss", Locale.US);
             Date date = null;
             try {
                 date = df.parse(strValue);

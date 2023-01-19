@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
@@ -61,14 +62,14 @@ public class Asn1GeneralizedTime extends Asn1Simple<Date> {
 
         fixedDateStr = dateStr.substring(0, 14) + millSecs;
         if (withZ) {
-            sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.US);
             sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
         } else if (withZone) {
             fixedDateStr += timeZonePart;
-            sdf = new SimpleDateFormat("yyyyMMddHHmmssSSSz");
+            sdf = new SimpleDateFormat("yyyyMMddHHmmssSSSz", Locale.US);
             sdf.setTimeZone(new SimpleTimeZone(0, "Z"));
         } else {
-            sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.US);
             sdf.setTimeZone(new SimpleTimeZone(0, TimeZone.getDefault().getID()));
         }
 
@@ -82,7 +83,7 @@ public class Asn1GeneralizedTime extends Asn1Simple<Date> {
     @Override
     protected void toBytes() {
         Date date = getValue();
-        SimpleDateFormat dateF = new SimpleDateFormat("yyyyMMddHHmmss'Z'");
+        SimpleDateFormat dateF = new SimpleDateFormat("yyyyMMddHHmmss'Z'", Locale.US);
         dateF.setTimeZone(new SimpleTimeZone(0, "Z"));
 
         String str = dateF.format(date);

@@ -43,6 +43,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * klist like tool
@@ -118,7 +119,7 @@ public class KlistTool {
         if (credentials.isEmpty()) {
             System.out.println("No credential has been cached.");
         } else {
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
             System.out.println("Valid starting\t\tExpires\t\t\tService principal");
 
@@ -198,7 +199,7 @@ public class KlistTool {
                 return 0;
             }
             System.out.println(header[outputIndex]);
-            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
             Keytab keytab = Keytab.loadKeytab(keytabFile);
             List<PrincipalName> principals = keytab.getPrincipals();
             for (PrincipalName principal : principals) {
