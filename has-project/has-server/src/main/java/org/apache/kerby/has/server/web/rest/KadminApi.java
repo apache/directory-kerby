@@ -46,6 +46,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -116,11 +117,18 @@ public class KadminApi {
                                                                             .replace('?', '-')
                                             + ".keytab");
                             try {
+                                // Check we are not writing out of the desired target directory
+                                if (!keytabFile.getCanonicalPath().startsWith(path.getCanonicalPath())) {
+                                    msg = "Failed to export keytab.";
+                                    WebServer.LOG.error(msg);
+                                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+                                }
+
                                 localKadmin.exportKeytab(keytabFile, princList);
                                 WebServer.LOG.info("Create keytab file for principals successfully.");
                                 return Response.ok(keytabFile).header("Content-Disposition",
                                         "attachment; filename=" + keytabFile.getName()).build();
-                            } catch (KrbException e) {
+                            } catch (IOException | KrbException e) {
                                 msg = "Failed to export keytab. " + e.toString();
                                 WebServer.LOG.error(msg);
                                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
@@ -136,12 +144,19 @@ public class KadminApi {
                     if (path.mkdirs()) {
                         File keytabFile = new File(path, principal.replace('/', '-') + ".keytab");
                         try {
+                            // Check we are not writing out of the desired target directory
+                            if (!keytabFile.getCanonicalPath().startsWith(path.getCanonicalPath())) {
+                                msg = "Failed to export keytab.";
+                                WebServer.LOG.error(msg);
+                                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+                            }
+
                             localKadmin.exportKeytab(keytabFile, principal);
                             WebServer.LOG.info("Create keytab file for " + principal + " successfully.");
                             return Response.ok(keytabFile).header(
                                 "Content-Disposition", "attachment; filename="
                                     + keytabFile.getName()).build();
-                        } catch (KrbException e) {
+                        } catch (IOException | KrbException e) {
                             msg = "Failed to export keytab. " + e.toString();
                             WebServer.LOG.error(msg);
                             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
