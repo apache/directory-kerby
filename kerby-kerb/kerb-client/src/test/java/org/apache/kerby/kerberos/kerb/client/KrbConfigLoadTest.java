@@ -65,4 +65,13 @@ public class KrbConfigLoadTest {
         assertThat(krbConfig.getRealmSectionItems("ATHENA.MIT.EDU", "admin_server")).hasSize(1);
         assertThat(krbConfig.getCapath("ATHENA.MIT.EDU", "ANDREW.CMU.EDU")).hasSize(3);
     }
+
+    @Test
+    public void testIncludeDir() throws Exception {
+        URL confFileUrl = KrbConfigLoadTest.class.getResource("/krb5include.conf");
+        File confFile = new File(confFileUrl.toURI());
+
+        KrbConfig krbConfig = new KrbConfig();
+        krbConfig.addKrb5Config(confFile);
+    }
 }
