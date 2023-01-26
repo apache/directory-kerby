@@ -170,7 +170,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
                 public void run() {
                     try {
                         zooKeeperServer.runFromConfig(configuration);
-                    } catch (IOException e) {
+                    } catch (org.apache.zookeeper.server.admin.AdminServer.AdminServerException | IOException e) {
                         LOG.warn(e.getMessage());
                     }
                 }
