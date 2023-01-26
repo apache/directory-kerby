@@ -28,35 +28,21 @@ public class MapConfigLoader extends ConfigLoader {
         @SuppressWarnings("unchecked")
         Map<String, Object> mapConfig = (Map<String, Object>) resource.getResource();
         Iterator<Map.Entry<String, Object>> iter = mapConfig.entrySet().iterator();
-        if (iter.hasNext()) {
-            Map.Entry entry = iter.next();
+        while (iter.hasNext()) {
+            Map.Entry<String, Object> entry = iter.next();
             if (entry.getValue() instanceof String) {
-                //insert StringMap
-                loadStringMap(config, mapConfig);
-            }   else {
-                //insert objectMap
-                loadObjectMap(config, mapConfig);
-            }
-        }
-    }
+                config.set(entry.getKey(), (String) entry.getValue());
+            } else {
+                String key = entry.getKey();
+                Object value = entry.getValue();
 
-    private void loadStringMap(ConfigImpl config, Map<String, Object> stringMap) {
-        for (Map.Entry<String, Object> entry: stringMap.entrySet()) {
-            config.set(entry.getKey(), (String) entry.getValue());
-        }
-    }
-
-    private void loadObjectMap(ConfigImpl config, Map<String, Object> objectMap) {
-        for (Map.Entry<String, Object> entry: objectMap.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-
-            if (value instanceof Map) {
-                ConfigImpl subConfig = new ConfigImpl(key); //new section
-                loadSubmap(subConfig, (Map) value);
-                config.add(subConfig);
-            }   else {
-                throw new RuntimeException("Unable to resolve config:" + key);
+                if (value instanceof Map) {
+                    ConfigImpl subConfig = new ConfigImpl(key); //new section
+                    loadSubmap(subConfig, (Map) value);
+                    config.add(subConfig);
+                } else {
+                    throw new RuntimeException("Unable to resolve config:" + key);
+                }
             }
         }
     }
