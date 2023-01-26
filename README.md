@@ -16,9 +16,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-[![Build Status](https://builds.apache.org/view/A-D/view/Directory/job/dir-kerby/badge/icon?subject=Build)](https://builds.apache.org/view/A-D/view/Directory/job/dir-kerby/)
+[![Build Status](https://ci-builds.apache.org/job/Directory/job/dir-kerby-jdk8//badge/icon?subject=Build)](https://ci-builds.apache.org/job/Directory/job/dir-kerby-jdk8/)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.kerby/kerby-all/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.kerby/kerby-all/)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/apache/directory-kerby)](https://lgtm.com/projects/g/apache/directory-kerby/alerts/)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/directory-kerby/badge)](https://api.securityscorecards.dev/projects/github.com/apache/directory-kerby)
 
 
 Apache Kerby
