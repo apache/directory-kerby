@@ -94,7 +94,6 @@
     <module>kerby-backend</module>
     <module>benchmark</module>
     <module>kerby-provider</module>
-    <module>has-project</module>
     <module>kerby-tool</module>
     <module>kerby-dist</module>
   </modules>
