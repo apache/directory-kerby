@@ -175,10 +175,6 @@ The Apache Kerby is also available as a Maven dependency.
 - please replace the ${kerby-version} with the release version.
 - Apache Kerby 1.0.1 is the latest release and recommended version for all users.
 
-### Hadoop Authentication Service (HAS)
-HAS is a security solution to support the authentication of open source big data ecosystem in cloud computing platforms.
-Please look at [has-project](has-project/README.md) for details.
-
 ### License
 Apache License V2.0
 
