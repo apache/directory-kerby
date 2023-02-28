@@ -72,7 +72,6 @@
     <commons-dbutils.version>1.7</commons-dbutils.version>
     <drizzle-jdbc.version>1.4</drizzle-jdbc.version>
     <jsch.version>0.1.55</jsch.version>
-    <maven-owasp-plugin-version>8.1.0</maven-owasp-plugin-version>
     <commons-codec.version>1.15</commons-codec.version>
     <commons-logging.version>1.2</commons-logging.version>
     <ini4j.version>0.5.4</ini4j.version>
@@ -348,23 +347,6 @@
             </configuration>
         </plugin>
 
-        <plugin>
-            <groupId>org.owasp</groupId>
-            <artifactId>dependency-check-maven</artifactId>
-            <version>${maven-owasp-plugin-version}</version>
-            <configuration>
-                <skipSystemScope>true</skipSystemScope>
-            </configuration>
-            <executions>
-                <execution>
-                    <phase>validate</phase>
-                    <goals>
-                        <goal>aggregate</goal>
-                    </goals>
-                </execution>
-            </executions>
-       </plugin>
-
        <plugin>
            <groupId>org.apache.maven.plugins</groupId>
            <artifactId>maven-javadoc-plugin</artifactId>
@@ -498,18 +480,6 @@
       </properties>
     </profile>
 
-    <profile>
-      <id>dependencycheck</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.owasp</groupId>
-            <artifactId>dependency-check-maven</artifactId>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
   </profiles>
 
   <repositories>
@@ -548,11 +518,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
         <version>${maven-jxr-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.owasp</groupId>
-        <artifactId>dependency-check-maven</artifactId>
-        <version>${maven-owasp-plugin-version}</version>
       </plugin>
     </plugins>
   </reporting>
