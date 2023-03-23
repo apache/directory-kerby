@@ -76,6 +76,8 @@
     <commons-logging.version>1.2</commons-logging.version>
     <ini4j.version>0.5.4</ini4j.version>
     <targetJdk.version>1.8</targetJdk.version>
+    <dropwizard.version>3.2.5</dropwizard.version>
+    <snappy.version>1.1.8.4</snappy.version>
     <zookeeper.version>3.6.4</zookeeper.version>
     <xnio-api.version>3.8.8.Final</xnio-api.version>
   </properties>
