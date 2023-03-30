@@ -217,6 +217,55 @@ public class JWTTokenTest extends TokenLoginTestBase {
         }
     }
 
+    @org.junit.Test
+    public void accessTokenNoSignature() throws Exception {
+
+        KrbClient client = getKrbClient();
+
+        // Get a TGT
+        TgtTicket tgt = client.requestTgt(getClientPrincipal(), getClientPassword());
+        assertNotNull(tgt);
+
+        // Write to cache
+        Credential credential = new Credential(tgt);
+        CredentialCache cCache = new CredentialCache();
+        cCache.addCredential(credential);
+        cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
+
+        File cCacheFile = Files.createTempFile("krb5_" + getClientPrincipal(), "cc").toFile();
+        cCache.store(cCacheFile);
+
+        KrbTokenClient tokenClient = new KrbTokenClient(client);
+
+        tokenClient.setKdcHost(client.getSetting().getKdcHost());
+        tokenClient.setKdcTcpPort(client.getSetting().getKdcTcpPort());
+
+        tokenClient.setKdcRealm(client.getSetting().getKdcRealm());
+        tokenClient.init();
+
+        // Create a JWT token with an invalid audience
+        AuthToken authToken = issueToken(getClientPrincipal());
+        authToken.isAcToken(true);
+        authToken.isIdToken(false);
+        authToken.setAudiences(Collections.singletonList(getServerPrincipal()));
+        KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
+
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        assertTrue(tokenEncoder instanceof JwtTokenEncoder);
+
+        krbToken.setTokenValue(tokenEncoder.encodeAsBytes(authToken));
+
+        // Now get a SGT using the JWT
+        try {
+            tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
+            fail("Failure expected on no signature");
+        } catch (KrbException ex) {
+            assertTrue(ex.getMessage().contains("Token should be signed"));
+        } finally {
+            cCacheFile.delete();
+        }
+    }
+
     @org.junit.Test(expected = KrbException.class)
     public void accessTokenUnknownIssuer() throws Exception {
 
@@ -452,7 +501,6 @@ public class JWTTokenTest extends TokenLoginTestBase {
 
         // Create a JWT token
         AuthToken authToken = issueToken(getClientPrincipal());
-        authToken.setAudiences(Collections.singletonList(authToken.getAudiences().get(0) + "_"));
         KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
 
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -464,6 +512,52 @@ public class JWTTokenTest extends TokenLoginTestBase {
         try {
             tokenClient.requestTgt(krbToken, cCacheFile.getPath());
             fail("Failure expected on an invalid signature");
+        } finally {
+            cCacheFile.delete();
+        }
+    }
+
+    @org.junit.Test
+    public void identityTokenNoSignature() throws Exception {
+
+        KrbClient client = getKrbClient();
+
+        // Get a TGT
+        TgtTicket tgt = client.requestTgt(getClientPrincipal(), getClientPassword());
+        assertNotNull(tgt);
+
+        // Write to cache
+        Credential credential = new Credential(tgt);
+        CredentialCache cCache = new CredentialCache();
+        cCache.addCredential(credential);
+        cCache.setPrimaryPrincipal(tgt.getClientPrincipal());
+
+        File cCacheFile = Files.createTempFile("krb5_" + getClientPrincipal(), "cc").toFile();
+        cCache.store(cCacheFile);
+
+        KrbTokenClient tokenClient = new KrbTokenClient(client);
+
+        tokenClient.setKdcHost(client.getSetting().getKdcHost());
+        tokenClient.setKdcTcpPort(client.getSetting().getKdcTcpPort());
+
+        tokenClient.setKdcRealm(client.getSetting().getKdcRealm());
+        tokenClient.init();
+
+        // Create a JWT token
+        AuthToken authToken = issueToken(getClientPrincipal());
+        KrbToken krbToken = new KrbToken(authToken, TokenFormat.JWT);
+
+        TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
+        assertTrue(tokenEncoder instanceof JwtTokenEncoder);
+
+        krbToken.setTokenValue(tokenEncoder.encodeAsBytes(authToken));
+
+        // Now get a TGT using the JWT token
+        try {
+            tokenClient.requestTgt(krbToken, cCacheFile.getPath());
+            fail("Failure expected on an invalid signature");
+        } catch (KrbException ex) {
+            assertTrue(ex.getMessage().contains("Token should be signed"));
         } finally {
             cCacheFile.delete();
         }
