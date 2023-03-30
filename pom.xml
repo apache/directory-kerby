@@ -63,7 +63,7 @@
     <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
     <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
     <mockito.version>2.7.22</mockito.version>
-    <netty.version>4.0.52.Final</netty.version>
+    <netty.version>4.1.89.Final</netty.version>
   </properties>
 
   <prerequisites>
