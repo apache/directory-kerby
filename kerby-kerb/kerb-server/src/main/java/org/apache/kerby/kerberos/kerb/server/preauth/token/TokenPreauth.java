@@ -97,7 +97,7 @@ public class TokenPreauth extends AbstractPreauthPlugin {
             AuthToken authToken;
             try {
                 authToken = tokenDecoder.decodeFromBytes(token.getTokenValue());
-                if (!tokenDecoder.isSigned() && !kdcRequest.isHttps()) {
+                if (!tokenDecoder.isSigned()) {
                     throw new KrbException("Token should be signed.");
                 }
             } catch (IOException e) {
