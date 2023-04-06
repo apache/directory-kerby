@@ -28,7 +28,6 @@
   <modules>
     <module>client-tool</module>
     <module>kdc-tool</module>
-    <module>has-tool</module>
   </modules>
 
 </project>
