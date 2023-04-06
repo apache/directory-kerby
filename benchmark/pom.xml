@@ -17,6 +17,7 @@
   <parent>
     <artifactId>kerby-parent</artifactId>
     <groupId>org.apache.kerby</groupId>
+    <relativePath>../parent/pom.xml</relativePath>
     <version>2.1.0-SNAPSHOT</version>
   </parent>
 
