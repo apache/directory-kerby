@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements. See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership. The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.apache.kerby</groupId>
+        <artifactId>kerby-all</artifactId>
+        <version>2.1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>kerby-parent</artifactId>
+    <name>Apache Directory Kerby Parent pom</name>
+    <description>Apache Directory Kerby Parent POM</description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <apacheds.version>2.0.0.AM26</apacheds.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <gson.version>2.10.1</gson.version>
+        <h2.version>2.1.214</h2.version>
+        <ldap.api.version>2.1.2</ldap.api.version>
+        <junit.version>4.13.2</junit.version>
+        <nimbus.jose.version>9.31</nimbus.jose.version>
+        <slf4j.version>1.7.36</slf4j.version>
+        <assertj.version>3.24.2</assertj.version>
+        <jline.version>3.23.0</jline.version>
+        <mockito.version>4.11.0</mockito.version>
+        <netty.version>4.1.91.Final</netty.version>
+        <hadoop.version>3.3.4</hadoop.version>
+        <bouncycastle.version>1.70</bouncycastle.version>
+        <jersey.container.version>2.17</jersey.container.version>
+        <jersey.version>1.19.4</jersey.version>
+        <commons-text.version>1.10.0</commons-text.version>
+        <commons-dbutils.version>1.7</commons-dbutils.version>
+        <drizzle-jdbc.version>1.4</drizzle-jdbc.version>
+        <jsch.version>0.1.55</jsch.version>
+        <commons-codec.version>1.15</commons-codec.version>
+        <commons-logging.version>1.2</commons-logging.version>
+        <ini4j.version>0.5.4</ini4j.version>
+        <dropwizard.version>4.1.12.1</dropwizard.version>
+        <snappy.version>1.1.7.7</snappy.version>
+        <zookeeper.version>3.7.1</zookeeper.version>
+        <xnio-api.version>3.8.9.Final</xnio-api.version>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- Overriding some transitive dependencies for security reasons -->
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>1.9.4</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
