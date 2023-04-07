@@ -31,13 +31,11 @@
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerby-asn1</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerby-util</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>

@@ -30,7 +30,6 @@
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-admin</artifactId>
-      <version>${project.version}</version>
     </dependency>
   </dependencies>
 

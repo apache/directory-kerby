@@ -31,17 +31,14 @@
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>client-tool</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerby-asn1</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>kerb-client-api-all</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <!-- For common and misc -->
