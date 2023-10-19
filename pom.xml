@@ -312,6 +312,24 @@
            </configuration>
        </plugin>
 
+       <plugin>
+          <groupId>org.cyclonedx</groupId>
+          <artifactId>cyclonedx-maven-plugin</artifactId>
+          <version>2.7.9</version>
+          <executions>
+            <execution>
+              <id>make-bom</id>
+              <phase>package</phase>
+              <goals>
+                <goal>makeAggregateBom</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <outputName>${project.artifactId}-${project.version}-bom</outputName>
+          </configuration>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -348,6 +366,11 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.cyclonedx</groupId>
+        <artifactId>cyclonedx-maven-plugin</artifactId>
       </plugin>
 
     </plugins>
