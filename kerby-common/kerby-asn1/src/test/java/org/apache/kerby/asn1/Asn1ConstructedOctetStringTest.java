@@ -20,7 +20,7 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.type.Asn1OctetString;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 

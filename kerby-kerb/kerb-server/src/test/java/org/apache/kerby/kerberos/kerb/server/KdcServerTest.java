@@ -20,10 +20,10 @@
 package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.util.NetworkUtil;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -36,7 +36,7 @@ public class KdcServerTest {
 
     private KdcServer kdcServer;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         kdcServer = new KdcServer();
         kdcServer.setKdcHost(serverHost);
@@ -57,11 +57,11 @@ public class KdcServerTest {
             SocketAddress sa = new InetSocketAddress(serverHost, serverPort);
             socketChannel.connect(sa);
 
-            Assert.assertTrue(socketChannel.isConnected());
+            Assertions.assertTrue(socketChannel.isConnected());
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         kdcServer.stop();
     }

@@ -22,7 +22,7 @@ package org.apache.kerby.xdr;
 import org.apache.kerby.xdr.type.XdrStructType;
 import org.apache.kerby.xdr.type.XdrUnion;
 import org.apache.kerby.xdr.util.HexUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 

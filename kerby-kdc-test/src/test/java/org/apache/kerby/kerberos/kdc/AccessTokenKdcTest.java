@@ -31,8 +31,8 @@ import org.apache.kerby.kerberos.kerb.common.PrivateKeyReader;
 import org.apache.kerby.kerberos.kerb.common.PublicKeyReader;
 import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AccessTokenKdcTest extends TokenKdcTestBase {
 
@@ -53,10 +53,10 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
         
         try {
             performTest();
-            Assert.fail("Failure expected on a bad issuer value");
+            Assertions.fail("Failure expected on a bad issuer value");
         } catch (Exception ex) {
             // expected
-            Assert.assertTrue(ex instanceof KrbException);
+            Assertions.assertTrue(ex instanceof KrbException);
         }
     }
 
@@ -72,10 +72,10 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
         
         try {
             performTest();
-            Assert.fail("Failure expected on a bad audience restriction value");
+            Assertions.fail("Failure expected on a bad audience restriction value");
         } catch (Exception ex) {
             // expected
-            Assert.assertTrue(ex instanceof KrbException);
+            Assertions.assertTrue(ex instanceof KrbException);
         }
     }
 
@@ -85,10 +85,10 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
         
         try {
             performTest();
-            Assert.fail("Failure expected on an unsigned token");
+            Assertions.fail("Failure expected on an unsigned token");
         } catch (Exception ex) {
             // expected
-            Assert.assertTrue(ex instanceof KrbException);
+            Assertions.assertTrue(ex instanceof KrbException);
         }
     }
     
@@ -101,10 +101,10 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
         
         try {
             performTest();
-            Assert.fail("Failure expected on a bad key");
+            Assertions.fail("Failure expected on a bad key");
         } catch (Exception ex) {
             // expected
-            Assert.assertTrue(ex instanceof KrbException);
+            Assertions.assertTrue(ex instanceof KrbException);
         }
     }
     
@@ -139,10 +139,10 @@ public class AccessTokenKdcTest extends TokenKdcTestBase {
         
         try {
             performTest();
-            Assert.fail("Failure expected on a bad key");
+            Assertions.fail("Failure expected on a bad key");
         } catch (Exception ex) {
             // expected
-            Assert.assertTrue(ex instanceof KrbException);
+            Assertions.assertTrue(ex instanceof KrbException);
         }
     }
     

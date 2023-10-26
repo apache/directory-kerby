@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.crypto.dh;
 
 
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -35,7 +35,7 @@ import org.junit.Test;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class OctetString2KeyTest extends org.junit.Assert {
+public class OctetString2KeyTest extends org.junit.jupiter.api.Assertions {
     /**
      * Set 1:
      * =====

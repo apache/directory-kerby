@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,7 +43,7 @@ public class MultiRequestsKdcTest extends KdcTestBase {
             tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
-            Assert.fail("Exception occurred with good password. "
+            Assertions.fail("Exception occurred with good password. "
                     + e.toString());
         }
 
@@ -63,7 +63,7 @@ public class MultiRequestsKdcTest extends KdcTestBase {
             tkt = getKrbClient().requestSgt(tgt, serverPrincipal);
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
-            Assert.fail("Exception occurred with good password again. "
+            Assertions.fail("Exception occurred with good password again. "
                     + e.toString());
         }
     }

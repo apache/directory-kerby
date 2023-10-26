@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.integration.test;
 
 import javax.security.auth.login.LoginException;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test login with token when token preauth is not allowed by kdc.
@@ -34,15 +34,17 @@ public class TokenLoginWithTokenPreauthDisabledTest extends TokenLoginTestBase {
         return false;
     }
 
-    @Test(expected = LoginException.class)
+    @Test
     public void testLoginWithTokenStr() throws Exception {
-        super.testLoginWithTokenStr();
-        Assert.fail("Exception should have been thrown");
+        Assertions.assertThrows(LoginException.class, () -> {
+            super.testLoginWithTokenStr();
+        });
     }
 
-    @Test(expected = LoginException.class)
+    @Test
     public void testLoginWithTokenCache() throws Exception {
-        super.testLoginWithTokenCache();
-        Assert.fail("Exception should have been thrown");
+        Assertions.assertThrows(LoginException.class, () -> {
+            super.testLoginWithTokenCache();
+        });
     }
 }

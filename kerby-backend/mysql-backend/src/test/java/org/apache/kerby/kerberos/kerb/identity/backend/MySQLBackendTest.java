@@ -23,8 +23,8 @@ import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.MySQLConfKey;
 import org.apache.kerby.kerberos.kdc.identitybackend.MySQLIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class MySQLBackendTest extends BackendTestBase {
     private static File testDir = new File(System.getProperty("test.dir", "target"));
     private static File dbFile = new File(testDir, "mysqlbackend.mv.db");
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws KrbException, IOException {
         Conf config = new Conf();
         config.setString(MySQLConfKey.MYSQL_DRIVER, "org.h2.Driver");
@@ -45,7 +45,7 @@ public class MySQLBackendTest extends BackendTestBase {
         backend.initialize();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws KrbException {
         if (backend != null) {
             backend.stop();

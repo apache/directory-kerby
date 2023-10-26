@@ -21,7 +21,7 @@ package org.apache.kerby.kerberos.kerb.integration.test;
 
 import org.apache.kerby.kerberos.kerb.integration.test.sasl.SaslAppClient;
 import org.apache.kerby.kerberos.kerb.integration.test.sasl.SaslAppServer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SaslAppTest extends AppTest {
 

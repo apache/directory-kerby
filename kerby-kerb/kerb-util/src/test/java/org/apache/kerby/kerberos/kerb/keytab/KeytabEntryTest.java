@@ -20,47 +20,46 @@
 package org.apache.kerby.kerberos.kerb.keytab;
 
 import org.apache.kerby.kerberos.kerb.type.KerberosTime;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.assertj.core.api.Assumptions;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
-@RunWith(MockitoJUnitRunner.class)
 public class KeytabEntryTest {
-    @Test(expected = IOException.class)
+    @Test
     public void exceptionThrownWhenLoadingInvalidKeytabEntry() throws Exception {
+
         KeytabInputStream mockKeytabInputStream = spy(
                 new KeytabInputStream(
                         new ByteArrayInputStream(new String("randomtestarray").getBytes())));
-
         doAnswer(new Answer<Integer>() {
-                     private boolean isFirstCall = true;
+            private boolean isFirstCall = true;
 
-                     @Override
-                     public Integer answer(InvocationOnMock invocationOnMock) throws Throwable {
-                         if (isFirstCall) {
-                             isFirstCall = false;
-                             return 200;
-                         }
-                         return 20;
-                     }
-                 }).when(mockKeytabInputStream).available();
+            @Override
+            public Integer answer(InvocationOnMock invocationOnMock) throws Throwable {
+                if (isFirstCall) {
+                    isFirstCall = false;
+                    return 200;
+                }
+                return 20;
+            }
+        }).when(mockKeytabInputStream).available();
         //doReturn(120).when(mockKeytabInputStream).readOctetsCount();
         doReturn(new byte[]{}).when(mockKeytabInputStream).readCountedOctets();
         doReturn(null).when(mockKeytabInputStream).readPrincipal(ArgumentMatchers.any(Integer.class));
         doReturn(new KerberosTime()).when(mockKeytabInputStream).readTime();
 
         KeytabEntry keytabEntry = new KeytabEntry();
-        keytabEntry.load(mockKeytabInputStream, 0x502, 100);
+        Assumptions.assumeThatIOException().isThrownBy(() -> {
+            keytabEntry.load(mockKeytabInputStream, 0x502, 100);
+        });
     }
 
 

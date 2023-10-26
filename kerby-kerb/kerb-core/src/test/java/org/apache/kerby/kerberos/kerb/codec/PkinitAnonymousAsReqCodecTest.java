@@ -38,7 +38,7 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.AuthPack;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsReq;
 import org.apache.kerby.x509.type.DhParameter;
 import org.apache.kerby.x509.type.SubjectPublicKeyInfo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.math.BigInteger;

@@ -34,10 +34,10 @@ import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
 import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test for a cross-realm KDC call.
@@ -53,7 +53,7 @@ public class CrossRealmKdcTest {
     private KerbyCrossRealmKdc kdc1;
     private KerbyCrossRealmKdc kdc2;
 
-    @BeforeClass
+    @BeforeAll
     public static void createTestDirs() throws IOException {
         String basedir = System.getProperty("basedir");
         if (basedir == null) {
@@ -68,7 +68,7 @@ public class CrossRealmKdcTest {
         testDir2.mkdirs();
     }
 
-    @AfterClass
+    @AfterAll
     public static void deleteTestDir() throws IOException {
         testDir1.delete();
         testDir2.delete();
@@ -114,7 +114,7 @@ public class CrossRealmKdcTest {
             tkt = kdc1.getKrbClient().requestSgt(tgt, kdc2.getServerPrincipal());
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
-            Assert.fail("Exception occurred with good password. "
+            Assertions.fail("Exception occurred with good password. "
                     + e.toString());
         }
     }

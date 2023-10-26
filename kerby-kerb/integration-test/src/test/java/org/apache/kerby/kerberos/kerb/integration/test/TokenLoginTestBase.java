@@ -29,8 +29,8 @@ import org.apache.kerby.kerberos.kerb.server.LoginTestBase;
 import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +52,7 @@ public class TokenLoginTestBase extends LoginTestBase {
     static final String GROUP = "sales-group";
     static final String ROLE = "ADMIN";
 
-    @Before
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -62,7 +62,7 @@ public class TokenLoginTestBase extends LoginTestBase {
         tokenCache = Files.createTempFile("tokencache", null).toFile();
     }
 
-    @After
+    @AfterEach
     public void cleanup() throws Exception {
         tokenCache.delete();
     }

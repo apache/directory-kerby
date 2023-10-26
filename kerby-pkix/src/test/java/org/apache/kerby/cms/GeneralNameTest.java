@@ -22,12 +22,12 @@ package org.apache.kerby.cms;
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.asn1.util.HexUtil;
 import org.apache.kerby.x509.type.GeneralName;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Ref. GeneralNameTest test in BouncyCastle library.
@@ -46,7 +46,7 @@ public class GeneralNameTest {
             // "10.9.8.0"
             assertThat(addressBytes).isEqualTo(new byte[] {0x0a, 0x09, 0x08, 0x00});
         } catch (Exception e) {
-            Assert.fail("Failed to test IpAddress. " + e.toString());
+            Assertions.fail("Failed to test IpAddress. " + e.toString());
         }
     }
 }

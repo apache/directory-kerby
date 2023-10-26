@@ -38,21 +38,21 @@ import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.apache.kerby.kerberos.kerb.type.base.KrbToken;
 import org.apache.kerby.kerberos.kerb.type.base.TokenFormat;
 import org.apache.kerby.kerberos.provider.token.JwtTokenEncoder;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class KerbyTokenAppTest extends TokenAppTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(KerbyGssAppTest.class);
 
-    @Before
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         Provider provider = new KerbyGssProvider();
@@ -71,7 +71,7 @@ public class KerbyTokenAppTest extends TokenAppTest {
             if (version.contains(".")) {
                 version = version.substring(0, version.indexOf('.'));
             }
-            Assume.assumeFalse(Integer.parseInt(version) >= 9);
+            Assumptions.assumeFalse(Integer.parseInt(version) >= 9);
         }
    
         runAppClientWithToken(createAppClient());
@@ -113,8 +113,7 @@ public class KerbyTokenAppTest extends TokenAppTest {
             }
         });
 
-        assertTrue("Client successfully connected and authenticated to server",
-                   appClient.isTestOK());
+        assertTrue(appClient.isTestOK(), "Client successfully connected and authenticated to server");
     }
 
     private byte[] signToken(AuthToken authToken, PrivateKey signKey) throws Exception {

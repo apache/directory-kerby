@@ -20,7 +20,7 @@
 package org.apache.kerby.kerberos.kerb;
 
 import org.apache.kerby.kerberos.kerb.common.Krb5Parser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;

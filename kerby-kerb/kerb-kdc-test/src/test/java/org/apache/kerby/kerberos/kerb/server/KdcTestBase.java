@@ -23,10 +23,10 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbPkinitClient;
 import org.apache.kerby.kerberos.kerb.client.KrbTokenClient;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public abstract class KdcTestBase {
                 serverPrincipalName + "/" + hostname + "@" + TestKdcServer.KDC_REALM;
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void createTestDir() throws IOException {
         String basedir = System.getProperty("basedir");
         if (basedir == null) {
@@ -68,7 +68,7 @@ public abstract class KdcTestBase {
         testDir.mkdirs();
     }
 
-    @AfterClass
+    @AfterAll
     public static void deleteTestDir() throws IOException {
         testDir.delete();
     }
@@ -133,7 +133,7 @@ public abstract class KdcTestBase {
         return true;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         setUpKdcServer();
 
@@ -174,7 +174,7 @@ public abstract class KdcTestBase {
         kdcServer.deletePrincipal(clientPrincipal);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         deletePrincipals();
         kdcServer.stop();

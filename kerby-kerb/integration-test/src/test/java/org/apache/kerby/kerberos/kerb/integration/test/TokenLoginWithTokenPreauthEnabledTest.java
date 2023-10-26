@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.integration.test;
 
 import org.apache.kerby.kerberos.kerb.server.KerberosClientExceptionAction;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
@@ -61,7 +61,7 @@ public class TokenLoginWithTokenPreauthEnabledTest extends TokenLoginTestBase {
                         getServerPrincipal());
 
         byte[] kerberosToken = (byte[]) Subject.doAs(subject, action);
-        Assert.assertNotNull(kerberosToken);
+        Assertions.assertNotNull(kerberosToken);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TokenLoginWithTokenPreauthEnabledTest extends TokenLoginTestBase {
         File signKeyFile = new File(this.getClass().getResource("/kdckeytest.pem").getPath());
         try {
             loginClientUsingTokenStr(tokenStr, getArmorCache(), getTGTCache(), signKeyFile);
-            Assert.fail("Failure expected on a signature that is not trusted");
+            Assertions.fail("Failure expected on a signature that is not trusted");
         } catch (LoginException ex) { //NOPMD
             // expected
         }
@@ -81,7 +81,7 @@ public class TokenLoginWithTokenPreauthEnabledTest extends TokenLoginTestBase {
         String tokenStr = createTokenAndArmorCache();
         try {
             loginClientUsingTokenStr(tokenStr, getArmorCache(), getTGTCache(), null);
-            Assert.fail("Failure expected on an unsigned token");
+            Assertions.fail("Failure expected on an unsigned token");
         } catch (LoginException ex) { //NOPMD
             // expected
         }

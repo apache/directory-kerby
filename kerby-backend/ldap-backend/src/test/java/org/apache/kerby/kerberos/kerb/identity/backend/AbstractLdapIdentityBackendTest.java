@@ -23,8 +23,8 @@ import org.apache.directory.server.core.api.DirectoryService;
 import org.apache.directory.server.ldap.LdapServer;
 import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.After;
+import org.junit.jupiter.api.Test;
 
 public abstract class AbstractLdapIdentityBackendTest extends  BackendTest {
     protected LdapIdentityBackend backend;

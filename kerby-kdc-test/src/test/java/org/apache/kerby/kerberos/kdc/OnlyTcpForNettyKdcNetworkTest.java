@@ -22,15 +22,15 @@ package org.apache.kerby.kerberos.kdc;
 import org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 public class OnlyTcpForNettyKdcNetworkTest extends KerbyKdcTest {
     private static File jsonBackendFile;
 
-    @AfterClass
+    @AfterAll
     public static void rmJsonBackendFile() {
         if (jsonBackendFile.exists()) {
             jsonBackendFile.delete();

@@ -31,12 +31,12 @@ import org.apache.kerby.kerberos.kerb.crypto.key.DkKeyMaker;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.util.CryptoUtil;
 import org.apache.kerby.util.HexUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Ref. t_derive.c test in MIT krb5 project.

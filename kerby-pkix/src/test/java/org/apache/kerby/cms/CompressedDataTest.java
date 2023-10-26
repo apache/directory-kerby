@@ -22,8 +22,8 @@ package org.apache.kerby.cms;
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.CompressedContentInfo;
 import org.apache.kerby.cms.type.CompressedData;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -45,7 +45,7 @@ public class CompressedDataTest extends CmsTestBase {
             CompressedData compressedData = contentInfo.getCompressedData();
             Asn1.dump(compressedData);
         } catch (Exception e) {
-            Assert.fail("Failed to dump the compressed data from file: "
+            Assertions.fail("Failed to dump the compressed data from file: "
                     + "compressed-data.txt. " + e.toString());
         }
     }

@@ -27,8 +27,8 @@ import org.apache.kerby.cms.type.EncapsulatedContentInfo;
 import org.apache.kerby.cms.type.SignedContentInfo;
 import org.apache.kerby.cms.type.SignedData;
 import org.apache.kerby.x509.type.Certificate;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -55,7 +55,7 @@ public class SignedDataTest extends CmsTestBase {
             byte[] encodedData = contentInfo.encode();
             Asn1.parseAndDump(encodedData);
         } catch (Exception e) {
-            Assert.fail("Failed to test decode from file: signed-data.txt. "
+            Assertions.fail("Failed to test decode from file: signed-data.txt. "
                     + e.toString());
         }
     }
@@ -107,7 +107,7 @@ public class SignedDataTest extends CmsTestBase {
                     contentInfo.getContentAs(SignedData.class);
             Asn1.dump(signedData);
         } catch (Exception e) {
-            Assert.fail("Failed to test content info from file: anonymous.txt. "
+            Assertions.fail("Failed to test content info from file: anonymous.txt. "
                     + e.toString());
         }
     }

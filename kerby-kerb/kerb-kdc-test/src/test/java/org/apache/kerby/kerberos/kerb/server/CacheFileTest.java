@@ -25,7 +25,7 @@ import java.io.File;
 
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CacheFileTest extends KdcTestBase {
 

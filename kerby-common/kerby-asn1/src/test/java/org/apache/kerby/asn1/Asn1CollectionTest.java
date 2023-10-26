@@ -23,7 +23,7 @@ import org.apache.kerby.asn1.type.Asn1Boolean;
 import org.apache.kerby.asn1.type.Asn1IA5String;
 import org.apache.kerby.asn1.type.Asn1Sequence;
 import org.apache.kerby.asn1.type.Asn1String;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 

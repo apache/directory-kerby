@@ -27,8 +27,8 @@ import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.TestKdcServer;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TokenWithAnonymousPkinitKdcTest extends TokenKdcTestBase {
 
@@ -89,7 +89,7 @@ public class TokenWithAnonymousPkinitKdcTest extends TokenKdcTestBase {
             tgt = getPkinitClient().requestTgt();
         } catch (KrbException te) {
             te.printStackTrace();
-            Assert.fail();
+            Assertions.fail();
         }
         return tgt;
     }

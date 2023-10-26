@@ -25,8 +25,8 @@ import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbConfigKey;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
@@ -63,7 +63,7 @@ public class EncryptionTypeKdcTest extends KerbyKdcTest {
         performKdcTest();
     }
 
-    @AfterClass
+    @AfterAll
     public static void rmJsonBackendFile() {
         if (jsonBackendFile.exists()) {
             jsonBackendFile.delete();

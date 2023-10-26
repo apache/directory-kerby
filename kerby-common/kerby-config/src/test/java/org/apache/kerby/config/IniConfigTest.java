@@ -19,9 +19,9 @@
  */
 package org.apache.kerby.config;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -35,7 +35,7 @@ public class IniConfigTest {
     private static final File TEST_DIR = new File(System.getProperty("test.dir", "target"));
     private static final File TEST_FILE = new File(TEST_DIR, "test-ini-config");
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         if (TEST_FILE.exists()) {
             TEST_FILE.delete();
@@ -81,7 +81,7 @@ public class IniConfigTest {
         assertThat(config1.getBoolean("dns_lookup_realm")).isTrue();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         TEST_FILE.delete();
     }

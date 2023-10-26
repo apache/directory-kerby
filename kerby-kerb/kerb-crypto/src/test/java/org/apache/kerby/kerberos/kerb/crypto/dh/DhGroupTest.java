@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.crypto.dh;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * "When using the Diffie-Hellman key agreement method, implementations MUST
@@ -30,7 +30,7 @@ import org.junit.Test;
  * @author <a href="mailto:dev@directory.apache.org">Apache Directory Project</a>
  * @version $Rev$, $Date$
  */
-public class DhGroupTest extends org.junit.Assert {
+public class DhGroupTest extends org.junit.jupiter.api.Assertions {
     /**
      * Tests that the translation of the hex representation of the prime modulus
      * resulted in the expected bit length.

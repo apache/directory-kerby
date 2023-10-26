@@ -24,7 +24,7 @@ import org.apache.kerby.kerberos.kerb.crypto.enc.EncryptProvider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia128Provider;
 import org.apache.kerby.kerberos.kerb.crypto.enc.provider.Camellia256Provider;
 import org.apache.kerby.util.HexUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.server;
 
 import org.apache.kerby.kerberos.kerb.client.JaasKrbUtil;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
@@ -38,7 +38,7 @@ public class LoginTestBase extends KdcTestBase {
     protected File ticketCacheFile;
     protected File serviceKeytabFile;
 
-    @Before
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -72,7 +72,7 @@ public class LoginTestBase extends KdcTestBase {
         assertThat(clientPrincipals).isNotEmpty();
     }
 
-    @After
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         ticketCacheFile.delete();

@@ -32,8 +32,8 @@ import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 import org.apache.kerby.util.CryptoUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /*
 The principal keys for krbtgt/SH.INTEL.COM@SH.INTEL.COM
@@ -62,7 +62,7 @@ public class EncryptionTest {
     private Keytab keytab;
     private CredentialCache cc;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         try (InputStream kis = EncryptionTest.class.getResourceAsStream("/krbtgt.keytab")) {
             keytab = Keytab.loadKeytab(kis);

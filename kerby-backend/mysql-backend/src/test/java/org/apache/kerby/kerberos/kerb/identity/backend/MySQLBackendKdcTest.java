@@ -25,9 +25,9 @@ import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
@@ -37,7 +37,7 @@ public class MySQLBackendKdcTest extends KdcTestBase {
     private static File testDir = new File(System.getProperty("test.dir", "target"));
     private static File dbFile = new File(testDir, "mysqlbackend.mv.db");
 
-    @After
+    @AfterEach
     public void tearDown() {
         if (dbFile.exists() && !dbFile.delete()) {
             System.err.println("Failed to delete the test database file.");
@@ -71,7 +71,7 @@ public class MySQLBackendKdcTest extends KdcTestBase {
             tkt = getKrbClient().requestSgt(tgt, getServerPrincipal());
             assertThat(tkt).isNotNull();
         } catch (Exception e) {
-            Assert.fail("Exception occurred with good password. "
+            Assertions.fail("Exception occurred with good password. "
                     + e.toString());
         }
     }
