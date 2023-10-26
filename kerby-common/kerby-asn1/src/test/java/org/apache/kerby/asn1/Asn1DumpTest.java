@@ -19,8 +19,8 @@
  */
 package org.apache.kerby.asn1;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -36,7 +36,7 @@ public class Asn1DumpTest {
             Asn1.parseAndDump(data);
             Asn1.decodeAndDump(data);
         } catch (Exception e) {
-            Assert.fail("Test dump with personnel record failed. "
+            Assertions.fail("Test dump with personnel record failed. "
                     + e.toString());
         }
     }
@@ -48,7 +48,7 @@ public class Asn1DumpTest {
             Asn1.parseAndDump(hexStr);
             Asn1.decodeAndDump(hexStr);
         } catch (Exception e) {
-            Assert.fail("Test dump with compressed data failed. "
+            Assertions.fail("Test dump with compressed data failed. "
                     + e.toString());
         }
     }
@@ -60,7 +60,7 @@ public class Asn1DumpTest {
             Asn1.parseAndDump(hexStr);
             Asn1.decodeAndDump(hexStr);
         } catch (Exception e) {
-            Assert.fail("test dump with signed data from file: "
+            Assertions.fail("test dump with signed data from file: "
                     + "signed-data.txt failed. " + e.toString());
         }
     }
@@ -72,7 +72,7 @@ public class Asn1DumpTest {
             Asn1.parseAndDump(data);
             Asn1.decodeAndDump(data);
         } catch (Exception e) {
-            Assert.fail("test dump with derData from file: "
+            Assertions.fail("test dump with derData from file: "
                     + "der-data.dat failed. " + e.toString());
         }
     }
@@ -84,7 +84,7 @@ public class Asn1DumpTest {
             Asn1.parseAndDump(data);
             Asn1.decodeAndDump(data);
         } catch (Exception e) {
-            Assert.fail("test dump with empty container from file: "
+            Assertions.fail("test dump with empty container from file: "
                     + "empty-container.txt failed. " + e.toString());
         }
     }

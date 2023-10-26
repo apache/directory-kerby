@@ -23,8 +23,8 @@ import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.ZKConfKey;
 import org.apache.kerby.kerberos.kdc.identitybackend.ZookeeperIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.io.File;
 
@@ -35,7 +35,7 @@ public class ZookeeperBackendTest extends BackendTestBase {
     private static File instanceDir;
     private static File dataDir;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws KrbException {
         Conf config = new Conf();
         File testdir = new File(System.getProperty("test.dir", "target"));
@@ -50,7 +50,7 @@ public class ZookeeperBackendTest extends BackendTestBase {
         backend.start();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws KrbException {
         if (dataDir.exists()) {
             dataDir.delete();

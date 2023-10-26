@@ -20,8 +20,8 @@
 package org.apache.kerby.kerberos.kerb.integration.test;
 
 import org.apache.kerby.util.NetworkUtil;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public abstract class TokenAppTest extends TokenLoginTestBase {
     private int serverPort;
     protected AppServer appServer;
 
-    @Before
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -81,8 +81,8 @@ public abstract class TokenAppTest extends TokenLoginTestBase {
             }
         });
 
-        Assert.assertTrue("Client successfully connected and authenticated to server",
-                appClient.isTestOK());
+        Assertions.assertTrue(appClient.isTestOK(),
+                "Client successfully connected and authenticated to server");
     }
 
 }

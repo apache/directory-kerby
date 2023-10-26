@@ -23,8 +23,8 @@ import org.apache.kerby.config.Conf;
 import org.apache.kerby.config.Config;
 import org.apache.kerby.kerberos.kdc.identitybackend.JsonIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.io.File;
 
@@ -34,7 +34,7 @@ import java.io.File;
 public class JsonBackendTest extends BackendTestBase {
     private static File jsonBackendFile;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws KrbException {
         File testDir = new File(System.getProperty("test.dir", "target"));
         jsonBackendFile = new File(testDir, "json-identity-backend-file");
@@ -47,7 +47,7 @@ public class JsonBackendTest extends BackendTestBase {
         backend.initialize();
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanJsonBackendFile() {
         if (jsonBackendFile.exists()) {
             jsonBackendFile.delete();

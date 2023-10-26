@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.server;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RepeatLoginWithDefaultKdcNetworkTest extends LoginTestBase {
     @Test

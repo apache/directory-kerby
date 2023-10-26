@@ -31,8 +31,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.kerby.kerberos.kerb.preauth.pkinit.CertificateHelper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CryptoTest {
 
@@ -40,23 +40,23 @@ public class CryptoTest {
     public void testCertificateLoading() throws Exception {
         // Load cert
         List<Certificate> certs = CertificateHelper.loadCerts("kdccerttest.pem");
-        Assert.assertEquals(1, certs.size());
+        Assertions.assertEquals(1, certs.size());
         
         // Now convert to a Kerby Certificate type
         org.apache.kerby.x509.type.Certificate certificate = new org.apache.kerby.x509.type.Certificate();
         byte[] encodedBytes = certs.get(0).getEncoded();
         certificate.decode(encodedBytes);
-        Assert.assertNotNull(certificate);
+        Assertions.assertNotNull(certificate);
         
         // Now convert back to an X.509 Certificate
         byte[] certBytes = certificate.encode();
         
         // Test for equality
-        Assert.assertArrayEquals(certBytes, encodedBytes);
+        Assertions.assertArrayEquals(certBytes, encodedBytes);
         
         // Convert back into an X.509 Certificate
         List<Certificate> certs2 = CertificateHelper.loadCerts(new java.io.ByteArrayInputStream(certBytes));
-        Assert.assertEquals(1, certs2.size());
+        Assertions.assertEquals(1, certs2.size());
         
         // Now validate the certificate chain
         

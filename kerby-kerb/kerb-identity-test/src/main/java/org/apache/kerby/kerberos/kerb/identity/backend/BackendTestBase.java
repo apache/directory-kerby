@@ -20,9 +20,9 @@
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Json backend test
@@ -34,7 +34,7 @@ public abstract class BackendTestBase extends BackendTest {
      * Create and prepare an identity backend for the tests. Must override.
      * @throws Exception e
      */
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         backend = null;
     }
@@ -64,7 +64,7 @@ public abstract class BackendTestBase extends BackendTest {
         testGetIdentities(backend);
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws KrbException {
         if (backend != null) {
             backend.stop();

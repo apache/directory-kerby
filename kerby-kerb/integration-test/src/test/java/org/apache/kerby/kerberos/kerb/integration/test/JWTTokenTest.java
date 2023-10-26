@@ -19,8 +19,6 @@
  */
 package org.apache.kerby.kerberos.kerb.integration.test;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -54,12 +52,14 @@ import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 import org.apache.kerby.kerberos.provider.token.JwtTokenEncoder;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * Some tests for JWT tokens using the Kerby client API
  */
 public class JWTTokenTest extends TokenLoginTestBase {
 
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     public void accessToken() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -123,7 +123,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCacheFile.delete();
     }
 
-    @org.junit.Test(expected = KrbException.class)
+    @org.junit.jupiter.api.Test
     public void accessTokenInvalidAudience() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -162,15 +162,16 @@ public class JWTTokenTest extends TokenLoginTestBase {
         }
         krbToken.setTokenValue(signToken(authToken, signKey));
 
-        // Now get a SGT using the JWT
-        try {
-            tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
-        } finally {
-            cCacheFile.delete();
-        }
+        assertThrows(KrbException.class, () -> {
+            try {
+                tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
+            } finally {
+                cCacheFile.delete();
+            }
+        });
     }
 
-    @org.junit.Test(expected = KrbException.class)
+    @org.junit.jupiter.api.Test
     public void accessTokenInvalidSignature() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -209,15 +210,16 @@ public class JWTTokenTest extends TokenLoginTestBase {
 
         krbToken.setTokenValue(signToken(authToken, keyPair.getPrivate()));
 
-        // Now get a SGT using the JWT
-        try {
-            tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
-        } finally {
-            cCacheFile.delete();
-        }
+        assertThrows(KrbException.class, () -> {
+            try {
+                tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
+            } finally {
+                cCacheFile.delete();
+            }
+        });
     }
 
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     public void accessTokenNoSignature() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -266,7 +268,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         }
     }
 
-    @org.junit.Test(expected = KrbException.class)
+    @org.junit.jupiter.api.Test
     public void accessTokenUnknownIssuer() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -307,15 +309,17 @@ public class JWTTokenTest extends TokenLoginTestBase {
         krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a SGT using the JWT
-        try {
-            tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
-        } finally {
-            cCacheFile.delete();
-        }
+        assertThrows(KrbException.class, () -> {
+            try {
+                tokenClient.requestSgt(krbToken, getServerPrincipal(), cCacheFile.getPath());
+            } finally {
+                cCacheFile.delete();
+            }
+        });
     }
 
     // Use the TGT here instead of an armor cache
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     public void accessTokenUsingTicket() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -368,7 +372,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         assertEquals(getServerPrincipal(), decodedKrbToken.getAudiences().get(0));
     }
 
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     public void identityToken() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -427,7 +431,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         cCacheFile.delete();
     }
 
-    @org.junit.Test(expected = KrbException.class)
+    @org.junit.jupiter.api.Test
     public void identityTokenInvalidAudience() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -465,15 +469,16 @@ public class JWTTokenTest extends TokenLoginTestBase {
         krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a TGT using the JWT token
-        try {
-            tokenClient.requestTgt(krbToken, cCacheFile.getPath());
-            fail("Failure expected on an invalid audience");
-        } finally {
-            cCacheFile.delete();
-        }
+        assertThrows(KrbException.class, () -> {
+            try {
+                tokenClient.requestTgt(krbToken, cCacheFile.getPath());
+            } finally {
+                cCacheFile.delete();
+            }
+        });
     }
 
-    @org.junit.Test(expected = KrbException.class)
+    @org.junit.jupiter.api.Test
     public void identityTokenInvalidSignature() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -509,15 +514,16 @@ public class JWTTokenTest extends TokenLoginTestBase {
         krbToken.setTokenValue(signToken(authToken, keyPair.getPrivate()));
 
         // Now get a TGT using the JWT token
-        try {
-            tokenClient.requestTgt(krbToken, cCacheFile.getPath());
-            fail("Failure expected on an invalid signature");
-        } finally {
-            cCacheFile.delete();
-        }
+        assertThrows(KrbException.class, () -> {
+            try {
+                tokenClient.requestTgt(krbToken, cCacheFile.getPath());
+            } finally {
+                cCacheFile.delete();
+            }
+        });
     }
 
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     public void identityTokenNoSignature() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -563,7 +569,7 @@ public class JWTTokenTest extends TokenLoginTestBase {
         }
     }
 
-    @org.junit.Test(expected = KrbException.class)
+    @org.junit.jupiter.api.Test
     public void identityTokenUnknownIssuer() throws Exception {
 
         KrbClient client = getKrbClient();
@@ -601,11 +607,13 @@ public class JWTTokenTest extends TokenLoginTestBase {
         krbToken.setTokenValue(signToken(authToken, signKey));
 
         // Now get a TGT using the JWT token
-        try {
-            tokenClient.requestTgt(krbToken, cCacheFile.getPath());
-        } finally {
-            cCacheFile.delete();
-        }
+        assertThrows(KrbException.class, () -> {
+            try {
+                tokenClient.requestTgt(krbToken, cCacheFile.getPath());
+            } finally {
+                cCacheFile.delete();
+            }
+        });
     }
 
     private byte[] signToken(AuthToken authToken, PrivateKey signKey) throws Exception {

@@ -27,9 +27,9 @@ import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,7 +40,7 @@ public class AnonymousPkinitKdcTest extends KdcTestBase {
     private String serverPrincipal;
     private KrbPkinitClient pkinitClient;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
@@ -75,7 +75,7 @@ public class AnonymousPkinitKdcTest extends KdcTestBase {
             tgt = pkinitClient.requestTgt();
         } catch (KrbException te) {
             te.printStackTrace();
-            Assert.fail();
+            Assertions.fail();
             return;
         }
         assertThat(tgt).isNotNull();

@@ -34,7 +34,7 @@
         <gson.version>2.10.1</gson.version>
         <h2.version>2.2.224</h2.version>
         <ldap.api.version>2.1.4</ldap.api.version>
-        <junit.version>4.13.2</junit.version>
+        <junit.version>5.10.0</junit.version>
         <nimbus.jose.version>9.37</nimbus.jose.version>
         <slf4j.version>1.7.36</slf4j.version>
         <assertj.version>3.24.2</assertj.version>
@@ -68,8 +68,8 @@
                 <version>${slf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>

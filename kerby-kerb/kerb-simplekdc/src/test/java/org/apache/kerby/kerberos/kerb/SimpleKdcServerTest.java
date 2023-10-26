@@ -22,9 +22,9 @@ package org.apache.kerby.kerberos.kerb;
 import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
 import org.apache.kerby.util.NetworkUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -38,7 +38,7 @@ public class SimpleKdcServerTest {
 
     private KdcServer kdcServer;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         kdcServer = new SimpleKdcServer();
         kdcServer.setKdcHost(serverHost);
@@ -69,7 +69,7 @@ public class SimpleKdcServerTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         kdcServer.stop();
     }

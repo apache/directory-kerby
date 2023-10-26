@@ -22,7 +22,7 @@ package org.apache.kerby.asn1;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.kerby.asn1.type.Asn1Utf8String;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

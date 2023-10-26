@@ -32,8 +32,8 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.GSSName;
 import org.ietf.jgss.Oid;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * This is an interop test using the Java GSS APIs against the Kerby KDC
@@ -44,14 +44,14 @@ public class GssInteropTest extends LoginTestBase {
     public void testGss() throws Exception {
         Subject clientSubject = loginClientUsingTicketCache();
         Set<Principal> clientPrincipals = clientSubject.getPrincipals();
-        Assert.assertFalse(clientPrincipals.isEmpty());
+        Assertions.assertFalse(clientPrincipals.isEmpty());
 
         // Get the TGT
         Set<KerberosTicket> privateCredentials =
                 clientSubject.getPrivateCredentials(KerberosTicket.class);
-        Assert.assertFalse(privateCredentials.isEmpty());
+        Assertions.assertFalse(privateCredentials.isEmpty());
         KerberosTicket tgt = privateCredentials.iterator().next();
-        Assert.assertNotNull(tgt);
+        Assertions.assertNotNull(tgt);
 
         // Get the service ticket
         KerberosClientExceptionAction action =
@@ -59,7 +59,7 @@ public class GssInteropTest extends LoginTestBase {
                         getServerPrincipal());
 
         byte[] kerberosToken = (byte[]) Subject.doAs(clientSubject, action);
-        Assert.assertNotNull(kerberosToken);
+        Assertions.assertNotNull(kerberosToken);
 
         validateServiceTicket(kerberosToken);
     }
@@ -67,7 +67,7 @@ public class GssInteropTest extends LoginTestBase {
     private void validateServiceTicket(byte[] ticket) throws Exception {
         Subject serviceSubject = loginServiceUsingKeytab();
         Set<Principal> servicePrincipals = serviceSubject.getPrincipals();
-        Assert.assertFalse(servicePrincipals.isEmpty());
+        Assertions.assertFalse(servicePrincipals.isEmpty());
 
         // Handle the service ticket
         KerberosServiceExceptionAction serviceAction =

@@ -20,16 +20,14 @@
 package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.type.Asn1Flags;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Asn1FlagsTest {
   
@@ -65,13 +63,10 @@ public class Asn1FlagsTest {
       return name();
     }
   }
-  
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-  
+
   private Asn1Flags flags;
   
-  @Before
+  @BeforeEach
   public void setUp() {
     flags = new Asn1Flags(FLAG_5 | FLAG_3 | FLAG_1);
   }

@@ -35,7 +35,7 @@ import org.apache.kerby.kerberos.kerb.type.pa.pkinit.DhRepInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.KdcDhKeyInfo;
 import org.apache.kerby.kerberos.kerb.type.pa.pkinit.PaPkAsRep;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

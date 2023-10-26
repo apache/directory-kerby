@@ -21,7 +21,7 @@ package org.apache.kerby.xdr;
 
 import org.apache.kerby.xdr.type.XdrString;
 import org.apache.kerby.xdr.util.HexUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 

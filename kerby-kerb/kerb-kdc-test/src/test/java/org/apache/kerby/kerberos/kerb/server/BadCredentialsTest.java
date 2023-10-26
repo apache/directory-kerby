@@ -22,8 +22,8 @@ package org.apache.kerby.kerberos.kerb.server;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Send some unknown principals, bad passwords etc. to the KDC to check that it is handled correctly.
@@ -36,7 +36,7 @@ public class BadCredentialsTest extends KdcTestBase {
         try {
             getKrbClient().requestTgt(principal, getClientPassword());
         } catch (KrbException ex) {
-            Assert.assertEquals(KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN, ex.getKrbErrorCode());
+            Assertions.assertEquals(KrbErrorCode.KDC_ERR_C_PRINCIPAL_UNKNOWN, ex.getKrbErrorCode());
         }
     }
 
@@ -45,7 +45,7 @@ public class BadCredentialsTest extends KdcTestBase {
         try {
             getKrbClient().requestTgt(getClientPrincipal(), "badpass");
         } catch (KrbException ex) {
-            Assert.assertEquals(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY, ex.getKrbErrorCode());
+            Assertions.assertEquals(KrbErrorCode.KRB_AP_ERR_BAD_INTEGRITY, ex.getKrbErrorCode());
         }
     }
 
@@ -58,7 +58,7 @@ public class BadCredentialsTest extends KdcTestBase {
             String serverPrincipal = "unknown/" + getHostname() + "@" + TestKdcServer.KDC_REALM;
             getKrbClient().requestSgt(tgtTicket, serverPrincipal);
         } catch (KrbException ex) {
-            Assert.assertEquals(KrbErrorCode.KDC_ERR_S_PRINCIPAL_UNKNOWN, ex.getKrbErrorCode());
+            Assertions.assertEquals(KrbErrorCode.KDC_ERR_S_PRINCIPAL_UNKNOWN, ex.getKrbErrorCode());
         }
     }
 

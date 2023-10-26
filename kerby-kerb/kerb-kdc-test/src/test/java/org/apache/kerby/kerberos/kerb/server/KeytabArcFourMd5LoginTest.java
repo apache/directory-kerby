@@ -30,7 +30,7 @@ import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendConfig;
 import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class KeytabArcFourMd5LoginTest extends LoginTestBase {
 

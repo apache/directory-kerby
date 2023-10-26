@@ -21,7 +21,7 @@ package org.apache.kerby.asn1;
 
 import org.apache.kerby.asn1.type.Asn1Tagging;
 import org.apache.kerby.asn1.type.Asn1VisibleString;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 

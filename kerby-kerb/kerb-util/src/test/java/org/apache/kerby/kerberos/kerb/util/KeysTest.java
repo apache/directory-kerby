@@ -26,8 +26,8 @@ import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +53,7 @@ public class KeysTest {
 
     private Keytab keytab;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         try (InputStream kis = KeysTest.class.getResourceAsStream("/test.keytab")) {
             keytab = Keytab.loadKeytab(kis);

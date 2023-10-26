@@ -20,14 +20,14 @@
 package org.apache.kerby.kerberos.kerb.integration.test;
 
 import org.apache.kerby.kerberos.kerb.gss.KerbyGssProvider;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.security.Provider;
 
 public class KerbyGssAppTest extends GssAppTest {
 
-    @Before
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         Provider provider = new KerbyGssProvider();

@@ -34,10 +34,10 @@ import org.apache.kerby.kerberos.kerb.server.KdcServer;
 import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.util.NetworkUtil;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +47,9 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RemoteKadminTest {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteKadminTest.class);
@@ -118,8 +118,8 @@ public class RemoteKadminTest {
         return adminClient;
     }
     
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    public static void setUpBeforeAll() throws Exception {
         workDir.mkdirs();
         
         kdcServer = buildMiniKdc();
@@ -131,8 +131,8 @@ public class RemoteKadminTest {
         adminServer.start();
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    @AfterAll
+    public static void tearDownAfterAll() throws Exception {
         adminServer.stop();
         kdcServer.stop();
         FileUtils.deleteDirectory(workDir);
@@ -158,18 +158,18 @@ public class RemoteKadminTest {
         String testPrincipal = "test/EXAMPLE.COM";
         String renamePrincipal = "test_rename/EXAMPLE.COM";
         adminClient.requestAddPrincipal(testPrincipal);
-        assertTrue("Remote kadmin add principal test failed.",
-                localKadmin.getPrincipals().contains(testPrincipal + "@EXAMPLE.COM"));
+        assertTrue(localKadmin.getPrincipals().contains(testPrincipal + "@EXAMPLE.COM"),
+                "Remote kadmin add principal test failed.");
 
         adminClient.requestRenamePrincipal(testPrincipal, renamePrincipal);
-        assertTrue("Remote kadmin rename principal test failed, the renamed principal does not exist.",
-                localKadmin.getPrincipals().contains(renamePrincipal + "@EXAMPLE.COM"));
-        assertFalse("Remote kadmin rename principal test failed, the old principal still exists.",
-                localKadmin.getPrincipals().contains(testPrincipal + "@EXAMPLE.COM"));
+        assertTrue(localKadmin.getPrincipals().contains(renamePrincipal + "@EXAMPLE.COM"),
+                "Remote kadmin rename principal test failed, the renamed principal does not exist.");
+        assertFalse(localKadmin.getPrincipals().contains(testPrincipal + "@EXAMPLE.COM"),
+                "Remote kadmin rename principal test failed, the old principal still exists.");
 
         adminClient.requestDeletePrincipal(renamePrincipal);
-        assertFalse("Remote kadmin delete principal test failed.",
-                localKadmin.getPrincipals().contains(renamePrincipal + "@EXAMPLE.COM"));
+        assertFalse(localKadmin.getPrincipals().contains(renamePrincipal + "@EXAMPLE.COM"),
+                "Remote kadmin delete principal test failed.");
     }
 
     @Test
@@ -196,7 +196,7 @@ public class RemoteKadminTest {
         try {
             AuthUtil.loginUsingPassword(testPrincipal, new PasswordCallbackHandler(newPassword));
         } catch (LoginException e) {
-            Assert.fail("Login using new password failed: " + e.toString());
+            Assertions.fail("Login using new password failed: " + e.toString());
         }
     }
     

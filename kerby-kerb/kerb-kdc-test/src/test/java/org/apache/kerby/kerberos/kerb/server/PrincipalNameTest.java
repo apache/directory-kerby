@@ -25,7 +25,7 @@ import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,7 +44,7 @@ public class PrincipalNameTest extends KdcTestBase {
     }
     
     @Test
-    @org.junit.Ignore // See https://issues.apache.org/jira/browse/DIRKRB-659
+    @org.junit.jupiter.api.Disabled // See https://issues.apache.org/jira/browse/DIRKRB-659
     public void testNTEnterprisePrincipal() throws IOException, KrbException {
 
         KOptions options = new KOptions();

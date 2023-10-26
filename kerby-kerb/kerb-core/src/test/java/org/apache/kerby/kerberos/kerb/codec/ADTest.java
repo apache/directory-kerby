@@ -19,7 +19,7 @@
  */
 package org.apache.kerby.kerberos.kerb.codec;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationData;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataEntry;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataWrapper;
 import org.apache.kerby.kerberos.kerb.type.ad.AuthorizationDataWrapper.WrapperType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for Authorization data codec.

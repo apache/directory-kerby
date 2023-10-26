@@ -27,8 +27,8 @@ import org.apache.directory.server.core.annotations.CreatePartition;
 import org.apache.directory.server.core.integ.FrameworkRunner;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Before;
+import org.junit.jupiter.api.runner.RunWith;
 
 @RunWith(FrameworkRunner.class)
 @CreateDS(name = "KerberosKRBProtocolTest-class",

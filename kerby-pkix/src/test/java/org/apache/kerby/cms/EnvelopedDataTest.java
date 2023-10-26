@@ -22,8 +22,8 @@ package org.apache.kerby.cms;
 import org.apache.kerby.asn1.Asn1;
 import org.apache.kerby.cms.type.EnvelopedContentInfo;
 import org.apache.kerby.cms.type.EnvelopedData;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -45,7 +45,7 @@ public class EnvelopedDataTest extends CmsTestBase {
             EnvelopedData envelopedData = contentInfo.getEnvelopedData();
             Asn1.dump(envelopedData);
         } catch (Exception e) {
-            Assert.fail("Failed to decode keyTrn from file:"
+            Assertions.fail("Failed to decode keyTrn from file:"
                     + " enveloped-keytrns.txt. " + e.toString());
         }
     }
@@ -63,7 +63,7 @@ public class EnvelopedDataTest extends CmsTestBase {
             EnvelopedData envelopedData = contentInfo.getEnvelopedData();
             Asn1.dump(envelopedData);
         } catch (Exception e) {
-            Assert.fail("Failed to decode kek from file: enveloped-kek.txt. "
+            Assertions.fail("Failed to decode kek from file: enveloped-kek.txt. "
                     + e.toString());
         }
     }
@@ -81,7 +81,7 @@ public class EnvelopedDataTest extends CmsTestBase {
             EnvelopedData envelopedData = contentInfo.getEnvelopedData();
             Asn1.dump(envelopedData);
         } catch (Exception e) {
-            Assert.fail("Failed to decode nestedNDEF from file:"
+            Assertions.fail("Failed to decode nestedNDEF from file:"
                     + " enveloped-nested-ndef.txt. " + e.toString());
         }
     }

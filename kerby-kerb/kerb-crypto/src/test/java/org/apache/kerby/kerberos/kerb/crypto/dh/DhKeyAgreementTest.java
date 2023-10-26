@@ -22,8 +22,8 @@ package org.apache.kerby.kerberos.kerb.crypto.dh;
 
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionType;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
@@ -75,7 +75,7 @@ public class DhKeyAgreementTest {
         byte[] cipherText = server.encrypt(clearText, KeyUsage.UNKNOWN);
         byte[] recovered = client.decrypt(cipherText, KeyUsage.UNKNOWN);
 
-        Assert.assertTrue(Arrays.equals(clearText, recovered));
+        Assertions.assertTrue(Arrays.equals(clearText, recovered));
     }
 
 
@@ -113,7 +113,7 @@ public class DhKeyAgreementTest {
         byte[] cipherText = server.encrypt(clearText, KeyUsage.UNKNOWN);
         byte[] recovered = client.decrypt(cipherText, KeyUsage.UNKNOWN);
 
-        Assert.assertTrue(Arrays.equals(clearText, recovered));
+        Assertions.assertTrue(Arrays.equals(clearText, recovered));
     }
 
     @Test
@@ -145,6 +145,6 @@ public class DhKeyAgreementTest {
         byte[] cipherText = server.encrypt(clearText, KeyUsage.UNKNOWN);
         byte[] recovered = client.decrypt(cipherText, KeyUsage.UNKNOWN);
 
-        Assert.assertTrue(Arrays.equals(clearText, recovered));
+        Assertions.assertTrue(Arrays.equals(clearText, recovered));
     }
 }

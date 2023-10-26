@@ -25,17 +25,17 @@ import org.apache.kerby.kerberos.kerb.identity.backend.BackendTestBase;
 import org.apache.kerby.kerberos.kerb.identity.backend.BackendTestUtil;
 import org.apache.kerby.kerberos.kerb.identity.backend.IdentityBackend;
 import org.apache.kerby.kerberos.kerb.request.KrbIdentity;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for MavibotBackend.
@@ -43,20 +43,15 @@ import static org.junit.Assert.assertTrue;
  * @author <a href="mailto:kerby@directory.apache.org">Apache Kerby Project</a>
  */
 public class MavibotBackendTest extends BackendTestBase {
-    private static TemporaryFolder tmpFolder = new TemporaryFolder();
 
-    @BeforeClass
+    @TempDir
+    static Path tmpFolder;
+
+    @BeforeAll
     public static void setup() throws Exception {
-        tmpFolder.create();
-        
-        File dbFile = tmpFolder.newFile();
+        File dbFile = tmpFolder.toFile();
         backend = new MavibotBackend(dbFile);
         backend.initialize();
-    }
-    
-    @AfterClass
-    public static void tearDown() throws KrbException {
-        tmpFolder.delete();
     }
 
     // overriding this cause MavibotBackend doesn't support range search

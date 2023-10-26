@@ -21,8 +21,8 @@ package org.apache.kerby.kerberos.kerb.util;
 
 import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +40,7 @@ public class CcacheTest {
 
     private CredentialCache cc;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         try (InputStream cis = CcacheTest.class.getResourceAsStream("/test.cc")) {
             cc = new CredentialCache();

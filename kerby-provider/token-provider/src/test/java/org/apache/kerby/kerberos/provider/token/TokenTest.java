@@ -27,8 +27,8 @@ import org.apache.kerby.kerberos.kerb.provider.TokenDecoder;
 import org.apache.kerby.kerberos.kerb.provider.TokenEncoder;
 import org.apache.kerby.kerberos.kerb.type.base.AuthToken;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.KeyGenerator;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class TokenTest {
     private List<String> auds = new ArrayList<>();
     private EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         authToken = KrbRuntime.getTokenProvider("JWT").createTokenFactory().createToken();
 
@@ -220,7 +220,7 @@ public class TokenTest {
     }
 
     @Test
-    @org.junit.Ignore
+    @org.junit.jupiter.api.Disabled
     // TODO: building error with openjdk8: NoSuchAlgorithm EC KeyPairGenerato..
     public void testTokenWithECDSASignedJWT() throws Exception {
         TokenEncoder tokenEncoder = KrbRuntime.getTokenProvider("JWT").createTokenEncoder();
