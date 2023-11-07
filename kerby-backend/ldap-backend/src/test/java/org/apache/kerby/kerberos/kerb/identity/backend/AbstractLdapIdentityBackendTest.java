@@ -20,38 +20,29 @@
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.directory.server.core.api.DirectoryService;
-import org.apache.directory.server.ldap.LdapServer;
+import org.apache.directory.server.core.integ.AbstractLdapTestUnit;
 import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
 import org.apache.kerby.kerberos.kerb.KrbException;
-import org.junit.jupiter.api.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-public abstract class AbstractLdapIdentityBackendTest extends  BackendTest {
+public abstract class AbstractLdapIdentityBackendTest extends AbstractLdapTestUnit {
     protected LdapIdentityBackend backend;
 
     /** The used DirectoryService instance */
     private static DirectoryService service;
 
-    /** The used LdapServer instance */
-    private static LdapServer ldapServer;
-
-    public static DirectoryService getService() {
+    public static DirectoryService getDirectoryService() {
         return service;
     }
 
-    public static void setService(DirectoryService service) {
+    public static void setDirectoryService(DirectoryService service) {
         AbstractLdapIdentityBackendTest.service = service;
     }
 
-    public static LdapServer getLdapServer() {
-        return ldapServer;
-    }
+    private BackendTest test = new LdapBackendTest();
 
-    public static void setLdapServer(LdapServer ldapServer) {
-        AbstractLdapIdentityBackendTest.ldapServer = ldapServer;
-    }
-
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         backend.stop();
         backend.release();
@@ -59,26 +50,30 @@ public abstract class AbstractLdapIdentityBackendTest extends  BackendTest {
 
     @Test
     public void testGet() throws KrbException {
-        testGet(backend);
+        test.testGet(backend);
     }
 
     @Test
     public void testStore() throws KrbException {
-        testStore(backend);
+        test.testStore(backend);
     }
 
     @Test
     public void testUpdate() throws KrbException {
-        testUpdate(backend);
+        test.testUpdate(backend);
     }
 
     @Test
     public void testDelete() throws KrbException {
-        testDelete(backend);
+        test.testDelete(backend);
     }
 
     @Test
     public void testGetIdentities() throws KrbException {
-        testGetIdentities(backend);
+        test.testGetIdentities(backend);
+    }
+
+    private static class LdapBackendTest extends BackendTest {
+
     }
 }

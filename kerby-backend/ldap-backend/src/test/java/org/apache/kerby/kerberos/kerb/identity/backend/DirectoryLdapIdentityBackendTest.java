@@ -26,13 +26,13 @@ import org.apache.directory.server.core.annotations.ApplyLdifs;
 import org.apache.directory.server.core.annotations.CreateDS;
 import org.apache.directory.server.core.annotations.CreatePartition;
 import org.apache.directory.server.core.api.LdapCoreSessionConnection;
-import org.apache.directory.server.core.integ.FrameworkRunner;
+import org.apache.directory.server.core.integ.ApacheDSTestExtension;
 import org.apache.kerby.config.Conf;
 import org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend;
-import org.junit.jupiter.api.Before;
-import org.junit.jupiter.api.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(FrameworkRunner.class)
+@ExtendWith({ ApacheDSTestExtension.class })
 @CreateDS(name = "KerberosKRBProtocolTest-class",
         partitions =
                 {
@@ -63,7 +63,7 @@ public class DirectoryLdapIdentityBackendTest extends AbstractLdapIdentityBacken
     private static final String ADMIN_PW = "secret";
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         Conf config = new Conf();
         config.setString("admin_dn", ADMIN_DN);

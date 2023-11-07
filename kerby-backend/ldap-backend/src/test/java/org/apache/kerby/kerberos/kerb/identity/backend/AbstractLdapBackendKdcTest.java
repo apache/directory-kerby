@@ -20,32 +20,71 @@
 package org.apache.kerby.kerberos.kerb.identity.backend;
 
 import org.apache.directory.server.core.api.DirectoryService;
-import org.apache.directory.server.ldap.LdapServer;
+import org.apache.directory.server.core.integ.AbstractLdapTestUnit;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.KrbClient;
+import org.apache.kerby.kerberos.kerb.server.KdcConfigKey;
 import org.apache.kerby.kerberos.kerb.server.KdcTestBase;
+import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
 
-public class AbstractLdapBackendKdcTest extends KdcTestBase {
+public class AbstractLdapBackendKdcTest extends AbstractLdapTestUnit {
+
+    protected static final String BASE_DN = "ou=users,dc=example,dc=com";
+    protected static final String ADMIN_DN = "uid=admin,ou=system";
+    protected static final String ADMIN_PW = "secret";
 
     /** The used DirectoryService instance */
     private static DirectoryService service;
 
-    /** The used LdapServer instance */
-    private static LdapServer ldapServer;
+    protected LdapKdcTestBase test = new LdapKdcTestBase();
 
-    public static DirectoryService getService() {
+    public static DirectoryService getDirectoryService() {
         return service;
     }
 
 
-    public static void setService(DirectoryService service) {
+    public static void setDirectoryService(DirectoryService service) {
         AbstractLdapBackendKdcTest.service = service;
     }
 
+    protected class LdapKdcTestBase extends KdcTestBase {
+        private int port;
 
-    public static LdapServer getLdapServer() {
-        return ldapServer;
-    }
+        public void setPort(int port) {
+            this.port = port;
+        }
 
-    public static void setLdapServer(LdapServer ldapServer) {
-        AbstractLdapBackendKdcTest.ldapServer = ldapServer;
+        @Override
+        public SimpleKdcServer getKdcServer() { //NOPMD
+            return super.getKdcServer();
+        }
+        @Override
+        public KrbClient getKrbClient() { //NOPMD
+            return super.getKrbClient();
+        }
+        @Override
+        public String getClientPrincipal() { //NOPMD
+            return super.getClientPrincipal();
+        }
+        @Override
+        public String getClientPassword() { //NOPMD
+            return super.getClientPassword();
+        }
+        @Override
+        public String getServerPrincipal() { //NOPMD
+            return super.getServerPrincipal();
+        }
+        @Override
+        public void prepareKdc() throws KrbException {
+            BackendConfig backendConfig = getKdcServer().getBackendConfig();
+            backendConfig.setString("host", "localhost");
+            backendConfig.setString("admin_dn", ADMIN_DN);
+            backendConfig.setString("admin_pw", ADMIN_PW);
+            backendConfig.setString("base_dn", BASE_DN);
+            backendConfig.setInt("port", port);
+            backendConfig.setString(KdcConfigKey.KDC_IDENTITY_BACKEND,
+                    "org.apache.kerby.kerberos.kdc.identitybackend.LdapIdentityBackend");
+            super.prepareKdc();
+        }
     }
 }
