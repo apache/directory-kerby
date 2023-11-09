@@ -90,11 +90,16 @@ public class EncryptionUtil {
 
     public static List<EncryptionKey> generateKeys(
             List<EncryptionType> encryptionTypes) throws KrbException {
+        return generateKeys(encryptionTypes, 1);
+    }
+
+    public static List<EncryptionKey> generateKeys(
+            List<EncryptionType> encryptionTypes, int kvno) throws KrbException {
         List<EncryptionKey> results =
                 new ArrayList<>(encryptionTypes.size());
         for (EncryptionType eType : encryptionTypes) {
             EncryptionKey encKey = EncryptionHandler.random2Key(eType);
-            encKey.setKvno(1);
+            encKey.setKvno(kvno);
             results.add(encKey);
         }
 
@@ -104,11 +109,18 @@ public class EncryptionUtil {
     public static List<EncryptionKey> generateKeys(
             String principal, String passwd,
             List<EncryptionType> encryptionTypes) throws KrbException {
+        return generateKeys(principal, passwd, encryptionTypes, 1);
+    }
+
+    public static List<EncryptionKey> generateKeys(
+            String principal, String passwd,
+            List<EncryptionType> encryptionTypes,
+            int kvno) throws KrbException {
         List<EncryptionKey> results = new ArrayList<>(encryptionTypes.size());
         for (EncryptionType eType : encryptionTypes) {
             EncryptionKey encKey = EncryptionHandler.string2Key(
                 principal, passwd, eType);
-            encKey.setKvno(1);
+            encKey.setKvno(kvno);
             results.add(encKey);
         }
 

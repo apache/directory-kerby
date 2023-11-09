@@ -356,8 +356,9 @@ public class LocalKadminImpl implements LocalKadmin {
                     + " was not found. Please check the input and try again");
         }
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(principal, newPassword,
-                getKdcConfig().getEncryptionTypes());
+                getKdcConfig().getEncryptionTypes(), identity.getKeyVersion() + 1);
         identity.addKeys(keys);
+        identity.setKeyVersion(identity.getKeyVersion() + 1);
 
         backend.updateIdentity(identity);
     }
@@ -371,8 +372,9 @@ public class LocalKadminImpl implements LocalKadmin {
                     + "was not found. Please check the input and try again");
         }
         List<EncryptionKey> keys = EncryptionUtil.generateKeys(
-                getKdcConfig().getEncryptionTypes());
+                getKdcConfig().getEncryptionTypes(), identity.getKeyVersion() + 1);
         identity.addKeys(keys);
+        identity.setKeyVersion(identity.getKeyVersion() + 1);
         backend.updateIdentity(identity);
     }
 
