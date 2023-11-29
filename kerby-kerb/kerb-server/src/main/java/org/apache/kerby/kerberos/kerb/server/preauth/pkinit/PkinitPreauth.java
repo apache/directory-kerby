@@ -68,11 +68,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PkinitPreauth extends AbstractPreauthPlugin {
 
@@ -82,20 +79,22 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
     public PkinitPreauth() {
         super(new PkinitPreauthMeta());
 
-        pkinitContexts = new HashMap<>(1);
+        pkinitContexts = new ConcurrentHashMap<>(1);
     }
 
     @Override
     public void initWith(KdcContext kdcContext) {
         super.initWith(kdcContext);
 
-        PkinitKdcContext tmp = new PkinitKdcContext();
-        tmp.realm = kdcContext.getKdcRealm();
-
         String pkinitIdentity = kdcContext.getConfig().getPkinitIdentity();
-        tmp.identityOpts.setIdentity(pkinitIdentity);
+        if (pkinitIdentity != null) {
+            PkinitKdcContext tmp = new PkinitKdcContext();
+            tmp.realm = kdcContext.getKdcRealm();
 
-        pkinitContexts.put(kdcContext.getKdcRealm(), tmp);
+            tmp.identityOpts.setIdentity(pkinitIdentity);
+
+            pkinitContexts.put(kdcContext.getKdcRealm(), tmp);
+        }
     }
 
     @Override
@@ -269,10 +268,7 @@ public class PkinitPreauth extends AbstractPreauthPlugin {
 
     private PkinitKdcContext findContext(PrincipalName principal) {
         String realm = principal.getRealm();
-        if (pkinitContexts.containsKey(realm)) {
-            return pkinitContexts.get(realm);
-        }
-        return null;
+        return pkinitContexts.get(realm);
     }
 
     /**
