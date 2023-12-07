@@ -43,7 +43,7 @@
         <netty.version>4.1.101.Final</netty.version>
         <bouncycastle.version>1.70</bouncycastle.version>
         <commons-text.version>1.10.0</commons-text.version>
-        <commons-dbutils.version>1.8.0</commons-dbutils.version>
+        <commons-dbutils.version>1.8.1</commons-dbutils.version>
         <drizzle-jdbc.version>1.4</drizzle-jdbc.version>
         <jsch.version>0.1.55</jsch.version>
         <commons-codec.version>1.15</commons-codec.version>
