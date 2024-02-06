@@ -36,7 +36,7 @@
         <ldap.api.version>2.1.5</ldap.api.version>
         <junit.version>5.10.2</junit.version>
         <nimbus.jose.version>9.37.3</nimbus.jose.version>
-        <slf4j.version>1.7.36</slf4j.version>
+        <slf4j.version>2.0.12</slf4j.version>
         <assertj.version>3.25.3</assertj.version>
         <jline.version>3.25.1</jline.version>
         <mockito.version>4.11.0</mockito.version>
