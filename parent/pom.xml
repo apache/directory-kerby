@@ -30,7 +30,7 @@
 
     <properties>
         <apacheds.version>2.0.0.AM27</apacheds.version>
-        <commons-io.version>2.15.1</commons-io.version>
+        <commons-io.version>2.16.0</commons-io.version>
         <gson.version>2.10.1</gson.version>
         <h2.version>2.2.224</h2.version>
         <ldap.api.version>2.1.6</ldap.api.version>
