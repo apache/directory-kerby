@@ -38,7 +38,7 @@
         <nimbus.jose.version>9.40</nimbus.jose.version>
         <slf4j.version>1.7.36</slf4j.version>
         <assertj.version>3.26.3</assertj.version>
-        <jline.version>3.26.2</jline.version>
+        <jline.version>3.26.3</jline.version>
         <mockito.version>4.11.0</mockito.version>
         <netty.version>4.1.111.Final</netty.version>
         <bouncycastle.version>1.70</bouncycastle.version>
