@@ -41,6 +41,7 @@ import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -114,7 +115,7 @@ public class KinitTool {
                     + "maybe you're running this from within an IDE. "
                     + "Use scanner to read password.");
             System.out.println("Password for " + principal + ":");
-            try (Scanner scanner = new Scanner(System.in, "UTF-8")) {
+            try (Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8.name())) {
                 return scanner.nextLine().trim();
             }
         }

@@ -23,6 +23,7 @@ import org.apache.kerby.KOptionType;
 import org.apache.kerby.KOptions;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.KadminOption;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class ToolUtil {
@@ -80,7 +81,7 @@ public class ToolUtil {
     }
 
     public static String getReplay(String prompt) {
-        Scanner scanner = new Scanner(System.in, "UTF-8");
+        Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8.name());
         System.out.println(prompt);
         String str = scanner.nextLine().trim();
         return str;

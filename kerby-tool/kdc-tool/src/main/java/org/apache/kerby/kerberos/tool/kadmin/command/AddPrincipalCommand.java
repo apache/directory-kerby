@@ -26,6 +26,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 import org.apache.kerby.kerberos.tool.kadmin.ToolUtil;
 
 import java.io.Console;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -112,7 +113,7 @@ public class AddPrincipalCommand extends KadminCommand {
             System.out.println("Couldn't get Console instance, "
                     + "maybe you're running this from within an IDE. "
                     + "Use scanner to read password.");
-            Scanner scanner = new Scanner(System.in, "UTF-8");
+            Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8.name());
             passwordOnce = getPassword(scanner,
                     "Enter password for principal \"" + principal + "\":");
             passwordTwice = getPassword(scanner,

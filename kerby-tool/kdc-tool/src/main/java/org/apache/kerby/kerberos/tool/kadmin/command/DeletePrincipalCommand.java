@@ -24,6 +24,7 @@ import org.apache.kerby.kerberos.kerb.admin.kadmin.Kadmin;
 import org.apache.kerby.kerberos.kerb.admin.kadmin.local.LocalKadmin;
 
 import java.io.Console;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class DeletePrincipalCommand extends KadminCommand {
@@ -60,7 +61,7 @@ public class DeletePrincipalCommand extends KadminCommand {
                 System.out.println("Couldn't get Console instance, "
                         + "maybe you're running this from within an IDE. "
                         + "Use scanner to read password.");
-                Scanner scanner = new Scanner(System.in, "UTF-8");
+                Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8.name());
                 reply = getReply(scanner, prompt);
             } else {
                 reply = getReply(console, prompt);
