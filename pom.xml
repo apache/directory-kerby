@@ -56,7 +56,7 @@
       <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
       <maven-jxr-plugin.version>3.4.0</maven-jxr-plugin.version>
       <skipTests>false</skipTests>
-      <targetJdk.version>1.8</targetJdk.version>
+      <targetJdk.version>8</targetJdk.version>
   </properties>
 
   <modules>
@@ -432,6 +432,15 @@
       <properties>
         <buildtools.dir>${basedir}/../../build-tools</buildtools.dir>
       </properties>
+    </profile>
+    <profile>
+        <id>jdk19-plus</id>
+        <activation>
+            <jdk>[9,)</jdk>
+        </activation>
+        <properties>
+            <maven.compiler.release>${targetJdk.version}</maven.compiler.release>
+        </properties>
     </profile>
 
   </profiles>
