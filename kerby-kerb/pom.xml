@@ -42,6 +42,18 @@
     <module>kerb-simplekdc</module>
     <module>kerb-client-api-all</module>
     <module>kerb-server-api-all</module>
-    <module>kerb-gssapi</module>
   </modules>
+
+  <profiles>
+    <profile>
+      <id>jdk18</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <modules>
+        <module>kerb-gssapi</module>
+      </modules>
+    </profile>
+  </profiles>
+
 </project>

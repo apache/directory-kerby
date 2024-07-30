@@ -19,13 +19,10 @@
  */
 package org.apache.kerby.kerberos.kerb.admin.server;
 
-import sun.security.util.Password;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class PasswordCallbackHandler implements CallbackHandler {
@@ -40,7 +37,7 @@ public class PasswordCallbackHandler implements CallbackHandler {
         for (Callback callback : callbacks) {
             if (callback instanceof PasswordCallback) {
                 PasswordCallback pc = (PasswordCallback) callback;
-                pc.setPassword(Password.readPassword(new ByteArrayInputStream(password.getBytes()), pc.isEchoOn()));
+                pc.setPassword(password.toCharArray());
             } else {
                 throw new UnsupportedCallbackException(
                         callback, "Only support PasswordCallback");
