@@ -61,4 +61,30 @@
       <artifactId>assertj-core</artifactId>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>jdk17+</id>
+      <activation>
+        <jdk>[17,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <skipTests>${skipTests}</skipTests>
+              <reuseForks>false</reuseForks>
+              <argLine>--add-exports java.security.jgss/sun.security.jgss.spi=ALL-UNNAMED</argLine>
+              <systemPropertyVariables>
+                <log4j.configuration>log4j.properties</log4j.configuration>
+              </systemPropertyVariables>
+              <failIfNoTests>false</failIfNoTests>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

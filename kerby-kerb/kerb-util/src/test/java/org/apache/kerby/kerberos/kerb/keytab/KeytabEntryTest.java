@@ -57,7 +57,7 @@ public class KeytabEntryTest {
         doReturn(new KerberosTime()).when(mockKeytabInputStream).readTime();
 
         KeytabEntry keytabEntry = new KeytabEntry();
-        Assumptions.assumeThatIOException().isThrownBy(() -> {
+        Assumptions.assumeThatException().isThrownBy(() -> {
             keytabEntry.load(mockKeytabInputStream, 0x502, 100);
         });
     }
