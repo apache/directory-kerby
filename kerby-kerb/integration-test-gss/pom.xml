@@ -21,10 +21,10 @@
     <version>2.1.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>integration-test</artifactId>
+  <artifactId>integration-test-gss</artifactId>
 
-  <name>Kerb Integration Test</name>
-  <description>Kerb Integration Test</description>
+  <name>Kerb Integration GSS Test</name>
+  <description>Kerb Integration GSS Test</description>
 
   <dependencies>
     <dependency>
@@ -41,6 +41,10 @@
     <dependency>
       <groupId>org.apache.kerby</groupId>
       <artifactId>token-provider</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-gssapi</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

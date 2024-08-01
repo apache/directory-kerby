@@ -52,6 +52,7 @@
       </activation>
       <modules>
         <module>kerb-gssapi</module>
+        <module>integration-test-gss</module>
       </modules>
     </profile>
   </profiles>

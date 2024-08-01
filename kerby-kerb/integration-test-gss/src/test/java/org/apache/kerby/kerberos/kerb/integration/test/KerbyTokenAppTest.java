@@ -50,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class KerbyTokenAppTest extends TokenAppTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KerbyGssAppTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KerbyTokenAppTest.class);
 
     @BeforeEach
     @Override
