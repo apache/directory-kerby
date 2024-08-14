@@ -213,5 +213,10 @@ See licenses/LICENSE-slf4j.txt
 ===============================================================================
 This project bundles the JLine library (BSD license):
 
-See licenses/LICENSE.jline.txt
+See licenses/LICENSE-jline.txt
+
+===============================================================================
+This project bundles the JSch library (BSD license):
+
+See licenses/LICENSE-jsch.txt
 
