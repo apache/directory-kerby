@@ -35,7 +35,7 @@
         <h2.version>2.2.224</h2.version>
         <ldap.api.version>2.1.7</ldap.api.version>
         <junit.version>5.11.0</junit.version>
-        <nimbus.jose.version>9.41</nimbus.jose.version>
+        <nimbus.jose.version>9.41.1</nimbus.jose.version>
         <slf4j.version>1.7.36</slf4j.version>
         <assertj.version>3.26.3</assertj.version>
         <jline.version>3.26.3</jline.version>
