@@ -40,7 +40,7 @@
         <assertj.version>3.26.3</assertj.version>
         <jline.version>3.27.0</jline.version>
         <mockito.version>4.11.0</mockito.version>
-        <netty.version>4.1.113.Final</netty.version>
+        <netty.version>4.1.114.Final</netty.version>
         <bouncycastle.version>1.70</bouncycastle.version>
         <commons-text.version>1.10.0</commons-text.version>
         <commons-dbutils.version>1.8.1</commons-dbutils.version>
