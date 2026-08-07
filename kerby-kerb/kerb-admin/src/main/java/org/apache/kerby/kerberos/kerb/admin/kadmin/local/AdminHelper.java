@@ -136,6 +136,13 @@ public final class AdminHelper {
                     throw new KrbException("Failed to create keytab file "
                             + keytabFile.getAbsolutePath());
                 }
+                // Restrict to owner-only (0600) to protect key material
+                keytabFile.setReadable(false, false);
+                keytabFile.setWritable(false, false);
+                keytabFile.setReadable(true, true);
+                keytabFile.setWritable(true, true);
+                keytab = new Keytab();
+            } else if (keytabFile.length() == 0) {
                 keytab = new Keytab();
             } else {
                 keytab = Keytab.loadKeytab(keytabFile);
