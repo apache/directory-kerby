@@ -125,6 +125,11 @@ public class JsonIdentityBackend extends AbstractIdentityBackend {
         if (!jsonKdbFile.exists()) {
             try {
                 jsonKdbFile.createNewFile();
+                // Restrict to owner-only (0600) to protect principal key material
+                jsonKdbFile.setReadable(false, false);
+                jsonKdbFile.setWritable(false, false);
+                jsonKdbFile.setReadable(true, true);
+                jsonKdbFile.setWritable(true, true);
             } catch (IOException e) {
                 throw new KrbException("Failed to create " + jsonKdbFile.getAbsolutePath());
             }
