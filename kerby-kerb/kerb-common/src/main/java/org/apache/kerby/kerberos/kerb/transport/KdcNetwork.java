@@ -96,7 +96,7 @@ public abstract class KdcNetwork {
                 } catch (SocketTimeoutException | ClosedChannelException | SocketException e) { //NOPMD
                     //NOOP as normal
                 } catch (IOException e) {
-                    throw new RuntimeException("Error occured while checking tcp connections", e);
+                    throw new RuntimeException("Error occurred while checking tcp connections", e);
                 }
             }
 
@@ -106,7 +106,7 @@ public abstract class KdcNetwork {
                 } catch (SocketTimeoutException | ClosedChannelException | SocketException e) { //NOPMD
                     //NOOP as normal
                 } catch (IOException e) {
-                    throw new RuntimeException("Error occured while checking udp connections", e);
+                    throw new RuntimeException("Error occurred while checking udp connections", e);
                 }
             }
         }
