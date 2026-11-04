@@ -291,7 +291,7 @@ public class CamelliaKey {
 
         if (keySize == 16) {
             if (isEncrypt) {
-                /* KL dependant keys */
+                /* KL dependent keys */
                 kw[0] = k[0];
                 kw[1] = k[1];
                 kw[2] = k[2];
@@ -304,7 +304,7 @@ public class CamelliaKey {
                 roldq(17, k, 0, ke, 4);
                 roldq(17, k, 0, subkey, 24);
                 roldq(17, k, 0, subkey, 32);
-                /* KA dependant keys */
+                /* KA dependent keys */
                 subkey[0] = ka[0];
                 subkey[1] = ka[1];
                 subkey[2] = ka[2];
@@ -319,7 +319,7 @@ public class CamelliaKey {
                 roldq(17, ka, 0, kw, 4);
 
             } else { // decryption
-                /* KL dependant keys */
+                /* KL dependent keys */
                 kw[4] = k[0];
                 kw[5] = k[1];
                 kw[6] = k[2];
@@ -332,7 +332,7 @@ public class CamelliaKey {
                 decroldq(17, k, 0, ke, 0);
                 decroldq(17, k, 0, subkey, 8);
                 decroldq(17, k, 0, subkey, 0);
-                /* KA dependant keys */
+                /* KA dependent keys */
                 subkey[34] = ka[0];
                 subkey[35] = ka[1];
                 subkey[32] = ka[2];
@@ -354,7 +354,7 @@ public class CamelliaKey {
             f2(kb, SIGMA, 8);
 
             if (isEncrypt) {
-                /* KL dependant keys */
+                /* KL dependent keys */
                 kw[0] = k[0];
                 kw[1] = k[1];
                 kw[2] = k[2];
@@ -363,12 +363,12 @@ public class CamelliaKey {
                 roldq(15, k, 0, ke, 4);
                 roldq(17, k, 0, subkey, 32);
                 roldqo32(34, k, 0, subkey, 44);
-                /* KR dependant keys */
+                /* KR dependent keys */
                 roldq(15, k, 4, subkey, 4);
                 roldq(15, k, 4, ke, 0);
                 roldq(30, k, 4, subkey, 24);
                 roldqo32(34, k, 4, subkey, 36);
-                /* KA dependant keys */
+                /* KA dependent keys */
                 roldq(15, ka, 0, subkey, 8);
                 roldq(30, ka, 0, subkey, 20);
                 /* 32bit rotation */
@@ -378,7 +378,7 @@ public class CamelliaKey {
                 ke[11] = ka[0];
                 roldqo32(49, ka, 0, subkey, 40);
 
-                /* KB dependant keys */
+                /* KB dependent keys */
                 subkey[0] = kb[0];
                 subkey[1] = kb[1];
                 subkey[2] = kb[2];
@@ -388,7 +388,7 @@ public class CamelliaKey {
                 roldqo32(51, kb, 0, kw, 4);
 
             } else { // decryption
-                /* KL dependant keys */
+                /* KL dependent keys */
                 kw[4] = k[0];
                 kw[5] = k[1];
                 kw[6] = k[2];
@@ -397,12 +397,12 @@ public class CamelliaKey {
                 decroldq(15, k, 0, ke, 4);
                 decroldq(17, k, 0, subkey, 12);
                 decroldqo32(34, k, 0, subkey, 0);
-                /* KR dependant keys */
+                /* KR dependent keys */
                 decroldq(15, k, 4, subkey, 40);
                 decroldq(15, k, 4, ke, 8);
                 decroldq(30, k, 4, subkey, 20);
                 decroldqo32(34, k, 4, subkey, 8);
-                /* KA dependant keys */
+                /* KA dependent keys */
                 decroldq(15, ka, 0, subkey, 36);
                 decroldq(30, ka, 0, subkey, 24);
                 /* 32bit rotation */
@@ -412,7 +412,7 @@ public class CamelliaKey {
                 ke[1] = ka[0];
                 decroldqo32(49, ka, 0, subkey, 4);
 
-                /* KB dependant keys */
+                /* KB dependent keys */
                 subkey[46] = kb[0];
                 subkey[47] = kb[1];
                 subkey[44] = kb[2];

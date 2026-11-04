@@ -94,7 +94,7 @@ public class IPAddressParser {
             s = s.substring(0, x) + ":" + ip4ToHex(ip4Suffix);
         }
 
-        // Check that we only have a single occurence of "::".
+        // Check that we only have a single occurrence of "::".
         x = s.indexOf("::");
         if (x >= 0 && s.indexOf("::", x + 1) >= 0) {
             return null;

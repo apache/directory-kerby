@@ -98,7 +98,7 @@ public class DefaultAdminServerHandler extends AdminServerHandler implements Run
             transport.sendMessage(adminResponse);
         } catch (Exception e) {
             transport.release();
-            logger.error("Error occured while processing request:", e);
+            logger.error("Error occurred while processing request:", e);
         }
     }
 

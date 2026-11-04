@@ -68,7 +68,7 @@ public class DefaultKdcHandler extends KdcHandler implements Runnable {
             transport.sendMessage(krbResponse);
         } catch (Exception e) {
             transport.release();
-            logger.error("Error occured while processing request:", e);
+            logger.error("Error occurred while processing request:", e);
         }
     }
 }
