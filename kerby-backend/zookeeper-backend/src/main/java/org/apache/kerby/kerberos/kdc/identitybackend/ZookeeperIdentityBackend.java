@@ -161,7 +161,7 @@ public class ZookeeperIdentityBackend extends AbstractIdentityBackend {
         try {
             quorumConfiguration.parseProperties(startupProperties);
         } catch (Exception e) {
-            throw new KrbException("Loading quorum configuraiton failed", e);
+            throw new KrbException("Loading quorum configuration failed", e);
         }
         final ServerConfig configuration = new ServerConfig();
         configuration.readFrom(quorumConfiguration);
